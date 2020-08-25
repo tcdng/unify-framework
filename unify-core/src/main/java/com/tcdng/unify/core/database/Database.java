@@ -243,6 +243,16 @@ public interface Database extends UnifyComponent {
             throws UnifyException;
 
     /**
+     * Finds child records into supplied record.
+     * 
+     * @param record
+     *               the record to find children into
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    <T extends Entity> void findChildren(T record) throws UnifyException;
+
+    /**
      * Lists record of specified type by id. List-only properties of returned object
      * are populated. Child and child list properties are populated.
      * 
@@ -371,6 +381,16 @@ public interface Database extends UnifyComponent {
      */
     <T, U extends Entity> Map<T, List<U>> listAllListMap(Class<T> keyClass, String keyName, Query<U> query)
             throws UnifyException;
+
+    /**
+     * Lists child records into supplied record.
+     * 
+     * @param record
+     *               the record to list children into
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    <T extends Entity> void listChildren(T record) throws UnifyException;
 
     /**
      * Returns a list of values of a particular field for all record that match

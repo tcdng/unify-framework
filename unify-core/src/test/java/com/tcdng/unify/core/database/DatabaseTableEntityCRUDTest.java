@@ -3265,6 +3265,48 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
     }
 
     @Test
+    public void testFindChildren() throws Exception {
+        tm.beginTransaction();
+        try {
+            Report report = new Report("weeklyReport", "Weekly Report");
+            report.setReportForm(new ReportForm("beanEditor"));
+            report.addParameter(new ReportParameter("startDate", BooleanType.FALSE))
+                    .addParameter(new ReportParameter("endDate", BooleanType.TRUE));
+            Long id = (Long) db.create(report);
+
+            Report foundReport = db.findLean(new ReportQuery().addEquals("id", id));
+            assertNotNull(foundReport);
+            assertEquals("weeklyReport", foundReport.getName());
+            assertEquals("Weekly Report", foundReport.getDescription());
+
+            assertNull(foundReport.getReportForm());
+            assertNull(foundReport.getParameters());
+            
+            db.findChildren(foundReport);
+            assertEquals("weeklyReport", foundReport.getName());
+            assertEquals("Weekly Report", foundReport.getDescription());
+            assertNotNull(foundReport.getReportForm());
+            assertEquals("beanEditor", foundReport.getReportForm().getEditor());
+            assertNotNull(foundReport.getParameters());
+            assertEquals(2, foundReport.getParameters().size());
+
+            ReportParameter rParam = foundReport.getParameters().get(0);
+            assertEquals("startDate", rParam.getName());
+            assertEquals(BooleanType.FALSE, rParam.getScheduled());
+            assertNull(rParam.getReportDesc());
+            assertNull(rParam.getScheduledDesc());
+
+            rParam = foundReport.getParameters().get(1);
+            assertEquals("endDate", rParam.getName());
+            assertEquals(BooleanType.TRUE, rParam.getScheduled());
+            assertNull(rParam.getReportDesc());
+            assertNull(rParam.getScheduledDesc());
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
     public void testListLeanRecordByIdWithChild() throws Exception {
         tm.beginTransaction();
         try {
@@ -3636,6 +3678,48 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             assertEquals("Weekly Report", list.get(0).getDescription());
 
             assertNull(list.get(0).getParameters());
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
+    public void testListChildren() throws Exception {
+        tm.beginTransaction();
+        try {
+            Report report = new Report("weeklyReport", "Weekly Report");
+            report.setReportForm(new ReportForm("beanEditor"));
+            report.addParameter(new ReportParameter("startDate", BooleanType.FALSE))
+                    .addParameter(new ReportParameter("endDate", BooleanType.TRUE));
+            Long id = (Long) db.create(report);
+
+            Report foundReport = db.findLean(new ReportQuery().addEquals("id", id));
+            assertNotNull(foundReport);
+            assertEquals("weeklyReport", foundReport.getName());
+            assertEquals("Weekly Report", foundReport.getDescription());
+
+            assertNull(foundReport.getReportForm());
+            assertNull(foundReport.getParameters());
+            
+            db.listChildren(foundReport);
+            assertEquals("weeklyReport", foundReport.getName());
+            assertEquals("Weekly Report", foundReport.getDescription());
+            assertNotNull(foundReport.getReportForm());
+            assertEquals("beanEditor", foundReport.getReportForm().getEditor());
+            assertNotNull(foundReport.getParameters());
+            assertEquals(2, foundReport.getParameters().size());
+
+            ReportParameter rParam = foundReport.getParameters().get(0);
+            assertEquals("startDate", rParam.getName());
+            assertEquals(BooleanType.FALSE, rParam.getScheduled());
+            assertEquals("Weekly Report", rParam.getReportDesc());
+            assertEquals("False", rParam.getScheduledDesc());
+
+            rParam = foundReport.getParameters().get(1);
+            assertEquals("endDate", rParam.getName());
+            assertEquals(BooleanType.TRUE, rParam.getScheduled());
+            assertEquals("Weekly Report", rParam.getReportDesc());
+            assertEquals("True", rParam.getScheduledDesc());
         } finally {
             tm.endTransaction();
         }

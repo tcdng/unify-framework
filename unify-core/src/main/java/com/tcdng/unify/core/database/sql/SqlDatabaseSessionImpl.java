@@ -194,6 +194,12 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     }
 
     @Override
+    public <T extends Entity> void findChildren(T record) throws UnifyException {
+        SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(record.getClass());
+        fetchChildRecords(sqlEntityInfo, record, null, IncludeListOnly.FALSE);
+    }
+
+    @Override
     public <T extends Entity> T list(Class<T> clazz, Object id) throws UnifyException {
         return list(clazz, id, FetchChild.TRUE);
     }
@@ -259,6 +265,12 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
         return getSqlStatementExecutor().executeMultipleRecordListResultQuery(connection, keyClass, keyName,
                 sqlDataSourceDialect.prepareListStatement(query));
+    }
+
+    @Override
+    public <T extends Entity> void listChildren(T record) throws UnifyException {
+        SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(record.getClass());
+        fetchChildRecords(sqlEntityInfo, record, null, IncludeListOnly.TRUE);
     }
 
     @Override
