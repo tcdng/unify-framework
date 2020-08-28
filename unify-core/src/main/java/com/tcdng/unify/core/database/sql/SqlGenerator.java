@@ -467,6 +467,17 @@ public interface SqlGenerator extends UnifyComponent {
     String generateInsertRecordSql(SqlEntitySchemaInfo sqlEntitySchemaInfo) throws UnifyException;
 
     /**
+     * Generates native insert record SQL with unmanaged identity for specified record type.
+     * 
+     * @param sqlEntitySchemaInfo
+     *            record schema information
+     * @return the create SQL
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String generateInsertUnmanagedIdentityRecordSql(SqlEntitySchemaInfo sqlEntitySchemaInfo) throws UnifyException;
+    
+    /**
      * Generates native insert record SQL using supplied values for specified record
      * type.
      * 

@@ -1202,7 +1202,13 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
             }
         }
 
-        SqlStatement sqlStatement = sqlDataSourceDialect.prepareCreateStatement(record);
+        SqlStatement sqlStatement = null;
+        if (sqlEntityInfo.isIdentityManaged()) {
+            sqlStatement = sqlDataSourceDialect.prepareCreateStatement(record);
+        } else {
+            sqlStatement = sqlDataSourceDialect.prepareCreateStatementWithUnmanagedIdentity(record);
+        }
+        
         try {
             getSqlStatementExecutor().executeUpdate(connection, sqlStatement);
 

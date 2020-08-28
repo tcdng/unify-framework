@@ -23,6 +23,7 @@ package com.tcdng.unify.core.database.sql;
  */
 public enum SqlStatementType {
     CREATE,
+    CREATE_UNMANAGED_IDENTITY,
     FIND,
     FIND_BY_PK,
     FIND_BY_PK_VERSION,

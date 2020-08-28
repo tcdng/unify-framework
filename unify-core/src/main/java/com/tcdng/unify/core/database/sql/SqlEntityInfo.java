@@ -108,6 +108,8 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 
     private List<SqlViewRestrictionInfo> viewRestrictionList;
 
+    private boolean identityManaged;
+    
     private boolean schemaAlreadyManaged;
     
     public SqlEntityInfo(Long index, Class<? extends Entity> entityClass, Class<? extends EnumConst> enumConstClass,
@@ -117,7 +119,7 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
             List<ChildFieldInfo> childInfoList, List<ChildFieldInfo> childListInfoList,
             Map<String, SqlUniqueConstraintInfo> uniqueConstraintMap, Map<String, SqlIndexInfo> indexMap,
             List<Map<String, Object>> staticValueList, Map<String, Class<?>> viewBaseTables,
-            List<SqlViewRestrictionInfo> viewRestrictionList, boolean isAllObjectsInLowerCase) throws UnifyException {
+            List<SqlViewRestrictionInfo> viewRestrictionList, boolean isAllObjectsInLowerCase, boolean identityManaged) throws UnifyException {
         this.index = index;
         this.entityClass = entityClass;
         this.enumConstClass = enumConstClass;
@@ -170,10 +172,11 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
         this.viewRestrictionList = DataUtils.unmodifiableList(viewRestrictionList);
         this.uniqueConstraintMap = DataUtils.unmodifiableMap(uniqueConstraintMap);
         this.indexMap = DataUtils.unmodifiableMap(indexMap);
+        this.identityManaged = identityManaged;
     }
 
     private SqlEntityInfo(SqlEntityInfo originSqlEntityInfo, Class<? extends Entity> entityClass,
-            Map<String, SqlFieldInfo> sQLFieldInfoMap) throws UnifyException {
+            Map<String, SqlFieldInfo> sQLFieldInfoMap, boolean identityManaged) throws UnifyException {
         this.index = originSqlEntityInfo.index;
         this.entityClass = entityClass;
         this.enumConstClass = originSqlEntityInfo.enumConstClass;
@@ -198,6 +201,7 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
         this.uniqueConstraintMap = originSqlEntityInfo.uniqueConstraintMap;
         this.indexMap = originSqlEntityInfo.indexMap;
         this.schemaAlreadyManaged = false;
+        this.identityManaged = identityManaged;
 
         if (sQLFieldInfoMap != null) {
             Map<String, SqlFieldInfo> newSQLFieldInfoMap =
@@ -314,6 +318,11 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
     @Override
     public SqlFieldSchemaInfo getFieldInfo(Long index) throws UnifyException {
         return listInfoMapByIndex.get(index);
+    }
+
+    @Override
+    public boolean isIdentityManaged() {
+        return identityManaged;
     }
 
     @Override
@@ -515,7 +524,7 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
         }
 
         extensionSqlEntityInfo =
-                new SqlEntityInfo(this, (Class<? extends Entity>) extensionEntityClass, sQLFieldInfoMap);
+                new SqlEntityInfo(this, (Class<? extends Entity>) extensionEntityClass, sQLFieldInfoMap, this.identityManaged);
         return extensionSqlEntityInfo;
     }
 

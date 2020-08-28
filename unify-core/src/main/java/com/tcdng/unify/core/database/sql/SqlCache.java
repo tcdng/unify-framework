@@ -31,6 +31,7 @@ public class SqlCache {
     private String listByPkSql;
     private String listByPkVersionSql;
     private String createSql;
+    private String createUnmanagedIdentitySql;
     private String updateSql;
     private String updateByPkSql;
     private String updateByPkVersionSql;
@@ -41,9 +42,10 @@ public class SqlCache {
     private String countViewSql;
     private String testSql;
 
-    public SqlCache(String findSql, String findViewSql, String findByPkSql, final String findByPkVersionSql, String listSql,
-            final String listByPkSql, String listByPkVersionSql, final String createSql, String updateSql,
-            final String updateByPkSql, String updateByPkVersionSql, final String deleteSql, String deleteByPkSql,
+    public SqlCache(String findSql, String findViewSql, String findByPkSql, final String findByPkVersionSql,
+            String listSql, final String listByPkSql, String listByPkVersionSql, final String createSql,
+            final String createUnmanagedIdentitySql, String updateSql, final String updateByPkSql,
+            String updateByPkVersionSql, final String deleteSql, String deleteByPkSql,
             final String deleteByPkVersionSql, String countSql, String countViewSql, final String testSql) {
         this.findSql = findSql;
         this.findViewSql = findViewSql;
@@ -53,6 +55,7 @@ public class SqlCache {
         this.listByPkSql = listByPkSql;
         this.listByPkVersionSql = listByPkVersionSql;
         this.createSql = createSql;
+        this.createUnmanagedIdentitySql = createUnmanagedIdentitySql;
         this.updateSql = updateSql;
         this.updateByPkSql = updateByPkSql;
         this.updateByPkVersionSql = updateByPkVersionSql;
@@ -96,6 +99,10 @@ public class SqlCache {
         return createSql;
     }
 
+    public String getCreateUnmanagedIdentitySql() {
+        return createUnmanagedIdentitySql;
+    }
+    
     public String getUpdateSql() {
         return updateSql;
     }

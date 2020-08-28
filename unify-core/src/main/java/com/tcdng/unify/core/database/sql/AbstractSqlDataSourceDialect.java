@@ -645,7 +645,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         }
         return listByPkVersionSql.toString();
     }
-
+    
     @Override
     public String generateInsertRecordSql(SqlEntitySchemaInfo sqlEntitySchemaInfo) throws UnifyException {
         StringBuilder fsb = new StringBuilder();
@@ -657,6 +657,28 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
             }
             fsb.append(sqlFieldInfo.getPreferredColumnName());
             psb.append('?');
+        }
+
+        StringBuilder insertSql = new StringBuilder();
+        insertSql.append("INSERT INTO ").append(sqlEntitySchemaInfo.getSchemaTableName()).append(" (").append(fsb)
+                .append(") VALUES (").append(psb).append(")").toString();
+        return insertSql.toString();
+    }
+
+    @Override
+    public String generateInsertUnmanagedIdentityRecordSql(SqlEntitySchemaInfo sqlEntitySchemaInfo)
+            throws UnifyException {
+        StringBuilder fsb = new StringBuilder();
+        StringBuilder psb = new StringBuilder();
+        for (SqlFieldSchemaInfo sqlFieldInfo : sqlEntitySchemaInfo.getFieldInfos()) {
+            if (!sqlFieldInfo.isPrimaryKey()) {
+                if (fsb.length() > 0) {
+                    fsb.append(',');
+                    psb.append(',');
+                }
+                fsb.append(sqlFieldInfo.getPreferredColumnName());
+                psb.append('?');
+            }
         }
 
         StringBuilder insertSql = new StringBuilder();
@@ -968,6 +990,12 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     public SqlStatement prepareCreateStatement(Entity record) throws UnifyException {
         return sqlStatementPoolsFactory.get(SqlUtils.getEntityClass(record)).getSqlStatement(SqlStatementType.CREATE,
                 record);
+    }
+
+    @Override
+    public SqlStatement prepareCreateStatementWithUnmanagedIdentity(Entity record) throws UnifyException {
+        return sqlStatementPoolsFactory.get(SqlUtils.getEntityClass(record))
+                .getSqlStatement(SqlStatementType.CREATE_UNMANAGED_IDENTITY, record);
     }
 
     @Override
@@ -2325,7 +2353,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
                         generateListRecordByPkVersionSql(sqlEntitySchemaInfo),
                         generateListRecordSql(sqlEntitySchemaInfo), generateListRecordByPkSql(sqlEntitySchemaInfo),
                         generateListRecordByPkVersionSql(sqlEntitySchemaInfo), null, null, null, null, null, null, null,
-                        generateCountRecordSql(sqlEntitySchemaInfo, QueryAgainst.VIEW),
+                        null, generateCountRecordSql(sqlEntitySchemaInfo, QueryAgainst.VIEW),
                         generateCountRecordSql(sqlEntitySchemaInfo, QueryAgainst.VIEW), generateTestSql());
             }
 
@@ -2335,6 +2363,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
                     generateFindRecordByPkVersionSql(sqlEntitySchemaInfo), generateListRecordSql(sqlEntitySchemaInfo),
                     generateListRecordByPkSql(sqlEntitySchemaInfo),
                     generateListRecordByPkVersionSql(sqlEntitySchemaInfo), generateInsertRecordSql(sqlEntitySchemaInfo),
+                    generateInsertUnmanagedIdentityRecordSql(sqlEntitySchemaInfo),
                     generateUpdateRecordSql(sqlEntitySchemaInfo), generateUpdateRecordByPkSql(sqlEntitySchemaInfo),
                     generateUpdateRecordByPkVersionSql(sqlEntitySchemaInfo),
                     generateDeleteRecordSql(sqlEntitySchemaInfo), generateDeleteRecordByPkSql(sqlEntitySchemaInfo),

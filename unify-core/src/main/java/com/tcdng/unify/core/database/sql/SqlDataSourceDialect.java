@@ -222,6 +222,18 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
     SqlStatement prepareCreateStatement(Entity record) throws UnifyException;
 
     /**
+     * Prepares create record statement for unmanaged identity.
+     * 
+     * @param record
+     *            the record to create
+     * @return the create statement. Should be restored after use by invoking
+     *         {@link #restoreStatement(SqlStatement)}
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    SqlStatement prepareCreateStatementWithUnmanagedIdentity(Entity record) throws UnifyException;
+
+    /**
      * Prepares update record by primary key statement.
      * 
      * @param record

@@ -204,7 +204,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                 return new SqlEntityInfo(null, StaticReference.class, (Class<? extends EnumConst>) entityClass, null,
                         schema, tableName, preferredTableName, schemaTableName, tableAlias, tableName,
                         preferredTableName, schemaTableName, idFieldInfo, null, propertyInfoMap, null, null, null, null,
-                        null, null, null, sqlDataSourceDialect.isAllObjectsInLowerCase());
+                        null, null, null, sqlDataSourceDialect.isAllObjectsInLowerCase(), true);
             }
 
             @SuppressWarnings("unchecked")
@@ -663,7 +663,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                         entityPolicy, schema, tableName, preferredTableName, schemaTableName, tableAlias, viewName,
                         preferredViewName, schemaViewName, idFieldInfo, versionFieldInfo, propertyInfoMap,
                         childInfoList, childListInfoList, uniqueConstraintMap, indexMap, null, null, null,
-                        sqlDataSourceDialect.isAllObjectsInLowerCase());
+                        sqlDataSourceDialect.isAllObjectsInLowerCase(), ta.identityManaged());
                 return sqlEntityInfo;
             }
 
@@ -1131,7 +1131,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                         schema, viewName, preferredViewName, schemaViewName, null, viewName, preferredViewName,
                         schemaViewName, idFieldInfo, null, propertyInfoMap, null, null, null, null, null,
                         tableReferences.getBaseTables(), viewRestrictionList,
-                        sqlDataSourceDialect.isAllObjectsInLowerCase());
+                        sqlDataSourceDialect.isAllObjectsInLowerCase(), true);
                 return sqlEntityInfo;
             }
 

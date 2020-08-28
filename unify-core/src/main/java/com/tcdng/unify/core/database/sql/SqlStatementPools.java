@@ -62,6 +62,8 @@ public class SqlStatementPools {
                 switch (type) {
                     case CREATE:
                         return new CreateSqlStatementInfoPool();
+                    case CREATE_UNMANAGED_IDENTITY:
+                        return new CreateUnmanagedIdentitySqlStatementInfoPool();
                     case COUNT:
                     case MIN:
                     case MAX:
@@ -167,6 +169,45 @@ public class SqlStatementPools {
         }
 
     }
+
+    private class CreateUnmanagedIdentitySqlStatementInfoPool extends SqlStatementPool {
+
+        public CreateUnmanagedIdentitySqlStatementInfoPool() {
+            super(getTimeout, minObjects, maxObjects);
+        }
+
+        @Override
+        protected SqlStatement createObject(Object... params) throws Exception {
+            List<SqlParameter> parameterInfoList = new ArrayList<SqlParameter>();
+            for (SqlFieldInfo sqlFieldInfo : sqlEntityInfo.getFieldInfos()) {
+                if (!sqlFieldInfo.isPrimaryKey()) {
+                    parameterInfoList.add(new SqlParameter(sqlDataTypePolicies.get(sqlFieldInfo.getColumnType())));
+                }
+            }
+            return new SqlStatement(sqlEntityInfo, SqlStatementType.CREATE_UNMANAGED_IDENTITY,
+                    sqlCache.getCreateUnmanagedIdentitySql(), parameterInfoList);
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        protected void onGetObject(SqlStatement sqlStatement, Object... params) throws Exception {
+            List<SqlParameter> parameterInfoList = sqlStatement.getParameterInfoList();
+            int i = 0;
+            for (SqlFieldInfo sqlFieldInfo : sqlEntityInfo.getFieldInfos()) {
+                if (!sqlFieldInfo.isPrimaryKey()) {
+                    if (sqlFieldInfo.isTransformed()) {
+                        parameterInfoList.get(i++)
+                                .setValue(((Transformer<Object, Object>) sqlFieldInfo.getTransformer())
+                                        .forwardTransform(sqlFieldInfo.getGetter().invoke(params[0])));
+                    } else {
+                        parameterInfoList.get(i++).setValue(sqlFieldInfo.getGetter().invoke(params[0]));
+                    }
+                }
+            }
+        }
+
+    }
+
 
     private class DeleteByPkSqlStatementInfoPool extends SqlStatementPool {
 

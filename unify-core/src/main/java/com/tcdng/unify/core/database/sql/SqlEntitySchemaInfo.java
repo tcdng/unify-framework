@@ -78,6 +78,8 @@ public interface SqlEntitySchemaInfo {
     Map<String, ? extends SqlIndexSchemaInfo> getIndexList();
 
     List<Map<String, Object>> getStaticValueList();
+    
+    boolean isIdentityManaged();
 
     boolean isVersioned();
 

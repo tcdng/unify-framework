@@ -103,4 +103,9 @@ public @interface Table {
      * Indicates table can belong to any data source. Ad-hoc tables are not managed.
      */
     boolean adhoc() default false;
+    
+    /**
+     * Indicates identity column is managed. Defaults to true.
+     */
+    boolean identityManaged() default true;
 }
