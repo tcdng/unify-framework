@@ -994,8 +994,8 @@ public final class ReflectUtils {
 
             return true;
         } catch (Exception e) {
+            throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, e);
         }
-        return false;
     }
 
     /**
@@ -1032,8 +1032,8 @@ public final class ReflectUtils {
             }
             return true;
         } catch (Exception e) {
+            throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, e);
         }
-        return false;
     }
 
     /**

@@ -24,7 +24,7 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
@@ -205,7 +205,7 @@ public class ReflectUtilsTest {
 
         po = propertyInfoList.get(6);
         assertEquals("officeAddresses", po.getName());
-        assertEquals(Collection.class, po.getType());
+        assertEquals(List.class, po.getType());
         assertEquals(Address.class, po.getArgumentType());
 
         po = propertyInfoList.get(7);
@@ -247,5 +247,37 @@ public class ReflectUtilsTest {
         assertTrue(fieldNames.contains("data.addressLine1"));
         assertTrue(fieldNames.contains("data.addressLine2"));
         assertTrue(fieldNames.contains("addressLine3"));
+    }
+    
+    @Test
+    public void testShallowBeanCopyNewInstance() throws Exception {
+        Customer srcCust = new Customer();
+        srcCust.setFirstName("Abe");
+        srcCust.setLastName("Shinzo");
+        srcCust.setOfficeAddresses(Arrays.asList(new Address(), new Address()));
+
+        Customer destCust = ReflectUtils.shallowBeanCopy(srcCust);
+        assertNotNull(destCust);
+        assertTrue(destCust !=  srcCust);
+        assertSame(destCust.getFirstName(), srcCust.getFirstName());
+        assertSame(destCust.getLastName(), srcCust.getLastName());
+        assertSame(destCust.getOfficeAddresses(), srcCust.getOfficeAddresses());
+    }
+    
+    @Test
+    public void testShallowBeanCopyFields() throws Exception {
+        Customer srcCust = new Customer();
+        srcCust.setFirstName("Abe");
+        srcCust.setLastName("Shinzo");
+        srcCust.setOrders(new Integer[] {2, 4});
+        srcCust.setOfficeAddresses(Arrays.asList(new Address(), new Address()));
+        
+
+        Customer destCust = new Customer();
+        ReflectUtils.shallowBeanCopy(destCust, srcCust, "firstName", "lastName", "officeAddresses");
+        assertSame(destCust.getFirstName(), srcCust.getFirstName());
+        assertSame(destCust.getLastName(), srcCust.getLastName());
+        assertSame(destCust.getOfficeAddresses(), srcCust.getOfficeAddresses());
+        assertNull(destCust.getOrders());
     }
 }

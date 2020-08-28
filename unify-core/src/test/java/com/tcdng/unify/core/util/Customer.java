@@ -15,7 +15,7 @@
  */
 package com.tcdng.unify.core.util;
 
-import java.util.Collection;
+import java.util.List;
 
 /**
  * Test customer class.
@@ -35,7 +35,7 @@ public class Customer {
 
     private Integer[] orders;
 
-    private Collection<Address> officeAddresses;
+    private List<Address> officeAddresses;
 
     public Long getId() {
         return id;
@@ -77,11 +77,11 @@ public class Customer {
         this.orders = orders;
     }
 
-    public Collection<Address> getOfficeAddresses() {
+    public List<Address> getOfficeAddresses() {
         return officeAddresses;
     }
 
-    public void setOfficeAddresses(Collection<Address> officeAddresses) {
+    public void setOfficeAddresses(List<Address> officeAddresses) {
         this.officeAddresses = officeAddresses;
     }
 }
