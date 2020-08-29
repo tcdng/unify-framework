@@ -183,6 +183,18 @@ public interface Database extends UnifyComponent {
     <T extends Entity> List<T> findAll(Query<T> query) throws UnifyException;
 
     /**
+     * Finds records with their child record by query. Does not fetch list-only
+     * fields.
+     * 
+     * @param query
+     *              the query
+     * @return the list of records found
+     * @throws UnifyException
+     *                        if an error occurs during search
+     */
+    <T extends Entity> List<T> findAllWithChildren(Query<T> query) throws UnifyException;
+
+    /**
      * Finds all records by criteria returning resulting record in a map. The keys
      * of the map are values of fields specified by the key property of the
      * criteria. For instance we have a record class
@@ -347,6 +359,17 @@ public interface Database extends UnifyComponent {
      *             if an error occurs
      */
     <T extends Entity> List<T> listAll(Query<T> query) throws UnifyException;
+
+    /**
+     * Retrieves list of record with children by query from associated view.
+     * 
+     * @param query
+     *              the query
+     * @return the list of records found
+     * @throws UnifyException
+     *                        -if an error occurs during search
+     */
+    <T extends Entity> List<T> listAllWithChildren(Query<T> query) throws UnifyException;
 
     /**
      * Lists all records with fields that match criteria returning resulting record

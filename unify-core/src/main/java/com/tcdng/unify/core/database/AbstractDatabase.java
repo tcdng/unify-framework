@@ -87,6 +87,11 @@ public abstract class AbstractDatabase extends AbstractUnifyComponent implements
     }
 
     @Override
+    public <T extends Entity> List<T> findAllWithChildren(Query<T> query) throws UnifyException {
+        return getDatabaseSession().findAllWithChildren(query);
+    }
+
+    @Override
     public <T, U extends Entity> Map<T, U> findAllMap(Class<T> keyClass, String keyName, Query<U> query)
             throws UnifyException {
         return getDatabaseSession().findAllMap(keyClass, keyName, query);
@@ -136,6 +141,11 @@ public abstract class AbstractDatabase extends AbstractUnifyComponent implements
     @Override
     public <T extends Entity> List<T> listAll(Query<T> query) throws UnifyException {
         return getDatabaseSession().listAll(query);
+    }
+
+    @Override
+    public <T extends Entity> List<T> listAllWithChildren(Query<T> query) throws UnifyException {
+        return getDatabaseSession().listAllWithChildren(query);
     }
 
     @Override

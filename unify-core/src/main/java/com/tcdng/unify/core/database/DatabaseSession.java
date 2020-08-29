@@ -138,7 +138,7 @@ public interface DatabaseSession {
     <T extends Entity> T findConstraint(T record) throws UnifyException;
 
     /**
-     * Finds record by query. Does not fetch attribute lists.
+     * Finds record by query. Does not fetch list-only fields and children.
      * 
      * @param query
      *            the query
@@ -147,6 +147,18 @@ public interface DatabaseSession {
      *             if an error occurs during search
      */
     <T extends Entity> List<T> findAll(Query<T> query) throws UnifyException;
+
+    /**
+     * Finds records with their child record by query. Does not fetch list-only
+     * fields.
+     * 
+     * @param query
+     *              the query
+     * @return the list of records found
+     * @throws UnifyException
+     *                        if an error occurs during search
+     */
+    <T extends Entity> List<T> findAllWithChildren(Query<T> query) throws UnifyException;
 
     /**
      * Fetches record by query as a map. Uses query key as result map key. Does not
@@ -276,7 +288,7 @@ public interface DatabaseSession {
 
     /**
      * Retrieves list of record by query from associated view. Does not fetch
-     * attribute lists.
+     * children.
      * 
      * @param query
      *            the query
@@ -287,8 +299,18 @@ public interface DatabaseSession {
     <T extends Entity> List<T> listAll(Query<T> query) throws UnifyException;
 
     /**
-     * Fetches map of records. Uses query key as result map key. Does not fetch
-     * attribute lists.
+     * Retrieves list of record with children by query from associated view.
+     * 
+     * @param query
+     *              the query
+     * @return the list of records found
+     * @throws UnifyException
+     *                        -if an error occurs during search
+     */
+    <T extends Entity> List<T> listAllWithChildren(Query<T> query) throws UnifyException;
+
+    /**
+     * Fetches map of records. Uses query key as result map key.
      * 
      * @param keyClass
      *            the map key class

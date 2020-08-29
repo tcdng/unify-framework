@@ -158,6 +158,19 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     }
 
     @Override
+    public <T extends Entity> List<T> findAllWithChildren(Query<T> query) throws UnifyException {
+        List<T> list = findAll(query);
+        if (!list.isEmpty()) {
+            SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
+            for (T record : list) {
+                fetchChildRecords(sqlEntityInfo, record, null, IncludeListOnly.FALSE);
+            }
+        }
+
+        return list;
+    }
+
+    @Override
     public <T, U extends Entity> Map<T, U> findAllMap(Class<T> keyClass, String keyName, Query<U> query)
             throws UnifyException {
         SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
@@ -239,6 +252,19 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
         return getSqlStatementExecutor().executeMultipleRecordResultQuery(connection,
                 sqlDataSourceDialect.prepareListStatement(query));
+    }
+
+    @Override
+    public <T extends Entity> List<T> listAllWithChildren(Query<T> query) throws UnifyException {
+        List<T> list = listAll(query);
+        if (!list.isEmpty()) {
+            SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
+            for (T record : list) {
+                fetchChildRecords(sqlEntityInfo, record, null, IncludeListOnly.TRUE);
+            }
+        }
+
+        return list;
     }
 
     @Override

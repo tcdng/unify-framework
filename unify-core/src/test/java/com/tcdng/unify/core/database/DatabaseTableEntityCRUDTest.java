@@ -3240,6 +3240,60 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
     }
 
     @Test
+    public void testFindAllWithChildrenWithChildOnly() throws Exception {
+        tm.beginTransaction();
+        try {
+            Report report = new Report("weeklyReport", "Weekly Report");
+            report.setReportForm(new ReportForm("editor10"));
+            db.create(report);
+
+            List<Report> list = db.findAllWithChildren(new ReportQuery().ignoreEmptyCriteria(true));
+            assertNotNull(list);
+            assertEquals(1, list.size());
+            assertEquals("weeklyReport", list.get(0).getName());
+            assertEquals("Weekly Report", list.get(0).getDescription());
+
+            ReportForm reportForm = list.get(0).getReportForm();
+            assertNotNull(reportForm);
+            assertEquals("editor10",reportForm.getEditor());
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
+    public void testFindAllWithChildrenWithChildList() throws Exception {
+        tm.beginTransaction();
+        try {
+            Report report = new Report("weeklyReport", "Weekly Report");
+            report.addParameter(new ReportParameter("startDate")).addParameter(new ReportParameter("endDate"));
+            db.create(report);
+
+            List<Report> list = db.findAllWithChildren(new ReportQuery().ignoreEmptyCriteria(true));
+            assertNotNull(list);
+            assertEquals("weeklyReport", list.get(0).getName());
+            assertEquals("Weekly Report", list.get(0).getDescription());
+
+            List<ReportParameter> parameterList = list.get(0).getParameters();
+            assertNotNull(parameterList);
+            assertEquals(2, parameterList.size());
+            ReportParameter rp = parameterList.get(0);
+            assertNotNull(rp);
+            assertEquals("startDate", rp.getName());
+            assertEquals(BooleanType.FALSE, rp.getScheduled());
+            assertNull(rp.getScheduledDesc());
+            
+            rp = parameterList.get(1);
+            assertNotNull(rp);
+            assertEquals("endDate", rp.getName());
+            assertEquals(BooleanType.FALSE, rp.getScheduled());
+            assertNull(rp.getScheduledDesc());            
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
     public void testFindAllRecordsWithDeepChildList() throws Exception {
         tm.beginTransaction();
         try {
@@ -3655,6 +3709,60 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             assertEquals("Weekly Report", list.get(0).getDescription());
 
             assertNull(list.get(0).getParameters());
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
+    public void testListAllWithChildrenWithChildOnly() throws Exception {
+        tm.beginTransaction();
+        try {
+            Report report = new Report("weeklyReport", "Weekly Report");
+            report.setReportForm(new ReportForm("editor10"));
+            db.create(report);
+
+            List<Report> list = db.listAllWithChildren(new ReportQuery().ignoreEmptyCriteria(true));
+            assertNotNull(list);
+            assertEquals(1, list.size());
+            assertEquals("weeklyReport", list.get(0).getName());
+            assertEquals("Weekly Report", list.get(0).getDescription());
+
+            ReportForm reportForm = list.get(0).getReportForm();
+            assertNotNull(reportForm);
+            assertEquals("editor10",reportForm.getEditor());
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
+    public void testListAllWithChildrenWithChildList() throws Exception {
+        tm.beginTransaction();
+        try {
+            Report report = new Report("weeklyReport", "Weekly Report");
+            report.addParameter(new ReportParameter("startDate")).addParameter(new ReportParameter("endDate"));
+            db.create(report);
+
+            List<Report> list = db.listAllWithChildren(new ReportQuery().ignoreEmptyCriteria(true));
+            assertNotNull(list);
+            assertEquals("weeklyReport", list.get(0).getName());
+            assertEquals("Weekly Report", list.get(0).getDescription());
+
+            List<ReportParameter> parameterList = list.get(0).getParameters();
+            assertNotNull(parameterList);
+            assertEquals(2, parameterList.size());
+            ReportParameter rp = parameterList.get(0);
+            assertNotNull(rp);
+            assertEquals("startDate", rp.getName());
+            assertEquals(BooleanType.FALSE, rp.getScheduled());
+            assertEquals("False", rp.getScheduledDesc());
+            
+            rp = parameterList.get(1);
+            assertNotNull(rp);
+            assertEquals("endDate", rp.getName());
+            assertEquals(BooleanType.FALSE, rp.getScheduled());
+            assertEquals("False", rp.getScheduledDesc());
         } finally {
             tm.endTransaction();
         }
