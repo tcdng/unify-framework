@@ -46,7 +46,7 @@ public class SmtpEmailServer extends AbstractEmailServer implements EmailServer 
     }
 
     @Override
-    public void sendEmail(String configurationCode, Email[] email) throws UnifyException {
+    public void sendEmail(String configurationCode, Email... email) throws UnifyException {
         Session session = getSession(configurationCode);
         Transport transport = null;
         try {

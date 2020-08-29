@@ -70,5 +70,5 @@ public interface EmailServer extends UnifyComponent {
      * @throws UnifyException
      *             if configuration with name is unknown. If an error occurs
      */
-    void sendEmail(String configName, Email[] emails) throws UnifyException;
+    void sendEmail(String configName, Email... emails) throws UnifyException;
 }
