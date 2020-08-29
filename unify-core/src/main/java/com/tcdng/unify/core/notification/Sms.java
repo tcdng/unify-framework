@@ -28,7 +28,7 @@ import com.tcdng.unify.core.util.StringUtils;
  */
 public class Sms {
 
-    private String id;
+    private Object id;
 
     private String sender;
 
@@ -38,14 +38,14 @@ public class Sms {
 
     private boolean sent;
 
-    public Sms(String id, String sender, String recipient, String message) {
+    private Sms(Object id, String sender, String recipient, String message) {
         this.id = id;
         this.sender = sender;
         this.recipient = recipient;
         this.message = message;
     }
 
-    public String getId() {
+    public Object getId() {
         return id;
     }
 
@@ -75,7 +75,7 @@ public class Sms {
 
     public static class Builder {
 
-        private String id;
+        private Object id;
 
         private String sender;
 
@@ -87,7 +87,7 @@ public class Sms {
 
         }
 
-        public Builder withId(String id) {
+        public Builder withId(Object id) {
             this.id = id;
             return this;
         }

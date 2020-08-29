@@ -34,6 +34,8 @@ import com.tcdng.unify.core.util.StringUtils;
  * @since 1.0
  */
 public class Email {
+    
+    private Object id;
 
     private String subject;
 
@@ -50,12 +52,13 @@ public class Email {
     private boolean sent;
 
     private Email(String subject, String message, String sender, List<EmailRecipient> recipients,
-            List<EmailAttachment> attachments, boolean htmlMessage) {
+            List<EmailAttachment> attachments, Object id, boolean htmlMessage) {
         this.subject = subject;
         this.message = message;
         this.sender = sender;
         this.recipients = recipients;
         this.attachments = attachments;
+        this.id = id;
         this.htmlMessage = htmlMessage;
     }
 
@@ -77,6 +80,10 @@ public class Email {
 
     public String getMessage() {
         return message;
+    }
+
+    public Object getId() {
+        return id;
     }
 
     public boolean isHtmlMessage() {
@@ -106,6 +113,8 @@ public class Email {
         private List<EmailRecipient> recipients;
 
         private List<EmailAttachment> attachments;
+        
+        private Object id;
 
         private boolean htmlMessage;
 
@@ -132,6 +141,11 @@ public class Email {
 
         public Builder containingMessage(String message) {
             this.message = message;
+            return this;
+        }
+
+        public Builder withId(Object id) {
+            this.id = id;
             return this;
         }
 
@@ -196,7 +210,7 @@ public class Email {
                 ErrorUtils.throwBuildError("Email requires at least one recipient");
             }
             return new Email(subject, message, senderAddress, DataUtils.unmodifiableList(recipients),
-                    DataUtils.unmodifiableList(attachments), htmlMessage);
+                    DataUtils.unmodifiableList(attachments), id, htmlMessage);
         }
 
         private List<EmailAttachment> getAttachments() {
