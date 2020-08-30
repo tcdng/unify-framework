@@ -36,5 +36,4 @@ public class Button extends AbstractTargetControl {
     public boolean isLayoutCaption() {
         return false;
     }
-
 }

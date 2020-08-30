@@ -15,6 +15,7 @@
  */
 package com.tcdng.unify.web.ui;
 
+import java.text.MessageFormat;
 import java.util.Collection;
 
 import com.tcdng.unify.core.ViewDirective;
@@ -43,6 +44,7 @@ import com.tcdng.unify.web.util.WidgetUtils;
 		@UplAttribute(name = "style", type = String.class),
 		@UplAttribute(name = "caption", type = String.class),
 		@UplAttribute(name = "captionBinding", type = String.class),
+        @UplAttribute(name = "captionParamBinding", type = String.class),
 		@UplAttribute(name = "columnStyle", type = String.class),
 		@UplAttribute(name = "columnSelectSummary", type = boolean.class),
 		@UplAttribute(name = "hint", type = String.class), @UplAttribute(name = "hintBinding", type = String.class),
@@ -115,12 +117,20 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 
 	@Override
 	public String getCaption() throws UnifyException {
+	    String caption = null;
 		String captionBinding = getUplAttribute(String.class, "captionBinding");
 		if (captionBinding != null) {
-			return getStringValue(captionBinding);
+		    caption = getStringValue(captionBinding);
+		} else {
+		    caption = getUplAttribute(String.class, "caption");
 		}
-
-		return getUplAttribute(String.class, "caption");
+		
+        String captionParamBinding = getUplAttribute(String.class, "captionParamBinding");
+        if (captionParamBinding != null) {
+            return MessageFormat.format(caption, getValue(captionParamBinding));
+        }
+        
+        return caption;
 	}
 
 	@Override
