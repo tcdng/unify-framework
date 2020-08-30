@@ -32,6 +32,7 @@ import com.tcdng.unify.web.font.AbstractFontSymbolManager;
 @Component(FontAwesomeApplicationComponents.FONTAWESOME_FONTSYMBOLMANAGER)
 public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
 
+    @Override
     public List<String> getFontResources() throws UnifyException {
         return Arrays.asList("webfonts/fa-solid-900.woff", "webfonts/fa-regular-400.woff");
     }
@@ -107,6 +108,8 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("newspaper", "&#xf1ea;");
         registerSymbol("paper-clip", "&#xf0c6;");
         registerSymbol("plus", "&#xf067;");
+        registerSymbol("redo", "&#xf01e;");
+        registerSymbol("redo-alt", "&#xf2f9;");
         registerSymbol("rocket", "&#xf135;");
         registerSymbol("satellite-disk", "&#xf7c0;");
         registerSymbol("save", "&#xf0c7;");
