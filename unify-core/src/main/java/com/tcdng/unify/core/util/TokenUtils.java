@@ -31,7 +31,7 @@ public final class TokenUtils {
 
     static {
         tokenChars = new HashSet<Character>(
-                Arrays.asList('m', 's', 'c', 'j', 'd', 'l', 'n', 't', 'x', 'o', 'f', 'g', 'e', 'q'));
+                Arrays.asList('m', 's', 'c', 'j', 'd', 'l', 'n', 't', 'x', 'o', 'f', 'g', 'e', 'q', 'p', 'r'));
     }
 
     private TokenUtils() {
@@ -136,6 +136,16 @@ public final class TokenUtils {
      */
     public static boolean isPathTag(String string) {
         return string.startsWith("$p{") && string.endsWith("}");
+    }
+
+    /**
+     * Tests if a string is a path configured action tag value.
+     * 
+     * @param string
+     *            the string to test
+     */
+    public static boolean isRequestPathActionTag(String string) {
+        return string.startsWith("$r{") && string.endsWith("}");
     }
 
     /**

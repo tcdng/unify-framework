@@ -886,6 +886,8 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
                 if (actionPath != null) {
                     if (TokenUtils.isNameTag(actionPath) || TokenUtils.isPathTag(actionPath)) {
                         actionPath = pathId + TokenUtils.extractTokenValue(actionPath);
+                    } else if (TokenUtils.isRequestPathActionTag(actionPath)) {
+                        actionPath = pathId + getRequestAttribute(TokenUtils.extractTokenValue(actionPath));
                     } else if (TokenUtils.isQuickReferenceTag(actionPath)) {
                         actionPath = (String) ((ValueStore) getRequestContext().getQuickReference())
                                 .retrieve(TokenUtils.extractTokenValue(actionPath));
@@ -928,7 +930,9 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
         } else if (path != null) {
             if (TokenUtils.isNameTag(path) || TokenUtils.isPathTag(path)) {
                 path = pathId + TokenUtils.extractTokenValue(path);
-            }
+            } else if (TokenUtils.isRequestPathActionTag(path)) {
+                path = pathId + getRequestAttribute(TokenUtils.extractTokenValue(path));
+            } 
 
             writer.write(",\"uURL\":\"");
             writer.writeContextURL(path);

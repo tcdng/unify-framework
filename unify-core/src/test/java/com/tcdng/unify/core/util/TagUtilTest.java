@@ -38,6 +38,14 @@ public class TagUtilTest {
     }
 
     @Test
+    public void testIsRequestPathActionTag() throws Exception {
+        assertTrue(TokenUtils.isRequestPathActionTag("$r{}"));
+        assertTrue(TokenUtils.isRequestPathActionTag("$r{hello.world}"));
+        assertFalse(TokenUtils.isRequestPathActionTag("$s{sky}"));
+        assertFalse(TokenUtils.isRequestPathActionTag("s{hello}"));
+    }
+
+    @Test
     public void testGetStringTagValue() throws Exception {
         assertEquals("", TokenUtils.getStringTokenValue("$s{}"));
         assertEquals("hello", TokenUtils.getStringTokenValue("$s{hello}"));
@@ -47,9 +55,9 @@ public class TagUtilTest {
 
     @Test
     public void testExtractTagValue() throws Exception {
-        assertTrue(TokenUtils.extractTokenValue("$m{tcdng.com}").equals("tcdng.com"));
+        assertEquals("tcdng.com", TokenUtils.extractTokenValue("$m{tcdng.com}"));
         // Bellow should also pass since method extractTagValue assumes supplied
         // parameter is a valid tagged value
-        assertTrue(TokenUtils.extractTokenValue("Skynet").equals("ne"));
+        assertEquals("ne", TokenUtils.extractTokenValue("Skynet"));
     }
 }
