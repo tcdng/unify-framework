@@ -550,4 +550,13 @@ public interface Widget extends UplComponent {
      *                        if an error occurs
      */
     void updateInternalState() throws UnifyException;
+    
+    /**
+     * Gets the widget writer work object in current request context.
+     * 
+     * @return the writer work object
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    WriteWork getWriteWork() throws UnifyException;
 }

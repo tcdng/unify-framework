@@ -473,6 +473,18 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 
 	}
 
+    @Override
+    public WriteWork getWriteWork() throws UnifyException {
+        String workId = getWorkId();
+        WriteWork work = (WriteWork) getRequestAttribute(workId);
+        if (work == null) {
+            work = new WriteWork();
+            setRequestAttribute(workId, work);
+        }
+
+        return work;
+    }
+
 	protected void setPageAttribute(String name, Object value) throws UnifyException {
 		getRequestContextUtil().getRequestPage().setAttribute(name, value);
 	}
@@ -564,4 +576,8 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 		}
 		return list;
 	}
+
+    private String getWorkId() throws UnifyException {
+        return getPrefixedId("wrk_");
+    }
 }
