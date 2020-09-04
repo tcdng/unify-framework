@@ -716,7 +716,7 @@ public final class JsonUtils {
 
     public static void write(LargeStringWriter lsw, Number val) {
         if (val != null) {
-            lsw.append("\":").append(val);
+            lsw.append(val);
         } else {
             lsw.append("null");
         }
@@ -747,7 +747,7 @@ public final class JsonUtils {
 
     public static void write(LargeStringWriter lsw, Boolean val) {
         if (val != null) {
-            lsw.append("\":").append(val);
+            lsw.append(val);
         } else {
             lsw.append("null");
         }

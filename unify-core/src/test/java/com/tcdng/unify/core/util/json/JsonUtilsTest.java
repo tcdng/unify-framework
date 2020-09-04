@@ -22,6 +22,8 @@ import java.math.BigDecimal;
 
 import org.junit.Test;
 
+import com.tcdng.unify.core.data.LargeStringWriter;
+
 /**
  * JSON utilities tests.
  * 
@@ -110,4 +112,33 @@ public class JsonUtilsTest {
                 JsonUtils.getWriteField("code", new boolean[] { true, false, true }));
     }
 
+
+    @Test
+    public void testWriteNumberFieldLSW() throws Exception {
+        LargeStringWriter lsw = new LargeStringWriter();
+        JsonUtils.writeField(lsw, "price", BigDecimal.valueOf(45.72));
+        assertEquals("\"price\":45.72", lsw.toString());
+    }
+
+    @Test
+    public void testWriteNumberArrayFieldLSW() throws Exception {
+        LargeStringWriter lsw = new LargeStringWriter();
+        JsonUtils.writeField(lsw, "ages", new Integer[] { 22, null });
+        assertEquals("\"ages\":[22,null]", lsw.toString());
+    }
+
+    @Test
+    public void testWriteBooleanFieldLSW() throws Exception {
+        LargeStringWriter lsw = new LargeStringWriter();
+        JsonUtils.writeField(lsw, "openFlag", Boolean.TRUE);
+        assertEquals("\"openFlag\":true", lsw.toString());
+    }
+
+    @Test
+    public void testWriteBooleanArrayFieldLSW() throws Exception {
+        LargeStringWriter lsw = new LargeStringWriter();
+        JsonUtils.writeField(lsw, "flags", new Boolean[] { true, null });
+        assertEquals("\"flags\":[true,null]", lsw.toString());
+    }
+    
 }
