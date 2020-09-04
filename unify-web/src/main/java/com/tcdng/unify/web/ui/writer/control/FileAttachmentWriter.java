@@ -143,16 +143,12 @@ public class FileAttachmentWriter extends AbstractControlWriter {
 
         // Append rigging
         FileAttachment fileAttachment = (FileAttachment) widget;
-        writer.write("ux.rigFileAttachment({");
-        writer.write("\"pId\":\"").write(fileAttachment.getId()).write('"');
-        writer.write(",\"pCmdURL\":\"");
-        writer.writeCommandURL();
-        writer.write('"');
+        writer.beginFunction("ux.rigFileAttachment");
+        writer.writeParam("pId", fileAttachment.getId());
+        writer.writeCommandURLParam("pCmdURL");
         String viewPath = fileAttachment.getViewPath();
         if (viewPath != null) {
-            writer.write(",\"pViewURL\":\"");
-            writer.writeContextURL(viewPath);
-            writer.write('"');
+            writer.writeContextURLParam("pViewURL", viewPath);
         }
 
         int len = 0;
@@ -161,13 +157,13 @@ public class FileAttachmentWriter extends AbstractControlWriter {
             len = valueStoreList.size();
         }
 
-        writer.write(",\"pContId\":\"").write(fileAttachment.getContainerId()).write('"');
-        writer.write(",\"pFileId\":\"").write(fileAttachment.getFileCtrl().getBaseId()).write('"');
-        writer.write(",\"pAttchId\":\"").write(fileAttachment.getAttachCtrl().getBaseId()).write('"');
-        writer.write(",\"pViewId\":\"").write(fileAttachment.getViewCtrl().getBaseId()).write('"');
-        writer.write(",\"pRemId\":\"").write(fileAttachment.getRemoveCtrl().getBaseId()).write('"');
-        writer.write(",\"pLen\":").write(len);
-        writer.write(",\"pEditable\":").write(fileAttachment.isContainerEditable());
-        writer.write("});");
+        writer.writeParam("pContId", fileAttachment.getContainerId());
+        writer.writeParam("pFileId", fileAttachment.getFileCtrl().getBaseId());
+        writer.writeParam("pAttchId", fileAttachment.getAttachCtrl().getBaseId());
+        writer.writeParam("pViewId", fileAttachment.getViewCtrl().getBaseId());
+        writer.writeParam("pRemId", fileAttachment.getRemoveCtrl().getBaseId());
+        writer.writeParam("pLen", len);
+        writer.writeParam("pEditable", fileAttachment.isContainerEditable());
+        writer.endFunction();
     }
 }

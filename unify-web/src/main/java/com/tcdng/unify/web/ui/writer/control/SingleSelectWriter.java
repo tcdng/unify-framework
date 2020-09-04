@@ -23,6 +23,7 @@ import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.data.Listable;
 import com.tcdng.unify.core.format.Formatter;
 import com.tcdng.unify.core.util.StringUtils;
+import com.tcdng.unify.core.util.json.JsonWriter;
 import com.tcdng.unify.web.ui.ListControlJsonData;
 import com.tcdng.unify.web.ui.ResponseWriter;
 import com.tcdng.unify.web.ui.control.AbstractPopupTextField;
@@ -101,20 +102,20 @@ public class SingleSelectWriter extends AbstractPopupTextFieldWriter {
 
         // Append rigging
         String blankOption = singleSelect.getBlankOption();
-        writer.write("ux.rigSingleSelect({");
-        writer.write("\"pId\":\"").write(singleSelect.getId()).write('"');
-        writer.write(",\"pFacId\":\"").write(singleSelect.getFacadeId()).write('"');
-        writer.write(",\"pFrmId\":\"").write(singleSelect.getFramePanelId()).write('"');
-        writer.write(",\"pLstId\":\"").write(singleSelect.getListPanelId()).write('"');
-        writer.write(",\"pBlnkId\":\"").write(singleSelect.getBlankOptionId()).write('"');
-        writer.write(",\"pKeyIdx\":").write(listControlJsonData.getValueIndex());
-        writer.write(",\"pICnt\":").write(listControlJsonData.getSize());
-        writer.write(",\"pLabelIds\":").write(listControlJsonData.getJsonSelectIds());
-        writer.write(",\"pKeys\":").write(listControlJsonData.getJsonKeys());
-        writer.write(",\"pIsBlank\":").write(blankOption != null);
-        writer.write(",\"pNormCls\":\"norm\"");
-        writer.write(",\"pSelCls\":\"").write(getUserColorStyleClass("sel")).write("\"");
-        writer.write("});");
+        writer.beginFunction("ux.rigSingleSelect");
+        writer.writeParam("pId", singleSelect.getId());
+        writer.writeParam("pFacId", singleSelect.getFacadeId());
+        writer.writeParam("pFrmId", singleSelect.getFramePanelId());
+        writer.writeParam("pLstId", singleSelect.getListPanelId());
+        writer.writeParam("pBlnkId", singleSelect.getBlankOptionId());
+        writer.writeParam("pKeyIdx", listControlJsonData.getValueIndex());
+        writer.writeParam("pICnt", listControlJsonData.getSize());
+        writer.writeResolvedParam("pLabelIds", listControlJsonData.getJsonSelectIds());
+        writer.writeResolvedParam("pKeys", listControlJsonData.getJsonKeys());
+        writer.writeParam("pIsBlank", blankOption != null);
+        writer.writeParam("pNormCls", "norm");
+        writer.writeParam("pSelCls", getUserColorStyleClass("sel"));
+        writer.endFunction();
     }
 
     @Override
@@ -125,11 +126,11 @@ public class SingleSelectWriter extends AbstractPopupTextFieldWriter {
     @Override
     protected String getOnShowParam(AbstractPopupTextField popupTextField) throws UnifyException {
         SingleSelect singleSelect = (SingleSelect) popupTextField;
-        StringBuilder sb = new StringBuilder();
-        sb.append('{');
-        sb.append("\"pFrmId\":\"").append(singleSelect.getFramePanelId()).append('"');
-        sb.append('}');
-        return sb.toString();
+        JsonWriter jw = new JsonWriter();
+        jw.beginObject();
+        jw.write("pFrmId", singleSelect.getFramePanelId());
+        jw.endObject();
+        return jw.toString();
     }
 
     @Override

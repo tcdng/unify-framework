@@ -38,14 +38,12 @@ public class DesktopType2LayoutWriter extends AbstractDocumentLayoutWriter {
         boolean isCollapsible = layout.getUplAttribute(boolean.class, "collapsibleSidebar");
         if (isCollapsible) {
             String docPageName = document.getId();
-            String menuId = docPageName + "_menu";
-            String gripId = docPageName + "_grip";
-            writer.write("ux.rigDesktopType2({");
-            writer.write("\"pId\":\"").write(docPageName).write('"');
-            writer.write(",\"pMenuId\":\"").write(menuId).write('"');
-            writer.write(",\"pGripId\":\"").write(gripId).write('"');
-            writer.write(",\"pOpen\":true");
-            writer.write("});");
+            writer.beginFunction("ux.rigDesktopType2");
+            writer.writeParam("pId", docPageName);
+            writer.writeParam("pMenuId", docPageName + "_menu");
+            writer.writeParam("pGripId", docPageName + "_grip");
+            writer.writeParam("pOpen", true);
+            writer.endFunction();
         }
     }
 

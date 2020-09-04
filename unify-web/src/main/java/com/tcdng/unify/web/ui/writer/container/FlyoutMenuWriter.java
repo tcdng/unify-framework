@@ -26,7 +26,9 @@ import com.tcdng.unify.core.ui.Menu;
 import com.tcdng.unify.core.ui.MenuItem;
 import com.tcdng.unify.core.ui.MenuItemSet;
 import com.tcdng.unify.core.ui.MenuSet;
+import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
+import com.tcdng.unify.core.util.json.JsonWriter;
 import com.tcdng.unify.web.ui.Container;
 import com.tcdng.unify.web.ui.ResponseWriter;
 import com.tcdng.unify.web.ui.Widget;
@@ -63,68 +65,64 @@ public class FlyoutMenuWriter extends AbstractPanelWriter {
                 String popupId = "pop_" + id;
                 String popupContentId = "popc_" + id;
                 String menuWinId = "win_" + id;
-                StringBuilder psb = new StringBuilder();
-                psb.append("{\"menuWinId\":\"").append(menuWinId);
-                psb.append("\",\"windowId\":\"").append(flyoutMenu.getSliderWinId());
-                psb.append("\",\"popupId\":\"").append(popupId);
-                psb.append("\",\"popupContentId\":\"").append(popupContentId).append("\"");
-                psb.append(",\"vertical\":").append(flyoutMenu.isVertical()).append("}");
-                writeOpenPopupJS(writer, "onmouseover", id, null, popupId, 500, "repositionmenupopup", psb.toString(),
+                String json = new JsonWriter()
+                                    .beginObject()
+                                        .write("menuWinId", menuWinId)
+                                        .write("windowId", flyoutMenu.getSliderWinId())
+                                        .write("popupId", popupId)
+                                        .write("popupContentId", popupContentId)
+                                        .write("vertical", flyoutMenu.isVertical())
+                                    .endObject().toString();
+                writeOpenPopupJS(writer, "onmouseover", id, null, popupId, 500, "repositionmenupopup", json,
                         null, null);
                 menuWinIdList.add(menuWinId);
             }
         }
 
-        writer.write("ux.rigFlyoutMenu({");
-        writer.write("\"pId\":\"").write(flyoutMenu.getId()).write("\"");
-        writer.write(",\"pContId\":\"").write(flyoutMenu.getContainerId()).write('"');
-        writer.write(",\"pCmdURL\":\"");
+        writer.beginFunction("ux.rigFlyoutMenu");
+        writer.writeParam("pId", flyoutMenu.getId());
+        writer.writeParam("pContId", flyoutMenu.getContainerId());
         // Resolves out of bean context error which usually happens of menu reload
         String originalPathId = (String) getSessionAttribute(ORIGINAL_MENU_PATHID);
         if (!StringUtils.isBlank(originalPathId)) {
-            writer.writeCommandURL(originalPathId);
+            writer.writeCommandURLParam("pCmdURL", originalPathId);
         } else {
             originalPathId = getRequestContextUtil().getResponsePathParts().getControllerPathId();
             setSessionAttribute(ORIGINAL_MENU_PATHID, originalPathId);
-            writer.writeCommandURL();
+            writer.writeCommandURLParam("pCmdURL");
         }
 
-        writer.write('"');
-        writer.write(",\"pMenuWinId\":").writeJsonArray(menuWinIdList);
-        writer.write(",\"pNavId\":\"").write(flyoutMenu.getNavId()).write("\"");
-        writer.write(",\"pVertical\":").write(flyoutMenu.isVertical());
+        writer.writeParam("pMenuWinId", DataUtils.toArray(String.class, menuWinIdList));
+        writer.writeParam("pNavId", flyoutMenu.getNavId());
+        writer.writeParam("pVertical", flyoutMenu.isVertical());
 
         MenuSet menuSet = (MenuSet) getApplicationAttribute(ApplicationAttributeConstants.APPLICATION_MENUSET);
         if (menuSet.isShowSelect()) {
-            writer.write(",\"pSelId\":\"").write(flyoutMenu.getSelectId()).write("\"");
-            writer.write(",\"pCurSelId\":\"").write(flyoutMenu.getCurrentSelCtrl().getId()).write("\"");
+            writer.writeParam("pSelId", flyoutMenu.getSelectId());
+            writer.writeParam("pCurSelId", flyoutMenu.getCurrentSelCtrl().getId());
         }
 
-        writer.write(",\"pMenuItems\":[");
-        boolean appendSym = false;
+        JsonWriter itemsJson = new JsonWriter();
+        itemsJson.beginArray();
         for (String id : flyoutMenu.getActiveMenuItemIds()) {
             MenuItem menuItem = flyoutMenu.getActiveMenuItem(id);
             if (getViewDirective(menuItem.getPrivilege()).isVisible()) {
                 if (!StringUtils.isBlank(menuItem.getActionPath())) {
-                    if (appendSym) {
-                        writer.write(",");
-                    } else {
-                        appendSym = true;
-                    }
-
-                    writer.write("{\"id\":\"").write(id).write("\"");
-                    writer.write(",\"main\":").write(menuItem.isMain());
-                    writer.write(",\"actionPath\":\"").writeContextURL(menuItem.getActionPath()).write("\"");
+                    itemsJson.beginObject();
+                    itemsJson.write("id",id);
+                    itemsJson.write("main", menuItem.isMain());
+                    itemsJson.write("actionPath", getContextURL(menuItem.getActionPath()));
                     if (!StringUtils.isBlank(menuItem.getOriginPath())) {
-                        writer.write(",\"originPath\":\"").write(menuItem.getOriginPath()).write("\"");
+                        itemsJson.write("originPath", menuItem.getOriginPath());
                     }
-                    writer.write("}");
+                    itemsJson.endObject();
                 }
             }
         }
-        writer.write("]");
+        itemsJson.endArray();
+        writer.writeParam("pMenuItems", itemsJson);
 
-        writer.write("});");
+        writer.endFunction();
     }
 
     @Override

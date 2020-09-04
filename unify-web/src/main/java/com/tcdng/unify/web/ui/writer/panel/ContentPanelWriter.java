@@ -20,6 +20,7 @@ import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.util.StringUtils;
+import com.tcdng.unify.core.util.json.JsonWriter;
 import com.tcdng.unify.web.PageAttributeConstants;
 import com.tcdng.unify.web.ControllerPathParts;
 import com.tcdng.unify.web.RequestContextUtil;
@@ -48,52 +49,49 @@ public class ContentPanelWriter extends AbstractPanelWriter {
         ContentPanelImpl contentPanelImpl = (ContentPanelImpl) widget;
 
         // Write content variables
-        writer.write("ux.rigContentPanel({");
-        writer.write("\"pId\":\"").write(contentPanelImpl.getId()).write("\"");
-        writer.write(",\"pHintPanelId\":\"").write(contentPanelImpl.getHintPanelId()).write("\"");
+        writer.beginFunction("ux.rigContentPanel");
+        writer.writeParam("pId", contentPanelImpl.getId());
+        writer.writeParam("pHintPanelId", contentPanelImpl.getHintPanelId());
         if (contentPanelImpl.getPageCount() > 0) {
             // Close image
             String closeImgId = contentPanelImpl.getTabItemImgId(contentPanelImpl.getPageIndex());
-            writer.write(",\"pCloseImgId\":\"").write(closeImgId).write("\"");
+            writer.writeParam("pCloseImgId", closeImgId);
         }
 
         if (contentPanelImpl.getPageCount() == 0) {
-            writer.write(",\"pImmURL\":\"").writeContextURL(contentPanelImpl.getPath()).write("\"");
+            writer.writeParam("pImmURL", getContextURL(contentPanelImpl.getPath()));
         } else {
-            writer.write(",\"pCurIdx\":").write(contentPanelImpl.getPageIndex());
+            writer.writeParam("pCurIdx", contentPanelImpl.getPageIndex());
             ContentInfo currentContentInfo = contentPanelImpl.getCurrentContentInfo();
             if (currentContentInfo.isRemoteSave()) {
-                writer.write(",\"pSavePath\":\"").write(currentContentInfo.getSavePath()).write("\"");
-                writer.write(",\"pSaveIsRem\":true");
+                writer.writeParam("pSavePath", currentContentInfo.getSavePath());
+                writer.writeParam("pSaveIsRem", true);
             } else {
-                writer.write(",\"pSavePath\":\"").writeContextURL(currentContentInfo.getSavePath()).write("\"");
-                writer.write(",\"pSaveIsRem\":false");
+                writer.writeParam("pSavePath", getContextURL(currentContentInfo.getSavePath()));
+                writer.writeParam("pSaveIsRem", false);
             }
 
-            writer.write(",\"pContent\":[");
+            JsonWriter jw = new JsonWriter();
+            jw.beginArray();
             for (int i = 0; i < contentPanelImpl.getPageCount(); i++) {
                 ContentInfo contentInfo = contentPanelImpl.getContentInfo(i);
-                if (i > 0) {
-                    writer.write(",");
-                }
-
-                writer.write("{");
-                writer.write("\"tabId\":\"").write(contentPanelImpl.getTabItemId(i)).write("\"");
-                writer.write(",\"tabImgId\":\"").write(contentPanelImpl.getTabItemImgId(i)).write("\"");
-                writer.write(",\"openPath\":\"").writeContextURL(contentInfo.getOpenPath()).write("\"");
-                writer.write(",\"closePath\":\"").writeContextURL(contentInfo.getClosePath()).write("\"");
-                writer.write("}");
+                jw.beginObject();
+                jw.write("tabId", contentPanelImpl.getTabItemId(i));
+                jw.write("tabImgId", contentPanelImpl.getTabItemImgId(i));
+                jw.write("openPath", getContextURL(contentInfo.getOpenPath()));
+                jw.write("closePath", getContextURL(contentInfo.getClosePath()));
+                jw.endObject();
             }
-
-            writer.write("]");
+            jw.endArray();
+            writer.writeParam("pContent", jw);
         }
 
         if (contentPanelImpl.isTabbed() && contentPanelImpl.getPageCount() > 0) {
-            writer.write(",\"pTabPaneId\":\"").write(contentPanelImpl.getTabPaneId()).write("\"");
-            writer.write(",\"pMenuId\":\"").write(contentPanelImpl.getMenuId()).write("\"");
+            writer.writeParam("pTabPaneId", contentPanelImpl.getTabPaneId());
+            writer.writeParam("pMenuId", contentPanelImpl.getMenuId());
         }
 
-        writer.write("});");
+        writer.endFunction();
 
         if (contentPanelImpl.isSidebar()) {
             writer.writeBehavior(contentPanelImpl.getSidebar());

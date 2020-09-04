@@ -32,7 +32,7 @@ public class JsonWriterTest {
     public void testWriteBlankArray() throws Exception {
         String str = new JsonWriter()
                         .beginArray()
-                        .endArray().build();
+                        .endArray().toString();
         assertEquals("[]", str);
     }
 
@@ -50,7 +50,7 @@ public class JsonWriterTest {
     public void testWriteBlankObject() throws Exception {
         String str = new JsonWriter()
                         .beginObject()
-                        .endObject().build();
+                        .endObject().toString();
         assertEquals("{}", str);
     }
 
@@ -59,14 +59,14 @@ public class JsonWriterTest {
         String str1 = new JsonWriter()
                         .beginObject()
                             .write("name", "Tom")
-                        .endObject().build();
+                        .endObject().toString();
         assertEquals("{\"name\":\"Tom\"}", str1);
 
         String str2 = new JsonWriter()
                         .beginObject()
                             .write("name", "Sam")
                             .write("age", 22)
-                        .endObject().build();
+                        .endObject().toString();
         assertEquals("{\"name\":\"Sam\",\"age\":22}", str2);
 
         String str3 = new JsonWriter()
@@ -74,7 +74,7 @@ public class JsonWriterTest {
                         .write("name", "Sam")
                         .write("age", 22)
                         .write("prices", new double[] { 25.75, 13.4 })
-                    .endObject().build();
+                    .endObject().toString();
         assertEquals("{\"name\":\"Sam\",\"age\":22,\"prices\":[25.75,13.4]}", str3);
     }
 
@@ -85,7 +85,7 @@ public class JsonWriterTest {
                             .beginObject()
                                 .write("name", "Tom")
                             .endObject()
-                        .endArray().build();
+                        .endArray().toString();
         assertEquals("[{\"name\":\"Tom\"}]", str1);
 
         String str2 = new JsonWriter()
@@ -97,7 +97,7 @@ public class JsonWriterTest {
                                 .write("name", "Harry")
                                 .write("age", 22)
                             .endObject()
-                        .endArray().build();
+                        .endArray().toString();
         assertEquals("[{\"name\":\"Tom\"},{\"name\":\"Harry\",\"age\":22}]", str2);
     }
 
@@ -111,7 +111,7 @@ public class JsonWriterTest {
                                 .write("email", "m@tcdng.com")
                             .endObject()
                         .endObject()
-                        .build();
+                        .toString();
         assertEquals("{\"name\":\"Tom\",\"contact\":{\"mobile\":\"+234010101\",\"email\":\"m@tcdng.com\"}}", str1);
 
         String str2 = new JsonWriter()
@@ -128,7 +128,7 @@ public class JsonWriterTest {
                                 .endObject()
                             .endArray()
                         .endObject()
-                        .build();
+                        .toString();
         assertEquals(
                 "{\"name\":\"Tom\",\"contacts\":[{\"mobile\":\"+234010101\",\"email\":\"m@tcdng.com\"},{\"mobile\":\"+23455555\",\"email\":\"ken@tcdng.com\"}]}",
                 str2);
@@ -145,7 +145,7 @@ public class JsonWriterTest {
                     .write("email", "m@tcdng.com")
                 .endObject()
             .endObject()
-        .build();
+        .toString();
         assertEquals(2, writer.getCapacity());
     }
 

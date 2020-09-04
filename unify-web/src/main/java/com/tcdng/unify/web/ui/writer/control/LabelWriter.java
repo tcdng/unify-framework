@@ -73,8 +73,9 @@ public class LabelWriter extends AbstractControlWriter {
         super.doWriteBehavior(writer, widget);
         Label label = (Label) widget;
         if (label.getUplAttribute(boolean.class, "draggable")) {
-            writer.write("ux.rigDragAndDropPopup({");
-            writer.write("\"pId\":\"").write(label.getId()).write("\"});");
+            writer.beginFunction("ux.rigDragAndDropPopup");
+            writer.writeParam("pId", label.getId());
+            writer.endFunction();
         }
     }
 

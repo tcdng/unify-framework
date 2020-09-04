@@ -22,7 +22,9 @@ import com.tcdng.unify.core.UserToken;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.data.ValueStore;
+import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
+import com.tcdng.unify.core.util.json.JsonWriter;
 import com.tcdng.unify.web.ui.Control;
 import com.tcdng.unify.web.ui.EventHandler;
 import com.tcdng.unify.web.ui.PushType;
@@ -193,47 +195,45 @@ public class TableWriter extends AbstractControlWriter {
         }
 
         // Append table rigging
-        writer.write("ux.rigTable({");
-        writer.write("\"pId\":\"").write(table.getId()).write('"');
-        writer.write(",\"pContId\":\"").write(table.getContainerId()).write('"');
-        writer.write(",\"pCmdURL\":\"");
-        writer.writeCommandURL();
-        writer.write('"');
-        writer.write(",\"pIdxCtrlId\":\"").write(table.getViewIndexCtrl().getId()).write('"');
-        writer.write(",\"pBaseIdx\":").write(table.getPageItemIndex());
-        writer.write(",\"pSelectable\":").write(table.isRowSelectable());
+        writer.beginFunction("ux.rigTable");
+        writer.writeParam("pId", table.getId());
+        writer.writeParam("pContId", table.getContainerId());
+        writer.writeCommandURLParam("pCmdURL");
+        writer.writeParam("pIdxCtrlId", table.getViewIndexCtrl().getId());
+        writer.writeParam("pBaseIdx", table.getPageItemIndex());
+        writer.writeParam("pSelectable", table.isRowSelectable());
         if (table.isRowSelectable()) {
-            writer.write(",\"pSelClassNm\":\"").write(getSelectClassName()).write("\"");
-            writer.write(",\"pSelDepList\":").writeJsonArray(table.getSelDependentList());
+            writer.writeParam("pSelClassNm", getSelectClassName());
+            writer.writeParam("pSelDepList", DataUtils.toArray(String.class, table.getSelDependentList()));
         }
-        writer.write(",\"pWindowed\":").write(table.isWindowed());
-        writer.write(",\"pPagination\":").write(table.isPagination());
-        writer.write(",\"pItemCount\":").write(table.getPageItemCount());
+        writer.writeParam("pWindowed", table.isWindowed());
+        writer.writeParam("pPagination", table.isPagination());
+        writer.writeParam("pItemCount", table.getPageItemCount());
         if (table.isPagination()) {
-            writer.write(",\"pCurrPgCtrlId\":\"").write(table.getCurrentPageCtrl().getId()).write('"');
-            writer.write(",\"pItemPerPgCtrlId\":\"").write(table.getItemsPerPageCtrl().getId()).write('"');
-            writer.write(",\"pCurrPage\":").write(table.getCurrentPage());
-            writer.write(",\"pPageCount\":").write(table.getTotalPages());
-            writer.write(",\"pNaviStart\":").write(table.getNaviPageStart());
-            writer.write(",\"pNaviStop\":").write(table.getNaviPageStop());
+            writer.writeParam("pCurrPgCtrlId", table.getCurrentPageCtrl().getId());
+            writer.writeParam("pItemPerPgCtrlId", table.getItemsPerPageCtrl().getId());
+            writer.writeParam("pCurrPage", table.getCurrentPage());
+            writer.writeParam("pPageCount", table.getTotalPages());
+            writer.writeParam("pNaviStart", table.getNaviPageStart());
+            writer.writeParam("pNaviStop", table.getNaviPageStop());
         }
 
         if (table.getPageItemCount() <= 0) {
-            writer.write(",\"pConDepList\":").writeJsonArray(table.getContentDependentList());
+            writer.writeParam("pConDepList", DataUtils.toArray(String.class, table.getContentDependentList()));
         }
 
-        writer.write(",\"pMultiSel\":").write(table.isMultiSelect());
+        writer.writeParam("pMultiSel", table.isMultiSelect());
         if (table.isMultiSelect()) {
             // Normal multi-select details
             if (!table.isRowSelectable()) {
-                writer.write(",\"pSelClassNm\":\"").write(getSelectClassName()).write("\"");
+                writer.writeParam("pSelClassNm", getSelectClassName());
             }
 
-            writer.write(",\"pSelAllId\":\"").write(table.getSelectAllId()).write('"');
-            writer.write(",\"pSelGrpId\":\"").write(table.getSelectGroupId()).write('"');
-            writer.write(",\"pVisibleSel\":").write(table.getPageSelectedRowCount());
-            writer.write(",\"pHiddenSel\":").write(table.getSelectedRows() - table.getPageSelectedRowCount());
-            writer.write(",\"pMultiSelDepList\":").writeJsonArray(table.getMultiSelDependentList());
+            writer.writeParam("pSelAllId", table.getSelectAllId());
+            writer.writeParam("pSelGrpId", table.getSelectGroupId());
+            writer.writeParam("pVisibleSel", table.getPageSelectedRowCount());
+            writer.writeParam("pHiddenSel", table.getSelectedRows() - table.getPageSelectedRowCount());
+            writer.writeParam("pMultiSelDepList", DataUtils.toArray(String.class, table.getMultiSelDependentList()));
 
             // Summary columns
             int summaryColIndex = 1; // Because of multi-select column
@@ -243,69 +243,63 @@ public class TableWriter extends AbstractControlWriter {
 
             String summarySrc = table.getSummarySrc();
             if (StringUtils.isNotBlank(summarySrc)) {
-                writer.write(",\"pSumSrc\":\"").write(summarySrc).write('"');
-                writer.write(",\"pSumProcList\":").writeJsonArray(table.getSummaryProcList());
-                writer.write(",\"pSumDepList\":").writeJsonArray(table.getSummaryDependentList());
+                writer.writeParam("pSumSrc", summarySrc);
+                writer.writeParam("pSumProcList", table.getSummaryProcList());
+                writer.writeParam("pSumDepList", DataUtils.toArray(String.class, table.getSummaryDependentList()));
             }
 
-            writer.write(",\"pSumColList\":[");
-            boolean appendSym = false;
+            JsonWriter jw = new JsonWriter();
+            jw.beginArray();
             for (Column column : table.getColumnList()) {
                 if (column.isVisible()) {
                     if (column.isColumnSelectSummary()) {
                         Control control = column.getControl();
-                        if (appendSym) {
-                            writer.write(',');
-                        } else {
-                            appendSym = true;
-                        }
-                        writer.write("{\"idx\":").write(summaryColIndex);
-                        writer.write(",\"nm\":\"").write(control.getShortName()).write("\"}");
+                        jw.beginObject();
+                        jw.write("idx", summaryColIndex);
+                        jw.write("nm", control.getShortName());
+                        jw.endObject();
                     }
                     summaryColIndex++;
                 }
             }
-            writer.write(']');
+            jw.endArray();
+            writer.writeParam("pSumColList", jw);
         }
 
         boolean shiftable = table.getShiftDirectionId() != null;
-        writer.write(",\"pShiftable\":").write(shiftable);
+        writer.writeParam("pShiftable", shiftable);
         if (shiftable) {
-            writer.write(",\"pShiftDirId\":\"").write(table.getShiftDirectionId()).write('"');
-            writer.write(",\"pShiftTopId\":\"").write(table.getShiftTopId()).write('"');
-            writer.write(",\"pShiftUpId\":\"").write(table.getShiftUpId()).write('"');
-            writer.write(",\"pShiftDownId\":\"").write(table.getShiftDownId()).write('"');
-            writer.write(",\"pShiftBottomId\":\"").write(table.getShiftBottomId()).write('"');
+            writer.writeParam("pShiftDirId", table.getShiftDirectionId());
+            writer.writeParam("pShiftTopId", table.getShiftTopId());
+            writer.writeParam("pShiftUpId", table.getShiftUpId());
+            writer.writeParam("pShiftDownId", table.getShiftDownId());
+            writer.writeParam("pShiftBottomId", table.getShiftBottomId());
         }
 
-        writer.write(",\"pSortable\":").write(table.isSortable());
+        writer.writeParam("pSortable", table.isSortable());
         if (table.isSortable()) {
-            writer.write(",\"pColIdxId\":\"").write(table.getColumnIndexCtrl().getId()).write('"');
-            writer.write(",\"pSortDirId\":\"").write(table.getSortDirectionCtrl().getId()).write('"');
-            writer.write(",\"pSortAscId\":\"").write(table.getAscImageCtrl().getId()).write('"');
-            writer.write(",\"pSortDescId\":\"").write(table.getDescImageCtrl().getId()).write('"');
-            writer.write(",\"pSortColList\":[");
-            boolean appendSym = false;
+            writer.writeParam("pColIdxId", table.getColumnIndexCtrl().getId());
+            writer.writeParam("pSortDirId", table.getSortDirectionCtrl().getId());
+            writer.writeParam("pSortAscId", table.getAscImageCtrl().getId());
+            writer.writeParam("pSortDescId", table.getDescImageCtrl().getId());
+
+            JsonWriter jw = new JsonWriter();
+            jw.beginArray();
             List<? extends ColumnState> columnStates = table.getColumnStates();
             for (int i = 0; i < columnStates.size(); i++) {
                 ColumnState columnState = columnStates.get(i);
                 if (columnState.isSortable()) {
-                    if (appendSym) {
-                        writer.write(',');
-                    } else {
-                        appendSym = true;
-                    }
-
-                    writer.write('{');
-                    writer.write("\"idx\":").write(i);
-                    writer.write(",\"ascend\":").write(columnState.isAscending());
-                    writer.write(",\"field\":\"").write(columnState.getFieldName()).write('"');
-                    writer.write('}');
+                    jw.beginObject();
+                    jw.write("idx", i);
+                    jw.write("ascend", columnState.isAscending());
+                    jw.write("field", columnState.getFieldName());
+                    jw.endObject();
                 }
             }
-            writer.write(']');
+            jw.endArray();
+            writer.writeParam("pSortColList", jw);
         }
-        writer.write("});");
+        writer.endFunction();
 
     }
 

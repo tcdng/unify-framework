@@ -98,15 +98,15 @@ public class MultiSelectWriter extends AbstractControlWriter {
         ListControlJsonData listControlJsonData = multiSelect.getListControlJsonData(true, false, false);
 
         // Append rigging
-        writer.write("ux.rigMultiSelect({");
-        writer.write("\"pId\":\"").write(pageName).write('"');
-        writer.write(",\"pFrmId\":\"").write(multiSelect.getFramePanelId()).write('"');
-        writer.write(",\"pLstId\":\"").write(multiSelect.getListPanelId()).write('"');
-        writer.write(",\"pICnt\":").write(listControlJsonData.getSize());
-        writer.write(",\"pLabelIds\":").write(listControlJsonData.getJsonSelectIds());
-        writer.write(",\"pNormCls\":\"norm\"");
-        writer.write(",\"pSelCls\":\"").write(getUserColorStyleClass("sel")).write("\"");
-        writer.write("});");
+        writer.beginFunction("ux.rigMultiSelect");
+        writer.writeParam("pId", pageName);
+        writer.writeParam("pFrmId", multiSelect.getFramePanelId());
+        writer.writeParam("pLstId", multiSelect.getListPanelId());
+        writer.writeParam("pICnt", listControlJsonData.getSize());
+        writer.writeResolvedParam("pLabelIds", listControlJsonData.getJsonSelectIds());
+        writer.writeParam("pNormCls", "norm");
+        writer.writeParam("pSelCls", getUserColorStyleClass("sel"));
+        writer.endFunction();
     }
 
 }

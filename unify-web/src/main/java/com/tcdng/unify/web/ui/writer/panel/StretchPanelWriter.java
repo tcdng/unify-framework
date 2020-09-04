@@ -61,10 +61,10 @@ public class StretchPanelWriter extends AbstractPanelWriter {
         StretchPanel panel = (StretchPanel) widget;
 
         // Append switch panel rigging
-        writer.write("ux.rigStretchPanel({");
-        writer.write("\"pId\":\"").write(panel.getId()).write('"');
-        writer.write(",\"pContId\":\"").write(panel.getContentPageName());
-        writer.write("\"});");
+        writer.beginFunction("ux.rigStretchPanel");
+        writer.writeParam("pId", panel.getId());
+        writer.writeParam("pContId", panel.getContentPageName());
+        writer.endFunction();
     }
 
 }

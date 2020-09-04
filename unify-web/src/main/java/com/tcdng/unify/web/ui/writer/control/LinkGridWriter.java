@@ -22,6 +22,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.util.DataUtils;
+import com.tcdng.unify.core.util.json.JsonWriter;
 import com.tcdng.unify.web.ui.ResponseWriter;
 import com.tcdng.unify.web.ui.Widget;
 import com.tcdng.unify.web.ui.control.LinkGrid;
@@ -99,44 +100,36 @@ public class LinkGridWriter extends AbstractControlWriter {
         LinkGrid linkGrid = (LinkGrid) widget;
 
         // Append link grid rigging
-        writer.write("ux.rigLinkGrid({");
-        writer.write("\"categories\":[");
-        boolean isAppendSym = false;
+        writer.beginFunction("ux.rigLinkGrid");
+        JsonWriter jw = new JsonWriter();
+        jw.beginArray();
         LinkGridInfo linkGridInfo = linkGrid.getValue(LinkGridInfo.class);
         if (linkGridInfo != null) {
             for (LinkCategoryInfo linkCategoryInfo : linkGridInfo.getLinkCategoryList()) {
-                if (isAppendSym) {
-                    writer.write(',');
-                } else {
-                    isAppendSym = true;
-                }
 
-                writer.write("{\"pURL\":\"").writeContextURL(linkCategoryInfo.getPath()).write("\"");
-                writer.write(",\"links\":[");
-                boolean isAppendSym2 = false;
+                jw.beginObject();
+                jw.write("pURL", getContextURL(linkCategoryInfo.getPath()));
+                jw.beginArray("links");
                 List<LinkInfo> linkInfoList = linkCategoryInfo.getLinkInfoList();
                 if (DataUtils.isNotBlank(linkInfoList)) {
                     String catName = linkGrid.getPrefixedId(linkCategoryInfo.getName());
                     int len = linkInfoList.size();
                     for (int i = 0; i < len; i++) {
-                        if (isAppendSym2) {
-                            writer.write(',');
-                        } else {
-                            isAppendSym2 = true;
-                        }
-
                         LinkInfo linkInfo = linkInfoList.get(i);
-                        writer.write("{\"pId\":\"");
-                        writer.write(catName).write(i);
-                        writer.write("\",\"pCode\":\"");
-                        writer.write(linkInfo.getCode());
-                        writer.write("\"}");
+                        jw.beginObject();
+                        jw.write("pId", catName + i);
+                        jw.write("pCode", linkInfo.getCode());
+                        jw.endObject();
                     }
                 }
-                writer.write("]}");
+                jw.endArray();
+                jw.endObject();
 
             }
         }
-        writer.write("]});");
+        jw.endArray();
+        writer.writeParam("categories", jw);
+        
+        writer.endFunction();
     }
 }

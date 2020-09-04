@@ -38,10 +38,10 @@ public class FixedContentPanelWriter extends AbstractPanelWriter {
     @Override
     protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
         FixedContentPanel fixedContentPanel = (FixedContentPanel) widget;
-        writer.write("ux.rigFixedContentPanel({");
-        writer.write("\"pHintPanelId\":\"").write(fixedContentPanel.getHintPanelId()).write("\"");
-        writer.write(",\"pBusyIndId\":\"").write(fixedContentPanel.getBusyIndicatorId()).write("\"");
-        writer.write("});");
+        writer.beginFunction("ux.rigFixedContentPanel");
+        writer.writeParam("pHintPanelId", fixedContentPanel.getHintPanelId());
+        writer.writeParam("pBusyIndId", fixedContentPanel.getBusyIndicatorId());
+        writer.endFunction();
         
         super.doWriteBehavior(writer, widget);
     }

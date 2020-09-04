@@ -39,18 +39,16 @@ public class AccordionPanelWriter extends AbstractPanelWriter {
     protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
         super.doWriteBehavior(writer, widget);
         AccordionPanel accordionPanel = (AccordionPanel) widget;
-        writer.write("ux.rigAccordion({");
-        writer.write("\"pId\":\"").write(accordionPanel.getId()).write('"');
-        writer.write(",\"pContId\":\"").write(accordionPanel.getContainerId()).write('"');
-        writer.write(",\"pCmdURL\":\"");
-        writer.writeCommandURL();
-        writer.write('"');
-        writer.write(",\"pHeaderIdBase\":\"").write(accordionPanel.getHeaderIdBase()).write('"');
-        writer.write(",\"pCollapsed\":").write(accordionPanel.isCollapsed());
-        writer.write(",\"pCurrSelCtrlId\":\"").write(accordionPanel.getCurrentSelCtrl().getId()).write('"');
-        writer.write(",\"pCurrSelIdx\":").write(accordionPanel.getCurrentSel());
-        writer.write(",\"pSectionCount\":").write(accordionPanel.getSectionCount());
-        writer.write("});");
+        writer.beginFunction("ux.rigAccordion");
+        writer.writeParam("pId", accordionPanel.getId());
+        writer.writeParam("pContId", accordionPanel.getContainerId());
+        writer.writeCommandURLParam("pCmdURL");
+        writer.writeParam("pHeaderIdBase", accordionPanel.getHeaderIdBase());
+        writer.writeParam("pCollapsed",accordionPanel.isCollapsed());
+        writer.writeParam("pCurrSelCtrlId", accordionPanel.getCurrentSelCtrl().getId());
+        writer.writeParam("pCurrSelIdx",accordionPanel.getCurrentSel());
+        writer.writeParam("pSectionCount", accordionPanel.getSectionCount());
+        writer.endFunction();
     }
 
     @Override

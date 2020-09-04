@@ -73,9 +73,9 @@ public class CheckBoxWriter extends AbstractControlWriter {
         CheckBox checkBox = (CheckBox) widget;
         if (checkBox.isContainerEditable() && !checkBox.isContainerDisabled()) {
             super.doWriteBehavior(writer, widget);
-            writer.write("ux.rigCheckbox({");
-            writer.write("\"pId\":\"").write(checkBox.getId()).write('"');
-            writer.write("});");
+            writer.beginFunction("ux.rigCheckbox");
+            writer.writeParam("pId", checkBox.getId());
+            writer.endFunction();
         }
     }
 

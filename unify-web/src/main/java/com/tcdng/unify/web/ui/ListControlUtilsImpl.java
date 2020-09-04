@@ -33,6 +33,7 @@ import com.tcdng.unify.core.list.ListCommand;
 import com.tcdng.unify.core.list.SearchProvider;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.ReflectUtils;
+import com.tcdng.unify.core.util.json.JsonUtils;
 import com.tcdng.unify.web.WebApplicationComponents;
 import com.tcdng.unify.web.util.HtmlUtils;
 
@@ -51,29 +52,30 @@ public class ListControlUtilsImpl extends AbstractUnifyComponent implements List
     private FactoryMap<String, ListInfo> listInfoMap;
 
     public ListControlUtilsImpl() {
-        listInfoMap = new FactoryMap<String, ListInfo>() {
+        listInfoMap = new FactoryMap<String, ListInfo>()
+            {
 
-            @Override
-            protected ListInfo create(String listName, Object... params) throws Exception {
-                if (isComponent(listName)) {
-                    ListCommand<?> listCommand = (ListCommand<?>) getComponent(listName);
-                    if (listCommand instanceof SearchProvider) {
-                        SearchProvider sp = (SearchProvider) listCommand;
-                        return new ListInfo(sp.getKeyProperty(), sp.getDescProperty());
+                @Override
+                protected ListInfo create(String listName, Object... params) throws Exception {
+                    if (isComponent(listName)) {
+                        ListCommand<?> listCommand = (ListCommand<?>) getComponent(listName);
+                        if (listCommand instanceof SearchProvider) {
+                            SearchProvider sp = (SearchProvider) listCommand;
+                            return new ListInfo(sp.getKeyProperty(), sp.getDescProperty());
+                        }
                     }
+
+                    return ListInfo.BLANK;
                 }
 
-                return ListInfo.BLANK;
-            }
-
-        };
+            };
     }
 
     @Override
     public ListControlJsonData getListControlJsonData(ListControl listControl, boolean indexes, boolean keys,
             boolean labels) throws UnifyException {
         List<? extends Listable> listableList = listControl.getListables();
-        int length = listableList.size();
+        int len = listableList.size();
         String value = null;
         if (!listControl.isMultiple()) {
             value = listControl.getStringValue();
@@ -81,30 +83,12 @@ public class ListControlUtilsImpl extends AbstractUnifyComponent implements List
 
         int valueIndex = -1;
         String valueLabel = null;
-        StringBuilder isb = new StringBuilder();
-        StringBuilder ksb = new StringBuilder();
-        StringBuilder lsb = new StringBuilder();
-        boolean appendSym = false;
-        isb.append('[');
-        ksb.append('[');
-        lsb.append('[');
-        for (int i = 0; i < length; i++) {
-            if (appendSym) {
-                if (indexes) {
-                    isb.append(',');
-                }
-                if (keys) {
-                    ksb.append(',');
-                }
-                if (labels) {
-                    lsb.append(',');
-                }
-            } else {
-                appendSym = true;
-            }
-
+        String[] isba = new String[len];
+        String[] ksba = new String[len];
+        String[] lsba = new String[len];
+        for (int i = 0; i < len; i++) {
             if (indexes) {
-                isb.append('"').append(listControl.getNamingIndexedId(i)).append('"');
+                isba[i] = listControl.getNamingIndexedId(i);
             }
 
             Listable listable = listableList.get(i);
@@ -116,17 +100,20 @@ public class ListControlUtilsImpl extends AbstractUnifyComponent implements List
             }
 
             if (keys) {
-                ksb.append('"').append(key).append('"');
+                ksba[i] = key;
             }
 
             if (labels) {
-                lsb.append('"').append(description).append('"');
+                lsba[i] = description;
             }
         }
-        isb.append(']');
-        ksb.append(']');
-        lsb.append(']');
 
+        StringBuilder isb = new StringBuilder();
+        StringBuilder ksb = new StringBuilder();
+        StringBuilder lsb = new StringBuilder();
+        JsonUtils.write(isb, isba);
+        JsonUtils.write(ksb, ksba);
+        JsonUtils.write(lsb, lsba);
         return new ListControlJsonData(isb.toString(), ksb.toString(), lsb.toString(), valueLabel, valueIndex,
                 listableList.size());
     }
@@ -170,7 +157,7 @@ public class ListControlUtilsImpl extends AbstractUnifyComponent implements List
                     list = newList;
                 }
             }
-            
+
             setRequestAttribute(reqId, list);
         }
 

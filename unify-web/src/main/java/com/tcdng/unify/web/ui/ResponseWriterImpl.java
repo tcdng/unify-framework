@@ -41,6 +41,8 @@ import com.tcdng.unify.core.upl.UplComponent;
 import com.tcdng.unify.core.upl.UplComponentWriter;
 import com.tcdng.unify.core.util.QueryUtils;
 import com.tcdng.unify.core.util.StringUtils;
+import com.tcdng.unify.core.util.json.JsonUtils;
+import com.tcdng.unify.core.util.json.JsonWriter;
 import com.tcdng.unify.web.RequestContextUtil;
 import com.tcdng.unify.web.ThemeManager;
 import com.tcdng.unify.web.UnifyWebErrorConstants;
@@ -81,6 +83,14 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 
 	private boolean tableMode;
 
+    private boolean openFunction;
+
+    private boolean paramAppendSym;
+	
+	public ResponseWriterImpl() {
+        secordaryList = new ArrayList<WebStringWriter>();
+	}
+	
 	@Override
 	public ResponseWriter writeStructureAndContent(Widget component) throws UnifyException {
 		((WidgetWriter) getWriter(component)).writeStructureAndContent(this, component);
@@ -219,6 +229,14 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 		return this;
 	}
 
+    @Override
+    public ResponseWriter writeParam(String paramName, Pattern[] pa) throws UnifyException {
+        preParamWrite();
+        buf.append('"').append(paramName).append("\":");
+        writeJsonPatternObject(pa);
+        return this;
+    }
+	
 	@Override
 	public ResponseWriter writeJsonPatternObject(Pattern[] pa) throws UnifyException {
 		buf.append("[");
@@ -241,6 +259,14 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 		buf.append("]");
 		return this;
 	}
+
+    @Override
+    public ResponseWriter writeParam(String paramName, DateTimeFormat[] dateTimeFormat) throws UnifyException {
+        preParamWrite();
+        buf.append('"').append(paramName).append("\":");
+        writeJsonDateTimeFormatObject(dateTimeFormat);
+        return this;
+    }
 
 	@Override
 	public ResponseWriter writeJsonDateTimeFormatObject(DateTimeFormat[] dateTimeFormat) throws UnifyException {
@@ -388,7 +414,7 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 		}
 		return this;
 	}
-
+	
 	@Override
 	public ResponseWriter writeContextURL(StringBuilder sb, String path, String... pathElement) throws UnifyException {
 		RequestContext requestContext = getRequestContext();
@@ -590,6 +616,219 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 	}
 
 	@Override
+    public ResponseWriter beginFunction(String functionName) throws UnifyException {
+        if (openFunction) {
+            try {
+                throw new RuntimeException("Function write already started.");
+            } catch (Exception e) {
+                throwOperationErrorException(e);
+            }
+        }
+
+        buf.append(functionName).append("({");
+        openFunction = true;
+        paramAppendSym =  false;
+        return this;
+    }
+
+    @Override
+    public ResponseWriter endFunction() throws UnifyException {
+        if (!openFunction) {
+            try {
+                throw new RuntimeException("Function write is not started");
+            } catch (Exception e) {
+                throwOperationErrorException(e);
+            }
+        }
+        
+        buf.append("});");
+        openFunction = false;
+        return this;
+    }
+
+    @Override
+    public ResponseWriter writeParam(String paramName, String[] val) throws UnifyException {
+        preParamWrite();
+        JsonUtils.writeField(buf, paramName, val);
+        return this;
+    }
+
+    @Override
+    public ResponseWriter writeParam(String paramName, String val) throws UnifyException {
+        preParamWrite();
+        JsonUtils.writeField(buf, paramName, val);
+        return this;
+    }
+
+    @Override
+    public ResponseWriter writeParam(String paramName, Number[] val) throws UnifyException {
+        preParamWrite();
+        JsonUtils.writeField(buf, paramName, val);
+        return this;
+    }
+
+    @Override
+    public ResponseWriter writeParam(String paramName, Number val) throws UnifyException {
+        preParamWrite();
+        JsonUtils.writeField(buf, paramName, val);
+        return this;
+    }
+
+    @Override
+    public ResponseWriter writeParam(String paramName, Boolean[] val) throws UnifyException {
+        preParamWrite();
+        JsonUtils.writeField(buf, paramName, val);
+        return this;
+    }
+
+    @Override
+    public ResponseWriter writeParam(String paramName, Boolean val) throws UnifyException {
+        preParamWrite();
+        JsonUtils.writeField(buf, paramName, val);
+        return this;
+    }
+
+    @Override
+    public ResponseWriter writeParam(String paramName, char[] val) throws UnifyException {
+        preParamWrite();
+        JsonUtils.writeField(buf, paramName, val);
+        return this;
+    }
+
+    @Override
+    public ResponseWriter writeParam(String paramName, char val) throws UnifyException {
+        preParamWrite();
+        JsonUtils.writeField(buf, paramName, val);
+        return this;
+    }
+
+    @Override
+    public ResponseWriter writeParam(String paramName, int[] val) throws UnifyException {
+        preParamWrite();
+        JsonUtils.writeField(buf, paramName, val);
+        return this;
+    }
+
+    @Override
+    public ResponseWriter writeParam(String paramName, int val) throws UnifyException {
+        preParamWrite();
+        JsonUtils.writeField(buf, paramName, val);
+        return this;
+    }
+
+    @Override
+    public ResponseWriter writeParam(String paramName, long[] val) throws UnifyException {
+        preParamWrite();
+        JsonUtils.writeField(buf, paramName, val);
+        return this;
+    }
+
+    @Override
+    public ResponseWriter writeParam(String paramName, long val) throws UnifyException {
+        preParamWrite();
+        JsonUtils.writeField(buf, paramName, val);
+        return this;
+    }
+
+    @Override
+    public ResponseWriter writeParam(String paramName, short[] val) throws UnifyException {
+        preParamWrite();
+        JsonUtils.writeField(buf, paramName, val);
+        return this;
+    }
+
+    @Override
+    public ResponseWriter writeParam(String paramName, short val) throws UnifyException {
+        preParamWrite();
+        JsonUtils.writeField(buf, paramName, val);
+        return this;
+    }
+
+    @Override
+    public ResponseWriter writeParam(String paramName, float[] val) throws UnifyException {
+        preParamWrite();
+        JsonUtils.writeField(buf, paramName, val);
+        return this;
+    }
+
+    @Override
+    public ResponseWriter writeParam(String paramName, float val) throws UnifyException {
+        preParamWrite();
+        JsonUtils.writeField(buf, paramName, val);
+        return this;
+    }
+
+    @Override
+    public ResponseWriter writeParam(String paramName, double[] val) throws UnifyException {
+        preParamWrite();
+        JsonUtils.writeField(buf, paramName, val);
+        return this;
+    }
+
+    @Override
+    public ResponseWriter writeParam(String paramName, double val) throws UnifyException {
+        preParamWrite();
+        JsonUtils.writeField(buf, paramName, val);
+        return this;
+    }
+
+    @Override
+    public ResponseWriter writeParam(String paramName, boolean[] val) throws UnifyException {
+        preParamWrite();
+        JsonUtils.writeField(buf, paramName, val);
+        return this;
+    }
+
+    @Override
+    public ResponseWriter writeParam(String paramName, boolean val) throws UnifyException {
+        preParamWrite();
+        JsonUtils.writeField(buf, paramName, val);
+        return this;
+    }
+    
+    @Override
+    public ResponseWriter writeParam(String paramName, JsonWriter val) throws UnifyException {
+        preParamWrite();
+        buf.append('"').append(paramName).append("\":").append(val.toString());
+        return this;
+    }
+
+    @Override
+    public ResponseWriter writeContextURLParam(String paramName, String path, String... pathElement)
+            throws UnifyException {
+        preParamWrite();
+        buf.append('"').append(paramName).append("\":\"");
+        writeContextURL(path, pathElement);
+        buf.append('"');
+        return this;
+    }
+
+    @Override
+    public ResponseWriter writeCommandURLParam(String paramName) throws UnifyException {
+        preParamWrite();
+        buf.append('"').append(paramName).append("\":\"");
+        writeCommandURL();
+        buf.append('"');
+        return this;
+    }
+
+    @Override
+    public ResponseWriter writeCommandURLParam(String paramName, String pageControllerName) throws UnifyException {
+        preParamWrite();
+        buf.append('"').append(paramName).append("\":\"");
+        writeCommandURL(pageControllerName);
+        buf.append('"');
+        return this;
+    }
+
+    @Override
+    public ResponseWriter writeResolvedParam(String paramName, String val) throws UnifyException {
+        preParamWrite();
+        buf.append('"').append(paramName).append("\":").append(val);
+        return this;
+    }
+
+    @Override
 	public WebStringWriter getStringWriter() {
 		return buf;
 	}
@@ -624,9 +863,11 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 	@Override
 	public void reset(Map<Class<? extends UplComponent>, UplComponentWriter> writers) {
 		this.writers = writers;
-		if (buf == null || secordaryList == null || !buf.isEmpty() || !secordaryList.isEmpty()) {
+		if (buf == null || !buf.isEmpty() || !secordaryList.isEmpty()) {
 			buf = new WebStringWriter(initialBufferCapacity);
-			secordaryList = new ArrayList<WebStringWriter>();
+			secordaryList.clear();
+			openFunction = false;
+	        paramAppendSym =  false;
 		}
 	}
 
@@ -654,6 +895,22 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 	protected void onTerminate() throws UnifyException {
 
 	}
+
+    private void preParamWrite() throws UnifyException {
+        if (!openFunction) {
+            try {
+                throw new RuntimeException("Function write is not started");
+            } catch (Exception e) {
+                throwOperationErrorException(e);
+            }
+        }
+        
+        if (paramAppendSym) {
+            buf.append(',');
+        } else {
+            paramAppendSym = true;
+        }
+    }
 
 	private UplComponentWriter getWriter(UplComponent component) throws UnifyException {
 		UplComponentWriter writer = writers.get(component.getClass());

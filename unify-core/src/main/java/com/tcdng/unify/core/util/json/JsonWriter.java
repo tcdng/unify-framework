@@ -218,7 +218,8 @@ public class JsonWriter {
         return this;
     }
 
-    public String build() {
+    @Override
+    public String toString() {
         if (depth >= 0) {
             throw new RuntimeException("JSON body is still open.");
         }

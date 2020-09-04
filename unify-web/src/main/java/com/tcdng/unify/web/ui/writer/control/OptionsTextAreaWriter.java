@@ -82,22 +82,22 @@ public class OptionsTextAreaWriter extends TextAreaWriter {
     protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
         super.doWriteBehavior(writer, widget);
         OptionsTextArea optionsTextArea = (OptionsTextArea) widget;
-        writer.write("ux.rigOptionsTextArea({");
-        writer.write("\"pId\":\"").write(optionsTextArea.getId()).write('"');
-        writer.write(",\"pScrEnd\":").write(optionsTextArea.isScrollToEnd());
+        writer.beginFunction("ux.rigOptionsTextArea");
+        writer.writeParam("pId", optionsTextArea.getId());
+        writer.writeParam("pScrEnd", optionsTextArea.isScrollToEnd());
 
         if (optionsTextArea.isContainerEditable() && !optionsTextArea.isContainerDisabled()) {
             ListControlJsonData listControlJsonData = optionsTextArea.getListControlJsonData(true, true, false);
-            writer.write(",\"pPopupId\":\"").write(optionsTextArea.getPopupId()).write('"');
-            writer.write(",\"pFrmId\":\"").write(optionsTextArea.getFramePanelId()).write('"');
-            writer.write(",\"pLstId\":\"").write(optionsTextArea.getListPanelId()).write('"');
-            writer.write(",\"pICnt\":").write(listControlJsonData.getSize());
-            writer.write(",\"pLabelIds\":").write(listControlJsonData.getJsonSelectIds());
-            writer.write(",\"pKeys\":").write(listControlJsonData.getJsonKeys());
-            writer.write(",\"pNormCls\":\"norm\"");
-            writer.write(",\"pSelCls\":\"").write(getUserColorStyleClass("sel")).write("\"");
+            writer.writeParam("pPopupId", optionsTextArea.getPopupId());
+            writer.writeParam("pFrmId", optionsTextArea.getFramePanelId());
+            writer.writeParam("pLstId", optionsTextArea.getListPanelId());
+            writer.writeParam("pICnt", listControlJsonData.getSize());
+            writer.writeResolvedParam("pLabelIds", listControlJsonData.getJsonSelectIds());
+            writer.writeResolvedParam("pKeys", listControlJsonData.getJsonKeys());
+            writer.writeParam("pNormCls", "norm");
+            writer.writeParam("pSelCls", getUserColorStyleClass("sel"));
         }
 
-        writer.write("});");
+        writer.endFunction();
     }
 }

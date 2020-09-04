@@ -74,19 +74,19 @@ public class DurationSelectWriter extends AbstractControlWriter {
 
         writer.writeBehavior(durationSelect.getMinuteSelCtrl());
 
-        writer.write("ux.rigDurationSelect({");
-        writer.write("\"pId\":\"").write(durationSelect.getId()).write('"');
+        writer.beginFunction("ux.rigDurationSelect");
+        writer.writeParam("pId", durationSelect.getId());
         if (durationSelect.isShowDays()) {
-            writer.write(",\"pDaySelId\":\"").write(durationSelect.getDaySelCtrl().getId()).write('"');
+            writer.writeParam("pDaySelId", durationSelect.getDaySelCtrl().getId());
         }
 
         if (durationSelect.isShowHours()) {
-            writer.write(",\"pHourSelId\":\"").write(durationSelect.getHourSelCtrl().getId()).write('"');
+            writer.writeParam("pHourSelId", durationSelect.getHourSelCtrl().getId());
         }
 
-        writer.write(",\"pMinSelId\":\"").write(durationSelect.getMinuteSelCtrl().getId()).write('"');
-        writer.write(",\"pDurationId\":\"").write(durationSelect.getDurationCtrl().getId()).write('"');
-        writer.write("});");
+        writer.writeParam("pMinSelId", durationSelect.getMinuteSelCtrl().getId());
+        writer.writeParam("pDurationId", durationSelect.getDurationCtrl().getId());
+        writer.endFunction();
     }
 
     private void writeFilter(ResponseWriter writer, Control select, String caption) throws UnifyException {

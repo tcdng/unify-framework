@@ -71,11 +71,11 @@ public class TextClockWriter extends AbstractControlWriter {
 
         // Append rigging
         TextClock textClock = (TextClock) widget;
-        writer.write("ux.rigTextClock({");
-        writer.write("\"pId\":\"").write(textClock.getId()).write('"');
-        writer.write(",\"pDateId\":\"").write(textClock.getDateId()).write('"');
-        writer.write(",\"pTimeId\":\"").write(textClock.getTimeId()).write('"');
-        writer.write("});");
+        writer.beginFunction("ux.rigTextClock");
+        writer.writeParam("pId", textClock.getId());
+        writer.writeParam("pDateId", textClock.getDateId());
+        writer.writeParam("pTimeId", textClock.getTimeId());
+        writer.endFunction();
     }
 
 }

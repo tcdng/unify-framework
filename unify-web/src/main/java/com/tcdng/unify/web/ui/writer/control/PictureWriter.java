@@ -46,16 +46,14 @@ public class PictureWriter extends AbstractControlWriter {
 
         // Append rigging
         Picture picture = (Picture) widget;
-        writer.write("ux.rigPhotoUpload({");
-        writer.write("\"pId\":\"").write(picture.getId()).write('"');
-        writer.write(",\"pCmdURL\":\"");
-        writer.writeCommandURL();
-        writer.write('"');
-        writer.write(",\"pContId\":\"").write(picture.getContainerId()).write('"');
-        writer.write(",\"pFileId\":\"").write(picture.getFileCtrl().getId()).write('"');
-        writer.write(",\"pImgId\":\"").write(picture.getImageCtrl().getId()).write('"');
-        writer.write(",\"pEditable\":").write(picture.isContainerEditable());
-        writer.write("});");
+        writer.beginFunction("ux.rigPhotoUpload");
+        writer.writeParam("pId", picture.getId());
+        writer.writeCommandURLParam("pCmdURL");
+        writer.writeParam("pContId", picture.getContainerId());
+        writer.writeParam("pFileId", picture.getFileCtrl().getId());
+        writer.writeParam("pImgId", picture.getImageCtrl().getId());
+        writer.writeParam("pEditable", picture.isContainerEditable());
+        writer.endFunction();
     }
 
 }

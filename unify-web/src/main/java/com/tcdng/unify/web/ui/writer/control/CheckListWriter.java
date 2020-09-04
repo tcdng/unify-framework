@@ -94,10 +94,10 @@ public class CheckListWriter extends AbstractControlWriter {
         CheckList checkList = (CheckList) widget;
         if (checkList.isContainerEditable() && !checkList.isContainerDisabled()) {
             super.doWriteBehavior(writer, widget);
-            writer.write("ux.rigChecklist({");
-            writer.write("\"pId\":\"").write(checkList.getId()).write('"');
-            writer.write(",\"pNm\":\"").write(checkList.getGroupId()).write('"');
-            writer.write("});");
+            writer.beginFunction("ux.rigChecklist");
+            writer.writeParam("pId", checkList.getId());
+            writer.writeParam("pNm", checkList.getGroupId());
+            writer.endFunction();
         }
     }
 }

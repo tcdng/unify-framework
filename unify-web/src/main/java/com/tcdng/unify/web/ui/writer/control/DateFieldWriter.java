@@ -87,18 +87,17 @@ public class DateFieldWriter extends AbstractPopupTextFieldWriter {
     protected void appendPopupBehaviour(ResponseWriter writer, AbstractPopupTextField popupTextField)
             throws UnifyException {
         DateField dateField = (DateField) popupTextField;
-        writer.write("ux.rigDateField({");
-        writer.write("\"pId\":\"").write(dateField.getId()).write('"');
-        writer.write(",\"pDayClass\":\"cday\"");
-        writer.write(",\"pCurrClass\":\"ccurrent\"");
-        writer.write(",\"pTodayClass\":\"ctoday\"");
-        writer.write(",\"pClearable\":").write(dateField.isClearable());
-        writer.write(",\"pPadLeft\":true");
-        writer.write(",\"pShortDayNm\":").writeJsonArray(dateField.getShortDayList());
-        writer.write(",\"pLongMonthNm\":").writeJsonArray(dateField.getLongMonthList());
-        writer.write(",\"pPattern\":");
-        writer.writeJsonPatternObject(dateField.getPattern());
-        writer.write("});");
+        writer.beginFunction("ux.rigDateField");
+        writer.writeParam("pId", dateField.getId());
+        writer.writeParam("pDayClass", "cday");
+        writer.writeParam("pCurrClass", "ccurrent");
+        writer.writeParam("pTodayClass", "ctoday");
+        writer.writeParam("pClearable", dateField.isClearable());
+        writer.writeParam("pPadLeft", true);
+        writer.writeParam("pShortDayNm", dateField.getShortDayList());
+        writer.writeParam("pLongMonthNm", dateField.getLongMonthList());
+        writer.writeParam("pPattern", dateField.getPattern());
+        writer.endFunction();
     }
 
     @Override

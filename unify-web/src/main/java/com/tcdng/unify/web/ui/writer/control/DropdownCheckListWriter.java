@@ -142,13 +142,13 @@ public class DropdownCheckListWriter extends AbstractPopupTextFieldWriter {
             throws UnifyException {
         DropdownCheckList dropdownCheckList = (DropdownCheckList) popupTextField;
         if (dropdownCheckList.isContainerEditable() && !dropdownCheckList.isContainerDisabled()) {
-            writer.write("ux.rigDropdownChecklist({");
-            writer.write("\"pId\":\"").write(dropdownCheckList.getId()).write('"');
-            writer.write(",\"pNm\":\"").write(dropdownCheckList.getId()).write('"');
+            writer.beginFunction("ux.rigDropdownChecklist");
+            writer.writeParam("pId", dropdownCheckList.getId());
+            writer.writeParam("pNm", dropdownCheckList.getId());
             if (dropdownCheckList.getSelectAllOption() != null) {
-                writer.write(",\"pSelAllId\":\"").write(dropdownCheckList.getSelectAllId()).write('"');
+                writer.writeParam("pSelAllId", dropdownCheckList.getSelectAllId());
             }
-            writer.write("});");
+            writer.endFunction();
         }
     }
 

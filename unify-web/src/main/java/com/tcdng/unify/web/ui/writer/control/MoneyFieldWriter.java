@@ -79,19 +79,19 @@ public class MoneyFieldWriter extends AbstractPopupTextFieldWriter {
         ListControlJsonData listControlJsonData = moneyField.getListControlJsonData(true, true, false);
 
         // Append rigging
-        writer.write("ux.rigMoneyField({");
-        writer.write("\"pId\":\"").write(moneyField.getId()).write('"');
-        writer.write(",\"pFrmId\":\"").write(moneyField.getFramePanelId()).write('"');
-        writer.write(",\"pLstId\":\"").write(moneyField.getListPanelId()).write('"');
-        writer.write(",\"pBtnId\":\"").write(moneyField.getPopupButtonId()).write('"');
-        writer.write(",\"pFacId\":\"").write(moneyField.getFacadeId()).write('"');
-        writer.write(",\"pKeyIdx\":").write(listControlJsonData.getValueIndex());
-        writer.write(",\"pICnt\":").write(listControlJsonData.getSize());
-        writer.write(",\"pLabelIds\":").write(listControlJsonData.getJsonSelectIds());
-        writer.write(",\"pKeys\":").write(listControlJsonData.getJsonKeys());
-        writer.write(",\"pNormCls\":\"norm\"");
-        writer.write(",\"pSelCls\":\"").write(getUserColorStyleClass("sel")).write("\"");
-        writer.write("});");
+        writer.beginFunction("ux.rigMoneyField");
+        writer.writeParam("pId", moneyField.getId());
+        writer.writeParam("pFrmId", moneyField.getFramePanelId());
+        writer.writeParam("pLstId", moneyField.getListPanelId());
+        writer.writeParam("pBtnId", moneyField.getPopupButtonId());
+        writer.writeParam("pFacId", moneyField.getFacadeId());
+        writer.writeParam("pKeyIdx", listControlJsonData.getValueIndex());
+        writer.writeParam("pICnt", listControlJsonData.getSize());
+        writer.writeResolvedParam("pLabelIds", listControlJsonData.getJsonSelectIds());
+        writer.writeResolvedParam("pKeys", listControlJsonData.getJsonKeys());
+        writer.writeParam("pNormCls", "norm");
+        writer.writeParam("pSelCls", getUserColorStyleClass("sel"));
+        writer.endFunction();
     }
 
     @Override

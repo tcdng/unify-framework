@@ -108,25 +108,25 @@ public class FileUploadWriter extends AbstractControlWriter {
         FileUpload fileUpload = (FileUpload) widget;
         if (!fileUpload.isHidden()) {
             // Append rigging
-            writer.write("ux.rigFileUpload({");
-            writer.write("\"pId\":\"").write(fileUpload.getId()).write('"');
-            writer.write(",\"pContId\":\"").write(fileUpload.getContainerId()).write('"');
-            writer.write(",\"pBtnId\":\"").write(fileUpload.getButtonId()).write('"');
-            writer.write(",\"pSpanId\":\"").write(fileUpload.getSpanId()).write('"');
-            writer.write(",\"pUpBtnId\":\"").write(fileUpload.getUploadButtonId()).write('"');
-            writer.write(",\"pDisabled\":").write(fileUpload.isContainerDisabled());
-            writer.write(",\"pSelect\":").write(fileUpload.isSelectOnly());
+            writer.beginFunction("ux.rigFileUpload");
+            writer.writeParam("pId", fileUpload.getId());
+            writer.writeParam("pContId", fileUpload.getContainerId());
+            writer.writeParam("pBtnId", fileUpload.getButtonId());
+            writer.writeParam("pSpanId", fileUpload.getSpanId());
+            writer.writeParam("pUpBtnId", fileUpload.getUploadButtonId());
+            writer.writeParam("pDisabled", fileUpload.isContainerDisabled());
+            writer.writeParam("pSelect", fileUpload.isSelectOnly());
             String uploadPath = fileUpload.getUploadURL();
             if (uploadPath != null) {
-                writer.write(",\"pUploadURL\":\"").writeContextURL(uploadPath).write('"');
+                writer.writeContextURLParam("pUploadURL", uploadPath);
             }
 
             int maxSize = fileUpload.getMaxSize();
             if (maxSize > 0) {
-                writer.write(",\"pMaxSize\":").write(maxSize);
-                writer.write(",\"pMaxMsg\":\"").write(getSessionMessage("fileupload.maxsize", maxSize)).write('"');
+                writer.writeParam("pMaxSize", maxSize);
+                writer.writeParam("pMaxMsg", getSessionMessage("fileupload.maxsize", maxSize));
             }
-            writer.write("});");
+            writer.endFunction();
         }
     }
 

@@ -107,14 +107,12 @@ public class TimeFieldWriter extends AbstractPopupTextFieldWriter {
             throws UnifyException {
         TimeField timeField = (TimeField) popupTextField;
         String pageName = timeField.getId();
-        writer.write("ux.rigTimeField({");
-        writer.write("\"pId\":\"").write(pageName).write('"');
-        writer.write(",\"pClearable\":").write(timeField.isClearable());
-        writer.write(",\"pPattern\":");
-        writer.writeJsonPatternObject(timeField.getPattern());
-        writer.write(",\"pFormat\":");
-        writer.writeJsonDateTimeFormatObject(timeField.getDateTimeFormat());
-        writer.write("});");
+        writer.beginFunction("ux.rigTimeField");
+        writer.writeParam("pId", pageName);
+        writer.writeParam("pClearable", timeField.isClearable());
+        writer.writeParam("pPattern", timeField.getPattern());
+        writer.writeParam("pFormat", timeField.getDateTimeFormat());
+        writer.endFunction();
     }
 
     @Override

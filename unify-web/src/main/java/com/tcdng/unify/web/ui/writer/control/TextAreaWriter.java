@@ -45,10 +45,10 @@ public class TextAreaWriter extends AbstractControlWriter {
     protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
         super.doWriteBehavior(writer, widget);
         TextArea textArea = (TextArea) widget;
-        writer.write("ux.rigTextArea({");
-        writer.write("\"pId\":\"").write(textArea.getId()).write('"');
-        writer.write(",\"pScrEnd\":").write(textArea.isScrollToEnd());
-        writer.write("});");
+        writer.beginFunction("ux.rigTextArea");
+        writer.writeParam("pId", textArea.getId());
+        writer.writeParam("pScrEnd", textArea.isScrollToEnd());
+        writer.endFunction();
     }
 
     @SuppressWarnings("unchecked")

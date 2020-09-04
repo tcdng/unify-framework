@@ -27,6 +27,7 @@ import com.tcdng.unify.core.format.NumberSymbols;
 import com.tcdng.unify.core.format.Pattern;
 import com.tcdng.unify.core.upl.UplComponent;
 import com.tcdng.unify.core.upl.UplComponentWriter;
+import com.tcdng.unify.core.util.json.JsonWriter;
 import com.tcdng.unify.web.data.WebStringWriter;
 
 /**
@@ -249,6 +250,17 @@ public interface ResponseWriter extends UnifyComponent {
 	 *             if an error occurs
 	 */
 	ResponseWriter writeJsonArray(Collection<?> col) throws UnifyException;
+    
+    /**
+     * Writes a JSON pattern object.
+     * 
+     * @param paramName the parameter name
+     * @param pa
+     *            the pattern to write
+     * @throws UnifyException
+     *             if an error occurs
+     */
+	ResponseWriter writeParam(String paramName, Pattern[] pa) throws UnifyException;
 
 	/**
 	 * Writes a JSON pattern object.
@@ -260,6 +272,19 @@ public interface ResponseWriter extends UnifyComponent {
 	 */
 	ResponseWriter writeJsonPatternObject(Pattern[] pa) throws UnifyException;
 
+    /**
+     * Writes a JSON format date-time format object.
+     * 
+     * @param paramName
+     *                       the parameter name
+     * @param dateTimeFormat
+     *                       the date-time format
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    ResponseWriter writeParam(String paramName, DateTimeFormat[] dateTimeFormat)
+            throws UnifyException;
+	
 	/**
 	 * Writes a JSON format date-time format object.
 	 * 
@@ -339,7 +364,7 @@ public interface ResponseWriter extends UnifyComponent {
 	 *             if an error occurs
 	 */
 	ResponseWriter writeContextURL(StringBuilder sb, String path, String... pathElement) throws UnifyException;
-
+	
 	/**
 	 * Writes a resource URL using supplied parameters and application context path.
 	 * 
@@ -431,12 +456,354 @@ public interface ResponseWriter extends UnifyComponent {
 	 *             if an error occurs
 	 */
 	ResponseWriter writeCommandURL(String pageControllerName) throws UnifyException;
-
+	
 	/**
 	 * Returns true if this response writer is empty.
 	 */
 	boolean isEmpty();
 
+    /**
+     * Writes beginning of a function call.
+     * 
+     * @param functionName
+     *                     the function name
+     * @return this writer
+     * @throws UnifyException
+     *                        if function is already begun. If an error occurs
+     */
+    ResponseWriter beginFunction(String functionName) throws UnifyException;
+
+    /**
+     * Write a function parameter.
+     * 
+     * @param paramName
+     *                  the parameter name
+     * @param val
+     *                  the parameter value
+     * @return this writer
+     * @throws UnifyException
+     *                        if write function is not begun. If an error occurs
+     */
+    ResponseWriter writeParam(String paramName, String[] val) throws UnifyException;
+
+    /**
+     * Write a function parameter.
+     * 
+     * @param paramName
+     *                  the parameter name
+     * @param val
+     *                  the parameter value
+     * @return this writer
+     * @throws UnifyException
+     *                        if write function is not begun. If an error occurs
+     */
+    ResponseWriter writeParam(String paramName, String val) throws UnifyException;
+
+    /**
+     * Write a resolved function parameter.
+     * 
+     * @param paramName
+     *                  the parameter name
+     * @param val
+     *                  the parameter value
+     * @return this writer
+     * @throws UnifyException
+     *                        if write function is not begun. If an error occurs
+     */
+    ResponseWriter writeResolvedParam(String paramName, String val) throws UnifyException;
+
+    /**
+     * Write a function parameter.
+     * 
+     * @param paramName
+     *                  the parameter name
+     * @param val
+     *                  the parameter value
+     * @return this writer
+     * @throws UnifyException
+     *                        if write function is not begun. If an error occurs
+     */
+    ResponseWriter writeParam(String paramName, Number[] val) throws UnifyException;
+
+    /**
+     * Write a function parameter.
+     * 
+     * @param paramName
+     *                  the parameter name
+     * @param val
+     *                  the parameter value
+     * @return this writer
+     * @throws UnifyException
+     *                        if write function is not begun. If an error occurs
+     */
+    ResponseWriter writeParam(String paramName, Number val) throws UnifyException;
+
+    /**
+     * Write a function parameter.
+     * 
+     * @param paramName
+     *                  the parameter name
+     * @param val
+     *                  the parameter value
+     * @return this writer
+     * @throws UnifyException
+     *                        if write function is not begun. If an error occurs
+     */
+    ResponseWriter writeParam(String paramName, Boolean[] val) throws UnifyException;
+
+    /**
+     * Write a function parameter.
+     * 
+     * @param paramName
+     *                  the parameter name
+     * @param val
+     *                  the parameter value
+     * @return this writer
+     * @throws UnifyException
+     *                        if write function is not begun. If an error occurs
+     */
+    ResponseWriter writeParam(String paramName, Boolean val) throws UnifyException;
+
+    /**
+     * Write a function parameter.
+     * 
+     * @param paramName
+     *                  the parameter name
+     * @param val
+     *                  the parameter value
+     * @return this writer
+     * @throws UnifyException
+     *                        if write function is not begun. If an error occurs
+     */
+    ResponseWriter writeParam(String paramName, char[] val) throws UnifyException;
+
+    /**
+     * Write a function parameter.
+     * 
+     * @param paramName
+     *                  the parameter name
+     * @param val
+     *                  the parameter value
+     * @return this writer
+     * @throws UnifyException
+     *                        if write function is not begun. If an error occurs
+     */
+    ResponseWriter writeParam(String paramName, char val) throws UnifyException;
+
+    /**
+     * Write a function parameter.
+     * 
+     * @param paramName
+     *                  the parameter name
+     * @param val
+     *                  the parameter value
+     * @return this writer
+     * @throws UnifyException
+     *                        if write function is not begun. If an error occurs
+     */
+    ResponseWriter writeParam(String paramName, int[] val) throws UnifyException;
+
+    /**
+     * Write a function parameter.
+     * 
+     * @param paramName
+     *                  the parameter name
+     * @param val
+     *                  the parameter value
+     * @return this writer
+     * @throws UnifyException
+     *                        if write function is not begun. If an error occurs
+     */
+    ResponseWriter writeParam(String paramName, int val) throws UnifyException;
+
+    /**
+     * Write a function parameter.
+     * 
+     * @param paramName
+     *                  the parameter name
+     * @param val
+     *                  the parameter value
+     * @return this writer
+     * @throws UnifyException
+     *                        if write function is not begun. If an error occurs
+     */
+    ResponseWriter writeParam(String paramName, long[] val) throws UnifyException;
+
+    /**
+     * Write a function parameter.
+     * 
+     * @param paramName
+     *                  the parameter name
+     * @param val
+     *                  the parameter value
+     * @return this writer
+     * @throws UnifyException
+     *                        if write function is not begun. If an error occurs
+     */
+    ResponseWriter writeParam(String paramName, long val) throws UnifyException;
+
+    /**
+     * Write a function parameter.
+     * 
+     * @param paramName
+     *                  the parameter name
+     * @param val
+     *                  the parameter value
+     * @return this writer
+     * @throws UnifyException
+     *                        if write function is not begun. If an error occurs
+     */
+    ResponseWriter writeParam(String paramName, short[] val) throws UnifyException;
+
+    /**
+     * Write a function parameter.
+     * 
+     * @param paramName
+     *                  the parameter name
+     * @param val
+     *                  the parameter value
+     * @return this writer
+     * @throws UnifyException
+     *                        if write function is not begun. If an error occurs
+     */
+    ResponseWriter writeParam(String paramName, short val) throws UnifyException;
+
+    /**
+     * Write a function parameter.
+     * 
+     * @param paramName
+     *                  the parameter name
+     * @param val
+     *                  the parameter value
+     * @return this writer
+     * @throws UnifyException
+     *                        if write function is not begun. If an error occurs
+     */
+    ResponseWriter writeParam(String paramName, float[] val) throws UnifyException;
+
+    /**
+     * Write a function parameter.
+     * 
+     * @param paramName
+     *                  the parameter name
+     * @param val
+     *                  the parameter value
+     * @return this writer
+     * @throws UnifyException
+     *                        if write function is not begun. If an error occurs
+     */
+    ResponseWriter writeParam(String paramName, float val) throws UnifyException;
+
+    /**
+     * Write a function parameter.
+     * 
+     * @param paramName
+     *                  the parameter name
+     * @param val
+     *                  the parameter value
+     * @return this writer
+     * @throws UnifyException
+     *                        if write function is not begun. If an error occurs
+     */
+    ResponseWriter writeParam(String paramName, double[] val) throws UnifyException;
+
+    /**
+     * Write a function parameter.
+     * 
+     * @param paramName
+     *                  the parameter name
+     * @param val
+     *                  the parameter value
+     * @return this writer
+     * @throws UnifyException
+     *                        if write function is not begun. If an error occurs
+     */
+    ResponseWriter writeParam(String paramName, double val) throws UnifyException;
+
+    /**
+     * Write a function parameter.
+     * 
+     * @param paramName
+     *                  the parameter name
+     * @param val
+     *                  the parameter value
+     * @return this writer
+     * @throws UnifyException
+     *                        if write function is not begun. If an error occurs
+     */
+    ResponseWriter writeParam(String paramName, boolean[] val) throws UnifyException;
+
+    /**
+     * Write a function parameter.
+     * 
+     * @param paramName
+     *                  the parameter name
+     * @param val
+     *                  the parameter value
+     * @return this writer
+     * @throws UnifyException
+     *                        if write function is not begun. If an error occurs
+     */
+    ResponseWriter writeParam(String paramName, boolean val) throws UnifyException;
+
+    /**
+     * Write a function parameter.
+     * 
+     * @param paramName
+     *                  the parameter name
+     * @param val
+     *                  the parameter value
+     * @return this writer
+     * @throws UnifyException
+     *                        if write function is not begun. If an error occurs
+     */
+    ResponseWriter writeParam(String paramName, JsonWriter val) throws UnifyException;
+
+    /**
+     * Writes a context request URL parameter using supplied path elements
+     * 
+     * @param paramName
+     *                  the parameter name
+     * @param path
+     *            the main path
+     * @param pathElement
+     *            the other path elements to use (optional).
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    ResponseWriter writeContextURLParam(String paramName, String path, String... pathElement) throws UnifyException;
+
+    /**
+     * Writes default parameter command URL.
+     * 
+     * @param paramName
+     *                  the parameter name
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    ResponseWriter writeCommandURLParam(String paramName) throws UnifyException;
+
+    /**
+     * Writes command URL parameter for specified controller
+     * 
+     * @param paramName
+     *                  the parameter name
+     * @param pageControllerName
+     *            the page controller name
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    ResponseWriter writeCommandURLParam(String paramName, String pageControllerName) throws UnifyException;
+
+    /**
+     * Write closure of a function call
+     * 
+     * @return this writer
+     * @throws UnifyException
+     *                        if write function is not begun. If an error occurs
+     */
+    ResponseWriter endFunction() throws UnifyException;
+    
 	/**
 	 * Writes javascript REGEX that allows only alphanumeric characters and,
 	 * optionally, some special characters.

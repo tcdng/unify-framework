@@ -15,6 +15,8 @@
  */
 package com.tcdng.unify.web.util;
 
+import com.tcdng.unify.core.data.LargeStringWriter;
+
 /**
  * HTML utilities.
  * 
@@ -41,29 +43,54 @@ public final class HtmlUtils {
 
         int length = string.length();
         for (int i = 0; i < length; i++) {
-            char ch = string.charAt(i);
-            switch (ch) {
-                case '<':
-                    sb.append("&lt;");
-                    break;
-                case '>':
-                    sb.append("&gt;");
-                    break;
-                case '&':
-                    sb.append("&amp;");
-                    break;
-                case '"':
-                    sb.append("&quot;");
-                    break;
-                case '\'':
-                    sb.append("&apos;");
-                    break;
-                default:
-                    sb.append(ch);
-            }
+            writeChar(sb, string.charAt(i));
         }
     }
 
+    public static void writeChar(StringBuilder sb, char ch) {
+        switch (ch) {
+            case '<':
+                sb.append("&lt;");
+                break;
+            case '>':
+                sb.append("&gt;");
+                break;
+            case '&':
+                sb.append("&amp;");
+                break;
+            case '"':
+                sb.append("&quot;");
+                break;
+            case '\'':
+                sb.append("&apos;");
+                break;
+            default:
+                sb.append(ch);
+        }
+    }
+    
+    public static void writeChar(LargeStringWriter lsw, char ch) {
+        switch (ch) {
+            case '<':
+                lsw.append("&lt;");
+                break;
+            case '>':
+                lsw.append("&gt;");
+                break;
+            case '&':
+                lsw.append("&amp;");
+                break;
+            case '"':
+                lsw.append("&quot;");
+                break;
+            case '\'':
+                lsw.append("&apos;");
+                break;
+            default:
+                lsw.append(ch);
+        }
+    }
+    
     public static String extractStyleAttribute(String style, String attributeName) {
         if (style != null && !style.isEmpty()) {
             int startIndex = style.indexOf(attributeName);

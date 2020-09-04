@@ -38,11 +38,10 @@ public class FileDownloadWriter extends ButtonWriter {
 
         // Append rigging
         FileDownload fileDownload = (FileDownload) widget;
-        writer.write("ux.rigFileDownload({");
-        writer.write("\"pId\":\"").write(fileDownload.getId()).write('"');
-        writer.write(",\"pCmdURL\":\"");
-        writer.writeCommandURL();
-        writer.write("\"});");
+        writer.beginFunction("ux.rigFileDownload");
+        writer.writeParam("pId", fileDownload.getId());
+        writer.writeCommandURLParam("pCmdURL");
+        writer.endFunction();
     }
 
 }

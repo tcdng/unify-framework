@@ -63,8 +63,9 @@ public class TitleBarWriter extends AbstractControlWriter {
         TitleBar titleBar = (TitleBar) widget;
         if (titleBar.getUplAttribute(boolean.class, "draggable")) {
             // Append drag and drop JS
-            writer.write("ux.rigDragAndDropPopup({");
-            writer.write("\"pId\":\"").write(titleBar.getId()).write("\"});");
+            writer.beginFunction("ux.rigDragAndDropPopup");
+            writer.writeParam("pId", titleBar.getId());
+            writer.endFunction();
         }
 
         // Append external controls behavior

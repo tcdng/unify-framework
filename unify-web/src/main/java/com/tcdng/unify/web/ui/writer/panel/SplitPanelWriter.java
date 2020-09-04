@@ -46,20 +46,18 @@ public class SplitPanelWriter extends AbstractPanelWriter {
                 writer.writeBehavior(innerWidget);
             }
         }
-        writer.write("ux.rigSplitPanel({");
-        writer.write("\"pId\":\"").write(splitPanel.getId()).write('"');
-        writer.write(",\"pContId\":\"").write(splitPanel.getId()).write('"');
-        writer.write(",\"pCmdURL\":\"");
-        writer.writeCommandURL();
-        writer.write('"');
-        writer.write(",\"pCtrlId\":\"").write(splitPanel.getSplitCtrlId()).write('"');
-        writer.write(",\"pMinorId\":\"").write(splitPanel.getMinorWinId()).write('"');
-        writer.write(",\"pMinorScrId\":\"").write(splitPanel.getMinorPaneId()).write('"');
-        writer.write(",\"pMajorScrId\":\"").write(splitPanel.getMajorPaneId()).write('"');
-        writer.write(",\"pMax\":").write(splitPanel.getMinorWinMax());
-        writer.write(",\"pMin\":").write(splitPanel.getMinorWinMin());
-        writer.write(",\"pVert\":").write(splitPanel.isVertical());
-        writer.write("});");
+        writer.beginFunction("ux.rigSplitPanel");
+        writer.writeParam("pId", splitPanel.getId());
+        writer.writeParam("pContId", splitPanel.getId());
+        writer.writeCommandURLParam("pCmdURL");
+        writer.writeParam("pCtrlId", splitPanel.getSplitCtrlId());
+        writer.writeParam("pMinorId", splitPanel.getMinorWinId());
+        writer.writeParam("pMinorScrId", splitPanel.getMinorPaneId());
+        writer.writeParam("pMajorScrId", splitPanel.getMajorPaneId());
+        writer.writeParam("pMax", splitPanel.getMinorWinMax());
+        writer.writeParam("pMin", splitPanel.getMinorWinMin());
+        writer.writeParam("pVert", splitPanel.isVertical());
+        writer.endFunction();
     }
 
     @Override

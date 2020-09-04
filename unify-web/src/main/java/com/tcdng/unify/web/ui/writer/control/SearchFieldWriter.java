@@ -21,6 +21,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.data.Listable;
+import com.tcdng.unify.core.util.json.JsonWriter;
 import com.tcdng.unify.web.ui.ListControlJsonData;
 import com.tcdng.unify.web.ui.ResponseWriter;
 import com.tcdng.unify.web.ui.Widget;
@@ -114,11 +115,11 @@ public class SearchFieldWriter extends AbstractPopupTextFieldWriter {
     @Override
     protected String getOnShowParam(AbstractPopupTextField popupTextField) throws UnifyException {
         SearchField searchField = (SearchField) popupTextField;
-        StringBuilder sb = new StringBuilder();
-        sb.append('{');
-        sb.append("\"pFilId\":\"").append(searchField.getFilterId()).append('"');
-        sb.append('}');
-        return sb.toString();
+        JsonWriter jw = new JsonWriter();
+        jw.beginObject();
+        jw.write("pFilId", searchField.getFilterId());
+        jw.endObject();
+        return jw.toString();
     }
 
     @Override
@@ -136,19 +137,19 @@ public class SearchFieldWriter extends AbstractPopupTextFieldWriter {
         ListControlJsonData listControlJsonData = searchField.getListControlJsonData(true, true, false);
 
         // Append rigging
-        writer.write(functionName).write("({");
-        writer.write("\"pId\":\"").write(searchField.getId()).write('"');
-        writer.write(",\"pFacId\":\"").write(searchField.getFacadeId()).write('"');
-        writer.write(",\"pFilId\":\"").write(searchField.getFilterId()).write('"');
-        writer.write(",\"pRltId\":\"").write(searchField.getResultPanelId()).write('"');
-        writer.write(",\"pClrId\":\"").write(searchField.getClearButtonId()).write('"');
-        writer.write(",\"pCanId\":\"").write(searchField.getCancelButtonId()).write('"');
-        writer.write(",\"pClearable\":").write(searchField.isClearable());
-        writer.write(",\"pCmdURL\":\"").writeCommandURL().write('"');
-        writer.write(",\"pICnt\":").write(listControlJsonData.getSize());
-        writer.write(",\"pLabelIds\":").write(listControlJsonData.getJsonSelectIds());
-        writer.write(",\"pKeys\":").write(listControlJsonData.getJsonKeys());
-        writer.write("});");
+        writer.beginFunction(functionName);
+        writer.writeParam("pId", searchField.getId());
+        writer.writeCommandURLParam("pCmdURL");
+        writer.writeParam("pFacId", searchField.getFacadeId());
+        writer.writeParam("pFilId", searchField.getFilterId());
+        writer.writeParam("pRltId", searchField.getResultPanelId());
+        writer.writeParam("pClrId", searchField.getClearButtonId());
+        writer.writeParam("pCanId", searchField.getCancelButtonId());
+        writer.writeParam("pClearable", searchField.isClearable());
+        writer.writeParam("pICnt", listControlJsonData.getSize());
+        writer.writeResolvedParam("pLabelIds", listControlJsonData.getJsonSelectIds());
+        writer.writeResolvedParam("pKeys", listControlJsonData.getJsonKeys());
+        writer.endFunction();
     }
 
     private void writeResultList(ResponseWriter writer, SearchField searchField) throws UnifyException {

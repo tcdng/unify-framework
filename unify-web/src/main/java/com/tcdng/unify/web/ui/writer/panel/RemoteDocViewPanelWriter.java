@@ -40,29 +40,29 @@ public class RemoteDocViewPanelWriter extends AbstractPanelWriter {
     @Override
     protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
         RemoteDocViewPanel remoteDocViewPanel = (RemoteDocViewPanel) widget;
-        writer.write("ux.loadRemoteDocViewPanel({");
-        writer.write("\"pId\":\"").write(remoteDocViewPanel.getId()).write('"');
-        writer.write(",\"pWinPgNm\":\"").write(getResponseControllerWinId()).write("\"");
+        writer.beginFunction("ux.loadRemoteDocViewPanel");
+        writer.writeParam("pId", remoteDocViewPanel.getId());
+        writer.writeParam("pWinPgNm", getResponseControllerWinId());
         RemoteDocViewInfo remoteDocViewInfo = remoteDocViewPanel.getRemoteDocViewInfo();
-        writer.write(",\"pRemoteURL\":\"").write(remoteDocViewInfo.getRemoteDocUrl()).write("\"");
+        writer.writeParam("pRemoteURL", remoteDocViewInfo.getRemoteDocUrl());
 
         UserToken userToken = getUserToken();
-        writer.write(",\"pLoginId\":\"").write(userToken.getUserLoginId()).write("\"");
-        writer.write(",\"pUserName\":\"").write(userToken.getUserName()).write("\"");
+        writer.writeParam("pLoginId", userToken.getUserLoginId());
+        writer.writeParam("pUserName", userToken.getUserName());
         if (StringUtils.isNotBlank(userToken.getRoleCode())) {
-            writer.write(",\"pRoleCode\":\"").write(userToken.getRoleCode()).write("\"");
+            writer.writeParam("pRoleCode", userToken.getRoleCode());
         }
 
         if (StringUtils.isNotBlank(userToken.getBranchCode())) {
-            writer.write(",\"pBranchCode\":\"").write(userToken.getBranchCode()).write("\"");
+            writer.writeParam("pBranchCode", userToken.getBranchCode());
         }
 
         if (StringUtils.isNotBlank(remoteDocViewInfo.getColorScheme())) {
-            writer.write(",\"pColorScheme\":\"").write(remoteDocViewInfo.getColorScheme()).write("\"");
+            writer.writeParam("pColorScheme", remoteDocViewInfo.getColorScheme());
         }
 
-        writer.write(",\"pGlobalFlag\":").write(userToken.isGlobalAccess());
-        writer.write("});");
+        writer.writeParam("pGlobalFlag", userToken.isGlobalAccess());
+        writer.endFunction();
     }
 
     @Override

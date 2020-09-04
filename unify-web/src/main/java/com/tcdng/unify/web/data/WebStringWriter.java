@@ -18,6 +18,8 @@ package com.tcdng.unify.web.data;
 
 import com.tcdng.unify.core.data.LargeStringWriter;
 import com.tcdng.unify.core.util.StringUtils;
+import com.tcdng.unify.core.util.json.JsonUtils;
+import com.tcdng.unify.web.util.HtmlUtils;
 
 /**
  * Web string writer.
@@ -62,30 +64,11 @@ public class WebStringWriter extends LargeStringWriter {
 
     public WebStringWriter appendHtmlEscaped(String str) {
         if (str == null) {
-            append(str);
+            super.append(str);
         } else {
             int len = str.length();
             for (int i = 0; i < len; i++) {
-                char ch = str.charAt(i);
-                switch (ch) {
-                    case '<':
-                        append("&lt;");
-                        break;
-                    case '>':
-                        append("&gt;");
-                        break;
-                    case '&':
-                        append("&amp;");
-                        break;
-                    case '"':
-                        append("&quot;");
-                        break;
-                    case '\'':
-                        append("&apos;");
-                        break;
-                    default:
-                        append(ch);
-                }
+                HtmlUtils.writeChar(this, str.charAt(i));
             }
         }
 
@@ -94,31 +77,12 @@ public class WebStringWriter extends LargeStringWriter {
 
     public WebStringWriter appendHtmlEscaped(WebStringWriter wsw) {
         if (wsw == null) {
-            append(StringUtils.NULL_STRING);
+            super.append(StringUtils.NULL_STRING);
         } else {
             char[] data = wsw.getData();
             int len = wsw.length();
             for (int i = 0; i < len; i++) {
-                char ch = data[i];
-                switch (ch) {
-                    case '<':
-                        append("&lt;");
-                        break;
-                    case '>':
-                        append("&gt;");
-                        break;
-                    case '&':
-                        append("&amp;");
-                        break;
-                    case '"':
-                        append("&quot;");
-                        break;
-                    case '\'':
-                        append("&apos;");
-                        break;
-                    default:
-                        append(ch);
-                }
+                HtmlUtils.writeChar(this, data[i]);
             }
         }
 
@@ -127,46 +91,12 @@ public class WebStringWriter extends LargeStringWriter {
 
     public WebStringWriter appendJsonQuoted(String str) {
         if (str == null || str.length() == 0) {
-            append("\"\"");
+            super.append("\"\"");
         } else {
             append('"');
             int len = str.length();
             for (int i = 0; i < len; i++) {
-                char ch = str.charAt(i);
-                switch (ch) {
-                    case '"':
-                    case '\\':
-                    case '/':
-                        append('\\').append(ch);
-                        break;
-                    case '\t':
-                        append("\\t");
-                        break;
-                    case '\f':
-                        append("\\f");
-                        break;
-                    case '\b':
-                        append("\\b");
-                        break;
-                    case '\r':
-                        append("\\r");
-                        break;
-                    case '\n':
-                        append("\\n");
-                        break;
-                    default:
-                        if (ch < ' ' || ch > 127) {
-                            String hex = Integer.toHexString(ch);
-                            int padLen = 4 - hex.length();
-                            append("\\u");
-                            while (padLen-- > 0) {
-                                append('0');
-                            }
-                            append(hex);
-                        } else {
-                            append(ch);
-                        }
-                }
+                JsonUtils.writeChar(this, str.charAt(i));
             }
             append('"');
         }
@@ -182,41 +112,7 @@ public class WebStringWriter extends LargeStringWriter {
             char[] data = wsw.getData();
             int len = wsw.length();
             for (int i = 0; i < len; i++) {
-                char ch = data[i];
-                switch (ch) {
-                    case '"':
-                    case '\\':
-                    case '/':
-                        append('\\').append(ch);
-                        break;
-                    case '\t':
-                        append("\\t");
-                        break;
-                    case '\f':
-                        append("\\f");
-                        break;
-                    case '\b':
-                        append("\\b");
-                        break;
-                    case '\r':
-                        append("\\r");
-                        break;
-                    case '\n':
-                        append("\\n");
-                        break;
-                    default:
-                        if (ch < ' ' || ch > 127) {
-                            String hex = Integer.toHexString(ch);
-                            int padLen = 4 - hex.length();
-                            append("\\u");
-                            while (padLen-- > 0) {
-                                append('0');
-                            }
-                            append(hex);
-                        } else {
-                            append(ch);
-                        }
-                }
+                JsonUtils.writeChar(this, data[i]);
             }
             append('"');
         }

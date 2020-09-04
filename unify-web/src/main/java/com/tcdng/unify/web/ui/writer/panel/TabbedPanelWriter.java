@@ -21,6 +21,7 @@ import java.util.List;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
+import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.web.ui.Container;
 import com.tcdng.unify.web.ui.ResponseWriter;
 import com.tcdng.unify.web.ui.Widget;
@@ -41,17 +42,14 @@ public class TabbedPanelWriter extends AbstractSwitchPanelWriter {
     protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
         super.doWriteBehavior(writer, widget);
         TabbedPanel tabbedPanel = (TabbedPanel) widget;
-        writer.write("ux.rigTabbedPanel({");
-        writer.write("\"pId\":\"").write(tabbedPanel.getId()).write('"');
-        writer.write(",\"pContId\":\"").write(tabbedPanel.getId()).write('"');
-        writer.write(",\"pCmdURL\":\"");
-        writer.writeCommandURL();
-        writer.write('"');
-        writer.write(",\"pActTabId\":\"").write(tabbedPanel.getActiveTabId()).write('"');
-        writer.write(",\"pActTabIdList\":").writeJsonArray(tabbedPanel.getActiveTabExpandedIdList());
-        writer.write(",\"pSelTabId\":\"").write(tabbedPanel.getSelectedTabId()).write('"');
-        writer.write(",\"pTabIdList\":").writeJsonArray(tabbedPanel.getTabIds());
-        writer.write(",\"pTabCapIdList\":");
+        writer.beginFunction("ux.rigTabbedPanel");
+        writer.writeParam("pId", tabbedPanel.getId());
+        writer.writeParam("pContId", tabbedPanel.getId());
+        writer.writeCommandURLParam("pCmdURL");
+        writer.writeParam("pActTabId", tabbedPanel.getActiveTabId());
+        writer.writeParam("pActTabIdList", DataUtils.toArray(String.class, tabbedPanel.getActiveTabExpandedIdList()));
+        writer.writeParam("pSelTabId", tabbedPanel.getSelectedTabId()).write('"');
+        writer.writeParam("pTabIdList" , DataUtils.toArray(String.class, tabbedPanel.getTabIds()));
         List<String> captionIds = new ArrayList<String>();
         for (String longName : tabbedPanel.getLayoutWidgetLongNames()) {
             Widget tabWidget = tabbedPanel.getWidgetByLongName(longName);
@@ -59,8 +57,8 @@ public class TabbedPanelWriter extends AbstractSwitchPanelWriter {
                 captionIds.add(tabWidget.getPrefixedId("cap_"));
             }
         }
-        writer.writeJsonArray(captionIds);
-        writer.write("});");
+        writer.writeParam("pTabCapIdList", DataUtils.toArray(String.class, captionIds));
+        writer.endFunction();
     }
 
     @Override

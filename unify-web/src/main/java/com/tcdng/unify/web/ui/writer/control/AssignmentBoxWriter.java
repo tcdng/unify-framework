@@ -100,32 +100,30 @@ public class AssignmentBoxWriter extends AbstractControlWriter {
         }
 
         // Append rigging
-        writer.write("ux.rigAssignmentBox({");
-        writer.write("\"pId\":\"").write(assignmentBox.getId()).write('"');
-        writer.write(",\"pCmdURL\":\"");
-        writer.writeCommandURL();
-        writer.write('"');
-        writer.write(",\"pContId\":\"").write(assignmentBox.getContainerId()).write('"');
+        writer.beginFunction("ux.rigAssignmentBox");
+        writer.writeParam("pId", assignmentBox.getId());
+        writer.writeCommandURLParam("pCmdURL");
+        writer.writeParam("pContId", assignmentBox.getContainerId());
         if (assignmentBox.getFilterSel1() != null) {
-            writer.write(",\"pFilterSel1Id\":\"").write(assignmentBox.getFilterSel1().getId()).write('"');
+            writer.writeParam("pFilterSel1Id", assignmentBox.getFilterSel1().getId());
         }
-
+        
         if (assignmentBox.getFilterSel2() != null) {
-            writer.write(",\"pFilterSel2Id\":\"").write(assignmentBox.getFilterSel2().getId()).write('"');
+            writer.writeParam("pFilterSel2Id", assignmentBox.getFilterSel2().getId());
         }
 
-        writer.write(",\"pAssnSelId\":\"").write(assignmentBox.getAssignSel().getId()).write('"');
-        writer.write(",\"pAssnOnly\":").write(assignmentBox.isShowAssignedOnly());
+        writer.writeParam("pAssnSelId", assignmentBox.getAssignSel().getId());
+        writer.writeParam("pAssnOnly", assignmentBox.isShowAssignedOnly());
         if (!assignmentBox.isShowAssignedOnly()) {
-            writer.write(",\"pAssnAll\":").write(assignmentBox.isAllowAssignAll());
-            writer.write(",\"pUnassnSelId\":\"").write(assignmentBox.getUnassignSel().getId()).write('"');
-            writer.write(",\"pAssnBtnId\":\"").write(assignmentBox.getAssignBtn().getId()).write('"');
-            writer.write(",\"pAssnAllBtnId\":\"").write(assignmentBox.getAssignAllBtn().getId()).write('"');
-            writer.write(",\"pUnassnBtnId\":\"").write(assignmentBox.getUnassignBtn().getId()).write('"');
-            writer.write(",\"pUnassnAllBtnId\":\"").write(assignmentBox.getUnassignAllBtn().getId()).write('"');
+            writer.writeParam("pAssnAll", assignmentBox.isAllowAssignAll());
+            writer.writeParam("pUnassnSelId", assignmentBox.getUnassignSel().getId());
+            writer.writeParam("pAssnBtnId", assignmentBox.getAssignBtn().getId());
+            writer.writeParam("pAssnAllBtnId", assignmentBox.getAssignAllBtn().getId());
+            writer.writeParam("pUnassnBtnId", assignmentBox.getUnassignBtn().getId());
+            writer.writeParam("pUnassnAllBtnId", assignmentBox.getUnassignAllBtn().getId());
         }
-        writer.write(",\"pEditable\":").write(assignmentBox.isContainerEditable());
-        writer.write("});");
+        writer.writeParam("pEditable", assignmentBox.isContainerEditable());
+        writer.endFunction();
     }
 
     private void writeFilter(ResponseWriter writer, Control filter, String caption)
