@@ -33,6 +33,7 @@ import com.tcdng.unify.core.data.ValueStoreFactory;
 import com.tcdng.unify.core.format.Formatter;
 import com.tcdng.unify.core.logging.Logger;
 import com.tcdng.unify.core.logging.LoggingLevel;
+import com.tcdng.unify.core.message.ResourceBundles;
 import com.tcdng.unify.core.task.TaskMonitor;
 import com.tcdng.unify.core.upl.UplComponent;
 import com.tcdng.unify.core.util.DataUtils;
@@ -1035,6 +1036,19 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 		return unifyComponentContext.getMessages().getMessage(getLocale(LocaleType.APPLICATION), messageKey, params);
 	}
 
+    /**
+     * Gets an array of application messages using supplied message keys.
+     * 
+     * @param messageKeys
+     *                    the message keys
+     * @return array of messages
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    protected String[] getApplicationMessages(String... messageKeys) throws UnifyException {
+        return getMessages(LocaleType.APPLICATION, messageKeys);
+    }
+	
 	/**
 	 * Gets a formatted message using current session locale. Obtains a message from
 	 * application messages component using supplied messageKey and then formats
@@ -1049,6 +1063,18 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	protected String getSessionMessage(String messageKey, Object... params) throws UnifyException {
 		return unifyComponentContext.getMessages().getMessage(getLocale(LocaleType.SESSION), messageKey, params);
 	}
+    /**
+     * Gets an array of session messages using supplied message keys.
+     * 
+     * @param messageKeys
+     *                    the message keys
+     * @return array of messages
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    protected String[] getSessionMessages(String... messageKeys) throws UnifyException {
+        return getMessages(LocaleType.SESSION, messageKeys);
+    }
 
 	/**
 	 * Resolves a message string using application locale. A message is resolved by
@@ -1389,6 +1415,17 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 		}
 		return getUnifyComponentContext().getApplicationLocale();
 	}
+
+    private String[] getMessages(LocaleType localeType, String... messageKeys) throws UnifyException {
+        ResourceBundles resourceBundles = unifyComponentContext.getMessages();
+        Locale locale = getLocale(localeType);
+        String[] messages =  new String[messageKeys.length];
+        for(int i = 0; i < messages.length; i++) {
+            messages[i] = resourceBundles.getMessage(locale, messageKeys[i]);
+        }
+        
+        return messages;
+    }
 
 	private void log(TaskMonitor taskMonitor, LoggingLevel loggingLevel, String message, Object... params) {
 		try {
