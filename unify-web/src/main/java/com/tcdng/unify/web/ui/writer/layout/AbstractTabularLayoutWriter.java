@@ -119,7 +119,8 @@ public abstract class AbstractTabularLayoutWriter extends AbstractLayoutWriter {
             if (isCaption) {
                 String captionCls = "llabel";
                 if (layout.isInlineCaption()) {
-                    captionCls = "llabelinl";
+                    String inlineCapClass = layout.getInlineCaptionClass();
+                    captionCls = inlineCapClass == null ? "llabelinl" : "llabelinl " + inlineCapClass;
                 }
 
                 writer.write("<div");

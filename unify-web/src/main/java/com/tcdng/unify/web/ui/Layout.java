@@ -43,6 +43,14 @@ public interface Layout extends UplComponent {
     boolean isInlineCaption() throws UnifyException;
 
     /**
+     * Returns layout inline caption style class.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getInlineCaptionClass() throws UnifyException;
+    
+    /**
      * Returns the layout's caption style.
      * 
      * @throws UnifyException

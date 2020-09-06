@@ -31,12 +31,18 @@ import com.tcdng.unify.core.upl.AbstractUplComponent;
         @UplAttribute(name = "showCaption", type = boolean.class, defaultVal = "false"),
         @UplAttribute(name = "captionStyle", type = String.class),
         @UplAttribute(name = "captionSuffix", type = String.class),
-        @UplAttribute(name = "inlineCaption", type = boolean.class) })
+        @UplAttribute(name = "inlineCaption", type = boolean.class),
+        @UplAttribute(name = "inlineCaptionClass", type = String.class)})
 public abstract class AbstractLayout extends AbstractUplComponent implements Layout {
 
     @Override
     public boolean isInlineCaption() throws UnifyException {
         return getUplAttribute(boolean.class, "inlineCaption");
+    }
+
+    @Override
+    public String getInlineCaptionClass() throws UnifyException {
+        return getUplAttribute(String.class, "inlineCaptionClass");
     }
 
     @Override

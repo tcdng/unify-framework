@@ -1101,6 +1101,13 @@ ux.showDetached = function(originId, detachId) {
 	}
 }
 
+ux.hideDetached = function() {
+	if (ux.detachElem) {
+		ux.detachElem.style.display = "none";
+		ux.detachElem = null;
+	}
+}
+
 /** Fixed content panel */
 ux.rigFixedContentPanel = function(rgp) {
 	ux.cntHintId = rgp.pHintPanelId;
@@ -4831,11 +4838,6 @@ ux.hidePopup = function(uEv) {
 			openPrm.hideHandler(openPrm.hideParam);
 		}
 	}
-	
-	if (ux.detachElem) {
-		ux.detachElem.style.display = "none";
-		ux.detachElem = null;
-	}
 }
 
 ux.startClosePopupTimer = function() {
@@ -4854,15 +4856,12 @@ ux.cancelClosePopupTimer = function() {
 
 // Hide popup when click-out
 ux.documentHidePopup = function(uEv) {
-	if (ux.popCurr || ux.detachElem) {
+	if (ux.popCurr) {
 		var elem = uEv.uTrg;
 		while (elem) {
 			// Do not hide. Exit if element clicked is original source element or
 			// popup window
-			if (elem == ux.popupOrigin
-					|| elem == ux.popCurr
-					|| elem == ux.detachOriginElem
-					|| elem == ux.detachElem) {
+			if (elem == ux.popupOrigin || elem == ux.popCurr) {
 				return;
 			}
 			elem = elem.parentElement;
