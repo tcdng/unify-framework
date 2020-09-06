@@ -257,6 +257,9 @@ z-index:400;}
     color: #000; text-align: left; text-decoration: none; white-space: nowrap;}
 .contentpanel-popup .mitem:hover {background-color: #49A3FF; color: #FFF;}
 
+/** Detached panel */
+.ui-detachedpanel {background: #FFF; border: 1px solid #A9A9A9;padding:2px;}
+
 /** Dialog panel */
 .ui-dialogpanel {}
 .ui-dialogpanel-base {background: #FFF; border: 1px solid #A9A9A9;}

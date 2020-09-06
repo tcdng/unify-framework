@@ -20,7 +20,7 @@
  * @author Lateef Ojulari
  * @since 1.0
  */
-var ux = {};
+const ux = {};
 
 const UNIFY_SHIFT = 0x0100;
 const UNIFY_CTRL = 0x0200;
@@ -1053,6 +1053,52 @@ ux.contentAttachClose = function(uId, cnt, type, mode) {
 	evp.uURL = cnt.closePath;
 	ux.addHdl(_id(type + uId), "click", ux.post,
 			evp);
+}
+
+/** Detached panel */
+ux.detachOriginElem = null;
+ux.detachElem = null;
+
+ux.rigDetachedPanel = function(rgp) {
+	const id = rgp.pId;
+	_id(id).orient = rgp.pOrient;
+}
+
+ux.showDetached = function(originId, detachId) {
+	const origin = _id(originId);
+	const detached = _id(detachId);
+	if (origin && detached) {
+		const orient = detached.orient;
+		if (orient) {
+			detached.style.visibility = "hidden";
+			detached.style.display = "block";
+			const orect = origin.getBoundingClientRect();
+			const drect = detached.getBoundingClientRect();
+			var x = 0;
+			var y = 0;
+			if ("bottom_left" == orient) {
+				x = orect.right - drect.width;
+				y = orect.bottom + 1;
+			} else if ("bottom_right" == orient) {
+				x = orect.left;
+				y = orect.bottom + 1;
+			} else if ("top_left" == orient) {
+				x = orect.right - drect.width;
+				y = orect.top - drect.height - 1;
+			} else if ("top_right" == orient) {
+				x = orect.left;
+				y = orect.top - drect.height - 1;
+			}
+			
+			// TODO Shift to stay in display window
+			detached.style.left = Math.round(x) + "px";
+			detached.style.top = Math.floor(y) + "px";
+			detached.style.visibility = "visible";
+			
+			ux.detachOriginElem = origin;
+			ux.detachElem = detached;
+		}
+	}
 }
 
 /** Fixed content panel */
@@ -4785,6 +4831,11 @@ ux.hidePopup = function(uEv) {
 			openPrm.hideHandler(openPrm.hideParam);
 		}
 	}
+	
+	if (ux.detachElem) {
+		ux.detachElem.style.display = "none";
+		ux.detachElem = null;
+	}
 }
 
 ux.startClosePopupTimer = function() {
@@ -4803,17 +4854,22 @@ ux.cancelClosePopupTimer = function() {
 
 // Hide popup when click-out
 ux.documentHidePopup = function(uEv) {
-	var elem = uEv.uTrg;
-	while (elem) {
-		// Do not hide. Exit if element clicked is original source element or
-		// popup window
-		if (elem == ux.popupOrigin || elem == ux.popCurr) {
-			return;
+	if (ux.popCurr || ux.detachElem) {
+		var elem = uEv.uTrg;
+		while (elem) {
+			// Do not hide. Exit if element clicked is original source element or
+			// popup window
+			if (elem == ux.popupOrigin
+					|| elem == ux.popCurr
+					|| elem == ux.detachOriginElem
+					|| elem == ux.detachElem) {
+				return;
+			}
+			elem = elem.parentElement;
 		}
-		elem = elem.parentElement;
-	}
 
-	ux.hidePopup(uEv);
+		ux.hidePopup(uEv);
+	}
 }
 
 ux.addHdl(document, "click", ux.documentHidePopup, {});
