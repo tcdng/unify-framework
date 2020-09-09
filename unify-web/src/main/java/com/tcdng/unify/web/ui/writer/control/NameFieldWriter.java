@@ -18,9 +18,9 @@ package com.tcdng.unify.web.ui.writer.control;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
-import com.tcdng.unify.web.ui.ResponseWriter;
 import com.tcdng.unify.web.ui.control.NameField;
 import com.tcdng.unify.web.ui.control.TextField;
+import com.tcdng.unify.web.util.WebRegexUtils;
 
 /**
  * Name field writer.
@@ -33,9 +33,9 @@ import com.tcdng.unify.web.ui.control.TextField;
 public class NameFieldWriter extends TextFieldWriter {
 
     @Override
-    protected void writeFormatRegex(ResponseWriter writer, TextField textField) throws UnifyException {
+    protected String getFormatRegex(TextField textField) throws UnifyException {
         NameField nameField = (NameField) textField;
-        writer.writeNameFormatRegex(nameField.isAcceptUnderscore(), nameField.isAcceptDollar(),
+        return WebRegexUtils.getNameFormatRegex(nameField.isAcceptUnderscore(), nameField.isAcceptDollar(),
                 nameField.isAcceptPeriod(), nameField.isAcceptDash());
     }
 }

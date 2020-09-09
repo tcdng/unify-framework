@@ -40,7 +40,8 @@ public abstract class AbstractPopupTextFieldWriter extends TextFieldWriter {
         super.doWriteBehavior(writer, popupTextField);
 
         ExtensionType extensionType = popupTextField.getExtensionType();
-        if (isAppendPopup(popupTextField)) {
+        boolean popupEnabled = isPopupEnabled(popupTextField);
+        if (popupEnabled) {
             // Append popup JS
             if (popupTextField.isPopupAlways()
                     || (popupTextField.isContainerEditable() && !popupTextField.isContainerDisabled())) {
@@ -61,10 +62,9 @@ public abstract class AbstractPopupTextFieldWriter extends TextFieldWriter {
                         popupTextField.getPopupId(), popupTextField.getDisplayTimeOut(), getOnShowAction(),
                         getOnShowParam(popupTextField), getOnHideAction(), getOnHideParam(popupTextField));
             }
-
-            // Append type specific JS
-            appendPopupBehaviour(writer, popupTextField);
         }
+
+        doWritePopupTextFieldBehaviour(writer, popupTextField, popupEnabled);
     }
 
     @Override
@@ -73,7 +73,7 @@ public abstract class AbstractPopupTextFieldWriter extends TextFieldWriter {
         writer.write("<button");
         writeTagId(writer, popupTextField.getPopupButtonId());
         writeTagStyleClass(writer, "tpbutton g_fsm");
-        if (!isAppendPopup(popupTextField)) {
+        if (!isPopupEnabled(popupTextField)) {
             writer.write(" disabled");
         }
         writer.write(">");
@@ -91,28 +91,26 @@ public abstract class AbstractPopupTextFieldWriter extends TextFieldWriter {
     @Override
     protected void writeBaseAddOn(ResponseWriter writer, Widget widget) throws UnifyException {
         AbstractPopupTextField popupTextField = (AbstractPopupTextField) widget;
-        if (isAppendPopup(popupTextField)) {
-            writer.write("<div");
-            writeTagId(writer, popupTextField.getPopupId());
-            writeTagStyleClass(writer, "ui-text-popup-win");
-            writer.write(">");
-            appendPopupContent(writer, popupTextField);
-            writer.write("</div>");
-        }
+        writer.write("<div");
+        writeTagId(writer, popupTextField.getPopupId());
+        writeTagStyleClass(writer, "ui-text-popup-win");
+        writer.write(">");
+        writePopupContent(writer, popupTextField);
+        writer.write("</div>");
     }
 
-    protected boolean isAppendPopup(AbstractPopupTextField popupTextField) throws UnifyException {
+    protected boolean isPopupEnabled(AbstractPopupTextField popupTextField) throws UnifyException {
         if (popupTextField.isPopupOnEditableOnly()) {
             return popupTextField.isContainerEditable() && !popupTextField.isContainerDisabled();
         }
         return true;
     }
     
-    protected abstract void appendPopupContent(ResponseWriter writer, AbstractPopupTextField popupTextField)
+    protected abstract void writePopupContent(ResponseWriter writer, AbstractPopupTextField popupTextField)
             throws UnifyException;
 
-    protected abstract void appendPopupBehaviour(ResponseWriter writer, AbstractPopupTextField popupTextField)
-            throws UnifyException;
+    protected abstract void doWritePopupTextFieldBehaviour(ResponseWriter writer, AbstractPopupTextField popupTextField,
+            boolean popupEnabled) throws UnifyException;
 
     /**
      * Returns the name of action to fire on show of popup.

@@ -22,14 +22,15 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.data.Listable;
-import com.tcdng.unify.core.data.Money;
 import com.tcdng.unify.core.format.NumberFormatter;
+import com.tcdng.unify.core.util.json.JsonWriter;
 import com.tcdng.unify.web.ui.ListControlJsonData;
 import com.tcdng.unify.web.ui.ResponseWriter;
 import com.tcdng.unify.web.ui.Widget;
 import com.tcdng.unify.web.ui.control.AbstractPopupTextField;
 import com.tcdng.unify.web.ui.control.MoneyField;
 import com.tcdng.unify.web.ui.control.TextField;
+import com.tcdng.unify.web.util.WebRegexUtils;
 
 /**
  * Money field writer.
@@ -42,7 +43,7 @@ import com.tcdng.unify.web.ui.control.TextField;
 public class MoneyFieldWriter extends AbstractPopupTextFieldWriter {
 
     @Override
-    protected void appendPopupContent(ResponseWriter writer, AbstractPopupTextField popupTextField)
+    protected void writePopupContent(ResponseWriter writer, AbstractPopupTextField popupTextField)
             throws UnifyException {
         MoneyField moneyField = (MoneyField) popupTextField;
 
@@ -52,18 +53,10 @@ public class MoneyFieldWriter extends AbstractPopupTextFieldWriter {
         List<? extends Listable> listableList = moneyField.getListables();
         int length = listableList.size();
 
-        String currencyCode = getCurrencyCode(moneyField);
-        String selStyleClass = getUserColorStyleClass("sel");
         for (int i = 0; i < length; i++) {
             Listable listable = listableList.get(i);
-            String key = listable.getListKey();
             writer.write("<a");
             writeTagId(writer, moneyField.getNamingIndexedId(i));
-            if (key.equals(currencyCode)) {
-                writeTagStyleClass(writer, selStyleClass);
-            } else {
-                writeTagStyleClass(writer, "norm");
-            }
             writer.write(">");
             writer.writeWithHtmlEscape(listable.getListDescription());
             writer.write("</a>");
@@ -73,7 +66,7 @@ public class MoneyFieldWriter extends AbstractPopupTextFieldWriter {
     }
 
     @Override
-    protected void appendPopupBehaviour(ResponseWriter writer, AbstractPopupTextField popupTextField)
+    protected void doWritePopupTextFieldBehaviour(ResponseWriter writer, AbstractPopupTextField popupTextField, boolean popupEnabled)
             throws UnifyException {
         MoneyField moneyField = (MoneyField) popupTextField;
         ListControlJsonData listControlJsonData = moneyField.getListControlJsonData(true, true, false);
@@ -91,12 +84,19 @@ public class MoneyFieldWriter extends AbstractPopupTextFieldWriter {
         writer.writeResolvedParam("pKeys", listControlJsonData.getJsonKeys());
         writer.writeParam("pNormCls", "norm");
         writer.writeParam("pSelCls", getUserColorStyleClass("sel"));
+        writer.writeParam("pEnabled", popupEnabled);
+        JsonWriter jw = new JsonWriter();
+        jw.beginObject();
+        jw.write("currency", moneyField.getCurrencyString());
+        jw.write("amount", moneyField.getAmountString());
+        jw.endObject();
+        writer.writeParam("pVal", jw);
         writer.endFunction();
     }
 
     @Override
-    protected boolean isAppendPopup(AbstractPopupTextField popupTextField) throws UnifyException {
-        if (super.isAppendPopup(popupTextField)) {
+    protected boolean isPopupEnabled(AbstractPopupTextField popupTextField) throws UnifyException {
+        if (super.isPopupEnabled(popupTextField)) {
             MoneyField moneyField = (MoneyField) popupTextField;
             return moneyField.isMultiCurrency();
         }
@@ -110,28 +110,27 @@ public class MoneyFieldWriter extends AbstractPopupTextFieldWriter {
         writer.write("<button");
         writeTagId(writer, moneyField.getPopupButtonId());
         writeTagStyleClass(writer, "tplbutton");
-        if (!isAppendPopup(moneyField)) {
+        if (!isPopupEnabled(moneyField)) {
             writer.write(" disabled");
         }
 
         writer.write(">");
-        writer.write(getCurrencyCode(moneyField));
         writer.write("</button>");
     }
 
     @Override
     protected String getOnShowAction() throws UnifyException {
-        return "ux.moneyFieldOnShow";
+        return "ux.mfOnShow";
     }
 
     @Override
     protected String getOnShowParam(AbstractPopupTextField popupTextField) throws UnifyException {
         MoneyField moneyField = (MoneyField) popupTextField;
-        StringBuilder sb = new StringBuilder();
-        sb.append('{');
-        sb.append("\"pFrmId\":\"").append(moneyField.getFramePanelId()).append('"');
-        sb.append('}');
-        return sb.toString();
+        JsonWriter jw = new JsonWriter();
+        jw.beginObject();
+        jw.write("pFrmId", moneyField.getFramePanelId());
+        jw.endObject();
+        return jw.toString();
     }
 
     @Override
@@ -145,26 +144,16 @@ public class MoneyFieldWriter extends AbstractPopupTextFieldWriter {
     }
 
     @Override
-    protected void writeFormatRegex(ResponseWriter writer, TextField textField) throws UnifyException {
+    protected String getFormatRegex(TextField textField) throws UnifyException {
         MoneyField moneyField = (MoneyField) textField;
         int scale = 0;
         if (textField.isUplAttribute("scale")) {
             scale = moneyField.getUplAttribute(int.class, "scale");
         }
 
-        writer.writeNumberFormatRegex(((NumberFormatter<?>) moneyField.getFormatter()).getNumberSymbols(),
+        return WebRegexUtils.getNumberFormatRegex(((NumberFormatter<?>) moneyField.getFormatter()).getNumberSymbols(),
                 moneyField.getUplAttribute(int.class, "precision"), scale,
                 moneyField.getUplAttribute(boolean.class, "acceptNegative"),
                 moneyField.getUplAttribute(boolean.class, "useGrouping"));
-    }
-
-    private String getCurrencyCode(MoneyField moneyField) throws UnifyException {
-        String currencyCode = moneyField.getCurrencyCode();
-        Money money = moneyField.getValue(Money.class);
-        if (money != null && money.getCurrencyCode() != null) {
-            currencyCode = money.getCurrencyCode();
-        }
-
-        return currencyCode;
     }
 }

@@ -46,22 +46,15 @@ public class TextFieldWriter extends AbstractControlWriter {
         super.doWriteBehavior(writer, textField);
 
         // Append formatting regex
-        writer.write("ux.setTextRegexFormatting(\"");
+        writer.beginFunction("ux.setTextRegexFormatting");
         if (textField.isUseFacade()) {
-            writer.write(textField.getFacadeId());
+            writer.writeParam("pId", textField.getFacadeId());
         } else {
-            writer.write(textField.getId());
+            writer.writeParam("pId", textField.getId());
         }
-        writer.write("\",\"");
-        writeFormatRegex(writer, textField);
-        writer.write("\",");
-        String textCase = textField.getCase();
-        if (textCase == null) {
-            writer.write(textCase);
-        } else {
-            writer.write("\"").write(textCase).write("\"");
-        }
-        writer.write(");");
+        writer.writeParam("pRegex", getFormatRegex(textField));
+        writer.writeParam("pCase", textField.getCase());
+        writer.endFunction();
     }
 
     protected void writeTextField(ResponseWriter writer, TextField textField, String type) throws UnifyException {
@@ -80,8 +73,8 @@ public class TextFieldWriter extends AbstractControlWriter {
 
     }
 
-    protected void writeFormatRegex(ResponseWriter writer, TextField textField) throws UnifyException {
-        writer.write("");
+    protected String getFormatRegex(TextField textField) throws UnifyException {
+        return "";
     }
 
     private void writeTextField(ResponseWriter writer, TextField textField, String type, ExtensionType extensionType)

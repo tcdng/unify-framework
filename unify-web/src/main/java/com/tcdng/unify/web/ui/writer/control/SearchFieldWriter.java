@@ -39,7 +39,7 @@ import com.tcdng.unify.web.ui.control.SearchField;
 public class SearchFieldWriter extends AbstractPopupTextFieldWriter {
 
     @Override
-    protected void appendPopupContent(ResponseWriter writer, AbstractPopupTextField popupTextField)
+    protected void writePopupContent(ResponseWriter writer, AbstractPopupTextField popupTextField)
             throws UnifyException {
         SearchField searchField = (SearchField) popupTextField;
         searchField.setKeyOnly(true);
@@ -82,11 +82,11 @@ public class SearchFieldWriter extends AbstractPopupTextFieldWriter {
     }
 
     @Override
-    protected void appendPopupBehaviour(ResponseWriter writer, AbstractPopupTextField popupTextField)
-            throws UnifyException {
+    protected void doWritePopupTextFieldBehaviour(ResponseWriter writer, AbstractPopupTextField popupTextField,
+            boolean popupEnabled) throws UnifyException {
         SearchField searchField = (SearchField) popupTextField;
         searchField.setKeyOnly(true);
-        writeRigging(writer, searchField, "ux.rigSearchField");
+        writeRigging(writer, searchField, "ux.rigSearchField", popupEnabled);
     }
 
     @Override
@@ -103,7 +103,7 @@ public class SearchFieldWriter extends AbstractPopupTextFieldWriter {
             throws UnifyException {
         SearchField searchField = (SearchField) widget;
         if (searchField.getResultPanelId().equals(sectionPageName)) {
-            writeRigging(writer, searchField, "ux.searchWireResult");
+            writeRigging(writer, searchField, "ux.searchWireResult", isPopupEnabled(searchField));
         }
     }
 
@@ -132,7 +132,7 @@ public class SearchFieldWriter extends AbstractPopupTextFieldWriter {
         return null;
     }
 
-    private void writeRigging(ResponseWriter writer, SearchField searchField, String functionName)
+    private void writeRigging(ResponseWriter writer, SearchField searchField, String functionName, boolean popupEnabled)
             throws UnifyException {
         ListControlJsonData listControlJsonData = searchField.getListControlJsonData(true, true, false);
 
@@ -149,6 +149,7 @@ public class SearchFieldWriter extends AbstractPopupTextFieldWriter {
         writer.writeParam("pICnt", listControlJsonData.getSize());
         writer.writeResolvedParam("pLabelIds", listControlJsonData.getJsonSelectIds());
         writer.writeResolvedParam("pKeys", listControlJsonData.getJsonKeys());
+        writer.writeParam("pEnabled", popupEnabled);
         writer.endFunction();
     }
 

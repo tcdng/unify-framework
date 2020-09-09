@@ -20,12 +20,8 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
-import com.tcdng.unify.core.constant.FrequencyUnit;
-import com.tcdng.unify.core.util.CalendarUtils;
-import com.tcdng.unify.core.util.CalendarUtils.DateDifference;
 import com.tcdng.unify.web.ui.AbstractMultiControl;
 import com.tcdng.unify.web.ui.Control;
-import com.tcdng.unify.web.ui.Widget;
 
 /**
  * Widget used for selecting a duration.
@@ -34,11 +30,11 @@ import com.tcdng.unify.web.ui.Widget;
  * @since 1.0
  */
 @Component("ui-durationselect")
-@UplAttributes({ @UplAttribute(name = "showDays", type = boolean.class, defaultVal = "true"),
-        @UplAttribute(name = "showHours", type = boolean.class, defaultVal = "true") })
+@UplAttributes({
+        @UplAttribute(name = "showDays", type = boolean.class, defaultVal = "true"),
+        @UplAttribute(name = "showHours", type = boolean.class, defaultVal = "true"),
+        @UplAttribute(name = "minuteStep", type = int.class, defaultVal = "5")})
 public class DurationSelect extends AbstractMultiControl {
-
-    private static final int MINUTE_JUMP = 5;
 
     private Control daySelCtrl;
 
@@ -46,48 +42,15 @@ public class DurationSelect extends AbstractMultiControl {
 
     private Control minuteSelCtrl;
 
-    private Control durationCtrl;
-
-    private int days;
-
-    private int hours;
-
-    private int minutes;
-
-    private int duration; // Duration in minutes
-
     @Override
-    public void updateInternalState() throws UnifyException {
-        super.updateInternalState();
-
-        duration = getValue(int.class);
-        if (duration < 0) {
-            duration = 0;
-        }
-
-        duration = duration - (duration % 5);
-        DateDifference dayDiff = CalendarUtils
-                .getDateDifference(CalendarUtils.getMilliSecondsByFrequency(FrequencyUnit.MINUTE, duration));
-        days = dayDiff.getDays();
-        hours = dayDiff.getHours();
-        minutes = dayDiff.getMinutes();
-
-        setValue(duration);
-    }
-
-    @Override
-    public void addPageAliases() throws UnifyException {
-        addPageAlias(daySelCtrl);
-        addPageAlias(hourSelCtrl);
-        addPageAlias(minuteSelCtrl);
-        addPageAlias(durationCtrl);
-    }
-
-    @Override
-    protected void onInternalChildPopulated(Widget widget) throws UnifyException {
-        if(durationCtrl.equals(widget)) {
-            setValue(duration);
-        }
+    protected void doOnPageConstruct() throws UnifyException {
+        daySelCtrl = (Control) addInternalChildWidget(
+                "!ui-select styleClass:$e{dsselect} list:dayslist size:2");
+        hourSelCtrl = (Control) addInternalChildWidget(
+                "!ui-select styleClass:$e{dsselect} list:hourslist size:2");
+        minuteSelCtrl = (Control) addInternalChildWidget(
+                "!ui-select styleClass:$e{dsselect} list:minuteslist size:2 listParamType:IMMEDIATE listParams:$l{"
+                        + getMinuteJump() + "}");
     }
 
     public boolean isShowDays() throws UnifyException {
@@ -98,6 +61,15 @@ public class DurationSelect extends AbstractMultiControl {
         return getUplAttribute(boolean.class, "showHours");
     }
 
+    public int getMinuteJump() throws UnifyException {
+        int jump = getUplAttribute(int.class, "minuteStep");
+        if (jump <= 0) {
+            return 1;
+        }
+        
+        return jump;
+    }
+    
     public Control getDaySelCtrl() {
         return daySelCtrl;
     }
@@ -108,54 +80,6 @@ public class DurationSelect extends AbstractMultiControl {
 
     public Control getMinuteSelCtrl() {
         return minuteSelCtrl;
-    }
-
-    public Control getDurationCtrl() {
-        return durationCtrl;
-    }
-
-    public int getDays() {
-        return days;
-    }
-
-    public void setDays(int days) {
-        this.days = days;
-    }
-
-    public int getHours() {
-        return hours;
-    }
-
-    public void setHours(int hours) {
-        this.hours = hours;
-    }
-
-    public int getMinutes() {
-        return minutes;
-    }
-
-    public void setMinutes(int minutes) {
-        this.minutes = minutes;
-    }
-
-    public int getDuration() {
-        return duration;
-    }
-
-    public void setDuration(int duration) {
-        this.duration = duration;
-    }
-
-    @Override
-    protected void doOnPageConstruct() throws UnifyException {
-        daySelCtrl = (Control) addInternalChildWidget(
-                "!ui-select styleClass:$e{dsselect} list:dayslist size:2 binding:days");
-        hourSelCtrl = (Control) addInternalChildWidget(
-                "!ui-select styleClass:$e{dsselect} list:hourslist size:2 binding:hours");
-        minuteSelCtrl = (Control) addInternalChildWidget(
-                "!ui-select styleClass:$e{dsselect} list:minuteslist size:2 listParamType:IMMEDIATE listParams:$l{"
-                        + MINUTE_JUMP + "} binding:minutes");
-        durationCtrl = (Control) addInternalChildWidget("!ui-hidden binding:duration");
     }
 
 }

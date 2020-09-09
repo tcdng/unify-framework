@@ -15,7 +15,6 @@
  */
 package com.tcdng.unify.web.ui.writer.control;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.tcdng.unify.core.UnifyException;
@@ -38,13 +37,11 @@ import com.tcdng.unify.web.ui.writer.AbstractControlWriter;
 @Component("checklist-writer")
 public class CheckListWriter extends AbstractControlWriter {
 
-    @SuppressWarnings("unchecked")
     @Override
     protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
         CheckList checkList = (CheckList) widget;
         writeHiddenPush(writer, checkList, PushType.CHECKBOX);
 
-        List<String> values = checkList.getValue(ArrayList.class, String.class);
         List<? extends Listable> listableList = checkList.getListables();
         int len = listableList.size();
         boolean appendSym = !checkList.getUplAttribute(boolean.class, "flow");
@@ -53,33 +50,19 @@ public class CheckListWriter extends AbstractControlWriter {
         String baseFacId = checkList.getFacadeId();
         for (int i = 0, breaks = len; i < len; i++) {
             Listable listable = listableList.get(i);
-            String key = listable.getListKey();
-            boolean checked = values != null && values.contains(key);
             writer.write("<span ");
             writeTagId(writer, baseFacId + i);
-            if (checked) {
-                if (isContainerDisabled) {
-                    writeTagVisualAttributesWithTrailingExtraStyleClass(writer, checkList, "g_cbc");
-                } else {
-                    writeTagVisualAttributesWithTrailingExtraStyleClass(writer, checkList, "g_cba");
-                }
+            if (isContainerDisabled) {
+                writeTagVisualAttributesWithTrailingExtraStyleClass(writer, checkList, "g_cbd");
             } else {
-                if (isContainerDisabled) {
-                    writeTagVisualAttributesWithTrailingExtraStyleClass(writer, checkList, "g_cbd");
-                } else {
-                    writeTagVisualAttributesWithTrailingExtraStyleClass(writer, checkList, "g_cbb");
-                }
+                writeTagVisualAttributesWithTrailingExtraStyleClass(writer, checkList, "g_cbb");
             }
 
             writer.write("/>");
             writer.write("<input type=\"checkbox\"");
             writeTagId(writer, baseId + i);
             writeTagName(writer, checkList);
-            if (checked) {
-                writer.write(" checked=\"checked\"");
-            }
-            
-            writer.write(" value=\"").write(key).write("\"/>");
+            writer.write(" value=\"").write(listable.getListKey()).write("\"/>");
             writer.write("</span>");
 
             writer.writeWithHtmlEscape(listable.getListDescription());
@@ -97,6 +80,7 @@ public class CheckListWriter extends AbstractControlWriter {
             writer.beginFunction("ux.rigChecklist");
             writer.writeParam("pId", checkList.getId());
             writer.writeParam("pNm", checkList.getGroupId());
+            writer.writeParam("pVal", checkList.getValue(String[].class));
             writer.endFunction();
         }
     }

@@ -23,7 +23,6 @@ import java.util.Map;
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.format.DateTimeFormat;
-import com.tcdng.unify.core.format.NumberSymbols;
 import com.tcdng.unify.core.format.Pattern;
 import com.tcdng.unify.core.upl.UplComponent;
 import com.tcdng.unify.core.upl.UplComponentWriter;
@@ -803,60 +802,6 @@ public interface ResponseWriter extends UnifyComponent {
      *                        if write function is not begun. If an error occurs
      */
     ResponseWriter endFunction() throws UnifyException;
-    
-	/**
-	 * Writes javascript REGEX that allows only alphanumeric characters and,
-	 * optionally, some special characters.
-	 * 
-	 * @param underscore
-	 *            indicates if regex should permit underscore character
-	 * @param dollar
-	 *            indicates if regex should permit dollar character
-	 * @param period
-	 *            indicates if regex should permit period character
-	 * @param dash
-	 *            indicates if regex should permit dash character
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	ResponseWriter writeNameFormatRegex(boolean underscore, boolean dollar, boolean period, boolean dash)
-			throws UnifyException;
-
-	/**
-	 * Writes javascript REGEX for identifiers.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	ResponseWriter writeIdentifierFormatRegex() throws UnifyException;
-
-	/**
-	 * Returns javascript REGEX that allows only alphabetic characters.
-	 * 
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	ResponseWriter writeWordFormatRegex() throws UnifyException;
-
-	/**
-	 * Writes a number formatting javascript REGEX.
-	 * 
-	 * @param numberSymbols
-	 *            the reference number symbols
-	 * @param precision
-	 *            the precision of the number
-	 * @param scale
-	 *            the scale of the number
-	 * @param acceptNegative
-	 *            if REGEX should accept negative values
-	 * @param useGrouping
-	 *            if REGEX should accept grouping characters
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	ResponseWriter writeNumberFormatRegex(NumberSymbols numberSymbols, int precision, int scale, boolean acceptNegative,
-			boolean useGrouping) throws UnifyException;
 
 	/**
 	 * Returns the current buffer.

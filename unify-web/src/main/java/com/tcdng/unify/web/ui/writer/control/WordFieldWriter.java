@@ -18,9 +18,9 @@ package com.tcdng.unify.web.ui.writer.control;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
-import com.tcdng.unify.web.ui.ResponseWriter;
 import com.tcdng.unify.web.ui.control.TextField;
 import com.tcdng.unify.web.ui.control.WordField;
+import com.tcdng.unify.web.util.WebRegexUtils;
 
 /**
  * Word field writer.
@@ -33,7 +33,7 @@ import com.tcdng.unify.web.ui.control.WordField;
 public class WordFieldWriter extends TextFieldWriter {
 
     @Override
-    protected void writeFormatRegex(ResponseWriter writer, TextField textField) throws UnifyException {
-        writer.writeWordFormatRegex();
+    protected String getFormatRegex(TextField textField) throws UnifyException {
+        return WebRegexUtils.getWordFormatRegex();
     }
 }

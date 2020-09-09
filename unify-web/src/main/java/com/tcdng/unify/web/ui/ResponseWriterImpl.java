@@ -20,7 +20,6 @@ import java.io.Writer;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -34,8 +33,6 @@ import com.tcdng.unify.core.annotation.Singleton;
 import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.data.Listable;
 import com.tcdng.unify.core.format.DateTimeFormat;
-import com.tcdng.unify.core.format.NumberSymbols;
-import com.tcdng.unify.core.format.NumberType;
 import com.tcdng.unify.core.format.Pattern;
 import com.tcdng.unify.core.upl.UplComponent;
 import com.tcdng.unify.core.upl.UplComponentWriter;
@@ -512,105 +509,6 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 	}
 
 	@Override
-	public ResponseWriter writeNameFormatRegex(boolean underscore, boolean dollar, boolean period, boolean dash)
-			throws UnifyException {
-		buf.append("/^[\\\\w");
-		if (underscore) {
-			buf.append("\\\\_");
-		}
-
-		if (dollar) {
-			buf.append("\\\\$");
-		}
-
-		if (period) {
-			buf.append("\\\\.");
-		}
-
-		if (dash) {
-			buf.append("-");
-		}
-		buf.append("]*$/");
-		return this;
-	}
-
-	@Override
-	public ResponseWriter writeIdentifierFormatRegex() throws UnifyException {
-		buf.append("/^([_a-zA-Z][_a-zA-Z0-9]*)?$/");
-		return this;
-	}
-
-	@Override
-	public ResponseWriter writeWordFormatRegex() throws UnifyException {
-		buf.append("/^[a-zA-Z]*$/");
-		return this;
-	}
-
-	@Override
-	public ResponseWriter writeNumberFormatRegex(NumberSymbols numberSymbols, int precision, int scale,
-			boolean acceptNegative, boolean useGrouping) throws UnifyException {
-		buf.append("/^");
-		if (acceptNegative) {
-			appendOptionalFormattingRegex(numberSymbols.getNegativePrefix(), numberSymbols.getPositivePrefix());
-		} else {
-			appendOptionalFormattingRegex(numberSymbols.getPositivePrefix());
-		}
-
-		if (scale > 0 && !NumberType.INTEGER.equals(numberSymbols.getNumberType())) {
-			precision = precision - scale;
-		}
-
-		String digit = escapeSpecial("d");
-		int groupSize = numberSymbols.getGroupSize();
-		if (precision > 0) {
-			if (useGrouping) {
-				int fullGroupCount = precision / groupSize;
-				int remainder = precision % groupSize;
-				if (remainder > 0) {
-					appendRangeOption(digit, remainder);
-				}
-				if (fullGroupCount > 0) {
-					buf.append("(");
-					appendOptionalFormattingRegex(String.valueOf(numberSymbols.getGroupingSeparator()));
-					appendRangeOption(digit, groupSize);
-					buf.append("){0,").append(fullGroupCount).append('}');
-				}
-			} else {
-				appendRangeOption(digit, precision);
-			}
-		} else {
-			if (useGrouping) {
-				appendRangeOption(digit, groupSize);
-				buf.append("(");
-				appendOptionalFormattingRegex(String.valueOf(numberSymbols.getGroupingSeparator()));
-				appendRangeOption(digit, groupSize);
-				buf.append(")*");
-			} else {
-				buf.append("[").append(digit).append("]*");
-			}
-		}
-
-		if (!NumberType.INTEGER.equals(numberSymbols.getNumberType())) {
-			buf.append('(');
-			buf.append(escapeSpecial(String.valueOf(numberSymbols.getDecimalSeparator())));
-			if (scale > 0) {
-				appendRangeOption(digit, scale);
-			} else {
-				buf.append("[").append(digit).append("]*");
-			}
-			buf.append(")?");
-		}
-
-		if (acceptNegative) {
-			appendOptionalFormattingRegex(numberSymbols.getNegativeSuffix(), numberSymbols.getPositiveSuffix());
-		} else {
-			appendOptionalFormattingRegex(numberSymbols.getPositiveSuffix());
-		}
-		buf.append("$/");
-		return this;
-	}
-
-	@Override
 	public boolean isEmpty() {
 		return buf.length() == 0;
 	}
@@ -960,85 +858,6 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 		}
 		buf.append(']');
 		return this;
-	}
-
-	private void appendRangeOption(String pattern, int range) {
-		buf.append("[").append(pattern).append(")]{0,").append(range).append('}');
-	}
-
-	private void appendOptionalFormattingRegex(String string) {
-		int len = 0;
-		if (string != null && (len = string.length()) > 0) {
-			buf.append('(');
-			boolean appendSym = false;
-			for (int i = 1; i <= len; i++) {
-				if (appendSym)
-					buf.append('|');
-				else
-					appendSym = true;
-				buf.append(escapeSpecial(string.substring(0, i)));
-			}
-			buf.append(")?");
-		}
-	}
-
-	private void appendOptionalFormattingRegex(String... strings) {
-		List<String> sbList = new ArrayList<String>();
-		Set<String> testSet = new HashSet<String>();
-		for (String string : strings) {
-			if (!testSet.contains(string)) {
-				useSecondary(128);
-				appendOptionalFormattingRegex(string);
-				WebStringWriter psb = discardSecondary();
-				if (psb.length() > 0) {
-					sbList.add(psb.toString());
-				}
-				testSet.add(string);
-			}
-		}
-
-		if (!sbList.isEmpty()) {
-			buf.append('(');
-			boolean appendSym = false;
-			for (String string : sbList) {
-				if (appendSym)
-					buf.append('|');
-				else
-					appendSym = true;
-				buf.append(string);
-			}
-			buf.append(')');
-		}
-	}
-
-	private String escapeSpecial(String string) {
-		StringBuilder sb = new StringBuilder();
-		escapeSpecial(sb, string);
-		return sb.toString();
-	}
-
-	private void escapeSpecial(StringBuilder sb, String string) {
-		int len = string.length();
-		for (int i = 0; i < len; i++) {
-			char ch = string.charAt(i);
-			switch (ch) {
-			case 'd':
-			case '\\':
-			case '[':
-			case ']':
-			case '(':
-			case ')':
-			case '|':
-			case '$':
-			case '.':
-			case ',':
-				sb.append("\\\\");
-				sb.append(ch);
-				break;
-			default:
-				sb.append(ch);
-			}
-		}
 	}
 
 }

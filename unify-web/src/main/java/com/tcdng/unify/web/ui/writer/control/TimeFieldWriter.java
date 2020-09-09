@@ -39,7 +39,7 @@ import com.tcdng.unify.web.ui.control.TimeField;
 public class TimeFieldWriter extends AbstractPopupTextFieldWriter {
 
     @Override
-    protected void appendPopupContent(ResponseWriter writer, AbstractPopupTextField popupTextField)
+    protected void writePopupContent(ResponseWriter writer, AbstractPopupTextField popupTextField)
             throws UnifyException {
         TimeField timeField = (TimeField) popupTextField;
         Date date = timeField.getValue(Date.class);
@@ -103,8 +103,8 @@ public class TimeFieldWriter extends AbstractPopupTextFieldWriter {
     }
 
     @Override
-    protected void appendPopupBehaviour(ResponseWriter writer, AbstractPopupTextField popupTextField)
-            throws UnifyException {
+    protected void doWritePopupTextFieldBehaviour(ResponseWriter writer, AbstractPopupTextField popupTextField,
+            boolean popupEnabled) throws UnifyException {
         TimeField timeField = (TimeField) popupTextField;
         String pageName = timeField.getId();
         writer.beginFunction("ux.rigTimeField");
@@ -112,6 +112,7 @@ public class TimeFieldWriter extends AbstractPopupTextFieldWriter {
         writer.writeParam("pClearable", timeField.isClearable());
         writer.writeParam("pPattern", timeField.getPattern());
         writer.writeParam("pFormat", timeField.getDateTimeFormat());
+        writer.writeParam("pEnabled", popupEnabled);
         writer.endFunction();
     }
 

@@ -39,7 +39,8 @@ public class DurationSelectWriter extends AbstractControlWriter {
     protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
         DurationSelect durationSelect = (DurationSelect) widget;
         writer.write("<div");
-        writeTagAttributes(writer, durationSelect);
+        writeTagStyleClass(writer, durationSelect);
+        writeTagStyle(writer, durationSelect);
         writer.write(">");
 
         writer.write("<div class=\"dstable\">");
@@ -55,7 +56,10 @@ public class DurationSelectWriter extends AbstractControlWriter {
         writeFilter(writer, durationSelect.getMinuteSelCtrl(), resolveSessionMessage("$m{durationselect.minutes}"));
         writer.write("</div></div>");
 
-        writer.writeStructureAndContent(durationSelect.getDurationCtrl());
+        writer.write("<input type=\"hidden\"");
+        writeTagId(writer, durationSelect);
+        writeTagName(writer, durationSelect);
+        writer.write("/>");
         writer.write("</div>");
     }
 
@@ -84,8 +88,11 @@ public class DurationSelectWriter extends AbstractControlWriter {
             writer.writeParam("pHourSelId", durationSelect.getHourSelCtrl().getId());
         }
 
+        int duration = durationSelect.getValue(int.class);
+        duration = duration - (duration % durationSelect.getMinuteJump());
+
         writer.writeParam("pMinSelId", durationSelect.getMinuteSelCtrl().getId());
-        writer.writeParam("pDurationId", durationSelect.getDurationCtrl().getId());
+        writer.writeParam("pVal", duration);
         writer.endFunction();
     }
 

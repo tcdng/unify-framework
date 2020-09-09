@@ -74,8 +74,7 @@ public class MoneyField extends AbstractListPopupTextField {
     }
 
     @SuppressWarnings("unchecked")
-    @Override
-    public String getFacadeStringValue() throws UnifyException {
+    public String getAmountString() throws UnifyException {
         Money money = getValue(Money.class);
         if (money != null) {
             StringBuilder sb = new StringBuilder();
@@ -88,6 +87,16 @@ public class MoneyField extends AbstractListPopupTextField {
         }
 
         return DataUtils.EMPTY_STRING;
+    }
+
+    public String getCurrencyString() throws UnifyException {
+        String currencyCode = getCurrencyCode();
+        Money money = getValue(Money.class);
+        if (money != null && money.getCurrencyCode() != null) {
+            currencyCode = money.getCurrencyCode();
+        }
+
+        return currencyCode;
     }
 
     public String getCurrencyCode() throws UnifyException {

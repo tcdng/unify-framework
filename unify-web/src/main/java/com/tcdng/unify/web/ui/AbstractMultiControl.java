@@ -102,9 +102,13 @@ public abstract class AbstractMultiControl extends AbstractControl implements Mu
     public void populate(DataTransferBlock transferBlock) throws UnifyException {
         if (transferBlock != null) {
             DataTransferBlock childBlock = transferBlock.getChildBlock();
-            DataTransferWidget dtWidget = (DataTransferWidget) getChildWidgetInfo(childBlock.getId()).getWidget();
-            dtWidget.populate(childBlock);
-            onInternalChildPopulated(dtWidget);
+            if (childBlock == null) {
+                super.populate(transferBlock);
+            } else {
+                DataTransferWidget dtWidget = (DataTransferWidget) getChildWidgetInfo(childBlock.getId()).getWidget();
+                dtWidget.populate(childBlock);
+                onInternalChildPopulated(dtWidget);
+            }
         }
     }
 

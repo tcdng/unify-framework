@@ -36,14 +36,9 @@ import com.tcdng.unify.web.ui.control.DateField;
 public class DateFieldWriter extends AbstractPopupTextFieldWriter {
 
     @Override
-    protected void appendPopupContent(ResponseWriter writer, AbstractPopupTextField popupTextField)
+    protected void writePopupContent(ResponseWriter writer, AbstractPopupTextField popupTextField)
             throws UnifyException {
         DateField dateField = (DateField) popupTextField;
-        Date date = dateField.getValue(Date.class);
-        if (date == null) {
-            date = new Date();
-        }
-
         writer.write("<div");
         writeTagId(writer, dateField.getPrefixedId("cal_"));
         writeTagStyleClass(writer, "dborder");
@@ -71,22 +66,21 @@ public class DateFieldWriter extends AbstractPopupTextFieldWriter {
         writeButton(writer, dateField.getPrefixedId("btnc_"), "cactbutton", "float:right;",
                 getSessionMessage("button.clear"));
         writer.write("</div>");
-
-        Calendar dateCal = Calendar.getInstance();
-        dateCal.setTime(date);
-        writeHidden(writer, dateField.getPrefixedId("day_"), dateCal.get(Calendar.DAY_OF_MONTH));
-        writeHidden(writer, dateField.getPrefixedId("mon_"), dateCal.get(Calendar.MONTH) + 1);
-        writeHidden(writer, dateField.getPrefixedId("year_"), dateCal.get(Calendar.YEAR));
-        writeHidden(writer, dateField.getPrefixedId("hour_"), dateCal.get(Calendar.HOUR_OF_DAY));
-        writeHidden(writer, dateField.getPrefixedId("min_"), dateCal.get(Calendar.MINUTE));
-        writeHidden(writer, dateField.getPrefixedId("sec_"), dateCal.get(Calendar.SECOND));
         writer.write("</div>");
     }
 
     @Override
-    protected void appendPopupBehaviour(ResponseWriter writer, AbstractPopupTextField popupTextField)
-            throws UnifyException {
+    protected void doWritePopupTextFieldBehaviour(ResponseWriter writer, AbstractPopupTextField popupTextField,
+            boolean popupEnabled) throws UnifyException {
         DateField dateField = (DateField) popupTextField;
+        Date date = dateField.getValue(Date.class);
+        if (date == null) {
+            date = new Date();
+        }
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+
         writer.beginFunction("ux.rigDateField");
         writer.writeParam("pId", dateField.getId());
         writer.writeParam("pDayClass", "cday");
@@ -97,6 +91,10 @@ public class DateFieldWriter extends AbstractPopupTextFieldWriter {
         writer.writeParam("pShortDayNm", dateField.getShortDayList());
         writer.writeParam("pLongMonthNm", dateField.getLongMonthList());
         writer.writeParam("pPattern", dateField.getPattern());
+        writer.writeParam("pDay", cal.get(Calendar.DAY_OF_MONTH));
+        writer.writeParam("pMonth", cal.get(Calendar.MONTH));
+        writer.writeParam("pYear", cal.get(Calendar.YEAR));
+        writer.writeParam("pEnabled", popupEnabled);
         writer.endFunction();
     }
 

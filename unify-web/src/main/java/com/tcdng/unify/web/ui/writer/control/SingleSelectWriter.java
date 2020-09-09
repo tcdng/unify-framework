@@ -40,27 +40,19 @@ import com.tcdng.unify.web.ui.control.SingleSelect;
 public class SingleSelectWriter extends AbstractPopupTextFieldWriter {
 
     @Override
-    protected void appendPopupContent(ResponseWriter writer, AbstractPopupTextField popupTextField)
+    protected void writePopupContent(ResponseWriter writer, AbstractPopupTextField popupTextField)
             throws UnifyException {
         SingleSelect singleSelect = (SingleSelect) popupTextField;
 
         writer.write("<div id=\"").write(singleSelect.getFramePanelId())
                 .write("\" class=\"ssborder\" style=\"overflow-y:auto;overflow-x:hidden;\" tabindex=\"0\">");
         writer.write("<div id=\"").write(singleSelect.getListPanelId()).write("\" class=\"sslist\">");
-        String value = singleSelect.getStringValue();
         List<? extends Listable> listableList = singleSelect.getListables();
         int length = listableList.size();
 
         String blankOption = singleSelect.getBlankOption();
-        String selStyleClass = getUserColorStyleClass("sel");
         if (blankOption != null) {
-            writer.write("<a id=\"").write(singleSelect.getBlankOptionId()).write("\" class=\"");
-            if (StringUtils.isBlank(value)) {
-                writer.write(selStyleClass).write("\">");
-            } else {
-                writer.write("norm\">");
-            }
-
+            writer.write("<a id=\"").write(singleSelect.getBlankOptionId()).write("\">");
             if (StringUtils.isBlank(blankOption)) {
                 writer.writeHtmlFixedSpace();
             } else {
@@ -74,14 +66,8 @@ public class SingleSelectWriter extends AbstractPopupTextFieldWriter {
         Formatter<Object> formatter = singleSelect.getFormatter();
         for (int i = 0; i < length; i++) {
             Listable listable = listableList.get(i);
-            String key = listable.getListKey();
             writer.write("<a");
             writeTagId(writer, singleSelect.getNamingIndexedId(i));
-            if (key.equals(value)) {
-                writeTagStyleClass(writer, selStyleClass);
-            } else {
-                writeTagStyleClass(writer, "norm");
-            }
             writer.write(">");
             if (formatter != null) {
                 writer.writeWithHtmlEscape(formatter.format(listable.getListDescription()));
@@ -95,32 +81,32 @@ public class SingleSelectWriter extends AbstractPopupTextFieldWriter {
     }
 
     @Override
-    protected void appendPopupBehaviour(ResponseWriter writer, AbstractPopupTextField popupTextField)
-            throws UnifyException {
+    protected void doWritePopupTextFieldBehaviour(ResponseWriter writer, AbstractPopupTextField popupTextField,
+            boolean popupEnabled) throws UnifyException {
         SingleSelect singleSelect = (SingleSelect) popupTextField;
         ListControlJsonData listControlJsonData = singleSelect.getListControlJsonData(true, true, false);
 
         // Append rigging
-        String blankOption = singleSelect.getBlankOption();
         writer.beginFunction("ux.rigSingleSelect");
         writer.writeParam("pId", singleSelect.getId());
         writer.writeParam("pFacId", singleSelect.getFacadeId());
         writer.writeParam("pFrmId", singleSelect.getFramePanelId());
         writer.writeParam("pLstId", singleSelect.getListPanelId());
         writer.writeParam("pBlnkId", singleSelect.getBlankOptionId());
-        writer.writeParam("pKeyIdx", listControlJsonData.getValueIndex());
         writer.writeParam("pICnt", listControlJsonData.getSize());
         writer.writeResolvedParam("pLabelIds", listControlJsonData.getJsonSelectIds());
         writer.writeResolvedParam("pKeys", listControlJsonData.getJsonKeys());
-        writer.writeParam("pIsBlank", blankOption != null);
+        writer.writeParam("pIsBlankOption", singleSelect.getBlankOption() != null);
         writer.writeParam("pNormCls", "norm");
         writer.writeParam("pSelCls", getUserColorStyleClass("sel"));
+        writer.writeParam("pEnabled", popupEnabled);
+        writer.writeParam("pVal", singleSelect.getStringValue());
         writer.endFunction();
     }
 
     @Override
     protected String getOnShowAction() throws UnifyException {
-        return "ux.singleSelectOnShow";
+        return "ux.ssOnShow";
     }
 
     @Override

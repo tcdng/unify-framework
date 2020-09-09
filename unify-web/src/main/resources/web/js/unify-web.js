@@ -229,7 +229,7 @@ ux.respHandler = {
 	loadContentHdl : function(resp) {
 		if (resp.closeRemoteTab) {
 			if (ux.cntTabCloseId) {
-				ux.fireEvent(_id(ux.cntTabCloseId), "click", true);
+				ux.fireEvent(_id(ux.cntTabCloseId), "click");
 			}
 		} else {
 			ux.refreshPageGlobals(resp);
@@ -769,8 +769,7 @@ ux.setAllChecked = function(uEv) {
 				for (var j = 0; j < elems.length; j++) {
 					var elem = elems[j];
 					if (elem.type == "checkbox") {
-						elem.checked = rElem.checked;
-						ux.cbSwitchImg(elem);
+						elem.setValue(rElem.checked);
 					}
 				}
 			}
@@ -838,11 +837,10 @@ ux.setCheckedPatternValue = function(prm) {
 			}
 		}
 
-		var elem = _id(prm.fillId);
-		var oldValue = elem.value;
-		elem.value = patternValue;
-		if (patternValue != oldValue) {
-			ux.fireEvent(elem, "change", true);
+		const fac = _id(prm.fillId);
+		if (fac.value != patternValue) {
+			fac.value = patternValue;
+			ux.fireEvent(_id(prm.id), "change");
 		}
 	}
 }
@@ -1284,6 +1282,19 @@ ux.tabbedPanelTabClickHandler = function(uEv) {
 }
 
 /** ********************* CONTROLS ********************* */
+/** Common */
+ux.rigSVA = function(id) {
+	const elem = _id(id);
+	if(elem) {
+		elem.setValue = function(val) {
+			this.value = val;
+		};
+
+		elem.getValue = function() {
+			return this.value;
+		};
+	}
+}
 
 /** Accordion */
 ux.rigAccordion = function(rgp) {
@@ -1395,176 +1406,227 @@ ux.rigAssignmentBox = function(rgp) {
 
 /** Checkbox */
 ux.rigCheckbox = function(rgp) {
-	var evp = {};
-	evp.uId = rgp.pId;	
-	ux.addHdl(_id("fac_" + evp.uId), "click",
-			ux.cbClick, evp);	
+	const box = _id(rgp.pId);
+	ux.cbWire(box);
 }
 
-ux.cbClick = function(uEv) {
-	var evp = uEv.evp;
-	var selBox = _id(evp.uId);
-	if (selBox) {
-		selBox.checked = !selBox.checked;
-		ux.cbSwitchImg(selBox);
-		ux.fireEvent(_id("fac_" + selBox.id), "change", true);
+ux.cbWire = function(box) {
+	if (box) {
+		const facId = "fac_" + box.id;
+		const evp = {};	
+		evp.uId = box.id;	
+		ux.addHdl(_id(facId), "click", ux.cbClick, evp);
+
+		box.facId = facId;
+		box.setValue = function(val) {
+			this.checked = (val == true);
+			ux.cbSwitchImg(this);
+			ux.fireEvent(_id(this.facId), "change");
+		};
+		
+		box.getValue = function() {
+			return this.checked;
+		};
 	}
 }
 
-ux.cbSwitchImg = function(selBox) {
-	var fac = _id("fac_" + selBox.id);
+ux.cbClick = function(uEv) {
+	const box = _id(uEv.evp.uId);
+	if (box) {
+		box.setValue(!box.getValue());
+	}
+}
+
+ux.cbSwitchImg = function(box) {
+	const fac = _id(box.facId);
 	if (fac && fac.className) {
-		if (selBox.checked) {
+		if (box.getValue()) {
 			fac.className = fac.className.replace("g_cbb", "g_cba");
+			fac.className = fac.className.replace("g_cbd", "g_cbc");
 		} else {
 			fac.className = fac.className.replace("g_cba", "g_cbb");
+			fac.className = fac.className.replace("g_cbc", "g_cbd");
 		}
 	}
 }
 
 /** Checklist */
 ux.rigChecklist = function(rgp) {
-	var elems = _name(rgp.pNm);
-	if(elems) {
-		for(var i = 0; i < elems.length; i++) {
-			var elem = elems[i];
-			var evp = {};
-			evp.uId = elem.id;	
-			ux.addHdl(_id("fac_" + elem.id), "click",
-					ux.cbClick, evp);	
+	const box = _name(rgp.pNm);
+	if(box) {
+		for(var i = 0; i < box.length; i++) {
+			ux.cbWire(box[i]);
 		}
 	}
-}
 
-/** Dropdown checklist */
-ux.rigDropdownChecklist = function(rgp) {
-	// Select all
-	if (rgp.pSelAllId) {
-		var evp = {};
-		evp.uId = rgp.pSelAllId;
-		_id(rgp.pSelAllId).checked = false;
-		var selFac = _id("fac_" + rgp.pSelAllId);
-		ux.addHdl(selFac, "click", ux.cbClick, evp);
+	const list = _id(rgp.pId);
+	if (list) {
+		list.box = box;
+		list.setValue = function(val) {
+			for(var i = 0; i < this.box.length; i++) {
+				const _box = this.box[i];
+				_box.setValue(val && val.includes(_box.value));
+			}
+		};
 		
-		evp = {};
-		evp.uSrcId = rgp.pSelAllId;
-		evp.uRef = [rgp.pId];
-		ux.addHdl(selFac, "change", ux.setAllChecked, evp);	
+		list.getValue = function() {
+			const val = [];
+			for(var i = 0; i < this.box.length; i++) {
+				const _box = this.box[i];
+				if (_box.getValue()) {
+					val.push(_box.value);
+				}
+			}
+			
+			return val;
+		};
+		
+		list.setValue(rgp.pVal);
 	}
-
-	// Rig checklist
-	ux.rigChecklist(rgp);
 }
 
 /** Date Field */
 ux.rigDateField = function(rgp) {
-	var id = rgp.pId;
-	var df = _id(id);
-	df.uRigPrm = rgp;
+	const id = rgp.pId;
+	const df = _id(id);
+	df.parts = {};
+	df.header = _id("disp_" + id);
+	df.calendar = _id("cont_" + id);
+	df.format = rgp.pPattern;
+	df.padLeft = rgp.pPadLeft;
+	df.shortDayNm = rgp.pShortDayNm;
+	df.longMonthNm = rgp.pLongMonthNm;
+	df.dayClass = rgp.pDayClass;
+	df.currClass = rgp.pCurrClass;
+	df.todayClass = rgp.pTodayClass;
 	
-	ux.dateSetupScroll(rgp, "decy_", "year_", -1);
-	ux.dateSetupScroll(rgp, "incy_", "year_", 1);
-	ux.dateSetupScroll(rgp, "decm_", "mon_", -1);
-	ux.dateSetupScroll(rgp, "incm_", "mon_", 1);
+	df.setValue = function(val) {
+		this.setDay(val.getDate());
+		this.setMonth(val.getMonth());
+		this.setYear(val.getFullYear());
+
+		const formatVal = ux.applyPattern(this);
+		if(this.value != formatVal) {
+			this.value = formatVal;
+			ux.fireEvent(this, "change");
+		}
+		ux.dfUpdateCalendar(df);
+	};
+	
+	df.getValue = function() {
+		var val = new Date();
+		val.setFullYear(this.getYear());
+		val.setMonth(this.getMonth());
+		val.setDate(this.getDay());
+		return val;
+	}
+	
+	df.setDay = function(val) {
+		this.parts["day_"] = "" + val;
+	};
+	
+	df.getDay = function() {
+		return parseInt(this.parts["day_"]);
+	};
+	
+	df.setMonth = function(val) {
+		this.scrollMonth =  val;
+		this.parts["mon_"] = "" + (val + 1);
+	};
+	
+	df.getMonth = function() {
+		return parseInt(this.parts["mon_"] - 1);
+	};
+	
+	df.setYear = function(val) {
+		this.scrollYear =  val;
+		this.parts["year_"] = "" + val;
+	};
+	
+	df.getYear = function() {
+		return parseInt(this.parts["year_"]);
+	};
+	
+	ux.dfSetupScroll(df, "decy_", "year_", -1);
+	ux.dfSetupScroll(df, "incy_", "year_", 1);
+	ux.dfSetupScroll(df, "decm_", "mon_", -1);
+	ux.dfSetupScroll(df, "incm_", "mon_", 1);
 
 	// Setup 'Clear' button
 	ux.popupWireClear(rgp, "btnc_" + id, [ id ]);
 
-	var evp = {};
-	evp.uId = id;
-	evp.uShortDayNm = rgp.pShortDayNm;
-	evp.uLongMonthNm = rgp.pLongMonthNm;
-	evp.uDayClass = rgp.pDayClass;
-	evp.uCurrClass = rgp.pCurrClass;
-	evp.uTodayClass = rgp.pTodayClass;
-	df.evp = evp;
-	ux.dateSetCurrent(id);
-
 	// Setup 'Today' button
-	ux.addHdl(_id("btnt_" + id), "click",
-			ux.dateTodayClickHandler, evp);
-
-	// Populate calendar
-	ux.datePopulateCalendar(evp);
-}
-
-ux.dateTodayClickHandler = function(uEv) {
-	var id = uEv.evp.uId;
-	var today = new Date();
-	_id("day_" + id).value = today.getDate();
-	_id("mon_" + id).value = today.getMonth() + 1;
-	_id("year_" + id).value = today.getFullYear();
-	ux.dateSetCurrent(id);
-	ux.setPatternValue(_id(id).uRigPrm);
-	ux.hidePopup(null);
-	ux.datePopulateCalendar(uEv.evp);
-}
-
-ux.dateSetCurrent = function(id) {
-	var df = _id(id);
-	if (df) {
-		if (_id("day_" + id)) {
-			df.uDay = parseInt(_id("day_" + id).value);
-			df.uMonth = parseInt(_id("mon_" + id).value) - 1;
-			df.uYear = parseInt(_id("year_" + id).value);
-		}
-	}
-}
-
-ux.dateSetupScroll = function(rgp, scrIdPrefix, valueIdPrefix, step) {
-	var id = rgp.pId;
-	var evp = {};
+	const evp = {};
 	evp.uId = id;
-	evp.uShortDayNm = rgp.pShortDayNm;
-	evp.uLongMonthNm = rgp.pLongMonthNm;
-	evp.uDayClass = rgp.pDayClass;
-	evp.uCurrClass = rgp.pCurrClass;
-	evp.uTodayClass = rgp.pTodayClass;
-	evp.uValueIdPrefix = valueIdPrefix;
-	evp.uStep = step;
-	ux.addHdl(_id(scrIdPrefix + id), "click",
-			ux.dateScrollHandler, evp);
+	ux.addHdl(_id("btnt_" + id), "click", ux.dfTodayHandler, evp);
+
+	// Update calendar
+	df.setDay(rgp.pDay);
+	df.setMonth(rgp.pMonth);
+	df.setYear(rgp.pYear);
+	ux.dfUpdateCalendar(df);
 }
 
-ux.dateScrollHandler = function(uEv) {
-	var evp = uEv.evp;
-	var elem = _id(evp.uValueIdPrefix + evp.uId);
-	if (evp.uValueIdPrefix == "mon_") {
-		var month = parseInt(elem.value);
+ux.dfTodayHandler = function(uEv) {
+	const df = _id(uEv.evp.uId);
+	df.setValue(new Date());
+	ux.hidePopup(null);
+}
+
+ux.dfDayHandler = function(id, dayCount) {
+	const df = _id(id);
+	df.setDay(dayCount);
+	df.setMonth(df.scrollMonth);
+	df.setYear(df.scrollYear);	
+	df.setValue(df.getValue());
+	ux.hidePopup(null);
+}
+
+ux.dfSetupScroll = function(df, scrIdPrefix, target, step) {
+	const evp = {};
+	evp.uId = df.id;
+	evp.uTarget = target;
+	evp.uStep = step;
+	ux.addHdl(_id(scrIdPrefix + df.id), "click",
+			ux.dfScrollHandler, evp);
+}
+
+ux.dfScrollHandler = function(uEv) {
+	const evp = uEv.evp;
+	const df = _id(uEv.evp.uId);
+	if (evp.uTarget == "mon_") {
+		var month = df.scrollMonth;
 		var yearChg = false;
 		if (evp.uStep > 0) {
-			if (month >= evp.uLongMonthNm.length) {
-				elem.value = 0;
+			if (month >= df.longMonthNm.length) {
+				df.scrollMonth = 0;
 				yearChg = true;
 			}
 		} else {
 			if (month <= 1) {
-				elem.value = evp.uLongMonthNm.length + 1;
+				df.scrollMonth = df.longMonthNm.length + 1;
 				yearChg = true;
 			}
 		}
 
 		if (yearChg) {
-			var yearElem = _id("year_" + evp.uId);
-			yearElem.value = parseInt(yearElem.value) + evp.uStep;
+			df.scrollYear = df.scrollYear + evp.uStep;
 		}
+
+		df.scrollMonth = df.scrollMonth + evp.uStep;
+	} else {
+		df.scrollYear = df.scrollYear + evp.uStep;
 	}
-	elem.value = parseInt(elem.value) + evp.uStep;
-	ux.datePopulateCalendar(evp);
+	
+	ux.dfUpdateCalendar(df);
 }
 
-ux.datePopulateCalendar = function(evp) {
-	var id = evp.uId;
-	if (!_id("mon_" + id)) {
-		return;
-	}
-
-	var month = parseInt(_id("mon_" + id).value) - 1;
-	var year = parseInt(_id("year_" + id).value);
+ux.dfUpdateCalendar = function(df) {
+	const month = df.scrollMonth;
+	const year = df.scrollYear;
 
 	// Display month year on header
-	var displayElem = _id("disp_" + id);
-	displayElem.innerHTML = evp.uLongMonthNm[month] + "&nbsp;" + year;
+	df.header.innerHTML = df.longMonthNm[month] + "&nbsp;" + year;
 
 	// Initialize variables and generate calendar HTML
 	var firstDay = new Date(year, month, 1).getDay();
@@ -1581,9 +1643,8 @@ ux.datePopulateCalendar = function(evp) {
 		today = 0;
 	}
 
-	var df = _id(id);
-	var currentDay = df.uDay;
-	if (!(month == df.uMonth && year == df.uYear)) {
+	var currentDay = df.getDay();
+	if (!(month == df.getMonth() && year == df.uYear)) {
 		currentDay = 0;
 	}
 
@@ -1591,7 +1652,7 @@ ux.datePopulateCalendar = function(evp) {
 	calendarHtml += "<tr>";
 	for (var i = 0; i < 7; i++) {
 		calendarHtml += "<th>";
-		calendarHtml += evp.uShortDayNm[i];
+		calendarHtml += df.shortDayNm[i];
 		calendarHtml += "</th>";
 	}
 	calendarHtml += "</tr>";
@@ -1606,16 +1667,16 @@ ux.datePopulateCalendar = function(evp) {
 					done = true;
 				}
 				if (dayCount <= daysInMonth) {
-					var dayClass = evp.uDayClass;
+					var dayClass = df.dayClass;
 					if (dayCount == currentDay) {
-						dayClass = evp.uCurrClass;
+						dayClass = df.currClass;
 					}
 
 					if (dayCount == today) {
-						dayClass = evp.uTodayClass;
+						dayClass = df.todayClass;
 					}
 					calendarHtml += "<span class=\"" + dayClass
-							+ "\" onclick=\"ux.dateCalendarDayClick('" + id
+							+ "\" onclick=\"ux.dfDayHandler('" + df.id
 							+ "'," + dayCount + ");\">" + dayCount + "</span>";
 					dayCount++;
 				} else {
@@ -1628,55 +1689,92 @@ ux.datePopulateCalendar = function(evp) {
 		rowCount++;
 	}
 	calendarHtml += "</table>";
-	_id("cont_" + id).innerHTML = calendarHtml;
+	df.calendar.innerHTML = calendarHtml;
 }
 
-ux.dateCalendarDayClick = function(id, dayCount) {
-	_id("day_" + id).value = dayCount;
-	ux.dateSetCurrent(id);
-	ux.setPatternValue(_id(id).uRigPrm);
-	ux.hidePopup(null);
-	ux.datePopulateCalendar(_id(id).evp);
+/** Dropdown checklist */
+ux.rigDropdownChecklist = function(rgp) {
+	// Select all
+	if (rgp.pSelAllId) {
+		ux.cbWire(_id(rgp.pSelAllId));
+
+		const evp = {};
+		evp.uSrcId = rgp.pSelAllId;
+		evp.uRef = [rgp.pId];
+		ux.addHdl(_id("fac_" + rgp.pSelAllId), "change", ux.setAllChecked, evp);	
+	}
+
+	// Rig checklist
+	ux.rigChecklist(rgp);
 }
 
 /** Duration Select */
 ux.rigDurationSelect = function(rgp) {
-	var evp = {};
-	if (rgp.pDaySelId) {
-		evp.daySel = _id(rgp.pDaySelId);
+	const id = rgp.pId;
+	const ds = _id(id);
+	ds.daySel = _id(rgp.pDaySelId);
+	ds.hourSel = _id(rgp.pHourSelId);
+	ds.minSel = _id(rgp.pMinSelId);
+
+	ds.setValue = function(val) {
+		const days = Math.floor(val / UNIFY_MINUTES_IN_DAY);
+		var rem = Math.floor(val % UNIFY_MINUTES_IN_DAY);
+		if (this.daySel) {
+			this.daySel.setValue(days);
+		}
+		
+		const hours = Math.floor(rem / UNIFY_MINUTES_IN_HOUR);
+		rem = Math.floor(rem % UNIFY_MINUTES_IN_HOUR);
+		if (this.hourSel) {
+			this.hourSel.setValue(hours);
+		}
+
+		this.minSel.setValue(rem);
+		this.setActual(val);
+	};
+	
+	ds.setActual = function(val) {
+		if(!this.value || parseInt(this.value) != val) {
+			this.value = val;
+			if (this.fire) {
+				ux.fireEvent(this, "change");
+			}
+		}
+	};
+
+	ds.getValue = function() {
+		return parseInt(this.value);
+	};
+
+	const evp = {};
+	evp.uId = id;
+	if (ds.daySel) {
+		ux.addHdl(ds.daySel, "change", ux.dsCalc, evp);
 	}
-
-	if (rgp.pHourSelId) {
-		evp.hourSel = _id(rgp.pHourSelId);
+	
+	if (ds.hourSel){
+		ux.addHdl(ds.hourSel, "change", ux.dsCalc, evp);
 	}
-
-	evp.minSel = _id(rgp.pMinSelId);
-	evp.durationHid = _id(rgp.pDurationId);
-
-	if (evp.daySel) {
-		ux.addHdl(evp.daySel, "change", ux.durationSelCalc, evp);
-	}
-
-	if (evp.hourSel) {
-		ux.addHdl(evp.hourSel, "change", ux.durationSelCalc, evp);
-	}
-
-	ux.addHdl(evp.minSel, "change", ux.durationSelCalc, evp);
+	
+	ux.addHdl(ds.minSel, "change", ux.dsCalc, evp);
+	
+	ds.setValue(rgp.pVal);
+	ds.fire = true;
 }
 
-ux.durationSelCalc = function(uEv) {
-	var evp = uEv.evp;
-	var totalMinutes = 0;
-	if (evp.daySel) {
-		totalMinutes = totalMinutes + evp.daySel.value * UNIFY_MINUTES_IN_DAY;
+ux.dsCalc = function(uEv) {
+	const ds = _id(uEv.evp.uId);
+	var total = 0;
+	if (ds.daySel){
+		total += parseInt(ds.daySel.getValue()) * UNIFY_MINUTES_IN_DAY;
 	}
-
-	if (evp.hourSel) {
-		totalMinutes = totalMinutes + evp.hourSel.value * UNIFY_MINUTES_IN_HOUR;
+	
+	if (ds.hourSel){
+		total += parseInt(ds.hourSel.getValue()) * UNIFY_MINUTES_IN_HOUR;
 	}
-
-	totalMinutes = totalMinutes + evp.minSel.value * 1;
-	evp.durationHid.value = totalMinutes;
+	
+	total += parseInt(ds.minSel.getValue());
+	ds.setActual(total);
 }
 
 /** FileAttachment */
@@ -1832,89 +1930,110 @@ ux.rigLinkGrid = function(rgp) {
 
 /** Money field */
 ux.rigMoneyField = function(rgp) {
-	var mfCom = {};
-	mfCom.uId = rgp.pId;
-	mfCom.uNorm = rgp.pNormCls;
-	mfCom.uSel = rgp.pSelCls;
-	mfCom.uSelIdx = rgp.pKeyIdx;
-	mfCom.uOldSelIdx = rgp.pKeyIdx;
-	mfCom.uICnt = rgp.pICnt;
-	mfCom.uKeys = rgp.pKeys;
-	mfCom.uOptIds = rgp.pLabelIds;
-	mfCom.uLabels = ux.extractLabels(rgp.pLabelIds, true);
-	mfCom.uLastKeyHit = Date.now();
-	mfCom.uHidObj = _id(rgp.pId);
-	mfCom.uFacObj = _id(rgp.pFacId);
-	mfCom.uFrmObj = _id(rgp.pFrmId);
-	mfCom.uListObj = _id(rgp.pLstId);
-	mfCom.uBtnObj = _id(rgp.pBtnId);
-	mfCom.uSelHandler = ux.mfSelectOpt;
-	mfCom.uFire = true;
+	const id = rgp.pId;
+	const mf = _id(id);
+	mf.norm = rgp.pNormCls;
+	mf.selName = rgp.pSelCls;
+	mf.selIdx = rgp.pKeyIdx;
+	mf.oldSelIdx = rgp.pKeyIdx;
+	mf.iCnt = rgp.pICnt;
+	mf.keys = rgp.pKeys;
+	mf.optIds = rgp.pLabelIds;
+	mf.labels = ux.extractLabels(rgp.pLabelIds, true);
+	mf.lastKeyHit = Date.now();
+	mf.facObj = _id(rgp.pFacId);
+	mf.frmObj = _id(rgp.pFrmId);
+	mf.listObj = _id(rgp.pLstId);
+	mf.btnObj = _id(rgp.pBtnId);
+	mf.pop = rgp.pEnabled;
+	mf.selHandler = ux.mfSelectOpt;
 	
-	// Wire facade
-	var evp = {};
-	evp.uCom = mfCom;
-	ux.addHdl(mfCom.uFacObj, "change", ux.mfAmountChange, evp);
+	mf.setValue = function(val) {
+		const currency = val.currency;
+		var k = -1;
+		for(var i = 0; i < this.keys.length; i++) {
+			if (currency == this.keys[i]) {
+				k = i;
+				break;
+			}
+		}
+		
+		this.facObj.value = val.amount;
+		ux.mfSelectOpt(this, k, true);
+	};
 	
-	// Wire section
-	ux.listWirePopFrame(mfCom, rgp);
+	mf.getValue = function() {
+		const val = {};
+		val.currency = this.btnObj.innerHTML;
+		val.amount = this.facObj.value;
+		return val;
+	};
+	
+	const evp = {};
+	evp.uId = id;
+	ux.addHdl(mf.facObj, "change", ux.mfAmountChange, evp);
+	
+	mf.setValue(rgp.pVal);
+	mf.fire = true;
+
+	ux.listWirePopFrame(mf, rgp);
 }
 
-ux.mfSelectOpt = function(mfCom, index, select) {
+ux.mfSelectOpt = function(mf, index, choose) {
 	var aElem = null;
 	var aVal = null;
 	if (index >= 0) {
-		aElem = _id(mfCom.uOptIds[index]);
-		aVal = mfCom.uKeys[index];
+		aElem = _id(mf.optIds[index]);
+		aVal = mf.keys[index];
 	}
 
-	if(mfCom.uOldSelIdx != index) {
+	if(mf.oldSelIdx != index) {
 		var oldElem = null;
-		if (mfCom.uOldSelIdx >= 0) {
-			oldElem = _id(mfCom.uOptIds[mfCom.uOldSelIdx]);
+		if (mf.uOldSelIdx >= 0) {
+			oldElem = _id(mf.optIds[mf.oldSelIdx]);
 		}
 		
-		aElem.className = mfCom.uSel;
-		if (oldElem) {
-			oldElem.className = mfCom.uNorm;
+		aElem.className = mf.selName;
+		if (oldElem && oldElem != aElem) {
+			oldElem.className = mf.norm;
 		}
 
-		mfCom.uOldSelIdx = index;
+		mf.oldSelIdx = index;
 		
-		if (!select) {
-			// Scroll to element
-			ux.listScrollLabel(mfCom, aElem);
+		if (!choose) {
+			ux.listScrollLabel(mf, aElem);
 		}
 	}
 	
-	if (select) {
-		if (mfCom.uSelIdx != index) {
-			mfCom.uBtnObj.innerHTML = aVal;
-			mfCom.uSelIdx = index;
-			ux.mfSetMoneyVal(mfCom);
+	if (choose) {
+		if (mf.selIdx != index) {
+			mf.btnObj.innerHTML = aVal;
+			mf.selIdx = index;
+			ux.mfSetMoneyVal(mf);
 		}
 	}
 }
 
 
 ux.mfAmountChange = function(uEv) {
-	var evp = uEv.evp;
-	ux.mfSetMoneyVal(evp.uCom);
+	ux.mfSetMoneyVal(_id(uEv.evp.uId));
 }
 
-ux.mfSetMoneyVal = function(mfCom) {
-	if (mfCom.uFacObj.value) {
-		mfCom.uHidObj.value = mfCom.uBtnObj.innerHTML + " " + mfCom.uFacObj.value;
-	} else {
-		mfCom.uHidObj.value = "";
+ux.mfSetMoneyVal = function(mf) {
+	var val = "";
+	if (mf.facObj.value) {
+		val = mf.btnObj.innerHTML + " " + mf.facObj.value;
 	}
 
-	if (mfCom.uFire) {
-		ux.fireEvent(mfCom.uHidObj, "change", true);			
+	if (mf.value != val) {
+		mf.value = val;
+		if (mf.fire) {
+			ux.fireEvent(mf, "change");			
+		}
 	}
 }
 
-ux.moneyFieldOnShow = function(rgp) {
+ux.mfOnShow = function(rgp) {
 	ux.setFocus(rgp.pFrmId);
 }
 
@@ -1997,7 +2116,7 @@ ux.msSelectOpt = function(msCom, index, scroll) {
 		ux.listScrollLabel(msCom, aElem);
 	}
 
-	ux.fireEvent(msCom.uSelObj, "change", true);
+	ux.fireEvent(msCom.uSelObj, "change");
 }
 
 ux.msUnSelectAllOpt = function(msCom) {
@@ -2077,7 +2196,7 @@ ux.searchSelect = function(uEv) {
 	var hElem = _id(evp.uId);
 	if (hElem) {
 		hElem.value = evp.uKey;
-		ux.fireEvent(hElem, "change", true);
+		ux.fireEvent(hElem, "change");
 	}
 
 	var tElem = _id(evp.uFacId);
@@ -2246,62 +2365,75 @@ ux.optionsTextAreaOnShow = function(frmId) {
 
 /** Single Select */
 ux.rigSingleSelect = function(rgp) {
-	var ssCom = {};
-	ssCom.uId = rgp.pId;
-	ssCom.uNorm = rgp.pNormCls;
-	ssCom.uSel = rgp.pSelCls;
-	ssCom.uSelIdx = rgp.pKeyIdx;
-	ssCom.uOldSelIdx = rgp.pKeyIdx;
-	ssCom.uIsBlank = rgp.pIsBlank;
-	ssCom.uICnt = rgp.pICnt;
-	ssCom.uKeys = rgp.pKeys;
-	ssCom.uOptIds = rgp.pLabelIds;
-	ssCom.uLabels = ux.extractLabels(rgp.pLabelIds, true);
-	ssCom.uLastKeyHit = Date.now();
-	ssCom.uHidObj = _id(rgp.pId);
-	ssCom.uFacObj = _id(rgp.pFacId);
-	ssCom.uFrmObj = _id(rgp.pFrmId);
-	ssCom.uListObj = _id(rgp.pLstId);
-	ssCom.uBlankObj = _id(rgp.pBlnkId);
-	ssCom.uSelHandler = ux.ssSelectOpt;
+	const id = rgp.pId;
+	const sel = _id(id);
+	sel.norm = rgp.pNormCls;
+	sel.selName = rgp.pSelCls;
+	sel.selIdx = -2;
+	sel.oldSelIdx = -2;
+	sel.isBlankOption = rgp.pIsBlankOption;
+	sel.optIds = rgp.pLabelIds;
+	sel.keys = rgp.pKeys;
+	sel.labels = ux.extractLabels(rgp.pLabelIds, true);
+	sel.iCnt = rgp.pICnt;
+	sel.lastKeyHit = Date.now();
+	sel.facObj = _id(rgp.pFacId);
+	sel.frmObj = _id(rgp.pFrmId);
+	sel.listObj = _id(rgp.pLstId);
+	sel.blankObj = _id(rgp.pBlnkId);
+	sel.pop = rgp.pEnabled;
+	sel.selHandler = ux.ssSelectOpt;
 	
-	// Init
-	if (ssCom.uSelIdx < 0 && !ssCom.uIsBlank && ssCom.uICnt > 0) {
-		ux.ssSelectOpt(ssCom, 0, true);
-	}
-	ssCom.uFire = true;
+	sel.setValue = function(val) {
+		var k = this.isBlankOption ? -1: 0;
+		for(var i = 0; i < this.keys.length; i++) {
+			if (val == this.keys[i]) {
+				k = i;
+				break;
+			}
+		}
+		
+		ux.ssSelectOpt(this, k, true);
+	};
+	
+	sel.getValue = function() {
+		return sel.value;
+	};
+	
+	sel.setValue(rgp.pVal);
+	sel.fire = true;
 	
 	// Wire section
-	ux.listWirePopFrame(ssCom, rgp);
+	ux.listWirePopFrame(sel);
 }
 
-ux.ssSelectOpt = function(ssCom, index, select) {
-	var aElem = ssCom.uBlankObj;
+ux.ssSelectOpt = function(sel, index, choose) {
+	var aElem = sel.blankObj;
 	var aVal = null;
 	if (index >= 0) {
-		aElem = _id(ssCom.uOptIds[index]);
-		aVal = ssCom.uKeys[index];
+		aElem = _id(sel.optIds[index]);
+		aVal = sel.keys[index];
 	}
 
-	if(ssCom.uOldSelIdx != index) {
-		var oldElem = ssCom.uBlankObj;
-		if (ssCom.uOldSelIdx >= 0) {
-			oldElem = _id(ssCom.uOptIds[ssCom.uOldSelIdx]);
+	if(sel.oldSelIdx != index) {
+		var oldElem = sel.blankObj;
+		if (sel.oldSelIdx >= 0) {
+			oldElem = _id(sel.optIds[sel.oldSelIdx]);
 		}
 		
-		aElem.className = ssCom.uSel;
-		if (oldElem) {
-			oldElem.className = ssCom.uNorm;
+		aElem.className = sel.selName;
+		if (oldElem && aElem != oldElem) {
+			oldElem.className = sel.norm;
 		}
-		ssCom.uOldSelIdx = index;
+		sel.oldSelIdx = index;
 		
-		if (!select) {
-			ux.listScrollLabel(ssCom, aElem);
+		if (!choose) {
+			ux.listScrollLabel(sel, aElem);
 		}
 	}
 	
-	if (select) {
-		if (ssCom.uSelIdx != index) {
+	if (choose) {
+		if (sel.selIdx != index) {
 			var txt = aElem.innerHTML;
 			if (txt == "&nbsp;") {
 				txt = "";
@@ -2309,19 +2441,17 @@ ux.ssSelectOpt = function(ssCom, index, select) {
 				txt = ux.decodeHtml(txt);
 			}
 
-			ssCom.uFacObj.value = txt;
-			ssCom.uHidObj.value = aVal;
-			ssCom.uSelIdx = index;
-
-			if (ssCom.uFire) {
-				ux.fireEvent(ssCom.uHidObj, "change", true);			
+			sel.facObj.value = txt;
+			sel.value = aVal;
+			sel.selIdx = index;
+			if (sel.fire) {
+				ux.fireEvent(sel, "change");			
 			}
 		}
 	}
 }
 
-
-ux.singleSelectOnShow = function(rgp) {
+ux.ssOnShow = function(rgp) {
 	ux.setFocus(rgp.pFrmId);
 }
 
@@ -2540,12 +2670,12 @@ ux.rigTable = function(rgp) {
 				viewIndex--;
 			}
 			
-			ux.fireEvent(tblToRig.rows[viewIndex], "click", true);
+			ux.fireEvent(tblToRig.rows[viewIndex], "click");
 		}
 	} else {
 		if (selectable) {
 			if (tblToRig.uFirstRow) {
-				ux.fireEvent(tblToRig.uFirstRow, "click", true);
+				ux.fireEvent(tblToRig.uFirstRow, "click");
 			}
 		}
 	}
@@ -2564,7 +2694,7 @@ ux.tableShiftClickHandler = function(uEv) {
 
 	var rowElem = ux.findParent(uEv.uTrg, "tr");
 	if (rowElem) {
-		ux.fireEvent(rowElem, "click", true);
+		ux.fireEvent(rowElem, "click");
 	}
 	
 	ux.post(uEv);
@@ -3779,112 +3909,109 @@ ux.setDisplayModeByName = function(name, mode) {
 
 /** ************************** MISCELLANEOUS ****************** */
 /** Lists */
-ux.listWirePopFrame = function(sCom, rgp) {
-	var evp = {};
-	evp.uCom = sCom;
-	evp.uHitHandler = ux.listKeydownHit;
-	evp.uEnterHandler = ux.listKeydownEnter;
-	ux.addHdl(sCom.uFrmObj, "click", ux.focusOnClick, evp);
-	ux.addHdl(sCom.uFrmObj, "keydown", ux.listSearchKeydown, evp);
-	
-	if (sCom.uBlankObj) {
-		evp = {};
-		evp.uIndex = -1;
-		evp.uCom = sCom;
-		ux.addHdl(sCom.uBlankObj, "click", ux.listSelectClick, evp);
-	}
-	
-	for (var i = 0; i < rgp.pICnt; i++) {
-		evp = {};
-		evp.uIndex = i;
-		evp.uCom = sCom;
-		var aElem = _id(rgp.pLabelIds[i]);
-		if (aElem) {
-			ux.addHdl(aElem, "click", ux.listSelectClick, evp);
+ux.listWirePopFrame = function(sel) {
+	if (sel.pop) {
+		var evp = {};
+		evp.uId = sel.id;
+		evp.uHitHandler = ux.listKeydownHit;
+		evp.uEnterHandler = ux.listKeydownEnter;
+		ux.addHdl(sel.frmObj, "click", ux.focusOnClick, evp);
+		ux.addHdl(sel.frmObj, "keydown", ux.listSearchKeydown, evp);
+		
+		if (sel.blankObj) {
+			evp = {};
+			evp.uId = sel.id;
+			evp.uIndex = -1;
+			ux.addHdl(sel.blankObj, "click", ux.listSelectClick, evp);
+		}
+		
+		for (var i = 0; i < sel.iCnt; i++) {
+			evp = {};
+			evp.uId = sel.id;
+			evp.uIndex = i;
+			ux.addHdl(_id(sel.optIds[i]), "click", ux.listSelectClick, evp);
 		}
 	}
 }
 
-ux.listKeydownHit = function(sCom) {
-	sCom.uSelHandler(sCom, sCom.uIndexes[0], false);
+ux.listKeydownHit = function(sel) {
+	sel.selHandler(sel, sel.indexes[0], false);
 }
 
-ux.listKeydownEnter = function(sCom) {
-	sCom.uSelHandler(sCom, sCom.uOldSelIdx, true);
+ux.listKeydownEnter = function(sel) {
+	sel.selHandler(sel, sel.oldSelIdx, true);
 	ux.hidePopup(null);
 }
 
-ux.listKeydownSkip = function(sCom, up) {
-	var i = sCom.uOldSelIdx;
+ux.listKeydownSkip = function(sel, up) {
+	var i = sel.oldSelIdx;
 	if (up) {
 		i--;
 	} else {
 		i++;
 	}
 	
-	if(i >= 0 && i < sCom.uICnt) {
-		sCom.uSelHandler(sCom, i, false);
+	if(i >= 0 && i < sel.iCnt) {
+		sel.selHandler(sel, i, false);
 	}	
 }
 
 ux.listSelectClick = function(uEv) {
-	var evp = uEv.evp;
-	var sCom = evp.uCom;
-	sCom.uSelHandler(sCom, evp.uIndex, true);
+	const sel = _id(uEv.evp.uId);
+	sel.selHandler(sel, uEv.evp.uIndex, true);
 	ux.hidePopup(null);
 }
 
-ux.listScrollLabel = function(sCom, aElem) {
+ux.listScrollLabel = function(sel, aElem) {
 	var aH = ux.boundingHeight(aElem);
-	var fH = ux.boundingHeight(sCom.uFrmObj);
-	var lH = ux.boundingHeight(sCom.uListObj);
+	var fH = ux.boundingHeight(sel.frmObj);
+	var lH = ux.boundingHeight(sel.listObj);
 	if(aH.top < fH.top) {
-		sCom.uFrmObj.scrollTop = aH.top - lH.top;
+		sel.frmObj.scrollTop = aH.top - lH.top;
 	} else {
 		if (aH.bottom > fH.bottom) {
-			sCom.uFrmObj.scrollTop = aH.bottom - (lH.top + fH.height);
+			sel.frmObj.scrollTop = aH.bottom - (lH.top + fH.height);
 		}
 	}
 }
 
 ux.listSearchKeydown = function(uEv) {
+	const sel = _id(uEv.evp.uId);
 	var evp = uEv.evp;
-	var sCom = evp.uCom;
 	if (uEv.uChar) {
-		var gap = Date.now() - sCom.uLastKeyHit;
-		
+		const gap = Date.now() - sel.lastKeyHit;
 		if (gap > UNIFY_KEY_SEARCH_MAX_GAP) {
-			sCom.uSchIdx = 0;
-			sCom.uIndexes = null;
+			sel.schIdx = 0;
+			sel.indexes = null;
 		}
 
-		ux.listSearchLabel(sCom, uEv.uChar);
-		if (sCom.uIndexes && sCom.uIndexes.length > 0) {
-			evp.uHitHandler(sCom);
+		ux.listSearchLabel(sel, uEv.uChar);
+		if (sel.indexes && sel.indexes.length > 0) {
+			evp.uHitHandler(sel);
 		}
 	
-		sCom.uLastKeyHit = Date.now(); 
+		sel.lastKeyHit = Date.now(); 
 	} else {
 		if(uEv.uKeyCode == '38') {
-			ux.listKeydownSkip(sCom, true);
+			ux.listKeydownSkip(sel, true);
 			uEv.uStop();
 		} else if(uEv.uKeyCode == '40') {
-			ux.listKeydownSkip(sCom, false);
+			ux.listKeydownSkip(sel, false);
 			uEv.uStop();
 		} else if (uEv.uKeyCode == 13 || (uEv.uKey && "ENTER" == uEv.uKey.toUpperCase())) {
 			if (evp.uEnterHandler) {
-				evp.uEnterHandler(sCom);
+				evp.uEnterHandler(sel);
 				uEv.uStop();
 			}
 		}
 	}
 }
 
-ux.listSearchLabel = function(sCom, char) {
+ux.listSearchLabel = function(sel, char) {
 	var newIndexes = [];
-	var schIdx = sCom.uSchIdx;
-	var labels = sCom.uLabels;
-	var indexes = sCom.uIndexes;
+	var schIdx = sel.schIdx;
+	var labels = sel.labels;
+	var indexes = sel.indexes;
 	var mChar = char.toUpperCase();
 	if(!indexes) {
 		for(var i = 0;  i < labels.length; i++) {
@@ -3903,8 +4030,8 @@ ux.listSearchLabel = function(sCom, char) {
 		}
 	}
 	
-	sCom.uSchIdx++;
-	sCom.uIndexes = newIndexes;
+	sel.schIdx++;
+	sel.indexes = newIndexes;
 }
 
 /** Delayed post */
@@ -4080,17 +4207,17 @@ ux.boundingWidth = function(elem) {
 
 /** ************************** FORMATTED TEXT ****************** */
 /** Text formatting */
-ux.setTextRegexFormatting = function(id, formatRegex, textCase) {
+ux.setTextRegexFormatting = function(prm) {
 	var evp = {};
-	if (textCase) {
-		evp.sTextCase = textCase.toLowerCase();
+	if (prm.pCase) {
+		evp.sTextCase = prm.pCase.toLowerCase();
 	}
 
-	if (formatRegex) {
-		evp.sFormatRegex = eval(formatRegex);
+	if (prm.pRegex) {
+		evp.sFormatRegex = eval(prm.pRegex);
 	}
 
-	var elem = _id(id);
+	var elem = _id(prm.pId);
 	if (elem) {
 		ux.addHdl(elem, "keypress", ux.textInputKeypress,
 				evp);
@@ -4297,7 +4424,7 @@ ux.setOnEvent = function(evp) {
 			ux.addHdl(elem, eventName, evp.uFunc,
 					evp);
 			if (evp.uFire) {
-				ux.fireEvent(elem, eventName, true);
+				ux.fireEvent(elem, eventName);
 			}
 		}
 	}
@@ -4347,28 +4474,26 @@ ux.popupWireCancel = function(btnId) {
 	}
 }
 
-ux.setPatternValue = function(rgp) {
-	var patternArr = rgp.pPattern;
-	if (patternArr) {
-		var fullValue = '';
-		for (var i = 0; i < patternArr.length; i++) {
-			var pattern = patternArr[i];
-			if (pattern.flag == true) {
-				fullValue += pattern.target;
+ux.applyPattern = function(df) {
+	var val = '';
+	if (df.parts && df.format) {
+		for (var i = 0; i < df.format.length; i++) {
+			const _tok = df.format[i];
+			if (_tok.flag == true) {
+				val += _tok.target;
 			} else {
-				if (rgp.pPadLeft) {
-					fullValue += ux.padLeft(_id(pattern.target).value, '0',
-							pattern.length);
+				if (df.padLeft) {
+					val += ux.padLeft(df.parts[_tok.target], '0',
+							_tok.length);
 				} else {
-					fullValue += _id(pattern.target).value;
+					val += df.parts[_tok.target];
 				}
 			}
 		}
-
-		var elem = _id(rgp.pId);
-		elem.value = fullValue;
-		ux.fireEvent(elem, "change", true);
+		
 	}
+	
+	return val;
 }
 
 /** Set hidden values */
@@ -4706,10 +4831,10 @@ ux.isPrintable = function(keyCode) {
 	return false;
 }
 
-ux.fireEvent = function(domObject, eventName, bubbling) {
+ux.fireEvent = function(domObject, eventName) {
 	if (document.createEvent) {
 		var event = document.createEvent("HTMLEvents");
-		event.initEvent(eventName, bubbling, true);
+		event.initEvent(eventName, true, true);
 		return !domObject.dispatchEvent(event);
 	} else {
 		var event = document.createEventObject();

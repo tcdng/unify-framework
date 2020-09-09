@@ -19,8 +19,10 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.web.ui.ResponseWriter;
+import com.tcdng.unify.web.ui.Widget;
 import com.tcdng.unify.web.ui.control.IdentifierField;
 import com.tcdng.unify.web.ui.control.TextField;
+import com.tcdng.unify.web.util.WebRegexUtils;
 
 /**
  * Identifier field writer.
@@ -33,8 +35,14 @@ import com.tcdng.unify.web.ui.control.TextField;
 public class IdentifierFieldWriter extends TextFieldWriter {
 
     @Override
-    protected void writeFormatRegex(ResponseWriter writer, TextField textField) throws UnifyException {
-        writer.writeIdentifierFormatRegex();
+    protected String getFormatRegex(TextField textField) throws UnifyException {
+        return WebRegexUtils.getIdentifierFormatRegex();
+    }
+
+    @Override
+    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
+        super.doWriteBehavior(writer, widget);
+        writeValueAccessor(writer, widget);
     }
 
 }
