@@ -24,7 +24,7 @@ import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.data.Listable;
 import com.tcdng.unify.core.format.NumberFormatter;
 import com.tcdng.unify.core.util.json.JsonWriter;
-import com.tcdng.unify.web.ui.ListControlJsonData;
+import com.tcdng.unify.web.ui.ListControlInfo;
 import com.tcdng.unify.web.ui.ResponseWriter;
 import com.tcdng.unify.web.ui.Widget;
 import com.tcdng.unify.web.ui.control.AbstractPopupTextField;
@@ -69,7 +69,7 @@ public class MoneyFieldWriter extends AbstractPopupTextFieldWriter {
     protected void doWritePopupTextFieldBehaviour(ResponseWriter writer, AbstractPopupTextField popupTextField, boolean popupEnabled)
             throws UnifyException {
         MoneyField moneyField = (MoneyField) popupTextField;
-        ListControlJsonData listControlJsonData = moneyField.getListControlJsonData(true, true, false);
+        ListControlInfo listControlInfo = moneyField.getListControlInfo(null);
 
         // Append rigging
         writer.beginFunction("ux.rigMoneyField");
@@ -78,10 +78,10 @@ public class MoneyFieldWriter extends AbstractPopupTextFieldWriter {
         writer.writeParam("pLstId", moneyField.getListPanelId());
         writer.writeParam("pBtnId", moneyField.getPopupButtonId());
         writer.writeParam("pFacId", moneyField.getFacadeId());
-        writer.writeParam("pKeyIdx", listControlJsonData.getValueIndex());
-        writer.writeParam("pICnt", listControlJsonData.getSize());
-        writer.writeResolvedParam("pLabelIds", listControlJsonData.getJsonSelectIds());
-        writer.writeResolvedParam("pKeys", listControlJsonData.getJsonKeys());
+        writer.writeParam("pICnt", listControlInfo.size());
+        writer.writeParam("pSelectIds", listControlInfo.getSelectIds());
+        writer.writeParam("pKeys", listControlInfo.getKeys());
+        writer.writeParam("pLabels", listControlInfo.getLabels());
         writer.writeParam("pNormCls", "norm");
         writer.writeParam("pSelCls", getUserColorStyleClass("sel"));
         writer.writeParam("pEnabled", popupEnabled);

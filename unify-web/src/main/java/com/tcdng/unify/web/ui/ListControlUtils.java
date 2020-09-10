@@ -21,6 +21,7 @@ import java.util.Map;
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.data.Listable;
+import com.tcdng.unify.core.format.Formatter;
 
 /**
  * List control utilities.
@@ -31,22 +32,16 @@ import com.tcdng.unify.core.data.Listable;
 public interface ListControlUtils extends UnifyComponent {
 
     /**
-     * Gets supplied list control's JSON data.
+     * Gets supplied list control's data.
      * 
      * @param listControl
      *            the list control
-     * @param indexes
-     *            indicates JSON indexes array should be generated
-     * @param keys
-     *            indicates JSON keys array should be generated
-     * @param labels
-     *            indicates JSON labels array should be generated
+     * @param formatter optional label formatter
      * @return the list control data
      * @throws UnifyException
      *             if an error occurs
      */
-    ListControlJsonData getListControlJsonData(ListControl listControl, boolean indexes, boolean keys, boolean labels)
-            throws UnifyException;
+    ListControlInfo getListControlInfo(ListControl listControl, Formatter<Object> formatter) throws UnifyException;
 
     /**
      * Returns listables for a list control.

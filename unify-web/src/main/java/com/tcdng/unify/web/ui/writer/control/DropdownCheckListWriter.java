@@ -22,7 +22,8 @@ import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.data.Listable;
 import com.tcdng.unify.core.util.StringUtils;
-import com.tcdng.unify.web.ui.ListControlJsonData;
+import com.tcdng.unify.core.util.json.JsonWriter;
+import com.tcdng.unify.web.ui.ListControlInfo;
 import com.tcdng.unify.web.ui.PushType;
 import com.tcdng.unify.web.ui.ResponseWriter;
 import com.tcdng.unify.web.ui.control.AbstractPopupTextField;
@@ -124,17 +125,21 @@ public class DropdownCheckListWriter extends AbstractPopupTextFieldWriter {
     protected void doWritePopupTextFieldBehaviour(ResponseWriter writer, AbstractPopupTextField popupTextField,
             boolean popupEnabled) throws UnifyException {
         DropdownCheckList dropdownCheckList = (DropdownCheckList) popupTextField;
-        if (dropdownCheckList.isContainerEditable() && !dropdownCheckList.isContainerDisabled()) {
-            writer.beginFunction("ux.rigDropdownChecklist");
-            writer.writeParam("pId", dropdownCheckList.getId());
-            writer.writeParam("pNm", dropdownCheckList.getId());
-            if (dropdownCheckList.getSelectAllOption() != null) {
-                writer.writeParam("pSelAllId", dropdownCheckList.getSelectAllId());
-            }
-            writer.writeParam("pVal", dropdownCheckList.getValue(String[].class));
-            writer.writeParam("pEnabled", popupEnabled);
-            writer.endFunction();
+        ListControlInfo listControlInfo = dropdownCheckList.getListControlInfo(popupTextField.getFormatter());
+        writer.beginFunction("ux.rigDropdownChecklist");
+        writer.writeParam("pId", dropdownCheckList.getId());
+        writer.writeParam("pNm", dropdownCheckList.getId());
+        writer.writeParam("pFacId", dropdownCheckList.getFacadeId());
+        if (dropdownCheckList.getSelectAllOption() != null) {
+            writer.writeParam("pSelAllId", dropdownCheckList.getSelectAllId());
         }
+
+        writer.writeParam("pSelectIds", listControlInfo.getSelectIds());
+        writer.writeParam("pKeys", listControlInfo.getKeys());
+        writer.writeParam("pLabels", listControlInfo.getLabels());
+        writer.writeParam("pVal", dropdownCheckList.getValue(String[].class));
+        writer.writeParam("pEnabled", popupEnabled);
+        writer.endFunction();
     }
 
     @Override
@@ -149,20 +154,17 @@ public class DropdownCheckListWriter extends AbstractPopupTextFieldWriter {
 
     @Override
     protected String getOnHideAction() throws UnifyException {
-        return "setcheckedpatternvalue";
+        return "ux.dcHidePopup";
     }
 
     @Override
     protected String getOnHideParam(AbstractPopupTextField popupTextField) throws UnifyException {
         DropdownCheckList dropdownCheckList = (DropdownCheckList) popupTextField;
-        ListControlJsonData listControlData = dropdownCheckList.getListControlJsonData(true, false, true);
-        StringBuilder psb = new StringBuilder();
-        psb.append("{\"id\":\"").append(dropdownCheckList.getId()).append("\"");
-        psb.append(",\"fillId\":\"").append(dropdownCheckList.getFacadeId()).append("\"");
-        psb.append(",\"chkIds\":").append(listControlData.getJsonSelectIds());
-        psb.append(",\"fillValues\":").append(listControlData.getJsonLabels());
-        psb.append('}');
-        return psb.toString();
+        JsonWriter jw = new JsonWriter();
+        jw.beginObject();
+        jw.write("id", dropdownCheckList.getId());
+        jw.endObject();
+        return jw.toString();
     }
 
 }

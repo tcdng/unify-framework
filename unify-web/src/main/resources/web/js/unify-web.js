@@ -817,32 +817,27 @@ ux.setFocus = function(id) {
 	}
 }
 
-ux.setCheckedPatternValue = function(prm) {
-	if (prm) {
-		var patternValue = "";
-		if (prm.chkIds && prm.fillValues) {
-			var chkIds = prm.chkIds;
-			var fillValues = prm.fillValues;
+ux.getCheckedPatternValue = function(sel) {
+	var val = "";
+	if (sel) {
+		if (sel._selectIds && sel._labels) {
 			var sym = false;
-			for (var i = 0; i < chkIds.length; i++) {
-				var elem = _id(chkIds[i]);
-				if (elem && elem.checked) {
+			for (var i = 0; i < sel._selectIds.length; i++) {
+				var box = _id(sel._selectIds[i]);
+				if (box && box.checked) {
 					if (sym) {
-						patternValue += ",";
+						val += ",";
 					} else {
 						sym = true;
 					}
-					patternValue += fillValues[i];
+					
+					val += sel._labels[i];
 				}
 			}
 		}
-
-		const fac = _id(prm.fillId);
-		if (fac.value != patternValue) {
-			fac.value = patternValue;
-			ux.fireEvent(_id(prm.id), "change");
-		}
 	}
+	
+	return val;
 }
 
 ux.populateSelectOptions = function(paramObject) {
@@ -1461,20 +1456,24 @@ ux.rigChecklist = function(rgp) {
 
 	const list = _id(rgp.pId);
 	if (list) {
-		list.box = box;
+		list._box = box;
 		list.setValue = function(val) {
-			for(var i = 0; i < this.box.length; i++) {
-				const _box = this.box[i];
-				_box.setValue(val && val.includes(_box.value));
+			for (var i = 0; i < this._box.length; i++) {
+				const box = this._box[i];
+				box.setValue(val && val.includes(box.value));
+			}
+			
+			if (list._setValueHandler) {
+				list._setValueHandler(list);
 			}
 		};
 		
 		list.getValue = function() {
 			const val = [];
-			for(var i = 0; i < this.box.length; i++) {
-				const _box = this.box[i];
-				if (_box.getValue()) {
-					val.push(_box.value);
+			for(var i = 0; i < this._box.length; i++) {
+				const box = this._box[i];
+				if (box.getValue()) {
+					val.push(box.value);
 				}
 			}
 			
@@ -1489,16 +1488,17 @@ ux.rigChecklist = function(rgp) {
 ux.rigDateField = function(rgp) {
 	const id = rgp.pId;
 	const df = _id(id);
-	df.parts = {};
-	df.header = _id("disp_" + id);
-	df.calendar = _id("cont_" + id);
-	df.format = rgp.pPattern;
-	df.padLeft = rgp.pPadLeft;
-	df.shortDayNm = rgp.pShortDayNm;
-	df.longMonthNm = rgp.pLongMonthNm;
-	df.dayClass = rgp.pDayClass;
-	df.currClass = rgp.pCurrClass;
-	df.todayClass = rgp.pTodayClass;
+	df._parts = {};
+	df._header = _id("disp_" + id);
+	df._calendar = _id("cont_" + id);
+	df._format = rgp.pPattern;
+	df._padLeft = rgp.pPadLeft;
+	df._shortDayNm = rgp.pShortDayNm;
+	df._longMonthNm = rgp.pLongMonthNm;
+	df._dayClass = rgp.pDayClass;
+	df._currClass = rgp.pCurrClass;
+	df._todayClass = rgp.pTodayClass;
+	df._pop = rgp.pEnabled;
 	
 	df.setValue = function(val) {
 		this.setDay(val.getDate());
@@ -1510,7 +1510,7 @@ ux.rigDateField = function(rgp) {
 			this.value = formatVal;
 			ux.fireEvent(this, "change");
 		}
-		ux.dfUpdateCalendar(df);
+		ux.dfUpdateCalendar(this);
 	};
 	
 	df.getValue = function() {
@@ -1522,45 +1522,43 @@ ux.rigDateField = function(rgp) {
 	}
 	
 	df.setDay = function(val) {
-		this.parts["day_"] = "" + val;
+		this._parts["day_"] = "" + val;
 	};
 	
 	df.getDay = function() {
-		return parseInt(this.parts["day_"]);
+		return parseInt(this._parts["day_"]);
 	};
 	
 	df.setMonth = function(val) {
-		this.scrollMonth =  val;
-		this.parts["mon_"] = "" + (val + 1);
+		this._scrollMonth =  val;
+		this._parts["mon_"] = "" + (val + 1);
 	};
 	
 	df.getMonth = function() {
-		return parseInt(this.parts["mon_"] - 1);
+		return parseInt(this._parts["mon_"] - 1);
 	};
 	
 	df.setYear = function(val) {
-		this.scrollYear =  val;
-		this.parts["year_"] = "" + val;
+		this._scrollYear =  val;
+		this._parts["year_"] = "" + val;
 	};
 	
 	df.getYear = function() {
-		return parseInt(this.parts["year_"]);
+		return parseInt(this._parts["year_"]);
 	};
 	
-	ux.dfSetupScroll(df, "decy_", "year_", -1);
-	ux.dfSetupScroll(df, "incy_", "year_", 1);
-	ux.dfSetupScroll(df, "decm_", "mon_", -1);
-	ux.dfSetupScroll(df, "incm_", "mon_", 1);
+	if (df._pop) {
+		ux.dfSetupScroll(df, "decy_", "year_", -1);
+		ux.dfSetupScroll(df, "incy_", "year_", 1);
+		ux.dfSetupScroll(df, "decm_", "mon_", -1);
+		ux.dfSetupScroll(df, "incm_", "mon_", 1);
+		ux.popupWireClear(rgp, "btnc_" + id, [ id ]);
+	}
 
-	// Setup 'Clear' button
-	ux.popupWireClear(rgp, "btnc_" + id, [ id ]);
-
-	// Setup 'Today' button
 	const evp = {};
 	evp.uId = id;
 	ux.addHdl(_id("btnt_" + id), "click", ux.dfTodayHandler, evp);
 
-	// Update calendar
 	df.setDay(rgp.pDay);
 	df.setMonth(rgp.pMonth);
 	df.setYear(rgp.pYear);
@@ -1576,8 +1574,8 @@ ux.dfTodayHandler = function(uEv) {
 ux.dfDayHandler = function(id, dayCount) {
 	const df = _id(id);
 	df.setDay(dayCount);
-	df.setMonth(df.scrollMonth);
-	df.setYear(df.scrollYear);	
+	df.setMonth(df._scrollMonth);
+	df.setYear(df._scrollYear);	
 	df.setValue(df.getValue());
 	ux.hidePopup(null);
 }
@@ -1595,148 +1593,178 @@ ux.dfScrollHandler = function(uEv) {
 	const evp = uEv.evp;
 	const df = _id(uEv.evp.uId);
 	if (evp.uTarget == "mon_") {
-		var month = df.scrollMonth;
+		var month = df._scrollMonth;
 		var yearChg = false;
 		if (evp.uStep > 0) {
-			if (month >= df.longMonthNm.length) {
-				df.scrollMonth = 0;
+			if (month >= df._longMonthNm.length) {
+				df._scrollMonth = 0;
 				yearChg = true;
 			}
 		} else {
 			if (month <= 1) {
-				df.scrollMonth = df.longMonthNm.length + 1;
+				df._scrollMonth = df._longMonthNm.length + 1;
 				yearChg = true;
 			}
 		}
 
 		if (yearChg) {
-			df.scrollYear = df.scrollYear + evp.uStep;
+			df._scrollYear = df._scrollYear + evp.uStep;
 		}
 
-		df.scrollMonth = df.scrollMonth + evp.uStep;
+		df._scrollMonth = df._scrollMonth + evp.uStep;
 	} else {
-		df.scrollYear = df.scrollYear + evp.uStep;
+		df._scrollYear = df._scrollYear + evp.uStep;
 	}
 	
 	ux.dfUpdateCalendar(df);
 }
 
 ux.dfUpdateCalendar = function(df) {
-	const month = df.scrollMonth;
-	const year = df.scrollYear;
+	if (df._pop) {
+		const month = df._scrollMonth;
+		const year = df._scrollYear;
 
-	// Display month year on header
-	df.header.innerHTML = df.longMonthNm[month] + "&nbsp;" + year;
+		// Display month year on header
+		df._header.innerHTML = df._longMonthNm[month] + "&nbsp;" + year;
 
-	// Initialize variables and generate calendar HTML
-	var firstDay = new Date(year, month, 1).getDay();
-	var nextMonth = new Date(year, month + 1, 1);
-	nextMonth.setHours(nextMonth.getHours() - 3);
-	var daysInMonth = nextMonth.getDate();
-	var done = false;
-	var rowCount = 0;
-	var dayCount = 1;
+		// Initialize variables and generate calendar HTML
+		var firstDay = new Date(year, month, 1).getDay();
+		var nextMonth = new Date(year, month + 1, 1);
+		nextMonth.setHours(nextMonth.getHours() - 3);
+		var daysInMonth = nextMonth.getDate();
+		var done = false;
+		var rowCount = 0;
+		var dayCount = 1;
 
-	var todayDt = new Date();
-	var today = todayDt.getDate();
-	if (!(month == todayDt.getMonth() && year == todayDt.getFullYear())) {
-		today = 0;
-	}
+		var todayDt = new Date();
+		var today = todayDt.getDate();
+		if (!(month == todayDt.getMonth() && year == todayDt.getFullYear())) {
+			today = 0;
+		}
 
-	var currentDay = df.getDay();
-	if (!(month == df.getMonth() && year == df.uYear)) {
-		currentDay = 0;
-	}
+		var currentDay = df.getDay();
+		if (!(month == df.getMonth() && year == df.getYear())) {
+			currentDay = 0;
+		}
 
-	var calendarHtml = "<table class=\"ctable\">";
-	calendarHtml += "<tr>";
-	for (var i = 0; i < 7; i++) {
-		calendarHtml += "<th>";
-		calendarHtml += df.shortDayNm[i];
-		calendarHtml += "</th>";
-	}
-	calendarHtml += "</tr>";
-	while (!done) {
+		var calendarHtml = "<table class=\"ctable\">";
 		calendarHtml += "<tr>";
 		for (var i = 0; i < 7; i++) {
-			calendarHtml += "<td>";
-			if ((rowCount == 0) && (i < firstDay)) {
-				calendarHtml += "&nbsp;";
-			} else {
-				if (dayCount >= daysInMonth) {
-					done = true;
-				}
-				if (dayCount <= daysInMonth) {
-					var dayClass = df.dayClass;
-					if (dayCount == currentDay) {
-						dayClass = df.currClass;
-					}
-
-					if (dayCount == today) {
-						dayClass = df.todayClass;
-					}
-					calendarHtml += "<span class=\"" + dayClass
-							+ "\" onclick=\"ux.dfDayHandler('" + df.id
-							+ "'," + dayCount + ");\">" + dayCount + "</span>";
-					dayCount++;
-				} else {
-					calendarHtml += "&nbsp;";
-				}
-			}
-			calendarHtml += "</td>";
+			calendarHtml += "<th>";
+			calendarHtml += df._shortDayNm[i];
+			calendarHtml += "</th>";
 		}
 		calendarHtml += "</tr>";
-		rowCount++;
+		while (!done) {
+			calendarHtml += "<tr>";
+			for (var i = 0; i < 7; i++) {
+				calendarHtml += "<td>";
+				if ((rowCount == 0) && (i < firstDay)) {
+					calendarHtml += "&nbsp;";
+				} else {
+					if (dayCount >= daysInMonth) {
+						done = true;
+					}
+					if (dayCount <= daysInMonth) {
+						var dayClass = df._dayClass;
+						if (dayCount == currentDay) {
+							dayClass = df._currClass;
+						}
+
+						if (dayCount == today) {
+							dayClass = df._todayClass;
+						}
+						calendarHtml += "<span class=\"" + dayClass
+								+ "\" onclick=\"ux.dfDayHandler('" + df.id
+								+ "'," + dayCount + ");\">" + dayCount + "</span>";
+						dayCount++;
+					} else {
+						calendarHtml += "&nbsp;";
+					}
+				}
+				calendarHtml += "</td>";
+			}
+			calendarHtml += "</tr>";
+			rowCount++;
+		}
+		calendarHtml += "</table>";
+		df._calendar.innerHTML = calendarHtml;
 	}
-	calendarHtml += "</table>";
-	df.calendar.innerHTML = calendarHtml;
 }
 
 /** Dropdown checklist */
 ux.rigDropdownChecklist = function(rgp) {
-	// Select all
-	if (rgp.pSelAllId) {
-		ux.cbWire(_id(rgp.pSelAllId));
+	const id = rgp.pId;
+	const dc = _id(id);
+	dc._fac = _id(rgp.pFacId);
+	dc._selectIds = rgp.pSelectIds;
+	dc._keys = rgp.pKeys;
+	dc._labels = rgp.pLabels;
+	dc._pop = rgp.pEnabled;
+	dc._setValueHandler = ux.dcUpdateFacade;
+	
+	if (rgp.pEnabled) {
+		if (rgp.pSelAllId) {
+			ux.cbWire(_id(rgp.pSelAllId));
 
-		const evp = {};
-		evp.uSrcId = rgp.pSelAllId;
-		evp.uRef = [rgp.pId];
-		ux.addHdl(_id("fac_" + rgp.pSelAllId), "change", ux.setAllChecked, evp);	
+			const evp = {};
+			evp.uSrcId = rgp.pSelAllId;
+			evp.uRef = [rgp.pId];
+			ux.addHdl(_id("fac_" + rgp.pSelAllId), "change", ux.setAllChecked, evp);	
+		}
 	}
 
-	// Rig checklist
 	ux.rigChecklist(rgp);
+	dc.setValue(rgp.pVal);
+	dc._fire = true;
+}
+
+ux.dcHidePopup = function(prm) {
+	const dc = _id(prm.id);
+	if (dc) {
+		ux.dcUpdateFacade(dc);
+	}
+}
+
+ux.dcUpdateFacade = function(dc) {
+	const val = ux.getCheckedPatternValue(dc);
+	if (dc._fac.value != val) {
+		dc._fac.value = val;
+		if (dc._fire) {
+			ux.fireEvent(dc, "change");
+		}
+	}	
 }
 
 /** Duration Select */
 ux.rigDurationSelect = function(rgp) {
 	const id = rgp.pId;
 	const ds = _id(id);
-	ds.daySel = _id(rgp.pDaySelId);
-	ds.hourSel = _id(rgp.pHourSelId);
-	ds.minSel = _id(rgp.pMinSelId);
+	ds._daySel = _id(rgp.pDaySelId);
+	ds._hourSel = _id(rgp.pHourSelId);
+	ds._minSel = _id(rgp.pMinSelId);
 
 	ds.setValue = function(val) {
 		const days = Math.floor(val / UNIFY_MINUTES_IN_DAY);
 		var rem = Math.floor(val % UNIFY_MINUTES_IN_DAY);
-		if (this.daySel) {
-			this.daySel.setValue(days);
+		if (this._daySel) {
+			this._daySel.setValue(days);
 		}
 		
 		const hours = Math.floor(rem / UNIFY_MINUTES_IN_HOUR);
 		rem = Math.floor(rem % UNIFY_MINUTES_IN_HOUR);
-		if (this.hourSel) {
-			this.hourSel.setValue(hours);
+		if (this._hourSel) {
+			this._hourSel.setValue(hours);
 		}
 
-		this.minSel.setValue(rem);
+		this._minSel.setValue(rem);
 		this.setActual(val);
 	};
 	
 	ds.setActual = function(val) {
 		if(!this.value || parseInt(this.value) != val) {
 			this.value = val;
-			if (this.fire) {
+			if (this._fire) {
 				ux.fireEvent(this, "change");
 			}
 		}
@@ -1748,32 +1776,32 @@ ux.rigDurationSelect = function(rgp) {
 
 	const evp = {};
 	evp.uId = id;
-	if (ds.daySel) {
-		ux.addHdl(ds.daySel, "change", ux.dsCalc, evp);
+	if (ds._daySel) {
+		ux.addHdl(ds._daySel, "change", ux.dsCalc, evp);
 	}
 	
-	if (ds.hourSel){
-		ux.addHdl(ds.hourSel, "change", ux.dsCalc, evp);
+	if (ds._hourSel){
+		ux.addHdl(ds._hourSel, "change", ux.dsCalc, evp);
 	}
 	
-	ux.addHdl(ds.minSel, "change", ux.dsCalc, evp);
+	ux.addHdl(ds._minSel, "change", ux.dsCalc, evp);
 	
 	ds.setValue(rgp.pVal);
-	ds.fire = true;
+	ds._fire = true;
 }
 
 ux.dsCalc = function(uEv) {
 	const ds = _id(uEv.evp.uId);
 	var total = 0;
-	if (ds.daySel){
-		total += parseInt(ds.daySel.getValue()) * UNIFY_MINUTES_IN_DAY;
+	if (ds._daySel){
+		total += parseInt(ds._daySel.getValue()) * UNIFY_MINUTES_IN_DAY;
 	}
 	
-	if (ds.hourSel){
-		total += parseInt(ds.hourSel.getValue()) * UNIFY_MINUTES_IN_HOUR;
+	if (ds._hourSel){
+		total += parseInt(ds._hourSel.getValue()) * UNIFY_MINUTES_IN_HOUR;
 	}
 	
-	total += parseInt(ds.minSel.getValue());
+	total += parseInt(ds._minSel.getValue());
 	ds.setActual(total);
 }
 
@@ -1932,85 +1960,72 @@ ux.rigLinkGrid = function(rgp) {
 ux.rigMoneyField = function(rgp) {
 	const id = rgp.pId;
 	const mf = _id(id);
-	mf.norm = rgp.pNormCls;
-	mf.selName = rgp.pSelCls;
-	mf.selIdx = rgp.pKeyIdx;
-	mf.oldSelIdx = rgp.pKeyIdx;
-	mf.iCnt = rgp.pICnt;
-	mf.keys = rgp.pKeys;
-	mf.optIds = rgp.pLabelIds;
-	mf.labels = ux.extractLabels(rgp.pLabelIds, true);
-	mf.lastKeyHit = Date.now();
-	mf.facObj = _id(rgp.pFacId);
-	mf.frmObj = _id(rgp.pFrmId);
-	mf.listObj = _id(rgp.pLstId);
-	mf.btnObj = _id(rgp.pBtnId);
-	mf.pop = rgp.pEnabled;
-	mf.selHandler = ux.mfSelectOpt;
+	mf._norm = rgp.pNormCls;
+	mf._sel = rgp.pSelCls;
+	mf._selIdx = -2;
+	mf._oldSelIdx = -2;
+	mf._iCnt = rgp.pICnt;
+	mf._selectIds = rgp.pSelectIds;
+	mf._keys = rgp.pKeys;
+	mf._labels = rgp.pLabels;
+	mf._lastKeyHit = Date.now();
+	mf._fac = _id(rgp.pFacId);
+	mf._frm = _id(rgp.pFrmId);
+	mf._list = _id(rgp.pLstId);
+	mf._btn = _id(rgp.pBtnId);
+	mf._pop = rgp.pEnabled;
+	mf._selHandler = ux.mfSelectOpt;
 	
 	mf.setValue = function(val) {
 		const currency = val.currency;
 		var k = -1;
-		for(var i = 0; i < this.keys.length; i++) {
-			if (currency == this.keys[i]) {
+		for(var i = 0; i < this._keys.length; i++) {
+			if (currency == this._keys[i]) {
 				k = i;
 				break;
 			}
 		}
 		
-		this.facObj.value = val.amount;
+		this._fac.value = val.amount;
 		ux.mfSelectOpt(this, k, true);
 	};
 	
 	mf.getValue = function() {
 		const val = {};
-		val.currency = this.btnObj.innerHTML;
-		val.amount = this.facObj.value;
+		val.currency = this._btn.innerHTML;
+		val.amount = this._fac.value;
 		return val;
 	};
 	
-	const evp = {};
-	evp.uId = id;
-	ux.addHdl(mf.facObj, "change", ux.mfAmountChange, evp);
-	
-	mf.setValue(rgp.pVal);
-	mf.fire = true;
-
+	ux.addHdl(mf._fac, "change", ux.mfAmountChange, {uId:id});
 	ux.listWirePopFrame(mf, rgp);
+
+	mf.setValue(rgp.pVal);
+	mf._fire = true;
 }
 
 ux.mfSelectOpt = function(mf, index, choose) {
-	var aElem = null;
-	var aVal = null;
-	if (index >= 0) {
-		aElem = _id(mf.optIds[index]);
-		aVal = mf.keys[index];
-	}
-
-	if(mf.oldSelIdx != index) {
-		var oldElem = null;
-		if (mf.uOldSelIdx >= 0) {
-			oldElem = _id(mf.optIds[mf.oldSelIdx]);
+	if (mf._pop) {
+		if(mf._oldSelIdx != index) {
+			const label = index >= 0 ? _id(mf._selectIds[index]) : null;
+			const olabel = mf._oldSelIdx >= 0 ? _id(mf._selectIds[mf._oldSelIdx]) : null;
+			label.className = mf._sel;
+			if (olabel && label != olabel) {
+				olabel.className = mf._norm;
+			}
+			
+			mf._oldSelIdx = index;
+			if (!choose) {
+				ux.listScrollToLabel(mf, label);
+			}
 		}
 		
-		aElem.className = mf.selName;
-		if (oldElem && oldElem != aElem) {
-			oldElem.className = mf.norm;
-		}
-
-		mf.oldSelIdx = index;
-		
-		if (!choose) {
-			ux.listScrollLabel(mf, aElem);
-		}
 	}
 	
-	if (choose) {
-		if (mf.selIdx != index) {
-			mf.btnObj.innerHTML = aVal;
-			mf.selIdx = index;
-			ux.mfSetMoneyVal(mf);
-		}
+	if (choose && (mf._selIdx != index)) {
+		mf._btn.innerHTML = index >= 0 ? mf._keys[index]:null;
+		mf._selIdx = index;
+		ux.mfSetMoneyVal(mf);
 	}
 }
 
@@ -2021,13 +2036,13 @@ ux.mfAmountChange = function(uEv) {
 
 ux.mfSetMoneyVal = function(mf) {
 	var val = "";
-	if (mf.facObj.value) {
-		val = mf.btnObj.innerHTML + " " + mf.facObj.value;
+	if (mf._fac.value) {
+		val = mf._btn.innerHTML + " " + mf._fac.value;
 	}
 
 	if (mf.value != val) {
 		mf.value = val;
-		if (mf.fire) {
+		if (mf._fire) {
 			ux.fireEvent(mf, "change");			
 		}
 	}
@@ -2039,96 +2054,116 @@ ux.mfOnShow = function(rgp) {
 
 /** Multi select */
 ux.rigMultiSelect = function(rgp) {
-	var id = rgp.pId;
-	var msCom = {};
-	msCom.uId = id;
-	msCom.uNorm = rgp.pNormCls;
-	msCom.uSel = rgp.pSelCls;
-	msCom.uOptIds = rgp.pLabelIds;
-	msCom.uLabels = ux.extractLabels(rgp.pLabelIds, true);
-	msCom.uLastKeyHit = Date.now();
-	msCom.uSelObj = _id(id);
-	msCom.uFrmObj = _id(rgp.pFrmId);
-	msCom.uListObj = _id(rgp.pLstId);
-	msCom.uStart = -1;
+	const id = rgp.pId;
+	const ms = _id(id);
+	ms._norm = rgp.pNormCls;
+	ms._selName = rgp.pSelCls;
+	ms._selectIds = rgp.pSelectIds;
+	ms._keys = rgp.pKeys;
+	ms._labels = rgp.pLabels;
+	ms._lastKeyHit = Date.now();
+	ms._frm = _id(rgp.pFrmId);
+	ms._list = _id(rgp.pLstId);
+	ms._start = -1;
+	
+	ms.setValue = function(val) {
+		for (var i = 0; i < this.options.length; i++) {
+			const option = this.options[i];
+			const label = _id(this.selectIds[i]);
+			if(val && val.includes(option.value)) {
+				label.className = this._sel;
+				option.selected = true;
+			} else {
+				label.className = this._norm;
+				option.selected = false;
+			}
+		}
+	};
+	
+	ms.getValue = function() {
+		const val = [];
+		for (var i = 0; i < this.options.length; i++) {
+			const option = this.options[i];
+			if (option.selected) {
+				val.push(option.value);
+			}
+		}
+		
+		return val;
+	};
 	
 	// Wire section
 	var evp = {};
-	evp.uCom = msCom;
+	evp.uId = id;
 	evp.uHitHandler = ux.msKeydownHit;
-	ux.addHdl(msCom.uFrmObj, "click", ux.focusOnClick, evp);
-	ux.addHdl(msCom.uFrmObj, "keydown", ux.listSearchKeydown, evp);
+	ux.addHdl(ms._frm, "click", ux.focusOnClick, evp);
+	ux.addHdl(ms._frm, "keydown", ux.listSearchKeydown, evp);
 
 	// Select
-	for (var i = 0; i < rgp.pICnt; i++) {
+	for (var i = 0; i < ms._selectIds.length; i++) {
 		evp = {};
 		evp.uIndex = i;
-		evp.uCom = msCom;
-		var aElem = _id(rgp.pLabelIds[i]);
-		if (aElem) {
-			ux.addHdl(aElem, "click", ux.msSelectClick, evp);
-		}
+		evp.uId = id;
+		const label = _id(ms._selectIds[i]);
+		label.innerHTML = ms._labels[i];
+		ux.addHdl(label, "click", ux.msSelectClick, evp);
 	}
 }
 
-ux.msKeydownHit = function(msCom) {
-	if (msCom.uIndexes && msCom.uIndexes.length > 0) {
-		var optIndex = msCom.uIndexes[0]
-		ux.msUnSelectAllOpt(msCom);
-		ux.msSelectOpt(msCom, optIndex, true);
-		msCom.uStart = optIndex;
+ux.msKeydownHit = function(ms) {
+	if (ms._indexes && ms._indexes.length > 0) {
+		var optIndex = ms._indexes[0]
+		ux.msUnSelectAllOpt(ms);
+		ux.msSelectOpt(ms, optIndex, true);
+		ms._start = optIndex;
 	}
 }
 
 ux.msSelectClick = function(uEv) {
 	var evp = uEv.evp;
-	var msCom = evp.uCom;
+	var ms = _id(evp.uId);
 
-	if (uEv.shiftKey && msCom.uStart >= 0) {
-		var start = msCom.uStart;
+	if (uEv.shiftKey && ms._start >= 0) {
+		var start = ms._start;
 		var stop = evp.uIndex;
 		if (start > stop) {
 			start = stop;
-			stop = msCom.uStart;
+			stop = ms._start;
 		}
 
-		ux.msUnSelectAllOpt(msCom);
+		ux.msUnSelectAllOpt(ms);
 		while (start <= stop) {
-			ux.msSelectOpt(msCom, start, false);
+			ux.msSelectOpt(ms, start, false);
 			start++;
 		}
 	} else {
 		if (!uEv.ctrlKey) {
-			ux.msUnSelectAllOpt(msCom);
+			ux.msUnSelectAllOpt(ms);
 		}
 
-		ux.msSelectOpt(msCom, evp.uIndex, false);
-		msCom.uStart = evp.uIndex;
+		ux.msSelectOpt(ms, evp.uIndex, false);
+		ms._start = evp.uIndex;
 	}
 }
 
-ux.msSelectOpt = function(msCom, index, scroll) {
-	var aElem = _id(msCom.uOptIds[index]);
-	aElem.className = msCom.uSel;
-	msCom.uSelObj.options[index].selected = true;
+ux.msSelectOpt = function(ms, index, scroll) {
+	const label = _id(ms._selectIds[index]);
+	label.className = ms._sel;
+	ms.options[index].selected = true;
 	
 	if (scroll) {
-		ux.listScrollLabel(msCom, aElem);
+		ux.listScrollToLabel(msCom, label);
 	}
 
-	ux.fireEvent(msCom.uSelObj, "change");
+	ux.fireEvent(ms, "change");
 }
 
-ux.msUnSelectAllOpt = function(msCom) {
-	var length = msCom.uOptIds.length;
-	var selObj = msCom.uSelObj;
-	for (var i = 0; i < length; i++) {
-		if (selObj.options[i].selected) {
-			var aElem = _id(msCom.uOptIds[i]);
-			if (aElem) {
-				aElem.className = msCom.uNorm;
-			}
-			selObj.options[i].selected = false;
+ux.msUnSelectAllOpt = function(ms) {
+	for (var i = 0; i < ms._selectIds.length; i++) {
+		const option = ms.options[i];
+		if (option.selected) {
+			_id(ms._selectIds[i]).className = ms._norm;
+			option.selected = false;
 		}
 	}
 }
@@ -2149,9 +2184,40 @@ ux.rigPhotoUpload = function(rgp) {
 	}
 }
 
+/** Radio buttons */
+ux.rigRadioButtons = function(rgp) {
+	const rb = _id(rgp.pId);
+	rb._name = _id(rgp.pNm);
+	
+	rb.setValue = function(val) {
+		const btn = _name(this._name);
+		for(var i = 0; i < btn.length; i++) {
+			btn[i].checked = btn[i].value == val;
+		}
+		
+		if(this._fire) {
+			ux.fireEvent(this, "change");
+		}
+	};
+	
+	rb.getValue = function() {
+		const btn = _name(this._name);
+		for(var i = 0; i < btn.length; i++) {
+			if (btn[i].checked) {
+				return btn[i].value;
+			}
+		}
+		
+		return null;
+	};
+	
+	rb.setValue(rgp.pVal);
+	rb._fire = true;
+}
+
 /** Search Field */
 ux.rigSearchField = function(rgp) {
-	var id = rgp.pId;
+	const id = rgp.pId;
 
 	// Filter
 	var fElem = _id(rgp.pFilId);
@@ -2163,7 +2229,7 @@ ux.rigSearchField = function(rgp) {
 	}
 
 	// Result
-	ux.searchWireResult(rgp);
+	ux.sfWireResult(rgp);
 
 	// Clear button
 	ux.popupWireClear(rgp, rgp.pClrId, [ id, rgp.pFacId ]);
@@ -2172,81 +2238,74 @@ ux.rigSearchField = function(rgp) {
 	ux.popupWireCancel(rgp.pCanId);
 }
 
-ux.searchWireResult = function(rgp) {
-	// Select
+ux.sfWireResult = function(rgp) {
+	const id = rgp.pId;
+	const sf = _id(id);
+	sf._selectIds = rgp.pSelectIds;
+	sf._keys = rgp.pKeys;
+	sf._fac = _id(rgp.pFacId);
+	
+	sf.setValue = function(val) {
+		this.value = val;
+		ux.fireEvent(this, "change");
+	};
+	
 	for (var i = 0; i < rgp.pICnt; i++) {
-		var evp = {};
-		evp.uId = rgp.pId;
-		evp.uFacId = rgp.pFacId;
-		evp.uKey = rgp.pKeys[i];
-		var aElem = _id(rgp.pLabelIds[i]);
-		if (aElem) {
-			ux.addHdl(aElem, "click", ux.searchSelect, evp);
-		}
+		const evp = {};
+		evp.uId = id;
+		evp.uIndex = i;
+		const label = _id(rgp.selectIds[i]);
+		ux.addHdl(label, "click", ux.sfSelect, evp);
 	}
 }
 
-ux.searchOnShow = function(rgp) {
-	// Focus on filter input
+ux.sfOnShow = function(rgp) {
 	ux.setFocus(rgp.pFilId);
 }
 
-ux.searchSelect = function(uEv) {
-	var evp = uEv.evp;
-	var hElem = _id(evp.uId);
-	if (hElem) {
-		hElem.value = evp.uKey;
-		ux.fireEvent(hElem, "change");
-	}
-
-	var tElem = _id(evp.uFacId);
-	if (tElem) {
-		var selOpt = uEv.uTrg;
-		tElem.value = selOpt.innerHTML;
-	}
+ux.sfSelect = function(uEv) {
+	const sf = _id(uEv.evp.uId);
+	const selOpt = uEv.uTrg;
+	sf._fac.value = selOpt.innerHTML;
 
 	ux.hidePopup(null);
+	sf.setValue(sf._keys[uEv.evp.uIndex]);
 }
 
 /** Options Text Area */
 ux.rigOptionsTextArea = function(rgp) {
-	var otaCom = {};
-	otaCom.uId = rgp.pId;
-	otaCom.uNorm = rgp.pNormCls;
-	otaCom.uSel = rgp.pSelCls;
-	otaCom.uSelIdx = 0;
-	otaCom.uOldSelIdx = 0;
-	otaCom.uICnt = rgp.pICnt;
-	otaCom.uKeys = rgp.pKeys;
-	otaCom.uOptIds = rgp.pLabelIds;
-	otaCom.uLabels = ux.extractLabels(rgp.pLabelIds, true);
-	otaCom.uLastKeyHit = Date.now();
-	otaCom.uFrmObj = _id(rgp.pFrmId);
-	otaCom.uListObj = _id(rgp.pLstId);
-	otaCom.uSelHandler = ux.otaSelectOpt;
+	const id = rgp.pId;
+	const ota = _id(id);
+	ota._norm = rgp.pNormCls;
+	ota._sel = rgp.pSelCls;
+	ota._selIdx = -1;
+	ota._oldSelIdx = -1;
+	ota._iCnt = rgp.pICnt;
+	ota._selectIds = rgp.pLabelIds;
+	ota._keys = rgp.pKeys;
+	ota._labels = rgp.pLabels;
+	ota._lastKeyHit = Date.now();
+	ota._frm = _id(rgp.pFrmId);
+	ota._list = _id(rgp.pLstId);
+	ota._selHandler = ux.otaSelectOpt;
+	ota._pop = rgp.pEnabled;
 	
-	// Init
-	var elem = _id(rgp.pId);
-	if (elem) {
-		var evp = {};
-		evp.uTrg = elem;
-		evp.popupId=rgp.pPopupId;
-		evp.frameId=rgp.pId;
-		evp.stayOpenForMillSec = 0;
-		evp.showHandler = ux.optionsTextAreaOnShow;
-		evp.showParam=rgp.pFrmId;
-		ux.addHdl(elem, "keypress", ux.otaTxtKeypress,
-				evp);
-		ux.addHdl(elem,  "keydown", ux.otaTxtKeydown,
-				evp);
-		
-		if (rgp.pScrEnd) {
-			elem.scrollTop = elem.scrollHeight;
-		}
+	var evp = {};
+	evp.uTrg = ota;
+	evp.popupId=rgp.pPopupId;
+	evp.frameId=rgp.pId;
+	evp.stayOpenForMillSec = 0;
+	evp.showHandler = ux.optionsTextAreaOnShow;
+	evp.showParam=rgp.pFrmId;
+	ux.addHdl(ota, "keypress", ux.otaTxtKeypress,
+			evp);
+	ux.addHdl(ota,  "keydown", ux.otaTxtKeydown,
+			evp);	
+	if (rgp.pScrEnd) {
+		ota.scrollTop = ota.scrollHeight;
 	}
 	
-	// Wire section
-	ux.listWirePopFrame(otaCom, rgp);
+	ux.listWirePopFrame(ota, rgp);
 }
 
 ux.otaTxtKeypress = function(uEv) {
@@ -2260,15 +2319,15 @@ ux.otaTxtKeydown = function(uEv) {
 		return;
 	}
 	
-	var elem = uEv.uTrg;
-	var txt = elem.value;
-	var pos = ux.getCaretPosition(elem);
+	const ota = uEv.uTrg;
+	var txt = ota.value;
+	var pos = ux.getCaretPosition(ota);
 	if (pos.start != pos.end) {
 		if (uEv.uKeyCode == '8' || uEv.uKeyCode == '46') {
 			pos.start = ux.otaTokenStart(txt, pos.start);
 			pos.end = ux.otaTokenEnd(txt, pos.end);
-			elem.value = txt.substring(0, pos.start) + txt.substring(pos.end);
-			ux.setCaretPosition(elem, pos.start, pos.start);
+			ota.value = txt.substring(0, pos.start) + txt.substring(pos.end);
+			ux.setCaretPosition(ota, pos.start, pos.start);
 			uEv.uStop();
 		}
 	} else {
@@ -2291,8 +2350,8 @@ ux.otaTxtKeydown = function(uEv) {
 				}
 				
 				if (pos.start != pos.end) {
-					elem.value = txt.substring(0, pos.start) + txt.substring(pos.end);
-					ux.setCaretPosition(elem, pos.start, pos.start);
+					ota.value = txt.substring(0, pos.start) + txt.substring(pos.end);
+					ux.setCaretPosition(ota, pos.start, pos.start);
 					uEv.uStop();
 				}
 			}
@@ -2327,34 +2386,33 @@ ux.otaTokenEnd = function(txt, end) {
 	return end;
 }
 
-ux.otaSelectOpt = function(otaCom, idx, sel) {
-	var aElem = _id(otaCom.uOptIds[idx]);
-	var aVal = otaCom.uKeys[idx];
+ux.otaSelectOpt = function(ota, idx, choose) {
+	var aElem = _id(ota._selectIds[idx]);
+	var aVal = ota._keys[idx];
 
-	if(otaCom.uOldSelIdx != idx) {
-		var oldElem = _id(otaCom.uOptIds[otaCom.uOldSelIdx]);
-		aElem.className = otaCom.uSel;
+	if(ota._oldSelIdx != idx) {
+		var oldElem = _id(ota._selectIds[ota._oldSelIdx]);
+		aElem.className = ota._sel;
 		if (oldElem) {
-			oldElem.className = otaCom.uNorm;
+			oldElem.className = ota._norm;
 		}
-		otaCom.uOldSelIdx = idx;
+		ota._oldSelIdx = idx;
 		
-		if (!sel) {
-			ux.listScrollLabel(otaCom, aElem);
+		if (!choose) {
+			ux.listScrollToLabel(ota, aElem);
 		}
 	}
 
-	if (sel) {
-		otaCom.uSelIdx = idx;
-		var txtElem = _id(otaCom.uId);
-		var pos = ux.getCaretPosition(txtElem);
-		var string = txtElem.value;
+	if (choose) {
+		ota._selIdx = idx;
+		var pos = ux.getCaretPosition(ota);
+		var string = ota.value;
 		var token = "{" + aVal + "}";
 		var spos = pos.start + token.length;
 		string = string.substring(0, pos.start) + token + string.substring(pos.end);
-		txtElem.value = string;
-		ux.setCaretPosition(txtElem, spos, spos);
-		txtElem.focus();
+		ota.value = string;
+		ux.setCaretPosition(ota, spos, spos);
+		ota.focus();
 	}
 }
 
@@ -2367,27 +2425,27 @@ ux.optionsTextAreaOnShow = function(frmId) {
 ux.rigSingleSelect = function(rgp) {
 	const id = rgp.pId;
 	const sel = _id(id);
-	sel.norm = rgp.pNormCls;
-	sel.selName = rgp.pSelCls;
-	sel.selIdx = -2;
-	sel.oldSelIdx = -2;
-	sel.isBlankOption = rgp.pIsBlankOption;
-	sel.optIds = rgp.pLabelIds;
-	sel.keys = rgp.pKeys;
-	sel.labels = ux.extractLabels(rgp.pLabelIds, true);
-	sel.iCnt = rgp.pICnt;
-	sel.lastKeyHit = Date.now();
-	sel.facObj = _id(rgp.pFacId);
-	sel.frmObj = _id(rgp.pFrmId);
-	sel.listObj = _id(rgp.pLstId);
-	sel.blankObj = _id(rgp.pBlnkId);
-	sel.pop = rgp.pEnabled;
-	sel.selHandler = ux.ssSelectOpt;
+	sel._norm = rgp.pNormCls;
+	sel._sel = rgp.pSelCls;
+	sel._selIdx = -2;
+	sel._oldSelIdx = -2;
+	sel._isBlankOption = rgp.pIsBlankOption;
+	sel._selectIds = rgp.pSelectIds;
+	sel._keys = rgp.pKeys;
+	sel._labels = rgp.pLabels;
+	sel._iCnt = rgp.pICnt;
+	sel._lastKeyHit = Date.now();
+	sel._fac = _id(rgp.pFacId);
+	sel._frm = _id(rgp.pFrmId);
+	sel._list = _id(rgp.pLstId);
+	sel._blank = _id(rgp.pBlnkId);
+	sel._pop = rgp.pEnabled;
+	sel._selHandler = ux.ssSelectOpt;
 	
 	sel.setValue = function(val) {
-		var k = this.isBlankOption ? -1: 0;
-		for(var i = 0; i < this.keys.length; i++) {
-			if (val == this.keys[i]) {
+		var k = this._isBlankOption ? -1: 0;
+		for(var i = 0; i < this._keys.length; i++) {
+			if (val == this._keys[i]) {
 				k = i;
 				break;
 			}
@@ -2397,56 +2455,50 @@ ux.rigSingleSelect = function(rgp) {
 	};
 	
 	sel.getValue = function() {
-		return sel.value;
+		return this.value;
 	};
 	
-	sel.setValue(rgp.pVal);
-	sel.fire = true;
-	
-	// Wire section
 	ux.listWirePopFrame(sel);
+	sel.setValue(rgp.pVal);
+	sel._fire = true;	
 }
 
 ux.ssSelectOpt = function(sel, index, choose) {
-	var aElem = sel.blankObj;
-	var aVal = null;
-	if (index >= 0) {
-		aElem = _id(sel.optIds[index]);
-		aVal = sel.keys[index];
-	}
-
-	if(sel.oldSelIdx != index) {
-		var oldElem = sel.blankObj;
-		if (sel.oldSelIdx >= 0) {
-			oldElem = _id(sel.optIds[sel.oldSelIdx]);
-		}
-		
-		aElem.className = sel.selName;
-		if (oldElem && aElem != oldElem) {
-			oldElem.className = sel.norm;
-		}
-		sel.oldSelIdx = index;
-		
-		if (!choose) {
-			ux.listScrollLabel(sel, aElem);
+	if (sel._pop) {
+		if(sel._oldSelIdx != index) {
+			const label = index >= 0 ? _id(sel._selectIds[index]) : sel._blank;
+			const olabel = sel._oldSelIdx >= 0 ? _id(sel._selectIds[sel._oldSelIdx]) : sel._blank;
+			label.className = sel._sel;
+			if (olabel && label != olabel) {
+				olabel.className = sel._norm;
+			}
+			
+			sel._oldSelIdx = index;
+			if (!choose) {
+				ux.listScrollToLabel(sel, label);
+			}
 		}
 	}
 	
-	if (choose) {
-		if (sel.selIdx != index) {
-			var txt = aElem.innerHTML;
-			if (txt == "&nbsp;") {
-				txt = "";
-			} else {
-				txt = ux.decodeHtml(txt);
-			}
+	if (choose && (sel._selIdx != index)) {
+		var txt = sel._blank ? sel._blank.innerHTML:"";
+		var val = null;
+		if (index >= 0) {
+			txt = sel._labels[index];
+			val = sel._keys[index];
+		}
+		
+		if (txt == "&nbsp;") {
+			txt = "";
+		} else {
+			txt = ux.decodeHtml(txt);
+		}
 
-			sel.facObj.value = txt;
-			sel.value = aVal;
-			sel.selIdx = index;
-			if (sel.fire) {
-				ux.fireEvent(sel, "change");			
-			}
+		sel.value = val;
+		sel._fac.value = txt;
+		sel._selIdx = index;
+		if (sel._fire) {
+			ux.fireEvent(sel, "change");			
 		}
 	}
 }
@@ -3910,67 +3962,71 @@ ux.setDisplayModeByName = function(name, mode) {
 /** ************************** MISCELLANEOUS ****************** */
 /** Lists */
 ux.listWirePopFrame = function(sel) {
-	if (sel.pop) {
+	if (sel._pop) {
 		var evp = {};
 		evp.uId = sel.id;
 		evp.uHitHandler = ux.listKeydownHit;
 		evp.uEnterHandler = ux.listKeydownEnter;
-		ux.addHdl(sel.frmObj, "click", ux.focusOnClick, evp);
-		ux.addHdl(sel.frmObj, "keydown", ux.listSearchKeydown, evp);
+		ux.addHdl(sel._frm, "click", ux.focusOnClick, evp);
+		ux.addHdl(sel._frm, "keydown", ux.listSearchKeydown, evp);
 		
-		if (sel.blankObj) {
+		if (sel._blank) {
 			evp = {};
 			evp.uId = sel.id;
 			evp.uIndex = -1;
-			ux.addHdl(sel.blankObj, "click", ux.listSelectClick, evp);
+			ux.addHdl(sel._blank, "click", ux.listSelectClick, evp);
 		}
 		
-		for (var i = 0; i < sel.iCnt; i++) {
+		for (var i = 0; i < sel._iCnt; i++) {
 			evp = {};
 			evp.uId = sel.id;
 			evp.uIndex = i;
-			ux.addHdl(_id(sel.optIds[i]), "click", ux.listSelectClick, evp);
+			const label = _id(sel._selectIds[i])
+			if (label) {
+				label.innerHTML = sel._labels[i];
+				ux.addHdl(label, "click", ux.listSelectClick, evp);
+			}
 		}
 	}
 }
 
 ux.listKeydownHit = function(sel) {
-	sel.selHandler(sel, sel.indexes[0], false);
+	sel._selHandler(sel, sel._indexes[0], false);
 }
 
 ux.listKeydownEnter = function(sel) {
-	sel.selHandler(sel, sel.oldSelIdx, true);
+	sel._selHandler(sel, sel._oldSelIdx, true);
 	ux.hidePopup(null);
 }
 
 ux.listKeydownSkip = function(sel, up) {
-	var i = sel.oldSelIdx;
+	var i = sel._oldSelIdx;
 	if (up) {
 		i--;
 	} else {
 		i++;
 	}
 	
-	if(i >= 0 && i < sel.iCnt) {
-		sel.selHandler(sel, i, false);
+	if(i >= 0 && i < sel._iCnt) {
+		sel._selHandler(sel, i, false);
 	}	
 }
 
 ux.listSelectClick = function(uEv) {
 	const sel = _id(uEv.evp.uId);
-	sel.selHandler(sel, uEv.evp.uIndex, true);
+	sel._selHandler(sel, uEv.evp.uIndex, true);
 	ux.hidePopup(null);
 }
 
-ux.listScrollLabel = function(sel, aElem) {
+ux.listScrollToLabel = function(sel, aElem) {
 	var aH = ux.boundingHeight(aElem);
-	var fH = ux.boundingHeight(sel.frmObj);
-	var lH = ux.boundingHeight(sel.listObj);
+	var fH = ux.boundingHeight(sel._frm);
+	var lH = ux.boundingHeight(sel._list);
 	if(aH.top < fH.top) {
-		sel.frmObj.scrollTop = aH.top - lH.top;
+		sel._frm.scrollTop = aH.top - lH.top;
 	} else {
 		if (aH.bottom > fH.bottom) {
-			sel.frmObj.scrollTop = aH.bottom - (lH.top + fH.height);
+			sel._frm.scrollTop = aH.bottom - (lH.top + fH.height);
 		}
 	}
 }
@@ -3979,18 +4035,18 @@ ux.listSearchKeydown = function(uEv) {
 	const sel = _id(uEv.evp.uId);
 	var evp = uEv.evp;
 	if (uEv.uChar) {
-		const gap = Date.now() - sel.lastKeyHit;
+		const gap = Date.now() - sel._lastKeyHit;
 		if (gap > UNIFY_KEY_SEARCH_MAX_GAP) {
-			sel.schIdx = 0;
-			sel.indexes = null;
+			sel._schIdx = 0;
+			sel._indexes = null;
 		}
 
 		ux.listSearchLabel(sel, uEv.uChar);
-		if (sel.indexes && sel.indexes.length > 0) {
+		if (sel._indexes && sel._indexes.length > 0) {
 			evp.uHitHandler(sel);
 		}
 	
-		sel.lastKeyHit = Date.now(); 
+		sel._lastKeyHit = Date.now(); 
 	} else {
 		if(uEv.uKeyCode == '38') {
 			ux.listKeydownSkip(sel, true);
@@ -4008,10 +4064,10 @@ ux.listSearchKeydown = function(uEv) {
 }
 
 ux.listSearchLabel = function(sel, char) {
-	var newIndexes = [];
-	var schIdx = sel.schIdx;
-	var labels = sel.labels;
-	var indexes = sel.indexes;
+	const newIndexes = [];
+	var schIdx = sel._schIdx;
+	const labels = sel._labels;
+	const indexes = sel._indexes;
 	var mChar = char.toUpperCase();
 	if(!indexes) {
 		for(var i = 0;  i < labels.length; i++) {
@@ -4030,8 +4086,8 @@ ux.listSearchLabel = function(sel, char) {
 		}
 	}
 	
-	sel.schIdx++;
-	sel.indexes = newIndexes;
+	sel._schIdx++;
+	sel._indexes = newIndexes;
 }
 
 /** Delayed post */
@@ -4430,26 +4486,6 @@ ux.setOnEvent = function(evp) {
 	}
 }
 
-ux.extractLabels = function(trgIdArr, upperCase) {
-	var labels = [];
-	if (trgIdArr) {
-		for (var i = 0; i < trgIdArr.length; i++) {
-			var elem = _id(trgIdArr[i]);
-			if (elem) {
-				if(upperCase) {
-					labels.push(elem.innerHTML.toUpperCase());
-				} else {
-					labels.push(elem.innerHTML);
-				}
-			} else {
-				labels.push("");
-			}
-		}
-	}
-	
-	return labels;
-}
-
 ux.popupWireClear = function(rgp, btnId, trgArr) {
 	var clearBtn = _id(btnId);
 	if (clearBtn) {
@@ -4476,17 +4512,17 @@ ux.popupWireCancel = function(btnId) {
 
 ux.applyPattern = function(df) {
 	var val = '';
-	if (df.parts && df.format) {
-		for (var i = 0; i < df.format.length; i++) {
-			const _tok = df.format[i];
+	if (df._parts && df._format) {
+		for (var i = 0; i < df._format.length; i++) {
+			const _tok = df._format[i];
 			if (_tok.flag == true) {
 				val += _tok.target;
 			} else {
-				if (df.padLeft) {
-					val += ux.padLeft(df.parts[_tok.target], '0',
+				if (df._padLeft) {
+					val += ux.padLeft(df._parts[_tok.target], '0',
 							_tok.length);
 				} else {
-					val += df.parts[_tok.target];
+					val += df._parts[_tok.target];
 				}
 			}
 		}

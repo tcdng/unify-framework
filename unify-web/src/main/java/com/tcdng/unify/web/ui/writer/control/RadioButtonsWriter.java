@@ -42,7 +42,6 @@ public class RadioButtonsWriter extends AbstractControlWriter {
         RadioButtons radioButtons = (RadioButtons) widget;
         writeHiddenPush(writer, radioButtons, PushType.RADIO);
 
-        String value = radioButtons.getValue(String.class);
         List<? extends Listable> listableList = radioButtons.getListables();
         boolean isNotFlow = !radioButtons.getUplAttribute(boolean.class, "flow");
         int breaks = listableList.size();
@@ -51,12 +50,7 @@ public class RadioButtonsWriter extends AbstractControlWriter {
             writeTagName(writer, radioButtons);
             writeTagStyleClass(writer, radioButtons);
             writeTagStyle(writer, radioButtons);
-            String key = listable.getListKey();
-
-            if (key.equals(value)) {
-                writer.write(" checked");
-            }
-            writer.write(" value=\"").write(key).write("\"/>");
+            writer.write(" value=\"").write(listable.getListKey()).write("\"/>");
             writer.writeWithHtmlEscape(listable.getListDescription());
 
             if (isNotFlow) {
@@ -65,6 +59,17 @@ public class RadioButtonsWriter extends AbstractControlWriter {
                 }
             }
         }
+    }
+
+    @Override
+    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
+        super.doWriteBehavior(writer, widget);
+        RadioButtons radioButtons = (RadioButtons) widget;
+        writer.beginFunction("ux.rigRadioButtons");
+        writer.writeParam("pId", radioButtons.getId());
+        writer.writeParam("pNm", radioButtons.getGroupId());
+        writer.writeParam("pVal", radioButtons.getValue(String.class));
+        writer.endFunction();
     }
 
 }

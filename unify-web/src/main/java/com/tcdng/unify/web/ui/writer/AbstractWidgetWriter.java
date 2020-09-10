@@ -93,7 +93,7 @@ public abstract class AbstractWidgetWriter extends AbstractDhtmlWriter implement
         EventHandler[] eventHandlers = widget.getUplAttribute(EventHandler[].class, "eventHandler");
         if (eventHandlers != null) {
             String id = widget.getId();
-            if (widget.isUseFacade()) {
+            if (widget.isBindEventsToFacade()) {
                 id = widget.getFacadeId();
             }
 

@@ -21,7 +21,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.data.Listable;
-import com.tcdng.unify.web.ui.ListControlJsonData;
+import com.tcdng.unify.web.ui.ListControlInfo;
 import com.tcdng.unify.web.ui.ResponseWriter;
 import com.tcdng.unify.web.ui.Widget;
 import com.tcdng.unify.web.ui.control.OptionsTextArea;
@@ -55,19 +55,10 @@ public class OptionsTextAreaWriter extends TextAreaWriter {
             writer.write("<div id=\"").write(optionsTextArea.getListPanelId()).write("\" class=\"otalist\">");
             List<? extends Listable> listableList = optionsTextArea.getListables();
             int length = listableList.size();
-
-            String selStyleClass = getUserColorStyleClass("sel");
             for (int i = 0; i < length; i++) {
-                Listable listable = listableList.get(i);
                 writer.write("<a");
                 writeTagId(writer, optionsTextArea.getNamingIndexedId(i));
-                if (i == 0) {
-                    writeTagStyleClass(writer, selStyleClass);
-                } else {
-                    writeTagStyleClass(writer, "norm");
-                }
                 writer.write(">");
-                writer.writeWithHtmlEscape(listable.getListDescription());
                 writer.write("</a>");
             }
             writer.write("</div>");
@@ -87,15 +78,17 @@ public class OptionsTextAreaWriter extends TextAreaWriter {
         writer.writeParam("pScrEnd", optionsTextArea.isScrollToEnd());
 
         if (optionsTextArea.isContainerEditable() && !optionsTextArea.isContainerDisabled()) {
-            ListControlJsonData listControlJsonData = optionsTextArea.getListControlJsonData(true, true, false);
+            ListControlInfo listControlInfo = optionsTextArea.getListControlInfo(null);
             writer.writeParam("pPopupId", optionsTextArea.getPopupId());
             writer.writeParam("pFrmId", optionsTextArea.getFramePanelId());
             writer.writeParam("pLstId", optionsTextArea.getListPanelId());
-            writer.writeParam("pICnt", listControlJsonData.getSize());
-            writer.writeResolvedParam("pLabelIds", listControlJsonData.getJsonSelectIds());
-            writer.writeResolvedParam("pKeys", listControlJsonData.getJsonKeys());
+            writer.writeParam("pICnt", listControlInfo.size());
+            writer.writeParam("pSelectIds", listControlInfo.getSelectIds());
+            writer.writeParam("pKeys", listControlInfo.getKeys());
+            writer.writeParam("pLabels", listControlInfo.getLabels());
             writer.writeParam("pNormCls", "norm");
             writer.writeParam("pSelCls", getUserColorStyleClass("sel"));
+            writer.writeParam("pEnabled", true);
         }
 
         writer.endFunction();

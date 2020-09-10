@@ -21,10 +21,9 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.data.Listable;
-import com.tcdng.unify.core.format.Formatter;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.core.util.json.JsonWriter;
-import com.tcdng.unify.web.ui.ListControlJsonData;
+import com.tcdng.unify.web.ui.ListControlInfo;
 import com.tcdng.unify.web.ui.ResponseWriter;
 import com.tcdng.unify.web.ui.control.AbstractPopupTextField;
 import com.tcdng.unify.web.ui.control.SingleSelect;
@@ -63,17 +62,10 @@ public class SingleSelectWriter extends AbstractPopupTextFieldWriter {
             writer.write("</a>");
         }
 
-        Formatter<Object> formatter = singleSelect.getFormatter();
         for (int i = 0; i < length; i++) {
-            Listable listable = listableList.get(i);
             writer.write("<a");
             writeTagId(writer, singleSelect.getNamingIndexedId(i));
             writer.write(">");
-            if (formatter != null) {
-                writer.writeWithHtmlEscape(formatter.format(listable.getListDescription()));
-            } else {
-                writer.writeWithHtmlEscape(listable.getListDescription());
-            }
             writer.write("</a>");
         }
         writer.write("</div>");
@@ -84,7 +76,7 @@ public class SingleSelectWriter extends AbstractPopupTextFieldWriter {
     protected void doWritePopupTextFieldBehaviour(ResponseWriter writer, AbstractPopupTextField popupTextField,
             boolean popupEnabled) throws UnifyException {
         SingleSelect singleSelect = (SingleSelect) popupTextField;
-        ListControlJsonData listControlJsonData = singleSelect.getListControlJsonData(true, true, false);
+        ListControlInfo listControlInfo = singleSelect.getListControlInfo(singleSelect.getFormatter());
 
         // Append rigging
         writer.beginFunction("ux.rigSingleSelect");
@@ -93,9 +85,10 @@ public class SingleSelectWriter extends AbstractPopupTextFieldWriter {
         writer.writeParam("pFrmId", singleSelect.getFramePanelId());
         writer.writeParam("pLstId", singleSelect.getListPanelId());
         writer.writeParam("pBlnkId", singleSelect.getBlankOptionId());
-        writer.writeParam("pICnt", listControlJsonData.getSize());
-        writer.writeResolvedParam("pLabelIds", listControlJsonData.getJsonSelectIds());
-        writer.writeResolvedParam("pKeys", listControlJsonData.getJsonKeys());
+        writer.writeParam("pICnt", listControlInfo.size());
+        writer.writeParam("pSelectIds", listControlInfo.getSelectIds());
+        writer.writeParam("pKeys", listControlInfo.getKeys());
+        writer.writeParam("pLabels", listControlInfo.getLabels());
         writer.writeParam("pIsBlankOption", singleSelect.getBlankOption() != null);
         writer.writeParam("pNormCls", "norm");
         writer.writeParam("pSelCls", getUserColorStyleClass("sel"));

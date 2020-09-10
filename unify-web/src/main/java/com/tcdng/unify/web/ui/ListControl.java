@@ -20,6 +20,7 @@ import java.util.Map;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.data.Listable;
+import com.tcdng.unify.core.format.Formatter;
 
 /**
  * List control interface.
@@ -30,25 +31,22 @@ import com.tcdng.unify.core.data.Listable;
 public interface ListControl extends Control {
 
     /**
-     * Returns list control data.
+     * Gets list control information.
      * 
-     * @param indexes
-     *            indicates JSON indexes array should be generated
-     * @param keys
-     *            indicates JSON keys array should be generated
-     * @param labels
-     *            indicates JSON labels array should be generated
+     * @param formatter
+     *                  optional label formatter
+     * @return a list control information object
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
-    ListControlJsonData getListControlJsonData(boolean indexes, boolean keys, boolean labels) throws UnifyException;
+    ListControlInfo getListControlInfo(Formatter<Object> formatter) throws UnifyException;
 
     /**
      * Returns listables for a list control.
      * 
      * @return listables
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     List<? extends Listable> getListables() throws UnifyException;
 
@@ -57,7 +55,7 @@ public interface ListControl extends Control {
      * 
      * @return the pair map
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     Map<String, String> getListMap() throws UnifyException;
 
@@ -65,7 +63,7 @@ public interface ListControl extends Control {
      * Returns this control's list.
      * 
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     String getList() throws UnifyException;
 
@@ -74,7 +72,7 @@ public interface ListControl extends Control {
      * 
      * @return array of parameters
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     String[] getListParams() throws UnifyException;
 
@@ -83,7 +81,7 @@ public interface ListControl extends Control {
      * 
      * @return the list parameter type
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     ListParamType getListParamType() throws UnifyException;
 
@@ -91,7 +89,7 @@ public interface ListControl extends Control {
      * Returns this control's list key.
      * 
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     String getListKey() throws UnifyException;
 
@@ -99,7 +97,7 @@ public interface ListControl extends Control {
      * Returns this control's list description.
      * 
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     String getListDescription() throws UnifyException;
 

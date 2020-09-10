@@ -22,7 +22,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.data.Listable;
-import com.tcdng.unify.web.ui.ListControlJsonData;
+import com.tcdng.unify.web.ui.ListControlInfo;
 import com.tcdng.unify.web.ui.ResponseWriter;
 import com.tcdng.unify.web.ui.Widget;
 import com.tcdng.unify.web.ui.control.MultiSelect;
@@ -49,23 +49,13 @@ public class MultiSelectWriter extends AbstractControlWriter {
         writer.write("><div id=\"").write(multiSelect.getFramePanelId())
                 .write("\" style=\"width:100%;height:100%;overflow-y:scroll;overflow-x:hidden;\" tabindex=\"0\">");
 
-        List<String> values = multiSelect.getValue(ArrayList.class, String.class);
         List<? extends Listable> listableList = multiSelect.getListables();
         int length = listableList.size();
         writer.write("<div id=\"").write(multiSelect.getListPanelId()).write("\" class=\"mslist\">");
-        String selStyleClass = getUserColorStyleClass("sel");
         for (int i = 0; i < length; i++) {
-            Listable listable = listableList.get(i);
-            String key = listable.getListKey();
             writer.write("<a");
             writeTagId(writer, multiSelect.getNamingIndexedId(i));
-            if (values != null && values.contains(key)) {
-                writeTagStyleClass(writer, selStyleClass);
-            } else {
-                writeTagStyleClass(writer, "norm");
-            }
             writer.write("\">");
-            writer.writeWithHtmlEscape(listable.getListDescription());
             writer.write("</a>");
         }
         writer.write("</div>");
@@ -75,7 +65,8 @@ public class MultiSelectWriter extends AbstractControlWriter {
         writeTagStyle(writer, "display:none;");
         writer.write(" multiple=\"multiple\">");
 
-        for (Listable listable : multiSelect.getListables()) {
+        List<String> values = multiSelect.getValue(ArrayList.class, String.class);
+        for (Listable listable : listableList) {
             String key = listable.getListKey();
             writer.write("<option value=\"").write(key).write("\"");
             if (values != null && values.contains(key)) {
@@ -95,17 +86,19 @@ public class MultiSelectWriter extends AbstractControlWriter {
 
         MultiSelect multiSelect = (MultiSelect) widget;
         String pageName = multiSelect.getId();
-        ListControlJsonData listControlJsonData = multiSelect.getListControlJsonData(true, false, false);
+        ListControlInfo listControlInfo = multiSelect.getListControlInfo(null);
 
         // Append rigging
         writer.beginFunction("ux.rigMultiSelect");
         writer.writeParam("pId", pageName);
         writer.writeParam("pFrmId", multiSelect.getFramePanelId());
         writer.writeParam("pLstId", multiSelect.getListPanelId());
-        writer.writeParam("pICnt", listControlJsonData.getSize());
-        writer.writeResolvedParam("pLabelIds", listControlJsonData.getJsonSelectIds());
+        writer.writeParam("pSelectIds", listControlInfo.getSelectIds());
+        writer.writeParam("pKeys", listControlInfo.getKeys());
+        writer.writeParam("pLabels", listControlInfo.getLabels());
         writer.writeParam("pNormCls", "norm");
         writer.writeParam("pSelCls", getUserColorStyleClass("sel"));
+        writer.writeParam("pVal", multiSelect.getValue(String[].class));
         writer.endFunction();
     }
 

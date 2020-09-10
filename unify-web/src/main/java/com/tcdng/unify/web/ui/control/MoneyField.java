@@ -73,6 +73,11 @@ public class MoneyField extends AbstractListPopupTextField {
         return true;
     }
 
+    @Override
+    public boolean isBindEventsToFacade() throws UnifyException {
+        return false;
+    }
+
     @SuppressWarnings("unchecked")
     public String getAmountString() throws UnifyException {
         Money money = getValue(Money.class);

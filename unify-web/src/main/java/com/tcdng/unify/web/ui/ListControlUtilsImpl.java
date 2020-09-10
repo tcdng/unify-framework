@@ -29,11 +29,11 @@ import com.tcdng.unify.core.constant.LocaleType;
 import com.tcdng.unify.core.data.FactoryMap;
 import com.tcdng.unify.core.data.ListData;
 import com.tcdng.unify.core.data.Listable;
+import com.tcdng.unify.core.format.Formatter;
 import com.tcdng.unify.core.list.ListCommand;
 import com.tcdng.unify.core.list.SearchProvider;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.ReflectUtils;
-import com.tcdng.unify.core.util.json.JsonUtils;
 import com.tcdng.unify.web.WebApplicationComponents;
 import com.tcdng.unify.web.util.HtmlUtils;
 
@@ -72,50 +72,26 @@ public class ListControlUtilsImpl extends AbstractUnifyComponent implements List
     }
 
     @Override
-    public ListControlJsonData getListControlJsonData(ListControl listControl, boolean indexes, boolean keys,
-            boolean labels) throws UnifyException {
+    public ListControlInfo getListControlInfo(ListControl listControl, Formatter<Object> formatter)
+            throws UnifyException {
         List<? extends Listable> listableList = listControl.getListables();
         int len = listableList.size();
-        String value = null;
-        if (!listControl.isMultiple()) {
-            value = listControl.getStringValue();
-        }
-
-        int valueIndex = -1;
-        String valueLabel = null;
-        String[] isba = new String[len];
-        String[] ksba = new String[len];
-        String[] lsba = new String[len];
+        String[] selectIds = new String[len];
+        String[] keys = new String[len];
+        String[] labels = new String[len];
         for (int i = 0; i < len; i++) {
-            if (indexes) {
-                isba[i] = listControl.getNamingIndexedId(i);
-            }
-
             Listable listable = listableList.get(i);
-            String key = listable.getListKey();
-            String description = HtmlUtils.getStringWithHtmlEscape(listable.getListDescription());
-            if (key.equals(value)) {
-                valueIndex = i;
-                valueLabel = description;
-            }
+            keys[i] = listable.getListKey();
+            if (formatter != null) {
+                labels[i] = HtmlUtils.getStringWithHtmlEscape(formatter.format(listable.getListDescription()));
+            } else {
+                labels[i] = HtmlUtils.getStringWithHtmlEscape(listable.getListDescription());
 
-            if (keys) {
-                ksba[i] = key;
             }
-
-            if (labels) {
-                lsba[i] = description;
-            }
+            selectIds[i] = listControl.getNamingIndexedId(i);
         }
 
-        StringBuilder isb = new StringBuilder();
-        StringBuilder ksb = new StringBuilder();
-        StringBuilder lsb = new StringBuilder();
-        JsonUtils.write(isb, isba);
-        JsonUtils.write(ksb, ksba);
-        JsonUtils.write(lsb, lsba);
-        return new ListControlJsonData(isb.toString(), ksb.toString(), lsb.toString(), valueLabel, valueIndex,
-                listableList.size());
+        return new ListControlInfo(selectIds, keys, labels);
     }
 
     @SuppressWarnings("unchecked")

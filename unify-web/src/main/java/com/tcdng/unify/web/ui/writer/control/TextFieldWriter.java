@@ -52,7 +52,7 @@ public class TextFieldWriter extends AbstractControlWriter {
         } else {
             writer.writeParam("pId", textField.getId());
         }
-        writer.writeParam("pRegex", getFormatRegex(textField));
+        writer.writeResolvedParam("pRegex", "\"" + getFormatRegex(textField) + "\"");
         writer.writeParam("pCase", textField.getCase());
         writer.endFunction();
     }
@@ -121,7 +121,7 @@ public class TextFieldWriter extends AbstractControlWriter {
         if (extensionType.isExtended()) {
             if (extensionType.isFacade()) {
                 writeTagId(writer, textField.getFacadeId());
-                value = textField.getFacadeStringValue();
+//                value = textField.getFacadeStringValue();
             } else {
                 writeTagId(writer, textField);
                 writeTagName(writer, textField);
@@ -155,6 +155,8 @@ public class TextFieldWriter extends AbstractControlWriter {
                     writer.write(" autocomplete=\"off\"");
                 }
             }
+            
+            writeSimpleValueAccessor(writer, textField);
         }
 
         if (value != null) {

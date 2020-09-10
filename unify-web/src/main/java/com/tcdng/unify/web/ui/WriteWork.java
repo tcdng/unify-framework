@@ -40,4 +40,9 @@ public class WriteWork {
     public Object get(String name) {
         return values.get(name);
     }
+    
+    @SuppressWarnings("unchecked")
+    public <T> T get(Class<T> clazz, String name) {
+        return (T) values.get(name);
+    }
 }

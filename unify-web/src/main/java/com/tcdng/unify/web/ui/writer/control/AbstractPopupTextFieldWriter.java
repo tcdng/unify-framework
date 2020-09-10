@@ -91,12 +91,14 @@ public abstract class AbstractPopupTextFieldWriter extends TextFieldWriter {
     @Override
     protected void writeBaseAddOn(ResponseWriter writer, Widget widget) throws UnifyException {
         AbstractPopupTextField popupTextField = (AbstractPopupTextField) widget;
-        writer.write("<div");
-        writeTagId(writer, popupTextField.getPopupId());
-        writeTagStyleClass(writer, "ui-text-popup-win");
-        writer.write(">");
-        writePopupContent(writer, popupTextField);
-        writer.write("</div>");
+        if (isPopupEnabled(popupTextField)) {
+            writer.write("<div");
+            writeTagId(writer, popupTextField.getPopupId());
+            writeTagStyleClass(writer, "ui-text-popup-win");
+            writer.write(">");
+            writePopupContent(writer, popupTextField);
+            writer.write("</div>");
+        }
     }
 
     protected boolean isPopupEnabled(AbstractPopupTextField popupTextField) throws UnifyException {

@@ -13,21 +13,41 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.web.ui.action;
-
-import com.tcdng.unify.core.annotation.Component;
-import com.tcdng.unify.web.ui.AbstractPageAction;
+package com.tcdng.unify.web.ui;
 
 /**
- * Set checked pattern value.
+ * List control data.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Component("ui-setcheckedpatternvalue")
-public class SetCheckedPatternValueAction extends AbstractPageAction {
+public class ListControlInfo {
 
-    public SetCheckedPatternValueAction() {
-        super("setcheckedpatternvalue");
+    private String[] selectIds;
+
+    private String[] keys;
+
+    private String[] labels;
+
+    public ListControlInfo(String[] selectIds, String[] keys, String[] labels) {
+        this.selectIds = selectIds;
+        this.keys = keys;
+        this.labels = labels;
+    }
+
+    public String[] getSelectIds() {
+        return selectIds;
+    }
+
+    public String[] getKeys() {
+        return keys;
+    }
+
+    public String[] getLabels() {
+        return labels;
+    }
+
+    public int size() {
+        return selectIds == null? 0 : selectIds.length;
     }
 }

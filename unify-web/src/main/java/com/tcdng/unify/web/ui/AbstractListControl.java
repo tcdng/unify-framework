@@ -22,6 +22,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.data.Listable;
+import com.tcdng.unify.core.format.Formatter;
 import com.tcdng.unify.web.WebApplicationComponents;
 
 /**
@@ -40,10 +41,18 @@ import com.tcdng.unify.web.WebApplicationComponents;
         @UplAttribute(name = "flow", type = boolean.class) })
 public abstract class AbstractListControl extends AbstractControl implements ListControl {
 
+    private static final String WORK_LIST_INFO = "workListInfo";
+    
     @Override
-    public ListControlJsonData getListControlJsonData(boolean indexes, boolean keys, boolean labels)
-            throws UnifyException {
-        return getListControlUtils().getListControlJsonData(this, indexes, keys, labels);
+    public ListControlInfo getListControlInfo(Formatter<Object> formatter) throws UnifyException {
+        WriteWork writeWork = getWriteWork();
+        ListControlInfo listControlInfo = writeWork.get(ListControlInfo.class, WORK_LIST_INFO);
+        if (listControlInfo == null) {
+            listControlInfo = getListControlUtils().getListControlInfo(this, formatter);
+            writeWork.set(WORK_LIST_INFO, listControlInfo);
+        }
+
+        return listControlInfo;
     }
 
     @Override

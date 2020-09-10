@@ -22,7 +22,7 @@ import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.data.Listable;
 import com.tcdng.unify.core.util.json.JsonWriter;
-import com.tcdng.unify.web.ui.ListControlJsonData;
+import com.tcdng.unify.web.ui.ListControlInfo;
 import com.tcdng.unify.web.ui.ResponseWriter;
 import com.tcdng.unify.web.ui.Widget;
 import com.tcdng.unify.web.ui.control.AbstractPopupTextField;
@@ -103,13 +103,13 @@ public class SearchFieldWriter extends AbstractPopupTextFieldWriter {
             throws UnifyException {
         SearchField searchField = (SearchField) widget;
         if (searchField.getResultPanelId().equals(sectionPageName)) {
-            writeRigging(writer, searchField, "ux.searchWireResult", isPopupEnabled(searchField));
+            writeRigging(writer, searchField, "ux.sfWireResult", isPopupEnabled(searchField));
         }
     }
 
     @Override
     protected String getOnShowAction() throws UnifyException {
-        return "ux.searchOnShow";
+        return "ux.sfOnShow";
     }
 
     @Override
@@ -134,7 +134,7 @@ public class SearchFieldWriter extends AbstractPopupTextFieldWriter {
 
     private void writeRigging(ResponseWriter writer, SearchField searchField, String functionName, boolean popupEnabled)
             throws UnifyException {
-        ListControlJsonData listControlJsonData = searchField.getListControlJsonData(true, true, false);
+        ListControlInfo listControlInfo = searchField.getListControlInfo(null);
 
         // Append rigging
         writer.beginFunction(functionName);
@@ -146,9 +146,9 @@ public class SearchFieldWriter extends AbstractPopupTextFieldWriter {
         writer.writeParam("pClrId", searchField.getClearButtonId());
         writer.writeParam("pCanId", searchField.getCancelButtonId());
         writer.writeParam("pClearable", searchField.isClearable());
-        writer.writeParam("pICnt", listControlJsonData.getSize());
-        writer.writeResolvedParam("pLabelIds", listControlJsonData.getJsonSelectIds());
-        writer.writeResolvedParam("pKeys", listControlJsonData.getJsonKeys());
+        writer.writeParam("pICnt", listControlInfo.size());
+        writer.writeParam("pSelectIds", listControlInfo.getSelectIds());
+        writer.writeParam("pKeys", listControlInfo.getKeys());
         writer.writeParam("pEnabled", popupEnabled);
         writer.endFunction();
     }

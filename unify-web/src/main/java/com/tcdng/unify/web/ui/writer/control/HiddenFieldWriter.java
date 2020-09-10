@@ -50,7 +50,7 @@ public class HiddenFieldWriter extends AbstractControlWriter {
     @Override
     protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
         super.doWriteBehavior(writer, widget);
-        writeValueAccessor(writer, widget);
+        writeSimpleValueAccessor(writer, widget);
     }
 
 }

@@ -64,16 +64,6 @@ public class SearchField extends AbstractListPopupTextField {
         return params;
     }
 
-    @Override
-    public String getFacadeStringValue() throws UnifyException {
-        String key = getStringValue();
-        if (key != null) {
-            return getListMap().get(key);
-        }
-
-        return null;
-    }
-
     @Action
     public void search() throws UnifyException {
         filter = getRequestTarget(String.class);

@@ -15,10 +15,6 @@
  */
 package com.tcdng.unify.web.ui.control;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.UplAttribute;
@@ -45,26 +41,6 @@ public class DropdownCheckList extends AbstractListPopupTextField {
     @Override
     public ExtensionType getExtensionType() {
         return ExtensionType.FACADE;
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public String getFacadeStringValue() throws UnifyException {
-        List<String> values = getValue(ArrayList.class, String.class);
-        StringBuilder sb = new StringBuilder();
-        if (values != null) {
-            Map<String, String> listMap = getListMap();
-            boolean appendSym = false;
-            for (String value : values) {
-                if (appendSym) {
-                    sb.append(",");
-                } else {
-                    appendSym = true;
-                }
-                sb.append(listMap.get(value));
-            }
-        }
-        return sb.toString();
     }
 
     public String getSelectAllId() throws UnifyException {

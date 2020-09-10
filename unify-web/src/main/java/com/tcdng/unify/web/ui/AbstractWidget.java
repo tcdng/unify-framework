@@ -283,6 +283,11 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 	}
 
 	@Override
+    public boolean isBindEventsToFacade() throws UnifyException {
+        return isUseFacade();
+    }
+
+    @Override
 	public void setConforming(boolean conforming) {
 		this.conforming = conforming;
 	}

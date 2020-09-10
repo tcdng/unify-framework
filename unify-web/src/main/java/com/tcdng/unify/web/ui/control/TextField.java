@@ -39,10 +39,6 @@ public class TextField extends AbstractFormattedControl {
         return getUplAttribute(String.class, "case");
     }
 
-    public String getFacadeStringValue() throws UnifyException {
-        return getStringValue();
-    }
-
     public String getExtStyleClass() throws UnifyException {
         return getUplAttribute(String.class, "extStyleClass");
     }

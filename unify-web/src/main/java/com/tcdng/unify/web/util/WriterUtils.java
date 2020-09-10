@@ -50,7 +50,6 @@ public final class WriterUtils {
         actionToJSMap.put("hide", "ux.hide");
         actionToJSMap.put("delegate", "ux.delegate");
         actionToJSMap.put("setallchecked", "ux.setAllChecked");
-        actionToJSMap.put("setcheckedpatternvalue", "ux.setCheckedPatternValue");
         actionToJSMap.put("populateselect", "ux.populateSelectOptions");
         actionToJSMap.put("openpopup", "ux.openPopup");
         actionToJSMap.put("hidepopup", "ux.hidePopup");
