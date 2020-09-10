@@ -565,14 +565,7 @@ ux.ajaxCallWithJSONResp = function(trgObj, evp) {
 
 ux.ajaxConstructCallParam = function(url, param, sync, encoded, busy,
 		successFunc) {
-	var ajaxPrms = {};
-	ajaxPrms.uURL = url;
-	ajaxPrms.uSync = sync;
-	ajaxPrms.uBusy = busy;
-	ajaxPrms.uEncoded = encoded;
-	ajaxPrms.uParam = param;
-	ajaxPrms.uSuccessFunc = successFunc;
-	return ajaxPrms;
+	return {uURL:url, uSync:sync, uBusy:busy, uEncoded:encoded, uParam:param, uSuccessFunc:successFunc};
 }
 
 /** Busy indicator */
@@ -859,14 +852,13 @@ ux.populateSelectOptions = function(paramObject) {
 
 /** Drag and drop popup */
 ux.rigDragAndDropPopup = function(rgp) {
-	var actElem = _id(rgp.pId);
 	rgp.uTargetPnlId = ux.docPopupId;
-	ux.addHdl(actElem, "mousedown", ux.dragDropEngage, rgp);
+	ux.addHdl(_id(rgp.pId), "mousedown", ux.dragDropEngage, rgp);
 }
 
 /** Remote document view panel */
 ux.loadRemoteDocViewPanel = function(rgp) {
-	var evp = {};
+	const evp = {};
 	evp.uViewer = rgp.pWinPgNm;
 	evp.uURL = rgp.pRemoteURL;
 	evp.uLoginId = rgp.pLoginId;
@@ -876,10 +868,7 @@ ux.loadRemoteDocViewPanel = function(rgp) {
 	evp.uGlobal = rgp.pGlobalFlag;
 	evp.uColor = rgp.pColorScheme;
 
-	// Resolve save path viewer
-	ux.cntSaveRemoteView = {};
-	ux.cntSaveRemoteView.view = evp.uViewer;
-	
+	ux.cntSaveRemoteView = {view:evp.uViewer};
 	ux.postCommit(evp);
 }
 
@@ -888,9 +877,7 @@ ux.loadRemoteDocViewPanel = function(rgp) {
 ux.rigDesktopType2 = function(rgp) {
 	var gripToRig = _id(rgp.pGripId);
 	if (gripToRig) {
-		var evp = {};
-		evp.uRigMenu = _id(rgp.pMenuId);
-		evp.uOpen = rgp.pOpen;
+		const evp = {uRigMenu:_id(rgp.pMenuId), uOpen:rgp.pOpen};
 		ux.addHdl(gripToRig, "click", ux.collapseGripClickHandler,
 				evp);
 	}
@@ -917,10 +904,8 @@ ux.rigFlyoutMenu = function(rgp) {
 
 	if (rgp.pMenuItems) {
 		for(var i = 0; i < rgp.pMenuItems.length; i++) {
-			var mItem = rgp.pMenuItems[i];
-			var evp = {};
-			evp.uMain = mItem.main;
-			evp.uOpenPath = mItem.actionPath;
+			const mItem = rgp.pMenuItems[i];
+			const evp = {uMain:mItem.main, uOpenPath:mItem.actionPath};
 			if (mItem.originPath) {
 				ux.remoteredirect[mItem.originPath] = mItem.actionPath;
 			}
@@ -972,34 +957,28 @@ ux.rigContentPanel = function(rgp) {
 	if (rgp.pImmURL) {
 		ux.postToPath(rgp.pImmURL);
 	} else {
-		var currIdx = rgp.pCurIdx;
-		var menuId = rgp.pMenuId;
-		var uId = rgp.pId;
+		const currIdx = rgp.pCurIdx;
+		const menuId = rgp.pMenuId;
+		const uId = rgp.pId;
 		for(var i = 0; i < rgp.pContent.length; i++) {
-			var cnt = rgp.pContent[i];
+			const cnt = rgp.pContent[i];
 			if (i == currIdx) {
 				if (i > 0) {
-					var evp = {};
-					evp.uTabPaneId = rgp.pTabPaneId;
-					evp.uMenuId = menuId;
+					const evp = {uTabPaneId:rgp.pTabPaneId, uMenuId:menuId};
 					ux.addHdl(_id(cnt.tabId), "rtclick", ux.contentOpenTabMenu,
 							evp);
-					
-					// Wire menu events
 					ux.contentAttachClose(uId, cnt, "mic_", "CL");
 					ux.contentAttachClose(uId, cnt, "mico_", "CLO");
 					ux.contentAttachClose(uId, cnt, "mica_", "CLA");
 				}
 			} else {
-				var evp = {};
-				evp.uOpenPath = cnt.openPath;
+				const evp = {uOpenPath:cnt.openPath};
 				ux.addHdl(_id(cnt.tabId), "click", ux.contentOpen,
 						evp);
 			}
 			
 			if (i > 0) {
-				var evp = {};
-				evp.uURL = cnt.closePath;
+				const evp = {uURL:cnt.closePath};
 				ux.addHdl(_id(cnt.tabImgId), "click", ux.post,
 						evp);
 			}
@@ -1041,9 +1020,7 @@ ux.contentOpen  = function(uEv) {
 }
 
 ux.contentAttachClose = function(uId, cnt, type, mode) {
-	var evp = {};
-	evp.uSendTrg = mode;
-	evp.uURL = cnt.closePath;
+	const evp = {uSendTrg:mode, uURL:cnt.closePath};
 	ux.addHdl(_id(type + uId), "click", ux.post,
 			evp);
 }
@@ -1109,7 +1086,7 @@ ux.rigFixedContentPanel = function(rgp) {
 
 /** Split panel */
 ux.rigSplitPanel = function(rgp) {
-	var evp = {};
+	const evp = {};
 	evp.uCtrlId = rgp.pCtrlId;
 	evp.uMinorId = rgp.pMinorId;
 	evp.uMinorScrId = rgp.pMinorScrId;
@@ -1408,8 +1385,7 @@ ux.rigCheckbox = function(rgp) {
 ux.cbWire = function(box) {
 	if (box) {
 		const facId = "fac_" + box.id;
-		const evp = {};	
-		evp.uId = box.id;	
+		const evp = {uId:box.id};	
 		ux.addHdl(_id(facId), "click", ux.cbClick, evp);
 
 		box.facId = facId;
@@ -1555,8 +1531,7 @@ ux.rigDateField = function(rgp) {
 		ux.popupWireClear(rgp, "btnc_" + id, [ id ]);
 	}
 
-	const evp = {};
-	evp.uId = id;
+	const evp = {uId:id};
 	ux.addHdl(_id("btnt_" + id), "click", ux.dfTodayHandler, evp);
 
 	df.setDay(rgp.pDay);
@@ -1581,10 +1556,7 @@ ux.dfDayHandler = function(id, dayCount) {
 }
 
 ux.dfSetupScroll = function(df, scrIdPrefix, target, step) {
-	const evp = {};
-	evp.uId = df.id;
-	evp.uTarget = target;
-	evp.uStep = step;
+	const evp = {uId:df.id, uTarget:target, uStep:step};
 	ux.addHdl(_id(scrIdPrefix + df.id), "click",
 			ux.dfScrollHandler, evp);
 }
@@ -1707,9 +1679,7 @@ ux.rigDropdownChecklist = function(rgp) {
 		if (rgp.pSelAllId) {
 			ux.cbWire(_id(rgp.pSelAllId));
 
-			const evp = {};
-			evp.uSrcId = rgp.pSelAllId;
-			evp.uRef = [rgp.pId];
+			const evp = {uSrcId:rgp.pSelAllId, uRef:rgp.pId};
 			ux.addHdl(_id("fac_" + rgp.pSelAllId), "change", ux.setAllChecked, evp);	
 		}
 	}
@@ -1774,8 +1744,7 @@ ux.rigDurationSelect = function(rgp) {
 		return parseInt(this.value);
 	};
 
-	const evp = {};
-	evp.uId = id;
+	const evp = {uId:id};
 	if (ds._daySel) {
 		ux.addHdl(ds._daySel, "change", ux.dsCalc, evp);
 	}
@@ -1824,16 +1793,13 @@ ux.rigFileAttachment = function(rgp) {
 			ux.addHdl(fileElem, "change", ux.post, evp);
 
 			// Attach
-			evp = {};
-			evp.fileId = fileElem.id;
+			evp = {fileId:fileElem.id};
 			ux.addHdl(_id(attachId + idx), "click",
 					ux.attachFileClickHandler, evp);
 
 			// View
 			if (rgp.pViewURL) {
-				evp = {};
-				evp.uURL = rgp.pViewURL;
-				evp.uPanels = [ rgp.pContId ];
+				evp = {uURL:rgp.pViewURL, uPanels:[ rgp.pContId ]};
 				ux.addHdl(_id(viewId + idx), "click", ux.post, evp);
 			} else {
 				evp = ux.newEvPrm(rgp);
@@ -1877,7 +1843,7 @@ ux.rigFileUpload = function(rgp) {
 			btnElem.disabled = true;
 		} else {
 			if (btnElem) {
-				var evp = {};
+				const evp = {};
 				ux.addHdl(btnElem, "click", function(uEv) {
 					fileElem.click();
 				}, evp);
@@ -1886,9 +1852,7 @@ ux.rigFileUpload = function(rgp) {
 
 		var spanElem = _id(rgp.pSpanId);
 		if (spanElem) {
-			var evp = {};
-			evp.uMaxSize = rgp.pMaxSize;
-			evp.uMaxMsg = rgp.pMaxMsg;
+			const evp = {uMaxSize:rgp.pMaxSize, uMaxMsg:rgp.pMaxMsg};
 			ux.addHdl(fileElem, "change", function(uEv) {
 				var maxLen = 0;
 				if (uEv.evp.uMaxSize) {
@@ -1918,20 +1882,15 @@ ux.rigFileUpload = function(rgp) {
 			btnUpElem.disabled = true;
 			if (!rgp.pDisabled) {
 				if (rgp.pUploadURL) {
-					var evp = {};
-					evp.uURL = rgp.pUploadURL;
-					evp.uRef = [ id ];
-					evp.uPanels = [ rgp.pContId ];
+					const evp = {uURL:rgp.pUploadURL, uRef:[ id ], uPanels:[ rgp.pContId ]};
 					ux.addHdl(btnUpElem, "click", ux.post, evp);
-
-					evp = {};
 					ux.addHdl(fileElem, "change", function(uEv) {
 						if (fileElem.value) {
 							btnUpElem.disabled = false;
 						} else {
 							btnUpElem.disabled = true;
 						}
-					}, evp);
+					}, {});
 				}
 			}
 		}
@@ -1944,10 +1903,8 @@ ux.rigLinkGrid = function(rgp) {
 		for(var i = 0; i < rgp.categories.length; i++) {
 			var linkCat = rgp.categories[i];
 			for(var j = 0; j < linkCat.links.length; j++) {
-				var link = linkCat.links[j];
-				var evp = {};
-				evp.uURL = linkCat.pURL;
-				evp.uSendTrg = link.pCode;
+				const link = linkCat.links[j];
+				const evp = {uURL:linkCat.pURL, uSendTrg:link.pCode};
 				ux.addHdl(_id(link.pId), "click", function(uEv) {
 					ux.post(uEv);
 				}, evp);
@@ -1977,24 +1934,28 @@ ux.rigMoneyField = function(rgp) {
 	mf._selHandler = ux.mfSelectOpt;
 	
 	mf.setValue = function(val) {
-		const currency = val.currency;
-		var k = -1;
-		for(var i = 0; i < this._keys.length; i++) {
-			if (currency == this._keys[i]) {
-				k = i;
-				break;
+		if (this._keys) {
+			const currency = val.currency;
+			var k = -1;
+			for(var i = 0; i < this._keys.length; i++) {
+				if (currency == this._keys[i]) {
+					k = i;
+					break;
+				}
 			}
+			
+			this._fac.value = val.amount;
+			ux.mfSelectOpt(this, k, true);
+		} else {
+			this._btn.innerHTML = val.currency;
+			this._fac.value = val.amount;
+			ux.mfSetMoneyVal(this);
 		}
 		
-		this._fac.value = val.amount;
-		ux.mfSelectOpt(this, k, true);
 	};
 	
 	mf.getValue = function() {
-		const val = {};
-		val.currency = this._btn.innerHTML;
-		val.amount = this._fac.value;
-		return val;
+		return {currency:this._btn.innerHTML, amount:this._fac.value};
 	};
 	
 	ux.addHdl(mf._fac, "change", ux.mfAmountChange, {uId:id});
@@ -2018,8 +1979,7 @@ ux.mfSelectOpt = function(mf, index, choose) {
 			if (!choose) {
 				ux.listScrollToLabel(mf, label);
 			}
-		}
-		
+		}	
 	}
 	
 	if (choose && (mf._selIdx != index)) {
@@ -2093,17 +2053,13 @@ ux.rigMultiSelect = function(rgp) {
 	};
 	
 	// Wire section
-	var evp = {};
-	evp.uId = id;
-	evp.uHitHandler = ux.msKeydownHit;
+	var evp = {uId:id, uHitHandler:ux.msKeydownHit};
 	ux.addHdl(ms._frm, "click", ux.focusOnClick, evp);
 	ux.addHdl(ms._frm, "keydown", ux.listSearchKeydown, evp);
 
 	// Select
 	for (var i = 0; i < ms._selectIds.length; i++) {
-		evp = {};
-		evp.uIndex = i;
-		evp.uId = id;
+		evp = {uId:id, uIndex:i};
 		const label = _id(ms._selectIds[i]);
 		label.innerHTML = ms._labels[i];
 		ux.addHdl(label, "click", ux.msSelectClick, evp);
@@ -2171,16 +2127,13 @@ ux.msUnSelectAllOpt = function(ms) {
 /** Photo Upload */
 ux.rigPhotoUpload = function(rgp) {
 	if (rgp.pEditable) {
-		var fileElem = _id(rgp.pFileId);
-		var evp = ux.newEvPrm(rgp);
+		const fileElem = _id(rgp.pFileId);
+		const evp = ux.newEvPrm(rgp);
 		evp.uPanels = [ rgp.pContId ];
 		ux.addHdl(fileElem, "change", ux.post, evp);
-
-		var imgElem = _id(rgp.pImgId);
-		evp = {};
-		ux.addHdl(imgElem, "click", function(uEv) {
+		ux.addHdl(_id(rgp.pImgId), "click", function(uEv) {
 			fileElem.click();
-		}, evp);
+		}, {});
 	}
 }
 
@@ -2251,9 +2204,7 @@ ux.sfWireResult = function(rgp) {
 	};
 	
 	for (var i = 0; i < rgp.pICnt; i++) {
-		const evp = {};
-		evp.uId = id;
-		evp.uIndex = i;
+		const evp = {uId:id, uIndex:i};
 		const label = _id(rgp.selectIds[i]);
 		ux.addHdl(label, "click", ux.sfSelect, evp);
 	}
@@ -2290,7 +2241,7 @@ ux.rigOptionsTextArea = function(rgp) {
 	ota._selHandler = ux.otaSelectOpt;
 	ota._pop = rgp.pEnabled;
 	
-	var evp = {};
+	const evp = {};
 	evp.uTrg = ota;
 	evp.popupId=rgp.pPopupId;
 	evp.frameId=rgp.pId;
@@ -2552,15 +2503,13 @@ ux.rigTable = function(rgp) {
 			}
 
 			for (var i = startIndex; i < tblToRig.rows.length; i++) {
-				var evp = {};
-				var tRow = tblToRig.rows[i];
+				const tRow = tblToRig.rows[i];
 				if (!tblToRig.uFirstRow) {
 					tblToRig.uFirstRow = tRow;
 				}
 				tRow.uIndex = i - startIndex;
 				tRow.uClassName = tRow.className;
-				evp.uRigTbl = tblToRig;
-				evp.uRigRow = tRow;
+				const evp = {uRigTbl:tblToRig, uRigRow:tRow};
 				ux.addHdl(tRow, "click", ux.tableRowClickHandler,
 						evp);
 			}
@@ -2636,8 +2585,7 @@ ux.rigTable = function(rgp) {
 			rowOffset = 0;
 		}
 
-		var evp = {};
-		evp.uRigTbl = tblToRig;
+		const evp = {uRigTbl:tblToRig};
 		tblToRig.uSelBoxes = selBoxes;
 		var selAll = _id(rgp.pSelAllId);
 		var selAllFac = _id("fac_" + rgp.pSelAllId);
@@ -2658,9 +2606,7 @@ ux.rigTable = function(rgp) {
 			ux.addHdl(selBoxFac, "click", ux.tableMultiSelClick,
 					evp);
 			if (!rgp.pShiftable) {
-				var evpRw = {};
-				evpRw.uRigTbl = tblToRig;
-				evpRw.uSelBox = selBox;
+				const evpRw = {uRigTbl:tblToRig, uSelBox:selBox};
 				ux.addHdl(tRow, "click", ux.tableMultiRowClickHandler,
 						evpRw);
 			}
@@ -2679,7 +2625,7 @@ ux.rigTable = function(rgp) {
 		if (rgp.pSortColList) {
 			for (var i = 0; i < rgp.pSortColList.length; i++) {
 				var colInfo = rgp.pSortColList[i];
-				var evp = ux.newEvPrm(rgp);
+				const evp = ux.newEvPrm(rgp);
 				evp.uCmd = id + "->sort";
 				evp.uPanels = [ rgp.pContId ];
 				evp.uColIdxId = rgp.pColIdxId;
@@ -2933,7 +2879,7 @@ ux.tableSummaryProc = function(rigTbl) {
 	var selBoxes = rigTbl.uSelBoxes;
 	
 	//Initialize
-	var summary = {};
+	const summary = {};
 	for (var i = 0; i < sumCols.length; i++) {
 		summary[sumCols[i].nm] = 0.0;
 	}
@@ -3058,13 +3004,11 @@ ux.rigTextClock = function(rgp) {
 
 /** Time Field */
 ux.rigTimeField = function(rgp) {
-	var id = rgp.pId;
+	const id = rgp.pId;
 
 	// Setup 'Set' button
-	var evp = {};
-	evp.uRigPrm = rgp;
 	ux.addHdl(_id("btns_" + id), "click", ux.timeSetBtnHandler,
-			evp);
+			{uRigPrm:rgp});
 
 	// Setup 'Clear' button
 	ux.popupWireClear(rgp, "btncl_" + id, [ id ]);
@@ -4490,8 +4434,7 @@ ux.popupWireClear = function(rgp, btnId, trgArr) {
 	var clearBtn = _id(btnId);
 	if (clearBtn) {
 		if (rgp.pClearable) {
-			var evp = {};
-			evp.uRef = trgArr;
+			const evp = {uRef:trgArr};
 			ux.addHdl(clearBtn, "click", function(uEv) {
 				ux.clear(uEv);
 				ux.hidePopup(uEv);
@@ -4505,8 +4448,7 @@ ux.popupWireClear = function(rgp, btnId, trgArr) {
 ux.popupWireCancel = function(btnId) {
 	var cancelBtn = _id(btnId);
 	if (cancelBtn) {
-		var evp = {};
-		ux.addHdl(cancelBtn, "click", ux.hidePopup, evp);
+		ux.addHdl(cancelBtn, "click", ux.hidePopup, {});
 	}
 }
 
@@ -4548,9 +4490,8 @@ ux.setHiddenValues = function(references, hiddenValues) {
 ux.init = function() {
 	ux.resizeTimeout = null;
 	// Set document keydown handler
-	var evp = {};
 	ux.addHdl(document, "keydown", ux.documentKeydownHandler,
-					evp);
+					{});
 	
 	// Register self as extension
 	ux.registerExtension("ux", ux);
@@ -5036,7 +4977,7 @@ ux.addHdl(document, "click", ux.documentHidePopup, {});
 
 /** On window resize function */
 ux.registerResizeFunc = function(id, resizeFunc, resizePrm) {
-	var resizeInfo = {};
+	const resizeInfo = {};
 	resizeInfo.resizeFunc = resizeFunc;
 	resizeInfo.resizePrm = resizePrm;
 	ux.resizefunctions[id] = resizeInfo;

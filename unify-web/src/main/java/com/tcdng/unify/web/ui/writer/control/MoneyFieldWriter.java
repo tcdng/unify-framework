@@ -69,19 +69,22 @@ public class MoneyFieldWriter extends AbstractPopupTextFieldWriter {
     protected void doWritePopupTextFieldBehaviour(ResponseWriter writer, AbstractPopupTextField popupTextField, boolean popupEnabled)
             throws UnifyException {
         MoneyField moneyField = (MoneyField) popupTextField;
-        ListControlInfo listControlInfo = moneyField.getListControlInfo(null);
-
-        // Append rigging
         writer.beginFunction("ux.rigMoneyField");
         writer.writeParam("pId", moneyField.getId());
         writer.writeParam("pFrmId", moneyField.getFramePanelId());
         writer.writeParam("pLstId", moneyField.getListPanelId());
         writer.writeParam("pBtnId", moneyField.getPopupButtonId());
         writer.writeParam("pFacId", moneyField.getFacadeId());
-        writer.writeParam("pICnt", listControlInfo.size());
-        writer.writeParam("pSelectIds", listControlInfo.getSelectIds());
-        writer.writeParam("pKeys", listControlInfo.getKeys());
-        writer.writeParam("pLabels", listControlInfo.getLabels());
+        if (moneyField.isMultiCurrency()) {
+            ListControlInfo listControlInfo = moneyField.getListControlInfo(null);
+            writer.writeParam("pICnt", listControlInfo.size());
+            writer.writeParam("pSelectIds", listControlInfo.getSelectIds());
+            writer.writeParam("pKeys", listControlInfo.getKeys());
+            writer.writeParam("pLabels", listControlInfo.getLabels());
+        } else {
+            writer.writeParam("pICnt", 0);
+        }
+        
         writer.writeParam("pNormCls", "norm");
         writer.writeParam("pSelCls", getUserColorStyleClass("sel"));
         writer.writeParam("pEnabled", popupEnabled);
