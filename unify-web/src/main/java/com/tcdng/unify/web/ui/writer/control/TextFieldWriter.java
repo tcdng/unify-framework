@@ -45,7 +45,6 @@ public class TextFieldWriter extends AbstractControlWriter {
         TextField textField = (TextField) widget;
         super.doWriteBehavior(writer, textField);
 
-        // Append formatting regex
         writer.beginFunction("ux.setTextRegexFormatting");
         if (textField.isUseFacade()) {
             writer.writeParam("pId", textField.getFacadeId());
@@ -55,6 +54,10 @@ public class TextFieldWriter extends AbstractControlWriter {
         writer.writeResolvedParam("pRegex", "\"" + getFormatRegex(textField) + "\"");
         writer.writeParam("pCase", textField.getCase());
         writer.endFunction();
+        
+        if(!textField.getExtensionType().isExtended()) {
+            writeSimpleValueAccessor(writer, textField);
+        }
     }
 
     protected void writeTextField(ResponseWriter writer, TextField textField, String type) throws UnifyException {
@@ -155,8 +158,6 @@ public class TextFieldWriter extends AbstractControlWriter {
                     writer.write(" autocomplete=\"off\"");
                 }
             }
-            
-            writeSimpleValueAccessor(writer, textField);
         }
 
         if (value != null) {

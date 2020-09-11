@@ -43,8 +43,6 @@ public class DateField extends AbstractTimeField {
     @Override
     public void onPageConstruct() throws UnifyException {
         super.onPageConstruct();
-
-        // Preset date-time format for month and pattern aliases
         Formatter<?> formatter = getFormatter();
         for (Pattern p : super.getPattern()) {
             if (!p.isFiller()) {
@@ -56,7 +54,6 @@ public class DateField extends AbstractTimeField {
             }
         }
 
-        // Preset short days list
         shortDayList = formatter.getFormatHelper().getSubPatternDateTimeFormat("EEE", formatter.getLocale())
                 .getSubPatternKeys();
     }

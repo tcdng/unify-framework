@@ -15,12 +15,9 @@
  */
 package com.tcdng.unify.web.ui.writer.control;
 
-import java.util.List;
-
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
-import com.tcdng.unify.core.data.Listable;
 import com.tcdng.unify.core.util.json.JsonWriter;
 import com.tcdng.unify.web.ui.ListControlInfo;
 import com.tcdng.unify.web.ui.ResponseWriter;
@@ -149,13 +146,15 @@ public class SearchFieldWriter extends AbstractPopupTextFieldWriter {
         writer.writeParam("pICnt", listControlInfo.size());
         writer.writeParam("pSelectIds", listControlInfo.getSelectIds());
         writer.writeParam("pKeys", listControlInfo.getKeys());
+        writer.writeParam("pLabels", listControlInfo.getLabels());
+        writer.writeParam("pVal", searchField.getValue(String.class));
         writer.writeParam("pEnabled", popupEnabled);
         writer.endFunction();
     }
 
     private void writeResultList(ResponseWriter writer, SearchField searchField) throws UnifyException {
-        List<? extends Listable> listableList = searchField.getListables();
-        int length = listableList.size();
+        ListControlInfo listControlInfo = searchField.getListControlInfo(null);
+        int length = listControlInfo.size();
         writer.write("<div");
         writeTagStyleClass(writer, "sflist");
         writer.write(">");
@@ -168,7 +167,7 @@ public class SearchFieldWriter extends AbstractPopupTextFieldWriter {
                 writeTagStyleClass(writer, "even");
             }
             writer.write(">");
-            writer.writeWithHtmlEscape(listableList.get(i).getListDescription());
+//            writer.writeWithHtmlEscape(listableList.get(i).getListDescription());
             writer.write("</a>");
         }
         writer.write("</div>");

@@ -44,6 +44,10 @@ const UNIFY_MAX_STRETCHPANEL_DEPTH = 5;
 const UNIFY_MINUTES_IN_DAY = 1440;
 const UNIFY_MINUTES_IN_HOUR = 60;
 
+const UNIFY_KEY_SPACE = '32';
+const UNIFY_KEY_BACKSPACE = '8';
+const UNIFY_KEY_DELETE = '46';
+
 ux.docPath = "";
 ux.docPopupBaseId = null;
 ux.docPopupId = null;
@@ -762,7 +766,7 @@ ux.setAllChecked = function(uEv) {
 				for (var j = 0; j < elems.length; j++) {
 					var elem = elems[j];
 					if (elem.type == "checkbox") {
-						elem.setValue(rElem.checked);
+						elem._setValue(rElem.checked);
 					}
 				}
 			}
@@ -1258,11 +1262,11 @@ ux.tabbedPanelTabClickHandler = function(uEv) {
 ux.rigSVA = function(id) {
 	const elem = _id(id);
 	if(elem) {
-		elem.setValue = function(val) {
+		elem._setValue = function(val) {
 			this.value = val;
 		};
 
-		elem.getValue = function() {
+		elem._getValue = function() {
 			return this.value;
 		};
 	}
@@ -1384,18 +1388,15 @@ ux.rigCheckbox = function(rgp) {
 
 ux.cbWire = function(box) {
 	if (box) {
-		const facId = "fac_" + box.id;
-		const evp = {uId:box.id};	
-		ux.addHdl(_id(facId), "click", ux.cbClick, evp);
+		box._facId = "fac_" + box.id;
+		ux.addHdl(_id(box._facId), "click", ux.cbClick, {uId:box.id});
 
-		box.facId = facId;
-		box.setValue = function(val) {
+		box._setValue = function(val) {
 			this.checked = (val == true);
 			ux.cbSwitchImg(this);
-			ux.fireEvent(_id(this.facId), "change");
 		};
 		
-		box.getValue = function() {
+		box._getValue = function() {
 			return this.checked;
 		};
 	}
@@ -1404,14 +1405,15 @@ ux.cbWire = function(box) {
 ux.cbClick = function(uEv) {
 	const box = _id(uEv.evp.uId);
 	if (box) {
-		box.setValue(!box.getValue());
+		box._setValue(!box._getValue());
+		ux.fireEvent(_id(box._facId), "change");
 	}
 }
 
 ux.cbSwitchImg = function(box) {
-	const fac = _id(box.facId);
+	const fac = _id(box._facId);
 	if (fac && fac.className) {
-		if (box.getValue()) {
+		if (box._getValue()) {
 			fac.className = fac.className.replace("g_cbb", "g_cba");
 			fac.className = fac.className.replace("g_cbd", "g_cbc");
 		} else {
@@ -1433,22 +1435,22 @@ ux.rigChecklist = function(rgp) {
 	const list = _id(rgp.pId);
 	if (list) {
 		list._box = box;
-		list.setValue = function(val) {
+		list._setValue = function(val) {
 			for (var i = 0; i < this._box.length; i++) {
 				const box = this._box[i];
-				box.setValue(val && val.includes(box.value));
+				box._setValue(val && val.includes(box.value));
 			}
 			
-			if (list._setValueHandler) {
-				list._setValueHandler(list);
+			if (list.updateFacade) {
+				list.updateFacade(false);
 			}
 		};
 		
-		list.getValue = function() {
+		list._getValue = function() {
 			const val = [];
 			for(var i = 0; i < this._box.length; i++) {
 				const box = this._box[i];
-				if (box.getValue()) {
+				if (box._getValue()) {
 					val.push(box.value);
 				}
 			}
@@ -1456,7 +1458,7 @@ ux.rigChecklist = function(rgp) {
 			return val;
 		};
 		
-		list.setValue(rgp.pVal);
+		list._setValue(rgp.pVal);
 	}
 }
 
@@ -1468,7 +1470,7 @@ ux.rigDateField = function(rgp) {
 	df._header = _id("disp_" + id);
 	df._calendar = _id("cont_" + id);
 	df._format = rgp.pPattern;
-	df._padLeft = rgp.pPadLeft;
+	df._padLeft = true;
 	df._shortDayNm = rgp.pShortDayNm;
 	df._longMonthNm = rgp.pLongMonthNm;
 	df._dayClass = rgp.pDayClass;
@@ -1476,26 +1478,110 @@ ux.rigDateField = function(rgp) {
 	df._todayClass = rgp.pTodayClass;
 	df._pop = rgp.pEnabled;
 	
-	df.setValue = function(val) {
+	df._setValue = function(val) {
 		this.setDay(val.getDate());
 		this.setMonth(val.getMonth());
 		this.setYear(val.getFullYear());
-
-		const formatVal = ux.applyPattern(this);
-		if(this.value != formatVal) {
-			this.value = formatVal;
-			ux.fireEvent(this, "change");
-		}
-		ux.dfUpdateCalendar(this);
+		this.setActual(false);
+		this.updateCalendar();
 	};
 	
-	df.getValue = function() {
-		var val = new Date();
+	df._getValue = function() {
+		const val = new Date();
 		val.setFullYear(this.getYear());
 		val.setMonth(this.getMonth());
 		val.setDate(this.getDay());
 		return val;
-	}
+	};
+
+	df.setActual = function(fire) {
+		const val = ux.applyPattern(this);
+		if(this.value != val) {
+			this.value = val;
+			if(fire) {
+				ux.fireEvent(this, "change");
+			}
+		}
+	};
+	
+	df.updateCalendar = function() {
+		if (this._pop) {
+			const month = this._scrollMonth;
+			const year = this._scrollYear;
+
+			// Display month year on header
+			this._header.innerHTML = this._longMonthNm[month] + "&nbsp;" + year;
+
+			// Initialize variables and generate calendar HTML
+			var firstDay = new Date(year, month, 1).getDay();
+			var nextMonth = new Date(year, month + 1, 1);
+			nextMonth.setHours(nextMonth.getHours() - 3);
+			var daysInMonth = nextMonth.getDate();
+			var done = false;
+			var rowCount = 0;
+			var dayCount = 1;
+
+			var todayDt = new Date();
+			var today = todayDt.getDate();
+			if (!(month == todayDt.getMonth() && year == todayDt.getFullYear())) {
+				today = 0;
+			}
+
+			var currentDay = this.getDay();
+			if (!(month == this.getMonth() && year == this.getYear())) {
+				currentDay = 0;
+			}
+
+			var calendarHtml = "<table class=\"ctable\">";
+			calendarHtml += "<tr>";
+			for (var i = 0; i < 7; i++) {
+				calendarHtml += "<th>";
+				calendarHtml += this._shortDayNm[i];
+				calendarHtml += "</th>";
+			}
+			calendarHtml += "</tr>";
+			while (!done) {
+				calendarHtml += "<tr>";
+				for (var i = 0; i < 7; i++) {
+					calendarHtml += "<td>";
+					if ((rowCount == 0) && (i < firstDay)) {
+						calendarHtml += "&nbsp;";
+					} else {
+						if (dayCount >= daysInMonth) {
+							done = true;
+						}
+						if (dayCount <= daysInMonth) {
+							var dayClass = this._dayClass;
+							if (dayCount == currentDay) {
+								dayClass = this._currClass;
+							}
+
+							if (dayCount == today) {
+								dayClass = this._todayClass;
+							}
+							calendarHtml += "<span class=\"" + dayClass
+									+ "\" onclick=\"ux.dfDayHandler('" + this.id
+									+ "'," + dayCount + ");\">" + dayCount + "</span>";
+							dayCount++;
+						} else {
+							calendarHtml += "&nbsp;";
+						}
+					}
+					calendarHtml += "</td>";
+				}
+				calendarHtml += "</tr>";
+				rowCount++;
+			}
+			calendarHtml += "</table>";
+			this._calendar.innerHTML = calendarHtml;
+		}
+	};
+
+	df.setupScroll = function(scrIdPrefix, target, step) {
+		const evp = {uId:this.id, uTarget:target, uStep:step};
+		ux.addHdl(_id(scrIdPrefix + this.id), "click",
+				ux.dfScrollHandler, evp);
+	};
 	
 	df.setDay = function(val) {
 		this._parts["day_"] = "" + val;
@@ -1524,10 +1610,10 @@ ux.rigDateField = function(rgp) {
 	};
 	
 	if (df._pop) {
-		ux.dfSetupScroll(df, "decy_", "year_", -1);
-		ux.dfSetupScroll(df, "incy_", "year_", 1);
-		ux.dfSetupScroll(df, "decm_", "mon_", -1);
-		ux.dfSetupScroll(df, "incm_", "mon_", 1);
+		df.setupScroll("decy_", "year_", -1);
+		df.setupScroll("incy_", "year_", 1);
+		df.setupScroll("decm_", "mon_", -1);
+		df.setupScroll("incm_", "mon_", 1);
 		ux.popupWireClear(rgp, "btnc_" + id, [ id ]);
 	}
 
@@ -1537,13 +1623,19 @@ ux.rigDateField = function(rgp) {
 	df.setDay(rgp.pDay);
 	df.setMonth(rgp.pMonth);
 	df.setYear(rgp.pYear);
-	ux.dfUpdateCalendar(df);
+	df.setActual(false);
+	df.updateCalendar();
 }
 
 ux.dfTodayHandler = function(uEv) {
-	const df = _id(uEv.evp.uId);
-	df.setValue(new Date());
+	const df = _id(id);
+	const val = new Date();
+	df.setDay(val.getDate());
+	df.setMonth(val.getMonth());
+	df.setYear(val.getFullYear());	
 	ux.hidePopup(null);
+	df.updateCalendar();
+	df.setActual(true);
 }
 
 ux.dfDayHandler = function(id, dayCount) {
@@ -1551,14 +1643,8 @@ ux.dfDayHandler = function(id, dayCount) {
 	df.setDay(dayCount);
 	df.setMonth(df._scrollMonth);
 	df.setYear(df._scrollYear);	
-	df.setValue(df.getValue());
 	ux.hidePopup(null);
-}
-
-ux.dfSetupScroll = function(df, scrIdPrefix, target, step) {
-	const evp = {uId:df.id, uTarget:target, uStep:step};
-	ux.addHdl(_id(scrIdPrefix + df.id), "click",
-			ux.dfScrollHandler, evp);
+	df.setActual(true);
 }
 
 ux.dfScrollHandler = function(uEv) {
@@ -1588,80 +1674,7 @@ ux.dfScrollHandler = function(uEv) {
 		df._scrollYear = df._scrollYear + evp.uStep;
 	}
 	
-	ux.dfUpdateCalendar(df);
-}
-
-ux.dfUpdateCalendar = function(df) {
-	if (df._pop) {
-		const month = df._scrollMonth;
-		const year = df._scrollYear;
-
-		// Display month year on header
-		df._header.innerHTML = df._longMonthNm[month] + "&nbsp;" + year;
-
-		// Initialize variables and generate calendar HTML
-		var firstDay = new Date(year, month, 1).getDay();
-		var nextMonth = new Date(year, month + 1, 1);
-		nextMonth.setHours(nextMonth.getHours() - 3);
-		var daysInMonth = nextMonth.getDate();
-		var done = false;
-		var rowCount = 0;
-		var dayCount = 1;
-
-		var todayDt = new Date();
-		var today = todayDt.getDate();
-		if (!(month == todayDt.getMonth() && year == todayDt.getFullYear())) {
-			today = 0;
-		}
-
-		var currentDay = df.getDay();
-		if (!(month == df.getMonth() && year == df.getYear())) {
-			currentDay = 0;
-		}
-
-		var calendarHtml = "<table class=\"ctable\">";
-		calendarHtml += "<tr>";
-		for (var i = 0; i < 7; i++) {
-			calendarHtml += "<th>";
-			calendarHtml += df._shortDayNm[i];
-			calendarHtml += "</th>";
-		}
-		calendarHtml += "</tr>";
-		while (!done) {
-			calendarHtml += "<tr>";
-			for (var i = 0; i < 7; i++) {
-				calendarHtml += "<td>";
-				if ((rowCount == 0) && (i < firstDay)) {
-					calendarHtml += "&nbsp;";
-				} else {
-					if (dayCount >= daysInMonth) {
-						done = true;
-					}
-					if (dayCount <= daysInMonth) {
-						var dayClass = df._dayClass;
-						if (dayCount == currentDay) {
-							dayClass = df._currClass;
-						}
-
-						if (dayCount == today) {
-							dayClass = df._todayClass;
-						}
-						calendarHtml += "<span class=\"" + dayClass
-								+ "\" onclick=\"ux.dfDayHandler('" + df.id
-								+ "'," + dayCount + ");\">" + dayCount + "</span>";
-						dayCount++;
-					} else {
-						calendarHtml += "&nbsp;";
-					}
-				}
-				calendarHtml += "</td>";
-			}
-			calendarHtml += "</tr>";
-			rowCount++;
-		}
-		calendarHtml += "</table>";
-		df._calendar.innerHTML = calendarHtml;
-	}
+	df.updateCalendar();
 }
 
 /** Dropdown checklist */
@@ -1673,37 +1686,32 @@ ux.rigDropdownChecklist = function(rgp) {
 	dc._keys = rgp.pKeys;
 	dc._labels = rgp.pLabels;
 	dc._pop = rgp.pEnabled;
-	dc._setValueHandler = ux.dcUpdateFacade;
+
+	dc.updateFacade = function(fire) {
+		const val = ux.getCheckedPatternValue(this);
+		if (this._fac.value != val) {
+			this._fac.value = val;
+			if (fire) {
+				ux.fireEvent(this, "change");
+			}
+		}	
+	};
 	
 	if (rgp.pEnabled) {
 		if (rgp.pSelAllId) {
 			ux.cbWire(_id(rgp.pSelAllId));
 
-			const evp = {uSrcId:rgp.pSelAllId, uRef:rgp.pId};
+			const evp = {uSrcId:rgp.pSelAllId, uRef:id};
 			ux.addHdl(_id("fac_" + rgp.pSelAllId), "change", ux.setAllChecked, evp);	
 		}
 	}
 
 	ux.rigChecklist(rgp);
-	dc.setValue(rgp.pVal);
-	dc._fire = true;
+	dc._setValue(rgp.pVal);
 }
 
 ux.dcHidePopup = function(prm) {
-	const dc = _id(prm.id);
-	if (dc) {
-		ux.dcUpdateFacade(dc);
-	}
-}
-
-ux.dcUpdateFacade = function(dc) {
-	const val = ux.getCheckedPatternValue(dc);
-	if (dc._fac.value != val) {
-		dc._fac.value = val;
-		if (dc._fire) {
-			ux.fireEvent(dc, "change");
-		}
-	}	
+	_id(prm.id).updateFacade(true);
 }
 
 /** Duration Select */
@@ -1714,33 +1722,33 @@ ux.rigDurationSelect = function(rgp) {
 	ds._hourSel = _id(rgp.pHourSelId);
 	ds._minSel = _id(rgp.pMinSelId);
 
-	ds.setValue = function(val) {
+	ds._setValue = function(val) {
 		const days = Math.floor(val / UNIFY_MINUTES_IN_DAY);
 		var rem = Math.floor(val % UNIFY_MINUTES_IN_DAY);
 		if (this._daySel) {
-			this._daySel.setValue(days);
+			this._daySel._setValue(days);
 		}
 		
 		const hours = Math.floor(rem / UNIFY_MINUTES_IN_HOUR);
 		rem = Math.floor(rem % UNIFY_MINUTES_IN_HOUR);
 		if (this._hourSel) {
-			this._hourSel.setValue(hours);
+			this._hourSel._setValue(hours);
 		}
 
-		this._minSel.setValue(rem);
-		this.setActual(val);
+		this._minSel._setValue(rem);
+		this.setActual(val, false);
 	};
 	
-	ds.setActual = function(val) {
+	ds.setActual = function(val, fire) {
 		if(!this.value || parseInt(this.value) != val) {
 			this.value = val;
-			if (this._fire) {
+			if (fire) {
 				ux.fireEvent(this, "change");
 			}
 		}
 	};
 
-	ds.getValue = function() {
+	ds._getValue = function() {
 		return parseInt(this.value);
 	};
 
@@ -1755,23 +1763,22 @@ ux.rigDurationSelect = function(rgp) {
 	
 	ux.addHdl(ds._minSel, "change", ux.dsCalc, evp);
 	
-	ds.setValue(rgp.pVal);
-	ds._fire = true;
+	ds._setValue(rgp.pVal);
 }
 
 ux.dsCalc = function(uEv) {
 	const ds = _id(uEv.evp.uId);
 	var total = 0;
 	if (ds._daySel){
-		total += parseInt(ds._daySel.getValue()) * UNIFY_MINUTES_IN_DAY;
+		total += parseInt(ds._daySel._getValue()) * UNIFY_MINUTES_IN_DAY;
 	}
 	
 	if (ds._hourSel){
-		total += parseInt(ds._hourSel.getValue()) * UNIFY_MINUTES_IN_HOUR;
+		total += parseInt(ds._hourSel._getValue()) * UNIFY_MINUTES_IN_HOUR;
 	}
 	
-	total += parseInt(ds._minSel.getValue());
-	ds.setActual(total);
+	total += parseInt(ds._minSel._getValue());
+	ds.setActual(total, true);
 }
 
 /** FileAttachment */
@@ -1931,9 +1938,8 @@ ux.rigMoneyField = function(rgp) {
 	mf._list = _id(rgp.pLstId);
 	mf._btn = _id(rgp.pBtnId);
 	mf._pop = rgp.pEnabled;
-	mf._selHandler = ux.mfSelectOpt;
 	
-	mf.setValue = function(val) {
+	mf._setValue = function(val) {
 		if (this._keys) {
 			const currency = val.currency;
 			var k = -1;
@@ -1945,67 +1951,65 @@ ux.rigMoneyField = function(rgp) {
 			}
 			
 			this._fac.value = val.amount;
-			ux.mfSelectOpt(this, k, true);
+			this.selectOpt(k, true, false);
 		} else {
 			this._btn.innerHTML = val.currency;
 			this._fac.value = val.amount;
-			ux.mfSetMoneyVal(this);
+			this.setMoneyVal(false);
 		}
-		
 	};
 	
-	mf.getValue = function() {
+	mf._getValue = function() {
 		return {currency:this._btn.innerHTML, amount:this._fac.value};
 	};
+	
+	mf.selectOpt = function(index, choose, fire) {
+		if (this._pop) {
+			if(this._oldSelIdx != index) {
+				const label = index >= 0 ? _id(this._selectIds[index]) : null;
+				const olabel = this._oldSelIdx >= 0 ? _id(this._selectIds[this._oldSelIdx]) : null;
+				label.className = this._sel;
+				if (olabel && label != olabel) {
+					olabel.className = this._norm;
+				}
+				
+				this._oldSelIdx = index;
+				if (!choose) {
+					ux.listScrollToLabel(this, label);
+				}
+			}	
+		}
+		
+		if (choose && (this._selIdx != index)) {
+			this._btn.innerHTML = index >= 0 ? this._keys[index]:null;
+			this._selIdx = index;
+			this.setMoneyVal(fire);
+		}
+	}
+	
+	mf.setMoneyVal = function(fire) {
+		var val = "";
+		if (this._fac.value) {
+			val = this._btn.innerHTML + " " + this._fac.value;
+		}
+
+		if (this.value != val) {
+			this.value = val;
+			if (fire) {
+				ux.fireEvent(this, "change");			
+			}
+		}
+	}
 	
 	ux.addHdl(mf._fac, "change", ux.mfAmountChange, {uId:id});
 	ux.listWirePopFrame(mf, rgp);
 
-	mf.setValue(rgp.pVal);
-	mf._fire = true;
-}
-
-ux.mfSelectOpt = function(mf, index, choose) {
-	if (mf._pop) {
-		if(mf._oldSelIdx != index) {
-			const label = index >= 0 ? _id(mf._selectIds[index]) : null;
-			const olabel = mf._oldSelIdx >= 0 ? _id(mf._selectIds[mf._oldSelIdx]) : null;
-			label.className = mf._sel;
-			if (olabel && label != olabel) {
-				olabel.className = mf._norm;
-			}
-			
-			mf._oldSelIdx = index;
-			if (!choose) {
-				ux.listScrollToLabel(mf, label);
-			}
-		}	
-	}
-	
-	if (choose && (mf._selIdx != index)) {
-		mf._btn.innerHTML = index >= 0 ? mf._keys[index]:null;
-		mf._selIdx = index;
-		ux.mfSetMoneyVal(mf);
-	}
+	mf._setValue(rgp.pVal);
 }
 
 
 ux.mfAmountChange = function(uEv) {
-	ux.mfSetMoneyVal(_id(uEv.evp.uId));
-}
-
-ux.mfSetMoneyVal = function(mf) {
-	var val = "";
-	if (mf._fac.value) {
-		val = mf._btn.innerHTML + " " + mf._fac.value;
-	}
-
-	if (mf.value != val) {
-		mf.value = val;
-		if (mf._fire) {
-			ux.fireEvent(mf, "change");			
-		}
-	}
+	_id(uEv.evp.uId).setMoneyVal(true);
 }
 
 ux.mfOnShow = function(rgp) {
@@ -2017,7 +2021,7 @@ ux.rigMultiSelect = function(rgp) {
 	const id = rgp.pId;
 	const ms = _id(id);
 	ms._norm = rgp.pNormCls;
-	ms._selName = rgp.pSelCls;
+	ms._sel = rgp.pSelCls;
 	ms._selectIds = rgp.pSelectIds;
 	ms._keys = rgp.pKeys;
 	ms._labels = rgp.pLabels;
@@ -2026,21 +2030,16 @@ ux.rigMultiSelect = function(rgp) {
 	ms._list = _id(rgp.pLstId);
 	ms._start = -1;
 	
-	ms.setValue = function(val) {
+	ms._setValue = function(val) {
 		for (var i = 0; i < this.options.length; i++) {
 			const option = this.options[i];
-			const label = _id(this.selectIds[i]);
-			if(val && val.includes(option.value)) {
-				label.className = this._sel;
-				option.selected = true;
-			} else {
-				label.className = this._norm;
-				option.selected = false;
-			}
+			const label = _id(this._selectIds[i]);
+			option.selected = val && val.includes(option.value);
+			label.className = option.selected ? this._sel:this._norm;
 		}
 	};
 	
-	ms.getValue = function() {
+	ms._getValue = function() {
 		const val = [];
 		for (var i = 0; i < this.options.length; i++) {
 			const option = this.options[i];
@@ -2052,23 +2051,22 @@ ux.rigMultiSelect = function(rgp) {
 		return val;
 	};
 	
-	// Wire section
-	var evp = {uId:id, uHitHandler:ux.msKeydownHit};
+	const evp = {uId:id, uHitHandler:ux.msKeydownHit};
 	ux.addHdl(ms._frm, "click", ux.focusOnClick, evp);
 	ux.addHdl(ms._frm, "keydown", ux.listSearchKeydown, evp);
-
-	// Select
 	for (var i = 0; i < ms._selectIds.length; i++) {
-		evp = {uId:id, uIndex:i};
+		const evpi = {uId:id, uIndex:i};
 		const label = _id(ms._selectIds[i]);
 		label.innerHTML = ms._labels[i];
-		ux.addHdl(label, "click", ux.msSelectClick, evp);
+		ux.addHdl(label, "click", ux.msSelectClick, evpi);
 	}
+	
+	ms._setValue(rgp.pVal);
 }
 
 ux.msKeydownHit = function(ms) {
 	if (ms._indexes && ms._indexes.length > 0) {
-		var optIndex = ms._indexes[0]
+		const optIndex = ms._indexes[0]
 		ux.msUnSelectAllOpt(ms);
 		ux.msSelectOpt(ms, optIndex, true);
 		ms._start = optIndex;
@@ -2076,8 +2074,8 @@ ux.msKeydownHit = function(ms) {
 }
 
 ux.msSelectClick = function(uEv) {
-	var evp = uEv.evp;
-	var ms = _id(evp.uId);
+	const evp = uEv.evp;
+	const ms = _id(evp.uId);
 
 	if (uEv.shiftKey && ms._start >= 0) {
 		var start = ms._start;
@@ -2106,12 +2104,13 @@ ux.msSelectOpt = function(ms, index, scroll) {
 	const label = _id(ms._selectIds[index]);
 	label.className = ms._sel;
 	ms.options[index].selected = true;
-	
 	if (scroll) {
-		ux.listScrollToLabel(msCom, label);
+		ux.listScrollToLabel(ms, label);
 	}
 
-	ux.fireEvent(ms, "change");
+	if(ms._fire) {
+//		ux.fireEvent(ms, "change");
+	}
 }
 
 ux.msUnSelectAllOpt = function(ms) {
@@ -2140,20 +2139,16 @@ ux.rigPhotoUpload = function(rgp) {
 /** Radio buttons */
 ux.rigRadioButtons = function(rgp) {
 	const rb = _id(rgp.pId);
-	rb._name = _id(rgp.pNm);
+	rb._name = rgp.pNm;
 	
-	rb.setValue = function(val) {
+	rb._setValue = function(val) {
 		const btn = _name(this._name);
 		for(var i = 0; i < btn.length; i++) {
 			btn[i].checked = btn[i].value == val;
 		}
-		
-		if(this._fire) {
-			ux.fireEvent(this, "change");
-		}
 	};
 	
-	rb.getValue = function() {
+	rb._getValue = function() {
 		const btn = _name(this._name);
 		for(var i = 0; i < btn.length; i++) {
 			if (btn[i].checked) {
@@ -2164,8 +2159,7 @@ ux.rigRadioButtons = function(rgp) {
 		return null;
 	};
 	
-	rb.setValue(rgp.pVal);
-	rb._fire = true;
+	rb._setValue(rgp.pVal);
 }
 
 /** Search Field */
@@ -2173,21 +2167,16 @@ ux.rigSearchField = function(rgp) {
 	const id = rgp.pId;
 
 	// Filter
-	var fElem = _id(rgp.pFilId);
-	if (fElem) {
-		var evp = ux.newEvPrm(rgp);
+	const fil = _id(rgp.pFilId);
+	if (fil) {
+		const evp = ux.newEvPrm(rgp);
 		evp.uCmd = id + "->search";
 		evp.uIsReqTrg = true;
-		ux.addHdl(fElem, "input", ux.post, evp);
+		ux.addHdl(fil, "input", ux.post, evp);
 	}
 
-	// Result
 	ux.sfWireResult(rgp);
-
-	// Clear button
 	ux.popupWireClear(rgp, rgp.pClrId, [ id, rgp.pFacId ]);
-
-	// Cancel button
 	ux.popupWireCancel(rgp.pCanId);
 }
 
@@ -2196,18 +2185,47 @@ ux.sfWireResult = function(rgp) {
 	const sf = _id(id);
 	sf._selectIds = rgp.pSelectIds;
 	sf._keys = rgp.pKeys;
+	sf._labels = rgp.pLabels;
 	sf._fac = _id(rgp.pFacId);
 	
-	sf.setValue = function(val) {
-		this.value = val;
-		ux.fireEvent(this, "change");
+	sf._setValue = function(val) {
+		this.updateFacade(val);
+		this.setActual(val, false);
+	};
+		
+	sf._getValue = function() {
+		return this.value;
 	};
 	
+	sf.updateFacade = function(val) {
+		var factxt = "";
+		for(var i = 0; i < this._keys.length; i++) {
+			if (this._keys[i] == val) {
+				factxt = this._labels[i];
+				break;
+			}
+		}
+		
+		this._fac.value = factxt;
+	};
+	
+	sf.setActual = function(val, fire) {
+		if (this.value != val) {
+			this.value = val;
+			if (fire) {
+				ux.fireEvent(this, "change");
+			}
+		}
+	};
+
 	for (var i = 0; i < rgp.pICnt; i++) {
 		const evp = {uId:id, uIndex:i};
-		const label = _id(rgp.selectIds[i]);
+		const label = _id(sf._selectIds[i]);
+		label.innerHTML = sf._labels[i];
 		ux.addHdl(label, "click", ux.sfSelect, evp);
 	}
+	
+	sf._setValue(rgp.pVal);
 }
 
 ux.sfOnShow = function(rgp) {
@@ -2216,11 +2234,10 @@ ux.sfOnShow = function(rgp) {
 
 ux.sfSelect = function(uEv) {
 	const sf = _id(uEv.evp.uId);
-	const selOpt = uEv.uTrg;
-	sf._fac.value = selOpt.innerHTML;
-
 	ux.hidePopup(null);
-	sf.setValue(sf._keys[uEv.evp.uIndex]);
+	const val = sf._keys[uEv.evp.uIndex];
+	sf.updateFacade(val);
+	sf.setActual(val, true);
 }
 
 /** Options Text Area */
@@ -2238,8 +2255,37 @@ ux.rigOptionsTextArea = function(rgp) {
 	ota._lastKeyHit = Date.now();
 	ota._frm = _id(rgp.pFrmId);
 	ota._list = _id(rgp.pLstId);
-	ota._selHandler = ux.otaSelectOpt;
 	ota._pop = rgp.pEnabled;
+	
+	ota.selectOpt = function(idx, choose, fire) {
+		if (this._pop) {
+			if(this._oldSelIdx != idx) {
+				const label = _id(this._selectIds[idx]);
+				const olabel = _id(this._selectIds[this._oldSelIdx]);
+				label.className = this._sel;
+				if (olabel) {
+					olabel.className = this._norm;
+				}
+				
+				this._oldSelIdx = index;
+				if (!choose) {
+					ux.listScrollToLabel(ota, label);
+				}
+			}
+		}
+		
+		if (choose) {
+			this._selIdx = idx;
+			var pos = ux.getCaretPosition(ota);
+			var string = this.value;
+			var token = "{" + this._keys[idx] + "}";
+			var spos = pos.start + token.length;
+			string = string.substring(0, pos.start) + token + string.substring(pos.end);
+			this.value = string;
+			ux.setCaretPosition(ota, spos, spos);
+			this.focus();
+		}
+	};
 	
 	const evp = {};
 	evp.uTrg = ota;
@@ -2248,10 +2294,8 @@ ux.rigOptionsTextArea = function(rgp) {
 	evp.stayOpenForMillSec = 0;
 	evp.showHandler = ux.optionsTextAreaOnShow;
 	evp.showParam=rgp.pFrmId;
-	ux.addHdl(ota, "keypress", ux.otaTxtKeypress,
-			evp);
-	ux.addHdl(ota,  "keydown", ux.otaTxtKeydown,
-			evp);	
+	ux.addHdl(ota, "keypress", ux.otaTxtKeypress, evp);
+	ux.addHdl(ota, "keydown", ux.otaTxtKeydown, evp);	
 	if (rgp.pScrEnd) {
 		ota.scrollTop = ota.scrollHeight;
 	}
@@ -2264,7 +2308,7 @@ ux.otaTxtKeypress = function(uEv) {
 }
 
 ux.otaTxtKeydown = function(uEv) {
-	if (uEv.shiftKey && uEv.uKeyCode == '32') {
+	if (uEv.shiftKey && uEv.uKeyCode == UNIFY_KEY_SPACE) {
 		ux.doOpenPopup(uEv.evp);
 		uEv.uStop();
 		return;
@@ -2274,7 +2318,7 @@ ux.otaTxtKeydown = function(uEv) {
 	var txt = ota.value;
 	var pos = ux.getCaretPosition(ota);
 	if (pos.start != pos.end) {
-		if (uEv.uKeyCode == '8' || uEv.uKeyCode == '46') {
+		if (uEv.uKeyCode == UNIFY_KEY_BACKSPACE || uEv.uKeyCode == UNIFY_KEY_DELETE) {
 			pos.start = ux.otaTokenStart(txt, pos.start);
 			pos.end = ux.otaTokenEnd(txt, pos.end);
 			ota.value = txt.substring(0, pos.start) + txt.substring(pos.end);
@@ -2282,9 +2326,9 @@ ux.otaTxtKeydown = function(uEv) {
 			uEv.uStop();
 		}
 	} else {
-		if (uEv.uKeyCode == '8' || uEv.uKeyCode == '46') {
+		if (uEv.uKeyCode == UNIFY_KEY_BACKSPACE || uEv.uKeyCode == UNIFY_KEY_DELETE) {
 			var i = pos.start;
-			if (uEv.uKeyCode == '8') {
+			if (uEv.uKeyCode == UNIFY_KEY_BACKSPACE) {
 				i--;
 			}
 
@@ -2337,36 +2381,6 @@ ux.otaTokenEnd = function(txt, end) {
 	return end;
 }
 
-ux.otaSelectOpt = function(ota, idx, choose) {
-	var aElem = _id(ota._selectIds[idx]);
-	var aVal = ota._keys[idx];
-
-	if(ota._oldSelIdx != idx) {
-		var oldElem = _id(ota._selectIds[ota._oldSelIdx]);
-		aElem.className = ota._sel;
-		if (oldElem) {
-			oldElem.className = ota._norm;
-		}
-		ota._oldSelIdx = idx;
-		
-		if (!choose) {
-			ux.listScrollToLabel(ota, aElem);
-		}
-	}
-
-	if (choose) {
-		ota._selIdx = idx;
-		var pos = ux.getCaretPosition(ota);
-		var string = ota.value;
-		var token = "{" + aVal + "}";
-		var spos = pos.start + token.length;
-		string = string.substring(0, pos.start) + token + string.substring(pos.end);
-		ota.value = string;
-		ux.setCaretPosition(ota, spos, spos);
-		ota.focus();
-	}
-}
-
 
 ux.optionsTextAreaOnShow = function(frmId) {
 	ux.setFocus(frmId);
@@ -2391,9 +2405,8 @@ ux.rigSingleSelect = function(rgp) {
 	sel._list = _id(rgp.pLstId);
 	sel._blank = _id(rgp.pBlnkId);
 	sel._pop = rgp.pEnabled;
-	sel._selHandler = ux.ssSelectOpt;
 	
-	sel.setValue = function(val) {
+	sel._setValue = function(val) {
 		var k = this._isBlankOption ? -1: 0;
 		for(var i = 0; i < this._keys.length; i++) {
 			if (val == this._keys[i]) {
@@ -2402,56 +2415,55 @@ ux.rigSingleSelect = function(rgp) {
 			}
 		}
 		
-		ux.ssSelectOpt(this, k, true);
+		this.selectOpt(k, true, false);
 	};
 	
-	sel.getValue = function() {
+	sel._getValue = function() {
 		return this.value;
 	};
 	
-	ux.listWirePopFrame(sel);
-	sel.setValue(rgp.pVal);
-	sel._fire = true;	
-}
-
-ux.ssSelectOpt = function(sel, index, choose) {
-	if (sel._pop) {
-		if(sel._oldSelIdx != index) {
-			const label = index >= 0 ? _id(sel._selectIds[index]) : sel._blank;
-			const olabel = sel._oldSelIdx >= 0 ? _id(sel._selectIds[sel._oldSelIdx]) : sel._blank;
-			label.className = sel._sel;
-			if (olabel && label != olabel) {
-				olabel.className = sel._norm;
+	sel.selectOpt = function(index, choose, fire) {
+		if (this._pop) {
+			if(this._oldSelIdx != index) {
+				const label = index >= 0 ? _id(this._selectIds[index]) : this._blank;
+				const olabel = this._oldSelIdx >= 0 ? _id(this._selectIds[this._oldSelIdx]) : this._blank;
+				label.className = this._sel;
+				if (olabel && label != olabel) {
+					olabel.className = this._norm;
+				}
+				
+				this._oldSelIdx = index;
+				if (!choose) {
+					ux.listScrollToLabel(this, label);
+				}
 			}
-			
-			sel._oldSelIdx = index;
-			if (!choose) {
-				ux.listScrollToLabel(sel, label);
-			}
-		}
-	}
-	
-	if (choose && (sel._selIdx != index)) {
-		var txt = sel._blank ? sel._blank.innerHTML:"";
-		var val = null;
-		if (index >= 0) {
-			txt = sel._labels[index];
-			val = sel._keys[index];
 		}
 		
-		if (txt == "&nbsp;") {
-			txt = "";
-		} else {
-			txt = ux.decodeHtml(txt);
-		}
+		if (choose && (this._selIdx != index)) {
+			var txt = this._blank ? this._blank.innerHTML:"";
+			var val = null;
+			if (index >= 0) {
+				txt = this._labels[index];
+				val = this._keys[index];
+			}
+			
+			if (txt == "&nbsp;") {
+				txt = "";
+			} else {
+				txt = ux.decodeHtml(txt);
+			}
 
-		sel.value = val;
-		sel._fac.value = txt;
-		sel._selIdx = index;
-		if (sel._fire) {
-			ux.fireEvent(sel, "change");			
+			this.value = val;
+			this._fac.value = txt;
+			this._selIdx = index;
+			if (fire) {
+				ux.fireEvent(this, "change");			
+			}
 		}
-	}
+	};
+	
+	ux.listWirePopFrame(sel);
+	sel._setValue(rgp.pVal);
 }
 
 ux.ssOnShow = function(rgp) {
@@ -2461,9 +2473,17 @@ ux.ssOnShow = function(rgp) {
 
 /** Text Area */
 ux.rigTextArea = function(rgp) {
-	var elem = _id(rgp.pId);
-	if (elem && rgp.pScrEnd) {
-		elem.scrollTop = elem.scrollHeight;
+	const ta = _id(rgp.pId);
+	ta._setValue = function(val) {
+		this.value = val;
+	};
+	
+	ta._getValue = function() {
+		return this.value;
+	};
+	
+	if (ta && rgp.pScrEnd) {
+		ta.scrollTop = ta.scrollHeight;
 	}
 }
 
@@ -3005,79 +3025,187 @@ ux.rigTextClock = function(rgp) {
 /** Time Field */
 ux.rigTimeField = function(rgp) {
 	const id = rgp.pId;
+	const tf = _id(id);
+	tf._parts = {};
+	tf._facId = rgp.pFacId;
+	tf._format = rgp.pPattern;
+	tf._lists = rgp.pLists;
+	tf._padLeft = true;
+	tf._clearable = rgp.pClearable;
+	tf._pop = rgp.pEnabled;
+	
+	tf._setValue = function(val) {
+		this.setHour24(val.getHours());
+		this.setMinute(val.getMinutes());
+		this.setSecond(val.getSeconds());
+		this.setActual(false);
+		this.updateClock();
+	};
+	
+	tf._getValue = function() {
+		const val = new Date();
+		val.setHours(this.getHour24());
+		val.setMinutes(this.getMinute());
+		val.setSeconds(this.getSecond());
+		return val;
+	};
 
-	// Setup 'Set' button
-	ux.addHdl(_id("btns_" + id), "click", ux.timeSetBtnHandler,
-			{uRigPrm:rgp});
-
-	// Setup 'Clear' button
-	ux.popupWireClear(rgp, "btncl_" + id, [ id ]);
-
-	// Setup 'Cancel' button
-	ux.popupWireCancel("btncn_" + id);
-
-	// Setup scroll buttons
-	for (var i = 0; i < rgp.pFormat.length; i++) {
-		var format = rgp.pFormat[i];
-		var len = rgp.pPattern[i].length;
-		if (format) {
-			var target = "timi_" + id + i;
-			var evp = {};
-			evp.uRigPrm = rgp;
-			evp.uTarget = target;
-			if (format.list) {
-				evp.uAltTarget = "h_" + target;
+	tf.setActual = function(fire) {
+		const val = ux.applyPattern(this);
+		if (tf.value != val) {
+			tf.value = val;
+			if (fire) {
+				ux.fireEvent(this, "change");
 			}
-			evp.uStep = 1;
-			evp.uLen = len;
-			evp.uFormat = format;
-			ux.addHdl(_id("btnat_" + id  + i), "click",
-					ux.timeScrollHandler, evp);
-
-			evp = {};
-			evp.uRigPrm = rgp;
-			evp.uTarget = target;
-			if (format.list) {
-				evp.uAltTarget = "h_" + target;
+		}
+	};
+	
+	tf.updateClock = function() {
+		if (this._pop) {
+			for (var i = 0; i < this._format.length; i++) {
+				const fmt = this._format[i];
+				if (!fmt.flag) {
+					const mfac = _id(this._facId + i);
+					if (fmt.target == "mer_") {
+						mfac.value = this._lists[i].list[this.getMeridiem()];
+					} else {
+						mfac.value = this._parts[fmt.target];
+					}
+				}
 			}
-			evp.uStep = -1;
-			evp.uLen = len;
-			evp.uFormat = format;
-			ux.addHdl(_id("btnst_" + id + i), "click",
-					ux.timeScrollHandler, evp);
+		}
+	};
+	
+	tf.setHour24 = function(val) {
+		var h12 = 0;
+		if (val < 12) {
+			h12 = val;
+			this._parts["mer_"] = "0";
+		} else {
+			h12 = val - 12;
+			this._parts["mer_"] = "1";
+		}
+		
+		if (h12 == 0) {
+			h12 = 12;
+		}
+		
+		this._parts["h12_"] = "" + h12;
+		this._parts["h24_"] = "" + val;
+	};
+	
+	tf.getHour24 = function() {
+		return parseInt(this._parts["h24_"]);
+	};
+	
+	tf.setHour12 = function(val) {
+		if (this.getMeridiem() == 0) {
+			this._parts["h24_"] = "" + val;
+		} else {
+			this._parts["h24_"] = "" + (val + 12);
+		}
+		
+		if (val == 0) {
+			val = 12;
+		}		
+		this._parts["h12_"] = "" + val;
+	};
+	
+	tf.getHour12 = function() {
+		const val = parseInt(this._parts["h12_"]);
+		if (val == 12) {
+			return 0;
+		}
+		
+		return val;
+	};
+	
+	tf.setMinute = function(val) {
+		this._parts["min_"] = "" + val;
+	};
+	
+	tf.getMinute = function() {
+		return parseInt(this._parts["min_"]);
+	};
+	
+	tf.setSecond = function(val) {
+		this._parts["sec_"] = "" + val;
+	};
+	
+	tf.getSecond = function() {
+		return parseInt(this._parts["sec_"]);
+	};
+	
+	tf.setMeridiem = function(val) {
+		if (val == 0) {
+			this._parts["h24_"] = this.parts["h12_"];
+		} else {
+			this._parts["h24_"] = "" + (this.getHour12() + 12);
+		}
+		
+		this._parts["mer_"] = "" + val;
+	};
+	
+	tf.getMeridiem = function() {
+		return parseInt(this._parts["mer_"]);
+	};
+	
+	if (tf._pop) {
+		ux.addHdl(_id("btns_" + id), "click", ux.tfSetHandler,
+				{uId:id});
+		ux.popupWireClear(rgp, "btncl_" + id, [ id ]);
+		ux.popupWireCancel("btncn_" + id);
+		for (var i = 0; i < tf._format.length; i++) {
+			const list = tf._lists[i];
+			if (list) {
+				const evppos = {uId:id, uIndex:i, uStep:1};
+				ux.addHdl(_id("btnpos_" + id  + i), "click",
+						ux.tfScrollHandler, evppos);
+
+				const evpneg = {uId:id, uIndex:i, uStep:-1};
+				ux.addHdl(_id("btnneg_" + id + i), "click",
+						ux.tfScrollHandler, evpneg);
+			}
 		}
 	}
+	
+	tf.setHour24(rgp.pHour);
+	tf.setMinute(rgp.pMinute);
+	tf.setSecond(rgp.pSecond);
+	tf.setActual(false);
+	tf.updateClock();
 }
 
-ux.timeSetBtnHandler = function(uEv) {
-	ux.setPatternValue(uEv.evp.uRigPrm);
+
+ux.tfSetHandler = function(uEv) {
 	ux.hidePopup(uEv);
+	_id(uEv.evp.uId).setActual(true);
 }
 
-ux.timeScrollHandler = function(uEv) {
-	var evp = uEv.evp;
-	var elem = _id(evp.uTarget);
-	if (evp.uAltTarget) {
-		elem = _id(evp.uAltTarget);
-	}
+ux.tfScrollHandler = function(uEv) {
+	const tf = _id(uEv.evp.uId);
+	const index = uEv.evp.uIndex;
+	const step = uEv.evp.uStep;
+	const fmt = tf._format[index];
+	const list = tf._lists[index];
 
-	var nextValue = parseInt(elem.value) + evp.uStep;
-	var format = evp.uFormat;
-	if (evp.uStep > 0) {
-		if (nextValue > format.max) {
-			nextValue = format.min;
+	var nextval = parseInt(tf._parts[fmt.target]) + step;
+	if (step > 0) {
+		if (nextval > list.max) {
+			nextval = list.min;
 		}
 	} else {
-		if (nextValue < format.min) {
-			nextValue = format.max;
+		if (nextval < list.min) {
+			nextval = list.max;
 		}
 	}
 
-	elem.value = ux.padLeft(nextValue + '', '0', evp.uLen);
-	if (evp.uAltTarget) {
-		elem = _id(evp.uTarget);
-		elem.value = format.list[nextValue];
+	if (list.list) {
+		tf._parts[fmt.target] = nextval;
+	} else {
+		tf._parts[fmt.target] = ux.padLeft("" + nextval, '0', fmt.length);
 	}
+	tf.updateClock();
 }
 
 /** Tree */
@@ -3915,31 +4043,25 @@ ux.listWirePopFrame = function(sel) {
 		ux.addHdl(sel._frm, "keydown", ux.listSearchKeydown, evp);
 		
 		if (sel._blank) {
-			evp = {};
-			evp.uId = sel.id;
-			evp.uIndex = -1;
-			ux.addHdl(sel._blank, "click", ux.listSelectClick, evp);
+			ux.addHdl(sel._blank, "click", ux.listSelectClick, {uId:sel.id, uIndex:-1});
 		}
 		
 		for (var i = 0; i < sel._iCnt; i++) {
-			evp = {};
-			evp.uId = sel.id;
-			evp.uIndex = i;
 			const label = _id(sel._selectIds[i])
 			if (label) {
 				label.innerHTML = sel._labels[i];
-				ux.addHdl(label, "click", ux.listSelectClick, evp);
+				ux.addHdl(label, "click", ux.listSelectClick, {uId:sel.id, uIndex:i});
 			}
 		}
 	}
 }
 
 ux.listKeydownHit = function(sel) {
-	sel._selHandler(sel, sel._indexes[0], false);
+	sel.selectOpt(sel._indexes[0], false, false);
 }
 
 ux.listKeydownEnter = function(sel) {
-	sel._selHandler(sel, sel._oldSelIdx, true);
+	sel.selectOpt(sel._oldSelIdx, true, true);
 	ux.hidePopup(null);
 }
 
@@ -3952,13 +4074,13 @@ ux.listKeydownSkip = function(sel, up) {
 	}
 	
 	if(i >= 0 && i < sel._iCnt) {
-		sel._selHandler(sel, i, false);
+		sel.selectOpt(i, false, false);
 	}	
 }
 
 ux.listSelectClick = function(uEv) {
 	const sel = _id(uEv.evp.uId);
-	sel._selHandler(sel, uEv.evp.uIndex, true);
+	sel.selectOpt(uEv.evp.uIndex, true, true);
 	ux.hidePopup(null);
 }
 
@@ -4456,15 +4578,19 @@ ux.applyPattern = function(df) {
 	var val = '';
 	if (df._parts && df._format) {
 		for (var i = 0; i < df._format.length; i++) {
-			const _tok = df._format[i];
-			if (_tok.flag == true) {
-				val += _tok.target;
+			const fmt = df._format[i];
+			if (fmt.flag) {
+				val += fmt.target;
 			} else {
+				var dat = df._parts[fmt.target];
+				if(df._lists && df._lists[i].list) {
+					dat = df._lists[i].list[parseInt(dat)];
+				}
+
 				if (df._padLeft) {
-					val += ux.padLeft(df._parts[_tok.target], '0',
-							_tok.length);
+					val += ux.padLeft(dat, '0', fmt.length);
 				} else {
-					val += df._parts[_tok.target];
+					val += dat;
 				}
 			}
 		}

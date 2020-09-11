@@ -59,7 +59,24 @@ public class TimeField extends AbstractTimeField {
         for (int i = 0; i < pattern.length; i++) {
             Pattern fp = pattern[i];
             if (!fp.isFiller()) {
-                fp.setTarget(getPrefixedId("timi_") + i);
+                switch (fp.getPattern().charAt(0)) {
+                    case 'H':
+                        fp.setTarget("h24_");
+                        break;
+                    case 'h':
+                        fp.setTarget("h12_");
+                        break;
+                    case 'm':
+                        fp.setTarget("min_");
+                        break;
+                    case 's':
+                        fp.setTarget("sec_");
+                        break;
+                    case 'a':
+                        fp.setTarget("mer_");
+                        break;
+                    default:
+                }
             }
         }
         return pattern;

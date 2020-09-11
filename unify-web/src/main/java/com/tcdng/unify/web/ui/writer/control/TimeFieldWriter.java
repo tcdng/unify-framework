@@ -15,14 +15,12 @@
  */
 package com.tcdng.unify.web.ui.writer.control;
 
+import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
-import com.tcdng.unify.core.data.Listable;
-import com.tcdng.unify.core.format.DateTimeFormat;
 import com.tcdng.unify.core.format.Pattern;
 import com.tcdng.unify.web.ui.ResponseWriter;
 import com.tcdng.unify.web.ui.control.AbstractPopupTextField;
@@ -42,16 +40,11 @@ public class TimeFieldWriter extends AbstractPopupTextFieldWriter {
     protected void writePopupContent(ResponseWriter writer, AbstractPopupTextField popupTextField)
             throws UnifyException {
         TimeField timeField = (TimeField) popupTextField;
-        Date date = timeField.getValue(Date.class);
-        if (date == null) {
-            date = new Date();
-        }
-
         StringBuilder hsb = new StringBuilder();
         StringBuilder csb = new StringBuilder();
         StringBuilder fsb = new StringBuilder();
         Pattern[] pattern = timeField.getPattern();
-        DateTimeFormat[] dateTimeFormat = timeField.getDateTimeFormat();
+        final String facId = timeField.getFacadeId();
         for (int i = 0; i < pattern.length; i++) {
             Pattern fp = pattern[i];
             if (fp.isFiller()) {
@@ -61,28 +54,15 @@ public class TimeFieldWriter extends AbstractPopupTextFieldWriter {
             } else {
                 char plusBtnSymbol = '+';
                 char minusBtnSymbol = '-';
-                List<? extends Listable> listableList = dateTimeFormat[i].getList();
-                String value = dateTimeFormat[i].format(date);
                 hsb.append("<div style=\"display:table-cell\"><button type=\"button\" class=\"tfbutton\" id=\"")
-                        .append(timeField.getPrefixedId("btnat_")).append(i).append("\">").append(plusBtnSymbol)
+                        .append(timeField.getPrefixedId("btnpos_")).append(i).append("\">").append(plusBtnSymbol)
                         .append("</button></div>");
                 csb.append(
                         "<div style=\"display:table-cell\"><input type=\"text\" class=\"tftext\" id=\"")
-                        .append(fp.getTarget()).append("\" value=\"").append(value).append("\" readonly />");
-                if (listableList != null) {
-                    int j = 0;
-                    for (Listable listable : listableList) {
-                        if (listable.getListKey().equals(value)) {
-                            break;
-                        }
-                        j++;
-                    }
-                    csb.append("<input type=\"hidden\" id=\"").append("h_").append(fp.getTarget()).append("\" value=\"")
-                            .append(j).append("\"/>");
-                }
+                        .append(facId).append(i).append("\"").append(" readonly />");
                 csb.append("</div>");
                 fsb.append("<div style=\"display:table-cell\"><button type=\"button\" class=\"tfbutton\" id=\"")
-                        .append(timeField.getPrefixedId("btnst_")).append(i).append("\">").append(minusBtnSymbol)
+                        .append(timeField.getPrefixedId("btnneg_")).append(i).append("\">").append(minusBtnSymbol)
                         .append("</button></div>");
             }
         }
@@ -106,12 +86,23 @@ public class TimeFieldWriter extends AbstractPopupTextFieldWriter {
     protected void doWritePopupTextFieldBehaviour(ResponseWriter writer, AbstractPopupTextField popupTextField,
             boolean popupEnabled) throws UnifyException {
         TimeField timeField = (TimeField) popupTextField;
-        String pageName = timeField.getId();
+        Date date = timeField.getValue(Date.class);
+        if (date == null) {
+            date = new Date();
+        }
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+
         writer.beginFunction("ux.rigTimeField");
-        writer.writeParam("pId", pageName);
+        writer.writeParam("pId", timeField.getId());
+        writer.writeParam("pFacId", timeField.getFacadeId());
         writer.writeParam("pClearable", timeField.isClearable());
         writer.writeParam("pPattern", timeField.getPattern());
-        writer.writeParam("pFormat", timeField.getDateTimeFormat());
+        writer.writeParam("pLists", timeField.getDateTimeFormat());
+        writer.writeParam("pHour", cal.get(Calendar.HOUR_OF_DAY));
+        writer.writeParam("pMinute", cal.get(Calendar.MINUTE));
+        writer.writeParam("pSecond", cal.get(Calendar.SECOND));
         writer.writeParam("pEnabled", popupEnabled);
         writer.endFunction();
     }

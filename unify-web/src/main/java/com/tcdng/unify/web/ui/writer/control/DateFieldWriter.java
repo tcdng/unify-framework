@@ -87,7 +87,6 @@ public class DateFieldWriter extends AbstractPopupTextFieldWriter {
         writer.writeParam("pCurrClass", "ccurrent");
         writer.writeParam("pTodayClass", "ctoday");
         writer.writeParam("pClearable", dateField.isClearable());
-        writer.writeParam("pPadLeft", true);
         writer.writeParam("pShortDayNm", dateField.getShortDayList());
         writer.writeParam("pLongMonthNm", dateField.getLongMonthList());
         writer.writeParam("pPattern", dateField.getPattern());
