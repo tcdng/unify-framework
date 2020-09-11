@@ -1466,165 +1466,186 @@ ux.rigChecklist = function(rgp) {
 ux.rigDateField = function(rgp) {
 	const id = rgp.pId;
 	const df = _id(id);
-	df._parts = {};
-	df._header = _id("disp_" + id);
-	df._calendar = _id("cont_" + id);
-	df._format = rgp.pPattern;
-	df._padLeft = true;
-	df._shortDayNm = rgp.pShortDayNm;
-	df._longMonthNm = rgp.pLongMonthNm;
-	df._dayClass = rgp.pDayClass;
-	df._currClass = rgp.pCurrClass;
-	df._todayClass = rgp.pTodayClass;
-	df._pop = rgp.pEnabled;
-	
-	df._setValue = function(val) {
-		this.setDay(val.getDate());
-		this.setMonth(val.getMonth());
-		this.setYear(val.getFullYear());
-		this.setActual(false);
-		this.updateCalendar();
-	};
-	
-	df._getValue = function() {
-		const val = new Date();
-		val.setFullYear(this.getYear());
-		val.setMonth(this.getMonth());
-		val.setDate(this.getDay());
-		return val;
-	};
+	if (df) {
+		df._parts = {};
+		df._header = _id("disp_" + id);
+		df._calendar = _id("cont_" + id);
+		df._format = rgp.pPattern;
+		df._padLeft = true;
+		df._shortDayNm = rgp.pShortDayNm;
+		df._longMonthNm = rgp.pLongMonthNm;
+		df._dayClass = rgp.pDayClass;
+		df._currClass = rgp.pCurrClass;
+		df._todayClass = rgp.pTodayClass;
+		df._pop = rgp.pEnabled;
+		
+		df._setValue = function(val) {
+			this.setDay(val.getDate());
+			this.setMonth(val.getMonth());
+			this.setYear(val.getFullYear());
+			this.setActual(false);
+			this.updateCalendar();
+		};
+		
+		df._getValue = function() {
+			const val = new Date();
+			val.setFullYear(this.getYear());
+			val.setMonth(this.getMonth());
+			val.setDate(this.getDay());
+			return val;
+		};
 
-	df.setActual = function(fire) {
-		const val = ux.applyPattern(this);
-		if(this.value != val) {
-			this.value = val;
-			if(fire) {
-				ux.fireEvent(this, "change");
+		df.setActual = function(fire) {
+			const val = ux.applyPattern(this);
+			if(this.value != val) {
+				this.value = val;
+				if(fire) {
+					ux.fireEvent(this, "change");
+				}
 			}
-		}
-	};
-	
-	df.updateCalendar = function() {
-		if (this._pop) {
-			const month = this._scrollMonth;
-			const year = this._scrollYear;
+		};
+		
+		df.updateCalendar = function() {
+			if (this._pop) {
+				var blank = true;
+				for(var m in this._parts) {
+					blank = false;
+					break;
+				}
+				
+				if (blank) {
+					const val = new Date();
+					this.setDay(val.getDate());
+					this.setMonth(val.getMonth());
+					this.setYear(val.getFullYear());	
+				}
 
-			// Display month year on header
-			this._header.innerHTML = this._longMonthNm[month] + "&nbsp;" + year;
+				const month = this._scrollMonth;
+				const year = this._scrollYear;
 
-			// Initialize variables and generate calendar HTML
-			var firstDay = new Date(year, month, 1).getDay();
-			var nextMonth = new Date(year, month + 1, 1);
-			nextMonth.setHours(nextMonth.getHours() - 3);
-			var daysInMonth = nextMonth.getDate();
-			var done = false;
-			var rowCount = 0;
-			var dayCount = 1;
+				// Display month year on header
+				this._header.innerHTML = this._longMonthNm[month] + "&nbsp;" + year;
 
-			var todayDt = new Date();
-			var today = todayDt.getDate();
-			if (!(month == todayDt.getMonth() && year == todayDt.getFullYear())) {
-				today = 0;
-			}
+				// Initialize variables and generate calendar HTML
+				var firstDay = new Date(year, month, 1).getDay();
+				var nextMonth = new Date(year, month + 1, 1);
+				nextMonth.setHours(nextMonth.getHours() - 3);
+				var daysInMonth = nextMonth.getDate();
+				var done = false;
+				var rowCount = 0;
+				var dayCount = 1;
 
-			var currentDay = this.getDay();
-			if (!(month == this.getMonth() && year == this.getYear())) {
-				currentDay = 0;
-			}
+				var todayDt = new Date();
+				var today = todayDt.getDate();
+				if (!(month == todayDt.getMonth() && year == todayDt.getFullYear())) {
+					today = 0;
+				}
 
-			var calendarHtml = "<table class=\"ctable\">";
-			calendarHtml += "<tr>";
-			for (var i = 0; i < 7; i++) {
-				calendarHtml += "<th>";
-				calendarHtml += this._shortDayNm[i];
-				calendarHtml += "</th>";
-			}
-			calendarHtml += "</tr>";
-			while (!done) {
+				var currentDay = this.getDay();
+				if (!(month == this.getMonth() && year == this.getYear())) {
+					currentDay = 0;
+				}
+
+				var calendarHtml = "<table class=\"ctable\">";
 				calendarHtml += "<tr>";
 				for (var i = 0; i < 7; i++) {
-					calendarHtml += "<td>";
-					if ((rowCount == 0) && (i < firstDay)) {
-						calendarHtml += "&nbsp;";
-					} else {
-						if (dayCount >= daysInMonth) {
-							done = true;
-						}
-						if (dayCount <= daysInMonth) {
-							var dayClass = this._dayClass;
-							if (dayCount == currentDay) {
-								dayClass = this._currClass;
-							}
-
-							if (dayCount == today) {
-								dayClass = this._todayClass;
-							}
-							calendarHtml += "<span class=\"" + dayClass
-									+ "\" onclick=\"ux.dfDayHandler('" + this.id
-									+ "'," + dayCount + ");\">" + dayCount + "</span>";
-							dayCount++;
-						} else {
-							calendarHtml += "&nbsp;";
-						}
-					}
-					calendarHtml += "</td>";
+					calendarHtml += "<th>";
+					calendarHtml += this._shortDayNm[i];
+					calendarHtml += "</th>";
 				}
 				calendarHtml += "</tr>";
-				rowCount++;
+				while (!done) {
+					calendarHtml += "<tr>";
+					for (var i = 0; i < 7; i++) {
+						calendarHtml += "<td>";
+						if ((rowCount == 0) && (i < firstDay)) {
+							calendarHtml += "&nbsp;";
+						} else {
+							if (dayCount >= daysInMonth) {
+								done = true;
+							}
+							if (dayCount <= daysInMonth) {
+								var dayClass = this._dayClass;
+								if (dayCount == currentDay) {
+									dayClass = this._currClass;
+								}
+
+								if (dayCount == today) {
+									dayClass = this._todayClass;
+								}
+								calendarHtml += "<span class=\"" + dayClass
+										+ "\" onclick=\"ux.dfDayHandler('" + this.id
+										+ "'," + dayCount + ");\">" + dayCount + "</span>";
+								dayCount++;
+							} else {
+								calendarHtml += "&nbsp;";
+							}
+						}
+						calendarHtml += "</td>";
+					}
+					calendarHtml += "</tr>";
+					rowCount++;
+				}
+				calendarHtml += "</table>";
+				this._calendar.innerHTML = calendarHtml;
 			}
-			calendarHtml += "</table>";
-			this._calendar.innerHTML = calendarHtml;
+		};
+
+		df.setupScroll = function(scrIdPrefix, target, step) {
+			const evp = {uId:this.id, uTarget:target, uStep:step};
+			ux.addHdl(_id(scrIdPrefix + this.id), "click",
+					ux.dfScrollHandler, evp);
+		};
+		
+		df.setDay = function(val) {
+			if (val != undefined) {
+				this._parts["day_"] = "" + val;
+			}
+		};
+		
+		df.getDay = function() {
+			return parseInt(this._parts["day_"]);
+		};
+		
+		df.setMonth = function(val) {
+			if (val != undefined) {
+				this._scrollMonth =  val;
+				this._parts["mon_"] = "" + (val + 1);
+			}
+		};
+		
+		df.getMonth = function() {
+			return parseInt(this._parts["mon_"]) - 1;
+		};
+		
+		df.setYear = function(val) {
+			if (val != undefined) {
+				this._scrollYear =  val;
+				this._parts["year_"] = "" + val;
+			}
+		};
+		
+		df.getYear = function() {
+			return parseInt(this._parts["year_"]);
+		};
+		
+		if (df._pop) {
+			df.setupScroll("decy_", "year_", -1);
+			df.setupScroll("incy_", "year_", 1);
+			df.setupScroll("decm_", "mon_", -1);
+			df.setupScroll("incm_", "mon_", 1);
+			ux.popupWireClear(rgp, "btnc_" + id, [ id ]);
 		}
-	};
 
-	df.setupScroll = function(scrIdPrefix, target, step) {
-		const evp = {uId:this.id, uTarget:target, uStep:step};
-		ux.addHdl(_id(scrIdPrefix + this.id), "click",
-				ux.dfScrollHandler, evp);
-	};
-	
-	df.setDay = function(val) {
-		this._parts["day_"] = "" + val;
-	};
-	
-	df.getDay = function() {
-		return parseInt(this._parts["day_"]);
-	};
-	
-	df.setMonth = function(val) {
-		this._scrollMonth =  val;
-		this._parts["mon_"] = "" + (val + 1);
-	};
-	
-	df.getMonth = function() {
-		return parseInt(this._parts["mon_"] - 1);
-	};
-	
-	df.setYear = function(val) {
-		this._scrollYear =  val;
-		this._parts["year_"] = "" + val;
-	};
-	
-	df.getYear = function() {
-		return parseInt(this._parts["year_"]);
-	};
-	
-	if (df._pop) {
-		df.setupScroll("decy_", "year_", -1);
-		df.setupScroll("incy_", "year_", 1);
-		df.setupScroll("decm_", "mon_", -1);
-		df.setupScroll("incm_", "mon_", 1);
-		ux.popupWireClear(rgp, "btnc_" + id, [ id ]);
+		const evp = {uId:id};
+		ux.addHdl(_id("btnt_" + id), "click", ux.dfTodayHandler, evp);
+
+		df.setDay(rgp.pDay);
+		df.setMonth(rgp.pMonth);
+		df.setYear(rgp.pYear);
+		df.setActual(false);
+		df.updateCalendar();
 	}
-
-	const evp = {uId:id};
-	ux.addHdl(_id("btnt_" + id), "click", ux.dfTodayHandler, evp);
-
-	df.setDay(rgp.pDay);
-	df.setMonth(rgp.pMonth);
-	df.setYear(rgp.pYear);
-	df.setActual(false);
-	df.updateCalendar();
 }
 
 ux.dfTodayHandler = function(uEv) {
@@ -1681,33 +1702,35 @@ ux.dfScrollHandler = function(uEv) {
 ux.rigDropdownChecklist = function(rgp) {
 	const id = rgp.pId;
 	const dc = _id(id);
-	dc._fac = _id(rgp.pFacId);
-	dc._selectIds = rgp.pSelectIds;
-	dc._keys = rgp.pKeys;
-	dc._labels = rgp.pLabels;
-	dc._pop = rgp.pEnabled;
+	if (dc) {
+		dc._fac = _id(rgp.pFacId);
+		dc._selectIds = rgp.pSelectIds;
+		dc._keys = rgp.pKeys;
+		dc._labels = rgp.pLabels;
+		dc._pop = rgp.pEnabled;
 
-	dc.updateFacade = function(fire) {
-		const val = ux.getCheckedPatternValue(this);
-		if (this._fac.value != val) {
-			this._fac.value = val;
-			if (fire) {
-				ux.fireEvent(this, "change");
+		dc.updateFacade = function(fire) {
+			const val = ux.getCheckedPatternValue(this);
+			if (this._fac.value != val) {
+				this._fac.value = val;
+				if (fire) {
+					ux.fireEvent(this, "change");
+				}
+			}	
+		};
+		
+		if (rgp.pEnabled) {
+			if (rgp.pSelAllId) {
+				ux.cbWire(_id(rgp.pSelAllId));
+
+				const evp = {uSrcId:rgp.pSelAllId, uRef:id};
+				ux.addHdl(_id("fac_" + rgp.pSelAllId), "change", ux.setAllChecked, evp);	
 			}
-		}	
-	};
-	
-	if (rgp.pEnabled) {
-		if (rgp.pSelAllId) {
-			ux.cbWire(_id(rgp.pSelAllId));
-
-			const evp = {uSrcId:rgp.pSelAllId, uRef:id};
-			ux.addHdl(_id("fac_" + rgp.pSelAllId), "change", ux.setAllChecked, evp);	
 		}
-	}
 
-	ux.rigChecklist(rgp);
-	dc._setValue(rgp.pVal);
+		ux.rigChecklist(rgp);
+		dc._setValue(rgp.pVal);
+	}
 }
 
 ux.dcHidePopup = function(prm) {
@@ -1718,52 +1741,54 @@ ux.dcHidePopup = function(prm) {
 ux.rigDurationSelect = function(rgp) {
 	const id = rgp.pId;
 	const ds = _id(id);
-	ds._daySel = _id(rgp.pDaySelId);
-	ds._hourSel = _id(rgp.pHourSelId);
-	ds._minSel = _id(rgp.pMinSelId);
+	if (ds) {
+		ds._daySel = _id(rgp.pDaySelId);
+		ds._hourSel = _id(rgp.pHourSelId);
+		ds._minSel = _id(rgp.pMinSelId);
 
-	ds._setValue = function(val) {
-		const days = Math.floor(val / UNIFY_MINUTES_IN_DAY);
-		var rem = Math.floor(val % UNIFY_MINUTES_IN_DAY);
-		if (this._daySel) {
-			this._daySel._setValue(days);
+		ds._setValue = function(val) {
+			const days = Math.floor(val / UNIFY_MINUTES_IN_DAY);
+			var rem = Math.floor(val % UNIFY_MINUTES_IN_DAY);
+			if (this._daySel) {
+				this._daySel._setValue(days);
+			}
+			
+			const hours = Math.floor(rem / UNIFY_MINUTES_IN_HOUR);
+			rem = Math.floor(rem % UNIFY_MINUTES_IN_HOUR);
+			if (this._hourSel) {
+				this._hourSel._setValue(hours);
+			}
+
+			this._minSel._setValue(rem);
+			this.setActual(val, false);
+		};
+		
+		ds.setActual = function(val, fire) {
+			if(!this.value || parseInt(this.value) != val) {
+				this.value = val;
+				if (fire) {
+					ux.fireEvent(this, "change");
+				}
+			}
+		};
+
+		ds._getValue = function() {
+			return parseInt(this.value);
+		};
+
+		const evp = {uId:id};
+		if (ds._daySel) {
+			ux.addHdl(ds._daySel, "change", ux.dsCalc, evp);
 		}
 		
-		const hours = Math.floor(rem / UNIFY_MINUTES_IN_HOUR);
-		rem = Math.floor(rem % UNIFY_MINUTES_IN_HOUR);
-		if (this._hourSel) {
-			this._hourSel._setValue(hours);
+		if (ds._hourSel){
+			ux.addHdl(ds._hourSel, "change", ux.dsCalc, evp);
 		}
-
-		this._minSel._setValue(rem);
-		this.setActual(val, false);
-	};
-	
-	ds.setActual = function(val, fire) {
-		if(!this.value || parseInt(this.value) != val) {
-			this.value = val;
-			if (fire) {
-				ux.fireEvent(this, "change");
-			}
-		}
-	};
-
-	ds._getValue = function() {
-		return parseInt(this.value);
-	};
-
-	const evp = {uId:id};
-	if (ds._daySel) {
-		ux.addHdl(ds._daySel, "change", ux.dsCalc, evp);
+		
+		ux.addHdl(ds._minSel, "change", ux.dsCalc, evp);
+		
+		ds._setValue(rgp.pVal);
 	}
-	
-	if (ds._hourSel){
-		ux.addHdl(ds._hourSel, "change", ux.dsCalc, evp);
-	}
-	
-	ux.addHdl(ds._minSel, "change", ux.dsCalc, evp);
-	
-	ds._setValue(rgp.pVal);
 }
 
 ux.dsCalc = function(uEv) {
@@ -1924,87 +1949,89 @@ ux.rigLinkGrid = function(rgp) {
 ux.rigMoneyField = function(rgp) {
 	const id = rgp.pId;
 	const mf = _id(id);
-	mf._norm = rgp.pNormCls;
-	mf._sel = rgp.pSelCls;
-	mf._selIdx = -2;
-	mf._oldSelIdx = -2;
-	mf._iCnt = rgp.pICnt;
-	mf._selectIds = rgp.pSelectIds;
-	mf._keys = rgp.pKeys;
-	mf._labels = rgp.pLabels;
-	mf._lastKeyHit = Date.now();
-	mf._fac = _id(rgp.pFacId);
-	mf._frm = _id(rgp.pFrmId);
-	mf._list = _id(rgp.pLstId);
-	mf._btn = _id(rgp.pBtnId);
-	mf._pop = rgp.pEnabled;
-	
-	mf._setValue = function(val) {
-		if (this._keys) {
-			const currency = val.currency;
-			var k = -1;
-			for(var i = 0; i < this._keys.length; i++) {
-				if (currency == this._keys[i]) {
-					k = i;
-					break;
-				}
-			}
-			
-			this._fac.value = val.amount;
-			this.selectOpt(k, true, false);
-		} else {
-			this._btn.innerHTML = val.currency;
-			this._fac.value = val.amount;
-			this.setMoneyVal(false);
-		}
-	};
-	
-	mf._getValue = function() {
-		return {currency:this._btn.innerHTML, amount:this._fac.value};
-	};
-	
-	mf.selectOpt = function(index, choose, fire) {
-		if (this._pop) {
-			if(this._oldSelIdx != index) {
-				const label = index >= 0 ? _id(this._selectIds[index]) : null;
-				const olabel = this._oldSelIdx >= 0 ? _id(this._selectIds[this._oldSelIdx]) : null;
-				label.className = this._sel;
-				if (olabel && label != olabel) {
-					olabel.className = this._norm;
+	if (mf) {
+		mf._norm = rgp.pNormCls;
+		mf._sel = rgp.pSelCls;
+		mf._selIdx = -2;
+		mf._oldSelIdx = -2;
+		mf._iCnt = rgp.pICnt;
+		mf._selectIds = rgp.pSelectIds;
+		mf._keys = rgp.pKeys;
+		mf._labels = rgp.pLabels;
+		mf._lastKeyHit = Date.now();
+		mf._fac = _id(rgp.pFacId);
+		mf._frm = _id(rgp.pFrmId);
+		mf._list = _id(rgp.pLstId);
+		mf._btn = _id(rgp.pBtnId);
+		mf._pop = rgp.pEnabled;
+		
+		mf._setValue = function(val) {
+			if (this._keys) {
+				const currency = val.currency;
+				var k = -1;
+				for(var i = 0; i < this._keys.length; i++) {
+					if (currency == this._keys[i]) {
+						k = i;
+						break;
+					}
 				}
 				
-				this._oldSelIdx = index;
-				if (!choose) {
-					ux.listScrollToLabel(this, label);
-				}
-			}	
-		}
+				this._fac.value = val.amount;
+				this.selectOpt(k, true, false);
+			} else {
+				this._btn.innerHTML = val.currency;
+				this._fac.value = val.amount;
+				this.setMoneyVal(false);
+			}
+		};
 		
-		if (choose && (this._selIdx != index)) {
-			this._btn.innerHTML = index >= 0 ? this._keys[index]:null;
-			this._selIdx = index;
-			this.setMoneyVal(fire);
-		}
-	}
-	
-	mf.setMoneyVal = function(fire) {
-		var val = "";
-		if (this._fac.value) {
-			val = this._btn.innerHTML + " " + this._fac.value;
-		}
-
-		if (this.value != val) {
-			this.value = val;
-			if (fire) {
-				ux.fireEvent(this, "change");			
+		mf._getValue = function() {
+			return {currency:this._btn.innerHTML, amount:this._fac.value};
+		};
+		
+		mf.selectOpt = function(index, choose, fire) {
+			if (this._pop) {
+				if(this._oldSelIdx != index) {
+					const label = index >= 0 ? _id(this._selectIds[index]) : null;
+					const olabel = this._oldSelIdx >= 0 ? _id(this._selectIds[this._oldSelIdx]) : null;
+					label.className = this._sel;
+					if (olabel && label != olabel) {
+						olabel.className = this._norm;
+					}
+					
+					this._oldSelIdx = index;
+					if (!choose) {
+						ux.listScrollToLabel(this, label);
+					}
+				}	
+			}
+			
+			if (choose && (this._selIdx != index)) {
+				this._btn.innerHTML = index >= 0 ? this._keys[index]:null;
+				this._selIdx = index;
+				this.setMoneyVal(fire);
 			}
 		}
-	}
-	
-	ux.addHdl(mf._fac, "change", ux.mfAmountChange, {uId:id});
-	ux.listWirePopFrame(mf, rgp);
+		
+		mf.setMoneyVal = function(fire) {
+			var val = "";
+			if (this._fac.value) {
+				val = this._btn.innerHTML + " " + this._fac.value;
+			}
 
-	mf._setValue(rgp.pVal);
+			if (this.value != val) {
+				this.value = val;
+				if (fire) {
+					ux.fireEvent(this, "change");			
+				}
+			}
+		}
+		
+		ux.addHdl(mf._fac, "change", ux.mfAmountChange, {uId:id});
+		ux.listWirePopFrame(mf, rgp);
+
+		mf._setValue(rgp.pVal);
+	}
 }
 
 
@@ -2020,55 +2047,70 @@ ux.mfOnShow = function(rgp) {
 ux.rigMultiSelect = function(rgp) {
 	const id = rgp.pId;
 	const ms = _id(id);
-	ms._norm = rgp.pNormCls;
-	ms._sel = rgp.pSelCls;
-	ms._selectIds = rgp.pSelectIds;
-	ms._keys = rgp.pKeys;
-	ms._labels = rgp.pLabels;
-	ms._lastKeyHit = Date.now();
-	ms._frm = _id(rgp.pFrmId);
-	ms._list = _id(rgp.pLstId);
-	ms._start = -1;
-	
-	ms._setValue = function(val) {
-		for (var i = 0; i < this.options.length; i++) {
-			const option = this.options[i];
-			const label = _id(this._selectIds[i]);
-			option.selected = val && val.includes(option.value);
-			label.className = option.selected ? this._sel:this._norm;
-		}
-	};
-	
-	ms._getValue = function() {
-		const val = [];
-		for (var i = 0; i < this.options.length; i++) {
-			const option = this.options[i];
-			if (option.selected) {
-				val.push(option.value);
+	if (ms) {
+		ms._norm = rgp.pNormCls;
+		ms._sel = rgp.pSelCls;
+		ms._selectIds = rgp.pSelectIds;
+		ms._keys = rgp.pKeys;
+		ms._labels = rgp.pLabels;
+		ms._lastKeyHit = Date.now();
+		ms._frm = _id(rgp.pFrmId);
+		ms._list = _id(rgp.pLstId);
+		ms._start = -1;
+		
+		ms._setValue = function(val) {
+			for (var i = 0; i < this.options.length; i++) {
+				const option = this.options[i];
+				const label = _id(this._selectIds[i]);
+				option.selected = val && val.includes(option.value);
+				label.className = option.selected ? this._sel:this._norm;
 			}
+		};
+		
+		ms._getValue = function() {
+			const val = [];
+			for (var i = 0; i < this.options.length; i++) {
+				const option = this.options[i];
+				if (option.selected) {
+					val.push(option.value);
+				}
+			}
+			
+			return val;
+		};
+
+		ms.selectOpt = function(index, scroll, fire) {
+			const label = _id(this._selectIds[index]);
+			label.className = this._sel;
+			this.options[index].selected = true;
+			if (scroll) {
+				ux.listScrollToLabel(this, label);
+			}
+
+			if(fire) {
+				ux.fireEvent(this, "change");
+			}
+		};
+		
+		const evp = {uId:id, uHitHandler:ux.msKeydownHit};
+		ux.addHdl(ms._frm, "click", ux.focusOnClick, evp);
+		ux.addHdl(ms._frm, "keydown", ux.listSearchKeydown, evp);
+		for (var i = 0; i < ms._selectIds.length; i++) {
+			const evpi = {uId:id, uIndex:i};
+			const label = _id(ms._selectIds[i]);
+			label.innerHTML = ms._labels[i];
+			ux.addHdl(label, "click", ux.msSelectClick, evpi);
 		}
 		
-		return val;
-	};
-	
-	const evp = {uId:id, uHitHandler:ux.msKeydownHit};
-	ux.addHdl(ms._frm, "click", ux.focusOnClick, evp);
-	ux.addHdl(ms._frm, "keydown", ux.listSearchKeydown, evp);
-	for (var i = 0; i < ms._selectIds.length; i++) {
-		const evpi = {uId:id, uIndex:i};
-		const label = _id(ms._selectIds[i]);
-		label.innerHTML = ms._labels[i];
-		ux.addHdl(label, "click", ux.msSelectClick, evpi);
+		ms._setValue(rgp.pVal);
 	}
-	
-	ms._setValue(rgp.pVal);
 }
 
 ux.msKeydownHit = function(ms) {
 	if (ms._indexes && ms._indexes.length > 0) {
 		const optIndex = ms._indexes[0]
 		ux.msUnSelectAllOpt(ms);
-		ux.msSelectOpt(ms, optIndex, true);
+		ms.selectOpt(optIndex, true, false);
 		ms._start = optIndex;
 	}
 }
@@ -2087,7 +2129,7 @@ ux.msSelectClick = function(uEv) {
 
 		ux.msUnSelectAllOpt(ms);
 		while (start <= stop) {
-			ux.msSelectOpt(ms, start, false);
+			ms.selectOpt(start, false, true);
 			start++;
 		}
 	} else {
@@ -2095,21 +2137,8 @@ ux.msSelectClick = function(uEv) {
 			ux.msUnSelectAllOpt(ms);
 		}
 
-		ux.msSelectOpt(ms, evp.uIndex, false);
+		ms.selectOpt(evp.uIndex, false, true);
 		ms._start = evp.uIndex;
-	}
-}
-
-ux.msSelectOpt = function(ms, index, scroll) {
-	const label = _id(ms._selectIds[index]);
-	label.className = ms._sel;
-	ms.options[index].selected = true;
-	if (scroll) {
-		ux.listScrollToLabel(ms, label);
-	}
-
-	if(ms._fire) {
-//		ux.fireEvent(ms, "change");
 	}
 }
 
@@ -2183,49 +2212,51 @@ ux.rigSearchField = function(rgp) {
 ux.sfWireResult = function(rgp) {
 	const id = rgp.pId;
 	const sf = _id(id);
-	sf._selectIds = rgp.pSelectIds;
-	sf._keys = rgp.pKeys;
-	sf._labels = rgp.pLabels;
-	sf._fac = _id(rgp.pFacId);
-	
-	sf._setValue = function(val) {
-		this.updateFacade(val);
-		this.setActual(val, false);
-	};
+	if (sf) {
+		sf._selectIds = rgp.pSelectIds;
+		sf._keys = rgp.pKeys;
+		sf._labels = rgp.pLabels;
+		sf._fac = _id(rgp.pFacId);
 		
-	sf._getValue = function() {
-		return this.value;
-	};
-	
-	sf.updateFacade = function(val) {
-		var factxt = "";
-		for(var i = 0; i < this._keys.length; i++) {
-			if (this._keys[i] == val) {
-				factxt = this._labels[i];
-				break;
-			}
-		}
+		sf._setValue = function(val) {
+			this.updateFacade(val);
+			this.setActual(val, false);
+		};
+			
+		sf._getValue = function() {
+			return this.value;
+		};
 		
-		this._fac.value = factxt;
-	};
-	
-	sf.setActual = function(val, fire) {
-		if (this.value != val) {
-			this.value = val;
-			if (fire) {
-				ux.fireEvent(this, "change");
+		sf.updateFacade = function(val) {
+			var factxt = "";
+			for(var i = 0; i < this._keys.length; i++) {
+				if (this._keys[i] == val) {
+					factxt = this._labels[i];
+					break;
+				}
 			}
-		}
-	};
+			
+			this._fac.value = factxt;
+		};
+		
+		sf.setActual = function(val, fire) {
+			if (this.value != val) {
+				this.value = val;
+				if (fire) {
+					ux.fireEvent(this, "change");
+				}
+			}
+		};
 
-	for (var i = 0; i < rgp.pICnt; i++) {
-		const evp = {uId:id, uIndex:i};
-		const label = _id(sf._selectIds[i]);
-		label.innerHTML = sf._labels[i];
-		ux.addHdl(label, "click", ux.sfSelect, evp);
+		for (var i = 0; i < rgp.pICnt; i++) {
+			const evp = {uId:id, uIndex:i};
+			const label = _id(sf._selectIds[i]);
+			label.innerHTML = sf._labels[i];
+			ux.addHdl(label, "click", ux.sfSelect, evp);
+		}
+		
+		sf._setValue(rgp.pVal);
 	}
-	
-	sf._setValue(rgp.pVal);
 }
 
 ux.sfOnShow = function(rgp) {
@@ -2244,63 +2275,65 @@ ux.sfSelect = function(uEv) {
 ux.rigOptionsTextArea = function(rgp) {
 	const id = rgp.pId;
 	const ota = _id(id);
-	ota._norm = rgp.pNormCls;
-	ota._sel = rgp.pSelCls;
-	ota._selIdx = -1;
-	ota._oldSelIdx = -1;
-	ota._iCnt = rgp.pICnt;
-	ota._selectIds = rgp.pLabelIds;
-	ota._keys = rgp.pKeys;
-	ota._labels = rgp.pLabels;
-	ota._lastKeyHit = Date.now();
-	ota._frm = _id(rgp.pFrmId);
-	ota._list = _id(rgp.pLstId);
-	ota._pop = rgp.pEnabled;
-	
-	ota.selectOpt = function(idx, choose, fire) {
-		if (this._pop) {
-			if(this._oldSelIdx != idx) {
-				const label = _id(this._selectIds[idx]);
-				const olabel = _id(this._selectIds[this._oldSelIdx]);
-				label.className = this._sel;
-				if (olabel) {
-					olabel.className = this._norm;
-				}
-				
-				this._oldSelIdx = index;
-				if (!choose) {
-					ux.listScrollToLabel(ota, label);
+	if (ota) {
+		ota._norm = rgp.pNormCls;
+		ota._sel = rgp.pSelCls;
+		ota._selIdx = -1;
+		ota._oldSelIdx = -1;
+		ota._iCnt = rgp.pICnt;
+		ota._selectIds = rgp.pLabelIds;
+		ota._keys = rgp.pKeys;
+		ota._labels = rgp.pLabels;
+		ota._lastKeyHit = Date.now();
+		ota._frm = _id(rgp.pFrmId);
+		ota._list = _id(rgp.pLstId);
+		ota._pop = rgp.pEnabled;
+		
+		ota.selectOpt = function(idx, choose, fire) {
+			if (this._pop) {
+				if(this._oldSelIdx != idx) {
+					const label = _id(this._selectIds[idx]);
+					const olabel = _id(this._selectIds[this._oldSelIdx]);
+					label.className = this._sel;
+					if (olabel) {
+						olabel.className = this._norm;
+					}
+					
+					this._oldSelIdx = index;
+					if (!choose) {
+						ux.listScrollToLabel(ota, label);
+					}
 				}
 			}
+			
+			if (choose) {
+				this._selIdx = idx;
+				var pos = ux.getCaretPosition(ota);
+				var string = this.value;
+				var token = "{" + this._keys[idx] + "}";
+				var spos = pos.start + token.length;
+				string = string.substring(0, pos.start) + token + string.substring(pos.end);
+				this.value = string;
+				ux.setCaretPosition(ota, spos, spos);
+				this.focus();
+			}
+		};
+		
+		const evp = {};
+		evp.uTrg = ota;
+		evp.popupId=rgp.pPopupId;
+		evp.frameId=rgp.pId;
+		evp.stayOpenForMillSec = 0;
+		evp.showHandler = ux.optionsTextAreaOnShow;
+		evp.showParam=rgp.pFrmId;
+		ux.addHdl(ota, "keypress", ux.otaTxtKeypress, evp);
+		ux.addHdl(ota, "keydown", ux.otaTxtKeydown, evp);	
+		if (rgp.pScrEnd) {
+			ota.scrollTop = ota.scrollHeight;
 		}
 		
-		if (choose) {
-			this._selIdx = idx;
-			var pos = ux.getCaretPosition(ota);
-			var string = this.value;
-			var token = "{" + this._keys[idx] + "}";
-			var spos = pos.start + token.length;
-			string = string.substring(0, pos.start) + token + string.substring(pos.end);
-			this.value = string;
-			ux.setCaretPosition(ota, spos, spos);
-			this.focus();
-		}
-	};
-	
-	const evp = {};
-	evp.uTrg = ota;
-	evp.popupId=rgp.pPopupId;
-	evp.frameId=rgp.pId;
-	evp.stayOpenForMillSec = 0;
-	evp.showHandler = ux.optionsTextAreaOnShow;
-	evp.showParam=rgp.pFrmId;
-	ux.addHdl(ota, "keypress", ux.otaTxtKeypress, evp);
-	ux.addHdl(ota, "keydown", ux.otaTxtKeydown, evp);	
-	if (rgp.pScrEnd) {
-		ota.scrollTop = ota.scrollHeight;
+		ux.listWirePopFrame(ota, rgp);
 	}
-	
-	ux.listWirePopFrame(ota, rgp);
 }
 
 ux.otaTxtKeypress = function(uEv) {
@@ -2390,80 +2423,82 @@ ux.optionsTextAreaOnShow = function(frmId) {
 ux.rigSingleSelect = function(rgp) {
 	const id = rgp.pId;
 	const sel = _id(id);
-	sel._norm = rgp.pNormCls;
-	sel._sel = rgp.pSelCls;
-	sel._selIdx = -2;
-	sel._oldSelIdx = -2;
-	sel._isBlankOption = rgp.pIsBlankOption;
-	sel._selectIds = rgp.pSelectIds;
-	sel._keys = rgp.pKeys;
-	sel._labels = rgp.pLabels;
-	sel._iCnt = rgp.pICnt;
-	sel._lastKeyHit = Date.now();
-	sel._fac = _id(rgp.pFacId);
-	sel._frm = _id(rgp.pFrmId);
-	sel._list = _id(rgp.pLstId);
-	sel._blank = _id(rgp.pBlnkId);
-	sel._pop = rgp.pEnabled;
-	
-	sel._setValue = function(val) {
-		var k = this._isBlankOption ? -1: 0;
-		for(var i = 0; i < this._keys.length; i++) {
-			if (val == this._keys[i]) {
-				k = i;
-				break;
-			}
-		}
+	if (sel) {
+		sel._norm = rgp.pNormCls;
+		sel._sel = rgp.pSelCls;
+		sel._selIdx = -2;
+		sel._oldSelIdx = -2;
+		sel._isBlankOption = rgp.pIsBlankOption;
+		sel._selectIds = rgp.pSelectIds;
+		sel._keys = rgp.pKeys;
+		sel._labels = rgp.pLabels;
+		sel._iCnt = rgp.pICnt;
+		sel._lastKeyHit = Date.now();
+		sel._fac = _id(rgp.pFacId);
+		sel._frm = _id(rgp.pFrmId);
+		sel._list = _id(rgp.pLstId);
+		sel._blank = _id(rgp.pBlnkId);
+		sel._pop = rgp.pEnabled;
 		
-		this.selectOpt(k, true, false);
-	};
-	
-	sel._getValue = function() {
-		return this.value;
-	};
-	
-	sel.selectOpt = function(index, choose, fire) {
-		if (this._pop) {
-			if(this._oldSelIdx != index) {
-				const label = index >= 0 ? _id(this._selectIds[index]) : this._blank;
-				const olabel = this._oldSelIdx >= 0 ? _id(this._selectIds[this._oldSelIdx]) : this._blank;
-				label.className = this._sel;
-				if (olabel && label != olabel) {
-					olabel.className = this._norm;
+		sel._setValue = function(val) {
+			var k = this._isBlankOption ? -1: 0;
+			for(var i = 0; i < this._keys.length; i++) {
+				if (val == this._keys[i]) {
+					k = i;
+					break;
 				}
-				
-				this._oldSelIdx = index;
-				if (!choose) {
-					ux.listScrollToLabel(this, label);
-				}
-			}
-		}
-		
-		if (choose && (this._selIdx != index)) {
-			var txt = this._blank ? this._blank.innerHTML:"";
-			var val = null;
-			if (index >= 0) {
-				txt = this._labels[index];
-				val = this._keys[index];
 			}
 			
-			if (txt == "&nbsp;") {
-				txt = "";
-			} else {
-				txt = ux.decodeHtml(txt);
+			this.selectOpt(k, true, false);
+		};
+		
+		sel._getValue = function() {
+			return this.value;
+		};
+		
+		sel.selectOpt = function(index, choose, fire) {
+			if (this._pop) {
+				if(this._oldSelIdx != index) {
+					const label = index >= 0 ? _id(this._selectIds[index]) : this._blank;
+					const olabel = this._oldSelIdx >= 0 ? _id(this._selectIds[this._oldSelIdx]) : this._blank;
+					label.className = this._sel;
+					if (olabel && label != olabel) {
+						olabel.className = this._norm;
+					}
+					
+					this._oldSelIdx = index;
+					if (!choose) {
+						ux.listScrollToLabel(this, label);
+					}
+				}
 			}
+			
+			if (choose && (this._selIdx != index)) {
+				var txt = this._blank ? this._blank.innerHTML:"";
+				var val = null;
+				if (index >= 0) {
+					txt = this._labels[index];
+					val = this._keys[index];
+				}
+				
+				if (txt == "&nbsp;") {
+					txt = "";
+				} else {
+					txt = ux.decodeHtml(txt);
+				}
 
-			this.value = val;
-			this._fac.value = txt;
-			this._selIdx = index;
-			if (fire) {
-				ux.fireEvent(this, "change");			
+				this.value = val;
+				this._fac.value = txt;
+				this._selIdx = index;
+				if (fire) {
+					ux.fireEvent(this, "change");			
+				}
 			}
-		}
-	};
-	
-	ux.listWirePopFrame(sel);
-	sel._setValue(rgp.pVal);
+		};
+		
+		ux.listWirePopFrame(sel);
+		sel._setValue(rgp.pVal);
+	}
 }
 
 ux.ssOnShow = function(rgp) {
@@ -3026,154 +3061,179 @@ ux.rigTextClock = function(rgp) {
 ux.rigTimeField = function(rgp) {
 	const id = rgp.pId;
 	const tf = _id(id);
-	tf._parts = {};
-	tf._facId = rgp.pFacId;
-	tf._format = rgp.pPattern;
-	tf._lists = rgp.pLists;
-	tf._padLeft = true;
-	tf._clearable = rgp.pClearable;
-	tf._pop = rgp.pEnabled;
-	
-	tf._setValue = function(val) {
-		this.setHour24(val.getHours());
-		this.setMinute(val.getMinutes());
-		this.setSecond(val.getSeconds());
-		this.setActual(false);
-		this.updateClock();
-	};
-	
-	tf._getValue = function() {
-		const val = new Date();
-		val.setHours(this.getHour24());
-		val.setMinutes(this.getMinute());
-		val.setSeconds(this.getSecond());
-		return val;
-	};
+	if (tf) {
+		tf._parts = {};
+		tf._facId = rgp.pFacId;
+		tf._format = rgp.pPattern;
+		tf._lists = rgp.pLists;
+		tf._padLeft = true;
+		tf._clearable = rgp.pClearable;
+		tf._pop = rgp.pEnabled;
+		
+		tf._setValue = function(val) {
+			this.setHour24(val.getHours());
+			this.setMinute(val.getMinutes());
+			this.setSecond(val.getSeconds());
+			this.setActual(false);
+			this.updateClock();
+		};
+		
+		tf._getValue = function() {
+			const val = new Date();
+			val.setHours(this.getHour24());
+			val.setMinutes(this.getMinute());
+			val.setSeconds(this.getSecond());
+			return val;
+		};
 
-	tf.setActual = function(fire) {
-		const val = ux.applyPattern(this);
-		if (tf.value != val) {
-			tf.value = val;
-			if (fire) {
-				ux.fireEvent(this, "change");
+		tf.setActual = function(fire) {
+			const val = ux.applyPattern(this);
+			if (this.value != val) {
+				this.value = val;
+				if (fire) {
+					ux.fireEvent(this, "change");
+				}
 			}
-		}
-	};
-	
-	tf.updateClock = function() {
-		if (this._pop) {
-			for (var i = 0; i < this._format.length; i++) {
-				const fmt = this._format[i];
-				if (!fmt.flag) {
-					const mfac = _id(this._facId + i);
-					if (fmt.target == "mer_") {
-						mfac.value = this._lists[i].list[this.getMeridiem()];
-					} else {
-						mfac.value = this._parts[fmt.target];
+		};
+		
+		tf.updateClock = function() {
+			if (this._pop) {
+				var blank = true;
+				for(var m in this._parts) {
+					blank = false;
+					break;
+				}
+				
+				if (blank) {
+					const val = new Date();
+					this.setHour24(val.getHours());
+					this.setMinute(val.getMinutes());
+					this.setSecond(val.getSeconds());
+				}
+				
+				for (var i = 0; i < this._format.length; i++) {
+					const fmt = this._format[i];
+					if (!fmt.flag) {
+						const mfac = _id(this._facId + i);
+						if (fmt.target == "mer_") {
+							mfac.value = this._lists[i].list[this.getMeridiem()];
+						} else {
+							mfac.value = ux.padLeft(this._parts[fmt.target], '0', fmt.length);
+						}
 					}
 				}
 			}
-		}
-	};
-	
-	tf.setHour24 = function(val) {
-		var h12 = 0;
-		if (val < 12) {
-			h12 = val;
-			this._parts["mer_"] = "0";
-		} else {
-			h12 = val - 12;
-			this._parts["mer_"] = "1";
-		}
+		};
 		
-		if (h12 == 0) {
-			h12 = 12;
-		}
+		tf.setHour24 = function(val) {
+			if (val != undefined) {
+				var h12 = 0;
+				if (val < 12) {
+					h12 = val;
+					this._parts["mer_"] = "0";
+				} else {
+					h12 = val - 12;
+					this._parts["mer_"] = "1";
+				}
+				
+				if (h12 == 0) {
+					h12 = 12;
+				}
+				
+				this._parts["h12_"] = "" + h12;
+				this._parts["h24_"] = "" + val;
+			}
+		};
 		
-		this._parts["h12_"] = "" + h12;
-		this._parts["h24_"] = "" + val;
-	};
-	
-	tf.getHour24 = function() {
-		return parseInt(this._parts["h24_"]);
-	};
-	
-	tf.setHour12 = function(val) {
-		if (this.getMeridiem() == 0) {
-			this._parts["h24_"] = "" + val;
-		} else {
-			this._parts["h24_"] = "" + (val + 12);
-		}
+		tf.getHour24 = function() {
+			return parseInt(this._parts["h24_"]);
+		};
 		
-		if (val == 0) {
-			val = 12;
-		}		
-		this._parts["h12_"] = "" + val;
-	};
-	
-	tf.getHour12 = function() {
-		const val = parseInt(this._parts["h12_"]);
-		if (val == 12) {
-			return 0;
-		}
+		tf.setHour12 = function(val) {
+			if (val != undefined) {
+				if (this.getMeridiem() == 0) {
+					this._parts["h24_"] = "" + val;
+				} else {
+					this._parts["h24_"] = "" + (val + 12);
+				}
+				
+				if (val == 0) {
+					val = 12;
+				}		
+				this._parts["h12_"] = "" + val;
+			}
+		};
 		
-		return val;
-	};
-	
-	tf.setMinute = function(val) {
-		this._parts["min_"] = "" + val;
-	};
-	
-	tf.getMinute = function() {
-		return parseInt(this._parts["min_"]);
-	};
-	
-	tf.setSecond = function(val) {
-		this._parts["sec_"] = "" + val;
-	};
-	
-	tf.getSecond = function() {
-		return parseInt(this._parts["sec_"]);
-	};
-	
-	tf.setMeridiem = function(val) {
-		if (val == 0) {
-			this._parts["h24_"] = this.parts["h12_"];
-		} else {
-			this._parts["h24_"] = "" + (this.getHour12() + 12);
-		}
+		tf.getHour12 = function() {
+			const val = parseInt(this._parts["h12_"]);
+			if (val == 12) {
+				return 0;
+			}
+			
+			return val;
+		};
 		
-		this._parts["mer_"] = "" + val;
-	};
-	
-	tf.getMeridiem = function() {
-		return parseInt(this._parts["mer_"]);
-	};
-	
-	if (tf._pop) {
-		ux.addHdl(_id("btns_" + id), "click", ux.tfSetHandler,
-				{uId:id});
-		ux.popupWireClear(rgp, "btncl_" + id, [ id ]);
-		ux.popupWireCancel("btncn_" + id);
-		for (var i = 0; i < tf._format.length; i++) {
-			const list = tf._lists[i];
-			if (list) {
-				const evppos = {uId:id, uIndex:i, uStep:1};
-				ux.addHdl(_id("btnpos_" + id  + i), "click",
-						ux.tfScrollHandler, evppos);
+		tf.setMinute = function(val) {
+			if (val != undefined) {
+				this._parts["min_"] = "" + val;
+			}
+		};
+		
+		tf.getMinute = function() {
+			return parseInt(this._parts["min_"]);
+		};
+		
+		tf.setSecond = function(val) {
+			if (val != undefined) {
+				this._parts["sec_"] = "" + val;
+			}
+		};
+		
+		tf.getSecond = function() {
+			return parseInt(this._parts["sec_"]);
+		};
+		
+		tf.setMeridiem = function(val) {
+			if (val != undefined) {
+				if (val == 0) {
+					this._parts["h24_"] = this.parts["h12_"];
+				} else {
+					this._parts["h24_"] = "" + (this.getHour12() + 12);
+				}
+				
+				this._parts["mer_"] = "" + val;
+			}
+		};
+		
+		tf.getMeridiem = function() {
+			return parseInt(this._parts["mer_"]);
+		};
+		
+		if (tf._pop) {
+			ux.addHdl(_id("btns_" + id), "click", ux.tfSetHandler,
+					{uId:id});
+			ux.popupWireClear(rgp, "btncl_" + id, [ id ]);
+			ux.popupWireCancel("btncn_" + id);
+			for (var i = 0; i < tf._format.length; i++) {
+				const list = tf._lists[i];
+				if (list) {
+					const evppos = {uId:id, uIndex:i, uStep:1};
+					ux.addHdl(_id("btnpos_" + id  + i), "click",
+							ux.tfScrollHandler, evppos);
 
-				const evpneg = {uId:id, uIndex:i, uStep:-1};
-				ux.addHdl(_id("btnneg_" + id + i), "click",
-						ux.tfScrollHandler, evpneg);
+					const evpneg = {uId:id, uIndex:i, uStep:-1};
+					ux.addHdl(_id("btnneg_" + id + i), "click",
+							ux.tfScrollHandler, evpneg);
+				}
 			}
 		}
+		
+		tf.setHour24(rgp.pHour);
+		tf.setMinute(rgp.pMinute);
+		tf.setSecond(rgp.pSecond);
+		tf.setActual(false);
+		tf.updateClock();
 	}
-	
-	tf.setHour24(rgp.pHour);
-	tf.setMinute(rgp.pMinute);
-	tf.setSecond(rgp.pSecond);
-	tf.setActual(false);
-	tf.updateClock();
 }
 
 
@@ -3205,6 +3265,7 @@ ux.tfScrollHandler = function(uEv) {
 	} else {
 		tf._parts[fmt.target] = ux.padLeft("" + nextval, '0', fmt.length);
 	}
+	
 	tf.updateClock();
 }
 
@@ -4575,7 +4636,7 @@ ux.popupWireCancel = function(btnId) {
 }
 
 ux.applyPattern = function(df) {
-	var val = '';
+	var val = "";
 	if (df._parts && df._format) {
 		for (var i = 0; i < df._format.length; i++) {
 			const fmt = df._format[i];
@@ -4583,14 +4644,18 @@ ux.applyPattern = function(df) {
 				val += fmt.target;
 			} else {
 				var dat = df._parts[fmt.target];
-				if(df._lists && df._lists[i].list) {
-					dat = df._lists[i].list[parseInt(dat)];
-				}
+				if (dat != undefined) {
+					if(df._lists && df._lists[i].list) {
+						dat = df._lists[i].list[parseInt(dat)];
+					}
 
-				if (df._padLeft) {
-					val += ux.padLeft(dat, '0', fmt.length);
+					if (df._padLeft) {
+						val += ux.padLeft(dat, '0', fmt.length);
+					} else {
+						val += dat;
+					}
 				} else {
-					val += dat;
+					return "";
 				}
 			}
 		}

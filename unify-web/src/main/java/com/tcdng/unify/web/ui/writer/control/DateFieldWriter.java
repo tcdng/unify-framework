@@ -73,14 +73,6 @@ public class DateFieldWriter extends AbstractPopupTextFieldWriter {
     protected void doWritePopupTextFieldBehaviour(ResponseWriter writer, AbstractPopupTextField popupTextField,
             boolean popupEnabled) throws UnifyException {
         DateField dateField = (DateField) popupTextField;
-        Date date = dateField.getValue(Date.class);
-        if (date == null) {
-            date = new Date();
-        }
-
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-
         writer.beginFunction("ux.rigDateField");
         writer.writeParam("pId", dateField.getId());
         writer.writeParam("pDayClass", "cday");
@@ -90,9 +82,14 @@ public class DateFieldWriter extends AbstractPopupTextFieldWriter {
         writer.writeParam("pShortDayNm", dateField.getShortDayList());
         writer.writeParam("pLongMonthNm", dateField.getLongMonthList());
         writer.writeParam("pPattern", dateField.getPattern());
-        writer.writeParam("pDay", cal.get(Calendar.DAY_OF_MONTH));
-        writer.writeParam("pMonth", cal.get(Calendar.MONTH));
-        writer.writeParam("pYear", cal.get(Calendar.YEAR));
+        Date date = dateField.getValue(Date.class);
+        if (date != null) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(date);
+            writer.writeParam("pDay", cal.get(Calendar.DAY_OF_MONTH));
+            writer.writeParam("pMonth", cal.get(Calendar.MONTH));
+            writer.writeParam("pYear", cal.get(Calendar.YEAR));
+        }
         writer.writeParam("pEnabled", popupEnabled);
         writer.endFunction();
     }

@@ -86,23 +86,20 @@ public class TimeFieldWriter extends AbstractPopupTextFieldWriter {
     protected void doWritePopupTextFieldBehaviour(ResponseWriter writer, AbstractPopupTextField popupTextField,
             boolean popupEnabled) throws UnifyException {
         TimeField timeField = (TimeField) popupTextField;
-        Date date = timeField.getValue(Date.class);
-        if (date == null) {
-            date = new Date();
-        }
-
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-
         writer.beginFunction("ux.rigTimeField");
         writer.writeParam("pId", timeField.getId());
         writer.writeParam("pFacId", timeField.getFacadeId());
         writer.writeParam("pClearable", timeField.isClearable());
         writer.writeParam("pPattern", timeField.getPattern());
         writer.writeParam("pLists", timeField.getDateTimeFormat());
-        writer.writeParam("pHour", cal.get(Calendar.HOUR_OF_DAY));
-        writer.writeParam("pMinute", cal.get(Calendar.MINUTE));
-        writer.writeParam("pSecond", cal.get(Calendar.SECOND));
+        Date date = timeField.getValue(Date.class);
+        if (date != null) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(date);
+            writer.writeParam("pHour", cal.get(Calendar.HOUR_OF_DAY));
+            writer.writeParam("pMinute", cal.get(Calendar.MINUTE));
+            writer.writeParam("pSecond", cal.get(Calendar.SECOND));
+        }
         writer.writeParam("pEnabled", popupEnabled);
         writer.endFunction();
     }
