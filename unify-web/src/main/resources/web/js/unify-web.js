@@ -766,7 +766,7 @@ ux.setAllChecked = function(uEv) {
 				for (var j = 0; j < elems.length; j++) {
 					var elem = elems[j];
 					if (elem.type == "checkbox") {
-						elem._setValue(rElem.checked);
+						elem.setValue(rElem.checked);
 					}
 				}
 			}
@@ -1262,11 +1262,11 @@ ux.tabbedPanelTabClickHandler = function(uEv) {
 ux.rigSVA = function(id) {
 	const elem = _id(id);
 	if(elem) {
-		elem._setValue = function(val) {
+		elem.setValue = function(val) {
 			this.value = val;
 		};
 
-		elem._getValue = function() {
+		elem.getValue = function() {
 			return this.value;
 		};
 	}
@@ -1391,12 +1391,12 @@ ux.cbWire = function(box) {
 		box._facId = "fac_" + box.id;
 		ux.addHdl(_id(box._facId), "click", ux.cbClick, {uId:box.id});
 
-		box._setValue = function(val) {
+		box.setValue = function(val) {
 			this.checked = (val == true);
 			ux.cbSwitchImg(this);
 		};
 		
-		box._getValue = function() {
+		box.getValue = function() {
 			return this.checked;
 		};
 	}
@@ -1405,7 +1405,7 @@ ux.cbWire = function(box) {
 ux.cbClick = function(uEv) {
 	const box = _id(uEv.evp.uId);
 	if (box) {
-		box._setValue(!box._getValue());
+		box.setValue(!box.getValue());
 		ux.fireEvent(_id(box._facId), "change");
 	}
 }
@@ -1413,7 +1413,7 @@ ux.cbClick = function(uEv) {
 ux.cbSwitchImg = function(box) {
 	const fac = _id(box._facId);
 	if (fac && fac.className) {
-		if (box._getValue()) {
+		if (box.getValue()) {
 			fac.className = fac.className.replace("g_cbb", "g_cba");
 			fac.className = fac.className.replace("g_cbd", "g_cbc");
 		} else {
@@ -1435,10 +1435,10 @@ ux.rigChecklist = function(rgp) {
 	const list = _id(rgp.pId);
 	if (list) {
 		list._box = box;
-		list._setValue = function(val) {
+		list.setValue = function(val) {
 			for (var i = 0; i < this._box.length; i++) {
 				const box = this._box[i];
-				box._setValue(val && val.includes(box.value));
+				box.setValue(val && val.includes(box.value));
 			}
 			
 			if (list.updateFacade) {
@@ -1446,11 +1446,11 @@ ux.rigChecklist = function(rgp) {
 			}
 		};
 		
-		list._getValue = function() {
+		list.getValue = function() {
 			const val = [];
 			for(var i = 0; i < this._box.length; i++) {
 				const box = this._box[i];
-				if (box._getValue()) {
+				if (box.getValue()) {
 					val.push(box.value);
 				}
 			}
@@ -1458,7 +1458,7 @@ ux.rigChecklist = function(rgp) {
 			return val;
 		};
 		
-		list._setValue(rgp.pVal);
+		list.setValue(rgp.pVal);
 	}
 }
 
@@ -1479,7 +1479,7 @@ ux.rigDateField = function(rgp) {
 		df._todayClass = rgp.pTodayClass;
 		df._pop = rgp.pEnabled;
 		
-		df._setValue = function(val) {
+		df.setValue = function(val) {
 			this.setDay(val.getDate());
 			this.setMonth(val.getMonth());
 			this.setYear(val.getFullYear());
@@ -1487,7 +1487,7 @@ ux.rigDateField = function(rgp) {
 			this.updateCalendar();
 		};
 		
-		df._getValue = function() {
+		df.getValue = function() {
 			const val = new Date();
 			val.setFullYear(this.getYear());
 			val.setMonth(this.getMonth());
@@ -1729,7 +1729,7 @@ ux.rigDropdownChecklist = function(rgp) {
 		}
 
 		ux.rigChecklist(rgp);
-		dc._setValue(rgp.pVal);
+		dc.setValue(rgp.pVal);
 	}
 }
 
@@ -1746,20 +1746,20 @@ ux.rigDurationSelect = function(rgp) {
 		ds._hourSel = _id(rgp.pHourSelId);
 		ds._minSel = _id(rgp.pMinSelId);
 
-		ds._setValue = function(val) {
+		ds.setValue = function(val) {
 			const days = Math.floor(val / UNIFY_MINUTES_IN_DAY);
 			var rem = Math.floor(val % UNIFY_MINUTES_IN_DAY);
 			if (this._daySel) {
-				this._daySel._setValue(days);
+				this._daySel.setValue(days);
 			}
 			
 			const hours = Math.floor(rem / UNIFY_MINUTES_IN_HOUR);
 			rem = Math.floor(rem % UNIFY_MINUTES_IN_HOUR);
 			if (this._hourSel) {
-				this._hourSel._setValue(hours);
+				this._hourSel.setValue(hours);
 			}
 
-			this._minSel._setValue(rem);
+			this._minSel.setValue(rem);
 			this.setActual(val, false);
 		};
 		
@@ -1772,7 +1772,7 @@ ux.rigDurationSelect = function(rgp) {
 			}
 		};
 
-		ds._getValue = function() {
+		ds.getValue = function() {
 			return parseInt(this.value);
 		};
 
@@ -1787,7 +1787,7 @@ ux.rigDurationSelect = function(rgp) {
 		
 		ux.addHdl(ds._minSel, "change", ux.dsCalc, evp);
 		
-		ds._setValue(rgp.pVal);
+		ds.setValue(rgp.pVal);
 	}
 }
 
@@ -1795,14 +1795,14 @@ ux.dsCalc = function(uEv) {
 	const ds = _id(uEv.evp.uId);
 	var total = 0;
 	if (ds._daySel){
-		total += parseInt(ds._daySel._getValue()) * UNIFY_MINUTES_IN_DAY;
+		total += parseInt(ds._daySel.getValue()) * UNIFY_MINUTES_IN_DAY;
 	}
 	
 	if (ds._hourSel){
-		total += parseInt(ds._hourSel._getValue()) * UNIFY_MINUTES_IN_HOUR;
+		total += parseInt(ds._hourSel.getValue()) * UNIFY_MINUTES_IN_HOUR;
 	}
 	
-	total += parseInt(ds._minSel._getValue());
+	total += parseInt(ds._minSel.getValue());
 	ds.setActual(total, true);
 }
 
@@ -1965,7 +1965,7 @@ ux.rigMoneyField = function(rgp) {
 		mf._btn = _id(rgp.pBtnId);
 		mf._pop = rgp.pEnabled;
 		
-		mf._setValue = function(val) {
+		mf.setValue = function(val) {
 			if (this._keys) {
 				const currency = val.currency;
 				var k = -1;
@@ -1985,7 +1985,7 @@ ux.rigMoneyField = function(rgp) {
 			}
 		};
 		
-		mf._getValue = function() {
+		mf.getValue = function() {
 			return {currency:this._btn.innerHTML, amount:this._fac.value};
 		};
 		
@@ -2030,7 +2030,7 @@ ux.rigMoneyField = function(rgp) {
 		ux.addHdl(mf._fac, "change", ux.mfAmountChange, {uId:id});
 		ux.listWirePopFrame(mf, rgp);
 
-		mf._setValue(rgp.pVal);
+		mf.setValue(rgp.pVal);
 	}
 }
 
@@ -2058,7 +2058,7 @@ ux.rigMultiSelect = function(rgp) {
 		ms._list = _id(rgp.pLstId);
 		ms._start = -1;
 		
-		ms._setValue = function(val) {
+		ms.setValue = function(val) {
 			for (var i = 0; i < this.options.length; i++) {
 				const option = this.options[i];
 				const label = _id(this._selectIds[i]);
@@ -2067,7 +2067,7 @@ ux.rigMultiSelect = function(rgp) {
 			}
 		};
 		
-		ms._getValue = function() {
+		ms.getValue = function() {
 			const val = [];
 			for (var i = 0; i < this.options.length; i++) {
 				const option = this.options[i];
@@ -2102,7 +2102,7 @@ ux.rigMultiSelect = function(rgp) {
 			ux.addHdl(label, "click", ux.msSelectClick, evpi);
 		}
 		
-		ms._setValue(rgp.pVal);
+		ms.setValue(rgp.pVal);
 	}
 }
 
@@ -2170,14 +2170,14 @@ ux.rigRadioButtons = function(rgp) {
 	const rb = _id(rgp.pId);
 	rb._name = rgp.pNm;
 	
-	rb._setValue = function(val) {
+	rb.setValue = function(val) {
 		const btn = _name(this._name);
 		for(var i = 0; i < btn.length; i++) {
 			btn[i].checked = btn[i].value == val;
 		}
 	};
 	
-	rb._getValue = function() {
+	rb.getValue = function() {
 		const btn = _name(this._name);
 		for(var i = 0; i < btn.length; i++) {
 			if (btn[i].checked) {
@@ -2188,7 +2188,7 @@ ux.rigRadioButtons = function(rgp) {
 		return null;
 	};
 	
-	rb._setValue(rgp.pVal);
+	rb.setValue(rgp.pVal);
 }
 
 /** Search Field */
@@ -2218,12 +2218,12 @@ ux.sfWireResult = function(rgp) {
 		sf._labels = rgp.pLabels;
 		sf._fac = _id(rgp.pFacId);
 		
-		sf._setValue = function(val) {
+		sf.setValue = function(val) {
 			this.updateFacade(val);
 			this.setActual(val, false);
 		};
 			
-		sf._getValue = function() {
+		sf.getValue = function() {
 			return this.value;
 		};
 		
@@ -2255,7 +2255,7 @@ ux.sfWireResult = function(rgp) {
 			ux.addHdl(label, "click", ux.sfSelect, evp);
 		}
 		
-		sf._setValue(rgp.pVal);
+		sf.setValue(rgp.pVal);
 	}
 }
 
@@ -2440,7 +2440,7 @@ ux.rigSingleSelect = function(rgp) {
 		sel._blank = _id(rgp.pBlnkId);
 		sel._pop = rgp.pEnabled;
 		
-		sel._setValue = function(val) {
+		sel.setValue = function(val) {
 			var k = this._isBlankOption ? -1: 0;
 			for(var i = 0; i < this._keys.length; i++) {
 				if (val == this._keys[i]) {
@@ -2452,7 +2452,7 @@ ux.rigSingleSelect = function(rgp) {
 			this.selectOpt(k, true, false);
 		};
 		
-		sel._getValue = function() {
+		sel.getValue = function() {
 			return this.value;
 		};
 		
@@ -2497,7 +2497,7 @@ ux.rigSingleSelect = function(rgp) {
 		};
 		
 		ux.listWirePopFrame(sel);
-		sel._setValue(rgp.pVal);
+		sel.setValue(rgp.pVal);
 	}
 }
 
@@ -2509,11 +2509,11 @@ ux.ssOnShow = function(rgp) {
 /** Text Area */
 ux.rigTextArea = function(rgp) {
 	const ta = _id(rgp.pId);
-	ta._setValue = function(val) {
+	ta.setValue = function(val) {
 		this.value = val;
 	};
 	
-	ta._getValue = function() {
+	ta.getValue = function() {
 		return this.value;
 	};
 	
@@ -3070,7 +3070,7 @@ ux.rigTimeField = function(rgp) {
 		tf._clearable = rgp.pClearable;
 		tf._pop = rgp.pEnabled;
 		
-		tf._setValue = function(val) {
+		tf.setValue = function(val) {
 			this.setHour24(val.getHours());
 			this.setMinute(val.getMinutes());
 			this.setSecond(val.getSeconds());
@@ -3078,7 +3078,7 @@ ux.rigTimeField = function(rgp) {
 			this.updateClock();
 		};
 		
-		tf._getValue = function() {
+		tf.getValue = function() {
 			const val = new Date();
 			val.setHours(this.getHour24());
 			val.setMinutes(this.getMinute());
