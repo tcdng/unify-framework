@@ -1030,57 +1030,59 @@ ux.contentAttachClose = function(uId, cnt, type, mode) {
 }
 
 /** Detached panel */
-ux.detachOriginElem = null;
-ux.detachElem = null;
-
+ux.detachObj = null;
 ux.rigDetachedPanel = function(rgp) {
 	const id = rgp.pId;
-	_id(id).orient = rgp.pOrient;
-}
-
-ux.showDetached = function(originId, detachId) {
-	const origin = _id(originId);
-	const detached = _id(detachId);
-	if (origin && detached) {
-		const orient = detached.orient;
-		if (orient) {
-			detached.style.visibility = "hidden";
-			detached.style.display = "block";
-			const orect = origin.getBoundingClientRect();
-			const drect = detached.getBoundingClientRect();
-			var x = 0;
-			var y = 0;
-			if ("bottom_left" == orient) {
-				x = orect.right - drect.width;
-				y = orect.bottom + 1;
-			} else if ("bottom_right" == orient) {
-				x = orect.left;
-				y = orect.bottom + 1;
-			} else if ("top_left" == orient) {
-				x = orect.right - drect.width;
-				y = orect.top - drect.height - 1;
-			} else if ("top_right" == orient) {
-				x = orect.left;
-				y = orect.top - drect.height - 1;
+	const detp = _id(id);
+	detp.orient = rgp.pOrient;
+	
+	detp.show = function(originId) {
+		const origin = _id(originId);
+		if (origin && origin.id != this.originId) {
+			const orient = this.orient;
+			if (orient) {
+				if (ux.detachObj) {
+					ux.detachObj.hide();
+				}
+				
+				this.style.visibility = "hidden";
+				this.style.display = "block";
+				const orect = origin.getBoundingClientRect();
+				const drect = this.getBoundingClientRect();
+				var x = 0;
+				var y = 0;
+				if ("bottom_left" == orient) {
+					x = orect.right - drect.width;
+					y = orect.bottom + 1;
+				} else if ("bottom_right" == orient) {
+					x = orect.left;
+					y = orect.bottom + 1;
+				} else if ("top_left" == orient) {
+					x = orect.right - drect.width;
+					y = orect.top - drect.height - 1;
+				} else if ("top_right" == orient) {
+					x = orect.left;
+					y = orect.top - drect.height - 1;
+				}
+				
+				// TODO Shift to stay in display window
+				this.style.left = Math.round(x) + "px";
+				this.style.top = Math.floor(y) + "px";
+				this.style.visibility = "visible";
+				
+				this.originId = originId;
+				ux.detachObj = this;
 			}
-			
-			// TODO Shift to stay in display window
-			detached.style.left = Math.round(x) + "px";
-			detached.style.top = Math.floor(y) + "px";
-			detached.style.visibility = "visible";
-			
-			ux.detachOriginElem = origin;
-			ux.detachElem = detached;
 		}
-	}
+	};
+	
+	detp.hide = function() {
+		this.style.display = "none";
+		this.originId  = null;
+		ux.detachObj = null;
+	};
 }
 
-ux.hideDetached = function() {
-	if (ux.detachElem) {
-		ux.detachElem.style.display = "none";
-		ux.detachElem = null;
-	}
-}
 
 /** Fixed content panel */
 ux.rigFixedContentPanel = function(rgp) {
@@ -2442,10 +2444,13 @@ ux.rigSingleSelect = function(rgp) {
 		
 		sel.setValue = function(val) {
 			var k = this._isBlankOption ? -1: 0;
-			for(var i = 0; i < this._keys.length; i++) {
-				if (val == this._keys[i]) {
-					k = i;
-					break;
+			if (val != null && val != undefined) {
+				val = "" + val;
+				for(var i = 0; i < this._keys.length; i++) {
+					if (val == this._keys[i]) {
+						k = i;
+						break;
+					}
 				}
 			}
 			
