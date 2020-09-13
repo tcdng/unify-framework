@@ -198,7 +198,9 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
     public void populate(DataTransferBlock transferBlock) throws UnifyException {
         DataTransferWidget dataTransferWidget = (DataTransferWidget) getRequestContextUtil().getRequestPage()
                 .getWidgetByLongName(transferBlock.getLongName());
-        dataTransferWidget.populate(transferBlock);
+        if (dataTransferWidget.getBinding() != null) {
+            dataTransferWidget.populate(transferBlock);
+        }
     }
 
     /**
