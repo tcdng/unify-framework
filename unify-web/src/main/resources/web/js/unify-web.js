@@ -1261,7 +1261,7 @@ ux.tabbedPanelTabClickHandler = function(uEv) {
 
 /** ********************* CONTROLS ********************* */
 /** Common */
-ux.rigSVA = function(id) {
+ux.rigValueAccessor = function(id) {
 	const elem = _id(id);
 	if(elem) {
 		elem.setValue = function(val) {
@@ -1385,13 +1385,16 @@ ux.rigAssignmentBox = function(rgp) {
 /** Checkbox */
 ux.rigCheckbox = function(rgp) {
 	const box = _id(rgp.pId);
+	box._active = rgp.pActive;
 	ux.cbWire(box);
 }
 
 ux.cbWire = function(box) {
 	if (box) {
-		box._facId = "fac_" + box.id;
-		ux.addHdl(_id(box._facId), "click", ux.cbClick, {uId:box.id});
+		if (box._active) {
+			box._facId = "fac_" + box.id;
+			ux.addHdl(_id(box._facId), "click", ux.cbClick, {uId:box.id});
+		}
 
 		box.setValue = function(val) {
 			this.checked = (val == true);
@@ -1430,6 +1433,7 @@ ux.rigChecklist = function(rgp) {
 	const box = _name(rgp.pNm);
 	if(box) {
 		for(var i = 0; i < box.length; i++) {
+			box[i]._active = rgp.pActive;
 			ux.cbWire(box[i]);
 		}
 	}
@@ -1723,9 +1727,11 @@ ux.rigDropdownChecklist = function(rgp) {
 		
 		if (rgp.pEnabled) {
 			if (rgp.pSelAllId) {
-				ux.cbWire(_id(rgp.pSelAllId));
+				const box = _id(rgp.pSelAllId);
+				box._active = true;
+				ux.cbWire(box);
 
-				const evp = {uSrcId:rgp.pSelAllId, uRef:id};
+				const evp = {uSrcId:rgp.pSelAllId, uRef:[id]};
 				ux.addHdl(_id("fac_" + rgp.pSelAllId), "change", ux.setAllChecked, evp);	
 			}
 		}

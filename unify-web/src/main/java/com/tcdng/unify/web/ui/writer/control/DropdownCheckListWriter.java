@@ -139,6 +139,7 @@ public class DropdownCheckListWriter extends AbstractPopupTextFieldWriter {
         writer.writeParam("pLabels", listControlInfo.getLabels());
         writer.writeParam("pVal", dropdownCheckList.getValue(String[].class));
         writer.writeParam("pEnabled", popupEnabled);
+        writer.writeParam("pActive", popupEnabled);
         writer.endFunction();
     }
 

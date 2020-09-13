@@ -329,6 +329,11 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 	}
 
 	@Override
+    public boolean isActive() throws UnifyException {
+	    return isContainerEditable() && !isContainerDisabled();
+    }
+
+    @Override
 	public boolean isVisible() throws UnifyException {
 		return visible && getViewDirective().isVisible();
 	}

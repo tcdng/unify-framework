@@ -490,6 +490,15 @@ public interface Widget extends UplComponent {
     boolean isContainerVisible() throws UnifyException;
 
     /**
+     * Tests if widget is visual active
+     * 
+     * @return true if component is active
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    boolean isActive() throws UnifyException;
+    
+    /**
      * Tests if the components behavior is always written irrespective of
      * visibility.
      * 

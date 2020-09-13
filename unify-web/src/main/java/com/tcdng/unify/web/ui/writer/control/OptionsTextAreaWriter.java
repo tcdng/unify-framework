@@ -77,7 +77,7 @@ public class OptionsTextAreaWriter extends TextAreaWriter {
         writer.writeParam("pId", optionsTextArea.getId());
         writer.writeParam("pScrEnd", optionsTextArea.isScrollToEnd());
 
-        if (optionsTextArea.isContainerEditable() && !optionsTextArea.isContainerDisabled()) {
+        if (optionsTextArea.isActive()) {
             ListControlInfo listControlInfo = optionsTextArea.getListControlInfo(null);
             writer.writeParam("pPopupId", optionsTextArea.getPopupId());
             writer.writeParam("pFrmId", optionsTextArea.getFramePanelId());

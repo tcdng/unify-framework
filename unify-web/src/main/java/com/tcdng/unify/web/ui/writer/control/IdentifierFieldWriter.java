@@ -42,7 +42,7 @@ public class IdentifierFieldWriter extends TextFieldWriter {
     @Override
     protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
         super.doWriteBehavior(writer, widget);
-        writeSimpleValueAccessor(writer, widget);
+        writeValueAccessor(writer, widget);
     }
 
 }

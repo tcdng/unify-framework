@@ -56,7 +56,7 @@ public class TextFieldWriter extends AbstractControlWriter {
         writer.endFunction();
         
         if(!textField.getExtensionType().isExtended()) {
-            writeSimpleValueAccessor(writer, textField);
+            writeValueAccessor(writer, textField);
         }
     }
 

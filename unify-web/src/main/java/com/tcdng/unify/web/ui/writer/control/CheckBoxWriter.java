@@ -70,13 +70,12 @@ public class CheckBoxWriter extends AbstractControlWriter {
 
     @Override
     protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
+        super.doWriteBehavior(writer, widget);
         CheckBox checkBox = (CheckBox) widget;
-        if (checkBox.isContainerEditable() && !checkBox.isContainerDisabled()) {
-            super.doWriteBehavior(writer, widget);
-            writer.beginFunction("ux.rigCheckbox");
-            writer.writeParam("pId", checkBox.getId());
-            writer.endFunction();
-        }
+        writer.beginFunction("ux.rigCheckbox");
+        writer.writeParam("pId", checkBox.getId());
+        writer.writeParam("pActive", checkBox.isActive());
+        writer.endFunction();
     }
 
 }

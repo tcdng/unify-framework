@@ -73,7 +73,7 @@ public abstract class AbstractContainerWriter extends AbstractWidgetWriter imple
         boolean isAlternate = container.isAlternate();
         for (String longName : container.getLayoutWidgetLongNames()) {
             Widget widget = container.getWidgetByLongName(longName);
-            if ((widget.isVisible() && !widget.isDisabled()) || widget.isHidden() || widget.isBehaviorAlways()) {
+            if (widget.isVisible() || widget.isHidden() || widget.isBehaviorAlways()) {
                 widget.setAlternateMode(isAlternate);
                 writer.writeBehavior(widget);
             }
