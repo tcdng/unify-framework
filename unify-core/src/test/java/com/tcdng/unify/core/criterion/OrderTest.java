@@ -77,6 +77,26 @@ public class OrderTest {
     }
 
     @Test
+    public void testOrderTrailingReplacement() {
+        Order order = new Order().add("name").add("description").add("name", OrderType.DESCENDING);
+        List<Part> parts = order.getParts();
+        assertNotNull(parts);
+        assertEquals(2, parts.size());
+        
+        Part part = parts.get(0);
+        assertNotNull(part);
+        assertEquals("description", part.getField());
+        assertEquals(OrderType.ASCENDING, part.getType());
+        assertTrue(part.isAscending());
+        
+        part = parts.get(1);
+        assertNotNull(part);
+        assertEquals("name", part.getField());
+        assertEquals(OrderType.DESCENDING, part.getType());
+        assertFalse(part.isAscending());
+    }
+
+    @Test
     public void testOrderLeading() {
         Order order = new Order(Order.Policy.ADD_LEADING).add("name").add("description");
         List<Part> parts = order.getParts();
@@ -114,5 +134,25 @@ public class OrderTest {
         assertEquals("name", part.getField());
         assertEquals(OrderType.DESCENDING, part.getType());
         assertFalse(part.isAscending());
+    }
+
+    @Test
+    public void testOrderLeadingReplacement() {
+        Order order = new Order(Order.Policy.ADD_LEADING).add("name").add("description").add("name", OrderType.DESCENDING);
+        List<Part> parts = order.getParts();
+        assertNotNull(parts);
+        assertEquals(2, parts.size());
+        
+        Part part = parts.get(0);
+        assertNotNull(part);
+        assertEquals("name", part.getField());
+        assertEquals(OrderType.DESCENDING, part.getType());
+        assertFalse(part.isAscending());
+        
+        part = parts.get(1);
+        assertNotNull(part);
+        assertEquals("description", part.getField());
+        assertEquals(OrderType.ASCENDING, part.getType());
+        assertTrue(part.isAscending());
     }
 }
