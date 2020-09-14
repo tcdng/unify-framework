@@ -28,20 +28,30 @@ import com.tcdng.unify.core.constant.OrderType;
  */
 public class Order {
 
+    public enum Policy {
+        ADD_LEADING,
+        ADD_TRAILING
+    };
+
     private List<Part> parts;
 
+    private final Policy policy;
+
     public Order() {
+        this(Policy.ADD_TRAILING);
+    }
+
+    public Order(Policy policy) {
+        this.policy = policy;
         parts = new ArrayList<Part>();
     }
 
     public Order add(String field) {
-        parts.add(new Part(field));
-        return this;
+        return doAdd(field, OrderType.ASCENDING);
     }
 
     public Order add(String field, OrderType type) {
-        parts.add(new Part(field, type));
-        return this;
+        return doAdd(field, type);
     }
 
     public List<Part> getParts() {
@@ -56,18 +66,31 @@ public class Order {
         return !parts.isEmpty();
     }
 
+    private Order doAdd(String field, OrderType type) {
+        final int len = parts.size();
+        for (int i = 0; i < len; i++) {
+            if (parts.get(i).getField().equals(field)) {
+                parts.remove(i);
+                break;
+            }
+        }
+
+        if (Policy.ADD_LEADING.equals(policy)) {
+            parts.add(0, new Part(field, type));
+        } else {
+            parts.add(new Part(field, type));
+        }
+
+        return this;
+    }
+
     public class Part {
 
         private String field;
 
         private OrderType type;
 
-        public Part(String field) {
-            this.field = field;
-            type = OrderType.ASCENDING;
-        }
-
-        public Part(String field, OrderType type) {
+        private Part(String field, OrderType type) {
             this.field = field;
             this.type = type;
         }

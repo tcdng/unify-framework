@@ -433,6 +433,10 @@ public class Query<T extends Entity> implements Cloneable {
         return order;
     }
 
+    public void setOrder(Order order) {
+        this.order = order;
+    }
+
     public boolean isOrder() {
         return order != null && order.isParts();
     }
