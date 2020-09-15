@@ -45,9 +45,9 @@ import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.constant.LocaleType;
 import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.data.FactoryMap;
-import com.tcdng.unify.core.stream.JSONObjectStreamer;
+import com.tcdng.unify.core.stream.JsonObjectStreamer;
 import com.tcdng.unify.core.stream.ObjectStreamer;
-import com.tcdng.unify.core.stream.XMLObjectStreamer;
+import com.tcdng.unify.core.stream.XmlObjectStreamer;
 import com.tcdng.unify.core.upl.UplElementReferences;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.IOUtils;
@@ -102,10 +102,10 @@ public class ControllerManagerImpl extends AbstractUnifyComponent implements Con
     private ResponseWriterPool responseWriterPool;
 
     @Configurable
-    private XMLObjectStreamer xmlObjectStreamer;
+    private XmlObjectStreamer xmlObjectStreamer;
 
     @Configurable
-    private JSONObjectStreamer jsonObjectStreamer;
+    private JsonObjectStreamer jsonObjectStreamer;
 
     @Configurable
     private RemoteCallBinaryMessageStreamer remoteCallBinaryMessageStreamer;

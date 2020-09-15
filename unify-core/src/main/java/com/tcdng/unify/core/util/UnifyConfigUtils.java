@@ -237,7 +237,7 @@ public final class UnifyConfigUtils {
     private static void readXmlConfigurationObject(UnifyContainerConfig.Builder uccb, Object xmlConfigObject)
             throws UnifyException {
         try {
-            UnifyConfig unifyConfig = XMLConfigUtils.readXmlConfig(UnifyConfig.class, xmlConfigObject);
+            UnifyConfig unifyConfig = XmlConfigUtils.readXmlConfig(UnifyConfig.class, xmlConfigObject);
             if (unifyConfig != null) {
                 uccb.deploymentVersion(unifyConfig.getVersion());
                 uccb.nodeId(unifyConfig.getNodeId());

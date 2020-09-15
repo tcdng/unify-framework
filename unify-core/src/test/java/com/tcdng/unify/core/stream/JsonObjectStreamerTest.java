@@ -33,22 +33,21 @@ import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.constant.PrintFormat;
 
 /**
- * XML object streamer implementation test.
+ * Jackson JSON object streaming manager implementation test.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class XMLObjectStreamerTest extends AbstractUnifyComponentTest {
+public class JsonObjectStreamerTest extends AbstractUnifyComponentTest {
 
-    private static final String BOOK_XML = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
-            + "<book genre=\"Science\">" + "<title>C++ for Engineers</title>" + "<price>25.2</price>"
-            + "<quantity>10</quantity>" + "</book>";
+    private static final String BOOK_JSON = "{" + "\"title\":\"C++ for Engineers\"," + "\"genre\":\"Science\","
+            + "\"price\":25.2," + "\"quantity\":10" + "}";
 
     @Test
     public void testReadObjectFromInputStream() throws Exception {
-        XMLObjectStreamer xosm =
-                (XMLObjectStreamer) this.getComponent(ApplicationComponents.APPLICATION_XMLOBJECTSTREAMER);
-        Book book = xosm.unmarshal(Book.class, new ByteArrayInputStream(BOOK_XML.getBytes()), null);
+        JsonObjectStreamer josm =
+                (JsonObjectStreamer) getComponent(ApplicationComponents.APPLICATION_JSONOBJECTSTREAMER);
+        Book book = josm.unmarshal(Book.class, new ByteArrayInputStream(BOOK_JSON.getBytes()), null);
         assertNotNull(book);
         assertEquals("Science", book.getGenre());
         assertEquals("C++ for Engineers", book.getTitle());
@@ -58,9 +57,9 @@ public class XMLObjectStreamerTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testReadObjectFromReader() throws Exception {
-        XMLObjectStreamer xosm =
-                (XMLObjectStreamer) this.getComponent(ApplicationComponents.APPLICATION_XMLOBJECTSTREAMER);
-        Book book = xosm.unmarshal(Book.class, new StringReader(BOOK_XML));
+        JsonObjectStreamer josm =
+                (JsonObjectStreamer) getComponent(ApplicationComponents.APPLICATION_JSONOBJECTSTREAMER);
+        Book book = josm.unmarshal(Book.class, new StringReader(BOOK_JSON));
         assertNotNull(book);
         assertEquals("Science", book.getGenre());
         assertEquals("C++ for Engineers", book.getTitle());
@@ -70,43 +69,51 @@ public class XMLObjectStreamerTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testWriteObjectToOutputStream() throws Exception {
-        XMLObjectStreamer xosm =
-                (XMLObjectStreamer) this.getComponent(ApplicationComponents.APPLICATION_XMLOBJECTSTREAMER);
+        JsonObjectStreamer josm =
+                (JsonObjectStreamer) getComponent(ApplicationComponents.APPLICATION_JSONOBJECTSTREAMER);
         Book book = new Book("C++ for Engineers", "Science", BigDecimal.valueOf(25.20), 10);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        xosm.marshal(book, baos, PrintFormat.NONE);
-        assertEquals(BOOK_XML, new String(baos.toByteArray()));
+        josm.marshal(book, baos, PrintFormat.NONE);
+        Book jsonBook = josm.unmarshal(Book.class, new String(baos.toByteArray()));
+        assertEquals(book.getGenre(), jsonBook.getGenre());
+        assertEquals(book.getPrice(), jsonBook.getPrice());
+        assertEquals(book.getQuantity(), jsonBook.getQuantity());
+        assertEquals(book.getTitle(), jsonBook.getTitle());
     }
 
     @Test
     public void testWriteObjectToWriter() throws Exception {
-        XMLObjectStreamer xosm =
-                (XMLObjectStreamer) this.getComponent(ApplicationComponents.APPLICATION_XMLOBJECTSTREAMER);
+        JsonObjectStreamer josm =
+                (JsonObjectStreamer) getComponent(ApplicationComponents.APPLICATION_JSONOBJECTSTREAMER);
         Book book = new Book("C++ for Engineers", "Science", BigDecimal.valueOf(25.20), 10);
         StringWriter writer = new StringWriter();
-        xosm.marshal(book, writer);
-        assertEquals(BOOK_XML, writer.toString());
+        josm.marshal(book, writer);
+        Book jsonBook = josm.unmarshal(Book.class, writer.toString());
+        assertEquals(book.getGenre(), jsonBook.getGenre());
+        assertEquals(book.getPrice(), jsonBook.getPrice());
+        assertEquals(book.getQuantity(), jsonBook.getQuantity());
+        assertEquals(book.getTitle(), jsonBook.getTitle());
     }
 
     @Test
     public void testWriteByteArrayObjectToOutputStream() throws Exception {
-        XMLObjectStreamer xosm =
-                (XMLObjectStreamer) this.getComponent(ApplicationComponents.APPLICATION_XMLOBJECTSTREAMER);
+        JsonObjectStreamer josm =
+                (JsonObjectStreamer) getComponent(ApplicationComponents.APPLICATION_JSONOBJECTSTREAMER);
         Author author =
                 new Author("Bramer & Bramer", null, new byte[] { (byte) 0xAA, (byte) 0xBB, (byte) 0xCC, (byte) 0xDD });
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        xosm.marshal(author, baos, PrintFormat.NONE);
+        josm.marshal(author, baos, PrintFormat.NONE);
     }
 
     @Test
     public void testReadByteArrayObjectToOutputStream() throws Exception {
-        XMLObjectStreamer xosm =
-                (XMLObjectStreamer) this.getComponent(ApplicationComponents.APPLICATION_XMLOBJECTSTREAMER);
+        JsonObjectStreamer josm =
+                (JsonObjectStreamer) getComponent(ApplicationComponents.APPLICATION_JSONOBJECTSTREAMER);
         Author author =
                 new Author("Bramer & Bramer", null, new byte[] { (byte) 0xAA, (byte) 0xBB, (byte) 0xCC, (byte) 0xDD });
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        xosm.marshal(author, baos, PrintFormat.NONE);
-        Author unAuthor = xosm.unmarshal(Author.class, new ByteArrayInputStream(baos.toByteArray()), null);
+        josm.marshal(author, baos, PrintFormat.NONE);
+        Author unAuthor = josm.unmarshal(Author.class, new ByteArrayInputStream(baos.toByteArray()), null);
         byte[] picture = unAuthor.getPicture();
         assertNotNull(picture);
         assertEquals(4, picture.length);
@@ -118,8 +125,8 @@ public class XMLObjectStreamerTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testWriteListObjectToOutputStream() throws Exception {
-        XMLObjectStreamer xosm =
-                (XMLObjectStreamer) this.getComponent(ApplicationComponents.APPLICATION_XMLOBJECTSTREAMER);
+        JsonObjectStreamer josm =
+                (JsonObjectStreamer) getComponent(ApplicationComponents.APPLICATION_JSONOBJECTSTREAMER);
         Author author =
                 new Author("Bramer & Bramer", null, new byte[] { (byte) 0xAA, (byte) 0xBB, (byte) 0xCC, (byte) 0xDD });
         List<Book> books = Arrays.asList(new Book("C++ for Engineers", "Science", BigDecimal.valueOf(25.20), 10),
@@ -128,13 +135,13 @@ public class XMLObjectStreamerTest extends AbstractUnifyComponentTest {
         author.setBooks(books);
         author.setAccount(account);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        xosm.marshal(author, baos, PrintFormat.NONE);
+        josm.marshal(author, baos, PrintFormat.NONE);
     }
 
     @Test
     public void testReadListObjectToOutputStream() throws Exception {
-        XMLObjectStreamer xosm =
-                (XMLObjectStreamer) this.getComponent(ApplicationComponents.APPLICATION_XMLOBJECTSTREAMER);
+        JsonObjectStreamer josm =
+                (JsonObjectStreamer) getComponent(ApplicationComponents.APPLICATION_JSONOBJECTSTREAMER);
         Author author =
                 new Author("Bramer & Bramer", null, new byte[] { (byte) 0xAA, (byte) 0xBB, (byte) 0xCC, (byte) 0xDD });
         List<Book> books = Arrays.asList(new Book("C++ for Engineers", "Science", BigDecimal.valueOf(25.20), 10),
@@ -143,8 +150,8 @@ public class XMLObjectStreamerTest extends AbstractUnifyComponentTest {
         author.setBooks(books);
         author.setAccount(account);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        xosm.marshal(author, baos, PrintFormat.NONE);
-        Author unAuthor = xosm.unmarshal(Author.class, new ByteArrayInputStream(baos.toByteArray()), null);
+        josm.marshal(author, baos, PrintFormat.NONE);
+        Author unAuthor = josm.unmarshal(Author.class, new ByteArrayInputStream(baos.toByteArray()), null);
         byte[] picture = unAuthor.getPicture();
         assertNotNull(picture);
         assertEquals(4, picture.length);

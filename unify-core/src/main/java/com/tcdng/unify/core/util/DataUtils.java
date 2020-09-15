@@ -1380,6 +1380,37 @@ public final class DataUtils {
      *                     the object to write
      * @param outputStream
      *                     the output stream to write to
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    public static void writeJsonObject(Object object, OutputStream outputStream) throws UnifyException {
+        writeJsonObject(object, outputStream, null, PrintFormat.NONE);
+    }
+
+    /**
+     * Writes a JSON object to an output stream. Has no support for collections.
+     * 
+     * @param object
+     *                     the object to write
+     * @param outputStream
+     *                     the output stream to write to
+     * @param printFormat
+     *                     formatting type
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    public static void writeJsonObject(Object object, OutputStream outputStream, PrintFormat printFormat)
+            throws UnifyException {
+        writeJsonObject(object, outputStream, null, printFormat);
+    }
+
+    /**
+     * Writes a JSON object to an output stream. Has no support for collections.
+     * 
+     * @param object
+     *                     the object to write
+     * @param outputStream
+     *                     the output stream to write to
      * @param charset
      *                     optional character set
      * @param printFormat

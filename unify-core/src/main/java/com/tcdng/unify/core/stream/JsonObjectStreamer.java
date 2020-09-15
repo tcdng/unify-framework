@@ -27,7 +27,7 @@ import com.tcdng.unify.core.UnifyException;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface JSONObjectStreamer extends ObjectStreamer {
+public interface JsonObjectStreamer extends ObjectStreamer {
 
     /**
      * Reads an object from supplied input stream.

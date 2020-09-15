@@ -30,9 +30,9 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.data.FactoryMaps;
-import com.tcdng.unify.core.stream.JSONObjectStreamer;
+import com.tcdng.unify.core.stream.JsonObjectStreamer;
 import com.tcdng.unify.core.stream.ObjectStreamer;
-import com.tcdng.unify.core.stream.XMLObjectStreamer;
+import com.tcdng.unify.core.stream.XmlObjectStreamer;
 import com.tcdng.unify.core.util.IOUtils;
 import com.tcdng.unify.core.util.NetworkUtils;
 import com.tcdng.unify.web.UnifyWebErrorConstants;
@@ -53,10 +53,10 @@ import com.tcdng.unify.web.discovery.gem.data.DiscoverRemoteCallResult;
 public class WebClientImpl extends AbstractUnifyComponent implements WebClient {
 
     @Configurable
-    private XMLObjectStreamer xmlObjectStreamer;
+    private XmlObjectStreamer xmlObjectStreamer;
 
     @Configurable
-    private JSONObjectStreamer jsonObjectStreamer;
+    private JsonObjectStreamer jsonObjectStreamer;
 
     @Configurable
     private RemoteCallBinaryMessageStreamer remoteCallBinaryMessageStreamer;

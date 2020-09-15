@@ -19,7 +19,7 @@ package com.tcdng.unify.web;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.constant.MimeType;
-import com.tcdng.unify.core.stream.JSONObjectStreamer;
+import com.tcdng.unify.core.stream.JsonObjectStreamer;
 
 /**
  * Abstract JSON result plain controller.
@@ -30,7 +30,7 @@ import com.tcdng.unify.core.stream.JSONObjectStreamer;
 public abstract class AbstractJsonResultPlainController extends AbstractPlainController {
 
     @Configurable
-    private JSONObjectStreamer jsonObjectStreamer;
+    private JsonObjectStreamer jsonObjectStreamer;
 
     @Override
     public void execute(ClientRequest request, ClientResponse response) throws UnifyException {

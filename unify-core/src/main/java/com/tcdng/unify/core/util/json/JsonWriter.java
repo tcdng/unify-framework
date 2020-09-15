@@ -16,6 +16,12 @@
 
 package com.tcdng.unify.core.util.json;
 
+import java.io.IOException;
+import java.io.OutputStream;
+
+import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.util.DataUtils;
+
 /**
  * Json writer.
  * 
@@ -218,6 +224,14 @@ public class JsonWriter {
         return this;
     }
 
+    public JsonWriter writeObject(String fieldName, Object object)
+            throws UnifyException {
+        preWrite();
+        sb.append('"').append(fieldName).append("\":");
+        DataUtils.writeJsonObject(object, new JsonWriterOutputStream());
+        return this;
+    }
+    
     @Override
     public String toString() {
         if (depth >= 0) {
@@ -225,6 +239,15 @@ public class JsonWriter {
         }
         
         return sb.toString();
+    }
+    
+    private class JsonWriterOutputStream extends OutputStream {
+
+        @Override
+        public void write(int b) throws IOException {
+            sb.append((char) b);
+        }
+        
     }
     
     private void preWrite() {

@@ -27,7 +27,7 @@ import com.tcdng.unify.core.UnifyException;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface XMLObjectStreamer extends ObjectStreamer {
+public interface XmlObjectStreamer extends ObjectStreamer {
 
     /**
      * Reads an object from supplied input stream.

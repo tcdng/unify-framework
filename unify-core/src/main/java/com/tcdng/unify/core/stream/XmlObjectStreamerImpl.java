@@ -54,7 +54,7 @@ import com.tcdng.unify.core.data.FactoryMap;
  * @since 1.0
  */
 @Component(name = ApplicationComponents.APPLICATION_XMLOBJECTSTREAMER, description = "JAXB XML Object Streamer")
-public class XMLObjectStreamerImpl extends AbstractObjectStreamer implements XMLObjectStreamer {
+public class XmlObjectStreamerImpl extends AbstractObjectStreamer implements XmlObjectStreamer {
 
     @Configurable("32")
     private int maxPoolSize;
@@ -64,7 +64,7 @@ public class XMLObjectStreamerImpl extends AbstractObjectStreamer implements XML
 
     private FactoryMap<Class<?>, JAXBContextPool> jaxbContextPools;
 
-    public XMLObjectStreamerImpl() {
+    public XmlObjectStreamerImpl() {
         jaxbContextPools = new FactoryMap<Class<?>, JAXBContextPool>() {
 
             @Override

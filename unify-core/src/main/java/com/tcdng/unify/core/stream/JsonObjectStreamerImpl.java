@@ -34,7 +34,7 @@ import com.tcdng.unify.core.util.DataUtils;
  * @since 1.0
  */
 @Component(name = ApplicationComponents.APPLICATION_JSONOBJECTSTREAMER, description = "JSON Object Streamer")
-public class JSONObjectStreamerImpl extends AbstractObjectStreamer implements JSONObjectStreamer {
+public class JsonObjectStreamerImpl extends AbstractObjectStreamer implements JsonObjectStreamer {
 
     @Override
     public <T> T unmarshal(Class<T> type, InputStream inputStream, Charset charset) throws UnifyException {

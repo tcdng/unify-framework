@@ -22,7 +22,7 @@ import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
-import com.tcdng.unify.core.stream.JSONObjectStreamer;
+import com.tcdng.unify.core.stream.JsonObjectStreamer;
 import com.tcdng.unify.core.stream.ObjectStreamer;
 
 /**
@@ -35,7 +35,7 @@ import com.tcdng.unify.core.stream.ObjectStreamer;
 public class JsonWebServiceCaller extends AbstractWebServiceCaller {
 
     @Configurable
-    private JSONObjectStreamer streamer;
+    private JsonObjectStreamer streamer;
 
     @Override
     protected void setHeaders(HttpURLConnection conn) throws UnifyException {

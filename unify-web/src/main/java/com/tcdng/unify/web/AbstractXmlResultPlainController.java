@@ -19,7 +19,7 @@ package com.tcdng.unify.web;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.constant.MimeType;
-import com.tcdng.unify.core.stream.XMLObjectStreamer;
+import com.tcdng.unify.core.stream.XmlObjectStreamer;
 
 /**
  * Abstract XML result plain controller.
@@ -30,7 +30,7 @@ import com.tcdng.unify.core.stream.XMLObjectStreamer;
 public abstract class AbstractXmlResultPlainController extends AbstractPlainController {
 
     @Configurable
-    private XMLObjectStreamer xmlObjectStreamer;
+    private XmlObjectStreamer xmlObjectStreamer;
 
     @Override
     public void execute(ClientRequest request, ClientResponse response) throws UnifyException {

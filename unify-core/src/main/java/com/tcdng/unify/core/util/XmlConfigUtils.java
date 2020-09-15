@@ -34,14 +34,14 @@ import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 
 /**
- * Provides utility methods for XML configiration.
+ * Provides utility methods for XML configuration.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public final class XMLConfigUtils {
+public final class XmlConfigUtils {
 
-    private XMLConfigUtils() {
+    private XmlConfigUtils() {
 
     }
 

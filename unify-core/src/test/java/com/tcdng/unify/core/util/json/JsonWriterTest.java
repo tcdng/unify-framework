@@ -149,4 +149,14 @@ public class JsonWriterTest {
         assertEquals(2, writer.getCapacity());
     }
 
+    @Test
+    public void testWriteObject() throws Exception {
+        Contact contact = new Contact("Jones", "+2348020000000", "24 Parklane Apapa", "Lagos, State");
+        String str = new JsonWriter()
+                        .beginObject()
+                            .writeObject("contact", contact)
+                        .endObject().toString();
+        assertEquals("{\"contact\":{\"name\":\"Jones\",\"mobile\":\"+2348020000000\",\"addressLine\":[\"24 Parklane Apapa\",\"Lagos, State\"]}}", str);
+    }
+
 }
