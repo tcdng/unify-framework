@@ -418,8 +418,9 @@ public class Query<T extends Entity> implements Cloneable {
         return groupBy;
     }
 
-    public void setGroupBy(GroupBy groupBy) {
+    public Query<T> setGroupBy(GroupBy groupBy) {
         this.groupBy = groupBy;
+        return this;
     }
 
     public boolean isGroupBy() {
@@ -433,8 +434,9 @@ public class Query<T extends Entity> implements Cloneable {
         return order;
     }
 
-    public void setOrder(Order order) {
+    public Query<T>  setOrder(Order order) {
         this.order = order;
+        return this;
     }
 
     public boolean isOrder() {
