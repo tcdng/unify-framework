@@ -1660,38 +1660,44 @@ public final class DataUtils {
                 JsonValueConverter<?> converter = jsonConverterMap.get(paramType);
                 if (converter == null) {
                     if (Collection.class.isAssignableFrom(paramType)) {
-                        JsonArray array = value.asArray();
-                        Collection<Object> result = ReflectUtils.newInstance(
-                                DataUtils.getCollectionConcreteType((Class<? extends Collection>) paramType));
-                        if (sInfo.isParameterArgumented()) {
-                            Class<?> componentType = sInfo.getArgumentType();
-                            converter = jsonConverterMap.get(sInfo.getArgumentType());
-                            if (converter == null) {
-                                for (int i = 0; i < array.size(); i++) {
-                                    result.add(DataUtils.readJsonObject(componentType.newInstance(),
-                                            array.get(i).asObject()));
-                                }
-                            } else {
-                                for (int i = 0; i < array.size(); i++) {
-                                    result.add(converter.read(array.get(i)));
+                        Collection<Object> result = null;
+                        if (!value.isNull()) {
+                            JsonArray array = value.asArray();
+                            result = ReflectUtils.newInstance(
+                                    DataUtils.getCollectionConcreteType((Class<? extends Collection>) paramType));
+                            if (sInfo.isParameterArgumented()) {
+                                Class<?> componentType = sInfo.getArgumentType();
+                                converter = jsonConverterMap.get(sInfo.getArgumentType());
+                                if (converter == null) {
+                                    for (int i = 0; i < array.size(); i++) {
+                                        result.add(DataUtils.readJsonObject(componentType.newInstance(),
+                                                array.get(i).asObject()));
+                                    }
+                                } else {
+                                    for (int i = 0; i < array.size(); i++) {
+                                        result.add(converter.read(array.get(i)));
+                                    }
                                 }
                             }
                         }
 
                         sInfo.getSetter().invoke(object, (Object) result);
                     } else if (paramType.isArray()) {
-                        JsonArray array = value.asArray();
-                        Class<?> componentType = paramType.getComponentType();
-                        converter = jsonConverterMap.get(componentType);
-                        Object[] valueArray = (Object[]) Array.newInstance(componentType, array.size());
-                        if (converter == null) {
-                            for (int i = 0; i < valueArray.length; i++) {
-                                valueArray[i] = DataUtils.readJsonObject(componentType.newInstance(),
-                                        array.get(i).asObject());
-                            }
-                        } else {
-                            for (int i = 0; i < valueArray.length; i++) {
-                                valueArray[i] = converter.read(array.get(i));
+                        Object[] valueArray = null;
+                        if (!value.isNull()) {
+                            JsonArray array = value.asArray();
+                            Class<?> componentType = paramType.getComponentType();
+                            converter = jsonConverterMap.get(componentType);
+                            valueArray = (Object[]) Array.newInstance(componentType, array.size());
+                            if (converter == null) {
+                                for (int i = 0; i < valueArray.length; i++) {
+                                    valueArray[i] = DataUtils.readJsonObject(componentType.newInstance(),
+                                            array.get(i).asObject());
+                                }
+                            } else {
+                                for (int i = 0; i < valueArray.length; i++) {
+                                    valueArray[i] = converter.read(array.get(i));
+                                }
                             }
                         }
 
@@ -1774,6 +1780,8 @@ public final class DataUtils {
                             jsonObject.add(name, converter.write(value));
                         }
                     }
+                } else {
+                    jsonObject.add(name, (String) null);
                 }
             }
         }

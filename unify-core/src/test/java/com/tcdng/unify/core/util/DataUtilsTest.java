@@ -365,7 +365,7 @@ public class DataUtilsTest {
     public void testWriteEmptyJsonObject() throws Exception {
         String json = DataUtils.writeJsonObject(new Inventory(), PrintFormat.NONE);
         assertNotNull(json);
-        assertEquals("{}", json);
+        assertEquals("{\"entries\":null}", json);
     }
 
     @Test

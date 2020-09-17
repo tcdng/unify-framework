@@ -31,6 +31,8 @@ public class Contact {
     
     private String mobile;
 
+    private String postCode;
+    
     private List<String> addressLine;
     
     public Contact(String name, String mobile, String... addressLine) {
@@ -57,6 +59,14 @@ public class Contact {
 
     public void setMobile(String mobile) {
         this.mobile = mobile;
+    }
+
+    public String getPostCode() {
+        return postCode;
+    }
+
+    public void setPostCode(String postCode) {
+        this.postCode = postCode;
     }
 
     public List<String> getAddressLine() {
