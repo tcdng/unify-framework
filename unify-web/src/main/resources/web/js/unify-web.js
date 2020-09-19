@@ -5163,8 +5163,6 @@ ux.documentHidePopup = function(uEv) {
 	if (ux.popCurr) {
 		var elem = uEv.uTrg;
 		while (elem) {
-			// Do not hide. Exit if element clicked is original source element or
-			// popup window
 			if (elem == ux.popupOrigin || elem == ux.popCurr) {
 				return;
 			}
@@ -5172,6 +5170,19 @@ ux.documentHidePopup = function(uEv) {
 		}
 
 		ux.hidePopup(uEv);
+	}
+	
+	if (ux.detachObj) {
+		const orig = _id(ux.detachObj.originId);
+		var elem = uEv.uTrg;
+		while (elem) {
+			if (elem == orig || elem == ux.detachObj) {
+				return;
+			}
+			elem = elem.parentElement;
+		}
+
+		ux.detachObj.hide();
 	}
 }
 
