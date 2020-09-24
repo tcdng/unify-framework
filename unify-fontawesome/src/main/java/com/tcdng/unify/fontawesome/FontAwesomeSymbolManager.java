@@ -108,6 +108,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("newspaper", "&#xf1ea;");
         registerSymbol("paper-clip", "&#xf0c6;");
         registerSymbol("plus", "&#xf067;");
+        registerSymbol("plus-square", "&#xf0fe;");
         registerSymbol("redo", "&#xf01e;");
         registerSymbol("redo-alt", "&#xf2f9;");
         registerSymbol("rocket", "&#xf135;");
