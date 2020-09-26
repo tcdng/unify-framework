@@ -35,7 +35,10 @@ public abstract class AbstractFormattedControl extends AbstractControl {
 
     @Override
     public void populate(DataTransferBlock transferBlock) throws UnifyException {
-        getValueStore().store(transferBlock.getItemIndex(), getBinding(), transferBlock.getValue(), getFormatter());
+        String binding = getBinding();
+        if (binding != null) {
+            getValueStore().store(transferBlock.getItemIndex(), binding, transferBlock.getValue(), getFormatter());
+        }
     }
 
     @Override

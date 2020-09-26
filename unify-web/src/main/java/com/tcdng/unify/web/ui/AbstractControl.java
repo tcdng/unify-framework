@@ -89,7 +89,10 @@ public abstract class AbstractControl extends AbstractWidget implements Control 
 
     @Override
     public void populate(DataTransferBlock transferBlock) throws UnifyException {
-        getValueStore().store(transferBlock.getItemIndex(), getBinding(), transferBlock.getValue());
+        String binding = getBinding();
+        if (binding != null) {
+            getValueStore().store(transferBlock.getItemIndex(), binding, transferBlock.getValue());
+        }
     }
 
     @Override
