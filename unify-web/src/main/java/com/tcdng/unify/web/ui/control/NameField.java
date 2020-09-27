@@ -31,7 +31,8 @@ import com.tcdng.unify.core.annotation.UplAttributes;
 @UplAttributes({ @UplAttribute(name = "underscore", type = boolean.class, defaultVal = "false"),
         @UplAttribute(name = "dollar", type = boolean.class, defaultVal = "false"),
         @UplAttribute(name = "period", type = boolean.class, defaultVal = "false"),
-        @UplAttribute(name = "dash", type = boolean.class, defaultVal = "false") })
+        @UplAttribute(name = "dash", type = boolean.class, defaultVal = "false"),
+        @UplAttribute(name = "special", type = boolean.class, defaultVal = "false")})
 public class NameField extends TextField {
 
     public boolean isAcceptUnderscore() throws UnifyException {
@@ -48,5 +49,9 @@ public class NameField extends TextField {
 
     public boolean isAcceptDash() throws UnifyException {
         return getUplAttribute(boolean.class, "dash");
+    }
+
+    public boolean isAcceptSpecial() throws UnifyException {
+        return getUplAttribute(boolean.class, "special");
     }
 }

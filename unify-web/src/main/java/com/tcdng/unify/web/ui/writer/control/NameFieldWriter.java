@@ -35,6 +35,10 @@ public class NameFieldWriter extends TextFieldWriter {
     @Override
     protected String getFormatRegex(TextField textField) throws UnifyException {
         NameField nameField = (NameField) textField;
+        if (nameField.isAcceptSpecial()) {
+            return WebRegexUtils.getNameAndSpecialCharactersFormatRegex();
+        }
+
         return WebRegexUtils.getNameFormatRegex(nameField.isAcceptUnderscore(), nameField.isAcceptDollar(),
                 nameField.isAcceptPeriod(), nameField.isAcceptDash());
     }

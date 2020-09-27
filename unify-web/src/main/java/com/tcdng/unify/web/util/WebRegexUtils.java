@@ -77,6 +77,18 @@ public final class WebRegexUtils {
     }
 
     /**
+     * Gets a JavaScript REGEX that allows alphanumeric characters and all special characters.
+     * 
+     * @return the name format regex
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public static String getNameAndSpecialCharactersFormatRegex()
+            throws UnifyException {
+        return "/^[\\\\w\\\\^\\\\$\\\\?\\\\*\\\\+\\\\.\\\\<\\\\>\\\\-\\\\=\\\\!\\\\_\\\\@\\\\#]*$/";
+    }
+
+    /**
      * Gets JavaScript REGEX for identifiers.
      * 
      * @return the identifier format regex
