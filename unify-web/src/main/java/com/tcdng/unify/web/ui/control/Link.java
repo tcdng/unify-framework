@@ -34,11 +34,6 @@ import com.tcdng.unify.web.ui.AbstractTargetControl;
 public class Link extends AbstractTargetControl {
 
     @Override
-    public boolean isContainerDisabled() throws UnifyException {
-        return super.isContainerDisabled() || !isContainerEditable();
-    }
-
-    @Override
     public boolean isLayoutCaption() {
         return false;
     }
