@@ -283,7 +283,7 @@ public class Report {
     }
 
     public void setParameter(ReportParameter reportParameter) {
-        reportParameters.setParameter(reportParameter);
+        reportParameters.addParameter(reportParameter);
     }
 
     public boolean isParameter(String name) {
@@ -609,7 +609,7 @@ public class Report {
         }
 
         public Builder addParameter(ReportParameter reportParameter) {
-            reportParameters.setParameter(reportParameter);
+            reportParameters.addParameter(reportParameter);
             return this;
         }
 
@@ -620,7 +620,7 @@ public class Report {
         public Builder addParameter(String name, String description, String formatter, Object value,
                 boolean headerDetail, boolean footerDetail) {
             reportParameters
-                    .setParameter(new ReportParameter(name, description, formatter, value, headerDetail, footerDetail));
+                    .addParameter(new ReportParameter(name, description, formatter, value, headerDetail, footerDetail));
             return this;
         }
 

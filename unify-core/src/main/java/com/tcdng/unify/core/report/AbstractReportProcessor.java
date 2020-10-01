@@ -67,6 +67,6 @@ public abstract class AbstractReportProcessor extends AbstractUnifyComponent imp
 
     protected void setReportHeaderParameter(ReportParameters reportParameters, String paramName, String paramDesc,
             String formatter, Object paramValue) throws UnifyException {
-        reportParameters.setParameter(paramName, paramDesc, formatter, paramValue, true, false);
+        reportParameters.addParameter(paramName, paramDesc, formatter, paramValue, true, false);
     }
 }

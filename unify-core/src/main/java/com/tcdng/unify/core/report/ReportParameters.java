@@ -64,16 +64,26 @@ public class ReportParameters {
         return null;
     }
 
-    public void setParameter(String name, String description, Object value) {
-        setParameter(name, description, null, value, false, false);
+    public boolean setParameterValue(String name, Object val) {
+        ReportParameter reportParameter = parameters.get(name);
+        if (reportParameter != null) {
+            reportParameter.setValue(val);
+            return true;
+        }
+        
+        return false;
+    }
+    
+    public void addParameter(String name, String description, Object value) {
+        addParameter(name, description, null, value, false, false);
     }
 
-    public void setParameter(String name, String description, String formatter, Object value, boolean headerDetail,
+    public void addParameter(String name, String description, String formatter, Object value, boolean headerDetail,
             boolean footerDetail) {
-        setParameter(new ReportParameter(name, description, formatter, value, headerDetail, footerDetail));
+        addParameter(new ReportParameter(name, description, formatter, value, headerDetail, footerDetail));
     }
 
-    public void setParameter(ReportParameter parameter) {
+    public void addParameter(ReportParameter parameter) {
         if (!parameters.containsKey(parameter.getName())) {
             if (parameter.isHeaderDetail()) {
                 showInHeaderCount++;
