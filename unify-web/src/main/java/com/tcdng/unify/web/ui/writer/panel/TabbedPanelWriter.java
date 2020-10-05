@@ -48,7 +48,7 @@ public class TabbedPanelWriter extends AbstractSwitchPanelWriter {
         writer.writeCommandURLParam("pCmdURL");
         writer.writeParam("pActTabId", tabbedPanel.getActiveTabId());
         writer.writeParam("pActTabIdList", DataUtils.toArray(String.class, tabbedPanel.getActiveTabExpandedIdList()));
-        writer.writeParam("pSelTabId", tabbedPanel.getSelectedTabId()).write('"');
+        writer.writeParam("pSelTabId", tabbedPanel.getSelectedTabId());
         writer.writeParam("pTabIdList" , DataUtils.toArray(String.class, tabbedPanel.getTabIds()));
         List<String> captionIds = new ArrayList<String>();
         for (String longName : tabbedPanel.getLayoutWidgetLongNames()) {
