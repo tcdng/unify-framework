@@ -19,7 +19,7 @@ import java.util.Map;
 
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.constant.UserPlatform;
+import com.tcdng.unify.core.constant.ClientPlatform;
 
 /**
  * UPL component writer manager.
@@ -38,5 +38,5 @@ public interface UplComponentWriterManager extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    Map<Class<? extends UplComponent>, UplComponentWriter> getWriters(UserPlatform platform) throws UnifyException;
+    Map<Class<? extends UplComponent>, UplComponentWriter> getWriters(ClientPlatform platform) throws UnifyException;
 }

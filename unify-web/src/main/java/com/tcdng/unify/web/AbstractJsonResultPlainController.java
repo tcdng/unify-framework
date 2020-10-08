@@ -33,7 +33,7 @@ public abstract class AbstractJsonResultPlainController extends AbstractPlainCon
     private JsonObjectStreamer jsonObjectStreamer;
 
     @Override
-    public void execute(ClientRequest request, ClientResponse response) throws UnifyException {
+    public void doProcess(ClientRequest request, ClientResponse response) throws UnifyException {
         response.setContentType(MimeType.APPLICATION_JSON.template());
         jsonObjectStreamer.marshal(doExecute(request), response.getWriter());
     }

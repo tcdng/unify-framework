@@ -26,7 +26,7 @@ import org.junit.Test;
 
 import com.tcdng.unify.core.AbstractUnifyComponentTest;
 import com.tcdng.unify.core.ApplicationComponents;
-import com.tcdng.unify.core.constant.UserPlatform;
+import com.tcdng.unify.core.constant.ClientPlatform;
 import com.tcdng.unify.core.upl.artifacts.TestDocumentA;
 import com.tcdng.unify.core.upl.artifacts.TestDocumentAWriter;
 import com.tcdng.unify.core.upl.artifacts.TestDocumentB;
@@ -49,7 +49,7 @@ public class UplComponentWriterManagerTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testGetDefaultPlatformWriters() throws Exception {
-        Map<Class<? extends UplComponent>, UplComponentWriter> writers = ucwManager.getWriters(UserPlatform.DEFAULT);
+        Map<Class<? extends UplComponent>, UplComponentWriter> writers = ucwManager.getWriters(ClientPlatform.DEFAULT);
         assertNotNull(writers);
         assertTrue(writers.containsKey(TestDocumentA.class));
         assertTrue(writers.containsKey(TestDocumentB.class));
@@ -80,7 +80,7 @@ public class UplComponentWriterManagerTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testGetKnownPlatformWritersFull() throws Exception {
-        Map<Class<? extends UplComponent>, UplComponentWriter> writers = ucwManager.getWriters(UserPlatform.MOBILE);
+        Map<Class<? extends UplComponent>, UplComponentWriter> writers = ucwManager.getWriters(ClientPlatform.MOBILE);
         assertNotNull(writers);
         assertTrue(writers.containsKey(TestDocumentA.class));
         assertTrue(writers.containsKey(TestDocumentB.class));
@@ -111,7 +111,7 @@ public class UplComponentWriterManagerTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testGetKnownPlatformWritersPartial() throws Exception {
-        Map<Class<? extends UplComponent>, UplComponentWriter> writers = ucwManager.getWriters(UserPlatform.DEFAULT);
+        Map<Class<? extends UplComponent>, UplComponentWriter> writers = ucwManager.getWriters(ClientPlatform.DEFAULT);
         assertNotNull(writers);
         assertTrue(writers.containsKey(TestDocumentA.class));
         assertTrue(writers.containsKey(TestDocumentB.class));
@@ -142,9 +142,9 @@ public class UplComponentWriterManagerTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testGetUnknownPlatformWriters() throws Exception {
-        Map<Class<? extends UplComponent>, UplComponentWriter> writers = ucwManager.getWriters(UserPlatform.DEFAULT);
+        Map<Class<? extends UplComponent>, UplComponentWriter> writers = ucwManager.getWriters(ClientPlatform.DEFAULT);
         Map<Class<? extends UplComponent>, UplComponentWriter> defaultWriters =
-                ucwManager.getWriters(UserPlatform.DEFAULT);
+                ucwManager.getWriters(ClientPlatform.DEFAULT);
         assertSame(defaultWriters, writers);
     }
 

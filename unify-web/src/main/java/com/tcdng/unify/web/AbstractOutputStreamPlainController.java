@@ -40,7 +40,7 @@ public abstract class AbstractOutputStreamPlainController extends AbstractPlainC
     }
 
     @Override
-    public void execute(ClientRequest request, ClientResponse response) throws UnifyException {
+    public void doProcess(ClientRequest request, ClientResponse response) throws UnifyException {
         response.setContentType(contentType);
         doExecute(response.getOutputStream(), request);
     }

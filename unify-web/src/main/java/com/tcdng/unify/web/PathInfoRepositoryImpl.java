@@ -21,7 +21,6 @@ import com.tcdng.unify.core.UnifyComponentConfig;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.data.FactoryMap;
-import com.tcdng.unify.web.ui.Page;
 
 /**
  * Default path information repository implementation.
@@ -32,20 +31,9 @@ import com.tcdng.unify.web.ui.Page;
 @Component(WebApplicationComponents.APPLICATION_PATHINFOREPOSITORY)
 public class PathInfoRepositoryImpl extends AbstractUnifyComponent implements PathInfoRepository {
 
-	private FactoryMap<String, PagePathInfo> pagePathInfos;
-
 	private FactoryMap<String, ControllerPathParts> controllerPathParts;
 
 	public PathInfoRepositoryImpl() {
-		pagePathInfos = new FactoryMap<String, PagePathInfo>() {
-
-			@Override
-			protected PagePathInfo create(String controllerPathId, Object... params) throws Exception {
-				return new PagePathInfo(controllerPathId, null, controllerPathId + "/openPage",
-						controllerPathId + "/savePage", controllerPathId + "/closePage", false);
-			}
-		};
-
 		controllerPathParts = new FactoryMap<String, ControllerPathParts>() {
 
 			@Override
@@ -75,41 +63,15 @@ public class PathInfoRepositoryImpl extends AbstractUnifyComponent implements Pa
 					}
 				}
 
-				boolean uiController = false;
 				if (ucc == null) {
 					ucc = getComponentConfig(Controller.class, controllerName);
 				}
 
-				if (ucc != null) {
-					uiController = UIController.class.isAssignableFrom(ucc.getType());
-				}
-
+                boolean sessionless = ucc == null ? false: SessionlessController.class.isAssignableFrom(ucc.getType());
 				return new ControllerPathParts(controllerPath, pathId, controllerName, pathVariable, actionName,
-						uiController);
+						sessionless);
 			}
-
-			// @Override
-			// protected boolean keep(ControllerPathParts controllerPathParts) throws
-			// Exception {
-			// return !controllerPathParts.isVariablePath();
-			// }
-
 		};
-	}
-
-	@Override
-	public PagePathInfo getPagePathInfo(Page page) throws UnifyException {
-		return pagePathInfos.get(page.getPathId());
-	}
-
-	@Override
-	public PagePathInfo getPagePathInfo(String path) throws UnifyException {
-		return pagePathInfos.get(path);
-	}
-
-	@Override
-	public ControllerPathParts getControllerPathParts(Page page) throws UnifyException {
-		return controllerPathParts.get(page.getPathId());
 	}
 
 	@Override

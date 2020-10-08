@@ -61,8 +61,8 @@ public class RequestPathParts {
         return controllerPathParts.getPathVariable();
     }
 
-    public boolean isUiController() {
-        return controllerPathParts.isUiController();
+    public boolean isSessionless() {
+        return controllerPathParts.isSessionless();
     }
 
     public boolean isVariablePath() {

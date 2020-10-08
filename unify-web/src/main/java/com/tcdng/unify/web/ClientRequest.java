@@ -20,6 +20,7 @@ import java.nio.charset.Charset;
 import java.util.Set;
 
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.constant.ClientPlatform;
 
 /**
  * A client request.
@@ -29,6 +30,13 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface ClientRequest {
 
+    /**
+     * Gets the client platform.
+     * 
+     * @return the platform
+     */
+    ClientPlatform getClientPlatform();
+    
     /**
      * Returns the client request type.
      */

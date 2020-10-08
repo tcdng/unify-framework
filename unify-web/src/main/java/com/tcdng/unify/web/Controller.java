@@ -16,6 +16,7 @@
 package com.tcdng.unify.web;
 
 import com.tcdng.unify.core.UnifyComponent;
+import com.tcdng.unify.core.UnifyException;
 
 /**
  * Component interface that must be implemented by every controller class.
@@ -26,9 +27,27 @@ import com.tcdng.unify.core.UnifyComponent;
 public interface Controller extends UnifyComponent {
 
     /**
-     * Returns the controller type.
+     * Processes a client request.
+     * 
+     * @param request
+     *                 the client request to process
+     * @param response
+     *                 the client response object
+     * @throws UnifyException
+     *                        if an error occurs
      */
-    ControllerType getType();
+    void process(ClientRequest request, ClientResponse response) throws UnifyException;
+
+    /**
+     * Ensures context resources associated with this controller are created.
+     * 
+     * @param controllerPathParts
+     *                            the controller path parts.
+     * 
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    void ensureContextResources(ControllerPathParts controllerPathParts) throws UnifyException;
 
     /**
      * Tests if controller requires secured access.

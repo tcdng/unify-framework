@@ -43,7 +43,7 @@ public abstract class AbstractByteArrayOutputStreamPlainController extends Abstr
     }
 
     @Override
-    public void execute(ClientRequest request, ClientResponse response) throws UnifyException {
+    public void doProcess(ClientRequest request, ClientResponse response) throws UnifyException {
         try {
             response.setContentType(getContentType());
             if (StringUtils.isNotBlank(disposition)) {

@@ -21,7 +21,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.tcdng.unify.core.constant.UserPlatform;
+import com.tcdng.unify.core.constant.ClientPlatform;
 import com.tcdng.unify.core.upl.UplComponent;
 
 /**
@@ -36,7 +36,7 @@ import com.tcdng.unify.core.upl.UplComponent;
 public @interface Writes {
 
     /** The target platform */
-    UserPlatform target() default UserPlatform.DEFAULT;
+    ClientPlatform target() default ClientPlatform.DEFAULT;
 
     /** UI component that writer writes */
     Class<? extends UplComponent> value();

@@ -19,7 +19,6 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import com.tcdng.unify.core.constant.UserPlatform;
 import com.tcdng.unify.core.data.Context;
 
 /**
@@ -54,8 +53,6 @@ public class SessionContext extends Context {
 
     private String remoteUser;
 
-    private UserPlatform platform;
-
     private Date lastAccessTime;
 
     private boolean isNewLastAccessTime;
@@ -63,7 +60,7 @@ public class SessionContext extends Context {
     private boolean useDaylightSavings;
 
     public SessionContext(String id, Locale locale, TimeZone timeZone, String uriBase, String contextPath,
-            String tenantPath, String remoteHost, String remoteAddress, String remoteUser, UserPlatform platform) {
+            String tenantPath, String remoteHost, String remoteAddress, String remoteUser) {
         this.id = id;
         this.locale = locale;
         this.timeZone = timeZone;
@@ -73,7 +70,6 @@ public class SessionContext extends Context {
         this.remoteHost = remoteHost;
         this.remoteAddress = remoteAddress;
         this.remoteUser = remoteUser;
-        this.platform = platform;
         this.isNewLastAccessTime = true;
         setAttribute(TRUE_ATTRIBUTE, Boolean.TRUE);
         setAttribute(FALSE_ATTRIBUTE, Boolean.FALSE);
@@ -121,10 +117,6 @@ public class SessionContext extends Context {
 
     public String getRemoteUser() {
         return remoteUser;
-    }
-
-    public UserPlatform getPlatform() {
-        return platform;
     }
 
     public boolean isWithTenantPath() {

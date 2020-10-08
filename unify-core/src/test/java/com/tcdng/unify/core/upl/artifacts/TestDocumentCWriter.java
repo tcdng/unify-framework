@@ -17,7 +17,7 @@ package com.tcdng.unify.core.upl.artifacts;
 
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
-import com.tcdng.unify.core.constant.UserPlatform;
+import com.tcdng.unify.core.constant.ClientPlatform;
 import com.tcdng.unify.core.upl.AbstractUplComponentWriter;
 
 /**
@@ -26,7 +26,7 @@ import com.tcdng.unify.core.upl.AbstractUplComponentWriter;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Writes(target = UserPlatform.MOBILE, value = TestDocumentC.class)
+@Writes(target = ClientPlatform.MOBILE, value = TestDocumentC.class)
 @Component("testdocumentc-writer")
 public class TestDocumentCWriter extends AbstractUplComponentWriter {
 

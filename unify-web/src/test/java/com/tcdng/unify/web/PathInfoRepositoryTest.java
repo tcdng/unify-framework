@@ -34,18 +34,6 @@ public class PathInfoRepositoryTest extends AbstractUnifyWebTest {
     private PathInfoRepository pir;
 
     @Test
-    public void testGetPagePathInfo() throws Exception {
-        PagePathInfo pagePathInfo = pir.getPagePathInfo("/testauthor");
-        assertNotNull(pagePathInfo);
-        assertEquals("/testauthor", pagePathInfo.getPathId());
-        assertNull(pagePathInfo.getColorScheme());
-        assertEquals("/testauthor/openPage", pagePathInfo.getOpenPagePath());
-        assertEquals("/testauthor/savePage", pagePathInfo.getSavePagePath());
-        assertEquals("/testauthor/closePage", pagePathInfo.getClosePagePath());
-        assertFalse(pagePathInfo.isRemoteSave());
-    }
-
-    @Test
     public void testGetPathPartsNoAction() throws Exception {
         ControllerPathParts controllerPathParts = pir.getControllerPathParts("/testauthor");
         assertNotNull(controllerPathParts);
@@ -55,7 +43,7 @@ public class PathInfoRepositoryTest extends AbstractUnifyWebTest {
         assertEquals("/testauthor", controllerPathParts.getControllerName());
         assertNull(controllerPathParts.getPathVariable());
         assertNull(controllerPathParts.getActionName());
-        assertTrue(controllerPathParts.isUiController());
+        assertFalse(controllerPathParts.isSessionless());
         assertFalse(controllerPathParts.isActionPath());
         assertFalse(controllerPathParts.isVariablePath());
     }
@@ -70,7 +58,7 @@ public class PathInfoRepositoryTest extends AbstractUnifyWebTest {
         assertEquals("/testauthor", controllerPathParts.getControllerName());
         assertNull(controllerPathParts.getPathVariable());
         assertEquals("/createAuthor", controllerPathParts.getActionName());
-        assertTrue(controllerPathParts.isUiController());
+        assertFalse(controllerPathParts.isSessionless());
         assertTrue(controllerPathParts.isActionPath());
         assertFalse(controllerPathParts.isVariablePath());
     }
@@ -85,7 +73,7 @@ public class PathInfoRepositoryTest extends AbstractUnifyWebTest {
         assertEquals("/testauthor", controllerPathParts.getControllerName());
         assertEquals("20", controllerPathParts.getPathVariable());
         assertNull(controllerPathParts.getActionName());
-        assertTrue(controllerPathParts.isUiController());
+        assertFalse(controllerPathParts.isSessionless());
         assertFalse(controllerPathParts.isActionPath());
         assertTrue(controllerPathParts.isVariablePath());
     }
@@ -100,7 +88,7 @@ public class PathInfoRepositoryTest extends AbstractUnifyWebTest {
         assertEquals("/testauthor", controllerPathParts.getControllerName());
         assertEquals("35", controllerPathParts.getPathVariable());
         assertEquals("/createAuthor", controllerPathParts.getActionName());
-        assertTrue(controllerPathParts.isUiController());
+        assertFalse(controllerPathParts.isSessionless());
         assertTrue(controllerPathParts.isActionPath());
         assertTrue(controllerPathParts.isVariablePath());
     }

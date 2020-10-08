@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.constant.ClientPlatform;
 
 /**
  * Test controller request.
@@ -38,6 +39,11 @@ public class TestClientRequest extends AbstractClientRequest {
     public TestClientRequest(RequestPathParts requestPathParts) {
         this.requestPathParts = requestPathParts;
         parameters = new HashMap<String, Object>();
+    }
+
+    @Override
+    public ClientPlatform getClientPlatform() {
+        return ClientPlatform.DEFAULT;
     }
 
     @Override

@@ -59,7 +59,7 @@ public class HttpRequestHandlerTest extends AbstractUnifyWebTest {
 		assertEquals("/testauthor", controllerPathParts.getControllerName());
 		assertNull(controllerPathParts.getPathVariable());
 		assertNull(controllerPathParts.getActionName());
-		assertTrue(controllerPathParts.isUiController());
+		assertFalse(controllerPathParts.isSessionless());
 		assertFalse(controllerPathParts.isActionPath());
 		assertFalse(controllerPathParts.isVariablePath());
 	}
@@ -80,7 +80,7 @@ public class HttpRequestHandlerTest extends AbstractUnifyWebTest {
 		assertEquals("/testauthor", controllerPathParts.getControllerName());
 		assertNull(controllerPathParts.getPathVariable());
 		assertEquals("/createAuthor", controllerPathParts.getActionName());
-		assertTrue(controllerPathParts.isUiController());
+        assertFalse(controllerPathParts.isSessionless());
 		assertTrue(controllerPathParts.isActionPath());
 		assertFalse(controllerPathParts.isVariablePath());
 	}
@@ -101,7 +101,7 @@ public class HttpRequestHandlerTest extends AbstractUnifyWebTest {
 		assertEquals("/testauthor", controllerPathParts.getControllerName());
 		assertEquals("20", controllerPathParts.getPathVariable());
 		assertNull(controllerPathParts.getActionName());
-		assertTrue(controllerPathParts.isUiController());
+        assertFalse(controllerPathParts.isSessionless());
 		assertFalse(controllerPathParts.isActionPath());
 		assertTrue(controllerPathParts.isVariablePath());
 	}
@@ -122,7 +122,7 @@ public class HttpRequestHandlerTest extends AbstractUnifyWebTest {
 		assertEquals("/testauthor", controllerPathParts.getControllerName());
 		assertEquals("35", controllerPathParts.getPathVariable());
 		assertEquals("/createAuthor", controllerPathParts.getActionName());
-		assertTrue(controllerPathParts.isUiController());
+        assertFalse(controllerPathParts.isSessionless());
 		assertTrue(controllerPathParts.isActionPath());
 		assertTrue(controllerPathParts.isVariablePath());
 	}

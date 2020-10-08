@@ -16,22 +16,12 @@
 
 package com.tcdng.unify.web;
 
-import com.tcdng.unify.core.UnifyException;
-
 /**
  * Represents a plain controller.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface PlainController extends Controller {
+public interface PlainController extends SessionlessController {
 
-    /**
-     * Executes control using supplied request and response objects.
-     * 
-     * @param request the request object
-     * @param response the response object
-     * @throws UnifyException if an error occurs
-     */
-    void execute(ClientRequest request, ClientResponse response) throws UnifyException;
 }

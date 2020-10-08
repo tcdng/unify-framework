@@ -35,6 +35,7 @@ import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
+import com.tcdng.unify.core.constant.ClientPlatform;
 import com.tcdng.unify.core.data.FactoryMap;
 import com.tcdng.unify.core.data.UploadedFile;
 import com.tcdng.unify.core.util.CalendarUtils;
@@ -43,7 +44,8 @@ import com.tcdng.unify.core.util.IOUtils;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ClientRequest;
 import com.tcdng.unify.web.ClientResponse;
-import com.tcdng.unify.web.ControllerManager;
+import com.tcdng.unify.web.Controller;
+import com.tcdng.unify.web.ControllerFinder;
 import com.tcdng.unify.web.PathInfoRepository;
 import com.tcdng.unify.web.RequestPathParts;
 import com.tcdng.unify.web.TenantPathManager;
@@ -71,8 +73,8 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 
 	private static final int BUFFER_SIZE = 4096;
 
-	@Configurable(WebApplicationComponents.APPLICATION_CONTROLLERMANAGER)
-	private ControllerManager controllerManager;
+	@Configurable
+	private ControllerFinder controllerFinder;
 
 	@Configurable
 	private PathInfoRepository pathInfoRepository;
@@ -149,9 +151,9 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 				charset = Charset.forName(request.getCharacterEncoding());
 			}
 
-			ClientRequest clientRequest = new HttpClientRequest(methodType, requestPathParts, charset,
-					extractRequestParameters(request, charset));
-			ClientResponse clientResponse = new HttpClientResponse((HttpServletResponse) responseObject);
+            ClientRequest clientRequest = new HttpClientRequest(detectClientPlatform(request), methodType,
+                    requestPathParts, charset, extractRequestParameters(request, charset));
+            ClientResponse clientResponse = new HttpClientResponse((HttpServletResponse) responseObject);
 
 			if (StringUtils.isNotBlank((String) request.getParameter(RequestParameterConstants.REMOTE_VIEWER))) {
 				if (!remoteViewerList.isEmpty()) {
@@ -166,7 +168,9 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 				}
 			}
 
-			controllerManager.executeController(clientRequest, clientResponse);
+            Controller controller = controllerFinder
+                    .findController(clientRequest.getRequestPathParts().getControllerPathParts());
+            controller.process(clientRequest, clientResponse);
 		} catch (UnifyException ue) {
 			logError(ue);
 			throw ue;
@@ -189,6 +193,15 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 	protected void onTerminate() throws UnifyException {
 
 	}
+
+    private ClientPlatform detectClientPlatform(HttpServletRequest request) {
+        ClientPlatform platform = ClientPlatform.DEFAULT;
+        String userAgent = request.getHeader("User-Agent");
+        if (userAgent != null && userAgent.indexOf("Mobile") >= 0) {
+            platform = ClientPlatform.MOBILE;
+        }
+        return platform;
+    }
 
 	private Map<String, Object> extractRequestParameters(HttpServletRequest request, Charset charset)
 			throws UnifyException {

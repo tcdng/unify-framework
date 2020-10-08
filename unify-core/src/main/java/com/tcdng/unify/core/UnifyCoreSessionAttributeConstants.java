@@ -24,6 +24,4 @@ package com.tcdng.unify.core;
 public interface UnifyCoreSessionAttributeConstants {
 
     String FORCE_LOGOUT = "UNIFYCORE.FORCELOGOUT";
-
-    String UPLCOMPONENT_WRITERS = "UNIFYCORE.UPLCOMPONENTWRITERS";
 }

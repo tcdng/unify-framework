@@ -24,7 +24,6 @@ import javax.servlet.http.HttpSessionBindingListener;
 import com.tcdng.unify.core.SessionContext;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.UserSession;
-import com.tcdng.unify.core.constant.UserPlatform;
 import com.tcdng.unify.core.system.UserSessionManager;
 import com.tcdng.unify.core.util.ApplicationUtils;
 import com.tcdng.unify.core.util.StringUtils;
@@ -42,13 +41,13 @@ public class HttpUserSession implements UserSession, HttpSessionBindingListener 
     private SessionContext sessionContext;
 
     public HttpUserSession(Locale locale, TimeZone timeZone, String sessionId, String uriBase, String contextPath,
-            String tenantPath, String remoteHost, String remoteIpAddress, String remoteUser, UserPlatform platform) {
+            String tenantPath, String remoteHost, String remoteIpAddress, String remoteUser) {
         if (StringUtils.isBlank(sessionId)) {
             sessionId = ApplicationUtils.generateSessionContextId();
         }
 
         sessionContext = new SessionContext(sessionId, locale, timeZone, uriBase, contextPath, tenantPath, remoteHost,
-                remoteIpAddress, remoteUser, platform);
+                remoteIpAddress, remoteUser);
     }
 
     @Override

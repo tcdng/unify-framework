@@ -29,7 +29,7 @@ import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
-import com.tcdng.unify.core.constant.UserPlatform;
+import com.tcdng.unify.core.constant.ClientPlatform;
 
 /**
  * Default implementation of UPL component writer manager.
@@ -40,32 +40,32 @@ import com.tcdng.unify.core.constant.UserPlatform;
 @Component(ApplicationComponents.APPLICATION_UPLCOMPONENTWRITERMANAGER)
 public class UplComponentWriterManagerImpl extends AbstractUnifyComponent implements UplComponentWriterManager {
 
-    private Map<UserPlatform, Map<Class<? extends UplComponent>, UplComponentWriter>> writersByPlatform;
+    private Map<ClientPlatform, Map<Class<? extends UplComponent>, UplComponentWriter>> writersByPlatform;
 
     public UplComponentWriterManagerImpl() {
         writersByPlatform =
-                new ConcurrentHashMap<UserPlatform, Map<Class<? extends UplComponent>, UplComponentWriter>>();
+                new ConcurrentHashMap<ClientPlatform, Map<Class<? extends UplComponent>, UplComponentWriter>>();
     }
 
     @Override
-    public Map<Class<? extends UplComponent>, UplComponentWriter> getWriters(UserPlatform platform)
+    public Map<Class<? extends UplComponent>, UplComponentWriter> getWriters(ClientPlatform platform)
             throws UnifyException {
         Map<Class<? extends UplComponent>, UplComponentWriter> writers = writersByPlatform.get(platform);
         if (writers == null) {
-            return writersByPlatform.get(UserPlatform.DEFAULT);
+            return writersByPlatform.get(ClientPlatform.DEFAULT);
         }
         return writers;
     }
 
     @Override
     protected void onInitialize() throws UnifyException {
-        writersByPlatform.put(UserPlatform.DEFAULT, new HashMap<Class<? extends UplComponent>, UplComponentWriter>());
+        writersByPlatform.put(ClientPlatform.DEFAULT, new HashMap<Class<? extends UplComponent>, UplComponentWriter>());
         List<UnifyComponentConfig> writerConfigList = getComponentConfigs(UplComponentWriter.class);
         for (UnifyComponentConfig config : writerConfigList) {
             Class<? extends UnifyComponent> writerType = config.getType();
             Writes wa = writerType.getAnnotation(Writes.class);
             if (wa != null) {
-                UserPlatform platform = wa.target();
+                ClientPlatform platform = wa.target();
                 UplComponentWriter writer = (UplComponentWriter) getComponent(config.getName());
                 Map<Class<? extends UplComponent>, UplComponentWriter> writers = writersByPlatform.get(platform);
                 if (writers == null) {
@@ -84,7 +84,7 @@ public class UplComponentWriterManagerImpl extends AbstractUnifyComponent implem
         }
 
         // Expand to concrete UPL component types
-        for (UserPlatform platform : writersByPlatform.keySet()) {
+        for (ClientPlatform platform : writersByPlatform.keySet()) {
             Map<Class<? extends UplComponent>, UplComponentWriter> writers =
                     this.expandToConcreteUplTypes(writersByPlatform.get(platform));
             writersByPlatform.put(platform, writers);
@@ -92,7 +92,7 @@ public class UplComponentWriterManagerImpl extends AbstractUnifyComponent implem
 
         // Set defaults for other platforms
         Map<Class<? extends UplComponent>, UplComponentWriter> defaultWriters =
-                writersByPlatform.get(UserPlatform.DEFAULT);
+                writersByPlatform.get(ClientPlatform.DEFAULT);
         for (Map<Class<? extends UplComponent>, UplComponentWriter> writers : writersByPlatform.values()) {
             if (writers != defaultWriters) {
                 for (Class<? extends UplComponent> uplType : defaultWriters.keySet()) {
@@ -104,7 +104,7 @@ public class UplComponentWriterManagerImpl extends AbstractUnifyComponent implem
         }
 
         // Calcify
-        for (UserPlatform platform : writersByPlatform.keySet()) {
+        for (ClientPlatform platform : writersByPlatform.keySet()) {
             writersByPlatform.put(platform, Collections.unmodifiableMap(writersByPlatform.get(platform)));
         }
     }

@@ -16,10 +16,13 @@
 package com.tcdng.unify.web;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
+import com.tcdng.unify.core.SessionContext;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.data.ValueStore;
 import com.tcdng.unify.core.data.ValueStoreFactory;
+import com.tcdng.unify.core.logging.EventLogger;
+import com.tcdng.unify.core.util.SystemUtils;
 import com.tcdng.unify.web.constant.Secured;
 
 /**
@@ -31,10 +34,13 @@ import com.tcdng.unify.web.constant.Secured;
 public abstract class AbstractController extends AbstractUnifyComponent implements Controller {
 
     @Configurable
-    private RequestContextUtil requestContextUtil;
+    private EventLogger eventLogger;
 
     @Configurable
     private ValueStoreFactory valueStoreFactory;
+
+    @Configurable
+    private ControllerFinder controllerFinder;
 
     private boolean secured;
 
@@ -57,26 +63,30 @@ public abstract class AbstractController extends AbstractUnifyComponent implemen
 
     }
 
-    /**
-     * Creates a value store using supplied source object.
-     * 
-     * @param sourceObject
-     *            the source object to use
-     * @return ValueStore new instance of a value store
-     * @throws UnifyException
-     *             if an error occurs
-     */
     protected ValueStore createValueStore(Object sourceObject) throws UnifyException {
         return valueStoreFactory.getValueStore(sourceObject, null, 0);
     }
 
-    /**
-     * Returns application request context utility component.
-     * 
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    protected RequestContextUtil getRequestContextUtil() throws UnifyException {
-        return requestContextUtil;
+    protected EventLogger getEventLogger() throws UnifyException {
+        return eventLogger;
+    }
+
+    protected ControllerFinder getControllerFinder() {
+        return controllerFinder;
+    }
+    
+    protected void ensureSecureAccess(ControllerPathParts reqPathParts, boolean remoteView) throws UnifyException {
+        SessionContext sessionContext = getSessionContext();
+        boolean isUserLoggedIn = sessionContext.isUserLoggedIn() || remoteView;
+        if (isSecured() && !isUserLoggedIn) {
+            String forceLogout = (String) sessionContext
+                    .removeAttribute(UnifyWebSessionAttributeConstants.FORCE_LOGOUT);
+            if (forceLogout != null) {
+                throw new UnifyException(SystemUtils.getSessionAttributeErrorCode(forceLogout),
+                        reqPathParts.getControllerPath());
+            }
+
+            throw new UnifyException(UnifyWebErrorConstants.LOGIN_REQUIRED, reqPathParts.getControllerPath());
+        }
     }
 }

@@ -21,7 +21,6 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import com.tcdng.unify.core.annotation.Component;
-import com.tcdng.unify.core.constant.UserPlatform;
 import com.tcdng.unify.core.util.ApplicationUtils;
 
 /**
@@ -95,7 +94,7 @@ public class RequestContextManagerImpl extends AbstractUnifyComponent implements
             return new RequestContext(null,
                     new SessionContext(ApplicationUtils.generateSessionContextId(), applicationLocale,
                             applicationTimeZone, "http://localhost", "/default", null, inetAddress.getHostName(),
-                            inetAddress.getHostAddress(), null, UserPlatform.DEFAULT));
+                            inetAddress.getHostAddress(), null));
         } catch (UnknownHostException e) {
         }
         return null;

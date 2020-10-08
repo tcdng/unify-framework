@@ -21,7 +21,6 @@ import com.tcdng.unify.core.RequestContextManager;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.system.UserSessionManager;
-import com.tcdng.unify.core.upl.UplComponentWriterManager;
 import com.tcdng.unify.web.UnifyWebPropertyConstants;
 import com.tcdng.unify.web.WebApplicationComponents;
 import com.tcdng.unify.web.http.AbstractHttpWebInterface;
@@ -68,7 +67,6 @@ public abstract class AbstractEmbeddedWebServer extends AbstractHttpWebInterface
 				(RequestContextManager) getComponent(ApplicationComponents.APPLICATION_REQUESTCONTEXTMANAGER),
 				(HttpRequestHandler) getComponent(WebApplicationComponents.APPLICATION_HTTPREQUESTHANDLER),
 				(UserSessionManager) getComponent(ApplicationComponents.APPLICATION_USERSESSIONMANAGER),
-				(UplComponentWriterManager) getComponent(ApplicationComponents.APPLICATION_UPLCOMPONENTWRITERMANAGER),
 				getContainerSetting(boolean.class, UnifyWebPropertyConstants.APPLICATION_TENANT_PATH_ENABLED, false));
 		return httpApplicationServlet;
 	}

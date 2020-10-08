@@ -33,7 +33,7 @@ public abstract class AbstractXmlResultPlainController extends AbstractPlainCont
     private XmlObjectStreamer xmlObjectStreamer;
 
     @Override
-    public void execute(ClientRequest request, ClientResponse response) throws UnifyException {
+    public void doProcess(ClientRequest request, ClientResponse response) throws UnifyException {
         response.setContentType(MimeType.APPLICATION_XML.template());
         xmlObjectStreamer.marshal(doExecute(request), response.getWriter());
     }

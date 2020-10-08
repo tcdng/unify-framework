@@ -15,7 +15,7 @@
  */
 package com.tcdng.unify.web;
 
-import com.tcdng.unify.core.annotation.Singleton;
+import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.web.constant.Secured;
 
 /**
@@ -24,16 +24,32 @@ import com.tcdng.unify.web.constant.Secured;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Singleton(true)
 public abstract class AbstractPlainController extends AbstractController implements PlainController {
+
+    public AbstractPlainController(Secured secured) {
+        super(secured);
+    }
 
     public AbstractPlainController() {
         super(Secured.FALSE);
     }
 
     @Override
-    public final ControllerType getType() {
-        return ControllerType.PLAIN_CONTROLLER;
+    public final void process(ClientRequest request, ClientResponse response) throws UnifyException {
+        try {
+            doProcess(request, response);
+        } catch (Exception e) {
+            // TODO
+        } finally {
+            response.close();
+        }
     }
+
+    @Override
+    public void ensureContextResources(ControllerPathParts controllerPathParts) throws UnifyException {
+        
+    }
+
+    protected abstract void doProcess(ClientRequest request, ClientResponse response) throws UnifyException;
 
 }

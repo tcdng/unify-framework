@@ -35,13 +35,10 @@ import com.tcdng.unify.core.RequestContextManager;
 import com.tcdng.unify.core.UnifyContainer;
 import com.tcdng.unify.core.UnifyContainerConfig;
 import com.tcdng.unify.core.UnifyContainerEnvironment;
-import com.tcdng.unify.core.UnifyCoreSessionAttributeConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.UserSession;
 import com.tcdng.unify.core.UserToken;
-import com.tcdng.unify.core.constant.UserPlatform;
 import com.tcdng.unify.core.system.UserSessionManager;
-import com.tcdng.unify.core.upl.UplComponentWriterManager;
 import com.tcdng.unify.core.util.ColorUtils;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.IOUtils;
@@ -80,8 +77,6 @@ public class HttpApplicationServlet extends HttpServlet {
 	private HttpRequestHandler httpRequestHandler;
 
 	private UserSessionManager userSessionManager;
-
-	private UplComponentWriterManager uplComponentWriterManager;
 
 	private Locale applicationLocale;
 
@@ -142,8 +137,6 @@ public class HttpApplicationServlet extends HttpServlet {
 						.getComponent(WebApplicationComponents.APPLICATION_HTTPREQUESTHANDLER);
 				userSessionManager = (UserSessionManager) unifyContainer
 						.getComponent(ApplicationComponents.APPLICATION_USERSESSIONMANAGER);
-				uplComponentWriterManager = (UplComponentWriterManager) unifyContainer
-						.getComponent(ApplicationComponents.APPLICATION_UPLCOMPONENTWRITERMANAGER);
 				isTenantPathEnabled = DataUtils.convert(boolean.class,
 						unifyContainer.getSetting(UnifyWebPropertyConstants.APPLICATION_TENANT_PATH_ENABLED), null);
 			} catch (Exception e) {
@@ -166,20 +159,18 @@ public class HttpApplicationServlet extends HttpServlet {
 		super.destroy();
 	}
 
-	public void setup(Locale applicationLocale, TimeZone applicationTimeZone, UnifyWebInterface webInterface,
-			RequestContextManager requestContextManager, HttpRequestHandler applicationController,
-			UserSessionManager userSessionManager, UplComponentWriterManager uplComponentWriterManager,
-			boolean isTenantPathEnabled) {
-		this.applicationLocale = applicationLocale;
-		this.applicationTimeZone = applicationTimeZone;
-		this.webInterface = webInterface;
-		this.requestContextManager = requestContextManager;
-		this.httpRequestHandler = applicationController;
-		this.userSessionManager = userSessionManager;
-		this.uplComponentWriterManager = uplComponentWriterManager;
-		this.isTenantPathEnabled = isTenantPathEnabled;
-		contextPath = webInterface.getContextPath();
-	}
+    public void setup(Locale applicationLocale, TimeZone applicationTimeZone, UnifyWebInterface webInterface,
+            RequestContextManager requestContextManager, HttpRequestHandler applicationController,
+            UserSessionManager userSessionManager, boolean isTenantPathEnabled) {
+        this.applicationLocale = applicationLocale;
+        this.applicationTimeZone = applicationTimeZone;
+        this.webInterface = webInterface;
+        this.requestContextManager = requestContextManager;
+        this.httpRequestHandler = applicationController;
+        this.userSessionManager = userSessionManager;
+        this.isTenantPathEnabled = isTenantPathEnabled;
+        contextPath = webInterface.getContextPath();
+    }
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -246,7 +237,7 @@ public class HttpApplicationServlet extends HttpServlet {
 	private UserSession getUserSession(HttpServletRequest request, RequestPathParts reqPathParts)
 			throws UnifyException {
 		HttpUserSession userSession = null;
-		if (!reqPathParts.isUiController()) {
+		if (reqPathParts.isSessionless()) {
 			// Non-UI controllers are session less. Handle sessionless remote call
 			HttpSession httpSession = request.getSession(false);
 			if (httpSession != null) {
@@ -338,22 +329,10 @@ public class HttpApplicationServlet extends HttpServlet {
 			uriBase.append(":").append(request.getServerPort());
 		}
 
-		UserPlatform platform = detectRequestPlatform(request);
 		HttpUserSession userSession = new HttpUserSession(applicationLocale, applicationTimeZone, sessionId,
 				uriBase.toString(), contextPath, reqPathParts.getTenantPath(), request.getRemoteHost(), remoteIpAddress,
-				request.getRemoteUser(), platform);
-		userSession.getSessionContext().setStickyAttribute(UnifyCoreSessionAttributeConstants.UPLCOMPONENT_WRITERS,
-				uplComponentWriterManager.getWriters(platform));
+				request.getRemoteUser());
 		userSession.setTransient(userSessionManager);
 		return userSession;
-	}
-
-	private UserPlatform detectRequestPlatform(HttpServletRequest request) {
-		UserPlatform platform = UserPlatform.DEFAULT;
-		String userAgent = request.getHeader("User-Agent");
-		if (userAgent != null && userAgent.indexOf("Mobile") >= 0) {
-			platform = UserPlatform.MOBILE;
-		}
-		return platform;
 	}
 }

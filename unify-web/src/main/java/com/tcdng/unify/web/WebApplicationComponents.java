@@ -27,31 +27,19 @@ public interface WebApplicationComponents {
 
     String APPLICATION_APIDISCOVERY_CONTROLLER = "/apidiscovery";
 
-    String APPLICATION_CONTROLLERMANAGER = "application-controllermanager";
+    String APPLICATION_CONTROLLERFINDER = "application-controllerfinder";
 
+    String APPLICATION_CONTROLLERUTIL =  "application-controllerutil";
+    
     String APPLICATION_HTTPREQUESTHANDLER = "application-httprequesthandler";
 
     String APPLICATION_HTTPCLIENT = "application-httpclient";
 
-    String APPLICATION_LISTCONTROLUTIL = "application-listcontrolutil";
-
-    String APPLICATION_BASICDOCUMENTRESOURCES = "application-basicdocumentresources";
-
-    String APPLICATION_PAGEMANAGER = "application-pagemanager";
-
     String APPLICATION_PATHINFOREPOSITORY = "application-pathinforepository";
-
-    String APPLICATION_RESPONSEWRITER = "application-responsewriter";
-
-    String APPLICATION_RESPONSEWRITERPOOL = "application-responsewriterpool";
-
-    String APPLICATION_REQUESTCONTEXTUTIL = "application-requestcontextutil";
-
+    
     String APPLICATION_THEMEMANAGER = "application-thememanager";
-
-    String APPLICATION_UICOMMANDMANAGER = "application-uicommandmanager";
 
     String APPLICATION_WEBCLIENT = "application-webclient";
 
-    String APPLICATION_DEFAULT_TREEPOLICY = "application-defaulttreepolicy";
+    String APPLICATION_REALPATHRESOURCECONTROLLER = "/resource/realpath";
 }

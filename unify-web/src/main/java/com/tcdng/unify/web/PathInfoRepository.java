@@ -18,49 +18,14 @@ package com.tcdng.unify.web;
 
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.web.ui.Page;
 
 /**
- * TargetPath information repository.
+ * Path information repository.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
 public interface PathInfoRepository extends UnifyComponent {
-
-	/**
-	 * Gets page path information.
-	 * 
-	 * @param page
-	 *            the page object.
-	 * 
-	 * @return the page path information
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	PagePathInfo getPagePathInfo(Page page) throws UnifyException;
-
-	/**
-	 * Gets page path information.
-	 * 
-	 * @param controllerPath
-	 *            the controller path
-	 * @return the page path information
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	PagePathInfo getPagePathInfo(String controllerPath) throws UnifyException;
-
-	/**
-	 * Gets the supplied page controller path parts
-	 * 
-	 * @param page
-	 *            the page object
-	 * @return the path parts
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	ControllerPathParts getControllerPathParts(Page page) throws UnifyException;
 
 	/**
 	 * Gets controller path parts

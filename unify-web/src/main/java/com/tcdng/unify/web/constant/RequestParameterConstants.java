@@ -25,28 +25,6 @@ public interface RequestParameterConstants {
 
     String MORSIC = "morsic";
 
-    String TARGET_VALUE = "req_trg";
-
-    String DOCUMENT = "req_doc";
-
-    String COMMAND = "req_cmd";
-
-    String CONFIRM_MSG = "req_cmsg";
-
-    String CONFIRM_MSGICON = "req_cmsgicon";
-
-    String CONFIRM_PARAM = "req_cprm";
-
-    String REFRESH = "req_rsh";
-
-    String VALIDATION_ACTION = "req_va";
-
-    String REMOTE_CALL_FORMAT = "req_rcf";
-
-    String REMOTE_CALL_BODY = "req_rcb";
-
-    String REMOTE_CALL_INPUTSTREAM = "req_rcin";
-
     String REMOTE_VIEWER = "req_rv";
 
     String REMOTE_SESSION_ID = "req_rsi";
@@ -66,6 +44,10 @@ public interface RequestParameterConstants {
     String REMOTE_TENANT_CODE = "req_tnc";
 
     String REMOTE_COLOR_SCHEME = "req_csm";
-    
-    String UNLOAD_ORIGIN_PAGE = "unload_origin";
+
+    String REMOTE_CALL_FORMAT = "req_rcf";
+
+    String REMOTE_CALL_BODY = "req_rcb";
+
+    String REMOTE_CALL_INPUTSTREAM = "req_rcin";
 }

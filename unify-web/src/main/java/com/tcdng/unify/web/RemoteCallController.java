@@ -21,6 +21,6 @@ package com.tcdng.unify.web;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface RemoteCallController extends Controller {
+public interface RemoteCallController extends SessionlessController {
 
 }

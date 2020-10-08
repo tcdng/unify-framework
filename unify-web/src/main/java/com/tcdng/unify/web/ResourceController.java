@@ -13,33 +13,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package com.tcdng.unify.web;
 
-import java.io.OutputStream;
-import java.util.Set;
-
-import com.tcdng.unify.core.UnifyException;
-
 /**
- * Serves as the controller component for a resource request.
+ * A resource controller.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface ResourceController extends UIController {
-
-    /**
-     * Returns the resource content type.
-     */
-    String getContentType();
-
-    /**
-     * Sets the content type.
-     * 
-     * @param contentType
-     *            the content type to set
-     */
-    void setContentType(String contentType);
+public interface ResourceController extends Controller {
 
     /**
      * Sets the resource name.
@@ -49,45 +32,4 @@ public interface ResourceController extends UIController {
      */
     void setResourceName(String resourceName);
 
-    /**
-     * Sets the attachment flag for this resource
-     * 
-     * @param attachment
-     *            the flag to set
-     */
-    void setAttachment(boolean attachment);
-
-    /**
-     * Gets resource meta-data keys.
-     * 
-     * @return A set of meta-data keys
-     */
-    Set<String> getMetaDataKeys();
-
-    /**
-     * Gets a meta data by name.
-     * 
-     * @param name
-     *            the non-case sensitive meta data name
-     * @return the meta data if found, otherwise null
-     */
-    String getMetaData(String name);
-
-    /**
-     * Prepare for execution.
-     * 
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    void prepareExecution() throws UnifyException;
-
-    /**
-     * Executes resource controller action.
-     * 
-     * @param outputStream
-     *            the output stream to stream resource to
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    void execute(OutputStream outputStream) throws UnifyException;
 }

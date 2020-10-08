@@ -1,0 +1,25 @@
+// UPL template for dialog panel
+// Copyright 2018-2020 The Code Department.
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+!ui-dialogpanel components:$c{basePanel} dialogBaseStyleClass:$e{ui-dialogpanel-base}
+    dialogBodyLayout:$d{!ui-vertical style:$s{width:100%;}} dialogActionLayout:$d{!ui-horizontal style:$s{width:100%;}}
+    closeDialogPath:$n{/hidePopup}
+
+// Base panel
+!ui-panel:basePanel layout:$d{!ui-vertical style:$s{width:100%;}} styleClass:$f{dialogBaseStyleClass}
+    components:$c{titleBar bodyPanel actionPanel}
+
+// Title bar
+!ui-titlebar:titleBar caption:$g{dialogCaption} components:$c{captionCancelBtn} draggable:true
+!ui-image:captionCancelBtn src:$t{images/cross_white.png} styleClass:$e{tbbutton}
+    eventHandler:$d{!ui-event event:onclick action:$c{closeDialogAct}}
+
+// Body panel
+!ui-panel:bodyPanel layout:$f{dialogBodyLayout} components:$g{dialogBodyComponents}
+
+// Action panel
+!ui-panel:actionPanel layout:$f{dialogActionLayout} components:$g{dialogActionComponents}
+     
+//Actions
+!ui-post:closeDialogAct path:$f{closeDialogPath}

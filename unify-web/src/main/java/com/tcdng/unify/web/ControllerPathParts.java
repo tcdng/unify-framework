@@ -34,16 +34,16 @@ public class ControllerPathParts {
 
     private String actionName;
 
-    private boolean uiController;
+    private boolean sessionless;
 
     public ControllerPathParts(String controllerPath, String controllerPathId, String controllerName, String pathVariable,
-            String actionName, boolean uiController) {
+            String actionName, boolean sessionless) {
         this.controllerPath = controllerPath;
         this.controllerPathId = controllerPathId;
         this.controllerName = controllerName;
         this.pathVariable = pathVariable;
         this.actionName = actionName;
-        this.uiController = uiController;
+        this.sessionless = sessionless;
     }
 
     public String getControllerPath() {
@@ -66,8 +66,8 @@ public class ControllerPathParts {
         return pathVariable;
     }
 
-    public boolean isUiController() {
-        return uiController;
+    public boolean isSessionless() {
+        return sessionless;
     }
 
     public boolean isVariablePath() {
