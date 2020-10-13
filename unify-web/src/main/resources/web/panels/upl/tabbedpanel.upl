@@ -1,3 +1,0 @@
-//Tabbed panel
-!ui-tabbedpanel 
-!ui-hidden:selectedTabId binding:activeTabId

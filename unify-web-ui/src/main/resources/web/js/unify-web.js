@@ -2520,16 +2520,18 @@ ux.ssOnShow = function(rgp) {
 /** Text Area */
 ux.rigTextArea = function(rgp) {
 	const ta = _id(rgp.pId);
-	ta.setValue = function(val) {
-		this.value = val;
-	};
-	
-	ta.getValue = function() {
-		return this.value;
-	};
-	
-	if (ta && rgp.pScrEnd) {
-		ta.scrollTop = ta.scrollHeight;
+	if (ta) {
+		ta.setValue = function(val) {
+			this.value = val;
+		};
+		
+		ta.getValue = function() {
+			return this.value;
+		};
+		
+		if (rgp.pScrEnd) {
+			ta.scrollTop = ta.scrollHeight;
+		}
 	}
 }
 
