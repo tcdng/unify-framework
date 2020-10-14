@@ -17,6 +17,7 @@ package com.tcdng.unify.core.database.sql;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.ColumnType;
+import com.tcdng.unify.core.constant.EnumConst;
 import com.tcdng.unify.core.criterion.Restriction;
 import com.tcdng.unify.core.criterion.RestrictionType;
 import com.tcdng.unify.core.util.DataUtils;
@@ -147,7 +148,7 @@ public abstract class AbstractSqlCriteriaPolicy implements SqlCriteriaPolicy {
             return tableName + "." + ((SqlFieldInfo) param).getPreferredColumnName();
         }
 
-        return param;
+        return param instanceof EnumConst? ((EnumConst) param).code(): param;
     }
 
     protected abstract void doTranslate(StringBuilder sql, String tableName, String columnName, Object param1,
