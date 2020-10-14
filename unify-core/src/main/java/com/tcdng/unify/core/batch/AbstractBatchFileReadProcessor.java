@@ -17,9 +17,8 @@ package com.tcdng.unify.core.batch;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.data.ValueStore;
-import com.tcdng.unify.core.data.ValueStoreFactory;
+import com.tcdng.unify.core.util.ValueStoreUtils;
 
 /**
  * Convenient base class for batch file read processor.
@@ -29,9 +28,6 @@ import com.tcdng.unify.core.data.ValueStoreFactory;
  */
 public abstract class AbstractBatchFileReadProcessor extends AbstractUnifyComponent
         implements BatchFileReadProcessor {
-
-    @Configurable
-    private ValueStoreFactory valueStoreFactory;
 
     @Override
     public Object process(BatchFileReadConfig batchFileReadConfig, Object... file) throws UnifyException {
@@ -55,7 +51,7 @@ public abstract class AbstractBatchFileReadProcessor extends AbstractUnifyCompon
     }
 
     protected ValueStore getValueStore(Object bean) throws UnifyException {
-        return valueStoreFactory.getValueStore(bean, null, 0);
+        return ValueStoreUtils.getValueStore(bean, null, 0);
     }
     
     protected abstract Object doProcess(BatchFileReadConfig batchFileReadConfig, BatchFileReader batchFileReader)

@@ -20,9 +20,9 @@ import com.tcdng.unify.core.SessionContext;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.data.ValueStore;
-import com.tcdng.unify.core.data.ValueStoreFactory;
 import com.tcdng.unify.core.logging.EventLogger;
 import com.tcdng.unify.core.util.SystemUtils;
+import com.tcdng.unify.core.util.ValueStoreUtils;
 import com.tcdng.unify.web.constant.Secured;
 
 /**
@@ -35,9 +35,6 @@ public abstract class AbstractController extends AbstractUnifyComponent implemen
 
     @Configurable
     private EventLogger eventLogger;
-
-    @Configurable
-    private ValueStoreFactory valueStoreFactory;
 
     @Configurable
     private ControllerFinder controllerFinder;
@@ -64,7 +61,7 @@ public abstract class AbstractController extends AbstractUnifyComponent implemen
     }
 
     protected ValueStore createValueStore(Object sourceObject) throws UnifyException {
-        return valueStoreFactory.getValueStore(sourceObject, null, 0);
+        return ValueStoreUtils.getValueStore(sourceObject, null, 0);
     }
 
     protected EventLogger getEventLogger() throws UnifyException {

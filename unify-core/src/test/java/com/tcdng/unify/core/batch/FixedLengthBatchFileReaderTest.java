@@ -22,10 +22,9 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import com.tcdng.unify.core.AbstractUnifyComponentTest;
-import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.data.ValueStore;
-import com.tcdng.unify.core.data.ValueStoreFactory;
 import com.tcdng.unify.core.util.IOUtils;
+import com.tcdng.unify.core.util.ValueStoreUtils;
 
 /**
  * Fixed length batch file reader tests.
@@ -228,7 +227,6 @@ public class FixedLengthBatchFileReaderTest extends AbstractUnifyComponentTest {
     }
 
     private ValueStore getValueStore(Object record) throws Exception {
-        return ((ValueStoreFactory) getComponent(ApplicationComponents.APPLICATION_VALUESTOREFACTORY))
-                .getValueStore(record, null, 0);
+        return ValueStoreUtils.getValueStore(record, null, 0);
     }
 }

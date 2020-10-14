@@ -29,7 +29,6 @@ import com.tcdng.unify.core.annotation.Singleton;
 import com.tcdng.unify.core.constant.LocaleType;
 import com.tcdng.unify.core.data.Listable;
 import com.tcdng.unify.core.data.ValueStore;
-import com.tcdng.unify.core.data.ValueStoreFactory;
 import com.tcdng.unify.core.format.Formatter;
 import com.tcdng.unify.core.logging.Logger;
 import com.tcdng.unify.core.logging.LoggingLevel;
@@ -38,6 +37,7 @@ import com.tcdng.unify.core.task.TaskMonitor;
 import com.tcdng.unify.core.upl.UplComponent;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.TokenUtils;
+import com.tcdng.unify.core.util.ValueStoreUtils;
 
 /**
  * Abstract unify component implementation that provides convenience methods for
@@ -386,8 +386,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 * @throws UnifyException if an error occurs
 	 */
 	protected ValueStore createValueStore(Object storageObject) throws UnifyException {
-		return ((ValueStoreFactory) getComponent(ApplicationComponents.APPLICATION_VALUESTOREFACTORY))
-				.getValueStore(storageObject);
+		return ValueStoreUtils.getValueStore(storageObject);
 	}
 
 	/**
@@ -399,8 +398,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 * @throws UnifyException if an error occurs
 	 */
 	protected ValueStore createValueStore(Object storageObject, int dataIndex) throws UnifyException {
-		return ((ValueStoreFactory) getComponent(ApplicationComponents.APPLICATION_VALUESTOREFACTORY))
-				.getValueStore(storageObject, null, dataIndex);
+		return ValueStoreUtils.getValueStore(storageObject, null, dataIndex);
 	}
 
 	/**
@@ -414,8 +412,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 */
 	protected ValueStore createValueStore(Object storageObject, String dataMarker, int dataIndex)
 			throws UnifyException {
-		return ((ValueStoreFactory) getComponent(ApplicationComponents.APPLICATION_VALUESTOREFACTORY))
-				.getValueStore(storageObject, dataMarker, dataIndex);
+		return ValueStoreUtils.getValueStore(storageObject, dataMarker, dataIndex);
 	}
 
 	/**
@@ -428,8 +425,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 * @throws UnifyException if an error occurs
 	 */
 	protected ValueStore createArrayValueStore(Object[] storageObject, int dataIndex) throws UnifyException {
-		return ((ValueStoreFactory) getComponent(ApplicationComponents.APPLICATION_VALUESTOREFACTORY))
-				.getArrayValueStore(storageObject, null, dataIndex);
+		return ValueStoreUtils.getArrayValueStore(storageObject, null, dataIndex);
 	}
 
 	/**
@@ -442,8 +438,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 * @throws UnifyException if an error occurs
 	 */
 	protected ValueStore createListValueStore(List<Object> storageObject, int dataIndex) throws UnifyException {
-		return ((ValueStoreFactory) getComponent(ApplicationComponents.APPLICATION_VALUESTOREFACTORY))
-				.getListValueStore(Object.class, storageObject, null, dataIndex);
+		return ValueStoreUtils.getListValueStore(Object.class, storageObject, null, dataIndex);
 	}
 
 	/**

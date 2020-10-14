@@ -13,31 +13,41 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.data;
+
+package com.tcdng.unify.core.util;
 
 import java.util.List;
 
-import com.tcdng.unify.core.AbstractUnifyComponent;
-import com.tcdng.unify.core.ApplicationComponents;
-import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.data.BeanValueArrayStore;
+import com.tcdng.unify.core.data.BeanValueListStore;
+import com.tcdng.unify.core.data.BeanValueStore;
+import com.tcdng.unify.core.data.MapValues;
+import com.tcdng.unify.core.data.MapValuesArrayStore;
+import com.tcdng.unify.core.data.MapValuesListStore;
+import com.tcdng.unify.core.data.MapValuesStore;
+import com.tcdng.unify.core.data.PackableDoc;
+import com.tcdng.unify.core.data.PackableDocArrayStore;
+import com.tcdng.unify.core.data.PackableDocListStore;
+import com.tcdng.unify.core.data.PackableDocStore;
+import com.tcdng.unify.core.data.ValueStore;
 
 /**
- * Default implementation of a value store factory.
+ * Value store utilities.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Component(ApplicationComponents.APPLICATION_VALUESTOREFACTORY)
-public class ValueStoreFactoryImpl extends AbstractUnifyComponent implements ValueStoreFactory {
+public final class ValueStoreUtils {
 
-    @Override
-    public ValueStore getValueStore(Object storageObject) throws UnifyException {
+    private ValueStoreUtils() {
+
+    }
+
+    public static ValueStore getValueStore(Object storageObject) {
         return getValueStore(storageObject, null, -1);
     }
 
-    @Override
-    public ValueStore getValueStore(Object storageObject, String dataMarker, int dataIndex) throws UnifyException {
+    public static ValueStore getValueStore(Object storageObject, String dataMarker, int dataIndex) {
         if (storageObject != null) {
             if (storageObject instanceof PackableDoc) {
                 return new PackableDocStore((PackableDoc) storageObject, dataMarker, dataIndex);
@@ -53,9 +63,7 @@ public class ValueStoreFactoryImpl extends AbstractUnifyComponent implements Val
         return null;
     }
 
-    @Override
-    public ValueStore getArrayValueStore(Object[] storageObject, String dataMarker, int dataIndex)
-            throws UnifyException {
+    public static ValueStore getArrayValueStore(Object[] storageObject, String dataMarker, int dataIndex) {
         if (storageObject != null) {
             if (storageObject instanceof PackableDoc[]) {
                 return new PackableDocArrayStore((PackableDoc[]) storageObject, dataMarker, dataIndex);
@@ -72,9 +80,8 @@ public class ValueStoreFactoryImpl extends AbstractUnifyComponent implements Val
     }
 
     @SuppressWarnings("unchecked")
-    @Override
-    public <T> ValueStore getListValueStore(Class<T> clazz, List<T> storageObject, String dataMarker,
-            int dataIndex) throws UnifyException {
+    public static <T> ValueStore getListValueStore(Class<T> clazz, List<T> storageObject, String dataMarker,
+            int dataIndex) {
         if (storageObject != null) {
             if (PackableDoc.class.equals(clazz)) {
                 return new PackableDocListStore((List<PackableDoc>) storageObject, dataMarker, dataIndex);
@@ -90,13 +97,4 @@ public class ValueStoreFactoryImpl extends AbstractUnifyComponent implements Val
         return null;
     }
 
-    @Override
-    protected void onInitialize() throws UnifyException {
-
-    }
-
-    @Override
-    protected void onTerminate() throws UnifyException {
-
-    }
 }

@@ -107,7 +107,5 @@ public interface ApplicationComponents {
 
     String APPLICATION_USERSESSIONMANAGER = "application-usersessionmanager";
 
-    String APPLICATION_VALUESTOREFACTORY = "application-valuestorefactory";
-
     String APPLICATION_XMLOBJECTSTREAMER = "application-xmlobjectstreamer";
 }

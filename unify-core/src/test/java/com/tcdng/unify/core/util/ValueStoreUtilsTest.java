@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.data;
+package com.tcdng.unify.core.util;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -23,26 +23,28 @@ import static org.junit.Assert.assertNull;
 import org.junit.Test;
 
 import com.tcdng.unify.core.AbstractUnifyComponentTest;
-import com.tcdng.unify.core.ApplicationComponents;
+import com.tcdng.unify.core.data.Address;
+import com.tcdng.unify.core.data.Customer;
+import com.tcdng.unify.core.data.PackableDoc;
+import com.tcdng.unify.core.data.PackableDocConfig;
+import com.tcdng.unify.core.data.ValueStore;
+import com.tcdng.unify.core.util.ValueStoreUtils;
 
 /**
- * Default value store factory implementation tests.
+ * Default value store utilities tests.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class ValueStoreFactoryImplTest extends AbstractUnifyComponentTest {
+public class ValueStoreUtilsTest extends AbstractUnifyComponentTest {
 
     private PackableDocConfig custDocConfig;
 
     @Test
     public void testGetValueStore() throws Exception {
-        ValueStoreFactory vsFactory =
-                (ValueStoreFactory) getComponent(ApplicationComponents.APPLICATION_VALUESTOREFACTORY);
-
-        ValueStore vs1 = vsFactory.getValueStore(new PackableDoc(custDocConfig, false), null, 0);
-        ValueStore vs2 = vsFactory.getValueStore(new Customer(), null, 0);
-        ValueStore vs3 = vsFactory.getValueStore(new Address(), null, 0);
+        ValueStore vs1 = ValueStoreUtils.getValueStore(new PackableDoc(custDocConfig, false), null, 0);
+        ValueStore vs2 = ValueStoreUtils.getValueStore(new Customer(), null, 0);
+        ValueStore vs3 = ValueStoreUtils.getValueStore(new Address(), null, 0);
         assertNotNull(vs1);
         assertNotNull(vs2);
         assertNotNull(vs3);
@@ -52,9 +54,7 @@ public class ValueStoreFactoryImplTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testGetValueStoreWithNullSource() throws Exception {
-        ValueStoreFactory vsFactory =
-                (ValueStoreFactory) getComponent(ApplicationComponents.APPLICATION_VALUESTOREFACTORY);
-        ValueStore vs1 = vsFactory.getValueStore(null, null, 0);
+        ValueStore vs1 = ValueStoreUtils.getValueStore(null, null, 0);
         assertNull(vs1);
     }
 

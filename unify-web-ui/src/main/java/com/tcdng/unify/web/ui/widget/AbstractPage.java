@@ -18,11 +18,10 @@ package com.tcdng.unify.web.ui.widget;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
-import com.tcdng.unify.core.data.ValueStoreFactory;
+import com.tcdng.unify.core.util.ValueStoreUtils;
 import com.tcdng.unify.web.ControllerPathParts;
 import com.tcdng.unify.web.ui.PageBean;
 import com.tcdng.unify.web.ui.UnifyWebUIErrorConstants;
@@ -83,8 +82,7 @@ public abstract class AbstractPage extends AbstractStandalonePanel implements Pa
 
     @Override
     public void setPageBean(PageBean pageBean) throws UnifyException {
-        setValueStore(((ValueStoreFactory) getComponent(ApplicationComponents.APPLICATION_VALUESTOREFACTORY))
-                .getValueStore(pageBean, null, -1));
+        setValueStore(ValueStoreUtils.getValueStore(pageBean, null, -1));
     }
 
     @Override
