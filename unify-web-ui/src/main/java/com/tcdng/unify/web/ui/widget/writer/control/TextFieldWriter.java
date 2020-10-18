@@ -134,9 +134,11 @@ public class TextFieldWriter extends AbstractControlWriter {
             writeTagStyleClass(writer, textField.getExtStyleClass());
             if (textField.getExtReadOnly()) {
                 writeTagReadOnly(writer);
+                writeTagDisabled(writer, textField);
             } else {
                 writeTagEditAttributes(writer, textField);
             }
+
         } else {
             writeTagAttributes(writer, textField);
             value = textField.getStringValue();

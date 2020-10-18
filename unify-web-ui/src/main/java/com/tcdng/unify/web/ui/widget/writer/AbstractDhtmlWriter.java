@@ -271,7 +271,7 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      */
     protected final void writeTagEditAttributes(ResponseWriter writer, Widget widget) throws UnifyException {
         if (widget.isContainerDisabled() || (!widget.isSupportReadOnly() && !widget.isContainerEditable())) {
-            writer.write(" disabled=\"true\"");
+            writer.write(" disabled");
         }
 
         if (widget.isSupportReadOnly() && !widget.isContainerEditable()) {
@@ -618,6 +618,22 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
     protected final void writeTagReadOnly(ResponseWriter writer, Widget widget) throws UnifyException {
         if (widget.isSupportReadOnly() && !widget.isContainerEditable()) {
             writer.write(" readonly");
+        }
+    }
+
+    /**
+     * Writes tag disabled attribute
+     * 
+     * @param writer
+     *            the writer to use
+     * @param widget
+     *            the widget
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected final void writeTagDisabled(ResponseWriter writer, Widget widget) throws UnifyException {
+        if (widget.isContainerDisabled()) {
+            writer.write(" disabled");
         }
     }
 
