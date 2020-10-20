@@ -83,13 +83,18 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("cut", "&#xf0c4;");
         registerSymbol("database", "&#xf1c0;");
         registerSymbol("desktop", "&#xf108;");
+        registerSymbol("directions", "&#xf5eb;");
         registerSymbol("door-open", "&#xf52b;");
         registerSymbol("edit", "&#xf044;");
+        registerSymbol("exchange-alt", "&#xf362;");
+        registerSymbol("exclamation-circle", "&#xf06a;");
         registerSymbol("file", "&#xf15b;");
         registerSymbol("file-excel", "&#x1c3;");
         registerSymbol("file-pdf", "&#xf1c1;");
         registerSymbol("file-word", "&#xf1c2;");
         registerSymbol("filter", "&#xf0b0;");
+        registerSymbol("flag", "&#xf024;");
+        registerSymbol("flag-checkered", "&#xf11e;");
         registerSymbol("folder", "&#xf07b;");
         registerSymbol("folder-open", "&#xf07c;");
         registerSymbol("forward", "&#xf04e;");
@@ -106,7 +111,9 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("minus", "&#xf068;");
         registerSymbol("money-bill", "&#xf0d6;");
         registerSymbol("newspaper", "&#xf1ea;");
+        registerSymbol("outdent", "&#xf03b;");
         registerSymbol("paper-clip", "&#xf0c6;");
+        registerSymbol("play", "&#xf04b;");
         registerSymbol("plus", "&#xf067;");
         registerSymbol("plus-square", "&#xf0fe;");
         registerSymbol("project-diagram", "&#xf542;");
@@ -120,14 +127,18 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("sign-out", "&#xf2f5;");
         registerSymbol("site-map", "&#xf0e8;");
         registerSymbol("sort", "&#xf0dc;");
+        registerSymbol("stream", "&#xf550;");
         registerSymbol("swap", "&#xf362;");
         registerSymbol("sync", "&#xf2f1;");
         registerSymbol("table", "&#xf0ce;");
         registerSymbol("tasks", "&#xf0ae;");
         registerSymbol("thumbtack", "&#xf08d;");
+        registerSymbol("times-circle", "&#xf057;");
         registerSymbol("undo", "&#xf2ea;");
         registerSymbol("user", "&#xf007;");
         registerSymbol("users", "&#xf0c0;");
+        registerSymbol("user-check", "&#xf4fc;");
+        registerSymbol("user-edit", "&#xf4ff;");
         registerSymbol("user-tag", "&#xf507;");
         registerSymbol("window-restore", "&#xf2d2;");
     }
