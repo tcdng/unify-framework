@@ -224,6 +224,13 @@ public class JsonWriter {
         return this;
     }
 
+    public JsonWriter writeObject(Object object)
+            throws UnifyException {
+        preWriteForObject();
+        DataUtils.writeJsonObject(object, new JsonWriterOutputStream());
+        return this;
+    }
+
     public JsonWriter writeObject(String fieldName, Object object)
             throws UnifyException {
         preWrite();
@@ -263,6 +270,16 @@ public class JsonWriter {
             sb.append(',');
         } else {
             appendSym[depth] = true;
+        }
+    }
+    
+    private void preWriteForObject() {
+        if (depth >= 0) {
+            if (appendSym[depth]) {
+                sb.append(',');
+            } else {
+                appendSym[depth] = true;
+            }
         }
     }
 

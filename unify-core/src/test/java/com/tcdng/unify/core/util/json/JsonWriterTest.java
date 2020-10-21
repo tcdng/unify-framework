@@ -149,14 +149,36 @@ public class JsonWriterTest {
         assertEquals(2, writer.getCapacity());
     }
 
-    @Test
-    public void testWriteObject() throws Exception {
+//    @Test
+//    public void testWriteObjectWithFieldName() throws Exception {
 //        Contact contact = new Contact("Jones", "+2348020000000", "24 Parklane Apapa", "Lagos, State");
 //        String str = new JsonWriter()
 //                        .beginObject()
 //                            .writeObject("contact", contact)
 //                        .endObject().toString();
 //        assertEquals("{\"contact\":{\"name\":\"Jones\",\"mobile\":\"+2348020000000\",\"postCode\":null,\"addressLine\":[\"24 Parklane Apapa\",\"Lagos, State\"]}}", str);
-    }
+//    }
+//
+//    @Test
+//    public void testWriteObject() throws Exception {
+//        Contact contact = new Contact("Jones", "+2348020000000", "24 Parklane Apapa", "Lagos, State");
+//        String str = new JsonWriter()
+//                        .writeObject(contact)
+//                        .toString();
+//        assertEquals("{\"name\":\"Jones\",\"mobile\":\"+2348020000000\",\"postCode\":null,\"addressLine\":[\"24 Parklane Apapa\",\"Lagos, State\"]}", str);
+//    }
+//
+//    @Test
+//    public void testWriteObjectInArray() throws Exception {
+//        Contact contact1 = new Contact("Tom", "+2348020000000", "38 Warehouse Road", "Lagos, State");
+//        Contact contact2 = new Contact("Jones", "+2348020000000", "24 Parklane Apapa", "Lagos, State");
+//        String str = new JsonWriter()
+//                        .beginArray()
+//                        .writeObject(contact1)
+//                        .writeObject(contact2)
+//                        .endArray()
+//                        .toString();
+//        assertEquals("[{\"name\":\"Tom\",\"mobile\":\"+2348020000000\",\"postCode\":null,\"addressLine\":[\"38 Warehouse Road\",\"Lagos, State\"]},{\"name\":\"Jones\",\"mobile\":\"+2348020000000\",\"postCode\":null,\"addressLine\":[\"24 Parklane Apapa\",\"Lagos, State\"]}]", str);
+//    }
 
 }
