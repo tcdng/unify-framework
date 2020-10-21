@@ -39,6 +39,18 @@ public interface FontSymbolManager extends UnifyComponent {
     List<String> getFontResources() throws UnifyException;
 
     /**
+     * Resolves uni-code code from supplied symbol code.
+     * 
+     * @param symbolName
+     *            the symbol name (case insensitive)
+     * @return the supplied symbol name if valid uni-code resolved from
+     *         symbol name, otherwise null
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String resolveSymbolUnicode(String symbolName) throws UnifyException;
+
+    /**
      * Resolves HTML hexadecimal code from supplied symbol code.
      * 
      * @param symbolName

@@ -21,6 +21,8 @@ import java.util.Map;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.data.FactoryMap;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * Convenient abstract base class for font symbol managers.
@@ -32,41 +34,63 @@ public abstract class AbstractFontSymbolManager extends AbstractUnifyComponent i
 
     private Map<String, String> nameToHexMap;
 
+    private FactoryMap<String, String> unicodeCode;
+
+    private FactoryMap<String, String> htmlHexCode;
+    
     public AbstractFontSymbolManager() {
         nameToHexMap = new HashMap<String, String>();
 
         // Register currencies
-        registerSymbol("naira-sign", "&#x20A6;");
-        registerSymbol("dollar-sign", "&#x24;");
-        registerSymbol("cent-sign", "&#xa2;");
-        registerSymbol("pound-sign", "&#xa3;");
-        registerSymbol("euro-sign", "&#x20AC;");
-        registerSymbol("yen-sign", "&#xa5;");
-        registerSymbol("rupee-sign", "&#x20A8;");
-        registerSymbol("ruble-sign", "&#x20BD;");
-        registerSymbol("peso-sign", "&#x20B1;");
-        registerSymbol("baht-sign", "&#x0E3F;");
+        registerSymbol("naira-sign", "20A6");
+        registerSymbol("dollar-sign", "0024");
+        registerSymbol("cent-sign", "00a2");
+        registerSymbol("pound-sign", "00a3");
+        registerSymbol("euro-sign", "20AC");
+        registerSymbol("yen-sign", "00a5");
+        registerSymbol("rupee-sign", "20A8");
+        registerSymbol("ruble-sign", "20BD");
+        registerSymbol("peso-sign", "20B1");
+        registerSymbol("baht-sign", "0E3F");
         
         // Other symbols
-        registerSymbol("copyright-sign", "&#xa9;");
-        registerSymbol("registered-sign", "&#xae;");
-        registerSymbol("trademark-sign", "&#x2122;");
-        registerSymbol("celsius-sign", "&#x2103;");
-        registerSymbol("fahrenheit-sign", "&#x2109;");
-        registerSymbol("baht-sign", "&#x0E3F;");
+        registerSymbol("copyright-sign", "00a9");
+        registerSymbol("registered-sign", "00ae");
+        registerSymbol("trademark-sign", "2122");
+        registerSymbol("celsius-sign", "2103");
+        registerSymbol("fahrenheit-sign", "2109");
+        registerSymbol("baht-sign", "0E3F");
         
+        unicodeCode = new FactoryMap<String, String>() {
+            @Override
+            protected String create(String key, Object... params) throws Exception {
+                return "\\u" + nameToHexMap.get(key);
+            }  
+        };
+
+        htmlHexCode = new FactoryMap<String, String>() {
+            @Override
+            protected String create(String key, Object... params) throws Exception {
+                return "&#x" + nameToHexMap.get(key) + ";";
+            }  
+        };
+    }
+
+    @Override
+    public String resolveSymbolUnicode(String symbolName) throws UnifyException {
+        String hex = nameToHexMap.get(symbolName);
+        if (hex != null) {
+            return unicodeCode.get(symbolName);
+        }
+
+        return null;
     }
 
     @Override
     public String resolveSymbolHtmlHexCode(String symbolName) throws UnifyException {
-        symbolName = symbolName.toLowerCase();
         String hex = nameToHexMap.get(symbolName);
         if (hex != null) {
-            return hex;
-        }
-
-        if (isValidHexCode(symbolName)) {
-            return symbolName;
+            return htmlHexCode.get(symbolName);
         }
 
         return null;
@@ -83,15 +107,11 @@ public abstract class AbstractFontSymbolManager extends AbstractUnifyComponent i
     }
 
     protected boolean registerSymbol(String symbolName, String hex) {
-        if (isValidHexCode(hex)) {
-            nameToHexMap.put(symbolName.toLowerCase(), hex);
+        if (hex != null && hex.matches("[0-9a-fA-F]+")) {
+            nameToHexMap.put(symbolName, StringUtils.padLeft(hex, '0', 4));
             return true;
         }
 
         return false;
-    }
-
-    private boolean isValidHexCode(String hex) {
-        return hex != null && hex.matches("&#x[0-9a-fA-F]+;");
     }
 }
