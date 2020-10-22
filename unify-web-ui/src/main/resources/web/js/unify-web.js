@@ -2715,21 +2715,36 @@ ux.rigTable = function(rgp) {
 
 	if (rgp.pShiftable) {
 		if (rgp.pItemCount > 0) {
-			var evp = ux.getTableShiftParams(rgp, 0);
-			ux.addHdlMany(rgp.pShiftTopId, "click",
-					ux.tableShiftClickHandler, evp);
+			var evp = null;
+			if (rgp.pShiftTopId) {
+				evp = ux.getTableShiftParams(rgp, 0);
+				ux.addHdlMany(rgp.pShiftTopId, "click",
+						ux.tableShiftClickHandler, evp);
+			}
 
-			evp = ux.getTableShiftParams(rgp, 1);
-			ux.addHdlMany(rgp.pShiftUpId, "click",
-					ux.tableShiftClickHandler, evp);
+			if (rgp.pShiftUpId) {
+				evp = ux.getTableShiftParams(rgp, 1);
+				ux.addHdlMany(rgp.pShiftUpId, "click",
+						ux.tableShiftClickHandler, evp);
+			}
 
-			evp = ux.getTableShiftParams(rgp, 2);
-			ux.addHdlMany(rgp.pShiftDownId, "click",
-					ux.tableShiftClickHandler, evp);
+			if (rgp.pShiftDownId) {
+				evp = ux.getTableShiftParams(rgp, 2);
+				ux.addHdlMany(rgp.pShiftDownId, "click",
+						ux.tableShiftClickHandler, evp);
+			}
 
-			evp = ux.getTableShiftParams(rgp, 3);
-			ux.addHdlMany(rgp.pShiftBottomId, "click",
-					ux.tableShiftClickHandler, evp);
+			if (rgp.pShiftBottomId) {
+				evp = ux.getTableShiftParams(rgp, 3);
+				ux.addHdlMany(rgp.pShiftBottomId, "click",
+						ux.tableShiftClickHandler, evp);
+			}
+
+			if (rgp.pDeleteId) {
+				evp = ux.getTableDeleteParams(rgp);
+				ux.addHdlMany(rgp.pDeleteId, "click",
+						ux.tableDeleteClickHandler, evp);
+			}
 
 			var viewIndex = 1 + parseInt(_id(rgp.pIdxCtrlId).value);
 			if (rgp.pWindowed) {
@@ -2758,6 +2773,15 @@ ux.tableShiftClickHandler = function(uEv) {
 		shiftDirCtrl.value = evp.uShiftDir;
 	}
 
+	var rowElem = ux.findParent(uEv.uTrg, "tr");
+	if (rowElem) {
+		ux.fireEvent(rowElem, "click");
+	}
+	
+	ux.post(uEv);
+}
+
+ux.tableDeleteClickHandler = function(uEv) {
 	var rowElem = ux.findParent(uEv.uTrg, "tr");
 	if (rowElem) {
 		ux.fireEvent(rowElem, "click");
@@ -3005,6 +3029,15 @@ ux.getTableShiftParams = function(rgp, direction) {
 	evp.uShiftDirId = rgp.pShiftDirId;
 	evp.uRef = [ rgp.pId ];
 	evp.uShiftDir = direction;
+	return evp;
+}
+
+ux.getTableDeleteParams = function(rgp) {
+	var evp = ux.newEvPrm(rgp);
+	evp.uCmd = rgp.pId + "->delete";
+	evp.uPanels = [ rgp.pContId ];
+	evp.uIdxId = rgp.pIdxCtrlId;
+	evp.uRef = [ rgp.pId ];
 	return evp;
 }
 

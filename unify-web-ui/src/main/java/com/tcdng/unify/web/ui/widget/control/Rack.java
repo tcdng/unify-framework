@@ -32,10 +32,12 @@ import com.tcdng.unify.web.ui.widget.Control;
  * @since 1.0
  */
 @Component("ui-rack")
-@UplAttributes({ @UplAttribute(name = "rowSelectable", type = boolean.class, defaultVal = "true") })
+@UplAttributes({
+    @UplAttribute(name = "actionButtons", type = String.class, defaultVal = "!ui-shiftbuttons"),
+    @UplAttribute(name = "rowSelectable", type = boolean.class, defaultVal = "true") })
 public class Rack extends Table {
 
-    private ShiftButtons shiftCtrl;
+    private RackButtons rackCtrl;
 
     private Control shiftDirectionCtrl;
 
@@ -52,22 +54,27 @@ public class Rack extends Table {
 
     @Override
     public String getShiftTopId() throws UnifyException {
-        return shiftCtrl.getShiftTopGroupId();
+        return rackCtrl.getShiftTopGroupId();
     }
 
     @Override
     public String getShiftUpId() throws UnifyException {
-        return shiftCtrl.getShiftUpGroupId();
+        return rackCtrl.getShiftUpGroupId();
     }
 
     @Override
     public String getShiftDownId() throws UnifyException {
-        return shiftCtrl.getShiftDownGroupId();
+        return rackCtrl.getShiftDownGroupId();
     }
 
     @Override
     public String getShiftBottomId() throws UnifyException {
-        return shiftCtrl.getShiftBottomGroupId();
+        return rackCtrl.getShiftBottomGroupId();
+    }
+
+    @Override
+    public String getDeleteId() throws UnifyException {
+        return rackCtrl.getDeleteGroupId();
     }
 
     public int isShiftDirection() {
@@ -86,10 +93,11 @@ public class Rack extends Table {
 
     @Override
     protected void doOnPageConstruct() throws UnifyException {
-        StringBuilder sb = new StringBuilder(
-                "!ui-shiftbuttons  caption:$m{table.rack.shift} columnStyle:$s{width:100px;} style:$s{text-align:center;}");
+        StringBuilder sb = new StringBuilder();
+        sb.append(getUplAttribute(String.class, "actionButtons"))
+                .append("  caption:$m{table.rack.shift} columnStyle:$s{width:100px;} style:$s{text-align:center;}");
         appendUplAttribute(sb, "binding");
-        shiftCtrl = (ShiftButtons) addExternalChildWidget(sb.toString());
+        rackCtrl = (RackButtons) addExternalChildWidget(sb.toString());
         shiftDirectionCtrl = (Control) addInternalChildWidget("!ui-hidden binding:shiftDirection");
 
         super.doOnPageConstruct();

@@ -274,6 +274,7 @@ public class TableWriter extends AbstractControlWriter {
             writer.writeParam("pShiftUpId", table.getShiftUpId());
             writer.writeParam("pShiftDownId", table.getShiftDownId());
             writer.writeParam("pShiftBottomId", table.getShiftBottomId());
+            writer.writeParam("pDeleteId", table.getDeleteId());
         }
 
         writer.writeParam("pSortable", table.isSortable());

@@ -29,7 +29,7 @@ import com.tcdng.unify.web.ui.widget.Control;
  * @since 1.0
  */
 @Component("ui-shiftbuttons")
-public class ShiftButtons extends AbstractMultiControl {
+public class ShiftButtons extends AbstractMultiControl implements RackButtons {
 
     @Configurable
     private FontSymbolManager fontSymbolManager;
@@ -42,36 +42,54 @@ public class ShiftButtons extends AbstractMultiControl {
 
     private Control shiftBottomCtrl;
 
+    @Override
     public Control getShiftTopCtrl() {
         return shiftTopCtrl;
     }
 
+    @Override
     public Control getShiftUpCtrl() {
         return shiftUpCtrl;
     }
 
+    @Override
     public Control getShiftDownCtrl() {
         return shiftDownCtrl;
     }
 
+    @Override
     public Control getShiftBottomCtrl() {
         return shiftBottomCtrl;
     }
 
+    @Override
+    public Control getDeleteCtrl() {
+        return null;
+    }
+
+    @Override
     public String getShiftTopGroupId() throws UnifyException {
         return shiftTopCtrl.getGroupId();
     }
 
+    @Override
     public String getShiftUpGroupId() throws UnifyException {
         return shiftUpCtrl.getGroupId();
     }
 
+    @Override
     public String getShiftDownGroupId() throws UnifyException {
         return shiftDownCtrl.getGroupId();
     }
 
+    @Override
     public String getShiftBottomGroupId() throws UnifyException {
         return shiftBottomCtrl.getGroupId();
+    }
+
+    @Override
+    public String getDeleteGroupId() throws UnifyException {
+        return null;
     }
 
     @Override

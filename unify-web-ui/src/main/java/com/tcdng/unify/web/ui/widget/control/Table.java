@@ -272,6 +272,12 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
         reIndex();
     }
 
+    @Action
+    public void delete() throws UnifyException {
+        getValueList().remove(getViewIndex());
+        reIndex();
+    }
+    
     public List<String> getColumnPropertyList() throws UnifyException {
         List<String> propertyList = new ArrayList<String>();
         for (ChildWidgetInfo childWidgetInfo : getChildWidgetInfos()) {
@@ -351,6 +357,10 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
     }
 
     public String getShiftBottomId() throws UnifyException {
+        return null;
+    }
+
+    public String getDeleteId() throws UnifyException {
         return null;
     }
 
