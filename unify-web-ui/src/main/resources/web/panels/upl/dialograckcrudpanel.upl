@@ -3,6 +3,6 @@
 !ui-dialograckcrudpanel
 
 // Rack
-!ui-rack:itemListTbl style:$s{width:100%;} bodyStyle:$s{height:240px;}  binding:itemList
+!ui-rack:itemListTbl style:$s{width:100%;} bodyStyle:$f{dialogTableBodyStyle} binding:itemList
     components:$g{tableComponents} multiSelect:false windowed:true rowSelectable:true
     rowEventHandler:$d{!ui-event event:ondblclick action:$c{prepareMaintainAct}}

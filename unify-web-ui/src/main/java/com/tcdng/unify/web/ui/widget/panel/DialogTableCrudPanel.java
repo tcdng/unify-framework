@@ -36,7 +36,9 @@ public class DialogTableCrudPanel extends AbstractDialogPanel {
     @Override
     public void switchState() throws UnifyException {
         super.switchState();
-        switch(getDialogCrudInfo().getMode()) {
+        DialogCrudInfo<?>  dialogCrudInfo = getDialogCrudInfo();
+        dialogCrudInfo.init();
+        switch(dialogCrudInfo.getMode()) {
             case MAINTAIN:
                 setVisible("saveFrmBtn", false);
                 setVisible("updateFrmBtn", true);

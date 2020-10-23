@@ -264,6 +264,11 @@ z-index:400;}
 .ui-dialogpanel {}
 .ui-dialogpanel-base {background: #FFF; border: 1px solid #A9A9A9;}
 
+/** Dialog table CRUD panel */
+.ui-dialogtablecrudpanel {}
+
+/** Dialog rack CRUD panel */
+.ui-dialograckcrudpanel {}
 
 /** Fixed content panel */
 .ui-fixedcontentpanel {}

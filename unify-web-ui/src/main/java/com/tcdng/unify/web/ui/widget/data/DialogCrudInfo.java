@@ -43,13 +43,18 @@ public class DialogCrudInfo<T> {
     
     private Mode mode;
     
-    public DialogCrudInfo(Class<? extends T> typeClass) throws UnifyException {
+    public DialogCrudInfo(Class<? extends T> typeClass) {
         this.typeClass = typeClass;
-        newItem();
     }
     
     public Mode getMode() {
         return mode;
+    }
+
+    public void init() throws UnifyException {
+        if (mode == null) {
+            newItem();
+        }
     }
 
     public void newItem() throws UnifyException {
@@ -70,7 +75,6 @@ public class DialogCrudInfo<T> {
     public void removeItem() throws UnifyException {
         if (item != null && itemList != null) {
             itemList.remove(item);
-            item = null;
         }
     }
 

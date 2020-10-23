@@ -5,9 +5,10 @@
     dialogBodyComponents:$c{itemListTbl formPanel}
     dialogActionLayout:$d{!ui-horizontal style:$s{width:100%;}}
     dialogActionComponents:$c{dialogActionPanel}
+    dialogTableBodyStyle:$s{height:240px;}
 
 // Table
-!ui-table:itemListTbl style:$s{width:100%;} bodyStyle:$s{height:240px;}  binding:itemList
+!ui-table:itemListTbl style:$s{width:100%;} bodyStyle:$f{dialogTableBodyStyle} binding:itemList
     components:$g{tableComponents} multiSelect:false windowed:true rowSelectable:true
     rowEventHandler:$d{!ui-event event:ondblclick action:$c{prepareMaintainAct}}
 
@@ -27,7 +28,7 @@
 !ui-button:applyBtn caption:$m{button.apply}
 	eventHandler:$f{applyEventHandler}
 !ui-button:cancelBtn caption:$m{button.cancel}
-    eventHandler:$f{cancelEventHandler}
+    eventHandler:$d{!ui-event event:onclick action:$c{closeDialogAct}}
 
 //Actions
 !ui-postcommand:prepareMaintainAct command:prepareMaintain components:$c{itemListTbl}
