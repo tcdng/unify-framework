@@ -1,0 +1,8 @@
+// UPL template for record dialog rack CRUD panel
+// Copyright 2018-2020 The Code Department
+!ui-dialograckcrudpanel
+
+// Rack
+!ui-rack:itemListTbl style:$s{width:100%;} bodyStyle:$s{height:240px;}  binding:itemList
+    components:$g{tableComponents} multiSelect:false windowed:true rowSelectable:true
+    rowEventHandler:$d{!ui-event event:ondblclick action:$c{prepareMaintainAct}}

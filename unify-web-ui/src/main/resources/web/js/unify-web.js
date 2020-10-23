@@ -2754,10 +2754,8 @@ ux.rigTable = function(rgp) {
 			ux.fireEvent(tblToRig.rows[viewIndex], "click");
 		}
 	} else {
-		if (selectable) {
-			if (tblToRig.uFirstRow) {
-				ux.fireEvent(tblToRig.uFirstRow, "click");
-			}
+		if (selectable && tblToRig.uFirstRow) {
+			ux.fireEvent(tblToRig.uFirstRow, "click");
 		}
 	}
 	
@@ -4643,9 +4641,9 @@ ux.setShortcut = function(shortcut, evp) {
 }
 
 ux.setOnEvent = function(evp) {
+	const eventName = evp.uEvnt;
 	var elem = _id(evp.uId);
 	if (elem) {
-		var eventName = evp.uEvnt;
 		if (elem.value == "pushr_") {
 			ux.addHdlMany(evp.uId, eventName, evp.uFunc,
 					evp);
@@ -4656,6 +4654,9 @@ ux.setOnEvent = function(evp) {
 				ux.fireEvent(elem, eventName);
 			}
 		}
+	} else {
+		ux.addHdlMany(evp.uId, eventName, evp.uFunc,
+				evp);
 	}
 }
 

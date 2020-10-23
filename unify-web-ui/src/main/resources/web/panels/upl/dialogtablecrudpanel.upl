@@ -1,0 +1,48 @@
+// UPL template for record dialog table CRUD panel
+// Copyright 2018-2020 The Code Department
+!ui-dialogtablecrudpanel
+	dialogBodyLayout:$d{!ui-horizontal style:$s{width:100%;} widths:$l{440px none}}
+    dialogBodyComponents:$c{itemListTbl formPanel}
+    dialogActionLayout:$d{!ui-horizontal style:$s{width:100%;}}
+    dialogActionComponents:$c{dialogActionPanel}
+
+// Table
+!ui-table:itemListTbl style:$s{width:100%;} bodyStyle:$s{height:240px;}  binding:itemList
+    components:$g{tableComponents} multiSelect:false windowed:true rowSelectable:true
+    rowEventHandler:$d{!ui-event event:ondblclick action:$c{prepareMaintainAct}}
+
+//Form   
+!ui-formpanel:formPanel layout:$d{!ui-vertical style:$s{table-layout:fixed;}}
+    formCaptionSuffix:$s{:} formBinding:item formColumns:1
+    footerComponentList:$c{saveFrmBtn updateFrmBtn deleteFrmBtn}
+    formSection:$f{formSection}
+!ui-button:saveFrmBtn caption:$m{button.add}
+	eventHandler:$d{!ui-event event:onclick action:$c{saveAct}}
+!ui-button:updateFrmBtn styleClass:$s{ui-button-alert} caption:$m{button.update}
+	eventHandler:$d{!ui-event event:onclick action:$c{updateAct}}
+!ui-button:deleteFrmBtn styleClass:$s{ui-button-alert} caption:$m{button.delete}
+	eventHandler:$d{!ui-event event:onclick action:$c{deleteAct}}
+
+!ui-panel:dialogActionPanel layout:$d{!ui-horizontal} components:$c{applyBtn cancelBtn}
+!ui-button:applyBtn caption:$m{button.apply}
+	eventHandler:$f{applyEventHandler}
+!ui-button:cancelBtn caption:$m{button.cancel}
+    eventHandler:$f{cancelEventHandler}
+
+//Actions
+!ui-postcommand:prepareMaintainAct command:prepareMaintain components:$c{itemListTbl}
+     refresh:$c{formPanel}
+!ui-postcommand:prepareCreateAct command:prepareCreate
+    refresh:$c{formPanel}
+!ui-postcommand:saveAct command:save components:$c{formPanel}
+    validations:$c{formValidation} validations:$f{saveValidations}
+    refresh:$c{bodyPanel}
+!ui-postcommand:updateAct command:update components:$c{formPanel}
+    validations:$c{formValidation} validations:$f{updateValidations}
+    refresh:$c{bodyPanel}
+!ui-postcommand:deleteAct command:delete
+    refresh:$c{bodyPanel}
+
+
+// Validations
+!ui-validation:formValidation components:$c{formPanel}
