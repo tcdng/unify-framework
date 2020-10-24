@@ -104,6 +104,8 @@ public class DialogCrudInfo<T> {
     }
 
     public void setItemList(List<T> itemList) {
+        mode = null;
+        item = null;
         this.itemList = itemList;
     }
 }
