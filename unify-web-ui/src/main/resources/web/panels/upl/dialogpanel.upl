@@ -11,7 +11,8 @@
     components:$c{titleBar bodyPanel actionPanel}
 
 // Title bar
-!ui-titlebar:titleBar caption:$g{dialogCaption} components:$c{captionCancelBtn} draggable:true
+!ui-titlebar:titleBar caption:$f{dialogCaption} captionBinding:$f{dialogCaptionBinding}
+	components:$c{captionCancelBtn} draggable:true
 !ui-image:captionCancelBtn src:$t{images/cross_white.png} styleClass:$e{tbbutton}
     eventHandler:$d{!ui-event event:onclick action:$c{closeDialogAct}}
 

@@ -1,6 +1,7 @@
 // UPL template for record dialog table CRUD panel
 // Copyright 2018-2020 The Code Department
 !ui-dialogtablecrudpanel
+	dialogCaptionBinding:title
 	dialogBodyLayout:$d{!ui-horizontal style:$s{width:100%;} widths:$l{440px none}}
     dialogBodyComponents:$c{itemListTbl formPanel}
     dialogActionLayout:$d{!ui-horizontal style:$s{width:100%;}}

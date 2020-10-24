@@ -119,7 +119,7 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 	public String getCaption() throws UnifyException {
 	    String caption = null;
 		String captionBinding = getUplAttribute(String.class, "captionBinding");
-		if (captionBinding != null) {
+		if (captionBinding != null && !captionBinding.isEmpty()) {
 		    caption = getStringValue(captionBinding);
 		} else {
 		    caption = getUplAttribute(String.class, "caption");

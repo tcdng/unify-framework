@@ -43,12 +43,22 @@ public class DialogCrudInfo<T> {
     
     private Mode mode;
     
+    private String title;
+    
     public DialogCrudInfo(Class<? extends T> typeClass) {
         this.typeClass = typeClass;
     }
     
     public Mode getMode() {
         return mode;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public void init() throws UnifyException {
