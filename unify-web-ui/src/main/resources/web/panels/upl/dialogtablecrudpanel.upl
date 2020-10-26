@@ -7,6 +7,8 @@
     dialogActionLayout:$d{!ui-horizontal style:$s{width:100%;}}
     dialogActionComponents:$c{dialogActionPanel}
     dialogTableBodyStyle:$s{height:240px;}
+    dialogCancelCaption:$m{button.cancel}
+    dialogCancelEventHandler:$d{!ui-event event:onclick action:$c{closeDialogAct}}
 
 // Table
 !ui-table:itemListTbl style:$s{width:100%;} bodyStyle:$f{dialogTableBodyStyle} binding:itemList
@@ -27,9 +29,9 @@
 
 !ui-panel:dialogActionPanel layout:$d{!ui-horizontal} components:$c{applyBtn cancelBtn}
 !ui-button:applyBtn caption:$m{button.apply}
-	eventHandler:$f{applyEventHandler}
-!ui-button:cancelBtn caption:$m{button.cancel}
-    eventHandler:$d{!ui-event event:onclick action:$c{closeDialogAct}}
+	eventHandler:$f{dialogApplyEventHandler}
+!ui-button:cancelBtn caption:$f{dialogCancelCaption}
+    eventHandler:$f{dialogCancelEventHandler}
 
 //Actions
 !ui-postcommand:prepareMaintainAct command:prepareMaintain components:$c{itemListTbl}
