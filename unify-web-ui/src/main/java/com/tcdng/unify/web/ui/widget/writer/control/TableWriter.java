@@ -307,7 +307,7 @@ public class TableWriter extends AbstractControlWriter {
     private void writeHeaderRow(ResponseWriter writer, Table table) throws UnifyException {
         writer.write("<tr>");
         table.clearVisibleColumnCount();
-        if (table.getUplAttribute(boolean.class, "serialNumbers")) {
+        if (table.isSerialNumbers()) {
             writer.write("<th class=\"thserialno tth\">*</th>");
             table.incrementVisibleColumnCount();
         }
@@ -378,18 +378,18 @@ public class TableWriter extends AbstractControlWriter {
     private void writeBodyRows(ResponseWriter writer, Table table) throws UnifyException {
         if (table.getPageItemCount() > 0) {
             List<Row> writeRowList = table.getValueList();
-            boolean isWindowed = table.isWindowed();
+            final boolean isWindowed = table.isWindowed();
             int index = table.getPageItemIndex();
             int lastIndex = index + table.getPageItemCount();
 
             table.clearPageSelectedRowCount();
 
-            boolean isSerialNo = table.isSerialNumbers();
-            boolean isMultiSelect = table.isMultiSelect();
-            boolean isContainerDisabled = table.isContainerDisabled();
-            boolean isContainerEditable = table.isContainerEditable();
-            boolean isShowMultiSelectCheckboxes = table.isShowMultiSelectCheckboxes();
-            boolean isHideMultiSelectBorder = isMultiSelect && !isShowMultiSelectCheckboxes;
+            final boolean isSerialNo = table.isSerialNumbers();
+            final boolean isMultiSelect = table.isMultiSelect();
+            final boolean isContainerDisabled = table.isContainerDisabled();
+            final boolean isContainerEditable = table.isContainerEditable();
+            final boolean isShowMultiSelectCheckboxes = table.isShowMultiSelectCheckboxes();
+            final boolean isHideMultiSelectBorder = isMultiSelect && !isShowMultiSelectCheckboxes;
 
             String dataGroupId = null;
             if (isContainerEditable) {

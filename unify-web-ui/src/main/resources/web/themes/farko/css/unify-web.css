@@ -267,6 +267,7 @@ z-index:400;}
 /** Dialog table CRUD panel */
 .ui-dialogtablecrudpanel {}
 
+
 /** Dialog rack CRUD panel */
 .ui-dialograckcrudpanel {}
 
@@ -331,6 +332,7 @@ z-index:400;}
     padding:8px 14px; margin-bottom:8px;}
 
 .ui-tablecrudpanel {}
+
 .ui-rackcrudpanel {}
 
 /** Split panel */

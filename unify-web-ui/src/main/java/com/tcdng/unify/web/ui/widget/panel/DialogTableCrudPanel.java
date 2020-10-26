@@ -43,11 +43,13 @@ public class DialogTableCrudPanel extends AbstractDialogPanel {
                 setVisible("saveFrmBtn", false);
                 setVisible("updateFrmBtn", true);
                 setVisible("deleteFrmBtn", true);
+                setVisible("cancelFrmBtn", true);
                 break;
             case CREATE:
                 setVisible("saveFrmBtn", true);
                 setVisible("updateFrmBtn", false);
                 setVisible("deleteFrmBtn", false);
+                setVisible("cancelFrmBtn", false);
             default:
                 break;
         }
@@ -86,6 +88,13 @@ public class DialogTableCrudPanel extends AbstractDialogPanel {
     public void delete() throws UnifyException {
         DialogCrudInfo<?>  dialogCrudInfo = getDialogCrudInfo();
         dialogCrudInfo.removeItem();
+        dialogCrudInfo.newItem();
+        switchState();
+    }
+
+    @Action
+    public void cancel() throws UnifyException {
+        DialogCrudInfo<?>  dialogCrudInfo = getDialogCrudInfo();
         dialogCrudInfo.newItem();
         switchState();
     }

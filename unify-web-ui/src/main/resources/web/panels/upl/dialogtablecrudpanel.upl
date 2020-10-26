@@ -6,26 +6,31 @@
     dialogBodyComponents:$c{itemListTbl formPanel}
     dialogActionLayout:$d{!ui-horizontal style:$s{width:100%;}}
     dialogActionComponents:$c{dialogActionPanel}
+    dialogTableSerialNumbers:false
     dialogTableBodyStyle:$s{height:240px;}
     dialogCancelCaption:$m{button.cancel}
     dialogCancelEventHandler:$d{!ui-event event:onclick action:$c{closeDialogAct}}
 
 // Table
-!ui-table:itemListTbl style:$s{width:100%;} bodyStyle:$f{dialogTableBodyStyle} binding:itemList
-    components:$g{tableComponents} multiSelect:false windowed:true rowSelectable:true
+!ui-table:itemListTbl style:$s{width:100%;} bodyStyle:$f{dialogTableBodyStyle} serialNumbers:$f{dialogTableSerialNumbers}
+	multiSelect:false windowed:true rowSelectable:true
+    components:$g{tableComponents} binding:itemList
     rowEventHandler:$d{!ui-event event:ondblclick action:$c{prepareMaintainAct}}
 
 //Form   
-!ui-formpanel:formPanel layout:$d{!ui-vertical style:$s{table-layout:fixed;}}
+!ui-formpanel:formPanel style:$s{border-left: solid 1px #ddd; padding-left: 4px; margin-left: 2px;}
+	layout:$d{!ui-vertical style:$s{table-layout:fixed;}}
     formCaptionSuffix:$s{:} formBinding:item formColumns:1
-    footerComponentList:$c{saveFrmBtn updateFrmBtn deleteFrmBtn}
+    footerComponentList:$c{saveFrmBtn updateFrmBtn deleteFrmBtn cancelFrmBtn}
     formSection:$f{formSection}
 !ui-button:saveFrmBtn caption:$m{button.add}
 	eventHandler:$d{!ui-event event:onclick action:$c{saveAct}}
-!ui-button:updateFrmBtn styleClass:$s{ui-button-alert} caption:$m{button.update}
+!ui-button:updateFrmBtn caption:$m{button.update}
 	eventHandler:$d{!ui-event event:onclick action:$c{updateAct}}
-!ui-button:deleteFrmBtn styleClass:$s{ui-button-alert} caption:$m{button.delete}
+!ui-button:deleteFrmBtn caption:$m{button.delete}
 	eventHandler:$d{!ui-event event:onclick action:$c{deleteAct}}
+!ui-button:cancelFrmBtn caption:$m{button.cancel}
+	eventHandler:$d{!ui-event event:onclick action:$c{cancelAct}}
 
 !ui-panel:dialogActionPanel layout:$d{!ui-horizontal} components:$c{applyBtn cancelBtn}
 !ui-button:applyBtn caption:$m{button.apply}
@@ -45,6 +50,8 @@
     validations:$c{formValidation} validations:$f{updateValidations}
     refresh:$c{bodyPanel}
 !ui-postcommand:deleteAct command:delete
+    refresh:$c{bodyPanel}
+!ui-postcommand:cancelAct command:cancel
     refresh:$c{bodyPanel}
 
 
