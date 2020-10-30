@@ -862,7 +862,12 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
                 String targetCmdPgNm = null;
                 String commandTarget = pageAction.getUplAttribute(String.class, "target");
                 if (commandTarget != null) {
-                    targetCmdPgNm = pageManager.getPageName(commandTarget);
+                    if ("PARENT".equals(commandTarget)) {
+                        targetCmdPgNm = pageManager.getPageName(pageAction.getParentLongName().substring(0,
+                                pageAction.getParentLongName().lastIndexOf('.')));
+                    } else {
+                        targetCmdPgNm = pageManager.getPageName(commandTarget);
+                    }
                 }
 
                 if (targetCmdPgNm == null) {
