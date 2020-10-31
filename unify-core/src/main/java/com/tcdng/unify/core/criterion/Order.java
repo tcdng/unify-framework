@@ -66,6 +66,11 @@ public class Order {
         return !parts.isEmpty();
     }
 
+    @Override
+    public String toString() {
+        return "Order [parts=" + parts + ", policy=" + policy + "]";
+    }
+
     private Order doAdd(String field, OrderType type) {
         final int len = parts.size();
         for (int i = 0; i < len; i++) {
@@ -105,6 +110,11 @@ public class Order {
 
         public boolean isAscending() {
             return OrderType.ASCENDING.equals(type);
+        }
+
+        @Override
+        public String toString() {
+            return "Part [field=" + field + ", type=" + type + "]";
         }
     }
 }
