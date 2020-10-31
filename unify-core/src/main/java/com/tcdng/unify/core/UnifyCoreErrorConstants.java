@@ -979,4 +979,23 @@ public interface UnifyCoreErrorConstants {
     
     /** SQL entity information not found for type {0}.*/
     String SQLENTITYINFOFACTORY_ENTITYINFO_NOT_FOUND = "UC_00FB";
+
+    /**
+     * Invalid foster parent type field type. Type = {0}, field = {1}
+     */
+    String RECORD_INVALID_FOSTER_PARENT_TYPE_FIELD_TYPE = "UC_00FC";
+
+    /**
+     * Invalid foster parent ID field type. Type = {0}, field = {1}
+     */
+    String RECORD_INVALID_FOSTER_PARENT_ID_FIELD_TYPE = "UC_00FD";
+
+    /** Entity has multiple foster parent type annotated fields. Type = {0}, field = {1} */
+    String RECORD_MULTIPLE_FOSTER_PARENT_TYPE_ANNOTATION = "UC_00FE";
+
+    /** Entity has multiple foster parent id annotated fields. Type = {0}, field = {1} */
+    String RECORD_MULTIPLE_FOSTER_PARENT_ID_ANNOTATION = "UC_00FF";
+
+    /** Entity must combine both @ForsterParentType and @ForsterParentId annotations. Type = {0} */
+    String RECORD_MUST_COMBINE_FOSTER_ANNOTATIONS = "UC_0100";
 }

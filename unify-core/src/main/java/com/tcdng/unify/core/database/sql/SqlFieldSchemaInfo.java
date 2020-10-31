@@ -55,6 +55,16 @@ public interface SqlFieldSchemaInfo {
      * Returns the field nullable attribute
      */
     boolean isNullable();
+
+    /**
+     * Returns the field is foster parent type
+     */
+    boolean isFosterParentType();
+
+    /**
+     * Returns the field is foster parent ID
+     */
+    boolean isFosterParentId();
     
     /**
      * Returns the field length.

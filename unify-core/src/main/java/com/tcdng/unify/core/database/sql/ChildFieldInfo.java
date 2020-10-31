@@ -28,7 +28,9 @@ import com.tcdng.unify.core.database.Entity;
  */
 public class ChildFieldInfo extends OnDeleteCascadeInfo {
 
-    private Method attrFkSetter;
+    private Method childFkIdSetter;
+
+    private Method childFkTypeSetter;
 
     private Field field;
 
@@ -38,10 +40,11 @@ public class ChildFieldInfo extends OnDeleteCascadeInfo {
 
     private boolean list;
 
-    public ChildFieldInfo(Class<? extends Entity> childEntityClass, Field childFkField, Method attrFkSetter,
-            Field field, Method getter, Method setter, boolean list) {
-        super(childEntityClass, childFkField);
-        this.attrFkSetter = attrFkSetter;
+    public ChildFieldInfo(Class<? extends Entity> childEntityClass, Field childFkIdField, Method childFkIdSetter,
+            Field childFkTypeField, Method childFkTypeSetter, Field field, Method getter, Method setter, boolean list) {
+        super(childEntityClass, childFkIdField, childFkTypeField);
+        this.childFkIdSetter = childFkIdSetter;
+        this.childFkTypeSetter = childFkTypeSetter;
         this.field = field;
         this.getter = getter;
         this.setter = setter;
@@ -52,8 +55,12 @@ public class ChildFieldInfo extends OnDeleteCascadeInfo {
         return field.getName();
     }
 
-    public Method getAttrFkSetter() {
-        return attrFkSetter;
+    public Method getChildFkIdSetter() {
+        return childFkIdSetter;
+    }
+
+    public Method getChildFkTypeSetter() {
+        return childFkTypeSetter;
     }
 
     public Field getField() {
@@ -72,4 +79,7 @@ public class ChildFieldInfo extends OnDeleteCascadeInfo {
         return list;
     }
 
+    public boolean isWithChildFkType() {
+        return childFkTypeSetter != null;
+    }
 }

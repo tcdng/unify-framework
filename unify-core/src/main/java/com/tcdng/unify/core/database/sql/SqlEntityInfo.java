@@ -70,6 +70,10 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 
     private SqlFieldInfo versionFieldInfo;
 
+    private SqlFieldInfo fosterParentTypeFieldInfo;
+
+    private SqlFieldInfo fosterParentIdFieldInfo;
+
     private List<SqlFieldInfo> fieldInfoList;
 
     private List<SqlFieldInfo> listFieldInfoList;
@@ -115,11 +119,13 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
     public SqlEntityInfo(Long index, Class<? extends Entity> entityClass, Class<? extends EnumConst> enumConstClass,
             EntityPolicy recordPolicy, String schema, String tableName, String preferredTableName,
             String schemaTableName, String tableAlias, String viewName, String preferredViewName, String schemaViewName,
-            SqlFieldInfo idFieldInfo, SqlFieldInfo versionFieldInfo, Map<String, SqlFieldInfo> sQLFieldInfoMap,
+            SqlFieldInfo idFieldInfo, SqlFieldInfo versionFieldInfo, SqlFieldInfo fosterParentTypeFieldInfo,
+            SqlFieldInfo fosterParentIdFieldInfo, Map<String, SqlFieldInfo> sQLFieldInfoMap,
             List<ChildFieldInfo> childInfoList, List<ChildFieldInfo> childListInfoList,
             Map<String, SqlUniqueConstraintInfo> uniqueConstraintMap, Map<String, SqlIndexInfo> indexMap,
             List<Map<String, Object>> staticValueList, Map<String, Class<?>> viewBaseTables,
-            List<SqlViewRestrictionInfo> viewRestrictionList, boolean isAllObjectsInLowerCase, boolean identityManaged) throws UnifyException {
+            List<SqlViewRestrictionInfo> viewRestrictionList, boolean isAllObjectsInLowerCase, boolean identityManaged)
+            throws UnifyException {
         this.index = index;
         this.entityClass = entityClass;
         this.enumConstClass = enumConstClass;
@@ -134,6 +140,8 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
         this.schemaViewName = schemaViewName;
         this.idFieldInfo = idFieldInfo;
         this.versionFieldInfo = versionFieldInfo;
+        this.fosterParentTypeFieldInfo = fosterParentTypeFieldInfo;
+        this.fosterParentIdFieldInfo = fosterParentIdFieldInfo;
         this.schemaAlreadyManaged = false;
 
         if (isAllObjectsInLowerCase) {
@@ -191,6 +199,8 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
         this.schemaViewName = originSqlEntityInfo.schemaViewName;
         this.idFieldInfo = originSqlEntityInfo.idFieldInfo;
         this.versionFieldInfo = originSqlEntityInfo.versionFieldInfo;
+        this.fosterParentTypeFieldInfo = originSqlEntityInfo.fosterParentTypeFieldInfo;
+        this.fosterParentIdFieldInfo = originSqlEntityInfo.fosterParentIdFieldInfo;
         this.childInfoList = originSqlEntityInfo.childInfoList;
         this.childListInfoList = originSqlEntityInfo.childListInfoList;
         this.childInfoByName = originSqlEntityInfo.childInfoByName;
@@ -266,6 +276,16 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
     @Override
     public SqlFieldInfo getVersionFieldInfo() {
         return versionFieldInfo;
+    }
+
+    @Override
+    public SqlFieldInfo getFosterParentTypeFieldInfo() {
+        return fosterParentTypeFieldInfo;
+    }
+
+    @Override
+    public SqlFieldInfo getFosterParentIdFieldInfo() {
+        return fosterParentIdFieldInfo;
     }
 
     @Override
@@ -475,6 +495,10 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
         return extensionSqlEntityInfo != null;
     }
 
+    public boolean isWithFosterParents() {
+        return fosterParentTypeFieldInfo != null;
+    }
+    
     SqlEntityInfo extend(String viewName, String preferredViewName, String schemaViewName,
             Class<? extends Entity> extensionEntityClass, Map<String, SqlFieldInfo> sQLFieldInfoMap,
             Map<String, SqlUniqueConstraintInfo> uniqueConstraintMap, Map<String, SqlIndexInfo> indexMap)

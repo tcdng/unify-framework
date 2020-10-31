@@ -30,19 +30,29 @@ public class OnDeleteCascadeInfo {
 
     private Class<? extends Entity> childEntityClass;
 
-    private Field childFkField;
+    private Field childFkIdField;
 
-    public OnDeleteCascadeInfo(Class<? extends Entity> childEntityClass, Field childFkField) {
+    private Field childFkTypeField;
+
+    public OnDeleteCascadeInfo(Class<? extends Entity> childEntityClass, Field childFkIdField, Field childFkTypeField) {
         this.childEntityClass = childEntityClass;
-        this.childFkField = childFkField;
+        this.childFkIdField = childFkIdField;
+        this.childFkTypeField = childFkTypeField;
     }
 
     public Class<? extends Entity> getChildEntityClass() {
         return childEntityClass;
     }
 
-    public Field getChildFkField() {
-        return childFkField;
+    public Field getChildFkIdField() {
+        return childFkIdField;
     }
 
+    public Field getChildFkTypeField() {
+        return childFkTypeField;
+    }
+
+    public boolean isWithChildFkType() {
+        return childFkTypeField != null;
+    }
 }
