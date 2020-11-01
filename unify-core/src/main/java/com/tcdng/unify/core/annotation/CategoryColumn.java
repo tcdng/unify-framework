@@ -24,15 +24,21 @@ import java.lang.annotation.Target;
 import com.tcdng.unify.core.constant.AnnotationConstants;
 
 /**
- * Indicates a child record.
+ * Indicates field contains category information.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Child {
+public @interface CategoryColumn {
 
-    /** Child list category */
-    String category() default AnnotationConstants.NONE;
+    /**
+     * The field column name. If not set, the system generates a column name using
+     * the field name.
+     */
+    String name() default AnnotationConstants.NONE;
+
+    /** The length of the field.*/
+    int length() default 64;
 }

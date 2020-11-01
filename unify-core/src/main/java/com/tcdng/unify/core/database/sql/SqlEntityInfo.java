@@ -73,7 +73,9 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
     private SqlFieldInfo fosterParentTypeFieldInfo;
 
     private SqlFieldInfo fosterParentIdFieldInfo;
-
+    
+    private SqlFieldInfo categoryFieldInfo;
+    
     private List<SqlFieldInfo> fieldInfoList;
 
     private List<SqlFieldInfo> listFieldInfoList;
@@ -120,7 +122,7 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
             EntityPolicy recordPolicy, String schema, String tableName, String preferredTableName,
             String schemaTableName, String tableAlias, String viewName, String preferredViewName, String schemaViewName,
             SqlFieldInfo idFieldInfo, SqlFieldInfo versionFieldInfo, SqlFieldInfo fosterParentTypeFieldInfo,
-            SqlFieldInfo fosterParentIdFieldInfo, Map<String, SqlFieldInfo> sQLFieldInfoMap,
+            SqlFieldInfo fosterParentIdFieldInfo, SqlFieldInfo categoryFieldInfo, Map<String, SqlFieldInfo> sQLFieldInfoMap,
             List<ChildFieldInfo> childInfoList, List<ChildFieldInfo> childListInfoList,
             Map<String, SqlUniqueConstraintInfo> uniqueConstraintMap, Map<String, SqlIndexInfo> indexMap,
             List<Map<String, Object>> staticValueList, Map<String, Class<?>> viewBaseTables,
@@ -142,6 +144,7 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
         this.versionFieldInfo = versionFieldInfo;
         this.fosterParentTypeFieldInfo = fosterParentTypeFieldInfo;
         this.fosterParentIdFieldInfo = fosterParentIdFieldInfo;
+        this.categoryFieldInfo = categoryFieldInfo;
         this.schemaAlreadyManaged = false;
 
         if (isAllObjectsInLowerCase) {
@@ -201,6 +204,7 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
         this.versionFieldInfo = originSqlEntityInfo.versionFieldInfo;
         this.fosterParentTypeFieldInfo = originSqlEntityInfo.fosterParentTypeFieldInfo;
         this.fosterParentIdFieldInfo = originSqlEntityInfo.fosterParentIdFieldInfo;
+        this.categoryFieldInfo = originSqlEntityInfo.categoryFieldInfo;
         this.childInfoList = originSqlEntityInfo.childInfoList;
         this.childListInfoList = originSqlEntityInfo.childListInfoList;
         this.childInfoByName = originSqlEntityInfo.childInfoByName;
@@ -286,6 +290,11 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
     @Override
     public SqlFieldInfo getFosterParentIdFieldInfo() {
         return fosterParentIdFieldInfo;
+    }
+
+    @Override
+    public SqlFieldInfo getCategoryFieldInfo() {
+        return categoryFieldInfo;
     }
 
     @Override
@@ -497,6 +506,10 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 
     public boolean isWithFosterParents() {
         return fosterParentTypeFieldInfo != null;
+    }
+
+    public boolean isCategoryColumn() {
+        return categoryFieldInfo != null;
     }
     
     SqlEntityInfo extend(String viewName, String preferredViewName, String schemaViewName,

@@ -707,6 +707,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
                         if (odci.isWithChildFkType()) {
                             attrQuery.addEquals(odci.getChildFkTypeField().getName(), tableName);
                         }
+                        
+                        if (odci.isWithChildCat()) {
+                            attrQuery.addEquals(odci.getChildCatField().getName(), odci.getCategory());
+                        }
+                        
                         attrQuery.addAmongst(odci.getChildFkIdField().getName(), idList);
                         deleteAll(attrQuery);
                     }
@@ -1055,6 +1060,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
                             if (clfi.isWithChildFkType()) {
                                 query.addEquals(clfi.getChildFkTypeField().getName(), tableName);
                             }
+                            
+                            if (clfi.isWithChildCat()) {
+                                query.addEquals(clfi.getChildCatField().getName(), clfi.getCategory());
+                            }
+                            
                             query.addEquals(clfi.getChildFkIdField().getName(), id)
                                     .addOrder(childSqlEntityInfo.getIdFieldInfo().getName());
                             List<? extends Entity> childList = null;
@@ -1096,6 +1106,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
                             if (clfi.isWithChildFkType()) {
                                 query.addEquals(clfi.getChildFkTypeField().getName(), tableName);
                             }
+
+                            if (clfi.isWithChildCat()) {
+                                query.addEquals(clfi.getChildCatField().getName(), clfi.getCategory());
+                            }
+                            
                             query.addEquals(clfi.getChildFkIdField().getName(), id)
                                     .addOrder(childSqlEntityInfo.getIdFieldInfo().getName());
                             List<? extends Entity> childList = null;
@@ -1273,6 +1288,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
                         if (alfi.isWithChildFkType()) {
                             alfi.getChildFkTypeSetter().invoke(childRecord, tableName);
                         }
+                        
+                        if (alfi.isWithChildCat()) {
+                            alfi.getChildCatSetter().invoke(childRecord, alfi.getCategory());
+                        }
+                        
                         create(childRecord);
                     }
                 }
@@ -1319,6 +1339,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
             if (odci.isWithChildFkType()) {
                 query.addEquals(odci.getChildFkTypeField().getName(), tableName);
             }
+            
+            if (odci.isWithChildCat()) {
+                query.addEquals(odci.getChildCatField().getName(), odci.getCategory());
+            }
+
             query.addEquals(odci.getChildFkIdField().getName(), id);
             deleteAll(query);
         }

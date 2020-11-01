@@ -34,10 +34,14 @@ public class OnDeleteCascadeInfo {
 
     private Field childFkTypeField;
 
-    public OnDeleteCascadeInfo(Class<? extends Entity> childEntityClass, Field childFkIdField, Field childFkTypeField) {
+    private Field childCatField;
+
+    public OnDeleteCascadeInfo(Class<? extends Entity> childEntityClass, Field childFkIdField, Field childFkTypeField,
+            Field childCatField) {
         this.childEntityClass = childEntityClass;
         this.childFkIdField = childFkIdField;
         this.childFkTypeField = childFkTypeField;
+        this.childCatField = childCatField;
     }
 
     public Class<? extends Entity> getChildEntityClass() {
@@ -52,7 +56,19 @@ public class OnDeleteCascadeInfo {
         return childFkTypeField;
     }
 
+    public Field getChildCatField() {
+        return childCatField;
+    }
+
     public boolean isWithChildFkType() {
         return childFkTypeField != null;
+    }
+
+    public boolean isWithChildCat() {
+        return childCatField != null;
+    }
+    
+    public String getCategory() {
+        return null;
     }
 }

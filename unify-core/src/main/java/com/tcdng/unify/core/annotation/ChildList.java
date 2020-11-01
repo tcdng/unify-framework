@@ -20,6 +20,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import com.tcdng.unify.core.constant.AnnotationConstants;
+
 /**
  * Indicates a list of child records.
  * 
@@ -30,4 +32,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ChildList {
 
+    /** Child list category */
+    String category() default AnnotationConstants.NONE;
 }

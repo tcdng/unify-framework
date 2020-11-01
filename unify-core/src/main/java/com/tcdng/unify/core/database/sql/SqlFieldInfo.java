@@ -68,6 +68,8 @@ public class SqlFieldInfo implements SqlFieldSchemaInfo {
     private boolean fosterParentType;
     
     private boolean fosterParentId;
+    
+    private boolean categoryColumn;
 
     private SqlFieldDimensions sqlFieldDimensions;
 
@@ -84,11 +86,12 @@ public class SqlFieldInfo implements SqlFieldSchemaInfo {
             String preferredColumnName, String constraintName, String foreignEntityPreferredAlias, boolean primaryKey,
             boolean foreignKey, boolean listOnly, boolean ignoreFkConstraint, Transformer<?, ?> transformer,
             SqlFieldDimensions sqlFieldDimensions, boolean nullable, boolean fosterParentType, boolean fosterParentId,
-            String defaultVal, Field field, Method getter, Method setter, boolean isAllObjectsInLowerCase) {
+            boolean categoryColumn, String defaultVal, Field field, Method getter, Method setter,
+            boolean isAllObjectsInLowerCase) {
         this(null, orderIndex, columnType, foreignSqlEntityInfo, foreignSqlFieldInfo, foreignKeySqlFieldInfo, name,
                 columnName, preferredColumnName, constraintName, foreignEntityPreferredAlias, primaryKey, foreignKey,
-                listOnly, ignoreFkConstraint, transformer, sqlFieldDimensions, nullable, fosterParentType, fosterParentId, defaultVal, field, getter,
-                setter, isAllObjectsInLowerCase);
+                listOnly, ignoreFkConstraint, transformer, sqlFieldDimensions, nullable, fosterParentType,
+                fosterParentId, categoryColumn, defaultVal, field, getter, setter, isAllObjectsInLowerCase);
     }
 
     public SqlFieldInfo(Long marker, int orderIndex, ColumnType columnType, SqlEntityInfo foreignSqlEntityInfo,
@@ -96,7 +99,7 @@ public class SqlFieldInfo implements SqlFieldSchemaInfo {
             String preferredColumnName, String constraintName, String foreignEntityPreferredAlias, boolean primaryKey,
             boolean foreignKey, boolean listOnly, boolean ignoreFkConstraint, Transformer<?, ?> transformer,
             SqlFieldDimensions sqlFieldDimensions, boolean nullable, boolean fosterParentType, boolean fosterParentId,
-            String defaultVal, Field field, Method getter, Method setter, boolean isAllObjectsInLowerCase) {
+            boolean categoryColumn, String defaultVal, Field field, Method getter, Method setter, boolean isAllObjectsInLowerCase) {
         this.marker = marker;
         this.columnType = columnType;
         this.foreignEntityInfo = foreignSqlEntityInfo;
@@ -115,6 +118,7 @@ public class SqlFieldInfo implements SqlFieldSchemaInfo {
         this.nullable = nullable;
         this.fosterParentType = fosterParentType;
         this.fosterParentId = fosterParentId;
+        this.categoryColumn = categoryColumn;
         this.sqlFieldDimensions = sqlFieldDimensions;
         this.defaultVal = defaultVal;
         this.field = field;
@@ -193,6 +197,11 @@ public class SqlFieldInfo implements SqlFieldSchemaInfo {
     @Override
     public boolean isFosterParentId() {
         return fosterParentId;
+    }
+
+    @Override
+    public boolean isCategoryColumn() {
+        return categoryColumn;
     }
 
     public SqlFieldDimensions getSqlFieldDimensions() {

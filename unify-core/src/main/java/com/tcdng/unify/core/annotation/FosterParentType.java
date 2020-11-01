@@ -39,6 +39,6 @@ public @interface FosterParentType {
      */
     String name() default AnnotationConstants.NONE;
 
-    /** The length of the field. Applied for character columns. */
+    /** The length of the field. */
     int length() default 128;
 }

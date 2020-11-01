@@ -22,9 +22,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyComponentConfig;
@@ -33,6 +35,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Callable;
 import com.tcdng.unify.core.annotation.CallableDataType;
 import com.tcdng.unify.core.annotation.CallableResult;
+import com.tcdng.unify.core.annotation.CategoryColumn;
 import com.tcdng.unify.core.annotation.Child;
 import com.tcdng.unify.core.annotation.ChildList;
 import com.tcdng.unify.core.annotation.Column;
@@ -183,11 +186,12 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                 final boolean isNullable = false;
                 final boolean isFosterParentType = false;
                 final boolean isFosterParentId = false;
+                final boolean isCategoryColumn = false;
                 SqlFieldInfo idFieldInfo = new SqlFieldInfo(DefaultColumnPositionConstants.ID_POSITION,
                         ColumnType.STRING, null, null, null, "code", "REF_CD",
                         sqlDataSourceDialect.getPreferredName("REF_CD"), null, null, true, isForeignKey, isListOnly,
                         isIgnoreFkConstraint, null, sqlFieldDimensions, isNullable, isFosterParentType,
-                        isFosterParentId, null, ReflectUtils.getField(StaticReference.class, "code"),
+                        isFosterParentId, isCategoryColumn, null, ReflectUtils.getField(StaticReference.class, "code"),
                         getterSetterInfo.getGetter(), getterSetterInfo.getSetter(),
                         sqlDataSourceDialect.isAllObjectsInLowerCase());
 
@@ -197,7 +201,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                         ColumnType.STRING, null, null, null, "description", "REF_DESC",
                         sqlDataSourceDialect.getPreferredName("REF_DESC"), null, null, false, isForeignKey,
                         isListOnly, isIgnoreFkConstraint, null, sqlFieldDimensions, isNullable, isFosterParentType,
-                        isFosterParentId, null, ReflectUtils.getField(StaticReference.class, "description"),
+                        isFosterParentId, isCategoryColumn, null, ReflectUtils.getField(StaticReference.class, "description"),
                         getterSetterInfo.getGetter(), getterSetterInfo.getSetter(),
                         sqlDataSourceDialect.isAllObjectsInLowerCase());
 
@@ -210,7 +214,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                 }
                 return new SqlEntityInfo(null, StaticReference.class, (Class<? extends EnumConst>) entityClass,
                         null, schema, tableName, preferredTableName, schemaTableName, tableAlias, tableName,
-                        preferredTableName, schemaTableName, idFieldInfo, null, null, null, propertyInfoMap, null,
+                        preferredTableName, schemaTableName, idFieldInfo, null, null, null, null, propertyInfoMap, null,
                         null, null, null, null, null, null, sqlDataSourceDialect.isAllObjectsInLowerCase(), true);
             }
 
@@ -260,7 +264,9 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                 SqlFieldInfo versionFieldInfo = null;
                 SqlFieldInfo fosterParentTypeFieldInfo = null;
                 SqlFieldInfo fosterParentIdFieldInfo = null;
+                SqlFieldInfo categoryFieldInfo = null;
                 Map<Class<?>, List<Field>> listOnlyFieldMap = new HashMap<Class<?>, List<Field>>();
+                Map<Class<?>, Set<String>> childTypeCategoryInfo = new HashMap<Class<?>, Set<String>>();
                 Class<?> searchClass = entityClass;
                 do {
                     Field[] fields = searchClass.getDeclaredFields();
@@ -272,11 +278,13 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                         boolean isNullable = false;
                         boolean isFosterParentType = false;
                         boolean isFosterParentId = false;
+                        boolean isCategoryColumn = false;
                         int length = -1;
                         int precision = -1;
                         int scale = -1;
                         int position = 0;
                         String defaultVal = null;
+                        String category = null;
 
                         String column = null;
                         ColumnType columnType = ColumnType.AUTO;
@@ -293,6 +301,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                         ChildList cla = field.getAnnotation(ChildList.class);
                         FosterParentType fpta = field.getAnnotation(FosterParentType.class);
                         FosterParentId fpia = field.getAnnotation(FosterParentId.class);
+                        CategoryColumn cca = field.getAnnotation(CategoryColumn.class);
 
                         // Process primary key
                         if (ia != null) {
@@ -315,7 +324,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                             }
 
                             if (va != null || ca != null || loa != null || fka != null || clda != null
-                                    || cla != null || fpta != null || fpia != null) {
+                                    || cla != null || fpta != null || fpia != null || cca != null) {
                                 throw new UnifyException(UnifyCoreErrorConstants.RECORD_INVALID_ANNOTATION_COMBO,
                                         searchClass, field);
                             }
@@ -343,7 +352,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                             }
 
                             if (ca != null || loa != null || fka != null || clda != null || cla != null
-                                    || fpta != null || fpia != null) {
+                                    || fpta != null || fpia != null || cca != null) {
                                 throw new UnifyException(UnifyCoreErrorConstants.RECORD_INVALID_ANNOTATION_COMBO,
                                         searchClass, field);
                             }
@@ -356,7 +365,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                             defaultVal = AnnotationUtils.getAnnotationString(ca.defaultVal());
 
                             if (loa != null || fka != null || clda != null || cla != null || fpta != null
-                                    || fpia != null) {
+                                    || fpia != null || cca != null) {
                                 throw new UnifyException(UnifyCoreErrorConstants.RECORD_INVALID_ANNOTATION_COMBO,
                                         searchClass, field);
                             }
@@ -402,7 +411,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                             position = fka.position();
                             defaultVal = AnnotationUtils.getAnnotationString(fka.defaultVal());
 
-                            if (loa != null || clda != null || cla != null || fpta != null || fpia != null) {
+                            if (loa != null || clda != null || cla != null || fpta != null || fpia != null || cca != null) {
                                 throw new UnifyException(UnifyCoreErrorConstants.RECORD_INVALID_ANNOTATION_COMBO,
                                         searchClass, field);
                             }
@@ -473,14 +482,14 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                             // Add on delete info to parent entity class
                             if (onDeleteCascade) {
                                 foreignEntityInfo.expandOnDeleteCascade(
-                                        new OnDeleteCascadeInfo((Class<? extends Entity>) entityClass, field, null));
+                                        new OnDeleteCascadeInfo((Class<? extends Entity>) entityClass, field, null, null));
                             }
                         }
 
                         // Save list-only fields. Would be processed later since
                         // they depend on foreign key fields
                         if (loa != null) {
-                            if (clda != null || cla != null || fpta != null || fpia != null) {
+                            if (clda != null || cla != null || fpta != null || fpia != null || cca != null) {
                                 throw new UnifyException(UnifyCoreErrorConstants.RECORD_INVALID_ANNOTATION_COMBO,
                                         searchClass, field);
                             }
@@ -495,7 +504,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
                         // Process child
                         if (clda != null) {
-                            if (cla != null || fpta != null || fpia != null) {
+                            if (cla != null || fpta != null || fpia != null || cca != null) {
                                 throw new UnifyException(UnifyCoreErrorConstants.RECORD_INVALID_ANNOTATION_COMBO,
                                         searchClass, field);
                             }
@@ -515,14 +524,27 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                                 throw new UnifyException(UnifyCoreErrorConstants.RECORD_CHILD_NO_MATCHING_FK, field,
                                         childType);
                             }
+                            
+                            category = AnnotationUtils.getAnnotationString(clda.category());
+                            if (StringUtils.isBlank(category) && childFkFields.isWithCategory()) {
+                                throw new UnifyException(UnifyCoreErrorConstants.RECORD_CHILD_ANNOTATION_REQUIRES_CATEGORY, field,
+                                        childType);
+                            }
+                            
+                            if (!StringUtils.isBlank(category) && !childFkFields.isWithCategory()) {
+                                throw new UnifyException(UnifyCoreErrorConstants.RECORD_CHILD_ANNOTATION_CANT_CATEGORY, field,
+                                        childType);
+                            }
+                            
+                            checkChildCategoryRule(entityClass, category, field, childType, childTypeCategoryInfo);
 
-                            childInfoList.add(getChildFieldInfo(entityClass, field, (Class<? extends Entity>) childType,
+                            childInfoList.add(getChildFieldInfo(entityClass, category, field, (Class<? extends Entity>) childType,
                                     childFkFields, false));
                         }
 
                         // Process child list
                         if (cla != null) {
-                            if (fpta != null || fpia != null) {
+                            if (fpta != null || fpia != null || cca != null) {
                                 throw new UnifyException(UnifyCoreErrorConstants.RECORD_INVALID_ANNOTATION_COMBO,
                                         searchClass, field);
                             }
@@ -548,14 +570,27 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                                 throw new UnifyException(UnifyCoreErrorConstants.RECORD_CHILDLIST_NO_MATCHING_FK, field,
                                         argumentType);
                             }
+                            
+                            category = AnnotationUtils.getAnnotationString(cla.category());
+                            if (StringUtils.isBlank(category) && childFkFields.isWithCategory()) {
+                                throw new UnifyException(UnifyCoreErrorConstants.RECORD_CHILD_ANNOTATION_REQUIRES_CATEGORY, field,
+                                        argumentType);
+                            }
+                            
+                            if (!StringUtils.isBlank(category) && !childFkFields.isWithCategory()) {
+                                throw new UnifyException(UnifyCoreErrorConstants.RECORD_CHILD_ANNOTATION_CANT_CATEGORY, field,
+                                        argumentType);
+                            }
 
-                            childListInfoList.add(getChildFieldInfo(entityClass, field,
+                            checkChildCategoryRule(entityClass, category, field, argumentType, childTypeCategoryInfo);
+                            
+                            childListInfoList.add(getChildFieldInfo(entityClass, category, field,
                                     (Class<? extends Entity>) argumentType, childFkFields, true));
                         }
 
                         // Process foster parent type
                         if (fpta != null) {
-                            if (fpia != null) {
+                            if (fpia != null || cca != null) {
                                 throw new UnifyException(UnifyCoreErrorConstants.RECORD_INVALID_ANNOTATION_COMBO,
                                         searchClass, field);
                             }
@@ -581,6 +616,11 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                         
                         // Process foster parent ID
                         if (fpia != null) {
+                            if (cca != null) {
+                                throw new UnifyException(UnifyCoreErrorConstants.RECORD_INVALID_ANNOTATION_COMBO,
+                                        searchClass, field);
+                            }
+
                             if (!field.getType().equals(Long.class)) {
                                 throw new UnifyException(UnifyCoreErrorConstants.RECORD_INVALID_FOSTER_PARENT_ID_FIELD_TYPE,
                                         searchClass, field);
@@ -597,6 +637,27 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                             
                             isPersistent = true;
                             isFosterParentId = true;
+                        }
+
+                        // Process category column
+                        if (cca != null) {
+                            if (!field.getType().equals(String.class)) {
+                                throw new UnifyException(UnifyCoreErrorConstants.RECORD_INVALID_CATEGORY_COLUMN_FIELD_TYPE,
+                                        searchClass, field);
+                            }
+
+                            if (categoryFieldInfo != null) {
+                                throw new UnifyException(UnifyCoreErrorConstants.RECORD_MULTIPLE_CATEGORY_COLUMN_ANNOTATION,
+                                        searchClass, field);
+                            }
+                           
+                            if (StringUtils.isNotBlank(AnnotationUtils.getAnnotationString(cca.name()))) {
+                                column = cca.name();
+                            }
+
+                            isPersistent = true;
+                            isCategoryColumn = true;
+                            length = cca.length();
                         }
                         
                         if (isPersistent) {
@@ -621,9 +682,10 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                                     ReflectUtils.getGetterSetterInfo(searchClass, field.getName());
                             SqlFieldInfo sqlFieldInfo = new SqlFieldInfo(position, columnType, foreignEntityInfo,
                                     foreignFieldInfo, null, field.getName(), column,
-                                    sqlDataSourceDialect.getPreferredName(column), constraintName, null, isPrimaryKey,
-                                    isForeignKey, isListOnly, isIgnoreFkConstraint, transformer, sqlFieldDimensions,
-                                    isNullable, isFosterParentType, isFosterParentId, defaultVal, field, getterSetterInfo.getGetter(),
+                                    sqlDataSourceDialect.getPreferredName(column), constraintName, null,
+                                    isPrimaryKey, isForeignKey, isListOnly, isIgnoreFkConstraint, transformer,
+                                    sqlFieldDimensions, isNullable, isFosterParentType, isFosterParentId,
+                                    isCategoryColumn, defaultVal, field, getterSetterInfo.getGetter(),
                                     getterSetterInfo.getSetter(), sqlDataSourceDialect.isAllObjectsInLowerCase());
 
                             if (ia != null) {
@@ -640,6 +702,10 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
                             if (fpia != null) {
                                 fosterParentIdFieldInfo = sqlFieldInfo;
+                            }
+                            
+                            if (cca != null) {
+                                categoryFieldInfo = sqlFieldInfo;
                             }
                             propertyInfoMap.put(sqlFieldInfo.getName(), sqlFieldInfo);
                         }
@@ -695,13 +761,14 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                         final boolean isListOnly = true;
                         final boolean isFosterParentType = false;
                         final boolean isFosterParentId = false;
+                        final boolean isCategoryColumn = false;
                         SqlFieldInfo sqlFieldInfo = new SqlFieldInfo(DefaultColumnPositionConstants.LIST_POSITION,
                                 foreignFieldInfo.getColumnType(), foreignEntityInfo, foreignFieldInfo,
                                 foreignKeySQLFieldInfo, field.getName(), column,
                                 sqlDataSourceDialect.getPreferredName(column), null, null, isPrimaryKey,
                                 isForeignKey, isListOnly, isIgnoreFkConstraint, foreignFieldInfo.getTransformer(),
                                 sqlFieldDimensions, foreignFieldInfo.isNullable(), isFosterParentType,
-                                isFosterParentId, null, field, getterSetterInfo.getGetter(),
+                                isFosterParentId, isCategoryColumn, null, field, getterSetterInfo.getGetter(),
                                 getterSetterInfo.getSetter(), sqlDataSourceDialect.isAllObjectsInLowerCase());
 
                         propertyInfoMap.put(sqlFieldInfo.getName(), sqlFieldInfo);
@@ -754,7 +821,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                 SqlEntityInfo sqlEntityInfo = new SqlEntityInfo(null, (Class<? extends Entity>) entityClass, null,
                         entityPolicy, schema, tableName, preferredTableName, schemaTableName, tableAlias, viewName,
                         preferredViewName, schemaViewName, idFieldInfo, versionFieldInfo, fosterParentTypeFieldInfo,
-                        fosterParentIdFieldInfo, propertyInfoMap, childInfoList, childListInfoList,
+                        fosterParentIdFieldInfo, categoryFieldInfo, propertyInfoMap, childInfoList, childListInfoList,
                         uniqueConstraintMap, indexMap, null, null, null,
                         sqlDataSourceDialect.isAllObjectsInLowerCase(), ta.identityManaged());
                 return sqlEntityInfo;
@@ -794,6 +861,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                     boolean isForeignKey = false;
                     final boolean isFosterParentType = false;
                     final boolean isFosterParentId = false;
+                    final boolean isCategoryColumn = false;
                     final boolean isNullable = true; // All extension fields are nullable
                     int length = -1;
                     int precision = -1;
@@ -910,7 +978,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                         // Add on delete info to parent entity class
                         if (onDeleteCascade) {
                             foreignEntityInfo.expandOnDeleteCascade(
-                                    new OnDeleteCascadeInfo((Class<? extends Entity>) entityClass, field, null));
+                                    new OnDeleteCascadeInfo((Class<? extends Entity>) entityClass, field, null, null));
                         }
                     }
 
@@ -944,8 +1012,9 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                                 foreignFieldInfo, null, field.getName(), column,
                                 sqlDataSourceDialect.getPreferredName(column), constraintName, null, isPrimaryKey,
                                 isForeignKey, isListOnly, isIgnoreFkConstraint, transformer, sqlFieldDimensions,
-                                isNullable, isFosterParentType, isFosterParentId, defaultVal, field, getterSetterInfo.getGetter(),
-                                getterSetterInfo.getSetter(), sqlDataSourceDialect.isAllObjectsInLowerCase());
+                                isNullable, isFosterParentType, isFosterParentId, isCategoryColumn, defaultVal,
+                                field, getterSetterInfo.getGetter(), getterSetterInfo.getSetter(),
+                                sqlDataSourceDialect.isAllObjectsInLowerCase());
                         propertyInfoMap.put(sqlFieldInfo.getName(), sqlFieldInfo);
                     }
                 }
@@ -1005,13 +1074,14 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                         final boolean isListOnly = true;
                         final boolean isFosterParentType = false;
                         final boolean isFosterParentId = false;
+                        final boolean isCategoryColumn = false;
                         SqlFieldInfo sqlFieldInfo = new SqlFieldInfo(DefaultColumnPositionConstants.LIST_POSITION,
                                 foreignFieldInfo.getColumnType(), foreignEntityInfo, foreignFieldInfo,
                                 foreignKeySQLFieldInfo, field.getName(), column,
                                 sqlDataSourceDialect.getPreferredName(column), null, null, isPrimaryKey,
                                 isForeignKey, isListOnly, isIgnoreFkConstraint, foreignFieldInfo.getTransformer(),
                                 sqlFieldDimensions, foreignFieldInfo.isNullable(), isFosterParentType,
-                                isFosterParentId, null, field, getterSetterInfo.getGetter(),
+                                isFosterParentId, isCategoryColumn, null, field, getterSetterInfo.getGetter(),
                                 getterSetterInfo.getSetter(), sqlDataSourceDialect.isAllObjectsInLowerCase());
 
                         propertyInfoMap.put(sqlFieldInfo.getName(), sqlFieldInfo);
@@ -1121,12 +1191,13 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                         final boolean isNullable = false;
                         final boolean isFosterParentType = false;
                         final boolean isFosterParentId = false;
+                        final boolean isCategoryColumn = false;
                         SqlFieldInfo sqlFieldInfo = new SqlFieldInfo(DefaultColumnPositionConstants.LIST_POSITION,
                                 refFieldInfo.getColumnType(), refEntityInfo, refFieldInfo, null, field.getName(),
                                 column, sqlDataSourceDialect.getPreferredName(column), null,
                                 refEntityPreferredAlias.toUpperCase(), isPrimaryKey, isForeignKey, isListOnly,
                                 isIgnoreFkConstraint, refFieldInfo.getTransformer(), sqlFieldDimensions, isNullable,
-                                isFosterParentType, isFosterParentId, null, field, getterSetterInfo.getGetter(),
+                                isFosterParentType, isFosterParentId, isCategoryColumn, null, field, getterSetterInfo.getGetter(),
                                 getterSetterInfo.getSetter(), sqlDataSourceDialect.isAllObjectsInLowerCase());
 
                         if (isPrimaryKey) {
@@ -1207,7 +1278,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
                 SqlEntityInfo sqlEntityInfo = new SqlEntityInfo(null, (Class<? extends Entity>) entityClass, null,
                         null, schema, viewName, preferredViewName, schemaViewName, null, viewName,
-                        preferredViewName, schemaViewName, idFieldInfo, null, null, null, propertyInfoMap, null,
+                        preferredViewName, schemaViewName, idFieldInfo, null, null, null, null, propertyInfoMap, null,
                         null, null, null, null, tableReferences.getBaseTables(), viewRestrictionList,
                         sqlDataSourceDialect.isAllObjectsInLowerCase(), true);
                 return sqlEntityInfo;
@@ -1552,23 +1623,66 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
         return type;
     }
 
-    private ChildFieldInfo getChildFieldInfo(Class<?> parentClass, Field childField, Class<? extends Entity> childClass,
-            ChildFkFields childFkFields, boolean list) throws UnifyException {
+    private void checkChildCategoryRule(Class<?> entityClass, String category, Field field, Class<?> childType,
+            Map<Class<?>, Set<String>> childTypeCategoryInfo) throws UnifyException {
+        Set<String> cats = childTypeCategoryInfo.get(childType);
+        if (cats == null) {
+            if (StringUtils.isBlank(category)) {
+                if (childTypeCategoryInfo.containsKey(childType)) {
+                    throw new UnifyException(UnifyCoreErrorConstants.RECORD_MULTIPLE_CHILD_REFERENCE_NO_CATEGORY,
+                            entityClass, field, childType);
+                }
+            } else {
+                if (childTypeCategoryInfo.containsKey(childType)) {
+                    throw new UnifyException(
+                            UnifyCoreErrorConstants.RECORD_MULTIPLE_CHILD_REFERENCE_NO_CATEGORY_WITH_CATEGORY,
+                            entityClass, field, childType);
+                }
+                cats = new HashSet<String>();
+                cats.add(category);
+            }
+
+            childTypeCategoryInfo.put(childType, cats);
+            return;
+        }
+
+        if (StringUtils.isBlank(category)) {
+            if (childTypeCategoryInfo.containsKey(childType)) {
+                throw new UnifyException(
+                        UnifyCoreErrorConstants.RECORD_MULTIPLE_CHILD_REFERENCE_NO_CATEGORY_WITH_CATEGORY, entityClass,
+                        field, childType);
+            }
+        }
+
+        if (cats.contains(category)) {
+            throw new UnifyException(UnifyCoreErrorConstants.RECORD_MULTIPLE_CHILD_REFERENCE_WITH_SAME_CATEGORY,
+                    entityClass, field, childType, category);
+        }
+
+        cats.add(category);
+    }
+
+    private ChildFieldInfo getChildFieldInfo(Class<?> parentClass, String category, Field childField,
+            Class<? extends Entity> childClass, ChildFkFields childFkFields, boolean list) throws UnifyException {
         GetterSetterInfo getterSetterInfo = ReflectUtils.getGetterSetterInfo(parentClass, childField.getName());
         Method childFkIdSetter = ReflectUtils.getGetterSetterInfo(childClass, childFkFields.getFkIdField().getName())
                 .getSetter();
         Method childFkTypeSetter = childFkFields.getFkTypeField() != null
                 ? ReflectUtils.getGetterSetterInfo(childClass, childFkFields.getFkTypeField().getName()).getSetter()
                 : null;
-        return new ChildFieldInfo(childClass, childFkFields.getFkIdField(), childFkIdSetter,
-                childFkFields.getFkTypeField(), childFkTypeSetter, childField, getterSetterInfo.getGetter(),
-                getterSetterInfo.getSetter(), list);
+        Method childCatSetter = childFkFields.getCategoryField() != null
+                ? ReflectUtils.getGetterSetterInfo(childClass, childFkFields.getCategoryField().getName()).getSetter()
+                : null;
+        return new ChildFieldInfo(childClass, category, childFkFields.getFkIdField(), childFkIdSetter,
+                childFkFields.getFkTypeField(), childFkTypeSetter, childFkFields.getCategoryField(), childCatSetter,
+                childField, getterSetterInfo.getGetter(), getterSetterInfo.getSetter(), list);
     }
 
     private ChildFkFields getFosterParentChildFkFields(Class<?> argumentType) throws UnifyException {
         Class<?> searchClass = argumentType;
         Field fkIdField = null;
         Field fkTypeField = null;
+        Field categoryField = null;
         do {
             Field[] fields = searchClass.getDeclaredFields();
             for (Field fld : fields) {
@@ -1576,13 +1690,15 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                     fkIdField = fld;
                 } else if(fkTypeField == null && fld.getAnnotation(FosterParentType.class) != null) {
                     fkTypeField = fld;
-                }
-                
-                if (fkIdField != null && fkTypeField != null) {
-                    return new ChildFkFields(fkIdField, fkTypeField);
+                } else if(categoryField == null && fld.getAnnotation(CategoryColumn.class) != null) {
+                    categoryField = fld;
                 }
             }
         } while ((searchClass = searchClass.getSuperclass()) != null);
+        
+        if (fkIdField != null && fkTypeField != null) {
+            return new ChildFkFields(fkIdField, fkTypeField, categoryField);
+        }
 
         return null;
     }
@@ -1590,17 +1706,28 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
     private ChildFkFields getAttributeOnlyChildFkFields(Class<?> entityClass, Class<?> argumentType)
             throws UnifyException {
         Class<?> searchClass = argumentType;
+        Field fkIdField = null;
+        Field categoryField = null;
         do {
             Field[] fields = searchClass.getDeclaredFields();
             for (Field fld : fields) {
                 ForeignKey fka = fld.getAnnotation(ForeignKey.class);
-                if (fka != null && fka.childKey()) {
+                if (fkIdField == null && fka != null && fka.childKey()) {
                     if (entityClass.equals(fka.value()) || entityClass.equals(fka.type())) {
-                        return new ChildFkFields(fld);
+                        fkIdField = fld;
+                        continue;
                     }
+                }
+                
+                if(categoryField == null && fld.getAnnotation(CategoryColumn.class) != null) {
+                    categoryField = fld;
                 }
             }
         } while ((searchClass = searchClass.getSuperclass()) != null);
+
+        if (fkIdField != null) {
+            return new ChildFkFields(fkIdField, categoryField);
+        }
 
         return null;
     }
@@ -1615,13 +1742,17 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
         private Field fkTypeField;
 
-        public ChildFkFields(Field fkIdField, Field fkTypeField) {
+        private Field categoryField;
+
+        public ChildFkFields(Field fkIdField, Field fkTypeField, Field categoryField) {
             this.fkIdField = fkIdField;
             this.fkTypeField = fkTypeField;
+            this.categoryField = categoryField;
         }
 
-        public ChildFkFields(Field fkIdField) {
+        public ChildFkFields(Field fkIdField, Field categoryField) {
             this.fkIdField = fkIdField;
+            this.categoryField = categoryField;
         }
 
         public Field getFkIdField() {
@@ -1630,6 +1761,14 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
         public Field getFkTypeField() {
             return fkTypeField;
+        }
+
+        public Field getCategoryField() {
+            return categoryField;
+        }
+        
+        public boolean isWithCategory() {
+            return categoryField != null;
         }
     }
     

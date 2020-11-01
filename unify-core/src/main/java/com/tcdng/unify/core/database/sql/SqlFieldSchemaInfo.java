@@ -67,6 +67,11 @@ public interface SqlFieldSchemaInfo {
     boolean isFosterParentId();
     
     /**
+     * Returns the field is category column
+     */
+    boolean isCategoryColumn();
+
+    /**
      * Returns the field length.
      */
     int getLength();

@@ -32,19 +32,26 @@ public class ChildFieldInfo extends OnDeleteCascadeInfo {
 
     private Method childFkTypeSetter;
 
+    private Method childCatSetter;
+
     private Field field;
 
     private Method getter;
 
     private Method setter;
 
+    private String category;
+
     private boolean list;
 
-    public ChildFieldInfo(Class<? extends Entity> childEntityClass, Field childFkIdField, Method childFkIdSetter,
-            Field childFkTypeField, Method childFkTypeSetter, Field field, Method getter, Method setter, boolean list) {
-        super(childEntityClass, childFkIdField, childFkTypeField);
+    public ChildFieldInfo(Class<? extends Entity> childEntityClass, String category, Field childFkIdField, Method childFkIdSetter,
+            Field childFkTypeField, Method childFkTypeSetter, Field childCatField, Method childCatSetter, Field field,
+            Method getter, Method setter, boolean list) {
+        super(childEntityClass, childFkIdField, childFkTypeField, childCatField);
+        this.category = category;
         this.childFkIdSetter = childFkIdSetter;
         this.childFkTypeSetter = childFkTypeSetter;
+        this.childCatSetter = childCatSetter;
         this.field = field;
         this.getter = getter;
         this.setter = setter;
@@ -63,6 +70,10 @@ public class ChildFieldInfo extends OnDeleteCascadeInfo {
         return childFkTypeSetter;
     }
 
+    public Method getChildCatSetter() {
+        return childCatSetter;
+    }
+
     public Field getField() {
         return field;
     }
@@ -75,11 +86,12 @@ public class ChildFieldInfo extends OnDeleteCascadeInfo {
         return setter;
     }
 
-    public boolean isList() {
-        return list;
+    @Override
+    public String getCategory() {
+        return category;
     }
 
-    public boolean isWithChildFkType() {
-        return childFkTypeSetter != null;
+    public boolean isList() {
+        return list;
     }
 }

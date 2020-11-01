@@ -998,4 +998,31 @@ public interface UnifyCoreErrorConstants {
 
     /** Entity must combine both @ForsterParentType and @ForsterParentId annotations. Type = {0} */
     String RECORD_MUST_COMBINE_FOSTER_ANNOTATIONS = "UC_0100";
+
+    /**
+     * Invalid category column field type. Type = {0}, field = {1}
+     */
+    String RECORD_INVALID_CATEGORY_COLUMN_FIELD_TYPE = "UC_0101";
+
+    /** Entity has multiple category column annotated fields. Type = {0}, field = {1} */
+    String RECORD_MULTIPLE_CATEGORY_COLUMN_ANNOTATION = "UC_0102";
+
+    /**
+     * Child annotation requires category since child has a category column. Field = {0}, Child type = {1}
+     */
+    String RECORD_CHILD_ANNOTATION_REQUIRES_CATEGORY = "UC_0103";
+
+    /**
+     * Child annotation can not specify category since child has has no category column. Field = {0}, Child type = {1}
+     */
+    String RECORD_CHILD_ANNOTATION_CANT_CATEGORY = "UC_0104";
+    
+    /** Can not have multiple child references of same type with no category. Type = {0}, field {1}, child type = {2} */
+    String RECORD_MULTIPLE_CHILD_REFERENCE_NO_CATEGORY = "UC_0105";
+    
+    /** Can not have multiple child references of same type with no category and with category. Type = {0}, field {1}, child type = {2} */
+    String RECORD_MULTIPLE_CHILD_REFERENCE_NO_CATEGORY_WITH_CATEGORY = "UC_0106";
+    
+    /** Child references of same type can not share the same category. Type = {0}, field {1}, child type = {2}, category = {3} */
+    String RECORD_MULTIPLE_CHILD_REFERENCE_WITH_SAME_CATEGORY = "UC_0107";
 }
