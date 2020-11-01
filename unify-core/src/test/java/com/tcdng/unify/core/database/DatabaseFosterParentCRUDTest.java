@@ -36,7 +36,7 @@ import com.tcdng.unify.core.UnifyCorePropertyConstants;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class DatabaseFosterParentChildListCRUDTest extends AbstractUnifyComponentTest {
+public class DatabaseFosterParentCRUDTest extends AbstractUnifyComponentTest {
 
     private DatabaseTransactionManager tm;
 

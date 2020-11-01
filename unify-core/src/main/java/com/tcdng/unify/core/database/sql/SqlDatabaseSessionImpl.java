@@ -1304,17 +1304,19 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
                     if (attrList != null) {
                         Method childFkIdSetter = alfi.getChildFkIdSetter();
                         Method childFkTypeSetter = alfi.getChildFkTypeSetter();
-                        if (childFkTypeSetter == null) {
-                            for (Entity attrRecord : attrList) {
-                                childFkIdSetter.invoke(attrRecord, id);
-                                create(attrRecord);
-                            }
-                        } else {
-                            for (Entity attrRecord : attrList) {
-                                childFkIdSetter.invoke(attrRecord, id);
+                        Method childCatSetter = alfi.getChildCatSetter();
+                        String category = alfi.getCategory();
+                        for (Entity attrRecord : attrList) {
+                            childFkIdSetter.invoke(attrRecord, id);
+                            if (childFkTypeSetter != null) {
                                 childFkTypeSetter.invoke(attrRecord, tableName);
-                                create(attrRecord);
                             }
+
+                            if (childCatSetter != null) {
+                                childCatSetter.invoke(attrRecord, category);
+                            }
+
+                            create(attrRecord);
                         }
                     }
                 }
