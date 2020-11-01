@@ -43,7 +43,7 @@ public abstract class AbstractSqlDataSourceDialectPolicies implements SqlDataSou
     protected Map<RestrictionType, SqlCriteriaPolicy> sqlCriteriaPolicies;
 
     public AbstractSqlDataSourceDialectPolicies() {
-        new SimpleDateFormat(TIMESTAMP_FORMAT);
+        timestampFormat = new SimpleDateFormat(TIMESTAMP_FORMAT);
     }
 
     @Override
