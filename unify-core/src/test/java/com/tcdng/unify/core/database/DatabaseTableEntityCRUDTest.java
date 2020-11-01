@@ -3059,6 +3059,25 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
     }
 
     @Test
+    public void testFindRecordByCriteriaWithNoSelectChild() throws Exception {
+        tm.beginTransaction();
+        try {
+            Report report = new Report("weeklyReport", "Weekly Report");
+            report.setReportForm(new ReportForm("beanEditor"));
+            Long id = (Long) db.create(report);
+
+            Report foundReport = db.find(new ReportQuery().addEquals("id", id).addSelect("name"));
+            assertNotNull(foundReport);
+            assertEquals("weeklyReport", foundReport.getName());
+            assertNull(foundReport.getDescription());
+
+            assertNull(foundReport.getReportForm());
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
     public void testFindRecordByCriteriaWithSelectChildList() throws Exception {
         tm.beginTransaction();
         try {
@@ -3086,6 +3105,26 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             assertEquals(BooleanType.TRUE, rParam.getScheduled());
             assertNull(rParam.getReportDesc());
             assertNull(rParam.getScheduledDesc());
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
+    public void testFindRecordByCriteriaWithNoSelectChildList() throws Exception {
+        tm.beginTransaction();
+        try {
+            Report report = new Report("weeklyReport", "Weekly Report");
+            report.addParameter(new ReportParameter("startDate", BooleanType.FALSE))
+                    .addParameter(new ReportParameter("endDate", BooleanType.TRUE));
+            Long id = (Long) db.create(report);
+
+            Report foundReport = db.find(new ReportQuery().addEquals("id", id).addSelect("name"));
+            assertNotNull(foundReport);
+            assertEquals("weeklyReport", foundReport.getName());
+            assertNull(foundReport.getDescription());
+
+            assertNull(foundReport.getParameters());
         } finally {
             tm.endTransaction();
         }

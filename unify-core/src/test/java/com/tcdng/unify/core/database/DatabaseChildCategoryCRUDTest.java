@@ -591,7 +591,29 @@ public class DatabaseChildCategoryCRUDTest extends AbstractUnifyComponentTest {
 
             LoanReportParameter reportForm = list.get(0).getReportForm();
             assertNotNull(reportForm);
-            assertEquals("editor10",reportForm.getName());
+            assertEquals("editor10", reportForm.getName());
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
+    public void testFindAllWithChildrenWithChildOnlyAndSelect() throws Exception {
+        tm.beginTransaction();
+        try {
+            LoanReport report = new LoanReport("weeklyReport", "Weekly LoanReport");
+            report.setReportForm(new LoanReportParameter("editor10"));
+            db.create(report);
+
+            List<LoanReport> list = db.findAllWithChildren(
+                    new LoanReportQuery().addSelect("name", "description").ignoreEmptyCriteria(true));
+            assertNotNull(list);
+            assertEquals(1, list.size());
+            assertEquals("weeklyReport", list.get(0).getName());
+            assertEquals("Weekly LoanReport", list.get(0).getDescription());
+
+            LoanReportParameter reportForm = list.get(0).getReportForm();
+            assertNull(reportForm);
         } finally {
             tm.endTransaction();
         }
@@ -618,12 +640,33 @@ public class DatabaseChildCategoryCRUDTest extends AbstractUnifyComponentTest {
             assertEquals("startDate", rp.getName());
             assertEquals(BooleanType.FALSE, rp.getScheduled());
             assertNull(rp.getScheduledDesc());
-            
+
             rp = parameterList.get(1);
             assertNotNull(rp);
             assertEquals("endDate", rp.getName());
             assertEquals(BooleanType.FALSE, rp.getScheduled());
-            assertNull(rp.getScheduledDesc());            
+            assertNull(rp.getScheduledDesc());
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
+    public void testFindAllWithChildrenWithChildListWithSelect() throws Exception {
+        tm.beginTransaction();
+        try {
+            LoanReport report = new LoanReport("weeklyReport", "Weekly LoanReport");
+            report.addParameter(new LoanReportParameter("startDate")).addParameter(new LoanReportParameter("endDate"));
+            db.create(report);
+
+            List<LoanReport> list = db.findAllWithChildren(
+                    new LoanReportQuery().addSelect("name", "description").ignoreEmptyCriteria(true));
+            assertNotNull(list);
+            assertEquals("weeklyReport", list.get(0).getName());
+            assertEquals("Weekly LoanReport", list.get(0).getDescription());
+
+            List<LoanReportParameter> parameterList = list.get(0).getParameters();
+            assertNull(parameterList);
         } finally {
             tm.endTransaction();
         }
@@ -728,7 +771,7 @@ public class DatabaseChildCategoryCRUDTest extends AbstractUnifyComponentTest {
 
             assertNull(foundReport.getReportForm());
             assertNull(foundReport.getParameters());
-            
+
             db.findChildren(foundReport);
             assertEquals("weeklyReport", foundReport.getName());
             assertEquals("Weekly LoanReport", foundReport.getDescription());
@@ -926,7 +969,8 @@ public class DatabaseChildCategoryCRUDTest extends AbstractUnifyComponentTest {
             report.setReportForm(new LoanReportParameter("grayEditor"));
             Long id = (Long) db.create(report);
 
-            LoanReport foundReport = db.list(new LoanReportQuery().addEquals("id", id).addSelect("description", "reportForm"));
+            LoanReport foundReport = db
+                    .list(new LoanReportQuery().addEquals("id", id).addSelect("description", "reportForm"));
             assertNotNull(foundReport);
             assertNull(foundReport.getName());
             assertEquals("Weekly LoanReport", foundReport.getDescription());
@@ -1016,7 +1060,29 @@ public class DatabaseChildCategoryCRUDTest extends AbstractUnifyComponentTest {
             LoanReportParameter reportForm = list.get(0).getReportForm();
             assertNotNull(reportForm);
             assertEquals("form", reportForm.getCategory());
-            assertEquals("editor10",reportForm.getName());
+            assertEquals("editor10", reportForm.getName());
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
+    public void testListAllWithChildrenWithChildOnlyWithSelect() throws Exception {
+        tm.beginTransaction();
+        try {
+            LoanReport report = new LoanReport("weeklyReport", "Weekly LoanReport");
+            report.setReportForm(new LoanReportParameter("editor10"));
+            db.create(report);
+
+            List<LoanReport> list = db.listAllWithChildren(
+                    new LoanReportQuery().addSelect("name", "description").ignoreEmptyCriteria(true));
+            assertNotNull(list);
+            assertEquals(1, list.size());
+            assertEquals("weeklyReport", list.get(0).getName());
+            assertEquals("Weekly LoanReport", list.get(0).getDescription());
+
+            LoanReportParameter reportForm = list.get(0).getReportForm();
+            assertNull(reportForm);
         } finally {
             tm.endTransaction();
         }
@@ -1043,12 +1109,33 @@ public class DatabaseChildCategoryCRUDTest extends AbstractUnifyComponentTest {
             assertEquals("startDate", rp.getName());
             assertEquals(BooleanType.FALSE, rp.getScheduled());
             assertEquals("False", rp.getScheduledDesc());
-            
+
             rp = parameterList.get(1);
             assertNotNull(rp);
             assertEquals("endDate", rp.getName());
             assertEquals(BooleanType.FALSE, rp.getScheduled());
             assertEquals("False", rp.getScheduledDesc());
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
+    public void testListAllWithChildrenWithChildListWithSelect() throws Exception {
+        tm.beginTransaction();
+        try {
+            LoanReport report = new LoanReport("weeklyReport", "Weekly LoanReport");
+            report.addParameter(new LoanReportParameter("startDate")).addParameter(new LoanReportParameter("endDate"));
+            db.create(report);
+
+            List<LoanReport> list = db.listAllWithChildren(
+                    new LoanReportQuery().addSelect("name", "description").ignoreEmptyCriteria(true));
+            assertNotNull(list);
+            assertEquals("weeklyReport", list.get(0).getName());
+            assertEquals("Weekly LoanReport", list.get(0).getDescription());
+
+            List<LoanReportParameter> parameterList = list.get(0).getParameters();
+            assertNull(parameterList);
         } finally {
             tm.endTransaction();
         }
@@ -1071,7 +1158,7 @@ public class DatabaseChildCategoryCRUDTest extends AbstractUnifyComponentTest {
 
             assertNull(foundReport.getReportForm());
             assertNull(foundReport.getParameters());
-            
+
             db.listChildren(foundReport);
             assertEquals("weeklyReport", foundReport.getName());
             assertEquals("Weekly LoanReport", foundReport.getDescription());

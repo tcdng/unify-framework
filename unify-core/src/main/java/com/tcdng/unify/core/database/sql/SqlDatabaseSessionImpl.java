@@ -163,7 +163,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
         if (!list.isEmpty()) {
             SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
             for (T record : list) {
-                fetchChildRecords(sqlEntityInfo, record, null, IncludeListOnly.FALSE);
+                fetchChildRecords(sqlEntityInfo, record, query.getSelect(), IncludeListOnly.FALSE);
             }
         }
 
@@ -260,7 +260,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
         if (!list.isEmpty()) {
             SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
             for (T record : list) {
-                fetchChildRecords(sqlEntityInfo, record, null, IncludeListOnly.TRUE);
+                fetchChildRecords(sqlEntityInfo, record, query.getSelect(), IncludeListOnly.TRUE);
             }
         }
 
