@@ -282,8 +282,8 @@ public class DatabaseFosterParentChildListCRUDTest extends AbstractUnifyComponen
             assertEquals(id, loanApplication.getId());
             assertEquals(id, rpStart.getOwnerId());
             assertEquals(id, rpEnd.getOwnerId());
-            assertEquals(LoanApplication.class.toString(), rpStart.getOwnerType());
-            assertEquals(LoanApplication.class.toString(), rpEnd.getOwnerType());
+            assertEquals("LOANAPPLICATION", rpStart.getOwnerType());
+            assertEquals("LOANAPPLICATION", rpEnd.getOwnerType());
 
             int count = db.countAll(new FileAttachmentQuery().ignoreEmptyCriteria(true));
             assertEquals(2, count);
@@ -305,10 +305,10 @@ public class DatabaseFosterParentChildListCRUDTest extends AbstractUnifyComponen
             loanApplication.addAttachment(new FileAttachment("birthCert", "Birth Certificate"));
             Long id2 = (Long) db.create(loanApplication);
 
-            int count = db.countAll(new FileAttachmentQuery().ownerId(id1).ownerType(LoanApplication.class.toString()));
+            int count = db.countAll(new FileAttachmentQuery().ownerId(id1).ownerType("LOANAPPLICATION"));
             assertEquals(2, count);
 
-            count = db.countAll(new FileAttachmentQuery().ownerId(id2).ownerType(LoanApplication.class.toString()));
+            count = db.countAll(new FileAttachmentQuery().ownerId(id2).ownerType("LOANAPPLICATION"));
             assertEquals(1, count);
         } finally {
             tm.endTransaction();
