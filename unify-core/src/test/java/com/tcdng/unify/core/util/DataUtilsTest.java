@@ -85,6 +85,15 @@ public class DataUtilsTest {
         assertEquals(Long.valueOf(240L), result.get(0));
         assertEquals(Long.valueOf(72L), result.get(1));
     }
+    
+    @Test
+    public void testConvertArrayToArray() throws Exception {
+        Long[] result = DataUtils.convert(Long[].class, new String[] { "240", "72" }, null);
+        assertNotNull(result);
+        assertEquals(2, result.length);
+        assertEquals(Long.valueOf(240L), result[0]);
+        assertEquals(Long.valueOf(72L), result[1]);
+    }
 
     @SuppressWarnings("unchecked")
     @Test
