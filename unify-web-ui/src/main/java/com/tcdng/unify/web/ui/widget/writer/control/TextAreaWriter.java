@@ -79,6 +79,10 @@ public class TextAreaWriter extends AbstractControlWriter {
         } else {
             writer.write(" wrap=\"off\"");
         }
+        
+        
+        writer.write(" spellcheck=\"").write(textArea.isSpellCheck()).write("\"");
+
         writer.write(">");
 
         Object value = textArea.getValue();

@@ -31,12 +31,17 @@ import com.tcdng.unify.web.ui.widget.AbstractFormattedControl;
 @Component("ui-text")
 @UplAttributes({ @UplAttribute(name = "size", type = int.class), @UplAttribute(name = "minLen", type = int.class),
         @UplAttribute(name = "maxLen", type = int.class), @UplAttribute(name = "case", type = String.class),
+        @UplAttribute(name = "spellCheck", type = boolean.class, defaultVal = "false"),
         @UplAttribute(name = "extStyleClass", type = String.class, defaultVal = "tread"),
         @UplAttribute(name = "extReadOnly", type = boolean.class, defaultVal = "true") })
 public class TextField extends AbstractFormattedControl {
 
     public String getCase() throws UnifyException {
         return getUplAttribute(String.class, "case");
+    }
+
+    public boolean isSpellCheck() throws UnifyException {
+        return getUplAttribute(boolean.class, "spellCheck");
     }
 
     public String getExtStyleClass() throws UnifyException {

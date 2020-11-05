@@ -160,6 +160,8 @@ public class TextFieldWriter extends AbstractControlWriter {
                     writer.write(" autocomplete=\"off\"");
                 }
             }
+            
+            writer.write(" spellcheck=\"").write(textField.isSpellCheck()).write("\"");
         }
 
         if (value != null) {

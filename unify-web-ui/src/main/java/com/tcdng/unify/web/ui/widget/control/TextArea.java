@@ -31,6 +31,7 @@ import com.tcdng.unify.web.ui.widget.AbstractControl;
 @UplAttributes({ @UplAttribute(name = "columns", type = int.class), @UplAttribute(name = "rows", type = int.class),
         @UplAttribute(name = "minLen", type = int.class), @UplAttribute(name = "maxLen", type = int.class),
         @UplAttribute(name = "wordWrap", type = boolean.class, defaultVal = "true"),
+        @UplAttribute(name = "spellCheck", type = boolean.class, defaultVal = "false"),
         @UplAttribute(name = "scrollToEnd", type = boolean.class) })
 public class TextArea extends AbstractControl {
 
@@ -48,6 +49,10 @@ public class TextArea extends AbstractControl {
 
     public int getMaxLen() throws UnifyException {
         return getUplAttribute(int.class, "maxLen");
+    }
+
+    public boolean isSpellCheck() throws UnifyException {
+        return getUplAttribute(boolean.class, "spellCheck");
     }
 
     public boolean isWordWrap() throws UnifyException {
