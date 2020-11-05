@@ -73,7 +73,7 @@ public abstract class AbstractPopupTextFieldWriter extends TextFieldWriter {
         writer.write("<button");
         writeTagId(writer, popupTextField.getPopupButtonId());
         writeTagStyleClass(writer, "tpbutton g_fsm");
-        if (!isPopupEnabled(popupTextField)) {
+        if (popupTextField.isContainerDisabled()) {
             writer.write(" disabled");
         }
         writer.write(">");
