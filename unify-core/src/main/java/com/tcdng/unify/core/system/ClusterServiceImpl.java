@@ -291,7 +291,7 @@ public class ClusterServiceImpl extends AbstractBusinessService implements Clust
 
         // Extend life of locks held by this node
         if (!dbLockList.isEmpty()) {
-            db().updateAll(new ClusterLockQuery().lockNameIn(dbLockList),
+            db().updateAll(new ClusterLockQuery().lockNameIn(new ArrayList<String>(dbLockList)),
                     new Update().add("expiryTime", getNewLockExpirationDate()));
         }
     }
