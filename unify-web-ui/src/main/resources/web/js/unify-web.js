@@ -1385,8 +1385,10 @@ ux.rigAssignmentBox = function(rgp) {
 /** Checkbox */
 ux.rigCheckbox = function(rgp) {
 	const box = _id(rgp.pId);
-	box._active = rgp.pActive;
-	ux.cbWire(box);
+	if (box) {
+		box._active = rgp.pActive;
+		ux.cbWire(box);
+	}
 }
 
 ux.cbWire = function(box) {
