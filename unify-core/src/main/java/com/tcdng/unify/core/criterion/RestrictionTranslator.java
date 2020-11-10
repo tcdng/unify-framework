@@ -16,8 +16,6 @@
 
 package com.tcdng.unify.core.criterion;
 
-import java.util.Map;
-
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 
@@ -45,12 +43,12 @@ public interface RestrictionTranslator extends UnifyComponent {
      * 
      * @param restriction
      *            the restriction to translate
-     * @param fieldLabels
-     *            field labels
+     * @param mapper
+     *            the translation mapper
      * @return the generated translation.
      * @throws UnifyException
      *             if an error occurs
      */
-    String translate(Restriction restriction, Map<String, String> fieldLabels) throws UnifyException;
+    String translate(Restriction restriction, RestrictionTranslatorMapper mapper) throws UnifyException;
 
 }

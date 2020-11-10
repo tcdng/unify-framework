@@ -34,31 +34,30 @@ import com.tcdng.unify.core.util.StringUtils;
 @Component(ApplicationComponents.APPLICATION_RESTRICTIONTRANSLATOR)
 public class RestrictionTranslatorImpl extends AbstractRestrictionTranslator {
 
-    private static final Map<String, String> emptyLabels = Collections.emptyMap();
-
     private Map<FilterConditionType, Translator> translators;
 
     @Override
     public String translate(Restriction restriction) throws UnifyException {
-        return translate(restriction, emptyLabels);
+        return translate(restriction, null);
     }
 
     @Override
-    public String translate(Restriction restriction, Map<String, String> fieldLabels) throws UnifyException {
+    public String translate(Restriction restriction, RestrictionTranslatorMapper mapper) throws UnifyException {
         if (restriction == null) {
             return getSessionMessage("filter.fetchall");
         }
-        
+
         StringBuilder sb = new StringBuilder();
-        translators.get(restriction.getConditionType()).translate(sb, restriction, fieldLabels, 0);
+        translators.get(restriction.getConditionType()).translate(sb, restriction, mapper, 0);
         return sb.toString();
     }
 
     @Override
     protected void onInitialize() throws UnifyException {
         super.onInitialize();
-        
-        Map<FilterConditionType, Translator> map = new EnumMap<FilterConditionType, Translator>(FilterConditionType.class);
+
+        Map<FilterConditionType, Translator> map = new EnumMap<FilterConditionType, Translator>(
+                FilterConditionType.class);
         map.put(FilterConditionType.EQUALS, new SingleParamRestrictionTranslator());
         map.put(FilterConditionType.NOT_EQUALS, new SingleParamRestrictionTranslator());
         map.put(FilterConditionType.LESS_THAN, new SingleParamRestrictionTranslator());
@@ -98,22 +97,29 @@ public class RestrictionTranslatorImpl extends AbstractRestrictionTranslator {
 
     private interface Translator {
 
-        void translate(StringBuilder sb, Restriction restriction, Map<String, String> fieldLabels, int depth)
+        void translate(StringBuilder sb, Restriction restriction, RestrictionTranslatorMapper mapper, int depth)
                 throws UnifyException;
     }
 
     private abstract class AbstractRestrictionTranslator implements Translator {
 
-        protected void appendField(StringBuilder sb, String fieldName, Map<String, String> fieldLabels) {
-            String fieldLabel = fieldLabels.get(fieldName);
+        protected void appendField(StringBuilder sb, String fieldName, RestrictionTranslatorMapper mapper)
+                throws UnifyException {
+            String fieldLabel = mapper != null ? mapper.getLabelTranslation(fieldName) : null;
             if (!StringUtils.isBlank(fieldLabel)) {
                 sb.append(fieldLabel);
             } else {
                 sb.append("$f{").append(fieldName).append("}");
             }
         }
-        
-        protected void appendParam(StringBuilder sb, Object param) {
+
+        protected void appendParam(StringBuilder sb, String fieldName, Object param, RestrictionTranslatorMapper mapper)
+                throws UnifyException {
+            if (mapper != null) {
+                Object mapped = mapper.getValueTranslation(fieldName, param);
+                param = mapped != null ? mapped : param;
+            }
+
             if (param instanceof String) {
                 sb.append('\'').append(param).append('\'');
             } else {
@@ -126,9 +132,9 @@ public class RestrictionTranslatorImpl extends AbstractRestrictionTranslator {
     private class ZeroParamRestrictionTranslator extends AbstractRestrictionTranslator {
 
         @Override
-        public void translate(StringBuilder sb, Restriction restriction, Map<String, String> fieldLabels, int depth)
+        public void translate(StringBuilder sb, Restriction restriction, RestrictionTranslatorMapper mapper, int depth)
                 throws UnifyException {
-            appendField(sb, ((ZeroParamRestriction) restriction).getFieldName(), fieldLabels);
+            appendField(sb, ((ZeroParamRestriction) restriction).getFieldName(), mapper);
             sb.append(' ');
             sb.append(getSessionMessage(restriction.getConditionType().symbolKey()));
         }
@@ -138,19 +144,20 @@ public class RestrictionTranslatorImpl extends AbstractRestrictionTranslator {
     private class SingleParamRestrictionTranslator extends AbstractRestrictionTranslator {
 
         @Override
-        public void translate(StringBuilder sb, Restriction restriction, Map<String, String> fieldLabels, int depth)
+        public void translate(StringBuilder sb, Restriction restriction, RestrictionTranslatorMapper mapper, int depth)
                 throws UnifyException {
             SingleParamRestriction singleParamRestriction = (SingleParamRestriction) restriction;
-            appendField(sb, singleParamRestriction.getFieldName(), fieldLabels);
+            final String fieldName = singleParamRestriction.getFieldName();
+            appendField(sb, fieldName, mapper);
             sb.append(' ');
             sb.append(getSessionMessage(restriction.getConditionType().symbolKey()));
             sb.append(' ');
 
             Object param = singleParamRestriction.getParam();
             if (param instanceof RestrictionField) {
-                appendField(sb, ((RestrictionField) param).getName(), fieldLabels);
+                appendField(sb, ((RestrictionField) param).getName(), mapper);
             } else {
-                appendParam(sb, param);
+                appendParam(sb, fieldName, param, mapper);
             }
         }
 
@@ -159,27 +166,28 @@ public class RestrictionTranslatorImpl extends AbstractRestrictionTranslator {
     private class DoubleParamRestrictionTranslator extends AbstractRestrictionTranslator {
 
         @Override
-        public void translate(StringBuilder sb, Restriction restriction, Map<String, String> fieldLabels, int depth)
+        public void translate(StringBuilder sb, Restriction restriction, RestrictionTranslatorMapper mapper, int depth)
                 throws UnifyException {
             DoubleParamRestriction doubleParamRestriction = (DoubleParamRestriction) restriction;
-            appendField(sb, doubleParamRestriction.getFieldName(), fieldLabels);
+            final String fieldName = doubleParamRestriction.getFieldName();
+            appendField(sb, fieldName, mapper);
             sb.append(' ');
             sb.append(getSessionMessage(restriction.getConditionType().symbolKey()));
             sb.append(" (");
 
             Object param = doubleParamRestriction.getFirstParam();
             if (param instanceof RestrictionField) {
-                appendField(sb, ((RestrictionField) param).getName(), fieldLabels);
+                appendField(sb, ((RestrictionField) param).getName(), mapper);
             } else {
-                appendParam(sb, param);
+                appendParam(sb, fieldName, param, mapper);
             }
 
             sb.append(", ");
             param = doubleParamRestriction.getSecondParam();
             if (param instanceof RestrictionField) {
-                appendField(sb, ((RestrictionField) param).getName(), fieldLabels);
+                appendField(sb, ((RestrictionField) param).getName(), mapper);
             } else {
-                appendParam(sb, param);
+                appendParam(sb, fieldName, param, mapper);
             }
             sb.append(")");
         }
@@ -189,10 +197,11 @@ public class RestrictionTranslatorImpl extends AbstractRestrictionTranslator {
     private class MultipleParamRestrictionTranslator extends AbstractRestrictionTranslator {
 
         @Override
-        public void translate(StringBuilder sb, Restriction restriction, Map<String, String> fieldLabels, int depth)
+        public void translate(StringBuilder sb, Restriction restriction, RestrictionTranslatorMapper mapper, int depth)
                 throws UnifyException {
             MultipleParamRestriction multipleParamRestriction = (MultipleParamRestriction) restriction;
-            appendField(sb, multipleParamRestriction.getFieldName(), fieldLabels);
+            final String fieldName = multipleParamRestriction.getFieldName();
+            appendField(sb, fieldName, mapper);
             sb.append(' ');
             sb.append(getSessionMessage(restriction.getConditionType().symbolKey()));
             sb.append(" (");
@@ -204,7 +213,7 @@ public class RestrictionTranslatorImpl extends AbstractRestrictionTranslator {
                     appendSym = true;
                 }
 
-                appendParam(sb, param);
+                appendParam(sb, fieldName, param, mapper);
             }
             sb.append(")");
         }
@@ -214,14 +223,14 @@ public class RestrictionTranslatorImpl extends AbstractRestrictionTranslator {
     private class CompoundRestrictionTranslator extends AbstractRestrictionTranslator {
 
         @Override
-        public void translate(StringBuilder sb, Restriction restriction, Map<String, String> fieldLabels, int depth)
+        public void translate(StringBuilder sb, Restriction restriction, RestrictionTranslatorMapper mapper, int depth)
                 throws UnifyException {
             boolean sub = depth > 0;
             CompoundRestriction compoundRestriction = (CompoundRestriction) restriction;
-            if(sub) {
+            if (sub) {
                 sb.append("(");
             }
-            
+
             String sym = " " + getSessionMessage(restriction.getConditionType().symbolKey()) + " ";
             depth++;
             boolean appendSym = false;
@@ -232,10 +241,10 @@ public class RestrictionTranslatorImpl extends AbstractRestrictionTranslator {
                     appendSym = true;
                 }
 
-                translators.get(subRestriction.getConditionType()).translate(sb, subRestriction, fieldLabels, depth);
+                translators.get(subRestriction.getConditionType()).translate(sb, subRestriction, mapper, depth);
             }
-            
-            if(sub) {
+
+            if (sub) {
                 sb.append(")");
             }
         }
