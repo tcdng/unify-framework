@@ -43,19 +43,22 @@ public abstract class AbstractTypeListCommand<T extends UnifyComponent> extends 
 
     public AbstractTypeListCommand(Class<T> typeClazz) {
         this.typeClass = typeClazz;
-        typeListMap = new FactoryMap<Locale, List<Listable>>() {
+        typeListMap = new FactoryMap<Locale, List<Listable>>()
+            {
 
-            @Override
-            protected List<Listable> create(Locale key, Object... params) throws Exception {
-                List<Listable> list = new ArrayList<Listable>();
-                for (UnifyComponentConfig unifyComponentConfig : getComponentConfigs(typeClass)) {
-                    list.add(new ListData(unifyComponentConfig.getName(),
-                            resolveSessionMessage(unifyComponentConfig.getDescription())));
+                @Override
+                protected List<Listable> create(Locale key, Object... params) throws Exception {
+                    List<Listable> list = new ArrayList<Listable>();
+                    for (UnifyComponentConfig unifyComponentConfig : getComponentConfigs(typeClass)) {
+                        String description = unifyComponentConfig.getDescription() != null
+                                ? resolveSessionMessage(unifyComponentConfig.getDescription())
+                                : unifyComponentConfig.getName();
+                        list.add(new ListData(unifyComponentConfig.getName(), description));
+                    }
+                    DataUtils.sortAscending(list, Listable.class, "listDescription");
+                    return list;
                 }
-                DataUtils.sortAscending(list, Listable.class, "listDescription");
-                return list;
-            }
-        };
+            };
     }
 
     @Override
