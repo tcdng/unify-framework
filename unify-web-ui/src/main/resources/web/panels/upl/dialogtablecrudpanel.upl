@@ -53,6 +53,8 @@
     refresh:$c{bodyPanel}
 !ui-postcommand:cancelAct command:cancel
     refresh:$c{bodyPanel}
+!ui-postcommand:switchAct components:$c{formPanel}
+    refresh:$c{bodyPanel}
 
 
 // Validations
