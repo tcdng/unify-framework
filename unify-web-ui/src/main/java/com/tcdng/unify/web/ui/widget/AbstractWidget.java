@@ -26,6 +26,7 @@ import com.tcdng.unify.core.data.ValueStore;
 import com.tcdng.unify.core.upl.AbstractUplComponent;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.TargetPath;
+import com.tcdng.unify.web.constant.ResultMappingConstants;
 import com.tcdng.unify.web.ui.PageRequestContextUtil;
 import com.tcdng.unify.web.ui.UIControllerUtil;
 import com.tcdng.unify.web.ui.WebUIApplicationComponents;
@@ -527,6 +528,15 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 	protected <T> T getRequestTarget(Class<T> clazz) throws UnifyException {
 		return getRequestContextUtil().getRequestTargetValue(clazz);
 	}
+
+    protected void commandShowPopup(String panelLongName) throws UnifyException {
+        getRequestContextUtil().setRequestPopupName(panelLongName);
+        setCommandResultMapping(ResultMappingConstants.SHOW_POPUP);
+    }
+
+    protected void commandHidePopup() throws UnifyException {
+        setCommandResultMapping(ResultMappingConstants.HIDE_POPUP);
+    }
 
 	protected void setCommandResultMapping(String resultMappingName) throws UnifyException {
 		getRequestContextUtil().setCommandResultMapping(resultMappingName);

@@ -259,12 +259,11 @@ public abstract class AbstractTableCrudPanel<T extends Entity> extends AbstractP
     }
 
     protected void showPopup() throws UnifyException {
-        getRequestContextUtil().setRequestPopupName(getWidgetByShortName("simpleCrudPopup").getLongName());
-        setCommandResultMapping(ResultMappingConstants.SHOW_POPUP);
+        commandShowPopup(getWidgetByShortName("simpleCrudPopup").getLongName());
     }
 
     protected void hidePopup() throws UnifyException {
-        setCommandResultMapping(ResultMappingConstants.HIDE_POPUP);
+        commandHidePopup();
     }
 
     protected void refreshTable() throws UnifyException {
