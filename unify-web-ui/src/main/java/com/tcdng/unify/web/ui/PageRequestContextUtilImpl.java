@@ -245,7 +245,7 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
     }
 
     @Override
-    public void setResponseRefreshPanels(String[] longNames) throws UnifyException {
+    public void setResponseRefreshPanels(String... longNames) throws UnifyException {
         setRequestAttribute(REFRESH_PANEL_LONGNAMES, longNames);
     }
 
