@@ -141,6 +141,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("user-check", "f4fc");
         registerSymbol("user-edit", "f4ff");
         registerSymbol("user-tag", "f507");
+        registerSymbol("window-maximize", "f2d0");
         registerSymbol("window-restore", "f2d2");
     }
 
