@@ -435,7 +435,7 @@ z-index:400;}
 .ui-assignmentbox .abtable {display:table;}
 .ui-assignmentbox .abftable {display:table; width:100%;}
 .ui-assignmentbox .abrow {display:table-row;}
-.ui-assignmentbox .abscell {display:table-cell;}
+.ui-assignmentbox .abscell {display:table-cell;vertical-align:top;}
 .ui-assignmentbox .abfieldset {padding-top: 4px; padding-bottom: 4px; border: 1px solid white;}
 .ui-assignmentbox .abmselect {width: 360px;height:220px; border: 1px solid #C8C8C8;}
 .ui-assignmentbox .abbcell {display:table-cell;text-align:center;vertical-align:middle;padding:8px;}
