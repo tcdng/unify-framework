@@ -34,6 +34,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
 
     @Override
     public List<String> getFontResources() throws UnifyException {
+        // Currently uses font aweaome 5.14.0
         return Arrays.asList("webfonts/fa-solid-900.woff", "webfonts/fa-regular-400.woff");
     }
 
@@ -101,6 +102,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("forward", "f04e");
         registerSymbol("forward-fast", "f050");
         registerSymbol("globe-africa", "f57c");
+        registerSymbol("hat-wizard", "f6e8");
         registerSymbol("harddisk", "f0a0");
         registerSymbol("house-user", "e065");
         registerSymbol("id-card", "f2c2");
