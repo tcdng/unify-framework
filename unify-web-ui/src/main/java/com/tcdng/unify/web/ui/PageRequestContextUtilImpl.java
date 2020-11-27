@@ -380,7 +380,7 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
     }
 
     @Override
-    public void belayHintUser() throws UnifyException {
+    public void clearHintUser() throws UnifyException {
         removeRequestAttribute(USER_HINT_LIST); 
     }
 

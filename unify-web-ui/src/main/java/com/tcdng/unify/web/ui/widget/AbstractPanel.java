@@ -159,13 +159,13 @@ public abstract class AbstractPanel extends AbstractContainer implements Panel {
     }
 
     /**
-     * Belays hint user in current request.
+     * Clears hint user in current request.
      * 
      * @throws UnifyException
      *             if an error occurs
      */
-    protected void belayHintUser() throws UnifyException {
-        getRequestContextUtil().belayHintUser();
+    protected void clearHintUser() throws UnifyException {
+        getRequestContextUtil().clearHintUser();
     }
 
     /**

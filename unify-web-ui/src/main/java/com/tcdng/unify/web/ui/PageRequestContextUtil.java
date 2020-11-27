@@ -436,12 +436,12 @@ public interface PageRequestContextUtil extends UnifyComponent {
     List<Hint> getUserHints() throws UnifyException;
     
     /**
-     * Belays all hint user in current request.
+     * Clears all hint user in current request.
      * 
      * @throws UnifyException
      *             if an error occurs
      */
-    void belayHintUser() throws UnifyException;
+    void clearHintUser() throws UnifyException;
 
     /**
      * Sets the ID of widget to focus on. Accepts only widget ID supplied on first
