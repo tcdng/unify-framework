@@ -380,6 +380,11 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
     }
 
     @Override
+    public void belayHintUser() throws UnifyException {
+        removeRequestAttribute(USER_HINT_LIST); 
+    }
+
+    @Override
     public boolean setFocusOnWidgetId(String id) throws UnifyException {
         if(!isRequestAttribute(FOCUS_ON_WIDGET)) {
             setRequestAttribute(FOCUS_ON_WIDGET, id);

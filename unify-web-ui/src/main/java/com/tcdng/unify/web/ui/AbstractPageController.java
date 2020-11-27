@@ -763,6 +763,16 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
     }
 
     /**
+     * Belays hint user in current request.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected void belayHintUser() throws UnifyException {
+        getPageRequestContextUtil().belayHintUser();
+    }
+
+    /**
      * Returns the current request target object
      * 
      * @param clazz

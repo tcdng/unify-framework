@@ -159,6 +159,16 @@ public abstract class AbstractPanel extends AbstractContainer implements Panel {
     }
 
     /**
+     * Belays hint user in current request.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected void belayHintUser() throws UnifyException {
+        getRequestContextUtil().belayHintUser();
+    }
+
+    /**
      * Sets this panel's refresh flag. If true panel would be automatically
      * refreshed at a frequency based on 'refreshEvery' attribute.
      * 
