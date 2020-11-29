@@ -23,6 +23,7 @@ import com.tcdng.unify.core.data.Money;
 import com.tcdng.unify.core.format.Formatter;
 import com.tcdng.unify.core.upl.UplElementReferences;
 import com.tcdng.unify.core.util.DataUtils;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * A value to string converter.
@@ -77,6 +78,10 @@ public class StringConverter extends AbstractConverter<String> {
                 return sb.toString();
             }
 
+            if (value instanceof String[]) {
+                return StringUtils.buildCommaSeparatedString((String[]) value, false);
+            }
+            
             if (formatter == null) {
                 if (value instanceof Date) {
                     formatter = DataUtils.getDefaultDateTimeFormatter();

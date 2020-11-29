@@ -1862,6 +1862,11 @@ public final class DataUtils {
             if (value.getClass().isArray()) {
                 return value;
             }
+            
+            if (value instanceof String) {
+                return StringUtils.commaSplit((String) value);
+            }
+            
             List<Object> values = new ArrayList<Object>();
             if (value instanceof Map) {
                 value = ((Map<?, ?>) value).values();

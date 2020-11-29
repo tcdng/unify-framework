@@ -533,6 +533,16 @@ public class DataUtilsTest {
         assertEquals("Blue", arr[2]);
     }
     
+    @Test
+    public void testConvertToArrayFromCommaString() throws Exception {
+        String[] arr = DataUtils.convert(String[].class, "Red,Green,Blue", null);
+        assertNotNull(arr);
+        assertEquals(3, arr.length);
+        assertEquals("Red", arr[0]);
+        assertEquals("Green", arr[1]);
+        assertEquals("Blue", arr[2]);
+    }
+    
     public static abstract class Asset {
 
         private String title;

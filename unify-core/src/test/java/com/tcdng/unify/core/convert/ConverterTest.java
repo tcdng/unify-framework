@@ -241,6 +241,7 @@ public class ConverterTest extends AbstractUnifyComponentTest {
         assertEquals("145.38", converter.convert(Double.valueOf(145.38), null));
         assertEquals("true", converter.convert(Boolean.TRUE, null));
         assertEquals("false", converter.convert(Boolean.FALSE, null));
+        assertEquals("A,B", converter.convert(new String[]{"A", "B"}, null));
     }
 
     @Test
