@@ -70,5 +70,9 @@ public abstract class AbstractPopupTextField extends TextField {
         return getUplAttribute(boolean.class, "popupAlways");
     }
 
+    public boolean isOpenPopupOnFac() {
+        return true;
+    }
+    
     public abstract boolean isPopupOnEditableOnly();
 }

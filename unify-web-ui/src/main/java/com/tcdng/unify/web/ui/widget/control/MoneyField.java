@@ -28,6 +28,7 @@ import com.tcdng.unify.core.format.NumberFormatter;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.web.constant.ExtensionType;
 import com.tcdng.unify.web.ui.widget.ListParamType;
+import com.tcdng.unify.web.ui.widget.WriteWork;
 
 /**
  * Represents an input field for capturing money.
@@ -77,9 +78,14 @@ public class MoneyField extends AbstractListPopupTextField {
         return false;
     }
 
+    @Override
+    public boolean isOpenPopupOnFac() {
+        return false;
+    }
+
     @SuppressWarnings("unchecked")
     public String getAmountString() throws UnifyException {
-        Money money = getValue(Money.class);
+        Money money = getMoney();
         if (money != null) {
             StringBuilder sb = new StringBuilder();
             Formatter<BigDecimal> formatter = getUplAttribute(Formatter.class, "formatter");
@@ -94,7 +100,7 @@ public class MoneyField extends AbstractListPopupTextField {
     }
 
     public String getCurrencyString() throws UnifyException {
-        Money money = getValue(Money.class);
+        Money money = getMoney();
         return (money != null && money.getCurrencyCode() != null) ? money.getCurrencyCode()
                 : getUplAttribute(String.class, "currency");
     }
@@ -115,4 +121,14 @@ public class MoneyField extends AbstractListPopupTextField {
         return getPrefixedId("lst_");
     }
 
+    private Money getMoney() throws UnifyException {
+        WriteWork writeWork = getWriteWork();
+        Money money = writeWork.get(Money.class, "money");
+        if (money == null) {
+            money = getValue(Money.class);
+            writeWork.set("money", money);
+        }
+        
+        return money;
+    }
 }

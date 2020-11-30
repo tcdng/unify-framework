@@ -54,9 +54,11 @@ public abstract class AbstractPopupTextFieldWriter extends TextFieldWriter {
                         popupTextField.getDisplayTimeOut(), getOnShowAction(), getOnShowParam(popupTextField),
                         getOnHideAction(), getOnHideParam(popupTextField));
 
-                writeOpenPopupJS(writer, "onclick", facId, popupTextField.getBorderId(), popupTextField.getPopupId(),
-                        popupTextField.getDisplayTimeOut(), getOnShowAction(), getOnShowParam(popupTextField),
-                        getOnHideAction(), getOnHideParam(popupTextField));
+                if(popupTextField.isOpenPopupOnFac()) {
+                    writeOpenPopupJS(writer, "onclick", facId, popupTextField.getBorderId(), popupTextField.getPopupId(),
+                            popupTextField.getDisplayTimeOut(), getOnShowAction(), getOnShowParam(popupTextField),
+                            getOnHideAction(), getOnHideParam(popupTextField));
+                }
 
                 writeOpenPopupJS(writer, "onclick", popupTextField.getPopupButtonId(), popupTextField.getBorderId(),
                         popupTextField.getPopupId(), popupTextField.getDisplayTimeOut(), getOnShowAction(),

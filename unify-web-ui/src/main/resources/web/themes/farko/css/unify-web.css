@@ -683,6 +683,22 @@ z-index:400;}
 /** Percent field */
 .ui-percent {text-align: right;}
 
+/** Period field */
+.ui-period {width: 140px;}
+.ui-period .tplbutton {min-width: 68px;}
+.ui-period .pfborder {width:100%;max-height:280px; border: solid 1px #A0A0A0; background-color: #FFF;}
+.ui-period .pflist a {display:block; padding:6px 4px; color:#2C2C2C;white-space:nowrap;
+	background-color: transparent; border: 0px; text-decoration: none;}
+.ui-period .pflist .norm {}
+.ui-period .pflist .norm:hover {background-color: #B2B2B2; color: #FFF;}
+.ui-period .pflist .sel {background-color: #5970B2; color: #FFF;}
+.ui-period .pflist .selred {background-color: #C03333; color: #FFF;}
+.ui-period .pflist .selblue {background-color: #3378C0; color: #FFF;}
+.ui-period .pflist .selgreen {background-color: #33C078; color: #FFF;}
+.ui-period .pflist .selyellow {background-color: #C0B800; color: #FFF;}
+.ui-period .pflist .selorange {background-color: #C07833; color: #FFF;}
+.ui-period .pflist .selgray {background-color: #787878; color: #FFF;}
+
 /** Picture **/
 .ui-picture {width:180px; height:180px; padding: 2px; cursor: pointer;}
 .ui-picture-frame {display:inline-block;border: solid 1px #A0A0A0;padding:2px;}

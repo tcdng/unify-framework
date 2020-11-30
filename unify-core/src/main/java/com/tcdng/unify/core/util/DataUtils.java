@@ -71,12 +71,14 @@ import com.tcdng.unify.core.convert.FloatConverter;
 import com.tcdng.unify.core.convert.IntegerConverter;
 import com.tcdng.unify.core.convert.LongConverter;
 import com.tcdng.unify.core.convert.MoneyConverter;
+import com.tcdng.unify.core.convert.PeriodConverter;
 import com.tcdng.unify.core.convert.ShortConverter;
 import com.tcdng.unify.core.convert.StringConverter;
 import com.tcdng.unify.core.convert.UplElementReferencesConverter;
 import com.tcdng.unify.core.convert.UploadedFileConverter;
 import com.tcdng.unify.core.data.Input;
 import com.tcdng.unify.core.data.Money;
+import com.tcdng.unify.core.data.Period;
 import com.tcdng.unify.core.data.UploadedFile;
 import com.tcdng.unify.core.format.DateTimeFormatter;
 import com.tcdng.unify.core.format.Formatter;
@@ -219,11 +221,12 @@ public final class DataUtils {
         map.put(BigDecimal.class, new BigDecimalConverter());
         map.put(Date.class, new DateConverter());
         map.put(Money.class, new MoneyConverter());
+        map.put(Period.class, new PeriodConverter());
         map.put(String.class, new StringConverter());
         map.put(UplElementReferences.class, new UplElementReferencesConverter());
         map.put(UploadedFile.class, new UploadedFileConverter());
         map.put(Class.class, new ClassConverter());
-        classToConverterMap = Collections.unmodifiableMap(map);
+        classToConverterMap = map;
     }
 
     private static final Map<Class<?>, Class<? extends Input>> classToInputMap;
@@ -351,12 +354,16 @@ public final class DataUtils {
 
     }
 
+    public static void registerConverter(Class<?> clazz, Converter<?> converter) {
+        classToConverterMap.put(clazz, converter);
+    }
+    
     public static void registerDefaultFormatters(DateTimeFormatter defaultDateTimeFormatter) {
         DataUtils.defaultDateTimeFormatter = defaultDateTimeFormatter;
     }
 
     public static DateTimeFormatter getDefaultDateTimeFormatter() {
-        return DataUtils.defaultDateTimeFormatter;
+        return defaultDateTimeFormatter;
     }
 
     /**

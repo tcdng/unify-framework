@@ -543,6 +543,12 @@ public class DataUtilsTest {
         assertEquals("Blue", arr[2]);
     }
     
+    @Test
+    public void testConvertToStringFromArray() throws Exception {
+        String val = DataUtils.convert(String.class, new String[] {"Red","Green","Blue"}, null);
+        assertEquals("Red,Green,Blue", val);
+    }
+    
     public static abstract class Asset {
 
         private String title;

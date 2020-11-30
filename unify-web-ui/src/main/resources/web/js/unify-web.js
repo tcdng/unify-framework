@@ -2004,7 +2004,10 @@ ux.rigMoneyField = function(rgp) {
 				if(this._oldSelIdx != index) {
 					const label = index >= 0 ? _id(this._selectIds[index]) : null;
 					const olabel = this._oldSelIdx >= 0 ? _id(this._selectIds[this._oldSelIdx]) : null;
-					label.className = this._sel;
+					if(label) {
+						label.className = this._sel;
+					}
+					
 					if (olabel && label != olabel) {
 						olabel.className = this._norm;
 					}
@@ -2160,6 +2163,108 @@ ux.msUnSelectAllOpt = function(ms) {
 			option.selected = false;
 		}
 	}
+}
+
+/** Period field */
+ux.rigPeriodField = function(rgp) {
+	const id = rgp.pId;
+	const pf = _id(id);
+	if (pf) {
+		pf._norm = rgp.pNormCls;
+		pf._sel = rgp.pSelCls;
+		pf._selIdx = -2;
+		pf._oldSelIdx = -2;
+		pf._iCnt = rgp.pICnt;
+		pf._selectIds = rgp.pSelectIds;
+		pf._keys = rgp.pKeys;
+		pf._labels = rgp.pLabels;
+		pf._lastKeyHit = Date.now();
+		pf._fac = _id(rgp.pFacId);
+		pf._frm = _id(rgp.pFrmId);
+		pf._list = _id(rgp.pLstId);
+		pf._btn = _id(rgp.pBtnId);
+		pf._unit = null;
+		pf._pop = rgp.pEnabled;
+		
+		pf.setValue = function(val) {
+			const unit = val.unit;
+			var k = -1;
+			for(var i = 0; i < this._keys.length; i++) {
+				if (unit == this._keys[i]) {
+					k = i;
+					break;
+				}
+			}
+			
+			this._fac.value = val.magnitude;
+			this.selectOpt(k, true, false);
+		};
+		
+		pf.getValue = function() {
+			return {unit:this._unit, magnitude:this._fac.value};
+		};
+		
+		pf.selectOpt = function(index, choose, fire) {
+			if (this._pop) {
+				if(this._oldSelIdx != index) {
+					const label = index >= 0 ? _id(this._selectIds[index]) : null;
+					const olabel = this._oldSelIdx >= 0 ? _id(this._selectIds[this._oldSelIdx]) : null;
+					if (label) {
+						label.className = this._sel;
+					}
+					if (olabel && label != olabel) {
+						olabel.className = this._norm;
+					}
+					
+					this._oldSelIdx = index;
+					if (!choose) {
+						ux.listScrollToLabel(this, label);
+					}
+				}	
+			}
+			
+			if (choose && (this._selIdx != index)) {
+				if (index >= 0) {
+					this._unit = this._keys[index];
+					this._btn.innerHTML = this._labels[index];
+				} else {
+					this._unit = null;
+					this._btn.innerHTML = null;
+				}
+
+				this._selIdx = index;
+				this.setPeriodVal(fire);
+			}
+		}
+		
+		pf.setPeriodVal = function(fire) {
+			var val = "";
+			if (this._fac.value) {
+				val = this._unit + " " + this._fac.value;
+			}
+
+			if (this.value != val) {
+				this.value = val;
+				if (fire) {
+					ux.fireEvent(this, "change");			
+				}
+			}
+		}
+		
+		ux.addHdl(pf._fac, "change", ux.pfMagnitudeChange, {uId:id});
+		ux.listWirePopFrame(pf, rgp);
+
+		pf.setValue(rgp.pVal);
+	}
+}
+
+
+ux.pfMagnitudeChange = function(uEv) {
+	_id(uEv.evp.uId).setPeriodVal(true);
+}
+
+ux.pfOnShow = function(rgp) {
+	ux.setFocus(rgp.pFrmId);
 }
 
 /** Photo Upload */
