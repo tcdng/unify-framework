@@ -104,6 +104,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("globe-africa", "f57c");
         registerSymbol("hat-wizard", "f6e8");
         registerSymbol("harddisk", "f0a0");
+        registerSymbol("history", "f1da");
         registerSymbol("house-user", "e065");
         registerSymbol("id-card", "f2c2");
         registerSymbol("image", "f03e");
