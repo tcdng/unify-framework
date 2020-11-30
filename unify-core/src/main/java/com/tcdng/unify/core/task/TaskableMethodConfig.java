@@ -19,6 +19,8 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 import com.tcdng.unify.core.data.Listable;
+import com.tcdng.unify.core.data.ParamConfig;
+import com.tcdng.unify.core.util.DataUtils;
 
 /**
  * Taskable method configuration.
@@ -50,7 +52,7 @@ public class TaskableMethodConfig implements Listable {
         this.description = description;
         this.componentName = componentName;
         this.method = method;
-        this.paramConfigList = paramConfigList;
+        this.paramConfigList = DataUtils.unmodifiableList(paramConfigList);
         this.taskExecLimit = taskExecLimit;
         this.idGenerator = idGenerator;
         this.schedulable = schedulable;
@@ -100,51 +102,5 @@ public class TaskableMethodConfig implements Listable {
 
     public boolean isSchedulable() {
         return schedulable;
-    }
-
-    public static class ParamConfig {
-
-        private String paramName;
-
-        private String paramDesc;
-
-        private String editor;
-
-        private Class<?> type;
-
-        private boolean mandatory;
-
-        public ParamConfig(Class<?> type, String paramName, String paramDesc, String editor, boolean mandatory) {
-            this.paramName = paramName;
-            this.paramDesc = paramDesc;
-            this.editor = editor;
-            this.type = type;
-            this.mandatory = mandatory;
-        }
-
-        public ParamConfig(Class<?> type, String paramName) {
-            this.type = type;
-            this.paramName = paramName;
-        }
-
-        public Class<?> getType() {
-            return type;
-        }
-
-        public String getParamName() {
-            return paramName;
-        }
-
-        public String getParamDesc() {
-            return paramDesc;
-        }
-
-        public String getEditor() {
-            return editor;
-        }
-
-        public boolean isMandatory() {
-            return mandatory;
-        }
     }
 }

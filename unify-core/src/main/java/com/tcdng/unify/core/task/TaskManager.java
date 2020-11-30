@@ -22,6 +22,7 @@ import java.util.Map;
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.PeriodicType;
+import com.tcdng.unify.core.data.ParamConfig;
 
 /**
  * Task manager.
@@ -61,6 +62,17 @@ public interface TaskManager extends UnifyComponent {
      */
     boolean isTaskableMethod(String taskName) throws UnifyException;
 
+    /**
+     * Gets task annotated parameters.
+     * 
+     * @param taskName
+     *                 the task name
+     * @return list of task parameters
+     * @throws UnifyException
+     *                        if task with name is unknown
+     */
+    List<ParamConfig> getTaskParameters(String taskName) throws UnifyException;
+    
     /**
      * Executes a task with specified name. Blocks until task completes execution or
      * fails. Task will still run in a separate thread.

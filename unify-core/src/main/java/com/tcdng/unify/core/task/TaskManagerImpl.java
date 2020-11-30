@@ -46,6 +46,8 @@ import com.tcdng.unify.core.annotation.Parameter;
 import com.tcdng.unify.core.annotation.PeriodicType;
 import com.tcdng.unify.core.annotation.Taskable;
 import com.tcdng.unify.core.business.internal.ProxyBusinessServiceMethodRelay;
+import com.tcdng.unify.core.data.FactoryMap;
+import com.tcdng.unify.core.data.ParamConfig;
 import com.tcdng.unify.core.system.ClusterService;
 import com.tcdng.unify.core.util.AnnotationUtils;
 import com.tcdng.unify.core.util.DataUtils;
@@ -82,9 +84,26 @@ public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManag
 
     private Map<String, TaskableMethodConfig> taskConfigByNameMap;
 
+    private FactoryMap<String, List<ParamConfig>> taskParamConfigByTypeMap;
+    
     public TaskManagerImpl() {
         uniqueTaskIDSet = Collections.synchronizedSet(new HashSet<String>());
         taskConfigByNameMap = new HashMap<String, TaskableMethodConfig>();
+        taskParamConfigByTypeMap = new FactoryMap<String, List<ParamConfig>>() {
+
+            @Override
+            protected List<ParamConfig> create(String taskName, Object... params) throws Exception {
+                UnifyComponentConfig ucc = getComponentConfig(Task.class, taskName);
+                List<ParamConfig> list = new ArrayList<ParamConfig>();
+                List<Parameter> pal = AnnotationUtils.getParameters(ucc.getType());
+                for (Parameter pa: pal) {
+                    list.add(createParamConfig(pa));
+                }
+                
+                return DataUtils.unmodifiableList(list);
+            }
+            
+        };
     }
 
     @Override
@@ -104,6 +123,15 @@ public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManag
     @Override
     public boolean isTaskableMethod(String taskName) throws UnifyException {
         return taskConfigByNameMap.containsKey(taskName);
+    }
+
+    @Override
+    public List<ParamConfig> getTaskParameters(String taskName) throws UnifyException {
+        if (isTaskableMethod(taskName)) {
+            return getTaskableMethodConfig(taskName).getParamConfigList();
+        }
+
+        return taskParamConfigByTypeMap.get(taskName);
     }
 
     @Override
@@ -228,34 +256,24 @@ public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManag
                     }
 
                     // Get parameter configuration
-                    List<TaskableMethodConfig.ParamConfig> paramConfigList =
-                            new ArrayList<TaskableMethodConfig.ParamConfig>();
+                    List<ParamConfig> paramConfigList =
+                            new ArrayList<ParamConfig>();
                     for (int i = 1; i < paramTypes.length; i++) {
                         Class<?> paramType = paramTypes[i];
                         Parameter pa = ta.parameters()[i - 1];
-                        String paramName = AnnotationUtils.getAnnotationString(pa.name());
-                        if (paramName == null) {
-                            paramName = AnnotationUtils.getAnnotationString(pa.value());
-                        }
-
-                        String description = AnnotationUtils.getAnnotationString(pa.description());
-                        if (description != null) {
-                            description = resolveApplicationMessage(description);
-                        }
-
-                        if (!paramType.isAssignableFrom(pa.type())) {
+                        ParamConfig pc = createParamConfig(pa);
+                        if (!paramType.isAssignableFrom(pc.getType())) {
                             throw new UnifyException(UnifyCoreErrorConstants.TASKABLE_PARAMETER_TYPE_INCOMPATIBLE,
-                                    paramName, pa.type(), ta.name(), paramType);
+                                    pc.getParamName(), pa.type(), ta.name(), paramType);
                         }
 
-                        paramConfigList.add(new TaskableMethodConfig.ParamConfig(pa.type(), paramName, description,
-                                pa.editor(), pa.mandatory()));
+                        paramConfigList.add(pc);
                     }
 
                     // Create configuration and store
                     String idGenerator = AnnotationUtils.getAnnotationString(ta.idGenerator());
                     tmc = new TaskableMethodConfig(ta.name(), resolveApplicationMessage(ta.description()),
-                            unifyComponentConfig.getName(), method, Collections.unmodifiableList(paramConfigList),
+                            unifyComponentConfig.getName(), method, paramConfigList,
                             ta.limit(), idGenerator, ta.schedulable());
                     taskConfigByNameMap.put(tmc.getName(), tmc);
                 }
@@ -269,6 +287,21 @@ public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManag
         scheduledExecutorService = Executors.newScheduledThreadPool(maxThreads);
     }
 
+    private ParamConfig createParamConfig(Parameter pa) throws UnifyException {
+        String paramName = AnnotationUtils.getAnnotationString(pa.name());
+        if (paramName == null) {
+            paramName = AnnotationUtils.getAnnotationString(pa.value());
+        }
+
+        String description = AnnotationUtils.getAnnotationString(pa.description());
+        if (description != null) {
+            description = resolveApplicationMessage(description);
+        }
+
+        return new ParamConfig(pa.type(), paramName, description,
+                pa.editor(), pa.mandatory());
+    }
+    
     @Override
     protected void onTerminate() throws UnifyException {
         scheduledExecutorService.shutdownNow();

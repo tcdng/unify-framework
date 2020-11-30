@@ -18,6 +18,8 @@ package com.tcdng.unify.core.task;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.annotation.Parameter;
+import com.tcdng.unify.core.annotation.Parameters;
 
 /**
  * Bad test task.
@@ -26,6 +28,8 @@ import com.tcdng.unify.core.annotation.Component;
  * @since 1.0
  */
 @Component("test-taskc")
+@Parameters({ @Parameter(type = int.class, name = "magnitude", description = "Magnitude",
+        editor = "!ui-integer precision:2") })
 public class TestTaskC extends AbstractTask {
 
     @Override

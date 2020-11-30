@@ -18,6 +18,7 @@ package com.tcdng.unify.core.task;
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.data.ParamConfig;
 
 /**
  * Taskable method task.
@@ -47,7 +48,7 @@ public class TaskableMethodTask extends AbstractTask {
             Object[] params = new Object[tmc.getParamCount() + 1];
             params[0] = taskMonitor;
             int i = 1; // Skip task monitor
-            for (TaskableMethodConfig.ParamConfig pc : tmc.getParamConfigList()) {
+            for (ParamConfig pc : tmc.getParamConfigList()) {
                 params[i] = input.getParam(pc.getType(), pc.getParamName());
                 i++;
             }

@@ -33,6 +33,7 @@ import org.junit.Test;
 import com.tcdng.unify.core.AbstractUnifyComponentTest;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.data.ParamConfig;
 
 /**
  * Default task manager implementation tests.
@@ -70,16 +71,47 @@ public class TaskManagerImplTest extends AbstractUnifyComponentTest {
         assertEquals(2, tmc.getParamCount());
         assertFalse(tmc.isSchedulable());
 
-        List<TaskableMethodConfig.ParamConfig> paramConfigList = tmc.getParamConfigList();
+        List<ParamConfig> paramConfigList = tmc.getParamConfigList();
         assertNotNull(paramConfigList);
         assertEquals(2, paramConfigList.size());
 
-        TaskableMethodConfig.ParamConfig pc1 = paramConfigList.get(0);
+        ParamConfig pc1 = paramConfigList.get(0);
         assertNotNull(pc1);
         assertEquals("name", pc1.getParamName());
         assertEquals(String.class, pc1.getType());
 
-        TaskableMethodConfig.ParamConfig pc2 = paramConfigList.get(1);
+        ParamConfig pc2 = paramConfigList.get(1);
+        assertNotNull(pc2);
+        assertEquals("factor", pc2.getParamName());
+        assertEquals(Double.class, pc2.getType());
+    }
+
+    @Test
+    public void testGetTaskParameters() throws Exception {
+        List<ParamConfig> paramConfigList = taskManager.getTaskParameters("test-taskc");
+        assertNotNull(paramConfigList);
+        assertEquals(1, paramConfigList.size());
+
+        ParamConfig pc1 = paramConfigList.get(0);
+        assertNotNull(pc1);
+        assertEquals("magnitude", pc1.getParamName());
+        assertEquals("Magnitude", pc1.getParamDesc());
+        assertEquals("!ui-integer precision:2", pc1.getEditor());
+        assertEquals(int.class, pc1.getType());
+    }
+
+    @Test
+    public void testGetTaskParametersTaskable() throws Exception {
+        List<ParamConfig> paramConfigList = taskManager.getTaskParameters("computegalactic-task");
+        assertNotNull(paramConfigList);
+        assertEquals(2, paramConfigList.size());
+
+        ParamConfig pc1 = paramConfigList.get(0);
+        assertNotNull(pc1);
+        assertEquals("name", pc1.getParamName());
+        assertEquals(String.class, pc1.getType());
+
+        ParamConfig pc2 = paramConfigList.get(1);
         assertNotNull(pc2);
         assertEquals("factor", pc2.getParamName());
         assertEquals(Double.class, pc2.getType());
@@ -115,18 +147,18 @@ public class TaskManagerImplTest extends AbstractUnifyComponentTest {
         assertEquals(2, tmc.getParamCount());
         assertTrue(tmc.isSchedulable());
 
-        List<TaskableMethodConfig.ParamConfig> paramConfigList = tmc.getParamConfigList();
+        List<ParamConfig> paramConfigList = tmc.getParamConfigList();
         assertNotNull(paramConfigList);
         assertEquals(2, paramConfigList.size());
 
-        TaskableMethodConfig.ParamConfig pc1 = paramConfigList.get(0);
+        ParamConfig pc1 = paramConfigList.get(0);
         assertNotNull(pc1);
         assertEquals("reportBase", pc1.getParamName());
         assertEquals("Report Base", pc1.getParamDesc());
         assertEquals("!ui-text", pc1.getEditor());
         assertEquals(String.class, pc1.getType());
 
-        TaskableMethodConfig.ParamConfig pc2 = paramConfigList.get(1);
+        ParamConfig pc2 = paramConfigList.get(1);
         assertNotNull(pc2);
         assertEquals("workingDt", pc2.getParamName());
         assertEquals("Working Date", pc2.getParamDesc());
