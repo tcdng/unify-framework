@@ -831,7 +831,7 @@ public final class DataUtils {
      *                        the collection type
      * @param dataClass
      *                        the collection data type
-     * @param value
+     * @param val
      *                        the value to convert
      * @param formatter
      *                        the conversion formatter. Can be null
@@ -840,75 +840,85 @@ public final class DataUtils {
      *                        if an error occurs
      */
     @SuppressWarnings("unchecked")
-    public static <T, U extends Collection<T>> U convert(Class<U> collectionClazz, Class<T> dataClass, Object value,
+    public static <T, U extends Collection<T>> U convert(Class<U> collectionClazz, Class<T> dataClass, Object val,
             Formatter<?> formatter) throws UnifyException {
         try {
-            if (value == null) {
+            if (val == null) {
                 return null;
             }
 
-            Class<?> valueClass = value.getClass();
-            if (collectionClazz.isAssignableFrom(valueClass)) {
-                Collection collection = (Collection) value;
+            Class<?> valClass = val.getClass();
+            if (collectionClazz.isAssignableFrom(valClass)) {
+                Collection collection = (Collection) val;
                 if (!collection.isEmpty()) {
                     Iterator it = collection.iterator();
                     while (it.hasNext()) {
                         Object elem = it.next();
                         if (elem != null) {
                             if (dataClass.isAssignableFrom(elem.getClass())) {
-                                return (U) value;
+                                return (U) val;
                             } else {
                                 break;
                             }
                         }
                     }
                 } else {
-                    return (U) value;
+                    return (U) val;
                 }
             }
 
+            if (val instanceof String) {
+                List<String> list = StringUtils.charToListSplit((String) val, ',');
+                if (String.class.equals(dataClass)) {
+                    return (U) list;
+                }
+                
+                val = list;
+                valClass = val.getClass();
+            }
+            
             Collection<Object> result = ReflectUtils.newInstance(DataUtils.getCollectionConcreteType(collectionClazz));
-            if (valueClass.isArray()) {
-                int length = Array.getLength(value);
-                if (dataClass.isAssignableFrom(DataUtils.getWrapperClass(valueClass.getComponentType()))) {
+            if (valClass.isArray()) {
+                int length = Array.getLength(val);
+                if (dataClass.isAssignableFrom(DataUtils.getWrapperClass(valClass.getComponentType()))) {
                     for (int i = 0; i < length; i++) {
-                        result.add(Array.get(value, i));
+                        result.add(Array.get(val, i));
                     }
                 } else {
                     if (EnumConst.class.isAssignableFrom(dataClass)) {
                         for (int i = 0; i < length; i++) {
                             result.add(EnumUtils.fromCode((Class<? extends EnumConst>) dataClass,
-                                    String.valueOf(Array.get(value, i))));
+                                    String.valueOf(Array.get(val, i))));
                         }
                     } else {
                         Converter<?> converter = classToConverterMap.get(dataClass);
                         for (int i = 0; i < length; i++) {
-                            result.add(converter.convert(Array.get(value, i), formatter));
+                            result.add(converter.convert(Array.get(val, i), formatter));
                         }
                     }
                 }
-            } else if (Collection.class.isAssignableFrom(valueClass)) {
+            } else if (Collection.class.isAssignableFrom(valClass)) {
                 if (EnumConst.class.isAssignableFrom(dataClass)) {
-                    for (Object object : (Collection<Object>) value) {
+                    for (Object object : (Collection<Object>) val) {
                         result.add(EnumUtils.fromCode((Class<? extends EnumConst>) dataClass, String.valueOf(object)));
                     }
                 } else {
                     Converter<?> converter = classToConverterMap.get(dataClass);
-                    for (Object object : (Collection<Object>) value) {
+                    for (Object object : (Collection<Object>) val) {
                         result.add(converter.convert(object, formatter));
                     }
                 }
             } else {
                 if (EnumConst.class.isAssignableFrom(dataClass)) {
                     Object resultItem = EnumUtils.fromCode((Class<? extends EnumConst>) dataClass,
-                            String.valueOf(value));
+                            String.valueOf(val));
                     if (resultItem == null) {
-                        resultItem = EnumUtils.fromName((Class<? extends EnumConst>) dataClass, String.valueOf(value));
+                        resultItem = EnumUtils.fromName((Class<? extends EnumConst>) dataClass, String.valueOf(val));
                     }
 
                     result.add(resultItem);
                 } else {
-                    result.add(classToConverterMap.get(dataClass).convert(value, formatter));
+                    result.add(classToConverterMap.get(dataClass).convert(val, formatter));
                 }
             }
             return (U) result;
@@ -916,7 +926,7 @@ public final class DataUtils {
         } catch (UnifyException e) {
             throw e;
         } catch (Exception e) {
-            throw new UnifyException(e, UnifyCoreErrorConstants.DATA_CONVERSION_ERROR, collectionClazz, value);
+            throw new UnifyException(e, UnifyCoreErrorConstants.DATA_CONVERSION_ERROR, collectionClazz, val);
         }
     }
 

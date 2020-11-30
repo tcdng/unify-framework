@@ -117,6 +117,26 @@ public final class StringUtils {
      */
     public static String[] charSplit(String string, char ch) {
         if (string != null) {
+            List<String> list = StringUtils.charToListSplit(string, ch);
+            if (list != null) {
+                return list.toArray(new String[list.size()]);
+            }
+        }
+
+        return DataUtils.ZEROLEN_STRING_ARRAY;
+    }
+
+    /**
+     * Split a string into tokens using supplied character character.
+     * 
+     * @param string
+     *               the string to split
+     * @param ch
+     *               the character to use
+     * @return the result tokens
+     */
+    public static List<String> charToListSplit(String string, char ch) {
+        if (string != null) {
             int len = string.length();
             if (len > 0) {
                 List<String> list = new ArrayList<String>();
@@ -132,11 +152,11 @@ public final class StringUtils {
                     }
                 }
 
-                return list.toArray(new String[list.size()]);
+                return list;
             }
         }
 
-        return DataUtils.ZEROLEN_STRING_ARRAY;
+        return null;
     }
 
     /**

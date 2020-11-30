@@ -86,6 +86,26 @@ public class DataUtilsTest {
         assertEquals(Long.valueOf(72L), result.get(1));
     }
     
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testCollectionConvertFromString() throws Exception {
+        List<Long> result = (List<Long>) DataUtils.convert(List.class, Long.class, "240,72", null);
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertEquals(Long.valueOf(240L), result.get(0));
+        assertEquals(Long.valueOf(72L), result.get(1));
+    }
+    
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testCollectionFromString() throws Exception {
+        List<String> result = (List<String>) DataUtils.convert(List.class, String.class, "240,72", null);
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertEquals("240", result.get(0));
+        assertEquals("72", result.get(1));
+    }
+    
     @Test
     public void testConvertArrayToArray() throws Exception {
         Long[] result = DataUtils.convert(Long[].class, new String[] { "240", "72" }, null);
