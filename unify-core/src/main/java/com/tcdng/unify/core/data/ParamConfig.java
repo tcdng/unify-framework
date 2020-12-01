@@ -72,4 +72,10 @@ public class ParamConfig {
     public boolean isMandatory() {
         return mandatory;
     }
+
+    @Override
+    public String toString() {
+        return "ParamConfig [paramName=" + paramName + ", paramDesc=" + paramDesc + ", editor=" + editor + ", type="
+                + type + ", mandatory=" + mandatory + "]";
+    }
 }
