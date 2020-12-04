@@ -122,10 +122,9 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 		String captionBinding = getUplAttribute(String.class, "captionBinding");
 		if (captionBinding != null && !captionBinding.isEmpty()) {
 		    caption = getStringValue(captionBinding);
-		} else {
-		    caption = getUplAttribute(String.class, "caption");
 		}
 		
+		caption = caption != null ? caption : getUplAttribute(String.class, "caption");
         String captionParamBinding = getUplAttribute(String.class, "captionParamBinding");
         if (captionParamBinding != null) {
             return MessageFormat.format(caption, getValue(captionParamBinding));
