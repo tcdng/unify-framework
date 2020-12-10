@@ -119,7 +119,7 @@ public class ConverterTest extends AbstractUnifyComponentTest {
     public void testDateConverterWithValidParameters() throws Exception {
         Converter<Date> converter = new DateConverter();
         assertNull(converter.convert(null, null));
-        Date now = new Date();
+        final Date now = new Date();
         assertEquals(now, converter.convert(now, null));
         Date date = converter.convert("October 18, 2014", dateFormatter);
         Calendar cal = Calendar.getInstance();
@@ -127,6 +127,10 @@ public class ConverterTest extends AbstractUnifyComponentTest {
         assertEquals(Calendar.OCTOBER, cal.get(Calendar.MONTH));
         assertEquals(18, cal.get(Calendar.DAY_OF_MONTH));
         assertEquals(2014, cal.get(Calendar.YEAR));
+        
+        Date date2 = converter.convert(now.getTime(), null);
+        assertNotNull(date2);
+        assertEquals(now, date2);
     }
 
     @Test(expected = UnifyException.class)
