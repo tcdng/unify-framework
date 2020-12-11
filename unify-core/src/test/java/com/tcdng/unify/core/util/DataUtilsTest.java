@@ -25,7 +25,9 @@ import static org.junit.Assert.assertTrue;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -113,6 +115,24 @@ public class DataUtilsTest {
         assertEquals(2, result.length);
         assertEquals(Long.valueOf(240L), result[0]);
         assertEquals(Long.valueOf(72L), result[1]);
+    }
+    
+    @Test
+    public void testConvertDateArrayToLongArray() throws Exception {
+        Date date1 = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MONTH, 2);
+        Date date2 = cal.getTime();
+        Long[] result = DataUtils.convert(Long[].class, new Date[] { date1, date2 }, null);
+        assertNotNull(result);
+        assertEquals(2, result.length);
+        assertFalse(result[0].equals(result[1]));
+
+        Date[] dates = DataUtils.convert(Date[].class, result, null);
+        assertNotNull(dates);
+        assertEquals(2, dates.length);
+        assertEquals(date1, dates[0]);
+        assertEquals(date2, dates[1]);
     }
 
     @SuppressWarnings("unchecked")

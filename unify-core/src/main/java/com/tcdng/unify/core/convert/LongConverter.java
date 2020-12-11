@@ -15,6 +15,8 @@
  */
 package com.tcdng.unify.core.convert;
 
+import java.util.Date;
+
 import com.tcdng.unify.core.format.Formatter;
 
 /**
@@ -30,6 +32,11 @@ public class LongConverter extends AbstractConverter<Long> {
         if (value instanceof Number) {
             return Long.valueOf(((Number) value).longValue());
         }
+        
+        if (value instanceof Date) {
+            return Long.valueOf(((Date) value).getTime());
+        }
+        
         if (value instanceof String) {
             String string = ((String) value).trim();
             if (!string.isEmpty()) {
