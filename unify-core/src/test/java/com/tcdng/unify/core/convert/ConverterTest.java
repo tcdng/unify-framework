@@ -194,7 +194,7 @@ public class ConverterTest extends AbstractUnifyComponentTest {
     public void testLongConverterWithValidParameters() throws Exception {
         Converter<Long> converter = new LongConverter();
         assertNull(converter.convert(null, null));
-        assertNull(converter.convert(new Date(), null));
+        assertNotNull(converter.convert(new Date(), null));
         assertEquals(Long.valueOf(10), converter.convert(Integer.valueOf(10), null));
         assertEquals(Long.valueOf(145), converter.convert(Double.valueOf(145.38), null));
         assertEquals(Long.valueOf(3567), converter.convert("3567", null));
