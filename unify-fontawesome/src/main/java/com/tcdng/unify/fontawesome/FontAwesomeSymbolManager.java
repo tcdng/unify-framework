@@ -66,6 +66,9 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("caret-left", "f0d9");
         registerSymbol("caret-right", "f0da");
         registerSymbol("caret-up", "f0d8");
+        registerSymbol("chart-area", "f1fe");
+        registerSymbol("chart-bar", "f080");
+        registerSymbol("chart-pie", "f200");
         registerSymbol("chevron-down", "f078");
         registerSymbol("chevron-left", "f053");
         registerSymbol("chevron-right", "f054");
