@@ -1,0 +1,22 @@
+language: java
+jdk:
+  - openjdk8
+
+branches:
+  only:
+    - master
+
+install: skip
+
+script:
+  - mvn clean install -DskipTests=true
+
+after_success:
+  - echo "Cloning wiki..."
+  - git clone $GITHUB_UNIFY_WIKI_URL >/dev/null 2>&1 # GITHUB_UNIFY_WIKI_URL Format: https://[USERNAME]:[PERSONAL_ACCESS_TOKEN]@github.com/tcdng/unify-framework.wiki.git
+  - echo "Wiki clone completed."
+  - cp -r docs/* unify-framework.wiki/
+  - cd unify-framework.wiki
+  - git add .
+  - git commit -m "Merge Documentation folder"
+  - git push origin master

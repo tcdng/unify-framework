@@ -2,3 +2,6 @@
 /.gitignore
 /.project
 /.README.md.html
+*.iml
+.idea
+*/target
