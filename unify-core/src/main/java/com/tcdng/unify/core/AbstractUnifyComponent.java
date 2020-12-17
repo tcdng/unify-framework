@@ -17,6 +17,7 @@ package com.tcdng.unify.core;
 
 import java.lang.annotation.Annotation;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -25,9 +26,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
 
+import com.tcdng.unify.core.annotation.Parameter;
 import com.tcdng.unify.core.annotation.Singleton;
 import com.tcdng.unify.core.constant.LocaleType;
 import com.tcdng.unify.core.data.Listable;
+import com.tcdng.unify.core.data.ParamConfig;
 import com.tcdng.unify.core.data.ValueStore;
 import com.tcdng.unify.core.format.Formatter;
 import com.tcdng.unify.core.logging.Logger;
@@ -35,6 +38,7 @@ import com.tcdng.unify.core.logging.LoggingLevel;
 import com.tcdng.unify.core.message.ResourceBundles;
 import com.tcdng.unify.core.task.TaskMonitor;
 import com.tcdng.unify.core.upl.UplComponent;
+import com.tcdng.unify.core.util.AnnotationUtils;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.TokenUtils;
 import com.tcdng.unify.core.util.ValueStoreUtils;
@@ -1387,6 +1391,32 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 		Exception e = new UnsupportedOperationException();
 		throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, getName(), e.getMessage());
 	}
+
+    protected List<ParamConfig> getComponentParamConfigs(Class<? extends UnifyComponent> componentType, String name)
+            throws UnifyException {
+        UnifyComponentConfig ucc = getComponentConfig(componentType, name);
+        List<ParamConfig> list = new ArrayList<ParamConfig>();
+        List<Parameter> pal = AnnotationUtils.getParameters(ucc.getType());
+        for (Parameter pa : pal) {
+            list.add(createParamConfig(pa));
+        }
+
+        return list;
+    }
+
+    protected ParamConfig createParamConfig(Parameter pa) throws UnifyException {
+        String paramName = AnnotationUtils.getAnnotationString(pa.name());
+        if (paramName == null) {
+            paramName = AnnotationUtils.getAnnotationString(pa.value());
+        }
+
+        String description = AnnotationUtils.getAnnotationString(pa.description());
+        if (description != null) {
+            description = resolveApplicationMessage(description);
+        }
+
+        return new ParamConfig(pa.type(), paramName, description, pa.editor(), pa.mandatory());
+    }
 
 	/**
 	 * Executes on initialization. Called after the component's context has been
