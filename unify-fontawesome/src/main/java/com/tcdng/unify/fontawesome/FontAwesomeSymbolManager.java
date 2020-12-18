@@ -34,7 +34,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
 
     @Override
     public List<String> getFontResources() throws UnifyException {
-        // Currently uses font aweaome 5.14.0
+        // Currently uses font awesome 5.14.1
         return Arrays.asList("webfonts/fa-solid-900.woff", "webfonts/fa-regular-400.woff");
     }
 
@@ -119,6 +119,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("mail-bulk", "f674");
         registerSymbol("minus", "f068");
         registerSymbol("money-bill", "f0d6");
+        registerSymbol("network-wired", "f6ff");
         registerSymbol("newspaper", "f1ea");
         registerSymbol("outdent", "f03b");
         registerSymbol("paper-clip", "f0c6");
@@ -149,6 +150,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("user-check", "f4fc");
         registerSymbol("user-edit", "f4ff");
         registerSymbol("user-tag", "f507");
+        registerSymbol("vector-square", "f5cb");
         registerSymbol("window-maximize", "f2d0");
         registerSymbol("window-restore", "f2d2");
     }
