@@ -118,6 +118,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("mail", "f0e0");
         registerSymbol("mail-bulk", "f674");
         registerSymbol("minus", "f068");
+        registerSymbol("minus-square", "f146");
         registerSymbol("money-bill", "f0d6");
         registerSymbol("network-wired", "f6ff");
         registerSymbol("newspaper", "f1ea");
