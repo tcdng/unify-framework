@@ -77,6 +77,7 @@ ux.delayedpanelposting = [];
 ux.debouncetime = [];
 
 ux.resizefunctions = {};
+ux.pageresets = {};
 ux.confirmstore = {};
 ux.extensionregistry = {};
 
@@ -231,6 +232,7 @@ ux.respHandler = {
 	},
 
 	loadContentHdl : function(resp) {
+		ux.callPageResets();
 		if (resp.closeRemoteTab) {
 			if (ux.cntTabCloseId) {
 				ux.fireEvent(_id(ux.cntTabCloseId), "click");
@@ -5330,6 +5332,21 @@ ux.documentHidePopup = function(uEv) {
 }
 
 ux.addHdl(document, "click", ux.documentHidePopup, {});
+
+/** Page resets */
+ux.registerPageReset = function(id, resetFunc) {
+	ux.pageresets[id] = resetFunc;
+}
+
+ux.callPageResets = function() {
+	for (var id in ux.pageresets) {
+		try {
+			ux.pageresets[id]();
+		} catch(e) {
+			console.log(e.message);
+		}
+	}
+}
 
 /** On window resize function */
 ux.registerResizeFunc = function(id, resizeFunc, resizePrm) {
