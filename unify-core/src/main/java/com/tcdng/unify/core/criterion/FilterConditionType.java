@@ -41,6 +41,17 @@ public enum FilterConditionType implements EnumConst {
             return new Equals(fieldName, paramA);
         }
     },
+    EQUALS_LINGUAL("EQG", RestrictionType.EQUALS, "condition.equalslingual.label", "condition.equals.symbol", false, false) {
+        @Override
+        public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
+
+        }
+
+        @Override
+        public Restriction createSimpleCriteria(String fieldName, Object paramA, Object paramB) {
+            return null;
+        }
+    },
     NOT_EQUALS("NEQ", RestrictionType.NOT_EQUALS, "condition.notequals.label", "condition.notequals.symbol", false,
             false) {
         @Override
@@ -575,6 +586,10 @@ public enum FilterConditionType implements EnumConst {
         return type.isZeroParams();
     }
 
+    public boolean isLingual() {
+        return EQUALS_LINGUAL.equals(this);
+    }
+    
     public abstract void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB);
 
     public abstract Restriction createSimpleCriteria(String fieldName, Object paramA, Object paramB);

@@ -122,7 +122,9 @@ public final class FilterUtils {
                     )));
     
     private static final Set<FilterConditionType> dateConditionTypes = Collections.unmodifiableSet(new LinkedHashSet<FilterConditionType>(
-            Arrays.asList(FilterConditionType.EQUALS,
+            Arrays.asList(
+                    FilterConditionType.EQUALS_LINGUAL,
+                    FilterConditionType.EQUALS,
                     FilterConditionType.GREATER_THAN,
                     FilterConditionType.GREATER_OR_EQUAL,
                     FilterConditionType.LESS_THAN,
