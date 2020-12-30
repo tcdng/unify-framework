@@ -24,8 +24,8 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
-import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.UnifyOperationException;
 import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.constant.PrintFormat;
@@ -263,7 +263,7 @@ public class HSqlDbDialect extends AbstractSqlDataSourceDialect {
                 st = connection.createStatement();
                 st.execute("SHUTDOWN");
             } catch (SQLException e) {
-                throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, getName());
+                throw new UnifyOperationException(e, getName());
             } finally {
                 SqlUtils.close(st);
             }

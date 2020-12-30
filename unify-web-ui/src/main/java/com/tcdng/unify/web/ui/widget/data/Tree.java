@@ -21,8 +21,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.UnifyOperationException;
 import com.tcdng.unify.core.data.MarkedTree;
 import com.tcdng.unify.core.data.MarkedTree.MarkedTreeItemMatcher;
 import com.tcdng.unify.core.data.MarkedTree.Node;
@@ -57,7 +57,7 @@ public class Tree {
     public Long addTreeItem(Long parentItemId, String itemTypeCode, Object item) throws UnifyException {
         TreeItemTypeInfo treeItemTypeInfo = typeInfo.getTreeItemTypeInfo(itemTypeCode);
         if (treeItemTypeInfo == null) {
-            throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR,
+            throw new UnifyOperationException(
                     "Unknown tree item type code [" + itemTypeCode + "].");
         }
 
@@ -253,7 +253,7 @@ public class Tree {
 
         public Builder addTreeItem(String type, Object item) throws UnifyException {
             if (!typeInfo.isTreeItemType(type)) {
-                throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR,
+                throw new UnifyOperationException(
                         "Unknown category [" + type + "].");
             }
 

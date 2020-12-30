@@ -21,8 +21,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.UnifyOperationException;
 import com.tcdng.unify.core.annotation.Column;
 import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.annotation.EntityType;
@@ -54,10 +54,10 @@ public final class DynamicEntityUtils {
             case TABLE_EXT:
                 return DynamicEntityUtils.generateTableEntityJavaClassSource(dynamicEntityInfo);
             case VIEW:
-                throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, DynamicEntityUtils.class,
+                throw new UnifyOperationException(DynamicEntityUtils.class,
                         "View entity type is unsupported for class source generation.");
             default:
-                throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, DynamicEntityUtils.class,
+                throw new UnifyOperationException(DynamicEntityUtils.class,
                         "Entity type not specified for class source generation.");
         }
     }

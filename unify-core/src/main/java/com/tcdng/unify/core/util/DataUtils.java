@@ -53,6 +53,7 @@ import com.eclipsesource.json.JsonValue;
 import com.eclipsesource.json.PrettyPrint;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.UnifyOperationException;
 import com.tcdng.unify.core.annotation.Column;
 import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.constant.DataType;
@@ -461,7 +462,7 @@ public final class DataUtils {
         try {
             return DataUtils.getDataType(Class.forName(className));
         } catch (ClassNotFoundException e) {
-            throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR);
+            throw new UnifyOperationException(e);
         }
     }
 
@@ -498,7 +499,7 @@ public final class DataUtils {
         try {
             return DataUtils.findDataType(Class.forName(className));
         } catch (ClassNotFoundException e) {
-            throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR);
+            throw new UnifyOperationException(e);
         }
     }
 

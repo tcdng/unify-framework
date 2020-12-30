@@ -15,8 +15,8 @@
  */
 package com.tcdng.unify.core.upl;
 
-import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.UnifyOperationException;
 
 /**
  * UPL utilities.
@@ -36,7 +36,7 @@ public final class UplUtils {
 
     public static UplGeneratorTarget getUplGeneratorTarget(String name) throws UnifyException {
         if (!UplUtils.isUplGeneratorTargetName(name)) {
-            throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, "UplUtils",
+            throw new UnifyOperationException("UplUtils",
                     "Invalid generator target name [" + name + "]");
         }
 
@@ -58,7 +58,7 @@ public final class UplUtils {
 
     public static UplComponentClone getUplComponentClone(String name) throws UnifyException {
         if (!UplUtils.isUplCloneName(name)) {
-            throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, "UplUtils",
+            throw new UnifyOperationException("UplUtils",
                     "Invalid UPL component clone name [" + name + "]");
         }
 

@@ -21,8 +21,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.UnifyOperationException;
 import com.tcdng.unify.core.annotation.EntityType;
 import com.tcdng.unify.core.constant.DataType;
 import com.tcdng.unify.core.system.entities.AbstractSequencedEntity;
@@ -81,7 +81,7 @@ public class DynamicEntityInfo {
     public DynamicFieldInfo getDynamicFieldInfo(String fieldName) throws UnifyException {
         DynamicFieldInfo dynamicFieldInfo = fieldInfos.get(fieldName);
         if (dynamicFieldInfo == null) {
-            throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, this.getClass(),
+            throw new UnifyOperationException(this.getClass(),
                     "Field with name [" + fieldName + "] is unknown.");
         }
 
@@ -168,7 +168,7 @@ public class DynamicEntityInfo {
             checkFieldNameExist(fieldName);
             DynamicForeignKeyFieldInfo fkFieldInfo = fkFields.get(key);
             if (fkFieldInfo == null) {
-                throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, this.getClass(),
+                throw new UnifyOperationException(getClass(),
                         "Unknown foreign key [" + key + "] referenced by [" + fieldName + "].");
             }
 
@@ -181,7 +181,7 @@ public class DynamicEntityInfo {
         private void checkFieldNameExist(String fieldName) throws UnifyException {
             if (fkFields.containsKey(fieldName) || columnFields.containsKey(fieldName)
                     || listOnlyFields.containsKey(fieldName)) {
-                throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, this.getClass(),
+                throw new UnifyOperationException(getClass(),
                         "Field with name [" + fieldName + "] already exists.");
             }
         }

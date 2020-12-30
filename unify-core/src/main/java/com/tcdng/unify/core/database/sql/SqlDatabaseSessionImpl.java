@@ -28,6 +28,7 @@ import java.util.Stack;
 
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.UnifyOperationException;
 import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.constant.FetchChild;
 import com.tcdng.unify.core.constant.IncludeListOnly;
@@ -470,7 +471,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
         } catch (UnifyException e) {
             throw e;
         } catch (Exception e) {
-            throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, e);
+            throw new UnifyOperationException(e);
         }
     }
 
@@ -536,7 +537,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
         } catch (UnifyException e) {
             throw e;
         } catch (Exception e) {
-            throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, getClass().getSimpleName());
+            throw new UnifyOperationException(e, getClass().getSimpleName());
         }
         return 0;
     }
@@ -725,7 +726,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
         } catch (UnifyException e) {
             throw e;
         } catch (Exception e) {
-            throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, getClass().getSimpleName());
+            throw new UnifyOperationException(e, getClass().getSimpleName());
         }
         return 0;
     }
@@ -779,7 +780,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
         } catch (UnifyException e) {
             throw e;
         } catch (Exception e) {
-            throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, getClass().getSimpleName());
+            throw new UnifyOperationException(e, getClass().getSimpleName());
         }
     }
 
@@ -798,7 +799,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
         } catch (UnifyException e) {
             throw e;
         } catch (Exception e) {
-            throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, getClass().getSimpleName());
+            throw new UnifyOperationException(e, getClass().getSimpleName());
         }
     }
 
@@ -818,7 +819,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
         } catch (UnifyException e) {
             throw e;
         } catch (Exception e) {
-            throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, getClass().getSimpleName());
+            throw new UnifyOperationException(e, getClass().getSimpleName());
         }
     }
 
@@ -978,7 +979,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
         } catch (UnifyException e) {
             throw e;
         } catch (Exception e) {
-            throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, getClass().getSimpleName());
+            throw new UnifyOperationException(e, getClass().getSimpleName());
         }
         return record;
     }
@@ -1137,7 +1138,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
             } catch (UnifyException e) {
                 throw e;
             } catch (Exception e) {
-                throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR,
+                throw new UnifyOperationException(e,
                         getClass().getSimpleName());
             }
         }
@@ -1235,7 +1236,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
             if (e instanceof UnifyException) {
                 throw ((UnifyException) e);
             }
-            throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, getClass().getSimpleName());
+            throw new UnifyOperationException(e, getClass().getSimpleName());
         } finally {
             if (sqlStatement != null) {
                 sqlDataSourceDialect.restoreStatement(sqlStatement);
@@ -1324,7 +1325,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
         } catch (UnifyException e) {
             throw e;
         } catch (Exception e) {
-            throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, getClass().getSimpleName());
+            throw new UnifyOperationException(e, getClass().getSimpleName());
         }
     }
 

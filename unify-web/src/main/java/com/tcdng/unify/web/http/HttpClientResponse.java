@@ -21,8 +21,8 @@ import java.io.Writer;
 
 import javax.servlet.http.HttpServletResponse;
 
-import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.UnifyOperationException;
 import com.tcdng.unify.core.util.IOUtils;
 import com.tcdng.unify.web.ClientResponse;
 
@@ -71,7 +71,7 @@ public class HttpClientResponse implements ClientResponse {
             }
             return outputStream;
         } catch (IOException e) {
-            throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, getClass().getSimpleName());
+            throw new UnifyOperationException(e, getClass().getSimpleName());
         }
     }
 
@@ -84,7 +84,7 @@ public class HttpClientResponse implements ClientResponse {
             }
             return writer;
         } catch (IOException e) {
-            throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, getClass().getSimpleName());
+            throw new UnifyOperationException(e, getClass().getSimpleName());
         }
     }
 

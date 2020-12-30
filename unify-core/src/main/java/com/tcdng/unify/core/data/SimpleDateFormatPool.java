@@ -20,8 +20,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.UnifyOperationException;
 
 /**
  * A class for managing a pool of simple date format objects.
@@ -101,7 +101,7 @@ public class SimpleDateFormatPool extends AbstractPool<SimpleDateFormat> {
         try {
             return sdf.parse(dateString);
         } catch (ParseException e) {
-            throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, e);
+            throw new UnifyOperationException(e);
         } finally {
             super.returnObject(sdf);
         }

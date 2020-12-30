@@ -1379,7 +1379,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 		if (t instanceof UnifyException) {
 			throw ((UnifyException) t);
 		}
-		throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, getName(), e.getMessage());
+		throw new UnifyOperationException(e, getName(), e.getMessage());
 	}
 
 	/**
@@ -1389,7 +1389,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 */
 	protected void throwUnsupportedOperationException() throws UnifyException {
 		Exception e = new UnsupportedOperationException();
-		throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, getName(), e.getMessage());
+		throw new UnifyOperationException(e, getName(), e.getMessage());
 	}
 
     protected List<ParamConfig> getComponentParamConfigs(Class<? extends UnifyComponent> componentType, String name)

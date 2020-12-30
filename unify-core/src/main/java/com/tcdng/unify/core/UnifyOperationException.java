@@ -13,27 +13,25 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.task;
 
-import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.UnifyOperationException;
-import com.tcdng.unify.core.annotation.Component;
-import com.tcdng.unify.core.annotation.Parameter;
-import com.tcdng.unify.core.annotation.Parameters;
+package com.tcdng.unify.core;
 
 /**
- * Bad test task.
+ * Common unify operation exception.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Component("test-taskc")
-@Parameters({ @Parameter(type = int.class, name = "magnitude", description = "Magnitude",
-        editor = "!ui-integer precision:2") })
-public class TestTaskC extends AbstractTask {
+public class UnifyOperationException extends UnifyException {
 
-    @Override
-    public void execute(TaskMonitor taskMonitor, TaskInput input, TaskOutput output) throws UnifyException {
-        throw new UnifyOperationException();
+    private static final long serialVersionUID = -3845989079792236780L;
+
+    public UnifyOperationException(Throwable cause, Object... errorParams) {
+        super(cause, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, errorParams);
     }
+
+    public UnifyOperationException(Object... errorParams) {
+        super(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, errorParams);
+    }
+
 }

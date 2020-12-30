@@ -23,8 +23,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.UnifyOperationException;
 import com.tcdng.unify.core.util.DataUtils;
 
 /**
@@ -118,7 +118,7 @@ public class TreeTypeInfo {
 
         public Builder addMenuItem(String code, String caption, String confirm) throws UnifyException {
             if (menuCodeList.contains(code)) {
-                throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR,
+                throw new UnifyOperationException(
                         "Menu item with code [" + code + "] already exists.");
             }
 
@@ -135,7 +135,7 @@ public class TreeTypeInfo {
         public Builder addMultiSelectMenuItem(String menuItemCode) throws UnifyException {
             int menuIndex = menuCodeList.indexOf(menuItemCode);
             if (menuIndex < 0) {
-                throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR,
+                throw new UnifyOperationException(
                         "Multi-select setup refers to unknown menu item [" + menuItemCode + "].");
             }
 
@@ -151,7 +151,7 @@ public class TreeTypeInfo {
 
         public Builder addTreeItemType(TreeItemTypeInfo treeItemTypeInfo) throws UnifyException {
             if (treeItemTypeInfos.containsKey(treeItemTypeInfo.getCode())) {
-                throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR,
+                throw new UnifyOperationException(
                         "Tree item type with code [" + treeItemTypeInfo.getCode() + "] exists.");
             }
 
@@ -161,7 +161,7 @@ public class TreeTypeInfo {
                 for (String menuCode : treeItemTypeInfo.getMenuCodeList()) {
                     int menuIndex = menuCodeList.indexOf(menuCode);
                     if (menuIndex < 0) {
-                        throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR,
+                        throw new UnifyOperationException(
                                 "Tree item type with code [" + treeItemTypeInfo.getCode()
                                         + "] refers to unknown menu item [" + menuCode + "].");
                     }

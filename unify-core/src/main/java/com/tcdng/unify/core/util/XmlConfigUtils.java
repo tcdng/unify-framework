@@ -30,8 +30,8 @@ import javax.xml.transform.sax.SAXSource;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
-import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.UnifyOperationException;
 
 /**
  * Provides utility methods for XML configuration.
@@ -76,7 +76,7 @@ public final class XmlConfigUtils {
 
             return (T) jaxbUnmarshaller.unmarshal((File) xmlSrcObject);
         } catch (Exception e) {
-            throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR,
+            throw new UnifyOperationException(e,
                     UnifyConfigUtils.class.getName());
         }
     }
