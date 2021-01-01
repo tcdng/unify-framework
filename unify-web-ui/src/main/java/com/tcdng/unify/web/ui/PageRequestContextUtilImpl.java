@@ -433,6 +433,7 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
     @Override
     public void clearRequestContext() throws UnifyException {
         setRequestAttribute(PageRequestParameterConstants.TARGET_VALUE, null);
+        setRequestAttribute(PageRequestParameterConstants.WINDOW_NAME, null);
         setRequestAttribute(PageRequestParameterConstants.CONFIRM_MSG, null);
         setRequestAttribute(PageRequestParameterConstants.CONFIRM_MSGICON, null);
         setRequestAttribute(PageRequestParameterConstants.CONFIRM_PARAM, null);
@@ -452,6 +453,8 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
     public void extractRequestParameters(ClientRequest request) throws UnifyException {
         setRequestAttribute(PageRequestParameterConstants.TARGET_VALUE,
                 request.getParameter(PageRequestParameterConstants.TARGET_VALUE));
+        setRequestAttribute(PageRequestParameterConstants.WINDOW_NAME,
+                request.getParameter(PageRequestParameterConstants.WINDOW_NAME));
         setRequestAttribute(PageRequestParameterConstants.CONFIRM_MSG,
                 request.getParameter(PageRequestParameterConstants.CONFIRM_MSG));
         setRequestAttribute(PageRequestParameterConstants.CONFIRM_MSGICON,

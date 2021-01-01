@@ -4039,6 +4039,7 @@ ux.buildObjParams = function(trgObj, evp, param) {
 			pb.append("req_rsi", ux.docSessionId);
 		} else {
 			pb.append("req_doc", ux.docPath);
+			pb.append("req_win", window.name);
 		}
 		if (evp.uValidateAct) {
 			pb.append("req_va", evp.uValidateAct);
@@ -4057,6 +4058,7 @@ ux.buildObjParams = function(trgObj, evp, param) {
 			pb += ("&req_rsi=" + _enc(ux.docSessionId));
 		} else {
 			pb += ("&req_doc=" + _enc(ux.docPath));
+			pb += ("&req_win=" + _enc(window.name));
 		}
 		if (evp.uValidateAct) {
 			pb += ("&req_va=" + _enc(evp.uValidateAct));

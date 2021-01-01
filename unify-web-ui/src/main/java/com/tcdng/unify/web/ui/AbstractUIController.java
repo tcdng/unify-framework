@@ -62,6 +62,7 @@ public abstract class AbstractUIController extends AbstractController implements
     private static final Set<String> skipOnPopulateSet = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(
             PageRequestParameterConstants.DOCUMENT,
             PageRequestParameterConstants.TARGET_VALUE,
+            PageRequestParameterConstants.WINDOW_NAME,
             PageRequestParameterConstants.VALIDATION_ACTION,
             PageRequestParameterConstants.CONFIRM_MSG,
             PageRequestParameterConstants.CONFIRM_MSGICON,
