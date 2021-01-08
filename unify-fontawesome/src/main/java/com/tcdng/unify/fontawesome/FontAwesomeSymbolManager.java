@@ -94,6 +94,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("exchange-alt", "f362");
         registerSymbol("exclamation-circle", "f06a");
         registerSymbol("file", "f15b");
+        registerSymbol("file-contract", "f56c");
         registerSymbol("file-excel", "1c3");
         registerSymbol("file-pdf", "f1c1");
         registerSymbol("file-word", "f1c2");
