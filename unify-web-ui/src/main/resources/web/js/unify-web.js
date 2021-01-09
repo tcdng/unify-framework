@@ -4859,14 +4859,14 @@ ux.init = function() {
 }
 
 ux.documentKeydownHandler = function(uEv) {
-	if (uEv.uKeyCode == 8) {
-		var preventKeypress = true;
+	if (uEv.uKeyCode == 8) { // Stop general backspace except for particular elements
+		var stopBackspace = true;
 		var elem = uEv.uTrg;
 		if (elem.type == "text" || elem.type == "password"
 				|| elem.type == "textarea") {
-			preventKeypress = elem.readOnly || elem.disabled;
+			stopBackspace = elem.readOnly || elem.disabled;
 		}
-		if (preventKeypress) {
+		if (stopBackspace) {
 			uEv.uStop();
 		}
 	}
