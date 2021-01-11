@@ -16,7 +16,6 @@
 package com.tcdng.unify.core.criterion;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -29,16 +28,15 @@ import com.tcdng.unify.core.data.Listable;
 import com.tcdng.unify.core.list.AbstractZeroParamsListCommand;
 import com.tcdng.unify.core.list.ZeroParams;
 import com.tcdng.unify.core.util.FilterUtils;
-import com.tcdng.unify.core.util.StringUtils;
 
 /**
- * Date condition list command.
+ * Boolean parameter condition list command.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Component("dateconditionlist")
-public class DateConditionListCommand extends AbstractZeroParamsListCommand {
+@Component("booleanparamconditionlist")
+public class BooleanParamConditionListCommand extends AbstractZeroParamsListCommand {
 
     private final FactoryMap<Locale, List<Listable>> listMap = new FactoryMap<Locale, List<Listable>>()
         {
@@ -46,16 +44,15 @@ public class DateConditionListCommand extends AbstractZeroParamsListCommand {
             @Override
             protected List<Listable> create(Locale locale, Object... arg1) throws Exception {
                 List<Listable> list = new ArrayList<Listable>();
-                for (FilterConditionType condType : FilterUtils.getSupportedFilterConditionTypes(Date.class,
-                        FilterConditionListType.IMMEDIATE_ONLY)) {
+                for (FilterConditionType condType : FilterUtils.getSupportedFilterConditionTypes(boolean.class,
+                        FilterConditionListType.IMMEDIATE_PARAM)) {
                     list.add(getListable(locale, condType));
                 }
                 return list;
             }
 
             private Listable getListable(Locale locale, FilterConditionType filterConditionType) throws UnifyException {
-                return new ListData(filterConditionType.code(),
-                        getMessage(locale, StringUtils.dotify("date", filterConditionType.labelKey())));
+                return new ListData(filterConditionType.code(), getMessage(locale, filterConditionType.labelKey()));
             }
         };
 

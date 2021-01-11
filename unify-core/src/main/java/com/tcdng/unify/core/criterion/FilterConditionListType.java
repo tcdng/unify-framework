@@ -13,23 +13,17 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package com.tcdng.unify.core.criterion;
 
 /**
- * Restriction for a property between two fields.
+ * Filter condition list type.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class BetweenField extends AbstractDoubleParamRestriction {
-
-    public BetweenField(String propertyName, String fieldNameA, String fieldNameB) {
-        super(propertyName, new RestrictionField(fieldNameA), new RestrictionField(fieldNameA));
-    }
-
-    @Override
-    public FilterConditionType getConditionType() {
-        return FilterConditionType.BETWEEN_FIELD;
-    }
-
+public enum FilterConditionListType {
+    IMMEDIATE_ONLY,
+    IMMEDIATE_FIELD,
+    IMMEDIATE_PARAM
 }

@@ -29,7 +29,7 @@ public class NotBetweenField extends AbstractDoubleParamRestriction {
 
     @Override
     public FilterConditionType getConditionType() {
-        return FilterConditionType.NOT_BETWEEN;
+        return FilterConditionType.NOT_BETWEEN_FIELD;
     }
 
 }

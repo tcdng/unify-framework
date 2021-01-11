@@ -13,23 +13,24 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package com.tcdng.unify.core.criterion;
 
 /**
- * Restriction for a property between two fields.
+ * Restriction for a property like a parameter value.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class BetweenField extends AbstractDoubleParamRestriction {
+public class LikeParam extends AbstractSingleParamRestriction {
 
-    public BetweenField(String propertyName, String fieldNameA, String fieldNameB) {
-        super(propertyName, new RestrictionField(fieldNameA), new RestrictionField(fieldNameA));
+    public LikeParam(String propertyName, String paramName) {
+        super(propertyName, new RestrictionParam(paramName));
     }
 
     @Override
     public FilterConditionType getConditionType() {
-        return FilterConditionType.BETWEEN_FIELD;
+        return FilterConditionType.LIKE_PARAM;
     }
 
 }

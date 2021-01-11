@@ -32,13 +32,13 @@ import com.tcdng.unify.core.util.FilterUtils;
 import com.tcdng.unify.core.util.StringUtils;
 
 /**
- * Date condition list command.
+ * Date field condition list command.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Component("dateconditionlist")
-public class DateConditionListCommand extends AbstractZeroParamsListCommand {
+@Component("datefieldconditionlist")
+public class DateFieldConditionListCommand extends AbstractZeroParamsListCommand {
 
     private final FactoryMap<Locale, List<Listable>> listMap = new FactoryMap<Locale, List<Listable>>()
         {
@@ -47,7 +47,7 @@ public class DateConditionListCommand extends AbstractZeroParamsListCommand {
             protected List<Listable> create(Locale locale, Object... arg1) throws Exception {
                 List<Listable> list = new ArrayList<Listable>();
                 for (FilterConditionType condType : FilterUtils.getSupportedFilterConditionTypes(Date.class,
-                        FilterConditionListType.IMMEDIATE_ONLY)) {
+                        FilterConditionListType.IMMEDIATE_FIELD)) {
                     list.add(getListable(locale, condType));
                 }
                 return list;

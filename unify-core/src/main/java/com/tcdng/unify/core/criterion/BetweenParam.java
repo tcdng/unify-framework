@@ -16,20 +16,20 @@
 package com.tcdng.unify.core.criterion;
 
 /**
- * Restriction for a property between two fields.
+ * Restriction for a property between two parameters.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class BetweenField extends AbstractDoubleParamRestriction {
+public class BetweenParam extends AbstractDoubleParamRestriction {
 
-    public BetweenField(String propertyName, String fieldNameA, String fieldNameB) {
-        super(propertyName, new RestrictionField(fieldNameA), new RestrictionField(fieldNameA));
+    public BetweenParam(String propertyName, String paramNameA, String paramNameB) {
+        super(propertyName, new RestrictionParam(paramNameA), new RestrictionParam(paramNameA));
     }
 
     @Override
     public FilterConditionType getConditionType() {
-        return FilterConditionType.BETWEEN_FIELD;
+        return FilterConditionType.BETWEEN;
     }
 
 }
