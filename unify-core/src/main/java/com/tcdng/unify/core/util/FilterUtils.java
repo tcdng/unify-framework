@@ -315,7 +315,7 @@ public final class FilterUtils {
         map.put(BigDecimal.class, numberConditionTypes_param);
         map.put(Date.class, dateConditionTypes_param);
         map.put(String.class, stringConditionTypes_param);
-        mapAll.put(FilterConditionListType.IMMEDIATE_FIELD, Collections.unmodifiableMap(map));
+        mapAll.put(FilterConditionListType.IMMEDIATE_PARAM, Collections.unmodifiableMap(map));
 
         supportedConditionMap = Collections.unmodifiableMap(mapAll);
     }
