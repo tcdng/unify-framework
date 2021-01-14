@@ -160,6 +160,43 @@ public class ContentPanelImpl extends AbstractContentPanel {
             return;
         }
 
+        untabbedClear();
+        contentIndex = contentList.size();
+        contentInfo = new ContentInfo(page, contentIndex);
+        contentList.add(contentInfo);
+        contentByPathIdMap.put(page.getPathId(), contentInfo);
+    }
+
+    @Override
+    public String insertContent(Page page) throws UnifyException {
+        ContentInfo contentInfo = contentByPathIdMap.get(page.getPathId());
+        if (contentInfo != null) {
+            contentIndex = contentInfo.getPageIndex();
+            return null;
+        }
+
+        untabbedClear();
+        
+        String replacedPathId = null;
+        final int len = contentList.size(); 
+        if (len <= 1) {
+            contentIndex = len;
+            contentInfo = new ContentInfo(page, contentIndex);
+            contentList.add(contentInfo);
+        } else {
+            replacedPathId = contentList.get(contentIndex).getPathId();
+            contentInfo = new ContentInfo(page, contentIndex);
+            contentList.add(contentIndex, contentInfo);
+            for(int i = contentIndex + 1; i <= len; i++) {
+                contentList.get(i).incPageIndex();
+            }
+        }
+
+        contentByPathIdMap.put(page.getPathId(), contentInfo);
+        return replacedPathId;
+    }
+
+    private void untabbedClear() throws UnifyException {
         if (!isTabbed()) {
             // Discard old pages
             for (ContentInfo oldContentInfo: contentList) {
@@ -170,13 +207,8 @@ public class ContentPanelImpl extends AbstractContentPanel {
             contentList.clear();
             contentByPathIdMap.clear();
         }
-        
-        contentIndex = contentList.size();
-        contentInfo = new ContentInfo(page, contentIndex);
-        contentList.add(contentInfo);
-        contentByPathIdMap.put(page.getPathId(), contentInfo);
     }
-
+    
     @Override
     public List<String> evaluateRemoveContent(Page page, ClosePageMode closePageMode) throws UnifyException {
         List<String> toRemovePathIdList = new ArrayList<String>();
@@ -272,12 +304,20 @@ public class ContentPanelImpl extends AbstractContentPanel {
             return page;
         }
 
+        public String getPathId() {
+            return page.getPathId();
+        }
+
         public int getPageIndex() {
             return pageIndex;
         }
 
         public void decPageIndex() {
             pageIndex--;
+        }
+
+        public void incPageIndex() {
+            pageIndex++;
         }
     }
 }

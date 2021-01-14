@@ -225,11 +225,26 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
     public String executePageCall(String actionName) throws UnifyException {
         try {
             if ("/openPage".equals(actionName)) {
-                openPage();
+                String resultName = openPage();
                 if (!getPageRequestContextUtil().isRemoteViewer()) {
                     ContentPanel contentPanel = getPageRequestContextUtil().getRequestDocument().getContentPanel();
                     contentPanel.addContent(getPageRequestContextUtil().getRequestPage());
                 }
+                
+                return resultName;
+            } else if ("/replacePage".equals(actionName)) {
+                String resultName = openPage();
+                PageRequestContextUtil pageRequestContextUtil = getPageRequestContextUtil();
+                if (!getPageRequestContextUtil().isRemoteViewer()) {
+                    ContentPanel contentPanel = pageRequestContextUtil.getRequestDocument().getContentPanel();
+                    Page currentPage = getPageRequestContextUtil().getRequestPage();
+                    String pathToReplaceId = contentPanel.insertContent(currentPage);
+                    if (!StringUtils.isBlank(pathToReplaceId)) {
+                        performClosePages(contentPanel, Arrays.asList(pathToReplaceId), true);
+                    }
+                }
+                
+                return resultName;
             } else if ("/closePage".equals(actionName)) {
                 ClosePageMode closePageMode = getPageRequestContextUtil().getRequestTargetValue(ClosePageMode.class);
                 performClosePage(closePageMode, true);
@@ -872,7 +887,15 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 
         ContentPanel contentPanel = pageRequestContextUtil.getRequestDocument().getContentPanel();
         List<String> toClosePathIdList = contentPanel.evaluateRemoveContent(currentPage, closePageMode);
+        performClosePages(contentPanel, toClosePathIdList, isFireClose);
+    }
+
+    private void performClosePages(ContentPanel contentPanel, List<String> toClosePathIdList, boolean isFireClose)
+            throws UnifyException {
         if (!toClosePathIdList.isEmpty()) {
+            PageRequestContextUtil pageRequestContextUtil = getPageRequestContextUtil();
+            Page currentPage = pageRequestContextUtil.getRequestPage();
+
             try {
                 if (isFireClose) {
                     // Fire closePage() for all targets
@@ -895,7 +918,7 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
             }
         }
     }
-
+    
     private boolean validate(Page page, DataTransfer dataTransfer) throws UnifyException {
         boolean successful = true;
         if (page.isValidationEnabled()) {

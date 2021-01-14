@@ -54,6 +54,11 @@ public class SimpleContentPanelImpl extends AbstractContentPanel {
     }
 
     @Override
+    public String insertContent(Page page) throws UnifyException {
+        return null;
+    }
+
+    @Override
     public List<String> evaluateRemoveContent(Page page, ClosePageMode closePageMode) throws UnifyException {
         return Collections.emptyList();
     }
