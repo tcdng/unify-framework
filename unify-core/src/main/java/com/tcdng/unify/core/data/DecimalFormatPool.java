@@ -21,8 +21,8 @@ import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
 import java.util.Locale;
 
-import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.UnifyOperationException;
 
 /**
  * A class for managing a pool of simple date format objects.
@@ -102,7 +102,7 @@ public class DecimalFormatPool extends AbstractPool<DecimalFormat> {
         try {
             return (BigDecimal) df.parse(decimalStr);
         } catch (ParseException e) {
-            throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, e);
+            throw new UnifyOperationException(e);
         } finally {
             super.returnObject(df);
         }

@@ -30,7 +30,7 @@ import com.tcdng.unify.core.util.EnumUtils;
 @StaticList("filterconditiontypelist")
 public enum FilterConditionType implements EnumConst {
 
-    EQUALS("EQ", RestrictionType.EQUALS, "condition.equals.label", "condition.equals.symbol", false, false) {
+    EQUALS("EQ", RestrictionType.EQUALS, "condition.equals.label", "condition.equals.symbol", FilterParamType.IMMEDIATE) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
             cb.addEquals(fieldName, paramA);
@@ -41,8 +41,18 @@ public enum FilterConditionType implements EnumConst {
             return new Equals(fieldName, paramA);
         }
     },
-    NOT_EQUALS("NEQ", RestrictionType.NOT_EQUALS, "condition.notequals.label", "condition.notequals.symbol", false,
-            false) {
+    EQUALS_LINGUAL("EQG", RestrictionType.EQUALS, "condition.equalslingual.label", "condition.equals.symbol", FilterParamType.IMMEDIATE) {
+        @Override
+        public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
+
+        }
+
+        @Override
+        public Restriction createSimpleCriteria(String fieldName, Object paramA, Object paramB) {
+            return null;
+        }
+    },
+    NOT_EQUALS("NEQ", RestrictionType.NOT_EQUALS, "condition.notequals.label", "condition.notequals.symbol", FilterParamType.IMMEDIATE) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
             cb.addNotEquals(fieldName, paramA);
@@ -53,7 +63,7 @@ public enum FilterConditionType implements EnumConst {
             return new NotEquals(fieldName, paramA);
         }
     },
-    LESS_THAN("LT", RestrictionType.LESS_THAN, "condition.lessthan.label", "condition.lessthan.symbol", false, false) {
+    LESS_THAN("LT", RestrictionType.LESS_THAN, "condition.lessthan.label", "condition.lessthan.symbol", FilterParamType.IMMEDIATE) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
             cb.addLessThan(fieldName, paramA);
@@ -64,8 +74,7 @@ public enum FilterConditionType implements EnumConst {
             return new Less(fieldName, paramA);
         }
     },
-    LESS_OR_EQUAL("LTE", RestrictionType.LESS_OR_EQUAL, "condition.lessorequal.label", "condition.lessorequal.symbol",
-            false, false) {
+    LESS_OR_EQUAL("LTE", RestrictionType.LESS_OR_EQUAL, "condition.lessorequal.label", "condition.lessorequal.symbol", FilterParamType.IMMEDIATE) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
             cb.addLessThanEqual(fieldName, paramA);
@@ -76,8 +85,7 @@ public enum FilterConditionType implements EnumConst {
             return new LessOrEqual(fieldName, paramA);
         }
     },
-    GREATER_THAN("GT", RestrictionType.GREATER, "condition.greaterthan.label", "condition.greaterthan.symbol", false,
-            false) {
+    GREATER_THAN("GT", RestrictionType.GREATER, "condition.greaterthan.label", "condition.greaterthan.symbol", FilterParamType.IMMEDIATE) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
             cb.addGreaterThan(fieldName, paramA);
@@ -88,8 +96,7 @@ public enum FilterConditionType implements EnumConst {
             return new Greater(fieldName, paramA);
         }
     },
-    GREATER_OR_EQUAL("GTE", RestrictionType.GREATER_OR_EQUAL, "condition.greaterorequal.label",
-            "condition.greaterorequal.symbol", false, false) {
+    GREATER_OR_EQUAL("GTE", RestrictionType.GREATER_OR_EQUAL, "condition.greaterorequal.label", "condition.greaterorequal.symbol", FilterParamType.IMMEDIATE) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
             cb.addGreaterThanEqual(fieldName, paramA);
@@ -100,7 +107,7 @@ public enum FilterConditionType implements EnumConst {
             return new GreaterOrEqual(fieldName, paramA);
         }
     },
-    BETWEEN("BT", RestrictionType.BETWEEN, "condition.between.label", "condition.between.symbol", false, false) {
+    BETWEEN("BT", RestrictionType.BETWEEN, "condition.between.label", "condition.between.symbol", FilterParamType.IMMEDIATE) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
             cb.addBetween(fieldName, paramA, paramB);
@@ -111,8 +118,7 @@ public enum FilterConditionType implements EnumConst {
             return new Between(fieldName, paramA, paramB);
         }
     },
-    NOT_BETWEEN("NBT", RestrictionType.NOT_BETWEEN, "condition.notbetween.label", "condition.notbetween.symbol", false,
-            false) {
+    NOT_BETWEEN("NBT", RestrictionType.NOT_BETWEEN, "condition.notbetween.label", "condition.notbetween.symbol", FilterParamType.IMMEDIATE) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
             cb.addNotBetween(fieldName, paramA, paramB);
@@ -123,7 +129,7 @@ public enum FilterConditionType implements EnumConst {
             return new NotBetween(fieldName, paramA, paramB);
         }
     },
-    AMONGST("IN", RestrictionType.AMONGST, "condition.amongst.label", "condition.amongst.symbol", false, false) {
+    AMONGST("IN", RestrictionType.AMONGST, "condition.amongst.label", "condition.amongst.symbol", FilterParamType.IMMEDIATE) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
             cb.addAmongst(fieldName, (Collection<?>) paramA);
@@ -134,8 +140,7 @@ public enum FilterConditionType implements EnumConst {
             return new Amongst(fieldName, (Collection<?>) paramA);
         }
     },
-    NOT_AMONGST("NIN", RestrictionType.NOT_AMONGST, "condition.notamongst.label", "condition.notamongst.symbol", false,
-            false) {
+    NOT_AMONGST("NIN", RestrictionType.NOT_AMONGST, "condition.notamongst.label", "condition.notamongst.symbol", FilterParamType.IMMEDIATE) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
             cb.addNotAmongst(fieldName, (Collection<?>) paramA);
@@ -146,7 +151,7 @@ public enum FilterConditionType implements EnumConst {
             return new NotAmongst(fieldName, (Collection<?>) paramA);
         }
     },
-    LIKE("LK", RestrictionType.LIKE, "condition.like.label", "condition.like.symbol", false, false) {
+    LIKE("LK", RestrictionType.LIKE, "condition.like.label", "condition.like.symbol", FilterParamType.IMMEDIATE) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
             cb.addLike(fieldName, (String) paramA);
@@ -157,7 +162,7 @@ public enum FilterConditionType implements EnumConst {
             return new Like(fieldName, (String) paramA);
         }
     },
-    NOT_LIKE("NLK", RestrictionType.NOT_LIKE, "condition.notlike.label", "condition.notlike.symbol", false, false) {
+    NOT_LIKE("NLK", RestrictionType.NOT_LIKE, "condition.notlike.label", "condition.notlike.symbol", FilterParamType.IMMEDIATE) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
             cb.addNotLike(fieldName, (String) paramA);
@@ -168,8 +173,7 @@ public enum FilterConditionType implements EnumConst {
             return new NotLike(fieldName, (String) paramA);
         }
     },
-    BEGINS_WITH("BW", RestrictionType.BEGINS_WITH, "condition.beginswith.label", "condition.beginswith.symbol", false,
-            false) {
+    BEGINS_WITH("BW", RestrictionType.BEGINS_WITH, "condition.beginswith.label", "condition.beginswith.symbol", FilterParamType.IMMEDIATE) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
             cb.addBeginsWith(fieldName, (String) paramA);
@@ -180,8 +184,7 @@ public enum FilterConditionType implements EnumConst {
             return new BeginsWith(fieldName, (String) paramA);
         }
     },
-    NOT_BEGIN_WITH("NBW", RestrictionType.NOT_BEGIN_WITH, "condition.notbeginswith.label",
-            "condition.notbeginswith.symbol", false, false) {
+    NOT_BEGIN_WITH("NBW", RestrictionType.NOT_BEGIN_WITH, "condition.notbeginswith.label", "condition.notbeginswith.symbol", FilterParamType.IMMEDIATE) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
             cb.addNotBeginWith(fieldName, (String) paramA);
@@ -192,7 +195,7 @@ public enum FilterConditionType implements EnumConst {
             return new NotBeginWith(fieldName, (String) paramA);
         }
     },
-    ENDS_WITH("EW", RestrictionType.ENDS_WITH, "condition.endswith.label", "condition.endswith.symbol", false, false) {
+    ENDS_WITH("EW", RestrictionType.ENDS_WITH, "condition.endswith.label", "condition.endswith.symbol", FilterParamType.IMMEDIATE) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
             cb.addEndsWith(fieldName, (String) paramA);
@@ -203,8 +206,7 @@ public enum FilterConditionType implements EnumConst {
             return new EndsWith(fieldName, (String) paramA);
         }
     },
-    NOT_END_WITH("NEW", RestrictionType.NOT_END_WITH, "condition.notendswith.label", "condition.notendswith.symbol",
-            false, false) {
+    NOT_END_WITH("NEW", RestrictionType.NOT_END_WITH, "condition.notendswith.label", "condition.notendswith.symbol", FilterParamType.IMMEDIATE) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
             cb.addNotEndWith(fieldName, (String) paramA);
@@ -215,7 +217,7 @@ public enum FilterConditionType implements EnumConst {
             return new NotEndWith(fieldName, (String) paramA);
         }
     },
-    IS_NULL("NL", RestrictionType.IS_NULL, "condition.isnull.label", "condition.isnull.symbol", false, false) {
+    IS_NULL("NL", RestrictionType.IS_NULL, "condition.isnull.label", "condition.isnull.symbol", FilterParamType.NONE) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
             cb.addIsNull(fieldName);
@@ -226,8 +228,7 @@ public enum FilterConditionType implements EnumConst {
             return new IsNull(fieldName);
         }
     },
-    IS_NOT_NULL("NNL", RestrictionType.IS_NOT_NULL, "condition.isnotnull.label", "condition.isnotnull.symbol", false,
-            false) {
+    IS_NOT_NULL("NNL", RestrictionType.IS_NOT_NULL, "condition.isnotnull.label", "condition.isnotnull.symbol", FilterParamType.NONE) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
             cb.addIsNotNull(fieldName);
@@ -239,8 +240,7 @@ public enum FilterConditionType implements EnumConst {
         }
     },
 
-    EQUALS_FIELD("EQF", RestrictionType.EQUALS, "condition.equalsfield.label", "condition.equalsfield.symbol", true,
-            false) {
+    EQUALS_FIELD("EQF", RestrictionType.EQUALS, "condition.equalsfield.label", "condition.equalsfield.symbol", FilterParamType.FIELD) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
             cb.addEqualsField(fieldName, (String) paramA);
@@ -251,8 +251,7 @@ public enum FilterConditionType implements EnumConst {
             return new EqualsField(fieldName, (String) paramA);
         }
     },
-    NOT_EQUALS_FIELD("NEQF", RestrictionType.NOT_EQUALS, "condition.notequalsfield.label",
-            "condition.notequalsfield.symbol", true, false) {
+    NOT_EQUALS_FIELD("NEQF", RestrictionType.NOT_EQUALS, "condition.notequalsfield.label", "condition.notequalsfield.symbol", FilterParamType.FIELD) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
             cb.addNotEqualsField(fieldName, (String) paramA);
@@ -263,8 +262,7 @@ public enum FilterConditionType implements EnumConst {
             return new NotEqualsField(fieldName, (String) paramA);
         }
     },
-    LESS_THAN_FIELD("LTF", RestrictionType.LESS_THAN, "condition.lessthanfield.label", "condition.lessthanfield.symbol",
-            true, false) {
+    LESS_THAN_FIELD("LTF", RestrictionType.LESS_THAN, "condition.lessthanfield.label", "condition.lessthanfield.symbol", FilterParamType.FIELD) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
             cb.addLessThanField(fieldName, (String) paramA);
@@ -275,8 +273,7 @@ public enum FilterConditionType implements EnumConst {
             return new LessField(fieldName, (String) paramA);
         }
     },
-    LESS_OR_EQUAL_FIELD("LTEF", RestrictionType.LESS_OR_EQUAL, "condition.lessorequalfield.label",
-            "condition.lessorequalfield.symbol", true, false) {
+    LESS_OR_EQUAL_FIELD("LTEF", RestrictionType.LESS_OR_EQUAL, "condition.lessorequalfield.label", "condition.lessorequalfield.symbol", FilterParamType.FIELD) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
             cb.addLessThanEqualField(fieldName, (String) paramA);
@@ -287,8 +284,7 @@ public enum FilterConditionType implements EnumConst {
             return new LessOrEqualField(fieldName, (String) paramA);
         }
     },
-    GREATER_THAN_FIELD("GTF", RestrictionType.GREATER, "condition.greaterthanfield.label",
-            "condition.greaterthanfield.symbol", true, false) {
+    GREATER_THAN_FIELD("GTF", RestrictionType.GREATER, "condition.greaterthanfield.label", "condition.greaterthanfield.symbol", FilterParamType.FIELD) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
             cb.addGreaterThanField(fieldName, (String) paramA);
@@ -299,8 +295,7 @@ public enum FilterConditionType implements EnumConst {
             return new GreaterField(fieldName, (String) paramA);
         }
     },
-    GREATER_OR_EQUAL_FIELD("GTEF", RestrictionType.GREATER_OR_EQUAL, "condition.greaterorequalfield.label",
-            "condition.greaterorequalfield.symbol", true, false) {
+    GREATER_OR_EQUAL_FIELD("GTEF", RestrictionType.GREATER_OR_EQUAL, "condition.greaterorequalfield.label", "condition.greaterorequalfield.symbol", FilterParamType.FIELD) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
             cb.addGreaterThanEqualField(fieldName, (String) paramA);
@@ -311,8 +306,7 @@ public enum FilterConditionType implements EnumConst {
             return new GreaterOrEqualField(fieldName, (String) paramA);
         }
     },
-    BETWEEN_FIELD("BTF", RestrictionType.BETWEEN, "condition.betweenfield.label", "condition.betweenfield.symbol", true,
-            false) {
+    BETWEEN_FIELD("BTF", RestrictionType.BETWEEN, "condition.betweenfield.label", "condition.betweenfield.symbol", FilterParamType.FIELD) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
             cb.addBetweenField(fieldName, (String) paramA, (String) paramB);
@@ -323,8 +317,7 @@ public enum FilterConditionType implements EnumConst {
             return new BetweenField(fieldName, (String) paramA, (String) paramB);
         }
     },
-    NOT_BETWEEN_FIELD("NBTF", RestrictionType.NOT_BETWEEN, "condition.notbetweenfield.label",
-            "condition.notbetweenfield.symbol", true, false) {
+    NOT_BETWEEN_FIELD("NBTF", RestrictionType.NOT_BETWEEN, "condition.notbetweenfield.label", "condition.notbetweenfield.symbol", FilterParamType.FIELD) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
             cb.addNotBetweenField(fieldName, (String) paramA, (String) paramB);
@@ -335,7 +328,7 @@ public enum FilterConditionType implements EnumConst {
             return new NotBetweenField(fieldName, (String) paramA, (String) paramB);
         }
     },
-    LIKE_FIELD("LKF", RestrictionType.LIKE, "condition.likefield.label", "condition.likefield.symbol", true, false) {
+    LIKE_FIELD("LKF", RestrictionType.LIKE, "condition.likefield.label", "condition.likefield.symbol", FilterParamType.FIELD) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
             cb.addLikeField(fieldName, (String) paramA);
@@ -346,8 +339,7 @@ public enum FilterConditionType implements EnumConst {
             return new LikeField(fieldName, (String) paramA);
         }
     },
-    NOT_LIKE_FIELD("NLKF", RestrictionType.NOT_LIKE, "condition.notlikefield.label", "condition.notlikefield.symbol",
-            true, false) {
+    NOT_LIKE_FIELD("NLKF", RestrictionType.NOT_LIKE, "condition.notlikefield.label", "condition.notlikefield.symbol", FilterParamType.FIELD) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
             cb.addNotLikeField(fieldName, (String) paramA);
@@ -358,8 +350,7 @@ public enum FilterConditionType implements EnumConst {
             return new NotLikeField(fieldName, (String) paramA);
         }
     },
-    BEGINS_WITH_FIELD("BWF", RestrictionType.BEGINS_WITH, "condition.beginswithfield.label",
-            "condition.beginswithfield.symbol", true, false) {
+    BEGINS_WITH_FIELD("BWF", RestrictionType.BEGINS_WITH, "condition.beginswithfield.label", "condition.beginswithfield.symbol", FilterParamType.FIELD) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
             cb.addBeginsWithField(fieldName, (String) paramA);
@@ -370,8 +361,7 @@ public enum FilterConditionType implements EnumConst {
             return new BeginsWithField(fieldName, (String) paramA);
         }
     },
-    NOT_BEGIN_WITH_FIELD("NBWF", RestrictionType.NOT_BEGIN_WITH, "condition.notbeginswithfield.label",
-            "condition.notbeginswithfield.symbol", true, false) {
+    NOT_BEGIN_WITH_FIELD("NBWF", RestrictionType.NOT_BEGIN_WITH, "condition.notbeginswithfield.label", "condition.notbeginswithfield.symbol", FilterParamType.FIELD) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
             cb.addNotBeginWithField(fieldName, (String) paramA);
@@ -382,8 +372,7 @@ public enum FilterConditionType implements EnumConst {
             return new NotBeginWithField(fieldName, (String) paramA);
         }
     },
-    ENDS_WITH_FIELD("EWF", RestrictionType.ENDS_WITH, "condition.endswithfield.label", "condition.endswithfield.symbol",
-            true, false) {
+    ENDS_WITH_FIELD("EWF", RestrictionType.ENDS_WITH, "condition.endswithfield.label", "condition.endswithfield.symbol", FilterParamType.FIELD) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
             cb.addEndsWithField(fieldName, (String) paramA);
@@ -394,8 +383,7 @@ public enum FilterConditionType implements EnumConst {
             return new EndsWithField(fieldName, (String) paramA);
         }
     },
-    NOT_END_WITH_FIELD("NEWF", RestrictionType.NOT_END_WITH, "condition.notendswithfield.label",
-            "condition.notendswithfield.symbol", true, false) {
+    NOT_END_WITH_FIELD("NEWF", RestrictionType.NOT_END_WITH, "condition.notendswithfield.label", "condition.notendswithfield.symbol", FilterParamType.FIELD) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
             cb.addNotEndWithField(fieldName, (String) paramA);
@@ -407,8 +395,162 @@ public enum FilterConditionType implements EnumConst {
         }
     },
 
-    EQUALS_COLLECTION("EQC", RestrictionType.EQUALS, "condition.equalscollection.label",
-            "condition.equalscollection.symbol", false, true) {
+    EQUALS_PARAM("EQP", RestrictionType.EQUALS, "condition.equalsparam.label", "condition.equalsparam.symbol", FilterParamType.PARAMETER) {
+        @Override
+        public void addSimpleCriteria(CriteriaBuilder cb, String paramName, Object paramA, Object paramB) {
+            cb.addEqualsParam(paramName, (String) paramA);
+        }
+
+        @Override
+        public Restriction createSimpleCriteria(String paramName, Object paramA, Object paramB) {
+            return new EqualsParam(paramName, (String) paramA);
+        }
+    },
+    NOT_EQUALS_PARAM("NEQP", RestrictionType.NOT_EQUALS, "condition.notequalsparam.label", "condition.notequalsparam.symbol", FilterParamType.PARAMETER) {
+        @Override
+        public void addSimpleCriteria(CriteriaBuilder cb, String paramName, Object paramA, Object paramB) {
+            cb.addNotEqualsParam(paramName, (String) paramA);
+        }
+
+        @Override
+        public Restriction createSimpleCriteria(String paramName, Object paramA, Object paramB) {
+            return new NotEqualsParam(paramName, (String) paramA);
+        }
+    },
+    LESS_THAN_PARAM("LTP", RestrictionType.LESS_THAN, "condition.lessthanparam.label", "condition.lessthanparam.symbol", FilterParamType.PARAMETER) {
+        @Override
+        public void addSimpleCriteria(CriteriaBuilder cb, String paramName, Object paramA, Object paramB) {
+            cb.addLessThanParam(paramName, (String) paramA);
+        }
+
+        @Override
+        public Restriction createSimpleCriteria(String paramName, Object paramA, Object paramB) {
+            return new LessParam(paramName, (String) paramA);
+        }
+    },
+    LESS_OR_EQUAL_PARAM("LTEP", RestrictionType.LESS_OR_EQUAL, "condition.lessorequalparam.label", "condition.lessorequalparam.symbol", FilterParamType.PARAMETER) {
+        @Override
+        public void addSimpleCriteria(CriteriaBuilder cb, String paramName, Object paramA, Object paramB) {
+            cb.addLessThanEqualParam(paramName, (String) paramA);
+        }
+
+        @Override
+        public Restriction createSimpleCriteria(String paramName, Object paramA, Object paramB) {
+            return new LessOrEqualParam(paramName, (String) paramA);
+        }
+    },
+    GREATER_THAN_PARAM("GTP", RestrictionType.GREATER, "condition.greaterthanparam.label", "condition.greaterthanparam.symbol", FilterParamType.PARAMETER) {
+        @Override
+        public void addSimpleCriteria(CriteriaBuilder cb, String paramName, Object paramA, Object paramB) {
+            cb.addGreaterThanParam(paramName, (String) paramA);
+        }
+
+        @Override
+        public Restriction createSimpleCriteria(String paramName, Object paramA, Object paramB) {
+            return new GreaterParam(paramName, (String) paramA);
+        }
+    },
+    GREATER_OR_EQUAL_PARAM("GTEP", RestrictionType.GREATER_OR_EQUAL, "condition.greaterorequalparam.label", "condition.greaterorequalparam.symbol", FilterParamType.PARAMETER) {
+        @Override
+        public void addSimpleCriteria(CriteriaBuilder cb, String paramName, Object paramA, Object paramB) {
+            cb.addGreaterThanEqualParam(paramName, (String) paramA);
+        }
+
+        @Override
+        public Restriction createSimpleCriteria(String paramName, Object paramA, Object paramB) {
+            return new GreaterOrEqualParam(paramName, (String) paramA);
+        }
+    },
+    BETWEEN_PARAM("BTP", RestrictionType.BETWEEN, "condition.betweenparam.label", "condition.betweenparam.symbol", FilterParamType.PARAMETER) {
+        @Override
+        public void addSimpleCriteria(CriteriaBuilder cb, String paramName, Object paramA, Object paramB) {
+            cb.addBetweenParam(paramName, (String) paramA, (String) paramB);
+        }
+
+        @Override
+        public Restriction createSimpleCriteria(String paramName, Object paramA, Object paramB) {
+            return new BetweenParam(paramName, (String) paramA, (String) paramB);
+        }
+    },
+    NOT_BETWEEN_PARAM("NBTP", RestrictionType.NOT_BETWEEN, "condition.notbetweenparam.label", "condition.notbetweenparam.symbol", FilterParamType.PARAMETER) {
+        @Override
+        public void addSimpleCriteria(CriteriaBuilder cb, String paramName, Object paramA, Object paramB) {
+            cb.addNotBetweenParam(paramName, (String) paramA, (String) paramB);
+        }
+
+        @Override
+        public Restriction createSimpleCriteria(String paramName, Object paramA, Object paramB) {
+            return new NotBetweenParam(paramName, (String) paramA, (String) paramB);
+        }
+    },
+    LIKE_PARAM("LKP", RestrictionType.LIKE, "condition.likeparam.label", "condition.likeparam.symbol", FilterParamType.PARAMETER) {
+        @Override
+        public void addSimpleCriteria(CriteriaBuilder cb, String paramName, Object paramA, Object paramB) {
+            cb.addLikeParam(paramName, (String) paramA);
+        }
+
+        @Override
+        public Restriction createSimpleCriteria(String paramName, Object paramA, Object paramB) {
+            return new LikeParam(paramName, (String) paramA);
+        }
+    },
+    NOT_LIKE_PARAM("NLKP", RestrictionType.NOT_LIKE, "condition.notlikeparam.label", "condition.notlikeparam.symbol", FilterParamType.PARAMETER) {
+        @Override
+        public void addSimpleCriteria(CriteriaBuilder cb, String paramName, Object paramA, Object paramB) {
+            cb.addNotLikeParam(paramName, (String) paramA);
+        }
+
+        @Override
+        public Restriction createSimpleCriteria(String paramName, Object paramA, Object paramB) {
+            return new NotLikeParam(paramName, (String) paramA);
+        }
+    },
+    BEGINS_WITH_PARAM("BWP", RestrictionType.BEGINS_WITH, "condition.beginswithparam.label", "condition.beginswithparam.symbol", FilterParamType.PARAMETER) {
+        @Override
+        public void addSimpleCriteria(CriteriaBuilder cb, String paramName, Object paramA, Object paramB) {
+            cb.addBeginsWithParam(paramName, (String) paramA);
+        }
+
+        @Override
+        public Restriction createSimpleCriteria(String paramName, Object paramA, Object paramB) {
+            return new BeginsWithParam(paramName, (String) paramA);
+        }
+    },
+    NOT_BEGIN_WITH_PARAM("NBWP", RestrictionType.NOT_BEGIN_WITH, "condition.notbeginswithparam.label", "condition.notbeginswithparam.symbol", FilterParamType.PARAMETER) {
+        @Override
+        public void addSimpleCriteria(CriteriaBuilder cb, String paramName, Object paramA, Object paramB) {
+            cb.addNotBeginWithParam(paramName, (String) paramA);
+        }
+
+        @Override
+        public Restriction createSimpleCriteria(String paramName, Object paramA, Object paramB) {
+            return new NotBeginWithParam(paramName, (String) paramA);
+        }
+    },
+    ENDS_WITH_PARAM("EWP", RestrictionType.ENDS_WITH, "condition.endswithparam.label", "condition.endswithparam.symbol", FilterParamType.PARAMETER) {
+        @Override
+        public void addSimpleCriteria(CriteriaBuilder cb, String paramName, Object paramA, Object paramB) {
+            cb.addEndsWithParam(paramName, (String) paramA);
+        }
+
+        @Override
+        public Restriction createSimpleCriteria(String paramName, Object paramA, Object paramB) {
+            return new EndsWithParam(paramName, (String) paramA);
+        }
+    },
+    NOT_END_WITH_PARAM("NEWP", RestrictionType.NOT_END_WITH, "condition.notendswithparam.label", "condition.notendswithparam.symbol", FilterParamType.PARAMETER) {
+        @Override
+        public void addSimpleCriteria(CriteriaBuilder cb, String paramName, Object paramA, Object paramB) {
+            cb.addNotEndWithParam(paramName, (String) paramA);
+        }
+
+        @Override
+        public Restriction createSimpleCriteria(String paramName, Object paramA, Object paramB) {
+            return new NotEndWithParam(paramName, (String) paramA);
+        }
+    },
+
+    EQUALS_COLLECTION("EQC", RestrictionType.EQUALS, "condition.equalscollection.label", "condition.equalscollection.symbol", FilterParamType.COLLECTION) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
             cb.addCollectionSizeEquals(fieldName, (Integer) paramA);
@@ -419,8 +561,7 @@ public enum FilterConditionType implements EnumConst {
             return new EqualsCollection(fieldName, (Integer) paramA);
         }
     },
-    NOT_EQUALS_COLLECTION("NEQC", RestrictionType.NOT_EQUALS, "condition.notequalscollection.label",
-            "condition.notequalscollection.symbol", false, true) {
+    NOT_EQUALS_COLLECTION("NEQC", RestrictionType.NOT_EQUALS, "condition.notequalscollection.label", "condition.notequalscollection.symbol", FilterParamType.COLLECTION) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
             cb.addCollectionSizeNotEquals(fieldName, (Integer) paramA);
@@ -431,8 +572,7 @@ public enum FilterConditionType implements EnumConst {
             return new NotEqualsCollection(fieldName, (Integer) paramA);
         }
     },
-    LESS_THAN_COLLECTION("LTC", RestrictionType.LESS_THAN, "condition.lessthancollection.label",
-            "condition.lessthancollection.symbol", false, true) {
+    LESS_THAN_COLLECTION("LTC", RestrictionType.LESS_THAN, "condition.lessthancollection.label", "condition.lessthancollection.symbol", FilterParamType.COLLECTION) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
             cb.addCollectionSizeLessThan(fieldName, (Integer) paramA);
@@ -443,8 +583,7 @@ public enum FilterConditionType implements EnumConst {
             return new LessCollection(fieldName, (Integer) paramA);
         }
     },
-    LESS_OR_EQUAL_COLLECTION("LTEC", RestrictionType.LESS_OR_EQUAL, "condition.lessorequalcollection.label",
-            "condition.lessorequalcollection.symbol", false, true) {
+    LESS_OR_EQUAL_COLLECTION("LTEC", RestrictionType.LESS_OR_EQUAL, "condition.lessorequalcollection.label", "condition.lessorequalcollection.symbol", FilterParamType.COLLECTION) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
             cb.addCollectionSizeLessThanEqual(fieldName, (Integer) paramA);
@@ -455,8 +594,7 @@ public enum FilterConditionType implements EnumConst {
             return new LessOrEqualCollection(fieldName, (Integer) paramA);
         }
     },
-    GREATER_THAN_COLLECTION("GTC", RestrictionType.GREATER, "condition.greaterthancollection.label",
-            "condition.greaterthancollection.symbol", false, true) {
+    GREATER_THAN_COLLECTION("GTC", RestrictionType.GREATER, "condition.greaterthancollection.label", "condition.greaterthancollection.symbol", FilterParamType.COLLECTION) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
             cb.addCollectionSizeGreaterThan(fieldName, (Integer) paramA);
@@ -467,8 +605,7 @@ public enum FilterConditionType implements EnumConst {
             return new GreaterCollection(fieldName, (Integer) paramA);
         }
     },
-    GREATER_OR_EQUAL_COLLECTION("GTEC", RestrictionType.GREATER_OR_EQUAL, "condition.greaterorequalcollection.label",
-            "condition.greaterorequalcollection.symbol", false, true) {
+    GREATER_OR_EQUAL_COLLECTION("GTEC", RestrictionType.GREATER_OR_EQUAL, "condition.greaterorequalcollection.label", "condition.greaterorequalcollection.symbol", FilterParamType.COLLECTION) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
             cb.addCollectionSizeGreaterThanEqual(fieldName, (Integer) paramA);
@@ -480,7 +617,7 @@ public enum FilterConditionType implements EnumConst {
         }
     },
 
-    AND("AND", RestrictionType.AND, "condition.and.label", "condition.and.symbol", false, false) {
+    AND("AND", RestrictionType.AND, "condition.and.label", "condition.and.symbol", FilterParamType.NONE) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
 
@@ -491,7 +628,7 @@ public enum FilterConditionType implements EnumConst {
             return null;
         }
     },
-    OR("OR", RestrictionType.OR, "condition.or.label", "condition.or.symbol", false, false) {
+    OR("OR", RestrictionType.OR, "condition.or.label", "condition.or.symbol", FilterParamType.NONE) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
 
@@ -511,18 +648,15 @@ public enum FilterConditionType implements EnumConst {
 
     private final String symbolKey;
 
-    private final boolean fieldVal;
+    private final FilterParamType paramType;
 
-    private final boolean collection;
-
-    private FilterConditionType(String code, RestrictionType type, String labelKey, String symbolKey, boolean fieldVal,
-            boolean collection) {
+    private FilterConditionType(String code, RestrictionType type, String labelKey, String symbolKey,
+            FilterParamType paramType) {
         this.code = code;
         this.type = type;
         this.labelKey = labelKey;
         this.symbolKey = symbolKey;
-        this.fieldVal = fieldVal;
-        this.collection = collection;
+        this.paramType = paramType;
     }
 
     @Override
@@ -547,12 +681,28 @@ public enum FilterConditionType implements EnumConst {
         return symbolKey;
     }
 
-    public boolean isFieldVal() {
-        return fieldVal;
+    public FilterParamType paramType() {
+        return paramType;
     }
 
-    public boolean isCollection() {
-        return collection;
+    public boolean isNoVal() {
+        return paramType.isNone();
+    }
+
+    public boolean isImmediateVal() {
+        return paramType.isImmediate();
+    }
+
+    public boolean isFieldVal() {
+        return paramType.isField();
+    }
+
+    public boolean isParameterVal() {
+        return paramType.isParameter();
+    }
+
+    public boolean isCollectionVal() {
+        return paramType.isCollection();
     }
 
     public boolean isAmongst() {
@@ -573,6 +723,10 @@ public enum FilterConditionType implements EnumConst {
 
     public boolean isZeroParams() {
         return type.isZeroParams();
+    }
+
+    public boolean isLingual() {
+        return EQUALS_LINGUAL.equals(this);
     }
 
     public abstract void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB);

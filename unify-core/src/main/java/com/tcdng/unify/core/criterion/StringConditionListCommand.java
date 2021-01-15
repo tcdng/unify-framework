@@ -38,22 +38,24 @@ import com.tcdng.unify.core.util.FilterUtils;
 @Component("stringconditionlist")
 public class StringConditionListCommand extends AbstractZeroParamsListCommand {
 
-    private final FactoryMap<Locale, List<Listable>> listMap  = new FactoryMap<Locale, List<Listable>>() {
+    private final FactoryMap<Locale, List<Listable>> listMap = new FactoryMap<Locale, List<Listable>>()
+        {
 
-        @Override
-        protected List<Listable> create(Locale locale, Object... arg1) throws Exception {
-            List<Listable> list = new ArrayList<Listable>();
-            for (FilterConditionType condType : FilterUtils.getSupportedFilterConditionTypes(String.class)) {
-                list.add(getListable(locale, condType));
+            @Override
+            protected List<Listable> create(Locale locale, Object... arg1) throws Exception {
+                List<Listable> list = new ArrayList<Listable>();
+                for (FilterConditionType condType : FilterUtils.getSupportedFilterConditionTypes(String.class,
+                        FilterConditionListType.IMMEDIATE_ONLY)) {
+                    list.add(getListable(locale, condType));
+                }
+                return list;
             }
-            return list;
-        }
-        
-        private Listable getListable(Locale locale, FilterConditionType filterConditionType)  throws UnifyException {
-            return new ListData(filterConditionType.code(), getMessage(locale, filterConditionType.labelKey()));
-        }
-    };
-    
+
+            private Listable getListable(Locale locale, FilterConditionType filterConditionType) throws UnifyException {
+                return new ListData(filterConditionType.code(), getMessage(locale, filterConditionType.labelKey()));
+            }
+        };
+
     @Override
     public List<? extends Listable> execute(Locale locale, ZeroParams zeroParams) throws UnifyException {
         return listMap.get(locale);

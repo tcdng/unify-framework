@@ -255,6 +255,76 @@ public class CriteriaBuilder {
         return this;
     }
 
+    public CriteriaBuilder addBetweenParam(String paramName, String lowerFieldName, String upperFieldName) {
+        addSimpleCondition(new BetweenParam(paramName, lowerFieldName, upperFieldName));
+        return this;
+    }
+
+    public CriteriaBuilder addEqualsParam(String paramNameA, String paramNameB) {
+        addSimpleCondition(new EqualsParam(paramNameA, paramNameB));
+        return this;
+    }
+
+    public CriteriaBuilder addGreaterThanParam(String paramNameA, String paramNameB) {
+        addSimpleCondition(new GreaterParam(paramNameA, paramNameB));
+        return this;
+    }
+
+    public CriteriaBuilder addGreaterThanEqualParam(String paramNameA, String paramNameB) {
+        addSimpleCondition(new GreaterOrEqualParam(paramNameA, paramNameB));
+        return this;
+    }
+
+    public CriteriaBuilder addLessThanParam(String paramNameA, String paramNameB) {
+        addSimpleCondition(new LessParam(paramNameA, paramNameB));
+        return this;
+    }
+
+    public CriteriaBuilder addLessThanEqualParam(String paramNameA, String paramNameB) {
+        addSimpleCondition(new LessOrEqualParam(paramNameA, paramNameB));
+        return this;
+    }
+
+    public CriteriaBuilder addLikeParam(String paramNameA, String paramNameB) {
+        addSimpleCondition(new LikeParam(paramNameA, paramNameB));
+        return this;
+    }
+
+    public CriteriaBuilder addBeginsWithParam(String paramNameA, String paramNameB) {
+        addSimpleCondition(new BeginsWithParam(paramNameA, paramNameB));
+        return this;
+    }
+
+    public CriteriaBuilder addEndsWithParam(String paramNameA, String paramNameB) {
+        addSimpleCondition(new EndsWithParam(paramNameA, paramNameB));
+        return this;
+    }
+
+    public CriteriaBuilder addNotBetweenParam(String paramName, String lowerFieldName, String upperFieldName) {
+        addSimpleCondition(new NotBetweenParam(paramName, lowerFieldName, upperFieldName));
+        return this;
+    }
+
+    public CriteriaBuilder addNotEqualsParam(String paramNameA, String paramNameB) {
+        addSimpleCondition(new NotEqualsParam(paramNameA, paramNameB));
+        return this;
+    }
+
+    public CriteriaBuilder addNotLikeParam(String paramNameA, String paramNameB) {
+        addSimpleCondition(new NotLikeParam(paramNameA, paramNameB));
+        return this;
+    }
+
+    public CriteriaBuilder addNotBeginWithParam(String paramNameA, String paramNameB) {
+        addSimpleCondition(new NotBeginWithParam(paramNameA, paramNameB));
+        return this;
+    }
+
+    public CriteriaBuilder addNotEndWithParam(String paramNameA, String paramNameB) {
+        addSimpleCondition(new NotEndWithParam(paramNameA, paramNameB));
+        return this;
+    }
+
     public CompoundRestriction build() {
         if (rootCondition == null) {
             throw new RuntimeException("Root condition is not established.");

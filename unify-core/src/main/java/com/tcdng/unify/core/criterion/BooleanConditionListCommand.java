@@ -43,7 +43,8 @@ public class BooleanConditionListCommand extends AbstractZeroParamsListCommand {
         @Override
         protected List<Listable> create(Locale locale, Object... arg1) throws Exception {
             List<Listable> list = new ArrayList<Listable>();
-            for (FilterConditionType condType : FilterUtils.getSupportedFilterConditionTypes(boolean.class)) {
+                for (FilterConditionType condType : FilterUtils.getSupportedFilterConditionTypes(boolean.class,
+                        FilterConditionListType.IMMEDIATE_ONLY)) {
                 list.add(getListable(locale, condType));
             }
             return list;

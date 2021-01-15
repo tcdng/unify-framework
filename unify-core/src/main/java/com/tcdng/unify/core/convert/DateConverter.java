@@ -34,6 +34,10 @@ public class DateConverter extends AbstractConverter<Date> {
             return (Date) value;
         }
 
+        if (value instanceof Long) {
+            return new Date((Long) value);
+        }
+
         if (value instanceof String) {
             String string = ((String) value).trim();
             if (!string.isEmpty()) {

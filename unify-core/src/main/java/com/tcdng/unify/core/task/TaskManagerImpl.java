@@ -89,21 +89,15 @@ public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManag
     public TaskManagerImpl() {
         uniqueTaskIDSet = Collections.synchronizedSet(new HashSet<String>());
         taskConfigByNameMap = new HashMap<String, TaskableMethodConfig>();
-        taskParamConfigByTypeMap = new FactoryMap<String, List<ParamConfig>>() {
+        taskParamConfigByTypeMap = new FactoryMap<String, List<ParamConfig>>()
+            {
 
-            @Override
-            protected List<ParamConfig> create(String taskName, Object... params) throws Exception {
-                UnifyComponentConfig ucc = getComponentConfig(Task.class, taskName);
-                List<ParamConfig> list = new ArrayList<ParamConfig>();
-                List<Parameter> pal = AnnotationUtils.getParameters(ucc.getType());
-                for (Parameter pa: pal) {
-                    list.add(createParamConfig(pa));
+                @Override
+                protected List<ParamConfig> create(String taskName, Object... params) throws Exception {
+                    return DataUtils.unmodifiableList(getComponentParamConfigs(Task.class, taskName));
                 }
-                
-                return DataUtils.unmodifiableList(list);
-            }
-            
-        };
+
+            };
     }
 
     @Override
@@ -285,21 +279,6 @@ public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManag
             maxThreads = 10;
         }
         scheduledExecutorService = Executors.newScheduledThreadPool(maxThreads);
-    }
-
-    private ParamConfig createParamConfig(Parameter pa) throws UnifyException {
-        String paramName = AnnotationUtils.getAnnotationString(pa.name());
-        if (paramName == null) {
-            paramName = AnnotationUtils.getAnnotationString(pa.value());
-        }
-
-        String description = AnnotationUtils.getAnnotationString(pa.description());
-        if (description != null) {
-            description = resolveApplicationMessage(description);
-        }
-
-        return new ParamConfig(pa.type(), paramName, description,
-                pa.editor(), pa.mandatory());
     }
     
     @Override

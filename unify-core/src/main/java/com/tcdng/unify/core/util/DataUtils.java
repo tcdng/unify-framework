@@ -53,6 +53,7 @@ import com.eclipsesource.json.JsonValue;
 import com.eclipsesource.json.PrettyPrint;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.UnifyOperationException;
 import com.tcdng.unify.core.annotation.Column;
 import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.constant.DataType;
@@ -461,7 +462,7 @@ public final class DataUtils {
         try {
             return DataUtils.getDataType(Class.forName(className));
         } catch (ClassNotFoundException e) {
-            throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR);
+            throw new UnifyOperationException(e);
         }
     }
 
@@ -498,7 +499,7 @@ public final class DataUtils {
         try {
             return DataUtils.findDataType(Class.forName(className));
         } catch (ClassNotFoundException e) {
-            throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR);
+            throw new UnifyOperationException(e);
         }
     }
 
@@ -1334,6 +1335,44 @@ public final class DataUtils {
             throw new UnifyException(UnifyCoreErrorConstants.DATAUTIL_ERROR, e);
         }
     }
+    
+    /**
+     * Reads a JSON array.
+     * 
+     * @param type
+     *               the data type
+     * @param json
+     *               the JSON array string
+     * @return array
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    public static <T> T[] readJsonArray(Class<T[]> type, String json) throws UnifyException {
+        return DataUtils.readJsonArray(type, new StringReader(json));
+    }
+
+    /**
+     * Reads a JSON array.
+     * 
+     * @param type
+     *               the data type
+     * @param reader
+     *               the JSON reader
+     * @return array
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T[] readJsonArray(Class<T[]> type, Reader reader) throws UnifyException {
+        try {
+          JsonValueConverter<?> converter = jsonConverterMap.get(type);
+          return (T[]) converter.read(Json.parse(reader));
+        } catch (UnifyException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new UnifyException(UnifyCoreErrorConstants.DATAUTIL_ERROR, e);
+        }
+    }
 
     /**
      * Reads a JSON object. Has no support for collections.
@@ -1479,11 +1518,35 @@ public final class DataUtils {
         }
     }
 
+    @Deprecated
     public static String writeJsonObject(Object object, PrintFormat printFormat) throws UnifyException {
         try {
             JsonObject jsonObject = Json.object();
             DataUtils.writeJsonObject(object, jsonObject, printFormat);
             return jsonObject.toString();
+        } catch (UnifyException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new UnifyException(UnifyCoreErrorConstants.DATAUTIL_ERROR, e);
+        }
+    }
+
+    public static String toJsonObjectString(Object object, PrintFormat printFormat) throws UnifyException {
+        try {
+            JsonObject jsonObject = Json.object();
+            DataUtils.writeJsonObject(object, jsonObject, printFormat);
+            return jsonObject.toString();
+        } catch (UnifyException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new UnifyException(UnifyCoreErrorConstants.DATAUTIL_ERROR, e);
+        }
+    }
+
+    public static <T> String toJsonArrayString(T[] array) throws UnifyException {
+        try {
+            JsonValueConverter<?> converter = jsonConverterMap.get(array.getClass());
+            return converter.write(array).toString();
         } catch (UnifyException e) {
             throw e;
         } catch (Exception e) {

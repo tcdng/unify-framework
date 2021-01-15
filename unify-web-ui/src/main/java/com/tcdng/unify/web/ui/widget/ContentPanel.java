@@ -58,6 +58,17 @@ public interface ContentPanel extends Panel {
     void addContent(Page page) throws UnifyException;
 
     /**
+     * Insert page to content at current page.
+     * 
+     * @param page
+     *            the page to insert
+     * @return the path ID of shifted page otherwise null
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String insertContent(Page page) throws UnifyException;
+
+    /**
      * Evaluates page close event.
      * 
      * @param page

@@ -36,6 +36,7 @@ import java.util.Set;
 
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.UnifyOperationException;
 import com.tcdng.unify.core.data.FactoryMap;
 import com.tcdng.unify.core.data.WrappedData;
 
@@ -994,7 +995,7 @@ public final class ReflectUtils {
 
             return true;
         } catch (Exception e) {
-            throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, e);
+            throw new UnifyOperationException(e);
         }
     }
 
@@ -1032,7 +1033,7 @@ public final class ReflectUtils {
             }
             return true;
         } catch (Exception e) {
-            throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, e);
+            throw new UnifyOperationException(e);
         }
     }
 
@@ -1215,7 +1216,7 @@ public final class ReflectUtils {
 
             return Class.forName(className);
         } catch (Exception e) {
-            throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, ReflectUtils.class);
+            throw new UnifyOperationException(e, ReflectUtils.class);
         }
     }
 
@@ -1364,7 +1365,7 @@ public final class ReflectUtils {
         } catch (UnifyException e) {
             throw e;
         } catch (Exception e) {
-            throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, ReflectUtils.class);
+            throw new UnifyOperationException(e, ReflectUtils.class);
         }
     }
 

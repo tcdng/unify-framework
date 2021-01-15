@@ -21,8 +21,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.UnifyOperationException;
 
 /**
  * Link grid information.
@@ -56,7 +56,7 @@ public class LinkGridInfo {
 
         public Builder addCategory(String name, String caption, String path) throws UnifyException {
             if (categories.containsKey(name)) {
-                throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR,
+                throw new UnifyOperationException(
                         "Category with name [" + name + "] exists.");
             }
 
@@ -67,7 +67,7 @@ public class LinkGridInfo {
         public Builder addLink(String categoryName, String code, String caption) throws UnifyException {
             CategoryInfo categoryInfo = categories.get(categoryName);
             if (categoryInfo == null) {
-                throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR,
+                throw new UnifyOperationException(
                         "Category with name [" + categoryName + "] is unknown.");
             }
 

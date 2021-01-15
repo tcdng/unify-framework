@@ -34,7 +34,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
 
     @Override
     public List<String> getFontResources() throws UnifyException {
-        // Currently uses font aweaome 5.14.0
+        // Currently uses font awesome 5.14.1
         return Arrays.asList("webfonts/fa-solid-900.woff", "webfonts/fa-regular-400.woff");
     }
 
@@ -66,6 +66,9 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("caret-left", "f0d9");
         registerSymbol("caret-right", "f0da");
         registerSymbol("caret-up", "f0d8");
+        registerSymbol("chart-area", "f1fe");
+        registerSymbol("chart-bar", "f080");
+        registerSymbol("chart-pie", "f200");
         registerSymbol("chevron-down", "f078");
         registerSymbol("chevron-left", "f053");
         registerSymbol("chevron-right", "f054");
@@ -91,7 +94,9 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("exchange-alt", "f362");
         registerSymbol("exclamation-circle", "f06a");
         registerSymbol("file", "f15b");
+        registerSymbol("file-contract", "f56c");
         registerSymbol("file-excel", "1c3");
+        registerSymbol("file-invoice", "f570");
         registerSymbol("file-pdf", "f1c1");
         registerSymbol("file-word", "f1c2");
         registerSymbol("filter", "f0b0");
@@ -108,13 +113,16 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("house-user", "e065");
         registerSymbol("id-card", "f2c2");
         registerSymbol("image", "f03e");
+        registerSymbol("key", "f084");
         registerSymbol("laptop-house", "e066");
         registerSymbol("list", "f03a");
         registerSymbol("magic", "f0d0");
         registerSymbol("mail", "f0e0");
         registerSymbol("mail-bulk", "f674");
         registerSymbol("minus", "f068");
+        registerSymbol("minus-square", "f146");
         registerSymbol("money-bill", "f0d6");
+        registerSymbol("network-wired", "f6ff");
         registerSymbol("newspaper", "f1ea");
         registerSymbol("outdent", "f03b");
         registerSymbol("paper-clip", "f0c6");
@@ -145,6 +153,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("user-check", "f4fc");
         registerSymbol("user-edit", "f4ff");
         registerSymbol("user-tag", "f507");
+        registerSymbol("vector-square", "f5cb");
         registerSymbol("window-maximize", "f2d0");
         registerSymbol("window-restore", "f2d2");
     }

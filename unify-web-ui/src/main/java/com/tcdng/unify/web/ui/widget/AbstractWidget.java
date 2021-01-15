@@ -26,7 +26,9 @@ import com.tcdng.unify.core.data.ValueStore;
 import com.tcdng.unify.core.upl.AbstractUplComponent;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.TargetPath;
+import com.tcdng.unify.web.UnifyWebSessionAttributeConstants;
 import com.tcdng.unify.web.constant.ResultMappingConstants;
+import com.tcdng.unify.web.constant.UnifyWebRequestAttributeConstants;
 import com.tcdng.unify.web.ui.PageRequestContextUtil;
 import com.tcdng.unify.web.ui.UIControllerUtil;
 import com.tcdng.unify.web.ui.WebUIApplicationComponents;
@@ -122,10 +124,9 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 		String captionBinding = getUplAttribute(String.class, "captionBinding");
 		if (captionBinding != null && !captionBinding.isEmpty()) {
 		    caption = getStringValue(captionBinding);
-		} else {
-		    caption = getUplAttribute(String.class, "caption");
 		}
 		
+		caption = caption != null ? caption : getUplAttribute(String.class, "caption");
         String captionParamBinding = getUplAttribute(String.class, "captionParamBinding");
         if (captionParamBinding != null) {
             return MessageFormat.format(caption, getValue(captionParamBinding));
@@ -542,7 +543,16 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
     protected void commandHidePopup() throws UnifyException {
         setCommandResultMapping(ResultMappingConstants.HIDE_POPUP);
     }
+    
+    protected void commandPost(String path) throws UnifyException {
+        setRequestAttribute(UnifyWebRequestAttributeConstants.COMMAND_POSTRESPONSE_PATH, path);
+        setCommandResultMapping(ResultMappingConstants.POST_RESPONSE);
+    }
 
+    protected void refreshApplicationMenu() throws UnifyException {
+        setSessionAttribute(UnifyWebSessionAttributeConstants.REFRESH_MENU, Boolean.TRUE);
+    }
+    
 	protected void setCommandResultMapping(String resultMappingName) throws UnifyException {
 		getRequestContextUtil().setCommandResultMapping(resultMappingName);
 	}

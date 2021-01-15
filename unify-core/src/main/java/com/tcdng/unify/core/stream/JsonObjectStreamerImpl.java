@@ -79,6 +79,6 @@ public class JsonObjectStreamerImpl extends AbstractObjectStreamer implements Js
 
     @Override
     public String marshal(Object object, PrintFormat printFormat) throws UnifyException {
-        return DataUtils.writeJsonObject(object, printFormat);
+        return DataUtils.toJsonObjectString(object, printFormat);
     }
 }

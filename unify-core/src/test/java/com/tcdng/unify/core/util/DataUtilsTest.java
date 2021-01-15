@@ -25,7 +25,9 @@ import static org.junit.Assert.assertTrue;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -113,6 +115,24 @@ public class DataUtilsTest {
         assertEquals(2, result.length);
         assertEquals(Long.valueOf(240L), result[0]);
         assertEquals(Long.valueOf(72L), result[1]);
+    }
+    
+    @Test
+    public void testConvertDateArrayToLongArray() throws Exception {
+        Date date1 = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MONTH, 2);
+        Date date2 = cal.getTime();
+        Long[] result = DataUtils.convert(Long[].class, new Date[] { date1, date2 }, null);
+        assertNotNull(result);
+        assertEquals(2, result.length);
+        assertFalse(result[0].equals(result[1]));
+
+        Date[] dates = DataUtils.convert(Date[].class, result, null);
+        assertNotNull(dates);
+        assertEquals(2, dates.length);
+        assertEquals(date1, dates[0]);
+        assertEquals(date2, dates[1]);
     }
 
     @SuppressWarnings("unchecked")
@@ -307,6 +327,25 @@ public class DataUtilsTest {
     }
 
     @Test
+    public void testReadJsonArray() throws Exception {
+        String json1 = "[\"10\", \"20\", \"30\"]";
+        String[] arr1 = DataUtils.readJsonArray(String[].class, json1);
+        assertNotNull(arr1);
+        assertEquals(3, arr1.length);
+        assertEquals("10", arr1[0]);
+        assertEquals("20", arr1[1]);
+        assertEquals("30", arr1[2]);
+        
+        String json2 = "[10, 20, 30]";
+        Integer[] arr2 = DataUtils.readJsonArray(Integer[].class, json2);
+        assertNotNull(arr2);
+        assertEquals(3, arr2.length);
+        assertEquals(Integer.valueOf(10), arr2[0]);
+        assertEquals(Integer.valueOf(20), arr2[1]);
+        assertEquals(Integer.valueOf(30), arr2[2]);        
+    }
+    
+    @Test
     public void testReadComplexJsonObject() throws Exception {
         String json =
                 "{\"id\":1025,\"book\":{\"author\":\"Bramer & Bramer\", \"price\":2.54, \"priceHistory\":[2.35, 2.03], \"copies\":20, \"censored\":true}}";
@@ -391,17 +430,17 @@ public class DataUtilsTest {
     }
 
     @Test
-    public void testWriteEmptyJsonObject() throws Exception {
-        String json = DataUtils.writeJsonObject(new Inventory(), PrintFormat.NONE);
+    public void testToEmptyJsonObjectString() throws Exception {
+        String json = DataUtils.toJsonObjectString(new Inventory(), PrintFormat.NONE);
         assertNotNull(json);
         assertEquals("{\"entries\":null}", json);
     }
 
     @Test
-    public void testWriteJsonObject() throws Exception {
+    public void testToJsonObjectString() throws Exception {
         Book book = new Book("Saladin", BigDecimal.valueOf(10.0), 20, false);
         book.setPriceHistory(new Double[] { 8.32, 9.14 });
-        String json = DataUtils.writeJsonObject(book, PrintFormat.NONE);
+        String json = DataUtils.toJsonObjectString(book, PrintFormat.NONE);
         assertNotNull(json);
 
         Book jsonBook = DataUtils.readJsonObject(Book.class, json);
@@ -419,14 +458,14 @@ public class DataUtilsTest {
     }
 
     @Test
-    public void testWriteComplexJsonObject() throws Exception {
+    public void testToComplexJsonObjectString() throws Exception {
         InventoryEntry entry = new InventoryEntry();
         entry.setId(1978);
         Book book = new Book("Paladin", BigDecimal.valueOf(11.04), 62, false);
         book.setPriceHistory(new Double[] { 12.45, 11.0, 11.22 });
         entry.setBook(book);
 
-        String json = DataUtils.writeJsonObject(entry, PrintFormat.NONE);
+        String json = DataUtils.toJsonObjectString(entry, PrintFormat.NONE);
         assertNotNull(json);
 
         InventoryEntry jsonEntry = DataUtils.readJsonObject(InventoryEntry.class, json);
@@ -449,7 +488,7 @@ public class DataUtilsTest {
     }
 
     @Test
-    public void testWriteMoreComplexJsonObject() throws Exception {
+    public void testToMoreComplexJsonObjectString() throws Exception {
         InventoryEntry entry1 = new InventoryEntry();
         entry1.setId(1978);
         Book book1 = new Book("Paladin", BigDecimal.valueOf(11.04), 62, false);
@@ -464,7 +503,7 @@ public class DataUtilsTest {
 
         Inventory inventory = new Inventory();
         inventory.setEntries(new InventoryEntry[] { entry1, entry2 });
-        String json = DataUtils.writeJsonObject(inventory, PrintFormat.NONE);
+        String json = DataUtils.toJsonObjectString(inventory, PrintFormat.NONE);
         assertNotNull(json);
 
         Inventory jsonInventory = DataUtils.readJsonObject(Inventory.class, json);
@@ -509,14 +548,14 @@ public class DataUtilsTest {
     }
 
     @Test
-    public void testWriteEmbeddedJsonObject() throws Exception {
+    public void testToEmbeddedJsonObjectString() throws Exception {
         PictureAsset pictureAsset = new PictureAsset();
         pictureAsset.setTitle("Bright Cat");
         ((Picture) pictureAsset.getResource()).setFormat("bmp");
         ((Picture) pictureAsset.getResource()).setWidth(200);
         ((Picture) pictureAsset.getResource()).setHeight(50);
 
-        String json = DataUtils.writeJsonObject(pictureAsset, PrintFormat.NONE);
+        String json = DataUtils.toJsonObjectString(pictureAsset, PrintFormat.NONE);
         assertNotNull(json);
 
         PictureAsset jsonPictureAsset = DataUtils.readJsonObject(PictureAsset.class, json);
@@ -526,6 +565,17 @@ public class DataUtilsTest {
         assertEquals(((Picture) pictureAsset.getResource()).getFormat(), jsonPicture.getFormat());
         assertEquals(((Picture) pictureAsset.getResource()).getWidth(), jsonPicture.getWidth());
         assertEquals(((Picture) pictureAsset.getResource()).getHeight(), jsonPicture.getHeight());
+    }
+
+    @Test
+    public void testToJsonArrayString() throws Exception {
+        String json1 = DataUtils.toJsonArrayString(new String[] {"10", "20", "30"});
+        assertNotNull(json1);
+        assertEquals("[\"10\",\"20\",\"30\"]", json1);
+        
+        String json2 = DataUtils.toJsonArrayString(new Integer[] {10, 20, 30});
+        assertNotNull(json2);
+        assertEquals("[10,20,30]", json2);        
     }
 
     @Test

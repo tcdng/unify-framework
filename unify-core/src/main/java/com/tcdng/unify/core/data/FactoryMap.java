@@ -20,8 +20,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.UnifyOperationException;
 import com.tcdng.unify.core.util.DataUtils;
 
 /**
@@ -128,7 +128,7 @@ public abstract class FactoryMap<T, U> {
         } catch (UnifyException e) {
             throw e;
         } catch (Exception e) {
-            throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, getClass().getSimpleName());
+            throw new UnifyOperationException(e, getClass().getSimpleName());
         }
     }
 
@@ -153,7 +153,13 @@ public abstract class FactoryMap<T, U> {
             throw new IllegalArgumentException("Parameter key can not be null!");
         }
 
-        return map.remove(key);
+        U val = map.remove(key);
+        try {
+            onRemove(val);
+        } catch (Exception e) {
+            throw new UnifyOperationException(e, getClass().getSimpleName());
+        }
+        return val;
     }
 
     /**
@@ -251,5 +257,17 @@ public abstract class FactoryMap<T, U> {
      */
     protected boolean keep(U value) throws Exception {
         return true;
+    }
+
+    /**
+     * Perform method on removed item.
+     * 
+     * @param value
+     *            the value removed
+     * @throws Exception
+     *             if an error occurs
+     */
+    protected void onRemove(U value) throws Exception {
+
     }
 }

@@ -77,6 +77,7 @@ ux.delayedpanelposting = [];
 ux.debouncetime = [];
 
 ux.resizefunctions = {};
+ux.pageresets = {};
 ux.confirmstore = {};
 ux.extensionregistry = {};
 
@@ -231,6 +232,7 @@ ux.respHandler = {
 	},
 
 	loadContentHdl : function(resp) {
+		ux.callPageResets();
 		if (resp.closeRemoteTab) {
 			if (ux.cntTabCloseId) {
 				ux.fireEvent(_id(ux.cntTabCloseId), "click");
@@ -4037,6 +4039,7 @@ ux.buildObjParams = function(trgObj, evp, param) {
 			pb.append("req_rsi", ux.docSessionId);
 		} else {
 			pb.append("req_doc", ux.docPath);
+			pb.append("req_win", window.name);
 		}
 		if (evp.uValidateAct) {
 			pb.append("req_va", evp.uValidateAct);
@@ -4055,6 +4058,7 @@ ux.buildObjParams = function(trgObj, evp, param) {
 			pb += ("&req_rsi=" + _enc(ux.docSessionId));
 		} else {
 			pb += ("&req_doc=" + _enc(ux.docPath));
+			pb += ("&req_win=" + _enc(window.name));
 		}
 		if (evp.uValidateAct) {
 			pb += ("&req_va=" + _enc(evp.uValidateAct));
@@ -4855,14 +4859,14 @@ ux.init = function() {
 }
 
 ux.documentKeydownHandler = function(uEv) {
-	if (uEv.uKeyCode == 8) {
-		var preventKeypress = true;
+	if (uEv.uKeyCode == 8) { // Stop general backspace except for particular elements
+		var stopBackspace = true;
 		var elem = uEv.uTrg;
 		if (elem.type == "text" || elem.type == "password"
 				|| elem.type == "textarea") {
-			preventKeypress = elem.readOnly || elem.disabled;
+			stopBackspace = elem.readOnly || elem.disabled;
 		}
-		if (preventKeypress) {
+		if (stopBackspace) {
 			uEv.uStop();
 		}
 	}
@@ -5330,6 +5334,21 @@ ux.documentHidePopup = function(uEv) {
 }
 
 ux.addHdl(document, "click", ux.documentHidePopup, {});
+
+/** Page resets */
+ux.registerPageReset = function(id, resetFunc) {
+	ux.pageresets[id] = resetFunc;
+}
+
+ux.callPageResets = function() {
+	for (var id in ux.pageresets) {
+		try {
+			ux.pageresets[id]();
+		} catch(e) {
+			console.log(e.message);
+		}
+	}
+}
 
 /** On window resize function */
 ux.registerResizeFunc = function(id, resizeFunc, resizePrm) {

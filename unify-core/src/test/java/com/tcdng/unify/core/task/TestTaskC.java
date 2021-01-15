@@ -15,8 +15,8 @@
  */
 package com.tcdng.unify.core.task;
 
-import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.UnifyOperationException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Parameter;
 import com.tcdng.unify.core.annotation.Parameters;
@@ -34,6 +34,6 @@ public class TestTaskC extends AbstractTask {
 
     @Override
     public void execute(TaskMonitor taskMonitor, TaskInput input, TaskOutput output) throws UnifyException {
-        throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR);
+        throw new UnifyOperationException();
     }
 }

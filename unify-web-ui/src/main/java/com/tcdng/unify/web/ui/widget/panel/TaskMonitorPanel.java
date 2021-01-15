@@ -20,8 +20,6 @@ import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.UplBinding;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.annotation.Action;
-import com.tcdng.unify.web.constant.ResultMappingConstants;
-import com.tcdng.unify.web.constant.UnifyWebRequestAttributeConstants;
 import com.tcdng.unify.web.ui.widget.AbstractPanel;
 import com.tcdng.unify.web.ui.widget.data.TaskMonitorInfo;
 
@@ -52,7 +50,7 @@ public class TaskMonitorPanel extends AbstractPanel {
     public void cancelTask() throws UnifyException {
         TaskMonitorInfo taskMonitorInfo = getValue(TaskMonitorInfo.class);
         taskMonitorInfo.cancelTask();
-        setCommandResultMapping(ResultMappingConstants.HIDE_POPUP);
+        commandHidePopup();
     }
 
     @Action
@@ -67,10 +65,9 @@ public class TaskMonitorPanel extends AbstractPanel {
         }
 
         if (StringUtils.isNotBlank(taskDonePath)) {
-            setRequestAttribute(UnifyWebRequestAttributeConstants.COMMAND_POSTRESPONSE_PATH, taskDonePath);
-            setCommandResultMapping(ResultMappingConstants.POST_RESPONSE);
+            commandPost(taskDonePath);
         } else {
-            setCommandResultMapping(ResultMappingConstants.HIDE_POPUP);
+            commandHidePopup();
         }
     }
 

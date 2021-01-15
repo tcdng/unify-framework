@@ -29,7 +29,7 @@ public class BetweenField extends AbstractDoubleParamRestriction {
 
     @Override
     public FilterConditionType getConditionType() {
-        return FilterConditionType.BETWEEN;
+        return FilterConditionType.BETWEEN_FIELD;
     }
 
 }

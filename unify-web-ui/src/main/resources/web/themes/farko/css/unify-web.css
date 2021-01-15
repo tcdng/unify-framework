@@ -93,7 +93,7 @@ z-index:400;}
 /********************* CONTAINERS ***************************/
 /** Document */
 .ui-document {height:100%;}
-.ui-document .dBody {
+.ui-document .dBody { /** Disable Select*/
 	height:100%;
     -webkit-touch-callout: none;
     -webkit-user-select: none;

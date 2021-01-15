@@ -46,4 +46,8 @@ public abstract class AbstractSequencedEntity extends AbstractEntity implements 
     public boolean isReserved() {
         return id != null && id.compareTo(Long.valueOf(0L)) < 0;
     }
+
+    public boolean isIdBlank() {
+        return id == null;
+    }
 }

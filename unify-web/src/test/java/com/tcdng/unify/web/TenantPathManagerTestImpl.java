@@ -17,8 +17,8 @@
 package com.tcdng.unify.web;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
-import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.UnifyOperationException;
 import com.tcdng.unify.core.annotation.Component;
 
 /**
@@ -33,7 +33,7 @@ public class TenantPathManagerTestImpl extends AbstractUnifyComponent implements
     @Override
     public void verifyTenantPath(String tenantPath) throws UnifyException {
         if (!"/abcbank".equals(tenantPath)) {
-            throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR);
+            throw new UnifyOperationException();
         }
     }
 

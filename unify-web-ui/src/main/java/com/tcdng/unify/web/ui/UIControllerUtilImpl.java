@@ -148,6 +148,7 @@ public class UIControllerUtilImpl extends AbstractUnifyComponent implements UICo
 
         skipOnPopulateSet.add(PageRequestParameterConstants.DOCUMENT);
         skipOnPopulateSet.add(PageRequestParameterConstants.TARGET_VALUE);
+        skipOnPopulateSet.add(PageRequestParameterConstants.WINDOW_NAME);
         skipOnPopulateSet.add(PageRequestParameterConstants.VALIDATION_ACTION);
         skipOnPopulateSet.add(PageRequestParameterConstants.CONFIRM_MSG);
         skipOnPopulateSet.add(PageRequestParameterConstants.CONFIRM_MSGICON);

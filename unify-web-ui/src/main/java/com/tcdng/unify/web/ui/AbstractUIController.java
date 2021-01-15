@@ -24,8 +24,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.UnifyOperationException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.constant.LocaleType;
 import com.tcdng.unify.core.constant.MimeType;
@@ -62,6 +62,7 @@ public abstract class AbstractUIController extends AbstractController implements
     private static final Set<String> skipOnPopulateSet = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(
             PageRequestParameterConstants.DOCUMENT,
             PageRequestParameterConstants.TARGET_VALUE,
+            PageRequestParameterConstants.WINDOW_NAME,
             PageRequestParameterConstants.VALIDATION_ACTION,
             PageRequestParameterConstants.CONFIRM_MSG,
             PageRequestParameterConstants.CONFIRM_MSGICON,
@@ -312,7 +313,7 @@ public abstract class AbstractUIController extends AbstractController implements
             if (e instanceof UnifyException) {
                 throw (UnifyException) e;
             } else {
-                throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, e);
+                throw new UnifyOperationException(e);
             }
         }
 
