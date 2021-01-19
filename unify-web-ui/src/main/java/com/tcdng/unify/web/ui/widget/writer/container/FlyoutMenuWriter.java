@@ -73,8 +73,8 @@ public class FlyoutMenuWriter extends AbstractPanelWriter {
                                         .write("popupContentId", popupContentId)
                                         .write("vertical", flyoutMenu.isVertical())
                                     .endObject().toString();
-                writeOpenPopupJS(writer, "onmouseover", id, null, popupId, 500, "repositionmenupopup", json,
-                        null, null);
+                writeOpenPopupJS(writer, "onmouseover", id, widget.getBinding(), null, popupId, 500,
+                        "repositionmenupopup", json, null, null);
                 menuWinIdList.add(menuWinId);
             }
         }

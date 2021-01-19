@@ -54,6 +54,8 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
 
     private static final String COMMAND = "COMMAND";
 
+    public static final String COMMAND_TAG = "COMMAND_TAG";
+
     private static final String COMMAND_RESULT_MAPPING = "COMMAND_RESULT_MAPPING";
 
     private static final String COMMAND_POSTRESPONSE_PATH = "COMMAND_POSTRESPONSE_PATH";
@@ -124,6 +126,16 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
     @Override
     public RequestCommand getRequestCommand() throws UnifyException {
         return (RequestCommand) getRequestAttribute(COMMAND);
+    }
+
+    @Override
+    public void setRequestCommandTag(String cmdTag) throws UnifyException {
+        setRequestAttribute(COMMAND_TAG, cmdTag);
+    }
+
+    @Override
+    public String getRequestCommandTag() throws UnifyException {
+        return (String) getRequestAttribute(COMMAND_TAG);
     }
 
     @Override

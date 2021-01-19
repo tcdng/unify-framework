@@ -138,10 +138,10 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 	}
 
 	@Override
-	public ResponseWriter writeBehavior(Behavior behavior, String id) throws UnifyException {
-		((BehaviorWriter) getWriter(behavior)).writeBehavior(this, behavior, id);
-		return this;
-	}
+    public ResponseWriter writeBehavior(Behavior behavior, String id, String cmdTag) throws UnifyException {
+        ((BehaviorWriter) getWriter(behavior)).writeBehavior(this, behavior, id, cmdTag);
+        return this;
+    }
 
 	@Override
 	public ResponseWriter write(Object object) {

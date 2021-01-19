@@ -121,6 +121,24 @@ public interface PageRequestContextUtil extends UnifyComponent {
     RequestCommand getRequestCommand() throws UnifyException;
 
     /**
+     * Sets current request context's request command tag.
+     * 
+     * @param cmdTag
+     *            the command tag to set
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void setRequestCommandTag(String cmdTag) throws UnifyException;
+
+    /**
+     * Returns request command tag in current request context.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getRequestCommandTag() throws UnifyException;
+
+    /**
      * Sets current request context's command result mapping.
      * 
      * @param resultMapping

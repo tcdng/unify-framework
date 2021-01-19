@@ -37,8 +37,10 @@ public interface BehaviorWriter extends UplComponentWriter {
      *            the behavior to write
      * @param id
      *            the component id
+     * @param cmdTag
+     *            optional command tag
      * @throws UnifyException
      *             if an error occurs
      */
-    void writeBehavior(ResponseWriter writer, Behavior behavior, String id) throws UnifyException;
+    void writeBehavior(ResponseWriter writer, Behavior behavior, String id, String cmdTag) throws UnifyException;
 }

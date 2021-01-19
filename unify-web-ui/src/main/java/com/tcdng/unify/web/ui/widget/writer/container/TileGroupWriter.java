@@ -48,7 +48,8 @@ public class TileGroupWriter extends AbstractContainerWriter {
             String actionPath = ((Tile) valueStore.getValueObject()).getActionPath();
             if (actionPath != null) {
                 imageCtrl.setValueStore(valueStore);
-                writePathEventHandlerJS(writer, imageCtrl.getId(), "onclick", "post", actionPath);
+                writePathEventHandlerJS(writer, imageCtrl.getId(), imageCtrl.getBinding(), "onclick", "post",
+                        actionPath);
             }
         }
     }
