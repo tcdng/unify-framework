@@ -16,13 +16,15 @@
 
 package com.tcdng.unify.web.data;
 
+import com.tcdng.unify.core.list.AbstractListParam;
+
 /**
  * Filter list parameters.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class FilterParams {
+public class FilterParams extends AbstractListParam {
 
     private Long filterId;
 
@@ -32,6 +34,11 @@ public class FilterParams {
 
     public Long getFilterId() {
         return filterId;
+    }
+
+    @Override
+    public boolean isPresent() {
+        return filterId != null;
     }
 
 }

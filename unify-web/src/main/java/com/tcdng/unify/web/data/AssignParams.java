@@ -19,6 +19,7 @@ package com.tcdng.unify.web.data;
 import java.util.List;
 
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.list.AbstractListParam;
 import com.tcdng.unify.core.util.DataUtils;
 
 /**
@@ -27,7 +28,7 @@ import com.tcdng.unify.core.util.DataUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class AssignParams {
+public class AssignParams extends AbstractListParam {
 
     private List<String> assignedIdList;
 
@@ -72,5 +73,10 @@ public class AssignParams {
 
     public boolean isEmpty() {
         return assignedIdList == null && filterId1 == null && filterId2 == null;
+    }
+
+    @Override
+    public boolean isPresent() {
+        return true;
     }
 }
