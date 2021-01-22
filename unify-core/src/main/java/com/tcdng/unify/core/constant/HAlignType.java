@@ -26,7 +26,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * @since 1.0
  */
 @Tooling(description = "Horizontal Alignment")
-@StaticList("horizontalalignlist")
+@StaticList(name = "horizontalalignlist", description="$m{staticlist.horizontalalignlist}")
 public enum HAlignType implements EnumConst {
     LEFT("L"), CENTER("C"), RIGHT("R"), JUSTIFIED("J");
 

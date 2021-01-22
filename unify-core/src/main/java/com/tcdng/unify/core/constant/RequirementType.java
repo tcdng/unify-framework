@@ -26,7 +26,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * @since 1.0
  */
 @Tooling(description = "Requirement Type")
-@StaticList("requirementtypelist")
+@StaticList(name = "requirementtypelist", description="$m{staticlist.requirementtypelist}")
 public enum RequirementType implements EnumConst {
 
     MANDATORY("M"), OPTIONAL("O"), NONE("N");

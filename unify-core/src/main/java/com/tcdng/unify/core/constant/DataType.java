@@ -32,7 +32,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@StaticList("datatypelist")
+@StaticList(name = "datatypelist", description="$m{staticlist.datatypelist}")
 public enum DataType implements EnumConst {
 
     CHAR("CH", Character.class, ColumnType.CHARACTER),

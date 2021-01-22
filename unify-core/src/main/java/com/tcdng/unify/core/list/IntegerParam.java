@@ -22,7 +22,7 @@ package com.tcdng.unify.core.list;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class IntegerParam {
+public class IntegerParam extends AbstractListParam {
 
     private Integer value;
 
@@ -34,6 +34,7 @@ public class IntegerParam {
         return value;
     }
     
+    @Override
     public boolean isPresent() {
         return value != null;
     }

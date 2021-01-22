@@ -22,7 +22,7 @@ package com.tcdng.unify.core.list;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class DoubleParam {
+public class DoubleParam extends AbstractListParam {
 
     private Double value;
 
@@ -34,6 +34,7 @@ public class DoubleParam {
         return value;
     }
     
+    @Override
     public boolean isPresent() {
         return value != null;
     }

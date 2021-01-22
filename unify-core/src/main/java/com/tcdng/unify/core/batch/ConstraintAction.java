@@ -25,7 +25,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@StaticList("constraintactionlist")
+@StaticList(name = "constraintactionlist", description="$m{staticlist.constraintactionlist}")
 public enum ConstraintAction implements EnumConst {
 
     UPDATE("U"), SKIP("S"), FAIL("F");

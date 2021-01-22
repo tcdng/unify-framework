@@ -25,7 +25,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * @author Lateef Ojulari
  * @version 1.0
  */
-@StaticList("tristatelist")
+@StaticList(name = "tristatelist", description="$m{staticlist.tristatelist}")
 public enum TriState implements EnumConst {
 
     TRUE("T"), FALSE("F"), CONFORMING("C");

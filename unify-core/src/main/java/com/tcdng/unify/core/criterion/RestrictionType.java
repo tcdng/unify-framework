@@ -25,7 +25,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@StaticList("restrictiontypelist")
+@StaticList(name = "restrictiontypelist", description="$m{staticlist.restrictiontypelist}")
 public enum RestrictionType implements EnumConst {
     EQUALS("EQ", true),
     NOT_EQUALS("NEQ", true),

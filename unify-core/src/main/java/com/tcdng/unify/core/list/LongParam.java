@@ -22,7 +22,7 @@ package com.tcdng.unify.core.list;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class LongParam {
+public class LongParam extends AbstractListParam {
 
     private Long value;
 
@@ -34,6 +34,7 @@ public class LongParam {
         return value;
     }
     
+    @Override
     public boolean isPresent() {
         return value != null;
     }

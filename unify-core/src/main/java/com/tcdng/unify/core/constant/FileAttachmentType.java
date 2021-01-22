@@ -24,7 +24,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@StaticList("fileattachmenttypelist")
+@StaticList(name = "fileattachmenttypelist", description="$m{staticlist.fileattachmenttypelist}")
 public enum FileAttachmentType implements EnumConst {
 
     AUDIO("AUD", "audio/*,audio/mp3", MimeType.AUDIO),

@@ -17,32 +17,11 @@
 package com.tcdng.unify.core.list;
 
 /**
- * Search provider parameters.
+ * Convenient abstract base class for list command parameter.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class SearchProviderParams extends AbstractListParam {
+public abstract class AbstractListParam implements ListParam {
 
-    private String key;
-
-    private String filter;
-
-    public SearchProviderParams(String key, String filter) {
-        this.key = key;
-        this.filter = filter;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public String getFilter() {
-        return filter;
-    }
-
-    @Override
-    public boolean isPresent() {
-        return key != null;
-    }
 }

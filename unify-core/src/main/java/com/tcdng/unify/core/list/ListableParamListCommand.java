@@ -38,7 +38,7 @@ public class ListableParamListCommand extends AbstractListCommand<ListableListPa
 
     @Override
     public List<? extends Listable> execute(Locale locale, ListableListParam params) throws UnifyException {
-        if (params.isListableList()) {
+        if (params.isPresent()) {
             return params.getListableList();
         }
 

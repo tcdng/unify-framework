@@ -16,6 +16,8 @@
 package com.tcdng.unify.core.list;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 import java.util.Locale;
@@ -56,6 +58,42 @@ public class ListManagerImplTest extends AbstractUnifyComponentTest {
         assertEquals("Red", list.get(0).getListDescription());
         assertEquals("Blue", list.get(1).getListDescription());
         assertEquals("Purple", list.get(2).getListDescription());
+    }
+
+    @Test
+    public void testGetStaticListList() throws Exception {
+        ListManager listManager = (ListManager) getComponent(ApplicationComponents.APPLICATION_LISTMANAGER);
+
+        List<? extends Listable> list = listManager.getList(Locale.ENGLISH, "staticlistlist");
+        assertNotNull(list);
+        assertTrue(!list.isEmpty());
+    }
+
+    @Test
+    public void testGetStaticListSublistWithFilter() throws Exception {
+        ListManager listManager = (ListManager) getComponent(ApplicationComponents.APPLICATION_LISTMANAGER);
+
+        List<? extends Listable> list = listManager.getSubList(Locale.ENGLISH, "staticlistlist", "F", -1);
+        assertNotNull(list);
+        assertTrue(!list.isEmpty());
+    }
+
+    @Test
+    public void testGetStaticListSublistWithLimit() throws Exception {
+        ListManager listManager = (ListManager) getComponent(ApplicationComponents.APPLICATION_LISTMANAGER);
+
+        List<? extends Listable> list = listManager.getSubList(Locale.ENGLISH, "staticlistlist", null, 4);
+        assertNotNull(list);
+        assertEquals(4, list.size());
+    }
+
+    @Test
+    public void testGetStaticListSublistWithFilterAndLimit() throws Exception {
+        ListManager listManager = (ListManager) getComponent(ApplicationComponents.APPLICATION_LISTMANAGER);
+
+        List<? extends Listable> list = listManager.getSubList(Locale.ENGLISH, "staticlistlist", "F", 3);
+        assertNotNull(list);
+        assertEquals(3, list.size());
     }
 
     @Override

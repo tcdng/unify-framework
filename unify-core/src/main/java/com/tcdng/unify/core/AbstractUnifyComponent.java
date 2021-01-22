@@ -1212,33 +1212,66 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 		return unifyComponentContext.getListManager().getListKeyDescription(getLocale(localeType), itemKey, listName);
 	}
 
-	/**
-	 * Gets a list based on supplied parameters.
-	 * 
-	 * @param localeType the locale type
-	 * @param listName   the list name
-	 * @param params     the list parameters
-	 * @return a list object containing listable items
-	 * @throws UnifyException if an error occurs
-	 */
-	protected List<? extends Listable> getList(LocaleType localeType, String listName, Object... params)
-			throws UnifyException {
-		return unifyComponentContext.getListManager().getList(getLocale(localeType), listName, params);
-	}
+    /**
+     * Gets a list based on supplied parameters.
+     * 
+     * @param localeType the locale type
+     * @param listName   the list name
+     * @param params     the list parameters
+     * @return a list object containing listable items
+     * @throws UnifyException if an error occurs
+     */
+    protected List<? extends Listable> getList(LocaleType localeType, String listName, Object... params)
+            throws UnifyException {
+        return unifyComponentContext.getListManager().getList(getLocale(localeType), listName, params);
+    }
 
-	/**
-	 * Gets a list map using application locale.
-	 * 
-	 * @param localeType the locale type
-	 * @param listName   the list name
-	 * @param params     the list parameters
-	 * @return a list map
-	 * @throws UnifyException if an error occurs
-	 */
-	protected Map<String, String> getListMap(LocaleType localeType, String listName, Object... params)
-			throws UnifyException {
-		return unifyComponentContext.getListManager().getListMap(getLocale(localeType), listName, params);
-	}
+    /**
+     * Gets a list based on supplied parameters.
+     * 
+     * @param localeType the locale type
+     * @param listName   the list name
+     * @param filter optional filter
+     * @param limit result limit
+     * @param params     the list parameters
+     * @return a list object containing listable items
+     * @throws UnifyException if an error occurs
+     */
+    protected List<? extends Listable> getList(LocaleType localeType, String listName, String filter, int limit,
+            Object... params) throws UnifyException {
+        return unifyComponentContext.getListManager().getSubList(getLocale(localeType), listName, filter, limit, params);
+    }
+
+    /**
+     * Gets a list map using application locale.
+     * 
+     * @param localeType the locale type
+     * @param listName   the list name
+     * @param params     the list parameters
+     * @return a list map
+     * @throws UnifyException if an error occurs
+     */
+    protected Map<String, String> getListMap(LocaleType localeType, String listName, Object... params)
+            throws UnifyException {
+        return unifyComponentContext.getListManager().getListMap(getLocale(localeType), listName, params);
+    }
+
+    /**
+     * Gets a list map using application locale.
+     * 
+     * @param localeType the locale type
+     * @param listName   the list name
+     * @param filter optional filter
+     * @param limit result limit
+     * @param params     the list parameters
+     * @return a list map
+     * @throws UnifyException if an error occurs
+     */
+    protected Map<String, String> getListMap(LocaleType localeType, String listName, String filter, int limit,
+            Object... params) throws UnifyException {
+        return unifyComponentContext.getListManager().getSubListMap(getLocale(localeType), listName, filter, limit,
+                params);
+    }
 
 	/**
 	 * Gets the application locale

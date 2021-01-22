@@ -40,5 +40,8 @@ public @interface StaticList {
     String datasource() default ApplicationComponents.APPLICATION_DATASOURCE;
 
     /** The static reference list */
-    String value();
+    String name();
+
+    /** The static list description */
+    String description();
 }

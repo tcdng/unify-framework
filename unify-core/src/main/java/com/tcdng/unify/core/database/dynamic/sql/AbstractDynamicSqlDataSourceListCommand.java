@@ -18,6 +18,7 @@ package com.tcdng.unify.core.database.dynamic.sql;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.list.AbstractListCommand;
+import com.tcdng.unify.core.list.AbstractListParam;
 
 /**
  * Abstract base class for dynamic SQL data source list command.
@@ -39,7 +40,7 @@ public abstract class AbstractDynamicSqlDataSourceListCommand
         return dsManager;
     }
 
-    public class DynamicSqlParams {
+    public class DynamicSqlParams extends AbstractListParam {
         private String configName;
         private String schemaName;
         private String tableName;
@@ -61,6 +62,11 @@ public abstract class AbstractDynamicSqlDataSourceListCommand
 
         public String getTableName() {
             return tableName;
+        }
+
+        @Override
+        public boolean isPresent() {
+            return true;
         }
 
     }

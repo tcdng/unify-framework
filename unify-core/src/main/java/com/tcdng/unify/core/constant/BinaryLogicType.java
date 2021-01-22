@@ -25,7 +25,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * @author Lateef Ojulari
  * @version 1.0
  */
-@StaticList("binarylogictypelist")
+@StaticList(name = "binarylogictypelist", description="$m{staticlist.binarylogictypelist}")
 public enum BinaryLogicType implements EnumConst {
 
     AND("AND"), OR("OR");

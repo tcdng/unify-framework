@@ -25,7 +25,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@StaticList("fielddelimiterlist")
+@StaticList(name = "fielddelimiterlist", description="$m{staticlist.fielddelimiterlist}")
 public enum FieldDelimiterType implements EnumConst {
 
     COMMA("C", ','), TAB("T", '\t');

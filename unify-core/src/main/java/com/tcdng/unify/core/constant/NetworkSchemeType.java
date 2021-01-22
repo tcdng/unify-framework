@@ -25,7 +25,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@StaticList("networkschemelist")
+@StaticList(name = "networkschemelist", description="$m{staticlist.networkschemelist}")
 public enum NetworkSchemeType implements EnumConst {
 
     HTTP("http"), HTTPS("https");

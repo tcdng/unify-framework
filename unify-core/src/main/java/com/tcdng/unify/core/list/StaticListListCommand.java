@@ -16,33 +16,33 @@
 
 package com.tcdng.unify.core.list;
 
+import java.util.List;
+import java.util.Locale;
+
+import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.annotation.Configurable;
+import com.tcdng.unify.core.data.Listable;
+
 /**
- * Search provider parameters.
+ * Static list list command.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class SearchProviderParams extends AbstractListParam {
+@Component("staticlistlist")
+public class StaticListListCommand extends AbstractListCommand<ZeroParams> {
 
-    private String key;
+    @Configurable
+    private ListManager listManager;
 
-    private String filter;
-
-    public SearchProviderParams(String key, String filter) {
-        this.key = key;
-        this.filter = filter;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public String getFilter() {
-        return filter;
+    public StaticListListCommand() {
+        super(ZeroParams.class);
     }
 
     @Override
-    public boolean isPresent() {
-        return key != null;
+    public List<? extends Listable> execute(Locale locale, ZeroParams params) throws UnifyException {
+        return listManager.getAllStaticLists(locale);
     }
+
 }

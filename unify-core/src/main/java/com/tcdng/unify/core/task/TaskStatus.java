@@ -25,7 +25,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@StaticList("taskstatuslist")
+@StaticList(name = "taskstatuslist", description="$m{staticlist.taskstatuslist}")
 public enum TaskStatus implements EnumConst {
 
     INITIALIZED("I"), RUNNING("R"), SUCCESSFUL("S"), CANCELED("X"), FAILED("F"), ABORTED("A"), CRITICAL("T");

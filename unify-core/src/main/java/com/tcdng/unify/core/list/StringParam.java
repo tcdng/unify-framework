@@ -22,7 +22,7 @@ package com.tcdng.unify.core.list;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class StringParam {
+public class StringParam extends AbstractListParam {
 
     private String value;
 
@@ -34,6 +34,7 @@ public class StringParam {
         return value;
     }
     
+    @Override
     public boolean isPresent() {
         return value != null;
     }

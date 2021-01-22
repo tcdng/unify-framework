@@ -24,7 +24,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@StaticList("frequencyunitlist")
+@StaticList(name = "frequencyunitlist", description="$m{staticlist.frequencyunitlist}")
 public enum FrequencyUnit implements EnumConst {
 
     SECOND("S"), MINUTE("M"), HOUR("H");

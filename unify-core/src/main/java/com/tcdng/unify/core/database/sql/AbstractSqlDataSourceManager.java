@@ -375,7 +375,7 @@ public abstract class AbstractSqlDataSourceManager extends AbstractUnifyComponen
                 StaticList sla = entityClass.getAnnotation(StaticList.class);
                 if (sla != null) {
                     logDebug("Updating static data for reference {0}...", sqlEntityInfo.getEnumConstClass());
-                    Map<String, String> map = getListMap(LocaleType.APPLICATION, sla.value());
+                    Map<String, String> map = getListMap(LocaleType.APPLICATION, sla.name());
                     for (Map.Entry<String, String> entry : map.entrySet()) {
                         final String code = entry.getKey();
                         final String description = entry.getValue();

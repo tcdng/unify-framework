@@ -20,11 +20,12 @@ import com.tcdng.unify.core.constant.EnumConst;
 import com.tcdng.unify.core.util.EnumUtils;
 
 /**
- *
+ * Test color type.
+ * 
  * @author Lateef Ojulari
  * @version 1.0
  */
-@StaticList("colorlist")
+@StaticList(name = "colorlist", description="Color List")
 public enum TestColorType implements EnumConst {
 
     RED("red"), BLUE("blue"), PURPLE("purple");
