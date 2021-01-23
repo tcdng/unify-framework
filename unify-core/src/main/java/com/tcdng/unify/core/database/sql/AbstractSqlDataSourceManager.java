@@ -36,6 +36,7 @@ import com.tcdng.unify.core.constant.EnumConst;
 import com.tcdng.unify.core.constant.ForceConstraints;
 import com.tcdng.unify.core.constant.LocaleType;
 import com.tcdng.unify.core.constant.PrintFormat;
+import com.tcdng.unify.core.data.Listable;
 import com.tcdng.unify.core.database.DataSourceManagerOptions;
 import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.util.DataUtils;
@@ -375,10 +376,10 @@ public abstract class AbstractSqlDataSourceManager extends AbstractUnifyComponen
                 StaticList sla = entityClass.getAnnotation(StaticList.class);
                 if (sla != null) {
                     logDebug("Updating static data for reference {0}...", sqlEntityInfo.getEnumConstClass());
-                    Map<String, String> map = getListMap(LocaleType.APPLICATION, sla.name());
-                    for (Map.Entry<String, String> entry : map.entrySet()) {
+                    Map<String, Listable> map = getListMap(LocaleType.APPLICATION, sla.name());
+                    for (Map.Entry<String, Listable> entry : map.entrySet()) {
                         final String code = entry.getKey();
-                        final String description = entry.getValue();
+                        final String description = entry.getValue().getListDescription();
 
                         final SqlFieldInfo codeFieldInfo = sqlEntityInfo.getFieldInfo("code");
                         final SqlFieldInfo descFieldInfo = sqlEntityInfo.getFieldInfo("description");

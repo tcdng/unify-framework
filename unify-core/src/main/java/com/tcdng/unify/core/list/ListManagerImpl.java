@@ -110,36 +110,36 @@ public class ListManagerImpl extends AbstractUnifyComponent implements ListManag
     }
 
     @Override
-    public Map<String, String> getListMap(Locale locale, String listName, Object... params) throws UnifyException {
+    public Map<String, Listable> getListMap(Locale locale, String listName, Object... params) throws UnifyException {
         StaticListInfo staticListInfo = staticListMaps.get(locale).get(listName);
         if (staticListInfo != null) {
             return staticListInfo.getMap();
         }
 
-        Map<String, String> listMap = new HashMap<String, String>();
+        Map<String, Listable> listMap = new HashMap<String, Listable>();
         for (Listable listable : executeListCommand(listName, locale, params)) {
-            listMap.put(listable.getListKey(), listable.getListDescription());
+            listMap.put(listable.getListKey(), listable);
         }
         return listMap;
     }
 
     @Override
-    public Map<String, String> getSubListMap(Locale locale, String listName, String filter, int limit, Object... params)
+    public Map<String, Listable> getSubListMap(Locale locale, String listName, String filter, int limit, Object... params)
             throws UnifyException {
         StaticListInfo staticListInfo = staticListMaps.get(locale).get(listName);
         if (staticListInfo != null) {
             return staticListInfo.getMap(filter, limit);
         }
 
-        Map<String, String> listMap = new HashMap<String, String>();
+        Map<String, Listable> listMap = new HashMap<String, Listable>();
         for (Listable listable : executeListCommand(listName, locale, filter, limit, params)) {
-            listMap.put(listable.getListKey(), listable.getListDescription());
+            listMap.put(listable.getListKey(), listable);
         }
         return listMap;
     }
 
     @Override
-    public String getListKeyDescription(Locale locale, String listKey, String listName, Object... params)
+    public Listable getListItem(Locale locale, String listName, String listKey, Object... params)
             throws UnifyException {
         return getListMap(locale, listName, params).get(listKey);
     }
@@ -176,7 +176,7 @@ public class ListManagerImpl extends AbstractUnifyComponent implements ListManag
 
         private List<? extends Listable> list;
 
-        private Map<String, String> map;
+        private Map<String, Listable> map;
 
         public StaticListInfo(Locale locale, String name, String description) {
             this.locale = locale;
@@ -210,13 +210,13 @@ public class ListManagerImpl extends AbstractUnifyComponent implements ListManag
             return ListUtils.getSubList(getList(), filter, limit);
         }
 
-        public Map<String, String> getMap() throws UnifyException {
+        public Map<String, Listable> getMap() throws UnifyException {
             if (map == null) {
                 synchronized (this) {
                     if (map == null) {
-                        map = new LinkedHashMap<String, String>();
+                        map = new LinkedHashMap<String, Listable>();
                         for (Listable listable : getList()) {
-                            map.put(listable.getListKey(), listable.getListDescription());
+                            map.put(listable.getListKey(), listable);
                         }
 
                         map = Collections.unmodifiableMap(map);
@@ -227,15 +227,15 @@ public class ListManagerImpl extends AbstractUnifyComponent implements ListManag
             return map;
         }
 
-        public Map<String, String> getMap(String filter, int limit) throws UnifyException {
+        public Map<String, Listable> getMap(String filter, int limit) throws UnifyException {
             List<? extends Listable> list = getList(filter, limit);
             if (list == this.list) {
                 return getMap();
             }
 
-            Map<String, String> map = new LinkedHashMap<String, String>();
+            Map<String, Listable> map = new LinkedHashMap<String, Listable>();
             for (Listable listable : list) {
-                map.put(listable.getListKey(), listable.getListDescription());
+                map.put(listable.getListKey(), listable);
             }
             return map;
         }

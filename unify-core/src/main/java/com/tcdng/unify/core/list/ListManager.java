@@ -87,7 +87,7 @@ public interface ListManager extends UnifyComponent {
      * @throws UnifyException
      *             if list is unknown. If an error occurs
      */
-    Map<String, String> getListMap(Locale locale, String listName, Object... params) throws UnifyException;
+    Map<String, Listable> getListMap(Locale locale, String listName, Object... params) throws UnifyException;
 
     /**
      * Returns a map of key to description values from specified list command for a
@@ -106,23 +106,23 @@ public interface ListManager extends UnifyComponent {
      * @throws UnifyException
      *                        if list is unknown. If an error occurs
      */
-    Map<String, String> getSubListMap(Locale locale, String listName, String filter, int limit, Object... params)
+    Map<String, Listable> getSubListMap(Locale locale, String listName, String filter, int limit, Object... params)
             throws UnifyException;
 
     /**
-     * Returns the description of a list item of a list.
+     * Returns the list item of a list.
      * 
      * @param locale
      *            the request locale
-     * @param listKey
-     *            the list key of the item to fetch description for
      * @param listName
      *            the name of the list command
+     * @param listKey
+     *            the list key of the item to fetch
      * @param params
      *            optional request parameters
      * @throws UnifyException
      *             if list is unknown. If an error occurs
      */
-    String getListKeyDescription(Locale locale, String listKey, String listName, Object... params)
+    Listable getListItem(Locale locale, String listName, String listKey, Object... params)
             throws UnifyException;
 }

@@ -65,7 +65,7 @@ public abstract class AbstractListPopupTextField extends AbstractPopupTextField 
     }
 
     @Override
-    public Map<String, String> getListMap() throws UnifyException {
+    public Map<String, Listable> getListMap() throws UnifyException {
         return getListControlUtils().getListMap(this);
     }
 

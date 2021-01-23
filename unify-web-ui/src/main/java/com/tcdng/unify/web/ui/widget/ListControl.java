@@ -57,7 +57,7 @@ public interface ListControl extends Control {
      * @throws UnifyException
      *                        if an error occurs
      */
-    Map<String, String> getListMap() throws UnifyException;
+    Map<String, Listable> getListMap() throws UnifyException;
 
     /**
      * Returns this control's list.

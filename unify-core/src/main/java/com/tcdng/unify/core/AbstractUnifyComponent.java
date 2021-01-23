@@ -1207,9 +1207,9 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 * @throws UnifyException if list with supplied name is unknown by the list
 	 *                        manager
 	 */
-	protected String getListItemDescription(LocaleType localeType, String listName, String itemKey)
+	protected Listable getListItem(LocaleType localeType, String listName, String itemKey)
 			throws UnifyException {
-		return unifyComponentContext.getListManager().getListKeyDescription(getLocale(localeType), itemKey, listName);
+		return unifyComponentContext.getListManager().getListItem(getLocale(localeType), listName, itemKey);
 	}
 
     /**
@@ -1251,7 +1251,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
      * @return a list map
      * @throws UnifyException if an error occurs
      */
-    protected Map<String, String> getListMap(LocaleType localeType, String listName, Object... params)
+    protected Map<String, Listable> getListMap(LocaleType localeType, String listName, Object... params)
             throws UnifyException {
         return unifyComponentContext.getListManager().getListMap(getLocale(localeType), listName, params);
     }
@@ -1267,7 +1267,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
      * @return a list map
      * @throws UnifyException if an error occurs
      */
-    protected Map<String, String> getListMap(LocaleType localeType, String listName, String filter, int limit,
+    protected Map<String, Listable> getListMap(LocaleType localeType, String listName, String filter, int limit,
             Object... params) throws UnifyException {
         return unifyComponentContext.getListManager().getSubListMap(getLocale(localeType), listName, filter, limit,
                 params);
