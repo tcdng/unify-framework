@@ -13,30 +13,18 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.convert;
 
-import com.tcdng.unify.core.format.Formatter;
-import com.tcdng.unify.core.util.ReflectUtils;
+package com.tcdng.unify.core.util;
+
+import com.tcdng.unify.core.UnifyException;
 
 /**
- * A value to class converter. Does a {@link ReflectUtils#classForName(String)} for string
- * values.
+ * Class for name provider.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class ClassConverter extends AbstractConverter<Class<?>> {
+public interface ClassForNameProvider {
 
-    @Override
-    protected Class<?> doConvert(Object value, Formatter<?> formatter) throws Exception {
-        if (value instanceof Class) {
-            return (Class<?>) value;
-        }
-
-        if (value instanceof String) {
-            return ReflectUtils.classForName((String) value);
-        }
-
-        return null;
-    }
+    Class<?> classForName(String className) throws UnifyException;
 }

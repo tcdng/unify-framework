@@ -1274,14 +1274,14 @@ public class UnifyContainer {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void resolveConfig(List<String> names, String value) throws Exception {
-		if (TokenUtils.isComponentListToken(value)) {
-			names.addAll(getComponentNames(
-					(Class<? extends UnifyComponent>) Class.forName(TokenUtils.extractTokenValue(value).trim())));
-		} else {
-			names.add(TokenUtils.getStringTokenValue(value));
-		}
-	}
+    private void resolveConfig(List<String> names, String value) throws Exception {
+        if (TokenUtils.isComponentListToken(value)) {
+            names.addAll(getComponentNames((Class<? extends UnifyComponent>) ReflectUtils
+                    .classForName(TokenUtils.extractTokenValue(value).trim())));
+        } else {
+            names.add(TokenUtils.getStringTokenValue(value));
+        }
+    }
 
 	@SuppressWarnings("unchecked")
 	private void initializeInterfaces() throws UnifyException {

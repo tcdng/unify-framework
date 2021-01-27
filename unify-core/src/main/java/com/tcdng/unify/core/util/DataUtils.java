@@ -53,7 +53,6 @@ import com.eclipsesource.json.JsonValue;
 import com.eclipsesource.json.PrettyPrint;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.UnifyOperationException;
 import com.tcdng.unify.core.annotation.Column;
 import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.constant.DataType;
@@ -459,11 +458,7 @@ public final class DataUtils {
      *                        if data type is unsupported
      */
     public static DataType getDataType(String className) throws UnifyException {
-        try {
-            return DataUtils.getDataType(Class.forName(className));
-        } catch (ClassNotFoundException e) {
-            throw new UnifyOperationException(e);
-        }
+        return DataUtils.getDataType(ReflectUtils.classForName(className));
     }
 
     /**
@@ -496,11 +491,7 @@ public final class DataUtils {
      *                        if an error occurs
      */
     public static DataType findDataType(String className) throws UnifyException {
-        try {
-            return DataUtils.findDataType(Class.forName(className));
-        } catch (ClassNotFoundException e) {
-            throw new UnifyOperationException(e);
-        }
+        return DataUtils.findDataType(ReflectUtils.classForName(className));
     }
 
     /**
@@ -553,7 +544,7 @@ public final class DataUtils {
      *                        if data type is unsupported
      */
     public static ColumnType getColumnType(String className) throws UnifyException {
-        Class<?> clazz = ReflectUtils.getClassForName(className);
+        Class<?> clazz = ReflectUtils.classForName(className);
         return DataUtils.getColumnType(clazz);
     }
 
@@ -612,7 +603,7 @@ public final class DataUtils {
      */
     public static boolean isNumberType(String className) {
         try {
-            return Number.class.isAssignableFrom(DataUtils.getWrapperClass(ReflectUtils.getClassForName(className)));
+            return Number.class.isAssignableFrom(DataUtils.getWrapperClass(ReflectUtils.classForName(className)));
         } catch (UnifyException e) {
         }
 

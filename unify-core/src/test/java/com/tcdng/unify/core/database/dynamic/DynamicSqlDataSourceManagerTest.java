@@ -21,22 +21,15 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import org.junit.Test;
 
 import com.tcdng.unify.core.AbstractUnifyComponentTest;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.annotation.EntityType;
-import com.tcdng.unify.core.constant.DataType;
-import com.tcdng.unify.core.database.dynamic.DynamicEntityInfo;
 import com.tcdng.unify.core.database.dynamic.sql.DynamicSqlDataSourceConfig;
 import com.tcdng.unify.core.database.dynamic.sql.DynamicSqlDataSourceManager;
 import com.tcdng.unify.core.system.entities.SingleVersionBlob;
-import com.tcdng.unify.core.util.ReflectUtils;
 
 /**
  * Dynamic SQL data source manager test.
@@ -115,80 +108,6 @@ public class DynamicSqlDataSourceManagerTest extends AbstractUnifyComponentTest 
     @Test(expected = UnifyException.class)
     public void testTerminateUnknownConfiguration() throws Exception {
         dsm.terminateConfiguration(TEST_CONFIG);
-    }
-
-    @Test(expected = UnifyException.class)
-    public void testCreateOrUpdateDataSourceDynamicEntitySchemaObjectsUnknownConfig() throws Exception {
-        dsm.createOrUpdateDataSourceDynamicEntitySchemaObjects("someConfig", new ArrayList<DynamicEntityInfo>());
-    }
-
-    @Test
-    public void testCreateOrUpdateDataSourceDynamicEntitySchemaObjectsEmptyList() throws Exception {
-        dsm.configure(getConfig());
-        dsm.createOrUpdateDataSourceDynamicEntitySchemaObjects(TEST_CONFIG, new ArrayList<DynamicEntityInfo>());
-    }
-
-    @Test
-    public void testCreateOrUpdateDataSourceDynamicEntitySchemaObjectsSingleSimpleEntity() throws Exception {
-        dsm.configure(getConfig());
-        DynamicEntityInfo dynamicEntityInfo =
-                DynamicEntityInfo.newBuilder(EntityType.TABLE).tableName("EQUIPMENT").className("com.tcdng.test.Equipment").version(1L)
-                        .addField(DataType.STRING, "EQUIPMENT_NM", "name", 32, 0, 0, false)
-                        .addField(DataType.STRING, "SERIAL_NO", "serialNo", 0, 0, 0, false)
-                        .addField(DataType.DECIMAL, "PRICE", "price", 0, 18, 2, false)
-                        .addField(DataType.DATE, "EXPIRY_DT", "expiryDt", 0, 0, 0, false)
-                        .addField(DataType.TIMESTAMP_UTC, "CREATE_DT", "createDt", 0, 0, 0, false)
-                        .build();
-        dsm.createOrUpdateDataSourceDynamicEntitySchemaObjects(TEST_CONFIG, Arrays.asList(dynamicEntityInfo));
-        Class<?> entityClass1 = dsm.getDataSourceDynamicEntityClass(TEST_CONFIG, "com.tcdng.test.Equipment");
-        assertNotNull(entityClass1);
-        Class<?> entityClass2 = dsm.getDataSourceDynamicEntityClass(TEST_CONFIG, "com.tcdng.test.Equipment");
-        assertNotNull(entityClass2);
-        assertTrue(entityClass1 == entityClass2);
-    }
-
-    @Test
-    public void testCreateOrUpdateDataSourceDynamicEntitySchemaObjectsSingleSimpleEntityNewSchema() throws Exception {
-        dsm.configure(getConfig());
-        DynamicEntityInfo dynamicEntityInfo =
-                DynamicEntityInfo.newBuilder(EntityType.TABLE).tableName("EQUIPMENT").className("com.tcdng.test.Equipment").version(1L)
-                        .addField(DataType.STRING, "EQUIPMENT_NM", "name", 32, 0, 0, false)
-                        .addField(DataType.STRING, "SERIAL_NO", "serialNo", 0, 0, 0, false)
-                        .addField(DataType.DECIMAL, "PRICE", "price", 0, 18, 2, false)
-                        .addField(DataType.DATE, "EXPIRY_DT", "expiryDt", 0, 0, 0, false)
-                        .addField(DataType.TIMESTAMP_UTC, "CREATE_DT", "createDt", 0, 0, 0, false)
-                        .build();
-        dsm.createOrUpdateDataSourceDynamicEntitySchemaObjects(TEST_CONFIG, Arrays.asList(dynamicEntityInfo));
-        Class<?> entityClass1 = dsm.getDataSourceDynamicEntityClass(TEST_CONFIG, "com.tcdng.test.Equipment");
-        assertNotNull(entityClass1);
-        List<String> beanFieldList = ReflectUtils.getBeanCompliantFieldNames(entityClass1);
-        assertTrue(beanFieldList.contains("name"));
-        assertTrue(beanFieldList.contains("serialNo"));
-        assertTrue(beanFieldList.contains("price"));
-        assertTrue(beanFieldList.contains("expiryDt"));
-        assertTrue(beanFieldList.contains("createDt"));
-        assertFalse(beanFieldList.contains("active"));
-        
-        dynamicEntityInfo =
-                DynamicEntityInfo.newBuilder(EntityType.TABLE).tableName("EQUIPMENT").className("com.tcdng.test.Equipment").version(2L)
-                        .addField(DataType.STRING, "EQUIPMENT_NM", "name", 64, 0, 0, false)
-                        .addField(DataType.STRING, "SERIAL_NO", "serialNo", 0, 0, 0, false)
-                        .addField(DataType.DECIMAL, "PRICE", "price", 0, 18, 2, false)
-                        .addField(DataType.DATE, "EXPIRY_DT", "expiryDt", 0, 0, 0, true)
-                        .addField(DataType.TIMESTAMP_UTC, "CREATE_DT", "createDt", 0, 0, 0, false)
-                        .addField(DataType.BOOLEAN, "ACTIVE_FG", "active", 0, 0, 0, false)
-                        .build();
-        dsm.createOrUpdateDataSourceDynamicEntitySchemaObjects(TEST_CONFIG, Arrays.asList(dynamicEntityInfo));        
-        Class<?> entityClass2 = dsm.getDataSourceDynamicEntityClass(TEST_CONFIG, "com.tcdng.test.Equipment");
-        assertNotNull(entityClass2);
-        assertFalse(entityClass1 == entityClass2);
-        beanFieldList = ReflectUtils.getBeanCompliantFieldNames(entityClass2);
-        assertTrue(beanFieldList.contains("name"));
-        assertTrue(beanFieldList.contains("serialNo"));
-        assertTrue(beanFieldList.contains("price"));
-        assertTrue(beanFieldList.contains("expiryDt"));
-        assertTrue(beanFieldList.contains("createDt"));
-        assertTrue(beanFieldList.contains("active"));
     }
 
     @Override

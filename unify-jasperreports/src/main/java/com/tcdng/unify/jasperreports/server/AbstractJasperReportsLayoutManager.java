@@ -368,7 +368,7 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
             JRDesignVariable jRDesignVariable = new JRDesignVariable();
             String name = jRDesignGroup.getName() + "_Sum_" + reportColumn.getName();
             jRDesignVariable.setName(name);
-            jRDesignVariable.setValueClass(ReflectUtils.getClassForName(reportColumn.getTypeName()));
+            jRDesignVariable.setValueClass(ReflectUtils.classForName(reportColumn.getTypeName()));
             jRDesignVariable.setResetType(ResetTypeEnum.GROUP);
             jRDesignVariable.setResetGroup(jRDesignGroup);
             jRDesignVariable.setCalculation(CalculationEnum.SUM);
@@ -396,7 +396,7 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
             JRDesignVariable jRDesignVariable = new JRDesignVariable();
             String name = "Sum_" + reportColumn.getName();
             jRDesignVariable.setName(name);
-            jRDesignVariable.setValueClass(ReflectUtils.getClassForName(reportColumn.getTypeName()));
+            jRDesignVariable.setValueClass(ReflectUtils.classForName(reportColumn.getTypeName()));
             jRDesignVariable.setResetType(ResetTypeEnum.REPORT);
             jRDesignVariable.setCalculation(CalculationEnum.SUM);
             if (reportColumn.getTypeName().equals("java.math.BigDecimal")) {
@@ -433,7 +433,7 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
             }
         }
 
-        field.setValueClass(ReflectUtils.getClassForName(type));
+        field.setValueClass(ReflectUtils.classForName(type));
         return field;
     }
 
