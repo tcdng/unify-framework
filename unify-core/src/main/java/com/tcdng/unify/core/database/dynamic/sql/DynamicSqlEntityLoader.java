@@ -14,31 +14,33 @@
  * the License.
  */
 
-package com.tcdng.unify.core.database.dynamic;
+package com.tcdng.unify.core.database.dynamic.sql;
 
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.database.Database;
 import com.tcdng.unify.core.database.Entity;
+import com.tcdng.unify.core.database.dynamic.DynamicEntityInfo;
+import com.tcdng.unify.core.database.sql.SqlDatabase;
 
 /**
- * Dynamic entity loader.
+ * Dynamic SQL entity loader.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface DynamicEntityLoader extends UnifyComponent {
+public interface DynamicSqlEntityLoader extends UnifyComponent {
 
     /**
-     * Loads dynamic entity information into database.
+     * Loads dynamic entity information into SQL database.
      * 
      * @param db
-     *                          the database to load to
+     *                          the SQl database to load to
      * @param dynamicEntityInfo
      *                          the dynamic entity information
      * @return the entity class representing the entity type
      * @throws UnifyException
      *                        if an error occurs
      */
-    Class<? extends Entity> loadDynamicEntity(Database db, DynamicEntityInfo dynamicEntityInfo) throws UnifyException;
+    Class<? extends Entity> loadDynamicSqlEntity(SqlDatabase db, DynamicEntityInfo dynamicEntityInfo)
+            throws UnifyException;
 }

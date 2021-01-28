@@ -49,7 +49,7 @@ public interface ApplicationComponents {
 
     String APPLICATION_DYNAMICSQLDATASOURCEMANAGER = "application-dynamicsqldatasourcemanager";
 
-    String APPLICATION_DYNAMICENTITYLOADER = "application-dynamicentityloader";
+    String APPLICATION_DYNAMICSQLENTITYLOADER = "application-dynamicsqlentityloader";
 
     String APPLICATION_EVENTSLOGGER = "application-eventlogger";
 

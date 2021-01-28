@@ -14,38 +14,54 @@
  * the License.
  */
 
-package com.tcdng.unify.core.database.dynamic;
+package com.tcdng.unify.core.database.dynamic.sql;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
-import com.tcdng.unify.core.database.Database;
 import com.tcdng.unify.core.database.Entity;
+import com.tcdng.unify.core.database.dynamic.DynamicEntityInfo;
+import com.tcdng.unify.core.database.sql.SqlDataSource;
+import com.tcdng.unify.core.database.sql.SqlDatabase;
+import com.tcdng.unify.core.database.sql.SqlSchemaManager;
+import com.tcdng.unify.core.database.sql.SqlSchemaManagerOptions;
 import com.tcdng.unify.core.runtime.RuntimeJavaClassManager;
 import com.tcdng.unify.core.util.DynamicEntityUtils;
 
 /**
- * Default implementation of dynamic entity loader.
+ * Default implementation of dynamic SQL entity loader.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Component(ApplicationComponents.APPLICATION_DYNAMICENTITYLOADER)
-public class DynamicEntityLoaderImpl extends AbstractUnifyComponent implements DynamicEntityLoader {
+@Component(ApplicationComponents.APPLICATION_DYNAMICSQLENTITYLOADER)
+public class DynamicSqlEntityLoaderImpl extends AbstractUnifyComponent implements DynamicSqlEntityLoader {
     
     @Configurable
     private RuntimeJavaClassManager runtimeJavaClassManager;
 
+    @Configurable
+    private SqlSchemaManager sqlSchemaManager;
+    
     @SuppressWarnings({ "unchecked" })
     @Override
-    public Class<? extends Entity> loadDynamicEntity(Database db, DynamicEntityInfo dynamicEntityInfo)
+    public Class<? extends Entity> loadDynamicSqlEntity(SqlDatabase db, DynamicEntityInfo dynamicEntityInfo)
             throws UnifyException {
+        // Create entity class
         String src = DynamicEntityUtils.generateEntityJavaClassSource(dynamicEntityInfo);
         Class<? extends Entity> entityClass = (Class<? extends Entity>) runtimeJavaClassManager
                 .compileAndLoadJavaClass(dynamicEntityInfo.getClassName(), src);
-        // TODO Update data source and alter schema
+        
+        // Register in data source
+        SqlDataSource sqlDataSource = (SqlDataSource) db.getDataSource();
+        sqlDataSource.getDialect().createSqlEntityInfo(entityClass);
+        
+        // Manage schema
+        SqlSchemaManagerOptions options = new SqlSchemaManagerOptions();
+        sqlSchemaManager.manageTableSchema(sqlDataSource, options, entityClass);
+        sqlSchemaManager.manageViewSchema(sqlDataSource, options, entityClass);
         return entityClass;
     }
 
