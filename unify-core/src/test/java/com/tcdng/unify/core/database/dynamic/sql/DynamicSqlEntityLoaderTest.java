@@ -29,7 +29,7 @@ import org.junit.Test;
 
 import com.tcdng.unify.core.AbstractUnifyComponentTest;
 import com.tcdng.unify.core.ApplicationComponents;
-import com.tcdng.unify.core.annotation.EntityType;
+import com.tcdng.unify.core.annotation.DynamicEntityType;
 import com.tcdng.unify.core.constant.DataType;
 import com.tcdng.unify.core.database.DatabaseTransactionManager;
 import com.tcdng.unify.core.database.Entity;
@@ -309,14 +309,14 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
         tm = (DatabaseTransactionManager) getComponent(ApplicationComponents.APPLICATION_DATABASETRANSACTIONMANAGER);
         db = (SqlDatabase) getComponent(ApplicationComponents.APPLICATION_DATABASE);
         dseLoader = (DynamicSqlEntityLoader) getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLENTITYLOADER);
-        dynamicEntityInfo = DynamicEntityInfo.newBuilder(EntityType.TABLE, "com.tcdng.test.Equipment")
+        dynamicEntityInfo = DynamicEntityInfo.newBuilder(DynamicEntityType.TABLE, "com.tcdng.test.Equipment")
                 .tableName("EQUIPMENT").version(1L)
                 .addField(DataType.STRING, "EQUIPMENT_NM", "name", 32, 0, 0, false)
                 .addField(DataType.STRING, "SERIAL_NO", "serialNo", 0, 0, 0, false)
                 .addField(DataType.DECIMAL, "PRICE", "price", 0, 18, 2, false)
                 .addField(DataType.DATE, "EXPIRY_DT", "expiryDt", 0, 0, 0, true)
                 .addField(DataType.TIMESTAMP_UTC, "CREATE_DT", "createDt", 0, 0, 0, false).build();
-        dynamicEntityInfoExt = DynamicEntityInfo.newBuilder(EntityType.TABLE_EXT, "com.tcdng.test.EquipmentExt")
+        dynamicEntityInfoExt = DynamicEntityInfo.newBuilder(DynamicEntityType.TABLE_EXT, "com.tcdng.test.EquipmentExt")
                 .baseClassName(Equipment.class.getName()).version(1L)
                 .addField(DataType.DECIMAL, "PRICE", "price", 0, 18, 2, false)
                 .addField(DataType.DATE, "EXPIRY_DT", "expiryDt", 0, 0, 0, true)

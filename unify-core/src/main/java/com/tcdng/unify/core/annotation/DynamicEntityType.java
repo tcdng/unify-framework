@@ -17,12 +17,12 @@
 package com.tcdng.unify.core.annotation;
 
 /**
- * Entity type enumeration.
+ * Dynamic entity type enumeration.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public enum EntityType {
+public enum DynamicEntityType {
     TABLE,
     TABLE_EXT,
     VIEW

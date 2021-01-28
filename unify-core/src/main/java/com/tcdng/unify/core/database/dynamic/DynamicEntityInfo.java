@@ -23,7 +23,7 @@ import java.util.Map;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.UnifyOperationException;
-import com.tcdng.unify.core.annotation.EntityType;
+import com.tcdng.unify.core.annotation.DynamicEntityType;
 import com.tcdng.unify.core.constant.DataType;
 import com.tcdng.unify.core.system.entities.AbstractSequencedEntity;
 import com.tcdng.unify.core.util.DataUtils;
@@ -36,7 +36,7 @@ import com.tcdng.unify.core.util.DataUtils;
  */
 public class DynamicEntityInfo {
 
-    private EntityType type;
+    private DynamicEntityType type;
 
     private String tableName;
 
@@ -48,7 +48,7 @@ public class DynamicEntityInfo {
 
     private long version;
 
-    private DynamicEntityInfo(EntityType type, String tableName, String baseClassName, String className,
+    private DynamicEntityInfo(DynamicEntityType type, String tableName, String baseClassName, String className,
             Map<String, DynamicFieldInfo> fieldInfos, long version) {
         this.type = type;
         this.tableName = tableName;
@@ -58,7 +58,7 @@ public class DynamicEntityInfo {
         this.version = version;
     }
 
-    public EntityType getType() {
+    public DynamicEntityType getType() {
         return type;
     }
 
@@ -92,13 +92,13 @@ public class DynamicEntityInfo {
         return version;
     }
 
-    public static Builder newBuilder(EntityType type, String className) {
+    public static Builder newBuilder(DynamicEntityType type, String className) {
         return new Builder(type, className);
     }
 
     public static class Builder {
 
-        private EntityType type;
+        private DynamicEntityType type;
 
         private String tableName;
 
@@ -114,7 +114,7 @@ public class DynamicEntityInfo {
 
         private long version;
 
-        private Builder(EntityType type, String className) {
+        private Builder(DynamicEntityType type, String className) {
             this.type = type;
             this.className = className;
             baseClassName = AbstractSequencedEntity.class.getCanonicalName();

@@ -25,7 +25,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.UnifyOperationException;
 import com.tcdng.unify.core.annotation.Column;
 import com.tcdng.unify.core.annotation.ColumnType;
-import com.tcdng.unify.core.annotation.EntityType;
+import com.tcdng.unify.core.annotation.DynamicEntityType;
 import com.tcdng.unify.core.annotation.ForeignKey;
 import com.tcdng.unify.core.annotation.ListOnly;
 import com.tcdng.unify.core.annotation.Table;
@@ -141,7 +141,7 @@ public final class DynamicEntityUtils {
 
         esb.append("import ").append(baseEntityInfo.getCanonicalName()).append(";\n");
 
-        if(EntityType.TABLE.equals(dynamicEntityInfo.getType())) {
+        if(DynamicEntityType.TABLE.equals(dynamicEntityInfo.getType())) {
             esb.append("import ").append(Table.class.getCanonicalName()).append(";\n");
             esb.append("@Table(\"").append(dynamicEntityInfo.getTableName()).append("\")\n");
         } else {
