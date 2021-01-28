@@ -22,6 +22,7 @@ import java.io.Reader;
 
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.util.ClassForNameProvider;
 
 /**
  * Component for managing runtime java classes. Compiled and saved classes are
@@ -31,7 +32,7 @@ import com.tcdng.unify.core.UnifyException;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface RuntimeJavaClassManager extends UnifyComponent {
+public interface RuntimeJavaClassManager extends UnifyComponent, ClassForNameProvider {
 
     /**
      * Compiles a Java class source from input stream and load resulting class to

@@ -838,9 +838,14 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                 }
 
                 SqlEntityInfo toExtendSqlEntityInfo = get(extendedEntityClass, entityCycleDetector);
+                boolean deprecateExtension = false;
                 if (toExtendSqlEntityInfo.isExtended()) {
-                    throw new UnifyException(UnifyCoreErrorConstants.RECORD_SUPERCLASS_ALREADY_EXTENDED, entityClass,
-                            extendedEntityClass, toExtendSqlEntityInfo.getEntityClass());
+                    deprecateExtension = entityClass.getName()
+                            .equals(toExtendSqlEntityInfo.getExtensionSqlEntityInfo().getEntityClass().getName());
+                    if (!deprecateExtension) {
+                        throw new UnifyException(UnifyCoreErrorConstants.RECORD_SUPERCLASS_ALREADY_EXTENDED,
+                                entityClass, extendedEntityClass, toExtendSqlEntityInfo.getEntityClass());
+                    }
                 }
 
                 final String tableName = toExtendSqlEntityInfo.getTableName();
@@ -1106,7 +1111,8 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                 }
 
                 return toExtendSqlEntityInfo.extend(viewName, preferredViewName, schemaViewName,
-                        (Class<? extends Entity>) entityClass, propertyInfoMap, uniqueConstraintMap, indexMap);
+                        (Class<? extends Entity>) entityClass, propertyInfoMap, uniqueConstraintMap, indexMap,
+                        deprecateExtension);
             }
 
             @SuppressWarnings("unchecked")

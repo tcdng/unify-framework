@@ -31,7 +31,6 @@ import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
-import com.tcdng.unify.core.util.ClassForNameProvider;
 import com.tcdng.unify.core.util.IOUtils;
 import com.tcdng.unify.core.util.ReflectUtils;
 
@@ -42,7 +41,7 @@ import com.tcdng.unify.core.util.ReflectUtils;
  * @since 1.0
  */
 @Component(ApplicationComponents.APPLICATION_RUNTIMEJAVACLASSMANAGER)
-public class RuntimeJavaClassManagerImpl extends AbstractRuntimeJavaClassManager implements ClassForNameProvider {
+public class RuntimeJavaClassManagerImpl extends AbstractRuntimeJavaClassManager {
 
     private Map<String, Class<?>> classByName;
     

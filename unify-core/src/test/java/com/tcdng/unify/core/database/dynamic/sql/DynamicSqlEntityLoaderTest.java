@@ -54,6 +54,8 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
 
     private DynamicEntityInfo dynamicEntityInfo;
 
+    private DynamicEntityInfo dynamicEntityInfoExt;
+
     @SuppressWarnings("unchecked")
     @Test
     public void testLoadDynamicSqlEntity() throws Exception {
@@ -178,6 +180,130 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
         }
     }
 
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testLoadDynamicSqlEntityExt() throws Exception {
+        Class<? extends Entity> clazz1 = dseLoader.loadDynamicSqlEntity(db, dynamicEntityInfoExt);
+        assertNotNull(clazz1);
+        assertEquals("com.tcdng.test.EquipmentExt", clazz1.getName());
+        Class<? extends Entity> clazz2 = (Class<? extends Entity>) ReflectUtils
+                .classForName("com.tcdng.test.EquipmentExt");
+        assertSame(clazz1, clazz2);
+    }
+
+    @Test
+    public void testLoadDynamicSqlEntityExtCreateInst() throws Exception {
+        dseLoader.loadDynamicSqlEntity(db, dynamicEntityInfoExt);
+        tm.beginTransaction();
+        try {
+            Date createDt = new Date();
+            Entity inst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.EquipmentExt");
+            assertNotNull(inst);
+            ReflectUtils.setBeanProperty(inst, "name", "5dPrinter");
+            ReflectUtils.setBeanProperty(inst, "serialNo", "202004-0003");
+            ReflectUtils.setBeanProperty(inst, "price", BigDecimal.valueOf(10.99));
+            ReflectUtils.setBeanProperty(inst, "createDt", createDt);
+            Long id = (Long) db.create(inst);
+            assertNotNull(id);
+            assertTrue(id > 0L);
+        } catch (Exception e) {
+            tm.setRollback();
+            throw e;
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
+    public void testLoadDynamicSqlEntityExtFindInstById() throws Exception {
+        dseLoader.loadDynamicSqlEntity(db, dynamicEntityInfoExt);
+        tm.beginTransaction();
+        try {
+            Date createDt = new Date();
+            Entity inst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.EquipmentExt");
+            assertNotNull(inst);
+            ReflectUtils.setBeanProperty(inst, "name", "6dPrinter");
+            ReflectUtils.setBeanProperty(inst, "serialNo", "202004-8883");
+            ReflectUtils.setBeanProperty(inst, "price", BigDecimal.valueOf(40.25));
+            ReflectUtils.setBeanProperty(inst, "createDt", createDt);
+            Long id = (Long) db.create(inst);
+            
+            Entity fInst = db.find(inst.getClass(), id);
+            assertNotNull(fInst);
+            assertEquals("6dPrinter", ReflectUtils.getBeanProperty(fInst, "name"));
+            assertEquals("202004-8883", ReflectUtils.getBeanProperty(fInst, "serialNo"));
+            assertEquals(BigDecimal.valueOf(40.25), ReflectUtils.getBeanProperty(fInst, "price"));
+            assertEquals(createDt, ReflectUtils.getBeanProperty(fInst, "createDt"));
+            assertNull(ReflectUtils.getBeanProperty(fInst, "expiryDt"));
+        } catch (Exception e) {
+            tm.setRollback();
+            throw e;
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
+    public void testLoadDynamicSqlEntityExtUpdateInstById() throws Exception {
+        dseLoader.loadDynamicSqlEntity(db, dynamicEntityInfoExt);
+        tm.beginTransaction();
+        try {
+            Date createDt = new Date();
+            Entity inst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.EquipmentExt");
+            assertNotNull(inst);
+            ReflectUtils.setBeanProperty(inst, "name", "6dPrinter");
+            ReflectUtils.setBeanProperty(inst, "serialNo", "202004-8883");
+            ReflectUtils.setBeanProperty(inst, "price", BigDecimal.valueOf(40.25));
+            ReflectUtils.setBeanProperty(inst, "createDt", createDt);
+            Long id = (Long) db.create(inst);
+            
+            Entity fInst = db.find(inst.getClass(), id);
+            assertNotNull(fInst);
+            ReflectUtils.setBeanProperty(fInst, "serialNo", "202004-7773");
+            ReflectUtils.setBeanProperty(fInst, "price", BigDecimal.valueOf(90.62));
+            db.updateByIdVersion(fInst);
+
+            Entity ffInst = db.find(inst.getClass(), id);
+            assertNotNull(ffInst);
+            assertEquals("6dPrinter", ReflectUtils.getBeanProperty(ffInst, "name"));
+            assertEquals("202004-7773", ReflectUtils.getBeanProperty(ffInst, "serialNo"));
+            assertEquals(BigDecimal.valueOf(90.62), ReflectUtils.getBeanProperty(ffInst, "price"));
+            assertEquals(createDt, ReflectUtils.getBeanProperty(ffInst, "createDt"));
+            assertNull(ReflectUtils.getBeanProperty(ffInst, "expiryDt"));
+        } catch (Exception e) {
+            tm.setRollback();
+            throw e;
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
+    public void testLoadDynamicSqlEntityExtDeleteInstById() throws Exception {
+        dseLoader.loadDynamicSqlEntity(db, dynamicEntityInfoExt);
+        tm.beginTransaction();
+        try {
+            Date createDt = new Date();
+            Entity inst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.EquipmentExt");
+            assertNotNull(inst);
+            ReflectUtils.setBeanProperty(inst, "name", "20dPrinter");
+            ReflectUtils.setBeanProperty(inst, "serialNo", "202004-8883");
+            ReflectUtils.setBeanProperty(inst, "price", BigDecimal.valueOf(40.25));
+            ReflectUtils.setBeanProperty(inst, "createDt", createDt);
+            Long id = (Long) db.create(inst);
+            
+            Entity fInst = db.find(inst.getClass(), id);
+            assertNotNull(fInst);
+            db.delete(inst.getClass(), id);
+            assertEquals(0, db.countAll(Query.of(inst.getClass()).addEquals("name", "20dPrinter")));
+        } catch (Exception e) {
+            tm.setRollback();
+            throw e;
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
     @Override
     protected void onSetup() throws Exception {
         tm = (DatabaseTransactionManager) getComponent(ApplicationComponents.APPLICATION_DATABASETRANSACTIONMANAGER);
@@ -187,6 +313,11 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
                 .tableName("EQUIPMENT").version(1L)
                 .addField(DataType.STRING, "EQUIPMENT_NM", "name", 32, 0, 0, false)
                 .addField(DataType.STRING, "SERIAL_NO", "serialNo", 0, 0, 0, false)
+                .addField(DataType.DECIMAL, "PRICE", "price", 0, 18, 2, false)
+                .addField(DataType.DATE, "EXPIRY_DT", "expiryDt", 0, 0, 0, true)
+                .addField(DataType.TIMESTAMP_UTC, "CREATE_DT", "createDt", 0, 0, 0, false).build();
+        dynamicEntityInfoExt = DynamicEntityInfo.newBuilder(EntityType.TABLE_EXT, "com.tcdng.test.EquipmentExt")
+                .baseClassName(Equipment.class.getName()).version(1L)
                 .addField(DataType.DECIMAL, "PRICE", "price", 0, 18, 2, false)
                 .addField(DataType.DATE, "EXPIRY_DT", "expiryDt", 0, 0, 0, true)
                 .addField(DataType.TIMESTAMP_UTC, "CREATE_DT", "createDt", 0, 0, 0, false).build();

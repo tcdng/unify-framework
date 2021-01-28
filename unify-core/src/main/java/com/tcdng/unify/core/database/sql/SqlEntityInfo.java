@@ -514,9 +514,10 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
     
     SqlEntityInfo extend(String viewName, String preferredViewName, String schemaViewName,
             Class<? extends Entity> extensionEntityClass, Map<String, SqlFieldInfo> sQLFieldInfoMap,
-            Map<String, SqlUniqueConstraintInfo> uniqueConstraintMap, Map<String, SqlIndexInfo> indexMap)
+            Map<String, SqlUniqueConstraintInfo> uniqueConstraintMap, Map<String, SqlIndexInfo> indexMap,
+            boolean deprecateExtension)
             throws UnifyException {
-        if (isExtended()) {
+        if (isExtended() && !deprecateExtension) {
             throw new UnifyException(UnifyCoreErrorConstants.RECORD_SUPERCLASS_ALREADY_EXTENDED, extensionEntityClass,
                     entityClass, extensionSqlEntityInfo.getEntityClass());
         }
