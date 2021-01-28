@@ -188,7 +188,6 @@ public class ListManagerImpl extends AbstractUnifyComponent implements ListManag
             return name;
         }
 
-        @SuppressWarnings("unused")
         public String getDescription() {
             return description;
         }

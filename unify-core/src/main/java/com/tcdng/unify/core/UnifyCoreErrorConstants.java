@@ -213,14 +213,14 @@ public interface UnifyCoreErrorConstants {
     /** Annotation utility error */
     String ANNOTATIONUTIL_ERROR = "UC_0039";
 
-    /** Data source manager manage schema error. Data source {0} */
-    String DATASOURCEMANAGER_MANAGE_SCHEMA_ERROR = "UC_003A";
+    /** SQl schema manager manage schema error. Data source {0} */
+    String SQLSCHEMAMANAGER_MANAGE_SCHEMA_ERROR = "UC_003A";
 
     /**
-     * Data source manager unable to update table/view. Data source {0}, Component
+     * SQl schema manager unable to update table/view. Data source {0}, Component
      * {1}, Table Type {2}
      */
-    String DATASOURCEMANAGER_UNABLE_TO_UPDATE_TABLE = "UC_003B";
+    String SQLSCHEMAMANAGER_UNABLE_TO_UPDATE_TABLE = "UC_003B";
 
     /**
      * Multiple record found. Single record expected for criteria

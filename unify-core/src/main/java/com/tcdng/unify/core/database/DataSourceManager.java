@@ -19,7 +19,7 @@ import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 
 /**
- * A component interface for managing a datasources.
+ * A component interface for managing data sources.
  * 
  * @author Lateef Ojulari
  * @since 1.0

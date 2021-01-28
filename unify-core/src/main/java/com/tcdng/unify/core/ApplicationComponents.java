@@ -49,6 +49,8 @@ public interface ApplicationComponents {
 
     String APPLICATION_DYNAMICSQLDATASOURCEMANAGER = "application-dynamicsqldatasourcemanager";
 
+    String APPLICATION_DYNAMICENTITYLOADER = "application-dynamicentityloader";
+
     String APPLICATION_EVENTSLOGGER = "application-eventlogger";
 
     String APPLICATION_EXPIRATIONMANAGER = "application-expirationmanager";
@@ -88,6 +90,8 @@ public interface ApplicationComponents {
     String APPLICATION_SEQUENCENUMBERSERVICE = "application-sequencenumberservice";
 
     String APPLICATION_SINGLEVERSIONLOBSERVICE = "application-singleversionlobservice";
+
+    String APPLICATION_SQLSCHEMAMANAGER = "application-sqlschemamanager";
 
     String APPLICATION_SQLENTITYINFOFACTORY = "application-sqlentityinfofactory";
 

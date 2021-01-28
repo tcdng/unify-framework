@@ -14,30 +14,27 @@
  * the License.
  */
 
-package com.tcdng.unify.core.runtime;
+package com.tcdng.unify.core.database.sql;
+
+import com.tcdng.unify.core.AbstractUnifyComponent;
+import com.tcdng.unify.core.UnifyException;
 
 /**
- * Java class source object.
+ * Convenient abstract base class for SQL schema managers.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class AbstractJavaClassSource {
+public abstract class AbstractSqlSchemaManager extends AbstractUnifyComponent implements SqlSchemaManager {
 
-    private String className;
-    
-    private long version;
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-    public AbstractJavaClassSource(String className, long version) {
-        this.className = className;
-        this.version = version;
     }
 
-    public String getClassName() {
-        return className;
+    @Override
+    protected void onTerminate() throws UnifyException {
+
     }
 
-    public long getVersion() {
-        return version;
-    }
 }

@@ -92,8 +92,8 @@ public class DynamicEntityInfo {
         return version;
     }
 
-    public static Builder newBuilder(EntityType type) {
-        return new Builder(type);
+    public static Builder newBuilder(EntityType type, String className) {
+        return new Builder(type, className);
     }
 
     public static class Builder {
@@ -114,8 +114,9 @@ public class DynamicEntityInfo {
 
         private long version;
 
-        private Builder(EntityType type) {
+        private Builder(EntityType type, String className) {
             this.type = type;
+            this.className = className;
             baseClassName = AbstractSequencedEntity.class.getCanonicalName();
             fkFields = new LinkedHashMap<String, DynamicForeignKeyFieldInfo>();
             columnFields = new LinkedHashMap<String, DynamicColumnFieldInfo>();
@@ -129,11 +130,6 @@ public class DynamicEntityInfo {
 
         public Builder baseClassName(String baseClassName) {
             this.baseClassName = baseClassName;
-            return this;
-        }
-
-        public Builder className(String className) {
-            this.className = className;
             return this;
         }
 
