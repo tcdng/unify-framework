@@ -96,6 +96,10 @@ public class DynamicEntityInfo {
         return new Builder(type, className);
     }
 
+    public static Builder newBuilder(String className) {
+        return new Builder(DynamicEntityType.INFO_ONLY, className);
+    }
+
     public static class Builder {
 
         private DynamicEntityType type;

@@ -25,5 +25,6 @@ package com.tcdng.unify.core.annotation;
 public enum DynamicEntityType {
     TABLE,
     TABLE_EXT,
-    VIEW
+    VIEW,
+    INFO_ONLY
 }
