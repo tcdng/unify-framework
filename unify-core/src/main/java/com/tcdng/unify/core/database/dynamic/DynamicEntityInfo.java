@@ -185,9 +185,19 @@ public class DynamicEntityInfo {
                         "Unknown foreign key [" + key + "] referenced by [" + fieldName + "].");
             }
 
-            listOnlyFields.put(fieldName,
-                    new DynamicListOnlyFieldInfo(fkFieldInfo.getParentDynamicEntityInfo().getDynamicFieldInfo(property),
-                            columnName, fieldName, key, property));
+            if (fkFieldInfo.isEnum()) {
+                if (!"name".equals(property) && !"description".equals(property)) {
+                    throw new UnifyOperationException(getClass(), "Enumeration property [" + property
+                            + "] referenced by [" + fieldName + "] is not supported.");
+                }
+
+                listOnlyFields.put(fieldName, new DynamicListOnlyFieldInfo(columnName, fieldName, key, property));
+            } else {
+                listOnlyFields.put(fieldName,
+                        new DynamicListOnlyFieldInfo(
+                                fkFieldInfo.getParentDynamicEntityInfo().getDynamicFieldInfo(property), columnName,
+                                fieldName, key, property));
+            }
             return this;
         }
 
