@@ -16,6 +16,7 @@
 
 package com.tcdng.unify.core.database.dynamic;
 
+import com.tcdng.unify.core.annotation.DynamicFieldType;
 import com.tcdng.unify.core.constant.DataType;
 import com.tcdng.unify.core.constant.EntityFieldType;
 
@@ -39,13 +40,14 @@ public class DynamicColumnFieldInfo extends DynamicFieldInfo {
 
     private boolean nullable;
 
-    public DynamicColumnFieldInfo(String enumClassName, String columnName, String fieldName, boolean nullable) {
-        super(EntityFieldType.TABLE_COLUMN, DataType.STRING, columnName, fieldName, enumClassName);
+    public DynamicColumnFieldInfo(DynamicFieldType type, String enumClassName, String columnName, String fieldName,
+            boolean nullable) {
+        super(type, EntityFieldType.TABLE_COLUMN, DataType.STRING, columnName, fieldName, enumClassName);
     }
 
-    public DynamicColumnFieldInfo(DataType dataType, String columnName, String fieldName, String transformer,
-            String defaultVal, int length, int precision, int scale, boolean nullable) {
-        super(EntityFieldType.TABLE_COLUMN, dataType, columnName, fieldName);
+    public DynamicColumnFieldInfo(DynamicFieldType type, DataType dataType, String columnName, String fieldName,
+            String transformer, String defaultVal, int length, int precision, int scale, boolean nullable) {
+        super(type, EntityFieldType.TABLE_COLUMN, dataType, columnName, fieldName);
         this.transformer = transformer;
         this.defaultVal = defaultVal;
         this.length = length;

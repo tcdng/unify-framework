@@ -16,6 +16,7 @@
 
 package com.tcdng.unify.core.database.dynamic;
 
+import com.tcdng.unify.core.annotation.DynamicFieldType;
 import com.tcdng.unify.core.constant.DataType;
 import com.tcdng.unify.core.constant.EntityFieldType;
 
@@ -31,15 +32,16 @@ public class DynamicForeignKeyFieldInfo extends DynamicFieldInfo {
 
     private boolean nullable;
 
-    public DynamicForeignKeyFieldInfo(DynamicEntityInfo parentDynamicEntityInfo, String columnName, String fieldName,
-            boolean nullable) {
-        super(EntityFieldType.FOREIGN_KEY, DataType.LONG, columnName, fieldName);
+    public DynamicForeignKeyFieldInfo(DynamicFieldType type, DynamicEntityInfo parentDynamicEntityInfo,
+            String columnName, String fieldName, boolean nullable) {
+        super(type, EntityFieldType.FOREIGN_KEY, DataType.LONG, columnName, fieldName);
         this.parentDynamicEntityInfo = parentDynamicEntityInfo;
         this.nullable = nullable;
     }
 
-    public DynamicForeignKeyFieldInfo(String enumClassName, String columnName, String fieldName, boolean nullable) {
-        super(EntityFieldType.FOREIGN_KEY, DataType.STRING, columnName, fieldName, enumClassName);
+    public DynamicForeignKeyFieldInfo(DynamicFieldType type, String enumClassName, String columnName, String fieldName,
+            boolean nullable) {
+        super(type, EntityFieldType.FOREIGN_KEY, DataType.STRING, columnName, fieldName, enumClassName);
         this.nullable = nullable;
     }
 

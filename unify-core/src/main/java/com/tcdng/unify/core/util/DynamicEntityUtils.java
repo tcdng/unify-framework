@@ -77,49 +77,51 @@ public final class DynamicEntityUtils {
         Set<String> fieldNames = new HashSet<String>();
         for (DynamicFieldInfo dynamicFieldInfo : dynamicEntityInfo.getFieldInfos()) {
             fieldNames.add(dynamicFieldInfo.getFieldName());
-            TypeInfo enumEntityInfo = null;
-            if (dynamicFieldInfo.isEnum()) {
-                enumEntityInfo = new TypeInfo(dynamicFieldInfo.getEnumClassName());
-                importSet.add(dynamicFieldInfo.getEnumClassName());
-            }
-
-            if (dynamicFieldInfo.getFieldType().isForeignKey()) {
-                DynamicForeignKeyFieldInfo fkInfo = (DynamicForeignKeyFieldInfo) dynamicFieldInfo;
-                DynamicEntityUtils.generateForeignKeyAnnotation(fsb, fkInfo);
-                importSet.add(ForeignKey.class.getCanonicalName());
-                if (!fkInfo.isEnum()) {
-                    importSet.add(fkInfo.getParentDynamicEntityInfo().getClassName());
+            if (dynamicFieldInfo.isGeneration()) {
+                TypeInfo enumEntityInfo = null;
+                if (dynamicFieldInfo.isEnum()) {
+                    enumEntityInfo = new TypeInfo(dynamicFieldInfo.getEnumClassName());
+                    importSet.add(dynamicFieldInfo.getEnumClassName());
                 }
 
-            } else if (dynamicFieldInfo.getFieldType().isTableColumn()) {
-                DynamicEntityUtils.generateColumnAnnotation(fsb, (DynamicColumnFieldInfo) dynamicFieldInfo);
-                if (!DataUtils.isMappedColumnType(dynamicFieldInfo.getDataType().columnType())) {
-                    importSet.add(ColumnType.class.getCanonicalName());
+                if (dynamicFieldInfo.getFieldType().isForeignKey()) {
+                    DynamicForeignKeyFieldInfo fkInfo = (DynamicForeignKeyFieldInfo) dynamicFieldInfo;
+                    DynamicEntityUtils.generateForeignKeyAnnotation(fsb, fkInfo);
+                    importSet.add(ForeignKey.class.getCanonicalName());
+                    if (!fkInfo.isEnum()) {
+                        importSet.add(fkInfo.getParentDynamicEntityInfo().getClassName());
+                    }
+
+                } else if (dynamicFieldInfo.getFieldType().isTableColumn()) {
+                    DynamicEntityUtils.generateColumnAnnotation(fsb, (DynamicColumnFieldInfo) dynamicFieldInfo);
+                    if (!DataUtils.isMappedColumnType(dynamicFieldInfo.getDataType().columnType())) {
+                        importSet.add(ColumnType.class.getCanonicalName());
+                    }
+
+                    importSet.add(Column.class.getCanonicalName());
+                } else {
+                    DynamicEntityUtils.generateLisOnlyAnnotation(fsb, (DynamicListOnlyFieldInfo) dynamicFieldInfo);
+                    importSet.add(ListOnly.class.getCanonicalName());
                 }
 
-                importSet.add(Column.class.getCanonicalName());
-            } else {
-                DynamicEntityUtils.generateLisOnlyAnnotation(fsb, (DynamicListOnlyFieldInfo) dynamicFieldInfo);
-                importSet.add(ListOnly.class.getCanonicalName());
+                final Class<?> javaClass = dynamicFieldInfo.getDataType().javaClass();
+                if (Date.class.equals(javaClass)) {
+                    importSet.add(Date.class.getCanonicalName());
+                } else if (BigDecimal.class.equals(javaClass)) {
+                    importSet.add(BigDecimal.class.getCanonicalName());
+                }
+
+                final String fieldName = dynamicFieldInfo.getFieldName();
+                final String simpleName = enumEntityInfo != null ? enumEntityInfo.getSimpleName()
+                        : javaClass.getSimpleName();
+                fsb.append(" private ").append(simpleName).append(" ").append(fieldName).append(";\n");
+
+                String capField = StringUtils.capitalizeFirstLetter(fieldName);
+                msb.append(" public ").append(simpleName).append(" get").append(capField).append("() {return ")
+                        .append(fieldName).append(";}\n");
+                msb.append(" public void set").append(capField).append("(").append(simpleName).append(" ").append(fieldName)
+                        .append(") {this.").append(fieldName).append(" = ").append(fieldName).append(";}\n");
             }
-
-            final Class<?> javaClass = dynamicFieldInfo.getDataType().javaClass();
-            if (Date.class.equals(javaClass)) {
-                importSet.add(Date.class.getCanonicalName());
-            } else if (BigDecimal.class.equals(javaClass)) {
-                importSet.add(BigDecimal.class.getCanonicalName());
-            }
-
-            final String fieldName = dynamicFieldInfo.getFieldName();
-            final String simpleName = enumEntityInfo != null ? enumEntityInfo.getSimpleName()
-                    : javaClass.getSimpleName();
-            fsb.append(" private ").append(simpleName).append(" ").append(fieldName).append(";\n");
-
-            String capField = StringUtils.capitalizeFirstLetter(fieldName);
-            msb.append(" public ").append(simpleName).append(" get").append(capField).append("() {return ")
-                    .append(fieldName).append(";}\n");
-            msb.append(" public void set").append(capField).append("(").append(simpleName).append(" ").append(fieldName)
-                    .append(") {this.").append(fieldName).append(" = ").append(fieldName).append(";}\n");
         }
 
         // Construct class

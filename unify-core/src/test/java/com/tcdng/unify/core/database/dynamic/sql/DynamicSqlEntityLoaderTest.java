@@ -30,6 +30,7 @@ import org.junit.Test;
 import com.tcdng.unify.core.AbstractUnifyComponentTest;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.annotation.DynamicEntityType;
+import com.tcdng.unify.core.annotation.DynamicFieldType;
 import com.tcdng.unify.core.constant.DataType;
 import com.tcdng.unify.core.constant.OrderType;
 import com.tcdng.unify.core.database.DatabaseTransactionManager;
@@ -106,7 +107,7 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
             ReflectUtils.setBeanProperty(inst, "createDt", createDt);
             ReflectUtils.setBeanProperty(inst, "order", OrderType.DESCENDING);
             Long id = (Long) db.create(inst);
-            
+
             Entity fInst = db.find(inst.getClass(), id);
             assertNotNull(fInst);
             assertEquals("6dPrinter", ReflectUtils.getBeanProperty(fInst, "name"));
@@ -137,7 +138,7 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
             ReflectUtils.setBeanProperty(inst, "createDt", createDt);
             ReflectUtils.setBeanProperty(inst, "order", OrderType.DESCENDING);
             Long id = (Long) db.create(inst);
-            
+
             Entity fInst = db.find(inst.getClass(), id);
             assertNotNull(fInst);
             ReflectUtils.setBeanProperty(fInst, "serialNo", "202004-7773");
@@ -175,7 +176,7 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
             ReflectUtils.setBeanProperty(inst, "createDt", createDt);
             ReflectUtils.setBeanProperty(inst, "order", OrderType.ASCENDING);
             Long id = (Long) db.create(inst);
-            
+
             Entity fInst = db.find(inst.getClass(), id);
             assertNotNull(fInst);
             db.delete(inst.getClass(), id);
@@ -235,7 +236,7 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
             ReflectUtils.setBeanProperty(inst, "price", BigDecimal.valueOf(40.25));
             ReflectUtils.setBeanProperty(inst, "createDt", createDt);
             Long id = (Long) db.create(inst);
-            
+
             Entity fInst = db.find(inst.getClass(), id);
             assertNotNull(fInst);
             assertEquals("6dPrinter", ReflectUtils.getBeanProperty(fInst, "name"));
@@ -264,7 +265,7 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
             ReflectUtils.setBeanProperty(inst, "price", BigDecimal.valueOf(40.25));
             ReflectUtils.setBeanProperty(inst, "createDt", createDt);
             Long id = (Long) db.create(inst);
-            
+
             Entity fInst = db.find(inst.getClass(), id);
             assertNotNull(fInst);
             ReflectUtils.setBeanProperty(fInst, "serialNo", "202004-7773");
@@ -299,7 +300,7 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
             ReflectUtils.setBeanProperty(inst, "price", BigDecimal.valueOf(40.25));
             ReflectUtils.setBeanProperty(inst, "createDt", createDt);
             Long id = (Long) db.create(inst);
-            
+
             Entity fInst = db.find(inst.getClass(), id);
             assertNotNull(fInst);
             db.delete(inst.getClass(), id);
@@ -319,18 +320,21 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
         dseLoader = (DynamicSqlEntityLoader) getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLENTITYLOADER);
         dynamicEntityInfo = DynamicEntityInfo.newBuilder(DynamicEntityType.TABLE, "com.tcdng.test.Equipment")
                 .tableName("EQUIPMENT").version(1L)
-                .addField(DataType.STRING, "EQUIPMENT_NM", "name", 32, 0, 0, false)
-                .addField(DataType.STRING, "SERIAL_NO", "serialNo", 0, 0, 0, false)
-                .addField(DataType.DECIMAL, "PRICE", "price", 0, 18, 2, false)
-                .addField(DataType.DATE, "EXPIRY_DT", "expiryDt", 0, 0, 0, true)
-                .addField(DataType.TIMESTAMP_UTC, "CREATE_DT", "createDt", 0, 0, 0, false)
-                .addField(OrderType.class.getName(), "EQUIPMENT_ORDER", "order", false)
+                .addField(DynamicFieldType.GENERATION, DataType.STRING, "EQUIPMENT_NM", "name", 32, 0, 0, false)
+                .addField(DynamicFieldType.GENERATION, DataType.STRING, "SERIAL_NO", "serialNo", 0, 0, 0, false)
+                .addField(DynamicFieldType.GENERATION, DataType.DECIMAL, "PRICE", "price", 0, 18, 2, false)
+                .addField(DynamicFieldType.GENERATION, DataType.DATE, "EXPIRY_DT", "expiryDt", 0, 0, 0, true)
+                .addField(DynamicFieldType.GENERATION, DataType.TIMESTAMP_UTC, "CREATE_DT", "createDt", 0, 0, 0, false)
+                .addField(DynamicFieldType.GENERATION, OrderType.class.getName(), "EQUIPMENT_ORDER", "order", false)
                 .build();
         dynamicEntityInfoExt = DynamicEntityInfo.newBuilder(DynamicEntityType.TABLE_EXT, "com.tcdng.test.EquipmentExt")
                 .baseClassName(Equipment.class.getName()).version(1L)
-                .addField(DataType.DECIMAL, "PRICE", "price", 0, 18, 2, false)
-                .addField(DataType.DATE, "EXPIRY_DT", "expiryDt", 0, 0, 0, true)
-                .addField(DataType.TIMESTAMP_UTC, "CREATE_DT", "createDt", 0, 0, 0, false).build();
+                .addField(DynamicFieldType.INFO_ONLY, DataType.STRING, "EQUIPMENT_NM", "name", 32, 0, 0, false)
+                .addField(DynamicFieldType.INFO_ONLY, DataType.STRING, "SERIAL_NO", "serialNo", 0, 0, 0, false)
+                .addField(DynamicFieldType.GENERATION, DataType.DECIMAL, "PRICE", "price", 0, 18, 2, false)
+                .addField(DynamicFieldType.GENERATION, DataType.DATE, "EXPIRY_DT", "expiryDt", 0, 0, 0, true)
+                .addField(DynamicFieldType.GENERATION, DataType.TIMESTAMP_UTC, "CREATE_DT", "createDt", 0, 0, 0, false)
+                .build();
     }
 
     @Override
