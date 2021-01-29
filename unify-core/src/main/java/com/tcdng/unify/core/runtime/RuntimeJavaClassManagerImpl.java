@@ -70,8 +70,13 @@ public class RuntimeJavaClassManagerImpl extends AbstractRuntimeJavaClassManager
     }
 
     @Override
-    public Class<?> compileAndLoadJavaClass(String className, String string) throws UnifyException {
-        return innerCompileAndLoadClass(className, new StringReader(string));
+    public Class<?> compileAndLoadJavaClass(String className, String src) throws UnifyException {
+        try {
+            return innerCompileAndLoadClass(className, new StringReader(src));
+        } catch (UnifyException e) {
+            logDebug("@Source: \n{0}", src);
+            throw e;
+        }
     }
 
     @Override

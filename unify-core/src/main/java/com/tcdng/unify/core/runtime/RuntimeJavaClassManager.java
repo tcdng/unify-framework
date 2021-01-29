@@ -71,13 +71,13 @@ public interface RuntimeJavaClassManager extends UnifyComponent, ClassForNamePro
      * 
      * @param className
      *            the class name
-     * @param string
-     *            string object
+     * @param src
+     *            string source object
      * @return the compiled and loaded class
      * @throws UnifyException
      *             if an error occurs
      */
-    Class<?> compileAndLoadJavaClass(String className, String string) throws UnifyException;
+    Class<?> compileAndLoadJavaClass(String className, String src) throws UnifyException;
 
     /**
      * Compiles a Java class source from file and load resulting class to JVM. Uses
