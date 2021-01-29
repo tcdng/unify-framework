@@ -28,18 +28,26 @@ import com.tcdng.unify.core.constant.EntityFieldType;
 public abstract class DynamicFieldInfo {
 
     private EntityFieldType fieldType;
-    
+
     private DataType dataType;
 
     private String columnName;
 
     private String fieldName;
 
+    private String enumClassName;
+
     public DynamicFieldInfo(EntityFieldType fieldType, DataType dataType, String columnName, String fieldName) {
+        this(fieldType, dataType, columnName, fieldName, null);
+    }
+
+    public DynamicFieldInfo(EntityFieldType fieldType, DataType dataType, String columnName, String fieldName,
+            String enumClassName) {
         this.fieldType = fieldType;
         this.dataType = dataType;
         this.columnName = columnName;
         this.fieldName = fieldName;
+        this.enumClassName = enumClassName;
     }
 
     public EntityFieldType getFieldType() {
@@ -58,4 +66,11 @@ public abstract class DynamicFieldInfo {
         return fieldName;
     }
 
+    public String getEnumClassName() {
+        return enumClassName;
+    }
+
+    public boolean isEnum() {
+        return enumClassName != null;
+    }
 }

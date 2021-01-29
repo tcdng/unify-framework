@@ -81,8 +81,7 @@ public class DynamicEntityInfo {
     public DynamicFieldInfo getDynamicFieldInfo(String fieldName) throws UnifyException {
         DynamicFieldInfo dynamicFieldInfo = fieldInfos.get(fieldName);
         if (dynamicFieldInfo == null) {
-            throw new UnifyOperationException(this.getClass(),
-                    "Field with name [" + fieldName + "] is unknown.");
+            throw new UnifyOperationException(this.getClass(), "Field with name [" + fieldName + "] is unknown.");
         }
 
         return dynamicFieldInfo;
@@ -150,9 +149,16 @@ public class DynamicEntityInfo {
             return this;
         }
 
+        public Builder addForeignKeyField(String enumClassName, String columnName, String fieldName, boolean nullable)
+                throws UnifyException {
+            checkFieldNameExist(fieldName);
+            fkFields.put(fieldName, new DynamicForeignKeyFieldInfo(enumClassName, columnName, fieldName, nullable));
+            return this;
+        }
+
         public Builder addField(DataType dataType, String columnName, String fieldName, int length, int precision,
                 int scale, boolean nullable) throws UnifyException {
-            return this.addField(dataType, columnName, fieldName, null, null, length, precision, scale, nullable);
+            return addField(dataType, columnName, fieldName, null, null, length, precision, scale, nullable);
         }
 
         public Builder addField(DataType dataType, String columnName, String fieldName, String transformer,
@@ -160,6 +166,13 @@ public class DynamicEntityInfo {
             checkFieldNameExist(fieldName);
             columnFields.put(fieldName, new DynamicColumnFieldInfo(dataType, columnName, fieldName, transformer,
                     defaultVal, length, precision, scale, nullable));
+            return this;
+        }
+
+        public Builder addField(String enumClassName, String columnName, String fieldName, boolean nullable)
+                throws UnifyException {
+            checkFieldNameExist(fieldName);
+            columnFields.put(fieldName, new DynamicColumnFieldInfo(enumClassName, columnName, fieldName, nullable));
             return this;
         }
 
@@ -181,8 +194,7 @@ public class DynamicEntityInfo {
         private void checkFieldNameExist(String fieldName) throws UnifyException {
             if (fkFields.containsKey(fieldName) || columnFields.containsKey(fieldName)
                     || listOnlyFields.containsKey(fieldName)) {
-                throw new UnifyOperationException(getClass(),
-                        "Field with name [" + fieldName + "] already exists.");
+                throw new UnifyOperationException(getClass(), "Field with name [" + fieldName + "] already exists.");
             }
         }
 

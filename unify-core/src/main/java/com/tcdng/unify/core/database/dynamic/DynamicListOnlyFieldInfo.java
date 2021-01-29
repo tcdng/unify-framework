@@ -32,9 +32,10 @@ public class DynamicListOnlyFieldInfo extends DynamicFieldInfo {
 
     private String property;
 
-    public DynamicListOnlyFieldInfo(DynamicFieldInfo propertyFieldInfo, String columnName, String fieldName,
-            String key, String property) {
-        super(EntityFieldType.LIST_ONLY, propertyFieldInfo.getDataType(), columnName, fieldName);
+    public DynamicListOnlyFieldInfo(DynamicFieldInfo propertyFieldInfo, String columnName, String fieldName, String key,
+            String property) {
+        super(EntityFieldType.LIST_ONLY, propertyFieldInfo.getDataType(), columnName, fieldName,
+                propertyFieldInfo.getEnumClassName());
         this.propertyFieldInfo = propertyFieldInfo;
         this.key = key;
         this.property = property;
