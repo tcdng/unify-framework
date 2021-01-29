@@ -21,6 +21,7 @@ import java.util.Map;
 
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.constant.EnumConst;
 import com.tcdng.unify.core.data.Listable;
 
 /**
@@ -31,6 +32,17 @@ import com.tcdng.unify.core.data.Listable;
  */
 public interface ListManager extends UnifyComponent {
 
+    /**
+     * Gets a static list enumeration type.
+     * 
+     * @param listName
+     *                 the list name
+     * @return the list enumeration type
+     * @throws UnifyException
+     *                        if static list with name is unknown. if an error occurs
+     */
+    Class<? extends EnumConst> getStaticListEnumType(String listName) throws UnifyException;
+    
     /**
      * Returns a list of all static lists for a locale.
      * 

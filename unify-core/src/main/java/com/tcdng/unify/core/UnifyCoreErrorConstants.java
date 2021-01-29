@@ -1025,4 +1025,7 @@ public interface UnifyCoreErrorConstants {
     
     /** Child references of same type can not share the same category. Type = {0}, field {1}, child type = {2}, category = {3} */
     String RECORD_MULTIPLE_CHILD_REFERENCE_WITH_SAME_CATEGORY = "UC_0107";
+    
+    /** Static list with name {0} is unknown. */
+    String STATICLIST_WITH_NAME_IS_UNKNOWN = "UC_0108";
 }

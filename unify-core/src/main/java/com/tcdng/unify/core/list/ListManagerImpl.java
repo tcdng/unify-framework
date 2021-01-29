@@ -25,6 +25,7 @@ import java.util.Map;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.ApplicationComponents;
+import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.StaticList;
@@ -48,23 +49,26 @@ public class ListManagerImpl extends AbstractUnifyComponent implements ListManag
 
     private LocaleFactoryMap<List<StaticListInfo>> staticLists;
 
+    private Map<String, StaticListEnumInfo> staticListEnumInfos;
+    
     public ListManagerImpl() {
-        staticLists = new LocaleFactoryMap<List<StaticListInfo>>() {
+        staticListEnumInfos = new HashMap<String, StaticListEnumInfo>();
+        staticLists = new LocaleFactoryMap<List<StaticListInfo>>()
+            {
 
-            @Override
-            protected List<StaticListInfo> create(Locale locale, Object... params) throws Exception {
-                List<StaticListInfo> list = new ArrayList<StaticListInfo>();
-                for (Class<? extends EnumConst> enumClass : getAnnotatedClasses(EnumConst.class,
-                        StaticList.class)) {
-                    StaticList sa = enumClass.getAnnotation(StaticList.class);
-                    list.add(new StaticListInfo(locale, sa.name(), resolveMessage(locale, sa.description())));
+                @Override
+                protected List<StaticListInfo> create(Locale locale, Object... params) throws Exception {
+                    List<StaticListInfo> list = new ArrayList<StaticListInfo>();
+                    for (StaticListEnumInfo staticListEnumInfo : staticListEnumInfos.values()) {
+                        list.add(new StaticListInfo(locale, staticListEnumInfo.getName(),
+                                resolveMessage(locale, staticListEnumInfo.getDescription())));
+                    }
+
+                    DataUtils.sortAscending(list, StaticListInfo.class, "description");
+                    return Collections.unmodifiableList(list);
                 }
 
-                DataUtils.sortAscending(list, StaticListInfo.class, "description");
-                return Collections.unmodifiableList(list);
-            }
-            
-        };
+            };
 
         staticListMaps = new LocaleFactoryMap<Map<String, StaticListInfo>>()
             {
@@ -81,6 +85,16 @@ public class ListManagerImpl extends AbstractUnifyComponent implements ListManag
 
             };
 
+    }
+
+    @Override
+    public Class<? extends EnumConst> getStaticListEnumType(String listName) throws UnifyException {
+        StaticListEnumInfo staticListEnumInfo = staticListEnumInfos.get(listName);
+        if (staticListEnumInfo == null) {
+            throw new UnifyException(UnifyCoreErrorConstants.STATICLIST_WITH_NAME_IS_UNKNOWN, listName);
+        }
+
+        return staticListEnumInfo.getEnumClass();
     }
 
     @Override
@@ -146,7 +160,10 @@ public class ListManagerImpl extends AbstractUnifyComponent implements ListManag
 
     @Override
     protected void onInitialize() throws UnifyException {
-
+        for (Class<? extends EnumConst> enumClass : getAnnotatedClasses(EnumConst.class, StaticList.class)) {
+            StaticList sa = enumClass.getAnnotation(StaticList.class);
+            staticListEnumInfos.put(sa.name(), new StaticListEnumInfo(enumClass, sa.name(), sa.description()));
+        }
     }
 
     @Override
@@ -246,6 +263,33 @@ public class ListManagerImpl extends AbstractUnifyComponent implements ListManag
 
         @Override
         public String getListDescription() {
+            return description;
+        }
+    }
+    
+    private class StaticListEnumInfo {
+        
+        private Class<? extends EnumConst> enumClass;
+        
+        private String name;
+        
+        private String description;
+
+        public StaticListEnumInfo(Class<? extends EnumConst> enumClass, String name, String description) {
+            this.enumClass = enumClass;
+            this.name = name;
+            this.description = description;
+        }
+
+        public Class<? extends EnumConst> getEnumClass() {
+            return enumClass;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getDescription() {
             return description;
         }
     }
