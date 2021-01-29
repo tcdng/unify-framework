@@ -29,7 +29,7 @@ public abstract class AbstractClientRequest implements ClientRequest {
 
     @Override
     public <T> T getParameter(Class<T> clazz, String name) throws UnifyException {
-        return DataUtils.convert(clazz, getParameter(name), null);
+        return DataUtils.convert(clazz, getParameter(name));
     }
 
 }

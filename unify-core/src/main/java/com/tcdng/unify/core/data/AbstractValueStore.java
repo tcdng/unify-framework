@@ -56,12 +56,12 @@ public abstract class AbstractValueStore<T> implements ValueStore {
 
     @Override
     public <U> U retrieve(Class<U> type, String name) throws UnifyException {
-        return DataUtils.convert(type, retrieve(name), null);
+        return DataUtils.convert(type, retrieve(name));
     }
 
     @Override
     public <U> U retrieve(Class<U> type, int storageIndex, String name) throws UnifyException {
-        return DataUtils.convert(type, retrieve(storageIndex, name), null);
+        return DataUtils.convert(type, retrieve(storageIndex, name));
     }
 
     @Override
@@ -96,7 +96,7 @@ public abstract class AbstractValueStore<T> implements ValueStore {
     @Override
     public <U> U getTempValue(Class<U> type, String name) throws UnifyException {
         if (temp != null) {
-            return DataUtils.convert(type, temp.get(name), null);
+            return DataUtils.convert(type, temp.get(name));
         }
         
         return null;

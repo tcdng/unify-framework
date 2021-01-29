@@ -172,7 +172,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 		if (value == null) {
 			value = defaultValue;
 		}
-		return DataUtils.convert(clazz, value, null);
+		return DataUtils.convert(clazz, value);
 	}
 
 	/**
@@ -537,7 +537,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 */
 	protected <T> T convert(Class<T> targetClazz, Object value, String formatterUpl) throws UnifyException {
 		if (formatterUpl == null) {
-			return DataUtils.convert(targetClazz, value, null);
+			return DataUtils.convert(targetClazz, value);
 		} else {
 			return DataUtils.convert(targetClazz, value, getSessionLocaleFormatter(formatterUpl));
 		}
@@ -556,7 +556,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	protected <T, U extends Collection<T>> U convert(Class<U> collectionClazz, Class<T> dataClass, Object value,
 			String formatterUpl) throws UnifyException {
 		if (formatterUpl == null) {
-			return DataUtils.convert(collectionClazz, dataClass, value, null);
+			return DataUtils.convert(collectionClazz, dataClass, value);
 		} else {
 			return DataUtils.convert(collectionClazz, dataClass, value, getSessionLocaleFormatter(formatterUpl));
 		}

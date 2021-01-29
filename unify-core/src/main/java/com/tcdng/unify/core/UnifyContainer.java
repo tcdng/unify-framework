@@ -348,7 +348,7 @@ public class UnifyContainer {
 		logDebug("Detecting and replacing customized components...");
 		// Resolve customization
 		List<String> customizationSuffixList = DataUtils.convert(ArrayList.class, String.class,
-				getSetting(UnifyCorePropertyConstants.APPLICATION_CUSTOMIZATION), null);
+				getSetting(UnifyCorePropertyConstants.APPLICATION_CUSTOMIZATION));
 		internalResolutionMap = UnifyConfigUtils.resolveConfigurationOverrides(internalUnifyComponentInfos,
 				customizationSuffixList);
 
@@ -1217,7 +1217,7 @@ public class UnifyContainer {
 			}
 
 			if (valueToInject == null) {
-				valueToInject = DataUtils.convert(fieldClass, configValues, null);
+				valueToInject = DataUtils.convert(fieldClass, configValues);
 			}
 
 			if (valueToInject != null) {
@@ -1287,13 +1287,13 @@ public class UnifyContainer {
 	private void initializeInterfaces() throws UnifyException {
 		// Initialize command interface if flagged
 		if (DataUtils.convert(boolean.class,
-				unifySettings.get(UnifyCorePropertyConstants.APPLICATION_COMMAND_INTERFACE), null)) {
+				unifySettings.get(UnifyCorePropertyConstants.APPLICATION_COMMAND_INTERFACE))) {
 			interfaces.add((UnifyContainerInterface) getComponent("unify-commandinterface"));
 		}
 
 		// Initialize other interfaces
 		List<String> interfacesList = DataUtils.convert(ArrayList.class, String.class,
-				unifySettings.get(UnifyCorePropertyConstants.APPLICATION_INTERFACES), null);
+				unifySettings.get(UnifyCorePropertyConstants.APPLICATION_INTERFACES));
 		if (interfacesList != null) {
 			for (String interfaceName : interfacesList) {
 				interfaces.add((UnifyContainerInterface) getComponent(interfaceName));
@@ -1336,7 +1336,7 @@ public class UnifyContainer {
 		}
 
 		List<String> cfgMessageBaseList = DataUtils.convert(ArrayList.class, String.class,
-				unifySettings.get(UnifyCorePropertyConstants.APPLICATION_MESSAGES_BASE), null);
+				unifySettings.get(UnifyCorePropertyConstants.APPLICATION_MESSAGES_BASE));
 		if (cfgMessageBaseList != null) {
 			messageBaseList.addAll(cfgMessageBaseList);
 		}

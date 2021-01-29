@@ -45,14 +45,14 @@ public abstract class AbstractDoubleParamObjectFilterPolicy implements ObjectFil
             if (paramA instanceof RestrictionField) {
                 paramA = valueStore.retrieve(((RestrictionField) paramA).getName());
             } else {
-                paramA = DataUtils.convert(fieldVal.getClass(), paramA, null);
+                paramA = DataUtils.convert(fieldVal.getClass(), paramA);
             }
 
             Object paramB = doubleParamRestriction.getSecondParam();
             if (paramB instanceof RestrictionField) {
                 paramB = valueStore.retrieve(((RestrictionField) paramB).getName());
             } else {
-                paramB = DataUtils.convert(fieldVal.getClass(), paramB, null);
+                paramB = DataUtils.convert(fieldVal.getClass(), paramB);
             }
 
             return doMatch(fieldVal, paramA, paramB);
@@ -70,14 +70,14 @@ public abstract class AbstractDoubleParamObjectFilterPolicy implements ObjectFil
             if (paramA instanceof RestrictionField) {
                 paramA = DataUtils.getNestedBeanProperty(bean, ((RestrictionField) paramA).getName());
             } else {
-                paramA = DataUtils.convert(fieldVal.getClass(), paramA, null);
+                paramA = DataUtils.convert(fieldVal.getClass(), paramA);
             }
 
             Object paramB = doubleParamRestriction.getSecondParam();
             if (paramB instanceof RestrictionField) {
                 paramB = DataUtils.getNestedBeanProperty(bean, ((RestrictionField) paramB).getName());
             } else {
-                paramB = DataUtils.convert(fieldVal.getClass(), paramB, null);
+                paramB = DataUtils.convert(fieldVal.getClass(), paramB);
             }
 
             return doMatch(fieldVal, paramA, paramB);

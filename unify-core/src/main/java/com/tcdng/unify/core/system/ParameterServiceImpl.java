@@ -166,7 +166,7 @@ public class ParameterServiceImpl extends AbstractBusinessService implements Par
                 if (parameterDefData != null) {
                     Class<?> type = ReflectUtils.classForName(parameterDefData.getType());
                     result.put(parameterDefData.getName(),
-                            DataUtils.convert(type, parameterValueData.getParamValue(), null));
+                            DataUtils.convert(type, parameterValueData.getParamValue()));
                 }
             }
 

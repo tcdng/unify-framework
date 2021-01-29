@@ -92,11 +92,11 @@ public class StringArrayPolicy extends AbstractSqlDataTypePolicy {
     }
 
     private String getString(Object data) throws Exception {
-        return StringUtils.buildCommaSeparatedString(DataUtils.convert(String[].class, data, null), false);
+        return StringUtils.buildCommaSeparatedString(DataUtils.convert(String[].class, data), false);
     }
 
     private Object getResult(String data) throws Exception {
-        return DataUtils.convert(arrayClass, StringUtils.getCommaSeparatedValues(data), null);
+        return DataUtils.convert(arrayClass, StringUtils.getCommaSeparatedValues(data));
     }
 
     @Override

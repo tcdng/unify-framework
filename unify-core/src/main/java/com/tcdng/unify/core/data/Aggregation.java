@@ -46,6 +46,6 @@ public class Aggregation {
     }
 
     public <T> T getValue(Class<T> targetClazz) throws UnifyException {
-        return DataUtils.convert(targetClazz, value, null);
+        return DataUtils.convert(targetClazz, value);
     }
 }

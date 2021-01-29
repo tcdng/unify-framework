@@ -145,7 +145,7 @@ public final class CalendarUtils {
         if (eWeekDays != null && eWeekDays.length > 0) {
             CalendarUtils.nextEligibleDayOfWeek(eMonths, eWeekDays, cal);
         } else {
-            int[] eDays = DataUtils.convert(int[].class, days, null);
+            int[] eDays = DataUtils.convert(int[].class, days);
             if (eDays != null && eDays.length > 0) {
                 CalendarUtils.nextEligibleDay(eMonths, eDays, cal);
             }

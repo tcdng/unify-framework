@@ -406,7 +406,7 @@ public class UIControllerUtilImpl extends AbstractUnifyComponent implements UICo
 
         // Resolve category
         List<String> categoryList = DataUtils.convert(ArrayList.class, String.class,
-                getContainerSetting(Object.class, UnifyCorePropertyConstants.APPLICATION_LAYOUT), null);
+                getContainerSetting(Object.class, UnifyCorePropertyConstants.APPLICATION_LAYOUT));
         UnifyConfigUtils.resolveConfigurationOverrides(resultByNameMap, categoryList);
 
         resultByNameMap.putAll(defaultResultMap); // Set result mappings that can

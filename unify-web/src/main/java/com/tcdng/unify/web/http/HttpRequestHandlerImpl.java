@@ -183,7 +183,7 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 		isTenantPathEnabled = getContainerSetting(boolean.class,
 				UnifyWebPropertyConstants.APPLICATION_TENANT_PATH_ENABLED, false);
 		remoteViewerList = DataUtils.convert(ArrayList.class, String.class,
-				getContainerSetting(Object.class, UnifyWebPropertyConstants.APPLICATION_REMOTE_VIEWERS), null);
+				getContainerSetting(Object.class, UnifyWebPropertyConstants.APPLICATION_REMOTE_VIEWERS));
 		if (remoteViewerList == null) {
 			remoteViewerList = Collections.emptyList();
 		}

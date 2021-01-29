@@ -81,7 +81,7 @@ public class DataUtilsTest {
     @SuppressWarnings("unchecked")
     @Test
     public void testCollectionConvertFromArray() throws Exception {
-        List<Long> result = (List<Long>) DataUtils.convert(List.class, Long.class, new String[] { "240", "72" }, null);
+        List<Long> result = (List<Long>) DataUtils.convert(List.class, Long.class, new String[] { "240", "72" });
         assertNotNull(result);
         assertEquals(2, result.size());
         assertEquals(Long.valueOf(240L), result.get(0));
@@ -91,7 +91,7 @@ public class DataUtilsTest {
     @SuppressWarnings("unchecked")
     @Test
     public void testCollectionConvertFromString() throws Exception {
-        List<Long> result = (List<Long>) DataUtils.convert(List.class, Long.class, "240,72", null);
+        List<Long> result = (List<Long>) DataUtils.convert(List.class, Long.class, "240,72");
         assertNotNull(result);
         assertEquals(2, result.size());
         assertEquals(Long.valueOf(240L), result.get(0));
@@ -101,7 +101,7 @@ public class DataUtilsTest {
     @SuppressWarnings("unchecked")
     @Test
     public void testCollectionFromString() throws Exception {
-        List<String> result = (List<String>) DataUtils.convert(List.class, String.class, "240,72", null);
+        List<String> result = (List<String>) DataUtils.convert(List.class, String.class, "240,72");
         assertNotNull(result);
         assertEquals(2, result.size());
         assertEquals("240", result.get(0));
@@ -110,7 +110,7 @@ public class DataUtilsTest {
     
     @Test
     public void testConvertArrayToArray() throws Exception {
-        Long[] result = DataUtils.convert(Long[].class, new String[] { "240", "72" }, null);
+        Long[] result = DataUtils.convert(Long[].class, new String[] { "240", "72" });
         assertNotNull(result);
         assertEquals(2, result.length);
         assertEquals(Long.valueOf(240L), result[0]);
@@ -123,12 +123,12 @@ public class DataUtilsTest {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.MONTH, 2);
         Date date2 = cal.getTime();
-        Long[] result = DataUtils.convert(Long[].class, new Date[] { date1, date2 }, null);
+        Long[] result = DataUtils.convert(Long[].class, new Date[] { date1, date2 });
         assertNotNull(result);
         assertEquals(2, result.length);
         assertFalse(result[0].equals(result[1]));
 
-        Date[] dates = DataUtils.convert(Date[].class, result, null);
+        Date[] dates = DataUtils.convert(Date[].class, result);
         assertNotNull(dates);
         assertEquals(2, dates.length);
         assertEquals(date1, dates[0]);
@@ -139,7 +139,7 @@ public class DataUtilsTest {
     @Test
     public void testCollectionConvertFromCollection() throws Exception {
         List<Long> result = (List<Long>) DataUtils.convert(List.class, Long.class,
-                Arrays.asList(new String[] { "240", "72" }), null);
+                Arrays.asList(new String[] { "240", "72" }));
         assertNotNull(result);
         assertEquals(2, result.size());
         assertEquals(Long.valueOf(240L), result.get(0));
@@ -605,7 +605,7 @@ public class DataUtilsTest {
     
     @Test
     public void testConvertToArrayFromCommaString() throws Exception {
-        String[] arr = DataUtils.convert(String[].class, "Red,Green,Blue", null);
+        String[] arr = DataUtils.convert(String[].class, "Red,Green,Blue");
         assertNotNull(arr);
         assertEquals(3, arr.length);
         assertEquals("Red", arr[0]);
@@ -615,7 +615,7 @@ public class DataUtilsTest {
     
     @Test
     public void testConvertToStringFromArray() throws Exception {
-        String val = DataUtils.convert(String.class, new String[] {"Red","Green","Blue"}, null);
+        String val = DataUtils.convert(String.class, new String[] {"Red","Green","Blue"});
         assertEquals("Red,Green,Blue", val);
     }
     

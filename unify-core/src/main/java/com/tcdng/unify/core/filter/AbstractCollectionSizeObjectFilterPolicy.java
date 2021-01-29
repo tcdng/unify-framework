@@ -49,9 +49,9 @@ public abstract class AbstractCollectionSizeObjectFilterPolicy implements Object
 			Object param = singleParamRestriction.getParam();
 			if (param instanceof RestrictionField) {
 				return doMatch(collSize,
-						DataUtils.convert(int.class, valueStore.retrieve(((RestrictionField) param).getName()), null));
+						DataUtils.convert(int.class, valueStore.retrieve(((RestrictionField) param).getName())));
 			} else {
-				return doMatch(collSize, DataUtils.convert(int.class, param, null));
+				return doMatch(collSize, DataUtils.convert(int.class, param));
 			}
 		}
 
@@ -68,9 +68,9 @@ public abstract class AbstractCollectionSizeObjectFilterPolicy implements Object
 			Object param = singleParamRestriction.getParam();
 			if (param instanceof RestrictionField) {
 				return doMatch(collSize, DataUtils.convert(int.class,
-						DataUtils.getNestedBeanProperty(bean, ((RestrictionField) param).getName()), null));
+						DataUtils.getNestedBeanProperty(bean, ((RestrictionField) param).getName())));
 			} else {
-				return doMatch(collSize, DataUtils.convert(int.class, param, null));
+				return doMatch(collSize, DataUtils.convert(int.class, param));
 			}
 		}
 

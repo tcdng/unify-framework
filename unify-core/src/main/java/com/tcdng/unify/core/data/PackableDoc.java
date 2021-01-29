@@ -187,7 +187,7 @@ public class PackableDoc implements Serializable {
                         valList = DataUtils.getNewArrayList(fc.getDataType());
                     }
 
-                    for (Object aVal : DataUtils.convert(List.class, Object.class, val, null)) {
+                    for (Object aVal : DataUtils.convert(List.class, Object.class, val)) {
                         ((List<Object>) valList).add(convertFrom(fc, aVal, formatter));
                     }
 
@@ -384,7 +384,7 @@ public class PackableDoc implements Serializable {
             return bean;
         }
 
-        return DataUtils.convert(type, val, null);
+        return DataUtils.convert(type, val);
     }
 
     private Object convertFrom(FieldConfig fc, Object val, Formatter<?> formatter) throws UnifyException {

@@ -48,7 +48,7 @@ public class AssignParams extends AbstractListParam {
 
     @SuppressWarnings("unchecked")
     public <T> List<T> getAssignedIdList(Class<T> dataType) throws UnifyException {
-        return (List<T>) DataUtils.convert(List.class, dataType, assignedIdList, null);
+        return (List<T>) DataUtils.convert(List.class, dataType, assignedIdList);
     }
 
     public String getFilterId1() {
@@ -56,7 +56,7 @@ public class AssignParams extends AbstractListParam {
     }
 
     public <T> T getFilterId1(Class<T> dataType) throws UnifyException {
-        return DataUtils.convert(dataType, filterId1, null);
+        return DataUtils.convert(dataType, filterId1);
     }
 
     public String getFilterId2() {
@@ -64,7 +64,7 @@ public class AssignParams extends AbstractListParam {
     }
 
     public <T> T getFilterId2(Class<T> dataType) throws UnifyException {
-        return DataUtils.convert(dataType, filterId2, null);
+        return DataUtils.convert(dataType, filterId2);
     }
 
     public boolean isAssignedIdList() {

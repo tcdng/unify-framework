@@ -50,7 +50,7 @@ public class GroupAggregation {
     public <T> T getGroupingValue(Class<T> targetClazz, String fieldName) throws UnifyException {
         for (Grouping grouping : groupingList) {
             if (grouping.getFieldName().equals(fieldName)) {
-                return DataUtils.convert(targetClazz, grouping.getValue(), null);
+                return DataUtils.convert(targetClazz, grouping.getValue());
             }
         }
 
@@ -58,7 +58,7 @@ public class GroupAggregation {
     }
 
     public <T> T getGroupingValue(Class<T> targetClazz, int index) throws UnifyException {
-        return DataUtils.convert(targetClazz, groupingList.get(index).getValue(), null);
+        return DataUtils.convert(targetClazz, groupingList.get(index).getValue());
     }
 
     public <T> T getAggregationValue(Class<T> targetClazz, int index) throws UnifyException {

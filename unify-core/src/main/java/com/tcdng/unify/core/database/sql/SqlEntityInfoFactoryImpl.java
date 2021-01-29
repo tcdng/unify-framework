@@ -1264,7 +1264,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                                 break;
                             case AMONGST:
                             case NOT_AMONGST:
-                                param1 = DataUtils.convert(List.class, String.class, vra.values(), null);
+                                param1 = DataUtils.convert(List.class, String.class, vra.values());
                                 break;
                             case AND:
                             case OR:
