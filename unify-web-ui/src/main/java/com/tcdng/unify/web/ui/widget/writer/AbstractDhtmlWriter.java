@@ -893,6 +893,10 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
                 }
             }
 
+            if (pageAction.getUplAttribute(boolean.class, "pushSrc")) {
+                writer.write(",\"uPushSrc\":true");
+            }
+            
             List<String> componentList = pageManager.getExpandedReferences(pageAction.getId());
             writer.write(",\"uRef\":").writeJsonArray(componentList);
 

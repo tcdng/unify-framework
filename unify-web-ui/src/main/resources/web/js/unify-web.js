@@ -4759,6 +4759,10 @@ ux.setShortcut = function(shortcut, evp) {
 
 ux.setOnEvent = function(evp) {
 	const eventName = evp.uEvnt;
+	if (evp.uPushSrc && evp.uRef && !evp.uRef.includes(evp.uId)) {
+		evp.uRef.push(evp.uId);
+	}
+	
 	var elem = _id(evp.uId);
 	if (elem) {
 		if (elem.value == "pushr_") {
