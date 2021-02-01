@@ -204,16 +204,18 @@ public final class DynamicEntityUtils {
             return;
         }
 
-        fsb.append(" @Column(");
+        fsb.append(" @Column");
         boolean appendSym = false;
         if (!DataUtils.isMappedColumnType(dynamicColumnFieldInfo.getDataType().columnType())) {
-            fsb.append("type = ColumnType.").append(dynamicColumnFieldInfo.getDataType().columnType());
+            fsb.append("(type = ColumnType.").append(dynamicColumnFieldInfo.getDataType().columnType());
             appendSym = true;
         }
 
         if (!StringUtils.isBlank(dynamicColumnFieldInfo.getColumnName())) {
             if (appendSym) {
                 fsb.append(", ");
+            } else {
+                fsb.append("(");
             }
 
             fsb.append("name = \"").append(dynamicColumnFieldInfo.getColumnName()).append("\"");
@@ -223,6 +225,8 @@ public final class DynamicEntityUtils {
         if (!StringUtils.isBlank(dynamicColumnFieldInfo.getTransformer())) {
             if (appendSym) {
                 fsb.append(", ");
+            } else {
+                fsb.append("(");
             }
 
             fsb.append("transformer = \"").append(dynamicColumnFieldInfo.getTransformer()).append("\"");
@@ -232,6 +236,8 @@ public final class DynamicEntityUtils {
         if (!StringUtils.isBlank(dynamicColumnFieldInfo.getDefaultVal())) {
             if (appendSym) {
                 fsb.append(", ");
+            } else {
+                fsb.append("(");
             }
 
             fsb.append("defaultVal = \"").append(dynamicColumnFieldInfo.getDefaultVal()).append("\"");
@@ -241,6 +247,8 @@ public final class DynamicEntityUtils {
         if (dynamicColumnFieldInfo.getLength() > 0) {
             if (appendSym) {
                 fsb.append(", ");
+            } else {
+                fsb.append("(");
             }
 
             fsb.append("length = ").append(dynamicColumnFieldInfo.getLength());
@@ -250,6 +258,8 @@ public final class DynamicEntityUtils {
         if (dynamicColumnFieldInfo.getPrecision() > 0) {
             if (appendSym) {
                 fsb.append(", ");
+            } else {
+                fsb.append("(");
             }
 
             fsb.append("precision = ").append(dynamicColumnFieldInfo.getPrecision());
@@ -259,21 +269,30 @@ public final class DynamicEntityUtils {
         if (dynamicColumnFieldInfo.getScale() > 0) {
             if (appendSym) {
                 fsb.append(", ");
+            } else {
+                fsb.append("(");
             }
 
             fsb.append("scale = ").append(dynamicColumnFieldInfo.getScale());
             appendSym = true;
         }
+        
         if (dynamicColumnFieldInfo.isNullable()) {
             if (appendSym) {
                 fsb.append(", ");
+            } else {
+                fsb.append("(");
             }
 
             fsb.append("nullable = true");
             appendSym = true;
         }
 
-        fsb.append(")\n");
+        if (appendSym) {
+            fsb.append(")");
+        }
+        
+        fsb.append("\n");
     }
 
     private static void generateLisOnlyAnnotation(StringBuilder fsb,
