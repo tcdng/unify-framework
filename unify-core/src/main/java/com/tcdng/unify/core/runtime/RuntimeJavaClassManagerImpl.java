@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -44,11 +45,15 @@ import com.tcdng.unify.core.util.ReflectUtils;
 public class RuntimeJavaClassManagerImpl extends AbstractRuntimeJavaClassManager {
 
     private Map<String, Class<?>> classByName;
+
+    private RuntimeClassLoader runtimeClassLoader;
+
+    private int classLoaderDepth;
     
     public RuntimeJavaClassManagerImpl() {
         classByName = new ConcurrentHashMap<String, Class<?>>();
     }
-    
+
     @Override
     public Class<?> classForName(String className) throws UnifyException {
         return classByName.get(className);
@@ -93,6 +98,18 @@ public class RuntimeJavaClassManagerImpl extends AbstractRuntimeJavaClassManager
     }
 
     @Override
+    public int getClassLoaderDepth() {
+        return classLoaderDepth;
+    }
+
+    @Override
+    public synchronized void clearClassLoader() {
+        classByName.clear();
+        runtimeClassLoader = null;
+        classLoaderDepth = 0;
+    }
+
+    @Override
     protected void onInitialize() throws UnifyException {
         super.onInitialize();
         ReflectUtils.registerClassForNameProvider(this);
@@ -106,14 +123,43 @@ public class RuntimeJavaClassManagerImpl extends AbstractRuntimeJavaClassManager
 
     private class RuntimeClassLoader extends ClassLoader {
 
-        private byte[] byteCode;
+        private Map<String, byte[]> byteCodes;
 
-        public RuntimeClassLoader(byte[] byteCode) {
-            this.byteCode = byteCode;
+        public RuntimeClassLoader() {
+            byteCodes = new HashMap<String, byte[]>();
+        }
+
+        public RuntimeClassLoader(ClassLoader parent) {
+            super(parent);
+            byteCodes = new HashMap<String, byte[]>();
+        }
+
+        public RuntimeClassLoader setByteCodes(String className, byte[] byteCode) {
+            byteCodes.put(className, byteCode);
+            return this;
+        }
+
+        // Implement child-first
+        @Override
+        protected Class<?> loadClass(String className, boolean resolve) throws ClassNotFoundException {
+            Class<?> loadedClass = findLoadedClass(className);
+            if (loadedClass == null) {
+                try {
+                    loadedClass = findClass(className);
+                } catch (ClassNotFoundException e) {
+                    loadedClass = super.loadClass(className, resolve);
+                }
+            }
+
+            if (resolve) {
+                resolveClass(loadedClass);
+            }
+            return loadedClass;
         }
 
         @Override
         protected Class<?> findClass(String className) throws ClassNotFoundException {
+            byte[] byteCode = byteCodes.remove(className);
             SecurityManager sm = System.getSecurityManager();
             if (sm != null) {
                 int pIndex = className.lastIndexOf('.');
@@ -133,18 +179,32 @@ public class RuntimeJavaClassManagerImpl extends AbstractRuntimeJavaClassManager
 
     }
 
-    private Class<?> innerCompileAndLoadClass(String className, Reader reader) throws UnifyException {
+    private synchronized Class<?> innerCompileAndLoadClass(String className, Reader reader) throws UnifyException {
         try {
+            RuntimeClassLoader loader = getRuntimeClassLoader(className);
             SimpleCompiler compiler = new SimpleCompiler();
+            compiler.setParentClassLoader(loader);
             compiler.cook(reader);
             byte[] byteCode = compiler.getBytecodes().get(className);
-            Class<?> clazz = new RuntimeClassLoader(byteCode).loadClass(className);
-            synchronized(classByName) {
-                classByName.put(className, clazz);
-            }
+            Class<?> clazz = loader.setByteCodes(className, byteCode).loadClass(className);
+            classByName.put(className, clazz);
             return clazz;
         } catch (Exception e) {
             throw new UnifyException(e, UnifyCoreErrorConstants.COMPILER_CLASSLOAD_ERROR);
         }
+    }
+
+    private RuntimeClassLoader getRuntimeClassLoader(String className) {
+        if (runtimeClassLoader == null) {
+            runtimeClassLoader = new RuntimeClassLoader();
+            classLoaderDepth++;
+        } else {
+            if (classByName.containsKey(className)) {
+                runtimeClassLoader = new RuntimeClassLoader(runtimeClassLoader);
+                classLoaderDepth++;
+            }
+        }
+
+        return runtimeClassLoader;
     }
 }

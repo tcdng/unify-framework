@@ -17,12 +17,12 @@
 package com.tcdng.unify.core.runtime;
 
 /**
- * Hello test interface.
+ * Person interface.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface Hello {
+public interface Person {
 
-    String hello();
+    String sayHello();
 }

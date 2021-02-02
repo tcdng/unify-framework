@@ -93,4 +93,16 @@ public interface RuntimeJavaClassManager extends UnifyComponent, ClassForNamePro
      *             if an error occurs
      */
     Class<?> compileAndLoadJavaClass(String className, File file) throws UnifyException;
+    
+    /**
+     * Gets class loader depth.
+     * 
+     * @return the class loader depth;
+     */
+    int getClassLoaderDepth();
+    
+    /**
+     * Clears class loader.
+     */
+    void clearClassLoader();
 }

@@ -38,15 +38,25 @@ public class RuntimeJavaClassManagerTest extends AbstractUnifyComponentTest {
     private RuntimeJavaClassManager rjcm;
 
     private final String engHelloSrc = "package com.tcdng.unify.core.runtime;" + "@Language(\"English\")"
-            + "public class EnglishHello implements Hello {" + " public String sayHello() {" + "     return \"Hello\";"
+            + "public class EnglishHello implements Hello {" + " public String hello() {" + "     return \"Hello\";"
             + " }" + "}";
 
-    private final String naijaHelloSrc1 = "package com.tcdng.unify.core.runtime;" + "@Language(\"Naija\")"
-            + "public class NaijaHello implements Hello {" + " public String sayHello() {" + "     return \"How now?\";"
+    private final String naijaHelloSrc = "package com.tcdng.unify.core.runtime;" + "@Language(\"Naija\")"
+            + "public class NaijaHello implements Hello {" + " public String hello() {" + "     return \"How now?\";"
             + " }" + "}";
+
+    private final String hausaHelloSrc = "package com.tcdng.unify.core.runtime;" + "@Language(\"Naija\")"
+            + "public class NaijaHello implements Hello {" + " public String hello() {" + "     return \"Yaya dai?\";"
+            + " }" + "}";
+
+    private final String naijaPersonSrc = "package com.tcdng.unify.core.runtime;"
+            + "import com.tcdng.unify.core.runtime.NaijaHello;" + "public class NaijaPerson implements Person {"
+            + " private Hello hello;" + " public NaijaPerson() {" + "     hello = new NaijaHello();" + " }"
+            + " public String sayHello() {" + "     return hello.hello();" + " }" + "}";
 
     @Test
     public void testCompileAndLoadClassString() throws Exception {
+        rjcm.clearClassLoader();
         Class<?> clazz = rjcm.compileAndLoadJavaClass("com.tcdng.unify.core.runtime.EnglishHello", engHelloSrc);
         assertNotNull(clazz);
         assertEquals("com.tcdng.unify.core.runtime.EnglishHello", clazz.getName());
@@ -58,19 +68,60 @@ public class RuntimeJavaClassManagerTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testCompileAndLoadClassFunction() throws Exception {
-        Class<?> clazz = rjcm.compileAndLoadJavaClass("com.tcdng.unify.core.runtime.NaijaHello", naijaHelloSrc1);
+        rjcm.clearClassLoader();
+        Class<?> clazz = rjcm.compileAndLoadJavaClass("com.tcdng.unify.core.runtime.NaijaHello", naijaHelloSrc);
         assertNotNull(clazz);
         Hello hello = (Hello) ReflectUtils.newInstance(clazz);
-        assertEquals("How now?", hello.sayHello());
+        assertEquals("How now?", hello.hello());
     }
 
     @Test
     public void testCompileAndLoadClassAsProvider() throws Exception {
-        Class<?> clazz1 = rjcm.compileAndLoadJavaClass("com.tcdng.unify.core.runtime.NaijaHello", naijaHelloSrc1);
+        Class<?> clazz1 = rjcm.compileAndLoadJavaClass("com.tcdng.unify.core.runtime.NaijaHello", naijaHelloSrc);
         assertNotNull(clazz1);
         Class<?> clazz2 = ReflectUtils.classForName("com.tcdng.unify.core.runtime.NaijaHello");
         assertNotNull(clazz2);
         assertSame(clazz1, clazz2);
+    }
+
+    @Test
+    public void testCompileAndLoadClassStringWithRef() throws Exception {
+        rjcm.clearClassLoader();
+        rjcm.compileAndLoadJavaClass("com.tcdng.unify.core.runtime.NaijaHello", naijaHelloSrc);
+
+        Class<?> clazz = rjcm.compileAndLoadJavaClass("com.tcdng.unify.core.runtime.NaijaPerson", naijaPersonSrc);
+        assertNotNull(clazz);
+        assertEquals("com.tcdng.unify.core.runtime.NaijaPerson", clazz.getName());
+        Person person = (Person) ReflectUtils.newInstance(clazz);
+        assertEquals("How now?", person.sayHello());
+    }
+
+    @Test
+    public void testCompileAndLoadClassStringWithNewRef() throws Exception {
+        rjcm.clearClassLoader();
+        rjcm.compileAndLoadJavaClass("com.tcdng.unify.core.runtime.NaijaHello", naijaHelloSrc);
+        rjcm.compileAndLoadJavaClass("com.tcdng.unify.core.runtime.NaijaHello", hausaHelloSrc); // Test child-first
+
+        Class<?> clazz = rjcm.compileAndLoadJavaClass("com.tcdng.unify.core.runtime.NaijaPerson", naijaPersonSrc);
+        assertNotNull(clazz);
+        assertEquals("com.tcdng.unify.core.runtime.NaijaPerson", clazz.getName());
+        Person person = (Person) ReflectUtils.newInstance(clazz);
+        assertEquals("Yaya dai?", person.sayHello());
+    }
+
+    @Test
+    public void testCompileAndLoadClassLoaderDepth() throws Exception {
+        rjcm.clearClassLoader();
+        assertEquals(0, rjcm.getClassLoaderDepth());
+        rjcm.compileAndLoadJavaClass("com.tcdng.unify.core.runtime.NaijaHello", naijaHelloSrc);
+        assertEquals(1, rjcm.getClassLoaderDepth());
+        rjcm.compileAndLoadJavaClass("com.tcdng.unify.core.runtime.EnglishHello", engHelloSrc);
+        assertEquals(1, rjcm.getClassLoaderDepth());
+        rjcm.compileAndLoadJavaClass("com.tcdng.unify.core.runtime.NaijaPerson", naijaPersonSrc);
+        assertEquals(1, rjcm.getClassLoaderDepth());
+
+        rjcm.compileAndLoadJavaClass("com.tcdng.unify.core.runtime.NaijaHello", hausaHelloSrc);
+        assertEquals(2, rjcm.getClassLoaderDepth());
     }
 
     @Override
