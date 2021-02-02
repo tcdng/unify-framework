@@ -158,22 +158,29 @@ public final class DynamicEntityUtils {
 
     private static void generateForeignKeyAnnotation(StringBuilder fsb,
             DynamicForeignKeyFieldInfo dynamicForeignKeyFieldInfo) {
-        if (dynamicForeignKeyFieldInfo.isEnum()) {
-            fsb.append(" @ForeignKey(");
-        } else {
-            fsb.append(" @ForeignKey(type = ")
+        fsb.append(" @ForeignKey");
+        boolean appendSym = false;
+        if (!dynamicForeignKeyFieldInfo.isEnum()) {
+            appendSym = appendSymbol(fsb, appendSym);
+            fsb.append("type = ")
                     .append(dynamicForeignKeyFieldInfo.getParentDynamicEntityInfo().getClassName()).append(".class");
         }
 
         if (!StringUtils.isBlank(dynamicForeignKeyFieldInfo.getColumnName())) {
-            fsb.append(", name = \"").append(dynamicForeignKeyFieldInfo.getColumnName()).append("\"");
+            appendSym = appendSymbol(fsb, appendSym);
+            fsb.append("name = \"").append(dynamicForeignKeyFieldInfo.getColumnName()).append("\"");
         }
 
         if (dynamicForeignKeyFieldInfo.isNullable()) {
-            fsb.append(", nullable = true");
+            appendSym = appendSymbol(fsb, appendSym);
+            fsb.append("nullable = true");
         }
 
-        fsb.append(")\n");
+        if (appendSym) {
+            fsb.append(")");
+        }
+        
+        fsb.append("\n");
     }
 
     private static void generateColumnAnnotation(StringBuilder fsb, DynamicColumnFieldInfo dynamicColumnFieldInfo) {
@@ -181,19 +188,13 @@ public final class DynamicEntityUtils {
             fsb.append(" @Column");
             boolean appendSym = false;
             if (!StringUtils.isBlank(dynamicColumnFieldInfo.getColumnName())) {
-                fsb.append("(name = \"").append(dynamicColumnFieldInfo.getColumnName()).append("\"");
-                appendSym = true;
+                appendSym = appendSymbol(fsb, appendSym);
+                fsb.append("name = \"").append(dynamicColumnFieldInfo.getColumnName()).append("\"");
             }
             
             if (dynamicColumnFieldInfo.isNullable()) {
-                if (appendSym) {
-                    fsb.append(", ");
-                } else {
-                    fsb.append("(");
-                }
-                
+                appendSym = appendSymbol(fsb, appendSym);
                 fsb.append("nullable = true");
-                appendSym = true;
             }
 
             if (appendSym) {
@@ -207,85 +208,43 @@ public final class DynamicEntityUtils {
         fsb.append(" @Column");
         boolean appendSym = false;
         if (!DataUtils.isMappedColumnType(dynamicColumnFieldInfo.getDataType().columnType())) {
-            fsb.append("(type = ColumnType.").append(dynamicColumnFieldInfo.getDataType().columnType());
-            appendSym = true;
+            appendSym = appendSymbol(fsb, appendSym);
+            fsb.append("type = ColumnType.").append(dynamicColumnFieldInfo.getDataType().columnType());
         }
 
         if (!StringUtils.isBlank(dynamicColumnFieldInfo.getColumnName())) {
-            if (appendSym) {
-                fsb.append(", ");
-            } else {
-                fsb.append("(");
-            }
-
+            appendSym = appendSymbol(fsb, appendSym);
             fsb.append("name = \"").append(dynamicColumnFieldInfo.getColumnName()).append("\"");
-            appendSym = true;
         }
 
         if (!StringUtils.isBlank(dynamicColumnFieldInfo.getTransformer())) {
-            if (appendSym) {
-                fsb.append(", ");
-            } else {
-                fsb.append("(");
-            }
-
+            appendSym = appendSymbol(fsb, appendSym);
             fsb.append("transformer = \"").append(dynamicColumnFieldInfo.getTransformer()).append("\"");
-            appendSym = true;
         }
 
         if (!StringUtils.isBlank(dynamicColumnFieldInfo.getDefaultVal())) {
-            if (appendSym) {
-                fsb.append(", ");
-            } else {
-                fsb.append("(");
-            }
-
+            appendSym = appendSymbol(fsb, appendSym);
             fsb.append("defaultVal = \"").append(dynamicColumnFieldInfo.getDefaultVal()).append("\"");
-            appendSym = true;
         }
 
         if (dynamicColumnFieldInfo.getLength() > 0) {
-            if (appendSym) {
-                fsb.append(", ");
-            } else {
-                fsb.append("(");
-            }
-
+            appendSym = appendSymbol(fsb, appendSym);
             fsb.append("length = ").append(dynamicColumnFieldInfo.getLength());
-            appendSym = true;
         }
 
         if (dynamicColumnFieldInfo.getPrecision() > 0) {
-            if (appendSym) {
-                fsb.append(", ");
-            } else {
-                fsb.append("(");
-            }
-
+            appendSym = appendSymbol(fsb, appendSym);
             fsb.append("precision = ").append(dynamicColumnFieldInfo.getPrecision());
-            appendSym = true;
         }
 
         if (dynamicColumnFieldInfo.getScale() > 0) {
-            if (appendSym) {
-                fsb.append(", ");
-            } else {
-                fsb.append("(");
-            }
-
+            appendSym = appendSymbol(fsb, appendSym);
             fsb.append("scale = ").append(dynamicColumnFieldInfo.getScale());
-            appendSym = true;
         }
         
         if (dynamicColumnFieldInfo.isNullable()) {
-            if (appendSym) {
-                fsb.append(", ");
-            } else {
-                fsb.append("(");
-            }
-
+            appendSym = appendSymbol(fsb, appendSym);
             fsb.append("nullable = true");
-            appendSym = true;
         }
 
         if (appendSym) {
@@ -297,36 +256,37 @@ public final class DynamicEntityUtils {
 
     private static void generateLisOnlyAnnotation(StringBuilder fsb,
             DynamicListOnlyFieldInfo dynamicListOnlyFieldInfo) {
-        fsb.append(" @ListOnly(");
+        fsb.append(" @ListOnly");
         boolean appendSym = false;
         if (!StringUtils.isBlank(dynamicListOnlyFieldInfo.getColumnName())) {
-            if (appendSym) {
-                fsb.append(",");
-            }
-
-            fsb.append(" name = \"").append(dynamicListOnlyFieldInfo.getColumnName()).append("\"");
-            appendSym = true;
+            appendSym = appendSymbol(fsb, appendSym);
+            fsb.append("name = \"").append(dynamicListOnlyFieldInfo.getColumnName()).append("\"");
         }
 
         if (!StringUtils.isBlank(dynamicListOnlyFieldInfo.getKey())) {
-            if (appendSym) {
-                fsb.append(",");
-            }
-
-            fsb.append(" key = \"").append(dynamicListOnlyFieldInfo.getKey()).append("\"");
-            appendSym = true;
+            appendSym = appendSymbol(fsb, appendSym);
+            fsb.append("key = \"").append(dynamicListOnlyFieldInfo.getKey()).append("\"");
         }
 
         if (!StringUtils.isBlank(dynamicListOnlyFieldInfo.getProperty())) {
-            if (appendSym) {
-                fsb.append(",");
-            }
-
+            appendSym = appendSymbol(fsb, appendSym);
             fsb.append(" property = \"").append(dynamicListOnlyFieldInfo.getProperty()).append("\"");
-            appendSym = true;
         }
 
-        fsb.append(")\n");
+        if (appendSym) {
+            fsb.append(")");
+        }
+        
+        fsb.append("\n");
     }
 
+    private static boolean appendSymbol(StringBuilder fsb, boolean appendSym) {
+        if (appendSym) {
+            fsb.append(", ");
+        } else {
+            fsb.append("(");
+        }
+        
+        return true;
+    }
 }
