@@ -32,7 +32,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@StaticList(name = "datatypelist", description="$m{staticlist.datatypelist}")
+@StaticList(name = "datatypelist", description = "$m{staticlist.datatypelist}")
 public enum DataType implements EnumConst {
 
     CHAR("CH", Character.class, ColumnType.CHARACTER),
@@ -62,11 +62,13 @@ public enum DataType implements EnumConst {
         this.code = code;
         this.javaClass = javaClass;
         this.columnType = columnType;
-        if (convertibleFromTypes == null || convertibleFromTypes.length == 0) {
-            this.convertibleFromTypes = Collections.emptySet();
-        } else {
-            this.convertibleFromTypes = new HashSet<DataType>(Arrays.asList(convertibleFromTypes));
+        Set<DataType> set = new HashSet<DataType>();
+        set.add(this);
+        if (convertibleFromTypes != null && convertibleFromTypes.length > 0) {
+            set.addAll(Arrays.asList(convertibleFromTypes));
         }
+
+        this.convertibleFromTypes = Collections.unmodifiableSet(set);
     }
 
     @Override
@@ -85,6 +87,10 @@ public enum DataType implements EnumConst {
 
     public ColumnType columnType() {
         return columnType;
+    }
+
+    public Set<DataType> convertibleFromTypes() {
+        return convertibleFromTypes;
     }
 
     public boolean isConvertibleFrom(DataType dataType) {
