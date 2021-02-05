@@ -154,9 +154,16 @@ public class FormWriter extends AbstractContainerWriter {
         }
 
         List<String> refList = section.getReferences();
-        int itemCount = refList.size();
-        int rows = itemCount / columns;
-        if (itemCount % columns > 0) {
+        final int itemCount = refList.size();
+        int visibleCount = 0;
+        for (int i = 0; i < itemCount; i++) {
+            if (form.getWidgetByLongName(refList.get(i)).isVisible()) {
+                visibleCount++;
+            }
+        }
+
+        int rows = visibleCount / columns;
+        if (visibleCount % columns > 0) {
             rows++;
         }
 

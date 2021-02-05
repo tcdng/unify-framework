@@ -64,6 +64,10 @@ public class SwitchPanel extends AbstractPanel {
         currentComponent = shortName;
     }
 
+    public void setSwitchPanelHandler(SwitchPanelHandler switchPanelHandler) {
+        this.switchPanelHandler = switchPanelHandler;
+    }
+
     public String getCurrentWidgetShortName() throws UnifyException {
         return currentComponent;
     }
