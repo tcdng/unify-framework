@@ -122,7 +122,7 @@ public interface ListManager extends UnifyComponent {
             throws UnifyException;
 
     /**
-     * Returns the list item of a list.
+     * Returns the list item of a list by key.
      * 
      * @param locale
      *            the request locale
@@ -135,6 +135,23 @@ public interface ListManager extends UnifyComponent {
      * @throws UnifyException
      *             if list is unknown. If an error occurs
      */
-    Listable getListItem(Locale locale, String listName, String listKey, Object... params)
+    Listable getListItemByKey(Locale locale, String listName, String listKey, Object... params)
+            throws UnifyException;
+
+    /**
+     * Returns the list item of a list by description.
+     * 
+     * @param locale
+     *            the request locale
+     * @param listName
+     *            the name of the list command
+     * @param listDesc
+     *            the list description of the item to fetch
+     * @param params
+     *            optional request parameters
+     * @throws UnifyException
+     *             if list is unknown. If an error occurs
+     */
+    Listable getListItemByDescription(Locale locale, String listName, String listDesc, Object... params)
             throws UnifyException;
 }

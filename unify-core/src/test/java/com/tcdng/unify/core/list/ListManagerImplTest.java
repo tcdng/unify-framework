@@ -17,6 +17,7 @@ package com.tcdng.unify.core.list;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
@@ -96,6 +97,37 @@ public class ListManagerImplTest extends AbstractUnifyComponentTest {
         assertEquals(3, list.size());
     }
 
+    @Test
+    public void testGetListItemByKey() throws Exception {
+        ListManager listManager = (ListManager) getComponent(ApplicationComponents.APPLICATION_LISTMANAGER);
+        Listable listable = listManager.getListItemByKey(Locale.ENGLISH, "colorlist", "red");
+        assertNotNull(listable);
+        assertEquals("red", listable.getListKey());
+        assertEquals("Red", listable.getListDescription());
+
+        listable = listManager.getListItemByKey(Locale.ENGLISH, "colorlist", "purple");
+        assertNotNull(listable);
+        assertEquals("purple", listable.getListKey());
+        assertEquals("Purple", listable.getListDescription());
+    }
+
+    @Test
+    public void testGetListItemByDescription() throws Exception {
+        ListManager listManager = (ListManager) getComponent(ApplicationComponents.APPLICATION_LISTMANAGER);
+        Listable listable = listManager.getListItemByDescription(Locale.ENGLISH, "colorlist", "Red");
+        assertNotNull(listable);
+        assertEquals("red", listable.getListKey());
+        assertEquals("Red", listable.getListDescription());
+
+        listable = listManager.getListItemByDescription(Locale.ENGLISH, "colorlist", "Purple");
+        assertNotNull(listable);
+        assertEquals("purple", listable.getListKey());
+        assertEquals("Purple", listable.getListDescription());
+
+        listable = listManager.getListItemByDescription(Locale.ENGLISH, "colorlist", "Brown");
+        assertNull(listable);
+    }
+    
     @Override
     protected void onSetup() throws Exception {
 

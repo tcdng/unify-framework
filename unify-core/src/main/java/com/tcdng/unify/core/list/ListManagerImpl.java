@@ -153,9 +153,21 @@ public class ListManagerImpl extends AbstractUnifyComponent implements ListManag
     }
 
     @Override
-    public Listable getListItem(Locale locale, String listName, String listKey, Object... params)
+    public Listable getListItemByKey(Locale locale, String listName, String listKey, Object... params)
             throws UnifyException {
         return getListMap(locale, listName, params).get(listKey);
+    }
+
+    @Override
+    public Listable getListItemByDescription(Locale locale, String listName, String listDesc, Object... params)
+            throws UnifyException {
+        for(Map.Entry<String, Listable> entry: getListMap(locale, listName, params).entrySet()) {
+            if(entry.getValue().getListDescription().equals(listDesc)) {
+                return entry.getValue();
+            }
+        }
+        
+        return null;
     }
 
     @Override

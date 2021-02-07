@@ -1207,10 +1207,16 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 * @throws UnifyException if list with supplied name is unknown by the list
 	 *                        manager
 	 */
-	protected Listable getListItem(LocaleType localeType, String listName, String itemKey)
-			throws UnifyException {
-		return unifyComponentContext.getListManager().getListItem(getLocale(localeType), listName, itemKey);
-	}
+    protected Listable getListItemByKey(LocaleType localeType, String listName, String itemKey)
+            throws UnifyException {
+        return unifyComponentContext.getListManager().getListItemByKey(getLocale(localeType), listName, itemKey);
+    }
+
+    protected Listable getListItemByDescription(LocaleType localeType, String listName, String itemDesc)
+            throws UnifyException {
+        return unifyComponentContext.getListManager().getListItemByDescription(getLocale(localeType), listName,
+                itemDesc);
+    }
 
     /**
      * Gets a list based on supplied parameters.
