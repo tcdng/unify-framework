@@ -25,7 +25,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@StaticList("sqltabletypelist")
+@StaticList(name = "sqltabletypelist", description="$m{staticlist.sqltabletypelist}")
 public enum SqlTableType implements EnumConst {
 
     TABLE("TABLE", false), VIEW("VIEW", true);

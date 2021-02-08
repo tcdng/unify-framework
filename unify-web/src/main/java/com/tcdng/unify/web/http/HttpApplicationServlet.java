@@ -138,7 +138,7 @@ public class HttpApplicationServlet extends HttpServlet {
 				userSessionManager = (UserSessionManager) unifyContainer
 						.getComponent(ApplicationComponents.APPLICATION_USERSESSIONMANAGER);
 				isTenantPathEnabled = DataUtils.convert(boolean.class,
-						unifyContainer.getSetting(UnifyWebPropertyConstants.APPLICATION_TENANT_PATH_ENABLED), null);
+						unifyContainer.getSetting(UnifyWebPropertyConstants.APPLICATION_TENANT_PATH_ENABLED));
 			} catch (Exception e) {
 				e.printStackTrace();
 				if (unifyContainer != null && unifyContainer.isStarted()) {

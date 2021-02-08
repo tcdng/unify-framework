@@ -16,6 +16,9 @@
 package com.tcdng.unify.core.list;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 import java.util.Locale;
@@ -58,6 +61,73 @@ public class ListManagerImplTest extends AbstractUnifyComponentTest {
         assertEquals("Purple", list.get(2).getListDescription());
     }
 
+    @Test
+    public void testGetStaticListList() throws Exception {
+        ListManager listManager = (ListManager) getComponent(ApplicationComponents.APPLICATION_LISTMANAGER);
+
+        List<? extends Listable> list = listManager.getList(Locale.ENGLISH, "staticlistlist");
+        assertNotNull(list);
+        assertTrue(!list.isEmpty());
+    }
+
+    @Test
+    public void testGetStaticListSublistWithFilter() throws Exception {
+        ListManager listManager = (ListManager) getComponent(ApplicationComponents.APPLICATION_LISTMANAGER);
+
+        List<? extends Listable> list = listManager.getSubList(Locale.ENGLISH, "staticlistlist", "F", -1);
+        assertNotNull(list);
+        assertTrue(!list.isEmpty());
+    }
+
+    @Test
+    public void testGetStaticListSublistWithLimit() throws Exception {
+        ListManager listManager = (ListManager) getComponent(ApplicationComponents.APPLICATION_LISTMANAGER);
+
+        List<? extends Listable> list = listManager.getSubList(Locale.ENGLISH, "staticlistlist", null, 4);
+        assertNotNull(list);
+        assertEquals(4, list.size());
+    }
+
+    @Test
+    public void testGetStaticListSublistWithFilterAndLimit() throws Exception {
+        ListManager listManager = (ListManager) getComponent(ApplicationComponents.APPLICATION_LISTMANAGER);
+
+        List<? extends Listable> list = listManager.getSubList(Locale.ENGLISH, "staticlistlist", "F", 3);
+        assertNotNull(list);
+        assertEquals(3, list.size());
+    }
+
+    @Test
+    public void testGetListItemByKey() throws Exception {
+        ListManager listManager = (ListManager) getComponent(ApplicationComponents.APPLICATION_LISTMANAGER);
+        Listable listable = listManager.getListItemByKey(Locale.ENGLISH, "colorlist", "red");
+        assertNotNull(listable);
+        assertEquals("red", listable.getListKey());
+        assertEquals("Red", listable.getListDescription());
+
+        listable = listManager.getListItemByKey(Locale.ENGLISH, "colorlist", "purple");
+        assertNotNull(listable);
+        assertEquals("purple", listable.getListKey());
+        assertEquals("Purple", listable.getListDescription());
+    }
+
+    @Test
+    public void testGetListItemByDescription() throws Exception {
+        ListManager listManager = (ListManager) getComponent(ApplicationComponents.APPLICATION_LISTMANAGER);
+        Listable listable = listManager.getListItemByDescription(Locale.ENGLISH, "colorlist", "Red");
+        assertNotNull(listable);
+        assertEquals("red", listable.getListKey());
+        assertEquals("Red", listable.getListDescription());
+
+        listable = listManager.getListItemByDescription(Locale.ENGLISH, "colorlist", "Purple");
+        assertNotNull(listable);
+        assertEquals("purple", listable.getListKey());
+        assertEquals("Purple", listable.getListDescription());
+
+        listable = listManager.getListItemByDescription(Locale.ENGLISH, "colorlist", "Brown");
+        assertNull(listable);
+    }
+    
     @Override
     protected void onSetup() throws Exception {
 

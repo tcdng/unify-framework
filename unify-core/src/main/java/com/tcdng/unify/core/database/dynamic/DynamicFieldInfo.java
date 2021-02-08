@@ -16,6 +16,7 @@
 
 package com.tcdng.unify.core.database.dynamic;
 
+import com.tcdng.unify.core.annotation.DynamicFieldType;
 import com.tcdng.unify.core.constant.DataType;
 import com.tcdng.unify.core.constant.EntityFieldType;
 
@@ -27,19 +28,35 @@ import com.tcdng.unify.core.constant.EntityFieldType;
  */
 public abstract class DynamicFieldInfo {
 
+    private DynamicFieldType type;
+
     private EntityFieldType fieldType;
-    
+
     private DataType dataType;
 
     private String columnName;
 
     private String fieldName;
 
-    public DynamicFieldInfo(EntityFieldType fieldType, DataType dataType, String columnName, String fieldName) {
+    private String enumClassName;
+
+    public DynamicFieldInfo(DynamicFieldType type, EntityFieldType fieldType, DataType dataType, String columnName,
+            String fieldName) {
+        this(type, fieldType, dataType, columnName, fieldName, null);
+    }
+
+    public DynamicFieldInfo(DynamicFieldType type, EntityFieldType fieldType, DataType dataType, String columnName,
+            String fieldName, String enumClassName) {
+        this.type = type;
         this.fieldType = fieldType;
         this.dataType = dataType;
         this.columnName = columnName;
         this.fieldName = fieldName;
+        this.enumClassName = enumClassName;
+    }
+
+    public DynamicFieldType getType() {
+        return type;
     }
 
     public EntityFieldType getFieldType() {
@@ -58,4 +75,15 @@ public abstract class DynamicFieldInfo {
         return fieldName;
     }
 
+    public String getEnumClassName() {
+        return enumClassName;
+    }
+
+    public boolean isEnum() {
+        return enumClassName != null;
+    }
+
+    public boolean isGeneration() {
+        return DynamicFieldType.GENERATION.equals(type);
+    }
 }

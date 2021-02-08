@@ -16,9 +16,10 @@
 package com.tcdng.unify.core.convert;
 
 import com.tcdng.unify.core.format.Formatter;
+import com.tcdng.unify.core.util.ReflectUtils;
 
 /**
- * A value to class converter. Does a {@link Class#forName(String)} for string
+ * A value to class converter. Does a {@link ReflectUtils#classForName(String)} for string
  * values.
  * 
  * @author Lateef Ojulari
@@ -33,7 +34,7 @@ public class ClassConverter extends AbstractConverter<Class<?>> {
         }
 
         if (value instanceof String) {
-            return Class.forName((String) value);
+            return ReflectUtils.classForName((String) value);
         }
 
         return null;

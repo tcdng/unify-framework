@@ -63,7 +63,7 @@ public class BatchFileReadConfig {
     }
 
     public <T> T getParameter(Class<T> paramType, String name) throws UnifyException {
-        return DataUtils.convert(paramType, parameters.get(name), null);
+        return DataUtils.convert(paramType, parameters.get(name));
     }
 
     public List<BatchFileFieldConfig> getFieldConfigList() {

@@ -22,7 +22,7 @@ package com.tcdng.unify.core.list;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class StatusParams {
+public class StatusParams extends AbstractListParam {
 
     private String status;
 
@@ -34,6 +34,7 @@ public class StatusParams {
         return status;
     }
     
+    @Override
     public boolean isPresent() {
         return status != null;
     }

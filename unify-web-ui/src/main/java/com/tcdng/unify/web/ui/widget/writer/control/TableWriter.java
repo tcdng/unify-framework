@@ -186,7 +186,7 @@ public class TableWriter extends AbstractControlWriter {
         EventHandler[] rowEventHandlers = table.getUplAttribute(EventHandler[].class, "rowEventHandler");
         if (rowEventHandlers != null) {
             for (EventHandler rowEventHandler : rowEventHandlers) {
-                writer.writeBehavior(rowEventHandler, table.getRowId());
+                writer.writeBehavior(rowEventHandler, table.getRowId(), null);
             }
         }
 

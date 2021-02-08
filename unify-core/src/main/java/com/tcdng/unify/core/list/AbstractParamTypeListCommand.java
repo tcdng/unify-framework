@@ -36,7 +36,7 @@ import com.tcdng.unify.core.util.DataUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public abstract class AbstractParamTypeListCommand<T> extends AbstractListCommand<T> {
+public abstract class AbstractParamTypeListCommand<T extends ListParam> extends AbstractListCommand<T> {
 
     private Map<Class<? extends UnifyComponent>, FactoryMap<Locale, List<Listable>>> typeListMap;
 

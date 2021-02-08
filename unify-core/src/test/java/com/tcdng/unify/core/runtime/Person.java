@@ -17,27 +17,12 @@
 package com.tcdng.unify.core.runtime;
 
 /**
- * Java class source object.
+ * Person interface.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class AbstractJavaClassSource {
+public interface Person {
 
-    private String className;
-    
-    private long version;
-
-    public AbstractJavaClassSource(String className, long version) {
-        this.className = className;
-        this.version = version;
-    }
-
-    public String getClassName() {
-        return className;
-    }
-
-    public long getVersion() {
-        return version;
-    }
+    String sayHello();
 }

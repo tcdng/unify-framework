@@ -31,10 +31,11 @@ import com.tcdng.unify.web.ui.widget.ResponseWriter;
 public abstract class AbstractPageActionWriter extends AbstractBehaviorWriter implements PageActionWriter {
 
     @Override
-    public void writeBehavior(ResponseWriter writer, Behavior behavior, String id) throws UnifyException {
+    public void writeBehavior(ResponseWriter writer, Behavior behavior, String id, String cmdTag)
+            throws UnifyException {
         PageAction pageAction = (PageAction) behavior;
         if (StringUtils.isNotBlank(behavior.getUplAttribute(String.class, "shortcut"))) {
-            writeShortcutHandlerJs(writer, null, id, pageAction);
+            writeShortcutHandlerJs(writer, null, id, cmdTag, pageAction);
         }
     }
 

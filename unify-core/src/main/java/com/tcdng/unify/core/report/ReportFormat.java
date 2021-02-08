@@ -26,7 +26,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@StaticList("reportformatlist")
+@StaticList(name = "reportformatlist", description="$m{staticlist.reportformatlist}")
 public enum ReportFormat implements EnumConst {
     CSV("CSV", ".csv", MimeType.TEXT_CSV),
     DOC("DOC", ".doc", MimeType.APPLICATION_DOC),

@@ -112,7 +112,7 @@ public class TreeExplorer extends AbstractMultiControl {
             if (TreeEventType.TREEITEM_DROP.equals(eventType)) {
                 String srcLongName = getPageManager().getLongName(dropSrcId);
                 List<Long> srcItemIdList =
-                        DataUtils.convert(List.class, Long.class, StringUtils.commaSplit(dropSrcItemIds), null);
+                        DataUtils.convert(List.class, Long.class, StringUtils.commaSplit(dropSrcItemIds));
                 tree.registerEvent(eventType, dropTrgItemId, srcLongName, srcItemIdList);
             } else {
                 tree.registerEvent(eventType, menuCode);

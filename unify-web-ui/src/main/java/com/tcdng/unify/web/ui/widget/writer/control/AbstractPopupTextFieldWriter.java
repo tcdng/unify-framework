@@ -50,19 +50,21 @@ public abstract class AbstractPopupTextFieldWriter extends TextFieldWriter {
                     facId = popupTextField.getFacadeId();
                 }
 
-                writeOpenPopupJS(writer, "onenter", facId, popupTextField.getBorderId(), popupTextField.getPopupId(),
-                        popupTextField.getDisplayTimeOut(), getOnShowAction(), getOnShowParam(popupTextField),
-                        getOnHideAction(), getOnHideParam(popupTextField));
-
-                if(popupTextField.isOpenPopupOnFac()) {
-                    writeOpenPopupJS(writer, "onclick", facId, popupTextField.getBorderId(), popupTextField.getPopupId(),
-                            popupTextField.getDisplayTimeOut(), getOnShowAction(), getOnShowParam(popupTextField),
-                            getOnHideAction(), getOnHideParam(popupTextField));
-                }
-
-                writeOpenPopupJS(writer, "onclick", popupTextField.getPopupButtonId(), popupTextField.getBorderId(),
+                String cmdTag = popupTextField.getBinding();
+                writeOpenPopupJS(writer, "onenter", facId, cmdTag, popupTextField.getBorderId(),
                         popupTextField.getPopupId(), popupTextField.getDisplayTimeOut(), getOnShowAction(),
                         getOnShowParam(popupTextField), getOnHideAction(), getOnHideParam(popupTextField));
+
+                if (popupTextField.isOpenPopupOnFac()) {
+                    writeOpenPopupJS(writer, "onclick", cmdTag, facId, popupTextField.getBorderId(),
+                            popupTextField.getPopupId(), popupTextField.getDisplayTimeOut(), getOnShowAction(),
+                            getOnShowParam(popupTextField), getOnHideAction(), getOnHideParam(popupTextField));
+                }
+
+                writeOpenPopupJS(writer, "onclick", popupTextField.getPopupButtonId(), cmdTag,
+                        popupTextField.getBorderId(), popupTextField.getPopupId(), popupTextField.getDisplayTimeOut(),
+                        getOnShowAction(), getOnShowParam(popupTextField), getOnHideAction(),
+                        getOnHideParam(popupTextField));
             }
         }
 

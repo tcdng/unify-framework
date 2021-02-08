@@ -268,7 +268,7 @@ public final class UnifyConfigUtils {
 
                     for (ComponentConfig componentConfig : componentsConfig.getComponentConfigList()) {
                         Class<? extends UnifyComponent> type = (Class<? extends UnifyComponent>) ReflectUtils
-                                .getClassForName(componentConfig.getClassName());
+                                .classForName(componentConfig.getClassName());
                         String componentName = componentConfig.getName();
                         String description = componentConfig.getDescription();
                         if (StringUtils.isBlank(componentName)) {

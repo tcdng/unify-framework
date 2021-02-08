@@ -137,7 +137,6 @@ public class FormWriter extends AbstractContainerWriter {
             return;
         }
 
-        String captionSuffix = form.getUplAttribute(String.class, "captionSuffix");
         String caption = section.getCaption();
         if (caption != null) {
             writer.write("<div><span class=\"secCaption\">");
@@ -154,79 +153,91 @@ public class FormWriter extends AbstractContainerWriter {
         }
 
         List<String> refList = section.getReferences();
-        int itemCount = refList.size();
-        int rows = itemCount / columns;
-        if (itemCount % columns > 0) {
-            rows++;
-        }
-
-        boolean isWidgetCaptionless = section.isWidgetCaptionless();
-        PageRequestContextUtil requestContextUtil = getRequestContextUtil();
-        int columnWidth = 100 / columns;
-        for (int i = 0; i < itemCount;) {
-            writer.write("<td class=\"secColumn\" style=\"width:");
-            writer.write(columnWidth);
-            writer.write("%\"><table style=\"width:100%;\">");
-            int row = 0;
-            while (row < rows && i < itemCount) {
-                Widget widget = form.getWidgetByLongName(refList.get(i));
-                if (valueStore != null) {
-                    widget.setValueStore(valueStore);
-                }
-
-                if (groupId != null) {
-                    widget.setGroupId(groupId);
-                }
-
-                if (widget.isVisible()) {
-                    writer.write("<tr>");
-                    caption = null;
-                    if (widget.isLayoutCaption()) {
-                        caption = widget.getUplAttribute(String.class, "caption");
-                    }
-
-                    if (!isWidgetCaptionless) {
-                        writer.write("<td class=\"secLabel\">");
-                        if (caption != null) {
-                            writer.writeWithHtmlEscape(caption);
-                            if (captionSuffix != null) {
-                                writer.write(captionSuffix);
-                            }
-                        }
-                        writer.write("</td>");
-
-                        writer.write("<td class=\"secInputReq\">");
-                        if (widget instanceof Control) {
-                            if (((Control) widget).getRequired().isTrue()) {
-                                writer.write("<span>").write(form.getUplAttribute(String.class, "requiredSymbol"))
-                                        .write("</span>");
-                            }
-
-                            // Add to save list
-                            requestContextUtil.addOnSaveContentWidget(widget.getId());
-                        }
-                        writer.write("</td>");
-                    }
-
-                    writer.write("<td class=\"secInput\"><div>");
-                    writer.writeStructureAndContent(widget);
-                    writer.write("</div>");
-                    if (widget instanceof Control) {
-                        writer.write("<div><span id=\"").write(((Control) widget).getNotificationId())
-                                .write("\" class=\"secInputErr\"></span>");
-                        writer.write("</div>");
-                    }
-                    writer.write("</td>");
-
-                    writer.write("</tr>");
-                    row++;
-                } else if (widget.isHidden()) {
-                    writer.writeStructureAndContent(widget);
-                }
-                i++;
+        final int itemCount = refList.size();
+        int visibleCount = 0;
+        for (int i = 0; i < itemCount; i++) {
+            if (form.getWidgetByLongName(refList.get(i)).isVisible()) {
+                visibleCount++;
             }
-            writer.write("</table></td>");
         }
+
+        if (visibleCount > 0) {
+            String captionSuffix = form.getUplAttribute(String.class, "captionSuffix");
+            int rows = visibleCount / columns;
+            if (visibleCount % columns > 0) {
+                rows++;
+            }
+
+            boolean isWidgetCaptionless = section.isWidgetCaptionless();
+            PageRequestContextUtil requestContextUtil = getRequestContextUtil();
+            int columnWidth = 100 / columns;
+            for (int i = 0; i < itemCount;) {
+                writer.write("<td class=\"secColumn\" style=\"width:");
+                writer.write(columnWidth);
+                writer.write("%\"><table style=\"width:100%;\">");
+                int row = 0;
+                while (row < rows && i < itemCount) {
+                    Widget widget = form.getWidgetByLongName(refList.get(i));
+                    if (valueStore != null) {
+                        widget.setValueStore(valueStore);
+                    }
+
+                    if (groupId != null) {
+                        widget.setGroupId(groupId);
+                    }
+
+                    if (widget.isVisible()) {
+                        writer.write("<tr>");
+                        caption = null;
+                        if (widget.isLayoutCaption()) {
+                            caption = widget.getUplAttribute(String.class, "caption");
+                        }
+
+                        if (!isWidgetCaptionless) {
+                            writer.write("<td class=\"secLabel\">");
+                            if (caption != null) {
+                                writer.writeWithHtmlEscape(caption);
+                                if (captionSuffix != null) {
+                                    writer.write(captionSuffix);
+                                }
+                            }
+                            writer.write("</td>");
+
+                            writer.write("<td class=\"secInputReq\">");
+                            if (widget instanceof Control) {
+                                if (((Control) widget).getRequired().isTrue()) {
+                                    writer.write("<span>").write(form.getUplAttribute(String.class, "requiredSymbol"))
+                                            .write("</span>");
+                                }
+
+                                // Add to save list
+                                requestContextUtil.addOnSaveContentWidget(widget.getId());
+                            }
+                            writer.write("</td>");
+                        }
+
+                        writer.write("<td class=\"secInput\"><div>");
+                        writer.writeStructureAndContent(widget);
+                        writer.write("</div>");
+                        if (widget instanceof Control) {
+                            writer.write("<div><span id=\"").write(((Control) widget).getNotificationId())
+                                    .write("\" class=\"secInputErr\"></span>");
+                            writer.write("</div>");
+                        }
+                        writer.write("</td>");
+
+                        writer.write("</tr>");
+                        row++;
+                    } else if (widget.isHidden()) {
+                        writer.writeStructureAndContent(widget);
+                    }
+                    i++;
+                }
+                writer.write("</table></td>");
+            }
+        }
+                
+        
         writer.write("</tr></table></div>");
     }
 }

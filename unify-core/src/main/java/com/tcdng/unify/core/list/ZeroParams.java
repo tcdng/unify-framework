@@ -22,8 +22,13 @@ package com.tcdng.unify.core.list;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class ZeroParams {
+public class ZeroParams extends AbstractListParam {
 
     public static final ZeroParams INSTANCE = new ZeroParams();
+
+    @Override
+    public boolean isPresent() {
+        return false;
+    }
 
 }

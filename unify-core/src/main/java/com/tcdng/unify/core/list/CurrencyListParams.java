@@ -22,7 +22,7 @@ package com.tcdng.unify.core.list;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class CurrencyListParams {
+public class CurrencyListParams extends AbstractListParam {
 
     private String[] currencyCodes;
 
@@ -34,7 +34,8 @@ public class CurrencyListParams {
         return currencyCodes;
     }
 
-    public boolean isCurrencyCodes() {
+    @Override
+    public boolean isPresent() {
         return currencyCodes != null && currencyCodes.length > 0;
     }
 }

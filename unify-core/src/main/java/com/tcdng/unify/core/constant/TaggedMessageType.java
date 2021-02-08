@@ -24,7 +24,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@StaticList("taggedmessagetypelist")
+@StaticList(name = "taggedmessagetypelist", description="$m{staticlist.taggedmessagetypelist}")
 public enum TaggedMessageType implements EnumConst {
 
     BINARY("BIN"), XML("XML");

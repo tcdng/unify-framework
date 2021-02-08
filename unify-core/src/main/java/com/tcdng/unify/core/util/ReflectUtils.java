@@ -49,7 +49,6 @@ import com.tcdng.unify.core.data.WrappedData;
 public final class ReflectUtils {
 
     // TODO Clear classes for dynamic class loaders to prevent leakage.
-
     private static final FactoryMap<Class<?>, Map<String, Field>> declaredFieldMap;
 
     private static final FactoryMap<Class<?>, Map<String, GetterSetterInfo>> caseSensitiveGetterSetterMap;
@@ -65,6 +64,8 @@ public final class ReflectUtils {
     private static final FactoryMap<Class<?>, ConstructorInfo> largeConstructorMap;
 
     private static final Map<String, Class<?>> primitiveToClassMap = new HashMap<String, Class<?>>();
+
+    private static ClassForNameProvider classForNameProvider;
 
     static {
         primitiveToClassMap.put("boolean", boolean.class);
@@ -609,7 +610,7 @@ public final class ReflectUtils {
      *             if an error occurs
      */
     public static List<String> getBeanCompliantFieldNames(String beanClass) throws UnifyException {
-        return beanFieldNamesMap.get(ReflectUtils.getClassForName(beanClass));
+        return beanFieldNamesMap.get(ReflectUtils.classForName(beanClass));
     }
 
     /**
@@ -635,7 +636,7 @@ public final class ReflectUtils {
      *             if an error occurs
      */
     public static List<String> getBeanCompliantNestedFieldNames(String beanClassName) throws UnifyException {
-        return beanNestedFieldNamesMap.get(ReflectUtils.getClassForName(beanClassName));
+        return beanNestedFieldNamesMap.get(ReflectUtils.classForName(beanClassName));
     }
 
     /**
@@ -663,7 +664,7 @@ public final class ReflectUtils {
      */
     public static List<PropertyInfo> getBeanCompliantNestedPropertiesWithGetters(String beanClassName)
             throws UnifyException {
-        return beanNestedPropertiesWithGetterMap.get(ReflectUtils.getClassForName(beanClassName));
+        return beanNestedPropertiesWithGetterMap.get(ReflectUtils.classForName(beanClassName));
     }
 
     /**
@@ -1199,6 +1200,16 @@ public final class ReflectUtils {
         return t;
     }
 
+    public static void registerClassForNameProvider(ClassForNameProvider classForNameProvider) {
+        ReflectUtils.classForNameProvider = classForNameProvider;
+    }
+
+    public static void unregisterClassForNameProvider(ClassForNameProvider classForNameProvider) {
+        if (classForNameProvider == ReflectUtils.classForNameProvider) {
+            ReflectUtils.classForNameProvider = null;
+        }
+    }
+    
     /**
      * Returns class for supplied name.
      * 
@@ -1207,13 +1218,20 @@ public final class ReflectUtils {
      * @throws UnifyException
      *             if an error occurs
      */
-    public static Class<?> getClassForName(String className) throws UnifyException {
+    public static Class<?> classForName(String className) throws UnifyException {
         try {
             Class<?> clazz = primitiveToClassMap.get(className);
             if (clazz != null) {
                 return clazz;
             }
-
+            
+            if (classForNameProvider != null) {
+                clazz = classForNameProvider.classForName(className);
+                if (clazz != null) {
+                    return clazz;
+                }
+            }
+            
             return Class.forName(className);
         } catch (Exception e) {
             throw new UnifyOperationException(e, ReflectUtils.class);
@@ -1233,7 +1251,7 @@ public final class ReflectUtils {
     @SuppressWarnings("unchecked")
     public static <T> T newInstance(Class<T> clazz, String className) throws UnifyException {
         try {
-            return (T) Class.forName(className).newInstance();
+            return (T) ReflectUtils.classForName(className).newInstance();
         } catch (Exception e) {
             throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_INSTANTIATION_ERROR, clazz);
         }
@@ -1359,7 +1377,7 @@ public final class ReflectUtils {
     public static String getPublicStaticStringConstant(String longFieldName) throws UnifyException {
         try {
             int index = longFieldName.lastIndexOf('.');
-            Class<?> clazz = Class.forName(longFieldName.substring(0, index));
+            Class<?> clazz = ReflectUtils.classForName(longFieldName.substring(0, index));
             Field field = clazz.getField(longFieldName.substring(index + 1));
             return ReflectUtils.getPublicStaticStringConstant(field);
         } catch (UnifyException e) {

@@ -22,7 +22,7 @@ package com.tcdng.unify.core.list;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class SearchProviderParams {
+public class SearchProviderParams extends AbstractListParam {
 
     private String key;
 
@@ -39,5 +39,10 @@ public class SearchProviderParams {
 
     public String getFilter() {
         return filter;
+    }
+
+    @Override
+    public boolean isPresent() {
+        return key != null;
     }
 }

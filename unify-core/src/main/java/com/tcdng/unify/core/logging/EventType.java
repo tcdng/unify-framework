@@ -25,7 +25,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@StaticList("auditactionlist")
+@StaticList(name = "auditactionlist", description="$m{staticlist.auditactionlist}")
 public enum EventType implements EnumConst {
 
     SEARCH("S", "ui-event-gray", true),

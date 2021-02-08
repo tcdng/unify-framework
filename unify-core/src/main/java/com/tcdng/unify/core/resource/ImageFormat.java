@@ -27,7 +27,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@StaticList("imageformatlist")
+@StaticList(name = "imageformatlist", description="$m{staticlist.imageformatlist}")
 public enum ImageFormat implements EnumConst {
 
     BITMAP("BMP", ".bmp", MimeType.IMAGE_BMP),

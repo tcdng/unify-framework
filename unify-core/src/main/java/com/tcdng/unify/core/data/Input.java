@@ -55,11 +55,11 @@ public abstract class Input<T> {
     }
 
     public String getStringValue() throws UnifyException {
-        return DataUtils.convert(String.class, value, null);
+        return DataUtils.convert(String.class, value);
     }
     
     public void setStringValue(String value) throws UnifyException  {
-        this.value = DataUtils.convert(type, value, null);
+        this.value = DataUtils.convert(type, value);
     }
 
     public Object getTypeValue() {

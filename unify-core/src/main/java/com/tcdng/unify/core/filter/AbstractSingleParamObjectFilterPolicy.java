@@ -45,7 +45,7 @@ public abstract class AbstractSingleParamObjectFilterPolicy implements ObjectFil
 			if (param instanceof RestrictionField) {
 				return doMatch(fieldVal, valueStore.retrieve(((RestrictionField) param).getName()));
 			} else {
-				return doMatch(fieldVal, DataUtils.convert(fieldVal.getClass(), param, null));
+				return doMatch(fieldVal, DataUtils.convert(fieldVal.getClass(), param));
 			}
 		}
 
@@ -61,7 +61,7 @@ public abstract class AbstractSingleParamObjectFilterPolicy implements ObjectFil
 			if (param instanceof RestrictionField) {
 				return doMatch(fieldVal, DataUtils.getNestedBeanProperty(bean, ((RestrictionField) param).getName()));
 			} else {
-				return doMatch(fieldVal, DataUtils.convert(fieldVal.getClass(), param, null));
+				return doMatch(fieldVal, DataUtils.convert(fieldVal.getClass(), param));
 			}
 		}
 

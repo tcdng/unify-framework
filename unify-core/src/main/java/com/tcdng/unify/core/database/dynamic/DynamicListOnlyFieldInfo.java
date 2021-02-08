@@ -16,6 +16,8 @@
 
 package com.tcdng.unify.core.database.dynamic;
 
+import com.tcdng.unify.core.annotation.DynamicFieldType;
+import com.tcdng.unify.core.constant.DataType;
 import com.tcdng.unify.core.constant.EntityFieldType;
 
 /**
@@ -27,15 +29,23 @@ import com.tcdng.unify.core.constant.EntityFieldType;
 public class DynamicListOnlyFieldInfo extends DynamicFieldInfo {
 
     private DynamicFieldInfo propertyFieldInfo;
-    
+
     private String key;
 
     private String property;
 
-    public DynamicListOnlyFieldInfo(DynamicFieldInfo propertyFieldInfo, String columnName, String fieldName,
-            String key, String property) {
-        super(EntityFieldType.LIST_ONLY, propertyFieldInfo.getDataType(), columnName, fieldName);
+    public DynamicListOnlyFieldInfo(DynamicFieldType type, DynamicFieldInfo propertyFieldInfo, String columnName,
+            String fieldName, String key, String property) {
+        super(type, EntityFieldType.LIST_ONLY, propertyFieldInfo.getDataType(), columnName, fieldName,
+                propertyFieldInfo.getEnumClassName());
         this.propertyFieldInfo = propertyFieldInfo;
+        this.key = key;
+        this.property = property;
+    }
+
+    public DynamicListOnlyFieldInfo(DynamicFieldType type, String columnName, String fieldName, String key,
+            String property) {
+        super(type, EntityFieldType.LIST_ONLY, DataType.STRING, columnName, fieldName);
         this.key = key;
         this.property = property;
     }

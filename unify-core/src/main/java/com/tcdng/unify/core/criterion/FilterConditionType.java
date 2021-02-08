@@ -27,7 +27,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@StaticList("filterconditiontypelist")
+@StaticList(name = "filterconditiontypelist", description="$m{staticlist.filterconditiontypelist}")
 public enum FilterConditionType implements EnumConst {
 
     EQUALS("EQ", RestrictionType.EQUALS, "condition.equals.label", "condition.equals.symbol", FilterParamType.IMMEDIATE) {

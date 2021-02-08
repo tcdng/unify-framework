@@ -43,7 +43,7 @@ public class UnorderedListWriter extends AbstractControlWriter {
         writer.write(">");
         String[] items = unorderedList.getItems();
         if (items == null) {
-            items = DataUtils.convert(String[].class, unorderedList.getValue(), null);
+            items = DataUtils.convert(String[].class, unorderedList.getValue());
         }
 
         if (items != null) {

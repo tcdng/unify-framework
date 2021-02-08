@@ -63,7 +63,7 @@ public class OptionsTextArea extends TextArea implements ListControl {
     }
 
     @Override
-    public Map<String, String> getListMap() throws UnifyException {
+    public Map<String, Listable> getListMap() throws UnifyException {
         return getListControlUtils().getListMap(this);
     }
 

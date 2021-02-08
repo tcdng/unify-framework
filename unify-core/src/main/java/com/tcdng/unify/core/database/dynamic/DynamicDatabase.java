@@ -16,11 +16,7 @@
 
 package com.tcdng.unify.core.database.dynamic;
 
-import java.util.List;
-
-import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.database.Database;
-import com.tcdng.unify.core.database.Entity;
 
 /**
  * Dynamic database with changing entity structures.
@@ -30,25 +26,4 @@ import com.tcdng.unify.core.database.Entity;
  */
 public interface DynamicDatabase extends Database {
 
-    /**
-     * Gets database dynamic entity java class.
-     * 
-     * @param className
-     *            the entity class name
-     * @return the entity class name
-     * @throws UnifyException
-     *             if entity type with class name is unknown in this database. if an
-     *             error occurs
-     */
-    Class<? extends Entity> getDynamicEntityClass(String className) throws UnifyException;
-
-    /**
-     * Creates of updates dynamic entity schema objects for database.
-     * 
-     * @param dynamicEntityInfoList
-     *            the new dynamic entity structure list
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    void createOrUpdateDynamicEntitySchemaObjects(List<DynamicEntityInfo> dynamicEntityInfoList) throws UnifyException;
 }

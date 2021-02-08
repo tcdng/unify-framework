@@ -20,7 +20,6 @@ import java.util.List;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.database.NativeQuery;
-import com.tcdng.unify.core.database.dynamic.DynamicEntityInfo;
 import com.tcdng.unify.core.database.sql.SqlColumnInfo;
 import com.tcdng.unify.core.database.sql.SqlDataSource;
 import com.tcdng.unify.core.database.sql.SqlDataSourceManager;
@@ -142,33 +141,6 @@ public interface DynamicSqlDataSourceManager extends SqlDataSourceManager {
      *             if an error occurs
      */
     SqlDataSource getDataSource(String dataSourceConfigName) throws UnifyException;
-
-    /**
-     * Gets a data source dynamic entity java class.
-     * 
-     * @param dataSourceConfigName
-     *            the data source configuration name
-     * @param className
-     *            the entity class name
-     * @return the entity class name
-     * @throws UnifyException
-     *             if data source configuration is unknown. if entity type with
-     *             class name is unknown. if an error occurs
-     */
-    Class<?> getDataSourceDynamicEntityClass(String dataSourceConfigName, String className) throws UnifyException;
-
-    /**
-     * Creates of updates dynamic entity schema objects for dynamic data source.
-     * 
-     * @param dataSourceConfigName
-     *            the data source configuration name
-     * @param dynamicEntityInfoList
-     *            the new dynamic entity structure list
-     * @throws UnifyException
-     *             if data source is unknown. if an error occurs
-     */
-    void createOrUpdateDataSourceDynamicEntitySchemaObjects(String dataSourceConfigName,
-            List<DynamicEntityInfo> dynamicEntityInfoList) throws UnifyException;
 
     /**
      * Gets a connection object from configured data source connection pool.

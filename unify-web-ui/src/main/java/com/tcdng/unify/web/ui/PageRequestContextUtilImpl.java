@@ -54,6 +54,8 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
 
     private static final String COMMAND = "COMMAND";
 
+    public static final String COMMAND_TAG = "COMMAND_TAG";
+
     private static final String COMMAND_RESULT_MAPPING = "COMMAND_RESULT_MAPPING";
 
     private static final String COMMAND_POSTRESPONSE_PATH = "COMMAND_POSTRESPONSE_PATH";
@@ -127,6 +129,16 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
     }
 
     @Override
+    public void setRequestCommandTag(String cmdTag) throws UnifyException {
+        setRequestAttribute(COMMAND_TAG, cmdTag);
+    }
+
+    @Override
+    public String getRequestCommandTag() throws UnifyException {
+        return (String) getRequestAttribute(COMMAND_TAG);
+    }
+
+    @Override
     public void setCommandResultMapping(String resultMapping) throws UnifyException {
         setRequestAttribute(COMMAND_RESULT_MAPPING, resultMapping);
     }
@@ -148,27 +160,27 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
 
     @Override
     public <T> T getRequestTargetValue(Class<T> targetClazz) throws UnifyException {
-        return DataUtils.convert(targetClazz, getRequestAttribute(PageRequestParameterConstants.TARGET_VALUE), null);
+        return DataUtils.convert(targetClazz, getRequestAttribute(PageRequestParameterConstants.TARGET_VALUE));
     }
 
     @Override
     public String getRequestConfirmMessage() throws UnifyException {
-        return DataUtils.convert(String.class, getRequestAttribute(PageRequestParameterConstants.CONFIRM_MSG), null);
+        return DataUtils.convert(String.class, getRequestAttribute(PageRequestParameterConstants.CONFIRM_MSG));
     }
 
     @Override
     public MessageIcon getRequestConfirmMessageIcon() throws UnifyException {
-        return MessageIcon.getIconByInt(DataUtils.convert(int.class, getRequestAttribute(PageRequestParameterConstants.CONFIRM_MSGICON), null));
+        return MessageIcon.getIconByInt(DataUtils.convert(int.class, getRequestAttribute(PageRequestParameterConstants.CONFIRM_MSGICON)));
     }
 
     @Override
     public String getRequestConfirmParam() throws UnifyException {
-        return DataUtils.convert(String.class, getRequestAttribute(PageRequestParameterConstants.CONFIRM_PARAM), null);
+        return DataUtils.convert(String.class, getRequestAttribute(PageRequestParameterConstants.CONFIRM_PARAM));
     }
 
     @Override
     public String getRemoteViewer() throws UnifyException {
-        return DataUtils.convert(String.class, getRequestAttribute(RequestParameterConstants.REMOTE_VIEWER), null);
+        return DataUtils.convert(String.class, getRequestAttribute(RequestParameterConstants.REMOTE_VIEWER));
     }
 
     @Override

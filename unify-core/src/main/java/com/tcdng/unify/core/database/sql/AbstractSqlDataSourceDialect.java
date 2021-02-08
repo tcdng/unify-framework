@@ -2206,7 +2206,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
             // Fix updates for enumerations that come different value type 01/07/19
             if (EnumConst.class.isAssignableFrom(sqlFieldInfo.getFieldType()) && value != null
                     && !value.getClass().equals(sqlFieldInfo.getFieldType())) {
-                value = DataUtils.convert(sqlFieldInfo.getFieldType(), value, null);
+                value = DataUtils.convert(sqlFieldInfo.getFieldType(), value);
             }
             // End fix
 

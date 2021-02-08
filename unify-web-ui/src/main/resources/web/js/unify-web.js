@@ -4047,6 +4047,9 @@ ux.buildObjParams = function(trgObj, evp, param) {
 		if (evp.uCmd) {
 			pb.append("req_cmd", evp.uCmd);
 		}
+		if (evp.uCmdTag) {
+			pb.append("req_cmdtag", evp.uCmdTag);
+		}
 		if (evp.uPanels) {
 			for (var i = 0; i < evp.uPanels.length; i++) {
 				pb.append("req_rsh", evp.uPanels[i]);
@@ -4065,6 +4068,9 @@ ux.buildObjParams = function(trgObj, evp, param) {
 		}
 		if (evp.uCmd) {
 			pb += ("&req_cmd=" + _enc(evp.uCmd));
+		}
+		if (evp.uCmdTag) {
+			pb += ("&req_cmdtag=" + _enc(evp.uCmdTag));
 		}
 		if (evp.uPanels) {
 			for (var i = 0; i < evp.uPanels.length; i++) {
@@ -4753,6 +4759,10 @@ ux.setShortcut = function(shortcut, evp) {
 
 ux.setOnEvent = function(evp) {
 	const eventName = evp.uEvnt;
+	if (evp.uPushSrc && evp.uRef && !evp.uRef.includes(evp.uId)) {
+		evp.uRef.push(evp.uId);
+	}
+	
 	var elem = _id(evp.uId);
 	if (elem) {
 		if (elem.value == "pushr_") {

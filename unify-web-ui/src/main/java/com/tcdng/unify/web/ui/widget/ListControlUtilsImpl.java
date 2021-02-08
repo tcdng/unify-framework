@@ -141,7 +141,7 @@ public class ListControlUtilsImpl extends AbstractUnifyComponent implements List
     }
 
     @Override
-    public Map<String, String> getListMap(ListControl listControl) throws UnifyException {
+    public Map<String, Listable> getListMap(ListControl listControl) throws UnifyException {
         String listName = listControl.getList();
         ListInfo listInfo = listInfoMap.get(listName);
         String keyProperty = listInfo.getListKey();
@@ -157,7 +157,7 @@ public class ListControlUtilsImpl extends AbstractUnifyComponent implements List
         if (keyProperty != null || descProperty != null) {
             List<? extends Listable> list = getList(LocaleType.SESSION, listName, resolveParams(listControl));
             if (!list.isEmpty()) {
-                Map<String, String> map = new HashMap<String, String>();
+                Map<String, Listable> map = new HashMap<String, Listable>();
                 for (Listable listable : list) {
                     String key = listable.getListKey();
                     String description = listable.getListDescription();
@@ -169,7 +169,7 @@ public class ListControlUtilsImpl extends AbstractUnifyComponent implements List
                         description = String.valueOf(ReflectUtils.getBeanProperty(listable, descProperty));
                     }
 
-                    map.put(key, description);
+                    map.put(key, new ListData(key, description));
                 }
 
                 return map;

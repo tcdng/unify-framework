@@ -27,6 +27,8 @@ import com.tcdng.unify.core.data.FactoryMap;
 import com.tcdng.unify.core.data.ListData;
 import com.tcdng.unify.core.data.Listable;
 import com.tcdng.unify.core.list.AbstractListCommand;
+import com.tcdng.unify.core.list.AbstractListParam;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * UPL document short name list command.
@@ -70,7 +72,7 @@ public class UplDocumentShortNamesListCommand
         return Collections.emptyList();
     }
 
-    public static class UplDocumentShortNamesParams {
+    public static class UplDocumentShortNamesParams extends AbstractListParam {
 
         private String documentName;
 
@@ -80,6 +82,11 @@ public class UplDocumentShortNamesListCommand
 
         public String getDocumentName() {
             return documentName;
+        }
+
+        @Override
+        public boolean isPresent() {
+            return !StringUtils.isBlank(documentName);
         }
 
     }

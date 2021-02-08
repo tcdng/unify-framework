@@ -20,7 +20,7 @@ import com.tcdng.unify.core.annotation.Tooling;
 import com.tcdng.unify.core.util.EnumUtils;
 
 @Tooling(description = "Month in Year")
-@StaticList("staticmonthinyearlist")
+@StaticList(name = "staticmonthinyearlist", description="$m{staticlist.staticmonthinyearlist}")
 public enum MonthInYear implements EnumConst {
 
     JANUARY("Jan", 0),

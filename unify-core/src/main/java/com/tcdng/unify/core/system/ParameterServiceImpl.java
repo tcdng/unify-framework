@@ -164,9 +164,9 @@ public class ParameterServiceImpl extends AbstractBusinessService implements Par
             for (ParameterValue parameterValueData : parameterValuesData.getParameterValues()) {
                 ParameterDef parameterDefData = parameterDefMap.get(parameterValueData.getParamKey());
                 if (parameterDefData != null) {
-                    Class<?> type = ReflectUtils.getClassForName(parameterDefData.getType());
+                    Class<?> type = ReflectUtils.classForName(parameterDefData.getType());
                     result.put(parameterDefData.getName(),
-                            DataUtils.convert(type, parameterValueData.getParamValue(), null));
+                            DataUtils.convert(type, parameterValueData.getParamValue()));
                 }
             }
 
@@ -227,7 +227,7 @@ public class ParameterServiceImpl extends AbstractBusinessService implements Par
     }
 
     private Input<?> getInput(ParameterDef parameterDef) throws UnifyException {
-        Class<?> type = ReflectUtils.getClassForName(parameterDef.getType());
+        Class<?> type = ReflectUtils.classForName(parameterDef.getType());
         return DataUtils.newInput(type, parameterDef.getName(), resolveSessionMessage(parameterDef.getDescription()),
                 parameterDef.getEditor(), parameterDef.isMandatory());
     }

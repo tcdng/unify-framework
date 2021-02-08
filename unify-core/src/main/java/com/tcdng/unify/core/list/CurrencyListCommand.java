@@ -59,7 +59,7 @@ public class CurrencyListCommand extends AbstractListCommand<CurrencyListParams>
 
     @Override
     public List<? extends Listable> execute(Locale locale, CurrencyListParams params) throws UnifyException {
-        if (params.isCurrencyCodes()) {
+        if (params.isPresent()) {
             List<ListData> list = new ArrayList<ListData>();
             for (String currencyCode : params.getCurrencyCodes()) {
                 Currency currency = Currency.getInstance(currencyCode);

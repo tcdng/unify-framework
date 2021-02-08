@@ -31,7 +31,7 @@ import com.tcdng.unify.core.data.Listable;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface ListCommand<T> extends UnifyComponent {
+public interface ListCommand<T extends ListParam> extends UnifyComponent {
 
     /**
      * Executes list command for specified locale and parameters.

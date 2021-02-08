@@ -53,7 +53,6 @@ import com.eclipsesource.json.JsonValue;
 import com.eclipsesource.json.PrettyPrint;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.UnifyOperationException;
 import com.tcdng.unify.core.annotation.Column;
 import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.constant.DataType;
@@ -459,11 +458,7 @@ public final class DataUtils {
      *                        if data type is unsupported
      */
     public static DataType getDataType(String className) throws UnifyException {
-        try {
-            return DataUtils.getDataType(Class.forName(className));
-        } catch (ClassNotFoundException e) {
-            throw new UnifyOperationException(e);
-        }
+        return DataUtils.getDataType(ReflectUtils.classForName(className));
     }
 
     /**
@@ -496,11 +491,7 @@ public final class DataUtils {
      *                        if an error occurs
      */
     public static DataType findDataType(String className) throws UnifyException {
-        try {
-            return DataUtils.findDataType(Class.forName(className));
-        } catch (ClassNotFoundException e) {
-            throw new UnifyOperationException(e);
-        }
+        return DataUtils.findDataType(ReflectUtils.classForName(className));
     }
 
     /**
@@ -553,7 +544,7 @@ public final class DataUtils {
      *                        if data type is unsupported
      */
     public static ColumnType getColumnType(String className) throws UnifyException {
-        Class<?> clazz = ReflectUtils.getClassForName(className);
+        Class<?> clazz = ReflectUtils.classForName(className);
         return DataUtils.getColumnType(clazz);
     }
 
@@ -612,7 +603,7 @@ public final class DataUtils {
      */
     public static boolean isNumberType(String className) {
         try {
-            return Number.class.isAssignableFrom(DataUtils.getWrapperClass(ReflectUtils.getClassForName(className)));
+            return Number.class.isAssignableFrom(DataUtils.getWrapperClass(ReflectUtils.classForName(className)));
         } catch (UnifyException e) {
         }
 
@@ -680,7 +671,7 @@ public final class DataUtils {
     }
 
     public static <T> T getBeanProperty(Class<T> targetClazz, Object bean, String propertyName) throws UnifyException {
-        return DataUtils.convert(targetClazz, ReflectUtils.getBeanProperty(bean, propertyName), null);
+        return DataUtils.convert(targetClazz, ReflectUtils.getBeanProperty(bean, propertyName));
     }
 
     @SuppressWarnings("unchecked")
@@ -714,6 +705,21 @@ public final class DataUtils {
         return null;
     }
 
+    /**
+     * Converts supplied value to target type.
+     * 
+     * @param targetClazz
+     *                    the target type
+     * @param value
+     *                    the value to convert
+     * @return the converted value
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    public static <T> T convert(Class<T> targetClazz, Object value) throws UnifyException {
+        return DataUtils.convert(targetClazz, value, null);
+    }
+    
     /**
      * Converts supplied value to target type.
      * 
@@ -825,6 +831,24 @@ public final class DataUtils {
         }
     }
 
+    /**
+     * Converts supplied value to target collection type.
+     * 
+     * @param collectionClazz
+     *                        the collection type
+     * @param dataClass
+     *                        the collection data type
+     * @param val
+     *                        the value to convert
+     * @return the converted value
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    public static <T, U extends Collection<T>> U convert(Class<U> collectionClazz, Class<T> dataClass, Object val)
+            throws UnifyException {
+        return DataUtils.convert(collectionClazz, dataClass, val, null);
+    }
+    
     /**
      * Converts supplied value to target collection type.
      * 
@@ -1180,10 +1204,9 @@ public final class DataUtils {
                 Class<?> type = setterInfo.getType();
                 Object value = entry.getValue();
                 if (setterInfo.isParameterArgumented()) {
-                    value = DataUtils.convert((Class<? extends Collection>) type, setterInfo.getArgumentType(), value,
-                            null);
+                    value = DataUtils.convert((Class<? extends Collection>) type, setterInfo.getArgumentType(), value);
                 } else {
-                    value = DataUtils.convert(type, value, null);
+                    value = DataUtils.convert(type, value);
                     if (value == null) {
                         value = DataUtils.getNullValue(type);
                     }
@@ -1692,13 +1715,13 @@ public final class DataUtils {
             List<Class<?>> paramTypeList = ReflectUtils.getLargestConstructorParameters(type);
             int len = paramTypeList.size();
             if (len == 1 && paramTypeList.get(0).isArray()) {
-                Object initParam = DataUtils.convert(paramTypeList.get(0), params, null);
+                Object initParam = DataUtils.convert(paramTypeList.get(0), params);
                 paramObject = ReflectUtils.newInstanceFromLargestConstructor(type, initParam);
             } else {
                 // Fit parameters
                 Object[] initParam = new Object[len];
                 for (int i = 0; i < len && i < params.length; i++) {
-                    initParam[i] = DataUtils.convert(paramTypeList.get(i), params[i], null);
+                    initParam[i] = DataUtils.convert(paramTypeList.get(i), params[i]);
                 }
 
                 paramObject = ReflectUtils.newInstanceFromLargestConstructor(type, initParam);

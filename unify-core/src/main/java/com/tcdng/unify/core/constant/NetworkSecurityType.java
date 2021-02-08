@@ -25,7 +25,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@StaticList("networksecuritytypelist")
+@StaticList(name = "networksecuritytypelist", description="$m{staticlist.networksecuritytypelist}")
 public enum NetworkSecurityType implements EnumConst {
 
     SSL("S"), TLS("T");

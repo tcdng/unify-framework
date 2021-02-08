@@ -1,6 +1,6 @@
 /** Global */
 body,div,img,table,tr,td,fieldset,ul,li {margin: 0px; padding: 0px;}
-body,td,th,button,input,select,textarea {font-family: Open Sans, sans-serif; font-size: 9pt;}
+body,td,th,button,input,select,textarea {font-family: sans-serif, Open Sans; font-size: 9pt;}
 
 input[type = "text"],input[type = "password"] {height:28px; border: 1px solid #C8C8C8;box-sizing: border-box;}
 select:not([multiple]){height:28px; padding-left: 4px; border: 1px solid #C8C8C8;}

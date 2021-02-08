@@ -14,26 +14,14 @@
  * the License.
  */
 
-package com.tcdng.unify.core.runtime;
-
-import java.io.Reader;
+package com.tcdng.unify.core.list;
 
 /**
- * Reader java class source.
+ * Convenient abstract base class for list command parameter.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class ReaderJavaClassSource extends AbstractJavaClassSource {
-    
-    private Reader source;
+public abstract class AbstractListParam implements ListParam {
 
-    public ReaderJavaClassSource(String className, Reader source, long version) {
-        super(className, version);
-        this.source = source;
-    }
-
-    public Reader getSource() {
-        return source;
-    }
 }

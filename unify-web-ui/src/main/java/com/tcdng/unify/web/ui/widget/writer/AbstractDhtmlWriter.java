@@ -770,32 +770,33 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
         writer.write("\");");
     }
 
-    protected void writeShortcutHandlerJs(ResponseWriter writer, String pageControllerName, String id,
+    protected void writeShortcutHandlerJs(ResponseWriter writer, String pageControllerName, String id, String cmdTag,
             PageAction pageAction) throws UnifyException {
         String function = WriterUtils.getActionJSFunction(pageAction.getAction().toLowerCase());
-        String eventParams = writeActionParamsJS(writer, null, function, id, pageAction, null, null, null);
+        String eventParams = writeActionParamsJS(writer, null, function, id, cmdTag, pageAction, null, null, null);
         String shortcut = pageAction.getUplAttribute(String.class, "shortcut");
         writer.write("ux.setShortcut(\"").write(WebUtils.encodeShortcut(shortcut)).write("\",");
         writer.write(eventParams).write(");");
     }
 
-    protected void writeEventJs(ResponseWriter writer, String event, String action, String pageName,
+    protected void writeEventJs(ResponseWriter writer, String event, String action, String pageName, String cmdTag,
             String... targetPageNames) throws UnifyException {
         event = WriterUtils.getEventJS(event.toLowerCase());
         String function = WriterUtils.getActionJSFunction(action);
-        String eventParams = writeActionParamsJS(writer, event, function, pageName, null, targetPageNames, null, null);
+        String eventParams = writeActionParamsJS(writer, event, function, pageName, cmdTag, null, targetPageNames, null,
+                null);
         writer.write("ux.setOnEvent(").write(eventParams).write(");");
     }
 
-    protected void writePathEventHandlerJS(ResponseWriter writer, String id, String eventType, String action,
-            String path) throws UnifyException {
+    protected void writePathEventHandlerJS(ResponseWriter writer, String id, String cmdTag, String eventType,
+            String action, String path) throws UnifyException {
         String event = WriterUtils.getEventJS(eventType.toLowerCase());
         String function = WriterUtils.getActionJSFunction(action.toLowerCase());
-        String eventParams = writeActionParamsJS(writer, event, function, id, null, null, null, path);
+        String eventParams = writeActionParamsJS(writer, event, function, id, cmdTag, null, null, null, path);
         writer.write("ux.setOnEvent(").write(eventParams).write(");");
     }
 
-    protected void writeOpenPopupJS(ResponseWriter writer, String event, String pageName, String frameId,
+    protected void writeOpenPopupJS(ResponseWriter writer, String event, String pageName, String cmdTag, String frameId,
             String popupId, long stayOpenForMillSec, String onShowAction, String onShowParamObject, String onHideAction,
             String onHideParamObject) throws UnifyException {
         StringBuilder psb = new StringBuilder();
@@ -818,10 +819,10 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
             }
         }
         psb.append("}");
-        writeRefObjectEventHandlerJS(writer, pageName, event, "openpopup", psb.toString());
+        writeRefObjectEventHandlerJS(writer, pageName, cmdTag, event, "openpopup", psb.toString());
     }
 
-    protected String writeActionParamsJS(ResponseWriter writer, String event, String function, String id,
+    protected String writeActionParamsJS(ResponseWriter writer, String event, String function, String id, String cmdTag,
             PageAction pageAction, String[] refPageNames, String refObject, String path) throws UnifyException {
         String pathId = getRequestContextUtil().getResponsePathParts().getControllerPathId();
         PageManager pageManager = getPageManager();
@@ -857,6 +858,9 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
                     writer.writeCommandURL(pathId);
                     writer.write('"');
                     writer.write(",\"uTrgCmd\":\"").write(cmd).write("\"");
+                    if (!StringUtils.isBlank(cmdTag)) {
+                        writer.write(",\"uCmdTag\":\"").write(cmdTag).write("\"");
+                    }
                 }
 
                 String targetCmdPgNm = null;
@@ -889,6 +893,10 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
                 }
             }
 
+            if (pageAction.getUplAttribute(boolean.class, "pushSrc")) {
+                writer.write(",\"uPushSrc\":true");
+            }
+            
             List<String> componentList = pageManager.getExpandedReferences(pageAction.getId());
             writer.write(",\"uRef\":").writeJsonArray(componentList);
 
@@ -980,11 +988,12 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
         }
     }
 
-    private void writeRefObjectEventHandlerJS(ResponseWriter writer, String pageName, String eventType, String action,
-            String refObject) throws UnifyException {
+    private void writeRefObjectEventHandlerJS(ResponseWriter writer, String pageName, String cmdTag, String eventType,
+            String action, String refObject) throws UnifyException {
         String event = WriterUtils.getEventJS(eventType.toLowerCase());
         String function = WriterUtils.getActionJSFunction(action.toLowerCase());
-        String eventParams = writeActionParamsJS(writer, event, function, pageName, null, null, refObject, null);
+        String eventParams = writeActionParamsJS(writer, event, function, pageName, cmdTag, null, null, refObject,
+                null);
         writer.write("ux.setOnEvent(").write(eventParams).write(");");
     }
 

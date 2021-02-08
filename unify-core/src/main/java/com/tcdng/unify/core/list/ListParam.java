@@ -14,26 +14,15 @@
  * the License.
  */
 
-package com.tcdng.unify.core.runtime;
-
-import java.io.File;
+package com.tcdng.unify.core.list;
 
 /**
- * File java class source.
+ * List command parameter.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class FileJavaClassSource extends AbstractJavaClassSource {
+public interface ListParam {
     
-    private File source;
-
-    public FileJavaClassSource(String className, File source, long version) {
-        super(className, version);
-        this.source = source;
-    }
-
-    public File getSource() {
-        return source;
-    }
+    boolean isPresent();
 }

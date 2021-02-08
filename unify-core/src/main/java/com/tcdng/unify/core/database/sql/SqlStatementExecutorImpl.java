@@ -513,7 +513,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
                 }
 
                 if (value == null) {
-                    value = DataUtils.convert(sqlResult.getType(), 0, null);
+                    value = DataUtils.convert(sqlResult.getType(), 0);
                 }
 
                 if (rs.next()) {
@@ -557,7 +557,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
                     }
 
                     if (value == null) {
-                        value = DataUtils.convert(sqlResult.getType(), 0, null);
+                        value = DataUtils.convert(sqlResult.getType(), 0);
                     }
 
                     resultList.add(new Aggregation(aggregateFunction, value));
@@ -612,7 +612,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
                         }
 
                         if (value == null) {
-                            value = DataUtils.convert(sqlResult.getType(), 0, null);
+                            value = DataUtils.convert(sqlResult.getType(), 0);
                         }
                         
                         aggregationList.add(new Aggregation(aggregateFunction, value));

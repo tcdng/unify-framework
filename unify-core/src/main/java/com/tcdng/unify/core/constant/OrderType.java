@@ -26,7 +26,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * @since 1.0
  */
 @Tooling(description = "Order")
-@StaticList("orderlist")
+@StaticList(name = "orderlist", description="$m{staticlist.orderlist}")
 public enum OrderType implements EnumConst {
 
     ASCENDING("ASC"), DESCENDING("DESC");

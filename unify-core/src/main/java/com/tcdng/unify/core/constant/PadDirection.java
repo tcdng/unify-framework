@@ -24,7 +24,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@StaticList("paddirectionlist")
+@StaticList(name = "paddirectionlist", description="$m{staticlist.paddirectionlist}")
 public enum PadDirection implements EnumConst {
 
     LEFT("L"), RIGHT("R");

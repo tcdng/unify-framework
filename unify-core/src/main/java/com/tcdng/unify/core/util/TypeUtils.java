@@ -89,47 +89,43 @@ public class TypeUtils {
                 Class<? extends Annotation> annotationClass, boolean exclude, String... packages)
                 throws UnifyException {
             List<Class<? extends T>> resultList = new ArrayList<Class<? extends T>>();
-            try {
-                Set<String> annotatedClassNames = annotationDB.getAnnotationIndex().get(annotationClass.getName());
+            Set<String> annotatedClassNames = annotationDB.getAnnotationIndex().get(annotationClass.getName());
 
-                if (annotatedClassNames != null && !annotatedClassNames.isEmpty()) {
-                    if (packages.length > 0) {
-                        if (exclude) {
-                            for (String name : annotatedClassNames) {
-                                for (String packageName : packages) {
-                                    if (!name.startsWith(packageName)) {
-                                        Class<?> clazz = Class.forName(name);
-                                        if (classType.isAssignableFrom(clazz)) {
-                                            resultList.add((Class<? extends T>) clazz);
-                                        }
-                                        break;
+            if (annotatedClassNames != null && !annotatedClassNames.isEmpty()) {
+                if (packages.length > 0) {
+                    if (exclude) {
+                        for (String name : annotatedClassNames) {
+                            for (String packageName : packages) {
+                                if (!name.startsWith(packageName)) {
+                                    Class<?> clazz = ReflectUtils.classForName(name);
+                                    if (classType.isAssignableFrom(clazz)) {
+                                        resultList.add((Class<? extends T>) clazz);
                                     }
-                                }
-                            }
-                        } else {
-                            for (String name : annotatedClassNames) {
-                                for (String packageName : packages) {
-                                    if (name.startsWith(packageName)) {
-                                        Class<?> clazz = Class.forName(name);
-                                        if (classType.isAssignableFrom(clazz)) {
-                                            resultList.add((Class<? extends T>) clazz);
-                                        }
-                                        break;
-                                    }
+                                    break;
                                 }
                             }
                         }
                     } else {
                         for (String name : annotatedClassNames) {
-                            Class<?> clazz = Class.forName(name);
-                            if (classType.isAssignableFrom(clazz)) {
-                                resultList.add((Class<? extends T>) clazz);
+                            for (String packageName : packages) {
+                                if (name.startsWith(packageName)) {
+                                    Class<?> clazz = ReflectUtils.classForName(name);
+                                    if (classType.isAssignableFrom(clazz)) {
+                                        resultList.add((Class<? extends T>) clazz);
+                                    }
+                                    break;
+                                }
                             }
                         }
                     }
+                } else {
+                    for (String name : annotatedClassNames) {
+                        Class<?> clazz = ReflectUtils.classForName(name);
+                        if (classType.isAssignableFrom(clazz)) {
+                            resultList.add((Class<? extends T>) clazz);
+                        }
+                    }
                 }
-            } catch (ClassNotFoundException e) {
-                throw new UnifyException(e, UnifyCoreErrorConstants.ANNOTATIONUTIL_ERROR);
             }
             return resultList;
         }

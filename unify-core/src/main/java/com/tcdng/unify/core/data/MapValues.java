@@ -45,7 +45,7 @@ public class MapValues {
 	public void addValue(String name, Class<?> type, Object value) throws UnifyException {
 		MapValue mapValue = new MapValue(type);
 		if (value != null && !type.isAssignableFrom(value.getClass())) {
-			value = DataUtils.convert(type, value, null);
+			value = DataUtils.convert(type, value);
 		}
 
 		mapValue.setValue(value);

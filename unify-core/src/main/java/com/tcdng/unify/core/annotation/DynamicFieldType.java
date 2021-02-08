@@ -14,26 +14,15 @@
  * the License.
  */
 
-package com.tcdng.unify.core.runtime;
-
-import java.io.InputStream;
+package com.tcdng.unify.core.annotation;
 
 /**
- * Input stream java class source.
+ * Dynamic field type enumeration.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class InputStreamJavaClassSource extends AbstractJavaClassSource {
-    
-    private InputStream source;
-
-    public InputStreamJavaClassSource(String className, InputStream source, long version) {
-        super(className, version);
-        this.source = source;
-    }
-
-    public InputStream getSource() {
-        return source;
-    }
+public enum DynamicFieldType {
+    GENERATION,
+    INFO_ONLY
 }

@@ -26,7 +26,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@StaticList("sqljointypelist")
+@StaticList(name = "sqljointypelist", description="$m{staticlist.sqljointypelist}")
 public enum SqlJoinType implements EnumConst {
 
     INNER("INNER", "INNER JOIN"), LEFT("LEFT", "LEFT JOIN"), RIGHT("RIGHT", "RIGHT JOIN"), FULL("FULL", "FULL JOIN");

@@ -440,7 +440,7 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
         }
 
         List<String> styleSheets = DataUtils.convert(ArrayList.class, String.class,
-                getContainerSetting(Object.class, UnifyWebPropertyConstants.APPLICATION_DOCUMENT_STYLESHEET), null);
+                getContainerSetting(Object.class, UnifyWebPropertyConstants.APPLICATION_DOCUMENT_STYLESHEET));
         if (styleSheets != null) {
             List<String> actStyleSheets = new ArrayList<String>();
             for (String styleSheet : styleSheets) {
@@ -451,7 +451,7 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
         }
 
         List<String> scripts = DataUtils.convert(ArrayList.class, String.class,
-                getContainerSetting(Object.class, UnifyWebPropertyConstants.APPLICATION_DOCUMENT_SCRIPT), null);
+                getContainerSetting(Object.class, UnifyWebPropertyConstants.APPLICATION_DOCUMENT_SCRIPT));
         if (scripts != null) {
             documentScripts = Collections.unmodifiableList(scripts);
         }

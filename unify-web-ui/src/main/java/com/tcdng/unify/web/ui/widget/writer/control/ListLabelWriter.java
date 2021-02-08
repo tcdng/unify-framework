@@ -18,6 +18,7 @@ package com.tcdng.unify.web.ui.widget.writer.control;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
+import com.tcdng.unify.core.data.Listable;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.Widget;
 import com.tcdng.unify.web.ui.widget.control.ListLabel;
@@ -39,12 +40,12 @@ public class ListLabelWriter extends AbstractControlWriter {
         writer.write("<span");
         writeTagAttributes(writer, listLabel);
         writer.write(">");
-        String value = listLabel.getListMap().get(listLabel.getStringValue());
+        Listable listable = listLabel.getListMap().get(listLabel.getStringValue());
 
-        if (value == null || value.trim().isEmpty()) {
+        if (listable == null) {
             writer.writeHtmlFixedSpace();
         } else {
-            writer.writeWithHtmlEscape(value);
+            writer.writeWithHtmlEscape(listable.getListDescription());
         }
         writer.write("</span>");
     }

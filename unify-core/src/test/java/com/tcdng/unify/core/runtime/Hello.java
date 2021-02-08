@@ -24,5 +24,5 @@ package com.tcdng.unify.core.runtime;
  */
 public interface Hello {
 
-    String sayHello();
+    String hello();
 }

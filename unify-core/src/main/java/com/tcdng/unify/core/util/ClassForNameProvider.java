@@ -14,16 +14,17 @@
  * the License.
  */
 
-package com.tcdng.unify.core.annotation;
+package com.tcdng.unify.core.util;
+
+import com.tcdng.unify.core.UnifyException;
 
 /**
- * Entity type enumeration.
+ * Class for name provider.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public enum EntityType {
-    TABLE,
-    TABLE_EXT,
-    VIEW
+public interface ClassForNameProvider {
+
+    Class<?> classForName(String className) throws UnifyException;
 }

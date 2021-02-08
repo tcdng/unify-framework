@@ -45,7 +45,7 @@ public abstract class AbstractMultipleParamObjectFilterPolicy implements ObjectF
         Object fieldVal = valueStore.retrieve(multipleParamRestriction.getFieldName());
         if (fieldVal != null) {
             return doMatch(fieldVal,
-                    DataUtils.convert(List.class, fieldVal.getClass(), multipleParamRestriction.getParams(), null));
+                    DataUtils.convert(List.class, fieldVal.getClass(), multipleParamRestriction.getParams()));
         }
 
         return inverted;
@@ -58,7 +58,7 @@ public abstract class AbstractMultipleParamObjectFilterPolicy implements ObjectF
         Object fieldVal = DataUtils.getNestedBeanProperty(bean, multipleParamRestriction.getFieldName());
         if (fieldVal != null) {
             return doMatch(fieldVal,
-                    DataUtils.convert(List.class, fieldVal.getClass(), multipleParamRestriction.getParams(), null));
+                    DataUtils.convert(List.class, fieldVal.getClass(), multipleParamRestriction.getParams()));
         }
 
         return inverted;

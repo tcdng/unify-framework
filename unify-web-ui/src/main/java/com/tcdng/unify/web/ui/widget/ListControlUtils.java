@@ -63,5 +63,5 @@ public interface ListControlUtils extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    Map<String, String> getListMap(ListControl listControl) throws UnifyException;
+    Map<String, Listable> getListMap(ListControl listControl) throws UnifyException;
 }

@@ -14,24 +14,17 @@
  * the License.
  */
 
-package com.tcdng.unify.core.runtime;
+package com.tcdng.unify.core.annotation;
 
 /**
- * String java class source.
+ * Dynamic entity type enumeration.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class StringJavaClassSource extends AbstractJavaClassSource {
-    
-    private String source;
-
-    public StringJavaClassSource(String className, String source, long version) {
-        super(className, version);
-        this.source = source;
-    }
-
-    public String getSource() {
-        return source;
-    }
+public enum DynamicEntityType {
+    TABLE,
+    TABLE_EXT,
+    VIEW,
+    INFO_ONLY
 }

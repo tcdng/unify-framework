@@ -20,7 +20,7 @@ import com.tcdng.unify.core.annotation.Tooling;
 import com.tcdng.unify.core.util.EnumUtils;
 
 @Tooling(description = "Color Scheme")
-@StaticList("colorschemelist")
+@StaticList(name = "colorschemelist", description="$m{staticlist.colorschemelist}")
 public enum ColorScheme implements EnumConst {
 
     RED("red", ColorPalette.RED_SCALE),

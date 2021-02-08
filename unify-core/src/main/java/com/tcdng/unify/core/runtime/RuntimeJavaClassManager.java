@@ -19,10 +19,10 @@ package com.tcdng.unify.core.runtime;
 import java.io.File;
 import java.io.InputStream;
 import java.io.Reader;
-import java.util.List;
 
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.util.ClassForNameProvider;
 
 /**
  * Component for managing runtime java classes. Compiled and saved classes are
@@ -32,7 +32,7 @@ import com.tcdng.unify.core.UnifyException;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface RuntimeJavaClassManager extends UnifyComponent {
+public interface RuntimeJavaClassManager extends UnifyComponent, ClassForNameProvider {
 
     /**
      * Compiles a Java class source from input stream and load resulting class to
@@ -71,13 +71,13 @@ public interface RuntimeJavaClassManager extends UnifyComponent {
      * 
      * @param className
      *            the class name
-     * @param string
-     *            string object
+     * @param src
+     *            string source object
      * @return the compiled and loaded class
      * @throws UnifyException
      *             if an error occurs
      */
-    Class<?> compileAndLoadJavaClass(String className, String string) throws UnifyException;
+    Class<?> compileAndLoadJavaClass(String className, String src) throws UnifyException;
 
     /**
      * Compiles a Java class source from file and load resulting class to JVM. Uses
@@ -93,132 +93,16 @@ public interface RuntimeJavaClassManager extends UnifyComponent {
      *             if an error occurs
      */
     Class<?> compileAndLoadJavaClass(String className, File file) throws UnifyException;
-
+    
     /**
-     * Compiles a java class source and saves a java class under a specified group.
-     * Performs no operation if supplied source is of a lower or equal version to
-     * previously saved compilation.
+     * Gets class loader depth.
      * 
-     * @param groupName
-     *            the group name
-     * @param inputStreamJavaClassSource
-     *            the source object
-     * @return true if supplied source is a newer version and compiled and saved
-     *         successfully otherwise false
-     * @throws UnifyException
-     *             if compilation fails. if an error occurs
+     * @return the class loader depth;
      */
-    boolean compileAndSaveJavaClass(String groupName, InputStreamJavaClassSource inputStreamJavaClassSource)
-            throws UnifyException;
-
+    int getClassLoaderDepth();
+    
     /**
-     * Compiles a java class source and saves a java class under a specified group.
-     * Performs no operation if supplied source is of a lower or equal version to
-     * previously saved compilation.
-     * 
-     * @param groupName
-     *            the group name
-     * @param readerJavaClassSource
-     *            the reader object
-     * @return true if supplied source is a newer version and compiled and saved
-     *         successfully otherwise false
-     * @throws UnifyException
-     *             if compilation fails. if an error occurs
+     * Clears class loader.
      */
-    boolean compileAndSaveJavaClass(String groupName, ReaderJavaClassSource readerJavaClassSource)
-            throws UnifyException;
-
-    /**
-     * Compiles a java class source and saves a java class under a specified group.
-     * Performs no operation if supplied source is of a lower or equal version to
-     * previously saved compilation.
-     * 
-     * @param groupName
-     *            the group name
-     * @param stringJavaClassSource
-     *            the source object
-     * @return true if supplied source is a newer version and compiled and saved
-     *         successfully otherwise false
-     * @throws UnifyException
-     *             if compilation fails. if an error occurs
-     */
-    boolean compileAndSaveJavaClass(String groupName, StringJavaClassSource stringJavaClassSource)
-            throws UnifyException;
-
-    /**
-     * Compiles a java class source and saves a java class under a specified group.
-     * Performs no operation if supplied source is of a lower or equal version to
-     * previously saved compilation.
-     * 
-     * @param groupName
-     *            the group name
-     * @param fileJavaClassSource
-     *            the source object
-     * @return true if supplied source is a newer version and compiled and saved
-     *         successfully otherwise false
-     * @throws UnifyException
-     *             if compilation fails. if an error occurs
-     */
-    boolean compileAndSaveJavaClass(String groupName, FileJavaClassSource fileJavaClassSource) throws UnifyException;
-
-    /**
-     * Gets a java class that belongs to a group. Class object if fetched from the
-     * group's class loader. Provided a group class loader has not been invalidated
-     * by a successful save, this method will always return the same class object
-     * for the same group name and class name.
-     * 
-     * @param groupName
-     *            the group name
-     * @param className
-     *            the class name
-     * @return the java class object
-     * @throws UnifyException
-     *             if class is not found in group. if an error occurs
-     */
-    Class<?> getSavedJavaClass(String groupName, String className) throws UnifyException;
-
-    /**
-     * Gets the names of all java classes that belong to a group.
-     * 
-     * @param groupName
-     *            the group name
-     * @return names of saved java classes
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    List<String> getSavedJavaClassNames(String groupName) throws UnifyException;
-
-    /**
-     * Gets all java classes that belong to a group.
-     * 
-     * @param groupName
-     *            the group name
-     * @return list of saved java classes
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    List<Class<?>> getSavedJavaClasses(String groupName) throws UnifyException;
-
-    /**
-     * Gets the version of a saved java class belonging to s group.
-     * 
-     * @param groupName
-     *            the group name
-     * @param className
-     *            the class name
-     * @return the saved class version if found otherwise zero
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    long getSavedJavaClassVersion(String groupName, String className) throws UnifyException;
-
-    /**
-     * Clears cached saved java classes belonging to a group.
-     * 
-     * @param groupName
-     *            the group name
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    void clearCachedSaveJavaClasses(String groupName) throws UnifyException;
+    void clearClassLoader();
 }

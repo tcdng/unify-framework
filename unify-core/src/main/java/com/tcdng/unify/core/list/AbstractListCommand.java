@@ -24,7 +24,8 @@ import com.tcdng.unify.core.UnifyException;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public abstract class AbstractListCommand<T> extends AbstractUnifyComponent implements ListCommand<T> {
+public abstract class AbstractListCommand<T extends ListParam> extends AbstractUnifyComponent
+        implements ListCommand<T> {
 
     private Class<T> paramType;
 

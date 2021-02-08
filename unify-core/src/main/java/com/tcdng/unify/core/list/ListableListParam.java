@@ -26,7 +26,7 @@ import com.tcdng.unify.core.data.Listable;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class ListableListParam {
+public class ListableListParam extends AbstractListParam {
 
     private List<? extends Listable> listableList;
 
@@ -38,7 +38,8 @@ public class ListableListParam {
         return listableList;
     }
 
-    public boolean isListableList() {
+    @Override
+    public boolean isPresent() {
         return listableList != null && !listableList.isEmpty();
     }
 }

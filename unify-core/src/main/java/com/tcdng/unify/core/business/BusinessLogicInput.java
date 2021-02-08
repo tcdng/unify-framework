@@ -61,7 +61,7 @@ public class BusinessLogicInput {
     }
 
     public <T> T getParameter(Class<T> valueType, String name) throws UnifyException {
-        return DataUtils.convert(valueType, parameters.get(name), null);
+        return DataUtils.convert(valueType, parameters.get(name));
     }
 
     public Map<String, Object> getParameters() {
