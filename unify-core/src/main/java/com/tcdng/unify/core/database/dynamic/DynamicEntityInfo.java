@@ -159,29 +159,30 @@ public class DynamicEntityInfo {
         }
 
         public Builder addField(DynamicFieldType type, DataType dataType, String columnName, String fieldName,
-                int length, int precision, int scale, boolean nullable) throws UnifyException {
-            return addField(type, dataType, columnName, fieldName, null, null, length, precision, scale, nullable);
+                int length, int precision, int scale, boolean nullable, boolean descriptive) throws UnifyException {
+            return addField(type, dataType, columnName, fieldName, null, null, length, precision, scale, nullable,
+                    descriptive);
         }
 
         public Builder addField(DynamicFieldType type, DataType dataType, String columnName, String fieldName,
-                String transformer, String defaultVal, int length, int precision, int scale, boolean nullable)
-                throws UnifyException {
+                String transformer, String defaultVal, int length, int precision, int scale, boolean nullable,
+                boolean descriptive) throws UnifyException {
             checkFieldNameExist(fieldName);
             columnFields.put(fieldName, new DynamicColumnFieldInfo(type, dataType, columnName, fieldName, transformer,
-                    defaultVal, length, precision, scale, nullable));
+                    defaultVal, length, precision, scale, nullable, descriptive));
             return this;
         }
 
         public Builder addField(DynamicFieldType type, String enumClassName, String columnName, String fieldName,
-                boolean nullable) throws UnifyException {
+                boolean nullable, boolean descriptive) throws UnifyException {
             checkFieldNameExist(fieldName);
             columnFields.put(fieldName,
-                    new DynamicColumnFieldInfo(type, enumClassName, columnName, fieldName, nullable));
+                    new DynamicColumnFieldInfo(type, enumClassName, columnName, fieldName, nullable, descriptive));
             return this;
         }
 
         public Builder addListOnlyField(DynamicFieldType type, String columnName, String fieldName, String key,
-                String property) throws UnifyException {
+                String property, boolean descriptive) throws UnifyException {
             checkFieldNameExist(fieldName);
             DynamicForeignKeyFieldInfo fkFieldInfo = fkFields.get(key);
             if (fkFieldInfo == null) {
@@ -195,12 +196,13 @@ public class DynamicEntityInfo {
                             + "] referenced by [" + fieldName + "] is not supported.");
                 }
 
-                listOnlyFields.put(fieldName, new DynamicListOnlyFieldInfo(type, columnName, fieldName, key, property));
+                listOnlyFields.put(fieldName,
+                        new DynamicListOnlyFieldInfo(type, columnName, fieldName, key, property, false));
             } else {
                 listOnlyFields.put(fieldName,
                         new DynamicListOnlyFieldInfo(type,
                                 fkFieldInfo.getParentDynamicEntityInfo().getDynamicFieldInfo(property), columnName,
-                                fieldName, key, property));
+                                fieldName, key, property, descriptive));
             }
             return this;
         }

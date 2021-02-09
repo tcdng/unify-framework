@@ -41,13 +41,14 @@ public class DynamicColumnFieldInfo extends DynamicFieldInfo {
     private boolean nullable;
 
     public DynamicColumnFieldInfo(DynamicFieldType type, String enumClassName, String columnName, String fieldName,
-            boolean nullable) {
-        super(type, EntityFieldType.TABLE_COLUMN, DataType.STRING, columnName, fieldName, enumClassName);
+            boolean nullable, boolean descriptive) {
+        super(type, EntityFieldType.TABLE_COLUMN, DataType.STRING, columnName, fieldName, enumClassName, descriptive);
     }
 
     public DynamicColumnFieldInfo(DynamicFieldType type, DataType dataType, String columnName, String fieldName,
-            String transformer, String defaultVal, int length, int precision, int scale, boolean nullable) {
-        super(type, EntityFieldType.TABLE_COLUMN, dataType, columnName, fieldName);
+            String transformer, String defaultVal, int length, int precision, int scale, boolean nullable,
+            boolean descriptive) {
+        super(type, EntityFieldType.TABLE_COLUMN, dataType, columnName, fieldName, descriptive);
         this.transformer = transformer;
         this.defaultVal = defaultVal;
         this.length = length;

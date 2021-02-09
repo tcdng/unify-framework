@@ -75,8 +75,19 @@ public final class DynamicEntityUtils {
 
         // Evaluate fields
         Set<String> fieldNames = new HashSet<String>();
+        List<String> descList = null;
         for (DynamicFieldInfo dynamicFieldInfo : dynamicEntityInfo.getFieldInfos()) {
-            fieldNames.add(dynamicFieldInfo.getFieldName());
+            final String fieldName = dynamicFieldInfo.getFieldName();
+            final String capField = StringUtils.capitalizeFirstLetter(fieldName);
+            fieldNames.add(fieldName);
+            if (dynamicFieldInfo.isDescriptive()) {
+                if (descList == null) {
+                    descList = new ArrayList<String>();
+                }
+
+                descList.add(capField);
+            }
+
             if (dynamicFieldInfo.isGeneration()) {
                 TypeInfo enumEntityInfo = null;
                 if (dynamicFieldInfo.isEnum()) {
@@ -111,16 +122,15 @@ public final class DynamicEntityUtils {
                     importSet.add(BigDecimal.class.getCanonicalName());
                 }
 
-                final String fieldName = dynamicFieldInfo.getFieldName();
                 final String simpleName = enumEntityInfo != null ? enumEntityInfo.getSimpleName()
                         : javaClass.getSimpleName();
                 fsb.append(" private ").append(simpleName).append(" ").append(fieldName).append(";\n");
 
-                String capField = StringUtils.capitalizeFirstLetter(fieldName);
                 msb.append(" public ").append(simpleName).append(" get").append(capField).append("() {return ")
                         .append(fieldName).append(";}\n");
-                msb.append(" public void set").append(capField).append("(").append(simpleName).append(" ").append(fieldName)
-                        .append(") {this.").append(fieldName).append(" = ").append(fieldName).append(";}\n");
+                msb.append(" public void set").append(capField).append("(").append(simpleName).append(" ")
+                        .append(fieldName).append(") {this.").append(fieldName).append(" = ").append(fieldName)
+                        .append(";}\n");
             }
         }
 
@@ -148,7 +158,26 @@ public final class DynamicEntityUtils {
                 .append(baseEntityInfo.getSimpleName()).append(" {\n");
         esb.append(fsb);
         if (!fieldNames.contains("description")) {
-            esb.append(" public String getDescription(){return null;}\n");
+            esb.append(" public String getDescription(){\n");
+            if (descList != null) {
+                esb.append("  StringBuilder sb = new StringBuilder();\n");
+                boolean appendSym = false;
+                for (String cFieldName: descList) {
+                    if (appendSym) {
+                        esb.append("  sb.append(\" \");\n");
+                    } else {
+                        appendSym =true;
+                    }
+                    
+                    esb.append("  sb.append(get").append(cFieldName).append("());\n");
+                }
+                
+                esb.append("  return sb.toString();\n");
+            } else {
+                esb.append("  return null;\n");
+            }
+
+            esb.append(" }\n");
         }
 
         esb.append(msb);
@@ -162,8 +191,8 @@ public final class DynamicEntityUtils {
         boolean appendSym = false;
         if (!dynamicForeignKeyFieldInfo.isEnum()) {
             appendSym = appendSymbol(fsb, appendSym);
-            fsb.append("type = ")
-                    .append(dynamicForeignKeyFieldInfo.getParentDynamicEntityInfo().getClassName()).append(".class");
+            fsb.append("type = ").append(dynamicForeignKeyFieldInfo.getParentDynamicEntityInfo().getClassName())
+                    .append(".class");
         }
 
         if (!StringUtils.isBlank(dynamicForeignKeyFieldInfo.getColumnName())) {
@@ -179,7 +208,7 @@ public final class DynamicEntityUtils {
         if (appendSym) {
             fsb.append(")");
         }
-        
+
         fsb.append("\n");
     }
 
@@ -191,7 +220,7 @@ public final class DynamicEntityUtils {
                 appendSym = appendSymbol(fsb, appendSym);
                 fsb.append("name = \"").append(dynamicColumnFieldInfo.getColumnName()).append("\"");
             }
-            
+
             if (dynamicColumnFieldInfo.isNullable()) {
                 appendSym = appendSymbol(fsb, appendSym);
                 fsb.append("nullable = true");
@@ -200,7 +229,7 @@ public final class DynamicEntityUtils {
             if (appendSym) {
                 fsb.append(")");
             }
-            
+
             fsb.append("\n");
             return;
         }
@@ -241,7 +270,7 @@ public final class DynamicEntityUtils {
             appendSym = appendSymbol(fsb, appendSym);
             fsb.append("scale = ").append(dynamicColumnFieldInfo.getScale());
         }
-        
+
         if (dynamicColumnFieldInfo.isNullable()) {
             appendSym = appendSymbol(fsb, appendSym);
             fsb.append("nullable = true");
@@ -250,7 +279,7 @@ public final class DynamicEntityUtils {
         if (appendSym) {
             fsb.append(")");
         }
-        
+
         fsb.append("\n");
     }
 
@@ -276,7 +305,7 @@ public final class DynamicEntityUtils {
         if (appendSym) {
             fsb.append(")");
         }
-        
+
         fsb.append("\n");
     }
 
@@ -286,7 +315,7 @@ public final class DynamicEntityUtils {
         } else {
             fsb.append("(");
         }
-        
+
         return true;
     }
 }

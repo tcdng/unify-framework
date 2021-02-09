@@ -115,6 +115,7 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
             assertEquals(BigDecimal.valueOf(40.25), ReflectUtils.getBeanProperty(fInst, "price"));
             assertEquals(createDt, ReflectUtils.getBeanProperty(fInst, "createDt"));
             assertNull(ReflectUtils.getBeanProperty(fInst, "expiryDt"));
+            assertEquals("6dPrinter", fInst.getDescription());
             assertEquals(OrderType.DESCENDING, ReflectUtils.getBeanProperty(fInst, "order"));
         } catch (Exception e) {
             tm.setRollback();
@@ -154,6 +155,7 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
             assertEquals(createDt, ReflectUtils.getBeanProperty(ffInst, "createDt"));
             assertNull(ReflectUtils.getBeanProperty(ffInst, "expiryDt"));
             assertEquals(OrderType.ASCENDING, ReflectUtils.getBeanProperty(ffInst, "order"));
+            assertEquals("6dPrinter", fInst.getDescription());
         } catch (Exception e) {
             tm.setRollback();
             throw e;
@@ -244,6 +246,7 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
             assertEquals(BigDecimal.valueOf(40.25), ReflectUtils.getBeanProperty(fInst, "price"));
             assertEquals(createDt, ReflectUtils.getBeanProperty(fInst, "createDt"));
             assertNull(ReflectUtils.getBeanProperty(fInst, "expiryDt"));
+            assertEquals("6dPrinter 202004-8883 40.25", fInst.getDescription());
         } catch (Exception e) {
             tm.setRollback();
             throw e;
@@ -279,6 +282,7 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
             assertEquals(BigDecimal.valueOf(90.62), ReflectUtils.getBeanProperty(ffInst, "price"));
             assertEquals(createDt, ReflectUtils.getBeanProperty(ffInst, "createDt"));
             assertNull(ReflectUtils.getBeanProperty(ffInst, "expiryDt"));
+            assertEquals("6dPrinter 202004-7773 90.62", fInst.getDescription());
         } catch (Exception e) {
             tm.setRollback();
             throw e;
@@ -320,20 +324,20 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
         dseLoader = (DynamicSqlEntityLoader) getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLENTITYLOADER);
         dynamicEntityInfo = DynamicEntityInfo.newBuilder(DynamicEntityType.TABLE, "com.tcdng.test.Equipment")
                 .tableName("EQUIPMENT").version(1L)
-                .addField(DynamicFieldType.GENERATION, DataType.STRING, "EQUIPMENT_NM", "name", 32, 0, 0, false)
-                .addField(DynamicFieldType.GENERATION, DataType.STRING, "SERIAL_NO", "serialNo", 0, 0, 0, false)
-                .addField(DynamicFieldType.GENERATION, DataType.DECIMAL, "PRICE", "price", 0, 18, 2, false)
-                .addField(DynamicFieldType.GENERATION, DataType.DATE, "EXPIRY_DT", "expiryDt", 0, 0, 0, true)
-                .addField(DynamicFieldType.GENERATION, DataType.TIMESTAMP_UTC, "CREATE_DT", "createDt", 0, 0, 0, false)
-                .addField(DynamicFieldType.GENERATION, OrderType.class.getName(), "EQUIPMENT_ORDER", "order", false)
+                .addField(DynamicFieldType.GENERATION, DataType.STRING, "EQUIPMENT_NM", "name", 32, 0, 0, false, true)
+                .addField(DynamicFieldType.GENERATION, DataType.STRING, "SERIAL_NO", "serialNo", 0, 0, 0, false, false)
+                .addField(DynamicFieldType.GENERATION, DataType.DECIMAL, "PRICE", "price", 0, 18, 2, false, false)
+                .addField(DynamicFieldType.GENERATION, DataType.DATE, "EXPIRY_DT", "expiryDt", 0, 0, 0, true, false)
+                .addField(DynamicFieldType.GENERATION, DataType.TIMESTAMP_UTC, "CREATE_DT", "createDt", 0, 0, 0, false, false)
+                .addField(DynamicFieldType.GENERATION, OrderType.class.getName(), "EQUIPMENT_ORDER", "order", false, false)
                 .build();
         dynamicEntityInfoExt = DynamicEntityInfo.newBuilder(DynamicEntityType.TABLE_EXT, "com.tcdng.test.EquipmentExt")
                 .baseClassName(Equipment.class.getName()).version(1L)
-                .addField(DynamicFieldType.INFO_ONLY, DataType.STRING, "EQUIPMENT_NM", "name", 32, 0, 0, false)
-                .addField(DynamicFieldType.INFO_ONLY, DataType.STRING, "SERIAL_NO", "serialNo", 0, 0, 0, false)
-                .addField(DynamicFieldType.GENERATION, DataType.DECIMAL, "PRICE", "price", 0, 18, 2, false)
-                .addField(DynamicFieldType.GENERATION, DataType.DATE, "EXPIRY_DT", "expiryDt", 0, 0, 0, true)
-                .addField(DynamicFieldType.GENERATION, DataType.TIMESTAMP_UTC, "CREATE_DT", "createDt", 0, 0, 0, false)
+                .addField(DynamicFieldType.INFO_ONLY, DataType.STRING, "EQUIPMENT_NM", "name", 32, 0, 0, false, true)
+                .addField(DynamicFieldType.INFO_ONLY, DataType.STRING, "SERIAL_NO", "serialNo", 0, 0, 0, false, true)
+                .addField(DynamicFieldType.GENERATION, DataType.DECIMAL, "PRICE", "price", 0, 18, 2, false, true)
+                .addField(DynamicFieldType.GENERATION, DataType.DATE, "EXPIRY_DT", "expiryDt", 0, 0, 0, true, false)
+                .addField(DynamicFieldType.GENERATION, DataType.TIMESTAMP_UTC, "CREATE_DT", "createDt", 0, 0, 0, false, false)
                 .build();
     }
 
