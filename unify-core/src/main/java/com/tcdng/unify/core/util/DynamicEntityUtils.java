@@ -37,6 +37,7 @@ import com.tcdng.unify.core.annotation.Table;
 import com.tcdng.unify.core.annotation.TableExt;
 import com.tcdng.unify.core.constant.EntityFieldType;
 import com.tcdng.unify.core.database.dynamic.DynamicChildFieldInfo;
+import com.tcdng.unify.core.database.dynamic.DynamicChildListFieldInfo;
 import com.tcdng.unify.core.database.dynamic.DynamicColumnFieldInfo;
 import com.tcdng.unify.core.database.dynamic.DynamicEntityInfo;
 import com.tcdng.unify.core.database.dynamic.DynamicFieldInfo;
@@ -120,25 +121,18 @@ public final class DynamicEntityUtils {
                     DynamicChildFieldInfo childInfo = (DynamicChildFieldInfo) dynamicFieldInfo;
                     DynamicEntityUtils.generateChildAnnotation(fsb, childInfo);
                     importSet.add(Child.class.getCanonicalName());
-                    childClass = childInfo.getParentDynamicEntityInfo().getClassName();
+                    childClass = childInfo.getChildDynamicEntityInfo().getClassName();
                     importSet.add(childClass);
                 } else if (type.isChildList()) {
-                    DynamicChildFieldInfo childListInfo = (DynamicChildFieldInfo) dynamicFieldInfo;
+                    DynamicChildListFieldInfo childListInfo = (DynamicChildListFieldInfo) dynamicFieldInfo;
                     DynamicEntityUtils.generateChildListAnnotation(fsb, childListInfo);
                     importSet.add(List.class.getCanonicalName());
                     importSet.add(ChildList.class.getCanonicalName());
-                    childClass = childListInfo.getParentDynamicEntityInfo().getClassName();
+                    childClass = childListInfo.getChildDynamicEntityInfo().getClassName();
                     importSet.add(childClass);
                 } else {
                     DynamicEntityUtils.generateLisOnlyAnnotation(fsb, (DynamicListOnlyFieldInfo) dynamicFieldInfo);
                     importSet.add(ListOnly.class.getCanonicalName());
-                }
-
-                final Class<?> javaClass = dynamicFieldInfo.getDataType().javaClass();
-                if (Date.class.equals(javaClass)) {
-                    importSet.add(Date.class.getCanonicalName());
-                } else if (BigDecimal.class.equals(javaClass)) {
-                    importSet.add(BigDecimal.class.getCanonicalName());
                 }
 
                 String simpleName = null;
@@ -147,8 +141,14 @@ public final class DynamicEntityUtils {
                 } else if (type.isChildList()) {
                     simpleName = "List<" + childClass + ">";
                 } else {
-                    simpleName = enumEntityInfo != null ? enumEntityInfo.getSimpleName()
-                            : javaClass.getSimpleName();
+                    Class<?> javaClass = dynamicFieldInfo.getDataType().javaClass();
+                    if (Date.class.equals(javaClass)) {
+                        importSet.add(Date.class.getCanonicalName());
+                    } else if (BigDecimal.class.equals(javaClass)) {
+                        importSet.add(BigDecimal.class.getCanonicalName());
+                    }
+
+                    simpleName = enumEntityInfo != null ? enumEntityInfo.getSimpleName() : javaClass.getSimpleName();
                 }
 
                 fsb.append(" private ").append(simpleName).append(" ").append(fieldName).append(";\n");
@@ -216,8 +216,10 @@ public final class DynamicEntityUtils {
         fsb.append(" @Child\n");
     }
 
-    private static void generateChildListAnnotation(StringBuilder fsb, DynamicChildFieldInfo childListInfo) {
-        fsb.append(" @ChildList\n");
+    private static void generateChildListAnnotation(StringBuilder fsb, DynamicChildListFieldInfo childListInfo) {
+        fsb.append(" @ChildList(listType = ");
+        fsb.append(childListInfo.getChildDynamicEntityInfo().getClassName());
+        fsb.append(".class)\n");
     }
 
     private static void generateForeignKeyAnnotation(StringBuilder fsb,

@@ -23,7 +23,9 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import org.junit.Test;
 
@@ -57,6 +59,10 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
     private DynamicEntityInfo dynamicEntityInfo;
 
     private DynamicEntityInfo dynamicEntityInfoExt;
+    
+    private DynamicEntityInfo authorDynamicEntityInfo;
+    
+    private DynamicEntityInfo bookDynamicEntityInfo;
 
     @SuppressWarnings("unchecked")
     @Test
@@ -317,6 +323,121 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
         }
     }
 
+    @Test
+    public void testLoadDynamicSqlEntityCircular() throws Exception {
+        List<Class<? extends Entity>> classList = dseLoader.loadDynamicSqlEntities(db,
+                Arrays.asList(authorDynamicEntityInfo, bookDynamicEntityInfo));
+        assertNotNull(classList);
+        assertEquals(2, classList.size());
+        Class<? extends Entity> authorClazz = (Class<? extends Entity>) classList.get(0);
+        assertEquals("com.tcdng.test.Author", authorClazz.getName());
+        Class<? extends Entity> bookClazz = (Class<? extends Entity>) classList.get(1);
+        assertEquals("com.tcdng.test.Book", bookClazz.getName());
+    }
+
+    @Test
+    public void testLoadDynamicSqlEntityCircularCreateInst() throws Exception {
+        dseLoader.loadDynamicSqlEntities(db,
+                Arrays.asList(authorDynamicEntityInfo, bookDynamicEntityInfo));
+
+        tm.beginTransaction();
+        try {
+            Entity authorInst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.Author");
+            ReflectUtils.setBeanProperty(authorInst, "name", "John Doe");
+            Entity book1Inst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.Book");
+            Entity book2Inst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.Book");
+            ReflectUtils.setBeanProperty(book1Inst, "title", "Finding Jane");
+            ReflectUtils.setBeanProperty(book2Inst, "title", "Attack the Bean");
+            ReflectUtils.setBeanProperty(authorInst, "bookList", Arrays.asList(book1Inst, book2Inst));
+            Long id = (Long) db.create(authorInst);
+            assertNotNull(id);
+            assertTrue(id > 0L);
+        } catch (Exception e) {
+            tm.setRollback();
+            throw e;
+        } finally {
+            tm.endTransaction();
+        }
+        
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testLoadDynamicSqlEntityCircularFindInst() throws Exception {
+        dseLoader.loadDynamicSqlEntities(db,
+                Arrays.asList(authorDynamicEntityInfo, bookDynamicEntityInfo));
+
+        tm.beginTransaction();
+        try {
+            Entity authorInst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.Author");
+            ReflectUtils.setBeanProperty(authorInst, "name", "John Doe");
+            Entity book1Inst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.Book");
+            Entity book2Inst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.Book");
+            ReflectUtils.setBeanProperty(book1Inst, "title", "Finding Jane");
+            ReflectUtils.setBeanProperty(book2Inst, "title", "Attack the Bean");
+            ReflectUtils.setBeanProperty(authorInst, "bookList", Arrays.asList(book1Inst, book2Inst));
+            Long id = (Long) db.create(authorInst);
+            
+            Entity findAuthorInst = db.list(authorInst.getClass(), id);
+            assertNotNull(findAuthorInst);
+            assertEquals("John Doe", ReflectUtils.getBeanProperty(findAuthorInst, "name"));
+            List<? extends Entity> list = (List<? extends Entity>) ReflectUtils.getBeanProperty(findAuthorInst, "bookList");
+            assertNotNull(list);
+            assertEquals(2, list.size());
+            
+            Entity findBook1Inst = list.get(0);
+            assertNotNull(findBook1Inst);
+            assertEquals(id, ReflectUtils.getBeanProperty(findBook1Inst, "authorId"));
+            assertEquals("Finding Jane", ReflectUtils.getBeanProperty(findBook1Inst, "title"));
+            assertEquals("John Doe", ReflectUtils.getBeanProperty(findBook1Inst, "authorName"));
+            
+            Entity findBook2Inst = list.get(1);
+            assertNotNull(findBook2Inst);
+            assertEquals(id, ReflectUtils.getBeanProperty(findBook2Inst, "authorId"));
+            assertEquals("Attack the Bean", ReflectUtils.getBeanProperty(findBook2Inst, "title"));
+            assertEquals("John Doe", ReflectUtils.getBeanProperty(findBook2Inst, "authorName"));
+            
+        } catch (Exception e) {
+            tm.setRollback();
+            throw e;
+        } finally {
+            tm.endTransaction();
+        }
+        
+    }
+
+    @Test
+    public void testLoadDynamicSqlEntityCircularDeleteInst() throws Exception {
+        dseLoader.loadDynamicSqlEntities(db,
+                Arrays.asList(authorDynamicEntityInfo, bookDynamicEntityInfo));
+
+        tm.beginTransaction();
+        try {
+            Entity authorInst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.Author");
+            ReflectUtils.setBeanProperty(authorInst, "name", "John Doe");
+            Entity book1Inst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.Book");
+            Entity book2Inst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.Book");
+            ReflectUtils.setBeanProperty(book1Inst, "title", "Finding Jane");
+            ReflectUtils.setBeanProperty(book2Inst, "title", "Attack the Bean");
+            ReflectUtils.setBeanProperty(authorInst, "bookList", Arrays.asList(book1Inst, book2Inst));
+            Long id = (Long) db.create(authorInst);
+            
+            int bookCount = db.countAll(Query.of(book1Inst.getClass()).addEquals("authorId", id));
+            assertEquals(2, bookCount);
+            
+            db.delete(authorInst.getClass(), id);
+            
+            bookCount = db.countAll(Query.of(book1Inst.getClass()).addEquals("authorId", id));
+            assertEquals(0, bookCount);
+        } catch (Exception e) {
+            tm.setRollback();
+            throw e;
+        } finally {
+            tm.endTransaction();
+        }
+        
+    }
+    
     @Override
     protected void onSetup() throws Exception {
         tm = (DatabaseTransactionManager) getComponent(ApplicationComponents.APPLICATION_DATABASETRANSACTIONMANAGER);
@@ -339,6 +460,17 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
                 .addField(DynamicFieldType.GENERATION, DataType.DATE, "EXPIRY_DT", "expiryDt", 0, 0, 0, true, false)
                 .addField(DynamicFieldType.GENERATION, DataType.TIMESTAMP_UTC, "CREATE_DT", "createDt", 0, 0, 0, false, false)
                 .build();
+        authorDynamicEntityInfo = DynamicEntityInfo
+                .newBuilder(DynamicEntityType.TABLE, "com.tcdng.test.Author").tableName("TAUTHOR").version(1L)
+                .addField(DynamicFieldType.GENERATION, DataType.STRING, "TAUTHOR_NM", "name", 32, 0, 0, false, true)
+                .build();
+        bookDynamicEntityInfo = DynamicEntityInfo
+                .newBuilder(DynamicEntityType.TABLE, "com.tcdng.test.Book").tableName("TBOOK").version(1L)
+                .addForeignKeyField(DynamicFieldType.GENERATION, authorDynamicEntityInfo, null, "authorId", false)
+                .addField(DynamicFieldType.GENERATION, DataType.STRING, "TITLE", "title", 32, 0, 0, false, true)
+                .addListOnlyField(DynamicFieldType.GENERATION, null, "authorName", "authorId", "name", false)
+                .build();
+        authorDynamicEntityInfo.addChildListField(DynamicFieldType.GENERATION, bookDynamicEntityInfo, "bookList");
     }
 
     @Override

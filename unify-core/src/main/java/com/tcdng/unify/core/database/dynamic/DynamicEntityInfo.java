@@ -27,7 +27,6 @@ import com.tcdng.unify.core.annotation.DynamicEntityType;
 import com.tcdng.unify.core.annotation.DynamicFieldType;
 import com.tcdng.unify.core.constant.DataType;
 import com.tcdng.unify.core.system.entities.AbstractSequencedEntity;
-import com.tcdng.unify.core.util.DataUtils;
 
 /**
  * Dynamic entity information.
@@ -55,7 +54,7 @@ public class DynamicEntityInfo {
         this.tableName = tableName;
         this.baseClassName = baseClassName;
         this.className = className;
-        this.fieldInfos = DataUtils.unmodifiableMap(fieldInfos);
+        this.fieldInfos = fieldInfos;
         this.version = version;
     }
 
@@ -88,8 +87,28 @@ public class DynamicEntityInfo {
         return dynamicFieldInfo;
     }
 
+    public DynamicEntityInfo addChildField(DynamicFieldType type, DynamicEntityInfo childDynamicEntityInfo,
+            String fieldName) throws UnifyException {
+        checkFieldNameExist(fieldName);
+        fieldInfos.put(fieldName, new DynamicChildFieldInfo(type, childDynamicEntityInfo, fieldName));
+        return this;
+    }
+
+    public DynamicEntityInfo addChildListField(DynamicFieldType type, DynamicEntityInfo childDynamicEntityInfo,
+            String fieldName) throws UnifyException {
+        checkFieldNameExist(fieldName);
+        fieldInfos.put(fieldName, new DynamicChildListFieldInfo(type, childDynamicEntityInfo, fieldName));
+        return this;
+    }
+
     public long getVersion() {
         return version;
+    }
+
+    private void checkFieldNameExist(String fieldName) throws UnifyException {
+        if (fieldInfos.containsKey(fieldName)) {
+            throw new UnifyOperationException(getClass(), "Field with name [" + fieldName + "] already exists.");
+        }
     }
 
     public static Builder newBuilder(DynamicEntityType type, String className) {
@@ -116,10 +135,6 @@ public class DynamicEntityInfo {
 
         private Map<String, DynamicListOnlyFieldInfo> listOnlyFields;
 
-        private Map<String, DynamicChildFieldInfo> childFields;
-
-        private Map<String, DynamicChildListFieldInfo> childListFields;
-
         private long version;
 
         private Builder(DynamicEntityType type, String className) {
@@ -129,8 +144,6 @@ public class DynamicEntityInfo {
             fkFields = new LinkedHashMap<String, DynamicForeignKeyFieldInfo>();
             columnFields = new LinkedHashMap<String, DynamicColumnFieldInfo>();
             listOnlyFields = new LinkedHashMap<String, DynamicListOnlyFieldInfo>();
-            childFields = new LinkedHashMap<String, DynamicChildFieldInfo>();
-            childListFields = new LinkedHashMap<String, DynamicChildListFieldInfo>();
         }
 
         public Builder tableName(String tableName) {
@@ -213,24 +226,9 @@ public class DynamicEntityInfo {
             return this;
         }
 
-        public Builder addChildField(DynamicEntityInfo parentDynamicEntityInfo, String fieldName)
-                throws UnifyException {
-            checkFieldNameExist(fieldName);
-            childFields.put(fieldName, new DynamicChildFieldInfo(parentDynamicEntityInfo, fieldName));
-            return this;
-        }
-
-        public Builder addChildListField(DynamicEntityInfo parentDynamicEntityInfo, String fieldName)
-                throws UnifyException {
-            checkFieldNameExist(fieldName);
-            childListFields.put(fieldName, new DynamicChildListFieldInfo(parentDynamicEntityInfo, fieldName));
-            return this;
-        }
-
         private void checkFieldNameExist(String fieldName) throws UnifyException {
             if (fkFields.containsKey(fieldName) || columnFields.containsKey(fieldName)
-                    || listOnlyFields.containsKey(fieldName) || childFields.containsKey(fieldName)
-                    || childListFields.containsKey(fieldName)) {
+                    || listOnlyFields.containsKey(fieldName)) {
                 throw new UnifyOperationException(getClass(), "Field with name [" + fieldName + "] already exists.");
             }
         }
@@ -240,8 +238,6 @@ public class DynamicEntityInfo {
             fieldInfos.putAll(fkFields);
             fieldInfos.putAll(columnFields);
             fieldInfos.putAll(listOnlyFields);
-            fieldInfos.putAll(childFields);
-            fieldInfos.putAll(childListFields);
             return new DynamicEntityInfo(type, tableName, baseClassName, className, fieldInfos, version);
         }
     }

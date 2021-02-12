@@ -27,15 +27,15 @@ import com.tcdng.unify.core.constant.EntityFieldType;
  */
 public class DynamicChildFieldInfo extends DynamicFieldInfo {
 
-    private DynamicEntityInfo parentDynamicEntityInfo;
+    private DynamicEntityInfo childDynamicEntityInfo;
 
-    public DynamicChildFieldInfo(DynamicEntityInfo parentDynamicEntityInfo, String fieldName) {
-        super(DynamicFieldType.GENERATION, EntityFieldType.CHILD, null, null, fieldName, false);
-        this.parentDynamicEntityInfo = parentDynamicEntityInfo;
+    public DynamicChildFieldInfo(DynamicFieldType type, DynamicEntityInfo childDynamicEntityInfo, String fieldName) {
+        super(type, EntityFieldType.CHILD, null, null, fieldName, false);
+        this.childDynamicEntityInfo = childDynamicEntityInfo;
     }
 
-    public DynamicEntityInfo getParentDynamicEntityInfo() {
-        return parentDynamicEntityInfo;
+    public DynamicEntityInfo getChildDynamicEntityInfo() {
+        return childDynamicEntityInfo;
     }
 
 }

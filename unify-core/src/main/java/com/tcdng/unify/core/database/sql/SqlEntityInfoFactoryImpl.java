@@ -556,6 +556,10 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                             }
 
                             Class<?> argumentType = ReflectUtils.getArgumentType(field.getGenericType(), 0);
+                            if (argumentType == null) {
+                                argumentType = cla.listType().equals(Entity.class) ? null: cla.listType();
+                            }
+                            
                             if (argumentType.isAnnotationPresent(TableExt.class)) {
                                 throw new UnifyException(UnifyCoreErrorConstants.RECORD_EXTENSION_REFERENCE_NOT_ALLOWED,
                                         entityClass, field);
