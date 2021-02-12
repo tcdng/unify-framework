@@ -46,16 +46,15 @@ public abstract class AbstractDBBatchItemFileReadProcessor<T extends BatchItemRe
     @Override
     protected Object doProcess(BatchFileReadConfig batchFileConfig, BatchFileReader reader) throws UnifyException {
         List<Object> ids = new ArrayList<Object>();
-        String[] updateFields = null;
+        List<String> updateList = null;
         ConstraintAction action = batchFileConfig.getOnConstraint();
         if (ConstraintAction.UPDATE.equals(action)) {
-            List<String> updateList = new ArrayList<String>();
+            updateList = new ArrayList<String>();
             for (BatchFileFieldConfig bfc : batchFileConfig.getFieldConfigList()) {
                 if (bfc.isUpdateOnConstraint()) {
                     updateList.add(bfc.getBeanFieldName());
                 }
             }
-            updateFields = updateList.toArray(new String[updateList.size()]);
         }
 
         T batchItem = ReflectUtils.newInstance(batchItemClass);
@@ -75,7 +74,7 @@ public abstract class AbstractDBBatchItemFileReadProcessor<T extends BatchItemRe
                         throw new UnifyException(UnifyCoreErrorConstants.BATCH_FILE_READER_RECORD_EXISTS, constraint,
                                 batchItem);
                     case UPDATE:
-                        ReflectUtils.shallowBeanCopy(constraint, batchItem, updateFields);
+                        ReflectUtils.shallowBeanCopy(constraint, batchItem, updateList);
                         genericService.update(constraint);
                         break;
                     case SKIP:

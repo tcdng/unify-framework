@@ -115,7 +115,7 @@ public class ReflectUtilsTest {
         contactAddressB.setAddressLine1("Main");
         contactAddressB.setAddressLine2("Carey");
         contactAddressA.setVersionNo(20);
-        assertTrue(ReflectUtils.beanEquals(contactAddressA, contactAddressB, "versionNo"));
+        assertTrue(ReflectUtils.beanEquals(contactAddressA, contactAddressB, Arrays.asList("versionNo")));
     }
 
     @Test
@@ -128,7 +128,7 @@ public class ReflectUtilsTest {
         contactAddressB.setAddressLine1("Main");
         contactAddressB.setAddressLine2("Tom");
         contactAddressA.setVersionNo(20);
-        assertFalse(ReflectUtils.beanEquals(contactAddressA, contactAddressB, "versionNo"));
+        assertFalse(ReflectUtils.beanEquals(contactAddressA, contactAddressB, Arrays.asList("versionNo")));
     }
 
     @Test
@@ -274,7 +274,7 @@ public class ReflectUtilsTest {
         
 
         Customer destCust = new Customer();
-        ReflectUtils.shallowBeanCopy(destCust, srcCust, "firstName", "lastName", "officeAddresses");
+        ReflectUtils.shallowBeanCopy(destCust, srcCust, Arrays.asList("firstName", "lastName", "officeAddresses"));
         assertSame(destCust.getFirstName(), srcCust.getFirstName());
         assertSame(destCust.getLastName(), srcCust.getLastName());
         assertSame(destCust.getOfficeAddresses(), srcCust.getOfficeAddresses());
