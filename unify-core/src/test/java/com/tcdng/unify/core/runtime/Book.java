@@ -14,39 +14,21 @@
  * the License.
  */
 
-package com.tcdng.unify.core.constant;
+package com.tcdng.unify.core.runtime;
 
 /**
- * Entity field type.
+ * Test book interface.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public enum EntityFieldType {
+public interface Book {
 
-    FOREIGN_KEY,
-    TABLE_COLUMN,
-    LIST_ONLY,
-    CHILD,
-    CHILDLIST;
+    void setAuthor(Author author);
+    
+    Author getAuthor();
 
-    public boolean isForeignKey() {
-        return FOREIGN_KEY.equals(this);
-    }
-
-    public boolean isTableColumn() {
-        return TABLE_COLUMN.equals(this);
-    }
-
-    public boolean isListOnly() {
-        return LIST_ONLY.equals(this);
-    }
-
-    public boolean isChild() {
-        return CHILD.equals(this);
-    }
-
-    public boolean isChildList() {
-        return CHILDLIST.equals(this);
-    }
+    void setTitle(String title);
+    
+    String getTitle();
 }

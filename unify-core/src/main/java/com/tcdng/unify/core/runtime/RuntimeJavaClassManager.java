@@ -19,6 +19,7 @@ package com.tcdng.unify.core.runtime;
 import java.io.File;
 import java.io.InputStream;
 import java.io.Reader;
+import java.util.List;
 
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
@@ -40,12 +41,12 @@ public interface RuntimeJavaClassManager extends UnifyComponent, ClassForNamePro
      * name can be compiled and loaded.
      * 
      * @param className
-     *            the class name
+     *                  the class name
      * @param is
-     *            input stream object
+     *                  input stream object
      * @return the compiled and loaded class
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     Class<?> compileAndLoadJavaClass(String className, InputStream is) throws UnifyException;
 
@@ -55,12 +56,12 @@ public interface RuntimeJavaClassManager extends UnifyComponent, ClassForNamePro
      * can be compiled and loaded.
      * 
      * @param className
-     *            the class name
+     *                  the class name
      * @param reader
-     *            reader object
+     *                  reader object
      * @return the compiled and loaded class
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     Class<?> compileAndLoadJavaClass(String className, Reader reader) throws UnifyException;
 
@@ -70,14 +71,42 @@ public interface RuntimeJavaClassManager extends UnifyComponent, ClassForNamePro
      * can be compiled and loaded.
      * 
      * @param className
-     *            the class name
+     *                  the class name
      * @param src
-     *            string source object
+     *                  string source object
      * @return the compiled and loaded class
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     Class<?> compileAndLoadJavaClass(String className, String src) throws UnifyException;
+
+    /**
+     * Compiles a Java class source and load resulting class to JVM.
+     * Uses a one-time class loader which implies that classes with the same name
+     * can be compiled and loaded.
+     * 
+     * @param source
+     *                  the java source object
+     * @return the compiled and loaded class
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    Class<?> compileAndLoadJavaClass(JavaClassSource source) throws UnifyException;
+
+    /**
+     * Compiles a list of Java class sources and load resulting classes to JVM. Uses
+     * a one-time class loader which implies that classes with the same name can be
+     * compiled and loaded.
+     * 
+     * @param className
+     *                   the class name
+     * @param sourceList
+     *                   the source list
+     * @return the compiled and loaded classes
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    List<Class<?>> compileAndLoadJavaClasses(List<JavaClassSource> sourceList) throws UnifyException;
 
     /**
      * Compiles a Java class source from file and load resulting class to JVM. Uses
@@ -85,22 +114,22 @@ public interface RuntimeJavaClassManager extends UnifyComponent, ClassForNamePro
      * compiled and loaded.
      * 
      * @param className
-     *            the class name
+     *                  the class name
      * @param file
-     *            file object
+     *                  file object
      * @return the compiled and loaded class
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     Class<?> compileAndLoadJavaClass(String className, File file) throws UnifyException;
-    
+
     /**
      * Gets class loader depth.
      * 
      * @return the class loader depth;
      */
     int getClassLoaderDepth();
-    
+
     /**
      * Clears class loader.
      */

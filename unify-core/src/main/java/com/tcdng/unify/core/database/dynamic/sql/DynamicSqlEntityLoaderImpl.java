@@ -39,7 +39,7 @@ import com.tcdng.unify.core.util.DynamicEntityUtils;
 @Component(ApplicationComponents.APPLICATION_DYNAMICSQLENTITYLOADER)
 public class DynamicSqlEntityLoaderImpl extends AbstractUnifyComponent implements DynamicSqlEntityLoader {
 
-    private static final String DYNAMICSQLENTITYLODER_LOCK = "dynamicsqlentityloader-lock";
+    private static final String DYNAMICSQLENTITYLOADER_LOCK = "dynamicsqlentityloader-lock";
 
     @Configurable
     private RuntimeJavaClassManager runtimeJavaClassManager;
@@ -60,14 +60,14 @@ public class DynamicSqlEntityLoaderImpl extends AbstractUnifyComponent implement
         SqlDataSource sqlDataSource = (SqlDataSource) db.getDataSource();
         sqlDataSource.getDialect().createSqlEntityInfo(entityClass);
 
-        beginClusterLock(DYNAMICSQLENTITYLODER_LOCK);
+        beginClusterLock(DYNAMICSQLENTITYLOADER_LOCK);
         try {
             // Manage schema
             SqlSchemaManagerOptions options = new SqlSchemaManagerOptions();
             sqlSchemaManager.manageTableSchema(sqlDataSource, options, entityClass);
             sqlSchemaManager.manageViewSchema(sqlDataSource, options, entityClass);
         } finally {
-            endClusterLock(DYNAMICSQLENTITYLODER_LOCK);
+            endClusterLock(DYNAMICSQLENTITYLOADER_LOCK);
         }
         return entityClass;
     }
