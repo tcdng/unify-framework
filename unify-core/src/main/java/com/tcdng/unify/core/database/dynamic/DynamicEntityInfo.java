@@ -61,6 +61,10 @@ public class DynamicEntityInfo {
     public DynamicEntityType getType() {
         return type;
     }
+    
+    public boolean isGeneration() {
+        return type.isGeneration();
+    }
 
     public String getTableName() {
         return tableName;
@@ -81,7 +85,7 @@ public class DynamicEntityInfo {
     public DynamicFieldInfo getDynamicFieldInfo(String fieldName) throws UnifyException {
         DynamicFieldInfo dynamicFieldInfo = fieldInfos.get(fieldName);
         if (dynamicFieldInfo == null) {
-            throw new UnifyOperationException(this.getClass(), "Field with name [" + fieldName + "] is unknown.");
+            throw new UnifyOperationException(getClass(), "Field with name [" + fieldName + "] is unknown.");
         }
 
         return dynamicFieldInfo;
