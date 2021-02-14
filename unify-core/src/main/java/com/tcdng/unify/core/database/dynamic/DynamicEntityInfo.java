@@ -47,7 +47,7 @@ public class DynamicEntityInfo {
     private Map<String, DynamicFieldInfo> fieldInfos;
 
     private boolean withChildField;
-    
+
     private long version;
 
     private DynamicEntityInfo(DynamicEntityType type, String tableName, String baseClassName, String className,
@@ -63,7 +63,7 @@ public class DynamicEntityInfo {
     public DynamicEntityType getType() {
         return type;
     }
-    
+
     public boolean isWithChildField() {
         return withChildField;
     }
@@ -91,7 +91,8 @@ public class DynamicEntityInfo {
     public DynamicFieldInfo getDynamicFieldInfo(String fieldName) throws UnifyException {
         DynamicFieldInfo dynamicFieldInfo = fieldInfos.get(fieldName);
         if (dynamicFieldInfo == null) {
-            throw new UnifyOperationException(className, "Field with name [" + fieldName + "] is unknown.");
+            throw new UnifyOperationException(getClass(),
+                    "Class [" + className + "] field with name [" + fieldName + "] is unknown.");
         }
 
         return dynamicFieldInfo;
@@ -119,7 +120,8 @@ public class DynamicEntityInfo {
 
     private void checkFieldNameExist(String fieldName) throws UnifyException {
         if (fieldInfos.containsKey(fieldName)) {
-            throw new UnifyOperationException(getClass(), "Field with name [" + fieldName + "] already exists.");
+            throw new UnifyOperationException(getClass(),
+                    "Class [" + className + "] field with name [" + fieldName + "] already exists.");
         }
     }
 
@@ -217,14 +219,14 @@ public class DynamicEntityInfo {
             checkFieldNameExist(fieldName);
             DynamicForeignKeyFieldInfo fkFieldInfo = fkFields.get(key);
             if (fkFieldInfo == null) {
-                throw new UnifyOperationException(getClass(),
-                        "Unknown foreign key [" + key + "] referenced by [" + fieldName + "].");
+                throw new UnifyOperationException(getClass(), "Class [" + className + "] unknown foreign key [" + key
+                        + "] referenced by [" + fieldName + "].");
             }
 
             if (fkFieldInfo.isEnum()) {
                 if (!"name".equals(property) && !"description".equals(property)) {
-                    throw new UnifyOperationException(getClass(), "Enumeration property [" + property
-                            + "] referenced by [" + fieldName + "] is not supported.");
+                    throw new UnifyOperationException(getClass(), "Class [" + className + "] enumeration property ["
+                            + property + "] referenced by [" + fieldName + "] is not supported.");
                 }
 
                 listOnlyFields.put(fieldName,
