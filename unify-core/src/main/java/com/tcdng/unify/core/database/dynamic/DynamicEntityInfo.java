@@ -46,6 +46,8 @@ public class DynamicEntityInfo {
 
     private Map<String, DynamicFieldInfo> fieldInfos;
 
+    private boolean withChildField;
+    
     private long version;
 
     private DynamicEntityInfo(DynamicEntityType type, String tableName, String baseClassName, String className,
@@ -62,6 +64,10 @@ public class DynamicEntityInfo {
         return type;
     }
     
+    public boolean isWithChildField() {
+        return withChildField;
+    }
+
     public boolean isGeneration() {
         return type.isGeneration();
     }
@@ -85,7 +91,7 @@ public class DynamicEntityInfo {
     public DynamicFieldInfo getDynamicFieldInfo(String fieldName) throws UnifyException {
         DynamicFieldInfo dynamicFieldInfo = fieldInfos.get(fieldName);
         if (dynamicFieldInfo == null) {
-            throw new UnifyOperationException(getClass(), "Field with name [" + fieldName + "] is unknown.");
+            throw new UnifyOperationException(className, "Field with name [" + fieldName + "] is unknown.");
         }
 
         return dynamicFieldInfo;
@@ -95,6 +101,7 @@ public class DynamicEntityInfo {
             String fieldName) throws UnifyException {
         checkFieldNameExist(fieldName);
         fieldInfos.put(fieldName, new DynamicChildFieldInfo(type, childDynamicEntityInfo, fieldName));
+        withChildField = true;
         return this;
     }
 
@@ -102,6 +109,7 @@ public class DynamicEntityInfo {
             String fieldName) throws UnifyException {
         checkFieldNameExist(fieldName);
         fieldInfos.put(fieldName, new DynamicChildListFieldInfo(type, childDynamicEntityInfo, fieldName));
+        withChildField = true;
         return this;
     }
 
