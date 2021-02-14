@@ -247,6 +247,21 @@ public abstract class FactoryMap<T, U> {
     }
 
     /**
+     * Replaces factory value.
+     * 
+     * @param key
+     *            the value's key
+     * @param value
+     *            the value to set
+     * @return the replace value otherwise null
+     * @throws Exception
+     *             if an error occurs
+     */
+    protected U replace(T key, U value) throws Exception {
+        return map.replace(key, value);
+    }
+
+    /**
      * Checks if created value should be kept in map.
      * 
      * @param value
