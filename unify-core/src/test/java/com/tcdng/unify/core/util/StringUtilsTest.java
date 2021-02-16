@@ -432,7 +432,7 @@ public class StringUtilsTest {
 
     @Test
     public void testBreakdownParameterizedStringSingleParameter() throws Exception {
-        List<StringToken> tokenList = StringUtils.breakdownParameterizedString("The {color} sky.");
+        List<StringToken> tokenList = StringUtils.breakdownParameterizedString("The {{color}} sky.");
         assertNotNull(tokenList);
         assertEquals(3, tokenList.size());
 
@@ -451,7 +451,7 @@ public class StringUtilsTest {
 
     @Test
     public void testBreakdownParameterizedStringSingleParameterOnly() throws Exception {
-        List<StringToken> tokenList = StringUtils.breakdownParameterizedString("{color}");
+        List<StringToken> tokenList = StringUtils.breakdownParameterizedString("{{color}}");
         assertNotNull(tokenList);
         assertEquals(1, tokenList.size());
 
@@ -462,7 +462,7 @@ public class StringUtilsTest {
 
     @Test
     public void testBreakdownParameterizedStringMultipleParametersOnly() throws Exception {
-        List<StringToken> tokenList = StringUtils.breakdownParameterizedString("{color}{adj}");
+        List<StringToken> tokenList = StringUtils.breakdownParameterizedString("{{color}}{{adj}}");
         assertNotNull(tokenList);
         assertEquals(2, tokenList.size());
 
@@ -477,7 +477,7 @@ public class StringUtilsTest {
 
     @Test
     public void testBreakdownParameterizedStringMultipleParameterTogether() throws Exception {
-        List<StringToken> tokenList = StringUtils.breakdownParameterizedString("The {color}{adj} sky.");
+        List<StringToken> tokenList = StringUtils.breakdownParameterizedString("The {{color}}{{adj}} sky.");
         assertNotNull(tokenList);
         assertEquals(4, tokenList.size());
 
@@ -500,7 +500,7 @@ public class StringUtilsTest {
 
     @Test
     public void testBreakdownParameterizedStringMultipleParameterSeparate() throws Exception {
-        List<StringToken> tokenList = StringUtils.breakdownParameterizedString("The {color} sky {adj}.");
+        List<StringToken> tokenList = StringUtils.breakdownParameterizedString("The {{color}} sky {{adj}}.");
         assertNotNull(tokenList);
         assertEquals(5, tokenList.size());
 
@@ -527,7 +527,7 @@ public class StringUtilsTest {
 
     @Test
     public void testBreakdownParameterizedStringMultipleParameterEdge() throws Exception {
-        List<StringToken> tokenList = StringUtils.breakdownParameterizedString("{color}The sky.{adj}");
+        List<StringToken> tokenList = StringUtils.breakdownParameterizedString("{{color}}The sky.{{adj}}");
         assertNotNull(tokenList);
         assertEquals(3, tokenList.size());
 
@@ -547,12 +547,31 @@ public class StringUtilsTest {
     @Test
     public void testBuildParameterizedStringUsingValueStore() throws Exception {
         List<StringToken> tokenList = StringUtils
-                .breakdownParameterizedString("Mr {lastName}'s phone number is {phoneNumber}.");
+                .breakdownParameterizedString("Mr {{lastName}}'s phone number is {{phoneNumber}}.");
         ValueStore vs = new BeanValueStore(new Customer());
         vs.store("lastName", "Shinzo");
         vs.setTempValue("phoneNumber", "+81203948574909090");
         assertEquals("Mr Shinzo's phone number is +81203948574909090.",
                 StringUtils.buildParameterizedString(tokenList, vs));
+    }
+
+    @Test
+    public void testBreakdownParameterizedStringSingleParameterWithBraces() throws Exception {
+        List<StringToken> tokenList = StringUtils.breakdownParameterizedString("The {{color}} {sky}.");
+        assertNotNull(tokenList);
+        assertEquals(3, tokenList.size());
+
+        StringToken token = tokenList.get(0);
+        assertEquals("The ", token.getToken());
+        assertFalse(token.isParam());
+
+        token = tokenList.get(1);
+        assertEquals("color", token.getToken());
+        assertTrue(token.isParam());
+
+        token = tokenList.get(2);
+        assertEquals(" {sky}.", token.getToken());
+        assertFalse(token.isParam());
     }
     
     @Test
