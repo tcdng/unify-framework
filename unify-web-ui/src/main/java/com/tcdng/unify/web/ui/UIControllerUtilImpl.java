@@ -307,6 +307,11 @@ public class UIControllerUtilImpl extends AbstractUnifyComponent implements UICo
                         (PageControllerResponse) getUplComponent(defaultLocale, "!refreshpanelresponse", false),
                         (PageControllerResponse) getUplComponent(defaultLocale, "!showpopupresponse", false) }));
 
+        defaultResultMap.put(ResultMappingConstants.REFRESH_HIDE_POPUP,
+                new Result(new PageControllerResponse[] {
+                        (PageControllerResponse) getUplComponent(defaultLocale, "!refreshpanelresponse", false),
+                        (PageControllerResponse) getUplComponent(defaultLocale, "!hidepopupresponse", false) }));
+
         defaultResultMap.put(ResultMappingConstants.REFRESH_PANELS,
                 new Result(new PageControllerResponse[] {
                         (PageControllerResponse) getUplComponent(defaultLocale, "!refreshpanelresponse", false) }));

@@ -533,10 +533,15 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 	protected String getRequestCommandTag() throws UnifyException {
 	    return getRequestContextUtil().getRequestCommandTag();
 	}
-	
+    
     protected void commandRefreshPanels(String... panelLongName) throws UnifyException {
-        getRequestContextUtil().setResponseRefreshPanels(panelLongName);;
+        getRequestContextUtil().setResponseRefreshPanels(panelLongName);
         setCommandResultMapping(ResultMappingConstants.REFRESH_PANELS);
+    }
+    
+    protected void commandRefreshPanelsAndHidePopup(String... panelLongName) throws UnifyException {
+        getRequestContextUtil().setResponseRefreshPanels(panelLongName);
+        setCommandResultMapping(ResultMappingConstants.REFRESH_HIDE_POPUP);
     }
 
     protected void commandShowPopup(String panelLongName) throws UnifyException {
