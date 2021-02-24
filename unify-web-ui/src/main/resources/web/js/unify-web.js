@@ -4618,8 +4618,13 @@ ux.getCaretPosition = function(trgObj) {
 	return {'start': 0, 'end': 0};
 }
 
-ux.setCaretPosition = function(trgObj, start, end) {
+const caretSupport = ["text", "search", "URL", "tel", "password"];
+ux.setCaretPosition = function(trgObj, start, end) {	
 	if(trgObj.setSelectionRange) {
+		if (trgObj.type && caretSupport.indexOf(trgObj.type) < 0) {
+			return;
+		}
+
 		trgObj.focus();
 		trgObj.setSelectionRange(start, end);
 	} else if (trgObj.createTextRange) {
