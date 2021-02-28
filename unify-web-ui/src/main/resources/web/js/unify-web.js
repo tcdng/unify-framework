@@ -1746,7 +1746,10 @@ ux.rigDropdownChecklist = function(rgp) {
 }
 
 ux.dcHidePopup = function(prm) {
-	_id(prm.id).updateFacade(true);
+	const _item = _id(prm.id);
+	if (_item) {
+		_item.updateFacade(true);
+	}
 }
 
 /** Duration Select */
