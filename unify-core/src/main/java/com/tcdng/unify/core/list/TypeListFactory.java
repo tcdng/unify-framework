@@ -13,6 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package com.tcdng.unify.core.list;
 
 import java.util.List;
@@ -20,30 +21,16 @@ import java.util.Locale;
 
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.data.Listable;
 
 /**
- * Abstract base class for a component type list command. Gets the
- * configurations of all components of a particular type and uses the name and
- * description values to form a list of listables, which is returned on execute.
+ * Type list factory.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public abstract class AbstractTypeListCommand<T extends UnifyComponent> extends AbstractZeroParamsListCommand {
+public interface TypeListFactory extends UnifyComponent {
 
-    @Configurable
-    private TypeListFactory typeListFactory;
-
-    private Class<T> typeClass;
-
-    public AbstractTypeListCommand(Class<T> typeClazz) {
-        this.typeClass = typeClazz;
-    }
-
-    @Override
-    public List<? extends Listable> execute(Locale locale, ZeroParams params) throws UnifyException {
-        return typeListFactory.getTypeList(locale, typeClass);
-    }
+    List<? extends Listable> getTypeList(Locale locale, Class<? extends UnifyComponent> typeClass)
+            throws UnifyException;
 }
