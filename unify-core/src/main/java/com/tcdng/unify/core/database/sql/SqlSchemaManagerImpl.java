@@ -62,7 +62,7 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 
     @Override
     public void manageTableSchema(SqlDataSource sqlDataSource, SqlSchemaManagerOptions options,
-            Class<?>... entityClasses) throws UnifyException {
+            List<Class<?>> entityClasses) throws UnifyException {
         Connection connection = (Connection) sqlDataSource.getConnection();
         try {
             logInfo("Scanning datasource {0} schema...", sqlDataSource.getPreferredName());
@@ -81,7 +81,7 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 
     @Override
     public void manageViewSchema(SqlDataSource sqlDataSource, SqlSchemaManagerOptions options,
-            Class<? extends Entity>... entityClasses) throws UnifyException {
+            List<Class<? extends Entity>> entityClasses) throws UnifyException {
         Connection connection = (Connection) sqlDataSource.getConnection();
         try {
             logInfo("Scanning datasource {0} schema...", sqlDataSource.getPreferredName());
@@ -95,6 +95,35 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
                     sqlDataSource.getPreferredName());
         } finally {
             sqlDataSource.restoreConnection(connection);
+        }
+    }
+
+    @Override
+    public List<Class<?>> buildDependencyList(SqlDataSource sqlDataSource, List<Class<?>> entityClasses)
+            throws UnifyException {
+        List<Class<?>> resultList = new ArrayList<Class<?>>();
+        for (Class<?> entityClass : entityClasses) {
+            buildDependencyList(sqlDataSource, resultList, entityClass);
+        }
+
+        return resultList;
+    }
+
+    private void buildDependencyList(SqlDataSource sqlDataSource, List<Class<?>> entityTypeList, Class<?> entityClass)
+            throws UnifyException {
+        logDebug("Building dependency list for entity type [{0}]...", entityClass);
+        SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
+        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.findSqlEntityInfo(entityClass);
+
+        for (SqlFieldInfo sqlFieldInfo : sqlEntityInfo.getManagedFieldInfos()) {
+            if (sqlFieldInfo.isForeignKey()) {
+                SqlEntityInfo fkSqlEntityInfo = sqlFieldInfo.getForeignEntityInfo();
+                buildDependencyList(sqlDataSource, entityTypeList, fkSqlEntityInfo.getKeyClass());
+            }
+        }
+
+        if (!entityTypeList.contains(entityClass)) {
+            entityTypeList.add(entityClass);
         }
     }
 

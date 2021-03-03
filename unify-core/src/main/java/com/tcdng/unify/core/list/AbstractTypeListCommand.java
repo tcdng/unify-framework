@@ -15,17 +15,13 @@
  */
 package com.tcdng.unify.core.list;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import com.tcdng.unify.core.UnifyComponent;
-import com.tcdng.unify.core.UnifyComponentConfig;
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.data.FactoryMap;
-import com.tcdng.unify.core.data.ListData;
+import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.data.Listable;
-import com.tcdng.unify.core.util.DataUtils;
 
 /**
  * Abstract base class for a component type list command. Gets the
@@ -37,32 +33,17 @@ import com.tcdng.unify.core.util.DataUtils;
  */
 public abstract class AbstractTypeListCommand<T extends UnifyComponent> extends AbstractZeroParamsListCommand {
 
-    private Class<T> typeClass;
+    @Configurable
+    private TypeListFactory typeListFactory;
 
-    private FactoryMap<Locale, List<Listable>> typeListMap;
+    private Class<T> typeClass;
 
     public AbstractTypeListCommand(Class<T> typeClazz) {
         this.typeClass = typeClazz;
-        typeListMap = new FactoryMap<Locale, List<Listable>>()
-            {
-
-                @Override
-                protected List<Listable> create(Locale key, Object... params) throws Exception {
-                    List<Listable> list = new ArrayList<Listable>();
-                    for (UnifyComponentConfig unifyComponentConfig : getComponentConfigs(typeClass)) {
-                        String description = unifyComponentConfig.getDescription() != null
-                                ? resolveSessionMessage(unifyComponentConfig.getDescription())
-                                : unifyComponentConfig.getName();
-                        list.add(new ListData(unifyComponentConfig.getName(), description));
-                    }
-                    DataUtils.sortAscending(list, Listable.class, "listDescription");
-                    return list;
-                }
-            };
     }
 
     @Override
     public List<? extends Listable> execute(Locale locale, ZeroParams params) throws UnifyException {
-        return typeListMap.get(locale);
+        return typeListFactory.getTypeList(locale, typeClass);
     }
 }

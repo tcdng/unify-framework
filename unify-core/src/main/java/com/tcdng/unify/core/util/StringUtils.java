@@ -725,13 +725,13 @@ public final class StringUtils {
         List<StringToken> tokenList = new ArrayList<StringToken>();
         int index = 0;
         int pStartIndex = 0;
-        while ((pStartIndex = string.indexOf('{', index)) >= 0) {
-            int pEndIndex = string.indexOf('}', pStartIndex);
+        while ((pStartIndex = string.indexOf("{{", index)) >= 0) {
+            int pEndIndex = string.indexOf("}}", pStartIndex);
             if (pEndIndex <= 0) {
                 throw new RuntimeException("Invalid parameterized string: parameter closure expected.");
             }
 
-            if ((pEndIndex - pStartIndex) < 2) {
+            if ((pEndIndex - pStartIndex) < 4) {
                 throw new RuntimeException(
                         "Invalid parameterized string: parameter name expected at index " + (pStartIndex + 1) + ".");
             }
@@ -740,9 +740,9 @@ public final class StringUtils {
                 tokenList.add(new StringToken(string.substring(index, pStartIndex)));
             }
 
-            tokenList.add(new StringToken(string.substring(pStartIndex + 1, pEndIndex), true));
+            tokenList.add(new StringToken(string.substring(pStartIndex + 2, pEndIndex), true));
 
-            index = pEndIndex + 1;
+            index = pEndIndex + 2;
         }
 
         if (index < string.length()) {

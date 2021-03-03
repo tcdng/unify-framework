@@ -26,6 +26,8 @@ import java.util.Set;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.UnifyOperationException;
+import com.tcdng.unify.core.annotation.Child;
+import com.tcdng.unify.core.annotation.ChildList;
 import com.tcdng.unify.core.annotation.Column;
 import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.annotation.DynamicEntityType;
@@ -33,6 +35,9 @@ import com.tcdng.unify.core.annotation.ForeignKey;
 import com.tcdng.unify.core.annotation.ListOnly;
 import com.tcdng.unify.core.annotation.Table;
 import com.tcdng.unify.core.annotation.TableExt;
+import com.tcdng.unify.core.constant.EntityFieldType;
+import com.tcdng.unify.core.database.dynamic.DynamicChildFieldInfo;
+import com.tcdng.unify.core.database.dynamic.DynamicChildListFieldInfo;
 import com.tcdng.unify.core.database.dynamic.DynamicColumnFieldInfo;
 import com.tcdng.unify.core.database.dynamic.DynamicEntityInfo;
 import com.tcdng.unify.core.database.dynamic.DynamicFieldInfo;
@@ -75,8 +80,19 @@ public final class DynamicEntityUtils {
 
         // Evaluate fields
         Set<String> fieldNames = new HashSet<String>();
+        List<String> descList = null;
         for (DynamicFieldInfo dynamicFieldInfo : dynamicEntityInfo.getFieldInfos()) {
-            fieldNames.add(dynamicFieldInfo.getFieldName());
+            final String fieldName = dynamicFieldInfo.getFieldName();
+            final String capField = StringUtils.capitalizeFirstLetter(fieldName);
+            fieldNames.add(fieldName);
+            if (dynamicFieldInfo.isDescriptive()) {
+                if (descList == null) {
+                    descList = new ArrayList<String>();
+                }
+
+                descList.add(capField);
+            }
+
             if (dynamicFieldInfo.isGeneration()) {
                 TypeInfo enumEntityInfo = null;
                 if (dynamicFieldInfo.isEnum()) {
@@ -84,7 +100,9 @@ public final class DynamicEntityUtils {
                     importSet.add(dynamicFieldInfo.getEnumClassName());
                 }
 
-                if (dynamicFieldInfo.getFieldType().isForeignKey()) {
+                final EntityFieldType type = dynamicFieldInfo.getFieldType();
+                String childClass = null;
+                if (type.isForeignKey()) {
                     DynamicForeignKeyFieldInfo fkInfo = (DynamicForeignKeyFieldInfo) dynamicFieldInfo;
                     DynamicEntityUtils.generateForeignKeyAnnotation(fsb, fkInfo);
                     importSet.add(ForeignKey.class.getCanonicalName());
@@ -92,35 +110,54 @@ public final class DynamicEntityUtils {
                         importSet.add(fkInfo.getParentDynamicEntityInfo().getClassName());
                     }
 
-                } else if (dynamicFieldInfo.getFieldType().isTableColumn()) {
+                } else if (type.isTableColumn()) {
                     DynamicEntityUtils.generateColumnAnnotation(fsb, (DynamicColumnFieldInfo) dynamicFieldInfo);
                     if (!DataUtils.isMappedColumnType(dynamicFieldInfo.getDataType().columnType())) {
                         importSet.add(ColumnType.class.getCanonicalName());
                     }
 
                     importSet.add(Column.class.getCanonicalName());
+                } else if (type.isChild()) {
+                    DynamicChildFieldInfo childInfo = (DynamicChildFieldInfo) dynamicFieldInfo;
+                    DynamicEntityUtils.generateChildAnnotation(fsb, childInfo);
+                    importSet.add(Child.class.getCanonicalName());
+                    childClass = childInfo.getChildDynamicEntityInfo().getClassName();
+                    importSet.add(childClass);
+                } else if (type.isChildList()) {
+                    DynamicChildListFieldInfo childListInfo = (DynamicChildListFieldInfo) dynamicFieldInfo;
+                    DynamicEntityUtils.generateChildListAnnotation(fsb, childListInfo);
+                    importSet.add(List.class.getCanonicalName());
+                    importSet.add(ChildList.class.getCanonicalName());
+                    childClass = childListInfo.getChildDynamicEntityInfo().getClassName();
+                    importSet.add(childClass);
                 } else {
                     DynamicEntityUtils.generateLisOnlyAnnotation(fsb, (DynamicListOnlyFieldInfo) dynamicFieldInfo);
                     importSet.add(ListOnly.class.getCanonicalName());
                 }
 
-                final Class<?> javaClass = dynamicFieldInfo.getDataType().javaClass();
-                if (Date.class.equals(javaClass)) {
-                    importSet.add(Date.class.getCanonicalName());
-                } else if (BigDecimal.class.equals(javaClass)) {
-                    importSet.add(BigDecimal.class.getCanonicalName());
+                String simpleName = null;
+                if (type.isChild()) {
+                    simpleName = childClass;
+                } else if (type.isChildList()) {
+                    simpleName = "List<" + childClass + ">";
+                } else {
+                    Class<?> javaClass = dynamicFieldInfo.getDataType().javaClass();
+                    if (Date.class.equals(javaClass)) {
+                        importSet.add(Date.class.getCanonicalName());
+                    } else if (BigDecimal.class.equals(javaClass)) {
+                        importSet.add(BigDecimal.class.getCanonicalName());
+                    }
+
+                    simpleName = enumEntityInfo != null ? enumEntityInfo.getSimpleName() : javaClass.getSimpleName();
                 }
 
-                final String fieldName = dynamicFieldInfo.getFieldName();
-                final String simpleName = enumEntityInfo != null ? enumEntityInfo.getSimpleName()
-                        : javaClass.getSimpleName();
                 fsb.append(" private ").append(simpleName).append(" ").append(fieldName).append(";\n");
 
-                String capField = StringUtils.capitalizeFirstLetter(fieldName);
                 msb.append(" public ").append(simpleName).append(" get").append(capField).append("() {return ")
                         .append(fieldName).append(";}\n");
-                msb.append(" public void set").append(capField).append("(").append(simpleName).append(" ").append(fieldName)
-                        .append(") {this.").append(fieldName).append(" = ").append(fieldName).append(";}\n");
+                msb.append(" public void set").append(capField).append("(").append(simpleName).append(" ")
+                        .append(fieldName).append(") {this.").append(fieldName).append(" = ").append(fieldName)
+                        .append(";}\n");
             }
         }
 
@@ -148,12 +185,41 @@ public final class DynamicEntityUtils {
                 .append(baseEntityInfo.getSimpleName()).append(" {\n");
         esb.append(fsb);
         if (!fieldNames.contains("description")) {
-            esb.append(" public String getDescription(){return null;}\n");
+            esb.append(" public String getDescription(){\n");
+            if (descList != null) {
+                esb.append("  StringBuilder sb = new StringBuilder();\n");
+                boolean appendSym = false;
+                for (String cFieldName : descList) {
+                    if (appendSym) {
+                        esb.append("  sb.append(\" \");\n");
+                    } else {
+                        appendSym = true;
+                    }
+
+                    esb.append("  sb.append(get").append(cFieldName).append("());\n");
+                }
+
+                esb.append("  return sb.toString();\n");
+            } else {
+                esb.append("  return null;\n");
+            }
+
+            esb.append(" }\n");
         }
 
         esb.append(msb);
         esb.append("}\n");
         return esb.toString();
+    }
+
+    private static void generateChildAnnotation(StringBuilder fsb, DynamicChildFieldInfo childInfo) {
+        fsb.append(" @Child\n");
+    }
+
+    private static void generateChildListAnnotation(StringBuilder fsb, DynamicChildListFieldInfo childListInfo) {
+        fsb.append(" @ChildList(listType = ");
+        fsb.append(childListInfo.getChildDynamicEntityInfo().getClassName());
+        fsb.append(".class)\n");
     }
 
     private static void generateForeignKeyAnnotation(StringBuilder fsb,
@@ -162,8 +228,8 @@ public final class DynamicEntityUtils {
         boolean appendSym = false;
         if (!dynamicForeignKeyFieldInfo.isEnum()) {
             appendSym = appendSymbol(fsb, appendSym);
-            fsb.append("type = ")
-                    .append(dynamicForeignKeyFieldInfo.getParentDynamicEntityInfo().getClassName()).append(".class");
+            fsb.append("type = ").append(dynamicForeignKeyFieldInfo.getParentDynamicEntityInfo().getClassName())
+                    .append(".class");
         }
 
         if (!StringUtils.isBlank(dynamicForeignKeyFieldInfo.getColumnName())) {
@@ -179,7 +245,7 @@ public final class DynamicEntityUtils {
         if (appendSym) {
             fsb.append(")");
         }
-        
+
         fsb.append("\n");
     }
 
@@ -191,7 +257,7 @@ public final class DynamicEntityUtils {
                 appendSym = appendSymbol(fsb, appendSym);
                 fsb.append("name = \"").append(dynamicColumnFieldInfo.getColumnName()).append("\"");
             }
-            
+
             if (dynamicColumnFieldInfo.isNullable()) {
                 appendSym = appendSymbol(fsb, appendSym);
                 fsb.append("nullable = true");
@@ -200,7 +266,7 @@ public final class DynamicEntityUtils {
             if (appendSym) {
                 fsb.append(")");
             }
-            
+
             fsb.append("\n");
             return;
         }
@@ -241,7 +307,7 @@ public final class DynamicEntityUtils {
             appendSym = appendSymbol(fsb, appendSym);
             fsb.append("scale = ").append(dynamicColumnFieldInfo.getScale());
         }
-        
+
         if (dynamicColumnFieldInfo.isNullable()) {
             appendSym = appendSymbol(fsb, appendSym);
             fsb.append("nullable = true");
@@ -250,7 +316,7 @@ public final class DynamicEntityUtils {
         if (appendSym) {
             fsb.append(")");
         }
-        
+
         fsb.append("\n");
     }
 
@@ -276,7 +342,7 @@ public final class DynamicEntityUtils {
         if (appendSym) {
             fsb.append(")");
         }
-        
+
         fsb.append("\n");
     }
 
@@ -286,7 +352,7 @@ public final class DynamicEntityUtils {
         } else {
             fsb.append("(");
         }
-        
+
         return true;
     }
 }

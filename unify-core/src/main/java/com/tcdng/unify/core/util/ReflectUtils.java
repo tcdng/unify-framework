@@ -894,22 +894,24 @@ public final class ReflectUtils {
      *            Fields to ignore otherwise all fields are considered
      * @return true value if a equals b
      */
-    public static boolean beanEquals(Object a, Object b, String... ignore) {
-        if (a == b) {
-            return true;
-        }
+    public static boolean beanEquals(Object a, Object b) {
+        Set<String> emptySet = Collections.emptySet();
+        return ReflectUtils.beanEquals(a, b, emptySet);
+    }
 
-        if (b == null) {
-            return false;
-        }
-
-        if (a.getClass() != b.getClass()) {
-            return false;
-        }
-
-        Set<String> ignoreSet = new HashSet<String>();
-        Collections.addAll(ignoreSet, ignore);
-        return ReflectUtils.innerBeanEquals(a, b, ignoreSet);
+    /**
+     * Compares two bean objects.
+     * 
+     * @param a
+     *            object to compare
+     * @param b
+     *            object to compare
+     * @param ignore
+     *            Fields to ignore otherwise all fields are considered
+     * @return true value if a equals b
+     */
+    public static boolean beanEquals(Object a, Object b, List<String> ignore) {
+        return ReflectUtils.beanEquals(a, b, new HashSet<String>(ignore));
     }
 
     /**
@@ -1014,8 +1016,8 @@ public final class ReflectUtils {
      * @throws UnifyException
      *             if an error occurs
      */
-    public static boolean shallowBeanCopy(Object destination, Object source, String... fields) throws UnifyException {
-        try {
+    public static boolean shallowBeanCopy(Object destination, Object source, List<String> fields) throws UnifyException {
+        try { 
             if (destination == source) {
                 return true;
             }

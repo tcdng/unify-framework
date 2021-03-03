@@ -14,39 +14,30 @@
  * the License.
  */
 
-package com.tcdng.unify.core.constant;
+package com.tcdng.unify.core.runtime;
 
 /**
- * Entity field type.
+ * java class source object.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public enum EntityFieldType {
+public class JavaClassSource {
 
-    FOREIGN_KEY,
-    TABLE_COLUMN,
-    LIST_ONLY,
-    CHILD,
-    CHILDLIST;
+    private String className;
+    
+    private String src;
 
-    public boolean isForeignKey() {
-        return FOREIGN_KEY.equals(this);
+    public JavaClassSource(String className, String src) {
+        this.className = className;
+        this.src = src;
     }
 
-    public boolean isTableColumn() {
-        return TABLE_COLUMN.equals(this);
+    public String getClassName() {
+        return className;
     }
 
-    public boolean isListOnly() {
-        return LIST_ONLY.equals(this);
-    }
-
-    public boolean isChild() {
-        return CHILD.equals(this);
-    }
-
-    public boolean isChildList() {
-        return CHILDLIST.equals(this);
+    public String getSrc() {
+        return src;
     }
 }

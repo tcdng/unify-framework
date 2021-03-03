@@ -26,5 +26,10 @@ public enum DynamicEntityType {
     TABLE,
     TABLE_EXT,
     VIEW,
-    INFO_ONLY
+    INFO_ONLY;
+    
+    public boolean isGeneration() {
+        return !INFO_ONLY.equals(this);
+    }
+    
 }

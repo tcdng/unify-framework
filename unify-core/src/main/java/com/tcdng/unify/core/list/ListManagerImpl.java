@@ -45,6 +45,8 @@ import com.tcdng.unify.core.util.StringUtils;
 @Component(ApplicationComponents.APPLICATION_LISTMANAGER)
 public class ListManagerImpl extends AbstractUnifyComponent implements ListManager {
 
+    private final Object lock = new Object();
+
     private LocaleFactoryMap<Map<String, StaticListInfo>> staticListMaps;
 
     private LocaleFactoryMap<List<StaticListInfo>> staticLists;
@@ -223,7 +225,7 @@ public class ListManagerImpl extends AbstractUnifyComponent implements ListManag
 
         public List<? extends Listable> getList() throws UnifyException {
             if (list == null) {
-                synchronized (this) {
+                synchronized (lock) {
                     if (list == null) {
                         String keyValueList = getMessage(locale, name);
                         list = Collections.unmodifiableList(StringUtils.readStaticList(keyValueList));
@@ -240,7 +242,7 @@ public class ListManagerImpl extends AbstractUnifyComponent implements ListManag
 
         public Map<String, Listable> getMap() throws UnifyException {
             if (map == null) {
-                synchronized (this) {
+                synchronized (lock) {
                     if (map == null) {
                         map = new LinkedHashMap<String, Listable>();
                         for (Listable listable : getList()) {

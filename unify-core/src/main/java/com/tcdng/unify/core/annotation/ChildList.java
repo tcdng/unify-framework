@@ -21,6 +21,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import com.tcdng.unify.core.constant.AnnotationConstants;
+import com.tcdng.unify.core.database.Entity;
 
 /**
  * Indicates a list of child records.
@@ -34,4 +35,6 @@ public @interface ChildList {
 
     /** Child list category */
     String category() default AnnotationConstants.NONE;
+    
+    Class<? extends Entity> listType() default Entity.class;
 }

@@ -14,39 +14,23 @@
  * the License.
  */
 
-package com.tcdng.unify.core.constant;
+package com.tcdng.unify.core.list;
+
+import java.util.List;
+import java.util.Locale;
+
+import com.tcdng.unify.core.UnifyComponent;
+import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.data.Listable;
 
 /**
- * Entity field type.
+ * Type list factory.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public enum EntityFieldType {
+public interface TypeListFactory extends UnifyComponent {
 
-    FOREIGN_KEY,
-    TABLE_COLUMN,
-    LIST_ONLY,
-    CHILD,
-    CHILDLIST;
-
-    public boolean isForeignKey() {
-        return FOREIGN_KEY.equals(this);
-    }
-
-    public boolean isTableColumn() {
-        return TABLE_COLUMN.equals(this);
-    }
-
-    public boolean isListOnly() {
-        return LIST_ONLY.equals(this);
-    }
-
-    public boolean isChild() {
-        return CHILD.equals(this);
-    }
-
-    public boolean isChildList() {
-        return CHILDLIST.equals(this);
-    }
+    List<? extends Listable> getTypeList(Locale locale, Class<? extends UnifyComponent> typeClass)
+            throws UnifyException;
 }

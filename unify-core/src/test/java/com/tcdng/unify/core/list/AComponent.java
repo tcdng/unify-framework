@@ -14,39 +14,16 @@
  * the License.
  */
 
-package com.tcdng.unify.core.constant;
+package com.tcdng.unify.core.list;
+
+import com.tcdng.unify.core.UnifyComponent;
 
 /**
- * Entity field type.
+ * A test component.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public enum EntityFieldType {
+public interface AComponent extends UnifyComponent {
 
-    FOREIGN_KEY,
-    TABLE_COLUMN,
-    LIST_ONLY,
-    CHILD,
-    CHILDLIST;
-
-    public boolean isForeignKey() {
-        return FOREIGN_KEY.equals(this);
-    }
-
-    public boolean isTableColumn() {
-        return TABLE_COLUMN.equals(this);
-    }
-
-    public boolean isListOnly() {
-        return LIST_ONLY.equals(this);
-    }
-
-    public boolean isChild() {
-        return CHILD.equals(this);
-    }
-
-    public boolean isChildList() {
-        return CHILDLIST.equals(this);
-    }
 }

@@ -16,6 +16,10 @@
 
 package com.tcdng.unify.core.database.dynamic.sql;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
@@ -24,9 +28,11 @@ import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.database.dynamic.DynamicEntityInfo;
 import com.tcdng.unify.core.database.sql.SqlDataSource;
+import com.tcdng.unify.core.database.sql.SqlDataSourceDialect;
 import com.tcdng.unify.core.database.sql.SqlDatabase;
 import com.tcdng.unify.core.database.sql.SqlSchemaManager;
 import com.tcdng.unify.core.database.sql.SqlSchemaManagerOptions;
+import com.tcdng.unify.core.runtime.JavaClassSource;
 import com.tcdng.unify.core.runtime.RuntimeJavaClassManager;
 import com.tcdng.unify.core.util.DynamicEntityUtils;
 
@@ -39,7 +45,7 @@ import com.tcdng.unify.core.util.DynamicEntityUtils;
 @Component(ApplicationComponents.APPLICATION_DYNAMICSQLENTITYLOADER)
 public class DynamicSqlEntityLoaderImpl extends AbstractUnifyComponent implements DynamicSqlEntityLoader {
 
-    private static final String DYNAMICSQLENTITYLODER_LOCK = "dynamicsqlentityloader-lock";
+    private static final String DYNAMICSQLENTITYLOADER_LOCK = "dynamicsqlentityloader-lock";
 
     @Configurable
     private RuntimeJavaClassManager runtimeJavaClassManager;
@@ -47,29 +53,55 @@ public class DynamicSqlEntityLoaderImpl extends AbstractUnifyComponent implement
     @Configurable
     private SqlSchemaManager sqlSchemaManager;
 
-    @SuppressWarnings({ "unchecked" })
     @Override
     public Class<? extends Entity> loadDynamicSqlEntity(SqlDatabase db, DynamicEntityInfo dynamicEntityInfo)
             throws UnifyException {
-        // Create entity class
-        String src = DynamicEntityUtils.generateEntityJavaClassSource(dynamicEntityInfo);
-        Class<? extends Entity> entityClass = (Class<? extends Entity>) runtimeJavaClassManager
-                .compileAndLoadJavaClass(dynamicEntityInfo.getClassName(), src);
+        return this.loadDynamicSqlEntities(db, Arrays.asList(dynamicEntityInfo)).get(0);
+    }
 
-        // Register in data source
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Class<? extends Entity>> loadDynamicSqlEntities(SqlDatabase db,
+            List<DynamicEntityInfo> dynamicEntityInfoList) throws UnifyException {
+        List<JavaClassSource> sourceList = new ArrayList<JavaClassSource>();
+        for (DynamicEntityInfo dynamicEntityInfo : dynamicEntityInfoList) {
+            logDebug("Generating source file for entity class [{0}]...", dynamicEntityInfo.getClassName());
+            JavaClassSource source = new JavaClassSource(dynamicEntityInfo.getClassName(),
+                    DynamicEntityUtils.generateEntityJavaClassSource(dynamicEntityInfo));
+            sourceList.add(source);
+        }
+
+        logDebug("Compiling and loading [{0}] entity classes...", sourceList.size());
+        List<Class<?>> classList = runtimeJavaClassManager.compileAndLoadJavaClasses(sourceList);
+
         SqlDataSource sqlDataSource = (SqlDataSource) db.getDataSource();
-        sqlDataSource.getDialect().createSqlEntityInfo(entityClass);
+        SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
+        for (Class<?> entityClass : classList) {
+            sqlDataSourceDialect.createSqlEntityInfo(entityClass);
+        }
 
-        beginClusterLock(DYNAMICSQLENTITYLODER_LOCK);
+        List<Class<?>> seqList = sqlSchemaManager.buildDependencyList(sqlDataSource, classList);
+        List<Class<?>> tableList = new ArrayList<Class<?>>();
+        List<Class<? extends Entity>> resultList = new ArrayList<Class<? extends Entity>>();
+        for (Class<?> clazz : seqList) {
+            if (classList.contains(clazz)) {
+                tableList.add(clazz);
+                resultList.add((Class<? extends Entity>) clazz);
+            }
+        }
+
+        beginClusterLock(DYNAMICSQLENTITYLOADER_LOCK);
         try {
             // Manage schema
+            logDebug("Managing schema for entity classes...");
             SqlSchemaManagerOptions options = new SqlSchemaManagerOptions();
-            sqlSchemaManager.manageTableSchema(sqlDataSource, options, entityClass);
-            sqlSchemaManager.manageViewSchema(sqlDataSource, options, entityClass);
+            sqlSchemaManager.manageTableSchema(sqlDataSource, options, tableList);
+            sqlSchemaManager.manageViewSchema(sqlDataSource, options, resultList);
         } finally {
-            endClusterLock(DYNAMICSQLENTITYLODER_LOCK);
+            endClusterLock(DYNAMICSQLENTITYLOADER_LOCK);
         }
-        return entityClass;
+
+        return resultList;
     }
 
     @Override

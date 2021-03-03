@@ -34,14 +34,14 @@ public class DynamicForeignKeyFieldInfo extends DynamicFieldInfo {
 
     public DynamicForeignKeyFieldInfo(DynamicFieldType type, DynamicEntityInfo parentDynamicEntityInfo,
             String columnName, String fieldName, boolean nullable) {
-        super(type, EntityFieldType.FOREIGN_KEY, DataType.LONG, columnName, fieldName);
+        super(type, EntityFieldType.FOREIGN_KEY, DataType.LONG, columnName, fieldName, false);
         this.parentDynamicEntityInfo = parentDynamicEntityInfo;
         this.nullable = nullable;
     }
 
     public DynamicForeignKeyFieldInfo(DynamicFieldType type, String enumClassName, String columnName, String fieldName,
             boolean nullable) {
-        super(type, EntityFieldType.FOREIGN_KEY, DataType.STRING, columnName, fieldName, enumClassName);
+        super(type, EntityFieldType.FOREIGN_KEY, DataType.STRING, columnName, fieldName, enumClassName, false);
         this.nullable = nullable;
     }
 

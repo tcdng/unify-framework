@@ -14,39 +14,29 @@
  * the License.
  */
 
-package com.tcdng.unify.core.constant;
+package com.tcdng.unify.core.list;
+
+import com.tcdng.unify.core.AbstractUnifyComponent;
+import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.annotation.Component;
 
 /**
- * Entity field type.
+ * Test A component implementation.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public enum EntityFieldType {
+@Component(name = "a-component", description = "A Component")
+public class AComponentImpl extends AbstractUnifyComponent implements AComponent {
 
-    FOREIGN_KEY,
-    TABLE_COLUMN,
-    LIST_ONLY,
-    CHILD,
-    CHILDLIST;
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-    public boolean isForeignKey() {
-        return FOREIGN_KEY.equals(this);
     }
 
-    public boolean isTableColumn() {
-        return TABLE_COLUMN.equals(this);
+    @Override
+    protected void onTerminate() throws UnifyException {
+
     }
 
-    public boolean isListOnly() {
-        return LIST_ONLY.equals(this);
-    }
-
-    public boolean isChild() {
-        return CHILD.equals(this);
-    }
-
-    public boolean isChildList() {
-        return CHILDLIST.equals(this);
-    }
 }

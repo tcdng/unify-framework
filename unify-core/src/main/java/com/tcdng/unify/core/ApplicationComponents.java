@@ -103,6 +103,8 @@ public interface ApplicationComponents {
 
     String APPLICATION_TASKLAUNCHER = "application-tasklauncher";
 
+    String APPLICATION_TYPELISTFACTORY = "application-tasklistfactory";
+
     String APPLICATION_TWOFACTORAUTHENTICATIONSERVICE = "application-twofactorautenticationservice";
 
     String APPLICATION_UPLCOMPILER = "application-uplcompiler";

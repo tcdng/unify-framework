@@ -97,6 +97,8 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("file-contract", "f56c");
         registerSymbol("file-download", "f56d");
         registerSymbol("file-excel", "1c3");
+        registerSymbol("file-export", "f56e");
+        registerSymbol("file-import", "f56f");
         registerSymbol("file-invoice", "f570");
         registerSymbol("file-pdf", "f1c1");
         registerSymbol("file-upload", "f574");

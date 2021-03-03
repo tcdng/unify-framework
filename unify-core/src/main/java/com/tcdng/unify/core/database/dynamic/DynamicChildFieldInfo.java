@@ -14,39 +14,28 @@
  * the License.
  */
 
-package com.tcdng.unify.core.constant;
+package com.tcdng.unify.core.database.dynamic;
+
+import com.tcdng.unify.core.annotation.DynamicFieldType;
+import com.tcdng.unify.core.constant.EntityFieldType;
 
 /**
- * Entity field type.
+ * Dynamic child field information.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public enum EntityFieldType {
+public class DynamicChildFieldInfo extends DynamicFieldInfo {
 
-    FOREIGN_KEY,
-    TABLE_COLUMN,
-    LIST_ONLY,
-    CHILD,
-    CHILDLIST;
+    private DynamicEntityInfo childDynamicEntityInfo;
 
-    public boolean isForeignKey() {
-        return FOREIGN_KEY.equals(this);
+    public DynamicChildFieldInfo(DynamicFieldType type, DynamicEntityInfo childDynamicEntityInfo, String fieldName) {
+        super(type, EntityFieldType.CHILD, null, null, fieldName, false);
+        this.childDynamicEntityInfo = childDynamicEntityInfo;
     }
 
-    public boolean isTableColumn() {
-        return TABLE_COLUMN.equals(this);
+    public DynamicEntityInfo getChildDynamicEntityInfo() {
+        return childDynamicEntityInfo;
     }
 
-    public boolean isListOnly() {
-        return LIST_ONLY.equals(this);
-    }
-
-    public boolean isChild() {
-        return CHILD.equals(this);
-    }
-
-    public boolean isChildList() {
-        return CHILDLIST.equals(this);
-    }
 }

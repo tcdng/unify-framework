@@ -40,19 +40,22 @@ public abstract class DynamicFieldInfo {
 
     private String enumClassName;
 
+    private boolean descriptive;
+    
     public DynamicFieldInfo(DynamicFieldType type, EntityFieldType fieldType, DataType dataType, String columnName,
-            String fieldName) {
-        this(type, fieldType, dataType, columnName, fieldName, null);
+            String fieldName, boolean descriptive) {
+        this(type, fieldType, dataType, columnName, fieldName, null, descriptive);
     }
 
     public DynamicFieldInfo(DynamicFieldType type, EntityFieldType fieldType, DataType dataType, String columnName,
-            String fieldName, String enumClassName) {
+            String fieldName, String enumClassName, boolean descriptive) {
         this.type = type;
         this.fieldType = fieldType;
         this.dataType = dataType;
         this.columnName = columnName;
         this.fieldName = fieldName;
         this.enumClassName = enumClassName;
+        this.descriptive = descriptive;
     }
 
     public DynamicFieldType getType() {
@@ -81,6 +84,10 @@ public abstract class DynamicFieldInfo {
 
     public boolean isEnum() {
         return enumClassName != null;
+    }
+
+    public boolean isDescriptive() {
+        return descriptive;
     }
 
     public boolean isGeneration() {

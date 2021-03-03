@@ -51,6 +51,8 @@ public interface ResultMappingConstants {
 
     String REFRESH_SHOW_POPUP = "resrv.refreshshowpopup";
 
+    String REFRESH_HIDE_POPUP = "resrv.refreshhidepopup";
+
     String REFRESH_PANELS = "resrv.refreshpanels";
 
     String REFRESH_SECTION = "resrv.refreshsection";

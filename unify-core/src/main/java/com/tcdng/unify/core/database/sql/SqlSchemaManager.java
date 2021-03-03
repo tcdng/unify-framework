@@ -16,6 +16,8 @@
 
 package com.tcdng.unify.core.database.sql;
 
+import java.util.List;
+
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.database.Entity;
@@ -40,7 +42,7 @@ public interface SqlSchemaManager extends UnifyComponent {
      * @throws UnifyException
      *                        if an error occurs
      */
-    void manageTableSchema(SqlDataSource sqlDataSource, SqlSchemaManagerOptions options, Class<?>... entityClasses)
+    void manageTableSchema(SqlDataSource sqlDataSource, SqlSchemaManagerOptions options, List<Class<?>> entityClasses)
             throws UnifyException;
 
     /**
@@ -56,5 +58,18 @@ public interface SqlSchemaManager extends UnifyComponent {
      *                        if an error occurs
      */
     void manageViewSchema(SqlDataSource sqlDataSource, SqlSchemaManagerOptions options,
-            Class<? extends Entity>... entityClasses) throws UnifyException;
+            List<Class<? extends Entity>> entityClasses) throws UnifyException;
+
+    /**
+     * Builds a dependency list form list of entities.
+     * 
+     * @param sqlDataSource
+     *                      the data source
+     * @param entityClasses
+     *                      the entity class list
+     * @return entity classes in a dependency list
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    List<Class<?>> buildDependencyList(SqlDataSource sqlDataSource, List<Class<?>> entityClasses) throws UnifyException;
 }
