@@ -21,9 +21,8 @@ import java.io.OutputStream;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
-import com.tcdng.unify.core.cache.FileCache;
+import com.tcdng.unify.core.file.FileResourceProvider;
 import com.tcdng.unify.core.util.IOUtils;
-import com.tcdng.unify.web.annotation.RequestParameter;
 import com.tcdng.unify.web.constant.Secured;
 import com.tcdng.unify.web.ui.AbstractPageResourceController;
 
@@ -37,17 +36,8 @@ import com.tcdng.unify.web.ui.AbstractPageResourceController;
 @Component("/resource/file")
 public class FileResourceController extends AbstractPageResourceController {
 
-    private static final long MINIMUM_CACHE_EXPIRY_TIME = 1;
-
     @Configurable
-    private FileCache fileCache;
-
-    @Configurable("300")
-    // Expiration in seconds
-    private long cacheExpirationTime;
-
-    @RequestParameter
-    private boolean cache;
+    private FileResourceProvider fileResourceProvider;
 
     public FileResourceController() {
         super(Secured.FALSE);
@@ -63,45 +53,27 @@ public class FileResourceController extends AbstractPageResourceController {
     }
 
     @Override
-    public void execute(OutputStream outputStream) throws UnifyException {
-        InputStream inputStream = null;
+    public void execute(OutputStream out) throws UnifyException {
+        InputStream in = null;
         try {
-            if (cache) {
-                inputStream = getCachedResourceInputStream();
-            } else {
-                inputStream = getInputStream();
-            }
-            IOUtils.writeAll(outputStream, inputStream);
+            in = getInputStream();
+            IOUtils.writeAll(out, in);
         } finally {
-            IOUtils.close(inputStream);
-        }
-    }
-
-    public boolean isCache() {
-        return cache;
-    }
-
-    public void setCache(boolean cache) {
-        this.cache = cache;
-    }
-
-    @Override
-    protected void onInitialize() throws UnifyException {
-        super.onInitialize();
-        if (cacheExpirationTime <= 0) {
-            cacheExpirationTime = MINIMUM_CACHE_EXPIRY_TIME;
+            IOUtils.close(in);
         }
     }
 
     protected InputStream getInputStream() throws UnifyException {
-        return IOUtils.openFileResourceInputStream(getResourceName(), getUnifyComponentContext().getWorkingPath());
+        InputStream in = null;
+        if (fileResourceProvider != null) {
+            in = fileResourceProvider.openFileResourceInputStream("/resource/file", getResourceName());
+        }
+
+        if (in == null) {
+            return IOUtils.openFileResourceInputStream(getResourceName(), getUnifyComponentContext().getWorkingPath());
+        }
+
+        return in;
     }
 
-    private InputStream getCachedResourceInputStream() throws UnifyException {
-        InputStream inputStream = fileCache.getTransformed(getResourceName());
-        if (inputStream == null) {
-            return fileCache.transformPut(getResourceName(), IOUtils.readAll(getInputStream()), cacheExpirationTime);
-        }
-        return inputStream;
-    }
 }
