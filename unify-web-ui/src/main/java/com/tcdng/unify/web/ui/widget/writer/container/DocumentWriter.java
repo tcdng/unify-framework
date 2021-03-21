@@ -129,7 +129,7 @@ public class DocumentWriter extends AbstractPageWriter {
         if (StringUtils.isNotBlank(backImageSrc)) {
             writer.write(" style=\"background: url('");
             writer.writeFileImageContextURL(backImageSrc);
-            writer.write("') no-repeat;background-size:100% 100%;");
+            writer.write("') no-repeat;background-size:cover;");
             if (style != null) {
                 writer.write(style);
             }
