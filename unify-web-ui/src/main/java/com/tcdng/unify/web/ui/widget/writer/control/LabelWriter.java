@@ -52,7 +52,7 @@ public class LabelWriter extends AbstractControlWriter {
                 writer.write(value);
             }
         } else {
-            if (StringUtils.isNotBlank(label.getBinding())) {
+            if (!label.isBindingOptional() && StringUtils.isNotBlank(label.getBinding())) {
                 writer.writeHtmlFixedSpace();
             } else if (!label.isLayoutCaption()) {
                 String caption = label.getCaption();
