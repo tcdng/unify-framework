@@ -63,6 +63,8 @@ public class FileAttachmentWriter extends AbstractControlWriter {
             Control attachCtrl = fileAttachment.getAttachCtrl();
             Control viewCtrl = fileAttachment.getViewCtrl();
             Control removeCtrl = fileAttachment.getRemoveCtrl();
+            final boolean adhoc = fileAttachmentsInfo.isAdhoc();
+            final boolean disabled = fileAttachmentsInfo.isDisabled();
             int size = valueStoreList.size();
             for (int i = 0; i < size; i++) {
                 ValueStore valueStore = valueStoreList.get(i);
@@ -85,7 +87,7 @@ public class FileAttachmentWriter extends AbstractControlWriter {
                 writer.writeStructureAndContent(fileCtrl);
 
                 writer.write("<div style=\"display:table;width:100%;\"><div style=\"display:table-row;\">");
-                if (!fileAttachmentsInfo.isAdhoc()) {
+                if (!adhoc) {
                     String description = fileAttachmentInfo.getDescription();
                     if (description == null) {
                         description = getSessionMessage("fileattachment.label", i);
@@ -106,14 +108,14 @@ public class FileAttachmentWriter extends AbstractControlWriter {
                 writer.writeWithHtmlEscape(filename);
                 writer.write("</div>");
                 writer.write("<div class=\"faaction\">");
-                attachCtrl.setDisabled(isContainerDisabled);
+                attachCtrl.setDisabled(disabled || isContainerDisabled);
                 attachCtrl.setEditable(isContainerEditable);
                 writer.writeStructureAndContent(attachCtrl);
 
                 if (!fileAttachmentInfo.isEmpty()) {
                     viewCtrl.setDisabled(isContainerDisabled);
                     viewCtrl.setEditable(isContainerEditable);
-                    removeCtrl.setDisabled(isContainerDisabled);
+                    removeCtrl.setDisabled(disabled || isContainerDisabled);
                     removeCtrl.setEditable(isContainerEditable);
                 } else {
                     viewCtrl.setDisabled(true);

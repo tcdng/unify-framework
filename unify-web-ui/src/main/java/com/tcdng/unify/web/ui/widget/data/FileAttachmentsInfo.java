@@ -49,6 +49,8 @@ public class FileAttachmentsInfo {
 
     private boolean adhoc;
 
+    private boolean disabled;
+
     /**
      * Creates new instance of file attachments information in ad-hoc mode.
      * 
@@ -211,6 +213,14 @@ public class FileAttachmentsInfo {
 
     public boolean isAdhoc() {
         return adhoc;
+    }
+
+    public boolean isDisabled() {
+        return disabled;
+    }
+
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
     }
 
     public int getSelectedIndex() {
