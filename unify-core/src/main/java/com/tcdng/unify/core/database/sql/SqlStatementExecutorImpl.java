@@ -150,7 +150,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
         return executeMultipleObjectResultQuery(new HashSet<T>(), connection, clazz, sqlDataTypePolicy, sqlStatement);
     }
 
-    @SuppressWarnings("resource")
+    @SuppressWarnings({ "resource", "unchecked" })
     @Override
     public <T, U> Map<T, U> executeMultipleObjectMapResultQuery(Connection connection, Class<T> keyClass, String key,
             Class<U> valueClass, String value, SqlStatement sqlStatement) throws UnifyException {
@@ -192,13 +192,13 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
             pStmt = getPreparedStatement(connection, sqlStatement, timeZoneOffset);
             rs = pStmt.executeQuery();
             while (rs.next()) {
-                T keyValue = getSqlResultValue(keySqlResult, rs, timeZoneOffset);
+                T keyValue = (T) getSqlResultValue(keySqlResult, rs, timeZoneOffset);
                 if (resultMap.containsKey(keyValue)) {
                     throw new UnifyException(UnifyCoreErrorConstants.VALUE_MULTIPLE_SAME_KEY_FOUND, keyValue,
                             sqlEntityInfo.getEntityClass());
                 }
 
-                U valueValue = getSqlResultValue(valueSqlResult, rs, timeZoneOffset);
+                U valueValue = (U) getSqlResultValue(valueSqlResult, rs, timeZoneOffset);
                 resultMap.put(keyValue, valueValue);
             }
         } catch (UnifyException e) {
@@ -212,7 +212,8 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
         return resultMap;
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public <T, U> Map<T, List<U>> executeMultipleObjectListMapResultQuery(Connection connection, Class<T> keyClass,
             String key, Class<U> valueClass, String value, SqlStatement sqlStatement) throws UnifyException {
         SqlResult keySqlResult = null;
@@ -253,8 +254,8 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
             pStmt = getPreparedStatement(connection, sqlStatement, timeZoneOffset);
             rs = pStmt.executeQuery();
             while (rs.next()) {
-                T keyValue = getSqlResultValue(keySqlResult, rs, timeZoneOffset);
-                U valueValue = getSqlResultValue(valueSqlResult, rs, timeZoneOffset);
+                T keyValue = (T) getSqlResultValue(keySqlResult, rs, timeZoneOffset);
+                U valueValue = (U) getSqlResultValue(valueSqlResult, rs, timeZoneOffset);
 
                 List<U> list = resultMap.get(keyValue);
                 if (list == null) {
@@ -788,13 +789,13 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
     }
 
     @SuppressWarnings("unchecked")
-    private <T> T getSqlResultValue(SqlResult sqlResult, ResultSet rs, final long timeZoneOffset) throws Exception {
+    private Object getSqlResultValue(SqlResult sqlResult, ResultSet rs, final long timeZoneOffset) throws Exception {
         Object value = sqlResult.getSqlDataTypePolicy().executeGetResult(rs, sqlResult.getType(),
                 sqlResult.getColumnName(), timeZoneOffset);
         if (sqlResult.isTransformed()) {
             value = ((Transformer<Object, Object>) sqlResult.getTransformer()).reverseTransform(value);
         }
-        return (T) value;
+        return value;
     }
 
     @SuppressWarnings("unchecked")
