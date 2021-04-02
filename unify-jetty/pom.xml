@@ -9,9 +9,9 @@
 		<version>2.0.1-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>unify-jetty-javax</artifactId>
-	<name>unify-jetty-javax</name>
-	<description>Unify Framework: Jetty Integration (javax)</description>
+	<artifactId>unify-jetty</artifactId>
+	<name>unify-jetty</name>
+	<description>Unify Framework: Jetty Integration</description>
 	<url>http://www.tcdng.com/unify</url>
 
 	<licenses>

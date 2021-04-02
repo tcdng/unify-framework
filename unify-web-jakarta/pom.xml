@@ -8,9 +8,9 @@
 		<version>2.0.1-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>unify-web-javax</artifactId>
-	<name>unify-web-javax</name>
-	<description>Unify Framework: Web HTTP (javax)</description>
+	<artifactId>unify-web-jakarta</artifactId>
+	<name>unify-web-jakarta</name>
+	<description>Unify Framework: Web HTTP (Jakarta)</description>
 	<url>http://www.tcdng.com/unify</url>
 
 	<licenses>
@@ -74,9 +74,10 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<version>3.1.0</version>
+		    <groupId>jakarta.servlet</groupId>
+		    <artifactId>jakarta.servlet-api</artifactId>
+		    <version>5.0.0</version>
+		    <scope>provided</scope>
 		</dependency>
 		<!-- Test dependencies -->
 		<dependency>

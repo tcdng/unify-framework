@@ -32,12 +32,13 @@
 		<module>unify-jasperreports</module>
 		<module>unify-jcifs</module>
 		<module>unify-web</module>
-		<module>unify-jetty-javax</module>
+		<module>unify-jetty</module>
 		<module>unify-xchart</module>
 		<module>unify-fontawesome</module>
     	<module>unify-web-ui</module>
     	<module>unify-web-javax</module>
-  </modules>
+    	<module>unify-web-jakarta</module>
+  	</modules>
 
 	<scm>
 		<connection>scm:git:git://github.com/tcdng/unify-framework.git</connection>
