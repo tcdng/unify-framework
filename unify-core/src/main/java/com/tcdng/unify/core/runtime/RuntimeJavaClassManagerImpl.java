@@ -152,10 +152,6 @@ public class RuntimeJavaClassManagerImpl extends AbstractRuntimeJavaClassManager
 
         private Map<String, byte[]> byteCodes;
 
-        public RuntimeClassLoader() {
-            byteCodes = new HashMap<String, byte[]>();
-        }
-
         public RuntimeClassLoader(ClassLoader parent) {
             super(parent);
             byteCodes = new HashMap<String, byte[]>();
@@ -260,7 +256,7 @@ public class RuntimeJavaClassManagerImpl extends AbstractRuntimeJavaClassManager
 
     private RuntimeClassLoader getRuntimeClassLoader(String... classNames) {
         if (runtimeClassLoader == null) {
-            runtimeClassLoader = new RuntimeClassLoader();
+            runtimeClassLoader = new RuntimeClassLoader(getClass().getClassLoader());
             classLoaderDepth++;
         } else {
             for (String className : classNames) {
