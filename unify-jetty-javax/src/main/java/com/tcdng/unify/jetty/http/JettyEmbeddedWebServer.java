@@ -28,7 +28,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.constant.NetworkSchemeType;
 import com.tcdng.unify.jetty.JettyApplicationComponents;
-import com.tcdng.unify.web.server.AbstractEmbeddedWebServer;
+import com.tcdng.unify.web.http.AbstractEmbeddedHttpWebServer;
 
 /**
  * Jetty embedded web server.
@@ -37,7 +37,7 @@ import com.tcdng.unify.web.server.AbstractEmbeddedWebServer;
  * @since 1.0
  */
 @Component(JettyApplicationComponents.JETTY_EMBEDDEDWEBSERVER)
-public class JettyEmbeddedWebServer extends AbstractEmbeddedWebServer {
+public class JettyEmbeddedWebServer extends AbstractEmbeddedHttpWebServer {
 
     private Server httpServer;
 

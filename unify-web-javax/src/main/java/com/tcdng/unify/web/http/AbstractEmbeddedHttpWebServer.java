@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.tcdng.unify.web.server;
+package com.tcdng.unify.web.http;
 
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.RequestContextManager;
@@ -24,16 +24,15 @@ import com.tcdng.unify.core.system.UserSessionManager;
 import com.tcdng.unify.web.UnifyWebPropertyConstants;
 import com.tcdng.unify.web.WebApplicationComponents;
 import com.tcdng.unify.web.http.AbstractHttpWebInterface;
-import com.tcdng.unify.web.http.HttpApplicationServlet;
 import com.tcdng.unify.web.http.HttpRequestHandler;
 
 /**
- * Abstract base class for embedded web servers.
+ * Abstract base class for embedded HTTP web servers.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public abstract class AbstractEmbeddedWebServer extends AbstractHttpWebInterface implements EmbeddedWebServer {
+public abstract class AbstractEmbeddedHttpWebServer extends AbstractHttpWebInterface implements EmbeddedHttpWebServer {
 
 	@Configurable("8080")
 	private int httpPort;

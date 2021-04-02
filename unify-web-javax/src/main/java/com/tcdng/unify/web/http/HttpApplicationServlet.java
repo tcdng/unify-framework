@@ -51,7 +51,7 @@ import com.tcdng.unify.web.UnifyWebPropertyConstants;
 import com.tcdng.unify.web.WebApplicationComponents;
 import com.tcdng.unify.web.constant.RequestParameterConstants;
 import com.tcdng.unify.web.constant.ReservedPageControllerConstants;
-import com.tcdng.unify.web.util.WebTypeUtils;
+import com.tcdng.unify.web.http.util.HttpWebTypeUtils;
 
 /**
  * Serves as an interface between the servlet container and the Unify container;
@@ -111,7 +111,7 @@ public class HttpApplicationServlet extends HttpServlet {
 			InputStream configInputStream = null;
 			try {
 				contextPath = servletContext.getContextPath();
-				TypeRepository tr = WebTypeUtils.getTypeRepositoryFromServletContext(servletContext);
+				TypeRepository tr = HttpWebTypeUtils.getTypeRepositoryFromServletContext(servletContext);
 				UnifyContainerEnvironment uce = new UnifyContainerEnvironment(tr, workingFolder);
 				UnifyContainerConfig.Builder uccb = UnifyContainerConfig.newBuilder();
 

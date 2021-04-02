@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.web.util;
+package com.tcdng.unify.web.http.util;
 
 import java.net.URL;
 
@@ -33,14 +33,14 @@ import com.tcdng.unify.core.util.TypeUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class WebTypeUtils extends TypeUtils {
+public class HttpWebTypeUtils extends TypeUtils {
 
     private static TypeRepository servletContextTypeRepository;
 
     public static TypeRepository getTypeRepositoryFromServletContext(ServletContext servletContext)
             throws UnifyException {
         if (servletContextTypeRepository == null) {
-            synchronized (WebTypeUtils.class) {
+            synchronized (HttpWebTypeUtils.class) {
                 if (servletContextTypeRepository == null) {
                     try {
                         AnnotationDB classpathDB = new AnnotationDB();
