@@ -306,6 +306,7 @@ public abstract class AbstractUnifyComponentTest {
         }
     }
 
+    @SuppressWarnings("unchecked")
     protected void deleteAll(Class<? extends Entity>... typeList) throws Exception {
         Database db = (Database) getComponent(ApplicationComponents.APPLICATION_DATABASE);
         DatabaseTransactionManager tm =

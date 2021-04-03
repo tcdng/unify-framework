@@ -32,10 +32,6 @@ import com.tcdng.unify.core.util.UnifyConfigUtils;
  */
 public class Unify {
 
-    public static final String DEFAULT_UNIFY_HOST = "localhost";
-
-    private static final String CONFIGURATION_FILE = "conf/unify.xml";
-
     private static UnifyContainer uc;
 
     public static void main(String[] args) {
@@ -47,8 +43,8 @@ public class Unify {
         String operation = args[0];
         String workingFolder = null;
         String configFile = null;
-        String host = DEFAULT_UNIFY_HOST;
-        short port = UnifyContainer.DEFAULT_COMMAND_PORT;
+        String host = UnifyCoreConstants.DEFAULT_UNIFY_HOST;
+        short port = UnifyCoreConstants.DEFAULT_COMMAND_PORT;
 
         for (int i = 1; i <= (args.length - 2); i += 2) {
             if ("-w".equals(args[i])) {
@@ -140,7 +136,7 @@ public class Unify {
 
         InputStream xmlInputStream = null;
         if (configFile == null || configFile.isEmpty()) {
-            configFile = CONFIGURATION_FILE;
+            configFile = UnifyCoreConstants.CONFIGURATION_FILE;
         }
 
         try {

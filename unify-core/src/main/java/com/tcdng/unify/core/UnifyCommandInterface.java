@@ -64,7 +64,7 @@ public class UnifyCommandInterface extends AbstractUnifyContainerInterface {
     @Override
     protected void onInitialize() throws UnifyException {
         listeningPort = getContainerSetting(short.class, UnifyCorePropertyConstants.APPLICATION_COMMAND_PORT,
-                UnifyContainer.DEFAULT_COMMAND_PORT);
+                UnifyCoreConstants.DEFAULT_COMMAND_PORT);
 
     }
 

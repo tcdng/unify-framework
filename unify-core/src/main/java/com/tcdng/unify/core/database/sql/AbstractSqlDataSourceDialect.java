@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
-import com.tcdng.unify.core.UnifyContainer;
+import com.tcdng.unify.core.UnifyCoreConstants;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyCorePropertyConstants;
 import com.tcdng.unify.core.UnifyException;
@@ -1962,7 +1962,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
         if (query.isApplyAppQueryLimit()) {
             return getContainerSetting(int.class, UnifyCorePropertyConstants.APPLICATION_QUERY_LIMIT,
-                    UnifyContainer.DEFAULT_APPLICATION_QUERY_LIMIT);
+                    UnifyCoreConstants.DEFAULT_APPLICATION_QUERY_LIMIT);
         }
 
         return 0;

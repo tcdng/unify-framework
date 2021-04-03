@@ -60,9 +60,9 @@ public abstract class AbstractEmbeddedHttpWebServer extends AbstractHttpWebInter
 		return contextPath;
 	}
 
-	protected HttpApplicationServlet createHttpServlet() throws UnifyException {
-		HttpApplicationServlet httpApplicationServlet = new HttpApplicationServlet(true); // Embedded
-		httpApplicationServlet.setup(getApplicationLocale(), getApplicationTimeZone(), this,
+	protected HttpServletModule createHttpServletModule() throws UnifyException {
+		HttpServletModule httpApplicationServlet = new HttpServletModule(true); // Embedded
+		httpApplicationServlet.init(getApplicationLocale(), getApplicationTimeZone(), this,
 				(RequestContextManager) getComponent(ApplicationComponents.APPLICATION_REQUESTCONTEXTMANAGER),
 				(HttpRequestHandler) getComponent(WebApplicationComponents.APPLICATION_HTTPREQUESTHANDLER),
 				(UserSessionManager) getComponent(ApplicationComponents.APPLICATION_USERSESSIONMANAGER),

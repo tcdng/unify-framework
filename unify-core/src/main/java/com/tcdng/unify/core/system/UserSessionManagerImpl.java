@@ -23,7 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.SessionAttributeValueConstants;
 import com.tcdng.unify.core.SessionContext;
-import com.tcdng.unify.core.UnifyContainer;
+import com.tcdng.unify.core.UnifyCoreConstants;
 import com.tcdng.unify.core.UnifyCorePropertyConstants;
 import com.tcdng.unify.core.UnifyCoreSessionAttributeConstants;
 import com.tcdng.unify.core.UnifyException;
@@ -184,7 +184,7 @@ public class UserSessionManagerImpl extends AbstractBusinessService implements U
         // Update active session records and remove inactive ones
         Date now = db().getNow();
         int expirationInSeconds = getContainerSetting(int.class, UnifyCorePropertyConstants.APPLICATION_SESSION_TIMEOUT,
-                UnifyContainer.DEFAULT_APPLICATION_SESSION_TIMEOUT_MILLISEC);
+                UnifyCoreConstants.DEFAULT_APPLICATION_SESSION_TIMEOUT_MILLISEC);
         expirationInSeconds = expirationInSeconds + expirationInSeconds / 5;
         Date expiryTime = CalendarUtils.getDateWithOffset(now, -(expirationInSeconds * 1000));
         for (UserSession userSession : userSessions.values()) {
