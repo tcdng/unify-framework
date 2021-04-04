@@ -93,7 +93,7 @@ public class HttpServletModule  {
 				configInputStream = new FileInputStream(IOUtils.fileInstance(configFilename, null));
 
 				// Read xml configuration
-				UnifyConfigUtils.readConfigFromXml(uccb, configInputStream);
+				UnifyConfigUtils.readConfigFromXml(uccb, configInputStream, workingFolder);
 				uccb.setPropertyIfBlank(UnifyWebPropertyConstants.APPLICATION_HOME,
 						ReservedPageControllerConstants.DEFAULT_APPLICATION_HOME);
 

@@ -111,10 +111,17 @@ public class UnifyComponentSettings {
             settings = new HashMap<String, Setting>();
             settings.putAll(annotationSettings.settings);
         }
-//
-//        public Builder setProperty(String name, Object value) {
-//            return setProperty(name, value, true, false);
-//        }
+
+        public Builder setProperty(String name, Object val) {
+            Setting setting = settings.get(name);
+            if (setting != null) {
+                setProperty(name, val, setting.isAutoInject(), setting.isHidden());
+            } else {
+                setProperty(name, val, false, false);
+            }
+            
+            return this;
+        }
 
         public Builder setProperty(String name, Object value, boolean autoInject, boolean concealed) {
             settings.put(name, new Setting(name, value, autoInject, concealed));

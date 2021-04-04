@@ -39,6 +39,8 @@ public interface UnifyCorePropertyConstants {
 
     String APPLICATION_INTERFACES = "application.interfaces";
 
+    String APPLICATION_PROPERTIES= "application.properties";
+
     String APPLICATION_OSMODE = "application.osmode";
 
     String APPLICATION_COMMAND_INTERFACE = "application.command.interface.enabled";

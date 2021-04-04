@@ -22,12 +22,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyComponentSettings;
 import com.tcdng.unify.core.UnifyContainerConfig;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
+import com.tcdng.unify.core.UnifyCorePropertyConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.UnifyStaticSettings;
 import com.tcdng.unify.core.annotation.AutoDetect;
@@ -62,11 +64,13 @@ public final class UnifyConfigUtils {
      *            the configuration object to read into.
      * @param xmlFile
      *            the XML configuration file to read
+     * @param workingFolder optional working folder
      * @throws UnifyException
      *             if an error occurs
      */
-    public static void readConfigFromXml(UnifyContainerConfig.Builder uccb, File xmlFile) throws UnifyException {
-        UnifyConfigUtils.readXmlConfigurationObject(uccb, xmlFile);
+    public static void readConfigFromXml(UnifyContainerConfig.Builder uccb, File xmlFile, String workingFolder)
+            throws UnifyException {
+        UnifyConfigUtils.readXmlConfigurationObject(uccb, xmlFile, workingFolder);
     }
 
     /**
@@ -76,12 +80,13 @@ public final class UnifyConfigUtils {
      *            the configuration object to read into.
      * @param xmlInputStream
      *            the XML configuration input stream to read
+     * @param workingFolder optional working folder
      * @throws UnifyException
      *             if an error occurs
      */
-    public static void readConfigFromXml(UnifyContainerConfig.Builder uccb, InputStream xmlInputStream)
-            throws UnifyException {
-        UnifyConfigUtils.readXmlConfigurationObject(uccb, xmlInputStream);
+    public static void readConfigFromXml(UnifyContainerConfig.Builder uccb, InputStream xmlInputStream,
+            String workingFolder) throws UnifyException {
+        UnifyConfigUtils.readXmlConfigurationObject(uccb, xmlInputStream, workingFolder);
     }
 
     /**
@@ -91,11 +96,13 @@ public final class UnifyConfigUtils {
      *            the configuration object to read into.
      * @param xmlConfig
      *            the XML configuration to read
+     * @param workingFolder optional working folder
      * @throws UnifyException
      *             if an error occurs
      */
-    public static void readConfigFromXml(UnifyContainerConfig.Builder uccb, String xmlConfig) throws UnifyException {
-        UnifyConfigUtils.readXmlConfigurationObject(uccb, xmlConfig);
+    public static void readConfigFromXml(UnifyContainerConfig.Builder uccb, String xmlConfig, String workingFolder)
+            throws UnifyException {
+        UnifyConfigUtils.readXmlConfigurationObject(uccb, xmlConfig, workingFolder);
     }
 
     /**
@@ -234,7 +241,7 @@ public final class UnifyConfigUtils {
     }
 
     @SuppressWarnings("unchecked")
-    private static void readXmlConfigurationObject(UnifyContainerConfig.Builder uccb, Object xmlConfigObject)
+    private static void readXmlConfigurationObject(UnifyContainerConfig.Builder uccb, Object xmlConfigObject, String workingFolder)
             throws UnifyException {
         try {
             UnifyConfig unifyConfig = XmlConfigUtils.readXmlConfig(UnifyConfig.class, xmlConfigObject);
@@ -257,6 +264,13 @@ public final class UnifyConfigUtils {
                     }
                 }
 
+                Properties appProperties = UnifyConfigUtils.getApplicationProperties(uccb,
+                        UnifyCorePropertyConstants.APPLICATION_PROPERTIES, workingFolder);
+                final Set<String> propertyNames = appProperties.stringPropertyNames();
+                for (String property : propertyNames) {
+                    uccb.setProperty(property, appProperties.getProperty(property));
+                }
+                
                 ComponentsConfig componentsConfig = unifyConfig.getComponentsConfig();
                 if (componentsConfig != null && componentsConfig.getComponentConfigList() != null) {
                     AliasesConfig aliasesConfig = unifyConfig.getComponentsConfig().getAliasesConfig();
@@ -309,6 +323,16 @@ public final class UnifyConfigUtils {
                             }
                         }
 
+                        if (!propertyNames.isEmpty()) {
+                            final String propPrefix = componentName + '.';
+                            for (String property : propertyNames) {
+                                if (property.startsWith(propPrefix)) {
+                                    ub.setProperty(property.substring(propPrefix.length()),
+                                            appProperties.getProperty(property));
+                                }
+                            }
+                        }
+                        
                         uccb.addComponentConfig(componentName, description, type, singleton, true, ub.build());
 
                     }
@@ -319,6 +343,17 @@ public final class UnifyConfigUtils {
         }
     }
 
+    @SuppressWarnings("unchecked")
+    private static Properties getApplicationProperties(final UnifyContainerConfig.Builder uccb,
+            final String propertyName, final String workingFolder) throws UnifyException {
+        Properties properties = new Properties();
+        List<String> applicationPropFiles = DataUtils.convert(List.class, String.class, uccb.getProperty(propertyName));
+        if (!DataUtils.isBlank(applicationPropFiles)) {
+            properties = IOUtils.readPropertiesFromFileResources(applicationPropFiles, workingFolder);
+        }
+        return properties;
+    }
+    
     private static Object getConfigurableValue(Configurable ca) {
         Object configuredValue = AnnotationUtils.getAnnotationString(ca.value());
         if (configuredValue == null && (ca.values().length > 0)) {

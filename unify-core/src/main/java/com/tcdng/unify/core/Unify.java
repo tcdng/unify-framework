@@ -149,7 +149,7 @@ public class Unify {
         }
 
         try {
-            UnifyConfigUtils.readConfigFromXml(uccb, xmlInputStream);
+            UnifyConfigUtils.readConfigFromXml(uccb, xmlInputStream, workingFolder);
         } catch (UnifyException e) {
             IOUtils.close(xmlInputStream);
             System.err

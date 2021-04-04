@@ -179,6 +179,10 @@ public class UnifyContainerConfig {
             return this;
         }
 
+        public Object getProperty(String name) {
+            return settings.get(name);
+        }
+
         public Builder setPropertyIfBlank(String name, Object value) {
             if (settings.get(name) == null) {
                 settings.put(name, value);
@@ -228,18 +232,18 @@ public class UnifyContainerConfig {
             return this;
         }
 
-        public Builder readXml(File xmlFile) throws UnifyException {
-            UnifyConfigUtils.readConfigFromXml(this, xmlFile);
+        public Builder readXml(File xmlFile, String workingFolder) throws UnifyException {
+            UnifyConfigUtils.readConfigFromXml(this, xmlFile, workingFolder);
             return this;
         }
 
-        public Builder readXml(InputStream xmlInputStream) throws UnifyException {
-            UnifyConfigUtils.readConfigFromXml(this, xmlInputStream);
+        public Builder readXml(InputStream xmlInputStream, String workingFolder) throws UnifyException {
+            UnifyConfigUtils.readConfigFromXml(this, xmlInputStream, workingFolder);
             return this;
         }
 
-        public Builder readXml(String xmlConfig) throws UnifyException {
-            UnifyConfigUtils.readConfigFromXml(this, xmlConfig);
+        public Builder readXml(String xmlConfig, String workingFolder) throws UnifyException {
+            UnifyConfigUtils.readConfigFromXml(this, xmlConfig, workingFolder);
             return this;
         }
 

@@ -82,7 +82,7 @@ public class UnifyConfigUtilsTest {
                 + "         <property name='minConnections' value='4'/>" + "     </properties>" + " </component>"
                 + "</components>" + "</unify>";
         UnifyContainerConfig.Builder uccb = UnifyContainerConfig.newBuilder();
-        UnifyConfigUtils.readConfigFromXml(uccb, configXml);
+        UnifyConfigUtils.readConfigFromXml(uccb, configXml, null);
 
         UnifyContainerConfig ucc = uccb.build();
         assertEquals("TestApplication", ucc.getProperty("application.name"));
@@ -123,7 +123,7 @@ public class UnifyConfigUtilsTest {
                 + "             <value>com.tcdng.unify.core.resources.messages</value>" + "         </property>"
                 + "     </properties>" + " </component>" + "</components>" + "</unify>";
         UnifyContainerConfig.Builder uccb = UnifyContainerConfig.newBuilder();
-        UnifyConfigUtils.readConfigFromXml(uccb, configXml);
+        UnifyConfigUtils.readConfigFromXml(uccb, configXml, null);
 
         UnifyContainerConfig ucc = uccb.build();
         assertEquals("TestApplication 2", ucc.getProperty("application.name"));
