@@ -36,6 +36,7 @@ import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
 import com.tcdng.unify.core.database.sql.SqlDialectNameConstants;
 import com.tcdng.unify.core.database.sql.SqlEntitySchemaInfo;
 import com.tcdng.unify.core.database.sql.SqlFieldSchemaInfo;
+import com.tcdng.unify.core.database.sql.SqlIndexSchemaInfo;
 import com.tcdng.unify.core.database.sql.SqlUniqueConstraintSchemaInfo;
 import com.tcdng.unify.core.database.sql.data.policy.BlobPolicy;
 import com.tcdng.unify.core.database.sql.data.policy.ClobPolicy;
@@ -103,6 +104,25 @@ public class MySqlDialect extends AbstractSqlDataSourceDialect {
     }
 
     @Override
+    public String generateInlineUniqueConstraintSql(SqlEntitySchemaInfo sqlEntitySchemaInfo,
+            SqlUniqueConstraintSchemaInfo sqlUniqueConstraintInfo, PrintFormat format) throws UnifyException {
+        StringBuilder sb = new StringBuilder();
+        sb.append("UNIQUE ").append(sqlUniqueConstraintInfo.getName()).append(" (");
+        boolean appendSym = false;
+        for (String fieldName : sqlUniqueConstraintInfo.getFieldNameList()) {
+            if (appendSym)
+                sb.append(',');
+            else
+                appendSym = true;
+
+            SqlFieldSchemaInfo sqlFieldInfo = sqlEntitySchemaInfo.getFieldInfo(fieldName);
+            sb.append(sqlFieldInfo.getPreferredColumnName());
+        }
+        sb.append(")");
+        return sb.toString();
+    }
+
+    @Override
     public String generateDropUniqueConstraintSql(SqlEntitySchemaInfo sqlRecordSchemaInfo,
             SqlUniqueConstraintSchemaInfo sqlUniqueConstraintInfo, PrintFormat format) throws UnifyException {
         StringBuilder sb = new StringBuilder();
@@ -115,6 +135,25 @@ public class MySqlDialect extends AbstractSqlDataSourceDialect {
         }
         sb.append("DROP INDEX ").append(tableName).append("_").append(sqlUniqueConstraintInfo.getName().toUpperCase())
                 .append("UK");
+        return sb.toString();
+    }
+
+    @Override
+    public String generateInlineIndexSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlIndexSchemaInfo sqlIndexInfo,
+            PrintFormat format) throws UnifyException {
+        StringBuilder sb = new StringBuilder();
+        sb.append("INDEX ").append(sqlIndexInfo.getName()).append(" (");
+        boolean appendSym = false;
+        for (String fieldName : sqlIndexInfo.getFieldNameList()) {
+            if (appendSym)
+                sb.append(',');
+            else
+                appendSym = true;
+
+            SqlFieldSchemaInfo sqlFieldInfo = sqlEntitySchemaInfo.getFieldInfo(fieldName);
+            sb.append(sqlFieldInfo.getPreferredColumnName());
+        }
+        sb.append(")");
         return sb.toString();
     }
 
@@ -184,6 +223,16 @@ public class MySqlDialect extends AbstractSqlDataSourceDialect {
         appendTypeSql(sb, sqlColumnInfo);
         sb.append(" NULL");
         return sb.toString();
+    }
+
+    @Override
+    public boolean isGeneratesUniqueConstraintsOnCreateTable() {
+        return true;
+    }
+
+    @Override
+    public boolean isGeneratesIndexesOnCreateTable() {
+        return true;
     }
 
     @Override

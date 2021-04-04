@@ -256,6 +256,23 @@ public interface SqlGenerator extends UnifyComponent {
             PrintFormat format) throws UnifyException;
 
     /**
+     * Generates native inline unique key constraint SQL for specified unique
+     * constraint info.
+     * 
+     * @param sqlEntitySchemaInfo
+     *            record schema information
+     * @param sqlUniqueConstraintInfo
+     *            unique constraint schema information
+     * @param format
+     *            indicates if SQL should be formatted
+     * @return the add unique constraint SQL
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String generateInlineUniqueConstraintSql(SqlEntitySchemaInfo sqlEntitySchemaInfo,
+            SqlUniqueConstraintSchemaInfo sqlUniqueConstraintInfo, PrintFormat format) throws UnifyException;
+
+    /**
      * Generates native add unique key constraint SQL for specified unique
      * constraint info.
      * 
@@ -304,6 +321,22 @@ public interface SqlGenerator extends UnifyComponent {
      *             if an error occurs
      */
     String generateDropUniqueConstraintSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, String dbUniqueConstraintName,
+            PrintFormat format) throws UnifyException;
+
+    /**
+     * Generates native inline index SQL for specified index.
+     * 
+     * @param sqlEntitySchemaInfo
+     *            record schema information
+     * @param sqlIndexInfo
+     *            the index schema information
+     * @param format
+     *            indicates if SQL should be formatted
+     * @return the create index SQL
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String generateInlineIndexSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlIndexSchemaInfo sqlIndexInfo,
             PrintFormat format) throws UnifyException;
 
     /**
@@ -622,4 +655,14 @@ public interface SqlGenerator extends UnifyComponent {
      *             if an error occurs
      */
     String generateLikeParameter(SqlLikeType type, Object param) throws UnifyException;
+    
+    /**
+     * Indicates if this component generates unique constraints in generated create table scripts.
+     */
+    boolean isGeneratesUniqueConstraintsOnCreateTable();
+    
+    /**
+     * Indicates if this component generates indexes in generated create table scripts.
+     */
+    boolean isGeneratesIndexesOnCreateTable();
 }

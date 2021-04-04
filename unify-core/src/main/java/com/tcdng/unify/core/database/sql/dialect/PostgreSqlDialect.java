@@ -173,6 +173,16 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
     }
 
     @Override
+    public boolean isGeneratesUniqueConstraintsOnCreateTable() {
+        return false;
+    }
+
+    @Override
+    public boolean isGeneratesIndexesOnCreateTable() {
+        return false;
+    }
+
+    @Override
     protected SqlDataSourceDialectPolicies getSqlDataSourceDialectPolicies() {
         return sqlDataSourceDialectPolicies;
     }

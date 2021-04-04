@@ -185,6 +185,16 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
     }
 
     @Override
+    public boolean isGeneratesUniqueConstraintsOnCreateTable() {
+        return false;
+    }
+
+    @Override
+    public boolean isGeneratesIndexesOnCreateTable() {
+        return false;
+    }
+
+    @Override
     protected boolean appendLimitOffsetInfixClause(StringBuilder sql, int offset, int limit) throws UnifyException {
         return false;
     }
