@@ -40,7 +40,6 @@ import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
 import com.tcdng.unify.core.database.sql.SqlDialectNameConstants;
 import com.tcdng.unify.core.database.sql.SqlEntitySchemaInfo;
 import com.tcdng.unify.core.database.sql.SqlFieldSchemaInfo;
-import com.tcdng.unify.core.database.sql.SqlUniqueConstraintSchemaInfo;
 import com.tcdng.unify.core.database.sql.data.policy.BlobPolicy;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
@@ -89,18 +88,24 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
     }
 
     @Override
-    public String generateDropUniqueConstraintSql(SqlEntitySchemaInfo sqlRecordSchemaInfo,
-            SqlUniqueConstraintSchemaInfo sqlUniqueConstraintInfo, PrintFormat format) throws UnifyException {
+    public String generateDropUniqueConstraintSql(SqlEntitySchemaInfo sqlEntitySchemaInfo,
+            String dbUniqueConstraintName, PrintFormat format) throws UnifyException {
+        return generateDropIndexSql(sqlEntitySchemaInfo, dbUniqueConstraintName, format);
+    }
+
+    @Override
+    public String generateDropIndexSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, String dbIndexName, PrintFormat format)
+            throws UnifyException {
         StringBuilder sb = new StringBuilder();
-        String tableName = sqlRecordSchemaInfo.getSchemaTableName();
+        String tableName = sqlEntitySchemaInfo.getSchemaTableName();
         sb.append("ALTER TABLE ").append(tableName);
         if (format.isPretty()) {
             sb.append(getLineSeparator());
         } else {
             sb.append(" ");
         }
-        sb.append("DROP INDEX ").append(tableName).append("_").append(sqlUniqueConstraintInfo.getName().toUpperCase())
-                .append("UK");
+
+        sb.append("DROP INDEX ").append(dbIndexName);
         return sb.toString();
     }
 
