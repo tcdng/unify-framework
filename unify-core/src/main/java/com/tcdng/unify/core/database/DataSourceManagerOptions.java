@@ -31,10 +31,6 @@ public class DataSourceManagerOptions {
 
     private ForceConstraints forceConstraints;
 
-    public DataSourceManagerOptions() {
-        this(PrintFormat.NONE, ForceConstraints.TRUE);
-    }
-
     public DataSourceManagerOptions(PrintFormat printFormat, ForceConstraints forceConstraints) {
         this.printFormat = printFormat;
         this.forceConstraints = forceConstraints;

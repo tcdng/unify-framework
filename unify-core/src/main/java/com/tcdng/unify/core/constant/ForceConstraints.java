@@ -29,4 +29,8 @@ public enum ForceConstraints {
     public boolean isTrue() {
         return TRUE.equals(this);
     }
+    
+    public static ForceConstraints fromBoolean(boolean bool) {
+        return bool ? ForceConstraints.TRUE: ForceConstraints.FALSE;
+    }
 }

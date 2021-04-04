@@ -22,9 +22,12 @@ import java.util.List;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.ApplicationComponents;
+import com.tcdng.unify.core.UnifyCorePropertyConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
+import com.tcdng.unify.core.constant.ForceConstraints;
+import com.tcdng.unify.core.constant.PrintFormat;
 import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.database.dynamic.DynamicEntityInfo;
 import com.tcdng.unify.core.database.sql.SqlDataSource;
@@ -94,7 +97,9 @@ public class DynamicSqlEntityLoaderImpl extends AbstractUnifyComponent implement
         try {
             // Manage schema
             logDebug("Managing schema for entity classes...");
-            SqlSchemaManagerOptions options = new SqlSchemaManagerOptions();
+            SqlSchemaManagerOptions options = new SqlSchemaManagerOptions(PrintFormat.NONE,
+                    ForceConstraints.fromBoolean(!getContainerSetting(boolean.class,
+                            UnifyCorePropertyConstants.APPLICATION_FOREIGNKEY_EASE, false)));
             sqlSchemaManager.manageTableSchema(sqlDataSource, options, tableList);
             sqlSchemaManager.manageViewSchema(sqlDataSource, options, resultList);
         } finally {

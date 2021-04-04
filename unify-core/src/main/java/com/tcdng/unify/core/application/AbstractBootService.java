@@ -18,10 +18,13 @@ package com.tcdng.unify.core.application;
 import java.util.List;
 
 import com.tcdng.unify.core.ApplicationComponents;
+import com.tcdng.unify.core.UnifyCorePropertyConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.Transactional;
 import com.tcdng.unify.core.business.AbstractBusinessService;
+import com.tcdng.unify.core.constant.ForceConstraints;
+import com.tcdng.unify.core.constant.PrintFormat;
 import com.tcdng.unify.core.database.DataSourceManager;
 import com.tcdng.unify.core.database.DataSourceManagerOptions;
 import com.tcdng.unify.core.database.sql.SqlDataSource;
@@ -49,7 +52,9 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
     @Transactional
     public void startup() throws UnifyException {
         logInfo("Initializing datasources...");
-        DataSourceManagerOptions options = new DataSourceManagerOptions();
+        DataSourceManagerOptions options = new DataSourceManagerOptions(PrintFormat.NONE,
+                ForceConstraints.fromBoolean(!getContainerSetting(boolean.class,
+                        UnifyCorePropertyConstants.APPLICATION_FOREIGNKEY_EASE, false)));
         List<String> datasources = getApplicationDataSources();
         for (String datasource : datasources) {
             dataSourceManager.initDataSource(datasource, options);

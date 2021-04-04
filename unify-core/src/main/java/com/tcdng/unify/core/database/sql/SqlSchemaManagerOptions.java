@@ -32,10 +32,6 @@ public class SqlSchemaManagerOptions {
 
     private ForceConstraints forceConstraints;
 
-    public SqlSchemaManagerOptions() {
-        this(PrintFormat.NONE, ForceConstraints.TRUE);
-    }
-
     public SqlSchemaManagerOptions(PrintFormat printFormat, ForceConstraints forceConstraints) {
         this.printFormat = printFormat;
         this.forceConstraints = forceConstraints;
