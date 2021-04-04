@@ -28,7 +28,7 @@ import com.tcdng.unify.core.annotation.UniqueConstraint;
 @Table(name = "UNCLUSTERUNIQUESTRING", uniqueConstraints = { @UniqueConstraint({ "uniqueString" }) })
 public class ClusterUniqueString extends AbstractSystemSequencedEntity {
 
-    @Column(length = 256)
+    @Column(length = 64)
     private String uniqueString;
 
     public String getUniqueString() {
