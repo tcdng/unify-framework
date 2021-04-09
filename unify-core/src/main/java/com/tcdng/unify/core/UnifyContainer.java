@@ -499,7 +499,7 @@ public class UnifyContainer {
 					(DateTimeFormatter) getUplComponent(getApplicationLocale(), "!datetimeformat", false));
 
 			// Run application startup service
-			toConsole("Initializing application bootup service...");
+			toConsole("Initializing application boot service...");
 			String bootComponentName = (String) unifySettings.get(UnifyCorePropertyConstants.APPLICATION_BOOT);
 			if (bootComponentName == null) {
 				bootComponentName = ApplicationComponents.APPLICATION_DEFAULTBOOTSERVICE;
@@ -507,7 +507,7 @@ public class UnifyContainer {
 			applicationBootService = (BootService) getComponent(bootComponentName);
 			applicationBootService.startup();
 
-			toConsole("Application bootup service initialization completed.");
+			toConsole("Application boot service initialization completed.");
 
 			// Initialize interfaces
 			logInfo("Initializing container interfaces...");
