@@ -52,7 +52,10 @@ public class TextFieldWriter extends AbstractControlWriter {
             writer.writeParam("pId", textField.getId());
         }
         writer.writeResolvedParam("pRegex", "\"" + getFormatRegex(textField) + "\"");
-        writer.writeParam("pCase", textField.getCase());
+        if(textField.getCase() != null) {
+            writer.writeParam("pCase", textField.getCase().toString().toLowerCase());
+        }
+        
         writer.endFunction();
         
         if(!textField.getExtensionType().isExtended()) {
