@@ -180,7 +180,7 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
         if (reqPathParts.isSessionless()) {
             // Non-UI controllers are session less. Handle sessionless remote call
             httpRequest.invalidateSession();
-            
+
             // Create single use session object
             userSession = createHttpUserSession(httpModule, httpRequest, reqPathParts, null);
         } else {
@@ -299,10 +299,9 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
     private Map<String, Object> extractRequestParameters(HttpRequest httpRequest, Charset charset)
             throws UnifyException {
         Map<String, Object> result = new HashMap<String, Object>();
-        String contentType = httpRequest.getContentType() == null ? null
-                : httpRequest.getContentType().toLowerCase();
-        RemoteCallFormat remoteCallFormat = RemoteCallFormat.fromContentType(
-                httpRequest.getHeader(RequestHeaderConstants.REMOTE_MESSAGE_TYPE_HEADER), contentType);
+        String contentType = httpRequest.getContentType() == null ? null : httpRequest.getContentType().toLowerCase();
+        RemoteCallFormat remoteCallFormat = RemoteCallFormat
+                .fromContentType(httpRequest.getHeader(RequestHeaderConstants.REMOTE_MESSAGE_TYPE_HEADER), contentType);
         if (remoteCallFormat != null) {
             result.put(RequestParameterConstants.REMOTE_CALL_FORMAT, remoteCallFormat);
             try {
@@ -318,7 +317,7 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
                     case TAGGED_XMLMESSAGE:
                     case XML:
                         result.put(RequestParameterConstants.REMOTE_CALL_BODY,
-                                new String(IOUtils.readAll(httpRequest.getInputStream()), charset));
+                                IOUtils.readAll(httpRequest.getReader()));
                         break;
                     default:
                         break;
@@ -357,8 +356,7 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
         return result;
     }
 
-    private void processParts(Map<String, Object> requestParameterMap, HttpRequest httpRequest)
-            throws UnifyException {
+    private void processParts(Map<String, Object> requestParameterMap, HttpRequest httpRequest) throws UnifyException {
         logDebug("Processing multi-part request parameters [{0}]", requestParameterMap.keySet());
         try {
             Map<String, List<String>> stringMap = new HashMap<String, List<String>>();

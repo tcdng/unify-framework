@@ -424,6 +424,10 @@ public class IOUtils {
         return baos.toByteArray();
     }
 
+    public static String readAll(Reader reader) throws UnifyException {
+        return IOUtils.readAll(new BufferedReader(reader));
+    }
+    
     public static String readAll(BufferedReader reader) throws UnifyException {
         try {
             StringBuilder sb = new StringBuilder();

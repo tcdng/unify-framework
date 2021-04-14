@@ -16,6 +16,7 @@
 
 package com.tcdng.unify.web.http;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -66,6 +67,11 @@ public class HttpRequestImpl implements HttpRequest {
     @Override
     public String getParameter(String paramName) {
         return request.getParameter(paramName);
+    }
+
+    @Override
+    public BufferedReader getReader() throws IOException {
+        return request.getReader();
     }
 
     @Override

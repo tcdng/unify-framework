@@ -16,6 +16,7 @@
 
 package com.tcdng.unify.web.http;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
@@ -57,6 +58,8 @@ public interface HttpRequest {
 
     HttpUserSession createHttpUserSession(Locale locale, TimeZone timeZone, String sessionId, String uriBase,
             String contextPath, String tenantPath, String remoteIpAddress);
+
+    BufferedReader getReader() throws IOException;
 
     InputStream getInputStream() throws IOException;
 
