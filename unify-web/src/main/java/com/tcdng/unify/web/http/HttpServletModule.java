@@ -33,6 +33,7 @@ import com.tcdng.unify.core.util.IOUtils;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.core.util.TypeRepository;
 import com.tcdng.unify.core.util.UnifyConfigUtils;
+import com.tcdng.unify.web.RequestPathParts;
 import com.tcdng.unify.web.UnifyWebInterface;
 import com.tcdng.unify.web.UnifyWebPropertyConstants;
 import com.tcdng.unify.web.WebApplicationComponents;
@@ -176,5 +177,27 @@ public class HttpServletModule  {
 
     public boolean isEmbedded() {
         return embedded;
+    }
+    
+    public void handleRequest(HttpRequestMethodType type, HttpRequest httpRequest,
+            HttpResponse httpResponse) throws UnifyException {
+        if (!embedded || webInterface.isServicingRequests()) {
+            try {
+                HttpRequestHandler httpRequestHandler = getHttpRequestHandler();
+                RequestPathParts reqPathParts = httpRequestHandler.resolveRequestPath(httpRequest);
+                requestContextManager.loadRequestContext(
+                        httpRequestHandler.getUserSession(this, httpRequest, reqPathParts),
+                        httpRequest.getServletPath());
+                httpRequestHandler.handleRequest(type, reqPathParts, httpRequest,
+                        httpResponse);
+            } finally {
+                try {
+                    userSessionManager.updateCurrentSessionLastAccessTime();
+                } catch (Exception e) {
+                }
+                
+                requestContextManager.unloadRequestContext();
+            }
+        }
     }
 }

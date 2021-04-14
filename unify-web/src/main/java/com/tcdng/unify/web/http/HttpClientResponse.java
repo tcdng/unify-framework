@@ -19,8 +19,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
 
-import jakarta.servlet.http.HttpServletResponse;
-
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.UnifyOperationException;
 import com.tcdng.unify.core.util.IOUtils;
@@ -34,7 +32,7 @@ import com.tcdng.unify.web.ClientResponse;
  */
 public class HttpClientResponse implements ClientResponse {
 
-    private HttpServletResponse response;
+    private HttpResponse response;
 
     private OutputStream outputStream;
 
@@ -42,8 +40,8 @@ public class HttpClientResponse implements ClientResponse {
 
     private boolean outUsed;
 
-    public HttpClientResponse(HttpServletResponse response) {
-        response.setStatus(HttpServletResponse.SC_OK);
+    public HttpClientResponse(HttpResponse response) {
+        response.setStatus(response.getOk());
         this.response = response;
     }
 

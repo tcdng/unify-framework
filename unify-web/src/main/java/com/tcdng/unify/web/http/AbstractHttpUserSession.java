@@ -18,29 +18,25 @@ package com.tcdng.unify.web.http;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import jakarta.servlet.http.HttpSessionBindingEvent;
-import jakarta.servlet.http.HttpSessionBindingListener;
-
 import com.tcdng.unify.core.SessionContext;
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.UserSession;
 import com.tcdng.unify.core.system.UserSessionManager;
 import com.tcdng.unify.core.util.ApplicationUtils;
 import com.tcdng.unify.core.util.StringUtils;
 
 /**
- * HTTP user session.
+ * Convenient abstract base class for HTTP user session.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class HttpUserSession implements UserSession, HttpSessionBindingListener {
+public abstract class AbstractHttpUserSession implements HttpUserSession {
 
     private transient UserSessionManager userSessionManager;
 
     private SessionContext sessionContext;
 
-    public HttpUserSession(Locale locale, TimeZone timeZone, String sessionId, String uriBase, String contextPath,
+    public AbstractHttpUserSession(Locale locale, TimeZone timeZone, String sessionId, String uriBase, String contextPath,
             String tenantPath, String remoteHost, String remoteIpAddress, String remoteUser) {
         if (StringUtils.isBlank(sessionId)) {
             sessionId = ApplicationUtils.generateSessionContextId();
@@ -75,6 +71,7 @@ public class HttpUserSession implements UserSession, HttpSessionBindingListener 
         return sessionContext.getTenantPath();
     }
 
+    @Override
     public void invalidate() {
     	if (sessionContext != null) {
             try {
@@ -86,15 +83,6 @@ public class HttpUserSession implements UserSession, HttpSessionBindingListener 
     }
 
     @Override
-    public void valueBound(HttpSessionBindingEvent event) {
-
-    }
-
-    @Override
-    public void valueUnbound(HttpSessionBindingEvent event) {
-    	invalidate();
-    }
-
     public void setTransient(UserSessionManager userSessionManager) {
         this.userSessionManager = userSessionManager;
     }
