@@ -15,6 +15,10 @@
  */
 package com.tcdng.unify.core.database;
 
+import java.util.Collection;
+
+import com.tcdng.unify.core.constant.Gender;
+
 /**
  * Query object for test author.
  * 
@@ -25,5 +29,13 @@ public class AuthorQuery extends AbstractTestTableEntityQuery<Author> {
 
     public AuthorQuery() {
         super(Author.class);
+    }
+    
+    public AuthorQuery gender(Gender gender) {
+        return (AuthorQuery) addEquals("gender", gender);
+    }
+    
+    public AuthorQuery genderIn(Collection<Gender> gender) {
+        return (AuthorQuery) addAmongst("gender", gender);
     }
 }

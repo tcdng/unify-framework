@@ -15,6 +15,10 @@
  */
 package com.tcdng.unify.core.database;
 
+import java.util.Collection;
+
+import com.tcdng.unify.core.constant.BooleanType;
+
 /**
  * Query object for test report parameter record.
  * 
@@ -29,5 +33,13 @@ public class ReportParameterQuery extends AbstractTestTableEntityQuery<ReportPar
 
     public ReportParameterQuery reportId(Long reportId) {
         return (ReportParameterQuery) addEquals("reportId", reportId);
+    }
+
+    public ReportParameterQuery scheduled(BooleanType scheduled) {
+        return (ReportParameterQuery) addEquals("scheduled", scheduled);
+    }
+
+    public ReportParameterQuery scheduledIn(Collection<BooleanType> scheduled) {
+        return (ReportParameterQuery) addAmongst("scheduled", scheduled);
     }
 }

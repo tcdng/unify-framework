@@ -3400,6 +3400,98 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
     }
 
     @Test
+    public void testFindAllUsingEnum() throws Exception {
+        tm.beginTransaction();
+        try {
+            Long parklaneOfficeId = (Long) db.create(parklaneOffice);
+            db.create(new Author("Brian Bramer", 50, Gender.MALE, BooleanType.FALSE, parklaneOfficeId));
+            db.create(new Author("Winfield Hill", 75, Gender.MALE, BooleanType.FALSE, parklaneOfficeId));
+
+            Long warehouseOfficeId = (Long) db.create(warehouseOffice);
+            db.create(new Author("Susan Bramer", 45, Gender.FEMALE, BooleanType.FALSE, warehouseOfficeId));
+
+            List<Author> testAuthorList =
+                    db.findAll(new AuthorQuery().gender(Gender.FEMALE));
+            assertEquals(1, testAuthorList.size());
+
+            Author foundAuthor = testAuthorList.get(0);
+            assertEquals("Susan Bramer", foundAuthor.getName());
+            assertEquals(Integer.valueOf(45), foundAuthor.getAge());
+            assertEquals(Gender.FEMALE, foundAuthor.getGender());
+            assertEquals(BooleanType.FALSE, foundAuthor.getRetired());
+            assertEquals(warehouseOfficeId, foundAuthor.getOfficeId());
+            assertNull(foundAuthor.getRetiredDesc());
+            assertNull(foundAuthor.getOfficeAddress());
+            assertNull(foundAuthor.getOfficeTelephone());
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
+    public void testFindAllUsingEnumCollection() throws Exception {
+        tm.beginTransaction();
+        try {
+            Long parklaneOfficeId = (Long) db.create(parklaneOffice);
+            db.create(new Author("Brian Bramer", 50, Gender.MALE, BooleanType.FALSE, parklaneOfficeId));
+            db.create(new Author("Winfield Hill", 75, Gender.MALE, BooleanType.FALSE, parklaneOfficeId));
+
+            Long warehouseOfficeId = (Long) db.create(warehouseOffice);
+            db.create(new Author("Susan Bramer", 45, Gender.FEMALE, BooleanType.FALSE, warehouseOfficeId));
+
+            List<Author> testAuthorList = db.findAll(new AuthorQuery().genderIn(Arrays.asList(Gender.FEMALE)));
+            assertEquals(1, testAuthorList.size());
+
+            Author foundAuthor = testAuthorList.get(0);
+            assertEquals("Susan Bramer", foundAuthor.getName());
+            assertEquals(Integer.valueOf(45), foundAuthor.getAge());
+            assertEquals(Gender.FEMALE, foundAuthor.getGender());
+            assertEquals(BooleanType.FALSE, foundAuthor.getRetired());
+            assertEquals(warehouseOfficeId, foundAuthor.getOfficeId());
+            assertNull(foundAuthor.getRetiredDesc());
+            assertNull(foundAuthor.getOfficeAddress());
+            assertNull(foundAuthor.getOfficeTelephone());
+
+            testAuthorList = db
+                    .findAll(new AuthorQuery().genderIn(Arrays.asList(Gender.MALE, Gender.FEMALE)).addOrder("id"));
+            assertEquals(3, testAuthorList.size());
+
+            foundAuthor = testAuthorList.get(0);
+            assertEquals("Brian Bramer", foundAuthor.getName());
+            assertEquals(Integer.valueOf(50), foundAuthor.getAge());
+            assertEquals(Gender.MALE, foundAuthor.getGender());
+            assertEquals(BooleanType.FALSE, foundAuthor.getRetired());
+            assertEquals(parklaneOfficeId, foundAuthor.getOfficeId());
+            assertNull(foundAuthor.getRetiredDesc());
+            assertNull(foundAuthor.getOfficeAddress());
+            assertNull(foundAuthor.getOfficeTelephone());
+
+            foundAuthor = testAuthorList.get(1);
+            assertEquals("Winfield Hill", foundAuthor.getName());
+            assertEquals(Integer.valueOf(75), foundAuthor.getAge());
+            assertEquals(Gender.MALE, foundAuthor.getGender());
+            assertEquals(BooleanType.FALSE, foundAuthor.getRetired());
+            assertEquals(parklaneOfficeId, foundAuthor.getOfficeId());
+            assertNull(foundAuthor.getRetiredDesc());
+            assertNull(foundAuthor.getOfficeAddress());
+            assertNull(foundAuthor.getOfficeTelephone());
+
+            foundAuthor = testAuthorList.get(2);
+            assertEquals("Susan Bramer", foundAuthor.getName());
+            assertEquals(Integer.valueOf(45), foundAuthor.getAge());
+            assertEquals(Gender.FEMALE, foundAuthor.getGender());
+            assertEquals(BooleanType.FALSE, foundAuthor.getRetired());
+            assertEquals(warehouseOfficeId, foundAuthor.getOfficeId());
+            assertNull(foundAuthor.getRetiredDesc());
+            assertNull(foundAuthor.getOfficeAddress());
+            assertNull(foundAuthor.getOfficeTelephone());
+
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
     public void testListLeanRecordByIdWithChild() throws Exception {
         tm.beginTransaction();
         try {
@@ -3867,6 +3959,82 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             assertEquals(BooleanType.TRUE, rParam.getScheduled());
             assertEquals("Weekly Report", rParam.getReportDesc());
             assertEquals("True", rParam.getScheduledDesc());
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
+    public void testListAllUsingEnum() throws Exception {
+        tm.beginTransaction();
+        try {
+            Long parklaneOfficeId = (Long) db.create(parklaneOffice);
+            db.create(new Author("Brian Bramer", 50, Gender.MALE, BooleanType.FALSE, parklaneOfficeId));
+            db.create(new Author("Winfield Hill", 75, Gender.MALE, BooleanType.FALSE, parklaneOfficeId));
+
+            Long warehouseOfficeId = (Long) db.create(warehouseOffice);
+            db.create(new Author("Susan Bramer", 45, Gender.FEMALE, BooleanType.FALSE, warehouseOfficeId));
+
+            List<Author> testAuthorList =
+                    db.listAll(new AuthorQuery().gender(Gender.FEMALE));
+            assertEquals(1, testAuthorList.size());
+
+            Author foundAuthor = testAuthorList.get(0);
+            assertEquals("Susan Bramer", foundAuthor.getName());
+            assertEquals(Integer.valueOf(45), foundAuthor.getAge());
+            assertEquals(Gender.FEMALE, foundAuthor.getGender());
+            assertEquals(BooleanType.FALSE, foundAuthor.getRetired());
+            assertEquals(warehouseOfficeId, foundAuthor.getOfficeId());
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
+    public void testListAllUsingEnumCollection() throws Exception {
+        tm.beginTransaction();
+        try {
+            Long parklaneOfficeId = (Long) db.create(parklaneOffice);
+            db.create(new Author("Brian Bramer", 50, Gender.MALE, BooleanType.FALSE, parklaneOfficeId));
+            db.create(new Author("Winfield Hill", 75, Gender.MALE, BooleanType.FALSE, parklaneOfficeId));
+
+            Long warehouseOfficeId = (Long) db.create(warehouseOffice);
+            db.create(new Author("Susan Bramer", 45, Gender.FEMALE, BooleanType.FALSE, warehouseOfficeId));
+
+            List<Author> testAuthorList = db.listAll(new AuthorQuery().genderIn(Arrays.asList(Gender.FEMALE)));
+            assertEquals(1, testAuthorList.size());
+
+            Author foundAuthor = testAuthorList.get(0);
+            assertEquals("Susan Bramer", foundAuthor.getName());
+            assertEquals(Integer.valueOf(45), foundAuthor.getAge());
+            assertEquals(Gender.FEMALE, foundAuthor.getGender());
+            assertEquals(BooleanType.FALSE, foundAuthor.getRetired());
+            assertEquals(warehouseOfficeId, foundAuthor.getOfficeId());
+
+            testAuthorList = db
+                    .listAll(new AuthorQuery().genderIn(Arrays.asList(Gender.MALE, Gender.FEMALE)).addOrder("id"));
+            assertEquals(3, testAuthorList.size());
+
+            foundAuthor = testAuthorList.get(0);
+            assertEquals("Brian Bramer", foundAuthor.getName());
+            assertEquals(Integer.valueOf(50), foundAuthor.getAge());
+            assertEquals(Gender.MALE, foundAuthor.getGender());
+            assertEquals(BooleanType.FALSE, foundAuthor.getRetired());
+            assertEquals(parklaneOfficeId, foundAuthor.getOfficeId());
+
+            foundAuthor = testAuthorList.get(1);
+            assertEquals("Winfield Hill", foundAuthor.getName());
+            assertEquals(Integer.valueOf(75), foundAuthor.getAge());
+            assertEquals(Gender.MALE, foundAuthor.getGender());
+            assertEquals(BooleanType.FALSE, foundAuthor.getRetired());
+            assertEquals(parklaneOfficeId, foundAuthor.getOfficeId());
+
+            foundAuthor = testAuthorList.get(2);
+            assertEquals("Susan Bramer", foundAuthor.getName());
+            assertEquals(Integer.valueOf(45), foundAuthor.getAge());
+            assertEquals(Gender.FEMALE, foundAuthor.getGender());
+            assertEquals(BooleanType.FALSE, foundAuthor.getRetired());
+            assertEquals(warehouseOfficeId, foundAuthor.getOfficeId());
         } finally {
             tm.endTransaction();
         }
@@ -4576,6 +4744,8 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
 
     @Override
     protected void doAddSettingsAndDependencies() throws Exception {
+//        addContainerSetting(UnifyCorePropertyConstants.APPLICATION_LOG_LEVEL, "debug");
+//        addContainerSetting(UnifyCorePropertyConstants.APPLICATION_LOG_TO_CONSOLE, "true");
         addContainerSetting(UnifyCorePropertyConstants.APPLICATION_QUERY_LIMIT, 8);
     }
 
