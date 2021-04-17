@@ -38,9 +38,11 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Properties;
 
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.UnifyOperationException;
 
 /**
  * Provides utility methods for IO.
@@ -61,10 +63,10 @@ public class IOUtils {
      * Detects an opens an input stream for a streamable object.
      * 
      * @param streamable
-     *            the streamable object
+     *                   the streamable object
      * @return opened inputstream on successful detection otherwise a null
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static InputStream detectAndOpenInputStream(Object streamable) throws UnifyException {
         try {
@@ -86,10 +88,10 @@ public class IOUtils {
      * Detects an opens a reader for a streamable object.
      * 
      * @param streamable
-     *            the streamable object
+     *                   the streamable object
      * @return opened reader on successful detection otherwise a null
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static BufferedReader detectAndOpenBufferedReader(Object streamable) throws UnifyException {
         try {
@@ -123,12 +125,12 @@ public class IOUtils {
      * </pre>
      * 
      * @param resourceName
-     *            the resource name.
+     *                     the resource name.
      * @param realPath
-     *            the optional real path. Can be null.
+     *                     the optional real path. Can be null.
      * @return the file resource input stream
      * @throws UnifyException
-     *             if resource is not found. If an error occurs
+     *                        if resource is not found. If an error occurs
      */
     public static InputStream openFileResourceInputStream(String resourceName, String realPath) throws UnifyException {
         try {
@@ -147,14 +149,14 @@ public class IOUtils {
      * Opens a resource input stream from the current class loader.
      * 
      * @param resourceName
-     *            the resource name
+     *                     the resource name
      * @return the opened input stream
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static InputStream openClassLoaderResourceInputStream(String resourceName) throws UnifyException {
-        InputStream inputStream =
-                IOUtils.class.getClassLoader().getResourceAsStream(IOUtils.conformJarSeparator(resourceName));
+        InputStream inputStream = IOUtils.class.getClassLoader()
+                .getResourceAsStream(IOUtils.conformJarSeparator(resourceName));
         if (inputStream != null) {
             return inputStream;
         }
@@ -165,10 +167,10 @@ public class IOUtils {
      * List resources in class loader directory.
      * 
      * @param path
-     *            the path of directory to list
+     *             the path of directory to list
      * @return list of directory items
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static List<String> getResourceListFromClassLoaderDirectory(String path) throws UnifyException {
         List<String> list = new ArrayList<String>();
@@ -192,10 +194,10 @@ public class IOUtils {
      * Opens a file input stream.
      * 
      * @param filename
-     *            the file name
+     *                 the file name
      * @return the file input stream
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static InputStream openFileInputStream(String filename) throws UnifyException {
         try {
@@ -209,12 +211,12 @@ public class IOUtils {
      * Opens a file input stream and skip by specified number of bytes..
      * 
      * @param filename
-     *            the file name
+     *                 the file name
      * @param skip
-     *            the number of bytes to skip by
+     *                 the number of bytes to skip by
      * @return the file input stream
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static InputStream openFileInputStream(String filename, long skip) throws UnifyException {
         try {
@@ -230,10 +232,10 @@ public class IOUtils {
      * Opens a file output stream. Truncates file if file already exists.
      * 
      * @param filename
-     *            the file name
+     *                 the file name
      * @return the file output stream
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static OutputStream openFileOutputStream(String filename) throws UnifyException {
         try {
@@ -247,12 +249,12 @@ public class IOUtils {
      * Opens a file output stream.
      * 
      * @param filename
-     *            the file name
+     *                 the file name
      * @param append
-     *            flag that indicates an append
+     *                 flag that indicates an append
      * @return the file output stream
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static OutputStream openFileOutputStream(String filename, boolean append) throws UnifyException {
         try {
@@ -266,7 +268,7 @@ public class IOUtils {
      * Gets a resource file instance for existing file with filename.
      * 
      * @param filename
-     *            the file name
+     *                 the file name
      * @return the file instance.
      */
     public static boolean isResourceFileInstance(String filename, String optionPath) {
@@ -281,7 +283,7 @@ public class IOUtils {
      * Gets a file instance for existing file with filename.
      * 
      * @param filename
-     *            the file name
+     *                 the file name
      * @return the file instance.
      */
     public static File fileInstance(String filename, String optionPath) {
@@ -302,10 +304,10 @@ public class IOUtils {
      * {@link #openFileResourceInputStream(String, String)}
      * 
      * @param resourceName
-     *            the resource name.
+     *                     the resource name.
      * @return the file resource
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static byte[] readFileResourceInputStream(String resourceName) throws UnifyException {
         return IOUtils.readFileResourceInputStream(resourceName, null);
@@ -316,15 +318,44 @@ public class IOUtils {
      * {@link #openFileResourceInputStream(String, String)}
      * 
      * @param resourceName
-     *            the resource name.
+     *                     the resource name.
      * @param realPath
-     *            the optional real path. Can be null.
+     *                     the optional real path. Can be null.
      * @return the file resource
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static byte[] readFileResourceInputStream(String resourceName, String realPath) throws UnifyException {
         return IOUtils.readAll(IOUtils.openFileResourceInputStream(resourceName, realPath));
+    }
+
+    public static Properties readPropertiesFromFileResource(String resourceName, String realPath)
+            throws UnifyException {
+        Properties properties = new Properties();
+        IOUtils.readPropertiesFromFileResource(properties, resourceName, realPath);
+        return properties;
+    }
+
+    public static Properties readPropertiesFromFileResources(List<String> resourceNames, String realPath)
+            throws UnifyException {
+        Properties properties = new Properties();
+        for (String resourceName : resourceNames) {
+            IOUtils.readPropertiesFromFileResource(properties, resourceName, realPath);
+        }
+        return properties;
+    }
+
+    private static void readPropertiesFromFileResource(Properties properties, String resourceName, String realPath)
+            throws UnifyException {
+        InputStream in = null;
+        try {
+            in = IOUtils.openFileResourceInputStream(resourceName, realPath);
+            properties.load(in);
+        } catch (IOException e) {
+            throw new UnifyOperationException(e);
+        } finally {
+            IOUtils.close(in);
+        }
     }
 
     /**
@@ -332,12 +363,12 @@ public class IOUtils {
      * of the buffer.
      * 
      * @param buffer
-     *            the buffer to read into
+     *                    the buffer to read into
      * @param inputStream
-     *            the input stream to read from
+     *                    the input stream to read from
      * @return the number of bytes read
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static int read(byte[] buffer, InputStream inputStream) throws UnifyException {
         try {
@@ -356,10 +387,10 @@ public class IOUtils {
      * Reads all data from file into a byte array.
      * 
      * @param file
-     *            the file
+     *             the file
      * @return byte[] the resulting byte array
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static byte[] readAll(File file) throws UnifyException {
         byte[] data = null;
@@ -381,10 +412,10 @@ public class IOUtils {
      * Reads all data from input stream into a byte array.
      * 
      * @param inputStream
-     *            the input stream to read from
+     *                    the input stream to read from
      * @return byte[] the resulting byte array
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static byte[] readAll(InputStream inputStream) throws UnifyException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -393,6 +424,10 @@ public class IOUtils {
         return baos.toByteArray();
     }
 
+    public static String readAll(Reader reader) throws UnifyException {
+        return IOUtils.readAll(new BufferedReader(reader));
+    }
+    
     public static String readAll(BufferedReader reader) throws UnifyException {
         try {
             StringBuilder sb = new StringBuilder();
@@ -411,12 +446,12 @@ public class IOUtils {
      * end of write.
      * 
      * @param outputStream
-     *            the output stream to write to
+     *                     the output stream to write to
      * @param inputStream
-     *            the input stream to read from
+     *                     the input stream to read from
      * @return the number of bytes written
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static long writeAll(OutputStream outputStream, InputStream inputStream) throws UnifyException {
         try {
@@ -439,12 +474,12 @@ public class IOUtils {
      * Writes all supplied data to specified output stream.
      * 
      * @param outputStream
-     *            the output stream to write to
+     *                     the output stream to write to
      * @param data
-     *            the data to write
+     *                     the data to write
      * @return the number of bytes written
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static long writeAll(OutputStream outputStream, byte[] data) throws UnifyException {
         try {
@@ -459,11 +494,11 @@ public class IOUtils {
      * Writes all input stream data into file.
      * 
      * @param filename
-     *            the file name
+     *                    the file name
      * @param inputStream
-     *            the input stream
+     *                    the input stream
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static void writeToFile(String filename, InputStream inputStream) throws UnifyException {
         OutputStream outputStream = null;
@@ -481,11 +516,11 @@ public class IOUtils {
      * Writes all input stream data into file.
      * 
      * @param file
-     *            the file
+     *                    the file
      * @param inputStream
-     *            the input stream
+     *                    the input stream
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static void writeToFile(File file, InputStream inputStream) throws UnifyException {
         OutputStream outputStream = null;
@@ -503,11 +538,11 @@ public class IOUtils {
      * Writes all input stream data into file.
      * 
      * @param filename
-     *            the file name
+     *                 the file name
      * @param data
-     *            the data to write
+     *                 the data to write
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static void writeToFile(String filename, byte[] data) throws UnifyException {
         OutputStream outputStream = null;
@@ -525,11 +560,11 @@ public class IOUtils {
      * Writes all input stream data into file.
      * 
      * @param file
-     *            the file
+     *             the file
      * @param data
-     *            the data to write
+     *             the data to write
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static void writeToFile(File file, byte[] data) throws UnifyException {
         OutputStream outputStream = null;
@@ -547,10 +582,10 @@ public class IOUtils {
      * Streams a serializable object to bytes.
      * 
      * @param serializable
-     *            the serializable object
+     *                     the serializable object
      * @return the streamed object
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static byte[] streamToBytes(Object serializable) throws UnifyException {
         try {
@@ -569,12 +604,12 @@ public class IOUtils {
      * Reconstructs an object from a stream of bytes.
      * 
      * @param targetClass
-     *            the target type
+     *                    the target type
      * @param bytes
-     *            the bytes to stream from
+     *                    the bytes to stream from
      * @return the constructed object
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     @SuppressWarnings("unchecked")
     public static <T> T streamFromBytes(Class<T> targetClass, byte[] bytes) throws UnifyException {
@@ -592,7 +627,7 @@ public class IOUtils {
      * Closes a reader quietly.
      * 
      * @param reader
-     *            the reader to close
+     *               the reader to close
      */
     public static void close(Reader reader) {
         if (reader != null) {
@@ -607,7 +642,7 @@ public class IOUtils {
      * Closes an input stream quietly.
      * 
      * @param instream
-     *            the input stream to close
+     *                 the input stream to close
      */
     public static void close(InputStream instream) {
         if (instream != null) {
@@ -622,7 +657,7 @@ public class IOUtils {
      * Closes a writer quietly.
      * 
      * @param writer
-     *            the writer to close
+     *               the writer to close
      */
     public static void close(Writer writer) {
         if (writer != null) {
@@ -638,7 +673,7 @@ public class IOUtils {
      * Closes an output stream quietly.
      * 
      * @param outstream
-     *            the output stream to close
+     *                  the output stream to close
      */
     public static void close(OutputStream outstream) {
         if (outstream != null) {
@@ -655,7 +690,7 @@ public class IOUtils {
      * directory does not exist.
      * 
      * @param path
-     *            the directory path
+     *             the directory path
      * @return true value if directory exists now.
      */
     public static boolean ensureDirectoryExists(String path) {
@@ -675,9 +710,9 @@ public class IOUtils {
      * Builds a canonical file name.
      * 
      * @param path
-     *            the file path
+     *                 the file path
      * @param filename
-     *            the file name
+     *                 the file name
      * @return the proper file name
      */
     public static String buildFilename(String path, String filename) {
@@ -701,7 +736,7 @@ public class IOUtils {
      * Conforms supplied path to system format.
      * 
      * @param path
-     *            the path to conform
+     *             the path to conform
      * @return the conformed path
      */
     public static String conformFilePath(String path) {
@@ -718,7 +753,7 @@ public class IOUtils {
      * Returns true if supplied file name is in file system.
      * 
      * @param absoluteFilename
-     *            the file name to test
+     *                         the file name to test
      */
     public static boolean isFile(String absoluteFilename) {
         File file = new File(absoluteFilename);
@@ -729,7 +764,7 @@ public class IOUtils {
      * Lists file names in supplied folder.
      * 
      * @param folder
-     *            the folder to list
+     *               the folder to list
      * @return list of file names in folder
      */
     public static String[] listFolderFilenames(String folder) {
@@ -746,9 +781,9 @@ public class IOUtils {
      * Lists file names in supplied folder using a filename filter.
      * 
      * @param folder
-     *            the folder to list
+     *                       the folder to list
      * @param filenameFilter
-     *            the filename filter
+     *                       the filename filter
      * @return list of file names in folder
      */
     public static String[] listFolderFilenames(String folder, FilenameFilter filenameFilter) {
@@ -765,7 +800,7 @@ public class IOUtils {
      * Lists files in supplied folder.
      * 
      * @param folder
-     *            the folder to list
+     *               the folder to list
      * @return list of files in folder
      */
     public static File[] listFolderFiles(String folder) {
@@ -782,9 +817,9 @@ public class IOUtils {
      * Lists files in supplied folder using a filename filter.
      * 
      * @param folder
-     *            the folder to list
+     *                       the folder to list
      * @param filenameFilter
-     *            the filename filter
+     *                       the filename filter
      * @return list of files in folder
      */
     public static File[] listFolderFiles(String folder, FilenameFilter filenameFilter) {
@@ -801,9 +836,9 @@ public class IOUtils {
      * Lists files in supplied folder using a file filter.
      * 
      * @param folder
-     *            the folder to list
+     *                   the folder to list
      * @param fileFilter
-     *            the file filter
+     *                   the file filter
      * @return list of files in folder
      */
     public static File[] listFolderFiles(String folder, FileFilter fileFilter) {
@@ -820,12 +855,12 @@ public class IOUtils {
      * Reads a file resource, obtained from file system or class loader, as lines.
      * 
      * @param resourceName
-     *            the resource name
+     *                     the resource name
      * @param realPath
-     *            an optional real path
+     *                     an optional real path
      * @return the lines read
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static List<String> readFileResourceLines(String resourceName, String realPath) throws UnifyException {
         List<String> lines = Collections.emptyList();
@@ -854,10 +889,10 @@ public class IOUtils {
      * Creats an in-memory text file.
      * 
      * @param lines
-     *            the text file content
+     *              the text file content
      * @return the created in file memory
      * @throws Exception
-     *             if an error occurs
+     *                   if an error occurs
      */
     public static byte[] createInMemoryTextFile(String... lines) throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -875,9 +910,9 @@ public class IOUtils {
      * Gets a new instance of a custom file name filter.
      * 
      * @param prefixes
-     *            the file name prefixes
+     *                   the file name prefixes
      * @param extensions
-     *            the file name extensions
+     *                   the file name extensions
      * @return the custom file name filter
      */
     public static CustomFilenameFilter getCustomFilenameFilter(String prefixes, String extensions) {
@@ -888,11 +923,11 @@ public class IOUtils {
      * Gets a new instance of a custom file name filter.
      * 
      * @param prefixes
-     *            the file name prefixes
+     *                   the file name prefixes
      * @param extensions
-     *            the file name extensions
+     *                   the file name extensions
      * @param signatures
-     *            the body signatures
+     *                   the body signatures
      * @return the custom file name filter
      */
     public static CustomFilenameFilter getCustomFilenameFilter(String prefixes, String extensions, String signatures) {

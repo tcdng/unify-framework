@@ -321,7 +321,8 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
                     }
                 }
 
-                if (sqlEntityInfo.isUniqueConstraints()) {
+                if (sqlEntityInfo.isUniqueConstraints()
+                        && !sqlDataSourceDialect.isGeneratesUniqueConstraintsOnCreateTable()) {
                     for (SqlUniqueConstraintSchemaInfo sqlUniqueConstraintInfo : sqlEntityInfo.getUniqueConstraintList()
                             .values()) {
                         tableUpdateSql.add(sqlDataSourceDialect.generateAddUniqueConstraintSql(sqlEntityInfo,
@@ -329,7 +330,7 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
                     }
                 }
 
-                if (sqlEntityInfo.isIndexes()) {
+                if (sqlEntityInfo.isIndexes() && !sqlDataSourceDialect.isGeneratesIndexesOnCreateTable()) {
                     for (SqlIndexSchemaInfo sqlIndexInfo : sqlEntityInfo.getIndexList().values()) {
                         tableUpdateSql.add(
                                 sqlDataSourceDialect.generateCreateIndexSql(sqlEntityInfo, sqlIndexInfo, printFormat));

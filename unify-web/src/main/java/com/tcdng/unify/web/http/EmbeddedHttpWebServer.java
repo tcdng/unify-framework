@@ -14,16 +14,14 @@
  * the License.
  */
 
-package com.tcdng.unify.web.server;
-
-import com.tcdng.unify.web.http.HttpWebInterface;
+package com.tcdng.unify.web.http;
 
 /**
- * Embedded web server.
+ * Embedded HTTP web server.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface EmbeddedWebServer extends HttpWebInterface {
+public interface EmbeddedHttpWebServer extends HttpWebInterface {
 
 }

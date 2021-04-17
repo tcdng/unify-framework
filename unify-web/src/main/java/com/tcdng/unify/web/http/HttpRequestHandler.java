@@ -17,6 +17,7 @@ package com.tcdng.unify.web.http;
 
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.UserSession;
 import com.tcdng.unify.web.RequestPathParts;
 
 /**
@@ -27,42 +28,58 @@ import com.tcdng.unify.web.RequestPathParts;
  */
 public interface HttpRequestHandler extends UnifyComponent {
 
-	/**
-	 * Resolve request path.
-	 * 
-	 * @param requestObject
-	 *            the request object
-	 * @return the path parts
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	RequestPathParts resolveRequestPath(Object requestObject) throws UnifyException;
+    /**
+     * Resolve request path.
+     * 
+     * @param httpRequest
+     *                      the request object
+     * @return the path parts
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    RequestPathParts resolveRequestPath(HttpRequest httpRequest) throws UnifyException;
 
-	/**
-	 * Gets the parts of supplied request path.
-	 * 
-	 * @param requestPath
-	 *            the request path
-	 * @return the request path parts
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	RequestPathParts getRequestPathParts(String requestPath) throws UnifyException;
+    /**
+     * Gets the parts of supplied request path.
+     * 
+     * @param requestPath
+     *                    the request path
+     * @return the request path parts
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    RequestPathParts getRequestPathParts(String requestPath) throws UnifyException;
 
-	/**
-	 * Handles HTTP request.
-	 * 
-	 * @param methodType
-	 *            the request method type
-	 * @param reqPathParts
-	 *            the path parts
-	 * @param requestObject
-	 *            the request object
-	 * @param responseObject
-	 *            the response object
-	 * @throws UnifyException
-	 *             if an error occurs
-	 */
-	void handleRequest(HttpRequestMethodType methodType, RequestPathParts reqPathParts, Object requestObject,
-			Object responseObject) throws UnifyException;
+    /**
+     * Get user session.
+     * 
+     * @param httpModule
+     *                      the HTTP module
+     * @param httpRequest
+     *                      the request object
+     * @param reqPathParts
+     *                      the request path parts
+     * @return the user session
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    UserSession getUserSession(HttpServletModule httpModule, HttpRequest httpRequest,
+            RequestPathParts reqPathParts) throws UnifyException;
+
+    /**
+     * Handles HTTP request.
+     * 
+     * @param methodType
+     *                       the request method type
+     * @param reqPathParts
+     *                       the path parts
+     * @param httpRequest
+     *                       the request object
+     * @param httpResponse
+     *                       the response object
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    void handleRequest(HttpRequestMethodType methodType, RequestPathParts reqPathParts, HttpRequest httpRequest,
+            HttpResponse httpResponse) throws UnifyException;
 }

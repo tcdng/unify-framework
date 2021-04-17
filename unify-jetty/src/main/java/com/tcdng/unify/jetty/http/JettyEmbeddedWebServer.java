@@ -21,14 +21,15 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
-import com.tcdng.unify.core.UnifyContainer;
+import com.tcdng.unify.core.UnifyCoreConstants;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyCorePropertyConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.constant.NetworkSchemeType;
 import com.tcdng.unify.jetty.JettyApplicationComponents;
-import com.tcdng.unify.web.server.AbstractEmbeddedWebServer;
+import com.tcdng.unify.web.http.AbstractEmbeddedHttpWebServer;
+import com.tcdng.unify.web.http.HttpApplicationServlet;
 
 /**
  * Jetty embedded web server.
@@ -37,7 +38,7 @@ import com.tcdng.unify.web.server.AbstractEmbeddedWebServer;
  * @since 1.0
  */
 @Component(JettyApplicationComponents.JETTY_EMBEDDEDWEBSERVER)
-public class JettyEmbeddedWebServer extends AbstractEmbeddedWebServer {
+public class JettyEmbeddedWebServer extends AbstractEmbeddedHttpWebServer {
 
     private Server httpServer;
 
@@ -67,10 +68,10 @@ public class JettyEmbeddedWebServer extends AbstractEmbeddedWebServer {
             context.setContextPath(getContextPath());
             context.getSessionHandler().getSessionManager().setMaxInactiveInterval(
                     getContainerSetting(int.class, UnifyCorePropertyConstants.APPLICATION_SESSION_TIMEOUT,
-                            UnifyContainer.DEFAULT_APPLICATION_SESSION_TIMEOUT_MILLISEC));
+                            UnifyCoreConstants.DEFAULT_APPLICATION_SESSION_TIMEOUT_MILLISEC));
             httpServer.setHandler(context);
 
-            ServletHolder mainHolder = new ServletHolder(createHttpServlet());
+            ServletHolder mainHolder = new ServletHolder(new HttpApplicationServlet(createHttpServletModule()));
             mainHolder.getRegistration().setMultipartConfig(new MultipartConfigElement(getMultipartLocation(),
                     getMultipartMaxFileSize(), getMultipartMaxRequestSize(), getMultipartFileSizeThreshold()));
             context.addServlet(mainHolder, getServletPath());

@@ -21,8 +21,11 @@ import java.util.List;
 
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
+import com.tcdng.unify.core.UnifyCorePropertyConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.constant.ForceConstraints;
+import com.tcdng.unify.core.constant.PrintFormat;
 import com.tcdng.unify.core.data.FactoryMap;
 import com.tcdng.unify.core.database.DataSourceManagerOptions;
 import com.tcdng.unify.core.database.NativeQuery;
@@ -210,7 +213,9 @@ public class DynamicSqlDataSourceManagerImpl extends AbstractSqlDataSourceManage
     private void createAndInitDynamicSqlDataSource(DynamicSqlDataSourceConfig dynamicSqlDataSourceConfig)
             throws UnifyException {
         dynamicSqlDataSourceMap.get(dynamicSqlDataSourceConfig.getName(), dynamicSqlDataSourceConfig);
-        DataSourceManagerOptions options = new DataSourceManagerOptions();
+        DataSourceManagerOptions options = new DataSourceManagerOptions(PrintFormat.NONE,
+                ForceConstraints.fromBoolean(!getContainerSetting(boolean.class,
+                        UnifyCorePropertyConstants.APPLICATION_FOREIGNKEY_EASE, false)));
         initDataSource(dynamicSqlDataSourceConfig.getName(), options);
         if (dynamicSqlDataSourceConfig.isManageSchema()) {
             manageDataSource(dynamicSqlDataSourceConfig.getName(), options);

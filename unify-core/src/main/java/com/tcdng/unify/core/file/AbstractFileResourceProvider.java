@@ -14,29 +14,27 @@
  * the License.
  */
 
-package com.tcdng.unify.web;
+package com.tcdng.unify.core.file;
 
+import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.annotation.Configurable;
-import com.tcdng.unify.core.constant.MimeType;
-import com.tcdng.unify.core.stream.JsonObjectStreamer;
 
 /**
- * Abstract JSON result plain controller.
+ * Convenient abstract base class for file resource providers.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public abstract class AbstractJsonResultPlainController extends AbstractPlainController {
-
-    @Configurable
-    private JsonObjectStreamer jsonObjectStreamer;
+public abstract class AbstractFileResourceProvider extends AbstractUnifyComponent implements FileResourceProvider {
 
     @Override
-    public void doProcess(ClientRequest request, ClientResponse response) throws UnifyException {
-        response.setContentType(MimeType.APPLICATION_JSON.template());
-        jsonObjectStreamer.marshal(doExecute(request), response.getWriter());
+    protected void onInitialize() throws UnifyException {
+
     }
 
-    protected abstract Object doExecute(ClientRequest request) throws UnifyException;
+    @Override
+    protected void onTerminate() throws UnifyException {
+
+    }
+
 }

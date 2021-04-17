@@ -120,6 +120,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("key", "f084");
         registerSymbol("laptop-house", "e066");
         registerSymbol("list", "f03a");
+        registerSymbol("lock", "f023");
         registerSymbol("magic", "f0d0");
         registerSymbol("mail", "f0e0");
         registerSymbol("mail-bulk", "f674");
@@ -152,6 +153,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("thumbtack", "f08d");
         registerSymbol("times-circle", "f057");
         registerSymbol("undo", "f2ea");
+        registerSymbol("unlock", "f09c");
         registerSymbol("user", "f007");
         registerSymbol("users", "f0c0");
         registerSymbol("user-check", "f4fc");

@@ -14,29 +14,27 @@
  * the License.
  */
 
-package com.tcdng.unify.web;
+package com.tcdng.unify.nashorn;
+
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
 
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.annotation.Configurable;
-import com.tcdng.unify.core.constant.MimeType;
-import com.tcdng.unify.core.stream.XmlObjectStreamer;
+import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.script.AbstractScriptingEngine;
 
 /**
- * Abstract XML result plain controller.
+ * Nashorn scripting engine integration component.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public abstract class AbstractXmlResultPlainController extends AbstractPlainController {
-
-    @Configurable
-    private XmlObjectStreamer xmlObjectStreamer;
+@Component(name = NashornApplicationComponents.NASHORN_SCRIPTING_ENGINE, description = "Nashorn Scripting Engine")
+public class NashornScriptingEngine extends AbstractScriptingEngine {
 
     @Override
-    public void doProcess(ClientRequest request, ClientResponse response) throws UnifyException {
-        response.setContentType(MimeType.APPLICATION_XML.template());
-        xmlObjectStreamer.marshal(doExecute(request), response.getWriter());
+    protected ScriptEngine createScriptEngine() throws UnifyException {
+        return new ScriptEngineManager().getEngineByName("nashorn");
     }
 
-    protected abstract Object doExecute(ClientRequest request) throws UnifyException;
 }

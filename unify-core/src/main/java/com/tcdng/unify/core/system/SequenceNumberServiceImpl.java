@@ -19,6 +19,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.codec.digest.DigestUtils;
+
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
@@ -138,14 +140,16 @@ public class SequenceNumberServiceImpl extends AbstractBusinessService implement
     @Override
     @Transactional
     @Synchronized("uniquestring-lock")
-    public Long getUniqueStringId(String uniqueString) throws UnifyException {
-        ClusterUniqueString uniqueStringData = db().find(new ClusterUniqueStringQuery().uniqueString(uniqueString));
-        if (uniqueStringData == null) {
-            uniqueStringData = new ClusterUniqueString();
-            uniqueStringData.setUniqueString(uniqueString);
-            return (Long) db().create(uniqueStringData);
+    public Long getUniqueStringId(final String uniqueString) throws UnifyException {
+        final String md5 = DigestUtils.md5Hex(uniqueString);
+        ClusterUniqueString clusterUniqueString = db().find(new ClusterUniqueStringQuery().uniqueString(md5));
+        if (clusterUniqueString == null) {
+            clusterUniqueString = new ClusterUniqueString();
+            clusterUniqueString.setUniqueString(md5);
+            return (Long) db().create(clusterUniqueString);
         }
-        return uniqueStringData.getId();
+
+        return clusterUniqueString.getId();
     }
 
     @Transactional

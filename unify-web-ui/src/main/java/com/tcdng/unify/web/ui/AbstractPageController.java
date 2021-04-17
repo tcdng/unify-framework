@@ -691,6 +691,18 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
     }
 
     /**
+     * Sets page title.
+     * 
+     * @param title
+     *              the title to set
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    protected void setPageTitle(String title) throws UnifyException {
+        setPageAttribute(PageAttributeConstants.PAGE_TITLE, title);
+    }
+
+    /**
      * Sets the page validation enabled flag.
      * 
      * @param validationEnabled

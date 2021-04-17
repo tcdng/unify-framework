@@ -70,6 +70,7 @@ ux.cntSaveList = null;
 ux.cntSaveRemoteView = null;
 ux.remoteView = null;
 ux.remoteredirect = [];
+ux.hintTimeout=UNIFY_HIDE_USER_HINT_DISPLAY_PERIOD;
 
 ux.shortcuts = [];
 ux.pagenamealiases = [];
@@ -226,7 +227,7 @@ ux.respHandler = {
 					window.clearTimeout(ux.closeUserHint);
 				}
 				ux.closeUserHint = window.setTimeout("ux.hideUserHint();",
-						UNIFY_HIDE_USER_HINT_DISPLAY_PERIOD);
+						ux.hintTimeout);
 			}
 		}
 	},
@@ -4874,6 +4875,10 @@ ux.init = function() {
 	    return true; // Do default
 	}
 
+}
+
+ux.setHintTimeout = function(millisec) {
+	ux.hintTimeout = millisec;
 }
 
 ux.documentKeydownHandler = function(uEv) {

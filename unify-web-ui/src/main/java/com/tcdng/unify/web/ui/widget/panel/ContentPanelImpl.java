@@ -26,6 +26,7 @@ import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.upl.UplElementReferences;
+import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ControllerPathParts;
 import com.tcdng.unify.web.constant.ClosePageMode;
 import com.tcdng.unify.web.ui.PagePathInfoRepository;
@@ -44,7 +45,9 @@ import com.tcdng.unify.web.ui.widget.Widget;
  */
 @Component("ui-contentpanel")
 @UplAttributes({ @UplAttribute(name = "path", type = String.class),
-        @UplAttribute(name = "pathBinding", type = String.class), @UplAttribute(name = "tabbed", type = boolean.class),
+        @UplAttribute(name = "pathBinding", type = String.class),
+        @UplAttribute(name = "tabbed", type = boolean.class),
+        @UplAttribute(name = "tabbedBinding", type = String.class),
         @UplAttribute(name = "titlebar", type = boolean.class),
         @UplAttribute(name = "sidebar", type = UplElementReferences.class) })
 public class ContentPanelImpl extends AbstractContentPanel {
@@ -68,6 +71,11 @@ public class ContentPanelImpl extends AbstractContentPanel {
     }
 
     public boolean isTabbed() throws UnifyException {
+        String tabbedBinding = getUplAttribute(String.class, "tabbedBinding");
+        if (StringUtils.isNotBlank(tabbedBinding)) {
+            return getValue(boolean.class, tabbedBinding);
+        }
+        
         return getUplAttribute(boolean.class, "tabbed");
     }
 

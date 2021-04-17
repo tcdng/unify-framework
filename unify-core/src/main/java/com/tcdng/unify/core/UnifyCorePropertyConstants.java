@@ -39,6 +39,8 @@ public interface UnifyCorePropertyConstants {
 
     String APPLICATION_INTERFACES = "application.interfaces";
 
+    String APPLICATION_PROPERTIES= "application.properties";
+
     String APPLICATION_OSMODE = "application.osmode";
 
     String APPLICATION_COMMAND_INTERFACE = "application.command.interface.enabled";
@@ -68,6 +70,8 @@ public interface UnifyCorePropertyConstants {
     String APPLICATION_LOG_LEVEL = "application.logger.level";
 
     String APPLICATION_QUERY_LIMIT = "application.query.limit";
+
+    String APPLICATION_FOREIGNKEY_EASE = "application.foreignkey.ease";
 
     String APPLICATION_SESSION_TIMEOUT = "application.session.timeout";
 

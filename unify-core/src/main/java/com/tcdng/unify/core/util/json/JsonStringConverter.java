@@ -32,6 +32,10 @@ public class JsonStringConverter implements JsonValueConverter<String> {
             return null;
         }
         
+        if (jsonValue.isObject()) {
+            return jsonValue.toString();
+        }
+        
         return jsonValue.asString();
     }
 

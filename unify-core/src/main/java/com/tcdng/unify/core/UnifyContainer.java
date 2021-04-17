@@ -90,18 +90,6 @@ import com.tcdng.unify.core.util.UnifyConfigUtils;
  */
 public class UnifyContainer {
 
-	public static final String DEFAULT_APPLICATION_BANNER = "banner/banner.txt";
-
-	public static final short DEFAULT_COMMAND_PORT = 4242;
-
-	public static final int DEFAULT_APPLICATION_QUERY_LIMIT = 10000;
-
-	public static final int DEFAULT_APPLICATION_SESSION_TIMEOUT_MILLISEC = 600;
-
-	private static final long PERIODIC_EXECUTION_INITIAL_DELAY_MILLISEC = 200;
-
-	private static final long COMMAND_THREAD_RATE_MILLISEC = 2000;
-
 	private static ThreadLocal<InitializationTrail> initializationTrailThreadLocal = new ThreadLocal<InitializationTrail>() {
 		@Override
 		protected InitializationTrail initialValue() {
@@ -511,7 +499,7 @@ public class UnifyContainer {
 					(DateTimeFormatter) getUplComponent(getApplicationLocale(), "!datetimeformat", false));
 
 			// Run application startup service
-			toConsole("Initializing application bootup service...");
+			toConsole("Initializing application boot service...");
 			String bootComponentName = (String) unifySettings.get(UnifyCorePropertyConstants.APPLICATION_BOOT);
 			if (bootComponentName == null) {
 				bootComponentName = ApplicationComponents.APPLICATION_DEFAULTBOOTSERVICE;
@@ -519,7 +507,7 @@ public class UnifyContainer {
 			applicationBootService = (BootService) getComponent(bootComponentName);
 			applicationBootService.startup();
 
-			toConsole("Application bootup service initialization completed.");
+			toConsole("Application boot service initialization completed.");
 
 			// Initialize interfaces
 			logInfo("Initializing container interfaces...");
@@ -544,7 +532,7 @@ public class UnifyContainer {
 					String taskStatusLoggerName = AnnotationUtils.getAnnotationString(pa.taskStatusLogger());
 					TaskMonitor taskMonitor = taskManager.schedulePeriodicExecution(periodicType,
 							componentEntry.getKey(), periodicEntry.getKey(), taskStatusLoggerName,
-							PERIODIC_EXECUTION_INITIAL_DELAY_MILLISEC);
+							UnifyCoreConstants.PERIODIC_EXECUTION_INITIAL_DELAY_MILLISEC);
 					periodicTaskMonitorList.add(taskMonitor);
 				}
 			}
@@ -1413,7 +1401,7 @@ public class UnifyContainer {
 	public List<String> getApplicationBanner() throws UnifyException {
 		String filename = (String) unifySettings.get(UnifyCorePropertyConstants.APPLICATION_BANNER);
 		if (StringUtils.isBlank(filename)) {
-			filename = DEFAULT_APPLICATION_BANNER;
+			filename = UnifyCoreConstants.DEFAULT_APPLICATION_BANNER;
 		}
 
 		return IOUtils.readFileResourceLines(filename, unifyContainerEnvironment.getWorkingPath());
@@ -1544,7 +1532,7 @@ public class UnifyContainer {
 						}
 					}
 
-					ThreadUtils.sleep(COMMAND_THREAD_RATE_MILLISEC);
+					ThreadUtils.sleep(UnifyCoreConstants.COMMAND_THREAD_RATE_MILLISEC);
 				} catch (Exception e) {
 					logError(e);
 				}

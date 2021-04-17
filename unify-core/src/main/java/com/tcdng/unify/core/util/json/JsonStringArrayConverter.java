@@ -36,6 +36,10 @@ public class JsonStringArrayConverter extends AbstractJsonArrayConverter<String>
             return null;
         }
         
+        if (jsonValue.isObject()) {
+            return jsonValue.toString();
+        }
+        
         return jsonValue.asString();
     }
 

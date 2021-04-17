@@ -70,14 +70,14 @@ public class DataUtilsTest {
         Map<String, String> map = new LinkedHashMap<String, String>();
         map.put("One", "Tom Hanks");
         map.put("Two", "Samuel L. Jackson");
-        
+
         List<String> list = DataUtils.unmodifiableValuesList(map);
         assertNotNull(list);
         assertEquals(2, list.size());
         assertEquals("Tom Hanks", list.get(0));
         assertEquals("Samuel L. Jackson", list.get(1));
     }
-    
+
     @SuppressWarnings("unchecked")
     @Test
     public void testCollectionConvertFromArray() throws Exception {
@@ -87,7 +87,7 @@ public class DataUtilsTest {
         assertEquals(Long.valueOf(240L), result.get(0));
         assertEquals(Long.valueOf(72L), result.get(1));
     }
-    
+
     @SuppressWarnings("unchecked")
     @Test
     public void testCollectionConvertFromString() throws Exception {
@@ -97,7 +97,7 @@ public class DataUtilsTest {
         assertEquals(Long.valueOf(240L), result.get(0));
         assertEquals(Long.valueOf(72L), result.get(1));
     }
-    
+
     @SuppressWarnings("unchecked")
     @Test
     public void testCollectionFromString() throws Exception {
@@ -107,7 +107,7 @@ public class DataUtilsTest {
         assertEquals("240", result.get(0));
         assertEquals("72", result.get(1));
     }
-    
+
     @Test
     public void testConvertArrayToArray() throws Exception {
         Long[] result = DataUtils.convert(Long[].class, new String[] { "240", "72" });
@@ -116,7 +116,7 @@ public class DataUtilsTest {
         assertEquals(Long.valueOf(240L), result[0]);
         assertEquals(Long.valueOf(72L), result[1]);
     }
-    
+
     @Test
     public void testConvertDateArrayToLongArray() throws Exception {
         Date date1 = new Date();
@@ -311,8 +311,7 @@ public class DataUtilsTest {
 
     @Test
     public void testReadJsonObject() throws Exception {
-        String json =
-                "{\"author\":\"Bramer & Bramer\", \"price\":2.54, \"priceHistory\":[2.35, 2.03], \"copies\":20, \"censored\":true}";
+        String json = "{\"author\":\"Bramer & Bramer\", \"price\":2.54, \"priceHistory\":[2.35, 2.03], \"copies\":20, \"censored\":true}";
         Book book = DataUtils.readJsonObject(Book.class, json);
         assertNotNull(book);
         assertEquals("Bramer & Bramer", book.getAuthor());
@@ -335,20 +334,19 @@ public class DataUtilsTest {
         assertEquals("10", arr1[0]);
         assertEquals("20", arr1[1]);
         assertEquals("30", arr1[2]);
-        
+
         String json2 = "[10, 20, 30]";
         Integer[] arr2 = DataUtils.readJsonArray(Integer[].class, json2);
         assertNotNull(arr2);
         assertEquals(3, arr2.length);
         assertEquals(Integer.valueOf(10), arr2[0]);
         assertEquals(Integer.valueOf(20), arr2[1]);
-        assertEquals(Integer.valueOf(30), arr2[2]);        
+        assertEquals(Integer.valueOf(30), arr2[2]);
     }
-    
+
     @Test
     public void testReadComplexJsonObject() throws Exception {
-        String json =
-                "{\"id\":1025,\"book\":{\"author\":\"Bramer & Bramer\", \"price\":2.54, \"priceHistory\":[2.35, 2.03], \"copies\":20, \"censored\":true}}";
+        String json = "{\"id\":1025,\"book\":{\"author\":\"Bramer & Bramer\", \"price\":2.54, \"priceHistory\":[2.35, 2.03], \"copies\":20, \"censored\":true}}";
         InventoryEntry entry = DataUtils.readJsonObject(InventoryEntry.class, json);
         assertNotNull(entry);
         assertEquals(1025, entry.getId());
@@ -368,9 +366,8 @@ public class DataUtilsTest {
 
     @Test
     public void testReadMoreComplexJsonObject() throws Exception {
-        String json =
-                "{\"entries\":[{\"id\":1025,\"book\":{\"author\":\"Bramer & Bramer\", \"price\":2.54, \"priceHistory\":[2.35, 2.03], \"copies\":20, \"censored\":true}},"
-                        + "{\"id\":1025,\"book\":{\"author\":\"Tom Clancy\", \"price\":4.71, \"priceHistory\":[3.86], \"copies\":82, \"censored\":false}}]}";
+        String json = "{\"entries\":[{\"id\":1025,\"book\":{\"author\":\"Bramer & Bramer\", \"price\":2.54, \"priceHistory\":[2.35, 2.03], \"copies\":20, \"censored\":true}},"
+                + "{\"id\":1025,\"book\":{\"author\":\"Tom Clancy\", \"price\":4.71, \"priceHistory\":[3.86], \"copies\":82, \"censored\":false}}]}";
         Inventory inventory = DataUtils.readJsonObject(Inventory.class, json);
         assertNotNull(inventory);
         InventoryEntry[] entries = inventory.getEntries();
@@ -424,8 +421,7 @@ public class DataUtilsTest {
 
     @Test(expected = UnifyException.class)
     public void testReadJsonObjectUnknownMember() throws Exception {
-        String json =
-                "{\"author\":\"Bramer & Bramer\", \"tax\":2.54, \"priceHistory\":[2.35, 2.03], \"copies\":20, \"censored\":true}";
+        String json = "{\"author\":\"Bramer & Bramer\", \"tax\":2.54, \"priceHistory\":[2.35, 2.03], \"copies\":20, \"censored\":true}";
         DataUtils.readJsonObject(Book.class, json);
     }
 
@@ -569,13 +565,49 @@ public class DataUtilsTest {
 
     @Test
     public void testToJsonArrayString() throws Exception {
-        String json1 = DataUtils.toJsonArrayString(new String[] {"10", "20", "30"});
+        String json1 = DataUtils.toJsonArrayString(new String[] { "10", "20", "30" });
         assertNotNull(json1);
         assertEquals("[\"10\",\"20\",\"30\"]", json1);
-        
-        String json2 = DataUtils.toJsonArrayString(new Integer[] {10, 20, 30});
+
+        String json2 = DataUtils.toJsonArrayString(new Integer[] { 10, 20, 30 });
         assertNotNull(json2);
-        assertEquals("[10,20,30]", json2);        
+        assertEquals("[10,20,30]", json2);
+    }
+
+    @Test
+    public void testReadStringArrayFromJsonObjectArrayBlank() throws Exception {
+        String json = "{\"batchNo\":\"abc000001\", \"documents\":[]}";
+        DocBatch docBatch = DataUtils.readJsonObject(DocBatch.class, json);
+        assertNotNull(docBatch);
+        assertEquals("abc000001", docBatch.getBatchNo());
+        String[] documents = docBatch.getDocuments();
+        assertNotNull(documents);
+        assertEquals(0, documents.length);
+    }
+
+    @Test
+    public void testReadStringArrayFromJsonObjectArray() throws Exception {
+        String json = "{\"batchNo\":\"abc000002\", \"documents\":[{\"name\":\"birthCert\", \"title\":\"Birth Certificate\", \"weight\":52}, {\"name\":\"drivers\", \"title\":\"Driver's License\", \"weight\":65}]}";
+        DocBatch docBatch = DataUtils.readJsonObject(DocBatch.class, json);
+        assertNotNull(docBatch);
+        assertEquals("abc000002", docBatch.getBatchNo());
+        String[] documents = docBatch.getDocuments();
+        assertNotNull(documents);
+        assertEquals(2, documents.length);
+        assertEquals("{\"name\":\"birthCert\",\"title\":\"Birth Certificate\",\"weight\":52}", documents[0]);
+        assertEquals("{\"name\":\"drivers\",\"title\":\"Driver's License\",\"weight\":65}", documents[1]);
+        
+        Doc doc = DataUtils.readJsonObject(Doc.class, documents[0]);
+        assertNotNull(doc);
+        assertEquals("birthCert", doc.getName());
+        assertEquals("Birth Certificate", doc.getTitle());
+        assertEquals(52, doc.getWeight());
+        
+        doc = DataUtils.readJsonObject(Doc.class, documents[1]);
+        assertNotNull(doc);
+        assertEquals("drivers", doc.getName());
+        assertEquals("Driver's License", doc.getTitle());
+        assertEquals(65, doc.getWeight());       
     }
 
     @Test
@@ -587,12 +619,12 @@ public class DataUtilsTest {
         assertTrue(list.contains("Green"));
         assertTrue(list.contains("Blue"));
     }
-    
+
     @Test
     public void testToArrayNull() throws Exception {
         assertNull(DataUtils.toArray(String.class, null));
     }
-    
+
     @Test
     public void testToArray() throws Exception {
         String[] arr = DataUtils.toArray(String.class, Arrays.asList("Red", "Green", "Blue"));
@@ -602,7 +634,7 @@ public class DataUtilsTest {
         assertEquals("Green", arr[1]);
         assertEquals("Blue", arr[2]);
     }
-    
+
     @Test
     public void testConvertToArrayFromCommaString() throws Exception {
         String[] arr = DataUtils.convert(String[].class, "Red,Green,Blue");
@@ -612,13 +644,13 @@ public class DataUtilsTest {
         assertEquals("Green", arr[1]);
         assertEquals("Blue", arr[2]);
     }
-    
+
     @Test
     public void testConvertToStringFromArray() throws Exception {
-        String val = DataUtils.convert(String.class, new String[] {"Red","Green","Blue"});
+        String val = DataUtils.convert(String.class, new String[] { "Red", "Green", "Blue" });
         assertEquals("Red,Green,Blue", val);
     }
-    
+
     public static abstract class Asset {
 
         private String title;
@@ -682,6 +714,63 @@ public class DataUtilsTest {
         }
     }
 
+    public static class DocBatch {
+
+        private String batchNo;
+
+        private String[] documents;
+
+        public String getBatchNo() {
+            return batchNo;
+        }
+
+        public void setBatchNo(String batchNo) {
+            this.batchNo = batchNo;
+        }
+
+        public String[] getDocuments() {
+            return documents;
+        }
+
+        public void setDocuments(String[] documents) {
+            this.documents = documents;
+        }
+    }
+
+    public static class Doc {
+        
+        private String name;
+        
+        private String title;
+        
+        private int weight;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public int getWeight() {
+            return weight;
+        }
+
+        public void setWeight(int weight) {
+            this.weight = weight;
+        }
+        
+    }
+    
     public static class Inventory {
         private InventoryEntry[] entries;
 

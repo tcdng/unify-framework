@@ -16,6 +16,7 @@
 package com.tcdng.unify.core.database.sql.dialect;
 
 import java.io.ByteArrayInputStream;
+import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Types;
@@ -40,8 +41,8 @@ import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
 import com.tcdng.unify.core.database.sql.SqlDialectNameConstants;
 import com.tcdng.unify.core.database.sql.SqlEntitySchemaInfo;
 import com.tcdng.unify.core.database.sql.SqlFieldSchemaInfo;
-import com.tcdng.unify.core.database.sql.SqlUniqueConstraintSchemaInfo;
 import com.tcdng.unify.core.database.sql.data.policy.BlobPolicy;
+import com.tcdng.unify.core.database.sql.data.policy.ClobPolicy;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
 
@@ -61,6 +62,7 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
         Map<ColumnType, SqlDataTypePolicy> tempMap1 = new EnumMap<ColumnType, SqlDataTypePolicy>(ColumnType.class);
         populateDefaultSqlDataTypePolicies(tempMap1);
         tempMap1.put(ColumnType.BLOB, new PostgreSqlBlobPolicy());
+        tempMap1.put(ColumnType.CLOB, new PostgreSqlClobPolicy());
 
         Map<RestrictionType, SqlCriteriaPolicy> tempMap2 = new EnumMap<RestrictionType, SqlCriteriaPolicy>(RestrictionType.class);
         populateDefaultSqlCriteriaPolicies(sqlDataSourceDialectPolicies, tempMap2);
@@ -89,18 +91,24 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
     }
 
     @Override
-    public String generateDropUniqueConstraintSql(SqlEntitySchemaInfo sqlRecordSchemaInfo,
-            SqlUniqueConstraintSchemaInfo sqlUniqueConstraintInfo, PrintFormat format) throws UnifyException {
+    public String generateDropUniqueConstraintSql(SqlEntitySchemaInfo sqlEntitySchemaInfo,
+            String dbUniqueConstraintName, PrintFormat format) throws UnifyException {
+        return generateDropIndexSql(sqlEntitySchemaInfo, dbUniqueConstraintName, format);
+    }
+
+    @Override
+    public String generateDropIndexSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, String dbIndexName, PrintFormat format)
+            throws UnifyException {
         StringBuilder sb = new StringBuilder();
-        String tableName = sqlRecordSchemaInfo.getSchemaTableName();
+        String tableName = sqlEntitySchemaInfo.getSchemaTableName();
         sb.append("ALTER TABLE ").append(tableName);
         if (format.isPretty()) {
             sb.append(getLineSeparator());
         } else {
             sb.append(" ");
         }
-        sb.append("DROP INDEX ").append(tableName).append("_").append(sqlUniqueConstraintInfo.getName().toUpperCase())
-                .append("UK");
+
+        sb.append("DROP INDEX ").append(dbIndexName);
         return sb.toString();
     }
 
@@ -170,6 +178,16 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
         appendTypeSql(sb, sqlColumnInfo);
         sb.append(" NULL");
         return sb.toString();
+    }
+
+    @Override
+    public boolean isGeneratesUniqueConstraintsOnCreateTable() {
+        return false;
+    }
+
+    @Override
+    public boolean isGeneratesIndexesOnCreateTable() {
+        return false;
     }
 
     @Override
@@ -269,5 +287,47 @@ class PostgreSqlBlobPolicy extends BlobPolicy {
     @Override
     public Object executeGetResult(Object rs, Class<?> type, int index, long utcOffset) throws Exception {
         return ((ResultSet) rs).getBytes(index);
+    }
+}
+
+class PostgreSqlClobPolicy extends ClobPolicy {
+
+    @Override
+    public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
+        sb.append(" TEXT");
+    }
+
+    @Override
+    public void executeSetPreparedStatement(Object pstmt, int index, Object data, long utcOffset) throws Exception {
+        if (data == null) {
+            ((PreparedStatement) pstmt).setNull(index, Types.VARCHAR);
+        } else {
+            ((PreparedStatement) pstmt).setString(index, (String) data);
+        }
+    }
+
+    @Override
+    public Object executeGetResult(Object rs, Class<?> type, String column, long utcOffset) throws Exception {
+        return ((ResultSet) rs).getString(column);
+    }
+
+    @Override
+    public Object executeGetResult(Object rs, Class<?> type, int index, long utcOffset) throws Exception {
+        return ((ResultSet) rs).getString(index);
+    }
+
+    @Override
+    public void executeRegisterOutParameter(Object cstmt, int index) throws Exception {
+        ((CallableStatement) cstmt).registerOutParameter(index, Types.VARCHAR);
+    }
+
+    @Override
+    public Object executeGetOutput(Object cstmt, Class<?> type, int index, long utcOffset) throws Exception {
+        return ((CallableStatement) cstmt).getString(index);
+    }
+
+    @Override
+    public int getSqlType() {
+        return Types.VARCHAR;
     }
 }

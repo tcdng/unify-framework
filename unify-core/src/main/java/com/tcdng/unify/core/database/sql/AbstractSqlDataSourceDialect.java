@@ -26,10 +26,11 @@ import java.util.Map;
 import java.util.Set;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
-import com.tcdng.unify.core.UnifyContainer;
+import com.tcdng.unify.core.UnifyCoreConstants;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyCorePropertyConstants;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.UnifyOperationException;
 import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.Singleton;
@@ -185,7 +186,8 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
             }
         }
 
-        if (uniqueConstraints.isTrue() && sqlEntitySchemaInfo.isUniqueConstraints()) {
+        if (uniqueConstraints.isTrue() && sqlEntitySchemaInfo.isUniqueConstraints()
+                && !isGeneratesUniqueConstraintsOnCreateTable()) {
             for (SqlUniqueConstraintSchemaInfo sqlUniqueConstraintInfo : sqlEntitySchemaInfo.getUniqueConstraintList()
                     .values()) {
                 sb.append(generateAddUniqueConstraintSql(sqlEntitySchemaInfo, sqlUniqueConstraintInfo,
@@ -198,7 +200,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
             }
         }
 
-        if (indexes.isTrue() && sqlEntitySchemaInfo.isIndexes()) {
+        if (indexes.isTrue() && sqlEntitySchemaInfo.isIndexes() && !isGeneratesIndexesOnCreateTable()) {
             for (SqlIndexSchemaInfo sqlIndexInfo : sqlEntitySchemaInfo.getIndexList().values()) {
                 sb.append(generateCreateIndexSql(sqlEntitySchemaInfo, sqlIndexInfo, PrintFormat.PRETTY));
                 sb.append(terminationSql);
@@ -333,9 +335,42 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
             appendColumnAndTypeSql(sb, sqlFieldSchemaInfo, false);
         }
 
+        
+        if (isGeneratesUniqueConstraintsOnCreateTable()) {
+            for (SqlUniqueConstraintSchemaInfo sqlUniqueConstraintInfo : sqlEntitySchemaInfo.getUniqueConstraintList()
+                    .values()) {
+                sb.append(',');
+                if (format.isPretty()) {
+                    sb.append(newLineSql);
+                }
+                
+                if (format.isPretty()) {
+                    sb.append('\t');
+                }
+
+                sb.append(generateInlineUniqueConstraintSql(sqlEntitySchemaInfo, sqlUniqueConstraintInfo, format));
+            }
+        }
+        
+        if (isGeneratesIndexesOnCreateTable()) {
+            for (SqlIndexSchemaInfo sqlIndexInfo : sqlEntitySchemaInfo.getIndexList().values()) {
+                sb.append(',');
+                if (format.isPretty()) {
+                    sb.append(newLineSql);
+                }
+                
+                if (format.isPretty()) {
+                    sb.append('\t');
+                }
+
+                sb.append(generateInlineIndexSql(sqlEntitySchemaInfo, sqlIndexInfo, format));
+            }
+        }
+        
         if (format.isPretty()) {
             sb.append(newLineSql);
         }
+
         sb.append(')');
         return sb.toString();
     }
@@ -453,6 +488,12 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     }
 
     @Override
+    public String generateInlineUniqueConstraintSql(SqlEntitySchemaInfo sqlEntitySchemaInfo,
+            SqlUniqueConstraintSchemaInfo sqlUniqueConstraintInfo, PrintFormat format) throws UnifyException {
+        throw new UnifyOperationException(new UnsupportedOperationException());
+    }
+
+    @Override
     public String generateAddUniqueConstraintSql(SqlEntitySchemaInfo sqlEntitySchemaInfo,
             SqlUniqueConstraintSchemaInfo sqlUniqueConstraintInfo, PrintFormat format) throws UnifyException {
         StringBuilder sb = new StringBuilder();
@@ -485,7 +526,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     }
 
     @Override
-    public String generateDropUniqueConstraintSql(SqlEntitySchemaInfo sqlEntitySchemaInfo,
+    public final String generateDropUniqueConstraintSql(SqlEntitySchemaInfo sqlEntitySchemaInfo,
             SqlUniqueConstraintSchemaInfo sqlUniqueConstraintInfo, PrintFormat format) throws UnifyException {
         return generateDropUniqueConstraintSql(sqlEntitySchemaInfo, sqlUniqueConstraintInfo.getName(), format);
     }
@@ -504,6 +545,12 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
         sb.append("DROP CONSTRAINT ").append(dbUniqueConstraintName);
         return sb.toString();
+    }
+
+    @Override
+    public String generateInlineIndexSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlIndexSchemaInfo sqlIndexInfo,
+            PrintFormat format) throws UnifyException {
+        throw new UnifyOperationException(new UnsupportedOperationException());
     }
 
     @Override
@@ -1962,7 +2009,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
         if (query.isApplyAppQueryLimit()) {
             return getContainerSetting(int.class, UnifyCorePropertyConstants.APPLICATION_QUERY_LIMIT,
-                    UnifyContainer.DEFAULT_APPLICATION_QUERY_LIMIT);
+                    UnifyCoreConstants.DEFAULT_APPLICATION_QUERY_LIMIT);
         }
 
         return 0;

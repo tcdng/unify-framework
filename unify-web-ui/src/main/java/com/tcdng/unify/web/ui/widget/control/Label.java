@@ -30,6 +30,7 @@ import com.tcdng.unify.web.ui.widget.AbstractFormattedControl;
 @Component("ui-label")
 @UplAttributes({ @UplAttribute(name = "htmlEscape", type = boolean.class, defaultVal = "true"),
         @UplAttribute(name = "layoutCaption", type = boolean.class, defaultVal = "false"),
+        @UplAttribute(name = "bindingOptional", type = boolean.class, defaultVal = "false"),
         @UplAttribute(name = "draggable", type = boolean.class, defaultVal = "false") })
 public class Label extends AbstractFormattedControl {
 
@@ -46,6 +47,10 @@ public class Label extends AbstractFormattedControl {
     public boolean isLayoutCaption() throws UnifyException {
         super.isLayoutCaption();
         return getUplAttribute(boolean.class, "layoutCaption");
+    }
+
+    public boolean isBindingOptional() throws UnifyException {
+        return getUplAttribute(boolean.class, "bindingOptional");
     }
 
     @Override

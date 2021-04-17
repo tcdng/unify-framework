@@ -252,6 +252,16 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
     }
 
     @Override
+    public boolean isGeneratesUniqueConstraintsOnCreateTable() {
+        return false;
+    }
+
+    @Override
+    public boolean isGeneratesIndexesOnCreateTable() {
+        return false;
+    }
+
+    @Override
     protected void onInitialize() throws UnifyException {
         super.onInitialize();
         includeNoPrecisionType("INT");
