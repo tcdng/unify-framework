@@ -13,7 +13,8 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.web.ui.controller;
+
+package com.tcdng.unify.web;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,49 +25,45 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.util.IOUtils;
 import com.tcdng.unify.core.util.StringUtils;
-import com.tcdng.unify.web.WebApplicationComponents;
-import com.tcdng.unify.web.constant.Secured;
 import com.tcdng.unify.web.util.RealPathUtils;
 
 /**
- * Resource controller for fetching file resources from application real path.
+ * Plain real path resource controller.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Component(WebApplicationComponents.APPLICATION_REALPATHRESOURCECONTROLLER)
-public class RealPathResourceController extends FileResourceController {
+@Component("/plain/resource/realpath")
+public class PlainRealPathResourceController extends AbstractPlainResourceController {
 
-    protected File file;
+    private File file;
 
     private String subfolder;
-    
-    public RealPathResourceController() {
-        this(null);
+   
+    public PlainRealPathResourceController() {
+
     }
 
-    public RealPathResourceController(String subfolder) {
-        super(Secured.FALSE);
+    public PlainRealPathResourceController(String subfolder) {
         this.subfolder = subfolder;
     }
 
     @Override
-    public void prepareExecution() throws UnifyException {
+    protected void prepareExecution(ClientRequest request) throws UnifyException {
+        super.prepareExecution(request);
         String resourceName = getResourceName();
         if (!StringUtils.isBlank(subfolder)) {
             resourceName = subfolder + resourceName;
         } else {
-            // Apply restrictions only on direct real path access
             RealPathUtils.checkAccessibleRealPath(resourceName);
         }
         
-        super.prepareExecution();
         file = new File(IOUtils.buildFilename(getUnifyComponentContext().getWorkingPath(), resourceName));
         if (file.exists()) {
             setContentLength(file.length());
         }
     }
-    
+
     @Override
     protected InputStream getInputStream() throws UnifyException {
         if (file != null && file.exists()) {
@@ -78,4 +75,5 @@ public class RealPathResourceController extends FileResourceController {
         }
         return null;
     }
+
 }

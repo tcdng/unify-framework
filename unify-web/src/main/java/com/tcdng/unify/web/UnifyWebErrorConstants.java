@@ -78,4 +78,9 @@ public interface UnifyWebErrorConstants {
 
     /** Message format {0} does not match expected {1} for controller {2} */
     String CONTROLLER_MESSAGE_FORMAT_NOT_MATCH_EXPECTED = "UW_0011";
+
+    /**
+     * Access to resource denied.
+     */
+    String RESOURCE_ACCESS_DENIED = "UW_0012";
 }

@@ -16,29 +16,24 @@
 
 package com.tcdng.unify.web;
 
-import java.io.Writer;
-
+import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 
 /**
- * Abstract writer plain controller.
+ * Download path logger.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public abstract class AbstractWriterPlainController extends AbstractPlainController {
+public interface DownloadPathLogger extends UnifyComponent {
 
-    private String contentType;
-
-    public AbstractWriterPlainController(String contentType) {
-        this.contentType = contentType;
-    }
-
-    @Override
-    public void doProcess(ClientRequest request, ClientResponse response) throws UnifyException {
-        response.setContentType(contentType);
-        doExecute(response.getWriter(), request);
-    }
-
-    protected abstract void doExecute(Writer writer, ClientRequest request) throws UnifyException;
+    /**
+     * Logs a download attempt.
+     * 
+     * @param resourceName
+     *                     the resource file name
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    void logDownloadAttempt(String resourceName) throws UnifyException;
 }

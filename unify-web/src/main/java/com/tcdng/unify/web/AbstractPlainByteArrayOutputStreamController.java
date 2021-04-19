@@ -24,21 +24,21 @@ import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.util.StringUtils;
 
 /**
- * Abstract output stream plain controller.
+ * Abstract plain output stream controller.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public abstract class AbstractByteArrayOutputStreamPlainController extends AbstractOutputStreamPlainController {
+public abstract class AbstractPlainByteArrayOutputStreamController extends AbstractPlainOutputStreamController {
 
     private String disposition;
 
-    public AbstractByteArrayOutputStreamPlainController(MimeType mimeType, String disposition) {
+    public AbstractPlainByteArrayOutputStreamController(MimeType mimeType, String disposition) {
         super(mimeType);
         this.disposition = disposition;
     }
 
-    public AbstractByteArrayOutputStreamPlainController() {
+    public AbstractPlainByteArrayOutputStreamController() {
 
     }
 

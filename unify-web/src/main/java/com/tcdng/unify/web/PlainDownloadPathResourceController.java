@@ -13,36 +13,36 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.web.ui.controller;
+
+package com.tcdng.unify.web;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
-import com.tcdng.unify.web.DownloadPathLogger;
 import com.tcdng.unify.web.constant.RealPathConstants;
 
 /**
- * Resource controller for fetching file downloading resources from container
- * download path.
+ * Plain download path resource controller.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-@Component("/resource/downloadpath")
-public class DownloadPathResourceController extends RealPathResourceController {
+@Component("/plain/resource/downloadpath")
+public class PlainDownloadPathResourceController extends PlainRealPathResourceController {
 
     @Configurable
     private DownloadPathLogger downloadPathLogger;
-    
-    public DownloadPathResourceController() {
+
+    public PlainDownloadPathResourceController() {
         super(RealPathConstants.DOWNLOAD_FOLDER);
     }
 
     @Override
-    public void prepareExecution() throws UnifyException {
-        super.prepareExecution();
+    public void prepareExecution(ClientRequest request) throws UnifyException {
+        super.prepareExecution(request);
         if (downloadPathLogger != null) {
             downloadPathLogger.logDownloadAttempt(getResourceName());
         }
     }
+
 }

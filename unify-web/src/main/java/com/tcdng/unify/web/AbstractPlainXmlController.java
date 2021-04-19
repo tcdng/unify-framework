@@ -18,38 +18,38 @@ package com.tcdng.unify.web;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
-import com.tcdng.unify.core.stream.JsonObjectStreamer;
+import com.tcdng.unify.core.stream.XmlObjectStreamer;
 import com.tcdng.unify.web.constant.RequestParameterConstants;
 import com.tcdng.unify.web.remotecall.RemoteCallFormat;
 
 /**
- * Abstract JSON plain controller.
+ * Abstract plain XML controller.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public abstract class AbstractJsonPlainController extends AbstractPlainController {
+public abstract class AbstractPlainXmlController extends AbstractPlainController {
 
     @Configurable
-    private JsonObjectStreamer jsonObjectStreamer;
+    private XmlObjectStreamer xmlObjectStreamer;
 
     @Override
     public void doProcess(ClientRequest request, ClientResponse response) throws UnifyException {
         RemoteCallFormat remoteCallFormat = (RemoteCallFormat) request
                 .getParameter(RequestParameterConstants.REMOTE_CALL_FORMAT);
-        if (!RemoteCallFormat.JSON.equals(remoteCallFormat)) {
+        if (!RemoteCallFormat.XML.equals(remoteCallFormat)) {
             throw new UnifyException(UnifyWebErrorConstants.CONTROLLER_MESSAGE_FORMAT_NOT_MATCH_EXPECTED,
-                    remoteCallFormat, RemoteCallFormat.JSON, getName());
+                    remoteCallFormat, RemoteCallFormat.XML, getName());
         }
 
-        response.setContentType(RemoteCallFormat.JSON.mimeType().template());
-        String jsonRequest = (String) request.getParameter(RequestParameterConstants.REMOTE_CALL_BODY);
-        jsonObjectStreamer.marshal(doExecute(jsonRequest), response.getWriter());
+        response.setContentType(RemoteCallFormat.XML.mimeType().template());
+        String xmlRequest = (String) request.getParameter(RequestParameterConstants.REMOTE_CALL_BODY);
+        xmlObjectStreamer.marshal(doExecute(xmlRequest), response.getWriter());
     }
 
-    protected <T> T getObjectFromRequestJson(Class<T> jsonType, String json) throws UnifyException {
-        return jsonObjectStreamer.unmarshal(jsonType, json);
+    protected <T> T getObjectFromRequestXml(Class<T> xmlType, String xml) throws UnifyException {
+        return xmlObjectStreamer.unmarshal(xmlType, xml);
     }
 
-    protected abstract Object doExecute(String jsonRequest) throws UnifyException;
+    protected abstract Object doExecute(String xmlRequest) throws UnifyException;
 }
