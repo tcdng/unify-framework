@@ -16,38 +16,29 @@
 
 package com.tcdng.unify.web;
 
-import java.io.OutputStream;
+import java.io.Writer;
 
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.constant.MimeType;
 
 /**
- * Abstract output stream plain controller.
+ * Abstract plain writer controller.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public abstract class AbstractOutputStreamPlainController extends AbstractPlainController {
+public abstract class AbstractPlainWriterController extends AbstractPlainController {
 
     private String contentType;
 
-    public AbstractOutputStreamPlainController() {
-        this(MimeType.APPLICATION_OCTETSTREAM);
-    }
-
-    public AbstractOutputStreamPlainController(MimeType mimeType) {
-        this.contentType = mimeType.template();
+    public AbstractPlainWriterController(String contentType) {
+        this.contentType = contentType;
     }
 
     @Override
     public void doProcess(ClientRequest request, ClientResponse response) throws UnifyException {
         response.setContentType(contentType);
-        doExecute(response.getOutputStream(), request);
+        doExecute(response.getWriter(), request);
     }
 
-    protected String getContentType() {
-        return contentType;
-    }
-
-    protected abstract void doExecute(OutputStream outStream, ClientRequest request) throws UnifyException;
+    protected abstract void doExecute(Writer writer, ClientRequest request) throws UnifyException;
 }

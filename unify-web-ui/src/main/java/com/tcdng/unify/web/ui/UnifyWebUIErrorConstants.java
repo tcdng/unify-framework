@@ -85,9 +85,4 @@ public interface UnifyWebUIErrorConstants {
      * No writer found for UPL component {0}
      */
     String UPLCOMPONENT_NO_WRITER = "UWI_0010";
-
-    /**
-     * Access to resource denied.
-     */
-    String RESOURCE_ACCESS_DENIED = "UWI_0011";
 }
