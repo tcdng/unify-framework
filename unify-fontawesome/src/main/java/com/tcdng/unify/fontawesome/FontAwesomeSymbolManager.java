@@ -116,6 +116,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("history", "f1da");
         registerSymbol("house-user", "e065");
         registerSymbol("id-card", "f2c2");
+        registerSymbol("id-badge", "f2c1");
         registerSymbol("image", "f03e");
         registerSymbol("key", "f084");
         registerSymbol("laptop-house", "e066");
