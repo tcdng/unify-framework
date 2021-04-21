@@ -206,7 +206,10 @@ public class ListControlUtilsImpl extends AbstractUnifyComponent implements List
                 params = new Object[listParams.length];
                 Panel panel = listControl.getPanel();
                 for (int i = 0; i < params.length; i++) {
-                    params[i] = panel.getValue(Object.class, listParams[i]);
+                    params[i] = listControl.getValue(listParams[i]);
+                    if (params[i] == null) {
+                        params[i] = panel.getValue(Object.class, listParams[i]);
+                    }
                 }
                 break;
             case CONTROL:
