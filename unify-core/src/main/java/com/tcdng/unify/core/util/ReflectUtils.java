@@ -173,15 +173,16 @@ public final class ReflectUtils {
                                                     method.getReturnType(), argumentType0, argumentType1, isField));
                                         }
                                     } else {
-                                        if (!gsInfo.getType().equals(method.getReturnType())
+                                        if (isField && (!gsInfo.getType().equals(method.getReturnType())
                                                 || ((gsInfo.getArgumentType0() != null)
                                                         && !gsInfo.getArgumentType0().equals(argumentType0))
                                                 || ((gsInfo.getArgumentType1() != null)
-                                                        && !gsInfo.getArgumentType1().equals(argumentType1))) {
+                                                        && !gsInfo.getArgumentType1().equals(argumentType1)))) {
                                             throw new UnifyException(
                                                     UnifyCoreErrorConstants.REFLECTUTIL_INCOMPATIBLE_GETTER_SETTER,
                                                     fieldName, beanClass);
                                         }
+                                        
                                         map.put(fieldName, new GetterSetterInfo(fieldName, method, gsInfo.getSetter(),
                                                 method.getReturnType(), argumentType0, argumentType1, isField));
                                     }
@@ -204,22 +205,16 @@ public final class ReflectUtils {
                                     map.put(fieldName, new GetterSetterInfo(fieldName, null, method,
                                             method.getParameterTypes()[0], argumentType0, argumentType1, isField));
                                 } else {
-                                    if (!method.getParameterTypes()[0].isAssignableFrom(gsInfo.getType())
+                                    if (isField && (!method.getParameterTypes()[0].isAssignableFrom(gsInfo.getType())
                                             || ((gsInfo.getArgumentType0() != null)
                                                     && !gsInfo.getArgumentType0().equals(argumentType0))
                                             || ((gsInfo.getArgumentType1() != null)
-                                                    && !gsInfo.getArgumentType1().equals(argumentType1))) {
-                                        System.out.println("@Croop: ");
-                                        System.out.println("@Croop: method.getParameterTypes()[0] = " + method.getParameterTypes()[0]);
-                                        System.out.println("@Croop: gsInfo.getType() = " + gsInfo.getType());
-                                        System.out.println("@Croop: argumentType0 = " + argumentType0);
-                                        System.out.println("@Croop: argumentType1 = " + argumentType1);
-                                        System.out.println("@Croop: gsInfo.getArgumentType0() = " + gsInfo.getArgumentType0());
-                                        System.out.println("@Croop: gsInfo.getArgumentType1() = " + gsInfo.getArgumentType1());
+                                                    && !gsInfo.getArgumentType1().equals(argumentType1)))) {
                                         throw new UnifyException(
                                                 UnifyCoreErrorConstants.REFLECTUTIL_INCOMPATIBLE_GETTER_SETTER,
                                                 fieldName, beanClass);
                                     }
+                                    
                                     map.put(fieldName, new GetterSetterInfo(fieldName, gsInfo.getGetter(), method,
                                             method.getParameterTypes()[0], argumentType0, argumentType1, isField));
                                 }
