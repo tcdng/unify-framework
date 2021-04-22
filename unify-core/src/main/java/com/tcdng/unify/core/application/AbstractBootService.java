@@ -47,6 +47,10 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
 
     private List<StartupShutdownHook> startupShutdownHooks;
 
+    public void setDataSourceManager(DataSourceManager dataSourceManager) {
+        this.dataSourceManager = dataSourceManager;
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     @Transactional

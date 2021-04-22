@@ -69,6 +69,10 @@ public class SchedulableTaskListCommand extends AbstractZeroParamsListCommand {
         };
     }
 
+    public void setTaskManager(TaskManager taskManager) {
+        this.taskManager = taskManager;
+    }
+
     @Override
     public List<? extends Listable> execute(Locale locale, ZeroParams params) throws UnifyException {
         return schedulableListMap.get(locale);

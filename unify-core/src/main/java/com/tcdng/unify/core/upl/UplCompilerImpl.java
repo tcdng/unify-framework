@@ -160,6 +160,10 @@ public class UplCompilerImpl extends AbstractUnifyComponent implements UplCompil
         };
     }
 
+    public void setMultilineBufferSize(int multilineBufferSize) {
+        this.multilineBufferSize = multilineBufferSize;
+    }
+
     @Override
     public UplElementAttributes compileDescriptor(Locale locale, String descriptor) throws UnifyException {
         return uplElementByDescriptorMap.get(locale, descriptor);

@@ -63,6 +63,10 @@ public class UplDocumentShortNamesListCommand
         };
     }
 
+    public void setUplCompiler(UplCompiler uplCompiler) {
+        this.uplCompiler = uplCompiler;
+    }
+
     @Override
     public List<? extends Listable> execute(Locale locale, UplDocumentShortNamesParams params) throws UnifyException {
         if (params.getDocumentName() != null) {

@@ -73,6 +73,7 @@ import com.tcdng.unify.core.upl.UplComponent;
 import com.tcdng.unify.core.upl.UplElementAttributes;
 import com.tcdng.unify.core.util.AnnotationUtils;
 import com.tcdng.unify.core.util.DataUtils;
+import com.tcdng.unify.core.util.GetterSetterInfo;
 import com.tcdng.unify.core.util.IOUtils;
 import com.tcdng.unify.core.util.ImageUtils;
 import com.tcdng.unify.core.util.NameUtils;
@@ -1108,10 +1109,10 @@ public class UnifyContainer {
 					value = settings.getSettingValue(property);
 				}
 
-				Field field = ReflectUtils.getField(clazz, property);
+				GetterSetterInfo setterInfo = ReflectUtils.getSetterInfo(clazz, property);
 				if (value == null && settings.isAutoInject(property)) {
-					if (UnifyComponent.class.isAssignableFrom(field.getType())) {
-						List<String> names = namelessConfigurableSuggestions.get(field.getType());
+					if (UnifyComponent.class.isAssignableFrom(setterInfo.getType())) {
+						List<String> names = namelessConfigurableSuggestions.get(setterInfo.getType());
 						if (names.size() == 1) { // Check perfect suggestion
 							value = names.get(0);
 						} else if (names.size() > 1) {
@@ -1122,7 +1123,7 @@ public class UnifyContainer {
 
 				if (value != null) {
 					String[] configValues = resolveConfigValue(value);
-					injectFieldValue(unifyComponent, field, configValues);
+					injectFieldValue(unifyComponent, setterInfo, configValues);
 				}
 			}
 
@@ -1164,16 +1165,15 @@ public class UnifyContainer {
 	 * Injects value into component field, performing necessary conversion
 	 * 
 	 * @param unifyComponent - the component
-	 * @param field          - the field to set
+	 * @param setterInfo          - the field to setter
 	 * @param configValues   - the value to inject
 	 */
 	@SuppressWarnings("unchecked")
-	private void injectFieldValue(UnifyComponent unifyComponent, Field field, String[] configValues)
+	private void injectFieldValue(UnifyComponent unifyComponent, GetterSetterInfo setterInfo, String[] configValues)
 			throws UnifyException {
-		ReflectUtils.assertNonStaticNonFinal(field);
 		try {
 			Object valueToInject = null;
-			Class<?> fieldClass = field.getType();
+			Class<?> fieldClass = setterInfo.getType();
 			if (fieldClass.isArray()) {
 				Class<?> arrFieldClass = fieldClass.getComponentType();
 				if (UnifyComponent.class.isAssignableFrom(arrFieldClass)) {
@@ -1184,16 +1184,16 @@ public class UnifyContainer {
 					}
 				}
 			} else if (Collection.class.isAssignableFrom(fieldClass)) {
-				Class<?> colFieldClass = ReflectUtils.getArgumentType(field.getGenericType(), 0);
+				Class<?> colFieldClass = setterInfo.getArgumentType0();
 				if (UnifyComponent.class.isAssignableFrom(colFieldClass)) {
 					Collection<Object> c = new ArrayList<Object>();
 					c.addAll(getComponents((Class<? extends UnifyComponent>) colFieldClass, configValues).values());
 					valueToInject = c;
 				}
 			} else if (Map.class.isAssignableFrom(fieldClass)) {
-				Class<?> keyFieldClass = ReflectUtils.getArgumentType(field.getGenericType(), 0);
+				Class<?> keyFieldClass = setterInfo.getArgumentType0();
 				if (String.class.equals(keyFieldClass)) {
-					Class<?> valFieldClass = ReflectUtils.getArgumentType(field.getGenericType(), 1);
+					Class<?> valFieldClass = setterInfo.getArgumentType1();
 					if (UnifyComponent.class.isAssignableFrom(valFieldClass)) {
 						valueToInject = getComponents((Class<? extends UnifyComponent>) valFieldClass, configValues);
 					}
@@ -1209,7 +1209,7 @@ public class UnifyContainer {
 			}
 
 			if (valueToInject != null) {
-				field.set(unifyComponent, valueToInject);
+			    setterInfo.getSetter().invoke(unifyComponent, valueToInject);
 			}
 		} catch (UnifyException e) {
 			throw e;

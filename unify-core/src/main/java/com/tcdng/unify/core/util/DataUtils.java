@@ -1203,8 +1203,8 @@ public final class DataUtils {
                 GetterSetterInfo setterInfo = ReflectUtils.getSetterInfo(bean.getClass(), entry.getKey());
                 Class<?> type = setterInfo.getType();
                 Object value = entry.getValue();
-                if (setterInfo.isParameterArgumented()) {
-                    value = DataUtils.convert((Class<? extends Collection>) type, setterInfo.getArgumentType(), value);
+                if (setterInfo.isParameterArgumented0()) {
+                    value = DataUtils.convert((Class<? extends Collection>) type, setterInfo.getArgumentType0(), value);
                 } else {
                     value = DataUtils.convert(type, value);
                     if (value == null) {
@@ -1258,8 +1258,8 @@ public final class DataUtils {
             GetterSetterInfo setterInfo = ReflectUtils.getSetterInfo(bean.getClass(), propertyName);
             Class<?> type = setterInfo.getType();
             if (!Object.class.equals(type)) {
-                if (setterInfo.isParameterArgumented()) {
-                    value = DataUtils.convert((Class<? extends Collection>) type, setterInfo.getArgumentType(), value,
+                if (setterInfo.isParameterArgumented0()) {
+                    value = DataUtils.convert((Class<? extends Collection>) type, setterInfo.getArgumentType0(), value,
                             formatter);
                 } else {
                     value = DataUtils.convert(type, value, formatter);
@@ -1768,9 +1768,9 @@ public final class DataUtils {
                             JsonArray array = value.asArray();
                             result = ReflectUtils.newInstance(
                                     DataUtils.getCollectionConcreteType((Class<? extends Collection>) paramType));
-                            if (sInfo.isParameterArgumented()) {
-                                Class<?> componentType = sInfo.getArgumentType();
-                                converter = jsonConverterMap.get(sInfo.getArgumentType());
+                            if (sInfo.isParameterArgumented0()) {
+                                Class<?> componentType = sInfo.getArgumentType0();
+                                converter = jsonConverterMap.get(sInfo.getArgumentType0());
                                 if (converter == null) {
                                     for (int i = 0; i < array.size(); i++) {
                                         result.add(DataUtils.readJsonObject(componentType.newInstance(),
@@ -1839,8 +1839,8 @@ public final class DataUtils {
                         if (converter == null) {
                             if (Collection.class.isAssignableFrom(value.getClass())) {
                                 JsonArray array = (JsonArray) Json.array();
-                                if (gInfo.isParameterArgumented()) {
-                                    converter = jsonConverterMap.get(gInfo.getArgumentType());
+                                if (gInfo.isParameterArgumented0()) {
+                                    converter = jsonConverterMap.get(gInfo.getArgumentType0());
                                 }
 
                                 if (converter == null) {

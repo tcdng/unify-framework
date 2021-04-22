@@ -38,6 +38,10 @@ public class DateSequenceNumberTask extends AbstractTask {
     @Configurable
     private SequenceNumberService sequenceNumberService;
 
+    public void setSequenceNumberService(SequenceNumberService sequenceNumberService) {
+        this.sequenceNumberService = sequenceNumberService;
+    }
+
     @Override
     public void execute(TaskMonitor taskMonitor, TaskInput input, TaskOutput output) throws UnifyException {
         int iterations = input.getParam(int.class, DateSequenceNumberTaskConstants.ITERATIONS);

@@ -36,6 +36,10 @@ public abstract class AbstractDynamicSqlDataSourceListCommand
         super(DynamicSqlParams.class);
     }
 
+    public void setDsManager(DynamicSqlDataSourceManager dsManager) {
+        this.dsManager = dsManager;
+    }
+
     protected DynamicSqlDataSourceManager getDsManager() {
         return dsManager;
     }

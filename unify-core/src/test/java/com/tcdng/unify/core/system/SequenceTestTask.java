@@ -38,6 +38,10 @@ public class SequenceTestTask extends AbstractTask {
     @Configurable
     private SequenceNumberService sequenceNumberService;
 
+    public void setSequenceNumberService(SequenceNumberService sequenceNumberService) {
+        this.sequenceNumberService = sequenceNumberService;
+    }
+
     @Override
     public void execute(TaskMonitor taskMonitor, TaskInput input, TaskOutput output) throws UnifyException {
         List<Long> sequenceNumbers = new ArrayList<Long>();

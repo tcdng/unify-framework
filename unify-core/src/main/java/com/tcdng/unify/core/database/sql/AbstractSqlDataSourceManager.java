@@ -39,6 +39,10 @@ public abstract class AbstractSqlDataSourceManager extends AbstractUnifyComponen
     @Configurable
     private SqlSchemaManager sqlSchemaManager;
 
+    public void setSqlSchemaManager(SqlSchemaManager sqlSchemaManager) {
+        this.sqlSchemaManager = sqlSchemaManager;
+    }
+
     @Override
     public void initDataSource(String dataSourceName, DataSourceManagerOptions options) throws UnifyException {
         SqlDataSource sqlDataSource = getSqlDataSource(dataSourceName);

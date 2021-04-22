@@ -39,6 +39,10 @@ public abstract class AbstractPageValidation extends AbstractBehavior implements
 
     private String id;
 
+    public void setPageManager(PageManager pageManager) {
+        this.pageManager = pageManager;
+    }
+
     @Override
     public String getId() {
         return id;

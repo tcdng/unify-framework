@@ -27,12 +27,15 @@ public class PropertyInfo implements Comparable<PropertyInfo> {
 
     private Class<?> type;
 
-    private Class<?> argumentType;
+    private Class<?> argumentType0;
 
-    public PropertyInfo(String name, Class<?> type, Class<?> argumentType) {
+    private Class<?> argumentType1;
+
+    public PropertyInfo(String name, Class<?> type, Class<?> argumentType0, Class<?> argumentType1) {
         this.name = name;
         this.type = type;
-        this.argumentType = argumentType;
+        this.argumentType0 = argumentType0;
+        this.argumentType1 = argumentType1;
     }
 
     public String getName() {
@@ -43,12 +46,20 @@ public class PropertyInfo implements Comparable<PropertyInfo> {
         return type;
     }
 
-    public Class<?> getArgumentType() {
-        return argumentType;
+    public Class<?> getArgumentType0() {
+        return argumentType0;
     }
 
-    public boolean isParameterArgumented() {
-        return this.argumentType != null;
+    public Class<?> getArgumentType1() {
+        return argumentType1;
+    }
+
+    public boolean isParameterArgumented0() {
+        return this.argumentType0 != null;
+    }
+
+    public boolean isParameterArgumented1() {
+        return this.argumentType1 != null;
     }
 
     @Override

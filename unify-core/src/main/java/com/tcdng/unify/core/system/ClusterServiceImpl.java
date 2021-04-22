@@ -74,6 +74,10 @@ public class ClusterServiceImpl extends AbstractBusinessService implements Clust
         pseudoLocks = new HashSet<String>();
     }
 
+    public void setNodeExpirationPeriod(int nodeExpirationPeriod) {
+        this.nodeExpirationPeriod = nodeExpirationPeriod;
+    }
+
     @Override
     public String getLockOwnerId(boolean nodeOnly) throws UnifyException {
         if (nodeOnly) {

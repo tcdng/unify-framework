@@ -51,6 +51,10 @@ public class DatabaseTransactionManagerImpl extends AbstractUnifyComponent imple
     @Configurable("true")
     private boolean autoJoin;
 
+    public void setAutoJoin(boolean autoJoin) {
+        this.autoJoin = autoJoin;
+    }
+
     @Override
     public void beginTransaction() throws UnifyException {
         beginTransaction(TransactionAttribute.REQUIRES_NEW);

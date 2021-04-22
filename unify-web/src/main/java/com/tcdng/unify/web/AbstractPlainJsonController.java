@@ -33,6 +33,10 @@ public abstract class AbstractPlainJsonController extends AbstractPlainControlle
     @Configurable
     private JsonObjectStreamer jsonObjectStreamer;
 
+    public void setJsonObjectStreamer(JsonObjectStreamer jsonObjectStreamer) {
+        this.jsonObjectStreamer = jsonObjectStreamer;
+    }
+
     @Override
     public void doProcess(ClientRequest request, ClientResponse response) throws UnifyException {
         RemoteCallFormat remoteCallFormat = (RemoteCallFormat) request

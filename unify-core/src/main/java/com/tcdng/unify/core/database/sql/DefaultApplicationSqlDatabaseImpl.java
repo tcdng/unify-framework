@@ -33,6 +33,10 @@ public class DefaultApplicationSqlDatabaseImpl extends AbstractSqlDatabase {
     @Configurable(ApplicationComponents.APPLICATION_DATASOURCE)
     private DataSource dataSource;
 
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
     @Override
     public String getDataSourceName() throws UnifyException {
         return dataSource.getName();

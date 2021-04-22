@@ -73,6 +73,22 @@ public class ProxyBusinessServiceGeneratorImpl extends AbstractUnifyComponent im
         annotationInfoBySignature = new HashMap<String, ProxyBusinessServiceMethodAnnotationInfo>();
     }
 
+    public void setRuntimeJavaClassManager(RuntimeJavaClassManager runtimeJavaClassManager) {
+        this.runtimeJavaClassManager = runtimeJavaClassManager;
+    }
+
+    public void setProxyPackageExtension(String proxyPackageExtension) {
+        this.proxyPackageExtension = proxyPackageExtension;
+    }
+
+    public void setProxyClassExtension(String proxyClassExtension) {
+        this.proxyClassExtension = proxyClassExtension;
+    }
+
+    public void setLogSource(boolean logSource) {
+        this.logSource = logSource;
+    }
+
     @Override
     public String generateProxyBusinessServiceName(Class<? extends BusinessService> businessServiceClazz)
             throws UnifyException {

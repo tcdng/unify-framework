@@ -34,6 +34,10 @@ public abstract class AbstractPopupTextFieldWriter extends TextFieldWriter {
     @Configurable
     private FontSymbolManager fontSymbolManager;
 
+    public void setFontSymbolManager(FontSymbolManager fontSymbolManager) {
+        this.fontSymbolManager = fontSymbolManager;
+    }
+
     @Override
     protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
         AbstractPopupTextField popupTextField = (AbstractPopupTextField) widget;

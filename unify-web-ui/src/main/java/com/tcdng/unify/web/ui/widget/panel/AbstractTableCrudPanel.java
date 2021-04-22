@@ -66,6 +66,10 @@ public abstract class AbstractTableCrudPanel<T extends Entity> extends AbstractP
         crudData = new CrudData(entityClass, title);
     }
 
+    public void setGenericService(GenericService genericService) {
+        this.genericService = genericService;
+    }
+
     @Override
     public void onPageConstruct() throws UnifyException {
         super.onPageConstruct();

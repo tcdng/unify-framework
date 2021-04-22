@@ -32,6 +32,10 @@ public abstract class AbstractBusinessLogicUnit extends AbstractUnifyComponent i
     @Configurable(ApplicationComponents.APPLICATION_DATABASE)
     private Database db;
     
+    public void setDb(Database db) {
+        this.db = db;
+    }
+
     @Override
     protected void onInitialize() throws UnifyException {
 

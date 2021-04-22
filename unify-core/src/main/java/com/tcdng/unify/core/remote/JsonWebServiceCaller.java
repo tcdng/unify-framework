@@ -37,6 +37,10 @@ public class JsonWebServiceCaller extends AbstractWebServiceCaller {
     @Configurable
     private JsonObjectStreamer streamer;
 
+    public void setStreamer(JsonObjectStreamer streamer) {
+        this.streamer = streamer;
+    }
+
     @Override
     protected void setHeaders(HttpURLConnection conn) throws UnifyException {
         conn.setRequestProperty("Accept", "application/json");

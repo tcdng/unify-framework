@@ -39,6 +39,10 @@ public class ButtonWriter extends AbstractTargetControlWriter {
     @Configurable
     private FontSymbolManager fontSymbolManager;
 
+    public void setFontSymbolManager(FontSymbolManager fontSymbolManager) {
+        this.fontSymbolManager = fontSymbolManager;
+    }
+
     @Override
     protected void doWriteTargetControl(ResponseWriter writer, TargetControl targetControl) throws UnifyException {
         Button button = (Button) targetControl;

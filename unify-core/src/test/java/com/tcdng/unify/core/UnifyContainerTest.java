@@ -175,6 +175,14 @@ public class UnifyContainerTest extends AbstractUnifyComponentTest {
             return testComponentA1;
         }
 
+        public void setTestComponentA1(TestComponentA1 testComponentA1) {
+            this.testComponentA1 = testComponentA1;
+        }
+
+        public void setAddress(String address) {
+            this.address = address;
+        }
+
         public String getAddress() {
             return address;
         }
@@ -214,6 +222,10 @@ public class UnifyContainerTest extends AbstractUnifyComponentTest {
 
         public TestComponentC getTestComponentC1() {
             return testComponentC1;
+        }
+
+        public void setTestComponentC1(TestComponentC testComponentC1) {
+            this.testComponentC1 = testComponentC1;
         }
 
         @Override

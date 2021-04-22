@@ -33,17 +33,20 @@ public class GetterSetterInfo {
 
     private Class<?> type;
 
-    private Class<?> argumentType;
+    private Class<?> argumentType0;
+
+    private Class<?> argumentType1;
 
     private boolean field;
 
-    public GetterSetterInfo(String name, Method getter, Method setter, Class<?> type, Class<?> argumentType,
-            boolean field) {
+    public GetterSetterInfo(String name, Method getter, Method setter, Class<?> type, Class<?> argumentType0,
+            Class<?> argumentType1, boolean field) {
         this.name = name;
         this.getter = getter;
         this.setter = setter;
         this.type = type;
-        this.argumentType = argumentType;
+        this.argumentType0 = argumentType0;
+        this.argumentType1 = argumentType1;
         this.field = field;
     }
 
@@ -63,8 +66,12 @@ public class GetterSetterInfo {
         return type;
     }
 
-    public Class<?> getArgumentType() {
-        return argumentType;
+    public Class<?> getArgumentType0() {
+        return argumentType0;
+    }
+
+    public Class<?> getArgumentType1() {
+        return argumentType1;
     }
 
     public boolean isGetter() {
@@ -75,8 +82,12 @@ public class GetterSetterInfo {
         return this.setter != null;
     }
 
-    public boolean isParameterArgumented() {
-        return this.argumentType != null;
+    public boolean isParameterArgumented0() {
+        return this.argumentType0 != null;
+    }
+
+    public boolean isParameterArgumented1() {
+        return this.argumentType1 != null;
     }
 
     public boolean isProperty() {

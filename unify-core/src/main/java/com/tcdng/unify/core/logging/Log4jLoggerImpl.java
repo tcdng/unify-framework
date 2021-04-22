@@ -58,6 +58,38 @@ public class Log4jLoggerImpl extends AbstractLog4jLogger {
     @Configurable("8")
     private int maxFileBackup;
 
+    public void setLogCategory(String logCategory) {
+        this.logCategory = logCategory;
+    }
+
+    public void setLogPattern(String logPattern) {
+        this.logPattern = logPattern;
+    }
+
+    public void setLogToConsole(boolean logToConsole) {
+        this.logToConsole = logToConsole;
+    }
+
+    public void setLogToFile(boolean logToFile) {
+        this.logToFile = logToFile;
+    }
+
+    public void setLogFilename(String logFilename) {
+        this.logFilename = logFilename;
+    }
+
+    public void setLogFileMaxSize(String logFileMaxSize) {
+        this.logFileMaxSize = logFileMaxSize;
+    }
+
+    public void setLogLevel(String logLevel) {
+        this.logLevel = logLevel;
+    }
+
+    public void setMaxFileBackup(int maxFileBackup) {
+        this.maxFileBackup = maxFileBackup;
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     protected void onInitialize() throws UnifyException {

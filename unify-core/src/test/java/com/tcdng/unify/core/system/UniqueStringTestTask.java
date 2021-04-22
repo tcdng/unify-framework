@@ -39,6 +39,10 @@ public class UniqueStringTestTask extends AbstractTask {
     @Configurable
     private SequenceNumberService sequenceNumberService;
 
+    public void setSequenceNumberService(SequenceNumberService sequenceNumberService) {
+        this.sequenceNumberService = sequenceNumberService;
+    }
+
     @Override
     public void execute(TaskMonitor taskMonitor, TaskInput taskInput, TaskOutput taskOutput) throws UnifyException {
         Map<String, Long> resultMap = new HashMap<String, Long>();

@@ -79,6 +79,30 @@ public class WebClientImpl extends AbstractUnifyComponent implements WebClient {
         };
     }
 
+    public void setXmlObjectStreamer(XmlObjectStreamer xmlObjectStreamer) {
+        this.xmlObjectStreamer = xmlObjectStreamer;
+    }
+
+    public void setJsonObjectStreamer(JsonObjectStreamer jsonObjectStreamer) {
+        this.jsonObjectStreamer = jsonObjectStreamer;
+    }
+
+    public void setRemoteCallBinaryMessageStreamer(RemoteCallBinaryMessageStreamer remoteCallBinaryMessageStreamer) {
+        this.remoteCallBinaryMessageStreamer = remoteCallBinaryMessageStreamer;
+    }
+
+    public void setRemoteCallXmlMessageStreamer(RemoteCallXmlMessageStreamer remoteCallXmlMessageStreamer) {
+        this.remoteCallXmlMessageStreamer = remoteCallXmlMessageStreamer;
+    }
+
+    public void setObjectStreamers(Map<RemoteCallFormat, ObjectStreamer> objectStreamers) {
+        this.objectStreamers = objectStreamers;
+    }
+
+    public void setPreferences(FactoryMaps<String, String, RemoteCallSetup> preferences) {
+        this.preferences = preferences;
+    }
+
     @Override
     public void setupRemoteCall(String remoteAppURL, String methodCode) throws UnifyException {
         setupRemoteCall(remoteAppURL, methodCode, RemoteCallFormat.JSON, StandardCharsets.UTF_8);

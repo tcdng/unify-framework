@@ -34,6 +34,10 @@ public class TaskLauncherImpl extends AbstractUnifyComponent implements TaskLaun
     @Configurable(ApplicationComponents.APPLICATION_TASKMANAGER)
     private TaskManager taskManager;
 
+    public void setTaskManager(TaskManager taskManager) {
+        this.taskManager = taskManager;
+    }
+
     @Override
     public TaskMonitor launchTask(TaskSetup taskSetup) throws UnifyException {
         if (taskSetup.getTaskNames().isEmpty()) {

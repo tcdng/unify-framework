@@ -50,7 +50,11 @@ public class PagePathInfoRepositoryImpl extends AbstractUnifyComponent implement
 		};
 	}
 
-	@Override
+	public void setPathInfoRepository(PathInfoRepository pathInfoRepository) {
+        this.pathInfoRepository = pathInfoRepository;
+    }
+
+    @Override
 	public PagePathInfo getPagePathInfo(Page page) throws UnifyException {
 		return pagePathInfos.get(page.getPathId());
 	}

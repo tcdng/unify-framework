@@ -176,42 +176,42 @@ public class ReflectUtilsTest {
         PropertyInfo po = propertyInfoList.get(0);
         assertEquals("address", po.getName());
         assertEquals(Address.class, po.getType());
-        assertNull(po.getArgumentType());
+        assertNull(po.getArgumentType0());
 
         po = propertyInfoList.get(1);
         assertEquals("address.addressLine1", po.getName());
         assertEquals(String.class, po.getType());
-        assertNull(po.getArgumentType());
+        assertNull(po.getArgumentType0());
 
         po = propertyInfoList.get(2);
         assertEquals("address.addressLine2", po.getName());
         assertEquals(String.class, po.getType());
-        assertNull(po.getArgumentType());
+        assertNull(po.getArgumentType0());
 
         po = propertyInfoList.get(3);
         assertEquals("firstName", po.getName());
         assertEquals(String.class, po.getType());
-        assertNull(po.getArgumentType());
+        assertNull(po.getArgumentType0());
 
         po = propertyInfoList.get(4);
         assertEquals("id", po.getName());
         assertEquals(Long.class, po.getType());
-        assertNull(po.getArgumentType());
+        assertNull(po.getArgumentType0());
 
         po = propertyInfoList.get(5);
         assertEquals("lastName", po.getName());
         assertEquals(String.class, po.getType());
-        assertNull(po.getArgumentType());
+        assertNull(po.getArgumentType0());
 
         po = propertyInfoList.get(6);
         assertEquals("officeAddresses", po.getName());
         assertEquals(List.class, po.getType());
-        assertEquals(Address.class, po.getArgumentType());
+        assertEquals(Address.class, po.getArgumentType0());
 
         po = propertyInfoList.get(7);
         assertEquals("orders", po.getName());
         assertEquals(Integer[].class, po.getType());
-        assertNull(po.getArgumentType());
+        assertNull(po.getArgumentType0());
     }
 
     @Test

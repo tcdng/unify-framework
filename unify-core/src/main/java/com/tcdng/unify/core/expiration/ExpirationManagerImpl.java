@@ -55,6 +55,10 @@ public class ExpirationManagerImpl extends AbstractUnifyComponent implements Exp
         expirablesList = new ArrayList<ObservedExpirableInfo>();
     }
 
+    public void setProxyMethodRelay(ProxyBusinessServiceMethodRelay proxyMethodRelay) {
+        this.proxyMethodRelay = proxyMethodRelay;
+    }
+
     @Periodic(PeriodicType.NORMAL)
     public synchronized void removeExpiredExpirables(TaskMonitor taskMonitor) throws UnifyException {
         Date now = new Date();

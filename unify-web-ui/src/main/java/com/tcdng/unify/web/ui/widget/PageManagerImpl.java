@@ -263,6 +263,14 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
 
     }
 
+    public void setUplCompiler(UplCompiler uplCompiler) {
+        this.uplCompiler = uplCompiler;
+    }
+
+    public void setSequenceNumberService(SequenceNumberService sequenceNumberService) {
+        this.sequenceNumberService = sequenceNumberService;
+    }
+
     @Override
     public List<String> getDocumentStyleSheets() throws UnifyException {
         return documentStyleSheets;

@@ -65,6 +65,14 @@ public class SequenceNumberServiceImpl extends AbstractBusinessService implement
         sequenceBlockMap = new HashMap<String, SequenceBlock>();
     }
 
+    public void setSequenceBlockSize(int sequenceBlockSize) {
+        this.sequenceBlockSize = sequenceBlockSize;
+    }
+
+    public void setMaxNextSequenceBlockAttempts(int maxNextSequenceBlockAttempts) {
+        this.maxNextSequenceBlockAttempts = maxNextSequenceBlockAttempts;
+    }
+
     @Override
     @Transactional(TransactionAttribute.REQUIRES_NEW)
     public synchronized Long getCachedBlockNextSequenceNumber(String sequencedName) throws UnifyException {

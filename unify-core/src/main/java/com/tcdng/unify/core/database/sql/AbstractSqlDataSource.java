@@ -78,6 +78,54 @@ public abstract class AbstractSqlDataSource extends AbstractDataSource implement
 
     private SqlConnectionPool sqlConnectionPool;
 
+    public void setGetConnectionTimeout(long getConnectionTimeout) {
+        this.getConnectionTimeout = getConnectionTimeout;
+    }
+
+    public void setDriver(String driver) {
+        this.driver = driver;
+    }
+
+    public void setConnectionUrl(String connectionUrl) {
+        this.connectionUrl = connectionUrl;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setMaxConnections(int maxConnections) {
+        this.maxConnections = maxConnections;
+    }
+
+    public void setMinConnections(int minConnections) {
+        this.minConnections = minConnections;
+    }
+
+    public void setAppSchema(String appSchema) {
+        this.appSchema = appSchema;
+    }
+
+    public String getDriver() {
+        return driver;
+    }
+
+    public String getConnectionUrl() {
+        return connectionUrl;
+    }
+
+    public void setShutdownOnTerminate(boolean shutdownOnTerminate) {
+        this.shutdownOnTerminate = shutdownOnTerminate;
+    }
+
+    public void setPasswordAuthentication(Authentication passwordAuthentication) {
+        this.passwordAuthentication = passwordAuthentication;
+    }
+
     @Override
     public String getAppSchema() throws UnifyException {
         if(StringUtils.isBlank(appSchema)) {
@@ -388,48 +436,8 @@ public abstract class AbstractSqlDataSource extends AbstractDataSource implement
         return sqlConnectionPool;
     }
 
-    protected void setDriver(String driver) {
-        this.driver = driver;
-    }
-
-    protected void setConnectionUrl(String connectionUrl) {
-        this.connectionUrl = connectionUrl;
-    }
-
-    protected void setUsername(String username) {
-        this.username = username;
-    }
-
-    protected void setPassword(String password) {
-        this.password = password;
-    }
-
-    protected void setGetConnectionTimeout(long getConnectionTimeout) {
-        this.getConnectionTimeout = getConnectionTimeout;
-    }
-
-    protected void setMaxConnections(int maxConnections) {
-        this.maxConnections = maxConnections;
-    }
-
-    protected void setMinConnections(int minConnections) {
-        this.minConnections = minConnections;
-    }
-
-    protected String getDriver() {
-        return driver;
-    }
-
-    protected String getConnectionUrl() {
-        return connectionUrl;
-    }
-
     protected Authentication getPasswordAuthentication() {
         return passwordAuthentication;
-    }
-
-    protected void setAppSchema(String appSchema) {
-        this.appSchema = appSchema;
     }
 
     protected String getUsername() {
@@ -454,10 +462,6 @@ public abstract class AbstractSqlDataSource extends AbstractDataSource implement
 
     protected boolean isShutdownOnTerminate() {
         return shutdownOnTerminate;
-    }
-
-    protected void setShutdownOnTerminate(boolean shutdownOnTerminate) {
-        this.shutdownOnTerminate = shutdownOnTerminate;
     }
 
     private SqlConnectionPool createSqlConnectionPool() throws UnifyException {
