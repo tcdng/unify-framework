@@ -89,6 +89,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("desktop", "f108");
         registerSymbol("directions", "f5eb");
         registerSymbol("door-open", "f52b");
+        registerSymbol("download", "f019");
         registerSymbol("edit", "f044");
         registerSymbol("equals", "f52c");
         registerSymbol("exchange-alt", "f362");
@@ -122,6 +123,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("laptop-house", "e066");
         registerSymbol("list", "f03a");
         registerSymbol("lock", "f023");
+        registerSymbol("logs", "f46d");
         registerSymbol("magic", "f0d0");
         registerSymbol("mail", "f0e0");
         registerSymbol("mail-bulk", "f674");
