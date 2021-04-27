@@ -43,4 +43,9 @@ public class EmailRecipient {
     public String getAddress() {
         return address;
     }
+
+    @Override
+    public String toString() {
+        return "EmailRecipient [type=" + type + ", address=" + address + "]";
+    }
 }

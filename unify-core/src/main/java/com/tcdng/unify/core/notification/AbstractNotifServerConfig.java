@@ -78,4 +78,10 @@ public abstract class AbstractNotifServerConfig {
     public String getPassword() {
         return password;
     }
+
+    @Override
+    public String toString() {
+        return "ServerConfig [hostAddress=" + hostAddress + ", hostPort=" + hostPort + ", securityType="
+                + securityType + ", authentication=" + authentication + ", username=" + username + ", password=xxxxxx]";
+    }
 }

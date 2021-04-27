@@ -98,6 +98,11 @@ public class Email {
         this.sent = sent;
     }
 
+    @Override
+    public String toString() {
+        return "Email [subject=" + subject + ", sender=" + sender + ", recipients=" + recipients + "]";
+    }
+
     public static Builder newBuilder() {
         return new Builder();
     }

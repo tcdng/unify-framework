@@ -36,6 +36,7 @@ public class SmtpEmailServer extends AbstractEmailServer implements EmailServer 
     @Override
     public void sendEmail(String configurationCode, Email email) throws UnifyException {
         try {
+            logDebug("Sending email [{0}]..." + email);
             MimeMessage mimeMessage = createMimeMessage(configurationCode, email);
             Transport.send(mimeMessage);
             email.setSent(true);
@@ -53,6 +54,7 @@ public class SmtpEmailServer extends AbstractEmailServer implements EmailServer 
             transport = session.getTransport("smtp");
             transport.connect();
             for (Email _email : email) {
+                logDebug("Sending email [{0}]..." + _email);
                 try {
                     MimeMessage mimeMessage = createMimeMessage(session, _email);
                     transport.sendMessage(mimeMessage, mimeMessage.getAllRecipients());
