@@ -24,8 +24,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyException;
@@ -83,7 +85,7 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 
     private FactoryMap<String, RequestPathParts> requestPathParts;
 
-    private List<String> remoteViewerList;
+    private Set<String> remoteViewerList;
 
     private boolean isTenantPathEnabled;
 
@@ -165,16 +167,12 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
                     requestPathParts, charset, extractRequestParameters(httpRequest, charset));
             ClientResponse clientResponse = new HttpClientResponse(httpResponse);
 
-            if (StringUtils.isNotBlank((String) httpRequest.getParameter(RequestParameterConstants.REMOTE_VIEWER))) {
-                if (!remoteViewerList.isEmpty()) {
-                    String origin = httpRequest.getHeader("origin");
-                    if (remoteViewerList.contains(origin)) {
-                        httpResponse.setHeader("Access-Control-Allow-Origin", origin);
-                        httpResponse.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
-                        httpResponse.setHeader("Access-Control-Allow-Headers", "Content-Type");
-                        httpResponse.setHeader("Access-Control-Max-Age", "600");
-                    }
-                }
+            String origin = httpRequest.getHeader("origin");
+            if (!StringUtils.isBlank(origin) && (remoteViewerList.isEmpty() || remoteViewerList.contains(origin))) {
+                httpResponse.setHeader("Access-Control-Allow-Origin", origin);
+                httpResponse.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS");
+                httpResponse.setHeader("Access-Control-Allow-Headers", "Content-Type");
+                httpResponse.setHeader("Access-Control-Max-Age", "600");
             }
 
             Controller controller = controllerFinder
@@ -287,10 +285,12 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
     protected void onInitialize() throws UnifyException {
         isTenantPathEnabled = getContainerSetting(boolean.class,
                 UnifyWebPropertyConstants.APPLICATION_TENANT_PATH_ENABLED, false);
-        remoteViewerList = DataUtils.convert(ArrayList.class, String.class,
+        List<String> viewersList = DataUtils.convert(ArrayList.class, String.class,
                 getContainerSetting(Object.class, UnifyWebPropertyConstants.APPLICATION_REMOTE_VIEWERS));
-        if (remoteViewerList == null) {
-            remoteViewerList = Collections.emptyList();
+        if (!DataUtils.isBlank(viewersList)) {
+            remoteViewerList = new HashSet<String>(viewersList);
+        } else {
+            remoteViewerList = Collections.emptySet();
         }
     }
 
