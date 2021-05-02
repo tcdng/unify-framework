@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.zip.CRC32;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
@@ -628,6 +629,8 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
 
         private Map<String, String> longNameByPageNameMap;
 
+        private CRC32 crc = new CRC32();
+
         public PageNameMap() {
             longNameByPageNameMap = new HashMap<String, String>();
         }
@@ -648,7 +651,8 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
 
         @Override
         protected String create(String longName, Object... params) throws Exception {
-            String pageName = pageNamePrefix + sequenceNumberService.getUniqueStringId(longName);
+            crc.update(longName.getBytes());
+            String pageName = pageNamePrefix + crc.getValue();
             longNameByPageNameMap.put(pageName, longName);
             return pageName;
         }
