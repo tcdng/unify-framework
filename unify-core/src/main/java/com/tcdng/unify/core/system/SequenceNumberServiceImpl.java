@@ -47,12 +47,13 @@ import com.tcdng.unify.core.util.ThreadUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
+@Transactional
 @Component(ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE)
 public class SequenceNumberServiceImpl extends AbstractBusinessService implements SequenceNumberService {
 
     private Map<String, SequenceBlock> sequenceBlockMap;
 
-    @Configurable("100")
+    @Configurable("1000")
     private int sequenceBlockSize;
 
     /**
@@ -74,8 +75,17 @@ public class SequenceNumberServiceImpl extends AbstractBusinessService implement
     }
 
     @Override
-    @Transactional(TransactionAttribute.REQUIRES_NEW)
     public synchronized Long getCachedBlockNextSequenceNumber(String sequencedName) throws UnifyException {
+        SequenceBlock sequenceBlock = sequenceBlockMap.get(sequencedName);
+        if (sequenceBlock == null || sequenceBlock.willExpire()) {
+            return getNewBlockCachedBlockNextSequenceNumber(sequencedName);
+        }
+
+        return sequenceBlock.getNextId();
+    }
+
+    @Transactional(TransactionAttribute.REQUIRES_NEW)
+    public Long getNewBlockCachedBlockNextSequenceNumber(String sequencedName) throws UnifyException {
         SequenceBlock sequenceBlock = sequenceBlockMap.get(sequencedName);
         if (sequenceBlock == null) {
             try {
@@ -94,20 +104,20 @@ public class SequenceNumberServiceImpl extends AbstractBusinessService implement
             sequenceBlockMap.put(sequencedName, sequenceBlock);
         }
 
-        Long id = Long.valueOf(sequenceBlock.next++);
-        if (sequenceBlock.next > sequenceBlock.last) {
+        Long id = sequenceBlock.getNextId();
+        if (sequenceBlock.isExpired()) {
             nextSequenceBlock(sequencedName, sequenceBlock, maxNextSequenceBlockAttempts);
         }
+
         return id;
     }
 
     @Override
-    @Transactional
     @Synchronized("nextsequencenumber-lock")
     public Long getNextSequenceNumber(String sequenceName) throws UnifyException {
         Long sequenceNumber = null;
-        ClusterSequenceNumber clusterSequenceNumber =
-                db().find(new ClusterSequenceNumberQuery().sequenceName(sequenceName));
+        ClusterSequenceNumber clusterSequenceNumber = db()
+                .find(new ClusterSequenceNumberQuery().sequenceName(sequenceName));
         if (clusterSequenceNumber != null) {
             sequenceNumber = clusterSequenceNumber.getSequenceCounter() + 1;
             clusterSequenceNumber.setSequenceCounter(sequenceNumber);
@@ -123,13 +133,12 @@ public class SequenceNumberServiceImpl extends AbstractBusinessService implement
     }
 
     @Override
-    @Transactional
     @Synchronized("nextdatesequencenumber-lock")
     public Long getNextSequenceNumber(String sequenceName, Date date) throws UnifyException {
         Long sequenceNumber = null;
         Date midnightDate = CalendarUtils.getMidnightDate(date);
-        ClusterDateSequenceNumber dateSequenceNumber =
-                db().find(new ClusterDateSequenceNumberQuery().sequenceDate(midnightDate).sequenceName(sequenceName));
+        ClusterDateSequenceNumber dateSequenceNumber = db()
+                .find(new ClusterDateSequenceNumberQuery().sequenceDate(midnightDate).sequenceName(sequenceName));
         if (dateSequenceNumber != null) {
             sequenceNumber = dateSequenceNumber.getSequenceCounter() + 1;
             dateSequenceNumber.setSequenceCounter(sequenceNumber);
@@ -146,9 +155,8 @@ public class SequenceNumberServiceImpl extends AbstractBusinessService implement
     }
 
     @Override
-    @Transactional
     @Synchronized("uniquestring-lock")
-    public Long getUniqueStringId(final String uniqueString) throws UnifyException {
+    public synchronized Long getUniqueStringId(final String uniqueString) throws UnifyException {
         final String md5 = DigestUtils.md5Hex(uniqueString);
         ClusterUniqueString clusterUniqueString = db().find(new ClusterUniqueStringQuery().uniqueString(md5));
         if (clusterUniqueString == null) {
@@ -160,7 +168,6 @@ public class SequenceNumberServiceImpl extends AbstractBusinessService implement
         return clusterUniqueString.getId();
     }
 
-    @Transactional
     @Override
     public void reset() throws UnifyException {
         if (!isProductionMode()) {
@@ -176,11 +183,11 @@ public class SequenceNumberServiceImpl extends AbstractBusinessService implement
      * clustered environments that share the same database.
      * 
      * @param sequencedName
-     *            the sequence name
+     *                        the sequence name
      * @param sequenceCounter
-     *            the sequence counter
+     *                        the sequence counter
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     private void nextSequenceBlock(String sequencedName, SequenceBlock sequenceCounter, int maxAttempts)
             throws UnifyException {
@@ -205,5 +212,17 @@ public class SequenceNumberServiceImpl extends AbstractBusinessService implement
         public long next;
 
         public long last;
+
+        public Long getNextId() {
+            return Long.valueOf(next++);
+        }
+
+        public boolean willExpire() {
+            return (next + 1) > last;
+        }
+
+        public boolean isExpired() {
+            return next > last;
+        }
     }
 }
