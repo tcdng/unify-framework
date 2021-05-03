@@ -1557,6 +1557,14 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
         };
     }
 
+    public void setSqlOrderColumns(boolean sqlOrderColumns) {
+        this.sqlOrderColumns = sqlOrderColumns;
+    }
+
+    public void setSqlGenerationApplySpacing(boolean sqlGenerationApplySpacing) {
+        this.sqlGenerationApplySpacing = sqlGenerationApplySpacing;
+    }
+
     @Override
     public void setSqlDataSourceDialect(SqlDataSourceDialect sqlDataSourceDialect) {
         this.sqlDataSourceDialect = sqlDataSourceDialect;

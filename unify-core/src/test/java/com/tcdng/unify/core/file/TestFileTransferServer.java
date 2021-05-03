@@ -47,6 +47,14 @@ public class TestFileTransferServer extends AbstractFileTransferServer {
         remoteFiles = new HashMap<String, FileInfo>();
     }
 
+    public void setLocalFilenames(String[] localFilenames) {
+        this.localFilenames = localFilenames;
+    }
+
+    public void setRemoteFilenames(String[] remoteFilenames) {
+        this.remoteFilenames = remoteFilenames;
+    }
+
     @Override
     public List<FileInfo> getLocalFileList(FileTransferSetup fileTransferSetup) throws UnifyException {
         return new ArrayList<FileInfo>(localFiles.values());

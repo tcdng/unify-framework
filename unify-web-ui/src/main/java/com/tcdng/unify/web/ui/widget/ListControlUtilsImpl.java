@@ -71,6 +71,10 @@ public class ListControlUtilsImpl extends AbstractUnifyComponent implements List
             };
     }
 
+    public void setPageManager(PageManager pageManager) {
+        this.pageManager = pageManager;
+    }
+
     @Override
     public ListControlInfo getListControlInfo(ListControl listControl, Formatter<Object> formatter)
             throws UnifyException {
@@ -206,7 +210,10 @@ public class ListControlUtilsImpl extends AbstractUnifyComponent implements List
                 params = new Object[listParams.length];
                 Panel panel = listControl.getPanel();
                 for (int i = 0; i < params.length; i++) {
-                    params[i] = panel.getValue(Object.class, listParams[i]);
+                    params[i] = listControl.getValue(listParams[i]);
+                    if (params[i] == null) {
+                        params[i] = panel.getValue(Object.class, listParams[i]);
+                    }
                 }
                 break;
             case CONTROL:

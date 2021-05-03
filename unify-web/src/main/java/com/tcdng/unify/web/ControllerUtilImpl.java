@@ -56,6 +56,14 @@ public class ControllerUtilImpl extends AbstractUnifyComponent implements Contro
         };
     }
 
+    public void setPathInfoRepository(PathInfoRepository pathInfoRepository) {
+        this.pathInfoRepository = pathInfoRepository;
+    }
+
+    public void setControllerFinder(ControllerFinder controllerFinder) {
+        this.controllerFinder = controllerFinder;
+    }
+
     @Override
     public RemoteCallControllerInfo getRemoteCallControllerInfo(String controllerName) throws UnifyException {
         return remoteCallControllerInfoMap.get(controllerName);

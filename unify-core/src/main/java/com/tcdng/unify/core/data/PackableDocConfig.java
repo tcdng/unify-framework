@@ -107,9 +107,9 @@ public class PackableDocConfig {
                 bmcb.addMapping(fieldName, fieldName);
 
                 Class<?> dataClass = gsInfo.getType();
-                boolean isList = gsInfo.isParameterArgumented();
+                boolean isList = gsInfo.isParameterArgumented0();
                 if (isList) {
-                    dataClass = gsInfo.getArgumentType();
+                    dataClass = gsInfo.getArgumentType0();
                 } else if (dataClass.isArray() && !dataClass.equals(byte[].class)) {
                     dataClass = dataClass.getComponentType();
                     isList = true;
@@ -195,9 +195,9 @@ public class PackableDocConfig {
                 // Ensure type is the same
                 if (!fc.isComplex()) {
                     if (fc.isList()) {
-                        if (gsInfo.isParameterArgumented()) {
+                        if (gsInfo.isParameterArgumented0()) {
                             if (!List.class.equals(gsInfo.getType())
-                                    || !fc.getDataType().equals(getPackableType(gsInfo.getArgumentType()))) {
+                                    || !fc.getDataType().equals(getPackableType(gsInfo.getArgumentType0()))) {
                                 throw new UnifyException(UnifyCoreErrorConstants.PACKABLEDOC_INCOMPATIBLE_FIELDCONFIG,
                                         beanClass, beanProperty, fc.getDataType());
                             }

@@ -88,6 +88,18 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
         this.pageBeanClass = pageBeanClass;
     }
 
+    public void setTaskLauncher(TaskLauncher taskLauncher) {
+        this.taskLauncher = taskLauncher;
+    }
+
+    public void setPagePathInfoRepository(PagePathInfoRepository pagePathInfoRepository) {
+        this.pagePathInfoRepository = pagePathInfoRepository;
+    }
+
+    public void setUiCommandManager(WidgetCommandManager uiCommandManager) {
+        this.uiCommandManager = uiCommandManager;
+    }
+
     @Override
     public void ensureContextResources(ControllerPathParts controllerPathParts) throws UnifyException {
         SessionContext sessionContext = getSessionContext();

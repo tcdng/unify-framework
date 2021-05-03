@@ -53,6 +53,8 @@ import com.tcdng.unify.core.util.xml.UnifyConfig;
  */
 public final class UnifyConfigUtils {
 
+    private static final String WORKING_PATH_PLACEHOLDER = "{{working-path}}";
+
     private UnifyConfigUtils() {
 
     }
@@ -61,12 +63,13 @@ public final class UnifyConfigUtils {
      * Reads component configuration from an XML file.
      * 
      * @param uccb
-     *            the configuration object to read into.
+     *                      the configuration object to read into.
      * @param xmlFile
-     *            the XML configuration file to read
-     * @param workingFolder optional working folder
+     *                      the XML configuration file to read
+     * @param workingFolder
+     *                      optional working folder
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static void readConfigFromXml(UnifyContainerConfig.Builder uccb, File xmlFile, String workingFolder)
             throws UnifyException {
@@ -77,12 +80,13 @@ public final class UnifyConfigUtils {
      * Reads component configuration from an XML input stream.
      * 
      * @param uccb
-     *            the configuration object to read into.
+     *                       the configuration object to read into.
      * @param xmlInputStream
-     *            the XML configuration input stream to read
-     * @param workingFolder optional working folder
+     *                       the XML configuration input stream to read
+     * @param workingFolder
+     *                       optional working folder
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static void readConfigFromXml(UnifyContainerConfig.Builder uccb, InputStream xmlInputStream,
             String workingFolder) throws UnifyException {
@@ -93,12 +97,13 @@ public final class UnifyConfigUtils {
      * Reads component configuration from an XML string.
      * 
      * @param uccb
-     *            the configuration object to read into.
+     *                      the configuration object to read into.
      * @param xmlConfig
-     *            the XML configuration to read
-     * @param workingFolder optional working folder
+     *                      the XML configuration to read
+     * @param workingFolder
+     *                      optional working folder
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static void readConfigFromXml(UnifyContainerConfig.Builder uccb, String xmlConfig, String workingFolder)
             throws UnifyException {
@@ -109,26 +114,26 @@ public final class UnifyConfigUtils {
      * Reads configuration information from type repository.
      * 
      * @param uccb
-     *            the configuration object to read into.
+     *                       the configuration object to read into.
      * @param typeRepository
-     *            the type repository
+     *                       the type repository
      * @param packages
-     *            the packages to search. This parameter is optional.
+     *                       the packages to search. This parameter is optional.
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static void readConfigFromTypeRepository(UnifyContainerConfig.Builder uccb, TypeRepository typeRepository,
             String... packages) throws UnifyException {
         // Static settings
-        List<Class<? extends UnifyStaticSettings>> settingsList =
-                typeRepository.getAnnotatedClasses(UnifyStaticSettings.class, AutoDetect.class, packages);
+        List<Class<? extends UnifyStaticSettings>> settingsList = typeRepository
+                .getAnnotatedClasses(UnifyStaticSettings.class, AutoDetect.class, packages);
         for (Class<? extends UnifyStaticSettings> type : settingsList) {
             uccb.addStaticSettings(ReflectUtils.newInstance(type));
         }
 
         // Components
-        List<Class<? extends UnifyComponent>> list =
-                typeRepository.getAnnotatedClasses(UnifyComponent.class, Component.class, packages);
+        List<Class<? extends UnifyComponent>> list = typeRepository.getAnnotatedClasses(UnifyComponent.class,
+                Component.class, packages);
         for (Class<? extends UnifyComponent> type : list) {
             String componentName = UnifyConfigUtils.getComponentName(type);
             String description = UnifyConfigUtils.getDescription(type);
@@ -147,10 +152,10 @@ public final class UnifyConfigUtils {
      * Reads a component's configurable properties (settings).
      * 
      * @param type
-     *            the component type
+     *             the component type
      * @return the component settings
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static UnifyComponentSettings readComponentSettings(Class<? extends UnifyComponent> type)
             throws UnifyException {
@@ -185,9 +190,9 @@ public final class UnifyConfigUtils {
      * Resolves configuration overrides.
      * 
      * @param map
-     *            the target type map
+     *                           the target type map
      * @param overrideSuffixList
-     *            the override suffix list
+     *                           the override suffix list
      */
     public static <T> Map<String, String> resolveConfigurationOverrides(Map<String, T> map,
             List<String> overrideSuffixList) {
@@ -241,8 +246,8 @@ public final class UnifyConfigUtils {
     }
 
     @SuppressWarnings("unchecked")
-    private static void readXmlConfigurationObject(UnifyContainerConfig.Builder uccb, Object xmlConfigObject, String workingFolder)
-            throws UnifyException {
+    private static void readXmlConfigurationObject(UnifyContainerConfig.Builder uccb, Object xmlConfigObject,
+            String workingFolder) throws UnifyException {
         try {
             UnifyConfig unifyConfig = XmlConfigUtils.readXmlConfig(UnifyConfig.class, xmlConfigObject);
             if (unifyConfig != null) {
@@ -254,12 +259,18 @@ public final class UnifyConfigUtils {
                 PropertiesConfig propertiesConfig = unifyConfig.getPropertiesConfig();
                 if (propertiesConfig != null && propertiesConfig.getPropertyConfigList() != null) {
                     for (PropertyConfig propertyConfig : propertiesConfig.getPropertyConfigList()) {
-                        String value = propertyConfig.getValue();
-                        if (value != null) {
-                            uccb.setProperty(propertyConfig.getName(), value);
+                        String val = propertyConfig.getValue();
+                        if (val != null) {
+                            uccb.setProperty(propertyConfig.getName(),
+                                    UnifyConfigUtils.replacePlaceHolderValues(val, workingFolder));
                         } else if (propertyConfig.getValueList() != null) {
-                            uccb.setProperty(propertyConfig.getName(), propertyConfig.getValueList()
-                                    .toArray(new String[propertyConfig.getValueList().size()]));
+                            String[] vals = propertyConfig.getValueList()
+                                    .toArray(new String[propertyConfig.getValueList().size()]);
+                            for (int i = 0; i < vals.length; i++) {
+                                vals[i] = UnifyConfigUtils.replacePlaceHolderValues(vals[i], workingFolder);
+                            }
+                            
+                            uccb.setProperty(propertyConfig.getName(), vals);
                         }
                     }
                 }
@@ -268,9 +279,11 @@ public final class UnifyConfigUtils {
                         UnifyCorePropertyConstants.APPLICATION_PROPERTIES, workingFolder);
                 final Set<String> propertyNames = appProperties.stringPropertyNames();
                 for (String property : propertyNames) {
-                    uccb.setProperty(property, appProperties.getProperty(property));
+                    String val = UnifyConfigUtils.replacePlaceHolderValues(appProperties.getProperty(property),
+                            workingFolder);
+                    uccb.setProperty(property, val);
                 }
-                
+
                 ComponentsConfig componentsConfig = unifyConfig.getComponentsConfig();
                 if (componentsConfig != null && componentsConfig.getComponentConfigList() != null) {
                     AliasesConfig aliasesConfig = unifyConfig.getComponentsConfig().getAliasesConfig();
@@ -311,14 +324,18 @@ public final class UnifyConfigUtils {
                         if (propertiesConfig != null && propertiesConfig.getPropertyConfigList() != null) {
                             for (PropertyConfig propertyConfig : propertiesConfig.getPropertyConfigList()) {
                                 String property = propertyConfig.getName();
-                                String value = propertyConfig.getValue();
-                                if (value != null) {
-                                    ub.setProperty(property, value, false, propertyConfig.isHidden());
+                                String val = propertyConfig.getValue();
+                                if (val != null) {
+                                    val = UnifyConfigUtils.replacePlaceHolderValues(val, workingFolder);
+                                    ub.setProperty(property, val, false, propertyConfig.isHidden());
                                 } else if (propertyConfig.getValueList() != null) {
-                                    ub.setProperty(property,
-                                            propertyConfig.getValueList()
-                                                    .toArray(new String[propertyConfig.getValueList().size()]),
-                                            false, propertyConfig.isHidden());
+                                    String[] vals = propertyConfig.getValueList()
+                                            .toArray(new String[propertyConfig.getValueList().size()]);
+                                    for (int i = 0; i < vals.length; i++) {
+                                        vals[i] = UnifyConfigUtils.replacePlaceHolderValues(vals[i], workingFolder);
+                                    }
+
+                                    ub.setProperty(property, vals, false, propertyConfig.isHidden());
                                 }
                             }
                         }
@@ -327,12 +344,14 @@ public final class UnifyConfigUtils {
                             final String propPrefix = componentName + '.';
                             for (String property : propertyNames) {
                                 if (property.startsWith(propPrefix)) {
+                                    String val = UnifyConfigUtils.replacePlaceHolderValues(appProperties.getProperty(property),
+                                            workingFolder);
                                     ub.setProperty(property.substring(propPrefix.length()),
-                                            appProperties.getProperty(property));
+                                            val);
                                 }
                             }
                         }
-                        
+
                         uccb.addComponentConfig(componentName, description, type, singleton, true, ub.build());
 
                     }
@@ -353,12 +372,23 @@ public final class UnifyConfigUtils {
         }
         return properties;
     }
-    
+
     private static Object getConfigurableValue(Configurable ca) {
         Object configuredValue = AnnotationUtils.getAnnotationString(ca.value());
         if (configuredValue == null && (ca.values().length > 0)) {
             return ca.values();
         }
         return configuredValue;
+    }
+
+    private static String replacePlaceHolderValues(String val, String workingFolder) {
+        if (val != null) {
+            int i = val.indexOf(WORKING_PATH_PLACEHOLDER);
+            if (i >= 0) {
+                return val.substring(0, i) + workingFolder + val.substring(i + WORKING_PATH_PLACEHOLDER.length());
+            }
+        }
+
+        return val;
     }
 }

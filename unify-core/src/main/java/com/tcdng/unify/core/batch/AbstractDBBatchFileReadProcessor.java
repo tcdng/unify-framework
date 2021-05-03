@@ -45,6 +45,10 @@ public abstract class AbstractDBBatchFileReadProcessor<T extends BatchRecord, U 
         this.batchItemClass = batchItemClass;
     }
 
+    public void setGenericService(GenericService genericService) {
+        this.genericService = genericService;
+    }
+
     @Override
     protected Object doProcess(BatchFileReadConfig batchFileReadConfig, BatchFileReader reader) throws UnifyException {
         Map<String, T> batchMap = new HashMap<String, T>();

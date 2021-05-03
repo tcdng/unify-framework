@@ -62,6 +62,14 @@ public class DynamicSqlEntityLoaderImpl extends AbstractUnifyComponent implement
         return this.loadDynamicSqlEntities(db, Arrays.asList(dynamicEntityInfo)).get(0);
     }
 
+    public void setRuntimeJavaClassManager(RuntimeJavaClassManager runtimeJavaClassManager) {
+        this.runtimeJavaClassManager = runtimeJavaClassManager;
+    }
+
+    public void setSqlSchemaManager(SqlSchemaManager sqlSchemaManager) {
+        this.sqlSchemaManager = sqlSchemaManager;
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public List<Class<? extends Entity>> loadDynamicSqlEntities(SqlDatabase db,

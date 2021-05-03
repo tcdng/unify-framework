@@ -218,8 +218,8 @@ public class PackableDoc implements Serializable {
             FieldConfig fc = config.getFieldConfig(beanMappingConfig.getMappedField(beanProperty));
             GetterSetterInfo gsInfo = ReflectUtils.getGetterSetterInfo(bean.getClass(), beanProperty);
             Class<?> type = gsInfo.getType();
-            if (gsInfo.isParameterArgumented()) {
-                type = gsInfo.getArgumentType();
+            if (gsInfo.isParameterArgumented0()) {
+                type = gsInfo.getArgumentType0();
             }
 
             DataUtils.setNestedBeanProperty(bean, beanProperty, read(type, fc.getFieldName()), null);

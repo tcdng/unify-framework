@@ -55,7 +55,35 @@ public abstract class AbstractEmbeddedHttpWebServer extends AbstractHttpWebInter
 	@Configurable("4096")
 	private int multipartFileSizeThreshold;
 
-	@Override
+	public void setHttpPort(int httpPort) {
+        this.httpPort = httpPort;
+    }
+
+    public void setContextPath(String contextPath) {
+        this.contextPath = contextPath;
+    }
+
+    public void setServletPath(String servletPath) {
+        this.servletPath = servletPath;
+    }
+
+    public void setMultipartLocation(String multipartLocation) {
+        this.multipartLocation = multipartLocation;
+    }
+
+    public void setMultipartMaxFileSize(long multipartMaxFileSize) {
+        this.multipartMaxFileSize = multipartMaxFileSize;
+    }
+
+    public void setMultipartMaxRequestSize(long multipartMaxRequestSize) {
+        this.multipartMaxRequestSize = multipartMaxRequestSize;
+    }
+
+    public void setMultipartFileSizeThreshold(int multipartFileSizeThreshold) {
+        this.multipartFileSizeThreshold = multipartFileSizeThreshold;
+    }
+
+    @Override
 	public String getContextPath() {
 		return contextPath;
 	}

@@ -69,6 +69,26 @@ public abstract class AbstractRemoteCallController extends AbstractController im
         super(Secured.FALSE);
     }
 
+    public void setControllerUtil(ControllerUtil controllerUtil) {
+        this.controllerUtil = controllerUtil;
+    }
+
+    public void setXmlObjectStreamer(XmlObjectStreamer xmlObjectStreamer) {
+        this.xmlObjectStreamer = xmlObjectStreamer;
+    }
+
+    public void setJsonObjectStreamer(JsonObjectStreamer jsonObjectStreamer) {
+        this.jsonObjectStreamer = jsonObjectStreamer;
+    }
+
+    public void setRemoteCallBinaryMessageStreamer(RemoteCallBinaryMessageStreamer remoteCallBinaryMessageStreamer) {
+        this.remoteCallBinaryMessageStreamer = remoteCallBinaryMessageStreamer;
+    }
+
+    public void setRemoteCallXmlMessageStreamer(RemoteCallXmlMessageStreamer remoteCallXmlMessageStreamer) {
+        this.remoteCallXmlMessageStreamer = remoteCallXmlMessageStreamer;
+    }
+
     @Override
     public final void process(ClientRequest request, ClientResponse response) throws UnifyException {
         try {

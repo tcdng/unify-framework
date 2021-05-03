@@ -53,6 +53,10 @@ public class JcifsFileTransferServer extends AbstractFileTransferServer {
     @Configurable("8192")
     private int bufferSize;
 
+    public void setBufferSize(int bufferSize) {
+        this.bufferSize = bufferSize;
+    }
+
     @Override
     public List<FileInfo> getRemoteFileList(FileTransferSetup fileTransferSetup) throws UnifyException {
         List<FileInfo> list = Collections.emptyList();

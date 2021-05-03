@@ -75,7 +75,7 @@ public class UIControllerUtilImpl extends AbstractUnifyComponent implements UICo
 
     @Configurable
     private ControllerFinder controllerFinder;
-    
+
     private Map<String, Result> defaultResultMap;
 
     @SuppressWarnings("rawtypes")
@@ -164,6 +164,22 @@ public class UIControllerUtilImpl extends AbstractUnifyComponent implements UICo
         skipOnPopulateSet.add(RequestParameterConstants.REMOTE_GLOBAL_ACCESS);
         skipOnPopulateSet.add(RequestParameterConstants.REMOTE_COLOR_SCHEME);
         skipOnPopulateSet.add(RequestParameterConstants.REMOTE_TENANT_CODE);
+    }
+    
+    public void setPageManager(PageManager pageManager) {
+        this.pageManager = pageManager;
+    }
+
+    public void setPageRequestContextUtil(PageRequestContextUtil pageRequestContextUtil) {
+        this.pageRequestContextUtil = pageRequestContextUtil;
+    }
+
+    public void setPathInfoRepository(PathInfoRepository pathInfoRepository) {
+        this.pathInfoRepository = pathInfoRepository;
+    }
+
+    public void setControllerFinder(ControllerFinder controllerFinder) {
+        this.controllerFinder = controllerFinder;
     }
 
     @Override

@@ -78,6 +78,8 @@ z-index:400;}
 .ui-flowgrid .lcontentinl {float:left; display:block; height:100%;}
 .ui-flowgrid .llabelblank {}
 
+.ui-inlabel {display:inline-block;padding-left:4px;}
+
 /** Shaded list layout */
 .ui-shadedlist {width:100%;color:#000;}
 .ui-shadedlist .slcap {width:20%; padding:2px;font-weight:bold;font-size:10pt;background-color:#DCDCDC;}

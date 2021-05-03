@@ -38,6 +38,10 @@ public abstract class AbstractTwoWayCryptograph extends AbstractUnifyComponent {
     /** The decrypt cipher pool */
     private CipherPool dcipherPool;
 
+    public void setEncryptionKey(String encryptionKey) {
+        this.encryptionKey = encryptionKey;
+    }
+
     @Override
     protected void onInitialize() throws UnifyException {
         String encryptionKey = getEncryptionKey();

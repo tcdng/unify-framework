@@ -88,7 +88,19 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
         secordaryList = new ArrayList<WebStringWriter>();
 	}
 	
-	@Override
+	public void setThemeManager(ThemeManager themeManager) {
+        this.themeManager = themeManager;
+    }
+
+    public void setPageRequestContextUtil(PageRequestContextUtil pageRequestContextUtil) {
+        this.pageRequestContextUtil = pageRequestContextUtil;
+    }
+
+    public void setInitialBufferCapacity(int initialBufferCapacity) {
+        this.initialBufferCapacity = initialBufferCapacity;
+    }
+
+    @Override
 	public ResponseWriter writeStructureAndContent(Widget component) throws UnifyException {
 		((WidgetWriter) getWriter(component)).writeStructureAndContent(this, component);
 		return this;

@@ -79,243 +79,263 @@ public final class ReflectUtils {
     }
 
     static {
-        declaredFieldMap = new FactoryMap<Class<?>, Map<String, Field>>() {
-            @Override
-            protected Map<String, Field> create(Class<?> clazz, Object... params) throws Exception {
-                Map<String, Field> map = new LinkedHashMap<String, Field>();
-                do {
-                    for (Field field : clazz.getDeclaredFields()) {
-                        if (!map.containsKey(field.getName())) {
-                            field.setAccessible(true);
-                            map.put(field.getName(), field);
-                        }
-                    }
-                } while ((clazz = clazz.getSuperclass()) != null);
-                return Collections.unmodifiableMap(map);
-            }
-        };
-
-        caseSensitiveGetterSetterList = new FactoryMap<Class<?>, List<GetterSetterInfo>>() {
-
-            @Override
-            protected List<GetterSetterInfo> create(Class<?> beanClass, Object... params) throws Exception {
-                Map<String, GetterSetterInfo> map = caseSensitiveGetterSetterMap.get(beanClass);
-                List<GetterSetterInfo> list = new ArrayList<GetterSetterInfo>();
-                list.addAll(map.values());
-                Collections.sort(list, new Comparator<GetterSetterInfo>() {
-
-                    @Override
-                    public int compare(GetterSetterInfo gsi0, GetterSetterInfo gsi1) {
-                        String name0 = gsi0.getName();
-                        String name1 = gsi1.getName();
-                        if (name0 == null) {
-                            if (name1 != null) {
-                                return -1;
-                            }
-                        } else {
-                            if (name1 == null) {
-                                return 1;
+        declaredFieldMap = new FactoryMap<Class<?>, Map<String, Field>>()
+            {
+                @Override
+                protected Map<String, Field> create(Class<?> clazz, Object... params) throws Exception {
+                    Map<String, Field> map = new LinkedHashMap<String, Field>();
+                    do {
+                        for (Field field : clazz.getDeclaredFields()) {
+                            if (!map.containsKey(field.getName())) {
+                                map.put(field.getName(), field);
                             }
                         }
+                    } while ((clazz = clazz.getSuperclass()) != null);
+                    return Collections.unmodifiableMap(map);
+                }
+            };
 
-                        return name0.compareTo(name1);
-                    }
-                });
-                return Collections.unmodifiableList(list);
-            }
+        caseSensitiveGetterSetterList = new FactoryMap<Class<?>, List<GetterSetterInfo>>()
+            {
 
-        };
+                @Override
+                protected List<GetterSetterInfo> create(Class<?> beanClass, Object... params) throws Exception {
+                    Map<String, GetterSetterInfo> map = caseSensitiveGetterSetterMap.get(beanClass);
+                    List<GetterSetterInfo> list = new ArrayList<GetterSetterInfo>();
+                    list.addAll(map.values());
+                    Collections.sort(list, new Comparator<GetterSetterInfo>()
+                        {
 
-        caseSensitiveGetterSetterMap = new FactoryMap<Class<?>, Map<String, GetterSetterInfo>>() {
-            @SuppressWarnings({ "rawtypes", "unchecked" })
-            @Override
-            protected Map<String, GetterSetterInfo> create(Class<?> beanClass, Object... params) throws Exception {
-                Map<String, GetterSetterInfo> map = new LinkedHashMap<String, GetterSetterInfo>();
-                Method[] methods = beanClass.getMethods();
-                Set<String> fieldNames = declaredFieldMap.get(beanClass).keySet();
-                for (Method method : methods) {
-                    if (method.isBridge() || method.isSynthetic()) {
-                        continue;
-                    }
-
-                    String name = method.getName();
-                    if (!void.class.equals(method.getReturnType()) && method.getParameterTypes().length == 0) {
-                        boolean isIs = false;
-                        if ((name.length() > 3 && (name.startsWith("get"))
-                                || (isIs = name.length() > 2 && name.startsWith("is")))) {
-                            int index = 3;
-                            if (isIs) {
-                                index = 2;
-                            }
-
-                            if (Character.isUpperCase(name.charAt(index))) {
-                                StringBuilder sb = new StringBuilder();
-                                sb.append(Character.toLowerCase(name.charAt(index)));
-                                sb.append(name.substring(index + 1));
-                                String fieldName = sb.toString();
-                                GetterSetterInfo gsInfo = map.get(fieldName);
-                                Class<?> argumentType = ReflectUtils.getArgumentType(method.getGenericReturnType(), 0);
-                                boolean isField = fieldNames.contains(fieldName);
-                                if (gsInfo == null) {
-                                    if ("getData".equals(name) && WrappedData.class.isAssignableFrom(beanClass)) {
-                                        WrappedData<?> wrappedBean =
-                                                ReflectUtils.newInstance((Class<? extends WrappedData>) beanClass);
-                                        map.put(fieldName, new GetterSetterInfo(fieldName, method, null,
-                                                wrappedBean.getDataType(), null, false));
-                                    } else {
-                                        map.put(fieldName, new GetterSetterInfo(fieldName, method, null,
-                                                method.getReturnType(), argumentType, isField));
+                            @Override
+                            public int compare(GetterSetterInfo gsi0, GetterSetterInfo gsi1) {
+                                String name0 = gsi0.getName();
+                                String name1 = gsi1.getName();
+                                if (name0 == null) {
+                                    if (name1 != null) {
+                                        return -1;
                                     }
                                 } else {
-                                    if (!gsInfo.getType().equals(method.getReturnType())
-                                            || ((gsInfo.getArgumentType() != null)
-                                                    && !gsInfo.getArgumentType().equals(argumentType))) {
+                                    if (name1 == null) {
+                                        return 1;
+                                    }
+                                }
+
+                                return name0.compareTo(name1);
+                            }
+                        });
+                    return Collections.unmodifiableList(list);
+                }
+
+            };
+
+        caseSensitiveGetterSetterMap = new FactoryMap<Class<?>, Map<String, GetterSetterInfo>>()
+            {
+                @SuppressWarnings({ "rawtypes", "unchecked" })
+                @Override
+                protected Map<String, GetterSetterInfo> create(Class<?> beanClass, Object... params) throws Exception {
+                    Map<String, GetterSetterInfo> map = new LinkedHashMap<String, GetterSetterInfo>();
+                    Method[] methods = beanClass.getMethods();
+                    Set<String> fieldNames = declaredFieldMap.get(beanClass).keySet();
+                    for (Method method : methods) {
+                        if (method.isBridge() || method.isSynthetic()) {
+                            continue;
+                        }
+
+                        String name = method.getName();
+                        if (!void.class.equals(method.getReturnType()) && method.getParameterTypes().length == 0) {
+                            boolean isIs = false;
+                            if ((name.length() > 3 && (name.startsWith("get"))
+                                    || (isIs = name.length() > 2 && name.startsWith("is")))) {
+                                int index = 3;
+                                if (isIs) {
+                                    index = 2;
+                                }
+
+                                if (Character.isUpperCase(name.charAt(index))) {
+                                    StringBuilder sb = new StringBuilder();
+                                    sb.append(Character.toLowerCase(name.charAt(index)));
+                                    sb.append(name.substring(index + 1));
+                                    String fieldName = sb.toString();
+                                    GetterSetterInfo gsInfo = map.get(fieldName);
+                                    Class<?> argumentType0 = ReflectUtils.getArgumentType(method.getGenericReturnType(),
+                                            0);
+                                    Class<?> argumentType1 = ReflectUtils.getArgumentType(method.getGenericReturnType(),
+                                            1);
+                                    boolean isField = fieldNames.contains(fieldName);
+                                    if (gsInfo == null) {
+                                        if ("getData".equals(name) && WrappedData.class.isAssignableFrom(beanClass)) {
+                                            WrappedData<?> wrappedBean = ReflectUtils
+                                                    .newInstance((Class<? extends WrappedData>) beanClass);
+                                            map.put(fieldName, new GetterSetterInfo(fieldName, method, null,
+                                                    wrappedBean.getDataType(), null, null, false));
+                                        } else {
+                                            map.put(fieldName, new GetterSetterInfo(fieldName, method, null,
+                                                    method.getReturnType(), argumentType0, argumentType1, isField));
+                                        }
+                                    } else {
+                                        if (isField && (!gsInfo.getType().equals(method.getReturnType())
+                                                || ((gsInfo.getArgumentType0() != null)
+                                                        && !gsInfo.getArgumentType0().equals(argumentType0))
+                                                || ((gsInfo.getArgumentType1() != null)
+                                                        && !gsInfo.getArgumentType1().equals(argumentType1)))) {
+                                            throw new UnifyException(
+                                                    UnifyCoreErrorConstants.REFLECTUTIL_INCOMPATIBLE_GETTER_SETTER,
+                                                    fieldName, beanClass);
+                                        }
+                                        
+                                        map.put(fieldName, new GetterSetterInfo(fieldName, method, gsInfo.getSetter(),
+                                                method.getReturnType(), argumentType0, argumentType1, isField));
+                                    }
+                                }
+                            }
+                        } else if (void.class.equals(method.getReturnType())
+                                && method.getParameterTypes().length == 1) {
+                            if (name.length() > 3 && Character.isUpperCase(name.charAt(3)) && name.startsWith("set")) {
+                                StringBuilder sb = new StringBuilder();
+                                sb.append(Character.toLowerCase(name.charAt(3)));
+                                sb.append(name.substring(4));
+                                String fieldName = sb.toString();
+                                boolean isField = fieldNames.contains(fieldName);
+                                GetterSetterInfo gsInfo = map.get(fieldName);
+                                Class<?> argumentType0 = ReflectUtils
+                                        .getArgumentType(method.getGenericParameterTypes()[0], 0);
+                                Class<?> argumentType1 = ReflectUtils
+                                        .getArgumentType(method.getGenericParameterTypes()[0], 1);
+                                if (gsInfo == null) {
+                                    map.put(fieldName, new GetterSetterInfo(fieldName, null, method,
+                                            method.getParameterTypes()[0], argumentType0, argumentType1, isField));
+                                } else {
+                                    if (isField && (!method.getParameterTypes()[0].isAssignableFrom(gsInfo.getType())
+                                            || ((gsInfo.getArgumentType0() != null)
+                                                    && !gsInfo.getArgumentType0().equals(argumentType0))
+                                            || ((gsInfo.getArgumentType1() != null)
+                                                    && !gsInfo.getArgumentType1().equals(argumentType1)))) {
                                         throw new UnifyException(
                                                 UnifyCoreErrorConstants.REFLECTUTIL_INCOMPATIBLE_GETTER_SETTER,
                                                 fieldName, beanClass);
                                     }
-                                    map.put(fieldName, new GetterSetterInfo(fieldName, method, gsInfo.getSetter(),
-                                            method.getReturnType(), argumentType, isField));
+                                    
+                                    map.put(fieldName, new GetterSetterInfo(fieldName, gsInfo.getGetter(), method,
+                                            method.getParameterTypes()[0], argumentType0, argumentType1, isField));
                                 }
-                            }
-                        }
-                    } else if (void.class.equals(method.getReturnType()) && method.getParameterTypes().length == 1) {
-                        if (name.length() > 3 && Character.isUpperCase(name.charAt(3)) && name.startsWith("set")) {
-                            StringBuilder sb = new StringBuilder();
-                            sb.append(Character.toLowerCase(name.charAt(3)));
-                            sb.append(name.substring(4));
-                            String fieldName = sb.toString();
-                            boolean isField = fieldNames.contains(fieldName);
-                            GetterSetterInfo gsInfo = map.get(fieldName);
-                            Class<?> argumentType =
-                                    ReflectUtils.getArgumentType(method.getGenericParameterTypes()[0], 0);
-                            if (gsInfo == null) {
-                                map.put(fieldName, new GetterSetterInfo(fieldName, null, method,
-                                        method.getParameterTypes()[0], argumentType, isField));
-                            } else {
-                                if (!gsInfo.getType().equals(method.getParameterTypes()[0])
-                                        || ((gsInfo.getArgumentType() != null)
-                                                && !gsInfo.getArgumentType().equals(argumentType))) {
-                                    throw new UnifyException(
-                                            UnifyCoreErrorConstants.REFLECTUTIL_INCOMPATIBLE_GETTER_SETTER, fieldName,
-                                            beanClass);
-                                }
-                                map.put(fieldName, new GetterSetterInfo(fieldName, gsInfo.getGetter(), method,
-                                        method.getParameterTypes()[0], argumentType, isField));
                             }
                         }
                     }
+
+                    return Collections.unmodifiableMap(map);
+                }
+            };
+
+        beanFieldNamesMap = new FactoryMap<Class<?>, List<String>>()
+            {
+
+                @Override
+                protected List<String> create(Class<?> beanClass, Object... params) throws Exception {
+                    List<String> names = new ArrayList<String>();
+                    for (Field field : declaredFieldMap.get(beanClass).values()) {
+                        String name = field.getName();
+                        GetterSetterInfo gsi = caseSensitiveGetterSetterMap.get(beanClass).get(name);
+                        if (gsi != null && gsi.isGetter() && gsi.isSetter()) {
+                            names.add(name);
+                        }
+                    }
+
+                    Collections.sort(names);
+                    return Collections.unmodifiableList(names);
                 }
 
-                return Collections.unmodifiableMap(map);
-            }
-        };
+            };
 
-        beanFieldNamesMap = new FactoryMap<Class<?>, List<String>>() {
+        beanNestedFieldNamesMap = new FactoryMap<Class<?>, List<String>>()
+            {
 
-            @Override
-            protected List<String> create(Class<?> beanClass, Object... params) throws Exception {
-                List<String> names = new ArrayList<String>();
-                for (Field field : declaredFieldMap.get(beanClass).values()) {
-                    String name = field.getName();
-                    GetterSetterInfo gsi = caseSensitiveGetterSetterMap.get(beanClass).get(name);
-                    if (gsi != null && gsi.isGetter() && gsi.isSetter()) {
+                @SuppressWarnings({ "rawtypes", "unchecked" })
+                @Override
+                protected List<String> create(Class<?> beanClass, Object... params) throws Exception {
+                    List<String> names = new ArrayList<String>();
+                    for (String name : beanFieldNamesMap.get(beanClass)) {
+                        GetterSetterInfo gsi = caseSensitiveGetterSetterMap.get(beanClass).get(name);
+                        if (!beanNestedFieldNamesMap.isKey(gsi.getType())) {
+                            for (String childName : beanNestedFieldNamesMap.get(gsi.getType())) {
+                                names.add(name + '.' + childName);
+                            }
+                        } else {
+                            for (String childName : beanNestedFieldNamesMap.find(gsi.getType())) {
+                                names.add(name + '.' + childName);
+                            }
+                        }
+
                         names.add(name);
                     }
-                }
 
-                Collections.sort(names);
-                return Collections.unmodifiableList(names);
-            }
-
-        };
-
-        beanNestedFieldNamesMap = new FactoryMap<Class<?>, List<String>>() {
-
-            @SuppressWarnings({ "rawtypes", "unchecked" })
-            @Override
-            protected List<String> create(Class<?> beanClass, Object... params) throws Exception {
-                List<String> names = new ArrayList<String>();
-                for (String name : beanFieldNamesMap.get(beanClass)) {
-                    GetterSetterInfo gsi = caseSensitiveGetterSetterMap.get(beanClass).get(name);
-                    if (!beanNestedFieldNamesMap.isKey(gsi.getType())) {
-                        for (String childName : beanNestedFieldNamesMap.get(gsi.getType())) {
-                            names.add(name + '.' + childName);
-                        }
-                    } else {
-                        for (String childName : beanNestedFieldNamesMap.find(gsi.getType())) {
-                            names.add(name + '.' + childName);
+                    if (WrappedData.class.isAssignableFrom(beanClass)) {
+                        WrappedData<?> wrappedBean = ReflectUtils.newInstance((Class<? extends WrappedData>) beanClass);
+                        Class<?> argumentType = wrappedBean.getDataType();
+                        for (String childName : beanNestedFieldNamesMap.get(argumentType)) {
+                            names.add("data." + childName);
                         }
                     }
 
-                    names.add(name);
+                    Collections.sort(names);
+                    return Collections.unmodifiableList(names);
                 }
 
-                if (WrappedData.class.isAssignableFrom(beanClass)) {
-                    WrappedData<?> wrappedBean = ReflectUtils.newInstance((Class<? extends WrappedData>) beanClass);
-                    Class<?> argumentType = wrappedBean.getDataType();
-                    for (String childName : beanNestedFieldNamesMap.get(argumentType)) {
-                        names.add("data." + childName);
-                    }
+            };
+
+        beanNestedPropertiesWithGetterMap = new FactoryMap<Class<?>, List<PropertyInfo>>()
+            {
+
+                @Override
+                protected List<PropertyInfo> create(Class<?> beanClass, Object... params) throws Exception {
+                    List<PropertyInfo> propertyInfoList = new ArrayList<PropertyInfo>();
+                    Set<Class<?>> cycleCheck = new HashSet<Class<?>>();
+                    extractPropertiesWithGetters(cycleCheck, propertyInfoList, beanClass, null);
+                    Collections.sort(propertyInfoList);
+                    return Collections.unmodifiableList(propertyInfoList);
                 }
 
-                Collections.sort(names);
-                return Collections.unmodifiableList(names);
-            }
+                private void extractPropertiesWithGetters(Set<Class<?>> cycleCheck, List<PropertyInfo> propertyInfoList,
+                        Class<?> beanClass, String parentName) throws Exception {
+                    cycleCheck.add(beanClass);
+                    for (Field field : declaredFieldMap.get(beanClass).values()) {
+                        GetterSetterInfo gsi = caseSensitiveGetterSetterMap.get(beanClass).get(field.getName());
+                        if (gsi != null && gsi.isGetter()) {
+                            String name = gsi.getName();
+                            if (parentName != null) {
+                                name = parentName + '.' + name;
+                            }
 
-        };
-
-        beanNestedPropertiesWithGetterMap = new FactoryMap<Class<?>, List<PropertyInfo>>() {
-
-            @Override
-            protected List<PropertyInfo> create(Class<?> beanClass, Object... params) throws Exception {
-                List<PropertyInfo> propertyInfoList = new ArrayList<PropertyInfo>();
-                Set<Class<?>> cycleCheck = new HashSet<Class<?>>();
-                extractPropertiesWithGetters(cycleCheck, propertyInfoList, beanClass, null);
-                Collections.sort(propertyInfoList);
-                return Collections.unmodifiableList(propertyInfoList);
-            }
-
-            private void extractPropertiesWithGetters(Set<Class<?>> cycleCheck, List<PropertyInfo> propertyInfoList,
-                    Class<?> beanClass, String parentName) throws Exception {
-                cycleCheck.add(beanClass);
-                for (Field field : declaredFieldMap.get(beanClass).values()) {
-                    GetterSetterInfo gsi = caseSensitiveGetterSetterMap.get(beanClass).get(field.getName());
-                    if (gsi != null && gsi.isGetter()) {
-                        String name = gsi.getName();
-                        if (parentName != null) {
-                            name = parentName + '.' + name;
-                        }
-
-                        propertyInfoList.add(new PropertyInfo(name, gsi.getType(), gsi.getArgumentType()));
-                        if (!cycleCheck.contains(gsi.getType())) {
-                            extractPropertiesWithGetters(cycleCheck, propertyInfoList, gsi.getType(), name);
+                            propertyInfoList.add(new PropertyInfo(name, gsi.getType(), gsi.getArgumentType0(),
+                                    gsi.getArgumentType1()));
+                            if (!cycleCheck.contains(gsi.getType())) {
+                                extractPropertiesWithGetters(cycleCheck, propertyInfoList, gsi.getType(), name);
+                            }
                         }
                     }
                 }
-            }
 
-        };
+            };
 
-        largeConstructorMap = new FactoryMap<Class<?>, ConstructorInfo>() {
+        largeConstructorMap = new FactoryMap<Class<?>, ConstructorInfo>()
+            {
 
-            @Override
-            protected ConstructorInfo create(Class<?> clazz, Object... params) throws Exception {
-                Constructor<?> largeConstructor = null;
-                Class<?>[] largeParamTypes = null;
-                for (Constructor<?> constructor : clazz.getDeclaredConstructors()) {
-                    Class<?>[] paramTypes = constructor.getParameterTypes();
-                    if (largeParamTypes == null || largeParamTypes.length < paramTypes.length) {
-                        largeConstructor = constructor;
-                        largeParamTypes = paramTypes;
+                @Override
+                protected ConstructorInfo create(Class<?> clazz, Object... params) throws Exception {
+                    Constructor<?> largeConstructor = null;
+                    Class<?>[] largeParamTypes = null;
+                    for (Constructor<?> constructor : clazz.getDeclaredConstructors()) {
+                        Class<?>[] paramTypes = constructor.getParameterTypes();
+                        if (largeParamTypes == null || largeParamTypes.length < paramTypes.length) {
+                            largeConstructor = constructor;
+                            largeParamTypes = paramTypes;
+                        }
                     }
+
+                    return new ConstructorInfo(largeConstructor,
+                            Collections.unmodifiableList(Arrays.asList(largeParamTypes)));
                 }
 
-                return new ConstructorInfo(largeConstructor,
-                        Collections.unmodifiableList(Arrays.asList(largeParamTypes)));
-            }
-
-        };
+            };
     }
 
     private ReflectUtils() {
@@ -326,12 +346,12 @@ public final class ReflectUtils {
      * Gets the value of a bean property.
      * 
      * @param bean
-     *            the bean object
+     *                     the bean object
      * @param propertyName
-     *            the bean property
+     *                     the bean property
      * @return the value of the bean property
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static Object getBeanProperty(Object bean, String propertyName) throws UnifyException {
         try {
@@ -382,12 +402,12 @@ public final class ReflectUtils {
      * </pre>
      * 
      * @param bean
-     *            the bean object
+     *                         the bean object
      * @param longPropertyName
-     *            the nested bean property long name
+     *                         the nested bean property long name
      * @return the value of the bean property
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static Object getNestedBeanProperty(Object bean, String longPropertyName) throws UnifyException {
         try {
@@ -419,8 +439,8 @@ public final class ReflectUtils {
         try {
             String[] properties = longPropertyName.split("\\.");
             for (int i = 0; i < properties.length && bean != null; i++) {
-                GetterSetterInfo getterSetterInfo =
-                        caseSensitiveGetterSetterMap.get(bean.getClass()).get(properties[i]);
+                GetterSetterInfo getterSetterInfo = caseSensitiveGetterSetterMap.get(bean.getClass())
+                        .get(properties[i]);
                 if (getterSetterInfo == null || !getterSetterInfo.isGetter()) {
                     return null;
                 }
@@ -439,13 +459,13 @@ public final class ReflectUtils {
      * Sets the value of the property of a bean.
      * 
      * @param bean
-     *            the bean object
+     *                     the bean object
      * @param propertyName
-     *            the property to set
+     *                     the property to set
      * @param value
-     *            the value to set
+     *                     the value to set
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static void setBeanProperty(Object bean, String propertyName, Object value) throws UnifyException {
         try {
@@ -497,13 +517,13 @@ public final class ReflectUtils {
      * </pre>
      * 
      * @param bean
-     *            the bean object
+     *                         the bean object
      * @param longPropertyName
-     *            the nested property long name
+     *                         the nested property long name
      * @param value
-     *            the value to set
+     *                         the value to set
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static void setNestedBeanProperty(Object bean, String longPropertyName, Object value) throws UnifyException {
         try {
@@ -529,12 +549,12 @@ public final class ReflectUtils {
      * Returns the getter information for a bean property.
      * 
      * @param beanClass
-     *            the bean class
+     *                     the bean class
      * @param propertyName
-     *            the property
+     *                     the property
      * @return the method
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static GetterSetterInfo getGetterInfo(Class<?> beanClass, String propertyName) throws UnifyException {
         GetterSetterInfo getterSetterInfo = caseSensitiveGetterSetterMap.get(beanClass).get(propertyName);
@@ -548,12 +568,12 @@ public final class ReflectUtils {
      * Returns the setter information for a bean property.
      * 
      * @param beanClass
-     *            the bean class
+     *                     the bean class
      * @param propertyName
-     *            the property
+     *                     the property
      * @return the method
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static GetterSetterInfo getSetterInfo(Class<?> beanClass, String propertyName) throws UnifyException {
         GetterSetterInfo getterSetterInfo = caseSensitiveGetterSetterMap.get(beanClass).get(propertyName);
@@ -579,10 +599,10 @@ public final class ReflectUtils {
      * Returns all getter/setter information for a bean class.
      * 
      * @param beanClass
-     *            the bean class
+     *                  the bean class
      * @return a list of getter/setter method info
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static List<GetterSetterInfo> getGetterSetterList(Class<?> beanClass) throws UnifyException {
         return caseSensitiveGetterSetterList.get(beanClass);
@@ -592,10 +612,10 @@ public final class ReflectUtils {
      * Returns all getter/setter information for a bean class.
      * 
      * @param beanClass
-     *            the bean class
+     *                  the bean class
      * @return a map of getter/setter method info by property name
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static Map<String, GetterSetterInfo> getGetterSetterMap(Class<?> beanClass) throws UnifyException {
         return caseSensitiveGetterSetterMap.get(beanClass);
@@ -605,9 +625,9 @@ public final class ReflectUtils {
      * Returns a list of all the bean compliant field names of a supplied type.
      * 
      * @param beanClass
-     *            the type
+     *                  the type
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static List<String> getBeanCompliantFieldNames(String beanClass) throws UnifyException {
         return beanFieldNamesMap.get(ReflectUtils.classForName(beanClass));
@@ -617,9 +637,9 @@ public final class ReflectUtils {
      * Returns a list of all the bean compliant field names of a supplied type.
      * 
      * @param beanClass
-     *            the bean type
+     *                  the bean type
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static List<String> getBeanCompliantFieldNames(Class<?> beanClass) throws UnifyException {
         return beanFieldNamesMap.get(beanClass);
@@ -630,10 +650,10 @@ public final class ReflectUtils {
      * type.
      * 
      * @param beanClassName
-     *            the name of the bean class
+     *                      the name of the bean class
      * @return a list of nested field names
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static List<String> getBeanCompliantNestedFieldNames(String beanClassName) throws UnifyException {
         return beanNestedFieldNamesMap.get(ReflectUtils.classForName(beanClassName));
@@ -644,10 +664,10 @@ public final class ReflectUtils {
      * type.
      * 
      * @param beanClass
-     *            the bean type
+     *                  the bean type
      * @return a list of nested field names
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static List<String> getBeanCompliantNestedFieldNames(Class<?> beanClass) throws UnifyException {
         return beanNestedFieldNamesMap.get(beanClass);
@@ -657,10 +677,10 @@ public final class ReflectUtils {
      * Returns a list of all the nested properties with getters of a supplied type.
      * 
      * @param beanClassName
-     *            the bean class name
+     *                      the bean class name
      * @return a list of properties with getters
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static List<PropertyInfo> getBeanCompliantNestedPropertiesWithGetters(String beanClassName)
             throws UnifyException {
@@ -671,10 +691,10 @@ public final class ReflectUtils {
      * Returns a list of all the nested properties with getters of a supplied type.
      * 
      * @param beanClass
-     *            the bean type
+     *                  the bean type
      * @return a list of properties with getters
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static List<PropertyInfo> getBeanCompliantNestedPropertiesWithGetters(Class<?> beanClass)
             throws UnifyException {
@@ -685,9 +705,10 @@ public final class ReflectUtils {
      * Asserts a supplied type is public, concrete and non-final.
      * 
      * @param clazz
-     *            the class to assert
+     *              the class to assert
      * @throws UnifyException
-     *             if supplied type is not public nor concrete or is final
+     *                        if supplied type is not public nor concrete or is
+     *                        final
      */
     public static void assertPublicConcreteNonFinal(Class<?> clazz) throws UnifyException {
         int modifiers = clazz.getModifiers();
@@ -709,9 +730,9 @@ public final class ReflectUtils {
      * Assert a non-static and non-final field.
      * 
      * @param field
-     *            the field to test
+     *              the field to test
      * @throws UnifyException
-     *             if field is static or final
+     *                        if field is static or final
      */
     public static void assertNonStaticNonFinal(Field field) throws UnifyException {
         int modifiers = field.getModifiers();
@@ -724,9 +745,9 @@ public final class ReflectUtils {
      * Asserts that a method can be overridden.
      * 
      * @param method
-     *            the method to test
+     *               the method to test
      * @throws UnifyException
-     *             if method can not be overriden
+     *                        if method can not be overriden
      */
     public static void assertOverridable(Method method) throws UnifyException {
         int modifiers = method.getModifiers();
@@ -739,11 +760,11 @@ public final class ReflectUtils {
      * Asserts that class has specific runtime annotation.
      * 
      * @param clazz
-     *            the type
+     *                   the type
      * @param annotClazz
-     *            the annotation type
+     *                   the annotation type
      * @throws UnifyException
-     *             if class has no such annotation
+     *                        if class has no such annotation
      */
     public static void assertAnnotation(Class<?> clazz, Class<? extends Annotation> annotClazz) throws UnifyException {
         if (!clazz.isAnnotationPresent(annotClazz)) {
@@ -755,11 +776,11 @@ public final class ReflectUtils {
      * Asserts the a type has a particular interface.
      * 
      * @param clazz
-     *            the type
+     *                      the type
      * @param intefaceClazz
-     *            the interface type
+     *                      the interface type
      * @throws UnifyException
-     *             if type does not have the specific interface
+     *                        if type does not have the specific interface
      */
     public static void assertInterface(Class<?> clazz, Class<?> intefaceClazz) throws UnifyException {
         if (!isInterface(clazz, intefaceClazz)) {
@@ -771,9 +792,9 @@ public final class ReflectUtils {
      * Tests if a type has a specific interface.
      * 
      * @param clazz
-     *            the type
+     *                      the type
      * @param intefaceClazz
-     *            the interface
+     *                      the interface
      */
     public static boolean isInterface(Class<?> clazz, Class<?> intefaceClazz) {
         while (clazz != null) {
@@ -792,13 +813,13 @@ public final class ReflectUtils {
      * Returns method by name and signature for supplied type.
      * 
      * @param clazz
-     *            the type
+     *                       the type
      * @param name
-     *            the method name
+     *                       the method name
      * @param parameterTypes
-     *            the method parameter types
+     *                       the method parameter types
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static Method getMethod(Class<?> clazz, String name, Class<?>... parameterTypes) throws UnifyException {
         try {
@@ -812,7 +833,7 @@ public final class ReflectUtils {
      * Computes the hash code of an object.
      * 
      * @param object
-     *            the object
+     *               the object
      * @return the computed hash code
      */
     @SuppressWarnings("unchecked")
@@ -824,9 +845,9 @@ public final class ReflectUtils {
      * Computes the hash code of an object.
      * 
      * @param object
-     *            the object
+     *               the object
      * @param ignore
-     *            Fields to ignore otherwise all fields are considered
+     *               Fields to ignore otherwise all fields are considered
      * @return the computed hash code
      */
     public static int beanHashCode(Object object, Set<String> ignore) {
@@ -862,9 +883,9 @@ public final class ReflectUtils {
      * Compares two objects.
      * 
      * @param a
-     *            object to compare
+     *          object to compare
      * @param b
-     *            object to compare
+     *          object to compare
      * @return true value if a equals b
      */
     public static boolean objectEquals(Object a, Object b) {
@@ -887,11 +908,11 @@ public final class ReflectUtils {
      * Compares two bean objects.
      * 
      * @param a
-     *            object to compare
+     *               object to compare
      * @param b
-     *            object to compare
+     *               object to compare
      * @param ignore
-     *            Fields to ignore otherwise all fields are considered
+     *               Fields to ignore otherwise all fields are considered
      * @return true value if a equals b
      */
     public static boolean beanEquals(Object a, Object b) {
@@ -903,11 +924,11 @@ public final class ReflectUtils {
      * Compares two bean objects.
      * 
      * @param a
-     *            object to compare
+     *               object to compare
      * @param b
-     *            object to compare
+     *               object to compare
      * @param ignore
-     *            Fields to ignore otherwise all fields are considered
+     *               Fields to ignore otherwise all fields are considered
      * @return true value if a equals b
      */
     public static boolean beanEquals(Object a, Object b, List<String> ignore) {
@@ -918,11 +939,11 @@ public final class ReflectUtils {
      * Compares two bean objects.
      * 
      * @param a
-     *            object to compare
+     *               object to compare
      * @param b
-     *            object to compare
+     *               object to compare
      * @param ignore
-     *            Fields to ignore otherwise all fields are considered
+     *               Fields to ignore otherwise all fields are considered
      * @return true value if a equals b
      */
     public static boolean beanEquals(Object a, Object b, Set<String> ignore) {
@@ -945,9 +966,9 @@ public final class ReflectUtils {
      * Returns a new shallow copy of supplied bean.
      * 
      * @param source
-     *            the supplied object
+     *               the supplied object
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     @SuppressWarnings("unchecked")
     public static <T> T shallowBeanCopy(T source) throws UnifyException {
@@ -970,12 +991,12 @@ public final class ReflectUtils {
      * Does a shallow copy of the values of source bean into destination bean.
      * 
      * @param destination
-     *            the destination object
+     *                    the destination object
      * @param source
-     *            the source object
+     *                    the source object
      * @return true if source is copied into destination
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static boolean shallowBeanCopy(Object destination, Object source) throws UnifyException {
         try {
@@ -1007,17 +1028,18 @@ public final class ReflectUtils {
      * destination object.
      * 
      * @param destination
-     *            the destination object
+     *                    the destination object
      * @param source
-     *            the source object
+     *                    the source object
      * @param fields
-     *            the fields to copy
+     *                    the fields to copy
      * @return true if source is copied into destination
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
-    public static boolean shallowBeanCopy(Object destination, Object source, List<String> fields) throws UnifyException {
-        try { 
+    public static boolean shallowBeanCopy(Object destination, Object source, List<String> fields)
+            throws UnifyException {
+        try {
             if (destination == source) {
                 return true;
             }
@@ -1045,12 +1067,12 @@ public final class ReflectUtils {
      * class.
      * 
      * @param clazz
-     *            the class
+     *                   the class
      * @param annotClazz
-     *            The annotation type
+     *                   The annotation type
      * @return the declared annotated fields
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static Field[] getAnnotatedFields(Class<?> clazz, Class<? extends Annotation> annotClazz)
             throws UnifyException {
@@ -1068,13 +1090,13 @@ public final class ReflectUtils {
      * specified class.
      * 
      * @param name
-     *            the field name
+     *                   the field name
      * @param clazz
-     *            the type
+     *                   the type
      * @param annotClazz
-     *            the annotation type
+     *                   the annotation type
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static Field getAnnotatedField(Class<?> clazz, String name, Class<? extends Annotation> annotClazz)
             throws UnifyException {
@@ -1089,13 +1111,13 @@ public final class ReflectUtils {
      * Returns a declared class field with specified name.
      * 
      * @param clazz
-     *            the class
+     *              the class
      * @param name
-     *            the field name
+     *              the field name
      * @return the field that matches supplied name iterating from subclass to super
      *         class
      * @throws UnifyException
-     *             if declared field with name is not found
+     *                        if declared field with name is not found
      */
     public static Field getField(Class<?> clazz, String name) throws UnifyException {
         Field field = declaredFieldMap.get(clazz).get(name);
@@ -1109,11 +1131,11 @@ public final class ReflectUtils {
      * Returns nested field type.
      * 
      * @param beanClazz
-     *            the base bean class
+     *                  the base bean class
      * @param name
-     *            the nested name
+     *                  the nested name
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static Class<?> getNestedFieldType(Class<?> beanClazz, String name) throws UnifyException {
         String[] names = name.split("\\.");
@@ -1128,11 +1150,11 @@ public final class ReflectUtils {
      * Returns true if a nested field of a class is gettable.
      * 
      * @param beanClazz
-     *            the bean class
+     *                  the bean class
      * @param name
-     *            the name of the field
+     *                  the name of the field
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static boolean isGettableField(Class<?> beanClazz, String name) throws UnifyException {
         if (name.indexOf('.') > 0) {
@@ -1154,11 +1176,11 @@ public final class ReflectUtils {
      * Returns true if a nested field of a class is settanle.
      * 
      * @param beanClazz
-     *            the bean class
+     *                  the bean class
      * @param name
-     *            the name of the field
+     *                  the name of the field
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static boolean isSettableField(Class<?> beanClazz, String name) throws UnifyException {
         if (name.indexOf('.') > 0) {
@@ -1187,12 +1209,12 @@ public final class ReflectUtils {
      * Returns a required class annotation.
      * 
      * @param clazz
-     *            the type
+     *                   the type
      * @param annotClazz
-     *            the annotation
+     *                   the annotation
      * @return the annotation
      * @throws UnifyException
-     *             if class does not have specified annotation
+     *                        if class does not have specified annotation
      */
     public static <T extends Annotation> T getAnnotation(Class<?> clazz, Class<T> annotClazz) throws UnifyException {
         T t = clazz.getAnnotation(annotClazz);
@@ -1211,14 +1233,14 @@ public final class ReflectUtils {
             ReflectUtils.classForNameProvider = null;
         }
     }
-    
+
     /**
      * Returns class for supplied name.
      * 
      * @param className
-     *            the name of the class
+     *                  the name of the class
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static Class<?> classForName(String className) throws UnifyException {
         try {
@@ -1226,14 +1248,14 @@ public final class ReflectUtils {
             if (clazz != null) {
                 return clazz;
             }
-            
+
             if (classForNameProvider != null) {
                 clazz = classForNameProvider.classForName(className);
                 if (clazz != null) {
                     return clazz;
                 }
             }
-            
+
             return Class.forName(className);
         } catch (Exception e) {
             throw new UnifyOperationException(e, ReflectUtils.class);
@@ -1244,11 +1266,11 @@ public final class ReflectUtils {
      * Returns a casted new instance of specific type.
      * 
      * @param clazz
-     *            the type to cast new instance to
+     *                  the type to cast new instance to
      * @param className
-     *            the name of the class
+     *                  the name of the class
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     @SuppressWarnings("unchecked")
     public static <T> T newInstance(Class<T> clazz, String className) throws UnifyException {
@@ -1263,9 +1285,9 @@ public final class ReflectUtils {
      * Returns a new instance of specific type.
      * 
      * @param clazz
-     *            the type
+     *              the type
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static <T> T newInstance(Class<T> clazz) throws UnifyException {
         try {
@@ -1279,14 +1301,14 @@ public final class ReflectUtils {
      * Returns a new instance of specific type using supplied parameters.
      * 
      * @param clazz
-     *            the instance type
+     *                       the instance type
      * @param parameterTypes
-     *            the constructor parameter types
+     *                       the constructor parameter types
      * @param parameters
-     *            the parameters
+     *                       the parameters
      * @return the instance
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static <T> T newInstance(Class<T> clazz, Class<?>[] parameterTypes, Object... parameters)
             throws UnifyException {
@@ -1302,12 +1324,12 @@ public final class ReflectUtils {
      * and parameters.
      * 
      * @param clazz
-     *            the instance type
+     *                   the instance type
      * @param parameters
-     *            the parameters
+     *                   the parameters
      * @return the instance
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     @SuppressWarnings("unchecked")
     public static <T> T newInstanceFromLargestConstructor(Class<T> clazz, Object... parameters) throws UnifyException {
@@ -1322,9 +1344,9 @@ public final class ReflectUtils {
      * Returns the largest constructor parameters for supplied class.
      * 
      * @param clazz
-     *            the class to check
+     *              the class to check
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static <T> List<Class<?>> getLargestConstructorParameters(Class<T> clazz) throws UnifyException {
         return largeConstructorMap.get(clazz).getParams();
@@ -1334,7 +1356,7 @@ public final class ReflectUtils {
      * Gets class hierarchy list from super class down to supplied sub class.
      * 
      * @param clazz
-     *            the type
+     *              the type
      * @return the class hierarchy list
      */
     public static List<Class<?>> getClassHierachyList(Class<?> clazz) {
@@ -1350,12 +1372,12 @@ public final class ReflectUtils {
      * Returns annotated constant strings for a specified type.
      * 
      * @param constantsClass
-     *            the type
+     *                        the type
      * @param annotationClass
-     *            the annotation type
+     *                        the annotation type
      * @return the map of string constants to annotation
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static <T extends Annotation> Map<String, T> getStringConstantFieldAnnotations(Class<?> constantsClass,
             Class<? extends T> annotationClass) throws UnifyException {
@@ -1372,9 +1394,9 @@ public final class ReflectUtils {
      * Gets the string value of a constant field.
      * 
      * @param longFieldName
-     *            the long java name of the field
+     *                      the long java name of the field
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     public static String getPublicStaticStringConstant(String longFieldName) throws UnifyException {
         try {
@@ -1411,12 +1433,15 @@ public final class ReflectUtils {
 
     public static Class<?> getArgumentType(Type type, int index) throws UnifyException {
         if (type instanceof ParameterizedType) {
-            Type argType = ((ParameterizedType) type).getActualTypeArguments()[index];
-            if (argType instanceof WildcardType) {
-                argType = ((WildcardType) argType).getUpperBounds()[0];
-            }
-            if (argType instanceof Class) {
-                return (Class<?>) argType;
+            Type[] argTypes = ((ParameterizedType) type).getActualTypeArguments();
+            if (index >= 0 && index < argTypes.length) {
+                Type argType = ((ParameterizedType) type).getActualTypeArguments()[index];
+                if (argType instanceof WildcardType) {
+                    argType = ((WildcardType) argType).getUpperBounds()[0];
+                }
+                if (argType instanceof Class) {
+                    return (Class<?>) argType;
+                }
             }
         }
         return null;

@@ -38,6 +38,10 @@ public class MockServiceImpl extends AbstractBusinessService implements MockServ
     @Configurable("anothermockservice")
     private AnotherMockService anotherMockService;
 
+    public void setAnotherMockService(AnotherMockService anotherMockService) {
+        this.anotherMockService = anotherMockService;
+    }
+
     @Override
     @Synchronized("sling")
     public int add(int a, int b) throws UnifyException {

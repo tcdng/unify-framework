@@ -41,6 +41,14 @@ public class ClusterLockTask extends AbstractTask {
 
     private static double sharedValue;
 
+    public void setSharedTestCount(int sharedTestCount) {
+        this.sharedTestCount = sharedTestCount;
+    }
+
+    public void setClusterManager(ClusterService clusterManager) {
+        this.clusterManager = clusterManager;
+    }
+
     @Override
     public void execute(TaskMonitor taskMonitor, TaskInput input, TaskOutput output) throws UnifyException {
         for (int i = 0; i < sharedTestCount; i++) {

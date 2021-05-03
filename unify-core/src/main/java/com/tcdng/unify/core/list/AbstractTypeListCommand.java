@@ -42,6 +42,10 @@ public abstract class AbstractTypeListCommand<T extends UnifyComponent> extends 
         this.typeClass = typeClazz;
     }
 
+    public void setTypeListFactory(TypeListFactory typeListFactory) {
+        this.typeListFactory = typeListFactory;
+    }
+
     @Override
     public List<? extends Listable> execute(Locale locale, ZeroParams params) throws UnifyException {
         return typeListFactory.getTypeList(locale, typeClass);

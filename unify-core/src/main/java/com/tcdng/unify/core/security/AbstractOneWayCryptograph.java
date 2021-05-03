@@ -34,6 +34,10 @@ public class AbstractOneWayCryptograph extends AbstractUnifyComponent {
     @Configurable("The Code Department")
     private String encryptionKey;
 
+    public void setEncryptionKey(String encryptionKey) {
+        this.encryptionKey = encryptionKey;
+    }
+
     @Override
     protected void onInitialize() throws UnifyException {
 

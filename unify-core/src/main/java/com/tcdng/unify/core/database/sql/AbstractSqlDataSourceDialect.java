@@ -152,6 +152,22 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         noPrecisionTypes = new HashSet<String>(Arrays.asList("BIGINT", "DATETIME"));
     }
 
+    public void setSqlEntityInfoFactory(SqlEntityInfoFactory sqlEntityInfoFactory) {
+        this.sqlEntityInfoFactory = sqlEntityInfoFactory;
+    }
+
+    public void setGetStatementInfoTimeout(long getStatementInfoTimeout) {
+        this.getStatementInfoTimeout = getStatementInfoTimeout;
+    }
+
+    public void setMinStatementInfo(int minStatementInfo) {
+        this.minStatementInfo = minStatementInfo;
+    }
+
+    public void setMaxStatementInfo(int maxStatementInfo) {
+        this.maxStatementInfo = maxStatementInfo;
+    }
+
     @Override
     public String getDataSourceName() {
         return dataSourceName;

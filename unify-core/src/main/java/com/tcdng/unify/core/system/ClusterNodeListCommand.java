@@ -38,6 +38,10 @@ public class ClusterNodeListCommand extends AbstractZeroParamsListCommand {
     @Configurable
     private ClusterService clusterService;
 
+    public void setClusterService(ClusterService clusterService) {
+        this.clusterService = clusterService;
+    }
+
     @Override
     public List<? extends Listable> execute(Locale locale, ZeroParams params) throws UnifyException {
         return clusterService

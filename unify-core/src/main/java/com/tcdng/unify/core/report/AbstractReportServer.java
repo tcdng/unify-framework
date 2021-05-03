@@ -58,6 +58,14 @@ public abstract class AbstractReportServer extends AbstractUnifyComponent
         reportLayoutManagers = new HashMap<String, ReportLayoutManager>();
     }
 
+    public void setDefaultDatasource(String defaultDatasource) {
+        this.defaultDatasource = defaultDatasource;
+    }
+
+    public void setDynamicSqlDataSourceManager(DynamicSqlDataSourceManager dynamicSqlDataSourceManager) {
+        this.dynamicSqlDataSourceManager = dynamicSqlDataSourceManager;
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public <T> Formatter<T> getFormatter(String formatterUpl) throws UnifyException {

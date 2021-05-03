@@ -97,6 +97,7 @@ public abstract class AbstractEmailServer extends AbstractUnifyComponent impleme
     @Override
     public void configure(String configName, EmailServerConfig emailServerConfig) throws UnifyException {
         configurations.remove(configName);
+        logDebug("Configuring email server with [{0}]...", emailServerConfig);
         configurations.get(configName, emailServerConfig);
     }
 

@@ -85,7 +85,7 @@ public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManag
     private Map<String, TaskableMethodConfig> taskConfigByNameMap;
 
     private FactoryMap<String, List<ParamConfig>> taskParamConfigByTypeMap;
-    
+
     public TaskManagerImpl() {
         uniqueTaskIDSet = Collections.synchronizedSet(new HashSet<String>());
         taskConfigByNameMap = new HashMap<String, TaskableMethodConfig>();
@@ -98,6 +98,26 @@ public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManag
                 }
 
             };
+    }
+    
+    public void setProxyMethodRelay(ProxyBusinessServiceMethodRelay proxyMethodRelay) {
+        this.proxyMethodRelay = proxyMethodRelay;
+    }
+
+    public void setTaskStatusLogger(TaskStatusLogger taskStatusLogger) {
+        this.taskStatusLogger = taskStatusLogger;
+    }
+
+    public void setRequestContextManager(RequestContextManager requestContextManager) {
+        this.requestContextManager = requestContextManager;
+    }
+
+    public void setMaxThreads(int maxThreads) {
+        this.maxThreads = maxThreads;
+    }
+
+    public void setMaxMonitorMessages(int maxMonitorMessages) {
+        this.maxMonitorMessages = maxMonitorMessages;
     }
 
     @Override

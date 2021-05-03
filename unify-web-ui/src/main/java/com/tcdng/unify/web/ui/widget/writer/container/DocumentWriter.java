@@ -51,6 +51,18 @@ public class DocumentWriter extends AbstractPageWriter {
     @Configurable
     private FontSymbolManager fontSymbolManager;
 
+    public void setPathInfoRepository(PagePathInfoRepository pathInfoRepository) {
+        this.pathInfoRepository = pathInfoRepository;
+    }
+
+    public void setResources(BasicDocumentResources resources) {
+        this.resources = resources;
+    }
+
+    public void setFontSymbolManager(FontSymbolManager fontSymbolManager) {
+        this.fontSymbolManager = fontSymbolManager;
+    }
+
     @Override
     protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
         BasicDocument document = (BasicDocument) widget;
