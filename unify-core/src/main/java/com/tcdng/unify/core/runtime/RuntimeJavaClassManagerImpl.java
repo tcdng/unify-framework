@@ -23,9 +23,12 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.codehaus.commons.compiler.CompilerFactoryFactory;
@@ -40,7 +43,6 @@ import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
-import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.IOUtils;
 import com.tcdng.unify.core.util.ReflectUtils;
 
@@ -57,10 +59,10 @@ public class RuntimeJavaClassManagerImpl extends AbstractRuntimeJavaClassManager
 
     private RuntimeClassLoader runtimeClassLoader;
 
-    private int classLoaderDepth;
-
+    private int runtimeClassLoaderDiscardCount;
+    
     public RuntimeJavaClassManagerImpl() {
-        classByName = new ConcurrentHashMap<String, Class<?>>();
+        reset();
     }
 
     @Override
@@ -119,21 +121,21 @@ public class RuntimeJavaClassManagerImpl extends AbstractRuntimeJavaClassManager
             for(JavaClassSource source: sourceList) {
                 logDebug("@Source: \n{0}", source.getSrc());
             }
-            
+
             throw e;
         }
     }
 
     @Override
-    public int getClassLoaderDepth() {
-        return classLoaderDepth;
+    public synchronized void reset() {
+        runtimeClassLoader = new RuntimeClassLoader(getClass().getClassLoader());
+        classByName = new ConcurrentHashMap<String, Class<?>>();
+        runtimeClassLoaderDiscardCount = 0;
     }
 
     @Override
-    public synchronized void clearClassLoader() {
-        classByName.clear();
-        runtimeClassLoader = null;
-        classLoaderDepth = 0;
+    public int getRuntimeClassLoaderDiscardCount() {
+        return runtimeClassLoaderDiscardCount;
     }
 
     @Override
@@ -152,9 +154,12 @@ public class RuntimeJavaClassManagerImpl extends AbstractRuntimeJavaClassManager
 
         private Map<String, byte[]> byteCodes;
 
+        private Set<String> history;
+        
         public RuntimeClassLoader(ClassLoader parent) {
             super(parent);
             byteCodes = new HashMap<String, byte[]>();
+            history = new HashSet<String>();
         }
 
         public RuntimeClassLoader setByteCodes(String className, byte[] byteCode) {
@@ -162,6 +167,20 @@ public class RuntimeJavaClassManagerImpl extends AbstractRuntimeJavaClassManager
             return this;
         }
 
+        public void clearByteCodes() {
+            byteCodes.clear();
+        }
+        
+        public boolean isInHistory(List<String> classNames) {
+            for (String className : classNames) {
+                if (history.contains(className)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+        
         // Implement child-first
         @Override
         protected Class<?> loadClass(String className, boolean resolve) throws ClassNotFoundException {
@@ -196,7 +215,7 @@ public class RuntimeJavaClassManagerImpl extends AbstractRuntimeJavaClassManager
             }
 
             Class<?> clazz = defineClass(className, byteCode, 0, byteCode.length);
-            byteCode = null;
+            history.add(className);
             return clazz;
         }
 
@@ -204,7 +223,7 @@ public class RuntimeJavaClassManagerImpl extends AbstractRuntimeJavaClassManager
 
     private synchronized Class<?> innerCompileAndLoadClass(String className, Reader reader) throws UnifyException {
         try {
-            RuntimeClassLoader loader = getRuntimeClassLoader(className);
+            RuntimeClassLoader loader = getRuntimeClassLoader(Arrays.asList(className));
             SimpleCompiler compiler = new SimpleCompiler();
             compiler.setParentClassLoader(loader);
             compiler.cook(reader);
@@ -220,6 +239,7 @@ public class RuntimeJavaClassManagerImpl extends AbstractRuntimeJavaClassManager
     private synchronized List<Class<?>> innerCompileAndLoadClasses(List<JavaClassSource> sourceList)
             throws UnifyException {
         List<Class<?>> resultList = new ArrayList<Class<?>>();
+        RuntimeClassLoader loader = null;
         try {
             ICompilerFactory compilerFactory = CompilerFactoryFactory.getDefaultCompilerFactory();
             ICompiler compiler = compilerFactory.newCompiler();
@@ -236,7 +256,7 @@ public class RuntimeJavaClassManagerImpl extends AbstractRuntimeJavaClassManager
             Map<String, byte[]> compiledClasses = new HashMap<String, byte[]>();
             compiler.setClassFileCreator(new MapResourceCreator(compiledClasses));
             compiler.compile(sourceResources);
-            RuntimeClassLoader loader = getRuntimeClassLoader(DataUtils.toArray(String.class, classNameList));
+            loader = getRuntimeClassLoader(classNameList);
             for (Map.Entry<String, byte[]> entry : compiledClasses.entrySet()) {
                 int lastIndex = entry.getKey().lastIndexOf('.');
                 loader.setByteCodes(entry.getKey().substring(0, lastIndex).replace('/', '.'), entry.getValue());
@@ -249,23 +269,19 @@ public class RuntimeJavaClassManagerImpl extends AbstractRuntimeJavaClassManager
             }
         } catch (Exception e) {
             throw new UnifyException(e, UnifyCoreErrorConstants.COMPILER_CLASSLOAD_ERROR);
+        } finally {
+            if (loader != null) {
+                loader.clearByteCodes();
+            }
         }
 
         return resultList;
     }
 
-    private RuntimeClassLoader getRuntimeClassLoader(String... classNames) {
-        if (runtimeClassLoader == null) {
-            runtimeClassLoader = new RuntimeClassLoader(getClass().getClassLoader());
-            classLoaderDepth++;
-        } else {
-            for (String className : classNames) {
-                if (classByName.containsKey(className)) {
-                    runtimeClassLoader = new RuntimeClassLoader(runtimeClassLoader);
-                    classLoaderDepth++;
-                    break;
-                }
-            }
+    private RuntimeClassLoader getRuntimeClassLoader(List<String> classNames) {
+        if (runtimeClassLoader.isInHistory(classNames)) {
+            runtimeClassLoader = new RuntimeClassLoader(getClass().getClassLoader()); 
+            runtimeClassLoaderDiscardCount++;
         }
 
         return runtimeClassLoader;

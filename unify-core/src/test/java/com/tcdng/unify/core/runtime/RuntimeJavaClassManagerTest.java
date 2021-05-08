@@ -82,7 +82,7 @@ public class RuntimeJavaClassManagerTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testCompileAndLoadClassString() throws Exception {
-        rjcm.clearClassLoader();
+        rjcm.reset();
         Class<?> clazz = rjcm.compileAndLoadJavaClass("com.tcdng.unify.core.runtime.EnglishHello", engHelloSrc);
         assertNotNull(clazz);
         assertEquals("com.tcdng.unify.core.runtime.EnglishHello", clazz.getName());
@@ -94,7 +94,7 @@ public class RuntimeJavaClassManagerTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testCompileAndLoadClassFunction() throws Exception {
-        rjcm.clearClassLoader();
+        rjcm.reset();
         Class<?> clazz = rjcm.compileAndLoadJavaClass("com.tcdng.unify.core.runtime.NaijaHello", naijaHelloSrc);
         assertNotNull(clazz);
         Hello hello = (Hello) ReflectUtils.newInstance(clazz);
@@ -112,7 +112,7 @@ public class RuntimeJavaClassManagerTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testCompileAndLoadClassStringWithRef() throws Exception {
-        rjcm.clearClassLoader();
+        rjcm.reset();
         rjcm.compileAndLoadJavaClass("com.tcdng.unify.core.runtime.NaijaHello", naijaHelloSrc);
 
         Class<?> clazz = rjcm.compileAndLoadJavaClass("com.tcdng.unify.core.runtime.NaijaPerson", naijaPersonSrc);
@@ -120,15 +120,18 @@ public class RuntimeJavaClassManagerTest extends AbstractUnifyComponentTest {
         assertEquals("com.tcdng.unify.core.runtime.NaijaPerson", clazz.getName());
         Person person = (Person) ReflectUtils.newInstance(clazz);
         assertEquals("How now?", person.sayHello());
+        assertEquals(0, rjcm.getRuntimeClassLoaderDiscardCount());
     }
 
     @Test
     public void testCompileAndLoadClassStringWithNewRef() throws Exception {
-        rjcm.clearClassLoader();
+        rjcm.reset();
         rjcm.compileAndLoadJavaClass("com.tcdng.unify.core.runtime.NaijaHello", naijaHelloSrc);
         rjcm.compileAndLoadJavaClass("com.tcdng.unify.core.runtime.NaijaHello", hausaHelloSrc); // Test child-first
+        assertEquals(1, rjcm.getRuntimeClassLoaderDiscardCount());
 
         Class<?> clazz = rjcm.compileAndLoadJavaClass("com.tcdng.unify.core.runtime.NaijaPerson", naijaPersonSrc);
+        assertEquals(1, rjcm.getRuntimeClassLoaderDiscardCount());
         assertNotNull(clazz);
         assertEquals("com.tcdng.unify.core.runtime.NaijaPerson", clazz.getName());
         Person person = (Person) ReflectUtils.newInstance(clazz);
@@ -137,7 +140,7 @@ public class RuntimeJavaClassManagerTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testCompileAndLoadClassesCircular() throws Exception {
-        rjcm.clearClassLoader();
+        rjcm.reset();
         List<JavaClassSource> sourceList = Arrays.asList(
                 new JavaClassSource("com.tcdng.unify.core.runtime.AuthorImpl", authorSrc),
                 new JavaClassSource("com.tcdng.unify.core.runtime.BookImpl", bookSrc));
@@ -162,21 +165,7 @@ public class RuntimeJavaClassManagerTest extends AbstractUnifyComponentTest {
         assertEquals("Leviathan Wakes", book.getTitle());
         book = books.get(1);
         assertEquals("Caliban's War", book.getTitle());
-    }
-
-    @Test
-    public void testCompileAndLoadClassLoaderDepth() throws Exception {
-        rjcm.clearClassLoader();
-        assertEquals(0, rjcm.getClassLoaderDepth());
-        rjcm.compileAndLoadJavaClass("com.tcdng.unify.core.runtime.NaijaHello", naijaHelloSrc);
-        assertEquals(1, rjcm.getClassLoaderDepth());
-        rjcm.compileAndLoadJavaClass("com.tcdng.unify.core.runtime.EnglishHello", engHelloSrc);
-        assertEquals(1, rjcm.getClassLoaderDepth());
-        rjcm.compileAndLoadJavaClass("com.tcdng.unify.core.runtime.NaijaPerson", naijaPersonSrc);
-        assertEquals(1, rjcm.getClassLoaderDepth());
-
-        rjcm.compileAndLoadJavaClass("com.tcdng.unify.core.runtime.NaijaHello", hausaHelloSrc);
-        assertEquals(2, rjcm.getClassLoaderDepth());
+        assertEquals(0, rjcm.getRuntimeClassLoaderDiscardCount());
     }
 
     @Override
