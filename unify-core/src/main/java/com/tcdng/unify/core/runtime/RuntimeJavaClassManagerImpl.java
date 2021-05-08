@@ -184,19 +184,21 @@ public class RuntimeJavaClassManagerImpl extends AbstractRuntimeJavaClassManager
         // Implement child-first
         @Override
         protected Class<?> loadClass(String className, boolean resolve) throws ClassNotFoundException {
-            Class<?> loadedClass = findLoadedClass(className);
-            if (loadedClass == null) {
-                try {
-                    loadedClass = findClass(className);
-                } catch (ClassNotFoundException e) {
-                    loadedClass = super.loadClass(className, resolve);
+            synchronized (getClassLoadingLock(className)) {
+                Class<?> loadedClass = findLoadedClass(className);
+                if (loadedClass == null) {
+                    try {
+                        loadedClass = findClass(className);
+                    } catch (ClassNotFoundException e) {
+                        loadedClass = super.loadClass(className, resolve);
+                    }
                 }
-            }
 
-            if (resolve) {
-                resolveClass(loadedClass);
+                if (resolve) {
+                    resolveClass(loadedClass);
+                }
+                return loadedClass;
             }
-            return loadedClass;
         }
 
         @Override
