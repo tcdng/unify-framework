@@ -16,6 +16,7 @@
 package com.tcdng.unify.core;
 
 import java.io.InputStream;
+import java.net.URL;
 import java.util.logging.LogManager;
 
 import com.tcdng.unify.core.util.CommandInterfaceUtils;
@@ -61,9 +62,9 @@ public class Unify {
         }
 
         if ("startup".equalsIgnoreCase(operation)) {
-            Unify.doStartup(workingFolder, configFile, false);
+            Unify.doStartup(workingFolder, configFile, null, false);
         } else if ("install".equalsIgnoreCase(operation)) {
-            Unify.doStartup(workingFolder, configFile, true);
+            Unify.doStartup(workingFolder, configFile, null, true);
         } else if ("shutdown".equalsIgnoreCase(operation)) {
             Unify.doShutdown(host, port);
         } else if ("help".equalsIgnoreCase(operation)) {
@@ -72,6 +73,11 @@ public class Unify {
             System.err.println("Unknown operation - " + operation);
             System.exit(1);
         }
+    }
+
+    public static synchronized void startup(String workingFolder, URL... baseUrls)
+            throws UnifyException {
+        Unify.doStartup(workingFolder, null, baseUrls, true);
     }
 
     public static synchronized UnifyContainer startup(UnifyContainerEnvironment uce, UnifyContainerConfig ucc)
@@ -111,12 +117,13 @@ public class Unify {
         return uc;
     }
 
-    private static void doStartup(String workingFolder, String configFile, boolean deploymentMode) {
+    private static void doStartup(String workingFolder, String configFile, URL[] baseUrls, boolean deploymentMode) {
         // Java 9 an 10 temp fix for jaxb binding and warnings
-        // This is a temporary fix and should be removed and resolved with jaxb-api 2.3.1 when moving to minimum Java 9
+        // This is a temporary fix and should be removed and resolved with jaxb-api
+        // 2.3.1 when moving to minimum Java 9
         System.setProperty("com.sun.xml.bind.v2.bytecode.ClassTailor.noOptimize", "true");
         LogManager.getLogManager().reset();
-        
+
         if (workingFolder == null || workingFolder.isEmpty()) {
             workingFolder = System.getProperty("user.dir");
         }
@@ -124,7 +131,7 @@ public class Unify {
         UnifyContainerEnvironment uce = null;
         UnifyContainerConfig.Builder uccb = UnifyContainerConfig.newBuilder();
         try {
-            TypeRepository tr = TypeUtils.getTypeRepositoryFromClasspath();
+            TypeRepository tr = TypeUtils.getTypeRepositoryFromClasspath(baseUrls);
             uce = new UnifyContainerEnvironment(tr, workingFolder);
             UnifyConfigUtils.readConfigFromTypeRepository(uccb, tr);
             uccb.deploymentMode(deploymentMode);
