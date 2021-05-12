@@ -160,6 +160,8 @@ public class UnifyContainer {
 
 	private TimeZone applicationTimeZone;
 
+	private short preferredPort;
+	
 	private boolean applicationIgnoreViewDirective;
 
 	private boolean toConsole;
@@ -257,6 +259,7 @@ public class UnifyContainer {
 		aliases = ucc.getAliases();
 		staticSettings = ucc.getStaticSettings();
 		nodeId = ucc.getNodeId();
+		preferredPort = ucc.getPreferredPort();
 
 		if (nodeId == null) {
 			throw new UnifyException(UnifyCoreErrorConstants.CONTAINER_NODEID_REQUIRED);
@@ -612,7 +615,7 @@ public class UnifyContainer {
 	 * 
 	 * @return the container information object
 	 */
-	public UnifyContainerInfo getInfo() {
+	public UnifyContainerInfo getInfo() throws UnifyException {
 		List<UnifyComponentInfo> componentInfoList = new ArrayList<UnifyComponentInfo>();
 		for (InternalUnifyComponentInfo uici : internalUnifyComponentInfos.values()) {
 			List<Setting> settingInfoList = new ArrayList<Setting>();
@@ -836,6 +839,10 @@ public class UnifyContainer {
 		return deploymentVersion;
 	}
 
+	public short getPreferredPort() {
+	    return preferredPort;
+	}
+	
 	public List<UnifyStaticSettings> getStaticSettings() {
 		return staticSettings;
 	}

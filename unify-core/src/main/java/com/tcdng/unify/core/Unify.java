@@ -45,7 +45,7 @@ public class Unify {
         String workingFolder = null;
         String configFile = null;
         String host = UnifyCoreConstants.DEFAULT_UNIFY_HOST;
-        short port = UnifyCoreConstants.DEFAULT_COMMAND_PORT;
+        short port = 0;
 
         for (int i = 1; i <= (args.length - 2); i += 2) {
             if ("-w".equals(args[i])) {
@@ -62,10 +62,14 @@ public class Unify {
         }
 
         if ("startup".equalsIgnoreCase(operation)) {
-            Unify.doStartup(workingFolder, configFile, null, false);
+            Unify.doStartup(workingFolder, configFile, null, port, false);
         } else if ("install".equalsIgnoreCase(operation)) {
-            Unify.doStartup(workingFolder, configFile, null, true);
+            Unify.doStartup(workingFolder, configFile, null, port, true);
         } else if ("shutdown".equalsIgnoreCase(operation)) {
+            if (port <= 0) {
+                port = UnifyCoreConstants.DEFAULT_COMMAND_PORT;
+            }
+            
             Unify.doShutdown(host, port);
         } else if ("help".equalsIgnoreCase(operation)) {
             Unify.doHelp();
@@ -75,9 +79,9 @@ public class Unify {
         }
     }
 
-    public static synchronized void startup(String workingFolder, URL... baseUrls)
+    public static synchronized void startup(String workingFolder, short preferredPort, URL... baseUrls)
             throws UnifyException {
-        Unify.doStartup(workingFolder, null, baseUrls, true);
+        Unify.doStartup(workingFolder, null, baseUrls, preferredPort, true);
     }
 
     public static synchronized UnifyContainer startup(UnifyContainerEnvironment uce, UnifyContainerConfig ucc)
@@ -117,7 +121,7 @@ public class Unify {
         return uc;
     }
 
-    private static void doStartup(String workingFolder, String configFile, URL[] baseUrls, boolean deploymentMode) {
+    private static void doStartup(String workingFolder, String configFile, URL[] baseUrls, short preferredPort, boolean deploymentMode) {
         // Java 9 an 10 temp fix for jaxb binding and warnings
         // This is a temporary fix and should be removed and resolved with jaxb-api
         // 2.3.1 when moving to minimum Java 9
@@ -168,6 +172,10 @@ public class Unify {
         }
 
         try {
+            if (preferredPort > 0) {
+                uccb.preferredPort(preferredPort);
+            }
+            
             UnifyContainerConfig ucc = uccb.build();
             Unify.startup(uce, ucc);
         } catch (UnifyException e) {

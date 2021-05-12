@@ -571,6 +571,10 @@ public class UnifyComponentContext {
 		return applicationContext.getContainer().getNodeId();
 	}
 
+	public short getPreferredPort() throws UnifyException {
+	    return applicationContext.getContainer().getPreferredPort();
+	}
+	
 	public String getInstanceCode() throws UnifyException {
 		return applicationContext.getContainer().getInstanceCode();
 	}

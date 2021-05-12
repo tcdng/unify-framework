@@ -54,7 +54,7 @@ public class JettyEmbeddedWebServer extends AbstractEmbeddedHttpWebServer {
     }
 
     @Override
-    public int getPort() {
+    public int getPort() throws UnifyException {
         return getHttpPort();
     }
 

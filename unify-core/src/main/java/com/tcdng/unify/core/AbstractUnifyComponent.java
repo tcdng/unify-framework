@@ -505,16 +505,26 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 		return unifyComponentContext.isDeploymentMode();
 	}
 
-	/**
-	 * Gets the component container node ID.
-	 * 
-	 * @return the node ID. A null value is returned if container is not in cluster
-	 *         mode.
-	 * @throws UnifyException if an error occurs
-	 */
-	protected String getNodeId() throws UnifyException {
-		return unifyComponentContext.getNodeId();
-	}
+    /**
+     * Gets the component container node ID.
+     * 
+     * @return the node ID. A null value is returned if container is not in cluster
+     *         mode.
+     * @throws UnifyException if an error occurs
+     */
+    protected String getNodeId() throws UnifyException {
+        return unifyComponentContext.getNodeId();
+    }
+
+    /**
+     * Gets the component container preferred port.
+     * 
+     * @return the container preferred port.
+     * @throws UnifyException if an error occurs
+     */
+    protected short getPreferredPort() throws UnifyException {
+        return unifyComponentContext.getPreferredPort();
+    }
 
 	/**
 	 * Gets the component context line separator.

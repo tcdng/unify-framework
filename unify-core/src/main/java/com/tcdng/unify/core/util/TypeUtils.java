@@ -53,7 +53,9 @@ public class TypeUtils {
                         classpathDB.setScanParameterAnnotations(false);
 
                         List<URL> finalUrls = new ArrayList<URL>();
-                        finalUrls.addAll(Arrays.asList(baseUrls));
+                        if (baseUrls != null) {
+                            finalUrls.addAll(Arrays.asList(baseUrls));
+                        }
                         
                         URL[] urls = ClasspathUrlFinder.findClassPaths();
                         if (urls != null) {
