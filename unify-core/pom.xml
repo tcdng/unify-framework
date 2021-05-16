@@ -79,7 +79,7 @@
 		<dependency>
 			<groupId>org.javassist</groupId>
 			<artifactId>javassist</artifactId>
-			<version>3.21.0-GA</version>
+			<version>3.25.0-GA</version>
 		</dependency>
 		<dependency>
 			<groupId>org.codehaus.janino</groupId>
@@ -122,11 +122,6 @@
 			<artifactId>minimal-json</artifactId>
 			<version>0.9.5</version>
 		</dependency>
-		<dependency>
-			<groupId>commons-codec</groupId>
-			<artifactId>commons-codec</artifactId>
-			<version>1.5</version>
-		</dependency>
 		<!-- Java 9 and above -->
         <dependency>
             <groupId>javax.xml.bind</groupId>
@@ -143,27 +138,5 @@
             <artifactId>jaxb-impl</artifactId>
             <version>2.3.0</version>
         </dependency>
-		<dependency>
-			<groupId>org.javassist</groupId>
-			<artifactId>javassist</artifactId>
-			<version>3.25.0-GA</version>
-		</dependency>
-
-        		<!--dependency>
-			<groupId>jakarta.xml.bind</groupId>
-			<artifactId>jakarta.xml.bind-api</artifactId>
-			<version>2.3.3</version>
-		</dependency>
-		<dependency>
-			<groupId>com.sun.xml.bind</groupId>
-			<artifactId>jaxb-impl</artifactId>
-			<version>2.3.3</version>
-			<scope>runtime</scope>
-		</dependency>
-		<-dependency>
-			<groupId>org.javassist</groupId>
-			<artifactId>javassist</artifactId>
-			<version>3.25.0-GA</version>
-		</dependency-->
 	</dependencies>
 </project>
