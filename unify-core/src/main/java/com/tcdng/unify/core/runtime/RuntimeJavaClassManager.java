@@ -127,11 +127,4 @@ public interface RuntimeJavaClassManager extends UnifyComponent, ClassForNamePro
      * Resets manager.
      */
     void reset();
-    
-    /**
-     * Gets the runtime class loader discard count.
-     * 
-     * @return the number of discards;
-     */
-    int getRuntimeClassLoaderDiscardCount();
 }
