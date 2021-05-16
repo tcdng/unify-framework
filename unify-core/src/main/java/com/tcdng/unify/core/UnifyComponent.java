@@ -52,4 +52,11 @@ public interface UnifyComponent {
      *             if an error occurs
      */
     void terminate() throws UnifyException;
+    
+    /**
+     * Returns true if component is initialized.
+     * 
+     * @return true if initialized
+     */
+    boolean isInitialized();
 }

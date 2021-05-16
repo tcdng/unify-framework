@@ -84,7 +84,12 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 		return null;
 	}
 
-	/**
+	@Override
+    public final boolean isInitialized() {
+        return unifyComponentContext != null;
+    }
+
+    /**
 	 * Gets the component context.
 	 *
 	 * @return the component context
