@@ -1113,11 +1113,13 @@ public class UnifyContainer {
                 throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_UNKNOWN_COMP, name);
             }
 
+            boolean instExist = false;
             if (iuci.isSingleton()) {
                 if (altSettings != null) {
                     throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_ALTSETTINGS_SINGLETON, name);
                 }
 
+                instExist = singletonComponentMap.isKey(iuci.getName());
                 inst = singletonComponentMap.get(iuci.getName(), iuci);
             } else {
                 if (altSettings != null) {
@@ -1135,7 +1137,7 @@ public class UnifyContainer {
                 inst = new UnifyComponentInst(iuci, unifyComponent);
             }
 
-            if (!inst.isInitialized()) {
+            if (!instExist && !inst.isInitialized()) {
                 injectProperties(inst, altSettings, uplElementAttributes);
                 inst.initialize(componentContextMap.get(iuci.getName()));
             }

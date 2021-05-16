@@ -37,10 +37,10 @@ import com.tcdng.unify.web.discovery.gem.data.DiscoverRemoteCallResult;
 public class APIDiscoveryController extends AbstractRemoteCallController {
 
     @Configurable
-    private APIDiscoveryManager aPIDiscoveryManager;
+    private APIDiscoveryManager apiDiscoveryManager;
 
-    public void setaPIDiscoveryManager(APIDiscoveryManager aPIDiscoveryManager) {
-        this.aPIDiscoveryManager = aPIDiscoveryManager;
+    public void setApiDiscoveryManager(APIDiscoveryManager apiDiscoveryManager) {
+        this.apiDiscoveryManager = apiDiscoveryManager;
     }
 
     @RemoteAction(
@@ -49,7 +49,7 @@ public class APIDiscoveryController extends AbstractRemoteCallController {
             restricted = false)
     public DiscoverRemoteCallResult discoverRemoteCall(DiscoverRemoteCallParams params) throws UnifyException {
         DiscoverRemoteCallResult result = new DiscoverRemoteCallResult();
-        APIDiscoveryRemoteCallInfo remoteCallInfo = aPIDiscoveryManager.getRemoteCallInfo(params.getRemoteCallCode());
+        APIDiscoveryRemoteCallInfo remoteCallInfo = apiDiscoveryManager.getRemoteCallInfo(params.getRemoteCallCode());
         result.setRemoteCallInfo(remoteCallInfo);
         return result;
     }

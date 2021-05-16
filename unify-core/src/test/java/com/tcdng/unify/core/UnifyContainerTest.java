@@ -134,6 +134,19 @@ public class UnifyContainerTest extends AbstractUnifyComponentTest {
         assertEquals("Hello World!", testComponentD.getTestComponentC1().getMessage());
     }
 
+    @Test
+    public void testGetSingletonCyclic() throws Exception {
+        UnifyComponent c1 = getComponent("component-e");
+        UnifyComponent c2 = getComponent("component-f");
+        assertNotNull(c1);
+        assertNotNull(c2);
+        
+        TestComponentE e = (TestComponentE) c1;
+        TestComponentF f = (TestComponentF) c2;
+        assertEquals(f, e.getTestComponentF());
+        assertEquals(e, f.getTestComponentE());
+    }
+    
     public void testComponentCustomisationResolved() throws Exception {
     }
 
@@ -239,6 +252,54 @@ public class UnifyContainerTest extends AbstractUnifyComponentTest {
         }
     }
 
+    public static class TestComponentE extends AbstractUnifyComponent {
+
+        @Configurable
+        private TestComponentF testComponentF;
+
+        public void setTestComponentF(TestComponentF testComponentF) {
+            this.testComponentF = testComponentF;
+        }
+
+        public TestComponentF getTestComponentF() {
+            return testComponentF;
+        }
+
+        @Override
+        protected void onInitialize() throws UnifyException {
+
+        }
+
+        @Override
+        protected void onTerminate() throws UnifyException {
+
+        }
+    }
+
+    public static class TestComponentF extends AbstractUnifyComponent {
+
+        @Configurable
+        private TestComponentE testComponentE;
+
+        public void setTestComponentE(TestComponentE testComponentE) {
+            this.testComponentE = testComponentE;
+        }
+
+        public TestComponentE getTestComponentE() {
+            return testComponentE;
+        }
+
+        @Override
+        protected void onInitialize() throws UnifyException {
+
+        }
+
+        @Override
+        protected void onTerminate() throws UnifyException {
+
+        }
+    }
+
     @Override
     protected void doAddSettingsAndDependencies() throws Exception {
         // Customise for tiger
@@ -250,6 +311,8 @@ public class UnifyContainerTest extends AbstractUnifyComponentTest {
         addDependency("component-b3", TestComponentB.class);// For custom override test
         addDependency("component-b3_tiger", TestComponentC.class);
         addDependency("component-d", TestComponentD.class);
+        addDependency("component-e", TestComponentE.class);
+        addDependency("component-f", TestComponentF.class);
     }
 
     @Override
