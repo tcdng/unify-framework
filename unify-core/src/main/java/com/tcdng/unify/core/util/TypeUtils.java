@@ -18,6 +18,7 @@ package com.tcdng.unify.core.util;
 import java.lang.annotation.Annotation;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -41,7 +42,7 @@ public class TypeUtils {
 
     }
 
-    public static TypeRepository getTypeRepositoryFromClasspath() throws UnifyException {
+    public static TypeRepository getTypeRepositoryFromClasspath(URL... baseUrls) throws UnifyException {
         if (classPathTypeRepository == null) {
             synchronized (TypeUtils.class) {
                 if (classPathTypeRepository == null) {
@@ -51,8 +52,17 @@ public class TypeUtils {
                         classpathDB.setScanMethodAnnotations(false);
                         classpathDB.setScanParameterAnnotations(false);
 
+                        List<URL> finalUrls = new ArrayList<URL>();
+                        if (baseUrls != null) {
+                            finalUrls.addAll(Arrays.asList(baseUrls));
+                        }
+                        
                         URL[] urls = ClasspathUrlFinder.findClassPaths();
-                        classpathDB.scanArchives(urls);
+                        if (urls != null) {
+                            finalUrls.addAll(Arrays.asList(urls));
+                        }
+
+                        classpathDB.scanArchives(DataUtils.toArray(URL.class, finalUrls));
                         classPathTypeRepository = new TypeRepositoryImpl(classpathDB);
                     } catch (Exception e) {
                         throw new UnifyException(e, UnifyCoreErrorConstants.ANNOTATIONUTIL_ERROR);

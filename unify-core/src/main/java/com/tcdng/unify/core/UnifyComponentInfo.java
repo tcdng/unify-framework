@@ -15,7 +15,6 @@
  */
 package com.tcdng.unify.core;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -30,28 +29,15 @@ public class UnifyComponentInfo {
 
     private String type;
 
-    private Date firstPassTime;
-
-    private Date firstFailTime;
-
-    private Date lastPassTime;
-
-    private Date lastFailTime;
-
     private int passCount;
 
     private int failCount;
 
     private List<Setting> settingInfoList;
 
-    public UnifyComponentInfo(String name, String type, Date firstPassTime, Date firstFailTime, Date lastPassTime,
-            Date lastFailTime, int passCount, int failCount, List<Setting> settingInfoList) {
+    public UnifyComponentInfo(String name, String type, int passCount, int failCount, List<Setting> settingInfoList) {
         this.name = name;
         this.type = type;
-        this.firstPassTime = firstPassTime;
-        this.firstFailTime = firstFailTime;
-        this.lastPassTime = lastPassTime;
-        this.lastFailTime = lastFailTime;
         this.passCount = passCount;
         this.failCount = failCount;
         this.settingInfoList = settingInfoList;
@@ -63,22 +49,6 @@ public class UnifyComponentInfo {
 
     public String getType() {
         return type;
-    }
-
-    public Date getFirstPassTime() {
-        return firstPassTime;
-    }
-
-    public Date getFirstFailTime() {
-        return firstFailTime;
-    }
-
-    public Date getLastPassTime() {
-        return lastPassTime;
-    }
-
-    public Date getLastFailTime() {
-        return lastFailTime;
     }
 
     public int getPassCount() {

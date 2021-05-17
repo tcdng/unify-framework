@@ -46,6 +46,9 @@ public interface UnifyContainerInterface extends UnifyComponent {
 
     /**
      * Returns the interface port number.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
      */
-    int getPort();
+    int getPort() throws UnifyException;
 }

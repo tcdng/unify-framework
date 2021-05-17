@@ -28,19 +28,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.codehaus.commons.compiler.CompilerFactoryFactory;
-import org.codehaus.commons.compiler.ICompiler;
-import org.codehaus.commons.compiler.ICompilerFactory;
-import org.codehaus.commons.compiler.util.resource.MapResourceCreator;
 import org.codehaus.commons.compiler.util.resource.Resource;
+import org.codehaus.commons.compiler.util.resource.ResourceFinder;
 import org.codehaus.commons.compiler.util.resource.StringResource;
+import org.codehaus.janino.JavaSourceClassLoader;
 import org.codehaus.janino.SimpleCompiler;
 
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
-import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.IOUtils;
 import com.tcdng.unify.core.util.ReflectUtils;
 
@@ -55,12 +52,8 @@ public class RuntimeJavaClassManagerImpl extends AbstractRuntimeJavaClassManager
 
     private Map<String, Class<?>> classByName;
 
-    private RuntimeClassLoader runtimeClassLoader;
-
-    private int classLoaderDepth;
-
     public RuntimeJavaClassManagerImpl() {
-        classByName = new ConcurrentHashMap<String, Class<?>>();
+        reset();
     }
 
     @Override
@@ -116,24 +109,17 @@ public class RuntimeJavaClassManagerImpl extends AbstractRuntimeJavaClassManager
         try {
             return innerCompileAndLoadClasses(sourceList);
         } catch (UnifyException e) {
-            for(JavaClassSource source: sourceList) {
+            for (JavaClassSource source : sourceList) {
                 logDebug("@Source: \n{0}", source.getSrc());
             }
-            
+
             throw e;
         }
     }
 
     @Override
-    public int getClassLoaderDepth() {
-        return classLoaderDepth;
-    }
-
-    @Override
-    public synchronized void clearClassLoader() {
-        classByName.clear();
-        runtimeClassLoader = null;
-        classLoaderDepth = 0;
+    public synchronized void reset() {
+        classByName = new ConcurrentHashMap<String, Class<?>>();
     }
 
     @Override
@@ -148,68 +134,12 @@ public class RuntimeJavaClassManagerImpl extends AbstractRuntimeJavaClassManager
         super.onTerminate();
     }
 
-    private class RuntimeClassLoader extends ClassLoader {
-
-        private Map<String, byte[]> byteCodes;
-
-        public RuntimeClassLoader(ClassLoader parent) {
-            super(parent);
-            byteCodes = new HashMap<String, byte[]>();
-        }
-
-        public RuntimeClassLoader setByteCodes(String className, byte[] byteCode) {
-            byteCodes.put(className, byteCode);
-            return this;
-        }
-
-        // Implement child-first
-        @Override
-        protected Class<?> loadClass(String className, boolean resolve) throws ClassNotFoundException {
-            Class<?> loadedClass = findLoadedClass(className);
-            if (loadedClass == null) {
-                try {
-                    loadedClass = findClass(className);
-                } catch (ClassNotFoundException e) {
-                    loadedClass = super.loadClass(className, resolve);
-                }
-            }
-
-            if (resolve) {
-                resolveClass(loadedClass);
-            }
-            return loadedClass;
-        }
-
-        @Override
-        protected Class<?> findClass(String className) throws ClassNotFoundException {
-            byte[] byteCode = byteCodes.remove(className);
-            SecurityManager sm = System.getSecurityManager();
-            if (sm != null) {
-                int pIndex = className.lastIndexOf('.');
-                if (pIndex >= 0) {
-                    sm.checkPackageDefinition(className.substring(0, pIndex));
-                }
-            }
-
-            if (byteCode == null) {
-                throw new ClassNotFoundException(className);
-            }
-
-            Class<?> clazz = defineClass(className, byteCode, 0, byteCode.length);
-            byteCode = null;
-            return clazz;
-        }
-
-    }
-
     private synchronized Class<?> innerCompileAndLoadClass(String className, Reader reader) throws UnifyException {
         try {
-            RuntimeClassLoader loader = getRuntimeClassLoader(className);
             SimpleCompiler compiler = new SimpleCompiler();
-            compiler.setParentClassLoader(loader);
+            compiler.setParentClassLoader(getClass().getClassLoader());
             compiler.cook(reader);
-            byte[] byteCode = compiler.getBytecodes().get(className);
-            Class<?> clazz = loader.setByteCodes(className, byteCode).loadClass(className);
+            Class<?> clazz = compiler.getClassLoader().loadClass(className);
             classByName.put(className, clazz);
             return clazz;
         } catch (Exception e) {
@@ -221,26 +151,17 @@ public class RuntimeJavaClassManagerImpl extends AbstractRuntimeJavaClassManager
             throws UnifyException {
         List<Class<?>> resultList = new ArrayList<Class<?>>();
         try {
-            ICompilerFactory compilerFactory = CompilerFactoryFactory.getDefaultCompilerFactory();
-            ICompiler compiler = compilerFactory.newCompiler();
-
             List<String> classNameList = new ArrayList<String>();
-            Resource[] sourceResources = new Resource[sourceList.size()];
+            StringResource[] sourceResources = new StringResource[sourceList.size()];
             for (int i = 0; i < sourceResources.length; i++) {
                 JavaClassSource javaSource = sourceList.get(i);
                 classNameList.add(javaSource.getClassName());
                 sourceResources[i] = new StringResource(javaSource.getClassName().replace('.', '/') + ".java",
                         javaSource.getSrc());
             }
-
-            Map<String, byte[]> compiledClasses = new HashMap<String, byte[]>();
-            compiler.setClassFileCreator(new MapResourceCreator(compiledClasses));
-            compiler.compile(sourceResources);
-            RuntimeClassLoader loader = getRuntimeClassLoader(DataUtils.toArray(String.class, classNameList));
-            for (Map.Entry<String, byte[]> entry : compiledClasses.entrySet()) {
-                int lastIndex = entry.getKey().lastIndexOf('.');
-                loader.setByteCodes(entry.getKey().substring(0, lastIndex).replace('/', '.'), entry.getValue());
-            }
+            
+            MapResourceFinder resourceFinder = new MapResourceFinder(sourceResources);
+            ClassLoader loader = new JavaSourceClassLoader(getClass().getClassLoader(), resourceFinder, null);
 
             for (String className : classNameList) {
                 Class<?> clazz = loader.loadClass(className);
@@ -254,21 +175,20 @@ public class RuntimeJavaClassManagerImpl extends AbstractRuntimeJavaClassManager
         return resultList;
     }
 
-    private RuntimeClassLoader getRuntimeClassLoader(String... classNames) {
-        if (runtimeClassLoader == null) {
-            runtimeClassLoader = new RuntimeClassLoader(getClass().getClassLoader());
-            classLoaderDepth++;
-        } else {
-            for (String className : classNames) {
-                if (classByName.containsKey(className)) {
-                    runtimeClassLoader = new RuntimeClassLoader(runtimeClassLoader);
-                    classLoaderDepth++;
-                    break;
-                }
+    private class MapResourceFinder extends ResourceFinder {
+        private Map<String, StringResource> map;
+
+        public MapResourceFinder(StringResource[] sources) {
+            this.map = new HashMap<String, StringResource>();
+            for (StringResource src : sources) {
+                this.map.put(src.getFileName(), src);
             }
         }
 
-        return runtimeClassLoader;
+        @Override
+        public Resource findResource(final String resourceName) {
+            return map.get(resourceName);
+        }
     }
 
 }

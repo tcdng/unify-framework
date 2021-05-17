@@ -98,8 +98,8 @@ public abstract class AbstractEmbeddedHttpWebServer extends AbstractHttpWebInter
 		return httpApplicationServlet;
 	}
 
-	protected int getHttpPort() {
-		return httpPort;
+	protected int getHttpPort() throws UnifyException {
+		return getPreferredPort() > 0 ? getPreferredPort(): httpPort;
 	}
 
 	protected String getServletPath() {

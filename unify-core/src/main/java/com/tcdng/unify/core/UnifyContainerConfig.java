@@ -50,6 +50,8 @@ public class UnifyContainerConfig {
 
     private String nodeId;
 
+    private short preferredPort;
+
     private boolean clusterMode;
 
     private boolean productionMode;
@@ -58,13 +60,14 @@ public class UnifyContainerConfig {
 
     private UnifyContainerConfig(Map<String, UnifyComponentConfig> unifyComponentConfigs, Map<String, Object> settings,
             Map<String, String> aliases, List<UnifyStaticSettings> staticSettings, String deploymentVersion,
-            String nodeId, boolean clusterMode, boolean productionMode, boolean deploymentMode) {
+            String nodeId, short preferredPort, boolean clusterMode, boolean productionMode, boolean deploymentMode) {
         this.unifyComponentConfigs = unifyComponentConfigs;
         this.settings = settings;
         this.aliases = aliases;
         this.staticSettings = staticSettings;
         this.deploymentVersion = deploymentVersion;
         this.nodeId = nodeId;
+        this.preferredPort = preferredPort;
         this.clusterMode = clusterMode;
         this.productionMode = productionMode;
         this.deploymentMode = deploymentMode;
@@ -76,6 +79,10 @@ public class UnifyContainerConfig {
 
     public String getNodeId() {
         return nodeId;
+    }
+
+    public short getPreferredPort() {
+        return preferredPort;
     }
 
     public boolean isClusterMode() {
@@ -136,6 +143,8 @@ public class UnifyContainerConfig {
 
         private String nodeId;
 
+        private short preferredPort;
+
         private boolean clusterMode;
 
         private boolean productionMode;
@@ -156,6 +165,11 @@ public class UnifyContainerConfig {
 
         public Builder nodeId(String nodeId) {
             this.nodeId = nodeId;
+            return this;
+        }
+
+        public Builder preferredPort(short preferredPort) {
+            this.preferredPort = preferredPort;
             return this;
         }
 
@@ -218,8 +232,8 @@ public class UnifyContainerConfig {
                 throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_HAS_NO_NAME, type);
             }
 
-            UnifyComponentConfig newUnifyComponentConfig =
-                    new UnifyComponentConfig(settings, name, description, type, singleton);
+            UnifyComponentConfig newUnifyComponentConfig = new UnifyComponentConfig(settings, name, description, type,
+                    singleton);
 
             UnifyComponentConfig existUnifyComponentConfig = unifyComponentConfigs.get(name);
             if (existUnifyComponentConfig != null && !overwrite) {
@@ -256,7 +270,7 @@ public class UnifyContainerConfig {
             DataUtils.sortAscending(staticSettings, UnifyStaticSettings.class, "level");
             return new UnifyContainerConfig(Collections.unmodifiableMap(unifyComponentConfigs),
                     Collections.unmodifiableMap(settings), Collections.unmodifiableMap(aliases),
-                    Collections.unmodifiableList(staticSettings), deploymentVersion, nodeId, clusterMode,
+                    Collections.unmodifiableList(staticSettings), deploymentVersion, nodeId, preferredPort, clusterMode,
                     productionMode, deploymentMode);
         }
     }
