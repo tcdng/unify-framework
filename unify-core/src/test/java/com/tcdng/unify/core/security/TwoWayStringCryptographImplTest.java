@@ -17,7 +17,9 @@ package com.tcdng.unify.core.security;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
@@ -87,9 +89,27 @@ public class TwoWayStringCryptographImplTest extends AbstractUnifyComponentTest 
         assertEquals("Piggy plans to kidnap Kermit", decrypted);
     }
 
+    @Test
+    public void testEncryptMultipleInstanceCryptographs() throws Exception {
+        TwoWayStringCryptograph stringCryptographA = (TwoWayStringCryptograph) getComponent("cryptographA");
+        String encryptedA10 = stringCryptographA.encrypt("Hello");
+
+        TwoWayStringCryptograph stringCryptographB = (TwoWayStringCryptograph) getComponent("cryptographA",
+                new Setting("encryptionKey", "Test"));
+        assertNotSame(stringCryptographA, stringCryptographB);
+
+        String encryptedA11 = stringCryptographA.encrypt("Hello");
+        String encryptedB = stringCryptographB.encrypt("Hello");
+        assertEquals(encryptedA10, encryptedA11);
+        assertNotEquals(encryptedA10, encryptedB);
+        
+        assertEquals("Hello", stringCryptographA.decrypt(encryptedA11));
+        assertEquals("Hello", stringCryptographB.decrypt(encryptedB));
+    }
+
     @Override
     protected void doAddSettingsAndDependencies() throws Exception {
-        addDependency("cryptographA", TwoWayStringCryptographImpl.class, new Setting("encryptionKey", "Neptune"));
+        addDependency("cryptographA", TwoWayStringCryptographImpl.class, false, new Setting("encryptionKey", "Neptune"));
         addDependency("cryptographB", TwoWayStringCryptographImpl.class, new Setting("encryptionKey", "Pluto"));
     }
 

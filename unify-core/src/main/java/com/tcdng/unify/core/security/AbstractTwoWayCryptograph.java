@@ -20,6 +20,7 @@ import javax.crypto.Cipher;
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
+import com.tcdng.unify.core.annotation.Singleton;
 
 /**
  * Abstract implementation of a cryptograph providing two-way encryption.
@@ -27,6 +28,7 @@ import com.tcdng.unify.core.annotation.Configurable;
  * @author Lateef Ojulari
  * @since 1.0
  */
+@Singleton(false)
 public abstract class AbstractTwoWayCryptograph extends AbstractUnifyComponent {
 
     @Configurable("The Code Department")

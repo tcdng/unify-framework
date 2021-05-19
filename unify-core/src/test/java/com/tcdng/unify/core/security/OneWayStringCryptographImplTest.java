@@ -17,6 +17,8 @@ package com.tcdng.unify.core.security;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
@@ -61,9 +63,24 @@ public class OneWayStringCryptographImplTest extends AbstractUnifyComponentTest 
         assertFalse(encryptedA.equals(encryptedB));
     }
 
+    @Test
+    public void testEncryptMultipleInstanceCryptographs() throws Exception {
+        OneWayStringCryptograph stringCryptographA = (OneWayStringCryptograph) getComponent("cryptographA");
+        String encryptedA10 = stringCryptographA.encrypt("Hello");
+
+        OneWayStringCryptograph stringCryptographB = (OneWayStringCryptograph) getComponent("cryptographA",
+                new Setting("encryptionKey", "Test"));
+        assertNotSame(stringCryptographA, stringCryptographB);
+
+        String encryptedA11 = stringCryptographA.encrypt("Hello");
+        String encryptedB = stringCryptographB.encrypt("Hello");
+        assertEquals(encryptedA10, encryptedA11);
+        assertNotEquals(encryptedA10, encryptedB);
+    }
+
     @Override
     protected void doAddSettingsAndDependencies() throws Exception {
-        addDependency("cryptographA", OneWayStringCryptographImpl.class, new Setting("encryptionKey", "Slink"));
+        addDependency("cryptographA", OneWayStringCryptographImpl.class, false, new Setting("encryptionKey", "Slink"));
         addDependency("cryptographB", OneWayStringCryptographImpl.class, new Setting("encryptionKey", "Slink"));
         addDependency("cryptographC", OneWayStringCryptographImpl.class,
                 new Setting("encryptionKey", "The Code Department"));
