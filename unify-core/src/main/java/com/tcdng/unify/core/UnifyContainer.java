@@ -1139,9 +1139,7 @@ public class UnifyContainer {
 
             if (!instExist && !inst.isInitialized()) {
                 injectProperties(inst, altSettings, uplElementAttributes);
-                if (!inst.isInitialized()) {
-                    inst.initialize(componentContextMap.get(iuci.getName()));
-                }
+                inst.initialize(componentContextMap.get(iuci.getName()));
             }
         } catch (UnifyException e) {
             throw e;
@@ -1700,7 +1698,11 @@ public class UnifyContainer {
 
         public void initialize(UnifyComponentContext ctx) throws UnifyException {
             if (!unifyComponent.isInitialized()) {
-                unifyComponent.initialize(ctx);
+                synchronized(unifyComponent) {
+                    if (!unifyComponent.isInitialized()) {
+                        unifyComponent.initialize(ctx);
+                    }
+                }
             }
         }
 
