@@ -382,12 +382,17 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
      * 
      * @param downloadFile
      *            the file download object
+     * @param hidePopup hide popup flag
      * @return {@link ResultMappingConstants#DOWNLOAD_FILE}
      * @throws UnifyException
      *             if an error occurs
      */
-    protected String fileDownloadResult(DownloadFile downloadFile) throws UnifyException {
+    protected String fileDownloadResult(DownloadFile downloadFile, boolean hidePopup) throws UnifyException {
         setRequestAttribute(UnifyWebRequestAttributeConstants.DOWNLOAD_FILE, downloadFile);
+        if (hidePopup) {
+            return ResultMappingConstants.DOWNLOAD_FILE_HIDE_POPUP;
+        }
+
         return ResultMappingConstants.DOWNLOAD_FILE;
     }
 

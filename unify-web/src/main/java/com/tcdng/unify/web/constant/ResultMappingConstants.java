@@ -49,6 +49,8 @@ public interface ResultMappingConstants {
 
     String DOWNLOAD_FILE = "resrv.downloadfile";
 
+    String DOWNLOAD_FILE_HIDE_POPUP = "resrv.downloadfilehidepopup";
+
     String REFRESH_SHOW_POPUP = "resrv.refreshshowpopup";
 
     String REFRESH_HIDE_POPUP = "resrv.refreshhidepopup";
