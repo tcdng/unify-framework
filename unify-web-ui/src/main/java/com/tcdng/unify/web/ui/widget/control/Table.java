@@ -59,6 +59,7 @@ import com.tcdng.unify.web.ui.widget.EventHandler;
         @UplAttribute(name = "pagination", type = boolean.class),
         @UplAttribute(name = "rowSelectable", type = boolean.class),
         @UplAttribute(name = "serialNumbers", type = boolean.class),
+        @UplAttribute(name = "serialNumberSymbol", type = String.class, defaultVal = "*"),
         @UplAttribute(name = "windowed", type = boolean.class),
         @UplAttribute(name = "headerEllipsis", type = boolean.class),
         @UplAttribute(name = "contentEllipsis", type = boolean.class),
@@ -206,6 +207,10 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
         return getUplAttribute(boolean.class, "serialNumbers");
     }
 
+    public String getSerialNumberSymbol() throws UnifyException {
+        return getUplAttribute(String.class, "serialNumberSymbol");
+    }
+    
     public boolean isSortable() throws UnifyException {
         return sortable;
     }

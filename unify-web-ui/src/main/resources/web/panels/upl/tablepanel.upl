@@ -1,8 +1,10 @@
 //Table Panel UPL
 !ui-tablepanel layout:$d{!ui-vertical} components:$c{contentTbl}
     tableStyleClass:$e{ui-table} tableMultiSelectCheckboxes:true
+    tableSerialNumberSymbol:$s{*}
     
-!ui-table:contentTbl bodyStyle:$f{tableBodyStyle} serialNumbers:$f{tableSerialNumbers} styleClass:$f{tableStyleClass}
+!ui-table:contentTbl bodyStyle:$f{tableBodyStyle} styleClass:$f{tableStyleClass}
+	serialNumbers:$f{tableSerialNumbers} serialNumberSymbol:$f{tableSerialNumberSymbol}
     rowSelectable:$f{tableRowSelectable} selDependentList:$f{tableSelDependentList}
     rowEventHandler:$f{tableRowEventHandler}
     windowed:$f{tableWindowed} pagination:$f{tablePagination}
