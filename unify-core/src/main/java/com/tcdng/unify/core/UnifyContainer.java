@@ -1139,7 +1139,9 @@ public class UnifyContainer {
 
             if (!instExist && !inst.isInitialized()) {
                 injectProperties(inst, altSettings, uplElementAttributes);
-                inst.initialize(componentContextMap.get(iuci.getName()));
+                if (!inst.isInitialized()) {
+                    inst.initialize(componentContextMap.get(iuci.getName()));
+                }
             }
         } catch (UnifyException e) {
             throw e;
