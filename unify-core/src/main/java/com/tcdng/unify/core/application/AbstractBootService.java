@@ -15,7 +15,9 @@
  */
 package com.tcdng.unify.core.application;
 
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyCorePropertyConstants;
@@ -75,6 +77,8 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
                 }
 
                 deploymentFeature = getFeature("deploymentVersion", "0.0");
+                getFeature("deploymentID", UUID.randomUUID().toString());
+                getFeature("deploymentInitDate", String.valueOf(new Date().getTime()));
                 isDataSourcesManaged = true;
             }
             
