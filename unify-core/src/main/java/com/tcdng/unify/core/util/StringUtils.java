@@ -176,6 +176,38 @@ public final class StringUtils {
     }
 
     /**
+     * Splits supplied string into lengths.
+     * 
+     * @param str
+     *             the string to split
+     * @param size
+     *             the lengths to split by
+     * @return array of split strings
+     */
+    public static String[] splitIntoLengths(String str, int size) {
+        if (size <= 0) {
+            throw new IllegalArgumentException("Length must be greater than zero.");
+        }
+
+        if (str != null) {
+            int len = str.length();
+            int times = len / size;
+            if ((len % size) > 0) {
+                times++;
+            }
+
+            String[] result = new String[times];
+            for (int start = 0, i = 0; start < len; i++) {
+                result[i] = str.substring(start, Math.min(len, start += size));
+            }
+
+            return result;
+        }
+
+        return null;
+    }
+    
+    /**
      * Concatenates a set of string value of objects using dot.
      * 
      * @param objects
