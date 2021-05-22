@@ -71,7 +71,7 @@ public class ButtonWriter extends AbstractTargetControlWriter {
 
             if (caption != null) {
                 if (isSymbol) {
-                    writer.write("&nbsp;");
+                    writer.write("&nbsp;&nbsp;");
                 }
                 
                 writer.writeWithHtmlEscape(caption);
