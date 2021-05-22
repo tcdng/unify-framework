@@ -15,6 +15,7 @@
  */
 package com.tcdng.unify.web.ui.widget.control;
 
+import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
@@ -29,8 +30,19 @@ import com.tcdng.unify.web.ui.widget.AbstractTargetControl;
 @Component("ui-button")
 @UplAttributes({ @UplAttribute(name = "imageSrc", type = String.class),
         @UplAttribute(name = "symbol", type = String.class),
+        @UplAttribute(name = "symbolBinding", type = String.class),
         @UplAttribute(name = "debounce", type = boolean.class, defaultVal = "true") })
 public class Button extends AbstractTargetControl {
+
+    public String getSymbol() throws UnifyException {
+        String symbol = null;
+        String symbolBinding = getUplAttribute(String.class, "symbolBinding");
+        if (symbolBinding != null && !symbolBinding.isEmpty()) {
+            symbol = getStringValue(symbolBinding);
+        }
+        
+        return symbol != null ? symbol : getUplAttribute(String.class, "symbol");
+    }
 
     @Override
     public boolean isLayoutCaption() {

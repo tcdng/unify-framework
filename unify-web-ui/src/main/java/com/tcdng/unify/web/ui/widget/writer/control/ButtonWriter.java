@@ -63,7 +63,7 @@ public class ButtonWriter extends AbstractTargetControlWriter {
         } else {
             boolean isSymbol = false;
             if (fontSymbolManager != null) {
-                String symbol = button.getUplAttribute(String.class, "symbol");
+                String symbol = button.getSymbol();
                 if (isSymbol = !StringUtils.isBlank(symbol)) {
                     writer.write(fontSymbolManager.resolveSymbolHtmlHexCode(symbol));
                 }
