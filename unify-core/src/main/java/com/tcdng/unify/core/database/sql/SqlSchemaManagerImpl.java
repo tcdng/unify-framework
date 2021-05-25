@@ -99,6 +99,25 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
     }
 
     @Override
+    public void dropViewSchema(SqlDataSource sqlDataSource, SqlSchemaManagerOptions options,
+            List<Class<?>> entityClasses) throws UnifyException {
+        Connection connection = (Connection) sqlDataSource.getConnection();
+        try {
+            logInfo("Scanning datasource {0} schema...", sqlDataSource.getPreferredName());
+            DatabaseMetaData databaseMetaData = connection.getMetaData();
+            for (Class<?> entityClass : entityClasses) {
+                logDebug("Dropping schema elements for view entity type {0}...", entityClass);
+                dropViewSchema(databaseMetaData, sqlDataSource, entityClass, options);
+            }
+        } catch (SQLException e) {
+            throw new UnifyException(e, UnifyCoreErrorConstants.SQLSCHEMAMANAGER_MANAGE_SCHEMA_ERROR,
+                    sqlDataSource.getPreferredName());
+        } finally {
+            sqlDataSource.restoreConnection(connection);
+        }
+    }
+
+    @Override
     public List<Class<?>> buildDependencyList(SqlDataSource sqlDataSource, List<Class<?>> entityClasses)
             throws UnifyException {
         List<Class<?>> resultList = new ArrayList<Class<?>>();
@@ -497,6 +516,61 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
             for (String sql : viewUpdateSQL) {
                 logDebug("Executing managed datasource script {0}...", sql);
                 pstmt = connection.prepareStatement(sql);
+                pstmt.executeUpdate();
+                SqlUtils.close(pstmt);
+            }
+            connection.commit();
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException e1) {
+            }
+            throw new UnifyException(e, UnifyCoreErrorConstants.SQLSCHEMAMANAGER_MANAGE_SCHEMA_ERROR,
+                    sqlDataSource.getName());
+        } finally {
+            SqlUtils.close(rs);
+            SqlUtils.close(pstmt);
+        }
+    }
+
+    private void dropViewSchema(DatabaseMetaData databaseMetaData, SqlDataSource sqlDataSource,
+            Class<?> entityClass, SqlSchemaManagerOptions options) throws UnifyException {
+        SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
+        SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.findSqlEntityInfo(entityClass);
+
+        Connection connection = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try {
+            connection = databaseMetaData.getConnection();
+            String appSchema = sqlDataSource.getAppSchema();
+
+            // Drop entity view
+            String dropViewSQL = null;
+            if (sqlEntityInfo.isViewable()) {
+                boolean isDropView = false;
+                rs = databaseMetaData.getTables(null, appSchema, sqlEntityInfo.getViewName(), null);
+                if (rs.next()) {
+                    String tableType = rs.getString("TABLE_TYPE");
+                    if (!"VIEW".equalsIgnoreCase(tableType)) {
+                        throw new UnifyException(UnifyCoreErrorConstants.SQLSCHEMAMANAGER_UNABLE_TO_UPDATE_TABLE,
+                                sqlDataSource.getName(), sqlEntityInfo.getViewName(), tableType);
+                    }
+
+                    isDropView = true;
+                }
+
+                SqlUtils.close(rs);
+
+                if (isDropView) {
+                    dropViewSQL = sqlDataSourceDialect.generateDropViewSql(sqlEntityInfo);
+                }
+            }
+
+            // Apply updates
+            if (dropViewSQL != null) {
+                logDebug("Executing managed datasource script {0}...", dropViewSQL);
+                pstmt = connection.prepareStatement(dropViewSQL);
                 pstmt.executeUpdate();
                 SqlUtils.close(pstmt);
             }

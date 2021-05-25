@@ -66,10 +66,14 @@ public abstract class AbstractSqlDataSourceManager extends AbstractUnifyComponen
     @Override
     public void manageDataSource(String dataSourceName, DataSourceManagerOptions options) throws UnifyException {
         SqlDataSource sqlDataSource = getSqlDataSource(dataSourceName);
-        sqlSchemaManager.manageTableSchema(sqlDataSource, new SqlSchemaManagerOptions(options),
-                getTableEntities(dataSourceName));
-        sqlSchemaManager.manageViewSchema(sqlDataSource, new SqlSchemaManagerOptions(options),
-                getViewEntities(dataSourceName));
+        SqlSchemaManagerOptions _options = new SqlSchemaManagerOptions(options);
+        List<Class<?>> tableList = getTableEntities(dataSourceName);
+        if (sqlDataSource.getDialect().isReconstructViewsOnTableSchemaUpdate()) {
+            sqlSchemaManager.dropViewSchema(sqlDataSource, _options, tableList);
+        }
+
+        sqlSchemaManager.manageTableSchema(sqlDataSource, _options, tableList);
+        sqlSchemaManager.manageViewSchema(sqlDataSource, _options, getViewEntities(dataSourceName));
     }
 
     @Override
@@ -89,11 +93,6 @@ public abstract class AbstractSqlDataSourceManager extends AbstractUnifyComponen
         return sqlDataSource.getTableEntityTypes();
     }
 
-    protected List<Class<?>> getTableExtensionEntityTypes(String dataSourceName, SqlDataSource sqlDataSource)
-            throws UnifyException {
-        return sqlDataSource.getTableExtensionEntityTypes();
-    }
-
     protected List<Class<? extends Entity>> getViewEntityTypes(String dataSourceName, SqlDataSource sqlDataSource)
             throws UnifyException {
         return sqlDataSource.getViewEntityTypes();
@@ -105,11 +104,6 @@ public abstract class AbstractSqlDataSourceManager extends AbstractUnifyComponen
         SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
         for (Class<?> entityClass : getTableEntityTypes(dataSourceName, sqlDataSource)) {
             logDebug("Building SQL information for entity type [{0}]...", entityClass);
-            sqlDataSourceDialect.createSqlEntityInfo(entityClass);
-        }
-
-        for (Class<?> entityClass : getTableExtensionEntityTypes(dataSourceName, sqlDataSource)) {
-            logDebug("Building SQL information for entity extension type [{0}]...", entityClass);
             sqlDataSourceDialect.createSqlEntityInfo(entityClass);
         }
 

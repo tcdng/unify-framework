@@ -740,6 +740,10 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                         }
 
                         SqlEntityInfo foreignEntityInfo = foreignKeySQLFieldInfo.getForeignEntityInfo();
+                        if (foreignEntityInfo.isExtended()) {
+                            foreignEntityInfo = foreignEntityInfo.getExtensionSqlEntityInfo();
+                        }
+                        
                         SqlFieldInfo foreignFieldInfo = foreignEntityInfo.getListFieldInfo(loa.property());
 
                         // Make sure field type is the same with foreign field
@@ -1058,6 +1062,10 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                         }
 
                         SqlEntityInfo foreignEntityInfo = foreignKeySQLFieldInfo.getForeignEntityInfo();
+                        if (foreignEntityInfo.isExtended()) {
+                            foreignEntityInfo = foreignEntityInfo.getExtensionSqlEntityInfo();
+                        }
+                        
                         SqlFieldInfo foreignFieldInfo = foreignEntityInfo.getListFieldInfo(loa.property());
 
                         // Make sure field type is the same with foreign field

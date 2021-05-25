@@ -76,24 +76,17 @@ public abstract class AbstractDataSource extends AbstractUnifyComponent implemen
             }
         }
 
-        return entityList;
-    }
-
-    @Override
-    public List<Class<?>> getTableExtensionEntityTypes() throws UnifyException {
-        List<Class<?>> entityList = new ArrayList<Class<?>>();
-        String name = getEntityMatchingName();
         // Extensions
         for (Class<? extends Entity> entityClass : getAnnotatedClasses(Entity.class, TableExt.class)) {
             Class<?> extendedEntityClass = entityClass.getSuperclass();
             if (extendedEntityClass != null) {
                 Table ta = extendedEntityClass.getAnnotation(Table.class);
                 if (AnnotationUtils.isTableDataSource(ta, name)) {
-                    entityList.add(entityClass);
+                    int index = entityList.indexOf(extendedEntityClass);
+                    entityList.add(index + 1, entityClass);
                 }
             }
         }
-
         return entityList;
     }
 

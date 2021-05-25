@@ -468,6 +468,15 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
     void restoreCallableStatement(SqlCallableStatement sqlCallableStatement) throws UnifyException;
 
     /**
+     * Indicates views should be reconstructed on table schema update.
+     * 
+     * @return true if to reconstruct otherwise false
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    boolean isReconstructViewsOnTableSchemaUpdate() throws UnifyException;
+
+    /**
      * Gets the data source shutdown hook.
      * 
      * @return the shutdown hook

@@ -209,6 +209,11 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
     }
 
     @Override
+    public boolean isReconstructViewsOnTableSchemaUpdate() throws UnifyException {
+        return true;
+    }
+
+    @Override
     protected SqlDataSourceDialectPolicies getSqlDataSourceDialectPolicies() {
         return sqlDataSourceDialectPolicies;
     }

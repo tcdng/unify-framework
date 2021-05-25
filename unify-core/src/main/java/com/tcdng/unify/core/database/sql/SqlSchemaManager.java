@@ -61,6 +61,21 @@ public interface SqlSchemaManager extends UnifyComponent {
             List<Class<? extends Entity>> entityClasses) throws UnifyException;
 
     /**
+     * Drops view schema for list of entity classes.
+     * 
+     * @param sqlDataSource
+     *                      the SQL data source
+     * @param options
+     *                      the manager options
+     * @param entityClasses
+     *                      the entity class list
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    void dropViewSchema(SqlDataSource sqlDataSource, SqlSchemaManagerOptions options, List<Class<?>> entityClasses)
+            throws UnifyException;
+
+    /**
      * Builds a dependency list form list of entities.
      * 
      * @param sqlDataSource

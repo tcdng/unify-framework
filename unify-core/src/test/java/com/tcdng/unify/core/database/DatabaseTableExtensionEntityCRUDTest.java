@@ -21,6 +21,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.junit.Test;
@@ -114,6 +115,61 @@ public class DatabaseTableExtensionEntityCRUDTest extends AbstractUnifyComponent
             assertNull(branchExt.getOfficeAddress());
             assertNull(branchExt.getOfficeTelephone());
             assertNull(branchExt.getClosedDesc());
+        } catch (Exception e) {
+            tm.setRollback();
+            throw e;
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
+    public void testFindRecordWithExtSuperClass() throws Exception {
+        tm.beginTransaction();
+        try {
+            Long parklaneOfficeId = (Long) db.create(parklaneOffice);
+            BranchExt branchExt = new BranchExt("100", "Head Office", "221015100", parklaneOfficeId, "Lagos", "Nigeria",
+                    BooleanType.FALSE);
+            Long branchId = (Long) db.create(branchExt);
+            assertNotNull(branchId);
+            assertEquals(branchId, branchExt.getId());
+            BranchAccount branchAccount = new BranchAccount(branchId, "loans", BigDecimal.valueOf(245.05));
+            Long branchAccountId = (Long) db.create(branchAccount);
+
+            BranchAccount foundBranchAccount = db.list(BranchAccount.class, branchAccountId);
+            assertNotNull(foundBranchAccount);
+            assertEquals("loans", foundBranchAccount.getAccountName());
+            assertEquals(BigDecimal.valueOf(245.05), foundBranchAccount.getBalance());
+            assertEquals("221015100", foundBranchAccount.getSortCode());
+            assertEquals("Lagos", foundBranchAccount.getState());
+        } catch (Exception e) {
+            tm.setRollback();
+            throw e;
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
+    public void testFindRecordWithExtSuperClassReferExt() throws Exception {
+        tm.beginTransaction();
+        try {
+            Long parklaneOfficeId = (Long) db.create(parklaneOffice);
+            BranchExt branchExt = new BranchExt("100", "Head Office", "221015100", parklaneOfficeId, "Lagos", "Nigeria",
+                    BooleanType.FALSE);
+            Long branchId = (Long) db.create(branchExt);
+            assertNotNull(branchId);
+            assertEquals(branchId, branchExt.getId());
+            BranchAccountExt branchAccount = new BranchAccountExt(branchId, "loans", BigDecimal.valueOf(245.05), 34.68);
+            Long branchAccountId = (Long) db.create(branchAccount);
+
+            BranchAccountExt foundBranchAccount = db.list(BranchAccountExt.class, branchAccountId);
+            assertNotNull(foundBranchAccount);
+            assertEquals("loans", foundBranchAccount.getAccountName());
+            assertEquals(BigDecimal.valueOf(245.05), foundBranchAccount.getBalance());
+            assertEquals("221015100", foundBranchAccount.getSortCode());
+            assertEquals("Lagos", foundBranchAccount.getState());
+            assertEquals(Double.valueOf(34.68), foundBranchAccount.getTax());
         } catch (Exception e) {
             tm.setRollback();
             throw e;
@@ -600,7 +656,7 @@ public class DatabaseTableExtensionEntityCRUDTest extends AbstractUnifyComponent
     @SuppressWarnings("unchecked")
     @Override
     protected void onTearDown() throws Exception {
-        deleteAll(Branch.class, Office.class);
+        deleteAll(BranchAccount.class, Branch.class, Office.class);
     }
 
 }
