@@ -154,8 +154,24 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
             } else {
                 sb.append(' ');
             }
-            sb.append("MODIFY ");
-            appendColumnAndTypeSql(sb, sqlFieldSchemaInfo, true);
+
+            sb.append("ALTER COLUMN ").append(sqlFieldSchemaInfo.getColumnName());
+            sb.append(" TYPE");
+            sqlDataTypePolicy.appendTypeSql(sb, sqlFieldSchemaInfo.getLength(), sqlFieldSchemaInfo.getPrecision(),
+                    sqlFieldSchemaInfo.getScale());
+            if (sqlFieldSchemaInfo.isNullable()) {
+                sb.append(", ALTER COLUMN ").append(sqlFieldSchemaInfo.getColumnName());
+                sb.append(" SET NULL");
+            } else {
+                sb.append(", ALTER COLUMN ").append(sqlFieldSchemaInfo.getColumnName());
+                sb.append(" SET ");
+                sqlDataTypePolicy.appendDefaultSql(sb, sqlFieldSchemaInfo.getFieldType(),
+                        sqlFieldSchemaInfo.getDefaultVal());
+                sb.append(", ALTER COLUMN ").append(sqlFieldSchemaInfo.getColumnName());
+                sb.append(" SET NOT NULL");
+            }
+            
+          
             sqlList.add(sb.toString());
             StringUtils.truncate(sb);
             return sqlList;
@@ -174,9 +190,11 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
         } else {
             sb.append(' ');
         }
-        sb.append("MODIFY ").append(sqlColumnInfo.getColumnName());
+        sb.append("ALTER COLUMN ").append(sqlColumnInfo.getColumnName());
+        sb.append(" TYPE");
         appendTypeSql(sb, sqlColumnInfo);
-        sb.append(" NULL");
+        sb.append(", ALTER COLUMN ").append(sqlColumnInfo.getColumnName());
+        sb.append(" SET NULL");
         return sb.toString();
     }
 
@@ -188,6 +206,11 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
     @Override
     public boolean isGeneratesIndexesOnCreateTable() {
         return false;
+    }
+
+    @Override
+    public boolean isReconstructViewsOnTableSchemaUpdate() throws UnifyException {
+        return true;
     }
 
     @Override

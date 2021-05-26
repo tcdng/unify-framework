@@ -199,11 +199,17 @@ public abstract class AbstractPanel extends AbstractContainer implements Panel {
      * 
      * @param downloadFile
      *            the file download object
+     * @param hidePopup
+     *            the hide popup flag
      * @throws UnifyException
      *             if an error occurs
      */
-    protected void fileDownloadResult(DownloadFile downloadFile) throws UnifyException {
+    protected void fileDownloadResult(DownloadFile downloadFile, boolean hidePopup) throws UnifyException {
         setRequestAttribute(UnifyWebRequestAttributeConstants.DOWNLOAD_FILE, downloadFile);
-        setCommandResultMapping(ResultMappingConstants.DOWNLOAD_FILE);
+        if (hidePopup) {
+            setCommandResultMapping(ResultMappingConstants.DOWNLOAD_FILE_HIDE_POPUP);
+        } else {
+            setCommandResultMapping(ResultMappingConstants.DOWNLOAD_FILE);
+        }
     }
 }

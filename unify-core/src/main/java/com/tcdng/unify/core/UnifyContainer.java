@@ -1698,7 +1698,11 @@ public class UnifyContainer {
 
         public void initialize(UnifyComponentContext ctx) throws UnifyException {
             if (!unifyComponent.isInitialized()) {
-                unifyComponent.initialize(ctx);
+                synchronized(unifyComponent) {
+                    if (!unifyComponent.isInitialized()) {
+                        unifyComponent.initialize(ctx);
+                    }
+                }
             }
         }
 

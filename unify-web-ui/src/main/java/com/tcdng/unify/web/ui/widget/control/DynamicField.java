@@ -71,9 +71,16 @@ public class DynamicField extends AbstractMultiControl {
         String descriptor = (String) getValue(descriptorBinding);
         if (StringUtils.isNotBlank(descriptor)) {
             String id = descriptorToIdMap.get(descriptor);
-            if (id == null) {
+            if (id == null) {            
                 StringBuilder sb = new StringBuilder(descriptor);
                 appendUplAttribute(sb, "binding");
+                if (descriptor.indexOf("style:$s{") < 0) {
+                    String style = super.getStyle();
+                    if(!StringUtils.isBlank(style)) {
+                        sb.append(" style:$s{").append(style).append("}");
+                    }
+                }
+                
                 control = (Control) addInternalChildWidget(sb.toString(), true, false);
                 descriptorToIdMap.put(descriptor, control.getBaseId());
             } else {

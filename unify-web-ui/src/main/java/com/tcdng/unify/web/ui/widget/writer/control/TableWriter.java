@@ -308,7 +308,13 @@ public class TableWriter extends AbstractControlWriter {
         writer.write("<tr>");
         table.clearVisibleColumnCount();
         if (table.isSerialNumbers()) {
-            writer.write("<th class=\"thserialno tth\">*</th>");
+            String snSym = table.getSerialNumberSymbol();
+            if (snSym != null) {
+                writer.write("<th class=\"thserialno tth\">").write(snSym).write("</th>");
+            } else {
+                writer.write("<th class=\"thserialno tth\"></th>");
+            }
+            
             table.incrementVisibleColumnCount();
         }
 

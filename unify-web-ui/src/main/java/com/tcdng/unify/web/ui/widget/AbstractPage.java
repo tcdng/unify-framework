@@ -49,12 +49,13 @@ public abstract class AbstractPage extends AbstractStandalonePanel implements Pa
 
     @Override
     public String getSubCaption() throws UnifyException {
+        String subCaption = null;
         String subCaptionBinding = getUplAttribute(String.class, "subCaptionBinding");
         if (subCaptionBinding != null) {
-            return getStringValue(subCaptionBinding);
+            subCaption = getStringValue(subCaptionBinding);
         }
 
-        return getUplAttribute(String.class, "subCaption");
+        return subCaption != null ? subCaption : getUplAttribute(String.class, "subCaption");
     }
 
     @Override

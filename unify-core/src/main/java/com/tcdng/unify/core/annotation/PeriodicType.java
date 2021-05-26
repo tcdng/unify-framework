@@ -22,6 +22,18 @@ package com.tcdng.unify.core.annotation;
  * @since 1.0
  */
 public enum PeriodicType {
+    /** 1 hour */
+    EON(60 * 60000),
+
+    /** 30 minutes */
+    ERA(30 * 60000),
+
+    /** 10 minutes */
+    UBER_SLOW(10 * 60000),
+
+    /** 5 minutes */
+    EXTREME_SLOW(5 * 60000),
+
     /** 60 seconds */
     SLOWEST(60000),
 
@@ -44,7 +56,7 @@ public enum PeriodicType {
     FASTEST(1000),
 
     /** .5 seconds */
-    EXTREME(500),
+    EXTREME_FAST(500),
 
     /** .1 second */
     LIGHTSPEED(100);

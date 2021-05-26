@@ -605,4 +605,56 @@ public class StringUtilsTest {
         assertEquals("Tom:Don", StringUtils.concatenateUsingSeparator(':', "Tom", "Don"));
         assertEquals("Henry:Tom:Don", StringUtils.concatenateUsingSeparator(':', "Henry", "Tom", "Don"));
     }
+    
+    @Test(expected=IllegalArgumentException.class)
+    public void testSplitToLengthsBadSize() throws Exception {
+        assertNull(StringUtils.splitIntoLengths(null, 0));
+    }
+    
+    @Test
+    public void testSplitToLengthsNull() throws Exception {
+        assertNull(StringUtils.splitIntoLengths(null, 2));
+    }
+    
+    @Test
+    public void testSplitToLengthsZero() throws Exception {
+        String[] res = StringUtils.splitIntoLengths("", 2);
+        assertNotNull(res);
+        assertEquals(0, res.length);
+    }
+    
+    @Test
+    public void testSplitToLengthsSingleLess() throws Exception {
+        String[] res = StringUtils.splitIntoLengths("Hello", 10);
+        assertNotNull(res);
+        assertEquals(1, res.length);
+        assertEquals("Hello", res[0]);
+    }
+    
+    @Test
+    public void testSplitToLengthsSingleEqual() throws Exception {
+        String[] res = StringUtils.splitIntoLengths("Hello", 5);
+        assertNotNull(res);
+        assertEquals(1, res.length);
+        assertEquals("Hello", res[0]);
+    }
+    
+    @Test
+    public void testSplitToLengthsMatch() throws Exception {
+        String[] res = StringUtils.splitIntoLengths("HelloWorld", 5);
+        assertNotNull(res);
+        assertEquals(2, res.length);
+        assertEquals("Hello", res[0]);
+        assertEquals("World", res[1]);
+    }
+    
+    @Test
+    public void testSplitToLengthsOverflow() throws Exception {
+        String[] res = StringUtils.splitIntoLengths("Hello World!", 5);
+        assertNotNull(res);
+        assertEquals(3, res.length);
+        assertEquals("Hello", res[0]);
+        assertEquals(" Worl", res[1]);
+        assertEquals("d!", res[2]);
+    }
 }

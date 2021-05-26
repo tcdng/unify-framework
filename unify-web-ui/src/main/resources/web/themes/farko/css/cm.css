@@ -1,6 +1,6 @@
 /** Container Management */
 .cm-banner {width: 100%; text-align:center;}
-.cm-banner-label {font-family: Impact, Charcoal, sans-serif; font-size:36pt; color:#444444;}
+.cm-banner-label {font-family: Impact, Charcoal, arial; font-size:36pt; color:#444444;}
 .cm-content {position: relative; top: 0px; display:block; width:100%; padding-top:40px;
 	overflow-y:scroll; max-height:calc(100vh - 40px) !important;}
 
