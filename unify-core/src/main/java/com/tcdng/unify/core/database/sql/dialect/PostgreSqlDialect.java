@@ -161,7 +161,7 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
                     sqlFieldSchemaInfo.getScale());
             if (sqlFieldSchemaInfo.isNullable()) {
                 sb.append(", ALTER COLUMN ").append(sqlFieldSchemaInfo.getColumnName());
-                sb.append(" SET NULL");
+                sb.append(" DROP NOT NULL");
             } else {
                 sb.append(", ALTER COLUMN ").append(sqlFieldSchemaInfo.getColumnName());
                 sb.append(" SET ");
@@ -194,7 +194,7 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
         sb.append(" TYPE");
         appendTypeSql(sb, sqlColumnInfo);
         sb.append(", ALTER COLUMN ").append(sqlColumnInfo.getColumnName());
-        sb.append(" SET NULL");
+        sb.append(" DROP NOT NULL");
         return sb.toString();
     }
 
