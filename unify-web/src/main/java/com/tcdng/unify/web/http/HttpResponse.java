@@ -40,6 +40,8 @@ public interface HttpResponse {
     
     void setStatus(int status);
     
-    int getOk();
+    void setStatusOk();
+    
+    void setStatusForbidden();
     
 }

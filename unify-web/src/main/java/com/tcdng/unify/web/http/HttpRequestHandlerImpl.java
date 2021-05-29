@@ -87,6 +87,8 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 
     private Set<String> remoteViewerList;
 
+    private boolean isRemoteViewStrict;
+
     private boolean isTenantPathEnabled;
 
     public HttpRequestHandlerImpl() {
@@ -168,11 +170,19 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
             ClientResponse clientResponse = new HttpClientResponse(httpResponse);
 
             String origin = httpRequest.getHeader("origin");
-            if (!StringUtils.isBlank(origin) && (remoteViewerList.isEmpty() || remoteViewerList.contains(origin))) {
-                httpResponse.setHeader("Access-Control-Allow-Origin", origin);
-                httpResponse.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS");
-                httpResponse.setHeader("Access-Control-Allow-Headers", "Content-Type");
-                httpResponse.setHeader("Access-Control-Max-Age", "600");
+            origin = origin != null ? origin : httpRequest.getHeader("Origin");
+            if (!StringUtils.isBlank(origin)) {
+                if (remoteViewerList.isEmpty() || remoteViewerList.contains(origin)) {
+                    httpResponse.setHeader("Access-Control-Allow-Origin", origin);
+                    httpResponse.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS");
+                    httpResponse.setHeader("Access-Control-Allow-Headers", "Content-Type");
+                    httpResponse.setHeader("Access-Control-Max-Age", "600");
+                } else {
+                    if (isRemoteViewStrict) {
+                        clientResponse.setStatusForbidden();
+                        return;
+                    }
+                }
             }
 
             Controller controller = controllerFinder
@@ -283,6 +293,8 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
     @SuppressWarnings("unchecked")
     @Override
     protected void onInitialize() throws UnifyException {
+        isRemoteViewStrict = getContainerSetting(boolean.class,
+                UnifyWebPropertyConstants.APPLICATION_REMOTE_VIEWERS_STRICT, false);
         isTenantPathEnabled = getContainerSetting(boolean.class,
                 UnifyWebPropertyConstants.APPLICATION_TENANT_PATH_ENABLED, false);
         List<String> viewersList = DataUtils.convert(ArrayList.class, String.class,

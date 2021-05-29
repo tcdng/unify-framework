@@ -76,6 +76,10 @@ public interface ClientResponse {
      *            the status to set
      */
     void setStatus(int status);
+    
+    void setStatusOk();
+    
+    void setStatusForbidden();
 
     /**
      * Closes response.

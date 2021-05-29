@@ -87,6 +87,16 @@ public class TestClientResponse implements ClientResponse {
     }
 
     @Override
+    public void setStatusOk() {
+        
+    }
+
+    @Override
+    public void setStatusForbidden() {
+        
+    }
+
+    @Override
     public void close() {
         IOUtils.close(writer);
         IOUtils.close(outputStream);

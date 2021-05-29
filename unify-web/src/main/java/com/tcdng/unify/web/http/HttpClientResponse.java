@@ -41,7 +41,7 @@ public class HttpClientResponse implements ClientResponse {
     private boolean outUsed;
 
     public HttpClientResponse(HttpResponse response) {
-        response.setStatus(response.getOk());
+        response.setStatusOk();
         this.response = response;
     }
 
@@ -89,6 +89,16 @@ public class HttpClientResponse implements ClientResponse {
     @Override
     public void setStatus(int status) {
         response.setStatus(status);
+    }
+
+    @Override
+    public void setStatusOk() {
+        response.setStatusOk();
+    }
+
+    @Override
+    public void setStatusForbidden() {
+        response.setStatusForbidden();
     }
 
     @Override

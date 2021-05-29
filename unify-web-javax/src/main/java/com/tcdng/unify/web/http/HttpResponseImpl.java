@@ -68,8 +68,13 @@ public class HttpResponseImpl implements HttpResponse {
     }
 
     @Override
-    public int getOk() {
-        return HttpServletResponse.SC_OK;
+    public void setStatusOk() {
+        response.setStatus(HttpServletResponse.SC_OK);
+    }
+
+    @Override
+    public void setStatusForbidden() {
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
     }
 
 }
