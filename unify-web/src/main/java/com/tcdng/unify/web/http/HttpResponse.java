@@ -43,5 +43,11 @@ public interface HttpResponse {
     void setStatusOk();
     
     void setStatusForbidden();
+
+    void setCookie(String name, String val);
+
+    void setCookie(String name, String val, int maxAge);
+
+    void setCookie(String domain, String path, String name, String val, int maxAge);
     
 }

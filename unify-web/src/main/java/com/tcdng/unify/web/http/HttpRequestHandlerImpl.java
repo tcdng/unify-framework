@@ -43,6 +43,7 @@ import com.tcdng.unify.core.util.ColorUtils;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.IOUtils;
 import com.tcdng.unify.core.util.StringUtils;
+import com.tcdng.unify.web.ClientCookie;
 import com.tcdng.unify.web.ClientRequest;
 import com.tcdng.unify.web.ClientResponse;
 import com.tcdng.unify.web.Controller;
@@ -166,7 +167,8 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
             }
 
             ClientRequest clientRequest = new HttpClientRequest(detectClientPlatform(httpRequest), methodType,
-                    requestPathParts, charset, extractRequestParameters(httpRequest, charset));
+                    requestPathParts, charset, extractRequestParameters(httpRequest, charset),
+                    extractCookies(httpRequest));
             ClientResponse clientResponse = new HttpClientResponse(httpResponse);
 
             String origin = httpRequest.getHeader("origin");
@@ -320,6 +322,20 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
         return platform;
     }
 
+    private Map<String, ClientCookie> extractCookies(HttpRequest httpRequest) {
+        List<ClientCookie> cookieList = httpRequest.getCookies();
+        if (!DataUtils.isBlank(cookieList)) {
+            Map<String, ClientCookie> cookies = new HashMap<String, ClientCookie>();
+            for (ClientCookie clientCookie : cookieList) {
+                cookies.put(clientCookie.getName(), clientCookie);
+            }
+
+            return cookies;
+        }
+
+        return Collections.emptyMap();
+    }
+    
     private Map<String, Object> extractRequestParameters(HttpRequest httpRequest, Charset charset)
             throws UnifyException {
         Map<String, Object> result = new HashMap<String, Object>();

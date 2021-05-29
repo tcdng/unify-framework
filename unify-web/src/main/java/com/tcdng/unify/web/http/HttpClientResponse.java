@@ -102,6 +102,21 @@ public class HttpClientResponse implements ClientResponse {
     }
 
     @Override
+    public void setCookie(String name, String val) {
+        response.setCookie(name, val);
+    }
+
+    @Override
+    public void setCookie(String name, String val, int maxAge) {
+        response.setCookie(name, val, maxAge);
+    }
+
+    @Override
+    public void setCookie(String domain, String path, String name, String val, int maxAge) {
+        response.setCookie(domain, path, name, val, maxAge);
+    }
+
+    @Override
     public void close() {
         IOUtils.close(outputStream);
         IOUtils.close(writer);

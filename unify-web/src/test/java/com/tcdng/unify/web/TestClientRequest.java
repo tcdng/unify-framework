@@ -79,4 +79,14 @@ public class TestClientRequest extends AbstractClientRequest {
     public InputStream getInputStream() throws UnifyException {
         return null;
     }
+
+    @Override
+    public Set<String> getCookieNames() {
+        return null;
+    }
+
+    @Override
+    public ClientCookie getCookie(String name) {
+        return null;
+    }
 }

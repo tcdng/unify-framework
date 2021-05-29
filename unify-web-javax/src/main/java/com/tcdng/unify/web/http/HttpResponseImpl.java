@@ -20,7 +20,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * HTTP response object implementation.
@@ -75,6 +78,40 @@ public class HttpResponseImpl implements HttpResponse {
     @Override
     public void setStatusForbidden() {
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+    }
+
+    @Override
+    public void setCookie(String name, String val) {
+        Cookie cookie = new Cookie(name, val);
+        response.addCookie(cookie);
+    }
+
+    @Override
+    public void setCookie(String name, String val, int maxAge) {
+        Cookie cookie = new Cookie(name, val);
+        if (maxAge >= 0) {
+            cookie.setMaxAge(maxAge);
+        }
+        
+        response.addCookie(cookie);
+    }
+
+    @Override
+    public void setCookie(String domain, String path, String name, String val, int maxAge) {
+        Cookie cookie = new Cookie(name, val);       
+        if (!StringUtils.isBlank(domain)) {
+            cookie.setDomain(domain);
+        }
+        
+        if (!StringUtils.isBlank(path)) {
+            cookie.setPath(path);
+        }
+        
+        if (maxAge >= 0) {
+            cookie.setMaxAge(maxAge);
+        }
+        
+        response.addCookie(cookie);
     }
 
 }
