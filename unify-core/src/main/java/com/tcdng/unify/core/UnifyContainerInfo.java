@@ -32,6 +32,8 @@ public class UnifyContainerInfo {
 
     private String version;
 
+    private String auxiliaryVersion;
+    
     private String hostAddress;
 
     private String hostHome;
@@ -54,13 +56,14 @@ public class UnifyContainerInfo {
 
     private List<UnifyContainerSettingInfo> settingInfoList;
 
-    public UnifyContainerInfo(String name, String id, String version, String hostAddress, String hostHome,
-            Date startTime, long usedMemory, long totalMemory, boolean clusterMode, boolean productionMode,
-            boolean deploymentMode, List<UnifyComponentInfo> componentInfoList,
+    public UnifyContainerInfo(String name, String id, String version, String hostAddress, String auxiliaryVersion,
+            String hostHome, Date startTime, long usedMemory, long totalMemory, boolean clusterMode,
+            boolean productionMode, boolean deploymentMode, List<UnifyComponentInfo> componentInfoList,
             List<UnifyInterfaceInfo> interfaceInfoList, List<UnifyContainerSettingInfo> settingInfoList) {
         this.name = name;
         this.id = id;
         this.version = version;
+        this.auxiliaryVersion = auxiliaryVersion;
         this.hostAddress = hostAddress;
         this.hostHome = hostHome;
         this.startTime = startTime;
@@ -84,6 +87,10 @@ public class UnifyContainerInfo {
 
     public String getVersion() {
         return version;
+    }
+
+    public String getAuxiliaryVersion() {
+        return auxiliaryVersion;
     }
 
     public String getHostAddress() {

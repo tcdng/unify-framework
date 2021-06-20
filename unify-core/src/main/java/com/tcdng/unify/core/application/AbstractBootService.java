@@ -58,9 +58,8 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
     @Transactional
     public void startup() throws UnifyException {
         logInfo("Initializing datasources...");
-        DataSourceManagerOptions options = new DataSourceManagerOptions(PrintFormat.NONE,
-                ForceConstraints.fromBoolean(!getContainerSetting(boolean.class,
-                        UnifyCorePropertyConstants.APPLICATION_FOREIGNKEY_EASE, false)));
+        DataSourceManagerOptions options = new DataSourceManagerOptions(PrintFormat.NONE, ForceConstraints.fromBoolean(
+                !getContainerSetting(boolean.class, UnifyCorePropertyConstants.APPLICATION_FOREIGNKEY_EASE, false)));
         List<String> datasources = getApplicationDataSources();
         for (String datasource : datasources) {
             dataSourceManager.initDataSource(datasource, options);
@@ -68,6 +67,7 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
 
         if (isDeploymentMode()) {
             Feature deploymentFeature = getFeature("deploymentVersion", "0.0");
+            Feature auxiliaryFeature = getFeature("auxiliaryVersion", "0.0");
             boolean isDataSourcesManaged = false;
             if (deploymentFeature == null) {
                 // Blank database. Manage data sources first time.
@@ -77,11 +77,12 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
                 }
 
                 deploymentFeature = getFeature("deploymentVersion", "0.0");
+                auxiliaryFeature = getFeature("auxiliaryVersion", "0.0");
                 getFeature("deploymentID", UUID.randomUUID().toString());
                 getFeature("deploymentInitDate", String.valueOf(new Date().getTime()));
                 isDataSourcesManaged = true;
             }
-            
+
             beginClusterLock(BOOT_DEPLOYMENT_LOCK);
             try {
                 logInfo("Checking application version information...");
@@ -89,10 +90,15 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
                 String lastDeploymentVersion = deploymentFeature.getValue();
                 String versionToDeploy = getDeploymentVersion();
                 boolean isDeployNewVersion = VersionUtils.isNewerVersion(versionToDeploy, lastDeploymentVersion);
+
+                auxiliaryFeature = getFeature("auxiliaryVersion", "0.0");
+                String lastAuxiliaryVersion = auxiliaryFeature.getValue();
+                String auxVersionToDeploy = getAuxiliaryVersion();
+                boolean isDeployNewAuxVersion = VersionUtils.isNewerVersion(auxVersionToDeploy, lastAuxiliaryVersion);
                 if (!isDataSourcesManaged) {
                     // If not already managed, manage data sources if not production mode or if
                     // deploying new version
-                    if (!isProductionMode() || isDeployNewVersion) {
+                    if (!isProductionMode() || isDeployNewVersion || isDeployNewAuxVersion) {
                         logInfo("Managing datasources...");
                         for (String datasource : datasources) {
                             dataSourceManager.manageDataSource(datasource, options);
@@ -101,9 +107,14 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
                 }
 
                 // Do installation only if deployment version is new
-                if (isDeployNewVersion) {
-                    logInfo("Installing newer application version {0}. Current version is {1}.", versionToDeploy,
-                            lastDeploymentVersion);
+                if (isDeployNewVersion || isDeployNewAuxVersion) {
+                    if (isDeployNewVersion) {
+                        logInfo("Installing newer application version {0}. Current version is {1}.", versionToDeploy,
+                                lastDeploymentVersion);
+                    } else {
+                        logInfo("Installing newer application auxiliary version {0}. Current auxiliary  version is {1}.",
+                                auxVersionToDeploy, lastAuxiliaryVersion);
+                    }
 
                     BootInstallationInfo<T> bootInstallationInfo = prepareBootInstallation();
                     if (bootInstallationInfo.isInstallers() && bootInstallationInfo.isFeatures()) {
@@ -113,20 +124,40 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
                         }
                     }
 
-                    // Update last deployment feature
-                    Feature lastDeploymentFeature = getFeature("lastDeploymentVersion", "0.0");
-                    lastDeploymentFeature.setValue(lastDeploymentVersion);
-                    db().updateByIdVersion(lastDeploymentFeature);
+                    if (isDeployNewVersion) {
+                        // Update last deployment feature
+                        Feature lastDeploymentFeature = getFeature("lastDeploymentVersion", "0.0");
+                        lastDeploymentFeature.setValue(lastDeploymentVersion);
+                        db().updateByIdVersion(lastDeploymentFeature);
 
-                    // Update current current deployment feature
-                    deploymentFeature.setValue(versionToDeploy);
-                    db().updateByIdVersion(deploymentFeature);
+                        // Update current deployment feature
+                        deploymentFeature.setValue(versionToDeploy);
+                        db().updateByIdVersion(deploymentFeature);
+                    }
+
+                    if (isDeployNewAuxVersion) {
+                        // Update last auxiliary feature
+                        Feature lastAuxiliaryFeature = getFeature("lastAuxiliaryVersion", "0.0");
+                        lastAuxiliaryFeature.setValue(lastAuxiliaryVersion);
+                        db().updateByIdVersion(lastAuxiliaryFeature);
+
+                        // Update current auxiliary feature
+                        auxiliaryFeature.setValue(auxVersionToDeploy);
+                        db().updateByIdVersion(auxiliaryFeature);
+                    }
                 } else {
                     if (lastDeploymentVersion.equals(versionToDeploy)) {
                         logInfo("Application deployment version {0} is current.", versionToDeploy);
                     } else {
                         logInfo("Application deployment version {0} is old. Current version is {1}.", versionToDeploy,
                                 lastDeploymentVersion);
+                    }
+
+                    if (lastAuxiliaryVersion.equals(auxVersionToDeploy)) {
+                        logInfo("Application auxiliary version {0} is current.", auxVersionToDeploy);
+                    } else {
+                        logInfo("Application auxiliary version {0} is old. Current version is {1}.", auxVersionToDeploy,
+                                lastAuxiliaryVersion);
                     }
                 }
             } finally {

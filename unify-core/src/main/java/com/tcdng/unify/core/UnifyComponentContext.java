@@ -582,10 +582,14 @@ public class UnifyComponentContext {
 	public String getInstanceName() throws UnifyException {
 		return applicationContext.getContainer().getInstanceName();
 	}
+	
+    public String getDeploymentVersion() throws UnifyException {
+        return applicationContext.getContainer().getDeploymentVersion();
+    }
 
-	public String getDeploymentVersion() throws UnifyException {
-		return applicationContext.getContainer().getDeploymentVersion();
-	}
+    public String getAuxiliaryVersion() throws UnifyException {
+        return applicationContext.getContainer().getAuxiliaryVersion();
+    }
 
 	public Object getContainerSetting(String name) throws UnifyException {
 		return applicationContext.getContainer().getSetting(name);
