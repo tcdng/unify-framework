@@ -137,7 +137,9 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
         for (SqlFieldInfo sqlFieldInfo : sqlEntityInfo.getManagedFieldInfos()) {
             if (sqlFieldInfo.isForeignKey()) {
                 SqlEntityInfo fkSqlEntityInfo = sqlFieldInfo.getForeignEntityInfo();
-                buildDependencyList(sqlDataSource, entityTypeList, fkSqlEntityInfo.getKeyClass());
+                if (!sqlEntityInfo.getTableName().equals(fkSqlEntityInfo.getTableName())) {
+                    buildDependencyList(sqlDataSource, entityTypeList, fkSqlEntityInfo.getKeyClass());
+                }
             }
         }
 

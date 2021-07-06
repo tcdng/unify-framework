@@ -614,11 +614,19 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
         List<SqlFieldInfo> inputlistFieldInfoList = new ArrayList<SqlFieldInfo>(listFieldInfoByName.values());
         DataUtils.sortAscending(inputlistFieldInfoList, SqlFieldSchemaInfo.class, "foreignEntityPreferredAlias");
         for (SqlFieldInfo sqlFieldInfo : inputlistFieldInfoList) {
-            if (!sqlFieldInfo.isListOnly()) {
+            if (sqlFieldInfo.isListOnly()) {
+                if (sqlFieldInfo.isUnresolvedListOnly()) {
+                    sqlFieldInfo.resolveListOnly(this);
+                }
+            } else {
                 fieldInfoByName.put(sqlFieldInfo.getName(), sqlFieldInfo);
                 fieldInfoList.add(sqlFieldInfo);
                 if (sqlFieldInfo.isForeignKey()) {
                     this.foreignKeyList.add(new SqlForeignKeyInfo(sqlFieldInfo));
+                }
+                
+                if (sqlFieldInfo.isUnresolvedForeignKey()) {
+                    sqlFieldInfo.resolveForeignKey(this, idFieldInfo);
                 }
             }
 

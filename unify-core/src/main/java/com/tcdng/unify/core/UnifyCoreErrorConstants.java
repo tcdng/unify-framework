@@ -1031,4 +1031,9 @@ public interface UnifyCoreErrorConstants {
 
     /** Multiple auxiliary versions detected */
     String MULTIPLE_AUXILIARY_VERSIONS_DETECTED = "UC_0109";
+
+    /**
+     * ID field not listable for recursive references. Type = {0}, Column = {1}
+     */
+    String RECORD_RECURSIVE_ID_NOT_LISTABLE = "UC_010A";
 }

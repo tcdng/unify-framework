@@ -419,19 +419,17 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                             isPersistent = true;
                             isForeignKey = true;
                             String fkName = null;
-                            boolean onDeleteCascade = false;
 
                             ForeignKeyOverride fkoa = fkOverrideMap.get(field.getName());
+                            Class<?> foreignType = null;
                             if (fkoa != null) {
                                 fkName = fkoa.name();
                                 isNullable = fkoa.nullable();
-                                entityCycleDetector.addReference(entityClass, fkoa.foreignType());
-                                foreignEntityInfo = get(fkoa.foreignType(), entityCycleDetector);
-                                onDeleteCascade = fkoa.onDeleteCascade();
+                                foreignType = fkoa.foreignType();
                             } else {
                                 fkName = fka.name();
                                 isNullable = fka.nullable();
-                                Class<?> foreignType = fka.value();
+                                foreignType = fka.value();
                                 if (foreignType.equals(Entity.class)) {
                                     foreignType = fka.type();
                                 } else if (!fka.type().equals(Entity.class)) {
@@ -461,28 +459,30 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                                             UnifyCoreErrorConstants.RECORD_EXTENSION_REFERENCE_NOT_ALLOWED, entityClass,
                                             field);
                                 }
-
-                                entityCycleDetector.addReference(entityClass, foreignType);
-                                foreignEntityInfo = get(foreignType, entityCycleDetector);
-                                onDeleteCascade = fka.onDeleteCascade();
                             }
-
-                            foreignFieldInfo = foreignEntityInfo.getIdFieldInfo();
-                            length = foreignFieldInfo.getLength();
-                            precision = foreignFieldInfo.getPrecision();
-                            scale = foreignFieldInfo.getScale();
 
                             // Set column name
                             column = AnnotationUtils.getAnnotationString(fkName);
-                            if (!isEnumConst && !field.getType().equals(foreignFieldInfo.getField().getType())) {
-                                throw new UnifyException(UnifyCoreErrorConstants.RECORD_FOREIGNKEY_TYPE_MUST_MATCH_ID,
-                                        searchClass, field, foreignFieldInfo.getField());
-                            }
+                            if (entityClass.equals(foreignType)) { // Self reference
+                                isNullable = true;
+                            } else {
+                                entityCycleDetector.addReference(entityClass, foreignType);
+                                foreignEntityInfo = get(foreignType, entityCycleDetector);
+                                foreignFieldInfo = foreignEntityInfo.getIdFieldInfo();
+                                length = foreignFieldInfo.getLength();
+                                precision = foreignFieldInfo.getPrecision();
+                                scale = foreignFieldInfo.getScale();
 
-                            // Add on delete info to parent entity class
-                            if (onDeleteCascade) {
-                                foreignEntityInfo.expandOnDeleteCascade(
-                                        new OnDeleteCascadeInfo((Class<? extends Entity>) entityClass, field, null, null));
+                                if (!isEnumConst && !field.getType().equals(foreignFieldInfo.getField().getType())) {
+                                    throw new UnifyException(UnifyCoreErrorConstants.RECORD_FOREIGNKEY_TYPE_MUST_MATCH_ID,
+                                            searchClass, field, foreignFieldInfo.getField());
+                                }
+
+                                // Add on delete info to parent entity class
+                                if (fka.onDeleteCascade()) {
+                                    foreignEntityInfo.expandOnDeleteCascade(
+                                            new OnDeleteCascadeInfo((Class<? extends Entity>) entityClass, field, null, null));
+                                }
                             }
                         }
 
@@ -728,29 +728,34 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                 for (Map.Entry<Class<?>, List<Field>> entry : listOnlyFieldMap.entrySet()) {
                     for (Field field : entry.getValue()) {
                         ListOnly loa = field.getAnnotation(ListOnly.class);
-                        SqlFieldInfo foreignKeySQLFieldInfo = propertyInfoMap.get(loa.key());
-                        if (foreignKeySQLFieldInfo == null) {
+                        SqlFieldInfo foreignKeySqlFieldInfo = propertyInfoMap.get(loa.key());
+                        if (foreignKeySqlFieldInfo == null) {
                             throw new UnifyException(UnifyCoreErrorConstants.RECORD_UNKNOWN_FOREIGN_KEY, entry.getKey(),
                                     field, loa.key());
                         }
 
-                        if (!foreignKeySQLFieldInfo.isForeignKey()) {
+                        if (!foreignKeySqlFieldInfo.isForeignKey()) {
                             throw new UnifyException(UnifyCoreErrorConstants.RECORD_LISTONLY_KEY_NOT_REF_FOREIGN_KEY,
                                     entry.getKey(), field, loa.key());
                         }
 
-                        SqlEntityInfo foreignEntityInfo = foreignKeySQLFieldInfo.getForeignEntityInfo();
-                        if (foreignEntityInfo.isExtended()) {
-                            foreignEntityInfo = foreignEntityInfo.getExtensionSqlEntityInfo();
-                        }
-                        
-                        SqlFieldInfo foreignFieldInfo = foreignEntityInfo.getListFieldInfo(loa.property());
+                        SqlEntityInfo foreignEntityInfo = null;
+                        SqlFieldInfo foreignPropSqlFieldInfo = null;
+                        if (foreignKeySqlFieldInfo.isUnresolvedForeignKey()) { //Self reference
+                            foreignPropSqlFieldInfo = propertyInfoMap.get(loa.property());
+                        } else {
+                            foreignEntityInfo = foreignKeySqlFieldInfo.getForeignEntityInfo();
+                            if (foreignEntityInfo.isExtended()) {
+                                foreignEntityInfo = foreignEntityInfo.getExtensionSqlEntityInfo();
+                            }
 
-                        // Make sure field type is the same with foreign field
-                        // type
-                        if (!field.getType().equals(foreignFieldInfo.getField().getType())) {
+                            foreignPropSqlFieldInfo = foreignEntityInfo.getListFieldInfo(loa.property());
+                        }
+
+                        // Make sure field type is the same with foreign field type
+                        if (!field.getType().equals(foreignPropSqlFieldInfo.getField().getType())) {
                             throw new UnifyException(UnifyCoreErrorConstants.RECORD_FOREIGNKEY_TYPE_MUST_MATCH_ID,
-                                    entry.getKey(), field, foreignFieldInfo.getField());
+                                    entry.getKey(), field, foreignPropSqlFieldInfo.getField());
                         }
 
                         // Set column name
@@ -759,8 +764,8 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                             column = SqlUtils.generateSchemaElementName(field.getName(), true);
                         }
 
-                        SqlFieldDimensions sqlFieldDimensions = new SqlFieldDimensions(foreignFieldInfo.getLength(),
-                                foreignFieldInfo.getPrecision(), foreignFieldInfo.getScale());
+                        SqlFieldDimensions sqlFieldDimensions = new SqlFieldDimensions(foreignPropSqlFieldInfo.getLength(),
+                                foreignPropSqlFieldInfo.getPrecision(), foreignPropSqlFieldInfo.getScale());
                         GetterSetterInfo getterSetterInfo =
                                 ReflectUtils.getGetterSetterInfo(entry.getKey(), field.getName());
                         final boolean isPrimaryKey = false;
@@ -771,11 +776,11 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                         final boolean isFosterParentId = false;
                         final boolean isCategoryColumn = false;
                         SqlFieldInfo sqlFieldInfo = new SqlFieldInfo(DefaultColumnPositionConstants.LIST_POSITION,
-                                foreignFieldInfo.getColumnType(), foreignEntityInfo, foreignFieldInfo,
-                                foreignKeySQLFieldInfo, field.getName(), column,
+                                foreignPropSqlFieldInfo.getColumnType(), foreignEntityInfo, foreignPropSqlFieldInfo,
+                                foreignKeySqlFieldInfo, field.getName(), column,
                                 sqlDataSourceDialect.getPreferredName(column), null, null, isPrimaryKey,
-                                isForeignKey, isListOnly, isIgnoreFkConstraint, foreignFieldInfo.getTransformer(),
-                                sqlFieldDimensions, foreignFieldInfo.isNullable(), isFosterParentType,
+                                isForeignKey, isListOnly, isIgnoreFkConstraint, foreignPropSqlFieldInfo.getTransformer(),
+                                sqlFieldDimensions, foreignPropSqlFieldInfo.isNullable(), isFosterParentType,
                                 isFosterParentId, isCategoryColumn, null, field, getterSetterInfo.getGetter(),
                                 getterSetterInfo.getSetter(), sqlDataSourceDialect.isAllObjectsInLowerCase());
 
