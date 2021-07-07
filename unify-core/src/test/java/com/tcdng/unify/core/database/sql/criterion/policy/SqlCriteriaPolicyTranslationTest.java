@@ -52,6 +52,24 @@ public class SqlCriteriaPolicyTranslationTest extends AbstractUnifyComponentTest
         assertEquals("BOOK.AUTHOR_GENDER = 'F'", sb.toString());
     }
 
+    @Test
+    public void testTranslateLike() throws Exception {
+        SqlDataSourceDialect dialect = (SqlDataSourceDialect) getComponent(SqlDialectNameConstants.HSQLDB);
+        SqlCriteriaPolicy policy = dialect.getSqlCriteriaPolicy(RestrictionType.LIKE);
+        StringBuilder sb = new StringBuilder();
+        policy.translate(sb, "BOOK", "TITLE", "C++ for Engineers", null);
+        assertEquals("BOOK.TITLE LIKE '%C++ for Engineers%'", sb.toString());
+    }
+
+    @Test
+    public void testTranslateILike() throws Exception {
+        SqlDataSourceDialect dialect = (SqlDataSourceDialect) getComponent(SqlDialectNameConstants.HSQLDB);
+        SqlCriteriaPolicy policy = dialect.getSqlCriteriaPolicy(RestrictionType.ILIKE);
+        StringBuilder sb = new StringBuilder();
+        policy.translate(sb, "BOOK", "TITLE", "C++ for Engineers", null);
+        assertEquals("LOWER(BOOK.TITLE) LIKE '%c++ for engineers%'", sb.toString());
+    }
+
     @Override
     protected void onSetup() throws Exception {
         

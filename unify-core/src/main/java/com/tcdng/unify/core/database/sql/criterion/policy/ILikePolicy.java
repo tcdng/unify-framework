@@ -20,21 +20,21 @@ import com.tcdng.unify.core.database.sql.SqlDataSourceDialectPolicies;
 import com.tcdng.unify.core.database.sql.SqlLikeType;
 
 /**
- * Like operator policy.
+ * Case-insensitive like operator policy.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class LikePolicy extends SingleParameterPolicy {
+public class ILikePolicy extends SingleParameterPolicy {
 
     private SqlLikeType type;
     
-    public LikePolicy(SqlDataSourceDialectPolicies rootPolicies) {
+    public ILikePolicy(SqlDataSourceDialectPolicies rootPolicies) {
         this(SqlLikeType.CONTAINS, rootPolicies);
     }
     
-    protected LikePolicy(SqlLikeType type, SqlDataSourceDialectPolicies rootPolicies) {
-        super(" LIKE ", rootPolicies);
+    protected ILikePolicy(SqlLikeType type, SqlDataSourceDialectPolicies rootPolicies) {
+        super(" LIKE ", rootPolicies, true);
         this.type = type;
     }
 

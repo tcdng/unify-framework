@@ -162,6 +162,17 @@ public enum FilterConditionType implements EnumConst {
             return new Like(fieldName, (String) paramA);
         }
     },
+    ILIKE("ILK", RestrictionType.ILIKE, "condition.ilike.label", "condition.ilike.symbol", FilterParamType.IMMEDIATE) {
+        @Override
+        public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
+            cb.addILike(fieldName, (String) paramA);
+        }
+
+        @Override
+        public Restriction createSimpleCriteria(String fieldName, Object paramA, Object paramB) {
+            return new ILike(fieldName, (String) paramA);
+        }
+    },
     NOT_LIKE("NLK", RestrictionType.NOT_LIKE, "condition.notlike.label", "condition.notlike.symbol", FilterParamType.IMMEDIATE) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
@@ -184,6 +195,17 @@ public enum FilterConditionType implements EnumConst {
             return new BeginsWith(fieldName, (String) paramA);
         }
     },
+    IBEGINS_WITH("IBW", RestrictionType.IBEGINS_WITH, "condition.ibeginswith.label", "condition.ibeginswith.symbol", FilterParamType.IMMEDIATE) {
+        @Override
+        public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
+            cb.addIBeginsWith(fieldName, (String) paramA);
+        }
+
+        @Override
+        public Restriction createSimpleCriteria(String fieldName, Object paramA, Object paramB) {
+            return new IBeginsWith(fieldName, (String) paramA);
+        }
+    },
     NOT_BEGIN_WITH("NBW", RestrictionType.NOT_BEGIN_WITH, "condition.notbeginswith.label", "condition.notbeginswith.symbol", FilterParamType.IMMEDIATE) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
@@ -204,6 +226,17 @@ public enum FilterConditionType implements EnumConst {
         @Override
         public Restriction createSimpleCriteria(String fieldName, Object paramA, Object paramB) {
             return new EndsWith(fieldName, (String) paramA);
+        }
+    },
+    IENDS_WITH("IEW", RestrictionType.IENDS_WITH, "condition.iendswith.label", "condition.iendswith.symbol", FilterParamType.IMMEDIATE) {
+        @Override
+        public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
+            cb.addIEndsWith(fieldName, (String) paramA);
+        }
+
+        @Override
+        public Restriction createSimpleCriteria(String fieldName, Object paramA, Object paramB) {
+            return new IEndsWith(fieldName, (String) paramA);
         }
     },
     NOT_END_WITH("NEW", RestrictionType.NOT_END_WITH, "condition.notendswith.label", "condition.notendswith.symbol", FilterParamType.IMMEDIATE) {
@@ -339,6 +372,17 @@ public enum FilterConditionType implements EnumConst {
             return new LikeField(fieldName, (String) paramA);
         }
     },
+    ILIKE_FIELD("ILKF", RestrictionType.ILIKE, "condition.ilikefield.label", "condition.ilikefield.symbol", FilterParamType.FIELD) {
+        @Override
+        public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
+            cb.addILikeField(fieldName, (String) paramA);
+        }
+
+        @Override
+        public Restriction createSimpleCriteria(String fieldName, Object paramA, Object paramB) {
+            return new ILikeField(fieldName, (String) paramA);
+        }
+    },
     NOT_LIKE_FIELD("NLKF", RestrictionType.NOT_LIKE, "condition.notlikefield.label", "condition.notlikefield.symbol", FilterParamType.FIELD) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
@@ -361,6 +405,17 @@ public enum FilterConditionType implements EnumConst {
             return new BeginsWithField(fieldName, (String) paramA);
         }
     },
+    IBEGINS_WITH_FIELD("IBWF", RestrictionType.IBEGINS_WITH, "condition.ibeginswithfield.label", "condition.ibeginswithfield.symbol", FilterParamType.FIELD) {
+        @Override
+        public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
+            cb.addIBeginsWithField(fieldName, (String) paramA);
+        }
+
+        @Override
+        public Restriction createSimpleCriteria(String fieldName, Object paramA, Object paramB) {
+            return new IBeginsWithField(fieldName, (String) paramA);
+        }
+    },
     NOT_BEGIN_WITH_FIELD("NBWF", RestrictionType.NOT_BEGIN_WITH, "condition.notbeginswithfield.label", "condition.notbeginswithfield.symbol", FilterParamType.FIELD) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
@@ -381,6 +436,17 @@ public enum FilterConditionType implements EnumConst {
         @Override
         public Restriction createSimpleCriteria(String fieldName, Object paramA, Object paramB) {
             return new EndsWithField(fieldName, (String) paramA);
+        }
+    },
+    IENDS_WITH_FIELD("IEWF", RestrictionType.IENDS_WITH, "condition.iendswithfield.label", "condition.iendswithfield.symbol", FilterParamType.FIELD) {
+        @Override
+        public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
+            cb.addIEndsWithField(fieldName, (String) paramA);
+        }
+
+        @Override
+        public Restriction createSimpleCriteria(String fieldName, Object paramA, Object paramB) {
+            return new IEndsWithField(fieldName, (String) paramA);
         }
     },
     NOT_END_WITH_FIELD("NEWF", RestrictionType.NOT_END_WITH, "condition.notendswithfield.label", "condition.notendswithfield.symbol", FilterParamType.FIELD) {
@@ -494,6 +560,17 @@ public enum FilterConditionType implements EnumConst {
             return new LikeParam(paramName, (String) paramA);
         }
     },
+    ILIKE_PARAM("ILKP", RestrictionType.ILIKE, "condition.ilikeparam.label", "condition.ilikeparam.symbol", FilterParamType.PARAMETER) {
+        @Override
+        public void addSimpleCriteria(CriteriaBuilder cb, String paramName, Object paramA, Object paramB) {
+            cb.addILikeParam(paramName, (String) paramA);
+        }
+
+        @Override
+        public Restriction createSimpleCriteria(String paramName, Object paramA, Object paramB) {
+            return new ILikeParam(paramName, (String) paramA);
+        }
+    },
     NOT_LIKE_PARAM("NLKP", RestrictionType.NOT_LIKE, "condition.notlikeparam.label", "condition.notlikeparam.symbol", FilterParamType.PARAMETER) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String paramName, Object paramA, Object paramB) {
@@ -516,6 +593,17 @@ public enum FilterConditionType implements EnumConst {
             return new BeginsWithParam(paramName, (String) paramA);
         }
     },
+    IBEGINS_WITH_PARAM("IBWP", RestrictionType.IBEGINS_WITH, "condition.ibeginswithparam.label", "condition.ibeginswithparam.symbol", FilterParamType.PARAMETER) {
+        @Override
+        public void addSimpleCriteria(CriteriaBuilder cb, String paramName, Object paramA, Object paramB) {
+            cb.addIBeginsWithParam(paramName, (String) paramA);
+        }
+
+        @Override
+        public Restriction createSimpleCriteria(String paramName, Object paramA, Object paramB) {
+            return new IBeginsWithParam(paramName, (String) paramA);
+        }
+    },
     NOT_BEGIN_WITH_PARAM("NBWP", RestrictionType.NOT_BEGIN_WITH, "condition.notbeginswithparam.label", "condition.notbeginswithparam.symbol", FilterParamType.PARAMETER) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String paramName, Object paramA, Object paramB) {
@@ -536,6 +624,17 @@ public enum FilterConditionType implements EnumConst {
         @Override
         public Restriction createSimpleCriteria(String paramName, Object paramA, Object paramB) {
             return new EndsWithParam(paramName, (String) paramA);
+        }
+    },
+    IENDS_WITH_PARAM("IEWP", RestrictionType.IENDS_WITH, "condition.iendswithparam.label", "condition.iendswithparam.symbol", FilterParamType.PARAMETER) {
+        @Override
+        public void addSimpleCriteria(CriteriaBuilder cb, String paramName, Object paramA, Object paramB) {
+            cb.addIEndsWithParam(paramName, (String) paramA);
+        }
+
+        @Override
+        public Restriction createSimpleCriteria(String paramName, Object paramA, Object paramB) {
+            return new IEndsWithParam(paramName, (String) paramA);
         }
     },
     NOT_END_WITH_PARAM("NEWP", RestrictionType.NOT_END_WITH, "condition.notendswithparam.label", "condition.notendswithparam.symbol", FilterParamType.PARAMETER) {

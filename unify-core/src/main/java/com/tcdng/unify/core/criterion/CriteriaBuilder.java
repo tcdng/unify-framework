@@ -170,8 +170,18 @@ public class CriteriaBuilder {
         return this;
     }
 
+    public CriteriaBuilder addILike(String fieldName, String value) {
+        addSimpleCondition(new ILike(fieldName, value));
+        return this;
+    }
+
     public CriteriaBuilder addLikeField(String fieldNameA, String fieldNameB) {
         addSimpleCondition(new LikeField(fieldNameA, fieldNameB));
+        return this;
+    }
+
+    public CriteriaBuilder addILikeField(String fieldNameA, String fieldNameB) {
+        addSimpleCondition(new ILikeField(fieldNameA, fieldNameB));
         return this;
     }
 
@@ -180,8 +190,18 @@ public class CriteriaBuilder {
         return this;
     }
 
+    public CriteriaBuilder addIBeginsWith(String fieldName, String value) {
+        addSimpleCondition(new IBeginsWith(fieldName, value));
+        return this;
+    }
+
     public CriteriaBuilder addBeginsWithField(String fieldNameA, String fieldNameB) {
         addSimpleCondition(new BeginsWithField(fieldNameA, fieldNameB));
+        return this;
+    }
+
+    public CriteriaBuilder addIBeginsWithField(String fieldNameA, String fieldNameB) {
+        addSimpleCondition(new IBeginsWithField(fieldNameA, fieldNameB));
         return this;
     }
 
@@ -190,8 +210,18 @@ public class CriteriaBuilder {
         return this;
     }
 
+    public CriteriaBuilder addIEndsWith(String fieldName, String value) {
+        addSimpleCondition(new IEndsWith(fieldName, value));
+        return this;
+    }
+
     public CriteriaBuilder addEndsWithField(String fieldNameA, String fieldNameB) {
         addSimpleCondition(new EndsWithField(fieldNameA, fieldNameB));
+        return this;
+    }
+
+    public CriteriaBuilder addIEndsWithField(String fieldNameA, String fieldNameB) {
+        addSimpleCondition(new IEndsWithField(fieldNameA, fieldNameB));
         return this;
     }
 
@@ -290,13 +320,28 @@ public class CriteriaBuilder {
         return this;
     }
 
+    public CriteriaBuilder addILikeParam(String paramNameA, String paramNameB) {
+        addSimpleCondition(new ILikeParam(paramNameA, paramNameB));
+        return this;
+    }
+
     public CriteriaBuilder addBeginsWithParam(String paramNameA, String paramNameB) {
         addSimpleCondition(new BeginsWithParam(paramNameA, paramNameB));
         return this;
     }
 
+    public CriteriaBuilder addIBeginsWithParam(String paramNameA, String paramNameB) {
+        addSimpleCondition(new IBeginsWithParam(paramNameA, paramNameB));
+        return this;
+    }
+
     public CriteriaBuilder addEndsWithParam(String paramNameA, String paramNameB) {
         addSimpleCondition(new EndsWithParam(paramNameA, paramNameB));
+        return this;
+    }
+
+    public CriteriaBuilder addIEndsWithParam(String paramNameA, String paramNameB) {
+        addSimpleCondition(new IEndsWithParam(paramNameA, paramNameB));
         return this;
     }
 

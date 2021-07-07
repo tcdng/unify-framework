@@ -15,31 +15,18 @@
  */
 package com.tcdng.unify.core.database.sql.criterion.policy;
 
-import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.database.sql.SqlDataSourceDialectPolicies;
 import com.tcdng.unify.core.database.sql.SqlLikeType;
 
 /**
- * Like operator policy.
+ * Case-insensitive like end with operator policy.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class LikePolicy extends SingleParameterPolicy {
+public class ILikeEndPolicy extends ILikePolicy {
 
-    private SqlLikeType type;
-    
-    public LikePolicy(SqlDataSourceDialectPolicies rootPolicies) {
-        this(SqlLikeType.CONTAINS, rootPolicies);
-    }
-    
-    protected LikePolicy(SqlLikeType type, SqlDataSourceDialectPolicies rootPolicies) {
-        super(" LIKE ", rootPolicies);
-        this.type = type;
-    }
-
-    @Override
-    protected Object resolveParam(String tableName, Object param) throws UnifyException{
-        return getRootPolicies().generateLikeParameter(type, tableName, param);
+    public ILikeEndPolicy(SqlDataSourceDialectPolicies rootPolicies) {
+        super(SqlLikeType.ENDS_WITH, rootPolicies);
     }
 }
