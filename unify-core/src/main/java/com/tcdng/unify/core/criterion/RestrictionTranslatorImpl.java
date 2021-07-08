@@ -69,9 +69,12 @@ public class RestrictionTranslatorImpl extends AbstractRestrictionTranslator {
         map.put(FilterConditionType.AMONGST, new MultipleParamRestrictionTranslator());
         map.put(FilterConditionType.NOT_AMONGST, new MultipleParamRestrictionTranslator());
         map.put(FilterConditionType.LIKE, new SingleParamRestrictionTranslator());
+        map.put(FilterConditionType.ILIKE, new SingleParamRestrictionTranslator());
         map.put(FilterConditionType.NOT_LIKE, new SingleParamRestrictionTranslator());
         map.put(FilterConditionType.BEGINS_WITH, new SingleParamRestrictionTranslator());
+        map.put(FilterConditionType.IBEGINS_WITH, new SingleParamRestrictionTranslator());
         map.put(FilterConditionType.NOT_BEGIN_WITH, new SingleParamRestrictionTranslator());
+        map.put(FilterConditionType.IENDS_WITH, new SingleParamRestrictionTranslator());
         map.put(FilterConditionType.ENDS_WITH, new SingleParamRestrictionTranslator());
         map.put(FilterConditionType.NOT_END_WITH, new SingleParamRestrictionTranslator());
         map.put(FilterConditionType.IS_NULL, new ZeroParamRestrictionTranslator());
