@@ -375,6 +375,7 @@ public abstract class AbstractUIController extends AbstractController implements
                         pathInfoRepository.getControllerPathParts(SystemInfoConstants.UNAUTHORIZED_CONTROLLER_NAME);
                 pageController = (PageController<?>) getControllerFinder().findController(respPathParts);
                 page = uiControllerUtil.loadRequestPage(respPathParts);
+                page.setWidgetVisible("stackTrace", !loginRequired);
                 result = uiControllerUtil.getPageControllerInfo(pageController.getName()).getResult(ResultMappingConstants.INDEX);
             } else {
                 respPathParts =
