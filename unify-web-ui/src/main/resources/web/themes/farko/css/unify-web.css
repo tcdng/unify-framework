@@ -577,6 +577,9 @@ z-index:400;}
 /** Integer field*/
 .ui-integer {text-align: right; padding-right: 4px;}
 
+/** Integer text field */
+.ui-integertext {}
+
 /** Key-value list area*/
 .ui-keyvaluelistarea {}
 .ui-keyvaluelistarea-body {width:100%;}

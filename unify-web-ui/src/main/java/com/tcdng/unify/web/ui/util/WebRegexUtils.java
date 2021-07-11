@@ -111,6 +111,17 @@ public final class WebRegexUtils {
     }
 
     /**
+     * Gets JavaScript REGEX that allows only digits.
+     * 
+     * @return the integer text format regex
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public static String getIntegerTextFormatRegex() throws UnifyException {
+        return "/^[0-9]*$/";
+    }
+
+    /**
      * Gets a number formatting JavaScript REGEX.
      * 
      * @param numberSymbols
