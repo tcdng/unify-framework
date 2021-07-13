@@ -52,7 +52,7 @@ public class ListManagerImpl extends AbstractUnifyComponent implements ListManag
     private LocaleFactoryMap<List<StaticListInfo>> staticLists;
 
     private Map<String, StaticListEnumInfo> staticListEnumInfos;
-    
+
     public ListManagerImpl() {
         staticListEnumInfos = new HashMap<String, StaticListEnumInfo>();
         staticLists = new LocaleFactoryMap<List<StaticListInfo>>()
@@ -115,14 +115,25 @@ public class ListManagerImpl extends AbstractUnifyComponent implements ListManag
     }
 
     @Override
-    public List<? extends Listable> getSubList(Locale locale, String listName, String filter, int limit, Object... params)
-            throws UnifyException {
+    public List<? extends Listable> getSubList(Locale locale, String listName, String filter, int limit,
+            Object... params) throws UnifyException {
         StaticListInfo staticListInfo = staticListMaps.get(locale).get(listName);
         if (staticListInfo != null) {
             return staticListInfo.getList(filter, limit);
         }
 
         return executeListCommand(listName, locale, filter, limit, params);
+    }
+
+    @Override
+    public List<? extends Listable> getCaseInsensitiveSubList(Locale locale, String listName, String filter, int limit,
+            Object... params) throws UnifyException {
+        StaticListInfo staticListInfo = staticListMaps.get(locale).get(listName);
+        if (staticListInfo != null) {
+            return staticListInfo.getCaseInsensitiveList(filter, limit);
+        }
+
+        return executeCaseInsensitiveListCommand(listName, locale, filter, limit, params);
     }
 
     @Override
@@ -140,8 +151,8 @@ public class ListManagerImpl extends AbstractUnifyComponent implements ListManag
     }
 
     @Override
-    public Map<String, Listable> getSubListMap(Locale locale, String listName, String filter, int limit, Object... params)
-            throws UnifyException {
+    public Map<String, Listable> getSubListMap(Locale locale, String listName, String filter, int limit,
+            Object... params) throws UnifyException {
         StaticListInfo staticListInfo = staticListMaps.get(locale).get(listName);
         if (staticListInfo != null) {
             return staticListInfo.getMap(filter, limit);
@@ -163,12 +174,12 @@ public class ListManagerImpl extends AbstractUnifyComponent implements ListManag
     @Override
     public Listable getListItemByDescription(Locale locale, String listName, String listDesc, Object... params)
             throws UnifyException {
-        for(Map.Entry<String, Listable> entry: getListMap(locale, listName, params).entrySet()) {
-            if(entry.getValue().getListDescription().equals(listDesc)) {
+        for (Map.Entry<String, Listable> entry : getListMap(locale, listName, params).entrySet()) {
+            if (entry.getValue().getListDescription().equals(listDesc)) {
                 return entry.getValue();
             }
         }
-        
+
         return null;
     }
 
@@ -195,6 +206,11 @@ public class ListManagerImpl extends AbstractUnifyComponent implements ListManag
     private <T extends ListParam> List<? extends Listable> executeListCommand(String listName, Locale locale,
             String filter, int limit, Object... params) throws UnifyException {
         return ListUtils.getSubList(executeListCommand(listName, locale, params), filter, limit);
+    }
+
+    private <T extends ListParam> List<? extends Listable> executeCaseInsensitiveListCommand(String listName,
+            Locale locale, String filter, int limit, Object... params) throws UnifyException {
+        return ListUtils.getCaseInsensitiveSubList(executeListCommand(listName, locale, params), filter, limit);
     }
 
     public class StaticListInfo implements Listable {
@@ -240,6 +256,10 @@ public class ListManagerImpl extends AbstractUnifyComponent implements ListManag
             return ListUtils.getSubList(getList(), filter, limit);
         }
 
+        public List<? extends Listable> getCaseInsensitiveList(String filter, int limit) throws UnifyException {
+            return ListUtils.getCaseInsensitiveSubList(getList(), filter, limit);
+        }
+
         public Map<String, Listable> getMap() throws UnifyException {
             if (map == null) {
                 synchronized (lock) {
@@ -280,13 +300,13 @@ public class ListManagerImpl extends AbstractUnifyComponent implements ListManag
             return description;
         }
     }
-    
+
     private class StaticListEnumInfo {
-        
+
         private Class<? extends EnumConst> enumClass;
-        
+
         private String name;
-        
+
         private String description;
 
         public StaticListEnumInfo(Class<? extends EnumConst> enumClass, String name, String description) {

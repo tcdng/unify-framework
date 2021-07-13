@@ -87,6 +87,26 @@ public interface ListManager extends UnifyComponent {
             throws UnifyException;
 
     /**
+     * Returns a list of listables from specified list command for a locale with
+     * case-insensitive filtering.
+     * 
+     * @param locale
+     *                 the locale
+     * @param listName
+     *                 the list command name
+     * @param filter
+     *                 optional filter string
+     * @param limit
+     *                 limits number of returned records if greater than zero
+     * @param params
+     *                 optional parameters
+     * @throws UnifyException
+     *                        if list is unknown. If an error occurs
+     */
+    List<? extends Listable> getCaseInsensitiveSubList(Locale locale, String listName, String filter, int limit,
+            Object... params) throws UnifyException;
+
+    /**
      * Returns a map of key to description values from specified list command for a
      * locale.
      * 
