@@ -18,9 +18,11 @@ package com.tcdng.unify.core.util;
 import java.io.CharArrayReader;
 import java.io.File;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Reader;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.ValidationEvent;
 import javax.xml.bind.ValidationEventHandler;
@@ -77,7 +79,19 @@ public final class XmlConfigUtils {
             return (T) jaxbUnmarshaller.unmarshal((File) xmlSrcObject);
         } catch (Exception e) {
             throw new UnifyOperationException(e,
-                    UnifyConfigUtils.class.getName());
+                    XmlConfigUtils.class.getName());
+        }
+    }
+
+    public static void writeXmlConfig(Object configObject, OutputStream outputStream) throws UnifyException {
+        try {
+            JAXBContext jaxbContext = JAXBContext.newInstance(configObject.getClass());
+            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+            jaxbMarshaller.marshal(configObject, outputStream);
+            outputStream.flush();
+        } catch (Exception e) {
+            throw new UnifyOperationException(e, XmlConfigUtils.class.getName());
         }
     }
 }
