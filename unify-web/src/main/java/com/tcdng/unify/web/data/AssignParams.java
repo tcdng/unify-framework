@@ -21,6 +21,7 @@ import java.util.List;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.list.AbstractListParam;
 import com.tcdng.unify.core.util.DataUtils;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * Assignment list parameters.
@@ -32,12 +33,15 @@ public class AssignParams extends AbstractListParam {
 
     private List<String> assignedIdList;
 
+    private String rule;
+    
     private String filterId1;
 
     private String filterId2;
 
-    public AssignParams(List<String> assignedIdList, String filterId1, String filterId2) {
+    public AssignParams(List<String> assignedIdList, String rule, String filterId1, String filterId2) {
         this.assignedIdList = assignedIdList;
+        this.rule = rule;
         this.filterId1 = filterId1;
         this.filterId2 = filterId2;
     }
@@ -49,6 +53,10 @@ public class AssignParams extends AbstractListParam {
     @SuppressWarnings("unchecked")
     public <T> List<T> getAssignedIdList(Class<T> dataType) throws UnifyException {
         return (List<T>) DataUtils.convert(List.class, dataType, assignedIdList);
+    }
+
+    public String getRule() {
+        return rule;
     }
 
     public String getFilterId1() {
@@ -75,6 +83,10 @@ public class AssignParams extends AbstractListParam {
         return assignedIdList == null && filterId1 == null && filterId2 == null;
     }
 
+    public boolean isWithRule() {
+        return !StringUtils.isBlank(rule);
+    }
+    
     @Override
     public boolean isPresent() {
         return true;
