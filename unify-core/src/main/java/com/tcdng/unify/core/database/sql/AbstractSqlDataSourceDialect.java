@@ -2051,9 +2051,14 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         }
 
         ViewAliasInfo viewAliasInfo = new ViewAliasInfo(sqlEntitySchemaInfo.getTableAlias());
-        Map<SqlFieldSchemaInfo, SqlJoinInfo> sqlJoinMap = new LinkedHashMap<SqlFieldSchemaInfo, SqlJoinInfo>();
+        // 29/07/2021 Solve null on depth issue by separating map
+        // Map<SqlFieldSchemaInfo, SqlJoinInfo> sqlJoinMap = new
+        // LinkedHashMap<SqlFieldSchemaInfo, SqlJoinInfo>();
+        LinkedHashMap<String, SqlJoinInfo> sqlJoinInfos = new LinkedHashMap<String, SqlJoinInfo>();
+        Set<SqlFieldSchemaInfo> referenceFieldSet = new HashSet<SqlFieldSchemaInfo>();
         for (SqlFieldSchemaInfo sqlFieldInfo : sqlEntitySchemaInfo.getManagedListFieldInfos()) {
-            appendCreateViewSQLElements(sqlEntitySchemaInfo, sqlFieldInfo, viewAliasInfo, sqlJoinMap);
+            appendCreateViewSQLElements(sqlEntitySchemaInfo, sqlFieldInfo, viewAliasInfo, referenceFieldSet,
+                    sqlJoinInfos);
         }
 
         boolean appendSym = false;
@@ -2099,7 +2104,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
             sb.append(" FROM ");
         }
         sb.append(sqlEntitySchemaInfo.getSchemaTableName()).append(' ').append(viewAliasInfo.getViewAlias());
-        for (SqlJoinInfo sqlJoinInfo : sqlJoinMap.values()) {
+        for (SqlJoinInfo sqlJoinInfo : sqlJoinInfos.values()) {
             if (format.isPretty()) {
                 sb.append(newLineSql);
                 sb.append('\t');
@@ -2297,18 +2302,21 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     }
 
     private void appendCreateViewSQLElements(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlFieldSchemaInfo sqlFieldInfo,
-            ViewAliasInfo viewAliasInfo, Map<SqlFieldSchemaInfo, SqlJoinInfo> sqlJoinMap) {
+            ViewAliasInfo viewAliasInfo, Set<SqlFieldSchemaInfo> referenceFieldSet,
+            LinkedHashMap<String, SqlJoinInfo> sqlJoinInfos) {
         String column = sqlFieldInfo.getPreferredColumnName();
         String viewAlias = viewAliasInfo.getViewAlias();
         String aliasExt = "";
         ViewAliasInfo.FkChainViewAliasInfo fcvAliasInfo = null;
+        // 29/07/2021 Solve null on depth issue by including depth variable
+        int depth = 0;
         while (sqlFieldInfo.isListOnly()) {
             SqlFieldSchemaInfo fkSQLFieldInfo = sqlFieldInfo.getForeignKeyFieldInfo();
             if (fcvAliasInfo == null) {
                 fcvAliasInfo = viewAliasInfo.getFkChainViewAliasInfo(fkSQLFieldInfo);
             }
 
-            if (!sqlJoinMap.containsKey(fkSQLFieldInfo)) {
+            if (!referenceFieldSet.contains(fkSQLFieldInfo) || depth > 0) {
                 StringBuilder csb = new StringBuilder();
                 String tableAlias = fkSQLFieldInfo.getForeignEntityInfo().getTableAlias() + fkSQLFieldInfo.getName();
 
@@ -2317,14 +2325,18 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
                 csb.append(" = ");
                 csb.append(fcvAliasInfo.getViewAlias(sqlEntitySchemaInfo.getTableAlias() + aliasExt)).append('.')
                         .append(fkSQLFieldInfo.getPreferredColumnName());
-                sqlJoinMap.put(fkSQLFieldInfo, new SqlJoinInfo(
-                        fkSQLFieldInfo.getForeignEntityInfo().getSchemaTableName(), viewAlias, csb.toString()));
+                referenceFieldSet.add(fkSQLFieldInfo);
+                if (!sqlJoinInfos.containsKey(viewAlias)) {
+                    sqlJoinInfos.put(viewAlias, new SqlJoinInfo(
+                            fkSQLFieldInfo.getForeignEntityInfo().getSchemaTableName(), viewAlias, csb.toString()));
+                }
             }
 
             sqlEntitySchemaInfo = sqlFieldInfo.getForeignEntityInfo();
             aliasExt = fkSQLFieldInfo.getName();
             viewAlias = fcvAliasInfo.getViewAlias(sqlEntitySchemaInfo.getTableAlias() + aliasExt);
             sqlFieldInfo = sqlFieldInfo.getForeignFieldInfo();
+            depth++;
         }
 
         viewAliasInfo.addPair(viewAlias + '.' + sqlFieldInfo.getPreferredColumnName(), column);

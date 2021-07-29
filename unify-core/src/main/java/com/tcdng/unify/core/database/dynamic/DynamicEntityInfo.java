@@ -36,6 +36,8 @@ import com.tcdng.unify.core.system.entities.AbstractSequencedEntity;
  */
 public class DynamicEntityInfo {
 
+    public static final DynamicEntityInfo SELF_REFERENCE = new DynamicEntityInfo(true);
+
     private DynamicEntityType type;
 
     private String tableName;
@@ -48,7 +50,13 @@ public class DynamicEntityInfo {
 
     private boolean withChildField;
 
+    private boolean selfReference;
+
     private long version;
+
+    private DynamicEntityInfo(boolean selfReference) {
+        this.selfReference = selfReference;
+    }
 
     private DynamicEntityInfo(DynamicEntityType type, String tableName, String baseClassName, String className,
             Map<String, DynamicFieldInfo> fieldInfos, long version) {
@@ -112,6 +120,10 @@ public class DynamicEntityInfo {
         fieldInfos.put(fieldName, new DynamicChildListFieldInfo(type, childDynamicEntityInfo, fieldName));
         withChildField = true;
         return this;
+    }
+
+    public boolean isSelfReference() {
+        return selfReference;
     }
 
     public long getVersion() {
@@ -232,10 +244,18 @@ public class DynamicEntityInfo {
                 listOnlyFields.put(fieldName,
                         new DynamicListOnlyFieldInfo(type, columnName, fieldName, key, property, false));
             } else {
-                listOnlyFields.put(fieldName,
-                        new DynamicListOnlyFieldInfo(type,
-                                fkFieldInfo.getParentDynamicEntityInfo().getDynamicFieldInfo(property), columnName,
-                                fieldName, key, property, descriptive));
+                DynamicFieldInfo _dynamicFieldInfo = null;
+                if (fkFieldInfo.getParentDynamicEntityInfo().isSelfReference()) {
+                    _dynamicFieldInfo = columnFields.get(property);
+                    if (_dynamicFieldInfo == null) {
+                        _dynamicFieldInfo = fkFields.get(property);
+                    }
+                } else {
+                    _dynamicFieldInfo = fkFieldInfo.getParentDynamicEntityInfo().getDynamicFieldInfo(property);
+                }
+
+                listOnlyFields.put(fieldName, new DynamicListOnlyFieldInfo(type, _dynamicFieldInfo, columnName,
+                        fieldName, key, property, descriptive));
             }
             return this;
         }
@@ -252,7 +272,13 @@ public class DynamicEntityInfo {
             fieldInfos.putAll(fkFields);
             fieldInfos.putAll(columnFields);
             fieldInfos.putAll(listOnlyFields);
-            return new DynamicEntityInfo(type, tableName, baseClassName, className, fieldInfos, version);
+            DynamicEntityInfo info = new DynamicEntityInfo(type, tableName, baseClassName, className, fieldInfos,
+                    version);
+            for (DynamicForeignKeyFieldInfo fkField: fkFields.values()) {
+                fkField.updateParentDynamicEntityInfo(info);
+            }
+            
+            return info;
         }
     }
 

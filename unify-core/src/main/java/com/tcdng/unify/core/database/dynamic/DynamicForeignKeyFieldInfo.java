@@ -49,6 +49,12 @@ public class DynamicForeignKeyFieldInfo extends DynamicFieldInfo {
         return parentDynamicEntityInfo;
     }
 
+    public void updateParentDynamicEntityInfo(DynamicEntityInfo _parentDynamicEntityInfo) {
+        if (parentDynamicEntityInfo != null && parentDynamicEntityInfo.isSelfReference()) {
+            parentDynamicEntityInfo = _parentDynamicEntityInfo;
+        }
+    }
+
     public boolean isNullable() {
         return nullable;
     }

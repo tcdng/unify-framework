@@ -460,9 +460,12 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
                 .addField(DynamicFieldType.GENERATION, DataType.DATE, "EXPIRY_DT", "expiryDt", 0, 0, 0, true, false)
                 .addField(DynamicFieldType.GENERATION, DataType.TIMESTAMP_UTC, "CREATE_DT", "createDt", 0, 0, 0, false, false)
                 .build();
-        authorDynamicEntityInfo = DynamicEntityInfo
-                .newBuilder(DynamicEntityType.TABLE, "com.tcdng.test.Author").tableName("TAUTHOR").version(1L)
+        authorDynamicEntityInfo = DynamicEntityInfo.newBuilder(DynamicEntityType.TABLE, "com.tcdng.test.Author")
+                .tableName("TAUTHOR").version(1L)
                 .addField(DynamicFieldType.GENERATION, DataType.STRING, "TAUTHOR_NM", "name", 32, 0, 0, false, true)
+                .addForeignKeyField(DynamicFieldType.GENERATION, DynamicEntityInfo.SELF_REFERENCE, "PARENT_AUTHOR_ID",
+                        "parentAuthorId", true)
+                .addListOnlyField(DynamicFieldType.GENERATION, null, "parentAuthorName", "parentAuthorId", "name", false)
                 .build();
         bookDynamicEntityInfo = DynamicEntityInfo
                 .newBuilder(DynamicEntityType.TABLE, "com.tcdng.test.Book").tableName("TBOOK").version(1L)
