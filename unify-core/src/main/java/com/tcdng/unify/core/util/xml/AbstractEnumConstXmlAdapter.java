@@ -36,7 +36,7 @@ public abstract class AbstractEnumConstXmlAdapter<T extends EnumConst> extends X
 
     @Override
     public String marshal(T type) throws Exception {
-        return type != null ? type.name() : "";
+        return type != null ? type.name() : null;
     }
 
     @Override
