@@ -440,6 +440,19 @@ public class IOUtils {
             throw new UnifyException(e, UnifyCoreErrorConstants.IOUTIL_STREAM_RW_ERROR);
         }
     }
+    
+    public static List<String> readAllLines(BufferedReader reader) throws UnifyException {
+        try {
+            List<String> lines = new ArrayList<String>();
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                lines.add(line);
+            }
+            return lines;
+        } catch (Exception e) {
+            throw new UnifyException(e, UnifyCoreErrorConstants.IOUTIL_STREAM_RW_ERROR);
+        }
+    }
 
     /**
      * Writes all data from input stream to output stream. Closes input stream at
