@@ -17,9 +17,11 @@ package com.tcdng.unify.core.util;
 
 import java.io.CharArrayReader;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
+import java.io.Writer;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
@@ -32,6 +34,7 @@ import javax.xml.transform.sax.SAXSource;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
+import com.sun.xml.bind.marshaller.CharacterEscapeHandler;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.UnifyOperationException;
 
@@ -93,5 +96,26 @@ public final class XmlConfigUtils {
         } catch (Exception e) {
             throw new UnifyOperationException(e, XmlConfigUtils.class.getName());
         }
+    }
+
+    public static void writeXmlConfigNoEscape(Object configObject, OutputStream outputStream) throws UnifyException {
+        try {
+            JAXBContext jaxbContext = JAXBContext.newInstance(configObject.getClass());
+            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+            jaxbMarshaller.setProperty("com.sun.xml.bind.characterEscapeHandler", new NoEscapeHandler()); 
+            jaxbMarshaller.marshal(configObject, outputStream);
+            outputStream.flush();
+        } catch (Exception e) {
+            throw new UnifyOperationException(e, XmlConfigUtils.class.getName());
+        }
+    }
+    
+    private static class NoEscapeHandler implements CharacterEscapeHandler {
+
+        @Override
+        public void escape(char[] ch, int start, int length, boolean isAttVal, Writer out) throws IOException {
+            out.write(ch, start, length);
+        }  
     }
 }
