@@ -81,6 +81,18 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
     }
 
     @Override
+    public String normalizeDefault(String defaultStr) {
+        if (defaultStr != null) {
+            int index = defaultStr.indexOf("::character varying");
+            if (index >= 0) {
+                return defaultStr.substring(0, index);
+            }
+        }
+
+        return defaultStr;
+    }
+
+    @Override
     public String generateTestSql() throws UnifyException {
         return "SELECT 1";
     }

@@ -21,6 +21,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -670,7 +671,7 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
                     sqlDataTypePolicy.getAltDefault(sqlfieldInfo.getFieldType()));
         }
 
-        boolean typeChange = columnInfo.getSqlType() != sqlDataTypePolicy.getSqlType();
+        boolean typeChange = !isSwappableSqlTypes(sqlDataTypePolicy.getSqlType(), columnInfo.getSqlType() );
         if (typeChange) {
             logDebug("Type Change: columnInfo.getSqlType() = {0}, sqlDataTypePolicy.getSqlType() = {1}...",
                     columnInfo.getSqlType(), sqlDataTypePolicy.getSqlType());
@@ -707,6 +708,10 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
         return new SqlColumnAlterInfo(nullableChange, defaultChange, typeChange, lenChange);
     }
 
+    private boolean isSwappableSqlTypes(int srcType, int destType) {
+        return (srcType == destType) || ((srcType == Types.DECIMAL) && (destType == Types.NUMERIC));
+    }
+    
     private boolean isSwappableValues(String origin, String alternative) {
         Set<String> set = swappableValueSet.get(origin);
         return set != null && set.contains(alternative);
