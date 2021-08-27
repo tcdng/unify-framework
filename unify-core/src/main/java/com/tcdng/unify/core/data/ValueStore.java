@@ -224,4 +224,18 @@ public interface ValueStore {
      *            the data index to set
      */
     void setDataIndex(int dataIndex);
+
+    /**
+     * Gets reader for this value store object.
+     * 
+     * @return the value store reader
+     */
+    ValueStoreReader getReader();
+
+    /**
+     * Gets writer for this value store object.
+     * 
+     * @return the value store writer
+     */
+    ValueStoreWriter getWriter();
 }

@@ -39,6 +39,10 @@ public abstract class AbstractListValueStore<T> implements ValueStore {
     private int dataIndex;
 
     private Map<String, Object> temp;
+    
+    private ValueStoreReader reader;
+    
+    private ValueStoreWriter writer;
 
     public AbstractListValueStore(List<T> storage, String dataMarker, int dataIndex) {
         this.storage = storage;
@@ -159,6 +163,32 @@ public abstract class AbstractListValueStore<T> implements ValueStore {
     @Override
     public Object getValueObject() {
         return storage;
+    }
+
+    @Override
+    public ValueStoreReader getReader() {
+        if (reader == null) {
+            synchronized(this) {
+                if(reader == null) {
+                    reader = new ValueStoreReader(this);
+                }
+            }
+        }
+
+        return reader;
+    }
+
+    @Override
+    public ValueStoreWriter getWriter() {
+        if (writer == null) {
+            synchronized(this) {
+                if(writer == null) {
+                    writer = new ValueStoreWriter(this);
+                }
+            }
+        }
+
+        return writer;
     }
 
     private void checkStorageIndex(int storageIndex) throws UnifyException {

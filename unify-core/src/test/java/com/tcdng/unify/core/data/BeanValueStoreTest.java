@@ -17,6 +17,7 @@ package com.tcdng.unify.core.data;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -132,5 +133,29 @@ public class BeanValueStoreTest {
         assertFalse(bvs.isTempValue("phoneNumber"));
         assertEquals("Shinzo", bvs.getTempValue("surname"));
         assertNull(bvs.getTempValue("phoneNumber"));
+    }
+
+    @Test
+    public void testGetReader() throws Exception {
+        Address address = new Address("24 Parklane", "Apapa Lagos");
+        BeanValueStore bvs = new BeanValueStore(address);
+        ValueStoreReader reader = bvs.getReader();
+        assertNotNull(reader);
+        assertEquals("24 Parklane", reader.read("line1"));
+        assertEquals("Apapa Lagos", reader.read("line2"));
+    }
+
+    @Test
+    public void testGetWriter() throws Exception {
+        BeanValueStore bvs = new BeanValueStore(new Address());
+        ValueStoreWriter writer = bvs.getWriter();
+        assertNotNull(writer);
+        writer.write("line1", "38 Warehouse Road");
+        writer.write("line2", "Apapa Lagos");
+        
+        ValueStoreReader reader = bvs.getReader();
+        assertNotNull(reader);
+        assertEquals("38 Warehouse Road", reader.read("line1"));
+        assertEquals("Apapa Lagos", reader.read("line2"));
     }
 }
