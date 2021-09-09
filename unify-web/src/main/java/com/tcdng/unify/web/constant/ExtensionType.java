@@ -23,15 +23,25 @@ package com.tcdng.unify.web.constant;
  */
 public enum ExtensionType {
 
-    NONE(false, false), EXTENDED(true, false), FACADE(true, true), FACADE_HIDDEN(true, true);
+    NONE(false, false, false, false),
+    EXTENDED(true, false, false, false),
+    FACADE(true, true, false, false),
+    FACADE_HIDDEN(true, true, true, false),
+    FACADE_HIDDEN_EDIT(true, true, true, true);
 
     private final boolean extended;
 
     private final boolean facade;
 
-    private ExtensionType(boolean extended, boolean facade) {
+    private final boolean hidden;
+
+    private final boolean edit;
+
+    private ExtensionType(boolean extended, boolean facade, boolean hidden, boolean edit) {
         this.extended = extended;
         this.facade = facade;
+        this.hidden = hidden;
+        this.edit = edit;
     }
 
     public boolean isExtended() {
@@ -40,6 +50,22 @@ public enum ExtensionType {
 
     public boolean isFacade() {
         return facade;
+    }
+
+    public boolean isHidden() {
+        return hidden;
+    }
+
+    public boolean isEdit() {
+        return edit;
+    }
+
+    public boolean isFacadeHidden() {
+        return facade && hidden;
+    }
+
+    public boolean isFacadeEdit() {
+        return facade && edit;
     }
 
 }

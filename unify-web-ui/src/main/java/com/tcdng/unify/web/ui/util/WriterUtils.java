@@ -63,6 +63,7 @@ public final class WriterUtils {
         eventToJSMap.put("onmouseover", "mouseover");
         eventToJSMap.put("onmouseout", "mouseout");
         eventToJSMap.put("onenter", "enter");
+        eventToJSMap.put("onfocus", "focus");
     }
 
     private WriterUtils() {

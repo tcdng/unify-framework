@@ -55,20 +55,26 @@ public abstract class AbstractPopupTextFieldWriter extends TextFieldWriter {
                 }
 
                 String cmdTag = popupTextField.getBinding();
-                writeOpenPopupJS(writer, "onenter", facId, cmdTag, popupTextField.getBorderId(),
-                        popupTextField.getPopupId(), popupTextField.getDisplayTimeOut(), getOnShowAction(),
-                        getOnShowParam(popupTextField), getOnHideAction(), getOnHideParam(popupTextField));
-
-                if (popupTextField.isOpenPopupOnFac()) {
-                    writeOpenPopupJS(writer, "onclick", cmdTag, facId, popupTextField.getBorderId(),
+                if (popupTextField.getExtensionType().isFacadeEdit()) {
+                    writeOpenPopupJS(writer, "onfocus", facId, cmdTag, popupTextField.getBorderId(),
                             popupTextField.getPopupId(), popupTextField.getDisplayTimeOut(), getOnShowAction(),
                             getOnShowParam(popupTextField), getOnHideAction(), getOnHideParam(popupTextField));
-                }
+                } else {
+                    writeOpenPopupJS(writer, "onenter", facId, cmdTag, popupTextField.getBorderId(),
+                            popupTextField.getPopupId(), popupTextField.getDisplayTimeOut(), getOnShowAction(),
+                            getOnShowParam(popupTextField), getOnHideAction(), getOnHideParam(popupTextField));
 
-                writeOpenPopupJS(writer, "onclick", popupTextField.getPopupButtonId(), cmdTag,
-                        popupTextField.getBorderId(), popupTextField.getPopupId(), popupTextField.getDisplayTimeOut(),
-                        getOnShowAction(), getOnShowParam(popupTextField), getOnHideAction(),
-                        getOnHideParam(popupTextField));
+                    if (popupTextField.isOpenPopupOnFac()) {
+                        writeOpenPopupJS(writer, "onclick", facId, cmdTag, popupTextField.getBorderId(),
+                                popupTextField.getPopupId(), popupTextField.getDisplayTimeOut(), getOnShowAction(),
+                                getOnShowParam(popupTextField), getOnHideAction(), getOnHideParam(popupTextField));
+                    }
+
+                    writeOpenPopupJS(writer, "onclick", popupTextField.getPopupButtonId(), cmdTag,
+                            popupTextField.getBorderId(), popupTextField.getPopupId(), popupTextField.getDisplayTimeOut(),
+                            getOnShowAction(), getOnShowParam(popupTextField), getOnHideAction(),
+                            getOnHideParam(popupTextField));
+                }
             }
         }
 
@@ -78,7 +84,7 @@ public abstract class AbstractPopupTextFieldWriter extends TextFieldWriter {
     @Override
     protected void writeTrailingAddOn(ResponseWriter writer, Widget widget) throws UnifyException {
         AbstractPopupTextField popupTextField = (AbstractPopupTextField) widget;
-        writer.write("<button");
+        writer.write("<button tabindex=\"-1\"");
         writeTagId(writer, popupTextField.getPopupButtonId());
         writeTagStyleClass(writer, "tpbutton g_fsm");
         if (popupTextField.isContainerDisabled()) {

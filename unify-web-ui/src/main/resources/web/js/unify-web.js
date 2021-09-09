@@ -4882,6 +4882,12 @@ ux.setHintTimeout = function(millisec) {
 }
 
 ux.documentKeydownHandler = function(uEv) {
+	// Hide popup on tab
+	if (uEv.uKeyCode == 9) {
+		ux.hidePopup(null);
+		return;
+	}
+	
 	if (uEv.uKeyCode == 8) { // Stop general backspace except for particular elements
 		var stopBackspace = true;
 		var elem = uEv.uTrg;

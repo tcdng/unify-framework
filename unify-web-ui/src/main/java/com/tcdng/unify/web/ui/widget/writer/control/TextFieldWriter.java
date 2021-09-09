@@ -95,7 +95,7 @@ public class TextFieldWriter extends AbstractControlWriter {
 
             writeLeadingAddOn(writer, textField);
 
-            if (ExtensionType.FACADE_HIDDEN.equals(extensionType)) {
+            if (extensionType.isFacadeHidden()) {
                 writer.write("<input type=\"hidden\"");
                 writeTagId(writer, textField);
                 writeTagName(writer, textField);
@@ -135,7 +135,7 @@ public class TextFieldWriter extends AbstractControlWriter {
             }
 
             writeTagStyleClass(writer, textField.getExtStyleClass());
-            if (textField.getExtReadOnly()) {
+            if (!extensionType.isEdit() && textField.getExtReadOnly()) {
                 writeTagReadOnly(writer);
                 writeTagDisabled(writer, textField);
             } else {
