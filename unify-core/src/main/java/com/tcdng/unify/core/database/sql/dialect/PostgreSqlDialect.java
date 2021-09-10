@@ -226,6 +226,12 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
     }
 
     @Override
+    protected void onInitialize() throws UnifyException {
+        super.onInitialize();
+        includeNoPrecisionType("INT8");
+    }
+
+    @Override
     protected SqlDataSourceDialectPolicies getSqlDataSourceDialectPolicies() {
         return sqlDataSourceDialectPolicies;
     }
