@@ -44,6 +44,10 @@ const UNIFY_MAX_STRETCHPANEL_DEPTH = 5;
 const UNIFY_MINUTES_IN_DAY = 1440;
 const UNIFY_MINUTES_IN_HOUR = 60;
 
+const UNIFY_KEY_ESCAPE = '27';
+const UNIFY_KEY_UP = '38';
+const UNIFY_KEY_DOWN = '40';
+const UNIFY_KEY_ENTER = '13';
 const UNIFY_KEY_SPACE = '32';
 const UNIFY_KEY_BACKSPACE = '8';
 const UNIFY_KEY_DELETE = '46';
@@ -4340,13 +4344,13 @@ ux.listSearchKeydown = function(uEv) {
 	
 		sel._lastKeyHit = Date.now(); 
 	} else {
-		if(uEv.uKeyCode == '38') {
+		if(uEv.uKeyCode == UNIFY_KEY_UP) {
 			ux.listKeydownSkip(sel, true);
 			uEv.uStop();
-		} else if(uEv.uKeyCode == '40') {
+		} else if(uEv.uKeyCode == UNIFY_KEY_DOWN) {
 			ux.listKeydownSkip(sel, false);
 			uEv.uStop();
-		} else if (uEv.uKeyCode == 13 || (uEv.uKey && "ENTER" == uEv.uKey.toUpperCase())) {
+		} else if (uEv.uKeyCode == UNIFY_KEY_ENTER || (uEv.uKey && "ENTER" == uEv.uKey.toUpperCase())) {
 			if (evp.uEnterHandler) {
 				evp.uEnterHandler(sel);
 				uEv.uStop();
@@ -5062,7 +5066,7 @@ ux.addHdlMany = function(name, eventName, handler, evp) {
 ux.addHdl = function(domObject, eventName, handler, evp) {
 	if ("enter" == eventName) {
 		eventName = "keydown";
-		handler = ux.wireSpecialKeyHandler(evp, handler, "Enter", 13);
+		handler = ux.wireSpecialKeyHandler(evp, handler, "Enter", UNIFY_KEY_ENTER);
 	} else if ("rtclick" == eventName) {
 		eventName = "mouseup";
 		handler = ux.wireRightClickHandler(evp, handler);
@@ -5303,6 +5307,14 @@ ux.doOpenPopup = function(openPrm) {
 			openPrm.showHandler(openPrm.showParam);
 		}
 	}
+}
+
+ux.isPopupVisible = function(uEv) {
+	if (ux.popCurr) {
+		return true;
+	}
+	
+	return false;
 }
 
 ux.hidePopup = function(uEv) {

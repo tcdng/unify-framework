@@ -55,11 +55,7 @@ public abstract class AbstractPopupTextFieldWriter extends TextFieldWriter {
                 }
 
                 String cmdTag = popupTextField.getBinding();
-                if (popupTextField.getExtensionType().isFacadeEdit()) {
-                    writeOpenPopupJS(writer, "onfocus", facId, cmdTag, popupTextField.getBorderId(),
-                            popupTextField.getPopupId(), popupTextField.getDisplayTimeOut(), getOnShowAction(),
-                            getOnShowParam(popupTextField), getOnHideAction(), getOnHideParam(popupTextField));
-                } else {
+                if (!popupTextField.getExtensionType().isFacadeEdit()) {
                     writeOpenPopupJS(writer, "onenter", facId, cmdTag, popupTextField.getBorderId(),
                             popupTextField.getPopupId(), popupTextField.getDisplayTimeOut(), getOnShowAction(),
                             getOnShowParam(popupTextField), getOnHideAction(), getOnHideParam(popupTextField));
