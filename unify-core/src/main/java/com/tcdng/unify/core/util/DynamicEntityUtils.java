@@ -240,6 +240,11 @@ public final class DynamicEntityUtils {
             fsb.append("name = \"").append(dynamicForeignKeyFieldInfo.getColumnName()).append("\"");
         }
 
+        if (!StringUtils.isBlank(dynamicForeignKeyFieldInfo.getDefaultVal())) {
+            appendSym = appendSymbol(fsb, appendSym);
+            fsb.append("defaultVal = \"").append(dynamicForeignKeyFieldInfo.getDefaultVal()).append("\"");
+        }
+
         if (dynamicForeignKeyFieldInfo.isNullable()) {
             appendSym = appendSymbol(fsb, appendSym);
             fsb.append("nullable = true");
