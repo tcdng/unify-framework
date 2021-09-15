@@ -125,10 +125,6 @@ public class Query<T extends Entity> implements Cloneable {
 
     public static <U extends Entity> Query<U> ofDefaultingToAnd(Class<U> entityClass, Restriction restriction,
             boolean applyAppQueryLimit) {
-        if (restriction instanceof CompoundRestriction) {
-            return new Query<U>(entityClass, (CompoundRestriction) restriction, applyAppQueryLimit);
-        }
-
         return new Query<U>(entityClass, new And().add(restriction), applyAppQueryLimit);
     }
 
@@ -138,10 +134,6 @@ public class Query<T extends Entity> implements Cloneable {
 
     public static <U extends Entity> Query<U> ofDefaultingToOr(Class<U> entityClass, Restriction restriction,
             boolean applyAppQueryLimit) {
-        if (restriction instanceof CompoundRestriction) {
-            return new Query<U>(entityClass, (CompoundRestriction) restriction, applyAppQueryLimit);
-        }
-
         return new Query<U>(entityClass, new Or().add(restriction), applyAppQueryLimit);
     }
 
