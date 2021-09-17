@@ -37,6 +37,7 @@ public class IntegerField extends AbstractNumberField {
         NumberFormatter<?> numberFormatter = (NumberFormatter<?>) getFormatter();
         numberFormatter.setPrecision(getUplAttribute(int.class, "precision"));
         numberFormatter.setGroupingUsed(getUplAttribute(boolean.class, "useGrouping"));
+        numberFormatter.setStrictFormat(getUplAttribute(boolean.class, "strictFormat"));
 
         super.onPageConstruct();
     }

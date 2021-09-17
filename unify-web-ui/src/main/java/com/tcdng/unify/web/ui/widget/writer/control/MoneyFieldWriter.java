@@ -157,6 +157,6 @@ public class MoneyFieldWriter extends AbstractPopupTextFieldWriter {
         return WebRegexUtils.getNumberFormatRegex(((NumberFormatter<?>) moneyField.getFormatter()).getNumberSymbols(),
                 moneyField.getUplAttribute(int.class, "precision"), scale,
                 moneyField.getUplAttribute(boolean.class, "acceptNegative"),
-                moneyField.getUplAttribute(boolean.class, "useGrouping"));
+                moneyField.getUplAttribute(boolean.class, "useGrouping"), false);
     }
 }

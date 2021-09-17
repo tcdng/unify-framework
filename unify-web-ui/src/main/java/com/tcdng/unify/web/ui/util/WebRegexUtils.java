@@ -100,6 +100,17 @@ public final class WebRegexUtils {
     }
 
     /**
+     * Gets JavaScript REGEX for alphanumeric only.
+     * 
+     * @return the alphanumeric format regex
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    public static String getAlphaNumericFormatRegex() throws UnifyException {
+        return "/ [a-zA-Z0-9]*$/";
+    }
+
+    /**
      * Gets JavaScript REGEX that allows only alphabetic characters.
      * 
      * @return the word format regex
@@ -134,12 +145,13 @@ public final class WebRegexUtils {
      *            if REGEX should accept negative values
      * @param useGrouping
      *            if REGEX should accept grouping characters
+     * @param strictFormat indicates if strict rule applies to precision and scale
      * @return the number format regex
      * @throws UnifyException
      *             if an error occurs
      */
     public static String getNumberFormatRegex(NumberSymbols numberSymbols, int precision, int scale,
-            boolean acceptNegative, boolean useGrouping) throws UnifyException {
+            boolean acceptNegative, boolean useGrouping, boolean strictFormat) throws UnifyException {
         StringBuilder sb = new StringBuilder();
         sb.append("/^");
         if (acceptNegative) {
@@ -171,24 +183,29 @@ public final class WebRegexUtils {
                 appendRangeOption(sb, digit, precision);
             }
         } else {
-            if (useGrouping) {
-                appendRangeOption(sb, digit, groupSize);
-                sb.append("(");
-                appendOptionalFormattingRegex(sb, String.valueOf(numberSymbols.getGroupingSeparator()));
-                appendRangeOption(sb, digit, groupSize);
-                sb.append(")*");
-            } else {
-                sb.append("[").append(digit).append("]*");
+            if (!strictFormat) {
+                if (useGrouping) {
+                    appendRangeOption(sb, digit, groupSize);
+                    sb.append("(");
+                    appendOptionalFormattingRegex(sb, String.valueOf(numberSymbols.getGroupingSeparator()));
+                    appendRangeOption(sb, digit, groupSize);
+                    sb.append(")*");
+                } else {
+                    sb.append("[").append(digit).append("]*");
+                }
             }
         }
 
         if (!NumberType.INTEGER.equals(numberSymbols.getNumberType())) {
             sb.append('(');
-            escapeSpecial(sb, String.valueOf(numberSymbols.getDecimalSeparator()));
             if (scale > 0) {
+                escapeSpecial(sb, String.valueOf(numberSymbols.getDecimalSeparator()));
                 appendRangeOption(sb, digit, scale);
             } else {
-                sb.append("[").append(digit).append("]*");
+                if (!strictFormat) {
+                    escapeSpecial(sb, String.valueOf(numberSymbols.getDecimalSeparator()));
+                    sb.append("[").append(digit).append("]*");
+                }
             }
             sb.append(")?");
         }

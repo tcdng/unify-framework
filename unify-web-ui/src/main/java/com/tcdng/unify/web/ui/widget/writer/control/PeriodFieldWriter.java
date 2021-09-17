@@ -139,6 +139,6 @@ public class PeriodFieldWriter extends AbstractPopupTextFieldWriter {
         PeriodField periodField = (PeriodField) textField;
         return WebRegexUtils.getNumberFormatRegex(((NumberFormatter<?>) periodField.getFormatter()).getNumberSymbols(),
                 periodField.getUplAttribute(int.class, "precision"), 0,
-                false, false);
+                false, false, false);
     }
 }

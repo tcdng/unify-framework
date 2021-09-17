@@ -55,6 +55,16 @@ public interface NumberFormatter<T extends Number> extends Formatter<T> {
     boolean isGroupingUsed() throws UnifyException;
 
     /**
+     * Sets the strict format flag.
+     */
+    void setStrictFormat(boolean strictFormat);
+
+    /**
+     * Gets the strict format flag.
+     */
+    boolean isStrictFormat() throws UnifyException;
+
+    /**
      * Gets the formatter number symbols.
      */
     NumberSymbols getNumberSymbols() throws UnifyException;
