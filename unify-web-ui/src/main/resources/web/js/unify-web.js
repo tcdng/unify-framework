@@ -50,6 +50,7 @@ const UNIFY_KEY_DOWN = '40';
 const UNIFY_KEY_ENTER = '13';
 const UNIFY_KEY_SPACE = '32';
 const UNIFY_KEY_BACKSPACE = '8';
+const UNIFY_KEY_TAB = '9';
 const UNIFY_KEY_DELETE = '46';
 
 ux.docPath = "";
@@ -4887,12 +4888,12 @@ ux.setHintTimeout = function(millisec) {
 
 ux.documentKeydownHandler = function(uEv) {
 	// Hide popup on tab
-	if (uEv.uKeyCode == 9) {
+	if (uEv.uKeyCode == UNIFY_KEY_TAB) {
 		ux.hidePopup(null);
 		return;
 	}
 	
-	if (uEv.uKeyCode == 8) { // Stop general backspace except for particular elements
+	if (uEv.uKeyCode == UNIFY_KEY_BACKSPACE) { // Stop general backspace except for particular elements
 		var stopBackspace = true;
 		var elem = uEv.uTrg;
 		if (elem.type == "text" || elem.type == "password"
