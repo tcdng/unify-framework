@@ -33,7 +33,19 @@ public abstract class AbstractSqlDataTypePolicy implements SqlDataTypePolicy {
         }
 
         if (StringUtils.isNotBlank(defaultVal)) {
-            sb.append(" DEFAULT ").append(defaultVal);
+            sb.append(" DEFAULT ");
+            if (String.class.equals(fieldType)) {
+                if (!defaultVal.startsWith("'")) {
+                    sb.append('\'');
+                }
+                
+                sb.append(defaultVal);
+                if (!defaultVal.endsWith("'")) {
+                    sb.append('\'');
+                }
+            } else {
+                sb.append(defaultVal);
+            }
         }
     }
 
@@ -44,7 +56,18 @@ public abstract class AbstractSqlDataTypePolicy implements SqlDataTypePolicy {
         }
 
         if (StringUtils.isNotBlank(defaultVal)) {
-            sb.append(defaultVal);
+            if (String.class.equals(fieldType)) {
+                if (!defaultVal.startsWith("'")) {
+                    sb.append('\'');
+                }
+                
+                sb.append(defaultVal);
+                if (!defaultVal.endsWith("'")) {
+                    sb.append('\'');
+                }
+            } else {
+                sb.append(defaultVal);
+            }
         }
     }
 }

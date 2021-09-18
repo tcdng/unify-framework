@@ -447,7 +447,7 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
         dynamicEntityInfo = DynamicEntityInfo.newBuilder(DynamicEntityType.TABLE, "com.tcdng.test.Equipment")
                 .tableName("EQUIPMENT").version(1L)
                 .addField(DynamicFieldType.GENERATION, DataType.STRING, "EQUIPMENT_NM", "name", defaultVal, 32, 0, 0, false, true)
-                .addField(DynamicFieldType.GENERATION, DataType.STRING, "SERIAL_NO", "serialNo", defaultVal, 0, 0, 0, false, false)
+                .addField(DynamicFieldType.GENERATION, DataType.STRING, "SERIAL_NO", "serialNo", "00000000", 0, 0, 0, false, false)
                 .addField(DynamicFieldType.GENERATION, DataType.DECIMAL, "PRICE", "price", defaultVal, 0, 18, 2, false, false)
                 .addField(DynamicFieldType.GENERATION, DataType.DATE, "EXPIRY_DT", "expiryDt", defaultVal, 0, 0, 0, true, false)
                 .addField(DynamicFieldType.GENERATION, DataType.TIMESTAMP_UTC, "CREATE_DT", "createDt", defaultVal, 0, 0, 0, false, false)
