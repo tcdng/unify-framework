@@ -106,8 +106,8 @@ public final class WebRegexUtils {
      * @throws UnifyException
      *             if an error occurs
      */
-    public static String getAlphaNumericFormatRegex() throws UnifyException {
-        return "/ [a-zA-Z0-9]*$/";
+    public static String getAlphanumericFormatRegex() throws UnifyException {
+        return "/^[0-9a-zA-Z]*$/";
     }
 
     /**

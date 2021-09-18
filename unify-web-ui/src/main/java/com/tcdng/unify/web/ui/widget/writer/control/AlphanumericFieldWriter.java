@@ -34,6 +34,6 @@ public class AlphanumericFieldWriter extends TextFieldWriter {
 
     @Override
     protected String getFormatRegex(TextField textField) throws UnifyException {
-        return WebRegexUtils.getAlphaNumericFormatRegex();
+        return WebRegexUtils.getAlphanumericFormatRegex();
     }
 }
