@@ -142,6 +142,7 @@ public class TextFieldWriter extends AbstractControlWriter {
                 writeTagEditAttributes(writer, textField);
             }
 
+            writer.write(" autocomplete=\"off\"");
         } else {
             writeTagAttributes(writer, textField);
             value = textField.getStringValue();
