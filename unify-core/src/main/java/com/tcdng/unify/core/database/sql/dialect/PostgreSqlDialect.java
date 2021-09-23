@@ -43,6 +43,9 @@ import com.tcdng.unify.core.database.sql.SqlEntitySchemaInfo;
 import com.tcdng.unify.core.database.sql.SqlFieldSchemaInfo;
 import com.tcdng.unify.core.database.sql.data.policy.BlobPolicy;
 import com.tcdng.unify.core.database.sql.data.policy.ClobPolicy;
+import com.tcdng.unify.core.database.sql.data.policy.DatePolicy;
+import com.tcdng.unify.core.database.sql.data.policy.TimestampPolicy;
+import com.tcdng.unify.core.database.sql.data.policy.TimestampUTCPolicy;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
 
@@ -61,6 +64,9 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
     static {
         Map<ColumnType, SqlDataTypePolicy> tempMap1 = new EnumMap<ColumnType, SqlDataTypePolicy>(ColumnType.class);
         populateDefaultSqlDataTypePolicies(tempMap1);
+        tempMap1.put(ColumnType.DATE, new PostgreSqlDatePolicy());
+        tempMap1.put(ColumnType.TIMESTAMP, new PostgreSqlTimestampPolicy());
+        tempMap1.put(ColumnType.TIMESTAMP_UTC, new PostgreSqlTimestampUTCPolicy());
         tempMap1.put(ColumnType.BLOB, new PostgreSqlBlobPolicy());
         tempMap1.put(ColumnType.CLOB, new PostgreSqlClobPolicy());
 
@@ -296,6 +302,33 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
             return sb.toString();
         }
     }
+}
+
+class PostgreSqlDatePolicy extends DatePolicy {
+
+    @Override
+    public String getAltDefault(Class<?> fieldType) {
+        return "CURRENT_TIMESTAMP";
+    }
+
+}
+
+class PostgreSqlTimestampPolicy extends TimestampPolicy {
+
+    @Override
+    public String getAltDefault(Class<?> fieldType) {
+        return "CURRENT_TIMESTAMP";
+    }
+
+}
+
+class PostgreSqlTimestampUTCPolicy extends TimestampUTCPolicy {
+
+    @Override
+    public String getAltDefault(Class<?> fieldType) {
+        return "CURRENT_TIMESTAMP";
+    }
+
 }
 
 class PostgreSqlBlobPolicy extends BlobPolicy {
