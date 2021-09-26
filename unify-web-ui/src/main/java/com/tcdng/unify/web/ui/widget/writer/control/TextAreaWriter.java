@@ -79,10 +79,17 @@ public class TextAreaWriter extends AbstractControlWriter {
         } else {
             writer.write(" wrap=\"off\"");
         }
-        
-        
-        writer.write(" spellcheck=\"").write(textArea.isSpellCheck()).write("\"");
 
+        writer.write(" spellcheck=\"").write(textArea.isSpellCheck()).write("\"");
+        if (textArea.isUplAttribute("autocomplete") && textArea.getUplAttribute(boolean.class, "autocomplete")) {
+            writer.write(" autocomplete=\"on\"");
+        } else {
+            writer.write(" autocomplete=\"off\"");
+        }
+        
+        if (textArea.getTabIndex() >= 0) {
+            writer.write(" tabindex=\"").write(textArea.getTabIndex()).write("\"");
+        }
         writer.write(">");
 
         Object value = textArea.getValue();
