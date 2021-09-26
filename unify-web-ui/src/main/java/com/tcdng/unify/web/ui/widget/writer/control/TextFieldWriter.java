@@ -168,7 +168,7 @@ public class TextFieldWriter extends AbstractControlWriter {
             writer.write(" autocomplete=\"off\"");
         }
         
-        if (textField.getTabIndex() >= 0) {
+        if (textField.getTabIndex() >= 0 && textField.isActive()) {
             writer.write(" tabindex=\"").write(textField.getTabIndex()).write("\"");
         }
         writer.write("/>");
