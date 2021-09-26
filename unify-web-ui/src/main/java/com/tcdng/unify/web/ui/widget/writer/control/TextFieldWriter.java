@@ -52,13 +52,13 @@ public class TextFieldWriter extends AbstractControlWriter {
             writer.writeParam("pId", textField.getId());
         }
         writer.writeResolvedParam("pRegex", "\"" + getFormatRegex(textField) + "\"");
-        if(textField.getCase() != null) {
+        if (textField.getCase() != null) {
             writer.writeParam("pCase", textField.getCase().toString().toLowerCase());
         }
-        
+
         writer.endFunction();
-        
-        if(!textField.getExtensionType().isExtended()) {
+
+        if (!textField.getExtensionType().isExtended()) {
             writeValueAccessor(writer, textField);
         }
     }
@@ -127,7 +127,6 @@ public class TextFieldWriter extends AbstractControlWriter {
         if (extensionType.isExtended()) {
             if (extensionType.isFacade()) {
                 writeTagId(writer, textField.getFacadeId());
-//                value = textField.getFacadeStringValue();
             } else {
                 writeTagId(writer, textField);
                 writeTagName(writer, textField);
@@ -141,8 +140,6 @@ public class TextFieldWriter extends AbstractControlWriter {
             } else {
                 writeTagEditAttributes(writer, textField);
             }
-
-            writer.write(" autocomplete=\"off\"");
         } else {
             writeTagAttributes(writer, textField);
             value = textField.getStringValue();
@@ -156,22 +153,23 @@ public class TextFieldWriter extends AbstractControlWriter {
             if (maxLen > 0) {
                 writer.write(" maxlength=\"").write(maxLen).write("\"");
             }
-
-            if (textField.isUplAttribute("autocomplete")) {
-                if (textField.getUplAttribute(boolean.class, "autocomplete")) {
-                    writer.write(" autocomplete=\"on\"");
-                } else {
-                    writer.write(" autocomplete=\"off\"");
-                }
-            }
-            
-            writer.write(" spellcheck=\"").write(textField.isSpellCheck()).write("\"");
         }
 
         if (value != null) {
             writer.write(" value=\"");
             writer.writeWithHtmlEscape(value);
             writer.write("\"");
+        }
+
+        writer.write(" spellcheck=\"").write(textField.isSpellCheck()).write("\"");
+        if (textField.isUplAttribute("autocomplete") && textField.getUplAttribute(boolean.class, "autocomplete")) {
+            writer.write(" autocomplete=\"on\"");
+        } else {
+            writer.write(" autocomplete=\"off\"");
+        }
+        
+        if (textField.getTabIndex() >= 0) {
+            writer.write(" tabindex=\"").write(textField.getTabIndex()).write("\"");
         }
         writer.write("/>");
     }

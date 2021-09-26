@@ -68,6 +68,8 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 
 	private ValueStore valueStore;
 
+	private int tabIndex;
+	
 	private boolean conforming;
 
 	private boolean disabled;
@@ -77,6 +79,7 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 	private boolean visible;
 
 	public AbstractWidget() {
+	    this.tabIndex = -1;
 		this.conforming = true;
 		this.disabled = false;
 		this.editable = true;
@@ -376,6 +379,16 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 	@Override
     public void setAlternateMode(boolean alternateMode) {
         
+    }
+
+    @Override
+    public int getTabIndex() {
+        return tabIndex;
+    }
+
+    @Override
+    public void setTabIndex(int tabIndex) {
+        this.tabIndex = tabIndex;
     }
 
     @Override
