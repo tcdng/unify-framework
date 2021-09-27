@@ -44,7 +44,7 @@ public class SingleSelectWriter extends AbstractPopupTextFieldWriter {
         SingleSelect singleSelect = (SingleSelect) popupTextField;
 
         writer.write("<div id=\"").write(singleSelect.getFramePanelId())
-                .write("\" class=\"ssborder\" style=\"overflow-y:auto;overflow-x:hidden;\" tabindex=\"0\">");
+                .write("\" class=\"ssborder\" style=\"overflow-y:auto;overflow-x:hidden;\" tabindex=\"-1\">");
         writer.write("<div id=\"").write(singleSelect.getListPanelId()).write("\" class=\"sslist\">");
         List<? extends Listable> listableList = singleSelect.getListables();
         int length = listableList.size();
@@ -65,7 +65,7 @@ public class SingleSelectWriter extends AbstractPopupTextFieldWriter {
         for (int i = 0; i < length; i++) {
             writer.write("<a");
             writeTagId(writer, singleSelect.getNamingIndexedId(i));
-            writer.write(">");
+            writer.write(" class=\"norm\">");
             writer.write("</a>");
         }
         writer.write("</div>");
