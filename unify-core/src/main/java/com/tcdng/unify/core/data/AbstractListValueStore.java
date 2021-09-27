@@ -191,6 +191,7 @@ public abstract class AbstractListValueStore<T> implements ValueStore {
         return writer;
     }
 
+    @Override
     public int size() {
         return storage.size();
     }

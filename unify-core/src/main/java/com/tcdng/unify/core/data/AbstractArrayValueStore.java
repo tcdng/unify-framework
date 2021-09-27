@@ -155,6 +155,11 @@ public abstract class AbstractArrayValueStore<T> implements ValueStore {
     }
 
     @Override
+    public int size() {
+        return storage.length;
+    }
+
+    @Override
     public Object getValueObject() {
         return storage;
     }

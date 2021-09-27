@@ -226,6 +226,13 @@ public interface ValueStore {
     void setDataIndex(int dataIndex);
 
     /**
+     * Returns the storage size for this value store
+     * 
+     * @return the storage size
+     */
+    int size();
+
+    /**
      * Gets reader for this value store object.
      * 
      * @return the value store reader
