@@ -32,7 +32,7 @@ import com.tcdng.unify.core.util.DataUtils;
  */
 public abstract class AbstractListValueStore<T> implements ValueStore {
 
-    private List<T> storage;
+    private List<? extends T> storage;
 
     private String dataMarker;
 
@@ -44,7 +44,7 @@ public abstract class AbstractListValueStore<T> implements ValueStore {
     
     private ValueStoreWriter writer;
 
-    public AbstractListValueStore(List<T> storage, String dataMarker, int dataIndex) {
+    public AbstractListValueStore(List<? extends T> storage, String dataMarker, int dataIndex) {
         this.storage = storage;
         this.dataMarker = dataMarker;
         this.dataIndex = dataIndex;
