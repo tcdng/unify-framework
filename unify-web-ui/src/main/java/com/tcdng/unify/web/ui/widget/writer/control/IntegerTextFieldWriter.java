@@ -34,6 +34,7 @@ public class IntegerTextFieldWriter extends TextFieldWriter {
 
     @Override
     protected String getFormatRegex(TextField textField) throws UnifyException {
-        return WebRegexUtils.getIntegerTextFormatRegex();
+        IntegerTextField intTextField = (IntegerTextField) textField;
+        return WebRegexUtils.getIntegerTextFormatRegex(intTextField.isAcceptPlus(), intTextField.isAcceptMinus());
     }
 }

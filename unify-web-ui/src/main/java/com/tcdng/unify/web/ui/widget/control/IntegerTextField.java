@@ -15,7 +15,10 @@
  */
 package com.tcdng.unify.web.ui.widget.control;
 
+import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.annotation.UplAttribute;
+import com.tcdng.unify.core.annotation.UplAttributes;
 
 /**
  * An input text field that allows only digits.
@@ -24,6 +27,15 @@ import com.tcdng.unify.core.annotation.Component;
  * @since 1.0
  */
 @Component("ui-integertext")
+@UplAttributes({ @UplAttribute(name = "acceptPlus", type = boolean.class),
+        @UplAttribute(name = "acceptMinus", type = boolean.class) })
 public class IntegerTextField extends TextField {
 
+    public boolean isAcceptPlus() throws UnifyException {
+        return getUplAttribute(boolean.class, "acceptPlus");
+    }
+
+    public boolean isAcceptMinus() throws UnifyException {
+        return getUplAttribute(boolean.class, "acceptMinus");
+    }
 }

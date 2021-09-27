@@ -128,11 +128,25 @@ public final class WebRegexUtils {
     /**
      * Gets JavaScript REGEX that allows only digits.
      * 
+     * @param allowPlus
+     * @param allowMinus
      * @return the integer text format regex
      * @throws UnifyException
      *             if an error occurs
      */
-    public static String getIntegerTextFormatRegex() throws UnifyException {
+    public static String getIntegerTextFormatRegex(boolean allowPlus, boolean allowMinus) throws UnifyException {
+        if (allowPlus && allowMinus) {
+            return "/^(\\\\+|\\\\-)?[0-9]*$/";
+        }
+        
+        if (allowPlus) {
+            return "/^(\\\\+)?[0-9]*$/";
+        }
+        
+        if (allowMinus) {
+            return "/^(\\\\-)?[0-9]*$/";
+        }
+        
         return "/^[0-9]*$/";
     }
 
