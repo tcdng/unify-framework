@@ -4601,6 +4601,14 @@ ux.textInputKeydown = function(uEv) {
 		if (evp.sTextCase) {
 			if ("upper" == evp.sTextCase) {
 				trgObj.value = string.toUpperCase();
+			} else if ("camel" == evp.sTextCase) {
+				const baseArr = string.split(" ")
+				const res = [];
+				for (var i = 0; i < baseArr.length; i++) {
+					var str = baseArr[i];
+					res.push(str.charAt(0).toUpperCase() + str.slice(1));
+				}
+				trgObj.value = res.join(" ");
 			} else {
 				trgObj.value = string.toLowerCase();
 			}

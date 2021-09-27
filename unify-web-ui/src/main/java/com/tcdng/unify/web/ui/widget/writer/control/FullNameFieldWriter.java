@@ -13,43 +13,27 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.constant;
+package com.tcdng.unify.web.ui.widget.writer.control;
 
-import com.tcdng.unify.core.util.EnumUtils;
+import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.annotation.Writes;
+import com.tcdng.unify.web.ui.util.WebRegexUtils;
+import com.tcdng.unify.web.ui.widget.control.FullNameField;
+import com.tcdng.unify.web.ui.widget.control.TextField;
 
 /**
- * Text case constants.
+ * Full name field writer.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public enum TextCase implements EnumConst {
-
-    LOWER("LC"),
-    UPPER("UC"),
-    CAMEL("CM");
-
-    private final String code;
-
-    private TextCase(String code) {
-        this.code = code;
-    }
+@Writes(FullNameField.class)
+@Component("fullnamefield-writer")
+public class FullNameFieldWriter extends TextFieldWriter {
 
     @Override
-    public String code() {
-        return this.code;
-    }
-
-    @Override
-    public String defaultCode() {
-        return LOWER.code;
-    }
-
-    public static TextCase fromCode(String code) {
-        return EnumUtils.fromCode(TextCase.class, code);
-    }
-
-    public static TextCase fromName(String name) {
-        return EnumUtils.fromName(TextCase.class, name);
+    protected String getFormatRegex(TextField textField) throws UnifyException {
+        return WebRegexUtils.getFullNameFormatRegex();
     }
 }

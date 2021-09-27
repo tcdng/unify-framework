@@ -121,6 +121,10 @@ public final class WebRegexUtils {
         return "/^[a-zA-Z]*$/";
     }
 
+    public static String getFullNameFormatRegex()  throws UnifyException {
+        return "/^[a-zA-Z][ a-zA-Z]*$/";
+    }
+    
     /**
      * Gets JavaScript REGEX that allows only digits.
      * 
