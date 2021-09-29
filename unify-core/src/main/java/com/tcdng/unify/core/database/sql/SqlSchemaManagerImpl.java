@@ -24,6 +24,8 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -176,13 +178,13 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
             rs = databaseMetaData.getTables(null, schema, sqlEntityInfo.getTableName(), null);
             if (rs.next()) {
                 // Table exists. Check for updates
+                List<String> alterTableColumnsSql = Collections.emptyList();
                 String tableType = rs.getString("TABLE_TYPE");
                 if ("TABLE".equalsIgnoreCase(tableType)) {
                     Map<String, SqlColumnInfo> columnMap = sqlDataSource.getColumnMap(schema,
                             sqlEntityInfo.getTableName());
-                    List<String> columnUpdateSql = detectColumnUpdates(sqlDataSourceDialect, sqlEntityInfo, columnMap,
+                    alterTableColumnsSql = detectColumnUpdates(sqlDataSourceDialect, sqlEntityInfo, columnMap,
                             printFormat);
-                    tableUpdateSql.addAll(columnUpdateSql);
                 } else {
                     throw new UnifyException(UnifyCoreErrorConstants.SQLSCHEMAMANAGER_UNABLE_TO_UPDATE_TABLE,
                             sqlDataSource.getName(), sqlEntityInfo.getTableName(), tableType);
@@ -229,102 +231,117 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
                     }
                 }
 
+                List<String> dropConstraintSql = new ArrayList<String>();
                 List<String> createUpdateConstraintSql = new ArrayList<String>();
-                // Detect foreign constraint changes
-                if (forceConstraints.isTrue() && sqlEntityInfo.isManagedForeignKeys()) {
+                if (!alterTableColumnsSql.isEmpty()) {
+                    // Drop all constraints and indexes
+                    dropConstraintSql.addAll(generateDropConstraints(sqlDataSourceDialect, sqlEntityInfo,
+                            managedTableConstraints.values(), printFormat));
+                    
+                    // Recreate all constraints and indexes
                     for (SqlForeignKeySchemaInfo sqlForeignKeyInfo : sqlEntityInfo.getManagedForeignKeyList()) {
-                        if (!sqlEntityInfo.getManagedFieldInfo(sqlForeignKeyInfo.getFieldName())
-                                .isIgnoreFkConstraint()) {
-                            SqlFieldInfo sqlFieldInfo = sqlEntityInfo
-                                    .getManagedFieldInfo(sqlForeignKeyInfo.getFieldName());
-                            String fkConstName = sqlFieldInfo.getConstraint();
-                            TableConstraint fkConst = managedTableConstraints.get(fkConstName);
+                        createUpdateConstraintSql.add(sqlDataSourceDialect.generateAddForeignKeyConstraintSql(
+                                sqlEntityInfo, sqlForeignKeyInfo, printFormat));
+                    }
+
+                    for (SqlUniqueConstraintSchemaInfo sqlUniqueConstraintInfo : sqlEntityInfo.getUniqueConstraintList()
+                            .values()) {
+                        createUpdateConstraintSql.add(sqlDataSourceDialect.generateAddUniqueConstraintSql(
+                                sqlEntityInfo, sqlUniqueConstraintInfo, printFormat));
+                    }
+
+                    for (SqlIndexSchemaInfo sqlIndexInfo : sqlEntityInfo.getIndexList().values()) {
+                        createUpdateConstraintSql.add(sqlDataSourceDialect.generateCreateIndexSql(sqlEntityInfo,
+                                sqlIndexInfo, printFormat));
+                    }
+                } else {
+                    // Detect foreign constraint changes
+                    if (forceConstraints.isTrue() && sqlEntityInfo.isManagedForeignKeys()) {
+                        for (SqlForeignKeySchemaInfo sqlForeignKeyInfo : sqlEntityInfo.getManagedForeignKeyList()) {
+                            if (!sqlEntityInfo.getManagedFieldInfo(sqlForeignKeyInfo.getFieldName())
+                                    .isIgnoreFkConstraint()) {
+                                SqlFieldInfo sqlFieldInfo = sqlEntityInfo
+                                        .getManagedFieldInfo(sqlForeignKeyInfo.getFieldName());
+                                String fkConstName = sqlFieldInfo.getConstraint();
+                                TableConstraint fkConst = managedTableConstraints.get(fkConstName);
+                                boolean update = true;
+                                if (fkConst != null) {
+                                    logDebug(
+                                            "Checking foreign key: fkConst = [{0}], entity.tableName = [{1}], field.columnName = [{2}]...",
+                                            fkConst, sqlFieldInfo.getForeignEntityInfo().getTableName(),
+                                            sqlFieldInfo.getForeignFieldInfo().getColumnName());
+                                    // Check if foreign key matches database constraint
+                                    if (fkConst.isForeignKey() /* && fkConst.getColumns().size() == 1 */
+                                            && fkConst.getTableName()
+                                                    .equals(sqlFieldInfo.getForeignEntityInfo().getTableName())
+                                            && fkConst.getColumns()
+                                                    .contains(sqlFieldInfo.getForeignFieldInfo().getColumnName())) {
+                                        // Perfect match. Remove from pending list and no need for update
+                                        managedTableConstraints.remove(fkConstName);
+                                        update = false;
+                                    }
+                                }
+
+                                if (update) {
+                                    createUpdateConstraintSql.add(sqlDataSourceDialect.generateAddForeignKeyConstraintSql(
+                                            sqlEntityInfo, sqlForeignKeyInfo, printFormat));
+                                }
+                            }
+                        }
+                    }
+
+                    // Detect unique constraint changes
+                    if (sqlEntityInfo.isUniqueConstraints()) {
+                        for (SqlUniqueConstraintSchemaInfo sqlUniqueConstraintInfo : sqlEntityInfo.getUniqueConstraintList()
+                                .values()) {
+                            TableConstraint ucConst = managedTableConstraints.get(sqlUniqueConstraintInfo.getName());
                             boolean update = true;
-                            if (fkConst != null) {
-                                logDebug(
-                                        "Checking foreign key: fkConst = [{0}], entity.tableName = [{1}], field.columnName = [{2}]...",
-                                        fkConst, sqlFieldInfo.getForeignEntityInfo().getTableName(),
-                                        sqlFieldInfo.getForeignFieldInfo().getColumnName());
-                                // Check if foreign key matches database constraint
-                                if (fkConst.isForeignKey() /* && fkConst.getColumns().size() == 1 */
-                                        && fkConst.getTableName()
-                                                .equals(sqlFieldInfo.getForeignEntityInfo().getTableName())
-                                        && fkConst.getColumns()
-                                                .contains(sqlFieldInfo.getForeignFieldInfo().getColumnName())) {
+                            if (ucConst != null) {
+                                // Check if unique constant matches database constraint
+                                if (ucConst.isUniqueConst() && matchIndexAllColumns(sqlEntityInfo,
+                                        sqlUniqueConstraintInfo.getFieldNameList(), ucConst.getColumns())) {
                                     // Perfect match. Remove from pending list and no need for update
-                                    managedTableConstraints.remove(fkConstName);
+                                    managedTableConstraints.remove(sqlUniqueConstraintInfo.getName());
                                     update = false;
                                 }
                             }
 
                             if (update) {
-                                createUpdateConstraintSql.add(sqlDataSourceDialect.generateAddForeignKeyConstraintSql(
-                                        sqlEntityInfo, sqlForeignKeyInfo, printFormat));
+                                createUpdateConstraintSql.add(sqlDataSourceDialect.generateAddUniqueConstraintSql(
+                                        sqlEntityInfo, sqlUniqueConstraintInfo, printFormat));
                             }
                         }
                     }
-                }
 
-                // Detect unique constraint changes
-                if (sqlEntityInfo.isUniqueConstraints()) {
-                    for (SqlUniqueConstraintSchemaInfo sqlUniqueConstraintInfo : sqlEntityInfo.getUniqueConstraintList()
-                            .values()) {
-                        TableConstraint ucConst = managedTableConstraints.get(sqlUniqueConstraintInfo.getName());
-                        boolean update = true;
-                        if (ucConst != null) {
-                            // Check if unique constant matches database constraint
-                            if (ucConst.isUniqueConst() && matchIndexAllColumns(sqlEntityInfo,
-                                    sqlUniqueConstraintInfo.getFieldNameList(), ucConst.getColumns())) {
-                                // Perfect match. Remove from pending list and no need for update
-                                managedTableConstraints.remove(sqlUniqueConstraintInfo.getName());
-                                update = false;
+                    // Detect index changes
+                    if (sqlEntityInfo.isIndexes()) {
+                        for (SqlIndexSchemaInfo sqlIndexInfo : sqlEntityInfo.getIndexList().values()) {
+                            TableConstraint idxConst = managedTableConstraints.get(sqlIndexInfo.getName());
+                            boolean update = true;
+                            if (idxConst != null) {
+                                // Check if index matches database constraint
+                                if (idxConst.isIndex() && matchIndexAllColumns(sqlEntityInfo,
+                                        sqlIndexInfo.getFieldNameList(), idxConst.getColumns())) {
+                                    // Perfect match. Remove from pending list and no need for update
+                                    managedTableConstraints.remove(sqlIndexInfo.getName());
+                                    update = false;
+                                }
+                            }
+
+                            if (update) {
+                                createUpdateConstraintSql.add(sqlDataSourceDialect.generateCreateIndexSql(sqlEntityInfo,
+                                        sqlIndexInfo, printFormat));
                             }
                         }
-
-                        if (update) {
-                            createUpdateConstraintSql.add(sqlDataSourceDialect.generateAddUniqueConstraintSql(
-                                    sqlEntityInfo, sqlUniqueConstraintInfo, printFormat));
-                        }
                     }
+
+                    // Drop unused constraints and indexes
+                    dropConstraintSql.addAll(generateDropConstraints(sqlDataSourceDialect, sqlEntityInfo,
+                            managedTableConstraints.values(), printFormat));
                 }
 
-                // Detect index changes
-                if (sqlEntityInfo.isIndexes()) {
-                    for (SqlIndexSchemaInfo sqlIndexInfo : sqlEntityInfo.getIndexList().values()) {
-                        TableConstraint idxConst = managedTableConstraints.get(sqlIndexInfo.getName());
-                        boolean update = true;
-                        if (idxConst != null) {
-                            // Check if index matches database constraint
-                            if (idxConst.isIndex() && matchIndexAllColumns(sqlEntityInfo,
-                                    sqlIndexInfo.getFieldNameList(), idxConst.getColumns())) {
-                                // Perfect match. Remove from pending list and no need for update
-                                managedTableConstraints.remove(sqlIndexInfo.getName());
-                                update = false;
-                            }
-                        }
-
-                        if (update) {
-                            createUpdateConstraintSql.add(sqlDataSourceDialect.generateCreateIndexSql(sqlEntityInfo,
-                                    sqlIndexInfo, printFormat));
-                        }
-                    }
-                }
-
-                // Add drops first
-                for (TableConstraint tConst : managedTableConstraints.values()) {
-                    if (tConst.isForeignKey()) {
-                        tableUpdateSql.add(sqlDataSourceDialect.generateDropForeignKeyConstraintSql(sqlEntityInfo,
-                                tConst.getName(), printFormat));
-                    } else if (tConst.isUniqueConst()) {
-                        tableUpdateSql.add(sqlDataSourceDialect.generateDropUniqueConstraintSql(sqlEntityInfo,
-                                tConst.getName(), printFormat));
-                    } else {
-                        tableUpdateSql.add(sqlDataSourceDialect.generateDropIndexSql(sqlEntityInfo, tConst.getName(),
-                                printFormat));
-                    }
-                }
-
-                // Then create changes
+                tableUpdateSql.addAll(dropConstraintSql);
+                tableUpdateSql.addAll(alterTableColumnsSql);
                 tableUpdateSql.addAll(createUpdateConstraintSql);
             } else {
                 logInfo("Creating datasource table {0}...", sqlEntityInfo.getTableName());
@@ -469,6 +486,24 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
         }
     }
 
+    private List<String> generateDropConstraints(SqlDataSourceDialect sqlDataSourceDialect, SqlEntityInfo sqlEntityInfo,
+            Collection<TableConstraint> constraints, PrintFormat printFormat) throws UnifyException {
+        List<String> dropSql = new ArrayList<String>();
+        for (TableConstraint tConst : constraints) {
+            if (tConst.isForeignKey()) {
+                dropSql.add(sqlDataSourceDialect.generateDropForeignKeyConstraintSql(sqlEntityInfo, tConst.getName(),
+                        printFormat));
+            } else if (tConst.isUniqueConst()) {
+                dropSql.add(sqlDataSourceDialect.generateDropUniqueConstraintSql(sqlEntityInfo, tConst.getName(),
+                        printFormat));
+            } else {
+                dropSql.add(sqlDataSourceDialect.generateDropIndexSql(sqlEntityInfo, tConst.getName(), printFormat));
+            }
+        }
+
+        return dropSql;
+    }
+
     private void manageViewSchema(DatabaseMetaData databaseMetaData, SqlDataSource sqlDataSource,
             Class<? extends Entity> entityClass, SqlSchemaManagerOptions options) throws UnifyException {
         SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
@@ -536,8 +571,8 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
         }
     }
 
-    private void dropViewSchema(DatabaseMetaData databaseMetaData, SqlDataSource sqlDataSource,
-            Class<?> entityClass, SqlSchemaManagerOptions options) throws UnifyException {
+    private void dropViewSchema(DatabaseMetaData databaseMetaData, SqlDataSource sqlDataSource, Class<?> entityClass,
+            SqlSchemaManagerOptions options) throws UnifyException {
         SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.findSqlEntityInfo(entityClass);
 
@@ -671,7 +706,7 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
                     sqlDataTypePolicy.getAltDefault(sqlfieldInfo.getFieldType()));
         }
 
-        boolean typeChange = !isSwappableSqlTypes(sqlDataTypePolicy.getSqlType(), columnInfo.getSqlType() );
+        boolean typeChange = !isSwappableSqlTypes(sqlDataTypePolicy.getSqlType(), columnInfo.getSqlType());
         if (typeChange) {
             logDebug("Type Change: columnInfo.getSqlType() = {0}, sqlDataTypePolicy.getSqlType() = {1}...",
                     columnInfo.getSqlType(), sqlDataTypePolicy.getSqlType());
@@ -711,7 +746,7 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
     private boolean isSwappableSqlTypes(int srcType, int destType) {
         return (srcType == destType) || ((srcType == Types.DECIMAL) && (destType == Types.NUMERIC));
     }
-    
+
     private boolean isSwappableValues(String origin, String alternative) {
         Set<String> set = swappableValueSet.get(origin);
         return set != null && set.contains(alternative);
