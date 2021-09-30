@@ -28,6 +28,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -192,7 +193,7 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 
                 SqlUtils.close(rs);
 
-                Map<String, TableConstraint> managedTableConstraints = new HashMap<String, TableConstraint>();
+                Map<String, TableConstraint> managedTableConstraints = new LinkedHashMap<String, TableConstraint>();
                 // Fetch foreign keys
                 rs = databaseMetaData.getImportedKeys(null, schema, sqlEntityInfo.getTableName());
                 while (rs.next()) {
@@ -338,7 +339,7 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
                     // Drop unused constraints and indexes
                     dropConstraintSql.addAll(generateDropConstraints(sqlDataSourceDialect, sqlEntityInfo,
                             managedTableConstraints.values(), printFormat));
-                }
+               }
 
                 tableUpdateSql.addAll(dropConstraintSql);
                 tableUpdateSql.addAll(alterTableColumnsSql);

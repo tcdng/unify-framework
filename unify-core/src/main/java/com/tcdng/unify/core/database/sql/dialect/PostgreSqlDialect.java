@@ -111,12 +111,6 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
     @Override
     public String generateDropUniqueConstraintSql(SqlEntitySchemaInfo sqlEntitySchemaInfo,
             String dbUniqueConstraintName, PrintFormat format) throws UnifyException {
-        return generateDropIndexSql(sqlEntitySchemaInfo, dbUniqueConstraintName, format);
-    }
-
-    @Override
-    public String generateDropIndexSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, String dbIndexName, PrintFormat format)
-            throws UnifyException {
         StringBuilder sb = new StringBuilder();
         String tableName = sqlEntitySchemaInfo.getSchemaTableName();
         sb.append("ALTER TABLE ").append(tableName);
@@ -126,6 +120,14 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
             sb.append(" ");
         }
 
+        sb.append("DROP CONSTRAINT ").append(dbUniqueConstraintName);
+        return sb.toString();
+    }
+
+    @Override
+    public String generateDropIndexSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, String dbIndexName, PrintFormat format)
+            throws UnifyException {
+        StringBuilder sb = new StringBuilder();
         sb.append("DROP INDEX ").append(dbIndexName);
         return sb.toString();
     }
