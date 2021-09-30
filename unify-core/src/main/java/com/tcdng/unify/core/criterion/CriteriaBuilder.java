@@ -85,6 +85,11 @@ public class CriteriaBuilder {
         return this;
     }
 
+    public CriteriaBuilder addIEquals(String fieldName, String value) {
+        addSimpleCondition(new IEquals(fieldName, value));
+        return this;
+    }
+
     public CriteriaBuilder addEqualsField(String fieldNameA, String fieldNameB) {
         addSimpleCondition(new EqualsField(fieldNameA, fieldNameB));
         return this;
@@ -242,6 +247,11 @@ public class CriteriaBuilder {
 
     public CriteriaBuilder addNotEquals(String fieldName, Object value) {
         addSimpleCondition(new NotEquals(fieldName, value));
+        return this;
+    }
+
+    public CriteriaBuilder addINotEquals(String fieldName, String value) {
+        addSimpleCondition(new INotEquals(fieldName, value));
         return this;
     }
 

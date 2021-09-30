@@ -59,9 +59,11 @@ import com.tcdng.unify.core.database.sql.criterion.policy.BetweenPolicy;
 import com.tcdng.unify.core.database.sql.criterion.policy.EqualPolicy;
 import com.tcdng.unify.core.database.sql.criterion.policy.GreaterOrEqualPolicy;
 import com.tcdng.unify.core.database.sql.criterion.policy.GreaterPolicy;
+import com.tcdng.unify.core.database.sql.criterion.policy.IEqualPolicy;
 import com.tcdng.unify.core.database.sql.criterion.policy.ILikeBeginPolicy;
 import com.tcdng.unify.core.database.sql.criterion.policy.ILikeEndPolicy;
 import com.tcdng.unify.core.database.sql.criterion.policy.ILikePolicy;
+import com.tcdng.unify.core.database.sql.criterion.policy.INotEqualsPolicy;
 import com.tcdng.unify.core.database.sql.criterion.policy.IsNotNullPolicy;
 import com.tcdng.unify.core.database.sql.criterion.policy.IsNullPolicy;
 import com.tcdng.unify.core.database.sql.criterion.policy.LessOrEqualPolicy;
@@ -1545,7 +1547,9 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     protected static void populateDefaultSqlCriteriaPolicies(SqlDataSourceDialectPolicies rootPolicies,
             Map<RestrictionType, SqlCriteriaPolicy> sqlCriteriaPolicies) {
         sqlCriteriaPolicies.put(RestrictionType.EQUALS, new EqualPolicy(rootPolicies));
+        sqlCriteriaPolicies.put(RestrictionType.IEQUALS, new IEqualPolicy(rootPolicies));
         sqlCriteriaPolicies.put(RestrictionType.NOT_EQUALS, new NotEqualsPolicy(rootPolicies));
+        sqlCriteriaPolicies.put(RestrictionType.INOT_EQUALS, new INotEqualsPolicy(rootPolicies));
         sqlCriteriaPolicies.put(RestrictionType.LESS_THAN, new LessPolicy(rootPolicies));
         sqlCriteriaPolicies.put(RestrictionType.LESS_OR_EQUAL, new LessOrEqualPolicy(rootPolicies));
         sqlCriteriaPolicies.put(RestrictionType.GREATER, new GreaterPolicy(rootPolicies));

@@ -41,6 +41,17 @@ public enum FilterConditionType implements EnumConst {
             return new Equals(fieldName, paramA);
         }
     },
+    IEQUALS("IEQ", RestrictionType.IEQUALS, "condition.iequals.label", "condition.iequals.symbol", FilterParamType.IMMEDIATE) {
+        @Override
+        public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
+            cb.addIEquals(fieldName, (String) paramA);
+        }
+
+        @Override
+        public Restriction createSimpleCriteria(String fieldName, Object paramA, Object paramB) {
+            return new IEquals(fieldName, (String) paramA);
+        }
+    },
     EQUALS_LINGUAL("EQG", RestrictionType.EQUALS, "condition.equalslingual.label", "condition.equals.symbol", FilterParamType.IMMEDIATE) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
@@ -61,6 +72,17 @@ public enum FilterConditionType implements EnumConst {
         @Override
         public Restriction createSimpleCriteria(String fieldName, Object paramA, Object paramB) {
             return new NotEquals(fieldName, paramA);
+        }
+    },
+    INOT_EQUALS("NEQ", RestrictionType.INOT_EQUALS, "condition.inotequals.label", "condition.inotequals.symbol", FilterParamType.IMMEDIATE) {
+        @Override
+        public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
+            cb.addINotEquals(fieldName, (String) paramA);
+        }
+
+        @Override
+        public Restriction createSimpleCriteria(String fieldName, Object paramA, Object paramB) {
+            return new INotEquals(fieldName, (String) paramA);
         }
     },
     LESS_THAN("LT", RestrictionType.LESS_THAN, "condition.lessthan.label", "condition.lessthan.symbol", FilterParamType.IMMEDIATE) {

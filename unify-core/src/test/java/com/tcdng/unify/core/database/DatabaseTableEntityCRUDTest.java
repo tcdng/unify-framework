@@ -1260,6 +1260,32 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
     }
 
     @Test
+    public void testFindAllRecordsCaseInsensitive() throws Exception {
+        tm.beginTransaction();
+        try {
+            Fruit apple = new Fruit("apple", "red", 20.00);
+            db.create(apple);
+            db.create(new Fruit("pineapple", "cyan", 60.00));
+            Fruit banana = new Fruit("banana", "yellow", 45.00);
+            db.create(banana);
+            Fruit orange = new Fruit("orange", "orange", 15.00);
+            db.create(orange);
+            
+            List<Fruit> testFruitList = db.findAll(new FruitQuery().addIEquals("name", "Orange"));
+            assertEquals(1, testFruitList.size());
+            assertEquals(orange, testFruitList.get(0));
+            
+            testFruitList = db.findAll(new FruitQuery().addINotEquals("name", "PINEAPPLE").addOrder("price"));
+            assertEquals(3, testFruitList.size());
+            assertEquals(orange, testFruitList.get(0));
+            assertEquals(apple, testFruitList.get(1));
+            assertEquals(banana, testFruitList.get(2));
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
     public void testFindAllRecordsWithOrder() throws Exception {
         tm.beginTransaction();
         try {

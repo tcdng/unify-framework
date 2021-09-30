@@ -39,8 +39,10 @@ import com.tcdng.unify.core.criterion.IBeginsWith;
 import com.tcdng.unify.core.criterion.IBeginsWithField;
 import com.tcdng.unify.core.criterion.IEndsWith;
 import com.tcdng.unify.core.criterion.IEndsWithField;
+import com.tcdng.unify.core.criterion.IEquals;
 import com.tcdng.unify.core.criterion.ILike;
 import com.tcdng.unify.core.criterion.ILikeField;
+import com.tcdng.unify.core.criterion.INotEquals;
 import com.tcdng.unify.core.criterion.IsNotNull;
 import com.tcdng.unify.core.criterion.IsNull;
 import com.tcdng.unify.core.criterion.Less;
@@ -162,6 +164,11 @@ public class Query<T extends Entity> implements Cloneable {
 
     public Query<T> addEquals(String field, Object value) {
         restrictions.add(new Equals(field, value));
+        return this;
+    }
+
+    public Query<T> addIEquals(String field, String value) {
+        restrictions.add(new IEquals(field, value));
         return this;
     }
 
@@ -292,6 +299,11 @@ public class Query<T extends Entity> implements Cloneable {
 
     public Query<T> addNotEquals(String field, Object value) {
         restrictions.add(new NotEquals(field, value));
+        return this;
+    }
+
+    public Query<T> addINotEquals(String field, String value) {
+        restrictions.add(new INotEquals(field, value));
         return this;
     }
 
