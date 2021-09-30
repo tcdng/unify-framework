@@ -74,7 +74,7 @@ public enum FilterConditionType implements EnumConst {
             return new NotEquals(fieldName, paramA);
         }
     },
-    INOT_EQUALS("NEQ", RestrictionType.INOT_EQUALS, "condition.inotequals.label", "condition.inotequals.symbol", FilterParamType.IMMEDIATE) {
+    INOT_EQUALS("INQ", RestrictionType.INOT_EQUALS, "condition.inotequals.label", "condition.inotequals.symbol", FilterParamType.IMMEDIATE) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
             cb.addINotEquals(fieldName, (String) paramA);
