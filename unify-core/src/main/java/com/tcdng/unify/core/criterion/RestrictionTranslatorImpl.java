@@ -59,7 +59,9 @@ public class RestrictionTranslatorImpl extends AbstractRestrictionTranslator {
         Map<FilterConditionType, Translator> map = new EnumMap<FilterConditionType, Translator>(
                 FilterConditionType.class);
         map.put(FilterConditionType.EQUALS, new SingleParamRestrictionTranslator());
+        map.put(FilterConditionType.IEQUALS, new SingleParamRestrictionTranslator());
         map.put(FilterConditionType.NOT_EQUALS, new SingleParamRestrictionTranslator());
+        map.put(FilterConditionType.INOT_EQUALS, new SingleParamRestrictionTranslator());
         map.put(FilterConditionType.LESS_THAN, new SingleParamRestrictionTranslator());
         map.put(FilterConditionType.LESS_OR_EQUAL, new SingleParamRestrictionTranslator());
         map.put(FilterConditionType.GREATER_THAN, new SingleParamRestrictionTranslator());

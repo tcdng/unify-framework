@@ -44,6 +44,9 @@ import com.tcdng.unify.core.filter.policy.GreaterOrEqualPolicy;
 import com.tcdng.unify.core.filter.policy.GreaterPolicy;
 import com.tcdng.unify.core.filter.policy.IBeginsWithPolicy;
 import com.tcdng.unify.core.filter.policy.IEndsWithPolicy;
+import com.tcdng.unify.core.filter.policy.IEqualsPolicy;
+import com.tcdng.unify.core.filter.policy.ILikePolicy;
+import com.tcdng.unify.core.filter.policy.INotEqualsPolicy;
 import com.tcdng.unify.core.filter.policy.IsNotNullPolicy;
 import com.tcdng.unify.core.filter.policy.IsNullPolicy;
 import com.tcdng.unify.core.filter.policy.LessCollectionPolicy;
@@ -51,7 +54,6 @@ import com.tcdng.unify.core.filter.policy.LessOrEqualCollectionPolicy;
 import com.tcdng.unify.core.filter.policy.LessOrEqualPolicy;
 import com.tcdng.unify.core.filter.policy.LessPolicy;
 import com.tcdng.unify.core.filter.policy.LikePolicy;
-import com.tcdng.unify.core.filter.policy.ILikePolicy;
 import com.tcdng.unify.core.filter.policy.NotAmongstPolicy;
 import com.tcdng.unify.core.filter.policy.NotBeginWithPolicy;
 import com.tcdng.unify.core.filter.policy.NotBetweenPolicy;
@@ -212,17 +214,19 @@ public final class FilterUtils {
 
     private static final Set<FilterConditionType> stringConditionTypes_imm = Collections
             .unmodifiableSet(new LinkedHashSet<FilterConditionType>(Arrays.asList(FilterConditionType.EQUALS,
-                    FilterConditionType.BEGINS_WITH, FilterConditionType.IBEGINS_WITH, FilterConditionType.ENDS_WITH,
-                    FilterConditionType.IENDS_WITH, FilterConditionType.LIKE, FilterConditionType.ILIKE,
-                    FilterConditionType.AMONGST, FilterConditionType.NOT_EQUALS, FilterConditionType.NOT_BEGIN_WITH,
+                    FilterConditionType.IEQUALS, FilterConditionType.BEGINS_WITH, FilterConditionType.IBEGINS_WITH,
+                    FilterConditionType.ENDS_WITH, FilterConditionType.IENDS_WITH, FilterConditionType.LIKE,
+                    FilterConditionType.ILIKE, FilterConditionType.AMONGST, FilterConditionType.NOT_EQUALS,
+                    FilterConditionType.INOT_EQUALS, FilterConditionType.NOT_BEGIN_WITH,
                     FilterConditionType.NOT_END_WITH, FilterConditionType.NOT_LIKE, FilterConditionType.NOT_AMONGST,
                     FilterConditionType.IS_NULL, FilterConditionType.IS_NOT_NULL)));
 
     private static final Set<FilterConditionType> stringConditionTypes_field = Collections
             .unmodifiableSet(new LinkedHashSet<FilterConditionType>(Arrays.asList(FilterConditionType.EQUALS,
-                    FilterConditionType.BEGINS_WITH, FilterConditionType.IBEGINS_WITH, FilterConditionType.ENDS_WITH,
-                    FilterConditionType.IENDS_WITH, FilterConditionType.LIKE, FilterConditionType.ILIKE,
-                    FilterConditionType.AMONGST, FilterConditionType.NOT_EQUALS, FilterConditionType.NOT_BEGIN_WITH,
+                    FilterConditionType.IEQUALS, FilterConditionType.BEGINS_WITH, FilterConditionType.IBEGINS_WITH,
+                    FilterConditionType.ENDS_WITH, FilterConditionType.IENDS_WITH, FilterConditionType.LIKE,
+                    FilterConditionType.ILIKE, FilterConditionType.AMONGST, FilterConditionType.NOT_EQUALS,
+                    FilterConditionType.INOT_EQUALS, FilterConditionType.NOT_BEGIN_WITH,
                     FilterConditionType.NOT_END_WITH, FilterConditionType.NOT_LIKE, FilterConditionType.NOT_AMONGST,
                     FilterConditionType.IS_NULL, FilterConditionType.IS_NOT_NULL, FilterConditionType.EQUALS_FIELD,
                     FilterConditionType.BEGINS_WITH_FIELD, FilterConditionType.ENDS_WITH_FIELD,
@@ -232,9 +236,10 @@ public final class FilterUtils {
 
     private static final Set<FilterConditionType> stringConditionTypes_param = Collections
             .unmodifiableSet(new LinkedHashSet<FilterConditionType>(Arrays.asList(FilterConditionType.EQUALS,
-                    FilterConditionType.BEGINS_WITH, FilterConditionType.IBEGINS_WITH, FilterConditionType.ENDS_WITH,
-                    FilterConditionType.IENDS_WITH, FilterConditionType.LIKE, FilterConditionType.ILIKE,
-                    FilterConditionType.AMONGST, FilterConditionType.NOT_EQUALS, FilterConditionType.NOT_BEGIN_WITH,
+                    FilterConditionType.IEQUALS, FilterConditionType.BEGINS_WITH, FilterConditionType.IBEGINS_WITH,
+                    FilterConditionType.ENDS_WITH, FilterConditionType.IENDS_WITH, FilterConditionType.LIKE,
+                    FilterConditionType.ILIKE, FilterConditionType.AMONGST, FilterConditionType.NOT_EQUALS,
+                    FilterConditionType.INOT_EQUALS, FilterConditionType.NOT_BEGIN_WITH,
                     FilterConditionType.NOT_END_WITH, FilterConditionType.NOT_LIKE, FilterConditionType.NOT_AMONGST,
                     FilterConditionType.IS_NULL, FilterConditionType.IS_NOT_NULL, FilterConditionType.EQUALS_PARAM,
                     FilterConditionType.BEGINS_WITH_PARAM, FilterConditionType.ENDS_WITH_PARAM,
@@ -332,7 +337,9 @@ public final class FilterUtils {
         Map<FilterConditionType, ObjectFilterPolicy> policies = new EnumMap<FilterConditionType, ObjectFilterPolicy>(
                 FilterConditionType.class);
         policies.put(FilterConditionType.EQUALS, new EqualsPolicy());
+        policies.put(FilterConditionType.IEQUALS, new IEqualsPolicy());
         policies.put(FilterConditionType.NOT_EQUALS, new NotEqualsPolicy());
+        policies.put(FilterConditionType.INOT_EQUALS, new INotEqualsPolicy());
         policies.put(FilterConditionType.LESS_THAN, new LessPolicy());
         policies.put(FilterConditionType.LESS_OR_EQUAL, new LessOrEqualPolicy());
         policies.put(FilterConditionType.GREATER_THAN, new GreaterPolicy());
