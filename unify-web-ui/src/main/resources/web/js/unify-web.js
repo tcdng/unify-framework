@@ -1539,6 +1539,8 @@ ux.rigDateField = function(rgp) {
 				const month = this._scrollMonth;
 				const year = this._scrollYear;
 
+				console.log("@Prip: month = " + month);
+				console.log("@Prip: _longMonthNm = " + JSON.stringify(this._longMonthNm));
 				// Display month year on header
 				this._header.innerHTML = this._longMonthNm[month] + "&nbsp;" + year;
 
@@ -1688,25 +1690,21 @@ ux.dfScrollHandler = function(uEv) {
 	const evp = uEv.evp;
 	const df = _id(uEv.evp.uId);
 	if (evp.uTarget == "mon_") {
-		var month = df._scrollMonth;
+		var month = df._scrollMonth + evp.uStep;
 		var yearChg = false;
-		if (evp.uStep > 0) {
-			if (month >= df._longMonthNm.length) {
-				df._scrollMonth = 0;
-				yearChg = true;
-			}
-		} else {
-			if (month <= 1) {
-				df._scrollMonth = df._longMonthNm.length + 1;
-				yearChg = true;
-			}
+		if (month >= df._longMonthNm.length) {
+			month = 0;
+			yearChg = true;
+		} else if (month < 0) {
+			month = df._longMonthNm.length - 1;
+			yearChg = true;
 		}
 
 		if (yearChg) {
 			df._scrollYear = df._scrollYear + evp.uStep;
 		}
 
-		df._scrollMonth = df._scrollMonth + evp.uStep;
+		df._scrollMonth = month;
 	} else {
 		df._scrollYear = df._scrollYear + evp.uStep;
 	}
