@@ -1539,8 +1539,6 @@ ux.rigDateField = function(rgp) {
 				const month = this._scrollMonth;
 				const year = this._scrollYear;
 
-				console.log("@Prip: month = " + month);
-				console.log("@Prip: _longMonthNm = " + JSON.stringify(this._longMonthNm));
 				// Display month year on header
 				this._header.innerHTML = this._longMonthNm[month] + "&nbsp;" + year;
 
