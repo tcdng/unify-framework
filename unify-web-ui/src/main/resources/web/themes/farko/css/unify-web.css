@@ -568,6 +568,10 @@ z-index:400;}
 .ui-fileupload .fubutton span {padding-left:16px;}
 .ui-fileupload .fsspan {width:100%; border: 1px solid #C8C8C8;}
 
+/** File Upload View */
+.ui-fileuploadview {}
+.ui-fileuploadview .faaction {text-align:right;padding:2px;}
+
 /** Full Name Field */
 .ui-fullname {}
 

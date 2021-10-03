@@ -1823,7 +1823,7 @@ ux.dsCalc = function(uEv) {
 	ds.setActual(total, true);
 }
 
-/** FileAttachment */
+/** File Attachment */
 ux.rigFileAttachment = function(rgp) {
 	var id = rgp.pId;
 	if (rgp.pEditable) {
@@ -1863,6 +1863,46 @@ ux.rigFileAttachment = function(rgp) {
 			evp.uPanels = [ rgp.pContId ];
 			ux.addHdl(_id(remId + idx), "click", ux.post, evp);
 		}
+	}
+}
+
+/** File Upload View */
+ux.rigFileUploadView = function(rgp) {
+	var id = rgp.pId;
+	if (rgp.pEditable) {
+		var len = rgp.pLen;
+		var fileId = rgp.pFileId;
+		var attachId = rgp.pAttchId;
+		var viewId = rgp.pViewId;
+		var remId = rgp.pRemId;
+
+		var fileElem = _id(fileId)
+		var evp = ux.newEvPrm(rgp);
+		evp.uPanels = [ rgp.pContId ];
+		evp.isUniqueTrg = true;
+		ux.addHdl(fileElem, "change", ux.post, evp);
+
+		// Attach
+		evp = {fileId:fileElem.id};
+		ux.addHdl(_id(attachId), "click",
+				ux.attachFileClickHandler, evp);
+
+		// View
+		if (rgp.pViewURL) {
+			evp = {uURL:rgp.pViewURL, uPanels:[ rgp.pContId ]};
+			ux.addHdl(_id(viewId), "click", ux.post, evp);
+		} else {
+			evp = ux.newEvPrm(rgp);
+			evp.uCmd = id + "->view";
+			evp.uPanels = [ rgp.pContId ];
+			ux.addHdl(_id(viewId), "click", ux.post, evp);
+		}
+
+		// Remove
+		evp = ux.newEvPrm(rgp);
+		evp.uCmd = id + "->detach";
+		evp.uPanels = [ rgp.pContId ];
+		ux.addHdl(_id(remId), "click", ux.post, evp);
 	}
 }
 

@@ -46,17 +46,23 @@ public class FileAttachmentResourceController extends AbstractPageResourceContro
 
     @Override
     public void execute(OutputStream outputStream) throws UnifyException {
-        FileAttachmentsInfo fileAttachmentsInfo = (FileAttachmentsInfo) removeSessionAttribute(getResourceName());
-        FileAttachmentInfo fileAttachmentInfo = fileAttachmentsInfo.getSelectedAttachmentInfo();
-        byte[] data = fileAttachmentInfo.getAttachment();
-        if (data == null) {
-            String handler = fileAttachmentsInfo.getHandlerName();
-            if (handler != null) {
-                FileAttachmentHandler fileAttachmentHandler = (FileAttachmentHandler) getComponent(handler);
-                FileAttachmentInfo viewFileAttachmentInfo =
-                        fileAttachmentHandler.handleView(fileAttachmentsInfo.getParentId(), fileAttachmentInfo);
-                data = viewFileAttachmentInfo.getAttachment();
+        byte[] data = null;
+        Object resource = removeSessionAttribute(getResourceName());
+        if (resource instanceof FileAttachmentsInfo) {
+            FileAttachmentsInfo fileAttachmentsInfo = (FileAttachmentsInfo) resource;
+            FileAttachmentInfo fileAttachmentInfo = fileAttachmentsInfo.getSelectedAttachmentInfo();
+            data = fileAttachmentInfo.getAttachment();
+            if (data == null) {
+                String handler = fileAttachmentsInfo.getHandlerName();
+                if (handler != null) {
+                    FileAttachmentHandler fileAttachmentHandler = (FileAttachmentHandler) getComponent(handler);
+                    FileAttachmentInfo viewFileAttachmentInfo = fileAttachmentHandler
+                            .handleView(fileAttachmentsInfo.getParentId(), fileAttachmentInfo);
+                    data = viewFileAttachmentInfo.getAttachment();
+                }
             }
+        } else {
+            data = ((FileAttachmentInfo) resource).getAttachment();
         }
 
         IOUtils.writeAll(outputStream, data);
