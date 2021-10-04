@@ -1877,10 +1877,10 @@ ux.rigFileUploadView = function(rgp) {
 		var remId = rgp.pRemId;
 
 		var fileElem = _id(fileId)
-		var evp = ux.newEvPrm(rgp);
-		evp.uPanels = [ rgp.pContId ];
-		evp.isUniqueTrg = true;
-		ux.addHdl(fileElem, "change", ux.post, evp);
+//		var evp = ux.newEvPrm(rgp);
+//		evp.uPanels = [ rgp.pContId ];
+//		evp.isUniqueTrg = true;
+//		ux.addHdl(fileElem, "change", ux.post, evp);
 
 		// Attach
 		evp = {fileId:fileElem.id};
