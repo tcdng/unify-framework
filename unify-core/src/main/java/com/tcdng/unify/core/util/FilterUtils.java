@@ -185,6 +185,8 @@ public final class FilterUtils {
 
     private static final Set<FilterConditionType> dateConditionTypes_imm = Collections
             .unmodifiableSet(new LinkedHashSet<FilterConditionType>(Arrays.asList(FilterConditionType.EQUALS_LINGUAL,
+                    FilterConditionType.GREATER_THAN_LINGUAL, FilterConditionType.GREATER_OR_EQUAL_LINGUAL,
+                    FilterConditionType.LESS_THAN_LINGUAL, FilterConditionType.LESS_OR_EQUAL_LINGUAL,
                     FilterConditionType.EQUALS, FilterConditionType.GREATER_THAN, FilterConditionType.GREATER_OR_EQUAL,
                     FilterConditionType.LESS_THAN, FilterConditionType.LESS_OR_EQUAL, FilterConditionType.BETWEEN,
                     FilterConditionType.NOT_EQUALS, FilterConditionType.NOT_BETWEEN, FilterConditionType.IS_NULL,
@@ -192,6 +194,8 @@ public final class FilterUtils {
 
     private static final Set<FilterConditionType> dateConditionTypes_field = Collections
             .unmodifiableSet(new LinkedHashSet<FilterConditionType>(Arrays.asList(FilterConditionType.EQUALS_LINGUAL,
+                    FilterConditionType.GREATER_THAN_LINGUAL, FilterConditionType.GREATER_OR_EQUAL_LINGUAL,
+                    FilterConditionType.LESS_THAN_LINGUAL, FilterConditionType.LESS_OR_EQUAL_LINGUAL,
                     FilterConditionType.EQUALS, FilterConditionType.GREATER_THAN, FilterConditionType.GREATER_OR_EQUAL,
                     FilterConditionType.LESS_THAN, FilterConditionType.LESS_OR_EQUAL, FilterConditionType.BETWEEN,
                     FilterConditionType.NOT_EQUALS, FilterConditionType.NOT_BETWEEN, FilterConditionType.IS_NULL,
@@ -203,6 +207,8 @@ public final class FilterUtils {
 
     private static final Set<FilterConditionType> dateConditionTypes_param = Collections
             .unmodifiableSet(new LinkedHashSet<FilterConditionType>(Arrays.asList(FilterConditionType.EQUALS_LINGUAL,
+                    FilterConditionType.GREATER_THAN_LINGUAL, FilterConditionType.GREATER_OR_EQUAL_LINGUAL,
+                    FilterConditionType.LESS_THAN_LINGUAL, FilterConditionType.LESS_OR_EQUAL_LINGUAL,
                     FilterConditionType.EQUALS, FilterConditionType.GREATER_THAN, FilterConditionType.GREATER_OR_EQUAL,
                     FilterConditionType.LESS_THAN, FilterConditionType.LESS_OR_EQUAL, FilterConditionType.BETWEEN,
                     FilterConditionType.NOT_EQUALS, FilterConditionType.NOT_BETWEEN, FilterConditionType.IS_NULL,
