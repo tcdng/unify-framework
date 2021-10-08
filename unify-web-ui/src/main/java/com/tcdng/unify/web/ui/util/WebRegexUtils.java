@@ -126,7 +126,11 @@ public final class WebRegexUtils {
         return "/^[a-zA-Z]*$/";
     }
 
-    public static String getFullNameFormatRegex()  throws UnifyException {
+    public static String getFullNameFormatRegex(boolean special)  throws UnifyException {
+        if (special) {
+            return "/^[a-zA-Z][ a-zA-Z/&\\\\-\\\\(\\\\)]*$/";
+        }
+        
         return "/^[a-zA-Z][ a-zA-Z]*$/";
     }
     

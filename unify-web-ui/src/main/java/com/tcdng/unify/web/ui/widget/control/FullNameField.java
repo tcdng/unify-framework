@@ -15,6 +15,7 @@
  */
 package com.tcdng.unify.web.ui.widget.control;
 
+import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
@@ -27,7 +28,12 @@ import com.tcdng.unify.core.constant.TextCase;
  * @since 1.0
  */
 @Component("ui-fullname")
-@UplAttributes({ @UplAttribute(name = "case", type = TextCase.class, defaultVal = "CAMEL")})
+@UplAttributes({ @UplAttribute(name = "case", type = TextCase.class, defaultVal = "CAMEL"),
+        @UplAttribute(name = "special", type = boolean.class, defaultVal = "false") })
 public class FullNameField extends TextField {
+
+    public boolean isSpecial() throws UnifyException {
+        return getUplAttribute(boolean.class, "special");
+    }
 
 }

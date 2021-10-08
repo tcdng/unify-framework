@@ -34,6 +34,7 @@ public class FullNameFieldWriter extends TextFieldWriter {
 
     @Override
     protected String getFormatRegex(TextField textField) throws UnifyException {
-        return WebRegexUtils.getFullNameFormatRegex();
+        FullNameField fullNameField = (FullNameField) textField;
+        return WebRegexUtils.getFullNameFormatRegex(fullNameField.isSpecial());
     }
 }
