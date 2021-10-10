@@ -2654,6 +2654,7 @@ ux.rigSingleSelect = function(rgp) {
 
 				this.value = val;
 				this._fac.value = txt;
+				this._fac.focus();
 				this._selIdx = index;
 				if (fire) {
 					ux.fireEvent(this, "change");			
