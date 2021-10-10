@@ -409,6 +409,11 @@ public interface Widget extends UplComponent {
     boolean isUseFacade() throws UnifyException;
 
     /**
+     * Tests if widget is facade focus mode.
+     */
+    boolean isUseFacadeFocus() throws UnifyException;
+
+    /**
      * Tests if widget events are to be bound to facade.
      */
     boolean isBindEventsToFacade() throws UnifyException;

@@ -287,6 +287,11 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 		return false;
 	}
 
+    @Override
+    public boolean isUseFacadeFocus() throws UnifyException {
+        return isUseFacade();
+    }
+
 	@Override
     public boolean isBindEventsToFacade() throws UnifyException {
         return isUseFacade();
