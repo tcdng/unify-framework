@@ -49,7 +49,7 @@ public class PeriodFieldWriter extends AbstractPopupTextFieldWriter {
         PeriodField periodField = (PeriodField) popupTextField;
 
         writer.write("<div id=\"").write(periodField.getFramePanelId())
-                .write("\" class=\"pfborder\" style=\"overflow-y:auto;overflow-x:hidden;\" tabindex=\"0\">");
+                .write("\" class=\"pfborder\" style=\"overflow-y:auto;overflow-x:hidden;\" tabindex=\"-1\">");
         writer.write("<div id=\"").write(periodField.getListPanelId()).write("\" class=\"pflist\">");
         List<? extends Listable> listableList = periodField.getListables();
         int length = listableList.size();

@@ -47,7 +47,7 @@ public class MultiSelectWriter extends AbstractControlWriter {
         writeTagStyle(writer, multiSelect);
         writeTagTitle(writer, multiSelect);
         writer.write("><div id=\"").write(multiSelect.getFramePanelId())
-                .write("\" style=\"width:100%;height:100%;overflow-y:scroll;overflow-x:hidden;\" tabindex=\"0\">");
+                .write("\" style=\"width:100%;height:100%;overflow-y:scroll;overflow-x:hidden;\" tabindex=\"-1\">");
 
         List<? extends Listable> listableList = multiSelect.getListables();
         int length = listableList.size();
