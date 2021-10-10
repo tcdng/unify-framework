@@ -142,6 +142,10 @@ public final class WebRegexUtils {
         
         return "/^[a-zA-Z][ a-zA-Z]*$/";
     }
+
+    public static String getSeriesRegex()  throws UnifyException {
+        return "/^[a-zA-Z][a-zA-Z]*[0-9]*$/";
+    }
     
     /**
      * Gets JavaScript REGEX that allows only digits.
