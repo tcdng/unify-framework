@@ -72,6 +72,26 @@ public class BeanValueStoreTest {
     }
 
     @Test
+    public void testStoreOnNullSimpleBeanPropertyValue() throws Exception {
+        Address address = new Address();
+        BeanValueStore bvs = new BeanValueStore(address);
+        bvs.storeOnNull("line1", "37 Pauwa Road");
+        bvs.storeOnNull("line2", "Ungwan Dosa, Kaduna");
+        assertEquals("37 Pauwa Road", address.getLine1());
+        assertEquals("Ungwan Dosa, Kaduna", address.getLine2());
+        
+        bvs.storeOnNull("line1", "38 Pauwa Road");
+        bvs.storeOnNull("line2", "Ungwan Dosa, Kastina");
+        assertEquals("37 Pauwa Road", address.getLine1());
+        assertEquals("Ungwan Dosa, Kaduna", address.getLine2());  
+        
+        bvs.store("line1", "38 Pauwa Road");
+        bvs.store("line2", "Ungwan Dosa, Kastina");
+        assertEquals("38 Pauwa Road", address.getLine1());
+        assertEquals("Ungwan Dosa, Kastina", address.getLine2());  
+    }
+
+    @Test
     public void testStoreSimpleBeanPropertyValue() throws Exception {
         Address address = new Address();
         BeanValueStore bvs = new BeanValueStore(address);

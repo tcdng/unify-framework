@@ -95,6 +95,36 @@ public abstract class AbstractListValueStore<T> implements ValueStore {
     }
 
     @Override
+    public void storeOnNull(int storageIndex, String name, Object value) throws UnifyException {
+        checkStorageIndex(storageIndex);
+        if (retrieve(storageIndex, name) == null) {
+            doStore(storage.get(storageIndex), name, value, null);
+        }
+    }
+
+    @Override
+    public void storeOnNull(int storageIndex, String name, Object value, Formatter<?> formatter) throws UnifyException {
+        checkStorageIndex(storageIndex);
+        if (retrieve(storageIndex, name) == null) {
+            doStore(storage.get(storageIndex), name, value, formatter);
+        }
+    }
+
+    @Override
+    public void storeOnNull(String name, Object value) throws UnifyException {
+        if (retrieve(name) == null) {
+            doStore(storage.get(dataIndex), name, value, null);
+        }
+    }
+
+    @Override
+    public void storeOnNull(String name, Object value, Formatter<?> formatter) throws UnifyException {
+        if (retrieve(name) == null) {
+            doStore(storage.get(dataIndex), name, value, formatter);
+        }
+    }
+
+    @Override
     public Object getTempValue(String name) throws UnifyException {
         if (temp != null) {
             return temp.get(name);
