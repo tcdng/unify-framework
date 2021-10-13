@@ -534,4 +534,20 @@ public interface PageRequestContextUtil extends UnifyComponent {
      *             if an error occurs
      */
     void clearRequestContext() throws UnifyException;
+
+    /**
+     * Sets content to be reset.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void setContentScrollReset() throws UnifyException;
+
+    /**
+     * Returns true if content is to be reset.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean isContentScrollReset() throws UnifyException;
 }

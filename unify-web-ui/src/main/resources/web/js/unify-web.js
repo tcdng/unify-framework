@@ -66,6 +66,7 @@ ux.busyIndicator = "";
 ux.busyIndicatorTimer;
 ux.busyCounter = 0;
 
+ux.cntId = null
 ux.cntHintId = null
 ux.cntTabCloseId = null;
 ux.cntOpenPath = null;
@@ -140,6 +141,15 @@ ux.processJSON = function(jsonstring) {
 		ux.cascadeStretch();
 	}
 
+	if (ux.cntId) {
+		if (jsonEval.scrollReset) {
+			var elem = _id(ux.cntId);
+			if (elem) {
+				elem.scrollTop = 0;
+			}
+		}
+	}
+	
 	ux.remoteView = null;
 }
 
@@ -961,6 +971,7 @@ ux.menuSelectChgHandler = function(uEv) {
 
 /** Content panel */
 ux.rigContentPanel = function(rgp) {
+	ux.cntId = rgp.pId
 	ux.cntHintId = rgp.pHintPanelId;
 	ux.cntTabCloseId = rgp.pCloseImgId;
 	ux.cntSavePath = rgp.pSavePath;

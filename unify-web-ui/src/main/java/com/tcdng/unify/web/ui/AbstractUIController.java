@@ -326,6 +326,8 @@ public abstract class AbstractUIController extends AbstractController implements
                 writer.write(",\"remoteView\":{");
                 writer.write("\"view\":\"").write(pageRequestContextUtil.getRemoteViewer()).write("\"}");
             }
+            
+            writer.write(",\"scrollReset\":").write(pageRequestContextUtil.isContentScrollReset());
             writer.write("}");
         } else {
             for (PageControllerResponse pageControllerResponse : result.getResponses()) {

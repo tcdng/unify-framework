@@ -86,6 +86,8 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
 
     private static final String FOCUS_ON_WIDGET = "FOCUS_ON_WIDGET";
 
+    private static final String CONTENT_SCROLL_RESET = "CONTENT_SCROLL_RESET";
+
     private static final String DEBOUNCE_WIDGET = "DEBOUNCE_WIDGET";
     
     @Override
@@ -443,6 +445,16 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
     }
 
     @Override
+    public void setContentScrollReset() throws UnifyException {
+        setRequestAttribute(CONTENT_SCROLL_RESET, Boolean.TRUE);;
+    }
+
+    @Override
+    public boolean isContentScrollReset() throws UnifyException {
+        return Boolean.TRUE.equals(getRequestAttribute(CONTENT_SCROLL_RESET));
+    }
+
+    @Override
     public void clearRequestContext() throws UnifyException {
         setRequestAttribute(PageRequestParameterConstants.TARGET_VALUE, null);
         setRequestAttribute(PageRequestParameterConstants.WINDOW_NAME, null);
@@ -458,7 +470,6 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
         setRequestAttribute(RESPONSE_PATHPARTS, null);
         setRequestAttribute(USER_HINT_LIST, null);
         setRequestAttribute(VALIDATION_INFO_LIST, null);
-
     }
 
     @Override
