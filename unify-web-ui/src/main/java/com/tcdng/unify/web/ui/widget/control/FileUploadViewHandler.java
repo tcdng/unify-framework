@@ -45,7 +45,8 @@ public interface FileUploadViewHandler extends UnifyComponent {
      * @throws UnifyException
      *                        if an error occurs
      */
-    Object save(Object id, String category, FileAttachmentType type, String filename, byte[] attachment) throws UnifyException;
+    Object save(Object id, String category, FileAttachmentType type, String filename, byte[] attachment)
+            throws UnifyException;
 
     /**
      * Retrieves attachment data.
@@ -66,11 +67,18 @@ public interface FileUploadViewHandler extends UnifyComponent {
      * Deletes an upload record.
      * 
      * @param id
-     *                 the upload ID
+     *                                the upload ID
      * @param category
-     *                 the upload category
+     *                                the upload category
+     * @param parentId
+     *                                the parent ID (optional)
+     * @param parentCategory
+     *                                the parent category (optional)
+     * @param parentUploadIdFieldName
+     *                                the parent upload ID field name (optional)
      * @throws UnifyException
      *                        if an error occurs
      */
-    void delete(Object id, String category) throws UnifyException;
+    void delete(Object id, String category, Object parentId, String parentCategory, String parentUploadIdFieldName)
+            throws UnifyException;
 }

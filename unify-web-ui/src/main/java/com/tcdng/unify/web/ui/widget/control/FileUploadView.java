@@ -21,6 +21,7 @@ import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.constant.FileAttachmentType;
 import com.tcdng.unify.core.data.UploadedFile;
+import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.web.annotation.Action;
 import com.tcdng.unify.web.constant.ResultMappingConstants;
 import com.tcdng.unify.web.constant.UnifyWebRequestAttributeConstants;
@@ -36,11 +37,12 @@ import com.tcdng.unify.web.ui.widget.data.FileAttachmentInfo;
  * @since 1.0
  */
 @Component("ui-fileuploadview")
-@UplAttributes({
-    @UplAttribute(name = "type", type = FileAttachmentType.class, defaultVal = "wildcard"),
-    @UplAttribute(name = "handler", type = String.class, mandatory = true),
-    @UplAttribute(name = "category", type = String.class),
-    @UplAttribute(name = "viewPath", type = String.class) })
+@UplAttributes({ @UplAttribute(name = "type", type = FileAttachmentType.class, defaultVal = "wildcard"),
+        @UplAttribute(name = "handler", type = String.class, mandatory = true),
+        @UplAttribute(name = "category", type = String.class),
+        @UplAttribute(name = "parentCategory", type = String.class),
+        @UplAttribute(name = "parentFieldName", type = String.class),
+        @UplAttribute(name = "viewPath", type = String.class) })
 public class FileUploadView extends AbstractMultiControl {
 
     private FileUpload fileCtrl;
@@ -52,17 +54,18 @@ public class FileUploadView extends AbstractMultiControl {
     private Control removeCtrl;
 
     private FileUploadViewHandler handler;
-    
+
     @Override
     public void populate(DataTransferBlock transferBlock) throws UnifyException {
         if (transferBlock != null) {
             DataTransferBlock nextBlock = transferBlock.getChildBlock();
             Object value = nextBlock.getValue();
             UploadedFile uploadedFile = ((UploadedFile[]) value)[0];
-            
+
             String category = getUplAttribute(String.class, "category");
-            FileAttachmentType type =  getUplAttribute(FileAttachmentType.class, "type");
-            Object uploadId = handler.save(getUploadId(), category, type, uploadedFile.getFilename(), uploadedFile.getData());
+            FileAttachmentType type = getUplAttribute(FileAttachmentType.class, "type");
+            Object uploadId = handler.save(getUploadId(), category, type, uploadedFile.getFilename(),
+                    uploadedFile.getData());
             setUploadId(uploadId);
         }
     }
@@ -73,8 +76,8 @@ public class FileUploadView extends AbstractMultiControl {
         Object uploadId = getUploadId();
         if (uploadId != null) {
             String category = getUplAttribute(String.class, "category");
-            FileAttachmentType type =  getUplAttribute(FileAttachmentType.class, "type");
-            FileAttachmentInfo fileAttachmentInfo = handler.retrive(uploadId, category, type);           
+            FileAttachmentType type = getUplAttribute(FileAttachmentType.class, "type");
+            FileAttachmentInfo fileAttachmentInfo = handler.retrive(uploadId, category, type);
             setRequestAttribute(UnifyWebRequestAttributeConstants.FILEATTACHMENTS_INFO, fileAttachmentInfo);
             setCommandResultMapping(ResultMappingConstants.SHOW_ATTACHMENT);
         }
@@ -84,9 +87,15 @@ public class FileUploadView extends AbstractMultiControl {
     public void detach() throws UnifyException {
         // Detach
         Object uploadId = getUploadId();
+        Object parentId = null;
+        Object valueObject = getValueStore().getValueObject();
+        if (valueObject instanceof Entity) {
+            parentId = ((Entity) valueObject).getId();
+        }
+
         if (uploadId != null) {
-            String category = getUplAttribute(String.class, "category");
-            handler.delete(uploadId, category); 
+            handler.delete(uploadId, getUplAttribute(String.class, "category"), parentId,
+                    getUplAttribute(String.class, "parentCategory"), getUplAttribute(String.class, "parentFieldName"));
             setUploadId(null);
         }
     }
