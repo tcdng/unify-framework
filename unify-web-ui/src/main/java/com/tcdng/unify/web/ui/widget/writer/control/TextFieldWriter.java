@@ -86,6 +86,10 @@ public class TextFieldWriter extends AbstractControlWriter {
     protected String getFacadeStringValue(TextField textField) throws UnifyException {
         return textField.getStringValue();
     }
+
+    protected String getFacadeHiddenStringValue(TextField textField) throws UnifyException {
+        return textField.getStringValue();
+    }
     
     private void writeTextField(ResponseWriter writer, TextField textField, String type, ExtensionType extensionType)
             throws UnifyException {
@@ -104,7 +108,7 @@ public class TextFieldWriter extends AbstractControlWriter {
                 writeTagId(writer, textField);
                 writeTagName(writer, textField);
 
-                String value = textField.getStringValue();
+                String value = getFacadeHiddenStringValue(textField);
                 if (value != null) {
                     writer.write(" value=\"").writeWithHtmlEscape(value).write("\"");
                 }

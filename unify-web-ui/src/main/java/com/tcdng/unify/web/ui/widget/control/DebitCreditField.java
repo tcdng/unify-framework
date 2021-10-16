@@ -20,6 +20,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
+import com.tcdng.unify.core.constant.DrCrType;
 import com.tcdng.unify.web.constant.ExtensionType;
 
 /**
@@ -30,7 +31,9 @@ import com.tcdng.unify.web.constant.ExtensionType;
  */
 @Component("ui-debitcredit")
 @UplAttributes({
-    @UplAttribute(name = "acceptNegative", type = boolean.class, defaultVal = "false")})
+    @UplAttribute(name = "acceptNegative", type = boolean.class, defaultVal = "false"),
+    @UplAttribute(name = "negativeCredit", type = boolean.class, defaultVal = "true"),
+    @UplAttribute(name = "type", type = DrCrType.class, defaultVal = "optional")})
 public class DebitCreditField extends DecimalField {
 
     @Override
@@ -43,8 +46,20 @@ public class DebitCreditField extends DecimalField {
         return true;
     }
 
+    @Override
+    public boolean isUseFacadeFocus() throws UnifyException {
+        return true;
+    }
+
     public String getButtonId() throws UnifyException {
         return getPrefixedId("btn_");
     }
 
+    public boolean isNegativeCredit() throws UnifyException {
+        return getUplAttribute(boolean.class, "negativeCredit");
+    }
+
+    public DrCrType getType() throws UnifyException {
+        return getUplAttribute(DrCrType.class, "type");
+    }
 }

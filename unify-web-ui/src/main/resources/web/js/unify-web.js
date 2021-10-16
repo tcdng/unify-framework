@@ -2015,13 +2015,35 @@ ux.rigLinkGrid = function(rgp) {
 
 /** Debit Credit field */
 ux.rigDebitCreditField = function(rgp) {
-	const id = rgp.pId;
-	const dcf = _id(id);
-	dcf._options = rgp.pOptions;
-	dcf._btn = _id(rgp.pBtnId)
+	const evp = {};
+	evp.uId = rgp.pId;
+	evp.index = rgp.pIndex;
+	evp.prefixes = rgp.pPrefixes;
+	evp.options = rgp.pOptions;
+	evp.hid = _id(rgp.pId);
+	evp.fac = _id(rgp.pFacId);
+	evp.btn = _id(rgp.pBtnId);
 
-	var index = (dcf.value && dcf.value < 0) ? 1: 0;
-	dcf._btn.innerHTML = dcf._options[index];
+	evp.btn.innerHTML = evp.options[evp.index];
+	ux.addHdl(evp.btn, "click", ux.dcfOptionToggle, evp);	
+	ux.addHdl(evp.fac, "input", ux.dcfInput, evp);	
+}
+
+ux.dcfOptionToggle = function(uEv) {
+	const evp = uEv.evp;
+	evp.index = evp.index == 0 ? 1 : 0;
+	evp.btn.innerHTML = evp.options[evp.index];
+	ux.dcfInput(uEv);
+	ux.fireEvent(evp.fac, "change");
+}
+
+ux.dcfInput = function(uEv) {
+	const evp = uEv.evp;
+	var val = evp.fac.value;
+	if (val) {
+		val = evp.prefixes[evp.index] + val;
+	}	
+	evp.hid.value = val;
 }
 
 /** Money field */
