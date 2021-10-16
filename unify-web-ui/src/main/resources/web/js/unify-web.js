@@ -2013,6 +2013,17 @@ ux.rigLinkGrid = function(rgp) {
 	}
 }
 
+/** Debit Credit field */
+ux.rigDebitCreditField = function(rgp) {
+	const id = rgp.pId;
+	const dcf = _id(id);
+	dcf._options = rgp.pOptions;
+	dcf._btn = _id(rgp.pBtnId)
+
+	var index = (dcf.value && dcf.value < 0) ? 1: 0;
+	dcf._btn.innerHTML = dcf._options[index];
+}
+
 /** Money field */
 ux.rigMoneyField = function(rgp) {
 	const id = rgp.pId;

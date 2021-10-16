@@ -83,6 +83,10 @@ public class TextFieldWriter extends AbstractControlWriter {
         return "";
     }
 
+    protected String getFacadeStringValue(TextField textField) throws UnifyException {
+        return textField.getStringValue();
+    }
+    
     private void writeTextField(ResponseWriter writer, TextField textField, String type, ExtensionType extensionType)
             throws UnifyException {
         if (extensionType.isExtended()) {
@@ -127,6 +131,9 @@ public class TextFieldWriter extends AbstractControlWriter {
         if (extensionType.isExtended()) {
             if (extensionType.isFacade()) {
                 writeTagId(writer, textField.getFacadeId());
+                if (extensionType.isEdit()) {
+                    value = getFacadeStringValue(textField);
+                }
             } else {
                 writeTagId(writer, textField);
                 writeTagName(writer, textField);

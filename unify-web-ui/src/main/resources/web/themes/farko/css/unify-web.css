@@ -515,6 +515,12 @@ z-index:400;}
 /** Decimal field */
 .ui-decimal {text-align: right; padding-right: 4px;}
 
+/** Debit/Credit field*/
+.ui-debitcredit {}
+.ui-debitcredit .tread {text-align: right; padding-right: 4px;}
+.ui-debitcredit .tpbutton {height:28px; padding:6px 4px; background-color: #E8E8E8 !important; color:#484848;
+    border: 1px solid #C8C8C8; border-left: none; cursor: pointer; font-weight:bold;}
+    
 /** Download link grid */
 .ui-downloadlinkgrid {}
 .ui-downloadlinkgrid .dlgcatcap{display:block; background-color:#F0F0F0; font-size:18px;
