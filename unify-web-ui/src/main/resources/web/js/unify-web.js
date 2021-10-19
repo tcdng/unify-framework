@@ -4657,6 +4657,10 @@ ux.setTextRegexFormatting = function(prm) {
 				evp);
 		ux.addHdl(elem,  "keydown", ux.textInputKeydown,
 				evp);
+		if (prm.pCase) {
+			ux.addHdl(elem,  "keyup", ux.textInputKeyup,
+					evp);
+		}
 	}
 }
 
@@ -4664,21 +4668,12 @@ ux.textInputKeypress = function(uEv) {
 
 }
 
-ux.textInputKeydown = function(uEv) {
+ux.textInputKeyup = function(uEv) {
 	var trgObj = uEv.uTrg;
 	var evp = uEv.evp;
-
-	if (uEv.uChar && !trgObj.readOnly) {
+	if (!trgObj.readOnly) {
 		var pos = ux.getCaretPosition(trgObj);
 		var string = trgObj.value;
-		string = string.substring(0, pos.start) + uEv.uChar + string.substring(pos.end);
-
-		var formatRegex = evp.sFormatRegex;
-		if (formatRegex && !formatRegex.test(string)) {
-			uEv.uStop();
-			return;
-		}
-
 		if (evp.sTextCase) {
 			if ("upper" == evp.sTextCase) {
 				trgObj.value = string.toUpperCase();
@@ -4696,9 +4691,25 @@ ux.textInputKeydown = function(uEv) {
 			
 			var spos = pos.start + 1;
 			ux.setCaretPosition(trgObj, spos, spos);
-			uEv.uStop();
 			return;
 		}		
+	}
+}
+
+ux.textInputKeydown = function(uEv) {
+	var trgObj = uEv.uTrg;
+	var evp = uEv.evp;
+
+	if (uEv.uChar && !trgObj.readOnly) {
+		var pos = ux.getCaretPosition(trgObj);
+		var string = trgObj.value;
+		string = string.substring(0, pos.start) + uEv.uChar + string.substring(pos.end);
+
+		var formatRegex = evp.sFormatRegex;
+		if (formatRegex && !formatRegex.test(string)) {
+			uEv.uStop();
+			return;
+		}
 	}
 }
 
