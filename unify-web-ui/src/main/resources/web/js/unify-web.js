@@ -4689,8 +4689,7 @@ ux.textInputKeyup = function(uEv) {
 				trgObj.value = string.toLowerCase();
 			}
 			
-			var spos = pos.start + 1;
-			ux.setCaretPosition(trgObj, spos, spos);
+			ux.setCaretPosition(trgObj, pos.start, pos.start);
 			return;
 		}		
 	}
