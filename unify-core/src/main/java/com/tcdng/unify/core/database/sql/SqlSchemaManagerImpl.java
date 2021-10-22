@@ -702,9 +702,9 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 
         if (defaultChange) {
             logDebug(
-                    "Default Change: columnInfo.getDefaultVal() = {0}, sqlfieldInfo.getDefaultVal() = {1}, sqlDataTypePolicy.getAltDefault() = {2}...",
-                    columnInfo.getDefaultVal(), sqlfieldInfo.getDefaultVal(),
-                    sqlDataTypePolicy.getAltDefault(sqlfieldInfo.getFieldType()));
+                    "Default Change: fieldName = {0}, column = {1}, columnInfo.getDefaultVal() = {2}, sqlfieldInfo.getDefaultVal() = {3}, sqlDataTypePolicy.getAltDefault() = {4}...",
+                    sqlfieldInfo.getName(), sqlfieldInfo.getColumnName(), columnInfo.getDefaultVal(),
+                    sqlfieldInfo.getDefaultVal(), sqlDataTypePolicy.getAltDefault(sqlfieldInfo.getFieldType()));
         }
 
         boolean typeChange = !isSwappableSqlTypes(sqlDataTypePolicy.getSqlType(), columnInfo.getSqlType());
@@ -749,6 +749,10 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
     }
 
     private boolean isSwappableValues(String origin, String alternative) {
+        if (origin == null && "0".equals(alternative)) {
+            return true;
+        }
+
         Set<String> set = swappableValueSet.get(origin);
         return set != null && set.contains(alternative);
     }
