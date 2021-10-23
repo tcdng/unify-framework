@@ -1360,6 +1360,7 @@ ux.rigAssignmentBox = function(rgp) {
 			var evp = ux.newEvPrm(rgp);
 			evp.uRef = [ unassnSelId ];
 			evp.uPanels = [ rgp.pContId ];
+			unassnSel.dblevp = evp;
 			ux.addHdl(assnBtn, "click", ux.post, evp);
 
 			var btnDsbld =  !rgp.pEditable || unassnSel.options.length == 0;
@@ -2204,6 +2205,7 @@ ux.rigMultiSelect = function(rgp) {
 			const label = _id(ms._selectIds[i]);
 			label.innerHTML = ms._labels[i];
 			ux.addHdl(label, "click", ux.msSelectClick, evpi);
+			ux.addHdl(label, "dblclick", ux.msSelectDblClick, evpi);
 		}
 		
 		ms.setValue(rgp.pVal);
@@ -2216,6 +2218,16 @@ ux.msKeydownHit = function(ms) {
 		ux.msUnSelectAllOpt(ms);
 		ms.selectOpt(optIndex, true, false);
 		ms._start = optIndex;
+	}
+}
+
+ux.msSelectDblClick = function(uEv) {
+	ux.msSelectClick(uEv);
+	const evp = uEv.evp;
+	const ms = _id(evp.uId);
+	if (ms && ms.dblevp) {
+		uEv.evp = ms.dblevp;
+		ux.post(uEv);
 	}
 }
 
