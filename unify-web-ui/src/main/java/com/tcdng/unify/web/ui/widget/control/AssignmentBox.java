@@ -48,6 +48,7 @@ import com.tcdng.unify.web.ui.widget.Control;
         @UplAttribute(name = "unassignListDesc", type = String.class),
         @UplAttribute(name = "multiSelectStyle", type = String.class),
         @UplAttribute(name = "listRule", type = String.class),
+        @UplAttribute(name = "baseIdBinding", type = String.class),
         @UplAttribute(name = "allowAssignAll", type = boolean.class, defaultVal="true"),
         @UplAttribute(name = "showAssignedOnly", type = boolean.class) })
 public class AssignmentBox extends AbstractMultiControl {
@@ -209,6 +210,15 @@ public class AssignmentBox extends AbstractMultiControl {
         this.filterId2 = filterId2;
     }
 
+    public Long getAssignBaseId() throws UnifyException {
+        String baseIdBinding = getUplAttribute(String.class, "baseIdBinding");
+        if (!StringUtils.isBlank(baseIdBinding)) {
+            return getValue(Long.class, baseIdBinding);
+        }
+
+        return null;
+    }
+
     @Override
     protected void doOnPageConstruct() throws UnifyException {
         String filterList1 = getUplAttribute(String.class, "filterList1");
@@ -258,7 +268,7 @@ public class AssignmentBox extends AbstractMultiControl {
             sb.append(" listDescription:").append(listDesc);
         }
 
-        sb.append(" listParams:$l{assignedIdList listRule filterId1 filterId2} binding:").append(binding);
+        sb.append(" listParams:$l{assignBaseId assignedIdList listRule filterId1 filterId2} binding:").append(binding);
         return sb.toString();
     }
 }

@@ -31,19 +31,27 @@ import com.tcdng.unify.core.util.StringUtils;
  */
 public class AssignParams extends AbstractListParam {
 
-    private List<String> assignedIdList;
+    private final List<String> assignedIdList;
 
-    private String rule;
+    private final Long assignBaseId;
     
-    private String filterId1;
+    private final String rule;
+    
+    private final String filterId1;
 
-    private String filterId2;
+    private final String filterId2;
 
-    public AssignParams(List<String> assignedIdList, String rule, String filterId1, String filterId2) {
+    public AssignParams(Long assignBaseId, List<String> assignedIdList, String rule, String filterId1,
+            String filterId2) {
+        this.assignBaseId = assignBaseId;
         this.assignedIdList = assignedIdList;
         this.rule = rule;
         this.filterId1 = filterId1;
         this.filterId2 = filterId2;
+    }
+
+    public Long getAssignBaseId() {
+        return assignBaseId;
     }
 
     public List<String> getAssignedIdList() {
