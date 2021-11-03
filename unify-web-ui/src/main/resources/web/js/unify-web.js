@@ -1360,9 +1360,11 @@ ux.rigAssignmentBox = function(rgp) {
 			var evp = ux.newEvPrm(rgp);
 			evp.uRef = [ unassnSelId ];
 			evp.uPanels = [ rgp.pContId ];
-			unassnSel.dblevp = evp;
 			ux.addHdl(assnBtn, "click", ux.post, evp);
-
+			if (rgp.pEditable) {
+				unassnSel.dblevp = evp;
+			}
+			
 			var btnDsbld =  !rgp.pEditable || unassnSel.options.length == 0;
 			if (assnAll) {
 				var assnAllBtn = _id(assnAllBtnId);
