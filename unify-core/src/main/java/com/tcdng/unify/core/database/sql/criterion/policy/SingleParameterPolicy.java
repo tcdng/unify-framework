@@ -83,7 +83,7 @@ public abstract class SingleParameterPolicy extends AbstractSqlCriteriaPolicy {
             SqlEntityInfo sqlEntityInfo, Restriction restriction) throws UnifyException {
         SingleParamRestriction svc = (SingleParamRestriction) restriction;
         SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(svc.getFieldName());
-        final Object val = svc.getParam();
+        Object val = svc.getParam();
         if (val instanceof RestrictionField) {
             if (caseInsensitive) {
                 Object param = resolveParam(null, sqlEntityInfo.getListFieldInfo(((RestrictionField) val).getName()));
@@ -105,16 +105,15 @@ public abstract class SingleParameterPolicy extends AbstractSqlCriteriaPolicy {
         }
 
         if (sqlFieldInfo.isTransformed()) {
-            parameterInfoList.add(new SqlParameter(getSqlTypePolicy(sqlFieldInfo.getColumnType()), resolveParam(null,
-                    ((Transformer<Object, Object>) sqlFieldInfo.getTransformer()).forwardTransform(val))));
-        } else {
-            Object postOp = convertType(sqlFieldInfo, resolveParam(null, val));
-            if (caseInsensitive) {
-                postOp = postOp != null ? ((String) postOp).toLowerCase(): null;
-            }
-            
-            parameterInfoList.add(new SqlParameter(getSqlTypePolicy(sqlFieldInfo.getColumnType()), postOp));
+            val = ((Transformer<Object, Object>) sqlFieldInfo.getTransformer()).forwardTransform(val);
         }
+
+        Object postOp = convertType(sqlFieldInfo, resolveParam(null, val));
+        if (caseInsensitive) {
+            postOp = postOp != null ? ((String) postOp).toLowerCase(): null;
+        }
+        
+        parameterInfoList.add(new SqlParameter(getSqlTypePolicy(sqlFieldInfo.getColumnType()), postOp));
     }
 
     @Override
