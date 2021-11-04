@@ -19,6 +19,8 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
+import com.tcdng.unify.core.format.Formatter;
+import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ui.widget.AbstractTargetControl;
 
@@ -30,7 +32,8 @@ import com.tcdng.unify.web.ui.widget.AbstractTargetControl;
  */
 @Component("ui-link")
 @UplAttributes({ @UplAttribute(name = "preferredCaption", type = String.class),
-        @UplAttribute(name = "preferredCaptionBinding", type = String.class) })
+        @UplAttribute(name = "preferredCaptionBinding", type = String.class),
+        @UplAttribute(name = "formatter", type = Formatter.class) })
 public class Link extends AbstractTargetControl {
 
     @Override
@@ -41,7 +44,7 @@ public class Link extends AbstractTargetControl {
     public String getPreferredCaption() throws UnifyException {
         String preferredCaptionBinding = getUplAttribute(String.class, "preferredCaptionBinding");
         if (preferredCaptionBinding != null) {
-            return getStringValue(preferredCaptionBinding);
+            return DataUtils.convert(String.class, getValue(preferredCaptionBinding), getFormatter());
         }
 
         return getUplAttribute(String.class, "preferredCaption");
@@ -50,5 +53,10 @@ public class Link extends AbstractTargetControl {
     public boolean isUsePreferredCaption() throws UnifyException {
         return StringUtils.isNotBlank(getUplAttribute(String.class, "preferredCaption"))
                 || StringUtils.isNotBlank(getUplAttribute(String.class, "preferredCaptionBinding"));
+    }
+
+    @SuppressWarnings("unchecked")
+    public Formatter<Object> getFormatter() throws UnifyException {
+        return (Formatter<Object>) getUplAttribute(Formatter.class, "formatter");
     }
 }
