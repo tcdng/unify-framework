@@ -17,6 +17,7 @@ package com.tcdng.unify.core.constant;
 
 import com.tcdng.unify.core.annotation.StaticList;
 import com.tcdng.unify.core.util.EnumUtils;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * File attachment type.
@@ -24,14 +25,19 @@ import com.tcdng.unify.core.util.EnumUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-@StaticList(name = "fileattachmenttypelist", description="$m{staticlist.fileattachmenttypelist}")
+@StaticList(name = "fileattachmenttypelist", description = "$m{staticlist.fileattachmenttypelist}")
 public enum FileAttachmentType implements EnumConst {
 
     AUDIO("AUD", "audio/*,audio/mp3", MimeType.AUDIO),
     CSV("CSV", ".csv", MimeType.TEXT_CSV),
     EXCEL("XLS", ".xls,.xlsx", MimeType.APPLICATION_EXCEL),
     IMAGE("IMG", "image/*", MimeType.IMAGE),
+    IMAGE_PNG("PNG", ".png", MimeType.IMAGE_PNG),
+    IMAGE_JPG("JPG", ".jpg,.jpeg", MimeType.IMAGE_JPG),
+    IMAGE_GIF("GIF", ".gif", MimeType.IMAGE_GIF),
+    IMAGE_BMP("BMP", ".bmp", MimeType.IMAGE_BMP),
     PDF("PDF", ".pdf", MimeType.APPLICATION_PDF),
+    XML("XML", ".xml", MimeType.APPLICATION_XML),
     TEXT("TXT", "text/*", MimeType.TEXT),
     VIDEO("VID", "video/*,video/mp4", MimeType.VIDEO),
     WILDCARD("WILD", "", MimeType.APPLICATION_OCTETSTREAM),
@@ -65,6 +71,22 @@ public enum FileAttachmentType implements EnumConst {
 
     public MimeType mimeType() {
         return mimeType;
+    }
+
+    public static FileAttachmentType detectFromFileName(String fileName) {
+        if (!StringUtils.isBlank(fileName)) {
+            int index = fileName.indexOf('.');
+            if (index > 0) {
+                String ext = fileName.substring(index).toLowerCase();
+                for (FileAttachmentType type : FileAttachmentType.values()) {
+                    if (type.extensions.indexOf(ext) >= 0) {
+                        return type;
+                    }
+                }
+            }
+        }
+
+        return WILDCARD;
     }
 
     public static FileAttachmentType fromCode(String code) {

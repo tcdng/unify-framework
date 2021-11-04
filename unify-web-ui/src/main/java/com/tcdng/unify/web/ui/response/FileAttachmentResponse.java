@@ -17,6 +17,7 @@ package com.tcdng.unify.web.ui.response;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.constant.FileAttachmentType;
 import com.tcdng.unify.web.constant.UnifyWebRequestAttributeConstants;
 import com.tcdng.unify.web.ui.AbstractOpenWindowPageControllerResponse;
 import com.tcdng.unify.web.ui.widget.data.FileAttachmentInfo;
@@ -39,17 +40,21 @@ public class FileAttachmentResponse extends AbstractOpenWindowPageControllerResp
             FileAttachmentsInfo fileAttachmentsInfo =
                     (FileAttachmentsInfo) resource;
             fileAttachmentInfo = fileAttachmentsInfo.getSelectedAttachmentInfo();
-            String resourceName = fileAttachmentInfo.getFilename();
+            String fileName = fileAttachmentInfo.getFilename();
             if (fileAttachmentsInfo.isViewTimestamped()) {
-                resourceName = getTimestampedResourceName(fileAttachmentInfo.getFilename());
+                fileName = getTimestampedResourceName(fileAttachmentInfo.getFilename());
             }
-            return new WindowResourceInfo(fileAttachmentsInfo, "/resource/fileattachment", resourceName,
-                    fileAttachmentInfo.getType().mimeType().template(), false);
+            
+            final FileAttachmentType type = FileAttachmentType.detectFromFileName(fileName);
+            return new WindowResourceInfo(fileAttachmentsInfo, "/resource/fileattachment", fileName,
+                    type.mimeType().template(), false);
         }
 
         fileAttachmentInfo = (FileAttachmentInfo) resource;
-        return new WindowResourceInfo(fileAttachmentInfo, "/resource/fileattachment", fileAttachmentInfo.getFilename(),
-                fileAttachmentInfo.getType().mimeType().template(), false);
+        String fileName = fileAttachmentInfo.getFilename();
+        final FileAttachmentType type = FileAttachmentType.detectFromFileName(fileName);
+        return new WindowResourceInfo(fileAttachmentInfo, "/resource/fileattachment", fileName,
+                type.mimeType().template(), false);
     }
 
 }
