@@ -55,7 +55,7 @@ const UNIFY_KEY_DELETE = '46';
 
 const UNIFY_POST_COMMIT_QUEUE = true; // Set to false to switch off commit queuing
 const UNIFY_POST_COMMIT_QUEUE_REPEAT_DELAY = 20; // 20 milliseconds
-const UNIFY_POST_COMMIT_QUEUE_FIRE_DELAY = 50; // 50 milliseconds
+const UNIFY_POST_COMMIT_QUEUE_FIRE_DELAY = 80; // 80 milliseconds
 ux.postCommitQueue = [];
 ux.postCommitExecuting = false;
 
