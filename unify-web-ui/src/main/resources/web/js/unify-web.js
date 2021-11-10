@@ -54,7 +54,8 @@ const UNIFY_KEY_TAB = '9';
 const UNIFY_KEY_DELETE = '46';
 
 const UNIFY_POST_COMMIT_QUEUE = true; // Set to false to switch off commit queuing
-const UNIFY_POST_COMMIT_QUEUE_DELAY = 20; // 20 milliseconds
+const UNIFY_POST_COMMIT_QUEUE_REPEAT_DELAY = 20; // 20 milliseconds
+const UNIFY_POST_COMMIT_QUEUE_FIRE_DELAY = 50; // 50 milliseconds
 ux.postCommitQueue = [];
 ux.postCommitExecuting = false;
 
@@ -679,18 +680,19 @@ ux.postCommit = function(evp) {
 }
 
 ux.postCommitProcessor = function() {
-   setTimeout(function() {
+   setTimeout(async function() {
 	   if (!ux.postCommitExecuting) {
 		   const evp = ux.postCommitQueue.pop();
 		   if(evp) {
 			   ux.postCommitExecuting = true;
+			   await ux.sleep(UNIFY_POST_COMMIT_QUEUE_FIRE_DELAY);
 			   ux.setHiddenValues(evp.uRef, evp.uVal);
 			   ux.ajaxCallWithJSONResp(evp.uTrg, evp);
 		   }
 	   }
 
 	   ux.postCommitProcessor();
-	  }, UNIFY_POST_COMMIT_QUEUE_DELAY);
+	  }, UNIFY_POST_COMMIT_QUEUE_REPEAT_DELAY);
 }
 
 ux.openWindow = function(uEv) {
@@ -5518,6 +5520,11 @@ ux.documentHidePopup = function(uEv) {
 }
 
 ux.addHdl(document, "click", ux.documentHidePopup, {});
+
+/** Delays */
+ux.sleep = function (mill) {
+	  return new Promise(resolve => setTimeout(resolve, mill));
+}
 
 /** Page resets */
 ux.registerPageReset = function(id, resetFunc) {
