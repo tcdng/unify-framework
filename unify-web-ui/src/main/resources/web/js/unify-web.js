@@ -53,6 +53,11 @@ const UNIFY_KEY_BACKSPACE = '8';
 const UNIFY_KEY_TAB = '9';
 const UNIFY_KEY_DELETE = '46';
 
+const UNIFY_POST_COMMIT_QUEUE = true; // Set to false to switch off commit queuing
+const UNIFY_POST_COMMIT_QUEUE_DELAY = 20; // 20 milliseconds
+ux.postCommitQueue = [];
+ux.postCommitExecuting = false;
+
 ux.docPath = "";
 ux.docPopupBaseId = null;
 ux.docPopupId = null;
@@ -534,6 +539,7 @@ ux.ajaxCall = function(ajaxPrms) {
 				if (ajaxPrms.uIsDebounce) {
 					 ux.clearDebounce(ajaxPrms.uDebounced);
 				}				
+				ux.postCommitExecuting = false;
 			}
 		};
 		
@@ -546,6 +552,7 @@ ux.ajaxCall = function(ajaxPrms) {
 		if (ajaxPrms.uIsDebounce) {
 			 ux.clearDebounce(ajaxPrms.uDebounced);
 		}				
+		ux.postCommitExecuting = false;
 
 		if (ajaxPrms.uSync) {
 			ux.submitting = false;
@@ -663,8 +670,27 @@ ux.postCommand = function(uEv) {
 
 ux.postCommit = function(evp) {
 	evp.uBusy = true;
-	ux.setHiddenValues(evp.uRef, evp.uVal);
-	ux.ajaxCallWithJSONResp(evp.uTrg, evp);
+	if (UNIFY_POST_COMMIT_QUEUE) {
+		ux.postCommitQueue.push(evp);
+	} else {
+		ux.setHiddenValues(evp.uRef, evp.uVal);
+		ux.ajaxCallWithJSONResp(evp.uTrg, evp);
+	}
+}
+
+ux.postCommitProcessor = function() {
+   setTimeout(function() {
+	   if (!ux.postCommitExecuting) {
+		   const evp = ux.postCommitQueue.pop();
+		   if(evp) {
+			   ux.postCommitExecuting = true;
+			   ux.setHiddenValues(evp.uRef, evp.uVal);
+			   ux.ajaxCallWithJSONResp(evp.uTrg, evp);
+		   }
+	   }
+
+	   ux.postCommitProcessor();
+	  }, UNIFY_POST_COMMIT_QUEUE_DELAY);
 }
 
 ux.openWindow = function(uEv) {
@@ -4993,6 +5019,9 @@ ux.init = function() {
 	    return true; // Do default
 	}
 
+	if (UNIFY_POST_COMMIT_QUEUE) {
+		ux.postCommitProcessor();
+	}
 }
 
 ux.setHintTimeout = function(millisec) {
