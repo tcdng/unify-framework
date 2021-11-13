@@ -222,36 +222,38 @@ public final class FilterUtils {
             .unmodifiableSet(new LinkedHashSet<FilterConditionType>(Arrays.asList(FilterConditionType.EQUALS,
                     FilterConditionType.IEQUALS, FilterConditionType.BEGINS_WITH, FilterConditionType.IBEGINS_WITH,
                     FilterConditionType.ENDS_WITH, FilterConditionType.IENDS_WITH, FilterConditionType.LIKE,
-                    FilterConditionType.ILIKE, FilterConditionType.AMONGST, FilterConditionType.NOT_EQUALS,
-                    FilterConditionType.INOT_EQUALS, FilterConditionType.NOT_BEGIN_WITH,
-                    FilterConditionType.NOT_END_WITH, FilterConditionType.NOT_LIKE, FilterConditionType.NOT_AMONGST,
-                    FilterConditionType.IS_NULL, FilterConditionType.IS_NOT_NULL)));
+                    FilterConditionType.ILIKE, FilterConditionType.BETWEEN, FilterConditionType.AMONGST,
+                    FilterConditionType.NOT_EQUALS, FilterConditionType.INOT_EQUALS, FilterConditionType.NOT_BEGIN_WITH,
+                    FilterConditionType.NOT_END_WITH, FilterConditionType.NOT_LIKE, FilterConditionType.NOT_BETWEEN,
+                    FilterConditionType.NOT_AMONGST, FilterConditionType.IS_NULL, FilterConditionType.IS_NOT_NULL)));
 
     private static final Set<FilterConditionType> stringConditionTypes_field = Collections
             .unmodifiableSet(new LinkedHashSet<FilterConditionType>(Arrays.asList(FilterConditionType.EQUALS,
                     FilterConditionType.IEQUALS, FilterConditionType.BEGINS_WITH, FilterConditionType.IBEGINS_WITH,
                     FilterConditionType.ENDS_WITH, FilterConditionType.IENDS_WITH, FilterConditionType.LIKE,
-                    FilterConditionType.ILIKE, FilterConditionType.AMONGST, FilterConditionType.NOT_EQUALS,
-                    FilterConditionType.INOT_EQUALS, FilterConditionType.NOT_BEGIN_WITH,
-                    FilterConditionType.NOT_END_WITH, FilterConditionType.NOT_LIKE, FilterConditionType.NOT_AMONGST,
-                    FilterConditionType.IS_NULL, FilterConditionType.IS_NOT_NULL, FilterConditionType.EQUALS_FIELD,
-                    FilterConditionType.BEGINS_WITH_FIELD, FilterConditionType.ENDS_WITH_FIELD,
-                    FilterConditionType.LIKE_FIELD, FilterConditionType.NOT_EQUALS_FIELD,
+                    FilterConditionType.ILIKE, FilterConditionType.BETWEEN, FilterConditionType.AMONGST,
+                    FilterConditionType.NOT_EQUALS, FilterConditionType.INOT_EQUALS, FilterConditionType.NOT_BEGIN_WITH,
+                    FilterConditionType.NOT_END_WITH, FilterConditionType.NOT_LIKE, FilterConditionType.NOT_BETWEEN,
+                    FilterConditionType.NOT_AMONGST, FilterConditionType.IS_NULL, FilterConditionType.IS_NOT_NULL,
+                    FilterConditionType.EQUALS_FIELD, FilterConditionType.BEGINS_WITH_FIELD,
+                    FilterConditionType.ENDS_WITH_FIELD, FilterConditionType.LIKE_FIELD,
+                    FilterConditionType.BETWEEN_FIELD, FilterConditionType.NOT_EQUALS_FIELD,
                     FilterConditionType.NOT_BEGIN_WITH_FIELD, FilterConditionType.NOT_END_WITH_FIELD,
-                    FilterConditionType.NOT_LIKE_FIELD)));
+                    FilterConditionType.NOT_LIKE_FIELD, FilterConditionType.NOT_BETWEEN_FIELD)));
 
     private static final Set<FilterConditionType> stringConditionTypes_param = Collections
             .unmodifiableSet(new LinkedHashSet<FilterConditionType>(Arrays.asList(FilterConditionType.EQUALS,
                     FilterConditionType.IEQUALS, FilterConditionType.BEGINS_WITH, FilterConditionType.IBEGINS_WITH,
                     FilterConditionType.ENDS_WITH, FilterConditionType.IENDS_WITH, FilterConditionType.LIKE,
-                    FilterConditionType.ILIKE, FilterConditionType.AMONGST, FilterConditionType.NOT_EQUALS,
-                    FilterConditionType.INOT_EQUALS, FilterConditionType.NOT_BEGIN_WITH,
-                    FilterConditionType.NOT_END_WITH, FilterConditionType.NOT_LIKE, FilterConditionType.NOT_AMONGST,
-                    FilterConditionType.IS_NULL, FilterConditionType.IS_NOT_NULL, FilterConditionType.EQUALS_PARAM,
-                    FilterConditionType.BEGINS_WITH_PARAM, FilterConditionType.ENDS_WITH_PARAM,
-                    FilterConditionType.LIKE_PARAM, FilterConditionType.NOT_EQUALS_PARAM,
+                    FilterConditionType.ILIKE, FilterConditionType.BETWEEN, FilterConditionType.AMONGST,
+                    FilterConditionType.NOT_EQUALS, FilterConditionType.INOT_EQUALS, FilterConditionType.NOT_BEGIN_WITH,
+                    FilterConditionType.NOT_END_WITH, FilterConditionType.NOT_LIKE, FilterConditionType.NOT_BETWEEN,
+                    FilterConditionType.NOT_AMONGST, FilterConditionType.IS_NULL, FilterConditionType.IS_NOT_NULL,
+                    FilterConditionType.EQUALS_PARAM, FilterConditionType.BEGINS_WITH_PARAM,
+                    FilterConditionType.ENDS_WITH_PARAM, FilterConditionType.LIKE_PARAM,
+                    FilterConditionType.BETWEEN_PARAM, FilterConditionType.NOT_EQUALS_PARAM,
                     FilterConditionType.NOT_BEGIN_WITH_PARAM, FilterConditionType.NOT_END_WITH_PARAM,
-                    FilterConditionType.NOT_LIKE_PARAM)));
+                    FilterConditionType.NOT_LIKE_PARAM, FilterConditionType.NOT_BETWEEN_PARAM)));
 
     private static final Set<FilterConditionType> enumConstConditionTypes = Collections
             .unmodifiableSet(new LinkedHashSet<FilterConditionType>(Arrays.asList(FilterConditionType.EQUALS,
