@@ -489,6 +489,72 @@ public class DatabaseQueryByValueTest extends AbstractUnifyComponentTest {
     }
 
     @Test
+    public void testQueryBetweenStrings() throws Exception {
+        tm.beginTransaction();
+        try {
+            db.create(new Product("bandana", "bandana", 20.00, 25.25));
+            db.create(new Product("hat", "Red Hat", 60.00, 60.00));
+            db.create(new Product("specs", "Blue Spectacles", 45.00, 45.00));
+            db.create(new Product("pants", "Wonder pants", 49.50, 17.45));
+
+            List<Product> prodList = db
+                    .findAll(Query.of(Product.class).addBetween("name", "bandana", "pants").addOrder("name"));
+            assertNotNull(prodList);
+            assertEquals(3, prodList.size());
+
+            Product product = prodList.get(0);
+            assertEquals("bandana", product.getName());
+            assertEquals("bandana", product.getDescription());
+            assertEquals(Double.valueOf(20.00), product.getCostPrice());
+            assertEquals(Double.valueOf(25.25), product.getSalesPrice());
+
+            product = prodList.get(1);
+            assertEquals("hat", product.getName());
+            assertEquals("Red Hat", product.getDescription());
+            assertEquals(Double.valueOf(60.00), product.getCostPrice());
+            assertEquals(Double.valueOf(60.00), product.getSalesPrice());
+
+            product = prodList.get(2);
+            assertEquals("pants", product.getName());
+            assertEquals("Wonder pants", product.getDescription());
+            assertEquals(Double.valueOf(49.50), product.getCostPrice());
+            assertEquals(Double.valueOf(17.45), product.getSalesPrice());
+        } catch (Exception e) {
+            tm.setRollback();
+            throw e;
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
+    public void testQueryNotBetweenStrings() throws Exception {
+        tm.beginTransaction();
+        try {
+            db.create(new Product("bandana", "bandana", 20.00, 25.25));
+            db.create(new Product("hat", "Red Hat", 60.00, 60.00));
+            db.create(new Product("specs", "Blue Spectacles", 45.00, 45.00));
+            db.create(new Product("pants", "Wonder pants", 49.50, 17.45));
+
+            List<Product> prodList =
+                    db.findAll(Query.of(Product.class).addNotBetween("name", "bandana", "pants").addOrder("name"));
+            assertNotNull(prodList);
+            assertEquals(1, prodList.size());
+
+            Product product = prodList.get(0);
+            assertEquals("specs", product.getName());
+            assertEquals("Blue Spectacles", product.getDescription());
+            assertEquals(Double.valueOf(45.00), product.getCostPrice());
+            assertEquals(Double.valueOf(45.00), product.getSalesPrice());
+        } catch (Exception e) {
+            tm.setRollback();
+            throw e;
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
     public void testQueryIsNull() throws Exception {
         tm.beginTransaction();
         try {
