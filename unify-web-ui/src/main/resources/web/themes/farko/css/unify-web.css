@@ -512,6 +512,15 @@ z-index:400;}
 .ui-date .ccurrent {width: 18px; height: 20px; margin: 2px; border: solid 1px #E0E0C0;
 	background-color: #80C080; color:white; cursor: pointer; text-align: right;}
 
+.ui-yearend .cdisplay {
+    width: calc(100% - 52px);
+    width: -webkit-calc(100% - 52px);
+    height: 15px;
+    margin: 2px;
+    text-align: center;
+    font-size: 8pt;
+}
+
 /** Decimal field */
 .ui-decimal {text-align: right; padding-right: 4px;}
 

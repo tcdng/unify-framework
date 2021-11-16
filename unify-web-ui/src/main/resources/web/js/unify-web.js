@@ -1535,6 +1535,8 @@ ux.rigDateField = function(rgp) {
 		df._dayClass = rgp.pDayClass;
 		df._currClass = rgp.pCurrClass;
 		df._todayClass = rgp.pTodayClass;
+		df._type = rgp.pType;
+		df._standard = rgp.pType == "standard";
 		df._pop = rgp.pEnabled;
 		
 		df.setValue = function(val) {
@@ -1582,7 +1584,11 @@ ux.rigDateField = function(rgp) {
 				const year = this._scrollYear;
 
 				// Display month year on header
-				this._header.innerHTML = this._longMonthNm[month] + "&nbsp;" + year;
+				if (this._standard) {
+					this._header.innerHTML = this._longMonthNm[month] + "&nbsp;" + year;
+				} else {
+					this._header.innerHTML = this._longMonthNm[month];
+				}
 
 				// Initialize variables and generate calendar HTML
 				var firstDay = new Date(year, month, 1).getDay();
@@ -1605,20 +1611,51 @@ ux.rigDateField = function(rgp) {
 				}
 
 				var calendarHtml = "<table class=\"ctable\">";
-				calendarHtml += "<tr>";
-				for (var i = 0; i < 7; i++) {
-					calendarHtml += "<th>";
-					calendarHtml += this._shortDayNm[i];
-					calendarHtml += "</th>";
-				}
-				calendarHtml += "</tr>";
-				while (!done) {
+				if (this._standard) {
 					calendarHtml += "<tr>";
 					for (var i = 0; i < 7; i++) {
-						calendarHtml += "<td>";
-						if ((rowCount == 0) && (i < firstDay)) {
-							calendarHtml += "&nbsp;";
-						} else {
+						calendarHtml += "<th>";
+						calendarHtml += this._shortDayNm[i];
+						calendarHtml += "</th>";
+					}
+					calendarHtml += "</tr>";
+					while (!done) {
+						calendarHtml += "<tr>";
+						for (var i = 0; i < 7; i++) {
+							calendarHtml += "<td>";
+							if ((rowCount == 0) && (i < firstDay)) {
+								calendarHtml += "&nbsp;";
+							} else {
+								if (dayCount >= daysInMonth) {
+									done = true;
+								}
+								if (dayCount <= daysInMonth) {
+									var dayClass = this._dayClass;
+									if (dayCount == currentDay) {
+										dayClass = this._currClass;
+									}
+
+									if (dayCount == today) {
+										dayClass = this._todayClass;
+									}
+									calendarHtml += "<span class=\"" + dayClass
+											+ "\" onclick=\"ux.dfDayHandler('" + this.id
+											+ "'," + dayCount + ");\">" + dayCount + "</span>";
+									dayCount++;
+								} else {
+									calendarHtml += "&nbsp;";
+								}
+							}
+							calendarHtml += "</td>";
+						}
+						calendarHtml += "</tr>";
+						rowCount++;
+					}
+				} else {
+					while (!done) {
+						calendarHtml += "<tr>";
+						for (var i = 0; i < 7; i++) {
+							calendarHtml += "<td>";
 							if (dayCount >= daysInMonth) {
 								done = true;
 							}
@@ -1628,9 +1665,6 @@ ux.rigDateField = function(rgp) {
 									dayClass = this._currClass;
 								}
 
-								if (dayCount == today) {
-									dayClass = this._todayClass;
-								}
 								calendarHtml += "<span class=\"" + dayClass
 										+ "\" onclick=\"ux.dfDayHandler('" + this.id
 										+ "'," + dayCount + ");\">" + dayCount + "</span>";
@@ -1638,11 +1672,11 @@ ux.rigDateField = function(rgp) {
 							} else {
 								calendarHtml += "&nbsp;";
 							}
+							calendarHtml += "</td>";
 						}
-						calendarHtml += "</td>";
+						calendarHtml += "</tr>";
+						rowCount++;
 					}
-					calendarHtml += "</tr>";
-					rowCount++;
 				}
 				calendarHtml += "</table>";
 				this._calendar.innerHTML = calendarHtml;
@@ -1688,15 +1722,19 @@ ux.rigDateField = function(rgp) {
 		};
 		
 		if (df._pop) {
-			df.setupScroll("decy_", "year_", -1);
-			df.setupScroll("incy_", "year_", 1);
+			if (df._standard) {
+				df.setupScroll("decy_", "year_", -1);
+				df.setupScroll("incy_", "year_", 1);
+			}
 			df.setupScroll("decm_", "mon_", -1);
 			df.setupScroll("incm_", "mon_", 1);
 			ux.popupWireClear(rgp, "btnc_" + id, [ id ]);
 		}
 
-		const evp = {uId:id};
-		ux.addHdl(_id("btnt_" + id), "click", ux.dfTodayHandler, evp);
+		if (df._standard) {
+			const evp = {uId:id};
+			ux.addHdl(_id("btnt_" + id), "click", ux.dfTodayHandler, evp);
+		}
 
 		df.setDay(rgp.pDay);
 		df.setMonth(rgp.pMonth);

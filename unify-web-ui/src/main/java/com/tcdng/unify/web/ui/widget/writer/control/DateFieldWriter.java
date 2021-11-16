@@ -24,6 +24,7 @@ import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.control.AbstractPopupTextField;
 import com.tcdng.unify.web.ui.widget.control.DateField;
+import com.tcdng.unify.web.ui.widget.control.DateFieldType;
 
 /**
  * Date field writer.
@@ -39,20 +40,27 @@ public class DateFieldWriter extends AbstractPopupTextFieldWriter {
     protected void writePopupContent(ResponseWriter writer, AbstractPopupTextField popupTextField)
             throws UnifyException {
         DateField dateField = (DateField) popupTextField;
+        final DateFieldType type = dateField.getType();
         writer.write("<div");
         writeTagId(writer, dateField.getPrefixedId("cal_"));
         writeTagStyleClass(writer, "dborder");
         writer.write(">");
 
         writer.write("<div class=\"cnav\">");
-        writeButton(writer, dateField.getPrefixedId("decy_"), "cscroll", null, "<<");
+        if (type.isStandard()) {
+            writeButton(writer, dateField.getPrefixedId("decy_"), "cscroll", null, "<<");
+        }
+        
         writeButton(writer, dateField.getPrefixedId("decm_"), "cscroll", null, "<");
         writer.write("<span");
         writeTagId(writer, dateField.getPrefixedId("disp_"));
         writeTagStyleClass(writer, "cdisplay");
         writer.write("></span>");
         writeButton(writer, dateField.getPrefixedId("incm_"), "cscroll", null, ">");
-        writeButton(writer, dateField.getPrefixedId("incy_"), "cscroll", null, ">>");
+        if (type.isStandard()) {
+            writeButton(writer, dateField.getPrefixedId("incy_"), "cscroll", null, ">>");
+        }
+        
         writer.write("</div>");
         writer.write("<div");
         writeTagId(writer, dateField.getPrefixedId("cont_"));
@@ -61,8 +69,11 @@ public class DateFieldWriter extends AbstractPopupTextFieldWriter {
         writer.write("</div>");
 
         writer.write("<div class=\"ccontrol\">");
-        writeButton(writer, dateField.getPrefixedId("btnt_"), "cactbutton", "float:left;",
-                getSessionMessage("button.today"));
+        if (type.isStandard()) {
+            writeButton(writer, dateField.getPrefixedId("btnt_"), "cactbutton", "float:left;",
+                    getSessionMessage("button.today"));
+        }
+        
         writeButton(writer, dateField.getPrefixedId("btnc_"), "cactbutton", "float:right;",
                 getSessionMessage("button.clear"));
         writer.write("</div>");
@@ -82,6 +93,7 @@ public class DateFieldWriter extends AbstractPopupTextFieldWriter {
         writer.writeParam("pShortDayNm", dateField.getShortDayList());
         writer.writeParam("pLongMonthNm", dateField.getLongMonthList());
         writer.writeParam("pPattern", dateField.getPattern());
+        writer.writeParam("pType", dateField.getType().toString().toLowerCase());
         Date date = dateField.getValue(Date.class);
         if (date != null) {
             Calendar cal = Calendar.getInstance();
