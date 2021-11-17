@@ -16,9 +16,7 @@
 package com.tcdng.unify.web.ui.widget.writer.control;
 
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.web.constant.ExtensionType;
-import com.tcdng.unify.web.font.FontSymbolManager;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.Widget;
 import com.tcdng.unify.web.ui.widget.control.AbstractPopupTextField;
@@ -30,13 +28,6 @@ import com.tcdng.unify.web.ui.widget.control.AbstractPopupTextField;
  * @since 1.0
  */
 public abstract class AbstractPopupTextFieldWriter extends TextFieldWriter {
-
-    @Configurable
-    private FontSymbolManager fontSymbolManager;
-
-    public void setFontSymbolManager(FontSymbolManager fontSymbolManager) {
-        this.fontSymbolManager = fontSymbolManager;
-    }
 
     @Override
     protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
@@ -88,8 +79,8 @@ public abstract class AbstractPopupTextFieldWriter extends TextFieldWriter {
         }
         writer.write(">");
 
-        if (fontSymbolManager != null) {
-            writer.write(fontSymbolManager.resolveSymbolHtmlHexCode(popupTextField.getButtonSymbol()));
+        if (isWithFontSymbolManager()) {
+            writer.write(resolveSymbolHtmlHexCode(popupTextField.getButtonSymbol()));
         } else {
             writer.write("<img src=\"");
             writer.writeFileImageContextURL(popupTextField.getButtonImageSrc());

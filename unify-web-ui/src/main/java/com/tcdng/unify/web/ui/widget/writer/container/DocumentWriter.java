@@ -22,7 +22,6 @@ import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ControllerPathParts;
-import com.tcdng.unify.web.font.FontSymbolManager;
 import com.tcdng.unify.web.ui.PagePathInfoRepository;
 import com.tcdng.unify.web.ui.widget.DocumentLayout;
 import com.tcdng.unify.web.ui.widget.Panel;
@@ -48,19 +47,12 @@ public class DocumentWriter extends AbstractPageWriter {
     @Configurable
     private BasicDocumentResources resources;
 
-    @Configurable
-    private FontSymbolManager fontSymbolManager;
-
     public void setPathInfoRepository(PagePathInfoRepository pathInfoRepository) {
         this.pathInfoRepository = pathInfoRepository;
     }
 
     public void setResources(BasicDocumentResources resources) {
         this.resources = resources;
-    }
-
-    public void setFontSymbolManager(FontSymbolManager fontSymbolManager) {
-        this.fontSymbolManager = fontSymbolManager;
     }
 
     @Override
@@ -223,11 +215,11 @@ public class DocumentWriter extends AbstractPageWriter {
         writeImageBeforeCss(writer, " .g_cbd", "$t{images/unchecked_gray.png}");
 
         // Write font symbols
-        if (fontSymbolManager != null) {
+        if (isWithFontSymbolManager()) {
             StringBuilder fsb = new StringBuilder();
             int i = 0;
             fsb.append(".g_fsm {font-family: ").append(document.getUplAttribute(String.class, "fontFamily"));
-            for (String fontResource : fontSymbolManager.getFontResources()) {
+            for (String fontResource : getFontResources()) {
                 fsb.append(", 'FontSymbolMngr").append(i).append('\'');
 
                 writer.write("@font-face {font-family: 'FontSymbolMngr").write(i).write("'; src: url(");
