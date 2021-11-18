@@ -48,8 +48,8 @@ public abstract class AbstractJsonPageControllerResponse extends AbstractPageCon
         PageRequestContextUtil reqUtils = getRequestContextUtil();
         doGenerate(writer, page);
 
-        if (reqUtils.isFocusOnWidget()) {
-            writer.write(",\"focusOnWidget\":\"").write(reqUtils.getFocusOnWidgetId()).write("\"");
+        if (reqUtils.isFocusOnWidgetOrDefault()) {
+            writer.write(",\"focusOnWidget\":\"").write(reqUtils.getFocusOnWidgetIdOrDefault()).write("\"");
             reqUtils.clearFocusOnWidget();
         }
 

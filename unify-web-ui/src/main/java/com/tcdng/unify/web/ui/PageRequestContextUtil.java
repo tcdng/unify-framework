@@ -462,6 +462,34 @@ public interface PageRequestContextUtil extends UnifyComponent {
     void clearHintUser() throws UnifyException;
 
     /**
+     * Sets the ID of default widget to focus on.
+     * 
+     * @param id
+     *            the widget ID to set
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void setDefaultFocusOnWidgetId(String id) throws UnifyException;
+
+    /**
+     * Checks if default widget focus is associated with this request.
+     * 
+     * @return a true value if widget focus is associated otherwise false.
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean isFocusOnWidgetOrDefault() throws UnifyException;
+
+    /**
+     * Gets the ID of widget to focus on.
+     * 
+     * @return the widget ID otherwise null
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getFocusOnWidgetIdOrDefault() throws UnifyException;
+
+    /**
      * Sets the ID of widget to focus on. Accepts only widget ID supplied on first
      * call for request. All subsequent calls are ignored.
      * 

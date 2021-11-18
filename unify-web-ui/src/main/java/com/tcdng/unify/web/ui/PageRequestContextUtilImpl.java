@@ -86,6 +86,8 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
 
     private static final String FOCUS_ON_WIDGET = "FOCUS_ON_WIDGET";
 
+    private static final String DEFAULT_FOCUS_ON_WIDGET = "PAGEREQUEST.DEFAULT_FOCUS_ON_WIDGET";
+
     private static final String CONTENT_SCROLL_RESET = "CONTENT_SCROLL_RESET";
 
     private static final String DEBOUNCE_WIDGET = "DEBOUNCE_WIDGET";
@@ -416,6 +418,25 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
     @Override
     public String getFocusOnWidgetId() throws UnifyException {
         return (String) getRequestAttribute(FOCUS_ON_WIDGET);
+    }
+
+    @Override
+    public void setDefaultFocusOnWidgetId(String id) throws UnifyException {
+        setSessionAttribute(DEFAULT_FOCUS_ON_WIDGET, id);        
+    }
+
+    @Override
+    public boolean isFocusOnWidgetOrDefault() throws UnifyException {
+        return isFocusOnWidget() || isSessionAttribute(DEFAULT_FOCUS_ON_WIDGET);
+    }
+
+    @Override
+    public String getFocusOnWidgetIdOrDefault() throws UnifyException {
+        if (isFocusOnWidget()) {
+            return getFocusOnWidgetId();
+        }
+        
+        return (String) getSessionAttribute(DEFAULT_FOCUS_ON_WIDGET);
     }
 
     @Override
