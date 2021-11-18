@@ -58,6 +58,7 @@ public final class WriterUtils {
         eventToJSMap = new HashMap<String, String>();
         eventToJSMap.put("onblur", "blur");
         eventToJSMap.put("onchange", "change");
+        eventToJSMap.put("oninput", "input");
         eventToJSMap.put("onclick", "click");
         eventToJSMap.put("ondblclick", "dblclick");
         eventToJSMap.put("onmouseover", "mouseover");
