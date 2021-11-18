@@ -200,6 +200,7 @@ public class DocumentWriter extends AbstractPageWriter {
         writer.write("ux.cascadeStretch();");
         
         // Set focus
+        getRequestContextUtil().considerDefaultFocusOnWidget();
         if (getRequestContextUtil().isFocusOnWidgetOrDefault()) {
             writer.write("ux.setFocus(\"").write(getRequestContextUtil().getFocusOnWidgetIdOrDefault()).write("\");");
             getRequestContextUtil().clearFocusOnWidget();
