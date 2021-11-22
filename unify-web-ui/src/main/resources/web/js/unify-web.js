@@ -418,11 +418,9 @@ ux.refreshPanels = function(resp) {
 
 ux.refreshSection = function(resp) {
 	if (resp.section) {
-		if (resp.section.html) {
-			var trg = _id(resp.section.target);
-			if (trg) {
-				trg.innerHTML = resp.section.html;
-			}
+		var trg = _id(resp.section.target);
+		if (trg) {
+			trg.innerHTML = resp.section.html;
 		}
 
 		if (resp.section.script) {
