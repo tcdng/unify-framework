@@ -1557,6 +1557,7 @@ ux.rigDateField = function(rgp) {
 			const val = ux.applyPattern(this);
 			if(this.value != val) {
 				this.value = val;
+				this.focus();
 				if(fire) {
 					ux.fireEvent(this, "change");
 				}
@@ -3411,6 +3412,7 @@ ux.rigTimeField = function(rgp) {
 			const val = ux.applyPattern(this);
 			if (this.value != val) {
 				this.value = val;
+				this.focus();
 				if (fire) {
 					ux.fireEvent(this, "change");
 				}
