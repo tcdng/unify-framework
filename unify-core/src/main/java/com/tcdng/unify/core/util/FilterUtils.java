@@ -219,16 +219,18 @@ public final class FilterUtils {
                     FilterConditionType.NOT_BETWEEN_PARAM)));
 
     private static final Set<FilterConditionType> stringConditionTypes_imm = Collections
-            .unmodifiableSet(new LinkedHashSet<FilterConditionType>(Arrays.asList(FilterConditionType.EQUALS,
-                    FilterConditionType.IEQUALS, FilterConditionType.BEGINS_WITH, FilterConditionType.IBEGINS_WITH,
-                    FilterConditionType.ENDS_WITH, FilterConditionType.IENDS_WITH, FilterConditionType.LIKE,
-                    FilterConditionType.ILIKE, FilterConditionType.BETWEEN, FilterConditionType.AMONGST,
-                    FilterConditionType.NOT_EQUALS, FilterConditionType.INOT_EQUALS, FilterConditionType.NOT_BEGIN_WITH,
+            .unmodifiableSet(new LinkedHashSet<FilterConditionType>(Arrays.asList(FilterConditionType.EQUALS_LINGUAL,
+                    FilterConditionType.NOT_EQUALS_LINGUAL, FilterConditionType.EQUALS, FilterConditionType.IEQUALS,
+                    FilterConditionType.BEGINS_WITH, FilterConditionType.IBEGINS_WITH, FilterConditionType.ENDS_WITH,
+                    FilterConditionType.IENDS_WITH, FilterConditionType.LIKE, FilterConditionType.ILIKE,
+                    FilterConditionType.BETWEEN, FilterConditionType.AMONGST, FilterConditionType.NOT_EQUALS,
+                    FilterConditionType.INOT_EQUALS, FilterConditionType.NOT_BEGIN_WITH,
                     FilterConditionType.NOT_END_WITH, FilterConditionType.NOT_LIKE, FilterConditionType.NOT_BETWEEN,
                     FilterConditionType.NOT_AMONGST, FilterConditionType.IS_NULL, FilterConditionType.IS_NOT_NULL)));
 
     private static final Set<FilterConditionType> stringConditionTypes_field = Collections
-            .unmodifiableSet(new LinkedHashSet<FilterConditionType>(Arrays.asList(FilterConditionType.EQUALS,
+            .unmodifiableSet(new LinkedHashSet<FilterConditionType>(Arrays.asList(FilterConditionType.EQUALS_LINGUAL,
+                    FilterConditionType.NOT_EQUALS_LINGUAL, FilterConditionType.EQUALS,
                     FilterConditionType.IEQUALS, FilterConditionType.BEGINS_WITH, FilterConditionType.IBEGINS_WITH,
                     FilterConditionType.ENDS_WITH, FilterConditionType.IENDS_WITH, FilterConditionType.LIKE,
                     FilterConditionType.ILIKE, FilterConditionType.BETWEEN, FilterConditionType.AMONGST,
