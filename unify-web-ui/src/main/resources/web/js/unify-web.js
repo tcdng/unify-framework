@@ -55,7 +55,7 @@ const UNIFY_KEY_DELETE = '46';
 
 const UNIFY_POST_COMMIT_QUEUE = true; // Set to false to switch off commit queuing
 const UNIFY_POST_COMMIT_QUEUE_REPEAT_DELAY = 20; // 20 milliseconds
-const UNIFY_POST_COMMIT_QUEUE_FIRE_DELAY = 200; // 200 milliseconds
+const UNIFY_POST_COMMIT_QUEUE_FIRE_DELAY = 100; // 100 milliseconds
 ux.postCommitQueue = [];
 ux.postCommitExecuting = false;
 
@@ -1533,8 +1533,11 @@ ux.rigDateField = function(rgp) {
 		df._dayClass = rgp.pDayClass;
 		df._currClass = rgp.pCurrClass;
 		df._todayClass = rgp.pTodayClass;
-		df._type = rgp.pType;
+		df._disableClass = rgp.pDisableClass;
 		df._standard = rgp.pType == "standard";
+		df._past = rgp.pType == "past";
+		df._future = rgp.pType == "future";
+		df._supportYear = df._standard | df._past | df._future;
 		df._pop = rgp.pEnabled;
 		
 		df.setValue = function(val) {
@@ -1583,15 +1586,16 @@ ux.rigDateField = function(rgp) {
 				const year = this._scrollYear;
 
 				// Display month year on header
-				if (this._standard) {
+				if (this._supportYear) {
 					this._header.innerHTML = this._longMonthNm[month] + "&nbsp;" + year;
 				} else {
 					this._header.innerHTML = this._longMonthNm[month];
 				}
 
 				// Initialize variables and generate calendar HTML
-				var firstDay = new Date(year, month, 1).getDay();
-				var nextMonth = new Date(year, month + 1, 1);
+				const selectCheck = new Date(year, month);
+				const firstDay = selectCheck.getDay();
+				const nextMonth = new Date(year, month + 1);
 				nextMonth.setHours(nextMonth.getHours() - 3);
 				var daysInMonth = nextMonth.getDate();
 				var done = false;
@@ -1603,6 +1607,8 @@ ux.rigDateField = function(rgp) {
 				if (!(month == todayDt.getMonth() && year == todayDt.getFullYear())) {
 					today = 0;
 				}
+				
+				const todayCheck = new Date(todayDt.getFullYear(), todayDt.getMonth(), todayDt.getDate());
 
 				var currentDay = this.getDay();
 				if (!(month == this.getMonth() && year == this.getYear())) {
@@ -1610,7 +1616,7 @@ ux.rigDateField = function(rgp) {
 				}
 
 				var calendarHtml = "<table class=\"ctable\">";
-				if (this._standard) {
+				if (this._supportYear) {
 					calendarHtml += "<tr>";
 					for (var i = 0; i < 7; i++) {
 						calendarHtml += "<th>";
@@ -1618,6 +1624,9 @@ ux.rigDateField = function(rgp) {
 						calendarHtml += "</th>";
 					}
 					calendarHtml += "</tr>";
+					if (this._past) {
+						_id("btnt_" + id).disabled = true;
+					}
 					while (!done) {
 						calendarHtml += "<tr>";
 						for (var i = 0; i < 7; i++) {
@@ -1629,18 +1638,27 @@ ux.rigDateField = function(rgp) {
 									done = true;
 								}
 								if (dayCount <= daysInMonth) {
-									var dayClass = this._dayClass;
-									if (dayCount == currentDay) {
-										dayClass = this._currClass;
+									var disableDay = (this._future && (selectCheck.getTime() < todayCheck.getTime()))
+											|| (this._past && (selectCheck.getTime() >= todayCheck.getTime()));
+									if (disableDay) {
+										calendarHtml += "<span class=\"" + this._disableClass
+										+ "\">" + dayCount + "</span>";
+									} else {
+										var dayClass = this._dayClass;
+										if (dayCount == currentDay) {
+											dayClass = this._currClass;
+										}
+
+										if (dayCount == today) {
+											dayClass = this._todayClass;
+										}
+										calendarHtml += "<span class=\"" + dayClass
+												+ "\" onclick=\"ux.dfDayHandler('" + this.id
+												+ "'," + dayCount + ");\">" + dayCount + "</span>";
 									}
 
-									if (dayCount == today) {
-										dayClass = this._todayClass;
-									}
-									calendarHtml += "<span class=\"" + dayClass
-											+ "\" onclick=\"ux.dfDayHandler('" + this.id
-											+ "'," + dayCount + ");\">" + dayCount + "</span>";
 									dayCount++;
+									selectCheck.setDate(selectCheck.getDate() + 1);
 								} else {
 									calendarHtml += "&nbsp;";
 								}
@@ -1721,7 +1739,7 @@ ux.rigDateField = function(rgp) {
 		};
 		
 		if (df._pop) {
-			if (df._standard) {
+			if (df._supportYear) {
 				df.setupScroll("decy_", "year_", -1);
 				df.setupScroll("incy_", "year_", 1);
 			}
@@ -1730,7 +1748,7 @@ ux.rigDateField = function(rgp) {
 			ux.popupWireClear(rgp, "btnc_" + id, [ id ]);
 		}
 
-		if (df._standard) {
+		if (df._supportYear) {
 			const evp = {uId:id};
 			ux.addHdl(_id("btnt_" + id), "click", ux.dfTodayHandler, evp);
 		}
@@ -1758,7 +1776,8 @@ ux.dfDayHandler = function(id, dayCount) {
 	const df = _id(id);
 	df.setDay(dayCount);
 	df.setMonth(df._scrollMonth);
-	df.setYear(df._scrollYear);	
+	df.setYear(df._scrollYear);		
+	df.updateCalendar();
 	ux.hidePopup(null);
 	df.setActual(true);
 }

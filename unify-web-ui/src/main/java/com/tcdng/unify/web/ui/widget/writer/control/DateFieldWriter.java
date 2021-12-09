@@ -47,7 +47,7 @@ public class DateFieldWriter extends AbstractPopupTextFieldWriter {
         writer.write(">");
 
         writer.write("<div class=\"cnav\">");
-        if (type.isStandard()) {
+        if (type.supportsYear()) {
             writeButton(writer, dateField.getPrefixedId("decy_"), "cscroll", null, "<<");
         }
         
@@ -57,7 +57,7 @@ public class DateFieldWriter extends AbstractPopupTextFieldWriter {
         writeTagStyleClass(writer, "cdisplay");
         writer.write("></span>");
         writeButton(writer, dateField.getPrefixedId("incm_"), "cscroll", null, ">");
-        if (type.isStandard()) {
+        if (type.supportsYear()) {
             writeButton(writer, dateField.getPrefixedId("incy_"), "cscroll", null, ">>");
         }
         
@@ -69,7 +69,7 @@ public class DateFieldWriter extends AbstractPopupTextFieldWriter {
         writer.write("</div>");
 
         writer.write("<div class=\"ccontrol\">");
-        if (type.isStandard()) {
+        if (type.supportsYear()) {
             writeButton(writer, dateField.getPrefixedId("btnt_"), "cactbutton", "float:left;",
                     getSessionMessage("button.today"));
         }
@@ -87,6 +87,7 @@ public class DateFieldWriter extends AbstractPopupTextFieldWriter {
         writer.beginFunction("ux.rigDateField");
         writer.writeParam("pId", dateField.getId());
         writer.writeParam("pDayClass", "cday");
+        writer.writeParam("pDisableClass", "cdis");
         writer.writeParam("pCurrClass", "ccurrent");
         writer.writeParam("pTodayClass", "ctoday");
         writer.writeParam("pClearable", dateField.isClearable());

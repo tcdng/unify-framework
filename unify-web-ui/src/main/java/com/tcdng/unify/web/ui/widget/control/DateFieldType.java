@@ -28,6 +28,8 @@ import com.tcdng.unify.core.util.EnumUtils;
 public enum DateFieldType implements EnumConst {
 
     STANDARD("STN"),
+    FUTURE("FTR"),
+    PAST("PST"),
     YEAR_END("YND");
 
     private final String code;
@@ -46,8 +48,8 @@ public enum DateFieldType implements EnumConst {
         return STANDARD.code;
     }
 
-    public boolean isStandard() {
-        return STANDARD.equals(this);
+    public boolean supportsYear() {
+        return !YEAR_END.equals(this);
     }
     
     public static DateFieldType fromCode(String code) {

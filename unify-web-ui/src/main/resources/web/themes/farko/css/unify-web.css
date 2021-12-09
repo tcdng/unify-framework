@@ -507,6 +507,8 @@ z-index:400;}
 .ui-date .cscroll:hover {background-color: #D0D0D0;}
 .ui-date .cday {width: 18px; height: 20px; margin: 2px; border: solid 1px #A0A0A0;
 	background-color: white; cursor: pointer; text-align: right;}
+.ui-date .cdis {width: 18px; height: 20px; margin: 2px;
+	background-color: white; text-align: right; color:#C0C0C0;}
 .ui-date .ctoday {width: 18px; height: 20px; margin: 2px;
 	border: solid 1px #A0C0A0; background-color: #80a0c0; color:white; cursor: pointer; text-align: right;}
 .ui-date .ccurrent {width: 18px; height: 20px; margin: 2px; border: solid 1px #E0E0C0;
