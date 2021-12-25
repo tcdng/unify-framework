@@ -651,6 +651,14 @@ public class DataUtilsTest {
         assertEquals("Red,Green,Blue", val);
     }
 
+    @Test
+    public void testAddBigDecimal() throws Exception {
+        assertNull(DataUtils.add(null, null));
+        assertEquals(BigDecimal.TEN, DataUtils.add(BigDecimal.TEN, null));
+        assertEquals(BigDecimal.TEN, DataUtils.add(null, BigDecimal.TEN));
+        assertEquals(BigDecimal.valueOf(20), DataUtils.add(BigDecimal.TEN, BigDecimal.TEN));
+    }
+    
     public static abstract class Asset {
 
         private String title;
