@@ -1444,6 +1444,7 @@ ux.cbWire = function(box) {
 		if (box._active) {
 			box._facId = "fac_" + box.id;
 			ux.addHdl(_id(box._facId), "click", ux.cbClick, {uId:box.id});
+			ux.addHdl(_id(box._facId), "keydown", ux.cbKeydown, {uId:box.id});
 		}
 
 		box.setValue = function(val) {
@@ -1454,6 +1455,12 @@ ux.cbWire = function(box) {
 		box.getValue = function() {
 			return this.checked;
 		};
+	}
+}
+
+ux.cbKeydown = function(uEv) {
+	if (uEv.uKeyCode == UNIFY_KEY_SPACE) {
+		ux.cbClick(uEv);
 	}
 }
 
