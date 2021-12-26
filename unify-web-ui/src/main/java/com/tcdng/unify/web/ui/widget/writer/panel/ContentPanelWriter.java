@@ -188,9 +188,11 @@ public class ContentPanelWriter extends AbstractPanelWriter {
 
                 writer.write(" id=\"").write(contentPanelImpl.getTabItemId(i)).write("\">");
                 writer.write("<div class=\"cptitle\">");
-                writer.write("<span class=\"hd\">").writeWithHtmlEscape(title).write("</span>");
+                writer.write("<span class=\"hd\" title=\"").writeWithHtmlEscape(title).write("\">")
+                        .writeWithHtmlEscape(title).write("</span>");
                 if (subTitle != null) {
-                    writer.write("<span class=\"hds\">").writeWithHtmlEscape(subTitle).write("</span>");
+                    writer.write("<span class=\"hds\" title=\"").writeWithHtmlEscape(subTitle).write("\">")
+                            .writeWithHtmlEscape(subTitle).write("</span>");
                 }
                 writer.write("</div>");
 
