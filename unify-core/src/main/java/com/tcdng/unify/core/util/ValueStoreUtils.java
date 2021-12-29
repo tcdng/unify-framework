@@ -91,7 +91,7 @@ public final class ValueStoreUtils {
                 return new MapValuesListStore((List<MapValues>) storageObject, dataMarker, dataIndex);
             }
 
-            return new BeanValueListStore((List<Object>) storageObject, dataMarker, dataIndex);
+            return new BeanValueListStore(storageObject, dataMarker, dataIndex);
         }
 
         return null;

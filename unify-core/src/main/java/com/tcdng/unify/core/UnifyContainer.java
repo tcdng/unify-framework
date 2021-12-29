@@ -141,6 +141,8 @@ public class UnifyContainer {
 
     private String deploymentVersion;
 
+    private String auxiliaryVersion;
+
     private String hostAddress;
 
     private String hostHome;
@@ -237,6 +239,7 @@ public class UnifyContainer {
         }
 
         deploymentVersion = ucc.getDeploymentVersion();
+        auxiliaryVersion = ucc.getAuxiliaryVersion();
         clusterMode = ucc.isClusterMode();
         productionMode = ucc.isProductionMode();
         deploymentMode = ucc.isDeploymentMode();
@@ -632,7 +635,7 @@ public class UnifyContainer {
         long totalMemory = runtime.totalMemory();
         long usedMemory = totalMemory - runtime.freeMemory();
         return new UnifyContainerInfo((String) unifySettings.get(UnifyCorePropertyConstants.APPLICATION_NAME), nodeId,
-                deploymentVersion, hostAddress, hostHome, startTime, usedMemory, totalMemory, clusterMode,
+                deploymentVersion, auxiliaryVersion, hostAddress, hostHome, startTime, usedMemory, totalMemory, clusterMode,
                 productionMode, deploymentMode, componentInfoList, interfaceInfoList, settingInfoList);
     }
 
@@ -845,6 +848,10 @@ public class UnifyContainer {
 
     public String getDeploymentVersion() {
         return deploymentVersion;
+    }
+
+    public String getAuxiliaryVersion() {
+        return auxiliaryVersion;
     }
 
     public short getPreferredPort() {

@@ -37,5 +37,7 @@ public interface UnifyWebPropertyConstants {
 
     String APPLICATION_REMOTE_VIEWERS = "application.web.remote.viewers";
 
+    String APPLICATION_REMOTE_VIEWERS_STRICT = "application.web.remote.viewers.strict";
+
     String APPLICATION_TENANT_PATH_ENABLED = "application.web.tenantpath.enabled";
 }

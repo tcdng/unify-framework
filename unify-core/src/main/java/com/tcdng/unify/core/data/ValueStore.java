@@ -133,6 +133,63 @@ public interface ValueStore {
     void store(int storageIndex, String name, Object value, Formatter<?> formatter) throws UnifyException;
 
     /**
+     * Stores a value using supplied name if the current store value is null.
+     * 
+     * @param name
+     *            the name of the value
+     * @param value
+     *            the value to store
+     * @throws UnifyException
+     *             if value with supplied name is unknown. If an error occurs
+     */
+    void storeOnNull(String name, Object value) throws UnifyException;
+
+    /**
+     * Stores a value using supplied name and optional formatter if the current store value is null.
+     * 
+     * @param name
+     *            the name of the value
+     * @param value
+     *            the value to store
+     * @param formatter
+     *            the optional formatter
+     * @throws UnifyException
+     *             if value with supplied name is unknown. If an error occurs
+     */
+    void storeOnNull(String name, Object value, Formatter<?> formatter) throws UnifyException;
+
+    /**
+     * Stores a value at particular storage index using supplied name if the current store value is null.
+     * 
+     * @param storageIndex
+     *            the storage index
+     * @param name
+     *            the name of the value
+     * @param value
+     *            the value to store
+     * @throws UnifyException
+     *             if value with supplied name is unknown. If an error occurs
+     */
+    void storeOnNull(int storageIndex, String name, Object value) throws UnifyException;
+
+    /**
+     * Stores a value at particular storage index using supplied name and optional
+     * formatter if the current store value is null.
+     * 
+     * @param storageIndex
+     *            the storage index
+     * @param name
+     *            the name of the value
+     * @param value
+     *            the value to store
+     * @param formatter
+     *            the optional formatter
+     * @throws UnifyException
+     *             if value with supplied name is unknown. If an error occurs
+     */
+    void storeOnNull(int storageIndex, String name, Object value, Formatter<?> formatter) throws UnifyException;
+    
+    /**
      * Gets temporary value from store using supplied name.
      * 
      * @param name
@@ -224,4 +281,25 @@ public interface ValueStore {
      *            the data index to set
      */
     void setDataIndex(int dataIndex);
+
+    /**
+     * Returns the storage size for this value store
+     * 
+     * @return the storage size
+     */
+    int size();
+
+    /**
+     * Gets reader for this value store object.
+     * 
+     * @return the value store reader
+     */
+    ValueStoreReader getReader();
+
+    /**
+     * Gets writer for this value store object.
+     * 
+     * @return the value store writer
+     */
+    ValueStoreWriter getWriter();
 }

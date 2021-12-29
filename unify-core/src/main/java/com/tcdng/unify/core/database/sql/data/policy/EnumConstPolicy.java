@@ -70,7 +70,11 @@ public class EnumConstPolicy extends AbstractSqlDataTypePolicy {
         if (data == null) {
             ((PreparedStatement) pstmt).setNull(index, Types.VARCHAR);
         } else {
-            ((PreparedStatement) pstmt).setString(index, ((EnumConst) data).code());
+            if (data instanceof String) {
+                ((PreparedStatement) pstmt).setString(index, (String) data);
+            } else {
+                ((PreparedStatement) pstmt).setString(index, ((EnumConst) data).code());
+            }
         }
     }
 

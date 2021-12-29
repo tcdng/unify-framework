@@ -59,7 +59,9 @@ public class RestrictionTranslatorImpl extends AbstractRestrictionTranslator {
         Map<FilterConditionType, Translator> map = new EnumMap<FilterConditionType, Translator>(
                 FilterConditionType.class);
         map.put(FilterConditionType.EQUALS, new SingleParamRestrictionTranslator());
+        map.put(FilterConditionType.IEQUALS, new SingleParamRestrictionTranslator());
         map.put(FilterConditionType.NOT_EQUALS, new SingleParamRestrictionTranslator());
+        map.put(FilterConditionType.INOT_EQUALS, new SingleParamRestrictionTranslator());
         map.put(FilterConditionType.LESS_THAN, new SingleParamRestrictionTranslator());
         map.put(FilterConditionType.LESS_OR_EQUAL, new SingleParamRestrictionTranslator());
         map.put(FilterConditionType.GREATER_THAN, new SingleParamRestrictionTranslator());
@@ -69,9 +71,12 @@ public class RestrictionTranslatorImpl extends AbstractRestrictionTranslator {
         map.put(FilterConditionType.AMONGST, new MultipleParamRestrictionTranslator());
         map.put(FilterConditionType.NOT_AMONGST, new MultipleParamRestrictionTranslator());
         map.put(FilterConditionType.LIKE, new SingleParamRestrictionTranslator());
+        map.put(FilterConditionType.ILIKE, new SingleParamRestrictionTranslator());
         map.put(FilterConditionType.NOT_LIKE, new SingleParamRestrictionTranslator());
         map.put(FilterConditionType.BEGINS_WITH, new SingleParamRestrictionTranslator());
+        map.put(FilterConditionType.IBEGINS_WITH, new SingleParamRestrictionTranslator());
         map.put(FilterConditionType.NOT_BEGIN_WITH, new SingleParamRestrictionTranslator());
+        map.put(FilterConditionType.IENDS_WITH, new SingleParamRestrictionTranslator());
         map.put(FilterConditionType.ENDS_WITH, new SingleParamRestrictionTranslator());
         map.put(FilterConditionType.NOT_END_WITH, new SingleParamRestrictionTranslator());
         map.put(FilterConditionType.IS_NULL, new ZeroParamRestrictionTranslator());

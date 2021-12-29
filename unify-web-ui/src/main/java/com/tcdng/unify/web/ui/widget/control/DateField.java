@@ -33,7 +33,9 @@ import com.tcdng.unify.core.format.Pattern;
 @UplAttributes({
         @UplAttribute(name = "buttonImgSrc", type = String.class, defaultVal = "$t{images/calendar.png}"),
         @UplAttribute(name = "buttonSymbol", type = String.class, defaultVal = "calendar-alt"),
-        @UplAttribute(name = "formatter", type = Formatter.class, defaultVal = "$d{!dateformat style:customshort}") })
+        @UplAttribute(name = "formatter", type = Formatter.class, defaultVal = "$d{!dateformat style:customshort}"),
+        @UplAttribute(name = "type", type = DateFieldType.class, defaultVal = "standard"),
+        })
 public class DateField extends AbstractTimeField {
 
     private String[] shortDayList;
@@ -80,6 +82,10 @@ public class DateField extends AbstractTimeField {
         return pattern;
     }
 
+    public DateFieldType getType() throws UnifyException {
+        return getUplAttribute(DateFieldType.class, "type");
+    }
+    
     public String[] getShortDayList() {
         return shortDayList;
     }

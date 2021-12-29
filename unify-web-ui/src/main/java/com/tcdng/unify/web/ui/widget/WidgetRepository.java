@@ -15,7 +15,9 @@
  */
 package com.tcdng.unify.web.ui.widget;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -75,5 +77,14 @@ public class WidgetRepository {
     
     public Set<String> getWidgetLongNames() {
         return widgets.keySet();
+    }
+    
+    public List<String> getWidgetIds() throws UnifyException {
+        List<String> list = new ArrayList<String>();
+        for(Widget widget: widgets.values()) {
+            list.add(widget.getId());
+        }
+        
+        return list;
     }
 }

@@ -119,7 +119,8 @@ public class ContentPanelWriter extends AbstractPanelWriter {
         writer.writeContextResourceURL("/resource/file", MimeType.IMAGE.template(), "$t{images/busy.gif}");
         writer.write("\"></div>");
 
-        writer.write("<div style=\"display:table;width:100%;height:100%;\">");
+        writer.write("<div id=\"").write(contentPanelImpl.getBaseContentId())
+                .write("\" style=\"display:table;width:100%;height:100%;\">");
         boolean isSidebar = contentPanelImpl.isSidebar();
         // Frame
         if (isSidebar) {
@@ -170,7 +171,7 @@ public class ContentPanelWriter extends AbstractPanelWriter {
                 }
 
                 String subTitle = page.getSubCaption();
-                
+
                 writer.write("><div><a ");
                 if (page.getUplAttribute(boolean.class, "remote")) {
                     String cpcat = CPREMOTE_CATEGORYBASE;
@@ -182,17 +183,19 @@ public class ContentPanelWriter extends AbstractPanelWriter {
                 } else {
                     if (subTitle != null) {
                         writer.write("class=\"cpt\"");
-                    }                    
+                    }
                 }
 
                 writer.write(" id=\"").write(contentPanelImpl.getTabItemId(i)).write("\">");
                 writer.write("<div class=\"cptitle\">");
-                writer.write("<span class=\"hd\">").writeWithHtmlEscape(title).write("</span>");
+                writer.write("<span class=\"hd\" title=\"").writeWithHtmlEscape(title).write("\">")
+                        .writeWithHtmlEscape(title).write("</span>");
                 if (subTitle != null) {
-                    writer.write("<span class=\"hds\">").writeWithHtmlEscape(subTitle).write("</span>");
+                    writer.write("<span class=\"hds\" title=\"").writeWithHtmlEscape(subTitle).write("\">")
+                            .writeWithHtmlEscape(subTitle).write("</span>");
                 }
                 writer.write("</div>");
-                
+
                 writer.write("</a>");
 
                 if (i > 0) {
@@ -259,7 +262,7 @@ public class ContentPanelWriter extends AbstractPanelWriter {
 
         // Restore response controller
         rcUtil.setResponsePathParts(currentRespPathParts);
-        
+
         writer.write("</div>");
         writer.write("</div>");
         writer.write("</div>");

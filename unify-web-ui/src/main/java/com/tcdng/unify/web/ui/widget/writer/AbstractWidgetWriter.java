@@ -15,12 +15,16 @@
  */
 package com.tcdng.unify.web.ui.widget.writer;
 
+import java.util.List;
+
 import com.tcdng.unify.core.RequestContext;
 import com.tcdng.unify.core.UnifyCorePropertyConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.UserToken;
+import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.util.ColorUtils;
 import com.tcdng.unify.core.util.StringUtils;
+import com.tcdng.unify.web.font.FontSymbolManager;
 import com.tcdng.unify.web.ui.WebUIApplicationComponents;
 import com.tcdng.unify.web.ui.widget.EventHandler;
 import com.tcdng.unify.web.ui.widget.PageManager;
@@ -34,6 +38,13 @@ import com.tcdng.unify.web.ui.widget.Widget;
  * @since 1.0
  */
 public abstract class AbstractWidgetWriter extends AbstractDhtmlWriter implements WidgetWriter {
+
+    @Configurable
+    private FontSymbolManager fontSymbolManager;
+
+    public final void setFontSymbolManager(FontSymbolManager fontSymbolManager) {
+        this.fontSymbolManager = fontSymbolManager;
+    }
 
     @Override
     public void writeStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
@@ -84,6 +95,22 @@ public abstract class AbstractWidgetWriter extends AbstractDhtmlWriter implement
 
     protected abstract void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException;
 
+    protected final boolean isWithFontSymbolManager() {
+        return fontSymbolManager != null;
+    }
+    
+    protected List<String> getFontResources() throws UnifyException {
+        return fontSymbolManager.getFontResources();
+    }
+
+    protected String resolveSymbolUnicode(String symbolName) throws UnifyException {
+        return fontSymbolManager.resolveSymbolUnicode(symbolName);
+    }
+
+    protected String resolveSymbolHtmlHexCode(String symbolName) throws UnifyException {
+        return fontSymbolManager.resolveSymbolHtmlHexCode(symbolName);
+    }
+
     protected void doWriteSectionStructureAndContent(ResponseWriter writer, Widget widget, String sectionId)
             throws UnifyException {
 
@@ -130,7 +157,7 @@ public abstract class AbstractWidgetWriter extends AbstractDhtmlWriter implement
         if (requestContext.isWithTenantPath()) {
             sb.append(requestContext.getTenantPath());
         }
-        
+
         sb.append(requestContext.getRequestPath());
         sb.append(path);
         for (String element : pathElement) {

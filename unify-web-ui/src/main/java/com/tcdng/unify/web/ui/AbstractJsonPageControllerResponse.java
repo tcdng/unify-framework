@@ -48,8 +48,8 @@ public abstract class AbstractJsonPageControllerResponse extends AbstractPageCon
         PageRequestContextUtil reqUtils = getRequestContextUtil();
         doGenerate(writer, page);
 
-        if (reqUtils.isFocusOnWidget()) {
-            writer.write(",\"focusOnWidget\":\"").write(reqUtils.getFocusOnWidgetId()).write("\"");
+        if (reqUtils.isFocusOnWidgetOrDefault()) {
+            writer.write(",\"focusOnWidget\":\"").write(reqUtils.getFocusOnWidgetIdOrDefault()).write("\"");
             reqUtils.clearFocusOnWidget();
         }
 
@@ -73,8 +73,14 @@ public abstract class AbstractJsonPageControllerResponse extends AbstractPageCon
     }
 
     protected String getTimestampedResourceName(String resourceName) throws UnifyException {
-        return StringUtils.underscore(resourceName) + "_" + getFormatHelper().formatNow(FormatHelper.yyyyMMdd_HHmmss);
+        int index = resourceName.indexOf('.');
+        if (index > 0) {
+            return StringUtils.underscore(resourceName.substring(0, index)) + "_"
+                    + getFormatHelper().formatNow(FormatHelper.yyyyMMdd_HHmmss) + resourceName.substring(index);
 
+        }
+
+        return StringUtils.underscore(resourceName) + "_" + getFormatHelper().formatNow(FormatHelper.yyyyMMdd_HHmmss);
     }
 
     protected abstract void doGenerate(ResponseWriter writer, Page page) throws UnifyException;

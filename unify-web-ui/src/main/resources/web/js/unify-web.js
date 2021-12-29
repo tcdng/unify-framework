@@ -44,9 +44,20 @@ const UNIFY_MAX_STRETCHPANEL_DEPTH = 5;
 const UNIFY_MINUTES_IN_DAY = 1440;
 const UNIFY_MINUTES_IN_HOUR = 60;
 
+const UNIFY_KEY_ESCAPE = '27';
+const UNIFY_KEY_UP = '38';
+const UNIFY_KEY_DOWN = '40';
+const UNIFY_KEY_ENTER = '13';
 const UNIFY_KEY_SPACE = '32';
 const UNIFY_KEY_BACKSPACE = '8';
+const UNIFY_KEY_TAB = '9';
 const UNIFY_KEY_DELETE = '46';
+
+const UNIFY_POST_COMMIT_QUEUE = true; // Set to false to switch off commit queuing
+const UNIFY_POST_COMMIT_QUEUE_REPEAT_DELAY = 20; // 20 milliseconds
+const UNIFY_POST_COMMIT_QUEUE_FIRE_DELAY = 100; // 100 milliseconds
+ux.postCommitQueue = [];
+ux.postCommitExecuting = false;
 
 ux.docPath = "";
 ux.docPopupBaseId = null;
@@ -61,6 +72,7 @@ ux.busyIndicator = "";
 ux.busyIndicatorTimer;
 ux.busyCounter = 0;
 
+ux.cntId = null
 ux.cntHintId = null
 ux.cntTabCloseId = null;
 ux.cntOpenPath = null;
@@ -135,6 +147,15 @@ ux.processJSON = function(jsonstring) {
 		ux.cascadeStretch();
 	}
 
+	if (ux.cntId) {
+		if (jsonEval.scrollReset) {
+			var elem = _id(ux.cntId);
+			if (elem) {
+				elem.scrollTop = 0;
+			}
+		}
+	}
+	
 	ux.remoteView = null;
 }
 
@@ -397,11 +418,9 @@ ux.refreshPanels = function(resp) {
 
 ux.refreshSection = function(resp) {
 	if (resp.section) {
-		if (resp.section.html) {
-			var trg = _id(resp.section.target);
-			if (trg) {
-				trg.innerHTML = resp.section.html;
-			}
+		var trg = _id(resp.section.target);
+		if (trg) {
+			trg.innerHTML = resp.section.html;
 		}
 
 		if (resp.section.script) {
@@ -519,6 +538,7 @@ ux.ajaxCall = function(ajaxPrms) {
 				if (ajaxPrms.uIsDebounce) {
 					 ux.clearDebounce(ajaxPrms.uDebounced);
 				}				
+				ux.postCommitExecuting = false;
 			}
 		};
 		
@@ -531,6 +551,7 @@ ux.ajaxCall = function(ajaxPrms) {
 		if (ajaxPrms.uIsDebounce) {
 			 ux.clearDebounce(ajaxPrms.uDebounced);
 		}				
+		ux.postCommitExecuting = false;
 
 		if (ajaxPrms.uSync) {
 			ux.submitting = false;
@@ -648,8 +669,28 @@ ux.postCommand = function(uEv) {
 
 ux.postCommit = function(evp) {
 	evp.uBusy = true;
-	ux.setHiddenValues(evp.uRef, evp.uVal);
-	ux.ajaxCallWithJSONResp(evp.uTrg, evp);
+	if (UNIFY_POST_COMMIT_QUEUE) {
+		ux.postCommitQueue.push(evp);
+	} else {
+		ux.setHiddenValues(evp.uRef, evp.uVal);
+		ux.ajaxCallWithJSONResp(evp.uTrg, evp);
+	}
+}
+
+ux.postCommitProcessor = function() {
+   setTimeout(async function() {
+	   if (!ux.postCommitExecuting) {
+		   const evp = ux.postCommitQueue.pop();
+		   if(evp) {
+			   ux.postCommitExecuting = true;
+			   await ux.sleep(UNIFY_POST_COMMIT_QUEUE_FIRE_DELAY);
+			   ux.setHiddenValues(evp.uRef, evp.uVal);
+			   ux.ajaxCallWithJSONResp(evp.uTrg, evp);
+		   }
+	   }
+
+	   ux.postCommitProcessor();
+	  }, UNIFY_POST_COMMIT_QUEUE_REPEAT_DELAY);
 }
 
 ux.openWindow = function(uEv) {
@@ -956,6 +997,7 @@ ux.menuSelectChgHandler = function(uEv) {
 
 /** Content panel */
 ux.rigContentPanel = function(rgp) {
+	ux.cntId = rgp.pId
 	ux.cntHintId = rgp.pHintPanelId;
 	ux.cntTabCloseId = rgp.pCloseImgId;
 	ux.cntSavePath = rgp.pSavePath;
@@ -1345,7 +1387,10 @@ ux.rigAssignmentBox = function(rgp) {
 			evp.uRef = [ unassnSelId ];
 			evp.uPanels = [ rgp.pContId ];
 			ux.addHdl(assnBtn, "click", ux.post, evp);
-
+			if (rgp.pEditable) {
+				unassnSel.dblevp = evp;
+			}
+			
 			var btnDsbld =  !rgp.pEditable || unassnSel.options.length == 0;
 			if (assnAll) {
 				var assnAllBtn = _id(assnAllBtnId);
@@ -1399,6 +1444,7 @@ ux.cbWire = function(box) {
 		if (box._active) {
 			box._facId = "fac_" + box.id;
 			ux.addHdl(_id(box._facId), "click", ux.cbClick, {uId:box.id});
+			ux.addHdl(_id(box._facId), "keydown", ux.cbKeydown, {uId:box.id});
 		}
 
 		box.setValue = function(val) {
@@ -1409,6 +1455,12 @@ ux.cbWire = function(box) {
 		box.getValue = function() {
 			return this.checked;
 		};
+	}
+}
+
+ux.cbKeydown = function(uEv) {
+	if (uEv.uKeyCode == UNIFY_KEY_SPACE) {
+		ux.cbClick(uEv);
 	}
 }
 
@@ -1488,6 +1540,11 @@ ux.rigDateField = function(rgp) {
 		df._dayClass = rgp.pDayClass;
 		df._currClass = rgp.pCurrClass;
 		df._todayClass = rgp.pTodayClass;
+		df._disableClass = rgp.pDisableClass;
+		df._standard = rgp.pType == "standard";
+		df._past = rgp.pType == "past";
+		df._future = rgp.pType == "future";
+		df._supportYear = df._standard | df._past | df._future;
 		df._pop = rgp.pEnabled;
 		
 		df.setValue = function(val) {
@@ -1510,6 +1567,7 @@ ux.rigDateField = function(rgp) {
 			const val = ux.applyPattern(this);
 			if(this.value != val) {
 				this.value = val;
+				this.focus();
 				if(fire) {
 					ux.fireEvent(this, "change");
 				}
@@ -1535,11 +1593,16 @@ ux.rigDateField = function(rgp) {
 				const year = this._scrollYear;
 
 				// Display month year on header
-				this._header.innerHTML = this._longMonthNm[month] + "&nbsp;" + year;
+				if (this._supportYear) {
+					this._header.innerHTML = this._longMonthNm[month] + "&nbsp;" + year;
+				} else {
+					this._header.innerHTML = this._longMonthNm[month];
+				}
 
 				// Initialize variables and generate calendar HTML
-				var firstDay = new Date(year, month, 1).getDay();
-				var nextMonth = new Date(year, month + 1, 1);
+				const selectCheck = new Date(year, month);
+				const firstDay = selectCheck.getDay();
+				const nextMonth = new Date(year, month + 1);
 				nextMonth.setHours(nextMonth.getHours() - 3);
 				var daysInMonth = nextMonth.getDate();
 				var done = false;
@@ -1551,6 +1614,8 @@ ux.rigDateField = function(rgp) {
 				if (!(month == todayDt.getMonth() && year == todayDt.getFullYear())) {
 					today = 0;
 				}
+				
+				const todayCheck = new Date(todayDt.getFullYear(), todayDt.getMonth(), todayDt.getDate());
 
 				var currentDay = this.getDay();
 				if (!(month == this.getMonth() && year == this.getYear())) {
@@ -1558,20 +1623,63 @@ ux.rigDateField = function(rgp) {
 				}
 
 				var calendarHtml = "<table class=\"ctable\">";
-				calendarHtml += "<tr>";
-				for (var i = 0; i < 7; i++) {
-					calendarHtml += "<th>";
-					calendarHtml += this._shortDayNm[i];
-					calendarHtml += "</th>";
-				}
-				calendarHtml += "</tr>";
-				while (!done) {
+				if (this._supportYear) {
 					calendarHtml += "<tr>";
 					for (var i = 0; i < 7; i++) {
-						calendarHtml += "<td>";
-						if ((rowCount == 0) && (i < firstDay)) {
-							calendarHtml += "&nbsp;";
-						} else {
+						calendarHtml += "<th>";
+						calendarHtml += this._shortDayNm[i];
+						calendarHtml += "</th>";
+					}
+					calendarHtml += "</tr>";
+					if (this._past) {
+						_id("btnt_" + id).disabled = true;
+					}
+					while (!done) {
+						calendarHtml += "<tr>";
+						for (var i = 0; i < 7; i++) {
+							calendarHtml += "<td>";
+							if ((rowCount == 0) && (i < firstDay)) {
+								calendarHtml += "&nbsp;";
+							} else {
+								if (dayCount >= daysInMonth) {
+									done = true;
+								}
+								if (dayCount <= daysInMonth) {
+									var disableDay = (this._future && (selectCheck.getTime() < todayCheck.getTime()))
+											|| (this._past && (selectCheck.getTime() >= todayCheck.getTime()));
+									if (disableDay) {
+										calendarHtml += "<span class=\"" + this._disableClass
+										+ "\">" + dayCount + "</span>";
+									} else {
+										var dayClass = this._dayClass;
+										if (dayCount == currentDay) {
+											dayClass = this._currClass;
+										}
+
+										if (dayCount == today) {
+											dayClass = this._todayClass;
+										}
+										calendarHtml += "<span class=\"" + dayClass
+												+ "\" onclick=\"ux.dfDayHandler('" + this.id
+												+ "'," + dayCount + ");\">" + dayCount + "</span>";
+									}
+
+									dayCount++;
+									selectCheck.setDate(selectCheck.getDate() + 1);
+								} else {
+									calendarHtml += "&nbsp;";
+								}
+							}
+							calendarHtml += "</td>";
+						}
+						calendarHtml += "</tr>";
+						rowCount++;
+					}
+				} else {
+					while (!done) {
+						calendarHtml += "<tr>";
+						for (var i = 0; i < 7; i++) {
+							calendarHtml += "<td>";
 							if (dayCount >= daysInMonth) {
 								done = true;
 							}
@@ -1581,9 +1689,6 @@ ux.rigDateField = function(rgp) {
 									dayClass = this._currClass;
 								}
 
-								if (dayCount == today) {
-									dayClass = this._todayClass;
-								}
 								calendarHtml += "<span class=\"" + dayClass
 										+ "\" onclick=\"ux.dfDayHandler('" + this.id
 										+ "'," + dayCount + ");\">" + dayCount + "</span>";
@@ -1591,11 +1696,11 @@ ux.rigDateField = function(rgp) {
 							} else {
 								calendarHtml += "&nbsp;";
 							}
+							calendarHtml += "</td>";
 						}
-						calendarHtml += "</td>";
+						calendarHtml += "</tr>";
+						rowCount++;
 					}
-					calendarHtml += "</tr>";
-					rowCount++;
 				}
 				calendarHtml += "</table>";
 				this._calendar.innerHTML = calendarHtml;
@@ -1641,15 +1746,19 @@ ux.rigDateField = function(rgp) {
 		};
 		
 		if (df._pop) {
-			df.setupScroll("decy_", "year_", -1);
-			df.setupScroll("incy_", "year_", 1);
+			if (df._supportYear) {
+				df.setupScroll("decy_", "year_", -1);
+				df.setupScroll("incy_", "year_", 1);
+			}
 			df.setupScroll("decm_", "mon_", -1);
 			df.setupScroll("incm_", "mon_", 1);
 			ux.popupWireClear(rgp, "btnc_" + id, [ id ]);
 		}
 
-		const evp = {uId:id};
-		ux.addHdl(_id("btnt_" + id), "click", ux.dfTodayHandler, evp);
+		if (df._supportYear) {
+			const evp = {uId:id};
+			ux.addHdl(_id("btnt_" + id), "click", ux.dfTodayHandler, evp);
+		}
 
 		df.setDay(rgp.pDay);
 		df.setMonth(rgp.pMonth);
@@ -1674,7 +1783,8 @@ ux.dfDayHandler = function(id, dayCount) {
 	const df = _id(id);
 	df.setDay(dayCount);
 	df.setMonth(df._scrollMonth);
-	df.setYear(df._scrollYear);	
+	df.setYear(df._scrollYear);		
+	df.updateCalendar();
 	ux.hidePopup(null);
 	df.setActual(true);
 }
@@ -1683,25 +1793,21 @@ ux.dfScrollHandler = function(uEv) {
 	const evp = uEv.evp;
 	const df = _id(uEv.evp.uId);
 	if (evp.uTarget == "mon_") {
-		var month = df._scrollMonth;
+		var month = df._scrollMonth + evp.uStep;
 		var yearChg = false;
-		if (evp.uStep > 0) {
-			if (month >= df._longMonthNm.length) {
-				df._scrollMonth = 0;
-				yearChg = true;
-			}
-		} else {
-			if (month <= 1) {
-				df._scrollMonth = df._longMonthNm.length + 1;
-				yearChg = true;
-			}
+		if (month >= df._longMonthNm.length) {
+			month = 0;
+			yearChg = true;
+		} else if (month < 0) {
+			month = df._longMonthNm.length - 1;
+			yearChg = true;
 		}
 
 		if (yearChg) {
 			df._scrollYear = df._scrollYear + evp.uStep;
 		}
 
-		df._scrollMonth = df._scrollMonth + evp.uStep;
+		df._scrollMonth = month;
 	} else {
 		df._scrollYear = df._scrollYear + evp.uStep;
 	}
@@ -1822,7 +1928,7 @@ ux.dsCalc = function(uEv) {
 	ds.setActual(total, true);
 }
 
-/** FileAttachment */
+/** File Attachment */
 ux.rigFileAttachment = function(rgp) {
 	var id = rgp.pId;
 	if (rgp.pEditable) {
@@ -1862,6 +1968,46 @@ ux.rigFileAttachment = function(rgp) {
 			evp.uPanels = [ rgp.pContId ];
 			ux.addHdl(_id(remId + idx), "click", ux.post, evp);
 		}
+	}
+}
+
+/** File Upload View */
+ux.rigFileUploadView = function(rgp) {
+	var id = rgp.pId;
+	if (rgp.pEditable) {
+		var len = rgp.pLen;
+		var fileId = rgp.pFileId;
+		var attachId = rgp.pAttchId;
+		var viewId = rgp.pViewId;
+		var remId = rgp.pRemId;
+
+		var fileElem = _id(fileId)
+//		var evp = ux.newEvPrm(rgp);
+//		evp.uPanels = [ rgp.pContId ];
+//		evp.isUniqueTrg = true;
+//		ux.addHdl(fileElem, "change", ux.post, evp);
+
+		// Attach
+		evp = {fileId:fileElem.id};
+		ux.addHdl(_id(attachId), "click",
+				ux.attachFileClickHandler, evp);
+
+		// View
+		if (rgp.pViewURL) {
+			evp = {uURL:rgp.pViewURL, uPanels:[ rgp.pContId ]};
+			ux.addHdl(_id(viewId), "click", ux.post, evp);
+		} else {
+			evp = ux.newEvPrm(rgp);
+			evp.uCmd = id + "->view";
+			evp.uPanels = [ rgp.pContId ];
+			ux.addHdl(_id(viewId), "click", ux.post, evp);
+		}
+
+		// Remove
+		evp = ux.newEvPrm(rgp);
+		evp.uCmd = id + "->detach";
+		evp.uPanels = [ rgp.pContId ];
+		ux.addHdl(_id(remId), "click", ux.post, evp);
 	}
 }
 
@@ -1959,6 +2105,39 @@ ux.rigLinkGrid = function(rgp) {
 			}
 		}
 	}
+}
+
+/** Debit Credit field */
+ux.rigDebitCreditField = function(rgp) {
+	const evp = {};
+	evp.uId = rgp.pId;
+	evp.index = rgp.pIndex;
+	evp.prefixes = rgp.pPrefixes;
+	evp.options = rgp.pOptions;
+	evp.hid = _id(rgp.pId);
+	evp.fac = _id(rgp.pFacId);
+	evp.btn = _id(rgp.pBtnId);
+
+	evp.btn.innerHTML = evp.options[evp.index];
+	ux.addHdl(evp.btn, "click", ux.dcfOptionToggle, evp);	
+	ux.addHdl(evp.fac, "input", ux.dcfInput, evp);	
+}
+
+ux.dcfOptionToggle = function(uEv) {
+	const evp = uEv.evp;
+	evp.index = evp.index == 0 ? 1 : 0;
+	evp.btn.innerHTML = evp.options[evp.index];
+	ux.dcfInput(uEv);
+	ux.fireEvent(evp.fac, "change");
+}
+
+ux.dcfInput = function(uEv) {
+	const evp = uEv.evp;
+	var val = evp.fac.value;
+	if (val) {
+		val = evp.prefixes[evp.index] + val;
+	}	
+	evp.hid.value = val;
 }
 
 /** Money field */
@@ -2119,6 +2298,7 @@ ux.rigMultiSelect = function(rgp) {
 			const label = _id(ms._selectIds[i]);
 			label.innerHTML = ms._labels[i];
 			ux.addHdl(label, "click", ux.msSelectClick, evpi);
+			ux.addHdl(label, "dblclick", ux.msSelectDblClick, evpi);
 		}
 		
 		ms.setValue(rgp.pVal);
@@ -2131,6 +2311,16 @@ ux.msKeydownHit = function(ms) {
 		ux.msUnSelectAllOpt(ms);
 		ms.selectOpt(optIndex, true, false);
 		ms._start = optIndex;
+	}
+}
+
+ux.msSelectDblClick = function(uEv) {
+	ux.msSelectClick(uEv);
+	const evp = uEv.evp;
+	const ms = _id(evp.uId);
+	if (ms && ms.dblevp) {
+		uEv.evp = ms.dblevp;
+		ux.post(uEv);
 	}
 }
 
@@ -2613,6 +2803,7 @@ ux.rigSingleSelect = function(rgp) {
 
 				this.value = val;
 				this._fac.value = txt;
+				this._fac.focus();
 				this._selIdx = index;
 				if (fire) {
 					ux.fireEvent(this, "change");			
@@ -3247,6 +3438,7 @@ ux.rigTimeField = function(rgp) {
 			const val = ux.applyPattern(this);
 			if (this.value != val) {
 				this.value = val;
+				this.focus();
 				if (fire) {
 					ux.fireEvent(this, "change");
 				}
@@ -4340,13 +4532,13 @@ ux.listSearchKeydown = function(uEv) {
 	
 		sel._lastKeyHit = Date.now(); 
 	} else {
-		if(uEv.uKeyCode == '38') {
+		if(uEv.uKeyCode == UNIFY_KEY_UP) {
 			ux.listKeydownSkip(sel, true);
 			uEv.uStop();
-		} else if(uEv.uKeyCode == '40') {
+		} else if(uEv.uKeyCode == UNIFY_KEY_DOWN) {
 			ux.listKeydownSkip(sel, false);
 			uEv.uStop();
-		} else if (uEv.uKeyCode == 13 || (uEv.uKey && "ENTER" == uEv.uKey.toUpperCase())) {
+		} else if (uEv.uKeyCode == UNIFY_KEY_ENTER || (uEv.uKey && "ENTER" == uEv.uKey.toUpperCase())) {
 			if (evp.uEnterHandler) {
 				evp.uEnterHandler(sel);
 				uEv.uStop();
@@ -4571,11 +4763,42 @@ ux.setTextRegexFormatting = function(prm) {
 				evp);
 		ux.addHdl(elem,  "keydown", ux.textInputKeydown,
 				evp);
+		if (prm.pCase) {
+			ux.addHdl(elem,  "keyup", ux.textInputKeyup,
+					evp);
+		}
 	}
 }
 
 ux.textInputKeypress = function(uEv) {
 
+}
+
+ux.textInputKeyup = function(uEv) {
+	var trgObj = uEv.uTrg;
+	var evp = uEv.evp;
+	if (!trgObj.readOnly) {
+		var pos = ux.getCaretPosition(trgObj);
+		var string = trgObj.value;
+		if (evp.sTextCase) {
+			if ("upper" == evp.sTextCase) {
+				trgObj.value = string.toUpperCase();
+			} else if ("camel" == evp.sTextCase) {
+				const baseArr = string.split(" ")
+				const res = [];
+				for (var i = 0; i < baseArr.length; i++) {
+					var str = baseArr[i];
+					res.push(str.charAt(0).toUpperCase() + str.slice(1));
+				}
+				trgObj.value = res.join(" ");
+			} else {
+				trgObj.value = string.toLowerCase();
+			}
+			
+			ux.setCaretPosition(trgObj, pos.start, pos.start);
+			return;
+		}		
+	}
 }
 
 ux.textInputKeydown = function(uEv) {
@@ -4592,19 +4815,6 @@ ux.textInputKeydown = function(uEv) {
 			uEv.uStop();
 			return;
 		}
-
-		if (evp.sTextCase) {
-			if ("upper" == evp.sTextCase) {
-				trgObj.value = string.toUpperCase();
-			} else {
-				trgObj.value = string.toLowerCase();
-			}
-			
-			var spos = pos.start + 1;
-			ux.setCaretPosition(trgObj, spos, spos);
-			uEv.uStop();
-			return;
-		}		
 	}
 }
 
@@ -4875,6 +5085,9 @@ ux.init = function() {
 	    return true; // Do default
 	}
 
+	if (UNIFY_POST_COMMIT_QUEUE) {
+		ux.postCommitProcessor();
+	}
 }
 
 ux.setHintTimeout = function(millisec) {
@@ -4882,7 +5095,13 @@ ux.setHintTimeout = function(millisec) {
 }
 
 ux.documentKeydownHandler = function(uEv) {
-	if (uEv.uKeyCode == 8) { // Stop general backspace except for particular elements
+	// Hide popup on tab
+	if (uEv.uKeyCode == UNIFY_KEY_TAB) {
+		ux.hidePopup(null);
+		return;
+	}
+	
+	if (uEv.uKeyCode == UNIFY_KEY_BACKSPACE) { // Stop general backspace except for particular elements
 		var stopBackspace = true;
 		var elem = uEv.uTrg;
 		if (elem.type == "text" || elem.type == "password"
@@ -5056,7 +5275,7 @@ ux.addHdlMany = function(name, eventName, handler, evp) {
 ux.addHdl = function(domObject, eventName, handler, evp) {
 	if ("enter" == eventName) {
 		eventName = "keydown";
-		handler = ux.wireSpecialKeyHandler(evp, handler, "Enter", 13);
+		handler = ux.wireSpecialKeyHandler(evp, handler, "Enter", UNIFY_KEY_ENTER);
 	} else if ("rtclick" == eventName) {
 		eventName = "mouseup";
 		handler = ux.wireRightClickHandler(evp, handler);
@@ -5299,6 +5518,14 @@ ux.doOpenPopup = function(openPrm) {
 	}
 }
 
+ux.isPopupVisible = function(uEv) {
+	if (ux.popCurr) {
+		return true;
+	}
+	
+	return false;
+}
+
 ux.hidePopup = function(uEv) {
 	if (ux.popCurr) {
 		var openPrm = ux.openPrm;
@@ -5357,6 +5584,11 @@ ux.documentHidePopup = function(uEv) {
 }
 
 ux.addHdl(document, "click", ux.documentHidePopup, {});
+
+/** Delays */
+ux.sleep = function (mill) {
+	  return new Promise(resolve => setTimeout(resolve, mill));
+}
 
 /** Page resets */
 ux.registerPageReset = function(id, resetFunc) {

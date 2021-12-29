@@ -30,23 +30,37 @@ public class DynamicForeignKeyFieldInfo extends DynamicFieldInfo {
 
     private DynamicEntityInfo parentDynamicEntityInfo;
 
+    private String defaultVal;
+
     private boolean nullable;
 
     public DynamicForeignKeyFieldInfo(DynamicFieldType type, DynamicEntityInfo parentDynamicEntityInfo,
-            String columnName, String fieldName, boolean nullable) {
+            String columnName, String fieldName, String defaultVal, boolean nullable) {
         super(type, EntityFieldType.FOREIGN_KEY, DataType.LONG, columnName, fieldName, false);
         this.parentDynamicEntityInfo = parentDynamicEntityInfo;
+        this.defaultVal = defaultVal;
         this.nullable = nullable;
     }
 
     public DynamicForeignKeyFieldInfo(DynamicFieldType type, String enumClassName, String columnName, String fieldName,
-            boolean nullable) {
+            String defaultVal, boolean nullable) {
         super(type, EntityFieldType.FOREIGN_KEY, DataType.STRING, columnName, fieldName, enumClassName, false);
+        this.defaultVal = defaultVal;
         this.nullable = nullable;
     }
 
     public DynamicEntityInfo getParentDynamicEntityInfo() {
         return parentDynamicEntityInfo;
+    }
+
+    public void updateParentDynamicEntityInfo(DynamicEntityInfo _parentDynamicEntityInfo) {
+        if (parentDynamicEntityInfo != null && parentDynamicEntityInfo.isSelfReference()) {
+            parentDynamicEntityInfo = _parentDynamicEntityInfo;
+        }
+    }
+
+    public String getDefaultVal() {
+        return defaultVal;
     }
 
     public boolean isNullable() {

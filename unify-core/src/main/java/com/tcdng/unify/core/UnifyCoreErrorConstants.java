@@ -1028,4 +1028,12 @@ public interface UnifyCoreErrorConstants {
     
     /** Static list with name {0} is unknown. */
     String STATICLIST_WITH_NAME_IS_UNKNOWN = "UC_0108";
+
+    /** Multiple auxiliary versions detected */
+    String MULTIPLE_AUXILIARY_VERSIONS_DETECTED = "UC_0109";
+
+    /**
+     * ID field not listable for recursive references. Type = {0}, Column = {1}
+     */
+    String RECORD_RECURSIVE_ID_NOT_LISTABLE = "UC_010A";
 }

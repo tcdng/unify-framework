@@ -130,16 +130,26 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	protected String getApplicationName() throws UnifyException {
 		return unifyComponentContext.getInstanceName();
 	}
+	
+    /**
+     * Gets the container deployment version.
+     * 
+     * @return the deployment version
+     * @throws UnifyException if an error occurs
+     */
+    protected String getDeploymentVersion() throws UnifyException {
+        return unifyComponentContext.getDeploymentVersion();
+    }
 
-	/**
-	 * Gets the container deployment version.
-	 * 
-	 * @return the deployment version
-	 * @throws UnifyException if an error occurs
-	 */
-	protected String getDeploymentVersion() throws UnifyException {
-		return unifyComponentContext.getDeploymentVersion();
-	}
+    /**
+     * Gets the container application auxiliary version.
+     * 
+     * @return the auxiliary version
+     * @throws UnifyException if an error occurs
+     */
+    protected String getAuxiliaryVersion() throws UnifyException {
+        return unifyComponentContext.getAuxiliaryVersion();
+    }
 
 	/**
 	 * Returns the component context container information object.

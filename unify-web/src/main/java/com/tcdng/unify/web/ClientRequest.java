@@ -85,4 +85,18 @@ public interface ClientRequest {
      *             if not octet-stream request
      */
     InputStream getInputStream() throws UnifyException;
+
+    /**
+     * Returns request cookie names.
+     */
+    Set<String> getCookieNames();
+
+    /**
+     * Gets client cookie from request.
+     * 
+     * @param name
+     *             the cookie name
+     * @return the cookie if found otherwise null
+     */
+    ClientCookie getCookie(String name);
 }

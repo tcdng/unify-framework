@@ -33,7 +33,7 @@ public class LikePolicy extends SingleParameterPolicy {
         this(SqlLikeType.CONTAINS, rootPolicies);
     }
     
-    public LikePolicy(SqlLikeType type, SqlDataSourceDialectPolicies rootPolicies) {
+    protected LikePolicy(SqlLikeType type, SqlDataSourceDialectPolicies rootPolicies) {
         super(" LIKE ", rootPolicies);
         this.type = type;
     }

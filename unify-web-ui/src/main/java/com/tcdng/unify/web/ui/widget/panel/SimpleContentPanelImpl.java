@@ -34,6 +34,11 @@ import com.tcdng.unify.web.ui.widget.Page;
 public class SimpleContentPanelImpl extends AbstractContentPanel {
 
     @Override
+    public String getBaseContentId() throws UnifyException {
+        return getPrefixedId("base_");
+    }
+
+    @Override
     public String getBusyIndicatorId() throws UnifyException {
         return getPrefixedId("busy_");
     }

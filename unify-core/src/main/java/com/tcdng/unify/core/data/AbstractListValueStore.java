@@ -32,15 +32,19 @@ import com.tcdng.unify.core.util.DataUtils;
  */
 public abstract class AbstractListValueStore<T> implements ValueStore {
 
-    private List<T> storage;
+    private List<? extends T> storage;
 
     private String dataMarker;
 
     private int dataIndex;
 
     private Map<String, Object> temp;
+    
+    private ValueStoreReader reader;
+    
+    private ValueStoreWriter writer;
 
-    public AbstractListValueStore(List<T> storage, String dataMarker, int dataIndex) {
+    public AbstractListValueStore(List<? extends T> storage, String dataMarker, int dataIndex) {
         this.storage = storage;
         this.dataMarker = dataMarker;
         this.dataIndex = dataIndex;
@@ -88,6 +92,36 @@ public abstract class AbstractListValueStore<T> implements ValueStore {
     @Override
     public void store(String name, Object value, Formatter<?> formatter) throws UnifyException {
         doStore(storage.get(dataIndex), name, value, formatter);
+    }
+
+    @Override
+    public void storeOnNull(int storageIndex, String name, Object value) throws UnifyException {
+        checkStorageIndex(storageIndex);
+        if (retrieve(storageIndex, name) == null) {
+            doStore(storage.get(storageIndex), name, value, null);
+        }
+    }
+
+    @Override
+    public void storeOnNull(int storageIndex, String name, Object value, Formatter<?> formatter) throws UnifyException {
+        checkStorageIndex(storageIndex);
+        if (retrieve(storageIndex, name) == null) {
+            doStore(storage.get(storageIndex), name, value, formatter);
+        }
+    }
+
+    @Override
+    public void storeOnNull(String name, Object value) throws UnifyException {
+        if (retrieve(name) == null) {
+            doStore(storage.get(dataIndex), name, value, null);
+        }
+    }
+
+    @Override
+    public void storeOnNull(String name, Object value, Formatter<?> formatter) throws UnifyException {
+        if (retrieve(name) == null) {
+            doStore(storage.get(dataIndex), name, value, formatter);
+        }
     }
 
     @Override
@@ -161,6 +195,37 @@ public abstract class AbstractListValueStore<T> implements ValueStore {
         return storage;
     }
 
+    @Override
+    public ValueStoreReader getReader() {
+        if (reader == null) {
+            synchronized(this) {
+                if(reader == null) {
+                    reader = new ValueStoreReader(this);
+                }
+            }
+        }
+
+        return reader;
+    }
+
+    @Override
+    public ValueStoreWriter getWriter() {
+        if (writer == null) {
+            synchronized(this) {
+                if(writer == null) {
+                    writer = new ValueStoreWriter(this);
+                }
+            }
+        }
+
+        return writer;
+    }
+
+    @Override
+    public int size() {
+        return storage.size();
+    }
+    
     private void checkStorageIndex(int storageIndex) throws UnifyException {
         if (storage == null) {
             throw new UnifyException(UnifyCoreErrorConstants.VALUESTORE_STORAGE_INDEX_OUT_BOUNDS, storageIndex, 0);

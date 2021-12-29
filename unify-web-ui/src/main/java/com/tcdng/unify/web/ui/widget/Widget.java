@@ -409,6 +409,11 @@ public interface Widget extends UplComponent {
     boolean isUseFacade() throws UnifyException;
 
     /**
+     * Tests if widget is facade focus mode.
+     */
+    boolean isUseFacadeFocus() throws UnifyException;
+
+    /**
      * Tests if widget events are to be bound to facade.
      */
     boolean isBindEventsToFacade() throws UnifyException;
@@ -497,7 +502,7 @@ public interface Widget extends UplComponent {
      *                        if an error occurs
      */
     boolean isActive() throws UnifyException;
-    
+
     /**
      * Tests if the components behavior is always written irrespective of
      * visibility.
@@ -540,6 +545,19 @@ public interface Widget extends UplComponent {
     void setAlternateMode(boolean alternateMode);
 
     /**
+     * Sets the widget's tab index
+     * 
+     * @param tabIndex
+     *                 the tab index to set
+     */
+    void setTabIndex(int tabIndex);
+
+    /**
+     * Gets this widget's tab index
+     */
+    int getTabIndex();
+
+    /**
      * Expects widget to add page name aliases to current request context.
      * 
      * @throws UnifyException
@@ -564,7 +582,7 @@ public interface Widget extends UplComponent {
      *                        if an error occurs
      */
     void updateInternalState() throws UnifyException;
-    
+
     /**
      * Gets the widget writer work object in current request context.
      * 

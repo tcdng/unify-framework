@@ -31,7 +31,11 @@ import com.tcdng.unify.core.util.ReflectUtils;
  */
 public class BeanValueListStore extends AbstractListValueStore<Object> {
 
-    public BeanValueListStore(List<Object> storage, String dataMarker, int dataIndex) {
+    public BeanValueListStore(List<? extends Object> storage) {
+        this(storage, null, 0);
+    }
+
+    public BeanValueListStore(List<? extends Object> storage, String dataMarker, int dataIndex) {
         super(storage, dataMarker, dataIndex);
     }
 

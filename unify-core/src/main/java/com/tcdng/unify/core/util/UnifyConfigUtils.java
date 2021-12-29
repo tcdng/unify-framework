@@ -37,6 +37,7 @@ import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.Configuration;
 import com.tcdng.unify.core.annotation.Singleton;
+import com.tcdng.unify.core.application.ApplicationAuxiliaryVersion;
 import com.tcdng.unify.core.util.xml.AliasConfig;
 import com.tcdng.unify.core.util.xml.AliasesConfig;
 import com.tcdng.unify.core.util.xml.ComponentConfig;
@@ -124,6 +125,20 @@ public final class UnifyConfigUtils {
      */
     public static void readConfigFromTypeRepository(UnifyContainerConfig.Builder uccb, TypeRepository typeRepository,
             String... packages) throws UnifyException {
+        // Auxiliary version
+        String auxiliaryVersion = "0.0";
+        List<Class<? extends ApplicationAuxiliaryVersion>> auxiliaryVersionList = typeRepository
+                .getAnnotatedClasses(ApplicationAuxiliaryVersion.class, AutoDetect.class, packages);
+        if (auxiliaryVersionList.size() > 1) {
+            throw new UnifyException(UnifyCoreErrorConstants.MULTIPLE_AUXILIARY_VERSIONS_DETECTED);
+        }
+        
+        if (!DataUtils.isBlank(auxiliaryVersionList)) {
+            ApplicationAuxiliaryVersion version = ReflectUtils.newInstance(auxiliaryVersionList.get(0));
+            auxiliaryVersion = version.getAuxiliaryVersion();
+        }
+        uccb.auxiliaryVersion(auxiliaryVersion);
+        
         // Static settings
         List<Class<? extends UnifyStaticSettings>> settingsList = typeRepository
                 .getAnnotatedClasses(UnifyStaticSettings.class, AutoDetect.class, packages);

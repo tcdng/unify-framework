@@ -850,6 +850,31 @@ public final class StringUtils {
         return sb.toString();
     }
 
+    public static String buildParameterizedString(List<StringToken> tokenList, ValueStore valueStore, int storageIndex)
+            throws UnifyException {
+        if (DataUtils.isBlank(tokenList)) {
+            return "";
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (StringToken stringToken : tokenList) {
+            if (stringToken.isParam()) {
+                Object val = valueStore.getTempValue(stringToken.getToken());
+                if (val == null) {
+                    val = valueStore.retrieve(storageIndex, stringToken.getToken());
+                }
+
+                if (val != null) {
+                    sb.append(val);
+                }
+            } else {
+                sb.append(stringToken.getToken());
+            }
+        }
+
+        return sb.toString();
+    }
+
     public static void truncate(StringBuilder sb) {
         if (sb != null) {
             sb.delete(0, sb.length());

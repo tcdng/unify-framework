@@ -59,6 +59,11 @@ import com.tcdng.unify.core.database.sql.criterion.policy.BetweenPolicy;
 import com.tcdng.unify.core.database.sql.criterion.policy.EqualPolicy;
 import com.tcdng.unify.core.database.sql.criterion.policy.GreaterOrEqualPolicy;
 import com.tcdng.unify.core.database.sql.criterion.policy.GreaterPolicy;
+import com.tcdng.unify.core.database.sql.criterion.policy.IEqualPolicy;
+import com.tcdng.unify.core.database.sql.criterion.policy.ILikeBeginPolicy;
+import com.tcdng.unify.core.database.sql.criterion.policy.ILikeEndPolicy;
+import com.tcdng.unify.core.database.sql.criterion.policy.ILikePolicy;
+import com.tcdng.unify.core.database.sql.criterion.policy.INotEqualsPolicy;
 import com.tcdng.unify.core.database.sql.criterion.policy.IsNotNullPolicy;
 import com.tcdng.unify.core.database.sql.criterion.policy.IsNullPolicy;
 import com.tcdng.unify.core.database.sql.criterion.policy.LessOrEqualPolicy;
@@ -149,7 +154,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         this.appendNullOnTblCreate = appendNullOnTblCreate;
         sqlCacheFactory = new SqlCacheFactory();
         sqlStatementPoolsFactory = new SqlStatementPoolsFactory();
-        noPrecisionTypes = new HashSet<String>(Arrays.asList("BIGINT", "DATETIME"));
+        noPrecisionTypes = new HashSet<String>(Arrays.asList("BIGINT", "DATETIME", "TIMESTAMP"));
     }
 
     public void setSqlEntityInfoFactory(SqlEntityInfoFactory sqlEntityInfoFactory) {
@@ -1542,7 +1547,9 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     protected static void populateDefaultSqlCriteriaPolicies(SqlDataSourceDialectPolicies rootPolicies,
             Map<RestrictionType, SqlCriteriaPolicy> sqlCriteriaPolicies) {
         sqlCriteriaPolicies.put(RestrictionType.EQUALS, new EqualPolicy(rootPolicies));
+        sqlCriteriaPolicies.put(RestrictionType.IEQUALS, new IEqualPolicy(rootPolicies));
         sqlCriteriaPolicies.put(RestrictionType.NOT_EQUALS, new NotEqualsPolicy(rootPolicies));
+        sqlCriteriaPolicies.put(RestrictionType.INOT_EQUALS, new INotEqualsPolicy(rootPolicies));
         sqlCriteriaPolicies.put(RestrictionType.LESS_THAN, new LessPolicy(rootPolicies));
         sqlCriteriaPolicies.put(RestrictionType.LESS_OR_EQUAL, new LessOrEqualPolicy(rootPolicies));
         sqlCriteriaPolicies.put(RestrictionType.GREATER, new GreaterPolicy(rootPolicies));
@@ -1552,10 +1559,13 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         sqlCriteriaPolicies.put(RestrictionType.AMONGST, new AmongstPolicy(rootPolicies));
         sqlCriteriaPolicies.put(RestrictionType.NOT_AMONGST, new NotAmongstPolicy(rootPolicies));
         sqlCriteriaPolicies.put(RestrictionType.LIKE, new LikePolicy(rootPolicies));
+        sqlCriteriaPolicies.put(RestrictionType.ILIKE, new ILikePolicy(rootPolicies));
         sqlCriteriaPolicies.put(RestrictionType.NOT_LIKE, new NotLikePolicy(rootPolicies));
         sqlCriteriaPolicies.put(RestrictionType.BEGINS_WITH, new LikeBeginPolicy(rootPolicies));
+        sqlCriteriaPolicies.put(RestrictionType.IBEGINS_WITH, new ILikeBeginPolicy(rootPolicies));
         sqlCriteriaPolicies.put(RestrictionType.NOT_BEGIN_WITH, new NotLikeBeginPolicy(rootPolicies));
         sqlCriteriaPolicies.put(RestrictionType.ENDS_WITH, new LikeEndPolicy(rootPolicies));
+        sqlCriteriaPolicies.put(RestrictionType.IENDS_WITH, new ILikeEndPolicy(rootPolicies));
         sqlCriteriaPolicies.put(RestrictionType.NOT_END_WITH, new NotLikeEndPolicy(rootPolicies));
         sqlCriteriaPolicies.put(RestrictionType.IS_NULL, new IsNullPolicy(rootPolicies));
         sqlCriteriaPolicies.put(RestrictionType.IS_NOT_NULL, new IsNotNullPolicy(rootPolicies));
@@ -2045,9 +2055,14 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         }
 
         ViewAliasInfo viewAliasInfo = new ViewAliasInfo(sqlEntitySchemaInfo.getTableAlias());
-        Map<SqlFieldSchemaInfo, SqlJoinInfo> sqlJoinMap = new LinkedHashMap<SqlFieldSchemaInfo, SqlJoinInfo>();
+        // 29/07/2021 Solve null on depth issue by separating map
+        // Map<SqlFieldSchemaInfo, SqlJoinInfo> sqlJoinMap = new
+        // LinkedHashMap<SqlFieldSchemaInfo, SqlJoinInfo>();
+        LinkedHashMap<String, SqlJoinInfo> sqlJoinInfos = new LinkedHashMap<String, SqlJoinInfo>();
+        Set<SqlFieldSchemaInfo> referenceFieldSet = new HashSet<SqlFieldSchemaInfo>();
         for (SqlFieldSchemaInfo sqlFieldInfo : sqlEntitySchemaInfo.getManagedListFieldInfos()) {
-            appendCreateViewSQLElements(sqlEntitySchemaInfo, sqlFieldInfo, viewAliasInfo, sqlJoinMap);
+            appendCreateViewSQLElements(sqlEntitySchemaInfo, sqlFieldInfo, viewAliasInfo, referenceFieldSet,
+                    sqlJoinInfos);
         }
 
         boolean appendSym = false;
@@ -2093,7 +2108,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
             sb.append(" FROM ");
         }
         sb.append(sqlEntitySchemaInfo.getSchemaTableName()).append(' ').append(viewAliasInfo.getViewAlias());
-        for (SqlJoinInfo sqlJoinInfo : sqlJoinMap.values()) {
+        for (SqlJoinInfo sqlJoinInfo : sqlJoinInfos.values()) {
             if (format.isPretty()) {
                 sb.append(newLineSql);
                 sb.append('\t');
@@ -2291,18 +2306,21 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     }
 
     private void appendCreateViewSQLElements(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlFieldSchemaInfo sqlFieldInfo,
-            ViewAliasInfo viewAliasInfo, Map<SqlFieldSchemaInfo, SqlJoinInfo> sqlJoinMap) {
+            ViewAliasInfo viewAliasInfo, Set<SqlFieldSchemaInfo> referenceFieldSet,
+            LinkedHashMap<String, SqlJoinInfo> sqlJoinInfos) {
         String column = sqlFieldInfo.getPreferredColumnName();
         String viewAlias = viewAliasInfo.getViewAlias();
         String aliasExt = "";
         ViewAliasInfo.FkChainViewAliasInfo fcvAliasInfo = null;
+        // 29/07/2021 Solve null on depth issue by including depth variable
+        int depth = 0;
         while (sqlFieldInfo.isListOnly()) {
             SqlFieldSchemaInfo fkSQLFieldInfo = sqlFieldInfo.getForeignKeyFieldInfo();
             if (fcvAliasInfo == null) {
                 fcvAliasInfo = viewAliasInfo.getFkChainViewAliasInfo(fkSQLFieldInfo);
             }
 
-            if (!sqlJoinMap.containsKey(fkSQLFieldInfo)) {
+            if (!referenceFieldSet.contains(fkSQLFieldInfo) || depth > 0) {
                 StringBuilder csb = new StringBuilder();
                 String tableAlias = fkSQLFieldInfo.getForeignEntityInfo().getTableAlias() + fkSQLFieldInfo.getName();
 
@@ -2311,14 +2329,18 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
                 csb.append(" = ");
                 csb.append(fcvAliasInfo.getViewAlias(sqlEntitySchemaInfo.getTableAlias() + aliasExt)).append('.')
                         .append(fkSQLFieldInfo.getPreferredColumnName());
-                sqlJoinMap.put(fkSQLFieldInfo, new SqlJoinInfo(
-                        fkSQLFieldInfo.getForeignEntityInfo().getSchemaTableName(), viewAlias, csb.toString()));
+                referenceFieldSet.add(fkSQLFieldInfo);
+                if (!sqlJoinInfos.containsKey(viewAlias)) {
+                    sqlJoinInfos.put(viewAlias, new SqlJoinInfo(
+                            fkSQLFieldInfo.getForeignEntityInfo().getSchemaTableName(), viewAlias, csb.toString()));
+                }
             }
 
             sqlEntitySchemaInfo = sqlFieldInfo.getForeignEntityInfo();
             aliasExt = fkSQLFieldInfo.getName();
             viewAlias = fcvAliasInfo.getViewAlias(sqlEntitySchemaInfo.getTableAlias() + aliasExt);
             sqlFieldInfo = sqlFieldInfo.getForeignFieldInfo();
+            depth++;
         }
 
         viewAliasInfo.addPair(viewAlias + '.' + sqlFieldInfo.getPreferredColumnName(), column);

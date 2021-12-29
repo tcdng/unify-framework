@@ -86,6 +86,12 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
 
     private static final String FOCUS_ON_WIDGET = "FOCUS_ON_WIDGET";
 
+    private static final String CONSIDER_DEFAULT_FOCUS = "CONSIDER_DEFAULT_FOCUS";
+
+    private static final String DEFAULT_FOCUS_ON_WIDGET = "PAGEREQUEST.DEFAULT_FOCUS_ON_WIDGET";
+
+    private static final String CONTENT_SCROLL_RESET = "CONTENT_SCROLL_RESET";
+
     private static final String DEBOUNCE_WIDGET = "DEBOUNCE_WIDGET";
     
     @Override
@@ -417,6 +423,31 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
     }
 
     @Override
+    public void considerDefaultFocusOnWidget() throws UnifyException {
+        setRequestAttribute(CONSIDER_DEFAULT_FOCUS, Boolean.TRUE);
+    }
+
+    @Override
+    public void setDefaultFocusOnWidgetId(String id) throws UnifyException {
+        setSessionAttribute(DEFAULT_FOCUS_ON_WIDGET, id);        
+    }
+
+    @Override
+    public boolean isFocusOnWidgetOrDefault() throws UnifyException {
+        return isFocusOnWidget()
+                || (isRequestAttribute(CONSIDER_DEFAULT_FOCUS) && isSessionAttribute(DEFAULT_FOCUS_ON_WIDGET));
+    }
+
+    @Override
+    public String getFocusOnWidgetIdOrDefault() throws UnifyException {
+        if (isFocusOnWidget()) {
+            return getFocusOnWidgetId();
+        }
+        
+        return (String) getSessionAttribute(DEFAULT_FOCUS_ON_WIDGET);
+    }
+
+    @Override
     public void clearFocusOnWidget() throws UnifyException {
         removeRequestAttribute(FOCUS_ON_WIDGET);       
     }
@@ -443,6 +474,16 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
     }
 
     @Override
+    public void setContentScrollReset() throws UnifyException {
+        setRequestAttribute(CONTENT_SCROLL_RESET, Boolean.TRUE);;
+    }
+
+    @Override
+    public boolean isContentScrollReset() throws UnifyException {
+        return Boolean.TRUE.equals(getRequestAttribute(CONTENT_SCROLL_RESET));
+    }
+
+    @Override
     public void clearRequestContext() throws UnifyException {
         setRequestAttribute(PageRequestParameterConstants.TARGET_VALUE, null);
         setRequestAttribute(PageRequestParameterConstants.WINDOW_NAME, null);
@@ -458,7 +499,6 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
         setRequestAttribute(RESPONSE_PATHPARTS, null);
         setRequestAttribute(USER_HINT_LIST, null);
         setRequestAttribute(VALIDATION_INFO_LIST, null);
-
     }
 
     @Override

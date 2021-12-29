@@ -44,6 +44,7 @@ public class NumberFieldWriter extends TextFieldWriter {
         return WebRegexUtils.getNumberFormatRegex(((NumberFormatter<?>) numberField.getFormatter()).getNumberSymbols(),
                 numberField.getUplAttribute(int.class, "precision"), scale,
                 numberField.getUplAttribute(boolean.class, "acceptNegative"),
-                numberField.getUplAttribute(boolean.class, "useGrouping"));
+                numberField.getUplAttribute(boolean.class, "useGrouping"),
+                numberField.getUplAttribute(boolean.class, "strictFormat"));
     }
 }

@@ -54,10 +54,10 @@ public class TextField extends AbstractFormattedControl {
     }
 
     @Override
-	public boolean isUseFacade() throws UnifyException {
-		return !getExtReadOnly();
-	}
-
+    public boolean isUseFacade() throws UnifyException {
+        return !getExtReadOnly();
+    }
+    
 	public ExtensionType getExtensionType() {
         return ExtensionType.NONE;
     }

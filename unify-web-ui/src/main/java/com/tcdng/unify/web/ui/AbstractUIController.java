@@ -326,6 +326,8 @@ public abstract class AbstractUIController extends AbstractController implements
                 writer.write(",\"remoteView\":{");
                 writer.write("\"view\":\"").write(pageRequestContextUtil.getRemoteViewer()).write("\"}");
             }
+            
+            writer.write(",\"scrollReset\":").write(pageRequestContextUtil.isContentScrollReset());
             writer.write("}");
         } else {
             for (PageControllerResponse pageControllerResponse : result.getResponses()) {
@@ -375,6 +377,7 @@ public abstract class AbstractUIController extends AbstractController implements
                         pathInfoRepository.getControllerPathParts(SystemInfoConstants.UNAUTHORIZED_CONTROLLER_NAME);
                 pageController = (PageController<?>) getControllerFinder().findController(respPathParts);
                 page = uiControllerUtil.loadRequestPage(respPathParts);
+                page.setWidgetVisible("stackTrace", !loginRequired);
                 result = uiControllerUtil.getPageControllerInfo(pageController.getName()).getResult(ResultMappingConstants.INDEX);
             } else {
                 respPathParts =

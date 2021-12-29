@@ -112,7 +112,7 @@ public class DynamicSqlEntityLoaderImpl extends AbstractUnifyComponent implement
                     ForceConstraints.fromBoolean(!getContainerSetting(boolean.class,
                             UnifyCorePropertyConstants.APPLICATION_FOREIGNKEY_EASE, false)));
             if (sqlDataSource.getDialect().isReconstructViewsOnTableSchemaUpdate()) {
-                sqlSchemaManager.dropViewSchema(sqlDataSource, options, dependencyList);
+                sqlSchemaManager.dropViewSchema(sqlDataSource, options, tableList); //dependencyList
             }
             
             sqlSchemaManager.manageTableSchema(sqlDataSource, options, tableList);

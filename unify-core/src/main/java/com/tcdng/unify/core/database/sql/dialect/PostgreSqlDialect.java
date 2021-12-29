@@ -43,6 +43,9 @@ import com.tcdng.unify.core.database.sql.SqlEntitySchemaInfo;
 import com.tcdng.unify.core.database.sql.SqlFieldSchemaInfo;
 import com.tcdng.unify.core.database.sql.data.policy.BlobPolicy;
 import com.tcdng.unify.core.database.sql.data.policy.ClobPolicy;
+import com.tcdng.unify.core.database.sql.data.policy.DatePolicy;
+import com.tcdng.unify.core.database.sql.data.policy.TimestampPolicy;
+import com.tcdng.unify.core.database.sql.data.policy.TimestampUTCPolicy;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
 
@@ -61,6 +64,9 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
     static {
         Map<ColumnType, SqlDataTypePolicy> tempMap1 = new EnumMap<ColumnType, SqlDataTypePolicy>(ColumnType.class);
         populateDefaultSqlDataTypePolicies(tempMap1);
+        tempMap1.put(ColumnType.DATE, new PostgreSqlDatePolicy());
+        tempMap1.put(ColumnType.TIMESTAMP, new PostgreSqlTimestampPolicy());
+        tempMap1.put(ColumnType.TIMESTAMP_UTC, new PostgreSqlTimestampUTCPolicy());
         tempMap1.put(ColumnType.BLOB, new PostgreSqlBlobPolicy());
         tempMap1.put(ColumnType.CLOB, new PostgreSqlClobPolicy());
 
@@ -81,6 +87,18 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
     }
 
     @Override
+    public String normalizeDefault(String defaultStr) {
+        if (defaultStr != null) {
+            int index = defaultStr.indexOf("::character varying");
+            if (index >= 0) {
+                return defaultStr.substring(0, index);
+            }
+        }
+
+        return defaultStr;
+    }
+
+    @Override
     public String generateTestSql() throws UnifyException {
         return "SELECT 1";
     }
@@ -93,12 +111,6 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
     @Override
     public String generateDropUniqueConstraintSql(SqlEntitySchemaInfo sqlEntitySchemaInfo,
             String dbUniqueConstraintName, PrintFormat format) throws UnifyException {
-        return generateDropIndexSql(sqlEntitySchemaInfo, dbUniqueConstraintName, format);
-    }
-
-    @Override
-    public String generateDropIndexSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, String dbIndexName, PrintFormat format)
-            throws UnifyException {
         StringBuilder sb = new StringBuilder();
         String tableName = sqlEntitySchemaInfo.getSchemaTableName();
         sb.append("ALTER TABLE ").append(tableName);
@@ -108,6 +120,14 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
             sb.append(" ");
         }
 
+        sb.append("DROP CONSTRAINT ").append(dbUniqueConstraintName);
+        return sb.toString();
+    }
+
+    @Override
+    public String generateDropIndexSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, String dbIndexName, PrintFormat format)
+            throws UnifyException {
+        StringBuilder sb = new StringBuilder();
         sb.append("DROP INDEX ").append(dbIndexName);
         return sb.toString();
     }
@@ -161,7 +181,7 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
                     sqlFieldSchemaInfo.getScale());
             if (sqlFieldSchemaInfo.isNullable()) {
                 sb.append(", ALTER COLUMN ").append(sqlFieldSchemaInfo.getColumnName());
-                sb.append(" SET NULL");
+                sb.append(" DROP NOT NULL");
             } else {
                 sb.append(", ALTER COLUMN ").append(sqlFieldSchemaInfo.getColumnName());
                 sb.append(" SET ");
@@ -194,7 +214,7 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
         sb.append(" TYPE");
         appendTypeSql(sb, sqlColumnInfo);
         sb.append(", ALTER COLUMN ").append(sqlColumnInfo.getColumnName());
-        sb.append(" SET NULL");
+        sb.append(" DROP NOT NULL");
         return sb.toString();
     }
 
@@ -211,6 +231,12 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
     @Override
     public boolean isReconstructViewsOnTableSchemaUpdate() throws UnifyException {
         return true;
+    }
+
+    @Override
+    protected void onInitialize() throws UnifyException {
+        super.onInitialize();
+        includeNoPrecisionType("INT8");
     }
 
     @Override
@@ -278,6 +304,33 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
             return sb.toString();
         }
     }
+}
+
+class PostgreSqlDatePolicy extends DatePolicy {
+
+    @Override
+    public String getAltDefault(Class<?> fieldType) {
+        return "CURRENT_TIMESTAMP";
+    }
+
+}
+
+class PostgreSqlTimestampPolicy extends TimestampPolicy {
+
+    @Override
+    public String getAltDefault(Class<?> fieldType) {
+        return "CURRENT_TIMESTAMP";
+    }
+
+}
+
+class PostgreSqlTimestampUTCPolicy extends TimestampUTCPolicy {
+
+    @Override
+    public String getAltDefault(Class<?> fieldType) {
+        return "CURRENT_TIMESTAMP";
+    }
+
 }
 
 class PostgreSqlBlobPolicy extends BlobPolicy {

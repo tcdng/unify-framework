@@ -51,7 +51,7 @@ public class OptionsTextAreaWriter extends TextAreaWriter {
             writer.write(">");
 
             writer.write("<div id=\"").write(optionsTextArea.getFramePanelId())
-                    .write("\" class=\"otaborder\" style=\"overflow-y:auto;overflow-x:hidden;\" tabindex=\"0\">");
+                    .write("\" class=\"otaborder\" style=\"overflow-y:auto;overflow-x:hidden;\" tabindex=\"-1\">");
             writer.write("<div id=\"").write(optionsTextArea.getListPanelId()).write("\" class=\"otalist\">");
             List<? extends Listable> listableList = optionsTextArea.getListables();
             int length = listableList.size();

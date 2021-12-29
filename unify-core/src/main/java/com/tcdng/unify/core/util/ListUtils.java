@@ -66,4 +66,40 @@ public final class ListUtils {
 
         return calcList;
     }
+
+    /**
+     * Gets a sub list based on filter and or limit.
+     * 
+     * @param srcList
+     *                the source list
+     * @param filter
+     *                optional description filter
+     * @param limit
+     *                the limit
+     * @return sub list
+     */
+    public static List<? extends Listable> getCaseInsensitiveSubList(List<? extends Listable> srcList, String filter,
+            int limit) {
+        if (StringUtils.isBlank(filter)) {
+            if (limit <= 0 || limit > srcList.size()) {
+                return srcList;
+            }
+
+            return srcList.subList(0, limit);
+        }
+
+        List<Listable> calcList = new ArrayList<Listable>();
+        filter = filter.toLowerCase();
+        int i = 0;
+        for (Listable listable : srcList) {
+            if (listable.getListDescription().toLowerCase().contains(filter)) {
+                calcList.add(listable);
+                if (limit > 0 && (++i) >= limit) {
+                    break;
+                }
+            }
+        }
+
+        return calcList;
+    }
 }

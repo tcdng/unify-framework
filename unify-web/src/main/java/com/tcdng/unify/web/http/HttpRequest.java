@@ -20,9 +20,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
+
+import com.tcdng.unify.web.ClientCookie;
 
 /**
  * HTTP request.
@@ -67,6 +70,8 @@ public interface HttpRequest {
 
     Collection<HttpPart> getParts() throws Exception;
 
+    List<ClientCookie> getCookies();
+    
     void invalidateSession();
 
     void setSessionAttribute(String name, Object val);

@@ -1731,6 +1731,18 @@ public final class DataUtils {
         return paramObject;
     }
 
+    public static BigDecimal add(BigDecimal a, BigDecimal b) {
+        if (a != null) {
+            if(b != null) {
+                return a.add(b);
+            }
+            
+            return a;
+        }
+        
+        return b;
+    }
+    
     @SuppressWarnings("unchecked")
     private static <T> T readJsonObject(T object, JsonObject jsonObject) throws UnifyException, Exception {
         Map<String, GetterSetterInfo> mutatorMap = ReflectUtils.getGetterSetterMap(object.getClass());

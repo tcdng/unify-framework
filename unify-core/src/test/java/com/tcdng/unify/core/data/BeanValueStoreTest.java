@@ -17,6 +17,7 @@ package com.tcdng.unify.core.data;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -68,6 +69,26 @@ public class BeanValueStoreTest {
         Address address = new Address("24 Parklane", "Apapa Lagos");
         BeanValueStore bvs = new BeanValueStore(address);
         assertNull(bvs.retrieve("line15"));
+    }
+
+    @Test
+    public void testStoreOnNullSimpleBeanPropertyValue() throws Exception {
+        Address address = new Address();
+        BeanValueStore bvs = new BeanValueStore(address);
+        bvs.storeOnNull("line1", "37 Pauwa Road");
+        bvs.storeOnNull("line2", "Ungwan Dosa, Kaduna");
+        assertEquals("37 Pauwa Road", address.getLine1());
+        assertEquals("Ungwan Dosa, Kaduna", address.getLine2());
+        
+        bvs.storeOnNull("line1", "38 Pauwa Road");
+        bvs.storeOnNull("line2", "Ungwan Dosa, Kastina");
+        assertEquals("37 Pauwa Road", address.getLine1());
+        assertEquals("Ungwan Dosa, Kaduna", address.getLine2());  
+        
+        bvs.store("line1", "38 Pauwa Road");
+        bvs.store("line2", "Ungwan Dosa, Kastina");
+        assertEquals("38 Pauwa Road", address.getLine1());
+        assertEquals("Ungwan Dosa, Kastina", address.getLine2());  
     }
 
     @Test
@@ -132,5 +153,29 @@ public class BeanValueStoreTest {
         assertFalse(bvs.isTempValue("phoneNumber"));
         assertEquals("Shinzo", bvs.getTempValue("surname"));
         assertNull(bvs.getTempValue("phoneNumber"));
+    }
+
+    @Test
+    public void testGetReader() throws Exception {
+        Address address = new Address("24 Parklane", "Apapa Lagos");
+        BeanValueStore bvs = new BeanValueStore(address);
+        ValueStoreReader reader = bvs.getReader();
+        assertNotNull(reader);
+        assertEquals("24 Parklane", reader.read("line1"));
+        assertEquals("Apapa Lagos", reader.read("line2"));
+    }
+
+    @Test
+    public void testGetWriter() throws Exception {
+        BeanValueStore bvs = new BeanValueStore(new Address());
+        ValueStoreWriter writer = bvs.getWriter();
+        assertNotNull(writer);
+        writer.write("line1", "38 Warehouse Road");
+        writer.write("line2", "Apapa Lagos");
+        
+        ValueStoreReader reader = bvs.getReader();
+        assertNotNull(reader);
+        assertEquals("38 Warehouse Road", reader.read("line1"));
+        assertEquals("Apapa Lagos", reader.read("line2"));
     }
 }

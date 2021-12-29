@@ -36,6 +36,8 @@ import com.tcdng.unify.core.system.entities.AbstractSequencedEntity;
  */
 public class DynamicEntityInfo {
 
+    public static final DynamicEntityInfo SELF_REFERENCE = new DynamicEntityInfo(true);
+
     private DynamicEntityType type;
 
     private String tableName;
@@ -48,7 +50,13 @@ public class DynamicEntityInfo {
 
     private boolean withChildField;
 
+    private boolean selfReference;
+
     private long version;
+
+    private DynamicEntityInfo(boolean selfReference) {
+        this.selfReference = selfReference;
+    }
 
     private DynamicEntityInfo(DynamicEntityType type, String tableName, String baseClassName, String className,
             Map<String, DynamicFieldInfo> fieldInfos, long version) {
@@ -114,6 +122,10 @@ public class DynamicEntityInfo {
         return this;
     }
 
+    public boolean isSelfReference() {
+        return selfReference;
+    }
+
     public long getVersion() {
         return version;
     }
@@ -176,24 +188,24 @@ public class DynamicEntityInfo {
         }
 
         public Builder addForeignKeyField(DynamicFieldType type, DynamicEntityInfo parentDynamicEntityInfo,
-                String columnName, String fieldName, boolean nullable) throws UnifyException {
+                String columnName, String fieldName, String defaultVal, boolean nullable) throws UnifyException {
             checkFieldNameExist(fieldName);
             fkFields.put(fieldName,
-                    new DynamicForeignKeyFieldInfo(type, parentDynamicEntityInfo, columnName, fieldName, nullable));
+                    new DynamicForeignKeyFieldInfo(type, parentDynamicEntityInfo, columnName, fieldName, defaultVal, nullable));
             return this;
         }
 
         public Builder addForeignKeyField(DynamicFieldType type, String enumClassName, String columnName,
-                String fieldName, boolean nullable) throws UnifyException {
+                String fieldName, String defaultVal, boolean nullable) throws UnifyException {
             checkFieldNameExist(fieldName);
             fkFields.put(fieldName,
-                    new DynamicForeignKeyFieldInfo(type, enumClassName, columnName, fieldName, nullable));
+                    new DynamicForeignKeyFieldInfo(type, enumClassName, columnName, fieldName, defaultVal, nullable));
             return this;
         }
 
         public Builder addField(DynamicFieldType type, DataType dataType, String columnName, String fieldName,
-                int length, int precision, int scale, boolean nullable, boolean descriptive) throws UnifyException {
-            return addField(type, dataType, columnName, fieldName, null, null, length, precision, scale, nullable,
+                String defaultVal, int length, int precision, int scale, boolean nullable, boolean descriptive) throws UnifyException {
+            return addField(type, dataType, columnName, fieldName, null, defaultVal, length, precision, scale, nullable,
                     descriptive);
         }
 
@@ -207,7 +219,7 @@ public class DynamicEntityInfo {
         }
 
         public Builder addField(DynamicFieldType type, String enumClassName, String columnName, String fieldName,
-                boolean nullable, boolean descriptive) throws UnifyException {
+                String defaultVal, boolean nullable, boolean descriptive) throws UnifyException {
             checkFieldNameExist(fieldName);
             columnFields.put(fieldName,
                     new DynamicColumnFieldInfo(type, enumClassName, columnName, fieldName, nullable, descriptive));
@@ -232,10 +244,18 @@ public class DynamicEntityInfo {
                 listOnlyFields.put(fieldName,
                         new DynamicListOnlyFieldInfo(type, columnName, fieldName, key, property, false));
             } else {
-                listOnlyFields.put(fieldName,
-                        new DynamicListOnlyFieldInfo(type,
-                                fkFieldInfo.getParentDynamicEntityInfo().getDynamicFieldInfo(property), columnName,
-                                fieldName, key, property, descriptive));
+                DynamicFieldInfo _dynamicFieldInfo = null;
+                if (fkFieldInfo.getParentDynamicEntityInfo().isSelfReference()) {
+                    _dynamicFieldInfo = columnFields.get(property);
+                    if (_dynamicFieldInfo == null) {
+                        _dynamicFieldInfo = fkFields.get(property);
+                    }
+                } else {
+                    _dynamicFieldInfo = fkFieldInfo.getParentDynamicEntityInfo().getDynamicFieldInfo(property);
+                }
+
+                listOnlyFields.put(fieldName, new DynamicListOnlyFieldInfo(type, _dynamicFieldInfo, columnName,
+                        fieldName, key, property, descriptive));
             }
             return this;
         }
@@ -252,7 +272,13 @@ public class DynamicEntityInfo {
             fieldInfos.putAll(fkFields);
             fieldInfos.putAll(columnFields);
             fieldInfos.putAll(listOnlyFields);
-            return new DynamicEntityInfo(type, tableName, baseClassName, className, fieldInfos, version);
+            DynamicEntityInfo info = new DynamicEntityInfo(type, tableName, baseClassName, className, fieldInfos,
+                    version);
+            for (DynamicForeignKeyFieldInfo fkField: fkFields.values()) {
+                fkField.updateParentDynamicEntityInfo(info);
+            }
+            
+            return info;
         }
     }
 

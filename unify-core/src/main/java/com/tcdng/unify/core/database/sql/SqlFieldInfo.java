@@ -293,6 +293,28 @@ public class SqlFieldInfo implements SqlFieldSchemaInfo {
         return foreignKeyFieldInfo;
     }
 
+    public boolean isUnresolvedForeignKey() {
+        return foreignKey && foreignEntityInfo == null;
+    }
+
+    public boolean isUnresolvedListOnly() {
+        return listOnly && foreignEntityInfo == null;
+    }
+    
+    public void resolveForeignKey(SqlEntityInfo foreignEntityInfo, SqlFieldInfo foreignFieldInfo) {
+        if (isUnresolvedForeignKey()) {
+            this.foreignEntityInfo = foreignEntityInfo;
+            this.foreignFieldInfo = foreignFieldInfo;
+            this.sqlFieldDimensions = foreignFieldInfo.sqlFieldDimensions;
+        }
+    }
+    
+    public void resolveListOnly(SqlEntityInfo foreignEntityInfo) {
+        if (isUnresolvedListOnly()) {
+            this.foreignEntityInfo = foreignEntityInfo;
+        }
+    }
+    
     public String toDimensionString() {
         StringBuilder sb = new StringBuilder();
         sb.append("{columnName = ").append(columnName);

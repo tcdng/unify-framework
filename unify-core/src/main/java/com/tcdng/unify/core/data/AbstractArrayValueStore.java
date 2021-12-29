@@ -37,6 +37,10 @@ public abstract class AbstractArrayValueStore<T> implements ValueStore {
     private int dataIndex;
 
     private Map<String, Object> temp;
+    
+    private ValueStoreReader reader;
+    
+    private ValueStoreWriter writer;
 
     public AbstractArrayValueStore(T[] storage, String dataMarker, int dataIndex) {
         this.storage = storage;
@@ -84,6 +88,34 @@ public abstract class AbstractArrayValueStore<T> implements ValueStore {
         doStore(storage[dataIndex], name, value, formatter);
     }
 
+    @Override
+    public void storeOnNull(int storageIndex, String name, Object value) throws UnifyException {
+        if (retrieve(storageIndex, name) == null) {
+            doStore(storage[storageIndex], name, value, null);
+        }
+    }
+
+    @Override
+    public void storeOnNull(int storageIndex, String name, Object value, Formatter<?> formatter) throws UnifyException {
+        if (retrieve(storageIndex, name) == null) {
+            doStore(storage[storageIndex], name, value, formatter);
+        }
+    }
+
+    @Override
+    public void storeOnNull(String name, Object value) throws UnifyException {
+        if (retrieve(name) == null) {
+            doStore(storage[dataIndex], name, value, null);
+        }
+    }
+
+    @Override
+    public void storeOnNull(String name, Object value, Formatter<?> formatter) throws UnifyException {
+        if (retrieve(name) == null) {
+            doStore(storage[dataIndex], name, value, formatter);
+        }
+    }
+    
     @Override
     public Object getTempValue(String name) throws UnifyException {
         if (temp != null) {
@@ -151,8 +183,39 @@ public abstract class AbstractArrayValueStore<T> implements ValueStore {
     }
 
     @Override
+    public int size() {
+        return storage.length;
+    }
+
+    @Override
     public Object getValueObject() {
         return storage;
+    }
+
+    @Override
+    public ValueStoreReader getReader() {
+        if (reader == null) {
+            synchronized(this) {
+                if(reader == null) {
+                    reader = new ValueStoreReader(this);
+                }
+            }
+        }
+
+        return reader;
+    }
+
+    @Override
+    public ValueStoreWriter getWriter() {
+        if (writer == null) {
+            synchronized(this) {
+                if(writer == null) {
+                    writer = new ValueStoreWriter(this);
+                }
+            }
+        }
+
+        return writer;
     }
 
     protected abstract boolean doSettable(T storage, String property) throws UnifyException;

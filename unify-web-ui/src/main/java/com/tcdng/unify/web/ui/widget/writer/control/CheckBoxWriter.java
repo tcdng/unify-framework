@@ -52,7 +52,10 @@ public class CheckBoxWriter extends AbstractControlWriter {
                 writeTagVisualAttributesWithTrailingExtraStyleClass(writer, checkBox, "g_cbb");
             }
         }
-
+        
+        if (checkBox.getTabIndex() >= 0) {
+            writer.write(" tabindex=\"").write(checkBox.getTabIndex()).write("\"");
+        }
         writer.write("/>");
         writer.write("<input type=\"checkbox\"");
         writeTagId(writer, checkBox);

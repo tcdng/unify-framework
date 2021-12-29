@@ -43,6 +43,7 @@ import com.tcdng.unify.core.util.ColorUtils;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.IOUtils;
 import com.tcdng.unify.core.util.StringUtils;
+import com.tcdng.unify.web.ClientCookie;
 import com.tcdng.unify.web.ClientRequest;
 import com.tcdng.unify.web.ClientResponse;
 import com.tcdng.unify.web.Controller;
@@ -86,6 +87,8 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
     private FactoryMap<String, RequestPathParts> requestPathParts;
 
     private Set<String> remoteViewerList;
+
+    private boolean isRemoteViewStrict;
 
     private boolean isTenantPathEnabled;
 
@@ -164,15 +167,24 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
             }
 
             ClientRequest clientRequest = new HttpClientRequest(detectClientPlatform(httpRequest), methodType,
-                    requestPathParts, charset, extractRequestParameters(httpRequest, charset));
+                    requestPathParts, charset, extractRequestParameters(httpRequest, charset),
+                    extractCookies(httpRequest));
             ClientResponse clientResponse = new HttpClientResponse(httpResponse);
 
             String origin = httpRequest.getHeader("origin");
-            if (!StringUtils.isBlank(origin) && (remoteViewerList.isEmpty() || remoteViewerList.contains(origin))) {
-                httpResponse.setHeader("Access-Control-Allow-Origin", origin);
-                httpResponse.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS");
-                httpResponse.setHeader("Access-Control-Allow-Headers", "Content-Type");
-                httpResponse.setHeader("Access-Control-Max-Age", "600");
+            origin = origin != null ? origin : httpRequest.getHeader("Origin");
+            if (!StringUtils.isBlank(origin)) {
+                if (remoteViewerList.isEmpty() || remoteViewerList.contains(origin)) {
+                    httpResponse.setHeader("Access-Control-Allow-Origin", origin);
+                    httpResponse.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS");
+                    httpResponse.setHeader("Access-Control-Allow-Headers", "Content-Type");
+                    httpResponse.setHeader("Access-Control-Max-Age", "600");
+                } else {
+                    if (isRemoteViewStrict) {
+                        clientResponse.setStatusForbidden();
+                        return;
+                    }
+                }
             }
 
             Controller controller = controllerFinder
@@ -283,6 +295,8 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
     @SuppressWarnings("unchecked")
     @Override
     protected void onInitialize() throws UnifyException {
+        isRemoteViewStrict = getContainerSetting(boolean.class,
+                UnifyWebPropertyConstants.APPLICATION_REMOTE_VIEWERS_STRICT, false);
         isTenantPathEnabled = getContainerSetting(boolean.class,
                 UnifyWebPropertyConstants.APPLICATION_TENANT_PATH_ENABLED, false);
         List<String> viewersList = DataUtils.convert(ArrayList.class, String.class,
@@ -308,6 +322,20 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
         return platform;
     }
 
+    private Map<String, ClientCookie> extractCookies(HttpRequest httpRequest) {
+        List<ClientCookie> cookieList = httpRequest.getCookies();
+        if (!DataUtils.isBlank(cookieList)) {
+            Map<String, ClientCookie> cookies = new HashMap<String, ClientCookie>();
+            for (ClientCookie clientCookie : cookieList) {
+                cookies.put(clientCookie.getName(), clientCookie);
+            }
+
+            return cookies;
+        }
+
+        return Collections.emptyMap();
+    }
+    
     private Map<String, Object> extractRequestParameters(HttpRequest httpRequest, Charset charset)
             throws UnifyException {
         Map<String, Object> result = new HashMap<String, Object>();

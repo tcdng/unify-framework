@@ -48,6 +48,11 @@ public class SingleSelect extends AbstractListPopupTextField {
     }
 
     @Override
+    public boolean isUseFacadeFocus() throws UnifyException {
+        return true;
+    }
+
+    @Override
     public ExtensionType getExtensionType() {
         return ExtensionType.FACADE_HIDDEN;
     }

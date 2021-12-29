@@ -17,6 +17,7 @@ package com.tcdng.unify.web.ui.response;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.constant.FileAttachmentType;
 import com.tcdng.unify.web.constant.UnifyWebRequestAttributeConstants;
 import com.tcdng.unify.web.ui.AbstractOpenWindowPageControllerResponse;
 import com.tcdng.unify.web.ui.widget.data.FileAttachmentInfo;
@@ -33,16 +34,27 @@ public class FileAttachmentResponse extends AbstractOpenWindowPageControllerResp
 
     @Override
     protected WindowResourceInfo prepareWindowResource() throws UnifyException {
-        FileAttachmentsInfo fileAttachmentsInfo =
-                (FileAttachmentsInfo) getRequestAttribute(UnifyWebRequestAttributeConstants.FILEATTACHMENTS_INFO);
-        FileAttachmentInfo fileAttachmentInfo = fileAttachmentsInfo.getSelectedAttachmentInfo();
-        String resourceName = fileAttachmentInfo.getFilename();
-        if (fileAttachmentsInfo.isViewTimestamped()) {
-            resourceName = getTimestampedResourceName(fileAttachmentInfo.getFilename());
+        FileAttachmentInfo fileAttachmentInfo = null;
+        Object resource = getRequestAttribute(UnifyWebRequestAttributeConstants.FILEATTACHMENTS_INFO);
+        if (resource instanceof FileAttachmentsInfo) {
+            FileAttachmentsInfo fileAttachmentsInfo =
+                    (FileAttachmentsInfo) resource;
+            fileAttachmentInfo = fileAttachmentsInfo.getSelectedAttachmentInfo();
+            String fileName = fileAttachmentInfo.getFilename();
+            if (fileAttachmentsInfo.isViewTimestamped()) {
+                fileName = getTimestampedResourceName(fileAttachmentInfo.getFilename());
+            }
+            
+            final FileAttachmentType type = FileAttachmentType.detectFromFileName(fileName);
+            return new WindowResourceInfo(fileAttachmentsInfo, "/resource/fileattachment", fileName,
+                    type.mimeType().template(), false);
         }
 
-        return new WindowResourceInfo(fileAttachmentsInfo, "/resource/fileattachment", resourceName,
-                fileAttachmentInfo.getType().mimeType().template(), false);
+        fileAttachmentInfo = (FileAttachmentInfo) resource;
+        String fileName = fileAttachmentInfo.getFilename();
+        final FileAttachmentType type = FileAttachmentType.detectFromFileName(fileName);
+        return new WindowResourceInfo(fileAttachmentInfo, "/resource/fileattachment", fileName,
+                type.mimeType().template(), false);
     }
 
 }

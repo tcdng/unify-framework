@@ -30,6 +30,15 @@ import com.tcdng.unify.web.constant.ClosePageMode;
 public interface ContentPanel extends Panel {
 
     /**
+     * Gets the base content ID.
+     * 
+     * @return the base content ID
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    String getBaseContentId() throws UnifyException;
+    
+    /**
      * Gets the busy indicator component ID for this content panel.
      * 
      * @return the indicator ID

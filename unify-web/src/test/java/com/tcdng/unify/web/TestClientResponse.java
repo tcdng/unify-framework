@@ -87,6 +87,31 @@ public class TestClientResponse implements ClientResponse {
     }
 
     @Override
+    public void setStatusOk() {
+        
+    }
+
+    @Override
+    public void setStatusForbidden() {
+        
+    }
+
+    @Override
+    public void setCookie(String name, String val) {
+
+    }
+
+    @Override
+    public void setCookie(String name, String val, int maxAge) {
+
+    }
+
+    @Override
+    public void setCookie(String domain, String path, String name, String val, int maxAge) {
+
+    }
+
+    @Override
     public void close() {
         IOUtils.close(writer);
         IOUtils.close(outputStream);

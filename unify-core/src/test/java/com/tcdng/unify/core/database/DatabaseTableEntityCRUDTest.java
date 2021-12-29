@@ -104,6 +104,47 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
     }
 
     @Test
+    public void testAggregateSingleCaseInsensitive() throws Exception {
+        tm.beginTransaction();
+        try {
+            db.create(new Fruit("Apple", "red", 20.00));
+            db.create(new Fruit("Pineapple", "cyan", 60.00));
+            db.create(new Fruit("banana", "yellow", 45.00));
+            db.create(new Fruit("orange", "orange", 15.00));
+
+            Aggregation aggregate = db.aggregate(new AggregateFunction(AggregateType.SUM, "price"),
+                    new FruitQuery().ignoreEmptyCriteria(true));
+            assertNotNull(aggregate);
+            assertEquals(140.00, aggregate.getValue());
+
+            aggregate = db.aggregate(new AggregateFunction(AggregateType.AVERAGE, "price"),
+                    new FruitQuery().addILike("name", "apple"));
+            assertNotNull(aggregate);
+            assertEquals(40.00, aggregate.getValue());
+
+            aggregate = db.aggregate(new AggregateFunction(AggregateType.MAXIMUM, "price"),
+                    new FruitQuery().ignoreEmptyCriteria(true));
+            assertNotNull(aggregate);
+            assertEquals(60.00, aggregate.getValue());
+
+            aggregate = db.aggregate(new AggregateFunction(AggregateType.MINIMUM, "price"),
+                    new FruitQuery().addILike("name", "apple"));
+            assertNotNull(aggregate);
+            assertEquals(20.00, aggregate.getValue());
+
+            aggregate = db.aggregate(new AggregateFunction(AggregateType.COUNT, "price"),
+                    new FruitQuery().addGreaterThanEqual("price", 20.00));
+            assertNotNull(aggregate);
+            assertEquals(3, aggregate.getValue());
+        } catch (Exception e) {
+            tm.setRollback();
+            throw e;
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
     public void testAggregateSingleListCriteria() throws Exception {
         tm.beginTransaction();
         try {
@@ -367,6 +408,23 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("banana", "yellow", 45.00));
             db.create(new Fruit("orange", "orange", 15.00));
             assertEquals(Double.valueOf(20.00), db.min(Double.class, "price", new FruitQuery().addLike("name", "app")));
+        } catch (Exception e) {
+            tm.setRollback();
+            throw e;
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
+    public void testGetMinValueWithCriteriaCaseInsensitive() throws Exception {
+        tm.beginTransaction();
+        try {
+            db.create(new Fruit("Apple", "red", 20.00));
+            db.create(new Fruit("pineapple", "cyan", 60.00));
+            db.create(new Fruit("banana", "yellow", 45.00));
+            db.create(new Fruit("orange", "orange", 15.00));
+            assertEquals(Double.valueOf(20.00), db.min(Double.class, "price", new FruitQuery().addILike("name", "APP")));
         } catch (Exception e) {
             tm.setRollback();
             throw e;
@@ -1153,6 +1211,22 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
         }
     }
 
+    @Test(expected = UnifyException.class)
+    public void testFindRecordByCriteriaWithMultipleResultCaseInsensitive() throws Exception {
+        tm.beginTransaction();
+        try {
+            db.create(new Fruit("apple", "red", 20.00));
+            db.create(new Fruit("pineApple", "cyan", 60.00));
+            db.create(new Fruit("banana", "yellow", 45.00));
+            db.find(new FruitQuery().addILike("name", "aPPle"));
+        } catch (Exception e) {
+            tm.setRollback();
+            throw e;
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
     @Test
     public void testFindRecordByCriteriaWithNoResult() throws Exception {
         tm.beginTransaction();
@@ -1180,6 +1254,32 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             assertEquals(2, testFruitList.size());
             assertEquals(orange, testFruitList.get(0));
             assertEquals(apple, testFruitList.get(1));
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
+    public void testFindAllRecordsCaseInsensitive() throws Exception {
+        tm.beginTransaction();
+        try {
+            Fruit apple = new Fruit("apple", "red", 20.00);
+            db.create(apple);
+            db.create(new Fruit("pineapple", "cyan", 60.00));
+            Fruit banana = new Fruit("banana", "yellow", 45.00);
+            db.create(banana);
+            Fruit orange = new Fruit("orange", "orange", 15.00);
+            db.create(orange);
+            
+            List<Fruit> testFruitList = db.findAll(new FruitQuery().addIEquals("name", "Orange"));
+            assertEquals(1, testFruitList.size());
+            assertEquals(orange, testFruitList.get(0));
+            
+            testFruitList = db.findAll(new FruitQuery().addINotEquals("name", "PINEAPPLE").addOrder("price"));
+            assertEquals(3, testFruitList.size());
+            assertEquals(orange, testFruitList.get(0));
+            assertEquals(apple, testFruitList.get(1));
+            assertEquals(banana, testFruitList.get(2));
         } finally {
             tm.endTransaction();
         }
@@ -1426,6 +1526,36 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
 
             assertEquals(2, testFruitList.size());
             assertEquals("apple", testFruitList.get(0).getName());
+            assertEquals("pineapple", testFruitList.get(1).getName());
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
+    public void testFindAllRecordsWithQueryBlankCopyCaseInsensitive() throws Exception {
+        tm.beginTransaction();
+        try {
+            db.create(new Fruit("Apple", "red", 20.00));
+            db.create(new Fruit("banana", "yellow", 35.00));
+            db.create(new Fruit("orange", "orange", 24.20));
+            db.create(new Fruit("mango", "green", 52.00));
+            db.create(new Fruit("pineapple", "green", 63.00));
+            db.create(new Fruit("peach", "peach", 11.50));
+            db.create(new Fruit("pear", "green", 42.50));
+            db.create(new Fruit("avocado", "purple", 99.20));
+            db.create(new Fruit("grape", "yellow", 4.50));
+            db.create(new Fruit("strawberry", "red", 4.50));
+
+            FruitQuery query = (FruitQuery) new FruitQuery().ignoreEmptyCriteria(true);
+            Restriction restriction = query.getRestrictions();
+            Query<Fruit> copyQuery =
+                    query.copyNoCriteria().addRestriction(restriction).addILike("name", "apple").addOrder("name");
+
+            List<Fruit> testFruitList = db.findAll(copyQuery);
+
+            assertEquals(2, testFruitList.size());
+            assertEquals("Apple", testFruitList.get(0).getName());
             assertEquals("pineapple", testFruitList.get(1).getName());
         } finally {
             tm.endTransaction();
@@ -4453,6 +4583,24 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("orange", "orange", 15.00, 11));
 
             List<String> colorList = db.valueList(String.class, "color", new FruitQuery().addLike("name", "apple"));
+            assertEquals(2, colorList.size());
+            assertTrue(colorList.contains("red"));
+            assertTrue(colorList.contains("cyan"));
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
+    public void testValueListCaseInsensitive() throws Exception {
+        tm.beginTransaction();
+        try {
+            db.create(new Fruit("apple", "red", 20.00, 25));
+            db.create(new Fruit("pineapple", "cyan", 60.00, 3));
+            db.create(new Fruit("banana", "yellow", 45.00, 45));
+            db.create(new Fruit("orange", "orange", 15.00, 11));
+
+            List<String> colorList = db.valueList(String.class, "color", new FruitQuery().addILike("name", "Ple"));
             assertEquals(2, colorList.size());
             assertTrue(colorList.contains("red"));
             assertTrue(colorList.contains("cyan"));

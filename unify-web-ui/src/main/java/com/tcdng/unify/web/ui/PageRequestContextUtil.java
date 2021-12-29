@@ -462,6 +462,42 @@ public interface PageRequestContextUtil extends UnifyComponent {
     void clearHintUser() throws UnifyException;
 
     /**
+     * Sets the ID of default widget to focus on.
+     * 
+     * @param id
+     *            the widget ID to set
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void setDefaultFocusOnWidgetId(String id) throws UnifyException;
+
+    /**
+     * Consider default focus on widget in this request.
+     * 
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    void considerDefaultFocusOnWidget() throws UnifyException;
+    
+    /**
+     * Checks if default widget focus is associated with this request.
+     * 
+     * @return a true value if widget focus is associated otherwise false.
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean isFocusOnWidgetOrDefault() throws UnifyException;
+
+    /**
+     * Gets the ID of widget to focus on.
+     * 
+     * @return the widget ID otherwise null
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getFocusOnWidgetIdOrDefault() throws UnifyException;
+
+    /**
      * Sets the ID of widget to focus on. Accepts only widget ID supplied on first
      * call for request. All subsequent calls are ignored.
      * 
@@ -534,4 +570,20 @@ public interface PageRequestContextUtil extends UnifyComponent {
      *             if an error occurs
      */
     void clearRequestContext() throws UnifyException;
+
+    /**
+     * Sets content to be reset.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void setContentScrollReset() throws UnifyException;
+
+    /**
+     * Returns true if content is to be reset.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean isContentScrollReset() throws UnifyException;
 }

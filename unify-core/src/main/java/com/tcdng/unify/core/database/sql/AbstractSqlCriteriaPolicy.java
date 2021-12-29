@@ -64,7 +64,7 @@ public abstract class AbstractSqlCriteriaPolicy implements SqlCriteriaPolicy {
      * 
      * @param type
      *            the restriction type
-     * @return the criteris policy
+     * @return the criteria policy
      * @throws UnifyException
      *             if an error occurs
      */

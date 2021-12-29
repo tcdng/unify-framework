@@ -48,6 +48,8 @@ public class UnifyContainerConfig {
 
     private String deploymentVersion;
 
+    private String auxiliaryVersion;
+
     private String nodeId;
 
     private short preferredPort;
@@ -60,12 +62,13 @@ public class UnifyContainerConfig {
 
     private UnifyContainerConfig(Map<String, UnifyComponentConfig> unifyComponentConfigs, Map<String, Object> settings,
             Map<String, String> aliases, List<UnifyStaticSettings> staticSettings, String deploymentVersion,
-            String nodeId, short preferredPort, boolean clusterMode, boolean productionMode, boolean deploymentMode) {
+            String auxiliaryVersion, String nodeId, short preferredPort, boolean clusterMode, boolean productionMode, boolean deploymentMode) {
         this.unifyComponentConfigs = unifyComponentConfigs;
         this.settings = settings;
         this.aliases = aliases;
         this.staticSettings = staticSettings;
         this.deploymentVersion = deploymentVersion;
+        this.auxiliaryVersion = auxiliaryVersion;
         this.nodeId = nodeId;
         this.preferredPort = preferredPort;
         this.clusterMode = clusterMode;
@@ -75,6 +78,10 @@ public class UnifyContainerConfig {
 
     public String getDeploymentVersion() {
         return deploymentVersion;
+    }
+
+    public String getAuxiliaryVersion() {
+        return auxiliaryVersion;
     }
 
     public String getNodeId() {
@@ -141,6 +148,8 @@ public class UnifyContainerConfig {
 
         private String deploymentVersion;
 
+        private String auxiliaryVersion;
+        
         private String nodeId;
 
         private short preferredPort;
@@ -160,6 +169,11 @@ public class UnifyContainerConfig {
 
         public Builder deploymentVersion(String deploymentVersion) {
             this.deploymentVersion = deploymentVersion;
+            return this;
+        }
+
+        public Builder auxiliaryVersion(String auxiliaryVersion) {
+            this.auxiliaryVersion = auxiliaryVersion;
             return this;
         }
 
@@ -270,8 +284,8 @@ public class UnifyContainerConfig {
             DataUtils.sortAscending(staticSettings, UnifyStaticSettings.class, "level");
             return new UnifyContainerConfig(Collections.unmodifiableMap(unifyComponentConfigs),
                     Collections.unmodifiableMap(settings), Collections.unmodifiableMap(aliases),
-                    Collections.unmodifiableList(staticSettings), deploymentVersion, nodeId, preferredPort, clusterMode,
-                    productionMode, deploymentMode);
+                    Collections.unmodifiableList(staticSettings), deploymentVersion, auxiliaryVersion, nodeId,
+                    preferredPort, clusterMode, productionMode, deploymentMode);
         }
     }
 }

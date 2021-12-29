@@ -26,7 +26,8 @@ import com.tcdng.unify.core.util.EnumUtils;
 public enum TextCase implements EnumConst {
 
     LOWER("LC"),
-    UPPER("UC");
+    UPPER("UC"),
+    CAMEL("CM");
 
     private final String code;
 

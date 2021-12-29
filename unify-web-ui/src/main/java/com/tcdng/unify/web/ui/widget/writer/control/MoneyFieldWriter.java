@@ -48,7 +48,7 @@ public class MoneyFieldWriter extends AbstractPopupTextFieldWriter {
         MoneyField moneyField = (MoneyField) popupTextField;
 
         writer.write("<div id=\"").write(moneyField.getFramePanelId())
-                .write("\" class=\"mfborder\" style=\"overflow-y:auto;overflow-x:hidden;\" tabindex=\"0\">");
+                .write("\" class=\"mfborder\" style=\"overflow-y:auto;overflow-x:hidden;\" tabindex=\"-1\">");
         writer.write("<div id=\"").write(moneyField.getListPanelId()).write("\" class=\"mflist\">");
         List<? extends Listable> listableList = moneyField.getListables();
         int length = listableList.size();
@@ -157,6 +157,6 @@ public class MoneyFieldWriter extends AbstractPopupTextFieldWriter {
         return WebRegexUtils.getNumberFormatRegex(((NumberFormatter<?>) moneyField.getFormatter()).getNumberSymbols(),
                 moneyField.getUplAttribute(int.class, "precision"), scale,
                 moneyField.getUplAttribute(boolean.class, "acceptNegative"),
-                moneyField.getUplAttribute(boolean.class, "useGrouping"));
+                moneyField.getUplAttribute(boolean.class, "useGrouping"), false);
     }
 }

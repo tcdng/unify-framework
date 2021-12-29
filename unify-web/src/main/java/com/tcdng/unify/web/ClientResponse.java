@@ -76,7 +76,55 @@ public interface ClientResponse {
      *            the status to set
      */
     void setStatus(int status);
+    
+    /**
+     * Sets response status to OK
+     */
+    void setStatusOk();
+    
+    /**
+     * Sets response status to forbidden
+     */
+    void setStatusForbidden();
 
+    /**
+     * Sets a cookie in response.
+     * 
+     * @param name
+     *             the cookie name
+     * @param val
+     *             the cookie value
+     */
+    void setCookie(String name, String val);
+
+    /**
+     * Sets a cookie in response.
+     * 
+     * @param name
+     *               the cookie name
+     * @param val
+     *               the cookie value
+     * @param maxAge
+     *               maximum cookie age in seconds
+     */
+    void setCookie(String name, String val, int maxAge);
+
+    /**
+     * Sets a cookie in response.
+     * 
+     * @param domain
+     *               the cookie domain
+     * @param path
+     *               the cookie path
+     * @param name
+     *               the cookie name
+     * @param val
+     *               the cookie value
+     * @param maxAge
+     *               maximum cookie age in seconds
+     */
+    void setCookie(String domain, String path, String name, String val, int maxAge);
+    
     /**
      * Closes response.
      */

@@ -35,6 +35,14 @@ import com.tcdng.unify.core.criterion.GreaterField;
 import com.tcdng.unify.core.criterion.GreaterOrEqual;
 import com.tcdng.unify.core.criterion.GreaterOrEqualField;
 import com.tcdng.unify.core.criterion.GroupBy;
+import com.tcdng.unify.core.criterion.IBeginsWith;
+import com.tcdng.unify.core.criterion.IBeginsWithField;
+import com.tcdng.unify.core.criterion.IEndsWith;
+import com.tcdng.unify.core.criterion.IEndsWithField;
+import com.tcdng.unify.core.criterion.IEquals;
+import com.tcdng.unify.core.criterion.ILike;
+import com.tcdng.unify.core.criterion.ILikeField;
+import com.tcdng.unify.core.criterion.INotEquals;
 import com.tcdng.unify.core.criterion.IsNotNull;
 import com.tcdng.unify.core.criterion.IsNull;
 import com.tcdng.unify.core.criterion.Less;
@@ -119,10 +127,6 @@ public class Query<T extends Entity> implements Cloneable {
 
     public static <U extends Entity> Query<U> ofDefaultingToAnd(Class<U> entityClass, Restriction restriction,
             boolean applyAppQueryLimit) {
-        if (restriction instanceof CompoundRestriction) {
-            return new Query<U>(entityClass, (CompoundRestriction) restriction, applyAppQueryLimit);
-        }
-
         return new Query<U>(entityClass, new And().add(restriction), applyAppQueryLimit);
     }
 
@@ -132,10 +136,6 @@ public class Query<T extends Entity> implements Cloneable {
 
     public static <U extends Entity> Query<U> ofDefaultingToOr(Class<U> entityClass, Restriction restriction,
             boolean applyAppQueryLimit) {
-        if (restriction instanceof CompoundRestriction) {
-            return new Query<U>(entityClass, (CompoundRestriction) restriction, applyAppQueryLimit);
-        }
-
         return new Query<U>(entityClass, new Or().add(restriction), applyAppQueryLimit);
     }
 
@@ -164,6 +164,11 @@ public class Query<T extends Entity> implements Cloneable {
 
     public Query<T> addEquals(String field, Object value) {
         restrictions.add(new Equals(field, value));
+        return this;
+    }
+
+    public Query<T> addIEquals(String field, String value) {
+        restrictions.add(new IEquals(field, value));
         return this;
     }
 
@@ -232,6 +237,16 @@ public class Query<T extends Entity> implements Cloneable {
         return this;
     }
 
+    public Query<T> addILike(String field, String value) {
+        restrictions.add(new ILike(field, value));
+        return this;
+    }
+
+    public Query<T> addILikeField(String field1, String field2) {
+        restrictions.add(new ILikeField(field1, field2));
+        return this;
+    }
+
     public Query<T> addBeginsWith(String field, String value) {
         restrictions.add(new BeginsWith(field, value));
         return this;
@@ -242,6 +257,16 @@ public class Query<T extends Entity> implements Cloneable {
         return this;
     }
 
+    public Query<T> addIBeginsWith(String field, String value) {
+        restrictions.add(new IBeginsWith(field, value));
+        return this;
+    }
+
+    public Query<T> addIBeginsWithField(String field1, String field2) {
+        restrictions.add(new IBeginsWithField(field1, field2));
+        return this;
+    }
+
     public Query<T> addEndsWith(String field, String value) {
         restrictions.add(new EndsWith(field, value));
         return this;
@@ -249,6 +274,16 @@ public class Query<T extends Entity> implements Cloneable {
 
     public Query<T> addEndsWithField(String field1, String field2) {
         restrictions.add(new EndsWithField(field1, field2));
+        return this;
+    }
+
+    public Query<T> addIEndsWith(String field, String value) {
+        restrictions.add(new IEndsWith(field, value));
+        return this;
+    }
+
+    public Query<T> addIEndsWithField(String field1, String field2) {
+        restrictions.add(new IEndsWithField(field1, field2));
         return this;
     }
 
@@ -264,6 +299,11 @@ public class Query<T extends Entity> implements Cloneable {
 
     public Query<T> addNotEquals(String field, Object value) {
         restrictions.add(new NotEquals(field, value));
+        return this;
+    }
+
+    public Query<T> addINotEquals(String field, String value) {
+        restrictions.add(new INotEquals(field, value));
         return this;
     }
 

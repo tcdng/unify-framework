@@ -57,6 +57,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("arrow-up", "f062");
         registerSymbol("backward", "f04a");
         registerSymbol("backward-fast", "f049");
+        registerSymbol("ban", "f05e");
         registerSymbol("bell", "f0f3");
         registerSymbol("bell-slash", "f1f6");
         registerSymbol("buffer", "f837");

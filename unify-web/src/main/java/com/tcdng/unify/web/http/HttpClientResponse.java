@@ -41,7 +41,7 @@ public class HttpClientResponse implements ClientResponse {
     private boolean outUsed;
 
     public HttpClientResponse(HttpResponse response) {
-        response.setStatus(response.getOk());
+        response.setStatusOk();
         this.response = response;
     }
 
@@ -89,6 +89,31 @@ public class HttpClientResponse implements ClientResponse {
     @Override
     public void setStatus(int status) {
         response.setStatus(status);
+    }
+
+    @Override
+    public void setStatusOk() {
+        response.setStatusOk();
+    }
+
+    @Override
+    public void setStatusForbidden() {
+        response.setStatusForbidden();
+    }
+
+    @Override
+    public void setCookie(String name, String val) {
+        response.setCookie(name, val);
+    }
+
+    @Override
+    public void setCookie(String name, String val, int maxAge) {
+        response.setCookie(name, val, maxAge);
+    }
+
+    @Override
+    public void setCookie(String domain, String path, String name, String val, int maxAge) {
+        response.setCookie(domain, path, name, val, maxAge);
     }
 
     @Override

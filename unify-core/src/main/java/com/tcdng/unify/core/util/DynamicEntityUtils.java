@@ -107,7 +107,10 @@ public final class DynamicEntityUtils {
                     DynamicEntityUtils.generateForeignKeyAnnotation(fsb, fkInfo);
                     importSet.add(ForeignKey.class.getCanonicalName());
                     if (!fkInfo.isEnum()) {
-                        importSet.add(fkInfo.getParentDynamicEntityInfo().getClassName());
+                        if (!dynamicEntityInfo.getClassName()
+                                .equals(fkInfo.getParentDynamicEntityInfo().getClassName())) {
+                            importSet.add(fkInfo.getParentDynamicEntityInfo().getClassName());
+                        }
                     }
 
                 } else if (type.isTableColumn()) {
@@ -235,6 +238,11 @@ public final class DynamicEntityUtils {
         if (!StringUtils.isBlank(dynamicForeignKeyFieldInfo.getColumnName())) {
             appendSym = appendSymbol(fsb, appendSym);
             fsb.append("name = \"").append(dynamicForeignKeyFieldInfo.getColumnName()).append("\"");
+        }
+
+        if (!StringUtils.isBlank(dynamicForeignKeyFieldInfo.getDefaultVal())) {
+            appendSym = appendSymbol(fsb, appendSym);
+            fsb.append("defaultVal = \"").append(dynamicForeignKeyFieldInfo.getDefaultVal()).append("\"");
         }
 
         if (dynamicForeignKeyFieldInfo.isNullable()) {

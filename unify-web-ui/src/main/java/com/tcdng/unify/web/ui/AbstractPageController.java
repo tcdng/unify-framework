@@ -855,7 +855,7 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
      *             if an error occurs
      */
     protected void onOpenPage() throws UnifyException {
-
+        getPageRequestContextUtil().setContentScrollReset();
     }
 
     /**

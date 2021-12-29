@@ -36,8 +36,16 @@ import com.tcdng.unify.core.transform.Transformer;
  */
 public abstract class SingleParameterPolicy extends AbstractSqlCriteriaPolicy {
 
+    final private boolean caseInsensitive;
+    
     public SingleParameterPolicy(String opSql, SqlDataSourceDialectPolicies rootPolicies) {
+        this(opSql, rootPolicies, false);
+    }
+
+    public SingleParameterPolicy(String opSql, SqlDataSourceDialectPolicies rootPolicies,
+            boolean caseInsensitive) {
         super(opSql, rootPolicies);
+        this.caseInsensitive = caseInsensitive;
     }
 
     @Override
@@ -52,8 +60,17 @@ public abstract class SingleParameterPolicy extends AbstractSqlCriteriaPolicy {
         final String tableName = sqlEntityInfo.getTableAlias();
         final Object val = svc.getParam();
         if (val instanceof RestrictionField) {
-            sql.append(tableName).append('.').append(columnName).append(opSql).append(
-                    resolveParam(tableName, sqlEntityInfo.getListFieldInfo(((RestrictionField) val).getName())));
+            if (caseInsensitive) {
+                Object param = resolveParam(tableName,
+                        sqlEntityInfo.getListFieldInfo(((RestrictionField) val).getName()));
+                param = param != null ? ((String) param).toLowerCase(): null;
+                sql.append("LOWER(").append(tableName).append('.').append(columnName).append(")").append(opSql)
+                        .append(param);
+            } else {
+                sql.append(tableName).append('.').append(columnName).append(opSql).append(
+                        resolveParam(tableName, sqlEntityInfo.getListFieldInfo(((RestrictionField) val).getName())));
+            }
+
             return;
         }
 
@@ -66,26 +83,49 @@ public abstract class SingleParameterPolicy extends AbstractSqlCriteriaPolicy {
             SqlEntityInfo sqlEntityInfo, Restriction restriction) throws UnifyException {
         SingleParamRestriction svc = (SingleParamRestriction) restriction;
         SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(svc.getFieldName());
-        final Object val = svc.getParam();
+        Object val = svc.getParam();
         if (val instanceof RestrictionField) {
-            sql.append(sqlFieldInfo.getPreferredColumnName()).append(opSql).append(resolveParam(
-                    null, sqlEntityInfo.getListFieldInfo(((RestrictionField) val).getName())));
+            if (caseInsensitive) {
+                Object param = resolveParam(null, sqlEntityInfo.getListFieldInfo(((RestrictionField) val).getName()));
+                param = param != null ? ((String) param).toLowerCase(): null;
+                sql.append("LOWER(").append(sqlFieldInfo.getPreferredColumnName()).append(")").append(opSql)
+                        .append(param);
+            } else {
+                sql.append(sqlFieldInfo.getPreferredColumnName()).append(opSql)
+                        .append(resolveParam(null, sqlEntityInfo.getListFieldInfo(((RestrictionField) val).getName())));
+            }
+
             return;
         }
 
-        sql.append(sqlFieldInfo.getPreferredColumnName()).append(opSql).append("?");
-        if (sqlFieldInfo.isTransformed()) {
-            parameterInfoList.add(new SqlParameter(getSqlTypePolicy(sqlFieldInfo.getColumnType()), resolveParam(null,
-                    ((Transformer<Object, Object>) sqlFieldInfo.getTransformer()).forwardTransform(val))));
+        if (caseInsensitive) {
+            sql.append("LOWER(").append(sqlFieldInfo.getPreferredColumnName()).append(")").append(opSql).append("?");
         } else {
-            Object postOp = convertType(sqlFieldInfo, resolveParam(null, val));
-            parameterInfoList.add(new SqlParameter(getSqlTypePolicy(sqlFieldInfo.getColumnType()), postOp));
+            sql.append(sqlFieldInfo.getPreferredColumnName()).append(opSql).append("?");
         }
+
+        if (sqlFieldInfo.isTransformed()) {
+            val = ((Transformer<Object, Object>) sqlFieldInfo.getTransformer()).forwardTransform(val);
+        }
+
+        Object postOp = convertType(sqlFieldInfo, resolveParam(null, val));
+        if (caseInsensitive) {
+            postOp = postOp != null ? ((String) postOp).toLowerCase(): null;
+        }
+        
+        parameterInfoList.add(new SqlParameter(getSqlTypePolicy(sqlFieldInfo.getColumnType()), postOp));
     }
 
     @Override
     protected void doTranslate(StringBuilder sql, String tableName, String columnName, Object param1, Object param2)
             throws UnifyException {
-        sql.append(tableName).append('.').append(columnName).append(opSql).append(getNativeSqlParam(param1));
+        if (caseInsensitive) {
+            String postOp = getNativeSqlParam(param1);
+            postOp = postOp != null ? postOp.toLowerCase(): null;
+            sql.append("LOWER(").append(tableName).append('.').append(columnName).append(")").append(opSql)
+                    .append(postOp);
+        } else {
+            sql.append(tableName).append('.').append(columnName).append(opSql).append(getNativeSqlParam(param1));
+        }
     }
 }

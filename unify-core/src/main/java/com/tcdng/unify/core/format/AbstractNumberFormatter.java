@@ -46,6 +46,8 @@ public abstract class AbstractNumberFormatter<T extends Number> extends Abstract
 
     private boolean groupingUsed;
 
+    private boolean strictFormat;
+
     private String pattern;
 
     public AbstractNumberFormatter(Class<T> dataType, NumberType type) {
@@ -106,6 +108,15 @@ public abstract class AbstractNumberFormatter<T extends Number> extends Abstract
         nf = null;
     }
 
+    public boolean isStrictFormat() {
+        return strictFormat;
+    }
+
+    public void setStrictFormat(boolean strictFormat) {
+        this.strictFormat = strictFormat;
+        nf = null;
+    }
+
     @Override
     public NumberSymbols getNumberSymbols() throws UnifyException {
         getNumberFormat();
@@ -137,6 +148,8 @@ public abstract class AbstractNumberFormatter<T extends Number> extends Abstract
                 df.setParseBigDecimal(false);
                 if (getPrecision() > 0) {
                     nf.setMaximumIntegerDigits(getPrecision());
+                } else if (strictFormat) {
+                    nf.setMaximumIntegerDigits(0);
                 }
             } else {
                 df.setParseBigDecimal(true);
@@ -148,11 +161,16 @@ public abstract class AbstractNumberFormatter<T extends Number> extends Abstract
                     }
                     if (precision > 0) {
                         df.setMaximumIntegerDigits(precision);
+                    } else if (strictFormat) {
+                        df.setMaximumIntegerDigits(0);
                     }
                 }
                 if (scale > 0) {
                     df.setMaximumFractionDigits(scale);
                     df.setMinimumFractionDigits(scale);
+                } else if (strictFormat) {
+                    df.setMaximumFractionDigits(0);
+                    df.setMinimumFractionDigits(0);
                 }
             }
 

@@ -23,6 +23,7 @@ import java.util.Set;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.constant.ClientPlatform;
 import com.tcdng.unify.web.AbstractClientRequest;
+import com.tcdng.unify.web.ClientCookie;
 import com.tcdng.unify.web.ClientRequestType;
 import com.tcdng.unify.web.RequestPathParts;
 import com.tcdng.unify.web.UnifyWebErrorConstants;
@@ -37,7 +38,7 @@ import com.tcdng.unify.web.constant.RequestParameterConstants;
 public class HttpClientRequest extends AbstractClientRequest {
 
     private ClientPlatform clientPlatform;
-    
+
     private HttpRequestMethodType methodType;
 
     private RequestPathParts requestPathParts;
@@ -46,13 +47,17 @@ public class HttpClientRequest extends AbstractClientRequest {
 
     private Map<String, Object> parameters;
 
+    private Map<String, ClientCookie> cookies;
+
     public HttpClientRequest(ClientPlatform clientPlatform, HttpRequestMethodType methodType,
-            RequestPathParts requestPathParts, Charset charset, Map<String, Object> parameters) {
+            RequestPathParts requestPathParts, Charset charset, Map<String, Object> parameters,
+            Map<String, ClientCookie> cookies) {
         this.clientPlatform = clientPlatform;
         this.methodType = methodType;
         this.requestPathParts = requestPathParts;
         this.charset = charset;
         this.parameters = parameters;
+        this.cookies = cookies;
     }
 
     @Override
@@ -93,5 +98,15 @@ public class HttpClientRequest extends AbstractClientRequest {
         }
 
         return in;
+    }
+
+    @Override
+    public Set<String> getCookieNames() {
+        return cookies.keySet();
+    }
+
+    @Override
+    public ClientCookie getCookie(String name) {
+        return cookies.get(name);
     }
 }

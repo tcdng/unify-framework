@@ -21,11 +21,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
+import com.tcdng.unify.web.ClientCookie;
+
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
@@ -92,6 +96,22 @@ public class HttpRequestImpl implements HttpRequest {
         }
 
         return partList;
+    }
+
+    @Override
+    public List<ClientCookie> getCookies() {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null && cookies.length > 0) {
+            List<ClientCookie> list = new ArrayList<ClientCookie>();
+            for (Cookie cookie : cookies) {
+                list.add(new ClientCookie(cookie.getDomain(), cookie.getPath(), cookie.getName(), cookie.getValue(),
+                        cookie.getMaxAge()));
+            }
+
+            return list;
+        }
+
+        return Collections.emptyList();
     }
 
     @Override

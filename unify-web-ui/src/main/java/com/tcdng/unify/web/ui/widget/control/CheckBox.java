@@ -42,6 +42,11 @@ public class CheckBox extends AbstractControl {
 		return true;
 	}
 
+    @Override
+    public boolean isUseFacadeFocus() throws UnifyException {
+        return true;
+    }
+
 	@Override
     public boolean isLayoutCaption() throws UnifyException {
         return getUplAttribute(boolean.class, "layoutCaption");

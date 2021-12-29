@@ -443,31 +443,35 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
         tm = (DatabaseTransactionManager) getComponent(ApplicationComponents.APPLICATION_DATABASETRANSACTIONMANAGER);
         db = (SqlDatabase) getComponent(ApplicationComponents.APPLICATION_DATABASE);
         dseLoader = (DynamicSqlEntityLoader) getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLENTITYLOADER);
+        String defaultVal = null;
         dynamicEntityInfo = DynamicEntityInfo.newBuilder(DynamicEntityType.TABLE, "com.tcdng.test.Equipment")
                 .tableName("EQUIPMENT").version(1L)
-                .addField(DynamicFieldType.GENERATION, DataType.STRING, "EQUIPMENT_NM", "name", 32, 0, 0, false, true)
-                .addField(DynamicFieldType.GENERATION, DataType.STRING, "SERIAL_NO", "serialNo", 0, 0, 0, false, false)
-                .addField(DynamicFieldType.GENERATION, DataType.DECIMAL, "PRICE", "price", 0, 18, 2, false, false)
-                .addField(DynamicFieldType.GENERATION, DataType.DATE, "EXPIRY_DT", "expiryDt", 0, 0, 0, true, false)
-                .addField(DynamicFieldType.GENERATION, DataType.TIMESTAMP_UTC, "CREATE_DT", "createDt", 0, 0, 0, false, false)
-                .addField(DynamicFieldType.GENERATION, OrderType.class.getName(), "EQUIPMENT_ORDER", "order", false, false)
+                .addField(DynamicFieldType.GENERATION, DataType.STRING, "EQUIPMENT_NM", "name", defaultVal, 32, 0, 0, false, true)
+                .addField(DynamicFieldType.GENERATION, DataType.STRING, "SERIAL_NO", "serialNo", "00000000", 0, 0, 0, false, false)
+                .addField(DynamicFieldType.GENERATION, DataType.DECIMAL, "PRICE", "price", defaultVal, 0, 18, 2, false, false)
+                .addField(DynamicFieldType.GENERATION, DataType.DATE, "EXPIRY_DT", "expiryDt", defaultVal, 0, 0, 0, true, false)
+                .addField(DynamicFieldType.GENERATION, DataType.TIMESTAMP_UTC, "CREATE_DT", "createDt", defaultVal, 0, 0, 0, false, false)
+                .addField(DynamicFieldType.GENERATION, OrderType.class.getName(), "EQUIPMENT_ORDER", "order", defaultVal, false, false)
                 .build();
         dynamicEntityInfoExt = DynamicEntityInfo.newBuilder(DynamicEntityType.TABLE_EXT, "com.tcdng.test.EquipmentExt")
                 .baseClassName(Equipment.class.getName()).version(1L)
-                .addField(DynamicFieldType.INFO_ONLY, DataType.STRING, "EQUIPMENT_NM", "name", 32, 0, 0, false, true)
-                .addField(DynamicFieldType.INFO_ONLY, DataType.STRING, "SERIAL_NO", "serialNo", 0, 0, 0, false, true)
-                .addField(DynamicFieldType.GENERATION, DataType.DECIMAL, "PRICE", "price", 0, 18, 2, false, true)
-                .addField(DynamicFieldType.GENERATION, DataType.DATE, "EXPIRY_DT", "expiryDt", 0, 0, 0, true, false)
-                .addField(DynamicFieldType.GENERATION, DataType.TIMESTAMP_UTC, "CREATE_DT", "createDt", 0, 0, 0, false, false)
+                .addField(DynamicFieldType.INFO_ONLY, DataType.STRING, "EQUIPMENT_NM", "name", defaultVal, 32, 0, 0, false, true)
+                .addField(DynamicFieldType.INFO_ONLY, DataType.STRING, "SERIAL_NO", "serialNo", defaultVal, 0, 0, 0, false, true)
+                .addField(DynamicFieldType.GENERATION, DataType.DECIMAL, "PRICE", "price", defaultVal, 0, 18, 2, false, true)
+                .addField(DynamicFieldType.GENERATION, DataType.DATE, "EXPIRY_DT", "expiryDt", defaultVal, 0, 0, 0, true, false)
+                .addField(DynamicFieldType.GENERATION, DataType.TIMESTAMP_UTC, "CREATE_DT", "createDt", defaultVal, 0, 0, 0, false, false)
                 .build();
-        authorDynamicEntityInfo = DynamicEntityInfo
-                .newBuilder(DynamicEntityType.TABLE, "com.tcdng.test.Author").tableName("TAUTHOR").version(1L)
-                .addField(DynamicFieldType.GENERATION, DataType.STRING, "TAUTHOR_NM", "name", 32, 0, 0, false, true)
+        authorDynamicEntityInfo = DynamicEntityInfo.newBuilder(DynamicEntityType.TABLE, "com.tcdng.test.Author")
+                .tableName("TAUTHOR").version(1L)
+                .addField(DynamicFieldType.GENERATION, DataType.STRING, "TAUTHOR_NM", "name", defaultVal, 32, 0, 0, false, true)
+                .addForeignKeyField(DynamicFieldType.GENERATION, DynamicEntityInfo.SELF_REFERENCE, "PARENT_AUTHOR_ID",
+                        "parentAuthorId", defaultVal, true)
+                .addListOnlyField(DynamicFieldType.GENERATION, null, "parentAuthorName", "parentAuthorId", "name", false)
                 .build();
         bookDynamicEntityInfo = DynamicEntityInfo
                 .newBuilder(DynamicEntityType.TABLE, "com.tcdng.test.Book").tableName("TBOOK").version(1L)
-                .addForeignKeyField(DynamicFieldType.GENERATION, authorDynamicEntityInfo, null, "authorId", false)
-                .addField(DynamicFieldType.GENERATION, DataType.STRING, "TITLE", "title", 32, 0, 0, false, true)
+                .addForeignKeyField(DynamicFieldType.GENERATION, authorDynamicEntityInfo, null, "authorId", "1", false)
+                .addField(DynamicFieldType.GENERATION, DataType.STRING, "TITLE", "title", defaultVal, 32, 0, 0, false, true)
                 .addListOnlyField(DynamicFieldType.GENERATION, null, "authorName", "authorId", "name", false)
                 .build();
         authorDynamicEntityInfo.addChildListField(DynamicFieldType.GENERATION, bookDynamicEntityInfo, "bookList");
