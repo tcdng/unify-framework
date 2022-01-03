@@ -28,17 +28,20 @@ import com.tcdng.unify.core.util.EnumUtils;
 @StaticList(name = "messagetypelist", description="$m{staticlist.messagetypelist}")
 public enum MessageType implements EnumConst {
 
-    INFO("INF", "images/info.png"),
-    WARNING("WRN", "images/warning.png"),
-    ERROR("ERR", "images/error.png");
+    INFO("INF", "images/info.png", "info"),
+    WARNING("WRN", "images/warning.png", "warning"),
+    ERROR("ERR", "images/error.png", "error");
 
     private final String code;
 
     private final String image;
 
-    private MessageType(String code, String image) {
+    private final String styleClass;
+
+    private MessageType(String code, String image, String styleClass) {
         this.code = code;
         this.image = image;
+        this.styleClass = styleClass;
     }
 
     @Override
@@ -53,6 +56,10 @@ public enum MessageType implements EnumConst {
 
     public String image() {
         return image;
+    }
+
+    public String styleClass() {
+        return styleClass;
     }
 
     public static MessageType fromCode(String code) {
