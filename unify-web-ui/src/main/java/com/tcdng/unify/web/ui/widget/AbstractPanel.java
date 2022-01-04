@@ -22,9 +22,15 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.data.DownloadFile;
+import com.tcdng.unify.core.util.StringUtils;
+import com.tcdng.unify.web.UnifyWebSessionAttributeConstants;
 import com.tcdng.unify.web.annotation.Action;
+import com.tcdng.unify.web.constant.ReservedPageControllerConstants;
 import com.tcdng.unify.web.constant.ResultMappingConstants;
 import com.tcdng.unify.web.constant.UnifyWebRequestAttributeConstants;
+import com.tcdng.unify.web.ui.widget.data.MessageBox;
+import com.tcdng.unify.web.ui.widget.data.MessageIcon;
+import com.tcdng.unify.web.ui.widget.data.MessageMode;
 import com.tcdng.unify.web.ui.widget.data.Hint.MODE;
 
 /**
@@ -211,5 +217,37 @@ public abstract class AbstractPanel extends AbstractContainer implements Panel {
         } else {
             setCommandResultMapping(ResultMappingConstants.DOWNLOAD_FILE);
         }
+    }
+
+    protected void showMessageBox(String message) throws UnifyException {
+        showMessageBox(MessageIcon.INFO, MessageMode.OK, "$m{messagebox.message}", message,
+                null);
+    }
+
+    protected void showMessageBox(MessageIcon messageIcon, MessageMode messageMode, String message)
+            throws UnifyException {
+        showMessageBox(messageIcon, messageMode, "$m{messagebox.message}", message, null);
+    }
+
+    protected void showMessageBox(String message, String actionPath) throws UnifyException {
+        showMessageBox(MessageIcon.INFO, MessageMode.OK, "$m{messagebox.message}", message,
+                actionPath);
+    }
+
+    protected void showMessageBox(String caption, String message, String fullActionPath) throws UnifyException {
+        showMessageBox(MessageIcon.INFO, MessageMode.OK, caption, message, fullActionPath);
+    }
+
+    protected void showMessageBox(MessageIcon messageIcon, MessageMode messageMode, String caption, String message,
+            String fullActionPath) throws UnifyException {
+        if (StringUtils.isBlank(fullActionPath)) {
+            fullActionPath = ReservedPageControllerConstants.COMMONUTILITIES + "/hidePopup";
+        }
+
+        caption = resolveSessionMessage(caption);
+        message = resolveSessionMessage(message);
+        setSessionAttribute(UnifyWebSessionAttributeConstants.MESSAGEBOX,
+                new MessageBox(messageIcon, messageMode, caption, message, fullActionPath));
+        setCommandResultMapping("showapplicationmessage");
     }
 }

@@ -408,7 +408,7 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
      *             if an error occurs
      */
     protected String showMessageBox(String message) throws UnifyException {
-        return showMessageBox(MessageIcon.INFO, MessageMode.OK, getSessionMessage("messagebox.message"), message,
+        return showMessageBox(MessageIcon.INFO, MessageMode.OK, "$m{messagebox.message}", message,
                 "/hidePopup");
     }
 
@@ -429,7 +429,7 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
      */
     protected String showMessageBox(MessageIcon messageIcon, MessageMode messageMode, String message)
             throws UnifyException {
-        return showMessageBox(messageIcon, messageMode, getSessionMessage("messagebox.message"), message, "/hidePopup");
+        return showMessageBox(messageIcon, messageMode, "$m{messagebox.message}", message, "/hidePopup");
     }
 
     /**
@@ -446,7 +446,7 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
      *             if an error occurs
      */
     protected String showMessageBox(String message, String actionPath) throws UnifyException {
-        return showMessageBox(MessageIcon.INFO, MessageMode.OK, getSessionMessage("messagebox.message"), message,
+        return showMessageBox(MessageIcon.INFO, MessageMode.OK, "$m{messagebox.message}", message,
                 actionPath);
     }
 
@@ -494,6 +494,7 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
             actionPath = "/hidePopup";
         }
 
+        caption = resolveSessionMessage(caption);
         message = resolveSessionMessage(message);
         setSessionAttribute(UnifyWebSessionAttributeConstants.MESSAGEBOX,
                 new MessageBox(messageIcon, messageMode, caption, message, getName() + actionPath));

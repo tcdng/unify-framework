@@ -28,9 +28,9 @@ import com.tcdng.unify.core.util.EnumUtils;
 @StaticList(name = "messagetypelist", description="$m{staticlist.messagetypelist}")
 public enum MessageType implements EnumConst {
 
-    INFO("INF", "images/info.png", "info", 0),
-    WARNING("WRN", "images/warning.png", "warning", 1),
-    ERROR("ERR", "images/error.png", "error", 2);
+    INFO("INF", "$t{images/info.png}", "info", 0),
+    WARNING("WRN", "$t{images/warning.png}", "warning", 1),
+    ERROR("ERR", "$t{images/error.png}", "error", 2);
 
     private final String code;
 
