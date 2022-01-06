@@ -872,7 +872,7 @@ ux.getCheckedPatternValue = function(sel) {
 						sym = true;
 					}
 					
-					val += sel._labels[i];
+					val += ux.decodeHtml(sel._labels[i]);
 				}
 			}
 		}
