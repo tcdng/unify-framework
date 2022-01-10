@@ -51,7 +51,7 @@ public class UserSessionTracking extends AbstractSystemEntity {
     @Column(length = 64, nullable = true)
     private String userName;
 
-    @Column(length = 32)
+    @Column(length = 48)
     private String node;
 
     @Column(type = ColumnType.TIMESTAMP_UTC)
