@@ -30,9 +30,9 @@ public interface ValueStore {
      * Retrieves value from store using supplied name.
      * 
      * @param name
-     *            the name of the value to retrieve
+     *             the name of the value to retrieve
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     Object retrieve(String name) throws UnifyException;
 
@@ -40,11 +40,11 @@ public interface ValueStore {
      * Retrieves value from store at a particular storage index using supplied name.
      * 
      * @param storageIndex
-     *            the storage index
+     *                     the storage index
      * @param name
-     *            the name of the value to retrieve
+     *                     the name of the value to retrieve
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     Object retrieve(int storageIndex, String name) throws UnifyException;
 
@@ -52,26 +52,40 @@ public interface ValueStore {
      * Retrieves converted value from store using supplied name.
      * 
      * @param type
-     *            the type to convert to
+     *             the type to convert to
      * @param name
-     *            the name of the value to retrieve
+     *             the name of the value to retrieve
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     <T> T retrieve(Class<T> type, String name) throws UnifyException;
+
+    /**
+     * Retrieves converted value from store using supplied name.
+     * 
+     * @param type
+     *                  the type to convert to
+     * @param name
+     *                  the name of the value to retrieve
+     * @param formatter
+     *                  the formatter for conversion
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    <T> T retrieve(Class<T> type, String name, Formatter<?> formatter) throws UnifyException;
 
     /**
      * Retrieves converted value from store at a particular storage index using
      * supplied name.
      * 
      * @param type
-     *            the type to convert to
+     *                     the type to convert to
      * @param storageIndex
-     *            the storage index
+     *                     the storage index
      * @param name
-     *            the name of the value to retrieve
+     *                     the name of the value to retrieve
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     <T> T retrieve(Class<T> type, int storageIndex, String name) throws UnifyException;
 
@@ -79,11 +93,12 @@ public interface ValueStore {
      * Stores a value using supplied name.
      * 
      * @param name
-     *            the name of the value
+     *              the name of the value
      * @param value
-     *            the value to store
+     *              the value to store
      * @throws UnifyException
-     *             if value with supplied name is unknown. If an error occurs
+     *                        if value with supplied name is unknown. If an error
+     *                        occurs
      */
     void store(String name, Object value) throws UnifyException;
 
@@ -91,13 +106,14 @@ public interface ValueStore {
      * Stores a value using supplied name and optional formatter.
      * 
      * @param name
-     *            the name of the value
+     *                  the name of the value
      * @param value
-     *            the value to store
+     *                  the value to store
      * @param formatter
-     *            the optional formatter
+     *                  the optional formatter
      * @throws UnifyException
-     *             if value with supplied name is unknown. If an error occurs
+     *                        if value with supplied name is unknown. If an error
+     *                        occurs
      */
     void store(String name, Object value, Formatter<?> formatter) throws UnifyException;
 
@@ -105,13 +121,14 @@ public interface ValueStore {
      * Stores a value at particular storage index using supplied name.
      * 
      * @param storageIndex
-     *            the storage index
+     *                     the storage index
      * @param name
-     *            the name of the value
+     *                     the name of the value
      * @param value
-     *            the value to store
+     *                     the value to store
      * @throws UnifyException
-     *             if value with supplied name is unknown. If an error occurs
+     *                        if value with supplied name is unknown. If an error
+     *                        occurs
      */
     void store(int storageIndex, String name, Object value) throws UnifyException;
 
@@ -120,15 +137,16 @@ public interface ValueStore {
      * formatter.
      * 
      * @param storageIndex
-     *            the storage index
+     *                     the storage index
      * @param name
-     *            the name of the value
+     *                     the name of the value
      * @param value
-     *            the value to store
+     *                     the value to store
      * @param formatter
-     *            the optional formatter
+     *                     the optional formatter
      * @throws UnifyException
-     *             if value with supplied name is unknown. If an error occurs
+     *                        if value with supplied name is unknown. If an error
+     *                        occurs
      */
     void store(int storageIndex, String name, Object value, Formatter<?> formatter) throws UnifyException;
 
@@ -136,39 +154,44 @@ public interface ValueStore {
      * Stores a value using supplied name if the current store value is null.
      * 
      * @param name
-     *            the name of the value
+     *              the name of the value
      * @param value
-     *            the value to store
+     *              the value to store
      * @throws UnifyException
-     *             if value with supplied name is unknown. If an error occurs
+     *                        if value with supplied name is unknown. If an error
+     *                        occurs
      */
     void storeOnNull(String name, Object value) throws UnifyException;
 
     /**
-     * Stores a value using supplied name and optional formatter if the current store value is null.
+     * Stores a value using supplied name and optional formatter if the current
+     * store value is null.
      * 
      * @param name
-     *            the name of the value
+     *                  the name of the value
      * @param value
-     *            the value to store
+     *                  the value to store
      * @param formatter
-     *            the optional formatter
+     *                  the optional formatter
      * @throws UnifyException
-     *             if value with supplied name is unknown. If an error occurs
+     *                        if value with supplied name is unknown. If an error
+     *                        occurs
      */
     void storeOnNull(String name, Object value, Formatter<?> formatter) throws UnifyException;
 
     /**
-     * Stores a value at particular storage index using supplied name if the current store value is null.
+     * Stores a value at particular storage index using supplied name if the current
+     * store value is null.
      * 
      * @param storageIndex
-     *            the storage index
+     *                     the storage index
      * @param name
-     *            the name of the value
+     *                     the name of the value
      * @param value
-     *            the value to store
+     *                     the value to store
      * @throws UnifyException
-     *             if value with supplied name is unknown. If an error occurs
+     *                        if value with supplied name is unknown. If an error
+     *                        occurs
      */
     void storeOnNull(int storageIndex, String name, Object value) throws UnifyException;
 
@@ -177,25 +200,26 @@ public interface ValueStore {
      * formatter if the current store value is null.
      * 
      * @param storageIndex
-     *            the storage index
+     *                     the storage index
      * @param name
-     *            the name of the value
+     *                     the name of the value
      * @param value
-     *            the value to store
+     *                     the value to store
      * @param formatter
-     *            the optional formatter
+     *                     the optional formatter
      * @throws UnifyException
-     *             if value with supplied name is unknown. If an error occurs
+     *                        if value with supplied name is unknown. If an error
+     *                        occurs
      */
     void storeOnNull(int storageIndex, String name, Object value, Formatter<?> formatter) throws UnifyException;
-    
+
     /**
      * Gets temporary value from store using supplied name.
      * 
      * @param name
-     *            the name of the value to read
+     *             the name of the value to read
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     Object getTempValue(String name) throws UnifyException;
 
@@ -203,11 +227,11 @@ public interface ValueStore {
      * Gets converted temporary value from store using supplied name.
      * 
      * @param type
-     *            the type to convert to
+     *             the type to convert to
      * @param name
-     *            the name of the value to retrieve
+     *             the name of the value to retrieve
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     <T> T getTempValue(Class<T> type, String name) throws UnifyException;
 
@@ -215,11 +239,12 @@ public interface ValueStore {
      * Sets a temporary value using supplied name.
      * 
      * @param name
-     *            the name of the value
+     *              the name of the value
      * @param value
-     *            the value to store
+     *              the value to store
      * @throws UnifyException
-     *             if value with supplied name is unknown. If an error occurs
+     *                        if value with supplied name is unknown. If an error
+     *                        occurs
      */
     void setTempValue(String name, Object value) throws UnifyException;
 
@@ -230,14 +255,14 @@ public interface ValueStore {
      *             the temporary value name
      */
     boolean isTempValue(String name);
-    
+
     /**
      * Returns true if value store has a gettable value with supplied name.
      * 
      * @param name
-     *            the name of the value
+     *             the name of the value
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     boolean isGettable(String name) throws UnifyException;
 
@@ -245,9 +270,9 @@ public interface ValueStore {
      * Returns true if value store has a settable value with supplied name.
      * 
      * @param name
-     *            the name of the value
+     *             the name of the value
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     boolean isSettable(String name) throws UnifyException;
 
@@ -265,7 +290,7 @@ public interface ValueStore {
      * Sets the value store data marker.
      * 
      * @param dataMarker
-     *            the data marker to set
+     *                   the data marker to set
      */
     void setDataMarker(String dataMarker);
 
@@ -278,7 +303,7 @@ public interface ValueStore {
      * Sets the value store data index.
      * 
      * @param dataIndex
-     *            the data index to set
+     *                  the data index to set
      */
     void setDataIndex(int dataIndex);
 

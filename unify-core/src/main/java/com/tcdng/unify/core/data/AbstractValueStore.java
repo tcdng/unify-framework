@@ -37,11 +37,11 @@ public abstract class AbstractValueStore<T> implements ValueStore {
     private int dataIndex;
 
     private Map<String, Object> temp;
-    
+
     private ValueStoreReader reader;
-    
+
     private ValueStoreWriter writer;
-    
+
     public AbstractValueStore(T storage, String dataMarker, int dataIndex) {
         this.storage = storage;
         this.dataMarker = dataMarker;
@@ -60,7 +60,12 @@ public abstract class AbstractValueStore<T> implements ValueStore {
 
     @Override
     public <U> U retrieve(Class<U> type, String name) throws UnifyException {
-        return DataUtils.convert(type, retrieve(name));
+        return DataUtils.convert(type, doRetrieve(name));
+    }
+
+    @Override
+    public <U> U retrieve(Class<U> type, String name, Formatter<?> formatter) throws UnifyException {
+        return DataUtils.convert(type, doRetrieve(name), formatter);
     }
 
     @Override
@@ -115,13 +120,13 @@ public abstract class AbstractValueStore<T> implements ValueStore {
             doStore(name, value, formatter);
         }
     }
-    
+
     @Override
     public Object getTempValue(String name) throws UnifyException {
         if (temp != null) {
             return temp.get(name);
         }
-        
+
         return null;
     }
 
@@ -130,7 +135,7 @@ public abstract class AbstractValueStore<T> implements ValueStore {
         if (temp != null) {
             return DataUtils.convert(type, temp.get(name));
         }
-        
+
         return null;
     }
 
@@ -139,7 +144,7 @@ public abstract class AbstractValueStore<T> implements ValueStore {
         if (temp == null) {
             temp = new HashMap<String, Object>();
         }
-        
+
         temp.put(name, value);
     }
 
@@ -148,7 +153,7 @@ public abstract class AbstractValueStore<T> implements ValueStore {
         if (temp != null) {
             return temp.containsKey(name);
         }
-        
+
         return false;
     }
 
@@ -185,8 +190,8 @@ public abstract class AbstractValueStore<T> implements ValueStore {
     @Override
     public ValueStoreReader getReader() {
         if (reader == null) {
-            synchronized(this) {
-                if(reader == null) {
+            synchronized (this) {
+                if (reader == null) {
                     reader = new ValueStoreReader(this);
                 }
             }
@@ -198,8 +203,8 @@ public abstract class AbstractValueStore<T> implements ValueStore {
     @Override
     public ValueStoreWriter getWriter() {
         if (writer == null) {
-            synchronized(this) {
-                if(writer == null) {
+            synchronized (this) {
+                if (writer == null) {
                     writer = new ValueStoreWriter(this);
                 }
             }

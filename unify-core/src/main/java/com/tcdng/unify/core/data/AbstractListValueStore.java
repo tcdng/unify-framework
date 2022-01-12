@@ -67,6 +67,11 @@ public abstract class AbstractListValueStore<T> implements ValueStore {
     }
 
     @Override
+    public <U> U retrieve(Class<U> type, String name, Formatter<?> formatter) throws UnifyException {
+        return DataUtils.convert(type, retrieve(name), formatter);
+    }
+
+    @Override
     public <U> U retrieve(Class<U> type, int storageIndex, String name) throws UnifyException {
         checkStorageIndex(storageIndex);
         return DataUtils.convert(type, retrieve(storageIndex, name));
