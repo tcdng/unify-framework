@@ -325,4 +325,9 @@ public class SqlFieldInfo implements SqlFieldSchemaInfo {
         sb.append(", defaultVal = ").append(defaultVal).append("}");
         return sb.toString();
     }
+
+    @Override
+    public String toString() {
+        return toDimensionString();
+    }
 }

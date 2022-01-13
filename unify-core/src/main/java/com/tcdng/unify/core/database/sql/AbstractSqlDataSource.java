@@ -251,6 +251,20 @@ public abstract class AbstractSqlDataSource extends AbstractDataSource implement
     }
 
     @Override
+    public Map<String, SqlColumnInfo> getColumnMapLowerCase(String schemaName, String tableName) throws UnifyException {
+        List<SqlColumnInfo> list = getColumnList(schemaName, tableName);
+        if (!list.isEmpty()) {
+            Map<String, SqlColumnInfo> map = new LinkedHashMap<String, SqlColumnInfo>();
+            for (SqlColumnInfo sqlColumnInfo : list) {
+                map.put(sqlColumnInfo.getColumnName().toLowerCase(), sqlColumnInfo);
+            }
+            return map;
+        }
+
+        return Collections.emptyMap();
+    }
+
+    @Override
     public Set<String> getColumns(String schemaName, String tableName) throws UnifyException {
         if (schemaName != null && tableName != null) {
             Connection connection = getConnection();
