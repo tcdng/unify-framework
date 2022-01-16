@@ -38,6 +38,11 @@ public class DynamicEntityInfo {
 
     public static final DynamicEntityInfo SELF_REFERENCE = new DynamicEntityInfo(true);
 
+    public enum ManagedType {
+        MANAGED,
+        NOT_MANAGED
+    }
+    
     private DynamicEntityType type;
 
     private String tableName;
@@ -51,6 +56,8 @@ public class DynamicEntityInfo {
     private boolean withChildField;
 
     private boolean selfReference;
+    
+    private ManagedType managed;
 
     private long version;
 
@@ -59,11 +66,12 @@ public class DynamicEntityInfo {
     }
 
     private DynamicEntityInfo(DynamicEntityType type, String tableName, String baseClassName, String className,
-            Map<String, DynamicFieldInfo> fieldInfos, long version) {
+            ManagedType managed, Map<String, DynamicFieldInfo> fieldInfos, long version) {
         this.type = type;
         this.tableName = tableName;
         this.baseClassName = baseClassName;
         this.className = className;
+        this.managed = managed;
         this.fieldInfos = fieldInfos;
         this.version = version;
     }
@@ -78,6 +86,10 @@ public class DynamicEntityInfo {
 
     public boolean isGeneration() {
         return type.isGeneration();
+    }
+
+    public boolean isManaged() {
+        return ManagedType.MANAGED.equals(managed);
     }
 
     public String getTableName() {
@@ -137,12 +149,12 @@ public class DynamicEntityInfo {
         }
     }
 
-    public static Builder newBuilder(DynamicEntityType type, String className) {
-        return new Builder(type, className);
+    public static Builder newBuilder(DynamicEntityType type, String className, ManagedType managed) {
+        return new Builder(type, className, managed);
     }
 
-    public static Builder newBuilder(String className) {
-        return new Builder(DynamicEntityType.INFO_ONLY, className);
+    public static Builder newBuilder(String className, ManagedType managed) {
+        return new Builder(DynamicEntityType.INFO_ONLY, className, managed);
     }
 
     public static class Builder {
@@ -161,11 +173,14 @@ public class DynamicEntityInfo {
 
         private Map<String, DynamicListOnlyFieldInfo> listOnlyFields;
 
+        private ManagedType managed;
+        
         private long version;
 
-        private Builder(DynamicEntityType type, String className) {
+        private Builder(DynamicEntityType type, String className, ManagedType managed) {
             this.type = type;
             this.className = className;
+            this.managed = managed;
             baseClassName = AbstractSequencedEntity.class.getCanonicalName();
             fkFields = new LinkedHashMap<String, DynamicForeignKeyFieldInfo>();
             columnFields = new LinkedHashMap<String, DynamicColumnFieldInfo>();
@@ -272,12 +287,12 @@ public class DynamicEntityInfo {
             fieldInfos.putAll(fkFields);
             fieldInfos.putAll(columnFields);
             fieldInfos.putAll(listOnlyFields);
-            DynamicEntityInfo info = new DynamicEntityInfo(type, tableName, baseClassName, className, fieldInfos,
-                    version);
-            for (DynamicForeignKeyFieldInfo fkField: fkFields.values()) {
+            DynamicEntityInfo info = new DynamicEntityInfo(type, tableName, baseClassName, className, managed,
+                    fieldInfos, version);
+            for (DynamicForeignKeyFieldInfo fkField : fkFields.values()) {
                 fkField.updateParentDynamicEntityInfo(info);
             }
-            
+
             return info;
         }
     }

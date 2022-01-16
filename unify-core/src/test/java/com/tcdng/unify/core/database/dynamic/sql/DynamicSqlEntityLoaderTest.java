@@ -444,7 +444,7 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
         db = (SqlDatabase) getComponent(ApplicationComponents.APPLICATION_DATABASE);
         dseLoader = (DynamicSqlEntityLoader) getComponent(ApplicationComponents.APPLICATION_DYNAMICSQLENTITYLOADER);
         String defaultVal = null;
-        dynamicEntityInfo = DynamicEntityInfo.newBuilder(DynamicEntityType.TABLE, "com.tcdng.test.Equipment")
+        dynamicEntityInfo = DynamicEntityInfo.newBuilder(DynamicEntityType.TABLE, "com.tcdng.test.Equipment", DynamicEntityInfo.ManagedType.MANAGED)
                 .tableName("EQUIPMENT").version(1L)
                 .addField(DynamicFieldType.GENERATION, DataType.STRING, "EQUIPMENT_NM", "name", defaultVal, 32, 0, 0, false, true)
                 .addField(DynamicFieldType.GENERATION, DataType.STRING, "SERIAL_NO", "serialNo", "00000000", 0, 0, 0, false, false)
@@ -453,7 +453,7 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
                 .addField(DynamicFieldType.GENERATION, DataType.TIMESTAMP_UTC, "CREATE_DT", "createDt", defaultVal, 0, 0, 0, false, false)
                 .addField(DynamicFieldType.GENERATION, OrderType.class.getName(), "EQUIPMENT_ORDER", "order", defaultVal, false, false)
                 .build();
-        dynamicEntityInfoExt = DynamicEntityInfo.newBuilder(DynamicEntityType.TABLE_EXT, "com.tcdng.test.EquipmentExt")
+        dynamicEntityInfoExt = DynamicEntityInfo.newBuilder(DynamicEntityType.TABLE_EXT, "com.tcdng.test.EquipmentExt", DynamicEntityInfo.ManagedType.MANAGED)
                 .baseClassName(Equipment.class.getName()).version(1L)
                 .addField(DynamicFieldType.INFO_ONLY, DataType.STRING, "EQUIPMENT_NM", "name", defaultVal, 32, 0, 0, false, true)
                 .addField(DynamicFieldType.INFO_ONLY, DataType.STRING, "SERIAL_NO", "serialNo", defaultVal, 0, 0, 0, false, true)
@@ -461,7 +461,7 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
                 .addField(DynamicFieldType.GENERATION, DataType.DATE, "EXPIRY_DT", "expiryDt", defaultVal, 0, 0, 0, true, false)
                 .addField(DynamicFieldType.GENERATION, DataType.TIMESTAMP_UTC, "CREATE_DT", "createDt", defaultVal, 0, 0, 0, false, false)
                 .build();
-        authorDynamicEntityInfo = DynamicEntityInfo.newBuilder(DynamicEntityType.TABLE, "com.tcdng.test.Author")
+        authorDynamicEntityInfo = DynamicEntityInfo.newBuilder(DynamicEntityType.TABLE, "com.tcdng.test.Author", DynamicEntityInfo.ManagedType.MANAGED)
                 .tableName("TAUTHOR").version(1L)
                 .addField(DynamicFieldType.GENERATION, DataType.STRING, "TAUTHOR_NM", "name", defaultVal, 32, 0, 0, false, true)
                 .addForeignKeyField(DynamicFieldType.GENERATION, DynamicEntityInfo.SELF_REFERENCE, "PARENT_AUTHOR_ID",
@@ -469,7 +469,7 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
                 .addListOnlyField(DynamicFieldType.GENERATION, null, "parentAuthorName", "parentAuthorId", "name", false)
                 .build();
         bookDynamicEntityInfo = DynamicEntityInfo
-                .newBuilder(DynamicEntityType.TABLE, "com.tcdng.test.Book").tableName("TBOOK").version(1L)
+                .newBuilder(DynamicEntityType.TABLE, "com.tcdng.test.Book", DynamicEntityInfo.ManagedType.MANAGED).tableName("TBOOK").version(1L)
                 .addForeignKeyField(DynamicFieldType.GENERATION, authorDynamicEntityInfo, null, "authorId", "1", false)
                 .addField(DynamicFieldType.GENERATION, DataType.STRING, "TITLE", "title", defaultVal, 32, 0, 0, false, true)
                 .addListOnlyField(DynamicFieldType.GENERATION, null, "authorName", "authorId", "name", false)

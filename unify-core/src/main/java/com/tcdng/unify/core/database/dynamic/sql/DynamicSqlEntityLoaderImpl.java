@@ -18,7 +18,9 @@ package com.tcdng.unify.core.database.dynamic.sql;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.ApplicationComponents;
@@ -84,12 +86,24 @@ public class DynamicSqlEntityLoaderImpl extends AbstractUnifyComponent implement
 
         logDebug("Compiling and loading [{0}] entity classes...", sourceList.size());
         List<Class<?>> classList = runtimeJavaClassManager.compileAndLoadJavaClasses(sourceList);
-
+        
+        final int len = dynamicEntityInfoList.size();
+        Set<Class<?>> unmanagedClasses = new HashSet<Class<?>>();
+        for (int i = 0; i < len; i++) {
+            if (!dynamicEntityInfoList.get(i).isManaged()) {
+                unmanagedClasses.add(classList.get(i));
+            }
+        }
+        
         SqlDataSource sqlDataSource = (SqlDataSource) db.getDataSource();
         SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
         for (Class<?> entityClass : classList) {
-            logDebug("Creating entity class information for [{0}] ...", entityClass);
-            sqlDataSourceDialect.createSqlEntityInfo(entityClass);
+            if (unmanagedClasses.contains(entityClass)) {
+                logDebug("Skipping entity class information for [{0}] ...", entityClass);
+            } else {
+                logDebug("Creating entity class information for [{0}] ...", entityClass);
+                sqlDataSourceDialect.createSqlEntityInfo(entityClass);
+            }
         }
 
         List<Class<?>> dependencyList = sqlSchemaManager.buildDependencyList(sqlDataSource, classList);
@@ -97,9 +111,16 @@ public class DynamicSqlEntityLoaderImpl extends AbstractUnifyComponent implement
         List<Class<? extends Entity>> viewList = new ArrayList<Class<? extends Entity>>();
         List<Class<? extends Entity>> resultList = new ArrayList<Class<? extends Entity>>();
         for (Class<?> clazz : dependencyList) {
-            viewList.add((Class<? extends Entity>) clazz);
+            boolean managed = !unmanagedClasses.contains(clazz);
+            if (managed) {
+                viewList.add((Class<? extends Entity>) clazz);
+            }
+            
             if (classList.contains(clazz)) {
-                tableList.add(clazz);
+                if (managed) {
+                    tableList.add(clazz);
+                }
+                
                 resultList.add((Class<? extends Entity>) clazz);
             }
         }

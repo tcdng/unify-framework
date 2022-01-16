@@ -493,7 +493,7 @@ public class UnifyContainer {
             // Initialize utilities
             ImageUtils.scanForPlugins();
             DataUtils.registerDefaultFormatters(
-                    (DateTimeFormatter) getUplComponent(getApplicationLocale(), "!datetimeformat", false));
+                    (DateTimeFormatter) getUplComponent(getApplicationLocale(), "!fixeddatetimeformat pattern:$s{yyyy-MM-dd HH:mm:ss}", false));
 
             // Run application startup service
             toConsole("Initializing application boot service...");
