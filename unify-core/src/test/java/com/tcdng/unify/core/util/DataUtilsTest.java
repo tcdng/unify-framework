@@ -36,6 +36,7 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.tcdng.unify.core.AbstractUnifyComponentTest;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.constant.PrintFormat;
 
@@ -45,7 +46,7 @@ import com.tcdng.unify.core.constant.PrintFormat;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class DataUtilsTest {
+public class DataUtilsTest extends AbstractUnifyComponentTest {
 
     private List<Book> bookList;
 
@@ -106,6 +107,63 @@ public class DataUtilsTest {
         assertEquals(2, result.size());
         assertEquals("240", result.get(0));
         assertEquals("72", result.get(1));
+    }
+
+    @Test
+    public void testConvertDateToString() throws Exception {
+        Calendar cal = Calendar.getInstance();
+        cal.set(2021, 11, 25, 13, 26, 5);
+        cal.set(Calendar.MILLISECOND, 0);
+        Date date1 = cal.getTime();
+        String conv = DataUtils.convert(String.class, date1);
+        assertEquals("2021-12-25 13:26:05.000", conv);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testConvertDateListToStringList() throws Exception {
+        Calendar cal = Calendar.getInstance();
+        cal.set(2021, 11, 25, 13, 26, 5);
+        cal.set(Calendar.MILLISECOND, 25);
+        Date date1 = cal.getTime();
+        cal = Calendar.getInstance();
+        cal.set(2021, 10, 14, 10, 26, 14);
+        cal.set(Calendar.MILLISECOND, 200);
+        Date date2 = cal.getTime();
+
+        List<String> dateStrList = DataUtils.convert(List.class, String.class, Arrays.asList(date1, date2));
+        assertNotNull(dateStrList);
+        assertEquals(2, dateStrList.size());
+        assertEquals("2021-12-25 13:26:05.025", dateStrList.get(0));
+        assertEquals("2021-11-14 10:26:14.200", dateStrList.get(1));
+    }
+
+    @Test
+    public void testConvertStringToDate() throws Exception {
+        Calendar cal = Calendar.getInstance();
+        cal.set(2021, 11, 25, 13, 26, 5);
+        cal.set(Calendar.MILLISECOND, 25);
+        Date date1 = cal.getTime();
+        Date date10 = DataUtils.convert(Date.class, "2021-12-25 13:26:05.025");
+        assertEquals(date1, date10);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testConvertStringListToDateList() throws Exception {
+        Calendar cal = Calendar.getInstance();
+        cal.set(2021, 11, 25, 13, 26, 5);
+        cal.set(Calendar.MILLISECOND, 25);
+        Date date1 = cal.getTime();
+        cal = Calendar.getInstance();
+        cal.set(2021, 10, 14, 10, 26, 14);
+        cal.set(Calendar.MILLISECOND, 200);
+        Date date2 = cal.getTime();
+
+        List<Date> dateList = DataUtils.convert(List.class, Date.class, Arrays.asList("2021-12-25 13:26:05.025", "2021-11-14 10:26:14.200"));
+        assertNotNull(dateList);
+        assertEquals(date1, dateList.get(0));
+        assertEquals(date2, dateList.get(1));
     }
 
     @Test
@@ -596,18 +654,18 @@ public class DataUtilsTest {
         assertEquals(2, documents.length);
         assertEquals("{\"name\":\"birthCert\",\"title\":\"Birth Certificate\",\"weight\":52}", documents[0]);
         assertEquals("{\"name\":\"drivers\",\"title\":\"Driver's License\",\"weight\":65}", documents[1]);
-        
+
         Doc doc = DataUtils.readJsonObject(Doc.class, documents[0]);
         assertNotNull(doc);
         assertEquals("birthCert", doc.getName());
         assertEquals("Birth Certificate", doc.getTitle());
         assertEquals(52, doc.getWeight());
-        
+
         doc = DataUtils.readJsonObject(Doc.class, documents[1]);
         assertNotNull(doc);
         assertEquals("drivers", doc.getName());
         assertEquals("Driver's License", doc.getTitle());
-        assertEquals(65, doc.getWeight());       
+        assertEquals(65, doc.getWeight());
     }
 
     @Test
@@ -658,7 +716,17 @@ public class DataUtilsTest {
         assertEquals(BigDecimal.TEN, DataUtils.add(null, BigDecimal.TEN));
         assertEquals(BigDecimal.valueOf(20), DataUtils.add(BigDecimal.TEN, BigDecimal.TEN));
     }
-    
+
+    @Override
+    protected void onSetup() throws Exception {
+
+    }
+
+    @Override
+    protected void onTearDown() throws Exception {
+
+    }
+
     public static abstract class Asset {
 
         private String title;
@@ -746,11 +814,11 @@ public class DataUtilsTest {
     }
 
     public static class Doc {
-        
+
         private String name;
-        
+
         private String title;
-        
+
         private int weight;
 
         public String getName() {
@@ -776,9 +844,9 @@ public class DataUtilsTest {
         public void setWeight(int weight) {
             this.weight = weight;
         }
-        
+
     }
-    
+
     public static class Inventory {
         private InventoryEntry[] entries;
 
