@@ -21,6 +21,8 @@ import java.util.Map;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.format.Formatter;
 import com.tcdng.unify.core.util.DataUtils;
+import com.tcdng.unify.core.util.GetterSetterInfo;
+import com.tcdng.unify.core.util.ReflectUtils;
 
 /**
  * Abstract value store.
@@ -175,6 +177,16 @@ public abstract class AbstractValueStore<T> implements ValueStore {
     @Override
     public void setDataIndex(int dataIndex) {
         this.dataIndex = dataIndex;
+    }
+
+    @Override
+    public void copy(ValueStore source) throws UnifyException {
+        for (GetterSetterInfo getterSetterInfo : ReflectUtils.getGetterSetterList(storage.getClass())) {
+            if (getterSetterInfo.isGetterSetter()) {
+                String fieldName = getterSetterInfo.getName();
+                store(fieldName, source.retrieve(fieldName));
+            }
+        }
     }
 
     @Override

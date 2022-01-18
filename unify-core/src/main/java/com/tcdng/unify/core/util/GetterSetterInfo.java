@@ -82,6 +82,10 @@ public class GetterSetterInfo {
         return this.setter != null;
     }
 
+    public boolean isGetterSetter() {
+        return this.getter != null && this.setter != null;
+    }
+
     public boolean isParameterArgumented0() {
         return this.argumentType0 != null;
     }

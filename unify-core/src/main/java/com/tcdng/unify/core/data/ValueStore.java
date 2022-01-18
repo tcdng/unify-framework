@@ -315,6 +315,16 @@ public interface ValueStore {
     int size();
 
     /**
+     * Copies supplied value store to this object.
+     * 
+     * @param source
+     *               the source value store
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    void copy(ValueStore source) throws UnifyException;
+    
+    /**
      * Gets reader for this value store object.
      * 
      * @return the value store reader
