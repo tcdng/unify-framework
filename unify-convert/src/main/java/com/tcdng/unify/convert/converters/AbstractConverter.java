@@ -13,11 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.convert;
-
-import com.tcdng.unify.core.UnifyCoreErrorConstants;
-import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.format.Formatter;
+package com.tcdng.unify.convert.converters;
 
 /**
  * Base class for converters.
@@ -28,14 +24,8 @@ import com.tcdng.unify.core.format.Formatter;
 public abstract class AbstractConverter<T> implements Converter<T> {
 
     @Override
-    public T convert(Object value, Formatter<?> formatter) throws UnifyException {
-        try {
-            return doConvert(value, formatter);
-        } catch (UnifyException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new UnifyException(e, UnifyCoreErrorConstants.CONVERTER_EXCEPTION);
-        }
+    public T convert(Object value, ConverterFormatter<?> formatter) throws Exception {
+        return doConvert(value, formatter);
     }
 
     /**
@@ -49,5 +39,5 @@ public abstract class AbstractConverter<T> implements Converter<T> {
      * @throws Exception
      *             if an error occurs
      */
-    protected abstract T doConvert(Object value, Formatter<?> formatter) throws Exception;
+    protected abstract T doConvert(Object value, ConverterFormatter<?> formatter) throws Exception;
 }

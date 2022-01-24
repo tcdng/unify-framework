@@ -18,11 +18,13 @@ package com.tcdng.unify.core.convert;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import com.tcdng.unify.core.constant.EnumConst;
+import com.tcdng.unify.convert.constants.EnumConst;
+import com.tcdng.unify.convert.converters.AbstractConverter;
+import com.tcdng.unify.convert.converters.ConverterFormatter;
+import com.tcdng.unify.convert.util.ConverterUtils;
 import com.tcdng.unify.core.data.Money;
 import com.tcdng.unify.core.format.Formatter;
 import com.tcdng.unify.core.upl.UplElementReferences;
-import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
 
 /**
@@ -35,7 +37,7 @@ public class StringConverter extends AbstractConverter<String> {
 
     @SuppressWarnings("unchecked")
     @Override
-    protected String doConvert(Object value, Formatter<?> formatter) throws Exception {
+    protected String doConvert(Object value, ConverterFormatter<?> formatter) throws Exception {
         if (value != null) {
             if (value instanceof String) {
                 if (formatter != null && formatter.getDataType().isAssignableFrom(String.class)) {
@@ -84,7 +86,7 @@ public class StringConverter extends AbstractConverter<String> {
             
             if (formatter == null) {
                 if (value instanceof Date) {
-                    formatter = DataUtils.getDefaultDateTimeFormatter();
+                    formatter = ConverterUtils.getDefaultDateTimeFormatter();
                 }
                 
                 if (formatter == null) {

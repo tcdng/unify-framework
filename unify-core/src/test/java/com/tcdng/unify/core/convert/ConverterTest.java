@@ -28,8 +28,18 @@ import java.util.Locale;
 
 import org.junit.Test;
 
+import com.tcdng.unify.convert.converters.BigDecimalConverter;
+import com.tcdng.unify.convert.converters.BooleanConverter;
+import com.tcdng.unify.convert.converters.ByteConverter;
+import com.tcdng.unify.convert.converters.CharacterConverter;
+import com.tcdng.unify.convert.converters.Converter;
+import com.tcdng.unify.convert.converters.DateConverter;
+import com.tcdng.unify.convert.converters.DoubleConverter;
+import com.tcdng.unify.convert.converters.FloatConverter;
+import com.tcdng.unify.convert.converters.IntegerConverter;
+import com.tcdng.unify.convert.converters.LongConverter;
+import com.tcdng.unify.convert.converters.ShortConverter;
 import com.tcdng.unify.core.AbstractUnifyComponentTest;
-import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.format.DateFormatter;
 import com.tcdng.unify.core.format.DecimalFormatter;
 import com.tcdng.unify.core.upl.UplElementReferences;
@@ -57,7 +67,7 @@ public class ConverterTest extends AbstractUnifyComponentTest {
         assertEquals(BigDecimal.valueOf(11002.254), converter.convert("11,002.254", defaultDecimalFormatter));
     }
 
-    @Test(expected = UnifyException.class)
+    @Test(expected = Exception.class)
     public void testBigDecimalConverterWithInvalidParameters() throws Exception {
         Converter<BigDecimal> converter = new BigDecimalConverter();
         converter.convert("11,002.254", null); // Expects a formatter
@@ -91,7 +101,7 @@ public class ConverterTest extends AbstractUnifyComponentTest {
         assertEquals(Byte.valueOf((byte) 20), converter.convert("20", null));
     }
 
-    @Test(expected = UnifyException.class)
+    @Test(expected = Exception.class)
     public void testByteConverterWithInvalidParameters() throws Exception {
         Converter<Byte> converter = new ByteConverter();
         converter.convert("200.00", null);
@@ -109,7 +119,7 @@ public class ConverterTest extends AbstractUnifyComponentTest {
         assertEquals(String.class, converter.convert("java.lang.String", null));
     }
 
-    @Test(expected = UnifyException.class)
+    @Test(expected = Exception.class)
     public void testClassConverterWithInvalidParameters() throws Exception {
         Converter<Class<?>> converter = new ClassConverter();
         assertEquals(String.class, converter.convert("String", null));
@@ -133,7 +143,7 @@ public class ConverterTest extends AbstractUnifyComponentTest {
         assertEquals(now, date2);
     }
 
-    @Test(expected = UnifyException.class)
+    @Test(expected = Exception.class)
     public void testDateConverterWithInvalidParameters() throws Exception {
         Converter<Date> converter = new DateConverter();
         converter.convert("Some Date", dateFormatter);
@@ -150,7 +160,7 @@ public class ConverterTest extends AbstractUnifyComponentTest {
         assertEquals(Double.valueOf(11002.254), converter.convert("11,002.254", defaultDecimalFormatter));
     }
 
-    @Test(expected = UnifyException.class)
+    @Test(expected = Exception.class)
     public void testDoubleConverterWithInvalidParameters() throws Exception {
         Converter<Double> converter = new DoubleConverter();
         converter.convert("11,002.254", null); // Expects a formatter
@@ -167,7 +177,7 @@ public class ConverterTest extends AbstractUnifyComponentTest {
         assertEquals(Float.valueOf((float) 11002.254), converter.convert("11,002.254", defaultDecimalFormatter));
     }
 
-    @Test(expected = UnifyException.class)
+    @Test(expected = Exception.class)
     public void testFloatConverterWithInvalidParameters() throws Exception {
         Converter<Float> converter = new FloatConverter();
         converter.convert("11,002.254", null); // Expects a formatter
@@ -184,7 +194,7 @@ public class ConverterTest extends AbstractUnifyComponentTest {
         assertEquals(Integer.valueOf(11002), converter.convert("11,002.254", defaultDecimalFormatter));
     }
 
-    @Test(expected = UnifyException.class)
+    @Test(expected = Exception.class)
     public void testIntegerConverterWithInvalidParameters() throws Exception {
         Converter<Integer> converter = new IntegerConverter();
         converter.convert("3567.6789", null); // Expects a formatter
@@ -201,7 +211,7 @@ public class ConverterTest extends AbstractUnifyComponentTest {
         assertEquals(Long.valueOf(11002), converter.convert("11,002.254", defaultDecimalFormatter));
     }
 
-    @Test(expected = UnifyException.class)
+    @Test(expected = Exception.class)
     public void testLongConverterWithInvalidParameters() throws Exception {
         Converter<Long> converter = new LongConverter();
         converter.convert("3567.6789", null); // Expects a formatter
@@ -218,7 +228,7 @@ public class ConverterTest extends AbstractUnifyComponentTest {
         assertEquals(Short.valueOf((short) 11002), converter.convert("11,002.254", defaultDecimalFormatter));
     }
 
-    @Test(expected = UnifyException.class)
+    @Test(expected = Exception.class)
     public void testShortConverterWithInvalidParameters() throws Exception {
         Converter<Short> converter = new ShortConverter();
         converter.convert("3567.6789", null); // Expects a formatter

@@ -18,8 +18,8 @@ package com.tcdng.unify.core.database.sql.criterion.policy;
 import java.util.List;
 
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.criterion.RestrictionField;
 import com.tcdng.unify.core.criterion.Restriction;
+import com.tcdng.unify.core.criterion.RestrictionField;
 import com.tcdng.unify.core.criterion.SingleParamRestriction;
 import com.tcdng.unify.core.database.sql.AbstractSqlCriteriaPolicy;
 import com.tcdng.unify.core.database.sql.SqlDataSourceDialectPolicies;

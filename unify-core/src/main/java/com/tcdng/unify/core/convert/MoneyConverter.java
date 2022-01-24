@@ -18,9 +18,10 @@ package com.tcdng.unify.core.convert;
 
 import java.math.BigDecimal;
 
+import com.tcdng.unify.convert.converters.AbstractConverter;
+import com.tcdng.unify.convert.converters.ConverterFormatter;
 import com.tcdng.unify.core.data.Money;
 import com.tcdng.unify.core.format.DecimalFormatter;
-import com.tcdng.unify.core.format.Formatter;
 
 /**
  * A value to money converter.
@@ -31,7 +32,7 @@ import com.tcdng.unify.core.format.Formatter;
 public class MoneyConverter extends AbstractConverter<Money> {
 
     @Override
-    protected Money doConvert(Object value, Formatter<?> formatter) throws Exception {
+    protected Money doConvert(Object value, ConverterFormatter<?> formatter) throws Exception {
         if (value instanceof Money) {
             return new Money((Money) value);
         }

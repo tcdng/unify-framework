@@ -13,33 +13,30 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.convert;
-
-import com.tcdng.unify.core.format.Formatter;
+package com.tcdng.unify.convert.converters;
 
 /**
- * A value to float converter.
+ * A value to integer converter.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class FloatConverter extends AbstractConverter<Float> {
+public class IntegerConverter extends AbstractConverter<Integer> {
 
     @Override
-    protected Float doConvert(Object value, Formatter<?> formatter) throws Exception {
+    protected Integer doConvert(Object value, ConverterFormatter<?> formatter) throws Exception {
         if (value instanceof Number) {
-            return Float.valueOf(((Number) value).floatValue());
+            return Integer.valueOf(((Number) value).intValue());
         }
         if (value instanceof String) {
             String string = ((String) value).trim();
             if (!string.isEmpty()) {
                 if (formatter == null) {
-                    return Float.valueOf(string);
+                    return Integer.decode(string);
                 }
                 return doConvert(formatter.parse(string), null);
             }
         }
         return null;
     }
-
 }

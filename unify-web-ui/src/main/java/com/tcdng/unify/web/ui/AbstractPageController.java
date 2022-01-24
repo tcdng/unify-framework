@@ -50,12 +50,12 @@ import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.Widget;
 import com.tcdng.unify.web.ui.widget.WidgetCommandManager;
 import com.tcdng.unify.web.ui.widget.WidgetContainer;
+import com.tcdng.unify.web.ui.widget.data.Hint.MODE;
 import com.tcdng.unify.web.ui.widget.data.MessageBox;
 import com.tcdng.unify.web.ui.widget.data.MessageIcon;
 import com.tcdng.unify.web.ui.widget.data.MessageMode;
 import com.tcdng.unify.web.ui.widget.data.MessageResult;
 import com.tcdng.unify.web.ui.widget.data.TaskMonitorInfo;
-import com.tcdng.unify.web.ui.widget.data.Hint.MODE;
 
 /**
  * Convenient base page controller implementation.

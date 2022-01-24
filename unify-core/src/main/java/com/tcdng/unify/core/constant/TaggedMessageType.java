@@ -15,6 +15,7 @@
  */
 package com.tcdng.unify.core.constant;
 
+import com.tcdng.unify.convert.constants.EnumConst;
 import com.tcdng.unify.core.annotation.StaticList;
 import com.tcdng.unify.core.util.EnumUtils;
 

@@ -13,37 +13,40 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.convert;
+package com.tcdng.unify.convert.converters;
 
 import java.util.Date;
 
-import com.tcdng.unify.core.format.Formatter;
+import com.tcdng.unify.convert.util.ConverterUtils;
 
 /**
- * A value to long converter.
+ * A value to date converter.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class LongConverter extends AbstractConverter<Long> {
+public class DateConverter extends AbstractConverter<Date> {
 
     @Override
-    protected Long doConvert(Object value, Formatter<?> formatter) throws Exception {
-        if (value instanceof Number) {
-            return Long.valueOf(((Number) value).longValue());
-        }
-        
+    protected Date doConvert(Object value, ConverterFormatter<?> formatter) throws Exception {
         if (value instanceof Date) {
-            return Long.valueOf(((Date) value).getTime());
+            return (Date) value;
         }
-        
+
+        if (value instanceof Long) {
+            return new Date((Long) value);
+        }
+
         if (value instanceof String) {
             String string = ((String) value).trim();
             if (!string.isEmpty()) {
                 if (formatter == null) {
-                    return Long.decode(string);
+                    formatter = ConverterUtils.getDefaultDateTimeFormatter();
                 }
-                return doConvert(formatter.parse(string), null);
+
+                if (formatter != null) {
+                    return doConvert(formatter.parse((String) value), null);
+                }
             }
         }
         return null;

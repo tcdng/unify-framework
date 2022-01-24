@@ -39,7 +39,8 @@
     	<module>unify-web-javax</module>
     	<module>unify-web-jakarta</module>
     	<module>unify-nashorn</module>
-  </modules>
+    	<module>unify-convert</module>
+  	</modules>
 
 	<scm>
 		<connection>scm:git:git://github.com/tcdng/unify-framework.git</connection>

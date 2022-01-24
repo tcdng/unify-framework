@@ -13,28 +13,26 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.convert;
-
-import com.tcdng.unify.core.format.Formatter;
+package com.tcdng.unify.convert.converters;
 
 /**
- * A value to double converter.
+ * A value to byte converter.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class DoubleConverter extends AbstractConverter<Double> {
+public class ByteConverter extends AbstractConverter<Byte> {
 
     @Override
-    protected Double doConvert(Object value, Formatter<?> formatter) throws Exception {
+    protected Byte doConvert(Object value, ConverterFormatter<?> formatter) throws Exception {
         if (value instanceof Number) {
-            return Double.valueOf(((Number) value).doubleValue());
+            return Byte.valueOf(((Number) value).byteValue());
         }
         if (value instanceof String) {
             String string = ((String) value).trim();
             if (!string.isEmpty()) {
                 if (formatter == null) {
-                    return Double.valueOf(string);
+                    return Byte.decode(string);
                 }
                 return doConvert(formatter.parse(string), null);
             }

@@ -13,43 +13,31 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.convert;
-
-import java.util.Date;
-
-import com.tcdng.unify.core.format.Formatter;
-import com.tcdng.unify.core.util.DataUtils;
+package com.tcdng.unify.convert.converters;
 
 /**
- * A value to date converter.
+ * A value to float converter.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class DateConverter extends AbstractConverter<Date> {
+public class FloatConverter extends AbstractConverter<Float> {
 
     @Override
-    protected Date doConvert(Object value, Formatter<?> formatter) throws Exception {
-        if (value instanceof Date) {
-            return (Date) value;
+    protected Float doConvert(Object value, ConverterFormatter<?> formatter) throws Exception {
+        if (value instanceof Number) {
+            return Float.valueOf(((Number) value).floatValue());
         }
-
-        if (value instanceof Long) {
-            return new Date((Long) value);
-        }
-
         if (value instanceof String) {
             String string = ((String) value).trim();
             if (!string.isEmpty()) {
                 if (formatter == null) {
-                    formatter = DataUtils.getDefaultDateTimeFormatter();
+                    return Float.valueOf(string);
                 }
-
-                if (formatter != null) {
-                    return doConvert(formatter.parse((String) value), null);
-                }
+                return doConvert(formatter.parse(string), null);
             }
         }
         return null;
     }
+
 }

@@ -13,29 +13,35 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.convert;
+package com.tcdng.unify.convert.converters;
 
-import com.tcdng.unify.core.format.Formatter;
+import java.math.BigDecimal;
 
 /**
- * A value to boolean converter. Converts, non-case sensitively, strings "y",
- * "on", "true", and "yes" to Boolean.TRUE.
+ * A value to big decimal converter.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class BooleanConverter extends AbstractConverter<Boolean> {
+public class BigDecimalConverter extends AbstractConverter<BigDecimal> {
 
     @Override
-    protected Boolean doConvert(Object value, Formatter<?> formatter) throws Exception {
-        if (value instanceof Boolean) {
-            return Boolean.valueOf((Boolean) value);
+    protected BigDecimal doConvert(Object value, ConverterFormatter<?> formatter) throws Exception {
+        if (value instanceof Number) {
+            return new BigDecimal(((Number) value).toString());
         }
+
         if (value instanceof String) {
-            String string = ((String) value);
-            return Boolean.valueOf("y".equalsIgnoreCase(string) || "on".equalsIgnoreCase(string)
-                    || "true".equalsIgnoreCase(string) || "yes".equalsIgnoreCase(string));
+            String string = ((String) value).trim();
+            if (!string.isEmpty()) {
+                if (formatter == null) {
+                    return new BigDecimal(string);
+                }
+
+                return doConvert(formatter.parse(string), null);
+            }
         }
+
         return null;
     }
 }

@@ -65,6 +65,11 @@
 
 	<dependencies>
 		<!-- Main dependencies -->
+        <dependency>
+            <groupId>com.tcdng.unify</groupId>
+            <artifactId>unify-convert</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 		<dependency>
 			<groupId>org.scannotation</groupId>
 			<artifactId>scannotation</artifactId>

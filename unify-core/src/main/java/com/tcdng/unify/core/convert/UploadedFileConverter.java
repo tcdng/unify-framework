@@ -15,8 +15,9 @@
  */
 package com.tcdng.unify.core.convert;
 
+import com.tcdng.unify.convert.converters.AbstractConverter;
+import com.tcdng.unify.convert.converters.ConverterFormatter;
 import com.tcdng.unify.core.data.UploadedFile;
-import com.tcdng.unify.core.format.Formatter;
 
 /**
  * Uploaded file converter.
@@ -27,7 +28,7 @@ import com.tcdng.unify.core.format.Formatter;
 public class UploadedFileConverter extends AbstractConverter<UploadedFile> {
 
     @Override
-    protected UploadedFile doConvert(Object value, Formatter<?> formatter) throws Exception {
+    protected UploadedFile doConvert(Object value, ConverterFormatter<?> formatter) throws Exception {
         if (value instanceof UploadedFile) {
             return (UploadedFile) value;
         }

@@ -15,9 +15,9 @@
  */
 package com.tcdng.unify.core.report;
 
+import com.tcdng.unify.convert.constants.EnumConst;
 import com.tcdng.unify.core.annotation.StaticList;
 import com.tcdng.unify.core.constant.MimeType;
-import com.tcdng.unify.core.constant.EnumConst;
 import com.tcdng.unify.core.util.EnumUtils;
 
 /**

@@ -15,8 +15,9 @@
  */
 package com.tcdng.unify.core.convert;
 
+import com.tcdng.unify.convert.converters.AbstractConverter;
+import com.tcdng.unify.convert.converters.ConverterFormatter;
 import com.tcdng.unify.core.data.UploadedFile;
-import com.tcdng.unify.core.format.Formatter;
 
 /**
  * Byte array converter.
@@ -27,7 +28,7 @@ import com.tcdng.unify.core.format.Formatter;
 public class ByteArrayConverter extends AbstractConverter<byte[]> {
 
     @Override
-    protected byte[] doConvert(Object value, Formatter<?> formatter) throws Exception {
+    protected byte[] doConvert(Object value, ConverterFormatter<?> formatter) throws Exception {
         if (value instanceof byte[]) {
             return (byte[]) value;
         }

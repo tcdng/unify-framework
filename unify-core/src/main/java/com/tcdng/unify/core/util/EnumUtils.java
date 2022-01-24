@@ -18,7 +18,7 @@ package com.tcdng.unify.core.util;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.tcdng.unify.core.constant.EnumConst;
+import com.tcdng.unify.convert.constants.EnumConst;
 import com.tcdng.unify.core.data.FactoryMap;
 
 /**

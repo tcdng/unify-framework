@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.tcdng.unify.convert.constants.EnumConst;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyComponentConfig;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
@@ -65,7 +66,6 @@ import com.tcdng.unify.core.annotation.Version;
 import com.tcdng.unify.core.annotation.View;
 import com.tcdng.unify.core.annotation.ViewRestriction;
 import com.tcdng.unify.core.constant.DefaultColumnPositionConstants;
-import com.tcdng.unify.core.constant.EnumConst;
 import com.tcdng.unify.core.criterion.RestrictionType;
 import com.tcdng.unify.core.data.CycleDetector;
 import com.tcdng.unify.core.data.FactoryMap;

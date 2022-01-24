@@ -17,7 +17,8 @@ package com.tcdng.unify.core.convert;
 
 import java.util.List;
 
-import com.tcdng.unify.core.format.Formatter;
+import com.tcdng.unify.convert.converters.AbstractConverter;
+import com.tcdng.unify.convert.converters.ConverterFormatter;
 import com.tcdng.unify.core.upl.UplElementReferences;
 
 /**
@@ -30,7 +31,7 @@ public class UplElementReferencesConverter extends AbstractConverter<UplElementR
 
     @SuppressWarnings("unchecked")
     @Override
-    protected UplElementReferences doConvert(Object value, Formatter<?> formatter) throws Exception {
+    protected UplElementReferences doConvert(Object value, ConverterFormatter<?> formatter) throws Exception {
         if (value instanceof UplElementReferences) {
             return (UplElementReferences) value;
         }

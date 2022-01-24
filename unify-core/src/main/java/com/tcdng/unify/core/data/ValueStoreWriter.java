@@ -17,8 +17,6 @@
 package com.tcdng.unify.core.data;
 
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.data.BeanValueStore;
-import com.tcdng.unify.core.data.ValueStore;
 import com.tcdng.unify.core.format.Formatter;
 
 /**
