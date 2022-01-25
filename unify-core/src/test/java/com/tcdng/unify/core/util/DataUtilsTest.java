@@ -37,7 +37,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.tcdng.unify.core.AbstractUnifyComponentTest;
-import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.constant.OrderType;
 import com.tcdng.unify.core.constant.PrintFormat;
 
 /**
@@ -358,7 +358,7 @@ public class DataUtilsTest extends AbstractUnifyComponentTest {
     @Test
     public void testReadEmptyJsonObject() throws Exception {
         String json = "{}";
-        Book book = DataUtils.readJsonObject(Book.class, json);
+        Book book = DataUtils.fromJsonString(Book.class, json);
         assertNotNull(book);
         assertNull(book.getAuthor());
         assertNull(book.getPrice());
@@ -369,9 +369,10 @@ public class DataUtilsTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testReadJsonObject() throws Exception {
-        String json = "{\"author\":\"Bramer & Bramer\", \"price\":2.54, \"priceHistory\":[2.35, 2.03], \"copies\":20, \"censored\":true}";
-        Book book = DataUtils.readJsonObject(Book.class, json);
+        String json = "{\"order\":\"DESCENDING\",\"author\":\"Bramer & Bramer\", \"price\":2.54, \"priceHistory\":[2.35, 2.03], \"copies\":20, \"censored\":true}";
+        Book book = DataUtils.fromJsonString(Book.class, json);
         assertNotNull(book);
+        assertEquals(OrderType.DESCENDING, book.getOrder());
         assertEquals("Bramer & Bramer", book.getAuthor());
         assertEquals(BigDecimal.valueOf(2.54), book.getPrice());
         assertEquals(20, book.getCopies());
@@ -386,7 +387,7 @@ public class DataUtilsTest extends AbstractUnifyComponentTest {
     @Test
     public void testReadJsonArray() throws Exception {
         String json1 = "[\"10\", \"20\", \"30\"]";
-        String[] arr1 = DataUtils.readJsonArray(String[].class, json1);
+        String[] arr1 = DataUtils.arrayFromJsonString(String[].class, json1);
         assertNotNull(arr1);
         assertEquals(3, arr1.length);
         assertEquals("10", arr1[0]);
@@ -394,7 +395,7 @@ public class DataUtilsTest extends AbstractUnifyComponentTest {
         assertEquals("30", arr1[2]);
 
         String json2 = "[10, 20, 30]";
-        Integer[] arr2 = DataUtils.readJsonArray(Integer[].class, json2);
+        Integer[] arr2 = DataUtils.arrayFromJsonString(Integer[].class, json2);
         assertNotNull(arr2);
         assertEquals(3, arr2.length);
         assertEquals(Integer.valueOf(10), arr2[0]);
@@ -405,7 +406,7 @@ public class DataUtilsTest extends AbstractUnifyComponentTest {
     @Test
     public void testReadComplexJsonObject() throws Exception {
         String json = "{\"id\":1025,\"book\":{\"author\":\"Bramer & Bramer\", \"price\":2.54, \"priceHistory\":[2.35, 2.03], \"copies\":20, \"censored\":true}}";
-        InventoryEntry entry = DataUtils.readJsonObject(InventoryEntry.class, json);
+        InventoryEntry entry = DataUtils.fromJsonString(InventoryEntry.class, json);
         assertNotNull(entry);
         assertEquals(1025, entry.getId());
 
@@ -426,7 +427,7 @@ public class DataUtilsTest extends AbstractUnifyComponentTest {
     public void testReadMoreComplexJsonObject() throws Exception {
         String json = "{\"entries\":[{\"id\":1025,\"book\":{\"author\":\"Bramer & Bramer\", \"price\":2.54, \"priceHistory\":[2.35, 2.03], \"copies\":20, \"censored\":true}},"
                 + "{\"id\":1025,\"book\":{\"author\":\"Tom Clancy\", \"price\":4.71, \"priceHistory\":[3.86], \"copies\":82, \"censored\":false}}]}";
-        Inventory inventory = DataUtils.readJsonObject(Inventory.class, json);
+        Inventory inventory = DataUtils.fromJsonString(Inventory.class, json);
         assertNotNull(inventory);
         InventoryEntry[] entries = inventory.getEntries();
         assertNotNull(entries);
@@ -467,7 +468,7 @@ public class DataUtilsTest extends AbstractUnifyComponentTest {
     @Test
     public void testReadEmbeddedJsonObject() throws Exception {
         String json = "{\"title\":\"Smart Dog\", \"resource\": {\"format\":\"jpeg\", \"width\":64, \"height\":128}}";
-        PictureAsset pictureAsset = DataUtils.readJsonObject(PictureAsset.class, json);
+        PictureAsset pictureAsset = DataUtils.fromJsonString(PictureAsset.class, json);
         assertNotNull(pictureAsset);
         assertEquals("Smart Dog", pictureAsset.getTitle());
 
@@ -477,15 +478,15 @@ public class DataUtilsTest extends AbstractUnifyComponentTest {
         assertEquals(128, picture.getHeight());
     }
 
-    @Test(expected = UnifyException.class)
-    public void testReadJsonObjectUnknownMember() throws Exception {
-        String json = "{\"author\":\"Bramer & Bramer\", \"tax\":2.54, \"priceHistory\":[2.35, 2.03], \"copies\":20, \"censored\":true}";
-        DataUtils.readJsonObject(Book.class, json);
-    }
+//    @Test(expected = UnifyException.class)
+//    public void testReadJsonObjectUnknownMember() throws Exception {
+//        String json = "{\"author\":\"Bramer & Bramer\", \"tax\":2.54, \"priceHistory\":[2.35, 2.03], \"copies\":20, \"censored\":true}";
+//        DataUtils.fromJsonString(Book.class, json);
+//    }
 
     @Test
     public void testToEmptyJsonObjectString() throws Exception {
-        String json = DataUtils.toJsonObjectString(new Inventory(), PrintFormat.NONE);
+        String json = DataUtils.asJsonString(new Inventory(), PrintFormat.NONE);
         assertNotNull(json);
         assertEquals("{\"entries\":null}", json);
     }
@@ -493,12 +494,14 @@ public class DataUtilsTest extends AbstractUnifyComponentTest {
     @Test
     public void testToJsonObjectString() throws Exception {
         Book book = new Book("Saladin", BigDecimal.valueOf(10.0), 20, false);
+        book.setOrder(OrderType.ASCENDING);
         book.setPriceHistory(new Double[] { 8.32, 9.14 });
-        String json = DataUtils.toJsonObjectString(book, PrintFormat.NONE);
+        String json = DataUtils.asJsonString(book, PrintFormat.NONE);
         assertNotNull(json);
 
-        Book jsonBook = DataUtils.readJsonObject(Book.class, json);
+        Book jsonBook = DataUtils.fromJsonString(Book.class, json);
         assertNotNull(jsonBook);
+        assertEquals(OrderType.ASCENDING, jsonBook.getOrder());
         assertEquals(book.getAuthor(), jsonBook.getAuthor());
         assertEquals(book.getPrice(), jsonBook.getPrice());
         assertEquals(book.getCopies(), jsonBook.getCopies());
@@ -519,10 +522,10 @@ public class DataUtilsTest extends AbstractUnifyComponentTest {
         book.setPriceHistory(new Double[] { 12.45, 11.0, 11.22 });
         entry.setBook(book);
 
-        String json = DataUtils.toJsonObjectString(entry, PrintFormat.NONE);
+        String json = DataUtils.asJsonString(entry, PrintFormat.NONE);
         assertNotNull(json);
 
-        InventoryEntry jsonEntry = DataUtils.readJsonObject(InventoryEntry.class, json);
+        InventoryEntry jsonEntry = DataUtils.fromJsonString(InventoryEntry.class, json);
         assertNotNull(jsonEntry);
         assertEquals(entry.getId(), jsonEntry.getId());
 
@@ -557,10 +560,10 @@ public class DataUtilsTest extends AbstractUnifyComponentTest {
 
         Inventory inventory = new Inventory();
         inventory.setEntries(new InventoryEntry[] { entry1, entry2 });
-        String json = DataUtils.toJsonObjectString(inventory, PrintFormat.NONE);
+        String json = DataUtils.asJsonString(inventory, PrintFormat.NONE);
         assertNotNull(json);
 
-        Inventory jsonInventory = DataUtils.readJsonObject(Inventory.class, json);
+        Inventory jsonInventory = DataUtils.fromJsonString(Inventory.class, json);
         assertNotNull(jsonInventory);
         InventoryEntry[] entries = jsonInventory.getEntries();
         assertNotNull(entries);
@@ -609,10 +612,10 @@ public class DataUtilsTest extends AbstractUnifyComponentTest {
         ((Picture) pictureAsset.getResource()).setWidth(200);
         ((Picture) pictureAsset.getResource()).setHeight(50);
 
-        String json = DataUtils.toJsonObjectString(pictureAsset, PrintFormat.NONE);
+        String json = DataUtils.asJsonString(pictureAsset, PrintFormat.NONE);
         assertNotNull(json);
 
-        PictureAsset jsonPictureAsset = DataUtils.readJsonObject(PictureAsset.class, json);
+        PictureAsset jsonPictureAsset = DataUtils.fromJsonString(PictureAsset.class, json);
         assertEquals(pictureAsset.getTitle(), jsonPictureAsset.getTitle());
 
         Picture jsonPicture = (Picture) jsonPictureAsset.getResource();
@@ -623,11 +626,11 @@ public class DataUtilsTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testToJsonArrayString() throws Exception {
-        String json1 = DataUtils.toJsonArrayString(new String[] { "10", "20", "30" });
+        String json1 = DataUtils.asJsonArrayString(new String[] { "10", "20", "30" });
         assertNotNull(json1);
         assertEquals("[\"10\",\"20\",\"30\"]", json1);
 
-        String json2 = DataUtils.toJsonArrayString(new Integer[] { 10, 20, 30 });
+        String json2 = DataUtils.asJsonArrayString(new Integer[] { 10, 20, 30 });
         assertNotNull(json2);
         assertEquals("[10,20,30]", json2);
     }
@@ -635,7 +638,7 @@ public class DataUtilsTest extends AbstractUnifyComponentTest {
     @Test
     public void testReadStringArrayFromJsonObjectArrayBlank() throws Exception {
         String json = "{\"batchNo\":\"abc000001\", \"documents\":[]}";
-        DocBatch docBatch = DataUtils.readJsonObject(DocBatch.class, json);
+        DocBatch docBatch = DataUtils.fromJsonString(DocBatch.class, json);
         assertNotNull(docBatch);
         assertEquals("abc000001", docBatch.getBatchNo());
         String[] documents = docBatch.getDocuments();
@@ -646,7 +649,7 @@ public class DataUtilsTest extends AbstractUnifyComponentTest {
     @Test
     public void testReadStringArrayFromJsonObjectArray() throws Exception {
         String json = "{\"batchNo\":\"abc000002\", \"documents\":[{\"name\":\"birthCert\", \"title\":\"Birth Certificate\", \"weight\":52}, {\"name\":\"drivers\", \"title\":\"Driver's License\", \"weight\":65}]}";
-        DocBatch docBatch = DataUtils.readJsonObject(DocBatch.class, json);
+        DocBatch docBatch = DataUtils.fromJsonString(DocBatch.class, json);
         assertNotNull(docBatch);
         assertEquals("abc000002", docBatch.getBatchNo());
         String[] documents = docBatch.getDocuments();
@@ -655,13 +658,13 @@ public class DataUtilsTest extends AbstractUnifyComponentTest {
         assertEquals("{\"name\":\"birthCert\",\"title\":\"Birth Certificate\",\"weight\":52}", documents[0]);
         assertEquals("{\"name\":\"drivers\",\"title\":\"Driver's License\",\"weight\":65}", documents[1]);
 
-        Doc doc = DataUtils.readJsonObject(Doc.class, documents[0]);
+        Doc doc = DataUtils.fromJsonString(Doc.class, documents[0]);
         assertNotNull(doc);
         assertEquals("birthCert", doc.getName());
         assertEquals("Birth Certificate", doc.getTitle());
         assertEquals(52, doc.getWeight());
 
-        doc = DataUtils.readJsonObject(Doc.class, documents[1]);
+        doc = DataUtils.fromJsonString(Doc.class, documents[1]);
         assertNotNull(doc);
         assertEquals("drivers", doc.getName());
         assertEquals("Driver's License", doc.getTitle());
@@ -747,6 +750,10 @@ public class DataUtilsTest extends AbstractUnifyComponentTest {
 
         public Object getResource() {
             return resource;
+        }
+
+        public void setResource(Object resource) {
+            this.resource = resource;
         }
     }
 
@@ -883,6 +890,9 @@ public class DataUtilsTest extends AbstractUnifyComponentTest {
     }
 
     public static class Book {
+        
+        private OrderType order;
+        
         private String author;
 
         private BigDecimal price;
@@ -902,6 +912,14 @@ public class DataUtilsTest extends AbstractUnifyComponentTest {
 
         public Book() {
 
+        }
+
+        public OrderType getOrder() {
+            return order;
+        }
+
+        public void setOrder(OrderType order) {
+            this.order = order;
         }
 
         public String getAuthor() {

@@ -26,7 +26,7 @@ import com.eclipsesource.json.JsonValue;
  */
 public class JsonDoubleConverter implements JsonValueConverter<Double> {
     @Override
-    public Double read(JsonValue jsonValue) throws Exception {
+    public Double read(Class<Double> clazz, JsonValue jsonValue) throws Exception {
         if (jsonValue.isNull()) {
             return null;
         }

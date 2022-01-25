@@ -23,6 +23,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
@@ -43,7 +44,6 @@ import java.util.Set;
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
-import com.eclipsesource.json.JsonObject.Member;
 import com.eclipsesource.json.JsonValue;
 import com.eclipsesource.json.PrettyPrint;
 import com.tcdng.unify.convert.constants.EnumConst;
@@ -911,64 +911,7 @@ public final class DataUtils {
             }
         }
     }
-
-    /**
-     * Reads a JSON object. Has no support for collections.
-     * 
-     * @param type
-     *             the object type
-     * @param json
-     *             the JSON string
-     * @return instance of object
-     * @throws UnifyException
-     *                        if an error occurs
-     */
-    public static <T> T readJsonObject(Class<T> type, String json) throws UnifyException {
-        return DataUtils.readJsonObject(type, new StringReader(json));
-    }
-
-    /**
-     * Reads a JSON object. Has no support for collections.
-     * 
-     * @param type
-     *                    the object type
-     * @param inputStream
-     *                    the JSON input stream
-     * @param charset
-     *                    optional character set
-     * @return instance of object
-     * @throws UnifyException
-     *                        if an error occurs
-     */
-    public static <T> T readJsonObject(Class<T> type, InputStream inputStream, Charset charset) throws UnifyException {
-        if (charset == null) {
-            return DataUtils.readJsonObject(type, new BufferedReader(new InputStreamReader(inputStream)));
-        }
-
-        return DataUtils.readJsonObject(type, new BufferedReader(new InputStreamReader(inputStream, charset)));
-    }
-
-    /**
-     * Reads a JSON object. Has no support for collections.
-     * 
-     * @param type
-     *               the object type
-     * @param reader
-     *               the JSON reader
-     * @return instance of object
-     * @throws UnifyException
-     *                        if an error occurs
-     */
-    public static <T> T readJsonObject(Class<T> type, Reader reader) throws UnifyException {
-        try {
-            return DataUtils.readJsonObject(type.newInstance(), Json.parse(reader).asObject());
-        } catch (UnifyException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new UnifyException(UnifyCoreErrorConstants.DATAUTIL_ERROR, e);
-        }
-    }
-    
+   
     /**
      * Reads a JSON array.
      * 
@@ -980,8 +923,8 @@ public final class DataUtils {
      * @throws UnifyException
      *                        if an error occurs
      */
-    public static <T> T[] readJsonArray(Class<T[]> type, String json) throws UnifyException {
-        return DataUtils.readJsonArray(type, new StringReader(json));
+    public static <T> T[] arrayFromJsonString(Class<T[]> type, String json) throws UnifyException {
+        return DataUtils.arrayFromJsonReader(type, new StringReader(json));
     }
 
     /**
@@ -995,11 +938,9 @@ public final class DataUtils {
      * @throws UnifyException
      *                        if an error occurs
      */
-    @SuppressWarnings("unchecked")
-    public static <T> T[] readJsonArray(Class<T[]> type, Reader reader) throws UnifyException {
+    public static <T> T[] arrayFromJsonReader(Class<T[]> type, Reader reader) throws UnifyException {
         try {
-          JsonValueConverter<?> converter = jsonConverterMap.get(type);
-          return (T[]) converter.read(Json.parse(reader));
+          return (T[]) DataUtils.fromJsonReader(type, reader);
         } catch (UnifyException e) {
             throw e;
         } catch (Exception e) {
@@ -1017,8 +958,8 @@ public final class DataUtils {
      * @throws UnifyException
      *                        if an error occurs
      */
-    public static void readJsonObject(Object object, String json) throws UnifyException {
-        DataUtils.readJsonObject(object, new StringReader(json));
+    public static <T> T  fromJsonString(Class<T> clazz, String json) throws UnifyException {
+        return DataUtils.fromJsonReader(clazz, new StringReader(json));
     }
 
     /**
@@ -1033,33 +974,116 @@ public final class DataUtils {
      * @throws UnifyException
      *                        if an error occurs
      */
-    public static void readJsonObject(Object object, InputStream inputStream, Charset charset) throws UnifyException {
+    public static <T> T fromJsonInputStream(Class<T> clazz, InputStream inputStream, Charset charset) throws UnifyException {
         if (charset == null) {
-            DataUtils.readJsonObject(object, new BufferedReader(new InputStreamReader(inputStream)));
-            return;
+            return DataUtils.fromJsonReader(clazz, new BufferedReader(new InputStreamReader(inputStream)));
         }
 
-        DataUtils.readJsonObject(object, new BufferedReader(new InputStreamReader(inputStream, charset)));
+        return DataUtils.fromJsonReader(clazz, new BufferedReader(new InputStreamReader(inputStream, charset)));
     }
 
     /**
      * Reads a JSON object. Has no support for collections.
      * 
-     * @param object
-     *               bean to read to
+     * @param clazz
+     *               bean type
      * @param reader
      *               the JSON reader
      * @throws UnifyException
      *                        if an error occurs
      */
-    public static void readJsonObject(Object object, Reader reader) throws UnifyException {
+    public static <T> T fromJsonReader(Class<T> clazz, Reader reader) throws UnifyException {
         try {
-            DataUtils.readJsonObject(object, Json.parse(reader).asObject());
+            return DataUtils.getObjectFromJsonValue(clazz, null, Json.parse(reader));
         } catch (UnifyException e) {
             throw e;
         } catch (Exception e) {
+            e.printStackTrace();
             throw new UnifyException(UnifyCoreErrorConstants.DATAUTIL_ERROR, e);
         }
+    }
+    
+    @SuppressWarnings("unchecked")
+    private static <T> T getObjectFromJsonValue(Class<T> clazz, Class<?> argClass, JsonValue jsonValue) throws Exception{
+        if (jsonValue == null || jsonValue.isNull() ) {
+            return (T) ConverterUtils.getNullValue(clazz);
+        }
+        
+        JsonValueConverter<T> converter = jsonConverterMap.get(clazz);
+        if (converter != null) {
+            return converter.read(clazz, jsonValue);
+        }
+        
+        if (clazz.isEnum()) {
+            Class<? extends Enum> enumClass = (Class<? extends Enum>) clazz;
+            return (T) Enum.valueOf(enumClass, jsonValue.asString());
+        }
+        
+        // Array
+        if(clazz.isArray()) {
+            Class<?> compClass = clazz.getComponentType();
+            if (jsonValue.isArray()) {
+                JsonArray jsonArray =  jsonValue.asArray();
+                int len = jsonArray.size();
+                Object arr = Array.newInstance(compClass, len);
+                for(int i = 0; i < len; i++) {
+                    Array.set(arr, i, DataUtils.getObjectFromJsonValue(compClass, null, jsonArray.get(i)));
+                }
+                
+                return (T) arr;
+            }
+
+            Object arr = Array.newInstance(compClass, 1);
+            Array.set(arr, 0, DataUtils.getObjectFromJsonValue(compClass, null, jsonValue));
+            
+            return (T) arr;
+        }
+        
+        // Collection
+        if (Collection.class.isAssignableFrom(clazz)) {
+            Collection<Object> result = ReflectUtils.newInstance(
+                    ConverterUtils.getCollectionConcreteType((Class<? extends Collection>) clazz));
+            if (jsonValue.isArray()) {
+                JsonArray jsonArray =  jsonValue.asArray();
+                int len = jsonArray.size();
+                for(int i = 0; i < len; i++) {
+                    result.add(DataUtils.getObjectFromJsonValue(argClass, null, jsonArray.get(i)));
+                }
+            } else {
+                result.add(DataUtils.getObjectFromJsonValue(argClass, null, jsonValue));
+            }
+            
+            return (T) result;
+        }
+        
+        // Map TODO
+        
+        // Bean
+        JsonObject jsonObject = jsonValue.asObject();
+        T bean = ReflectUtils.newInstance(clazz);
+        if(jsonObject.size() > 0) {
+            Map<String, GetterSetterInfo> accessors = ReflectUtils.getGetterSetterMap(clazz);
+            for (String name : accessors.keySet()) {
+                GetterSetterInfo gInfo = accessors.get(name);
+                if (!gInfo.isSetter() || !gInfo.isProperty()) {
+                    continue;
+                }
+                
+                JsonValue jsonVal = jsonObject.get(name);
+                Class<?> type = gInfo.getType();
+                if (Object.class.equals(type)) {
+                    Object inst = gInfo.getGetter().invoke(bean);
+                    if (inst != null) {
+                        type = inst.getClass();
+                    }
+                }
+                
+                Object val = getObjectFromJsonValue(type, gInfo.getArgumentType0(), jsonVal);
+                gInfo.getSetter().invoke(bean, val);
+            }
+        }
+        
+        return bean;
     }
 
     /**
@@ -1132,16 +1156,15 @@ public final class DataUtils {
      */
     public static void writeJsonObject(Object object, Writer writer, PrintFormat printFormat) throws UnifyException {
         try {
-            JsonObject jsonObject = Json.object();
-            DataUtils.writeJsonObject(object, jsonObject, printFormat);
+            JsonValue jsonValue = DataUtils.getJsonValueFromObject(object);
             switch (printFormat) {
-            case PRETTY:
-                jsonObject.writeTo(writer, PrettyPrint.PRETTY_PRINT);
-                break;
-            case NONE:
-            default:
-                jsonObject.writeTo(writer);
-                break;
+                case PRETTY:
+                    jsonValue.writeTo(writer, PrettyPrint.PRETTY_PRINT);
+                    break;
+                case NONE:
+                default:
+                    jsonValue.writeTo(writer);
+                    break;
             }
             writer.flush();
         } catch (UnifyException e) {
@@ -1151,12 +1174,11 @@ public final class DataUtils {
         }
     }
 
-    @Deprecated
-    public static String writeJsonObject(Object object, PrintFormat printFormat) throws UnifyException {
+    public static String asJsonString(Object obj, PrintFormat format) throws UnifyException {
         try {
-            JsonObject jsonObject = Json.object();
-            DataUtils.writeJsonObject(object, jsonObject, printFormat);
-            return jsonObject.toString();
+            StringWriter writer = new StringWriter();
+            DataUtils.writeJsonObject(obj, writer, format);
+            return writer.toString();
         } catch (UnifyException e) {
             throw e;
         } catch (Exception e) {
@@ -1164,19 +1186,60 @@ public final class DataUtils {
         }
     }
 
-    public static String toJsonObjectString(Object object, PrintFormat printFormat) throws UnifyException {
-        try {
-            JsonObject jsonObject = Json.object();
-            DataUtils.writeJsonObject(object, jsonObject, printFormat);
-            return jsonObject.toString();
-        } catch (UnifyException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new UnifyException(UnifyCoreErrorConstants.DATAUTIL_ERROR, e);
+    private static JsonValue getJsonValueFromObject(Object obj) throws Exception{
+        if (obj == null) {
+            return Json.NULL;
         }
+        
+        JsonValueConverter<?> converter = jsonConverterMap.get(obj.getClass());
+        if (converter != null) {
+            return converter.write(obj);
+        }
+        
+        if (obj.getClass().isEnum()) {            
+            return Json.value(((Enum) obj).name());
+        }
+        
+        // Array
+        if(obj.getClass().isArray()) {
+            JsonArray array = Json.array();
+            int len = Array.getLength(obj);
+            for (int i = 0; i < len; i++) {
+                array.add(getJsonValueFromObject(Array.get(obj, i)));
+            }
+            
+            return array;
+        }
+        
+        // Collection
+        if (Collection.class.isAssignableFrom(obj.getClass())) {
+            JsonArray jsonArray = Json.array();
+            for (Object val : (Collection<?>) obj) {
+                jsonArray.add(getJsonValueFromObject(val));
+            }
+            
+            return jsonArray;
+        }
+        
+        // Map TODO
+        
+        // Bean
+        JsonObject jsonObject = Json.object();
+        Map<String, GetterSetterInfo> accessors = ReflectUtils.getGetterSetterMap(obj.getClass());
+        for (String name : accessors.keySet()) {
+            GetterSetterInfo gInfo = accessors.get(name);
+            if (!gInfo.isGetter() || !gInfo.isProperty()) {
+                continue;
+            }
+            
+            Object val = gInfo.getGetter().invoke(obj);
+            jsonObject.add(name, getJsonValueFromObject(val));
+        }
+        
+        return jsonObject;
     }
 
-    public static <T> String toJsonArrayString(T[] array) throws UnifyException {
+    public static <T> String asJsonArrayString(T[] array) throws UnifyException {
         try {
             JsonValueConverter<?> converter = jsonConverterMap.get(array.getClass());
             return converter.write(array).toString();
@@ -1442,166 +1505,7 @@ public final class DataUtils {
         
         return b;
     }
-    
-    @SuppressWarnings("unchecked")
-    private static <T> T readJsonObject(T object, JsonObject jsonObject) throws UnifyException, Exception {
-        Map<String, GetterSetterInfo> mutatorMap = ReflectUtils.getGetterSetterMap(object.getClass());
-        for (Member member : jsonObject) {
-            GetterSetterInfo sInfo = mutatorMap.get(member.getName());
-            if (sInfo == null) {
-                throw new Exception(
-                        "Type " + object.getClass() + " has no mutator/accesor for member " + member.getName());
-            }
-
-            if (!sInfo.isProperty()) {
-                throw new Exception(
-                        "Type " + object.getClass() + " has no matching bean property for member " + member.getName());
-            }
-
-            Class<?> paramType = sInfo.getType();
-            JsonValue value = member.getValue();
-            if (Object.class.equals(paramType)) {
-                if (!sInfo.isGetter()) {
-                    throw new Exception("Type " + object.getClass() + " has no accesor for member " + member.getName());
-                }
-
-                Object implObject = sInfo.getGetter().invoke(object);
-                DataUtils.readJsonObject(implObject, value.asObject());
-            } else {
-                if (!sInfo.isSetter()) {
-                    throw new Exception("Type " + object.getClass() + " has no mutator for member " + member.getName());
-                }
-
-                JsonValueConverter<?> converter = jsonConverterMap.get(paramType);
-                if (converter == null) {
-                    if (Collection.class.isAssignableFrom(paramType)) {
-                        Collection<Object> result = null;
-                        if (!value.isNull()) {
-                            JsonArray array = value.asArray();
-                            result = ReflectUtils.newInstance(
-                                    ConverterUtils.getCollectionConcreteType((Class<? extends Collection>) paramType));
-                            if (sInfo.isParameterArgumented0()) {
-                                Class<?> componentType = sInfo.getArgumentType0();
-                                converter = jsonConverterMap.get(sInfo.getArgumentType0());
-                                if (converter == null) {
-                                    for (int i = 0; i < array.size(); i++) {
-                                        result.add(DataUtils.readJsonObject(componentType.newInstance(),
-                                                array.get(i).asObject()));
-                                    }
-                                } else {
-                                    for (int i = 0; i < array.size(); i++) {
-                                        result.add(converter.read(array.get(i)));
-                                    }
-                                }
-                            }
-                        }
-
-                        sInfo.getSetter().invoke(object, (Object) result);
-                    } else if (paramType.isArray()) {
-                        Object[] valueArray = null;
-                        if (!value.isNull()) {
-                            JsonArray array = value.asArray();
-                            Class<?> componentType = paramType.getComponentType();
-                            converter = jsonConverterMap.get(componentType);
-                            valueArray = (Object[]) Array.newInstance(componentType, array.size());
-                            if (converter == null) {
-                                for (int i = 0; i < valueArray.length; i++) {
-                                    valueArray[i] = DataUtils.readJsonObject(componentType.newInstance(),
-                                            array.get(i).asObject());
-                                }
-                            } else {
-                                for (int i = 0; i < valueArray.length; i++) {
-                                    valueArray[i] = converter.read(array.get(i));
-                                }
-                            }
-                        }
-
-                        sInfo.getSetter().invoke(object, (Object) valueArray);
-                    } else {
-                        sInfo.getSetter().invoke(object,
-                                DataUtils.readJsonObject(paramType.newInstance(), value.asObject()));
-                    }
-                } else {
-                    sInfo.getSetter().invoke(object, converter.read(value));
-                }
-            }
-        }
-        return object;
-    }
-
-    private static <T> void writeJsonObject(T object, JsonObject jsonObject, PrintFormat printFormat)
-            throws UnifyException, Exception {
-        if (object != null) {
-            Map<String, GetterSetterInfo> accessorMap = ReflectUtils.getGetterSetterMap(object.getClass());
-            for (String name : accessorMap.keySet()) {
-                GetterSetterInfo gInfo = accessorMap.get(name);
-                if (!gInfo.isGetter() || !gInfo.isProperty()) {
-                    continue;
-                }
-
-                Object value = gInfo.getGetter().invoke(object);
-                if (value != null) {
-                    Class<?> returnType = gInfo.getType();
-                    if (Object.class.equals(returnType)) {
-                        JsonObject jsonValue = Json.object();
-                        DataUtils.writeJsonObject(value, jsonValue, printFormat);
-                        jsonObject.add(name, jsonValue);
-                    } else {
-                        JsonValueConverter<?> converter = jsonConverterMap.get(returnType);
-                        if (converter == null) {
-                            if (Collection.class.isAssignableFrom(value.getClass())) {
-                                JsonArray array = (JsonArray) Json.array();
-                                if (gInfo.isParameterArgumented0()) {
-                                    converter = jsonConverterMap.get(gInfo.getArgumentType0());
-                                }
-
-                                if (converter == null) {
-                                    for (Object obj : (Collection<?>) value) {
-                                        JsonObject jsonValue = Json.object();
-                                        DataUtils.writeJsonObject(obj, jsonValue, printFormat);
-                                        array.add(jsonValue);
-                                    }
-                                } else {
-                                    for (Object obj : (Collection<?>) value) {
-                                        array.add(converter.write(obj));
-                                    }
-                                }
-
-                                jsonObject.add(name, array);
-                            } else if (value.getClass().isArray()) {
-                                JsonArray array = (JsonArray) Json.array();
-                                Class<?> componentType = value.getClass().getComponentType();
-                                converter = jsonConverterMap.get(componentType);
-                                int length = Array.getLength(value);
-                                if (converter == null) {
-                                    for (int i = 0; i < length; i++) {
-                                        JsonObject jsonValue = Json.object();
-                                        DataUtils.writeJsonObject(Array.get(value, i), jsonValue, printFormat);
-                                        array.add(jsonValue);
-                                    }
-                                } else {
-                                    for (int i = 0; i < length; i++) {
-                                        array.add(converter.write(Array.get(value, i)));
-                                    }
-                                }
-
-                                jsonObject.add(name, array);
-                            } else {
-                                JsonObject jsonValue = Json.object();
-                                DataUtils.writeJsonObject(value, jsonValue, printFormat);
-                                jsonObject.add(name, jsonValue);
-                            }
-                        } else {
-                            jsonObject.add(name, converter.write(value));
-                        }
-                    }
-                } else {
-                    jsonObject.add(name, (String) null);
-                }
-            }
-        }
-    }
-
+   
     @SuppressWarnings("unchecked")
     private static <T> void sort(List<?> list, Class<T> beanClass, String property, boolean ascending)
             throws UnifyException {

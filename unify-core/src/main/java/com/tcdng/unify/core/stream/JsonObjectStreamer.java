@@ -15,12 +15,6 @@
  */
 package com.tcdng.unify.core.stream;
 
-import java.io.InputStream;
-import java.io.Reader;
-import java.nio.charset.Charset;
-
-import com.tcdng.unify.core.UnifyException;
-
 /**
  * JSON object read/write device.
  * 
@@ -29,41 +23,4 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface JsonObjectStreamer extends ObjectStreamer {
 
-    /**
-     * Reads an object from supplied input stream.
-     * 
-     * @param object
-     *            object to read to
-     * @param inputStream
-     *            input stream to read from
-     * @param charset
-     *            optional character set
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    void unmarshal(Object object, InputStream inputStream, Charset charset) throws UnifyException;
-
-    /**
-     * Reads an object from supplied reader.
-     * 
-     * @param object
-     *            object to read to
-     * @param reader
-     *            reader to read from
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    void unmarshal(Object object, Reader reader) throws UnifyException;
-
-    /**
-     * Reads an object from supplied string.
-     * 
-     * @param object
-     *            object to read to
-     * @param string
-     *            string to read
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    void unmarshal(Object object, String string) throws UnifyException;
 }

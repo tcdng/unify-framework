@@ -29,17 +29,11 @@ import com.eclipsesource.json.JsonValue;
  */
 public abstract class AbstractJsonArrayConverter<T> implements JsonValueConverter<T[]> {
 
-    private Class<T> clazz;
-
-    public AbstractJsonArrayConverter(Class<T> clazz) {
-        this.clazz = clazz;
-    }
-
     @SuppressWarnings("unchecked")
     @Override
-    public T[] read(JsonValue jsonValue) throws Exception {
+    public T[] read(Class<T[]> clazz, JsonValue jsonValue) throws Exception {
         JsonArray array = jsonValue.asArray();
-        T[] result = (T[]) Array.newInstance(clazz, array.size());
+        T[] result = (T[]) Array.newInstance(clazz.getComponentType(), array.size());
         for (int i = 0; i < result.length; i++) {
             result[i] = getValue(array.get(i));
         }

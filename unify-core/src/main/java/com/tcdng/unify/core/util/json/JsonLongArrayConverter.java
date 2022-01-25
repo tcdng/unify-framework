@@ -26,10 +26,6 @@ import com.eclipsesource.json.JsonValue;
  */
 public class JsonLongArrayConverter extends AbstractJsonArrayConverter<Long> {
 
-    public JsonLongArrayConverter() {
-        super(Long.class);
-    }
-
     @Override
     protected Long getValue(JsonValue jsonValue) throws Exception {
         if (jsonValue.isNull()) {

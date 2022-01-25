@@ -28,10 +28,6 @@ import com.eclipsesource.json.JsonValue;
  */
 public class JsonBigDecimalArrayConverter extends AbstractJsonArrayConverter<BigDecimal> {
 
-    public JsonBigDecimalArrayConverter() {
-        super(BigDecimal.class);
-    }
-
     @Override
     protected BigDecimal getValue(JsonValue jsonValue) throws Exception {
         if (jsonValue.isNull()) {
