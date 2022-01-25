@@ -98,15 +98,15 @@ public interface RuntimeJavaClassManager extends UnifyComponent, ClassForNamePro
      * a one-time class loader which implies that classes with the same name can be
      * compiled and loaded.
      * 
-     * @param className
-     *                   the class name
+     * @param clazz
+     *                   the class type
      * @param sourceList
      *                   the source list
      * @return the compiled and loaded classes
      * @throws UnifyException
      *                        if an error occurs
      */
-    List<Class<?>> compileAndLoadJavaClasses(List<JavaClassSource> sourceList) throws UnifyException;
+    <T> List<Class<? extends T>> compileAndLoadJavaClasses(Class<T> clazz, List<JavaClassSource> sourceList) throws UnifyException;
 
     /**
      * Compiles a Java class source from file and load resulting class to JVM. Uses

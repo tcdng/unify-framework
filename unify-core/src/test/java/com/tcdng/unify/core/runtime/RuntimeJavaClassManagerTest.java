@@ -28,6 +28,7 @@ import org.junit.Test;
 
 import com.tcdng.unify.core.AbstractUnifyComponentTest;
 import com.tcdng.unify.core.ApplicationComponents;
+import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.util.ReflectUtils;
 
 /**
@@ -107,7 +108,7 @@ public class RuntimeJavaClassManagerTest extends AbstractUnifyComponentTest {
         List<JavaClassSource> sourceList = Arrays.asList(
                 new JavaClassSource("com.tcdng.unify.core.runtime.AuthorImpl", authorSrc),
                 new JavaClassSource("com.tcdng.unify.core.runtime.BookImpl", bookSrc));
-        List<Class<?>> clazzList = rjcm.compileAndLoadJavaClasses(sourceList);
+        List<Class<? extends Entity>> clazzList = rjcm.compileAndLoadJavaClasses(Entity.class, sourceList);
         assertNotNull(clazzList);
         assertEquals(2, clazzList.size());
         assertEquals("com.tcdng.unify.core.runtime.AuthorImpl", clazzList.get(0).getName());
