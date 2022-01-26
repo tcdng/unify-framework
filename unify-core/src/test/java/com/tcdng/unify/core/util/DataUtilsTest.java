@@ -496,6 +496,7 @@ public class DataUtilsTest extends AbstractUnifyComponentTest {
         Book book = new Book("Saladin", BigDecimal.valueOf(10.0), 20, false);
         book.setOrder(OrderType.ASCENDING);
         book.setPriceHistory(new Double[] { 8.32, 9.14 });
+        book.setSignDt(new Date());
         String json = DataUtils.asJsonString(book, PrintFormat.NONE);
         assertNotNull(json);
 
@@ -506,6 +507,7 @@ public class DataUtilsTest extends AbstractUnifyComponentTest {
         assertEquals(book.getPrice(), jsonBook.getPrice());
         assertEquals(book.getCopies(), jsonBook.getCopies());
         assertEquals(book.isCensored(), jsonBook.isCensored());
+        assertEquals(book.getSignDt(), jsonBook.getSignDt());
 
         Double[] priceHistory = jsonBook.getPriceHistory();
         assertNotNull(priceHistory);
@@ -902,6 +904,9 @@ public class DataUtilsTest extends AbstractUnifyComponentTest {
         private boolean censored;
 
         private Double[] priceHistory;
+        
+        private Date signDt;
+        
 
         public Book(String author, BigDecimal price, int copies, boolean censored) {
             this.author = author;
@@ -960,6 +965,14 @@ public class DataUtilsTest extends AbstractUnifyComponentTest {
 
         public void setPriceHistory(Double[] priceHistory) {
             this.priceHistory = priceHistory;
+        }
+
+        public Date getSignDt() {
+            return signDt;
+        }
+
+        public void setSignDt(Date signDt) {
+            this.signDt = signDt;
         }
     }
 }

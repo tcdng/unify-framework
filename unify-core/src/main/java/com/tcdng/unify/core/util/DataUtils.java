@@ -89,6 +89,8 @@ import com.tcdng.unify.core.util.json.JsonBooleanArrayConverter;
 import com.tcdng.unify.core.util.json.JsonBooleanConverter;
 import com.tcdng.unify.core.util.json.JsonByteArrayConverter;
 import com.tcdng.unify.core.util.json.JsonCharacterConverter;
+import com.tcdng.unify.core.util.json.JsonDateArrayConverter;
+import com.tcdng.unify.core.util.json.JsonDateConverter;
 import com.tcdng.unify.core.util.json.JsonDoubleArrayConverter;
 import com.tcdng.unify.core.util.json.JsonDoubleConverter;
 import com.tcdng.unify.core.util.json.JsonFloatArrayConverter;
@@ -267,6 +269,8 @@ public final class DataUtils {
         map.put(short.class, new JsonShortConverter());
         map.put(String.class, new JsonStringConverter());
         map.put(String[].class, new JsonStringArrayConverter());
+        map.put(Date.class, new JsonDateConverter());
+        map.put(Date[].class, new JsonDateArrayConverter());
         jsonConverterMap = Collections.unmodifiableMap(map);
     }
 
