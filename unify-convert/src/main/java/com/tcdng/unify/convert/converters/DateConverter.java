@@ -15,6 +15,7 @@
  */
 package com.tcdng.unify.convert.converters;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.tcdng.unify.convert.util.ConverterUtils;
@@ -26,6 +27,8 @@ import com.tcdng.unify.convert.util.ConverterUtils;
  * @since 1.0
  */
 public class DateConverter extends AbstractConverter<Date> {
+
+    private static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
 
     @Override
     protected Date doConvert(Object value, ConverterFormatter<?> formatter) throws Exception {
@@ -47,6 +50,8 @@ public class DateConverter extends AbstractConverter<Date> {
                 if (formatter != null) {
                     return doConvert(formatter.parse((String) value), null);
                 }
+                
+                return new SimpleDateFormat(DEFAULT_DATE_FORMAT).parse((String) value);
             }
         }
         return null;
