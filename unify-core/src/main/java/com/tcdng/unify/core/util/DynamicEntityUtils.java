@@ -77,6 +77,7 @@ public final class DynamicEntityUtils {
         StringBuilder fsb = new StringBuilder();
         StringBuilder msb = new StringBuilder();
         Set<String> importSet = new HashSet<String>();
+        final boolean managed = dynamicEntityInfo.isManaged();
 
         // Evaluate fields
         Set<String> fieldNames = new HashSet<String>();
@@ -102,40 +103,42 @@ public final class DynamicEntityUtils {
 
                 final EntityFieldType type = dynamicFieldInfo.getFieldType();
                 String childClass = null;
-                if (type.isForeignKey()) {
-                    DynamicForeignKeyFieldInfo fkInfo = (DynamicForeignKeyFieldInfo) dynamicFieldInfo;
-                    DynamicEntityUtils.generateForeignKeyAnnotation(fsb, fkInfo);
-                    importSet.add(ForeignKey.class.getCanonicalName());
-                    if (!fkInfo.isEnum()) {
-                        if (!dynamicEntityInfo.getClassName()
-                                .equals(fkInfo.getParentDynamicEntityInfo().getClassName())) {
-                            importSet.add(fkInfo.getParentDynamicEntityInfo().getClassName());
+                if (managed) {
+                    if (type.isForeignKey()) {
+                        DynamicForeignKeyFieldInfo fkInfo = (DynamicForeignKeyFieldInfo) dynamicFieldInfo;
+                        DynamicEntityUtils.generateForeignKeyAnnotation(fsb, fkInfo);
+                        importSet.add(ForeignKey.class.getCanonicalName());
+                        if (!fkInfo.isEnum()) {
+                            if (!dynamicEntityInfo.getClassName()
+                                    .equals(fkInfo.getParentDynamicEntityInfo().getClassName())) {
+                                importSet.add(fkInfo.getParentDynamicEntityInfo().getClassName());
+                            }
                         }
-                    }
 
-                } else if (type.isTableColumn()) {
-                    DynamicEntityUtils.generateColumnAnnotation(fsb, (DynamicColumnFieldInfo) dynamicFieldInfo);
-                    if (!DataUtils.isMappedColumnType(dynamicFieldInfo.getDataType().columnType())) {
-                        importSet.add(ColumnType.class.getCanonicalName());
-                    }
+                    } else if (type.isTableColumn()) {
+                        DynamicEntityUtils.generateColumnAnnotation(fsb, (DynamicColumnFieldInfo) dynamicFieldInfo);
+                        if (!DataUtils.isMappedColumnType(dynamicFieldInfo.getDataType().columnType())) {
+                            importSet.add(ColumnType.class.getCanonicalName());
+                        }
 
-                    importSet.add(Column.class.getCanonicalName());
-                } else if (type.isChild()) {
-                    DynamicChildFieldInfo childInfo = (DynamicChildFieldInfo) dynamicFieldInfo;
-                    DynamicEntityUtils.generateChildAnnotation(fsb, childInfo);
-                    importSet.add(Child.class.getCanonicalName());
-                    childClass = childInfo.getChildDynamicEntityInfo().getClassName();
-                    importSet.add(childClass);
-                } else if (type.isChildList()) {
-                    DynamicChildListFieldInfo childListInfo = (DynamicChildListFieldInfo) dynamicFieldInfo;
-                    DynamicEntityUtils.generateChildListAnnotation(fsb, childListInfo);
-                    importSet.add(List.class.getCanonicalName());
-                    importSet.add(ChildList.class.getCanonicalName());
-                    childClass = childListInfo.getChildDynamicEntityInfo().getClassName();
-                    importSet.add(childClass);
-                } else {
-                    DynamicEntityUtils.generateLisOnlyAnnotation(fsb, (DynamicListOnlyFieldInfo) dynamicFieldInfo);
-                    importSet.add(ListOnly.class.getCanonicalName());
+                        importSet.add(Column.class.getCanonicalName());
+                    } else if (type.isChild()) {
+                        DynamicChildFieldInfo childInfo = (DynamicChildFieldInfo) dynamicFieldInfo;
+                        DynamicEntityUtils.generateChildAnnotation(fsb, childInfo);
+                        importSet.add(Child.class.getCanonicalName());
+                        childClass = childInfo.getChildDynamicEntityInfo().getClassName();
+                        importSet.add(childClass);
+                    } else if (type.isChildList()) {
+                        DynamicChildListFieldInfo childListInfo = (DynamicChildListFieldInfo) dynamicFieldInfo;
+                        DynamicEntityUtils.generateChildListAnnotation(fsb, childListInfo);
+                        importSet.add(List.class.getCanonicalName());
+                        importSet.add(ChildList.class.getCanonicalName());
+                        childClass = childListInfo.getChildDynamicEntityInfo().getClassName();
+                        importSet.add(childClass);
+                    } else {
+                        DynamicEntityUtils.generateLisOnlyAnnotation(fsb, (DynamicListOnlyFieldInfo) dynamicFieldInfo);
+                        importSet.add(ListOnly.class.getCanonicalName());
+                    }
                 }
 
                 String simpleName = null;
@@ -176,12 +179,14 @@ public final class DynamicEntityUtils {
 
         esb.append("import ").append(baseEntityInfo.getCanonicalName()).append(";\n");
 
-        if (DynamicEntityType.TABLE.equals(dynamicEntityInfo.getType())) {
-            esb.append("import ").append(Table.class.getCanonicalName()).append(";\n");
-            esb.append("@Table(\"").append(dynamicEntityInfo.getTableName()).append("\")\n");
-        } else {
-            esb.append("import ").append(TableExt.class.getCanonicalName()).append(";\n");
-            esb.append("@TableExt\n");
+        if (managed) {
+            if (DynamicEntityType.TABLE.equals(dynamicEntityInfo.getType())) {
+                esb.append("import ").append(Table.class.getCanonicalName()).append(";\n");
+                esb.append("@Table(\"").append(dynamicEntityInfo.getTableName()).append("\")\n");
+            } else {
+                esb.append("import ").append(TableExt.class.getCanonicalName()).append(";\n");
+                esb.append("@TableExt\n");
+            }
         }
 
         esb.append("public class ").append(typeInfo.getSimpleName()).append(" extends ")
