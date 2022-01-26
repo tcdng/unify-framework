@@ -139,6 +139,17 @@ public final class DynamicEntityUtils {
                         DynamicEntityUtils.generateLisOnlyAnnotation(fsb, (DynamicListOnlyFieldInfo) dynamicFieldInfo);
                         importSet.add(ListOnly.class.getCanonicalName());
                     }
+                } else {
+                    if (type.isChild()) {
+                        DynamicChildFieldInfo childInfo = (DynamicChildFieldInfo) dynamicFieldInfo;
+                        childClass = childInfo.getChildDynamicEntityInfo().getClassName();
+                        importSet.add(childClass);
+                    } else if (type.isChildList()) {
+                        DynamicChildListFieldInfo childListInfo = (DynamicChildListFieldInfo) dynamicFieldInfo;
+                        importSet.add(List.class.getCanonicalName());
+                        childClass = childListInfo.getChildDynamicEntityInfo().getClassName();
+                        importSet.add(childClass);
+                    }
                 }
 
                 String simpleName = null;
