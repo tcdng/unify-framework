@@ -253,6 +253,11 @@ public final class ConverterUtils {
                 if (result == null) {
                     result = EnumUtils.fromName((Class<? extends EnumConst>) targetClazz, valueStr);
                 }
+            } else if (targetClazz.isEnum()) {
+                if (value instanceof String) {
+                    Class<? extends Enum> enumClass = (Class<? extends Enum>) targetClazz;
+                    result = Enum.valueOf(enumClass, (String) value);
+                }
             } else {
                 if (value.getClass().isArray() && Array.getLength(value) == 1) {
                     result = classToConverterMap.get(targetClazz).convert(Array.get(value, 0), formatter);
