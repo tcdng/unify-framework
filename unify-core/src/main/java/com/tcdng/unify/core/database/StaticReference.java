@@ -25,9 +25,9 @@ import com.tcdng.unify.convert.constants.EnumConst;
  */
 public class StaticReference extends AbstractEntity {
 
-    public static final int CODE_LENGTH = 10;
+    public static final int CODE_LENGTH = 32;
 
-    public static final int DESCRIPTION_LENGTH = 48;
+    public static final int DESCRIPTION_LENGTH = 64;
 
     private Class<? extends EnumConst> enumConstType;
 
