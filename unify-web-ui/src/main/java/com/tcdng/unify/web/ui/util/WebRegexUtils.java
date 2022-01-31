@@ -111,10 +111,10 @@ public final class WebRegexUtils {
     public static String getAlphanumericFormatRegex(boolean special, boolean space) throws UnifyException {
         if (special) {
             if (space) {
-                return "/^[ 0-9a-zA-Z/&\\\\-\\\\(\\\\)]*$/";
+                return "/^[ 0-9a-zA-Z/&\\\\-\\\\.\\\\(\\\\)]*$/";
             }
 
-            return "/^[0-9a-zA-Z/&\\\\-\\\\(\\\\)]*$/";
+            return "/^[0-9a-zA-Z/&\\\\-\\\\.\\\\(\\\\)]*$/";
         }
         
         if (space) {
@@ -137,7 +137,7 @@ public final class WebRegexUtils {
 
     public static String getFullNameFormatRegex(boolean special)  throws UnifyException {
         if (special) {
-            return "/^[a-zA-Z][ a-zA-Z/&\\\\-\\\\(\\\\)]*$/";
+            return "/^[a-zA-Z][ a-zA-Z/&\\\\-\\\\.\\\\(\\\\)]*$/";
         }
         
         return "/^[a-zA-Z][ a-zA-Z]*$/";
