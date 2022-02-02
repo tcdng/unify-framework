@@ -92,6 +92,8 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("door-open", "f52b");
         registerSymbol("download", "f019");
         registerSymbol("edit", "f044");
+        registerSymbol("ellipsis-h", "f141");
+        registerSymbol("ellipsis-v", "f142");
         registerSymbol("equals", "f52c");
         registerSymbol("exchange-alt", "f362");
         registerSymbol("exclamation-circle", "f06a");
