@@ -25,6 +25,7 @@ import com.tcdng.unify.core.criterion.And;
 import com.tcdng.unify.core.criterion.BeginsWith;
 import com.tcdng.unify.core.criterion.BeginsWithField;
 import com.tcdng.unify.core.criterion.Between;
+import com.tcdng.unify.core.criterion.BetweenField;
 import com.tcdng.unify.core.criterion.CompoundRestriction;
 import com.tcdng.unify.core.criterion.EndsWith;
 import com.tcdng.unify.core.criterion.EndsWithField;
@@ -159,6 +160,11 @@ public class Query<T extends Entity> implements Cloneable {
 
     public Query<T> addBetween(String field, Object lowerValue, Object upperValue) {
         restrictions.add(new Between(field, lowerValue, upperValue));
+        return this;
+    }
+
+    public Query<T> addBetweenField(String field, String lowerField, String upperField) {
+        restrictions.add(new BetweenField(field, lowerField, upperField));
         return this;
     }
 
