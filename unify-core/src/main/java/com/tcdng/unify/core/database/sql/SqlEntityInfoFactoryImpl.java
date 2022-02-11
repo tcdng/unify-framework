@@ -245,7 +245,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                 final String schema = getWorkingSchema(AnnotationUtils.getAnnotationString(ta.schema()),
                         sqlDataSourceDialect.getDataSourceName());
                 String schemaTableName = SqlUtils.generateFullSchemaElementName(schema, preferredTableName);
-
+                
                 Map<String, ForeignKeyOverride> fkOverrideMap = new HashMap<String, ForeignKeyOverride>();
                 for (ForeignKeyOverride fkoa : ta.foreignKeyOverrides()) {
                     fkOverrideMap.put(fkoa.key(), fkoa);
@@ -257,6 +257,8 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                 }
 
                 // Process all fields including super class fields
+                Set<String> uniqueConstraintNames = new HashSet<String>();
+                int ucConflictIndex = 0;
                 Map<String, SqlFieldInfo> propertyInfoMap = new HashMap<String, SqlFieldInfo>();
                 List<ChildFieldInfo> childInfoList = new ArrayList<ChildFieldInfo>();
                 List<ChildFieldInfo> childListInfoList = new ArrayList<ChildFieldInfo>();
@@ -676,6 +678,11 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                             String constraintName = null;
                             if (isForeignKey) {
                                 constraintName = SqlUtils.generateForeignKeyConstraintName(tableName, field.getName());
+                                if (uniqueConstraintNames.contains(constraintName)) {
+                                    constraintName = SqlUtils.resolveForeignKeyConstraintNameConflict(constraintName, ucConflictIndex++);
+                                } else {
+                                    uniqueConstraintNames.add(constraintName);
+                                }
                             }
 
                             SqlFieldDimensions sqlFieldDimensions =
@@ -864,6 +871,8 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                 final String tableName = toExtendSqlEntityInfo.getTableName();
 
                 // Process all fields including super class fields
+                Set<String> uniqueConstraintNames = new HashSet<String>();
+                int ucConflictIndex = 0;
                 Map<String, SqlFieldInfo> propertyInfoMap = new HashMap<String, SqlFieldInfo>();
                 List<Field> listOnlyFieldList = new ArrayList<Field>();
                 Field[] fields = entityClass.getDeclaredFields();
@@ -1018,6 +1027,11 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                         String constraintName = null;
                         if (isForeignKey) {
                             constraintName = SqlUtils.generateForeignKeyConstraintName(tableName, field.getName());
+                            if (uniqueConstraintNames.contains(constraintName)) {
+                                constraintName = SqlUtils.resolveForeignKeyConstraintNameConflict(constraintName, ucConflictIndex++);
+                            } else {
+                                uniqueConstraintNames.add(constraintName);
+                            }
                         }
 
                         SqlFieldDimensions sqlFieldDimensions =
