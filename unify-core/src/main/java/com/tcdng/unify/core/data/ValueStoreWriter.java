@@ -48,4 +48,8 @@ public class ValueStoreWriter {
     public void write(String fieldName, Object value, Formatter<?> formatter) throws UnifyException {
         valueStore.store(fieldName, value, formatter);
     }
+    
+    public Object getValueObject() {
+        return valueStore.getValueObject();
+    }
 }

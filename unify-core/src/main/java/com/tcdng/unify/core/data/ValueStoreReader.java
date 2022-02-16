@@ -51,4 +51,8 @@ public class ValueStoreReader {
     public <T> T read(Class<T> type, String fieldName) throws UnifyException {
         return valueStore.retrieve(type, fieldName);
     }
+    
+    public Object getValueObject() {
+        return valueStore.getValueObject();
+    }
 }
