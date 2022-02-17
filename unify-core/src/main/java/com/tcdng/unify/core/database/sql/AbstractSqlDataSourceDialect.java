@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.tcdng.unify.convert.constants.EnumConst;
+import com.tcdng.unify.convert.util.ConverterUtils;
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyCoreConstants;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
@@ -34,7 +36,6 @@ import com.tcdng.unify.core.UnifyOperationException;
 import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.Singleton;
-import com.tcdng.unify.core.constant.EnumConst;
 import com.tcdng.unify.core.constant.ForeignConstraints;
 import com.tcdng.unify.core.constant.Indexes;
 import com.tcdng.unify.core.constant.PrintFormat;
@@ -983,7 +984,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         aggregateSql.append("SELECT ");
         returnFieldInfoList = new ArrayList<SqlFieldInfo>();
         SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(aggregateFunction.getFieldName());
-        if (!aggregateFunction.getType().supports(DataUtils.getWrapperClass(sqlFieldInfo.getFieldType()))) {
+        if (!aggregateFunction.getType().supports(ConverterUtils.getWrapperClass(sqlFieldInfo.getFieldType()))) {
             throw new UnifyException(UnifyCoreErrorConstants.RECORD_SELECT_NOT_SUITABLE_FOR_AGGREGATE,
                     aggregateFunction.getFieldName(), sqlEntityInfo.getKeyClass());
         }
@@ -1029,7 +1030,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
         for (AggregateFunction aggregateFunction : aggregateFunctionList) {
             SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(aggregateFunction.getFieldName());
-            if (!aggregateFunction.getType().supports(DataUtils.getWrapperClass(sqlFieldInfo.getFieldType()))) {
+            if (!aggregateFunction.getType().supports(ConverterUtils.getWrapperClass(sqlFieldInfo.getFieldType()))) {
                 throw new UnifyException(UnifyCoreErrorConstants.RECORD_SELECT_NOT_SUITABLE_FOR_AGGREGATE,
                         aggregateFunction.getFieldName(), sqlEntityInfo.getKeyClass());
             }

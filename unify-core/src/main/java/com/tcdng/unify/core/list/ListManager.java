@@ -19,9 +19,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import com.tcdng.unify.convert.constants.EnumConst;
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.constant.EnumConst;
 import com.tcdng.unify.core.data.Listable;
 
 /**

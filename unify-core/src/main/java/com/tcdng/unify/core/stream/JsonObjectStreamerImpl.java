@@ -38,32 +38,17 @@ public class JsonObjectStreamerImpl extends AbstractObjectStreamer implements Js
 
     @Override
     public <T> T unmarshal(Class<T> type, InputStream inputStream, Charset charset) throws UnifyException {
-        return DataUtils.readJsonObject(type, inputStream, charset);
+        return DataUtils.fromJsonInputStream(type, inputStream, charset);
     }
 
     @Override
     public <T> T unmarshal(Class<T> type, Reader reader) throws UnifyException {
-        return DataUtils.readJsonObject(type, reader);
+        return DataUtils.fromJsonReader(type, reader);
     }
 
     @Override
     public <T> T unmarshal(Class<T> type, String string) throws UnifyException {
-        return DataUtils.readJsonObject(type, string);
-    }
-
-    @Override
-    public void unmarshal(Object object, InputStream inputStream, Charset charset) throws UnifyException {
-        DataUtils.readJsonObject(object, inputStream, charset);
-    }
-
-    @Override
-    public void unmarshal(Object object, Reader reader) throws UnifyException {
-        DataUtils.readJsonObject(object, reader);
-    }
-
-    @Override
-    public void unmarshal(Object object, String string) throws UnifyException {
-        DataUtils.readJsonObject(object, string);
+        return DataUtils.fromJsonString(type, string);
     }
 
     @Override
@@ -79,6 +64,6 @@ public class JsonObjectStreamerImpl extends AbstractObjectStreamer implements Js
 
     @Override
     public String marshal(Object object, PrintFormat printFormat) throws UnifyException {
-        return DataUtils.toJsonObjectString(object, printFormat);
+        return DataUtils.asJsonString(object, printFormat);
     }
 }

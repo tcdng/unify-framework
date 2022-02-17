@@ -13,30 +13,45 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.convert;
+package com.tcdng.unify.convert.converters;
 
-import com.tcdng.unify.core.format.Formatter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import com.tcdng.unify.convert.util.ConverterUtils;
 
 /**
- * A value to byte converter.
+ * A value to date converter.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class ByteConverter extends AbstractConverter<Byte> {
+public class DateConverter extends AbstractConverter<Date> {
+
+    private static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
 
     @Override
-    protected Byte doConvert(Object value, Formatter<?> formatter) throws Exception {
-        if (value instanceof Number) {
-            return Byte.valueOf(((Number) value).byteValue());
+    protected Date doConvert(Object value, ConverterFormatter<?> formatter) throws Exception {
+        if (value instanceof Date) {
+            return (Date) value;
         }
+
+        if (value instanceof Long) {
+            return new Date((Long) value);
+        }
+
         if (value instanceof String) {
             String string = ((String) value).trim();
             if (!string.isEmpty()) {
                 if (formatter == null) {
-                    return Byte.decode(string);
+                    formatter = ConverterUtils.getDefaultDateTimeFormatter();
                 }
-                return doConvert(formatter.parse(string), null);
+
+                if (formatter != null) {
+                    return doConvert(formatter.parse((String) value), null);
+                }
+                
+                return new SimpleDateFormat(DEFAULT_DATE_FORMAT).parse((String) value);
             }
         }
         return null;

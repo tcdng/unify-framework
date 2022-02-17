@@ -29,12 +29,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.tcdng.unify.convert.constants.EnumConst;
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
+import com.tcdng.unify.core.UnifyCorePropertyConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
-import com.tcdng.unify.core.constant.EnumConst;
 import com.tcdng.unify.core.constant.MustMatch;
 import com.tcdng.unify.core.criterion.AggregateFunction;
 import com.tcdng.unify.core.criterion.AggregateType;
@@ -58,6 +59,8 @@ import com.tcdng.unify.core.util.SqlUtils;
 @Component(ApplicationComponents.APPLICATION_SQLSTATEMENTEXECUTOR)
 public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements SqlStatementExecutor {
 
+    private boolean sqlDebugging;
+    
     @Override
     public int executeUpdate(Connection connection, SqlStatement sqlStatement) throws UnifyException {
         int result = 0;
@@ -735,7 +738,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
 
     @Override
     protected void onInitialize() throws UnifyException {
-
+        sqlDebugging = getContainerSetting(boolean.class, UnifyCorePropertyConstants.APPLICATION_SQL_DEBUGGING, false);
     }
 
     @Override
@@ -746,7 +749,10 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
     @SuppressWarnings("unchecked")
     private PreparedStatement getPreparedStatement(Connection connection, SqlStatement sqlStatement,
             final long timeZoneOffset) throws Exception {
-        logDebug("Preparing SQl: statement = {0}", sqlStatement);
+        if (sqlDebugging) {
+            logDebug("Preparing SQl: statement = {0}", sqlStatement);
+        }
+        
         PreparedStatement pStmt = connection.prepareStatement(sqlStatement.getSql());
         int index = 0;
         for (SqlParameter sqlParameter : sqlStatement.getParameterInfoList()) {
@@ -765,7 +771,10 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
 
     private CallableStatement getCallableStatement(Connection connection, SqlCallableStatement sqlCallableStatement,
             final long timeZoneOffset) throws Exception {
-        logDebug("Preparing SQl: callable statement = {0}", sqlCallableStatement);
+        if (sqlDebugging) {
+            logDebug("Preparing SQl: callable statement = {0}", sqlCallableStatement);
+        }
+        
         CallableStatement cStmt = connection.prepareCall(sqlCallableStatement.getSql());
         int sqlIndex = 1;
         if (sqlCallableStatement.isWithReturn() && !sqlCallableStatement.isFunctionMode()) {

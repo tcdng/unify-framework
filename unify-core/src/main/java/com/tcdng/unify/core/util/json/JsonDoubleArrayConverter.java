@@ -26,10 +26,6 @@ import com.eclipsesource.json.JsonValue;
  */
 public class JsonDoubleArrayConverter extends AbstractJsonArrayConverter<Double> {
 
-    public JsonDoubleArrayConverter() {
-        super(Double.class);
-    }
-
     @Override
     protected Double getValue(JsonValue jsonValue) throws Exception {
         if (jsonValue.isNull()) {

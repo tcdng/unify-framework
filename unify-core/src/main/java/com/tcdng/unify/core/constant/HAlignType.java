@@ -15,6 +15,7 @@
  */
 package com.tcdng.unify.core.constant;
 
+import com.tcdng.unify.convert.constants.EnumConst;
 import com.tcdng.unify.core.annotation.StaticList;
 import com.tcdng.unify.core.annotation.Tooling;
 import com.tcdng.unify.core.util.EnumUtils;
@@ -26,14 +27,20 @@ import com.tcdng.unify.core.util.EnumUtils;
  * @since 1.0
  */
 @Tooling(description = "Horizontal Alignment")
-@StaticList(name = "horizontalalignlist", description="$m{staticlist.horizontalalignlist}")
+@StaticList(name = "horizontalalignlist", description = "$m{staticlist.horizontalalignlist}")
 public enum HAlignType implements EnumConst {
-    LEFT("L"), CENTER("C"), RIGHT("R"), JUSTIFIED("J");
+    LEFT("L", "haleft"),
+    CENTER("C", "hacenter"),
+    RIGHT("R", "haright"),
+    JUSTIFIED("J", "hajustified");
 
     private final String code;
 
-    private HAlignType(String code) {
+    private final String styleClass;
+
+    private HAlignType(String code, String styleClass) {
         this.code = code;
+        this.styleClass = styleClass;
     }
 
     @Override
@@ -44,6 +51,10 @@ public enum HAlignType implements EnumConst {
     @Override
     public String defaultCode() {
         return LEFT.code;
+    }
+
+    public String styleClass() {
+        return this.styleClass;
     }
 
     public static HAlignType fromCode(String code) {

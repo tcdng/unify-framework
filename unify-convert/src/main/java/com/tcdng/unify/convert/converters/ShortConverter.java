@@ -13,9 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.convert;
-
-import com.tcdng.unify.core.format.Formatter;
+package com.tcdng.unify.convert.converters;
 
 /**
  * A value to short converter.
@@ -26,7 +24,7 @@ import com.tcdng.unify.core.format.Formatter;
 public class ShortConverter extends AbstractConverter<Short> {
 
     @Override
-    protected Short doConvert(Object value, Formatter<?> formatter) throws Exception {
+    protected Short doConvert(Object value, ConverterFormatter<?> formatter) throws Exception {
         if (value instanceof Number) {
             return Short.valueOf(((Number) value).shortValue());
         }

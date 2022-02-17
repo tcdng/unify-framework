@@ -28,10 +28,10 @@ import com.tcdng.unify.web.annotation.Action;
 import com.tcdng.unify.web.constant.ReservedPageControllerConstants;
 import com.tcdng.unify.web.constant.ResultMappingConstants;
 import com.tcdng.unify.web.constant.UnifyWebRequestAttributeConstants;
+import com.tcdng.unify.web.ui.widget.data.Hint.MODE;
 import com.tcdng.unify.web.ui.widget.data.MessageBox;
 import com.tcdng.unify.web.ui.widget.data.MessageIcon;
 import com.tcdng.unify.web.ui.widget.data.MessageMode;
-import com.tcdng.unify.web.ui.widget.data.Hint.MODE;
 
 /**
  * Serves as the base class for a panel.

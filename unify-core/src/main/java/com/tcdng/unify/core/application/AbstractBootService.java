@@ -98,7 +98,7 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
                 if (!isDataSourcesManaged) {
                     // If not already managed, manage data sources if not production mode or if
                     // deploying new version
-                    if (!isProductionMode() || isDeployNewVersion || isDeployNewAuxVersion) {
+                    if (isDeployNewVersion || isDeployNewAuxVersion) {
                         logInfo("Managing datasources...");
                         for (String datasource : datasources) {
                             dataSourceManager.manageDataSource(datasource, options);

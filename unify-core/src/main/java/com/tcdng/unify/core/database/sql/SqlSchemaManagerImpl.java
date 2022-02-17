@@ -33,12 +33,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.tcdng.unify.convert.constants.EnumConst;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.StaticList;
-import com.tcdng.unify.core.constant.EnumConst;
 import com.tcdng.unify.core.constant.ForceConstraints;
 import com.tcdng.unify.core.constant.LocaleType;
 import com.tcdng.unify.core.constant.PrintFormat;
@@ -182,7 +182,7 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
                 List<String> alterTableColumnsSql = Collections.emptyList();
                 String tableType = rs.getString("TABLE_TYPE");
                 if ("TABLE".equalsIgnoreCase(tableType)) {
-                    Map<String, SqlColumnInfo> columnMap = sqlDataSource.getColumnMap(schema,
+                    Map<String, SqlColumnInfo> columnMap = sqlDataSource.getColumnMapLowerCase(schema,
                             sqlEntityInfo.getTableName());
                     alterTableColumnsSql = detectColumnUpdates(sqlDataSourceDialect, sqlEntityInfo, columnMap,
                             printFormat);
@@ -655,15 +655,17 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
             Map<String, SqlColumnInfo> columnInfos, PrintFormat printFormat) throws UnifyException {
         List<String> columnUpdateSql = new ArrayList<String>();
         for (SqlFieldInfo sqlfieldInfo : sqlEntityInfo.getManagedFieldInfos()) {
-            SqlColumnInfo sqlColumnInfo = columnInfos.remove(sqlfieldInfo.getColumnName());
+            SqlColumnInfo sqlColumnInfo = columnInfos.remove(sqlfieldInfo.getColumnName().toLowerCase());
             if (sqlColumnInfo == null) {
                 // New column
+                logDebug("New column/field detected [{0}]...", sqlfieldInfo);
                 columnUpdateSql.add(sqlDataSourceDialect.generateAddColumn(sqlEntityInfo, sqlfieldInfo, printFormat));
             } else {
                 SqlColumnAlterInfo columnAlterInfo = checkSqlColumnAltered(sqlDataSourceDialect, sqlfieldInfo,
                         sqlColumnInfo);
                 if (columnAlterInfo.isAltered()) {
                     // Alter column
+                    logDebug("Column alteration of column/field [{0}] detected [{1}]...", sqlfieldInfo, columnAlterInfo);
                     columnUpdateSql.addAll(sqlDataSourceDialect.generateAlterColumn(sqlEntityInfo, sqlfieldInfo,
                             columnAlterInfo, printFormat));
                 }
@@ -674,6 +676,7 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
         for (SqlColumnInfo sqlColumnInfo : columnInfos.values()) {
             if (!sqlColumnInfo.isNullable()) {
                 // Alter column nullable
+                logDebug("Non-nullable unused field detected [{0}]...", sqlColumnInfo);
                 columnUpdateSql
                         .add(sqlDataSourceDialect.generateAlterColumnNull(sqlEntityInfo, sqlColumnInfo, printFormat));
             }

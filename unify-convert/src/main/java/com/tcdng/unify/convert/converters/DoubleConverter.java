@@ -13,37 +13,30 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.convert;
-
-import java.math.BigDecimal;
-
-import com.tcdng.unify.core.format.Formatter;
+package com.tcdng.unify.convert.converters;
 
 /**
- * A value to big decimal converter.
+ * A value to double converter.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class BigDecimalConverter extends AbstractConverter<BigDecimal> {
+public class DoubleConverter extends AbstractConverter<Double> {
 
     @Override
-    protected BigDecimal doConvert(Object value, Formatter<?> formatter) throws Exception {
+    protected Double doConvert(Object value, ConverterFormatter<?> formatter) throws Exception {
         if (value instanceof Number) {
-            return new BigDecimal(((Number) value).toString());
+            return Double.valueOf(((Number) value).doubleValue());
         }
-
         if (value instanceof String) {
             String string = ((String) value).trim();
             if (!string.isEmpty()) {
                 if (formatter == null) {
-                    return new BigDecimal(string);
+                    return Double.valueOf(string);
                 }
-
                 return doConvert(formatter.parse(string), null);
             }
         }
-
         return null;
     }
 }

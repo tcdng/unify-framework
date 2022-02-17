@@ -99,6 +99,20 @@ public interface SqlDataSource extends DataSource, NameSqlDataSourceSchema {
     Map<String, SqlColumnInfo> getColumnMap(String schemaName, String tableName) throws UnifyException;
 
     /**
+     * Returns a map of column information by column name (in lower case).
+     * 
+     * @param schemaName
+     *            the schema name
+     * @param tableName
+     *            the table name
+     * @return map of column information. Empty map is returned if schemaName or
+     *         tableName is null.
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    Map<String, SqlColumnInfo> getColumnMapLowerCase(String schemaName, String tableName) throws UnifyException;
+
+    /**
      * Returns table column names..
      * 
      * @param schemaName

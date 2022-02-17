@@ -83,24 +83,30 @@ public class DynamicSqlEntityLoaderImpl extends AbstractUnifyComponent implement
         }
 
         logDebug("Compiling and loading [{0}] entity classes...", sourceList.size());
-        List<Class<?>> classList = runtimeJavaClassManager.compileAndLoadJavaClasses(sourceList);
-
+        List<Class<? extends Entity>> classList = runtimeJavaClassManager.compileAndLoadJavaClasses(Entity.class, sourceList);
+        
+        final int len = dynamicEntityInfoList.size();
+        List<Class<?>> managedClassList = new ArrayList<Class<?>>();
+        for (int i = 0; i < len; i++) {
+            if (dynamicEntityInfoList.get(i).isManaged()) {
+                managedClassList.add(classList.get(i));
+            }
+        }
+        
         SqlDataSource sqlDataSource = (SqlDataSource) db.getDataSource();
         SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
-        for (Class<?> entityClass : classList) {
-            logDebug("Creating entity class information for [{0}] ...", entityClass);
+        for (Class<?> entityClass : managedClassList) {
+            logDebug("Creating entity class information for managed class [{0}] ...", entityClass);
             sqlDataSourceDialect.createSqlEntityInfo(entityClass);
         }
 
-        List<Class<?>> dependencyList = sqlSchemaManager.buildDependencyList(sqlDataSource, classList);
+        List<Class<?>> dependencyList = sqlSchemaManager.buildDependencyList(sqlDataSource, managedClassList);
         List<Class<?>> tableList = new ArrayList<Class<?>>();
         List<Class<? extends Entity>> viewList = new ArrayList<Class<? extends Entity>>();
-        List<Class<? extends Entity>> resultList = new ArrayList<Class<? extends Entity>>();
         for (Class<?> clazz : dependencyList) {
             viewList.add((Class<? extends Entity>) clazz);
-            if (classList.contains(clazz)) {
+            if (managedClassList.contains(clazz)) {
                 tableList.add(clazz);
-                resultList.add((Class<? extends Entity>) clazz);
             }
         }
 
@@ -112,7 +118,7 @@ public class DynamicSqlEntityLoaderImpl extends AbstractUnifyComponent implement
                     ForceConstraints.fromBoolean(!getContainerSetting(boolean.class,
                             UnifyCorePropertyConstants.APPLICATION_FOREIGNKEY_EASE, false)));
             if (sqlDataSource.getDialect().isReconstructViewsOnTableSchemaUpdate()) {
-                sqlSchemaManager.dropViewSchema(sqlDataSource, options, tableList); //dependencyList
+                sqlSchemaManager.dropViewSchema(sqlDataSource, options, tableList);
             }
             
             sqlSchemaManager.manageTableSchema(sqlDataSource, options, tableList);
@@ -121,7 +127,7 @@ public class DynamicSqlEntityLoaderImpl extends AbstractUnifyComponent implement
             endClusterLock(DYNAMICSQLENTITYLOADER_LOCK);
         }
 
-        return resultList;
+        return classList ;
     }
 
     @Override

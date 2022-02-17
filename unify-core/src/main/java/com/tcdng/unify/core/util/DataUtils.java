@@ -23,6 +23,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
@@ -35,44 +36,29 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.Deque;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 import java.util.Set;
 
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
-import com.eclipsesource.json.JsonObject.Member;
 import com.eclipsesource.json.JsonValue;
 import com.eclipsesource.json.PrettyPrint;
+import com.tcdng.unify.convert.constants.EnumConst;
+import com.tcdng.unify.convert.converters.ConverterFormatter;
+import com.tcdng.unify.convert.util.ConverterUtils;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Column;
 import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.constant.DataType;
-import com.tcdng.unify.core.constant.EnumConst;
 import com.tcdng.unify.core.constant.PrintFormat;
-import com.tcdng.unify.core.convert.BigDecimalConverter;
-import com.tcdng.unify.core.convert.BooleanConverter;
 import com.tcdng.unify.core.convert.ByteArrayConverter;
-import com.tcdng.unify.core.convert.ByteConverter;
-import com.tcdng.unify.core.convert.CharacterConverter;
 import com.tcdng.unify.core.convert.ClassConverter;
-import com.tcdng.unify.core.convert.Converter;
-import com.tcdng.unify.core.convert.DateConverter;
-import com.tcdng.unify.core.convert.DoubleConverter;
-import com.tcdng.unify.core.convert.FloatConverter;
-import com.tcdng.unify.core.convert.IntegerConverter;
-import com.tcdng.unify.core.convert.LongConverter;
 import com.tcdng.unify.core.convert.MoneyConverter;
 import com.tcdng.unify.core.convert.PeriodConverter;
-import com.tcdng.unify.core.convert.ShortConverter;
 import com.tcdng.unify.core.convert.StringConverter;
 import com.tcdng.unify.core.convert.UplElementReferencesConverter;
 import com.tcdng.unify.core.convert.UploadedFileConverter;
@@ -103,6 +89,8 @@ import com.tcdng.unify.core.util.json.JsonBooleanArrayConverter;
 import com.tcdng.unify.core.util.json.JsonBooleanConverter;
 import com.tcdng.unify.core.util.json.JsonByteArrayConverter;
 import com.tcdng.unify.core.util.json.JsonCharacterConverter;
+import com.tcdng.unify.core.util.json.JsonDateArrayConverter;
+import com.tcdng.unify.core.util.json.JsonDateConverter;
 import com.tcdng.unify.core.util.json.JsonDoubleArrayConverter;
 import com.tcdng.unify.core.util.json.JsonDoubleConverter;
 import com.tcdng.unify.core.util.json.JsonFloatArrayConverter;
@@ -137,8 +125,6 @@ public final class DataUtils {
     public static final byte[] ZEROLEN_BYTE_ARRAY = new byte[0];
 
     public static final String EMPTY_STRING = "";
-
-    private static DateTimeFormatter defaultDateTimeFormatter;
 
     private static final Map<Class<?>, DataType> classToDataTypeMap;
 
@@ -197,36 +183,14 @@ public final class DataUtils {
         classToColumnMap = Collections.unmodifiableMap(map);
     }
 
-    private static final Map<Class<?>, Converter<?>> classToConverterMap;
-
     static {
-        Map<Class<?>, Converter<?>> map = new HashMap<Class<?>, Converter<?>>();
-        map.put(boolean.class, new BooleanConverter());// ByteArrayConverter
-        map.put(Boolean.class, new BooleanConverter());
-        map.put(byte.class, new ByteConverter());
-        map.put(Byte.class, new ByteConverter());
-        map.put(byte[].class, new ByteArrayConverter());
-        map.put(char.class, new CharacterConverter());
-        map.put(Character.class, new CharacterConverter());
-        map.put(short.class, new ShortConverter());
-        map.put(Short.class, new ShortConverter());
-        map.put(int.class, new IntegerConverter());
-        map.put(Integer.class, new IntegerConverter());
-        map.put(long.class, new LongConverter());
-        map.put(Long.class, new LongConverter());
-        map.put(float.class, new FloatConverter());
-        map.put(Float.class, new FloatConverter());
-        map.put(double.class, new DoubleConverter());
-        map.put(Double.class, new DoubleConverter());
-        map.put(BigDecimal.class, new BigDecimalConverter());
-        map.put(Date.class, new DateConverter());
-        map.put(Money.class, new MoneyConverter());
-        map.put(Period.class, new PeriodConverter());
-        map.put(String.class, new StringConverter());
-        map.put(UplElementReferences.class, new UplElementReferencesConverter());
-        map.put(UploadedFile.class, new UploadedFileConverter());
-        map.put(Class.class, new ClassConverter());
-        classToConverterMap = map;
+        ConverterUtils.registerConverter(byte[].class, new ByteArrayConverter());
+        ConverterUtils.registerConverter(Money.class, new MoneyConverter());
+        ConverterUtils.registerConverter(Period.class, new PeriodConverter());
+        ConverterUtils.registerConverter(String.class, new StringConverter());
+        ConverterUtils.registerConverter(UplElementReferences.class, new UplElementReferencesConverter());
+        ConverterUtils.registerConverter(UploadedFile.class, new UploadedFileConverter());
+        ConverterUtils.registerConverter(Class.class, new ClassConverter());
     }
 
     private static final Map<Class<?>, Class<? extends Input>> classToInputMap;
@@ -257,36 +221,6 @@ public final class DataUtils {
         classToInputMap = Collections.unmodifiableMap(map);
     }
 
-    private static final Map<Class<?>, Object> classToNullMap;
-
-    static {
-        Map<Class<?>, Object> map = new HashMap<Class<?>, Object>();
-        map.put(boolean.class, false);
-        map.put(byte.class, Byte.valueOf((byte) 0));
-        map.put(char.class, Character.valueOf((char) 0));
-        map.put(short.class, Short.valueOf((short) 0));
-        map.put(int.class, Integer.valueOf(0));
-        map.put(long.class, Long.valueOf(0));
-        map.put(float.class, Float.valueOf((float) 0.0));
-        map.put(double.class, Double.valueOf(0.0));
-        classToNullMap = Collections.unmodifiableMap(map);
-    }
-
-    private static final Map<Class<?>, Class<?>> classToWrapperMap;
-
-    static {
-        Map<Class<?>, Class<?>> map = new HashMap<Class<?>, Class<?>>();
-        map.put(boolean.class, Boolean.class);
-        map.put(char.class, Character.class);
-        map.put(byte.class, Byte.class);
-        map.put(short.class, Short.class);
-        map.put(int.class, Integer.class);
-        map.put(long.class, Long.class);
-        map.put(float.class, Float.class);
-        map.put(double.class, Double.class);
-        classToWrapperMap = Collections.unmodifiableMap(map);
-    }
-
     private static final Map<Class<?>, String> typeToFormatterMap;
 
     static {
@@ -304,18 +238,6 @@ public final class DataUtils {
         map.put(BigDecimal.class, "!decimalformat");
         map.put(Date.class, "!dateformat");
         typeToFormatterMap = Collections.unmodifiableMap(map);
-    }
-
-    private static final Map<Class<? extends Collection>, Class<? extends Collection>> collectionInterfaceToClassMap;
-
-    static {
-        Map<Class<? extends Collection>, Class<? extends Collection>> map = new HashMap<Class<? extends Collection>, Class<? extends Collection>>();
-        map.put(Collection.class, ArrayList.class);
-        map.put(List.class, ArrayList.class);
-        map.put(Set.class, HashSet.class);
-        map.put(Queue.class, LinkedList.class);
-        map.put(Deque.class, LinkedList.class);
-        collectionInterfaceToClassMap = Collections.unmodifiableMap(map);
     }
 
     private static final Map<Class<?>, JsonValueConverter> jsonConverterMap;
@@ -347,23 +269,21 @@ public final class DataUtils {
         map.put(short.class, new JsonShortConverter());
         map.put(String.class, new JsonStringConverter());
         map.put(String[].class, new JsonStringArrayConverter());
+        map.put(Date.class, new JsonDateConverter());
+        map.put(Date[].class, new JsonDateArrayConverter());
         jsonConverterMap = Collections.unmodifiableMap(map);
     }
 
     private DataUtils() {
 
     }
-
-    public static void registerConverter(Class<?> clazz, Converter<?> converter) {
-        classToConverterMap.put(clazz, converter);
-    }
     
     public static void registerDefaultFormatters(DateTimeFormatter defaultDateTimeFormatter) {
-        DataUtils.defaultDateTimeFormatter = defaultDateTimeFormatter;
+        ConverterUtils.registerDefaultFormatters(defaultDateTimeFormatter);
     }
 
     public static DateTimeFormatter getDefaultDateTimeFormatter() {
-        return defaultDateTimeFormatter;
+        return (DateTimeFormatter) ConverterUtils.getDefaultDateTimeFormatter();
     }
 
     /**
@@ -385,26 +305,6 @@ public final class DataUtils {
         }
 
         return a.equals(b);
-    }
-
-    /**
-     * Returns a concrete type for a collection type.
-     * 
-     * @param clazz
-     *              the collection type
-     * @throws UnifyException
-     *                        if an error occurs
-     */
-    public static Class<? extends Collection> getCollectionConcreteType(Class<? extends Collection> clazz)
-            throws UnifyException {
-        Class<? extends Collection> result = clazz;
-        if (clazz.isInterface()) {
-            result = collectionInterfaceToClassMap.get(clazz);
-            if (result == null) {
-                throw new UnifyException(UnifyCoreErrorConstants.UNSUPPORTED_COLLECTIONTYPE, clazz);
-            }
-        }
-        return result;
     }
 
     /**
@@ -548,35 +448,6 @@ public final class DataUtils {
         return DataUtils.getColumnType(clazz);
     }
 
-    /**
-     * Returns the wrapper class for a data type.
-     * 
-     * @param clazz
-     *              the data type
-     * @return the wrapper class if found, otherwise the supplied data type is
-     *         returned
-     */
-    public static Class<?> getWrapperClass(Class<?> clazz) {
-        if (clazz.isPrimitive()) {
-            return classToWrapperMap.get(clazz);
-        }
-        return clazz;
-    }
-
-    /**
-     * Returns the name of the wrapper class for a data type.
-     * 
-     * @param clazz
-     *              the data type
-     * @return the name of the wrapper class
-     */
-    public static String getWrapperClassName(Class<?> clazz) {
-        if (clazz.isPrimitive()) {
-            return classToWrapperMap.get(clazz).getName();
-        }
-        return clazz.getName();
-    }
-
     public static String getDefaultFormatterDescriptor(Class<?> clazz) {
         return typeToFormatterMap.get(clazz);
     }
@@ -592,7 +463,7 @@ public final class DataUtils {
      *              the data type
      */
     public static boolean isNumberType(Class<?> clazz) {
-        return Number.class.isAssignableFrom(DataUtils.getWrapperClass(clazz));
+        return Number.class.isAssignableFrom(ConverterUtils.getWrapperClass(clazz));
     }
 
     /**
@@ -603,22 +474,11 @@ public final class DataUtils {
      */
     public static boolean isNumberType(String className) {
         try {
-            return Number.class.isAssignableFrom(DataUtils.getWrapperClass(ReflectUtils.classForName(className)));
+            return Number.class.isAssignableFrom(ConverterUtils.getWrapperClass(ReflectUtils.classForName(className)));
         } catch (UnifyException e) {
         }
 
         return false;
-    }
-
-    /**
-     * Gets the null value of a data type.
-     * 
-     * @param clazz
-     *              the data type
-     * @return the null value
-     */
-    public static Object getNullValue(Class<?> clazz) {
-        return classToNullMap.get(clazz);
     }
 
     public static Object getNestedBeanProperty(Object bean, String longPropertyName) throws UnifyException {
@@ -671,7 +531,11 @@ public final class DataUtils {
     }
 
     public static <T> T getBeanProperty(Class<T> targetClazz, Object bean, String propertyName) throws UnifyException {
-        return DataUtils.convert(targetClazz, ReflectUtils.getBeanProperty(bean, propertyName));
+        try {
+            return ConverterUtils.convert(targetClazz, ReflectUtils.getBeanProperty(bean, propertyName));
+        } catch (Exception e) {
+            throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, e);
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -703,256 +567,6 @@ public final class DataUtils {
         }
 
         return null;
-    }
-
-    /**
-     * Converts supplied value to target type.
-     * 
-     * @param targetClazz
-     *                    the target type
-     * @param value
-     *                    the value to convert
-     * @return the converted value
-     * @throws UnifyException
-     *                        if an error occurs
-     */
-    public static <T> T convert(Class<T> targetClazz, Object value) throws UnifyException {
-        return DataUtils.convert(targetClazz, value, null);
-    }
-    
-    /**
-     * Converts supplied value to target type.
-     * 
-     * @param targetClazz
-     *                    the target type
-     * @param value
-     *                    the value to convert
-     * @param formatter
-     *                    the conversion formatter. Can be null
-     * @return the converted value
-     * @throws UnifyException
-     *                        if an error occurs
-     */
-    @SuppressWarnings("unchecked")
-    public static <T> T convert(Class<T> targetClazz, Object value, Formatter<?> formatter) throws UnifyException {
-        try {
-            if (value == null) {
-                return (T) classToNullMap.get(targetClazz);
-            }
-
-            if (targetClazz.equals(value.getClass())) {
-                if (formatter != null && String.class.equals(targetClazz)) {
-                    return (T) classToConverterMap.get(targetClazz).convert(value, formatter);
-                }
-
-                return (T) value;
-            }
-
-            if (targetClazz.isAssignableFrom(value.getClass())) {
-                if (formatter != null) {
-                    return (T) classToConverterMap.get(targetClazz).convert(value, formatter);
-                }
-
-                return (T) value;
-            }
-
-            if (targetClazz.isArray()) {
-                if (byte[].class.equals(targetClazz)) {
-                    return (T) classToConverterMap.get(targetClazz).convert(value, formatter);
-                }
-
-                Class<?> targetClass = targetClazz.getComponentType();
-                Object values = DataUtils.getValueObjectArray(value);
-                int length = Array.getLength(values);
-                Object result = Array.newInstance(targetClass, length);
-                Object nullValue = classToNullMap.get(targetClass);
-                if (EnumConst.class.isAssignableFrom(targetClass)) {
-                    for (int i = 0; i < length; i++) {
-                        Object arrValue = Array.get(values, i);
-                        if (arrValue == null) {
-                            arrValue = nullValue;
-                        } else if (!targetClass.isAssignableFrom(arrValue.getClass())) {
-                            arrValue = EnumUtils.fromCode((Class<? extends EnumConst>) targetClass,
-                                    String.valueOf(arrValue));
-                        }
-                        Array.set(result, i, arrValue);
-                    }
-                } else {
-                    Converter<?> converter = classToConverterMap.get(targetClass);
-                    for (int i = 0; i < length; i++) {
-                        Object arrValue = Array.get(values, i);
-                        if (arrValue == null) {
-                            arrValue = nullValue;
-                        } else if (!targetClass.isAssignableFrom(arrValue.getClass())) {
-                            arrValue = converter.convert(arrValue, formatter);
-                        }
-                        Array.set(result, i, arrValue);
-                    }
-                }
-                return (T) result;
-            } else if (Collection.class.isAssignableFrom(targetClazz)) {
-                Object values = DataUtils.getValueObjectArray(value);
-                int length = Array.getLength(values);
-                Collection<Object> result = ReflectUtils
-                        .newInstance(DataUtils.getCollectionConcreteType((Class<? extends Collection>) targetClazz));
-                for (int i = 0; i < length; i++) {
-                    result.add(Array.get(values, i));
-                }
-                return (T) result;
-            } else {
-                Object result = null;
-                if (EnumConst.class.isAssignableFrom(targetClazz)) {
-                    String valueStr = null;
-                    if (value.getClass().isArray() && Array.getLength(value) == 1) {
-                        valueStr = String.valueOf(Array.get(value, 0));
-                    } else {
-                        valueStr = String.valueOf(value);
-                    }
-
-                    result = EnumUtils.fromCode((Class<? extends EnumConst>) targetClazz, valueStr);
-                    if (result == null) {
-                        result = EnumUtils.fromName((Class<? extends EnumConst>) targetClazz, valueStr);
-                    }
-                } else {
-                    if (value.getClass().isArray() && Array.getLength(value) == 1) {
-                        result = classToConverterMap.get(targetClazz).convert(Array.get(value, 0), formatter);
-                    } else {
-                        result = classToConverterMap.get(targetClazz).convert(value, formatter);
-                    }
-                }
-
-                if (result == null) {
-                    result = classToNullMap.get(targetClazz);
-                }
-                return (T) result;
-            }
-        } catch (Exception e) {
-            throw new UnifyException(e, UnifyCoreErrorConstants.DATA_CONVERSION_ERROR, targetClazz, value);
-        }
-    }
-
-    /**
-     * Converts supplied value to target collection type.
-     * 
-     * @param collectionClazz
-     *                        the collection type
-     * @param dataClass
-     *                        the collection data type
-     * @param val
-     *                        the value to convert
-     * @return the converted value
-     * @throws UnifyException
-     *                        if an error occurs
-     */
-    public static <T, U extends Collection<T>> U convert(Class<U> collectionClazz, Class<T> dataClass, Object val)
-            throws UnifyException {
-        return DataUtils.convert(collectionClazz, dataClass, val, null);
-    }
-    
-    /**
-     * Converts supplied value to target collection type.
-     * 
-     * @param collectionClazz
-     *                        the collection type
-     * @param dataClass
-     *                        the collection data type
-     * @param val
-     *                        the value to convert
-     * @param formatter
-     *                        the conversion formatter. Can be null
-     * @return the converted value
-     * @throws UnifyException
-     *                        if an error occurs
-     */
-    @SuppressWarnings("unchecked")
-    public static <T, U extends Collection<T>> U convert(Class<U> collectionClazz, Class<T> dataClass, Object val,
-            Formatter<?> formatter) throws UnifyException {
-        try {
-            if (val == null) {
-                return null;
-            }
-
-            Class<?> valClass = val.getClass();
-            if (collectionClazz.isAssignableFrom(valClass)) {
-                Collection collection = (Collection) val;
-                if (!collection.isEmpty()) {
-                    Iterator it = collection.iterator();
-                    while (it.hasNext()) {
-                        Object elem = it.next();
-                        if (elem != null) {
-                            if (dataClass.isAssignableFrom(elem.getClass())) {
-                                return (U) val;
-                            } else {
-                                break;
-                            }
-                        }
-                    }
-                } else {
-                    return (U) val;
-                }
-            }
-
-            if (val instanceof String) {
-                List<String> list = StringUtils.charToListSplit((String) val, ',');
-                if (String.class.equals(dataClass)) {
-                    return (U) list;
-                }
-                
-                val = list;
-                valClass = val.getClass();
-            }
-            
-            Collection<Object> result = ReflectUtils.newInstance(DataUtils.getCollectionConcreteType(collectionClazz));
-            if (valClass.isArray()) {
-                int length = Array.getLength(val);
-                if (dataClass.isAssignableFrom(DataUtils.getWrapperClass(valClass.getComponentType()))) {
-                    for (int i = 0; i < length; i++) {
-                        result.add(Array.get(val, i));
-                    }
-                } else {
-                    if (EnumConst.class.isAssignableFrom(dataClass)) {
-                        for (int i = 0; i < length; i++) {
-                            result.add(EnumUtils.fromCode((Class<? extends EnumConst>) dataClass,
-                                    String.valueOf(Array.get(val, i))));
-                        }
-                    } else {
-                        Converter<?> converter = classToConverterMap.get(dataClass);
-                        for (int i = 0; i < length; i++) {
-                            result.add(converter.convert(Array.get(val, i), formatter));
-                        }
-                    }
-                }
-            } else if (Collection.class.isAssignableFrom(valClass)) {
-                if (EnumConst.class.isAssignableFrom(dataClass)) {
-                    for (Object object : (Collection<Object>) val) {
-                        result.add(EnumUtils.fromCode((Class<? extends EnumConst>) dataClass, String.valueOf(object)));
-                    }
-                } else {
-                    Converter<?> converter = classToConverterMap.get(dataClass);
-                    for (Object object : (Collection<Object>) val) {
-                        result.add(converter.convert(object, formatter));
-                    }
-                }
-            } else {
-                if (EnumConst.class.isAssignableFrom(dataClass)) {
-                    Object resultItem = EnumUtils.fromCode((Class<? extends EnumConst>) dataClass,
-                            String.valueOf(val));
-                    if (resultItem == null) {
-                        resultItem = EnumUtils.fromName((Class<? extends EnumConst>) dataClass, String.valueOf(val));
-                    }
-
-                    result.add(resultItem);
-                } else {
-                    result.add(classToConverterMap.get(dataClass).convert(val, formatter));
-                }
-            }
-            return (U) result;
-
-        } catch (UnifyException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new UnifyException(e, UnifyCoreErrorConstants.DATA_CONVERSION_ERROR, collectionClazz, val);
-        }
     }
 
     /**
@@ -1204,11 +818,11 @@ public final class DataUtils {
                 Class<?> type = setterInfo.getType();
                 Object value = entry.getValue();
                 if (setterInfo.isParameterArgumented0()) {
-                    value = DataUtils.convert((Class<? extends Collection>) type, setterInfo.getArgumentType0(), value);
+                    value = ConverterUtils.convert((Class<? extends Collection>) type, setterInfo.getArgumentType0(), value);
                 } else {
-                    value = DataUtils.convert(type, value);
+                    value = ConverterUtils.convert(type, value);
                     if (value == null) {
-                        value = DataUtils.getNullValue(type);
+                        value = ConverterUtils.getNullValue(type);
                     }
                 }
                 setterInfo.getSetter().invoke(bean, value);
@@ -1259,12 +873,12 @@ public final class DataUtils {
             Class<?> type = setterInfo.getType();
             if (!Object.class.equals(type)) {
                 if (setterInfo.isParameterArgumented0()) {
-                    value = DataUtils.convert((Class<? extends Collection>) type, setterInfo.getArgumentType0(), value,
+                    value = ConverterUtils.convert((Class<? extends Collection>) type, setterInfo.getArgumentType0(), value,
                             formatter);
                 } else {
-                    value = DataUtils.convert(type, value, formatter);
+                    value = ConverterUtils.convert(type, value, formatter);
                     if (value == null) {
-                        value = DataUtils.getNullValue(type);
+                        value = ConverterUtils.getNullValue(type);
                     }
                 }
             }
@@ -1290,7 +904,7 @@ public final class DataUtils {
             try {
                 for (GetterSetterInfo getterSetterInfo : ReflectUtils.getGetterSetterMap(bean.getClass()).values()) {
                     if (getterSetterInfo.isSetter()) {
-                        Object nullVal = classToNullMap.get(getterSetterInfo.getType());
+                        Object nullVal = ConverterUtils.getNullValue(getterSetterInfo.getType());
                         getterSetterInfo.getSetter().invoke(bean, nullVal);
                     }
                 }
@@ -1301,64 +915,7 @@ public final class DataUtils {
             }
         }
     }
-
-    /**
-     * Reads a JSON object. Has no support for collections.
-     * 
-     * @param type
-     *             the object type
-     * @param json
-     *             the JSON string
-     * @return instance of object
-     * @throws UnifyException
-     *                        if an error occurs
-     */
-    public static <T> T readJsonObject(Class<T> type, String json) throws UnifyException {
-        return DataUtils.readJsonObject(type, new StringReader(json));
-    }
-
-    /**
-     * Reads a JSON object. Has no support for collections.
-     * 
-     * @param type
-     *                    the object type
-     * @param inputStream
-     *                    the JSON input stream
-     * @param charset
-     *                    optional character set
-     * @return instance of object
-     * @throws UnifyException
-     *                        if an error occurs
-     */
-    public static <T> T readJsonObject(Class<T> type, InputStream inputStream, Charset charset) throws UnifyException {
-        if (charset == null) {
-            return DataUtils.readJsonObject(type, new BufferedReader(new InputStreamReader(inputStream)));
-        }
-
-        return DataUtils.readJsonObject(type, new BufferedReader(new InputStreamReader(inputStream, charset)));
-    }
-
-    /**
-     * Reads a JSON object. Has no support for collections.
-     * 
-     * @param type
-     *               the object type
-     * @param reader
-     *               the JSON reader
-     * @return instance of object
-     * @throws UnifyException
-     *                        if an error occurs
-     */
-    public static <T> T readJsonObject(Class<T> type, Reader reader) throws UnifyException {
-        try {
-            return DataUtils.readJsonObject(type.newInstance(), Json.parse(reader).asObject());
-        } catch (UnifyException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new UnifyException(UnifyCoreErrorConstants.DATAUTIL_ERROR, e);
-        }
-    }
-    
+   
     /**
      * Reads a JSON array.
      * 
@@ -1370,8 +927,8 @@ public final class DataUtils {
      * @throws UnifyException
      *                        if an error occurs
      */
-    public static <T> T[] readJsonArray(Class<T[]> type, String json) throws UnifyException {
-        return DataUtils.readJsonArray(type, new StringReader(json));
+    public static <T> T[] arrayFromJsonString(Class<T[]> type, String json) throws UnifyException {
+        return DataUtils.arrayFromJsonReader(type, new StringReader(json));
     }
 
     /**
@@ -1385,11 +942,9 @@ public final class DataUtils {
      * @throws UnifyException
      *                        if an error occurs
      */
-    @SuppressWarnings("unchecked")
-    public static <T> T[] readJsonArray(Class<T[]> type, Reader reader) throws UnifyException {
+    public static <T> T[] arrayFromJsonReader(Class<T[]> type, Reader reader) throws UnifyException {
         try {
-          JsonValueConverter<?> converter = jsonConverterMap.get(type);
-          return (T[]) converter.read(Json.parse(reader));
+          return (T[]) DataUtils.fromJsonReader(type, reader);
         } catch (UnifyException e) {
             throw e;
         } catch (Exception e) {
@@ -1407,8 +962,8 @@ public final class DataUtils {
      * @throws UnifyException
      *                        if an error occurs
      */
-    public static void readJsonObject(Object object, String json) throws UnifyException {
-        DataUtils.readJsonObject(object, new StringReader(json));
+    public static <T> T  fromJsonString(Class<T> clazz, String json) throws UnifyException {
+        return DataUtils.fromJsonReader(clazz, new StringReader(json));
     }
 
     /**
@@ -1423,33 +978,116 @@ public final class DataUtils {
      * @throws UnifyException
      *                        if an error occurs
      */
-    public static void readJsonObject(Object object, InputStream inputStream, Charset charset) throws UnifyException {
+    public static <T> T fromJsonInputStream(Class<T> clazz, InputStream inputStream, Charset charset) throws UnifyException {
         if (charset == null) {
-            DataUtils.readJsonObject(object, new BufferedReader(new InputStreamReader(inputStream)));
-            return;
+            return DataUtils.fromJsonReader(clazz, new BufferedReader(new InputStreamReader(inputStream)));
         }
 
-        DataUtils.readJsonObject(object, new BufferedReader(new InputStreamReader(inputStream, charset)));
+        return DataUtils.fromJsonReader(clazz, new BufferedReader(new InputStreamReader(inputStream, charset)));
     }
 
     /**
      * Reads a JSON object. Has no support for collections.
      * 
-     * @param object
-     *               bean to read to
+     * @param clazz
+     *               bean type
      * @param reader
      *               the JSON reader
      * @throws UnifyException
      *                        if an error occurs
      */
-    public static void readJsonObject(Object object, Reader reader) throws UnifyException {
+    public static <T> T fromJsonReader(Class<T> clazz, Reader reader) throws UnifyException {
         try {
-            DataUtils.readJsonObject(object, Json.parse(reader).asObject());
+            return DataUtils.getObjectFromJsonValue(clazz, null, Json.parse(reader));
         } catch (UnifyException e) {
             throw e;
         } catch (Exception e) {
+            e.printStackTrace();
             throw new UnifyException(UnifyCoreErrorConstants.DATAUTIL_ERROR, e);
         }
+    }
+    
+    @SuppressWarnings("unchecked")
+    private static <T> T getObjectFromJsonValue(Class<T> clazz, Class<?> argClass, JsonValue jsonValue) throws Exception{
+        if (jsonValue == null || jsonValue.isNull() ) {
+            return (T) ConverterUtils.getNullValue(clazz);
+        }
+        
+        JsonValueConverter<T> converter = jsonConverterMap.get(clazz);
+        if (converter != null) {
+            return converter.read(clazz, jsonValue);
+        }
+        
+        if (clazz.isEnum()) {
+            Class<? extends Enum> enumClass = (Class<? extends Enum>) clazz;
+            return (T) Enum.valueOf(enumClass, jsonValue.asString());
+        }
+        
+        // Array
+        if(clazz.isArray()) {
+            Class<?> compClass = clazz.getComponentType();
+            if (jsonValue.isArray()) {
+                JsonArray jsonArray =  jsonValue.asArray();
+                int len = jsonArray.size();
+                Object arr = Array.newInstance(compClass, len);
+                for(int i = 0; i < len; i++) {
+                    Array.set(arr, i, DataUtils.getObjectFromJsonValue(compClass, null, jsonArray.get(i)));
+                }
+                
+                return (T) arr;
+            }
+
+            Object arr = Array.newInstance(compClass, 1);
+            Array.set(arr, 0, DataUtils.getObjectFromJsonValue(compClass, null, jsonValue));
+            
+            return (T) arr;
+        }
+        
+        // Collection
+        if (Collection.class.isAssignableFrom(clazz)) {
+            Collection<Object> result = ReflectUtils.newInstance(
+                    ConverterUtils.getCollectionConcreteType((Class<? extends Collection>) clazz));
+            if (jsonValue.isArray()) {
+                JsonArray jsonArray =  jsonValue.asArray();
+                int len = jsonArray.size();
+                for(int i = 0; i < len; i++) {
+                    result.add(DataUtils.getObjectFromJsonValue(argClass, null, jsonArray.get(i)));
+                }
+            } else {
+                result.add(DataUtils.getObjectFromJsonValue(argClass, null, jsonValue));
+            }
+            
+            return (T) result;
+        }
+        
+        // Map TODO
+        
+        // Bean
+        JsonObject jsonObject = jsonValue.asObject();
+        T bean = ReflectUtils.newInstance(clazz);
+        if(jsonObject.size() > 0) {
+            Map<String, GetterSetterInfo> accessors = ReflectUtils.getGetterSetterMap(clazz);
+            for (String name : accessors.keySet()) {
+                GetterSetterInfo gInfo = accessors.get(name);
+                if (!gInfo.isSetter() || !gInfo.isProperty()) {
+                    continue;
+                }
+                
+                JsonValue jsonVal = jsonObject.get(name);
+                Class<?> type = gInfo.getType();
+                if (Object.class.equals(type)) {
+                    Object inst = gInfo.getGetter().invoke(bean);
+                    if (inst != null) {
+                        type = inst.getClass();
+                    }
+                }
+                
+                Object val = getObjectFromJsonValue(type, gInfo.getArgumentType0(), jsonVal);
+                gInfo.getSetter().invoke(bean, val);
+            }
+        }
+        
+        return bean;
     }
 
     /**
@@ -1522,16 +1160,15 @@ public final class DataUtils {
      */
     public static void writeJsonObject(Object object, Writer writer, PrintFormat printFormat) throws UnifyException {
         try {
-            JsonObject jsonObject = Json.object();
-            DataUtils.writeJsonObject(object, jsonObject, printFormat);
+            JsonValue jsonValue = DataUtils.getJsonValueFromObject(object);
             switch (printFormat) {
-            case PRETTY:
-                jsonObject.writeTo(writer, PrettyPrint.PRETTY_PRINT);
-                break;
-            case NONE:
-            default:
-                jsonObject.writeTo(writer);
-                break;
+                case PRETTY:
+                    jsonValue.writeTo(writer, PrettyPrint.PRETTY_PRINT);
+                    break;
+                case NONE:
+                default:
+                    jsonValue.writeTo(writer);
+                    break;
             }
             writer.flush();
         } catch (UnifyException e) {
@@ -1541,12 +1178,11 @@ public final class DataUtils {
         }
     }
 
-    @Deprecated
-    public static String writeJsonObject(Object object, PrintFormat printFormat) throws UnifyException {
+    public static String asJsonString(Object obj, PrintFormat format) throws UnifyException {
         try {
-            JsonObject jsonObject = Json.object();
-            DataUtils.writeJsonObject(object, jsonObject, printFormat);
-            return jsonObject.toString();
+            StringWriter writer = new StringWriter();
+            DataUtils.writeJsonObject(obj, writer, format);
+            return writer.toString();
         } catch (UnifyException e) {
             throw e;
         } catch (Exception e) {
@@ -1554,19 +1190,60 @@ public final class DataUtils {
         }
     }
 
-    public static String toJsonObjectString(Object object, PrintFormat printFormat) throws UnifyException {
-        try {
-            JsonObject jsonObject = Json.object();
-            DataUtils.writeJsonObject(object, jsonObject, printFormat);
-            return jsonObject.toString();
-        } catch (UnifyException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new UnifyException(UnifyCoreErrorConstants.DATAUTIL_ERROR, e);
+    private static JsonValue getJsonValueFromObject(Object obj) throws Exception{
+        if (obj == null) {
+            return Json.NULL;
         }
+        
+        JsonValueConverter<?> converter = jsonConverterMap.get(obj.getClass());
+        if (converter != null) {
+            return converter.write(obj);
+        }
+        
+        if (obj.getClass().isEnum()) {            
+            return Json.value(((Enum) obj).name());
+        }
+        
+        // Array
+        if(obj.getClass().isArray()) {
+            JsonArray array = Json.array();
+            int len = Array.getLength(obj);
+            for (int i = 0; i < len; i++) {
+                array.add(getJsonValueFromObject(Array.get(obj, i)));
+            }
+            
+            return array;
+        }
+        
+        // Collection
+        if (Collection.class.isAssignableFrom(obj.getClass())) {
+            JsonArray jsonArray = Json.array();
+            for (Object val : (Collection<?>) obj) {
+                jsonArray.add(getJsonValueFromObject(val));
+            }
+            
+            return jsonArray;
+        }
+        
+        // Map TODO
+        
+        // Bean
+        JsonObject jsonObject = Json.object();
+        Map<String, GetterSetterInfo> accessors = ReflectUtils.getGetterSetterMap(obj.getClass());
+        for (String name : accessors.keySet()) {
+            GetterSetterInfo gInfo = accessors.get(name);
+            if (!gInfo.isGetter() || !gInfo.isProperty()) {
+                continue;
+            }
+            
+            Object val = gInfo.getGetter().invoke(obj);
+            jsonObject.add(name, getJsonValueFromObject(val));
+        }
+        
+        return jsonObject;
     }
 
-    public static <T> String toJsonArrayString(T[] array) throws UnifyException {
+    public static <T> String asJsonArrayString(T[] array) throws UnifyException {
         try {
             JsonValueConverter<?> converter = jsonConverterMap.get(array.getClass());
             return converter.write(array).toString();
@@ -1695,6 +1372,92 @@ public final class DataUtils {
     }
 
     /**
+     * Converts supplied value to target type.
+     * 
+     * @param targetClazz
+     *                    the target type
+     * @param value
+     *                    the value to convert
+     * @return the converted value
+     * @throws UnifyException
+     *                   if an error occurs
+     */
+    public static <T> T convert(Class<T> targetClazz, Object value) throws UnifyException {
+        try {
+            return ConverterUtils.convert(targetClazz, value);
+        } catch (Exception e) {
+            throw new UnifyException(UnifyCoreErrorConstants.DATAUTIL_ERROR, e);
+        }
+    }
+
+    /**
+     * Converts supplied value to target type.
+     * 
+     * @param targetClazz
+     *                    the target type
+     * @param value
+     *                    the value to convert
+     * @param formatter
+     *                    the conversion formatter. Can be null
+     * @return the converted value
+     * @throws UnifyException
+     *                   if an error occurs
+     */
+    public static <T> T convert(Class<T> targetClazz, Object value, ConverterFormatter<?> formatter) throws UnifyException {
+        try {
+            return ConverterUtils.convert(targetClazz, value, formatter);
+        } catch (Exception e) {
+            throw new UnifyException(UnifyCoreErrorConstants.DATAUTIL_ERROR, e);
+        }
+    }
+
+    /**
+     * Converts supplied value to target collection type.
+     * 
+     * @param collectionClazz
+     *                        the collection type
+     * @param dataClass
+     *                        the collection data type
+     * @param val
+     *                        the value to convert
+     * @return the converted value
+     * @throws UnifyException
+     *                   if an error occurs
+     */
+    public static <T, U extends Collection<T>> U convert(Class<U> collectionClazz, Class<T> dataClass, Object val)
+            throws UnifyException {
+        try {
+            return ConverterUtils.convert(collectionClazz, dataClass, val);
+        } catch (Exception e) {
+            throw new UnifyException(UnifyCoreErrorConstants.DATAUTIL_ERROR, e);
+        }
+    }
+
+    /**
+     * Converts supplied value to target collection type.
+     * 
+     * @param collectionClazz
+     *                        the collection type
+     * @param dataClass
+     *                        the collection data type
+     * @param val
+     *                        the value to convert
+     * @param formatter
+     *                        the conversion formatter. Can be null
+     * @return the converted value
+     * @throws UnifyException
+     *                   if an error occurs
+     */
+    public static <T, U extends Collection<T>> U convert(Class<U> collectionClazz, Class<T> dataClass, Object val,
+            ConverterFormatter<?> formatter) throws UnifyException {
+        try {
+            return ConverterUtils.convert(collectionClazz, dataClass, val, formatter);
+        } catch (Exception e) {
+            throw new UnifyException(UnifyCoreErrorConstants.DATAUTIL_ERROR, e);
+        }
+    }
+
+    /**
      * Creates a new instance of a data object populated with supplied parameters.
      * 
      * @param type
@@ -1709,23 +1472,27 @@ public final class DataUtils {
     @SuppressWarnings("unchecked")
     public static <T> T constructDataObject(Class<T> type, Object... params) throws UnifyException {
         T paramObject = null;
-        if (ZeroParams.class.equals(type)) {
-            paramObject = (T) ZeroParams.INSTANCE;
-        } else {
-            List<Class<?>> paramTypeList = ReflectUtils.getLargestConstructorParameters(type);
-            int len = paramTypeList.size();
-            if (len == 1 && paramTypeList.get(0).isArray()) {
-                Object initParam = DataUtils.convert(paramTypeList.get(0), params);
-                paramObject = ReflectUtils.newInstanceFromLargestConstructor(type, initParam);
+        try {
+            if (ZeroParams.class.equals(type)) {
+                paramObject = (T) ZeroParams.INSTANCE;
             } else {
-                // Fit parameters
-                Object[] initParam = new Object[len];
-                for (int i = 0; i < len && i < params.length; i++) {
-                    initParam[i] = DataUtils.convert(paramTypeList.get(i), params[i]);
-                }
+                List<Class<?>> paramTypeList = ReflectUtils.getLargestConstructorParameters(type);
+                int len = paramTypeList.size();
+                if (len == 1 && paramTypeList.get(0).isArray()) {
+                    Object initParam = ConverterUtils.convert(paramTypeList.get(0), params);
+                    paramObject = ReflectUtils.newInstanceFromLargestConstructor(type, initParam);
+                } else {
+                    // Fit parameters
+                    Object[] initParam = new Object[len];
+                    for (int i = 0; i < len && i < params.length; i++) {
+                        initParam[i] = ConverterUtils.convert(paramTypeList.get(i), params[i]);
+                    }
 
-                paramObject = ReflectUtils.newInstanceFromLargestConstructor(type, initParam);
+                    paramObject = ReflectUtils.newInstanceFromLargestConstructor(type, initParam);
+                }
             }
+        } catch (Exception e) {
+            throw new UnifyException(UnifyCoreErrorConstants.DATAUTIL_ERROR, e);
         }
 
         return paramObject;
@@ -1742,166 +1509,7 @@ public final class DataUtils {
         
         return b;
     }
-    
-    @SuppressWarnings("unchecked")
-    private static <T> T readJsonObject(T object, JsonObject jsonObject) throws UnifyException, Exception {
-        Map<String, GetterSetterInfo> mutatorMap = ReflectUtils.getGetterSetterMap(object.getClass());
-        for (Member member : jsonObject) {
-            GetterSetterInfo sInfo = mutatorMap.get(member.getName());
-            if (sInfo == null) {
-                throw new Exception(
-                        "Type " + object.getClass() + " has no mutator/accesor for member " + member.getName());
-            }
-
-            if (!sInfo.isProperty()) {
-                throw new Exception(
-                        "Type " + object.getClass() + " has no matching bean property for member " + member.getName());
-            }
-
-            Class<?> paramType = sInfo.getType();
-            JsonValue value = member.getValue();
-            if (Object.class.equals(paramType)) {
-                if (!sInfo.isGetter()) {
-                    throw new Exception("Type " + object.getClass() + " has no accesor for member " + member.getName());
-                }
-
-                Object implObject = sInfo.getGetter().invoke(object);
-                DataUtils.readJsonObject(implObject, value.asObject());
-            } else {
-                if (!sInfo.isSetter()) {
-                    throw new Exception("Type " + object.getClass() + " has no mutator for member " + member.getName());
-                }
-
-                JsonValueConverter<?> converter = jsonConverterMap.get(paramType);
-                if (converter == null) {
-                    if (Collection.class.isAssignableFrom(paramType)) {
-                        Collection<Object> result = null;
-                        if (!value.isNull()) {
-                            JsonArray array = value.asArray();
-                            result = ReflectUtils.newInstance(
-                                    DataUtils.getCollectionConcreteType((Class<? extends Collection>) paramType));
-                            if (sInfo.isParameterArgumented0()) {
-                                Class<?> componentType = sInfo.getArgumentType0();
-                                converter = jsonConverterMap.get(sInfo.getArgumentType0());
-                                if (converter == null) {
-                                    for (int i = 0; i < array.size(); i++) {
-                                        result.add(DataUtils.readJsonObject(componentType.newInstance(),
-                                                array.get(i).asObject()));
-                                    }
-                                } else {
-                                    for (int i = 0; i < array.size(); i++) {
-                                        result.add(converter.read(array.get(i)));
-                                    }
-                                }
-                            }
-                        }
-
-                        sInfo.getSetter().invoke(object, (Object) result);
-                    } else if (paramType.isArray()) {
-                        Object[] valueArray = null;
-                        if (!value.isNull()) {
-                            JsonArray array = value.asArray();
-                            Class<?> componentType = paramType.getComponentType();
-                            converter = jsonConverterMap.get(componentType);
-                            valueArray = (Object[]) Array.newInstance(componentType, array.size());
-                            if (converter == null) {
-                                for (int i = 0; i < valueArray.length; i++) {
-                                    valueArray[i] = DataUtils.readJsonObject(componentType.newInstance(),
-                                            array.get(i).asObject());
-                                }
-                            } else {
-                                for (int i = 0; i < valueArray.length; i++) {
-                                    valueArray[i] = converter.read(array.get(i));
-                                }
-                            }
-                        }
-
-                        sInfo.getSetter().invoke(object, (Object) valueArray);
-                    } else {
-                        sInfo.getSetter().invoke(object,
-                                DataUtils.readJsonObject(paramType.newInstance(), value.asObject()));
-                    }
-                } else {
-                    sInfo.getSetter().invoke(object, converter.read(value));
-                }
-            }
-        }
-        return object;
-    }
-
-    private static <T> void writeJsonObject(T object, JsonObject jsonObject, PrintFormat printFormat)
-            throws UnifyException, Exception {
-        if (object != null) {
-            Map<String, GetterSetterInfo> accessorMap = ReflectUtils.getGetterSetterMap(object.getClass());
-            for (String name : accessorMap.keySet()) {
-                GetterSetterInfo gInfo = accessorMap.get(name);
-                if (!gInfo.isGetter() || !gInfo.isProperty()) {
-                    continue;
-                }
-
-                Object value = gInfo.getGetter().invoke(object);
-                if (value != null) {
-                    Class<?> returnType = gInfo.getType();
-                    if (Object.class.equals(returnType)) {
-                        JsonObject jsonValue = Json.object();
-                        DataUtils.writeJsonObject(value, jsonValue, printFormat);
-                        jsonObject.add(name, jsonValue);
-                    } else {
-                        JsonValueConverter<?> converter = jsonConverterMap.get(returnType);
-                        if (converter == null) {
-                            if (Collection.class.isAssignableFrom(value.getClass())) {
-                                JsonArray array = (JsonArray) Json.array();
-                                if (gInfo.isParameterArgumented0()) {
-                                    converter = jsonConverterMap.get(gInfo.getArgumentType0());
-                                }
-
-                                if (converter == null) {
-                                    for (Object obj : (Collection<?>) value) {
-                                        JsonObject jsonValue = Json.object();
-                                        DataUtils.writeJsonObject(obj, jsonValue, printFormat);
-                                        array.add(jsonValue);
-                                    }
-                                } else {
-                                    for (Object obj : (Collection<?>) value) {
-                                        array.add(converter.write(obj));
-                                    }
-                                }
-
-                                jsonObject.add(name, array);
-                            } else if (value.getClass().isArray()) {
-                                JsonArray array = (JsonArray) Json.array();
-                                Class<?> componentType = value.getClass().getComponentType();
-                                converter = jsonConverterMap.get(componentType);
-                                int length = Array.getLength(value);
-                                if (converter == null) {
-                                    for (int i = 0; i < length; i++) {
-                                        JsonObject jsonValue = Json.object();
-                                        DataUtils.writeJsonObject(Array.get(value, i), jsonValue, printFormat);
-                                        array.add(jsonValue);
-                                    }
-                                } else {
-                                    for (int i = 0; i < length; i++) {
-                                        array.add(converter.write(Array.get(value, i)));
-                                    }
-                                }
-
-                                jsonObject.add(name, array);
-                            } else {
-                                JsonObject jsonValue = Json.object();
-                                DataUtils.writeJsonObject(value, jsonValue, printFormat);
-                                jsonObject.add(name, jsonValue);
-                            }
-                        } else {
-                            jsonObject.add(name, converter.write(value));
-                        }
-                    }
-                } else {
-                    jsonObject.add(name, (String) null);
-                }
-            }
-        }
-    }
-
+   
     @SuppressWarnings("unchecked")
     private static <T> void sort(List<?> list, Class<T> beanClass, String property, boolean ascending)
             throws UnifyException {
@@ -1953,10 +1561,6 @@ public final class DataUtils {
         public ObjectByFieldComparator(Method getter, boolean ascending) {
             this.getter = getter;
             this.ascending = ascending;
-            Class<?> fieldType = getter.getReturnType();
-            if (fieldType.isPrimitive()) {
-                fieldType = classToWrapperMap.get(fieldType);
-            }
         }
 
         @SuppressWarnings("unchecked")
@@ -1969,41 +1573,6 @@ public final class DataUtils {
             } catch (Exception e) {
             }
             return 0;
-        }
-    }
-
-    private static Object getValueObjectArray(Object value) throws UnifyException {
-        try {
-            if (value.getClass().isArray()) {
-                return value;
-            }
-            
-            if (value instanceof String) {
-                return StringUtils.commaSplit((String) value);
-            }
-            
-            List<Object> values = new ArrayList<Object>();
-            if (value instanceof Map) {
-                value = ((Map<?, ?>) value).values();
-            } else if (value instanceof Collection) {
-                for (Object subValues : (Collection<?>) value) {
-                    if (subValues != null) {
-                        if (subValues.getClass().isArray()) {
-                            int length = Array.getLength(subValues);
-                            for (int i = 0; i < length; i++) {
-                                values.add(Array.get(subValues, i));
-                            }
-                        } else {
-                            values.add(subValues);
-                        }
-                    }
-                }
-            } else {
-                values.add(value);
-            }
-            return values.toArray(new Object[values.size()]);
-        } catch (Exception e) {
-            throw new UnifyException(e, UnifyCoreErrorConstants.CONVERTER_EXCEPTION);
         }
     }
 }

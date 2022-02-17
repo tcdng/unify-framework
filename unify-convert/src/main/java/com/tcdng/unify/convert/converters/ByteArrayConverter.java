@@ -13,32 +13,23 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.convert;
-
-import com.tcdng.unify.core.format.Formatter;
+package com.tcdng.unify.convert.converters;
 
 /**
- * A value to integer converter.
+ * Byte array converter.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class IntegerConverter extends AbstractConverter<Integer> {
+public class ByteArrayConverter extends AbstractConverter<byte[]> {
 
     @Override
-    protected Integer doConvert(Object value, Formatter<?> formatter) throws Exception {
-        if (value instanceof Number) {
-            return Integer.valueOf(((Number) value).intValue());
+    protected byte[] doConvert(Object value, ConverterFormatter<?> formatter) throws Exception {
+        if (value instanceof byte[]) {
+            return (byte[]) value;
         }
-        if (value instanceof String) {
-            String string = ((String) value).trim();
-            if (!string.isEmpty()) {
-                if (formatter == null) {
-                    return Integer.decode(string);
-                }
-                return doConvert(formatter.parse(string), null);
-            }
-        }
+
         return null;
     }
+
 }

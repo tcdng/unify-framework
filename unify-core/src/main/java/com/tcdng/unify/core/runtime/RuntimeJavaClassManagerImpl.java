@@ -105,9 +105,10 @@ public class RuntimeJavaClassManagerImpl extends AbstractRuntimeJavaClassManager
     }
 
     @Override
-    public List<Class<?>> compileAndLoadJavaClasses(List<JavaClassSource> sourceList) throws UnifyException {
+    public <T> List<Class<? extends T>> compileAndLoadJavaClasses(Class<T> typeClass, List<JavaClassSource> sourceList)
+            throws UnifyException {
         try {
-            return innerCompileAndLoadClasses(sourceList);
+            return innerCompileAndLoadClasses(typeClass, sourceList);
         } catch (UnifyException e) {
             for (JavaClassSource source : sourceList) {
                 logDebug("@Source: \n{0}", source.getSrc());
@@ -147,9 +148,10 @@ public class RuntimeJavaClassManagerImpl extends AbstractRuntimeJavaClassManager
         }
     }
 
-    private synchronized List<Class<?>> innerCompileAndLoadClasses(List<JavaClassSource> sourceList)
+    @SuppressWarnings("unchecked")
+    private synchronized <T> List<Class<? extends T>> innerCompileAndLoadClasses(Class<T> typeClass, List<JavaClassSource> sourceList)
             throws UnifyException {
-        List<Class<?>> resultList = new ArrayList<Class<?>>();
+        List<Class<? extends T>> resultList = new ArrayList<Class<? extends T>>();
         try {
             List<String> classNameList = new ArrayList<String>();
             StringResource[] sourceResources = new StringResource[sourceList.size()];
@@ -164,7 +166,7 @@ public class RuntimeJavaClassManagerImpl extends AbstractRuntimeJavaClassManager
             ClassLoader loader = new JavaSourceClassLoader(getClass().getClassLoader(), resourceFinder, null);
 
             for (String className : classNameList) {
-                Class<?> clazz = loader.loadClass(className);
+                Class<? extends T> clazz = (Class<? extends T>) loader.loadClass(className);
                 classByName.put(className, clazz);
                 resultList.add(clazz);
             }

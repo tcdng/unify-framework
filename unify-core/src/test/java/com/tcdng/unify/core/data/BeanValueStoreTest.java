@@ -178,4 +178,13 @@ public class BeanValueStoreTest {
         assertEquals("38 Warehouse Road", reader.read("line1"));
         assertEquals("Apapa Lagos", reader.read("line2"));
     }
+
+    @Test
+    public void testCopy() throws Exception {
+        Address address = new Address();
+        BeanValueStore bvs = new BeanValueStore(address);
+        bvs.copy(new BeanValueStore(new Address("24 Parklane", "Apapa Lagos")));
+        assertEquals("24 Parklane", address.getLine1());
+        assertEquals("Apapa Lagos", address.getLine2());
+    }
 }

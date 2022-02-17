@@ -16,9 +16,9 @@
 package com.tcdng.unify.web.ui.widget;
 
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.web.ControllerPathParts;
 import com.tcdng.unify.web.ui.PageBean;
 import com.tcdng.unify.web.ui.widget.panel.StandalonePanel;
-import com.tcdng.unify.web.ControllerPathParts;
 
 /**
  * A user interface page.

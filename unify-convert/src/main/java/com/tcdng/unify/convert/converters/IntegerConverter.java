@@ -13,28 +13,29 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.convert;
-
-import com.tcdng.unify.core.format.Formatter;
+package com.tcdng.unify.convert.converters;
 
 /**
- * A value to boolean converter. Converts, non-case sensitively, strings "y",
- * "on", "true", and "yes" to Boolean.TRUE.
+ * A value to integer converter.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class BooleanConverter extends AbstractConverter<Boolean> {
+public class IntegerConverter extends AbstractConverter<Integer> {
 
     @Override
-    protected Boolean doConvert(Object value, Formatter<?> formatter) throws Exception {
-        if (value instanceof Boolean) {
-            return Boolean.valueOf((Boolean) value);
+    protected Integer doConvert(Object value, ConverterFormatter<?> formatter) throws Exception {
+        if (value instanceof Number) {
+            return Integer.valueOf(((Number) value).intValue());
         }
         if (value instanceof String) {
-            String string = ((String) value);
-            return Boolean.valueOf("y".equalsIgnoreCase(string) || "on".equalsIgnoreCase(string)
-                    || "true".equalsIgnoreCase(string) || "yes".equalsIgnoreCase(string));
+            String string = ((String) value).trim();
+            if (!string.isEmpty()) {
+                if (formatter == null) {
+                    return Integer.decode(string);
+                }
+                return doConvert(formatter.parse(string), null);
+            }
         }
         return null;
     }

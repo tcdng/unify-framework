@@ -17,8 +17,6 @@
 package com.tcdng.unify.core.data;
 
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.data.BeanValueStore;
-import com.tcdng.unify.core.data.ValueStore;
 import com.tcdng.unify.core.format.Formatter;
 
 /**
@@ -49,5 +47,9 @@ public class ValueStoreWriter {
 
     public void write(String fieldName, Object value, Formatter<?> formatter) throws UnifyException {
         valueStore.store(fieldName, value, formatter);
+    }
+    
+    public Object getValueObject() {
+        return valueStore.getValueObject();
     }
 }

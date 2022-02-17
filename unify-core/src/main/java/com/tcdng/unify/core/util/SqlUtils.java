@@ -255,6 +255,11 @@ public final class SqlUtils {
                 IDENTIFIER_SUFFIX_FOREIGNKEY);
     }
 
+    public static String resolveForeignKeyConstraintNameConflict(String constraintName, int conflictIndex) {
+        StringBuilder sb = new StringBuilder(constraintName);
+        sb.insert(constraintName.length() - IDENTIFIER_SUFFIX_FOREIGNKEY.length(), "" + conflictIndex);
+        return sb.toString();    }
+    
     /**
      * Generates a unique constraint name.
      * 

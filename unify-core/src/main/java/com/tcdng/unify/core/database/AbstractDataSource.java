@@ -18,6 +18,7 @@ package com.tcdng.unify.core.database;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.tcdng.unify.convert.constants.EnumConst;
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
@@ -25,7 +26,6 @@ import com.tcdng.unify.core.annotation.StaticList;
 import com.tcdng.unify.core.annotation.Table;
 import com.tcdng.unify.core.annotation.TableExt;
 import com.tcdng.unify.core.annotation.View;
-import com.tcdng.unify.core.constant.EnumConst;
 import com.tcdng.unify.core.util.AnnotationUtils;
 import com.tcdng.unify.core.util.StringUtils;
 

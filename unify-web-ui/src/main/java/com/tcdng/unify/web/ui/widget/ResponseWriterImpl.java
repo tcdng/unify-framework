@@ -101,6 +101,20 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
     }
 
     @Override
+    public ResponseWriter writeResolvedApplicationMessage(String message, Object... params) throws UnifyException {
+        String msg = super.resolveApplicationMessage(message, params);
+        writeWithHtmlEscape(msg);
+        return this;
+    }
+
+    @Override
+    public ResponseWriter writeResolvedSessionMessage(String message, Object... params) throws UnifyException {
+        String msg = super.resolveSessionMessage(message, params);
+        writeWithHtmlEscape(msg);
+        return this;
+    }
+
+    @Override
 	public ResponseWriter writeStructureAndContent(Widget component) throws UnifyException {
 		((WidgetWriter) getWriter(component)).writeStructureAndContent(this, component);
 		return this;

@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.UUID;
 
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyComponentSettings;
@@ -267,7 +268,8 @@ public final class UnifyConfigUtils {
             UnifyConfig unifyConfig = XmlConfigUtils.readXmlConfig(UnifyConfig.class, xmlConfigObject);
             if (unifyConfig != null) {
                 uccb.deploymentVersion(unifyConfig.getVersion());
-                uccb.nodeId(unifyConfig.getNodeId());
+//                uccb.nodeId(unifyConfig.getNodeId());
+                uccb.nodeId(UUID.randomUUID().toString());
                 uccb.productionMode(unifyConfig.isProduction());
                 uccb.clusterMode(unifyConfig.isCluster());
 

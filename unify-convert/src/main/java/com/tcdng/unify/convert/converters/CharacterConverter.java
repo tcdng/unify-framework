@@ -13,9 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.convert;
-
-import com.tcdng.unify.core.format.Formatter;
+package com.tcdng.unify.convert.converters;
 
 /**
  * A value to character converter.
@@ -26,7 +24,7 @@ import com.tcdng.unify.core.format.Formatter;
 public class CharacterConverter extends AbstractConverter<Character> {
 
     @Override
-    protected Character doConvert(Object value, Formatter<?> formatter) throws Exception {
+    protected Character doConvert(Object value, ConverterFormatter<?> formatter) throws Exception {
         if (value instanceof Character) {
             return (Character) value;
         }

@@ -23,6 +23,8 @@ import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.format.Formatter;
 import com.tcdng.unify.core.util.DataUtils;
+import com.tcdng.unify.core.util.GetterSetterInfo;
+import com.tcdng.unify.core.util.ReflectUtils;
 
 /**
  * Abstract list value store.
@@ -32,11 +34,11 @@ import com.tcdng.unify.core.util.DataUtils;
  */
 public abstract class AbstractListValueStore<T> implements ValueStore {
 
-    private List<? extends T> storage;
+    protected List<? extends T> storage;
+
+    protected int dataIndex;
 
     private String dataMarker;
-
-    private int dataIndex;
 
     private Map<String, Object> temp;
     
@@ -64,6 +66,11 @@ public abstract class AbstractListValueStore<T> implements ValueStore {
     @Override
     public <U> U retrieve(Class<U> type, String name) throws UnifyException {
         return DataUtils.convert(type, retrieve(name));
+    }
+
+    @Override
+    public <U> U retrieve(Class<U> type, String name, Formatter<?> formatter) throws UnifyException {
+        return DataUtils.convert(type, retrieve(name), formatter);
     }
 
     @Override
@@ -219,6 +226,16 @@ public abstract class AbstractListValueStore<T> implements ValueStore {
         }
 
         return writer;
+    }
+
+    @Override
+    public void copy(ValueStore source) throws UnifyException {
+        for (GetterSetterInfo getterSetterInfo : ReflectUtils.getGetterSetterList(storage.get(dataIndex).getClass())) {
+            if (getterSetterInfo.isGetterSetter()) {
+                String fieldName = getterSetterInfo.getName();
+                store(fieldName, source.retrieve(fieldName));
+            }
+        }
     }
 
     @Override

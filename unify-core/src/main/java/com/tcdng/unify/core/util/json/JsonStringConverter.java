@@ -27,7 +27,7 @@ import com.eclipsesource.json.JsonValue;
 public class JsonStringConverter implements JsonValueConverter<String> {
 
     @Override
-    public String read(JsonValue jsonValue) throws Exception {
+    public String read(Class<String> clazz, JsonValue jsonValue) throws Exception {
         if (jsonValue.isNull()) {
             return null;
         }

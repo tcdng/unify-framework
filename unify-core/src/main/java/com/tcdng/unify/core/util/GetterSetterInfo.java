@@ -74,12 +74,28 @@ public class GetterSetterInfo {
         return argumentType1;
     }
 
+    void setArgumentType0(Class<?> argumentType0) {
+        if (this.argumentType0 == null) {
+            this.argumentType0 = argumentType0;
+        }
+    }
+
+    void setArgumentType1(Class<?> argumentType1) {
+        if (this.argumentType1 == null) {
+            this.argumentType1 = argumentType1;
+        }
+    }
+
     public boolean isGetter() {
         return this.getter != null;
     }
 
     public boolean isSetter() {
         return this.setter != null;
+    }
+
+    public boolean isGetterSetter() {
+        return this.getter != null && this.setter != null;
     }
 
     public boolean isParameterArgumented0() {

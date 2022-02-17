@@ -26,10 +26,6 @@ import com.eclipsesource.json.JsonValue;
  */
 public class JsonIntArrayConverter extends AbstractJsonArrayConverter<Integer> {
 
-    public JsonIntArrayConverter() {
-        super(Integer.class);
-    }
-
     @Override
     protected Integer getValue(JsonValue jsonValue) throws Exception {
         if (jsonValue.isNull()) {

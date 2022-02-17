@@ -17,6 +17,7 @@ package com.tcdng.unify.core.format;
 
 import java.util.Locale;
 
+import com.tcdng.unify.convert.converters.ConverterFormatter;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.upl.UplComponent;
 
@@ -27,7 +28,7 @@ import com.tcdng.unify.core.upl.UplComponent;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public interface Formatter<T> extends UplComponent {
+public interface Formatter<T> extends UplComponent, ConverterFormatter<T> {
 
     /**
      * Returns the formatter format helper.

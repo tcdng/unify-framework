@@ -118,8 +118,8 @@ public abstract class FactoryMap<T, U> {
                     value = map.get(key);
                     if (value == null) {
                         value = create(key, params);
-                        if (value != null && keep(value)) {
-                            map.put(key, value);
+                        if (value != null && onCreate(value)) {
+                            put(key, value);
                         }
                     }
                 }
@@ -227,9 +227,11 @@ public abstract class FactoryMap<T, U> {
      *            the key
      * @param value
      *            the value to set
+     * @throws Exception
+     *             if an error occurs
      */
-    protected void preset(T key, U value) {
-        map.put(key, value);
+    protected void preset(T key, U value) throws Exception {
+        put(key, value);
     }
 
     /**
@@ -258,11 +260,12 @@ public abstract class FactoryMap<T, U> {
      *             if an error occurs
      */
     protected U put(T key, U value) throws Exception {
+        onPut(value);
         return map.put(key, value);
     }
 
     /**
-     * Checks if created value should be kept in map.
+     * Executes after creation of object.
      * 
      * @param value
      *            the value to test
@@ -270,8 +273,21 @@ public abstract class FactoryMap<T, U> {
      * @throws Exception
      *             if an error occurs
      */
-    protected boolean keep(U value) throws Exception {
+    protected boolean onCreate(U value) throws Exception {
         return true;
+    }
+
+    /**
+     * Executes after put of object.
+     * 
+     * @param value
+     *            the value to test
+     * @return a true if value is to be retained
+     * @throws Exception
+     *             if an error occurs
+     */
+    protected void onPut(U value) throws Exception {
+
     }
 
     /**

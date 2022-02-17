@@ -595,6 +595,23 @@ public final class ReflectUtils {
         return getterSetterInfo;
     }
 
+    public static void updateTypePropertyArgumentTypes(String typeClassName, List<ArgumentTypeInfo> argumentInfos)
+            throws UnifyException {
+        Class<?> beanClass = ReflectUtils.classForName(typeClassName);
+        Map<String, GetterSetterInfo> map = ReflectUtils.getGetterSetterMap(beanClass);
+        for (ArgumentTypeInfo argumentTypeInfo : argumentInfos) {
+            GetterSetterInfo getterSetterInfo = map.get(argumentTypeInfo.getFieldName());
+            Class<?> argumentType0 = argumentTypeInfo.getArgumentTypeName0() != null
+                    ? ReflectUtils.classForName(argumentTypeInfo.getArgumentTypeName0())
+                    : null;
+            Class<?> argumentType1 = argumentTypeInfo.getArgumentTypeName1() != null
+                    ? ReflectUtils.classForName(argumentTypeInfo.getArgumentTypeName1())
+                    : null;
+            getterSetterInfo.setArgumentType0(argumentType0);
+            getterSetterInfo.setArgumentType1(argumentType1);
+        }
+    }
+    
     /**
      * Returns all getter/setter information for a bean class.
      * 

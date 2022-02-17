@@ -13,33 +13,37 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.convert;
+package com.tcdng.unify.convert.converters;
 
-import com.tcdng.unify.core.format.Formatter;
+import java.util.Date;
 
 /**
- * A value to float converter.
+ * A value to long converter.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class FloatConverter extends AbstractConverter<Float> {
+public class LongConverter extends AbstractConverter<Long> {
 
     @Override
-    protected Float doConvert(Object value, Formatter<?> formatter) throws Exception {
+    protected Long doConvert(Object value, ConverterFormatter<?> formatter) throws Exception {
         if (value instanceof Number) {
-            return Float.valueOf(((Number) value).floatValue());
+            return Long.valueOf(((Number) value).longValue());
         }
+        
+        if (value instanceof Date) {
+            return Long.valueOf(((Date) value).getTime());
+        }
+        
         if (value instanceof String) {
             String string = ((String) value).trim();
             if (!string.isEmpty()) {
                 if (formatter == null) {
-                    return Float.valueOf(string);
+                    return Long.decode(string);
                 }
                 return doConvert(formatter.parse(string), null);
             }
         }
         return null;
     }
-
 }

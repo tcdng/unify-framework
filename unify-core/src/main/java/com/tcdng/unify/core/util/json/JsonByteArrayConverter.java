@@ -30,7 +30,7 @@ import com.eclipsesource.json.JsonValue;
  */
 public class JsonByteArrayConverter implements JsonValueConverter<byte[]> {
     @Override
-    public byte[] read(JsonValue jsonValue) throws Exception {
+    public byte[] read(Class<byte[]> clazz, JsonValue jsonValue) throws Exception {
         if (jsonValue.isNull()) {
             return null;
         }

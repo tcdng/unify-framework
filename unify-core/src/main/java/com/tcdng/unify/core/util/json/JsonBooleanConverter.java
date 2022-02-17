@@ -26,7 +26,7 @@ import com.eclipsesource.json.JsonValue;
  */
 public class JsonBooleanConverter implements JsonValueConverter<Boolean> {
     @Override
-    public Boolean read(JsonValue jsonValue) throws Exception {
+    public Boolean read(Class<Boolean> clazz, JsonValue jsonValue) throws Exception {
         if (jsonValue.isNull()) {
             return null;
         }

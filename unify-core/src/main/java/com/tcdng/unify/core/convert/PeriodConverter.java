@@ -16,9 +16,10 @@
 
 package com.tcdng.unify.core.convert;
 
+import com.tcdng.unify.convert.converters.AbstractConverter;
+import com.tcdng.unify.convert.converters.ConverterFormatter;
 import com.tcdng.unify.core.constant.FrequencyUnit;
 import com.tcdng.unify.core.data.Period;
-import com.tcdng.unify.core.format.Formatter;
 
 /**
  * A value to period converter.
@@ -29,7 +30,7 @@ import com.tcdng.unify.core.format.Formatter;
 public class PeriodConverter extends AbstractConverter<Period> {
 
     @Override
-    protected Period doConvert(Object value, Formatter<?> formatter) throws Exception {
+    protected Period doConvert(Object value, ConverterFormatter<?> formatter) throws Exception {
         if (value instanceof Period) {
             return (Period) value;
         }

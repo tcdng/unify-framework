@@ -13,10 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.convert;
-
-import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.format.Formatter;
+package com.tcdng.unify.convert.converters;
 
 /**
  * Used for converting a value to a particular type.
@@ -34,8 +31,8 @@ public interface Converter<T> {
      * @param formatter
      *            for conversions that need formatting information. Can be null.
      * @return the converted value
-     * @throws UnifyException
+     * @throws Exception
      *             if an error occurs
      */
-    T convert(Object value, Formatter<?> formatter) throws UnifyException;
+    T convert(Object value, ConverterFormatter<?> formatter) throws Exception;
 }

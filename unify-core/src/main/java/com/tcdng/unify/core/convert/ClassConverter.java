@@ -15,7 +15,8 @@
  */
 package com.tcdng.unify.core.convert;
 
-import com.tcdng.unify.core.format.Formatter;
+import com.tcdng.unify.convert.converters.AbstractConverter;
+import com.tcdng.unify.convert.converters.ConverterFormatter;
 import com.tcdng.unify.core.util.ReflectUtils;
 
 /**
@@ -28,7 +29,7 @@ import com.tcdng.unify.core.util.ReflectUtils;
 public class ClassConverter extends AbstractConverter<Class<?>> {
 
     @Override
-    protected Class<?> doConvert(Object value, Formatter<?> formatter) throws Exception {
+    protected Class<?> doConvert(Object value, ConverterFormatter<?> formatter) throws Exception {
         if (value instanceof Class) {
             return (Class<?>) value;
         }

@@ -20,7 +20,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Types;
 
-import com.tcdng.unify.core.constant.EnumConst;
+import com.tcdng.unify.convert.constants.EnumConst;
 import com.tcdng.unify.core.database.sql.AbstractSqlDataTypePolicy;
 
 /**
