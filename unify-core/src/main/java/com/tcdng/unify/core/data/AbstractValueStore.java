@@ -15,8 +15,11 @@
  */
 package com.tcdng.unify.core.data;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.format.Formatter;
@@ -185,6 +188,32 @@ public abstract class AbstractValueStore<T> implements ValueStore {
             if (getterSetterInfo.isGetterSetter()) {
                 String fieldName = getterSetterInfo.getName();
                 store(fieldName, source.retrieve(fieldName));
+            }
+        }
+    }
+
+    @Override
+    public void copyWithExclusions(ValueStore source, String... exclusionFieldNames) throws UnifyException {
+        Set<String> exclusion = new HashSet<String>(Arrays.asList(exclusionFieldNames));
+        for (GetterSetterInfo getterSetterInfo : ReflectUtils.getGetterSetterList(storage.getClass())) {
+            if (getterSetterInfo.isGetterSetter()) {
+                String fieldName = getterSetterInfo.getName();
+                if (!exclusion.contains(fieldName)) {
+                    store(fieldName, source.retrieve(fieldName));
+                }
+            }
+        }
+    }
+
+    @Override
+    public void copyWithInclusions(ValueStore source, String... inclusionFieldNames) throws UnifyException {
+        Set<String> inclusion = new HashSet<String>(Arrays.asList(inclusionFieldNames));
+        for (GetterSetterInfo getterSetterInfo : ReflectUtils.getGetterSetterList(storage.getClass())) {
+            if (getterSetterInfo.isGetterSetter()) {
+                String fieldName = getterSetterInfo.getName();
+                if (inclusion.contains(fieldName)) {
+                    store(fieldName, source.retrieve(fieldName));
+                }
             }
         }
     }
