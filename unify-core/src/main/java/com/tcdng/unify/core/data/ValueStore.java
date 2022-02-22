@@ -323,6 +323,30 @@ public interface ValueStore {
      *                        if an error occurs
      */
     void copy(ValueStore source) throws UnifyException;
+
+    /**
+     * Copies supplied value store to this object with exclusions.
+     * 
+     * @param source
+     *                            the source value store
+     * @param exclusionFieldNames
+     *                            the fields to exclude from copy.
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    void copyWithExclusions(ValueStore source, String... exclusionFieldNames) throws UnifyException;
+
+    /**
+     * Copies supplied value store to this object with inclusions.
+     * 
+     * @param source
+     *                            the source value store
+     * @param inclusionFieldNames
+     *                            the fields to include in copy.
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    void copyWithInclusions(ValueStore source, String... inclusionFieldNames) throws UnifyException;
     
     /**
      * Gets reader for this value store object.

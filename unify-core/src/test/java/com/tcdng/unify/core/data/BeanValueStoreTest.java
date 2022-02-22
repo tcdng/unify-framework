@@ -187,4 +187,24 @@ public class BeanValueStoreTest {
         assertEquals("24 Parklane", address.getLine1());
         assertEquals("Apapa Lagos", address.getLine2());
     }
+
+    @Test
+    public void testCopyWithExclusions() throws Exception {
+        Address address = new Address();
+        address.setLine2("Ibadan, Oyo");
+        BeanValueStore bvs = new BeanValueStore(address);
+        bvs.copyWithExclusions(new BeanValueStore(new Address("24 Parklane", "Apapa Lagos")), "line2");
+        assertEquals("24 Parklane", address.getLine1());
+        assertEquals("Ibadan, Oyo", address.getLine2());
+    }
+
+    @Test
+    public void testCopyWithInclusions() throws Exception {
+        Address address = new Address();
+        address.setLine2("Ibadan, Oyo");
+        BeanValueStore bvs = new BeanValueStore(address);
+        bvs.copyWithInclusions(new BeanValueStore(new Address("24 Parklane", "Apapa Lagos")), "line2");
+        assertNull(address.getLine1());
+        assertEquals("Apapa Lagos", address.getLine2());
+    }
 }

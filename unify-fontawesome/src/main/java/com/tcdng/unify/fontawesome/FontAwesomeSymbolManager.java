@@ -155,6 +155,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("swap", "f362");
         registerSymbol("sync", "f2f1");
         registerSymbol("table", "f0ce");
+        registerSymbol("table-list", "f00b");
         registerSymbol("tasks", "f0ae");
         registerSymbol("thumbtack", "f08d");
         registerSymbol("times-circle", "f057");
