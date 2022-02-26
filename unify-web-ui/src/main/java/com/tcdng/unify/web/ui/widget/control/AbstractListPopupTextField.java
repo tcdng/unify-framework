@@ -15,8 +15,14 @@
  */
 package com.tcdng.unify.web.ui.widget.control;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.UplAttribute;
@@ -42,10 +48,13 @@ import com.tcdng.unify.web.ui.widget.WriteWork;
         @UplAttribute(name = "listParams", type = String[].class),
         @UplAttribute(name = "listKey", type = String.class),
         @UplAttribute(name = "listDescription", type = String.class),
-        @UplAttribute(name = "listParamType", type = ListParamType.class, defaultVal = "control") })
+        @UplAttribute(name = "listParamType", type = ListParamType.class, defaultVal = "control"),
+        @UplAttribute(name = "exclude", type = String[].class),})
 public abstract class AbstractListPopupTextField extends AbstractPopupTextField implements ListControl {
 
     private static final String WORK_LIST_INFO = "workListInfo";
+    
+    private Set<String> excludes;
     
     @Override
     public ListControlInfo getListControlInfo(Formatter<Object> formatter) throws UnifyException {
@@ -61,11 +70,33 @@ public abstract class AbstractListPopupTextField extends AbstractPopupTextField 
 
     @Override
     public List<? extends Listable> getListables() throws UnifyException {
+        if (!excludes.isEmpty()) {
+            List<Listable> list = new ArrayList<Listable>();
+            for (Listable listable: getListControlUtils().getListables(this)) {
+                if (!excludes.contains(listable.getListKey())) {
+                    list.add(listable);
+                }
+            }
+            
+            return list;
+        }
+        
         return getListControlUtils().getListables(this);
     }
 
     @Override
     public Map<String, Listable> getListMap() throws UnifyException {
+        if (!excludes.isEmpty()) {
+            Map<String, Listable> map = new HashMap<String, Listable>();
+            for (Map.Entry<String, Listable> entry : getListControlUtils().getListMap(this).entrySet()) {
+                if (!excludes.contains(entry.getKey())) {
+                    map.put(entry.getKey(), entry.getValue());
+                }
+            }
+
+            return map;
+        }
+
         return getListControlUtils().getListMap(this);
     }
 
@@ -97,6 +128,18 @@ public abstract class AbstractListPopupTextField extends AbstractPopupTextField 
     @Override
     public String getListDescription() throws UnifyException {
         return getUplAttribute(String.class, "listDescription");
+    }
+
+    @Override
+    protected void onInitialize() throws UnifyException {
+        super.onInitialize();
+
+        String[] exclude = getUplAttribute(String[].class, "exclude");
+        if (exclude != null && exclude.length > 0) {
+            excludes = new HashSet<String>(Arrays.asList(exclude));
+        } else {
+            excludes = Collections.emptySet();
+        }
     }
 
     private ListControlUtils getListControlUtils() throws UnifyException {
