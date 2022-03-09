@@ -1551,54 +1551,63 @@ ux.rigDateField = function(rgp) {
 		df._pop = rgp.pEnabled;
 		
 		// Month Select
-		var evp = {uId:id};
-		ux.addHdl(df._header1, "click", ux.dfMonthClick, evp);
-		
-		var html = [];
-		for (var i = 0; i < df._longMonthNm.length; i++) {
-			html.push("<a class=\"norm\" id=\"mn_");
-			html.push(id + i);
-			html.push("\">");
-			html.push(df._longMonthNm[i]);
-			html.push("</a>");
-		}
-		df._monthlist.innerHTML = html.join("");
+		if (df._monthlist) {
+			var evp = {uId:id};
+			ux.addHdl(df._header1, "click", ux.dfMonthClick, evp);
 			
-		for (var i = 0; i < df._longMonthNm.length; i++) {
-			var elem = _id("mn_" + id + i);
-			evp = {uId:id, month:i};
-			ux.addHdl(elem, "click", ux.dfMonthSelect, evp);
+			var html = [];
+			for (var i = 0; i < df._longMonthNm.length; i++) {
+				html.push("<a class=\"norm\" id=\"mn_");
+				html.push(id + i);
+				html.push("\">");
+				html.push(df._longMonthNm[i]);
+				html.push("</a>");
+			}
+			df._monthlist.innerHTML = html.join("");
+				
+			for (var i = 0; i < df._longMonthNm.length; i++) {
+				var elem = _id("mn_" + id + i);
+				evp = {uId:id, month:i};
+				ux.addHdl(elem, "click", ux.dfMonthSelect, evp);
+			}
 		}
 		
 		// Year select
-		evp = {uId:id};
-		ux.addHdl(df._header2, "click", ux.dfYearClick, evp);
-		
-		var currYear = new Date().getFullYear();
-		var start_year = df._future ? currYear: currYear - 100;
-		var end_year = df._past ? currYear: currYear + 50;
-
-		html = [];
-		for (var i = start_year; i <= end_year; i++) {
-			html.push("<a class=\"norm\" id=\"yr_");
-			html.push(id + i);
-			html.push("\">");
-			html.push(i);
-			html.push("</a>");
-		}
-		df._header2.start_year = start_year;
-		df._header2.end_year = end_year;
-		df._yearlist.innerHTML = html.join("");
+		if (df._yearlist) {
+			evp = {uId:id};
+			ux.addHdl(df._header2, "click", ux.dfYearClick, evp);
 			
-		for (var i = start_year; i <= end_year; i++) {
-			var elem = _id("yr_" + id + i);
-			evp = {uId:id, year:i};
-			ux.addHdl(elem, "click", ux.dfYearSelect, evp);
+			var currYear = new Date().getFullYear();
+			var start_year = df._future ? currYear: currYear - 100;
+			var end_year = df._past ? currYear: currYear + 50;
+
+			html = [];
+			for (var i = start_year; i <= end_year; i++) {
+				html.push("<a class=\"norm\" id=\"yr_");
+				html.push(id + i);
+				html.push("\">");
+				html.push(i);
+				html.push("</a>");
+			}
+			df._header2.start_year = start_year;
+			df._header2.end_year = end_year;
+			df._yearlist.innerHTML = html.join("");
+				
+			for (var i = start_year; i <= end_year; i++) {
+				var elem = _id("yr_" + id + i);
+				evp = {uId:id, year:i};
+				ux.addHdl(elem, "click", ux.dfYearSelect, evp);
+			}
 		}
 		
 		df.hideSelect = function() {
-			this._monthlist.style.display = "none";	
-			this._yearlist.style.display = "none";	
+			if (this._monthlist) {
+				this._monthlist.style.display = "none";	
+			}
+			
+			if (this._yearlist) {
+				this._yearlist.style.display = "none";	
+			}
 		}
 
 		df.setValue = function(val) {
