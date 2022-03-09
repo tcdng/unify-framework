@@ -494,7 +494,9 @@ z-index:400;}
 .ui-date {width: 160px;}
 .ui-date .dborder {border: solid 1px #A0A0A0; background-color: #FFF;}
 .ui-date .cnav {}
-.ui-date .cdisplay {width: calc(100% - 100px); width: -webkit-calc(100% - 100px); height: 15px; margin: 2px; text-align: center; font-size: 8pt;}
+.ui-date .cdisplay {display:inline-block;width: calc(100% - 100px); width: -webkit-calc(100% - 100px); height: 15px; margin: 2px;text-align: center;}
+.ui-date .cdisplay span{font-size: 8pt;padding: 2px 2px;}
+.ui-date .cdisplay span:hover {cursor:pointer;background-color: #b2b2b2; color:#fff;}
 .ui-date .ccontent {padding:4px;}
 .ui-date .ccontent td{padding:0px !important;border:0px !important;}
 .ui-date .ccontrol {height: 30px; text-align: center; padding: 4px 5px;}
@@ -513,6 +515,13 @@ z-index:400;}
 	border: solid 1px #A0C0A0; background-color: #80a0c0; color:white; cursor: pointer; text-align: right;}
 .ui-date .ccurrent {width: 18px; height: 20px; margin: 2px; border: solid 1px #E0E0C0;
 	background-color: #80C080; color:white; cursor: pointer; text-align: right;}
+.ui-date .clist {display:none;background-color: #fafafa;padding: 4px;position: absolute;top: 0px;bottom: 0px;box-sizing: border-box;width: 100px;margin-left: calc(100% - 100px);
+overflow-x:hidden;overflow-y:scroll;border-top: solid 1px #A0A0A0;border-left: solid 1px #A0A0A0;border-bottom: solid 1px #A0A0A0;}
+.ui-date .clist a {display:block; padding:6px 4px; color:#2C2C2C;white-space:nowrap;
+	background-color: transparent; border: 0px; text-decoration: none; font-size:8pt;}
+.ui-date .clist .norm {}
+.ui-date .clist .norm:hover {background-color: #B2B2B2; color: #FFF;}
+.ui-date .clist .sel {background-color: #5970B2; color: #FFF;}
 
 .ui-yearend .cdisplay {
     width: calc(100% - 52px);
