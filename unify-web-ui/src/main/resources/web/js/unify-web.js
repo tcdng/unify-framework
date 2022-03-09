@@ -1574,14 +1574,14 @@ ux.rigDateField = function(rgp) {
 		
 		// Year select
 		if (df._yearlist) {
-			evp = {uId:id};
+			var evp = {uId:id};
 			ux.addHdl(df._header2, "click", ux.dfYearClick, evp);
 			
 			var currYear = new Date().getFullYear();
 			var start_year = df._future ? currYear: currYear - 100;
 			var end_year = df._past ? currYear: currYear + 50;
 
-			html = [];
+			var html = [];
 			for (var i = start_year; i <= end_year; i++) {
 				html.push("<a class=\"norm\" id=\"yr_");
 				html.push(id + i);
@@ -1594,7 +1594,7 @@ ux.rigDateField = function(rgp) {
 			df._yearlist.innerHTML = html.join("");
 				
 			for (var i = start_year; i <= end_year; i++) {
-				var elem = _id("yr_" + id + i);
+				elem = _id("yr_" + id + i);
 				evp = {uId:id, year:i};
 				ux.addHdl(elem, "click", ux.dfYearSelect, evp);
 			}
