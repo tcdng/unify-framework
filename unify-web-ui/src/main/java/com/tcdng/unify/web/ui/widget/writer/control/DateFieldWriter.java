@@ -46,28 +46,51 @@ public class DateFieldWriter extends AbstractPopupTextFieldWriter {
         writeTagStyleClass(writer, "dborder");
         writer.write(">");
 
+        // Top section
         writer.write("<div class=\"cnav\">");
         if (type.supportsYear()) {
             writeButton(writer, dateField.getPrefixedId("decy_"), "cscroll", null, "<<");
         }
         
         writeButton(writer, dateField.getPrefixedId("decm_"), "cscroll", null, "<");
+        writer.write("<div class=\"cdisplay\">");
         writer.write("<span");
-        writeTagId(writer, dateField.getPrefixedId("disp_"));
-        writeTagStyleClass(writer, "cdisplay");
+        writeTagId(writer, dateField.getPrefixedId("disp1_"));
         writer.write("></span>");
+        writer.write("<span");
+        writeTagId(writer, dateField.getPrefixedId("disp2_"));
+        writer.write("></span>");
+        writer.write("</div>");
         writeButton(writer, dateField.getPrefixedId("incm_"), "cscroll", null, ">");
         if (type.supportsYear()) {
             writeButton(writer, dateField.getPrefixedId("incy_"), "cscroll", null, ">>");
         }
         
         writer.write("</div>");
+
+        // Mid section
+        writer.write("<div style=\"position:relative;\">");
         writer.write("<div");
         writeTagId(writer, dateField.getPrefixedId("cont_"));
         writeTagStyleClass(writer, "ccontent");
         writer.write(">");
         writer.write("</div>");
 
+        writer.write("<div");
+        writeTagId(writer, dateField.getPrefixedId("month_"));
+        writeTagStyleClass(writer, "clist");
+        writer.write(">");
+        writer.write("</div>");
+
+        writer.write("<div");
+        writeTagId(writer, dateField.getPrefixedId("year_"));
+        writeTagStyleClass(writer, "clist");
+        writer.write(">");
+        writer.write("</div>");
+        
+        writer.write("</div>");
+
+        // Bottom section
         writer.write("<div class=\"ccontrol\">");
         if (type.supportsYear()) {
             writeButton(writer, dateField.getPrefixedId("btnt_"), "cactbutton", "float:left;",

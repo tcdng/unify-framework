@@ -1531,8 +1531,11 @@ ux.rigDateField = function(rgp) {
 	const df = _id(id);
 	if (df) {
 		df._parts = {};
-		df._header = _id("disp_" + id);
+		df._header1 = _id("disp1_" + id);
+		df._header2 = _id("disp2_" + id);
 		df._calendar = _id("cont_" + id);
+		df._monthlist = _id("month_" + id);
+		df._yearlist = _id("year_" + id);
 		df._format = rgp.pPattern;
 		df._padLeft = true;
 		df._shortDayNm = rgp.pShortDayNm;
@@ -1547,6 +1550,57 @@ ux.rigDateField = function(rgp) {
 		df._supportYear = df._standard | df._past | df._future;
 		df._pop = rgp.pEnabled;
 		
+		// Month Select
+		var evp = {uId:id};
+		ux.addHdl(df._header1, "click", ux.dfMonthClick, evp);
+		
+		var html = [];
+		for (var i = 0; i < df._longMonthNm.length; i++) {
+			html.push("<a class=\"norm\" id=\"mn_");
+			html.push(id + i);
+			html.push("\">");
+			html.push(df._longMonthNm[i]);
+			html.push("</a>");
+		}
+		df._monthlist.innerHTML = html.join("");
+			
+		for (var i = 0; i < df._longMonthNm.length; i++) {
+			var elem = _id("mn_" + id + i);
+			evp = {uId:id, month:i};
+			ux.addHdl(elem, "click", ux.dfMonthSelect, evp);
+		}
+		
+		// Year select
+		evp = {uId:id};
+		ux.addHdl(df._header2, "click", ux.dfYearClick, evp);
+		
+		var currYear = new Date().getFullYear();
+		var start_year = df._future ? currYear: currYear - 100;
+		var end_year = df._past ? currYear: currYear + 50;
+
+		html = [];
+		for (var i = start_year; i <= end_year; i++) {
+			html.push("<a class=\"norm\" id=\"yr_");
+			html.push(id + i);
+			html.push("\">");
+			html.push(i);
+			html.push("</a>");
+		}
+		df._header2.start_year = start_year;
+		df._header2.end_year = end_year;
+		df._yearlist.innerHTML = html.join("");
+			
+		for (var i = start_year; i <= end_year; i++) {
+			var elem = _id("yr_" + id + i);
+			evp = {uId:id, year:i};
+			ux.addHdl(elem, "click", ux.dfYearSelect, evp);
+		}
+		
+		df.hideSelect = function() {
+			this._monthlist.style.display = "none";	
+			this._yearlist.style.display = "none";	
+		}
+
 		df.setValue = function(val) {
 			this.setDay(val.getDate());
 			this.setMonth(val.getMonth());
@@ -1593,10 +1647,11 @@ ux.rigDateField = function(rgp) {
 				const year = this._scrollYear;
 
 				// Display month year on header
+				this._header1.innerHTML = this._longMonthNm[month];
+				this._header1.sel = month;
 				if (this._supportYear) {
-					this._header.innerHTML = this._longMonthNm[month] + "&nbsp;" + year;
-				} else {
-					this._header.innerHTML = this._longMonthNm[month];
+					this._header2.innerHTML = year;
+					this._header2.sel = year;
 				}
 
 				// Initialize variables and generate calendar HTML
@@ -1768,12 +1823,72 @@ ux.rigDateField = function(rgp) {
 	}
 }
 
-ux.dfTodayHandler = function(uEv) {
+ux.dfMonthClick = function(uEv) {
+	const evp = uEv.evp;
+	const id = uEv.evp.uId;
+	const mlist = _id("month_" + id);
 	const df = _id(id);
+	
+	const month = df._header1.sel;
+	for (var i = 0; i < df._longMonthNm.length; i++) {
+		_id("mn_" + id + i).className = i == month ? "sel" :"norm"; 
+	}
+
+	df.hideSelect();
+	mlist.style.display = "block";
+	mlist.scrollTop = month * 25;
+}
+
+ux.dfMonthSelect = function(uEv) {
+	const evp = uEv.evp;
+	const id = uEv.evp.uId;
+	const df = _id(id);
+	df.hideSelect();
+
+	if (evp.month != df._header1.sel) {
+		df.setDay(1);
+		df.setMonth(evp.month);
+		df.updateCalendar();
+	}
+}
+
+ux.dfYearClick = function(uEv) {
+	const evp = uEv.evp;
+	const id = uEv.evp.uId;
+	const ylist = _id("year_" + id);
+	const df = _id(id);
+	
+	const year = df._header2.sel;
+	for (var i = df._header2.start_year; i <= df._header2.end_year; i++) {
+		_id("yr_" + id + i).className = i == year ? "sel" :"norm"; 
+	}
+
+	df.hideSelect();
+	ylist.style.display = "block";
+	ylist.scrollTop = (year - df._header2.start_year) * 25;
+}
+
+ux.dfYearSelect = function(uEv) {
+	const evp = uEv.evp;
+	const id = uEv.evp.uId;
+	const df = _id(id);
+	df.hideSelect();
+
+	if (evp.year != df._header2.sel) {
+		df.setDay(1);
+		df.setYear(evp.year);
+		df.updateCalendar();
+	}
+}
+
+ux.dfTodayHandler = function(uEv) {
+	const evp = uEv.evp;
+	const df = _id(uEv.evp.uId);
 	const val = new Date();
 	df.setDay(val.getDate());
 	df.setMonth(val.getMonth());
 	df.setYear(val.getFullYear());	
+	df.hideSelect();
 	ux.hidePopup(null);
 	df.updateCalendar();
 	df.setActual(true);
@@ -1785,6 +1900,7 @@ ux.dfDayHandler = function(id, dayCount) {
 	df.setMonth(df._scrollMonth);
 	df.setYear(df._scrollYear);		
 	df.updateCalendar();
+	df.hideSelect();
 	ux.hidePopup(null);
 	df.setActual(true);
 }
@@ -1812,6 +1928,7 @@ ux.dfScrollHandler = function(uEv) {
 		df._scrollYear = df._scrollYear + evp.uStep;
 	}
 	
+	df.hideSelect();
 	df.updateCalendar();
 }
 
