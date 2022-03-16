@@ -80,6 +80,7 @@ ux.cntSaveIsRemote = false;
 ux.cntSavePath = null;
 ux.cntSaveList = null;
 ux.cntSaveRemoteView = null;
+ux.cntScrollY = -1;
 ux.remoteView = null;
 ux.remoteredirect = [];
 ux.hintTimeout=UNIFY_HIDE_USER_HINT_DISPLAY_PERIOD;
@@ -148,15 +149,27 @@ ux.processJSON = function(jsonstring) {
 	}
 
 	if (ux.cntId) {
-		if (jsonEval.scrollReset) {
-			var elem = _id(ux.cntId);
-			if (elem) {
+		var elem = _id(ux.cntId);
+		if (elem) {
+			if (jsonEval.scrollReset) {
 				elem.scrollTop = 0;
+			} else if (ux.cntScrollY >= 0) {
+				elem.scrollTop = ux.cntScrollY;
 			}
 		}
 	}
 	
 	ux.remoteView = null;
+}
+
+ux.saveContentScroll = function() {
+	ux.cntScrollY = -1;
+	if (ux.cntId) {
+		var elem = _id(ux.cntId);
+		if (elem) {
+			ux.cntScrollY = elem.scrollTop;
+		}
+	}
 }
 
 /** Event parameters */
@@ -507,6 +520,7 @@ ux.ajaxCall = function(ajaxPrms) {
 	}
 	
 	try {
+		ux.saveContentScroll();
 		uAjaxReq.open("POST", ajaxPrms.uURL, true);
 		if (ajaxPrms.uEncoded) {
 			uAjaxReq.setRequestHeader("Content-Type",
