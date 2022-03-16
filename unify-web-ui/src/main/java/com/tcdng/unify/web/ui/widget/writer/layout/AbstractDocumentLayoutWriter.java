@@ -35,7 +35,7 @@ public abstract class AbstractDocumentLayoutWriter extends AbstractDhtmlWriter i
     public void writeStructureAndContent(ResponseWriter writer, DocumentLayout layout, Document document)
             throws UnifyException {
         writer.write("<div");
-        writeTagId(writer, document);
+        writeTagId(writer, "lay_" + document.getId());
         writeTagStyleClass(writer, layout.getStyleClass());
         writeTagStyle(writer, layout.getStyle());
         writer.write(">");
