@@ -435,7 +435,7 @@ public class PackableDocTest extends AbstractUnifyComponentTest {
         PackableDocAudit pda = pDoc.audit();
         assertNotNull(pda);
 
-        Map<String, PackableDocAudit.TrailItem> items = pda.getTrailItems();
+        Map<String, Audit.TrailItem> items = pda.getTrailItems();
         assertNotNull(items);
         assertEquals(5, items.size());
 
@@ -474,7 +474,7 @@ public class PackableDocTest extends AbstractUnifyComponentTest {
         PackableDocAudit pda = pDoc2.audit();
         assertNotNull(pda);
 
-        Map<String, PackableDocAudit.TrailItem> items = pda.getTrailItems();
+        Map<String, Audit.TrailItem> items = pda.getTrailItems();
         assertNotNull(items);
         assertEquals(2, items.size());
 

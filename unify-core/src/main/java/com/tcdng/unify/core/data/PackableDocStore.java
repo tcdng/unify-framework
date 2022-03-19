@@ -26,7 +26,7 @@ import com.tcdng.unify.core.util.ReflectUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class PackableDocStore extends AbstractValueStore<PackableDoc> {
+public class PackableDocStore extends AbstractSingleObjectValueStore<PackableDoc> {
 
     public PackableDocStore(PackableDoc packableDoc) {
         this(packableDoc, null, -1);

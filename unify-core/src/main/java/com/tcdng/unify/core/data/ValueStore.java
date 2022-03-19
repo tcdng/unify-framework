@@ -315,6 +315,17 @@ public interface ValueStore {
     int size();
 
     /**
+     * Finds the differences between value store.
+     * 
+     * @param newSource
+     *                  the new source value store
+     * @return the audit of differences
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    Audit diff(ValueStore newSource) throws UnifyException;
+
+    /**
      * Copies supplied value store to this object.
      * 
      * @param source

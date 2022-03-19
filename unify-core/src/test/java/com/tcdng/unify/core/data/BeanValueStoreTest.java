@@ -26,6 +26,8 @@ import java.util.Date;
 
 import org.junit.Test;
 
+import com.tcdng.unify.core.data.Audit.TrailItem;
+
 /**
  * Bean value store tests.
  * 
@@ -79,16 +81,16 @@ public class BeanValueStoreTest {
         bvs.storeOnNull("line2", "Ungwan Dosa, Kaduna");
         assertEquals("37 Pauwa Road", address.getLine1());
         assertEquals("Ungwan Dosa, Kaduna", address.getLine2());
-        
+
         bvs.storeOnNull("line1", "38 Pauwa Road");
         bvs.storeOnNull("line2", "Ungwan Dosa, Kastina");
         assertEquals("37 Pauwa Road", address.getLine1());
-        assertEquals("Ungwan Dosa, Kaduna", address.getLine2());  
-        
+        assertEquals("Ungwan Dosa, Kaduna", address.getLine2());
+
         bvs.store("line1", "38 Pauwa Road");
         bvs.store("line2", "Ungwan Dosa, Kastina");
         assertEquals("38 Pauwa Road", address.getLine1());
-        assertEquals("Ungwan Dosa, Kastina", address.getLine2());  
+        assertEquals("Ungwan Dosa, Kastina", address.getLine2());
     }
 
     @Test
@@ -121,7 +123,7 @@ public class BeanValueStoreTest {
         assertEquals("17, I Close, 5th Avenue", customer.getAddress().getLine1());
         assertEquals("Festac Town", customer.getAddress().getLine2());
     }
-    
+
     @Test
     public void testIsTempValueBlank() throws Exception {
         Customer customer = new Customer();
@@ -130,7 +132,7 @@ public class BeanValueStoreTest {
         BeanValueStore bvs = new BeanValueStore(customer);
         assertFalse(bvs.isTempValue("surname"));
     }
-    
+
     @Test
     public void testSetTempValue() throws Exception {
         Customer customer = new Customer();
@@ -141,7 +143,7 @@ public class BeanValueStoreTest {
         assertTrue(bvs.isTempValue("surname"));
         assertFalse(bvs.isTempValue("phoneNumber"));
     }
-    
+
     @Test
     public void testGetTempValue() throws Exception {
         Customer customer = new Customer();
@@ -172,11 +174,30 @@ public class BeanValueStoreTest {
         assertNotNull(writer);
         writer.write("line1", "38 Warehouse Road");
         writer.write("line2", "Apapa Lagos");
-        
+
         ValueStoreReader reader = bvs.getReader();
         assertNotNull(reader);
         assertEquals("38 Warehouse Road", reader.read("line1"));
         assertEquals("Apapa Lagos", reader.read("line2"));
+    }
+
+    @Test
+    public void testDiff() throws Exception {
+        BeanValueStore oldValueStore = new BeanValueStore(new Address("24 Parklane", "Apapa Lagos"));
+        BeanValueStore newValueStore = new BeanValueStore(new Address("24 Parklane", "Apapa Lagos"));
+        Audit audit = oldValueStore.diff(newValueStore);
+        assertNotNull(audit);
+        assertEquals(0, audit.size());
+
+        newValueStore = new BeanValueStore(new Address("38 Wharehouse Road", "Apapa Lagos"));
+        audit = oldValueStore.diff(newValueStore);
+        assertNotNull(audit);
+        assertEquals(1, audit.size());
+        TrailItem trial = audit.getTrailItem("line1");
+        assertNotNull(trial);
+        assertEquals("line1", trial.getFieldName());
+        assertEquals("24 Parklane", trial.getOldValue());
+        assertEquals("38 Wharehouse Road", trial.getNewValue());
     }
 
     @Test

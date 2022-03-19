@@ -26,7 +26,7 @@ import com.tcdng.unify.core.util.ReflectUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public class BeanValueStore extends AbstractValueStore<Object> {
+public class BeanValueStore extends AbstractSingleObjectValueStore<Object> {
 
     public BeanValueStore(Object valueBean) {
         this(valueBean, null, -1);

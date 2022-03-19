@@ -25,7 +25,7 @@ import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
-import com.tcdng.unify.core.data.AbstractValueStore;
+import com.tcdng.unify.core.data.AbstractSingleObjectValueStore;
 import com.tcdng.unify.core.format.Formatter;
 import com.tcdng.unify.core.upl.UplElementReferences;
 import com.tcdng.unify.core.util.DataUtils;
@@ -754,7 +754,7 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
 
     }
 
-    public class RowValueStore extends AbstractValueStore<Row> {
+    public class RowValueStore extends AbstractSingleObjectValueStore<Row> {
 
         private RowValueStore(Row row) {
             this(row, null, -1);

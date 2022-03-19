@@ -231,7 +231,7 @@ public class PackableDoc implements Serializable {
             throw new UnifyException(UnifyCoreErrorConstants.DOCUMENT_PACKABLE_NOT_AUDITABLE);
         }
 
-        List<PackableDocAudit.TrailItem> items = new ArrayList<PackableDocAudit.TrailItem>();
+        List<Audit.TrailItem> items = new ArrayList<Audit.TrailItem>();
         for (String fieldName : config.getFieldNames()) {
             Object oldVal = oldValues.get(fieldName);
             Object val = values.get(fieldName);
@@ -245,7 +245,7 @@ public class PackableDoc implements Serializable {
                 }
             }
 
-            items.add(new PackableDocAudit.TrailItem(fieldName, oldVal, val));
+            items.add(new Audit.TrailItem(fieldName, oldVal, val));
         }
 
         return new PackableDocAudit(items);
