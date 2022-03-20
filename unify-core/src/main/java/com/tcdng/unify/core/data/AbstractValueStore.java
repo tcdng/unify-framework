@@ -16,6 +16,7 @@
 package com.tcdng.unify.core.data;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -50,6 +51,31 @@ public abstract class AbstractValueStore implements ValueStore {
     }
 
     @Override
+    public Audit diff(ValueStore newSource, String... inclusionFieldNames) throws UnifyException {
+        Set<String> inclusion = new HashSet<String>(Arrays.asList(inclusionFieldNames));
+        return this.diff(newSource, inclusion);
+    }
+
+    @Override
+    public Audit diff(ValueStore newSource, Collection<String> inclusionFieldNames) throws UnifyException {
+        Audit.Builder ab = Audit.newBuilder();
+        for (GetterSetterInfo getterSetterInfo : ReflectUtils.getGetterSetterList(getDataClass())) {
+            if (getterSetterInfo.isGetterSetter()) {
+                String fieldName = getterSetterInfo.getName();
+                if (inclusionFieldNames.contains(fieldName)) {
+                    Object oldVal = retrieve(fieldName);
+                    Object newVal = newSource.retrieve(fieldName);
+                    if (!DataUtils.equals(oldVal, newVal)) {
+                        ab.addItem(fieldName, oldVal, newVal);
+                    }
+                }
+            }
+        }
+
+        return ab.build();
+    }
+
+    @Override
     public void copy(ValueStore source) throws UnifyException {
         for (GetterSetterInfo getterSetterInfo : ReflectUtils.getGetterSetterList(getDataClass())) {
             if (getterSetterInfo.isGetterSetter()) {
@@ -62,10 +88,21 @@ public abstract class AbstractValueStore implements ValueStore {
     @Override
     public void copyWithExclusions(ValueStore source, String... exclusionFieldNames) throws UnifyException {
         Set<String> exclusion = new HashSet<String>(Arrays.asList(exclusionFieldNames));
+        copyWithExclusions(source, exclusion);
+    }
+
+    @Override
+    public void copyWithInclusions(ValueStore source, String... inclusionFieldNames) throws UnifyException {
+        Set<String> inclusion = new HashSet<String>(Arrays.asList(inclusionFieldNames));
+        copyWithInclusions(source, inclusion);
+    }
+
+    @Override
+    public void copyWithExclusions(ValueStore source, Collection<String> exclusionFieldNames) throws UnifyException {
         for (GetterSetterInfo getterSetterInfo : ReflectUtils.getGetterSetterList(getDataClass())) {
             if (getterSetterInfo.isGetterSetter()) {
                 String fieldName = getterSetterInfo.getName();
-                if (!exclusion.contains(fieldName)) {
+                if (!exclusionFieldNames.contains(fieldName)) {
                     store(fieldName, source.retrieve(fieldName));
                 }
             }
@@ -73,12 +110,11 @@ public abstract class AbstractValueStore implements ValueStore {
     }
 
     @Override
-    public void copyWithInclusions(ValueStore source, String... inclusionFieldNames) throws UnifyException {
-        Set<String> inclusion = new HashSet<String>(Arrays.asList(inclusionFieldNames));
+    public void copyWithInclusions(ValueStore source, Collection<String> inclusionFieldNames) throws UnifyException {
         for (GetterSetterInfo getterSetterInfo : ReflectUtils.getGetterSetterList(getDataClass())) {
             if (getterSetterInfo.isGetterSetter()) {
                 String fieldName = getterSetterInfo.getName();
-                if (inclusion.contains(fieldName)) {
+                if (inclusionFieldNames.contains(fieldName)) {
                     store(fieldName, source.retrieve(fieldName));
                 }
             }

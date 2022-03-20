@@ -15,6 +15,8 @@
  */
 package com.tcdng.unify.core.data;
 
+import java.util.Collection;
+
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.format.Formatter;
 
@@ -326,6 +328,32 @@ public interface ValueStore {
     Audit diff(ValueStore newSource) throws UnifyException;
 
     /**
+     * Finds the differences between value store.
+     * 
+     * @param newSource
+     *                            the new source value store
+     * @param inclusionFieldNames
+     *                            the fields to include in difference check.
+     * @return the audit of differences
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    Audit diff(ValueStore newSource, String... inclusionFieldNames) throws UnifyException;
+
+    /**
+     * Finds the differences between value store.
+     * 
+     * @param newSource
+     *                            the new source value store
+     * @param inclusionFieldNames
+     *                            the fields to include in difference check.
+     * @return the audit of differences
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    Audit diff(ValueStore newSource, Collection<String> inclusionFieldNames) throws UnifyException;
+
+    /**
      * Copies supplied value store to this object.
      * 
      * @param source
@@ -358,6 +386,30 @@ public interface ValueStore {
      *                        if an error occurs
      */
     void copyWithInclusions(ValueStore source, String... inclusionFieldNames) throws UnifyException;
+
+    /**
+     * Copies supplied value store to this object with exclusions.
+     * 
+     * @param source
+     *                            the source value store
+     * @param exclusionFieldNames
+     *                            the fields to exclude from copy.
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    void copyWithExclusions(ValueStore source, Collection<String> exclusionFieldNames) throws UnifyException;
+
+    /**
+     * Copies supplied value store to this object with inclusions.
+     * 
+     * @param source
+     *                            the source value store
+     * @param inclusionFieldNames
+     *                            the fields to include in copy.
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    void copyWithInclusions(ValueStore source, Collection<String> inclusionFieldNames) throws UnifyException;
     
     /**
      * Gets reader for this value store object.
