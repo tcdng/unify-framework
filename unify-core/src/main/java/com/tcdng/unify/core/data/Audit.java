@@ -53,6 +53,16 @@ public class Audit {
         return items.containsKey(name);
     }
 
+    public boolean isWithAnyItem(String... names) {
+        for (String name : names) {
+            if (items.containsKey(name)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public Set<String> getItemNames() {
         return items.keySet();
     }
