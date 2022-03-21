@@ -123,5 +123,10 @@ public class Audit {
         public Object getNewValue() {
             return newValue;
         }
+
+        @Override
+        public String toString() {
+            return "TrailItem [fieldName=" + fieldName + ", oldValue=" + oldValue + ", newValue=" + newValue + "]";
+        }
     }
 }
