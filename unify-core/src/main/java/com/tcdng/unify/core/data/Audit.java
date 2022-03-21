@@ -75,6 +75,11 @@ public class Audit {
         return new Builder();
     }
 
+    @Override
+    public String toString() {
+        return "Audit [items=" + items + "]";
+    }
+
     public static class Builder {
 
         private List<TrailItem> items;
