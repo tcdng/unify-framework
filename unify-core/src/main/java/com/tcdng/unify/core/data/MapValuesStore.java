@@ -24,7 +24,7 @@ import com.tcdng.unify.core.format.Formatter;
  * @author Lateef Ojulari
  * @version 1.0
  */
-public class MapValuesStore extends AbstractValueStore<MapValues> {
+public class MapValuesStore extends AbstractSingleObjectValueStore<MapValues> {
 
     public MapValuesStore(MapValues map) {
         super(map, null, -1);

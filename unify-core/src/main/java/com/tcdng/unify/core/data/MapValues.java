@@ -37,12 +37,13 @@ public class MapValues {
 		this.map = new HashMap<String, MapValue>();
 	}
 
-	public void addValue(String name, Class<?> type) {
+	public MapValues addValue(String name, Class<?> type) {
 		MapValue mapValue = new MapValue(type);
 		this.map.put(name, mapValue);
+		return this;
 	}
 
-	public void addValue(String name, Class<?> type, Object value) throws UnifyException {
+	public MapValues addValue(String name, Class<?> type, Object value) throws UnifyException {
 		MapValue mapValue = new MapValue(type);
 		if (value != null && !type.isAssignableFrom(value.getClass())) {
 			value = DataUtils.convert(type, value);
@@ -50,6 +51,7 @@ public class MapValues {
 
 		mapValue.setValue(value);
 		this.map.put(name, mapValue);
+        return this;
 	}
 
 	public Object getValue(String name) throws UnifyException {
@@ -60,12 +62,13 @@ public class MapValues {
 		return mapValue.getValue();
 	}
 
-	public void setValue(String name, Object value, Formatter<?> formatter) throws UnifyException {
+	public MapValues setValue(String name, Object value, Formatter<?> formatter) throws UnifyException {
 		MapValue mapValue = this.map.get(name);
 		if (mapValue == null) {
 			throw new UnifyException(UnifyCoreErrorConstants.MAPVALUESTORE_NO_SUCH_ENTRY, name);
 		}
 		mapValue.setValue(DataUtils.convert(mapValue.getType(), value, formatter));
+        return this;
 	}
 
 	public boolean isMapValue(String name) {

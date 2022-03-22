@@ -16,13 +16,11 @@
 package com.tcdng.unify.core.data;
 
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.format.Formatter;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.GetterSetterInfo;
 import com.tcdng.unify.core.util.ReflectUtils;
@@ -33,158 +31,53 @@ import com.tcdng.unify.core.util.ReflectUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public abstract class AbstractValueStore<T> implements ValueStore {
-
-    protected T storage;
-
-    private String dataMarker;
-
-    private int dataIndex;
-
-    private Map<String, Object> temp;
-
-    private ValueStoreReader reader;
-
-    private ValueStoreWriter writer;
-
-    public AbstractValueStore(T storage, String dataMarker, int dataIndex) {
-        this.storage = storage;
-        this.dataMarker = dataMarker;
-        this.dataIndex = dataIndex;
-    }
+public abstract class AbstractValueStore implements ValueStore {
 
     @Override
-    public Object retrieve(int storageIndex, String name) throws UnifyException {
-        return retrieve(name);
-    }
-
-    @Override
-    public Object retrieve(String name) throws UnifyException {
-        return doRetrieve(name);
-    }
-
-    @Override
-    public <U> U retrieve(Class<U> type, String name) throws UnifyException {
-        return DataUtils.convert(type, doRetrieve(name));
-    }
-
-    @Override
-    public <U> U retrieve(Class<U> type, String name, Formatter<?> formatter) throws UnifyException {
-        return DataUtils.convert(type, doRetrieve(name), formatter);
-    }
-
-    @Override
-    public <U> U retrieve(Class<U> type, int storageIndex, String name) throws UnifyException {
-        return DataUtils.convert(type, retrieve(storageIndex, name));
-    }
-
-    @Override
-    public void store(int storageIndex, String name, Object value) throws UnifyException {
-        store(name, value);
-    }
-
-    @Override
-    public void store(int storageIndex, String name, Object value, Formatter<?> formatter) throws UnifyException {
-        store(name, value, formatter);
-    }
-
-    @Override
-    public void store(String name, Object value) throws UnifyException {
-        doStore(name, value, null);
-    }
-
-    @Override
-    public void store(String name, Object value, Formatter<?> formatter) throws UnifyException {
-        doStore(name, value, formatter);
-    }
-
-    @Override
-    public void storeOnNull(int storageIndex, String name, Object value) throws UnifyException {
-        if (retrieve(storageIndex, name) == null) {
-            store(name, value);
-        }
-    }
-
-    @Override
-    public void storeOnNull(int storageIndex, String name, Object value, Formatter<?> formatter) throws UnifyException {
-        if (retrieve(storageIndex, name) == null) {
-            store(name, value, formatter);
-        }
-    }
-
-    @Override
-    public void storeOnNull(String name, Object value) throws UnifyException {
-        if (retrieve(name) == null) {
-            doStore(name, value, null);
-        }
-    }
-
-    @Override
-    public void storeOnNull(String name, Object value, Formatter<?> formatter) throws UnifyException {
-        if (retrieve(name) == null) {
-            doStore(name, value, formatter);
-        }
-    }
-
-    @Override
-    public Object getTempValue(String name) throws UnifyException {
-        if (temp != null) {
-            return temp.get(name);
+    public Audit diff(ValueStore newSource) throws UnifyException {
+        Audit.Builder ab = Audit.newBuilder();
+        for (GetterSetterInfo getterSetterInfo : ReflectUtils.getGetterSetterList(getDataClass())) {
+            if (getterSetterInfo.isGetterSetter()) {
+                String fieldName = getterSetterInfo.getName();
+                Object oldVal = retrieve(fieldName);
+                Object newVal = newSource.retrieve(fieldName);
+                if (!DataUtils.equals(oldVal, newVal)) {
+                    ab.addItem(fieldName, oldVal, newVal);
+                }
+            }
         }
 
-        return null;
+        return ab.build();
     }
 
     @Override
-    public <U> U getTempValue(Class<U> type, String name) throws UnifyException {
-        if (temp != null) {
-            return DataUtils.convert(type, temp.get(name));
+    public Audit diff(ValueStore newSource, String... inclusionFieldNames) throws UnifyException {
+        Set<String> inclusion = new HashSet<String>(Arrays.asList(inclusionFieldNames));
+        return this.diff(newSource, inclusion);
+    }
+
+    @Override
+    public Audit diff(ValueStore newSource, Collection<String> inclusionFieldNames) throws UnifyException {
+        Audit.Builder ab = Audit.newBuilder();
+        for (GetterSetterInfo getterSetterInfo : ReflectUtils.getGetterSetterList(getDataClass())) {
+            if (getterSetterInfo.isGetterSetter()) {
+                String fieldName = getterSetterInfo.getName();
+                if (inclusionFieldNames.contains(fieldName)) {
+                    Object oldVal = retrieve(fieldName);
+                    Object newVal = newSource.retrieve(fieldName);
+                    if (!DataUtils.equals(oldVal, newVal)) {
+                        ab.addItem(fieldName, oldVal, newVal);
+                    }
+                }
+            }
         }
 
-        return null;
-    }
-
-    @Override
-    public void setTempValue(String name, Object value) throws UnifyException {
-        if (temp == null) {
-            temp = new HashMap<String, Object>();
-        }
-
-        temp.put(name, value);
-    }
-
-    @Override
-    public boolean isTempValue(String name) {
-        if (temp != null) {
-            return temp.containsKey(name);
-        }
-
-        return false;
-    }
-
-    @Override
-    public String getDataMarker() {
-        return dataMarker;
-    }
-
-    @Override
-    public void setDataMarker(String dataMarker) {
-        this.dataMarker = dataMarker;
-    }
-
-    @Override
-    public int getDataIndex() {
-        return dataIndex;
-    }
-
-    @Override
-    public void setDataIndex(int dataIndex) {
-        this.dataIndex = dataIndex;
+        return ab.build();
     }
 
     @Override
     public void copy(ValueStore source) throws UnifyException {
-        for (GetterSetterInfo getterSetterInfo : ReflectUtils.getGetterSetterList(storage.getClass())) {
+        for (GetterSetterInfo getterSetterInfo : ReflectUtils.getGetterSetterList(getDataClass())) {
             if (getterSetterInfo.isGetterSetter()) {
                 String fieldName = getterSetterInfo.getName();
                 store(fieldName, source.retrieve(fieldName));
@@ -195,23 +88,21 @@ public abstract class AbstractValueStore<T> implements ValueStore {
     @Override
     public void copyWithExclusions(ValueStore source, String... exclusionFieldNames) throws UnifyException {
         Set<String> exclusion = new HashSet<String>(Arrays.asList(exclusionFieldNames));
-        for (GetterSetterInfo getterSetterInfo : ReflectUtils.getGetterSetterList(storage.getClass())) {
-            if (getterSetterInfo.isGetterSetter()) {
-                String fieldName = getterSetterInfo.getName();
-                if (!exclusion.contains(fieldName)) {
-                    store(fieldName, source.retrieve(fieldName));
-                }
-            }
-        }
+        copyWithExclusions(source, exclusion);
     }
 
     @Override
     public void copyWithInclusions(ValueStore source, String... inclusionFieldNames) throws UnifyException {
         Set<String> inclusion = new HashSet<String>(Arrays.asList(inclusionFieldNames));
-        for (GetterSetterInfo getterSetterInfo : ReflectUtils.getGetterSetterList(storage.getClass())) {
+        copyWithInclusions(source, inclusion);
+    }
+
+    @Override
+    public void copyWithExclusions(ValueStore source, Collection<String> exclusionFieldNames) throws UnifyException {
+        for (GetterSetterInfo getterSetterInfo : ReflectUtils.getGetterSetterList(getDataClass())) {
             if (getterSetterInfo.isGetterSetter()) {
                 String fieldName = getterSetterInfo.getName();
-                if (inclusion.contains(fieldName)) {
+                if (!exclusionFieldNames.contains(fieldName)) {
                     store(fieldName, source.retrieve(fieldName));
                 }
             }
@@ -219,43 +110,17 @@ public abstract class AbstractValueStore<T> implements ValueStore {
     }
 
     @Override
-    public int size() {
-        return 0;
-    }
-
-    @Override
-    public Object getValueObject() {
-        return storage;
-    }
-
-    @Override
-    public ValueStoreReader getReader() {
-        if (reader == null) {
-            synchronized (this) {
-                if (reader == null) {
-                    reader = new ValueStoreReader(this);
+    public void copyWithInclusions(ValueStore source, Collection<String> inclusionFieldNames) throws UnifyException {
+        for (GetterSetterInfo getterSetterInfo : ReflectUtils.getGetterSetterList(getDataClass())) {
+            if (getterSetterInfo.isGetterSetter()) {
+                String fieldName = getterSetterInfo.getName();
+                if (inclusionFieldNames.contains(fieldName)) {
+                    store(fieldName, source.retrieve(fieldName));
                 }
             }
         }
-
-        return reader;
     }
 
-    @Override
-    public ValueStoreWriter getWriter() {
-        if (writer == null) {
-            synchronized (this) {
-                if (writer == null) {
-                    writer = new ValueStoreWriter(this);
-                }
-            }
-        }
-
-        return writer;
-    }
-
-    protected abstract Object doRetrieve(String property) throws UnifyException;
-
-    protected abstract void doStore(String property, Object value, Formatter<?> formatter) throws UnifyException;
+    protected abstract Class<?> getDataClass() throws UnifyException;
 
 }

@@ -15,17 +15,12 @@
  */
 package com.tcdng.unify.core.data;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.format.Formatter;
 import com.tcdng.unify.core.util.DataUtils;
-import com.tcdng.unify.core.util.GetterSetterInfo;
-import com.tcdng.unify.core.util.ReflectUtils;
 
 /**
  * Abstract array value store.
@@ -33,7 +28,7 @@ import com.tcdng.unify.core.util.ReflectUtils;
  * @author Lateef Ojulari
  * @since 1.0
  */
-public abstract class AbstractArrayValueStore<T> implements ValueStore {
+public abstract class AbstractArrayValueStore<T> extends AbstractValueStore {
 
     protected T[] storage;
 
@@ -193,42 +188,6 @@ public abstract class AbstractArrayValueStore<T> implements ValueStore {
     }
 
     @Override
-    public void copy(ValueStore source) throws UnifyException {
-        for (GetterSetterInfo getterSetterInfo : ReflectUtils.getGetterSetterList(storage[dataIndex].getClass())) {
-            if (getterSetterInfo.isGetterSetter()) {
-                String fieldName = getterSetterInfo.getName();
-                store(fieldName, source.retrieve(fieldName));
-            }
-        }
-    }
-
-    @Override
-    public void copyWithExclusions(ValueStore source, String... exclusionFieldNames) throws UnifyException {
-        Set<String> exclusion = new HashSet<String>(Arrays.asList(exclusionFieldNames));
-        for (GetterSetterInfo getterSetterInfo : ReflectUtils.getGetterSetterList(storage[dataIndex].getClass())) {
-            if (getterSetterInfo.isGetterSetter()) {
-                String fieldName = getterSetterInfo.getName();
-                if (!exclusion.contains(fieldName)) {
-                    store(fieldName, source.retrieve(fieldName));
-                }
-            }
-        }
-    }
-
-    @Override
-    public void copyWithInclusions(ValueStore source, String... inclusionFieldNames) throws UnifyException {
-        Set<String> inclusion = new HashSet<String>(Arrays.asList(inclusionFieldNames));
-        for (GetterSetterInfo getterSetterInfo : ReflectUtils.getGetterSetterList(storage[dataIndex].getClass())) {
-            if (getterSetterInfo.isGetterSetter()) {
-                String fieldName = getterSetterInfo.getName();
-                if (inclusion.contains(fieldName)) {
-                    store(fieldName, source.retrieve(fieldName));
-                }
-            }
-        }
-    }
-
-    @Override
     public int size() {
         return storage.length;
     }
@@ -262,6 +221,11 @@ public abstract class AbstractArrayValueStore<T> implements ValueStore {
         }
 
         return writer;
+    }
+
+    @Override
+    protected Class<?> getDataClass() throws UnifyException {
+        return storage[dataIndex].getClass();
     }
 
     protected abstract boolean doSettable(T storage, String property) throws UnifyException;

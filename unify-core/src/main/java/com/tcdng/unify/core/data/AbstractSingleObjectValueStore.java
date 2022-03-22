@@ -16,35 +16,33 @@
 package com.tcdng.unify.core.data;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.format.Formatter;
 import com.tcdng.unify.core.util.DataUtils;
 
 /**
- * Abstract list value store.
+ * Abstract single storage value store.
  * 
  * @author Lateef Ojulari
  * @since 1.0
  */
-public abstract class AbstractListValueStore<T> extends AbstractValueStore {
+public abstract class AbstractSingleObjectValueStore<T> extends AbstractValueStore {
 
-    protected List<? extends T> storage;
-
-    protected int dataIndex;
+    protected T storage;
 
     private String dataMarker;
 
+    private int dataIndex;
+
     private Map<String, Object> temp;
-    
+
     private ValueStoreReader reader;
-    
+
     private ValueStoreWriter writer;
 
-    public AbstractListValueStore(List<? extends T> storage, String dataMarker, int dataIndex) {
+    public AbstractSingleObjectValueStore(T storage, String dataMarker, int dataIndex) {
         this.storage = storage;
         this.dataMarker = dataMarker;
         this.dataIndex = dataIndex;
@@ -52,80 +50,74 @@ public abstract class AbstractListValueStore<T> extends AbstractValueStore {
 
     @Override
     public Object retrieve(int storageIndex, String name) throws UnifyException {
-        checkStorageIndex(storageIndex);
-        return doRetrieve(storage.get(storageIndex), name);
+        return retrieve(name);
     }
 
     @Override
     public Object retrieve(String name) throws UnifyException {
-        return doRetrieve(storage.get(dataIndex), name);
+        return doRetrieve(name);
     }
 
     @Override
     public <U> U retrieve(Class<U> type, String name) throws UnifyException {
-        return DataUtils.convert(type, retrieve(name));
+        return DataUtils.convert(type, doRetrieve(name));
     }
 
     @Override
     public <U> U retrieve(Class<U> type, String name, Formatter<?> formatter) throws UnifyException {
-        return DataUtils.convert(type, retrieve(name), formatter);
+        return DataUtils.convert(type, doRetrieve(name), formatter);
     }
 
     @Override
     public <U> U retrieve(Class<U> type, int storageIndex, String name) throws UnifyException {
-        checkStorageIndex(storageIndex);
         return DataUtils.convert(type, retrieve(storageIndex, name));
     }
 
     @Override
     public void store(int storageIndex, String name, Object value) throws UnifyException {
-        checkStorageIndex(storageIndex);
-        doStore(storage.get(storageIndex), name, value, null);
+        store(name, value);
     }
 
     @Override
     public void store(int storageIndex, String name, Object value, Formatter<?> formatter) throws UnifyException {
-        checkStorageIndex(storageIndex);
-        doStore(storage.get(storageIndex), name, value, formatter);
+        store(name, value, formatter);
     }
 
     @Override
     public void store(String name, Object value) throws UnifyException {
-        doStore(storage.get(dataIndex), name, value, null);
+        doStore(name, value, null);
     }
 
     @Override
     public void store(String name, Object value, Formatter<?> formatter) throws UnifyException {
-        doStore(storage.get(dataIndex), name, value, formatter);
+        doStore(name, value, formatter);
     }
 
     @Override
     public void storeOnNull(int storageIndex, String name, Object value) throws UnifyException {
-        checkStorageIndex(storageIndex);
         if (retrieve(storageIndex, name) == null) {
-            doStore(storage.get(storageIndex), name, value, null);
+            store(name, value);
         }
     }
 
     @Override
     public void storeOnNull(int storageIndex, String name, Object value, Formatter<?> formatter) throws UnifyException {
-        checkStorageIndex(storageIndex);
         if (retrieve(storageIndex, name) == null) {
-            doStore(storage.get(storageIndex), name, value, formatter);
+            store(name, value, formatter);
         }
     }
 
     @Override
     public void storeOnNull(String name, Object value) throws UnifyException {
         if (retrieve(name) == null) {
-            doStore(storage.get(dataIndex), name, value, null);
+            doStore(name, value, null);
         }
     }
 
     @Override
     public void storeOnNull(String name, Object value, Formatter<?> formatter) throws UnifyException {
         if (retrieve(name) == null) {
-            doStore(storage.get(dataIndex), name, value, formatter);
+            doStore(name, value, formatter);
         }
     }
 
@@ -134,7 +126,7 @@ public abstract class AbstractListValueStore<T> extends AbstractValueStore {
         if (temp != null) {
             return temp.get(name);
         }
-        
+
         return null;
     }
 
@@ -143,7 +135,7 @@ public abstract class AbstractListValueStore<T> extends AbstractValueStore {
         if (temp != null) {
             return DataUtils.convert(type, temp.get(name));
         }
-        
+
         return null;
     }
 
@@ -152,7 +144,7 @@ public abstract class AbstractListValueStore<T> extends AbstractValueStore {
         if (temp == null) {
             temp = new HashMap<String, Object>();
         }
-        
+
         temp.put(name, value);
     }
 
@@ -161,18 +153,8 @@ public abstract class AbstractListValueStore<T> extends AbstractValueStore {
         if (temp != null) {
             return temp.containsKey(name);
         }
-        
+
         return false;
-    }
-
-    @Override
-    public boolean isGettable(String name) throws UnifyException {
-        return doGettable(storage.get(dataIndex), name);
-    }
-
-    @Override
-    public boolean isSettable(String name) throws UnifyException {
-        return doSettable(storage.get(dataIndex), name);
     }
 
     @Override
@@ -196,6 +178,11 @@ public abstract class AbstractListValueStore<T> extends AbstractValueStore {
     }
 
     @Override
+    public int size() {
+        return 0;
+    }
+
+    @Override
     public Object getValueObject() {
         return storage;
     }
@@ -203,8 +190,8 @@ public abstract class AbstractListValueStore<T> extends AbstractValueStore {
     @Override
     public ValueStoreReader getReader() {
         if (reader == null) {
-            synchronized(this) {
-                if(reader == null) {
+            synchronized (this) {
+                if (reader == null) {
                     reader = new ValueStoreReader(this);
                 }
             }
@@ -216,8 +203,8 @@ public abstract class AbstractListValueStore<T> extends AbstractValueStore {
     @Override
     public ValueStoreWriter getWriter() {
         if (writer == null) {
-            synchronized(this) {
-                if(writer == null) {
+            synchronized (this) {
+                if (writer == null) {
                     writer = new ValueStoreWriter(this);
                 }
             }
@@ -227,32 +214,12 @@ public abstract class AbstractListValueStore<T> extends AbstractValueStore {
     }
 
     @Override
-    public int size() {
-        return storage.size();
-    }
-    
-    @Override
     protected Class<?> getDataClass() throws UnifyException {
-        return storage.get(dataIndex).getClass();
+        return storage.getClass();
     }
 
-    private void checkStorageIndex(int storageIndex) throws UnifyException {
-        if (storage == null) {
-            throw new UnifyException(UnifyCoreErrorConstants.VALUESTORE_STORAGE_INDEX_OUT_BOUNDS, storageIndex, 0);
-        }
+    protected abstract Object doRetrieve(String property) throws UnifyException;
 
-        if (storageIndex < 0 || storageIndex >= storage.size()) {
-            throw new UnifyException(UnifyCoreErrorConstants.VALUESTORE_STORAGE_INDEX_OUT_BOUNDS, storageIndex, storage.size());
-        }
-    }
-
-    protected abstract boolean doSettable(T storage, String property) throws UnifyException;
-
-    protected abstract boolean doGettable(T storage, String property) throws UnifyException;
-
-    protected abstract Object doRetrieve(T storage, String property) throws UnifyException;
-
-    protected abstract void doStore(T storage, String property, Object value, Formatter<?> formatter)
-            throws UnifyException;
+    protected abstract void doStore(String property, Object value, Formatter<?> formatter) throws UnifyException;
 
 }

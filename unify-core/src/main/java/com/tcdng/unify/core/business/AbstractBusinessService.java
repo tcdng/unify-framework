@@ -191,4 +191,34 @@ public abstract class AbstractBusinessService extends AbstractUnifyComponent imp
     protected void clearRollbackTransactions() throws UnifyException {
         databaseTransactionManager.clearRollback();
     }
+
+    /**
+     * Sets save point.
+     * 
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    protected void setSavePoint() throws UnifyException {
+        databaseTransactionManager.setSavePoint();
+    }
+
+    /**
+     * Clears save point.
+     * 
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    protected void clearSavePoint() throws UnifyException {
+        databaseTransactionManager.clearSavePoint();
+    }
+
+    /**
+     * Rollback to savepoint
+     * 
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    protected void rollbackToSavePoint() throws UnifyException {
+        databaseTransactionManager.rollbackToSavePoint();
+    }
 }
