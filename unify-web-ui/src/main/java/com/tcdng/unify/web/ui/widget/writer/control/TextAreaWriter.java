@@ -81,7 +81,7 @@ public class TextAreaWriter extends AbstractControlWriter {
         }
 
         writer.write(" spellcheck=\"").write(textArea.isSpellCheck()).write("\"");
-        if (textArea.isUplAttribute("autocomplete") && textArea.getUplAttribute(boolean.class, "autocomplete")) {
+        if (textArea.isAutoComplete()) {
             writer.write(" autocomplete=\"on\"");
         } else {
             writer.write(" autocomplete=\"off\"");

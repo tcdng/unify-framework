@@ -173,7 +173,7 @@ public class TextFieldWriter extends AbstractControlWriter {
         }
 
         writer.write(" spellcheck=\"").write(textField.isSpellCheck()).write("\"");
-        if (textField.isUplAttribute("autocomplete") && textField.getUplAttribute(boolean.class, "autocomplete")) {
+        if (textField.isAutoComplete()) {
             writer.write(" autocomplete=\"on\"");
         } else {
             writer.write(" autocomplete=\"off\"");

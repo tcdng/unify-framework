@@ -17,8 +17,6 @@ package com.tcdng.unify.web.ui.widget.control;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
-import com.tcdng.unify.core.annotation.UplAttribute;
-import com.tcdng.unify.core.annotation.UplAttributes;
 
 /**
  * Represents an input text field for entering a password.
@@ -27,7 +25,6 @@ import com.tcdng.unify.core.annotation.UplAttributes;
  * @since 1.0
  */
 @Component("ui-password")
-@UplAttributes({ @UplAttribute(name = "autocomplete", type = boolean.class) })
 public class PasswordField extends TextField {
 
     @Override
