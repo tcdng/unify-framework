@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2020 The Code Department.
+ * Copyright 2018-2022 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,7 +29,7 @@ import com.tcdng.unify.web.ui.widget.writer.AbstractControlWriter;
 /**
  * Text area writer.
  * 
- * @author Lateef Ojulari
+ * @author The Code Department
  * @since 1.0
  */
 @Writes(TextArea.class)
@@ -81,7 +81,7 @@ public class TextAreaWriter extends AbstractControlWriter {
         }
 
         writer.write(" spellcheck=\"").write(textArea.isSpellCheck()).write("\"");
-        if (textArea.isUplAttribute("autocomplete") && textArea.getUplAttribute(boolean.class, "autocomplete")) {
+        if (textArea.isAutoComplete()) {
             writer.write(" autocomplete=\"on\"");
         } else {
             writer.write(" autocomplete=\"off\"");

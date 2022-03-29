@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2020 The Code Department.
+ * Copyright 2018-2022 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -24,7 +24,7 @@ import com.tcdng.unify.core.upl.AbstractUplComponent;
 /**
  * Abstract formatter.
  * 
- * @author Lateef Ojulari
+ * @author The Code Department
  * @since 1.0
  */
 public abstract class AbstractFormatter<T> extends AbstractUplComponent implements Formatter<T> {
@@ -48,6 +48,16 @@ public abstract class AbstractFormatter<T> extends AbstractUplComponent implemen
     @Override
     public Class<T> getDataType() {
         return dataType;
+    }
+
+    @Override
+    public final boolean isLabelFormat() {
+        return String.class.equals(dataType);
+    }
+
+    @Override
+    public boolean isArrayFormat() {
+        return Object[].class.isAssignableFrom(dataType);
     }
 
     @Override

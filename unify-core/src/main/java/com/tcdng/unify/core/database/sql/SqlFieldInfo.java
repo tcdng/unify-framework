@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2020 The Code Department.
+ * Copyright 2018-2022 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,7 +26,7 @@ import com.tcdng.unify.core.util.StringUtils;
  * Holds SQL information, relational information, reflection information and
  * other information for a record field.
  * 
- * @author Lateef Ojulari
+ * @author The Code Department
  * @since 1.0
  */
 public class SqlFieldInfo implements SqlFieldSchemaInfo {

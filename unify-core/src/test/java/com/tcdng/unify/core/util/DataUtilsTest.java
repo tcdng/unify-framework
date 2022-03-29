@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2020 The Code Department.
+ * Copyright 2018-2022 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,6 +31,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.junit.Before;
@@ -39,14 +40,17 @@ import org.junit.Test;
 import com.tcdng.unify.core.AbstractUnifyComponentTest;
 import com.tcdng.unify.core.constant.OrderType;
 import com.tcdng.unify.core.constant.PrintFormat;
+import com.tcdng.unify.core.format.Formatter;
 
 /**
  * CalendarUtils tests.
  * 
- * @author Lateef Ojulari
+ * @author The Code Department
  * @since 1.0
  */
 public class DataUtilsTest extends AbstractUnifyComponentTest {
+
+    private Formatter<?> pipeArrayFormatter;
 
     private List<Book> bookList;
 
@@ -712,6 +716,16 @@ public class DataUtilsTest extends AbstractUnifyComponentTest {
     public void testConvertToStringFromArray() throws Exception {
         String val = DataUtils.convert(String.class, new String[] { "Red", "Green", "Blue" });
         assertEquals("Red,Green,Blue", val);
+        
+        val = DataUtils.convert(String.class, new String[] { "Red", "Green", "Blue" }, pipeArrayFormatter);
+        assertEquals("Red|Green|Blue", val);
+        
+        String[] vals = DataUtils.convert(String[].class, val, pipeArrayFormatter);
+        assertNotNull(vals);
+        assertEquals(3, vals.length);
+        assertEquals("Red", vals[0]);
+        assertEquals("Green", vals[1]);
+        assertEquals("Blue", vals[2]);
     }
 
     @Test
@@ -724,6 +738,7 @@ public class DataUtilsTest extends AbstractUnifyComponentTest {
 
     @Override
     protected void onSetup() throws Exception {
+        pipeArrayFormatter = (Formatter<?>) getUplComponent(Locale.ENGLISH, "!pipearrayformat");
 
     }
 

@@ -6,7 +6,7 @@ import com.tcdng.unify.core.UnifyException;
 /**
  * Convenient abstract task ID generator component.
  * 
- * @author Lateef Ojulari
+ * @author The Code Department
  * @since 1.0
  */
 public abstract class AbstractTaskIdGenerator extends AbstractUnifyComponent implements TaskIdGenerator {

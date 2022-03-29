@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2020 The Code Department.
+ * Copyright 2018-2022 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -51,7 +51,7 @@ import com.tcdng.unify.convert.converters.StringConverter;
 /**
  * Conversion utility methods for data manipulation.
  * 
- * @author Lateef Ojulari
+ * @author The Code Department
  * @since 1.0
  */
 @SuppressWarnings("rawtypes")
@@ -201,8 +201,12 @@ public final class ConverterUtils {
                 return (T) classToConverterMap.get(targetClazz).convert(value, formatter);
             }
 
+            Object values = ConverterUtils.getValueObjectArray(value, formatter);
+            if(targetClazz.isAssignableFrom(values.getClass())) {
+                return (T) values;
+            }
+            
             Class<?> targetClass = targetClazz.getComponentType();
-            Object values = ConverterUtils.getValueObjectArray(value);
             int length = Array.getLength(values);
             Object result = Array.newInstance(targetClass, length);
             Object nullValue = classToNullMap.get(targetClass);
@@ -231,7 +235,7 @@ public final class ConverterUtils {
             }
             return (T) result;
         } else if (Collection.class.isAssignableFrom(targetClazz)) {
-            Object values = ConverterUtils.getValueObjectArray(value);
+            Object values = ConverterUtils.getValueObjectArray(value, formatter);
             int length = Array.getLength(values);
             Collection<Object> result = ConverterUtils.getCollectionConcreteType((Class<? extends Collection>) targetClazz)
                     .newInstance();
@@ -449,13 +453,14 @@ public final class ConverterUtils {
         return result;
     }
 
-    private static Object getValueObjectArray(Object value) throws Exception {
+    private static Object getValueObjectArray(Object value, ConverterFormatter<?> formatter) throws Exception {
         if (value.getClass().isArray()) {
             return value;
         }
 
         if (value instanceof String) {
-            return ((String) value).split(",");
+            return formatter != null && formatter.isArrayFormat() ? formatter.parse((String) value)
+                    : ((String) value).split(",");
         }
 
         List<Object> values = new ArrayList<Object>();

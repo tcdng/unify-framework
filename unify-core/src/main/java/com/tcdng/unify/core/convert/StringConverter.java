@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2020 The Code Department.
+ * Copyright 2018-2022 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,7 +30,7 @@ import com.tcdng.unify.core.util.StringUtils;
 /**
  * A value to string converter.
  * 
- * @author Lateef Ojulari
+ * @author The Code Department
  * @since 1.0
  */
 public class StringConverter extends AbstractConverter<String> {
@@ -80,11 +80,11 @@ public class StringConverter extends AbstractConverter<String> {
                 return sb.toString();
             }
 
-            if (value instanceof String[]) {
-                return StringUtils.buildCommaSeparatedString((String[]) value, false);
-            }
-            
             if (formatter == null) {
+                if (value instanceof String[]) {
+                    return StringUtils.buildCommaSeparatedString((String[]) value, false);
+                }
+                
                 if (value instanceof Date) {
                     formatter = ConverterUtils.getDefaultDateTimeFormatter();
                 }
