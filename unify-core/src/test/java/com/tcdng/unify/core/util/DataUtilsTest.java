@@ -31,6 +31,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.junit.Before;
@@ -39,6 +40,7 @@ import org.junit.Test;
 import com.tcdng.unify.core.AbstractUnifyComponentTest;
 import com.tcdng.unify.core.constant.OrderType;
 import com.tcdng.unify.core.constant.PrintFormat;
+import com.tcdng.unify.core.format.Formatter;
 
 /**
  * CalendarUtils tests.
@@ -47,6 +49,8 @@ import com.tcdng.unify.core.constant.PrintFormat;
  * @since 1.0
  */
 public class DataUtilsTest extends AbstractUnifyComponentTest {
+
+    private Formatter<?> pipeArrayFormatter;
 
     private List<Book> bookList;
 
@@ -712,6 +716,16 @@ public class DataUtilsTest extends AbstractUnifyComponentTest {
     public void testConvertToStringFromArray() throws Exception {
         String val = DataUtils.convert(String.class, new String[] { "Red", "Green", "Blue" });
         assertEquals("Red,Green,Blue", val);
+        
+        val = DataUtils.convert(String.class, new String[] { "Red", "Green", "Blue" }, pipeArrayFormatter);
+        assertEquals("Red|Green|Blue", val);
+        
+        String[] vals = DataUtils.convert(String[].class, val, pipeArrayFormatter);
+        assertNotNull(vals);
+        assertEquals(3, vals.length);
+        assertEquals("Red", vals[0]);
+        assertEquals("Green", vals[1]);
+        assertEquals("Blue", vals[2]);
     }
 
     @Test
@@ -724,6 +738,7 @@ public class DataUtilsTest extends AbstractUnifyComponentTest {
 
     @Override
     protected void onSetup() throws Exception {
+        pipeArrayFormatter = (Formatter<?>) getUplComponent(Locale.ENGLISH, "!pipearrayformat");
 
     }
 

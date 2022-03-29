@@ -80,11 +80,11 @@ public class StringConverter extends AbstractConverter<String> {
                 return sb.toString();
             }
 
-            if (value instanceof String[]) {
-                return StringUtils.buildCommaSeparatedString((String[]) value, false);
-            }
-            
             if (formatter == null) {
+                if (value instanceof String[]) {
+                    return StringUtils.buildCommaSeparatedString((String[]) value, false);
+                }
+                
                 if (value instanceof Date) {
                     formatter = ConverterUtils.getDefaultDateTimeFormatter();
                 }

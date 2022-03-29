@@ -50,5 +50,14 @@ public interface ConverterFormatter<T> {
      *             if an error occurs
      */
     T parse(String string) throws Exception;
-
+    
+    /**
+     * Returns true if applies to label
+     */
+    boolean isLabelFormat();
+    
+    /**
+     * Returns true if applies to arrays
+     */
+    boolean isArrayFormat();
 }

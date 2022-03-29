@@ -86,7 +86,7 @@ public class ListControlUtilsImpl extends AbstractUnifyComponent implements List
         for (int i = 0; i < len; i++) {
             Listable listable = listableList.get(i);
             keys[i] = listable.getListKey();
-            if (formatter != null) {
+            if (formatter != null && formatter.isLabelFormat()) {
                 labels[i] = HtmlUtils.getStringWithHtmlEscape(formatter.format(listable.getListDescription()));
             } else {
                 labels[i] = HtmlUtils.getStringWithHtmlEscape(listable.getListDescription());

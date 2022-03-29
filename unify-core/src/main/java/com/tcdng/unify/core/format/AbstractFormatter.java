@@ -51,6 +51,16 @@ public abstract class AbstractFormatter<T> extends AbstractUplComponent implemen
     }
 
     @Override
+    public final boolean isLabelFormat() {
+        return String.class.equals(dataType);
+    }
+
+    @Override
+    public boolean isArrayFormat() {
+        return Object[].class.isAssignableFrom(dataType);
+    }
+
+    @Override
     protected void onInitialize() throws UnifyException {
 
     }

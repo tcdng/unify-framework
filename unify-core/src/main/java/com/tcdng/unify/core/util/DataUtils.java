@@ -1002,7 +1002,6 @@ public final class DataUtils {
         } catch (UnifyException e) {
             throw e;
         } catch (Exception e) {
-            e.printStackTrace();
             throw new UnifyException(UnifyCoreErrorConstants.DATAUTIL_ERROR, e);
         }
     }

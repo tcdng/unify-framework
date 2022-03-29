@@ -41,7 +41,6 @@ public class SmtpEmailServer extends AbstractEmailServer implements EmailServer 
             Transport.send(mimeMessage);
             email.setSent(true);
         } catch (MessagingException e) {
-            e.printStackTrace();
             logError(e);
         }
     }
