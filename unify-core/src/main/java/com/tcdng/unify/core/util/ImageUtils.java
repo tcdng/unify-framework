@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2020 The Code Department.
+ * Copyright 2018-2022 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,7 +27,7 @@ import org.apache.commons.codec.binary.Base64;
 /**
  * Provides utility methods for Image processing.
  * 
- * @author Lateef Ojulari
+ * @author The Code Department
  */
 public final class ImageUtils {
 

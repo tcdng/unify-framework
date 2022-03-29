@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2020 The Code Department.
+ * Copyright 2018-2022 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,7 +19,7 @@ package com.tcdng.unify.convert.converters;
  * A value to boolean converter. Converts, non-case sensitively, strings "y",
  * "on", "true", and "yes" to Boolean.TRUE.
  * 
- * @author Lateef Ojulari
+ * @author The Code Department
  * @since 1.0
  */
 public class BooleanConverter extends AbstractConverter<Boolean> {
