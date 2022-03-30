@@ -360,6 +360,11 @@ public final class ConverterUtils {
                         result.add(EnumUtils.fromCode((Class<? extends EnumConst>) dataClass,
                                 String.valueOf(Array.get(val, i))));
                     }
+                } else if (dataClass.isEnum()) {
+                    Class<? extends Enum> enumClass = (Class<? extends Enum>) dataClass;
+                    for (int i = 0; i < length; i++) {
+                        result.add(Enum.valueOf(enumClass, String.valueOf(Array.get(val, i))));
+                    }
                 } else {
                     Converter<?> converter = classToConverterMap.get(dataClass);
                     for (int i = 0; i < length; i++) {
@@ -371,6 +376,13 @@ public final class ConverterUtils {
             if (EnumConst.class.isAssignableFrom(dataClass)) {
                 for (Object object : (Collection<Object>) val) {
                     result.add(EnumUtils.fromCode((Class<? extends EnumConst>) dataClass, String.valueOf(object)));
+                }
+            } else if (dataClass.isEnum()) {
+                Class<? extends Enum> enumClass = (Class<? extends Enum>) dataClass;
+                for (Object _val : (Collection<Object>) val) {
+                    if (_val instanceof String) {
+                        result.add(Enum.valueOf(enumClass, (String) _val));
+                    }
                 }
             } else {
                 Converter<?> converter = classToConverterMap.get(dataClass);
@@ -386,6 +398,9 @@ public final class ConverterUtils {
                 }
 
                 result.add(resultItem);
+            } else if (dataClass.isEnum()) {
+                Class<? extends Enum> enumClass = (Class<? extends Enum>) dataClass;
+                result.add(Enum.valueOf(enumClass, String.valueOf(val)));
             } else {
                 result.add(classToConverterMap.get(dataClass).convert(val, formatter));
             }
