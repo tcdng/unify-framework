@@ -41,6 +41,8 @@ public interface PageRequestParameterConstants {
 
     String REFRESH = "req_rsh";
 
+    String TRIGGER_WIDGETID = "req_wid";
+
     String VALIDATION_ACTION = "req_va";
     
     String UNLOAD_ORIGIN_PAGE = "unload_origin";

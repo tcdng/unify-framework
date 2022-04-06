@@ -263,6 +263,15 @@ public abstract class AbstractUIController extends AbstractController implements
                 continue;
             }
 
+            if (PageRequestParameterConstants.TRIGGER_WIDGETID.equals(transferId)) {
+                if (!(values instanceof String)) {
+                    throw new UnifyException(UnifyWebUIErrorConstants.MULTIPLE_COMMAND_PARAMETERS_IN_REQUEST);
+                }
+
+                pageRequestContextUtil.setTriggerWidgetId((String) values);
+                continue;
+            }
+
             if (transferBlocks == null) {
                 transferBlocks = new HashMap<String, DataTransferBlock>();
             }

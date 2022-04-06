@@ -4386,6 +4386,9 @@ ux.buildObjParams = function(trgObj, evp, param) {
 		if (evp.uCmdTag) {
 			pb.append("req_cmdtag", evp.uCmdTag);
 		}
+		if (evp.uId) {
+			pb.append("req_wid", evp.uId);
+		}
 		if (evp.uPanels) {
 			for (var i = 0; i < evp.uPanels.length; i++) {
 				pb.append("req_rsh", evp.uPanels[i]);
@@ -4407,6 +4410,9 @@ ux.buildObjParams = function(trgObj, evp, param) {
 		}
 		if (evp.uCmdTag) {
 			pb += ("&req_cmdtag=" + _enc(evp.uCmdTag));
+		}
+		if (evp.uId) {
+			pb += ("&req_wid=" + _enc(evp.uId));
 		}
 		if (evp.uPanels) {
 			for (var i = 0; i < evp.uPanels.length; i++) {
