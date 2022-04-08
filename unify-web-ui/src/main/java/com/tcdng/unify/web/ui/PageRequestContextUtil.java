@@ -139,6 +139,24 @@ public interface PageRequestContextUtil extends UnifyComponent {
     String getRequestCommandTag() throws UnifyException;
 
     /**
+     * Sets current request context's trigger widget ID.
+     * 
+     * @param widgetId
+     *                 the trigger widget ID to set
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    void setTriggerWidgetId(String widgetId) throws UnifyException;
+
+    /**
+     * Returns request trigger widget ID in current request context.
+     * 
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    String getTriggerWidgetId() throws UnifyException;
+
+    /**
      * Sets current request context's command result mapping.
      * 
      * @param resultMapping

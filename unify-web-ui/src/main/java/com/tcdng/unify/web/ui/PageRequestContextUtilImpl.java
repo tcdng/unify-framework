@@ -60,6 +60,8 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
 
     private static final String COMMAND_POSTRESPONSE_PATH = "COMMAND_POSTRESPONSE_PATH";
 
+    private static final String TRIGGER_WIDGETID = "TRIGGER_WIDGETID";
+
     private static final String PAGENAME_ALIASES = "PAGENAME_ALIASES";
 
     private static final String REFRESH_PANEL_LONGNAMES = "REFRESH_PANEL_LONGNAMES";
@@ -142,6 +144,16 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
     @Override
     public String getRequestCommandTag() throws UnifyException {
         return (String) getRequestAttribute(COMMAND_TAG);
+    }
+
+    @Override
+    public void setTriggerWidgetId(String widgetId) throws UnifyException {
+        setRequestAttribute(TRIGGER_WIDGETID, widgetId);
+    }
+
+    @Override
+    public String getTriggerWidgetId() throws UnifyException {
+        return (String) getRequestAttribute(TRIGGER_WIDGETID);
     }
 
     @Override
