@@ -29,7 +29,9 @@ import com.tcdng.unify.web.constant.ExtensionType;
  * @since 1.0
  */
 @Component("ui-select")
-@UplAttributes({ @UplAttribute(name = "blankOption", type = String.class) })
+@UplAttributes({ 
+    @UplAttribute(name = "blankOption", type = String.class),
+    @UplAttribute(name = "colors", type = boolean.class) })
 public class SingleSelect extends AbstractListPopupTextField {
 
     @Override
@@ -59,6 +61,10 @@ public class SingleSelect extends AbstractListPopupTextField {
 
     public String getBlankOption() throws UnifyException {
         return getUplAttribute(String.class, "blankOption");
+    }
+
+    public boolean isColors() throws UnifyException {
+        return getUplAttribute(boolean.class, "colors");
     }
 
     public String getFramePanelId() throws UnifyException {

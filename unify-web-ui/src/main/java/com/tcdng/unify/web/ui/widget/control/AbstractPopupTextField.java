@@ -46,6 +46,10 @@ public abstract class AbstractPopupTextField extends TextField {
         return getPrefixedId("popb_");
     }
 
+    public String getPopupButtonColorId() throws UnifyException {
+        return getPrefixedId("popbc_");
+    }
+
     public String getPopupId() throws UnifyException {
         return getPrefixedId("pop_");
     }
