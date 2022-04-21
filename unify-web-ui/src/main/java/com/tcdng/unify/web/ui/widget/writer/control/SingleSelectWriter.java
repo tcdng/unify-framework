@@ -25,6 +25,7 @@ import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.core.util.json.JsonWriter;
 import com.tcdng.unify.web.ui.widget.ListControlInfo;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
+import com.tcdng.unify.web.ui.widget.Widget;
 import com.tcdng.unify.web.ui.widget.control.AbstractPopupTextField;
 import com.tcdng.unify.web.ui.widget.control.SingleSelect;
 
@@ -93,8 +94,42 @@ public class SingleSelectWriter extends AbstractPopupTextFieldWriter {
         writer.writeParam("pNormCls", "norm");
         writer.writeParam("pSelCls", getUserColorStyleClass("sel"));
         writer.writeParam("pEnabled", popupEnabled);
+        writer.writeParam("pColors", singleSelect.isColors());
+        writer.writeParam("pSelColId", singleSelect.getPopupButtonColorId());
         writer.writeParam("pVal", singleSelect.getStringValue());
         writer.endFunction();
+    }
+
+    @Override
+    protected void writeTrailingAddOn(ResponseWriter writer, Widget widget) throws UnifyException {
+        SingleSelect singleSelect = (SingleSelect) widget;
+        if (singleSelect.isColors()) {
+            AbstractPopupTextField popupTextField = (AbstractPopupTextField) widget;
+            writer.write("<button tabindex=\"-1\"");
+            writeTagId(writer, popupTextField.getPopupButtonId());
+            writeTagStyleClass(writer, "tpbutton g_fsm");
+            if (popupTextField.isContainerDisabled()) {
+                writer.write(" disabled");
+            }
+            writer.write(">");
+
+            writer.write("<span class=\"ssbcol\" style=\"background-color:");
+            String val = singleSelect.getStringValue();
+            if (StringUtils.isBlank(val)) {
+                writer.write("transparent");
+            } else {
+                writer.write(val);
+            }
+            
+            writer.write(";\" id=\"");
+            writer.write(singleSelect.getPopupButtonColorId());
+            writer.write("\"></span>");
+
+            writer.write("</button>");
+            return;
+        }
+
+        super.writeTrailingAddOn(writer, widget);
     }
 
     @Override

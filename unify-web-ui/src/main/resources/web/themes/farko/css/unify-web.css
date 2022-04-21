@@ -785,6 +785,8 @@ overflow-x:hidden;overflow-y:scroll;border-top: solid 1px #A0A0A0;border-left: s
 .ui-select .sslist .selyellow {background-color: #C0B800; color: #FFF;}
 .ui-select .sslist .selorange {background-color: #C07833; color: #FFF;}
 .ui-select .sslist .selgray {background-color: #787878; color: #FFF;}
+.ui-select .sscol {padding: 6px 8px;margin-right: 6px;border: 1px solid #f0f0f0;vertical-align: middle;}
+.ui-select .ssbcol {padding: 2px 8px;border: 1px solid #f0f0f0;}
 
 /** Single Select (Mini)*/
 .ui-miniselect {width: 100px; font-size:7pt;}

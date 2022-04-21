@@ -2889,6 +2889,11 @@ ux.rigSingleSelect = function(rgp) {
 		sel._frm = _id(rgp.pFrmId);
 		sel._list = _id(rgp.pLstId);
 		sel._blank = _id(rgp.pBlnkId);
+		sel._colors = rgp.pColors;
+		if (sel._colors) {
+			sel._colorbtn = _id(rgp.pSelColId);
+		}
+		
 		sel._pop = rgp.pEnabled;
 		
 		sel.setValue = function(val) {
@@ -2941,6 +2946,10 @@ ux.rigSingleSelect = function(rgp) {
 					txt = ux.decodeHtml(txt);
 				}
 
+				if (this._colors) {
+					this._colorbtn.style.backgroundColor = val ? val: "transparent";
+				}
+				
 				this.value = val;
 				this._fac.value = txt;
 				this._fac.focus();
@@ -4613,7 +4622,8 @@ ux.listWirePopFrame = function(sel) {
 		for (var i = 0; i < sel._iCnt; i++) {
 			const label = _id(sel._selectIds[i])
 			if (label) {
-				label.innerHTML = sel._labels[i];
+				const pref = sel._colors ? "<span class=\"sscol\" style=\"background-color:" + sel._keys[i] + ";\"></span>" : "";
+				label.innerHTML =  pref + sel._labels[i];
 				ux.addHdl(label, "click", ux.listSelectClick, {uId:sel.id, uIndex:i});
 			}
 		}
