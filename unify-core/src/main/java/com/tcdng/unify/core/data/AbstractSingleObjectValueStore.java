@@ -55,17 +55,17 @@ public abstract class AbstractSingleObjectValueStore<T> extends AbstractValueSto
 
     @Override
     public Object retrieve(String name) throws UnifyException {
-        return doRetrieve(name);
+        return retrieveInternal(name);
     }
 
     @Override
     public <U> U retrieve(Class<U> type, String name) throws UnifyException {
-        return DataUtils.convert(type, doRetrieve(name));
+        return DataUtils.convert(type, retrieveInternal(name));
     }
 
     @Override
     public <U> U retrieve(Class<U> type, String name, Formatter<?> formatter) throws UnifyException {
-        return DataUtils.convert(type, doRetrieve(name), formatter);
+        return DataUtils.convert(type, retrieveInternal(name), formatter);
     }
 
     @Override
@@ -85,12 +85,12 @@ public abstract class AbstractSingleObjectValueStore<T> extends AbstractValueSto
 
     @Override
     public void store(String name, Object value) throws UnifyException {
-        doStore(name, value, null);
+        storeInternal(name, value, null);
     }
 
     @Override
     public void store(String name, Object value, Formatter<?> formatter) throws UnifyException {
-        doStore(name, value, formatter);
+        storeInternal(name, value, formatter);
     }
 
     @Override
@@ -110,14 +110,14 @@ public abstract class AbstractSingleObjectValueStore<T> extends AbstractValueSto
     @Override
     public void storeOnNull(String name, Object value) throws UnifyException {
         if (retrieve(name) == null) {
-            doStore(name, value, null);
+            storeInternal(name, value, null);
         }
     }
 
     @Override
     public void storeOnNull(String name, Object value, Formatter<?> formatter) throws UnifyException {
         if (retrieve(name) == null) {
-            doStore(name, value, formatter);
+            storeInternal(name, value, formatter);
         }
     }
 
@@ -222,4 +222,17 @@ public abstract class AbstractSingleObjectValueStore<T> extends AbstractValueSto
 
     protected abstract void doStore(String property, Object value, Formatter<?> formatter) throws UnifyException;
 
+    private Object retrieveInternal(String property) throws UnifyException {
+        ValueStorePolicy policy = getPolicy();
+        return policy != null ? policy.onRetrieve(this, property, doRetrieve(property)) : doRetrieve(property);
+    }
+
+    private void storeInternal(String property, Object val, Formatter<?> formatter) throws UnifyException {
+        ValueStorePolicy policy = getPolicy();
+        if (policy != null) {
+            val = policy.onStore(this, property, val);
+        }
+
+        doStore(property, val, formatter);
+    }
 }

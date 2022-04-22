@@ -33,6 +33,13 @@ import com.tcdng.unify.core.util.ReflectUtils;
  */
 public abstract class AbstractValueStore implements ValueStore {
 
+    private ValueStorePolicy policy;
+    
+    @Override
+    public void setPolicy(ValueStorePolicy policy) {
+        this.policy = policy;
+    }
+
     @Override
     public Audit diff(ValueStore newSource) throws UnifyException {
         Audit.Builder ab = Audit.newBuilder();
@@ -119,6 +126,10 @@ public abstract class AbstractValueStore implements ValueStore {
                 }
             }
         }
+    }
+
+    protected ValueStorePolicy getPolicy() {
+        return policy;
     }
 
     protected abstract Class<?> getDataClass() throws UnifyException;

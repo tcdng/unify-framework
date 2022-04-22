@@ -26,6 +26,7 @@ import java.util.Date;
 
 import org.junit.Test;
 
+import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.data.Audit.TrailItem;
 
 /**
@@ -227,5 +228,55 @@ public class BeanValueStoreTest {
         bvs.copyWithInclusions(new BeanValueStore(new Address("24 Parklane", "Apapa Lagos")), "line2");
         assertNull(address.getLine1());
         assertEquals("Apapa Lagos", address.getLine2());
+    }
+
+    @Test
+    public void testPolicyRetrieveSimpleBeanPropertyValue() throws Exception {
+        Address address = new Address("24 Parklane", "Apapa Lagos");
+        BeanValueStore bvs = new BeanValueStore(address);
+        bvs.setPolicy(new TestValueStorePolicy());
+        assertEquals("Apapa Lagos", bvs.retrieve("line1"));
+        assertEquals("Apapa Lagos", bvs.retrieve("line2"));
+        
+        address = new Address("38 Warehouse Road", "Apapa Lagos");
+        bvs = new BeanValueStore(address);
+        bvs.setPolicy(new TestValueStorePolicy());
+        assertEquals("38 Warehouse Road", bvs.retrieve("line1"));
+        assertEquals("Apapa Lagos", bvs.retrieve("line2"));
+    }
+
+    @Test
+    public void testPolicyStoreSimpleBeanPropertyValue() throws Exception {
+        Address address = new Address();
+        BeanValueStore bvs = new BeanValueStore(address);
+        bvs.setPolicy(new TestValueStorePolicy());
+        bvs.store("line1", "37 Pauwa Road");
+        bvs.store("line2", "Ungwan Dosa, Kaduna");
+        assertEquals("surf.37 Pauwa Road", address.getLine1());
+        assertEquals("Ungwan Dosa, Kaduna", address.getLine2());
+    }
+   
+    private class TestValueStorePolicy implements ValueStorePolicy {
+
+        @Override
+        public Object onRetrieve(ValueStore valueStore, String name, Object val) throws UnifyException {
+            if ("line1".equals(name)) {
+                if (val != null && ((String) val).contains("Parklane")) {
+                    val = valueStore.retrieve("line2");
+                }
+            }
+            
+            return val;
+        }
+
+        @Override
+        public Object onStore(ValueStore valueStore, String name, Object val) throws UnifyException {
+            if ("line1".equals(name)) {
+                val = "surf." + val;
+            }
+
+            return val;
+        }
+        
     }
 }

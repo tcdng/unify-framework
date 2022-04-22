@@ -29,6 +29,14 @@ import com.tcdng.unify.core.format.Formatter;
 public interface ValueStore {
 
     /**
+     * Sets the policy for this value store
+     * 
+     * @param policy
+     *               the policy to set
+     */
+    void setPolicy(ValueStorePolicy policy);
+    
+    /**
      * Retrieves value from store using supplied name.
      * 
      * @param name

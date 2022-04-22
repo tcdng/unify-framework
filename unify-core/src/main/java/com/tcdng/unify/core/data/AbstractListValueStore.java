@@ -39,9 +39,9 @@ public abstract class AbstractListValueStore<T> extends AbstractValueStore {
     private String dataMarker;
 
     private Map<String, Object> temp;
-    
+
     private ValueStoreReader reader;
-    
+
     private ValueStoreWriter writer;
 
     public AbstractListValueStore(List<? extends T> storage, String dataMarker, int dataIndex) {
@@ -53,12 +53,12 @@ public abstract class AbstractListValueStore<T> extends AbstractValueStore {
     @Override
     public Object retrieve(int storageIndex, String name) throws UnifyException {
         checkStorageIndex(storageIndex);
-        return doRetrieve(storage.get(storageIndex), name);
+        return retrieveInternal(storage.get(storageIndex), name);
     }
 
     @Override
     public Object retrieve(String name) throws UnifyException {
-        return doRetrieve(storage.get(dataIndex), name);
+        return retrieveInternal(storage.get(dataIndex), name);
     }
 
     @Override
@@ -80,30 +80,30 @@ public abstract class AbstractListValueStore<T> extends AbstractValueStore {
     @Override
     public void store(int storageIndex, String name, Object value) throws UnifyException {
         checkStorageIndex(storageIndex);
-        doStore(storage.get(storageIndex), name, value, null);
+        storeInternal(storage.get(storageIndex), name, value, null);
     }
 
     @Override
     public void store(int storageIndex, String name, Object value, Formatter<?> formatter) throws UnifyException {
         checkStorageIndex(storageIndex);
-        doStore(storage.get(storageIndex), name, value, formatter);
+        storeInternal(storage.get(storageIndex), name, value, formatter);
     }
 
     @Override
     public void store(String name, Object value) throws UnifyException {
-        doStore(storage.get(dataIndex), name, value, null);
+        storeInternal(storage.get(dataIndex), name, value, null);
     }
 
     @Override
     public void store(String name, Object value, Formatter<?> formatter) throws UnifyException {
-        doStore(storage.get(dataIndex), name, value, formatter);
+        storeInternal(storage.get(dataIndex), name, value, formatter);
     }
 
     @Override
     public void storeOnNull(int storageIndex, String name, Object value) throws UnifyException {
         checkStorageIndex(storageIndex);
         if (retrieve(storageIndex, name) == null) {
-            doStore(storage.get(storageIndex), name, value, null);
+            storeInternal(storage.get(storageIndex), name, value, null);
         }
     }
 
@@ -111,21 +111,21 @@ public abstract class AbstractListValueStore<T> extends AbstractValueStore {
     public void storeOnNull(int storageIndex, String name, Object value, Formatter<?> formatter) throws UnifyException {
         checkStorageIndex(storageIndex);
         if (retrieve(storageIndex, name) == null) {
-            doStore(storage.get(storageIndex), name, value, formatter);
+            storeInternal(storage.get(storageIndex), name, value, formatter);
         }
     }
 
     @Override
     public void storeOnNull(String name, Object value) throws UnifyException {
         if (retrieve(name) == null) {
-            doStore(storage.get(dataIndex), name, value, null);
+            storeInternal(storage.get(dataIndex), name, value, null);
         }
     }
 
     @Override
     public void storeOnNull(String name, Object value, Formatter<?> formatter) throws UnifyException {
         if (retrieve(name) == null) {
-            doStore(storage.get(dataIndex), name, value, formatter);
+            storeInternal(storage.get(dataIndex), name, value, formatter);
         }
     }
 
@@ -134,7 +134,7 @@ public abstract class AbstractListValueStore<T> extends AbstractValueStore {
         if (temp != null) {
             return temp.get(name);
         }
-        
+
         return null;
     }
 
@@ -143,7 +143,7 @@ public abstract class AbstractListValueStore<T> extends AbstractValueStore {
         if (temp != null) {
             return DataUtils.convert(type, temp.get(name));
         }
-        
+
         return null;
     }
 
@@ -152,7 +152,7 @@ public abstract class AbstractListValueStore<T> extends AbstractValueStore {
         if (temp == null) {
             temp = new HashMap<String, Object>();
         }
-        
+
         temp.put(name, value);
     }
 
@@ -161,7 +161,7 @@ public abstract class AbstractListValueStore<T> extends AbstractValueStore {
         if (temp != null) {
             return temp.containsKey(name);
         }
-        
+
         return false;
     }
 
@@ -203,8 +203,8 @@ public abstract class AbstractListValueStore<T> extends AbstractValueStore {
     @Override
     public ValueStoreReader getReader() {
         if (reader == null) {
-            synchronized(this) {
-                if(reader == null) {
+            synchronized (this) {
+                if (reader == null) {
                     reader = new ValueStoreReader(this);
                 }
             }
@@ -216,8 +216,8 @@ public abstract class AbstractListValueStore<T> extends AbstractValueStore {
     @Override
     public ValueStoreWriter getWriter() {
         if (writer == null) {
-            synchronized(this) {
-                if(writer == null) {
+            synchronized (this) {
+                if (writer == null) {
                     writer = new ValueStoreWriter(this);
                 }
             }
@@ -230,7 +230,7 @@ public abstract class AbstractListValueStore<T> extends AbstractValueStore {
     public int size() {
         return storage.size();
     }
-    
+
     @Override
     protected Class<?> getDataClass() throws UnifyException {
         return storage.get(dataIndex).getClass();
@@ -242,7 +242,8 @@ public abstract class AbstractListValueStore<T> extends AbstractValueStore {
         }
 
         if (storageIndex < 0 || storageIndex >= storage.size()) {
-            throw new UnifyException(UnifyCoreErrorConstants.VALUESTORE_STORAGE_INDEX_OUT_BOUNDS, storageIndex, storage.size());
+            throw new UnifyException(UnifyCoreErrorConstants.VALUESTORE_STORAGE_INDEX_OUT_BOUNDS, storageIndex,
+                    storage.size());
         }
     }
 
@@ -255,4 +256,18 @@ public abstract class AbstractListValueStore<T> extends AbstractValueStore {
     protected abstract void doStore(T storage, String property, Object value, Formatter<?> formatter)
             throws UnifyException;
 
+    private Object retrieveInternal(T storage, String property) throws UnifyException {
+        ValueStorePolicy policy = getPolicy();
+        return policy != null ? policy.onRetrieve(this, property, doRetrieve(storage, property))
+                : doRetrieve(storage, property);
+    }
+
+    private void storeInternal(T storage, String property, Object val, Formatter<?> formatter) throws UnifyException {
+        ValueStorePolicy policy = getPolicy();
+        if (policy != null) {
+            val = policy.onStore(this, property, val);
+        }
+
+        doStore(storage, property, val, formatter);
+    }
 }
