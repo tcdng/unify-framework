@@ -50,12 +50,12 @@ public abstract class AbstractArrayValueStore<T> extends AbstractValueStore {
 
     @Override
     public Object retrieve(int storageIndex, String name) throws UnifyException {
-        return doRetrieve(storage[storageIndex], name);
+        return retrieveInternal(storage[storageIndex], name);
     }
 
     @Override
     public Object retrieve(String name) throws UnifyException {
-        return doRetrieve(storage[dataIndex], name);
+        return retrieveInternal(storage[dataIndex], name);
     }
 
     @Override
@@ -75,49 +75,49 @@ public abstract class AbstractArrayValueStore<T> extends AbstractValueStore {
 
     @Override
     public void store(int storageIndex, String name, Object value) throws UnifyException {
-        doStore(storage[storageIndex], name, value, null);
+        storeInternal(storage[storageIndex], name, value, null);
     }
 
     @Override
     public void store(int storageIndex, String name, Object value, Formatter<?> formatter) throws UnifyException {
-        doStore(storage[storageIndex], name, value, formatter);
+        storeInternal(storage[storageIndex], name, value, formatter);
     }
 
     @Override
     public void store(String name, Object value) throws UnifyException {
-        doStore(storage[dataIndex], name, value, null);
+        storeInternal(storage[dataIndex], name, value, null);
     }
 
     @Override
     public void store(String name, Object value, Formatter<?> formatter) throws UnifyException {
-        doStore(storage[dataIndex], name, value, formatter);
+        storeInternal(storage[dataIndex], name, value, formatter);
     }
 
     @Override
     public void storeOnNull(int storageIndex, String name, Object value) throws UnifyException {
         if (retrieve(storageIndex, name) == null) {
-            doStore(storage[storageIndex], name, value, null);
+            storeInternal(storage[storageIndex], name, value, null);
         }
     }
 
     @Override
     public void storeOnNull(int storageIndex, String name, Object value, Formatter<?> formatter) throws UnifyException {
         if (retrieve(storageIndex, name) == null) {
-            doStore(storage[storageIndex], name, value, formatter);
+            storeInternal(storage[storageIndex], name, value, formatter);
         }
     }
 
     @Override
     public void storeOnNull(String name, Object value) throws UnifyException {
         if (retrieve(name) == null) {
-            doStore(storage[dataIndex], name, value, null);
+            storeInternal(storage[dataIndex], name, value, null);
         }
     }
 
     @Override
     public void storeOnNull(String name, Object value, Formatter<?> formatter) throws UnifyException {
         if (retrieve(name) == null) {
-            doStore(storage[dataIndex], name, value, formatter);
+            storeInternal(storage[dataIndex], name, value, formatter);
         }
     }
     
@@ -236,5 +236,20 @@ public abstract class AbstractArrayValueStore<T> extends AbstractValueStore {
 
     protected abstract void doStore(T storage, String property, Object value, Formatter<?> formatter)
             throws UnifyException;
+
+    private Object retrieveInternal(T storage, String property) throws UnifyException {
+        ValueStorePolicy policy = getPolicy();
+        return policy != null ? policy.onRetrieve(this, property, doRetrieve(storage, property))
+                : doRetrieve(storage, property);
+    }
+
+    private void storeInternal(T storage, String property, Object val, Formatter<?> formatter) throws UnifyException {
+        ValueStorePolicy policy = getPolicy();
+        if (policy != null) {
+            val = policy.onStore(this, property, val);
+        }
+
+        doStore(storage, property, val, formatter);
+    }
 
 }
