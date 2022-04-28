@@ -135,7 +135,7 @@ public class TextFieldWriter extends AbstractControlWriter {
         if (extensionType.isExtended()) {
             if (extensionType.isFacade()) {
                 writeTagId(writer, textField.getFacadeId());
-                if (extensionType.isEdit()) {
+                if (extensionType.isFacadeStringValue()) {
                     value = getFacadeStringValue(textField);
                 }
             } else {

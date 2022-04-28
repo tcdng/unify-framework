@@ -27,6 +27,7 @@ public enum ExtensionType {
     EXTENDED(true, false, false, false),
     FACADE(true, true, false, false),
     FACADE_HIDDEN(true, true, true, false),
+    FACADE_HIDDEN_LIST(true, true, true, false),
     FACADE_HIDDEN_EDIT(true, true, true, true);
 
     private final boolean extended;
@@ -58,6 +59,10 @@ public enum ExtensionType {
 
     public boolean isEdit() {
         return edit;
+    }
+
+    public boolean isFacadeStringValue() {
+        return edit || FACADE_HIDDEN_LIST.equals(this);
     }
 
     public boolean isFacadeHidden() {
