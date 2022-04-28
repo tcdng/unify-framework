@@ -894,6 +894,9 @@ overflow-x:hidden;overflow-y:scroll;border-top: solid 1px #A0A0A0;border-left: s
 /** Text Field */
 .ui-text {}
 
+/** List Read-only Text Field */
+.ui-listreadonlytext{}
+
 /** Text Area */
 .ui-textarea {resize: none; word-wrap:break-word; border: 1px solid #C8C8C8;box-sizing: border-box;}
 
