@@ -17,7 +17,6 @@ package com.tcdng.unify.web.ui.widget;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +50,8 @@ public abstract class AbstractMultiControl extends AbstractControl implements Mu
     private List<String> standalonePanelNames;
 
     private String uplValueMarker;
+    
+    private int childIndex;
     
     public AbstractMultiControl() {
         widgetInfoMap = new LinkedHashMap<String, ChildWidgetInfo>();
@@ -137,8 +138,7 @@ public abstract class AbstractMultiControl extends AbstractControl implements Mu
                 Widget widget = childWidgetInfo.getWidget();
                 String newChildId = WidgetUtils.renameChildId(id, widget.getId());
                 widget.setId(newChildId);
-                map.put(newChildId, new ChildWidgetInfo(widget, childWidgetInfo.isIgnoreParentState(),
-                        childWidgetInfo.isExternal()));
+                map.put(newChildId, childWidgetInfo);
             }
 
             widgetInfoMap = map;
@@ -255,13 +255,14 @@ public abstract class AbstractMultiControl extends AbstractControl implements Mu
      *             if an error occurs
      */
     protected void removeAllExternalChildWidgets() throws UnifyException {
-        for (Iterator<Map.Entry<String, ChildWidgetInfo>> it = widgetInfoMap.entrySet().iterator(); it.hasNext();) {
-            Map.Entry<String, ChildWidgetInfo> entry = it.next();
-            if (entry.getValue().isExternal()) {
-                it.remove();
+        Map<String, ChildWidgetInfo> map = new LinkedHashMap<String, ChildWidgetInfo>();
+        for (Map.Entry<String, ChildWidgetInfo> entry: widgetInfoMap.entrySet()) {
+            if (!entry.getValue().isExternal()) {
+                map.put(entry.getKey(), entry.getValue());
             }
         }
-
+        widgetInfoMap =  map;
+        
         if (standalonePanelNames != null) {
             Page page = getRequestContextUtil().getRequestPage();
             for (String uniqueName : standalonePanelNames) {
@@ -338,8 +339,7 @@ public abstract class AbstractMultiControl extends AbstractControl implements Mu
 
     private void doAddChildWidget(Widget widget, boolean pageConstruct, boolean conforming, boolean ignoreParentState,
             boolean external) throws UnifyException {
-        int childIndex = widgetInfoMap.size();
-        String childId = WidgetUtils.getChildId(getId(), widget.getId(), childIndex);
+        String childId = WidgetUtils.getChildId(getId(), widget.getId(), childIndex++);
         widget.setId(childId);
         if (pageConstruct) {
             widget.onPageConstruct();
@@ -402,5 +402,11 @@ public abstract class AbstractMultiControl extends AbstractControl implements Mu
         public boolean isPrivilegeVisible() throws UnifyException {
             return widget.isVisible();
         }
+
+        @Override
+        public String toString() {
+            return "ChildWidgetInfo [widget=" + widget + ", external=" + external + ", ignoreParentState="
+                    + ignoreParentState + "]";
+        }        
     }
 }
