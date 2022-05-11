@@ -84,7 +84,7 @@ public class TextAreaWriter extends AbstractControlWriter {
         if (textArea.isAutoComplete()) {
             writer.write(" autocomplete=\"on\"");
         } else {
-            writer.write(" autocomplete=\"off\"");
+            writer.write(" autocomplete=\"nef\"");
         }
         
         if (textArea.getTabIndex() >= 0) {

@@ -176,7 +176,7 @@ public class TextFieldWriter extends AbstractControlWriter {
         if (textField.isAutoComplete()) {
             writer.write(" autocomplete=\"on\"");
         } else {
-            writer.write(" autocomplete=\"off\"");
+            writer.write(" autocomplete=\"nef\"");
         }
         
         if (textField.getTabIndex() >= 0) {
