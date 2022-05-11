@@ -21,7 +21,7 @@ jobs:
         distribution: 'temurin'
         cache: maven
         gpg-private-key: ${{ secrets.MVN_GPG_SECRET_KEY }}
-        gpg-passphrase: ${{secrets.MVN_GPG_PASSPHRASE}}
+        gpg-passphrase: ${{ secrets.MVN_GPG_PASSPHRASE }}
         
     - name: Setup Maven Version
       uses: s4u/setup-maven-action@v1.2.1
