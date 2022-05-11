@@ -118,7 +118,7 @@
 						<configuration>
 							<serverId>sonatype-nexus-staging</serverId>
 							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
-							<autoReleaseAfterClose>false</autoReleaseAfterClose>
+							<autoReleaseAfterClose>true</autoReleaseAfterClose>
 							<stagingProgressTimeoutMinutes>10</stagingProgressTimeoutMinutes>
 						</configuration>
 					</plugin>
