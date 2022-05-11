@@ -50,7 +50,13 @@ jobs:
                 "enabled": "true"
               }
           }] 
-       
+          
+    - name: Import GPG Key
+      uses: crazy-max/ghaction-import-gpg@v1
+      env:
+        GPG_PRIVATE_KEY: ${{ secrets.MVN_GPG_SECRET_KEY }}
+        PASSPHRASE: ${{ secrets.MVN_GPG_PASSPHRASE }} 
+        
     - name: Extract Project Version
       id: project
       run: echo ::set-output name=version::$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
@@ -58,3 +64,4 @@ jobs:
     - name: Deploy Snapshot with Maven
       if:  ${{ endsWith(steps.project.outputs.version, '-SNAPSHOT') }}
       run: mvn clean deploy -B -DrepoDeployMode=true
+
