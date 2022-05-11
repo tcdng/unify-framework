@@ -57,4 +57,4 @@ jobs:
        
     - name: Deploy Snapshot with Maven
       if:  ${{ endsWith(steps.project.outputs.version, '-SNAPSHOT') }}
-      run: mvn clean deploy -B
+      run: mvn clean deploy -B -DrepoDeployMode=true
