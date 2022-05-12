@@ -3,8 +3,10 @@
 name: Deploy Unify Framework Staging
 
 on:
-  release:
-    types: [published]
+  push:
+    branches: [ master ]
+    tags:        
+      - '*'
     
 jobs:
   build:
