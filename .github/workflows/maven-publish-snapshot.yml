@@ -1,6 +1,6 @@
 # This workflow will build and release unify framework snapshot
 
-name: Release Unify Framework  Snapshot
+name: Deploy Unify Framework  Snapshot
 
 on:
   push:
