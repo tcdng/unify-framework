@@ -3,12 +3,11 @@
 name: Deploy Release
 
 on:
-  release:
-    types: [published]
+  push:
+    branches: [master]
 
 jobs:
   build:
-    if: github.event.base_ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     
     steps:
