@@ -3,62 +3,62 @@
 name: Deploy Release
 
 on:
-  release:
-    types: [published]
+	release:
+		types: [published]
 
 jobs:
-  build:
-     if: github.event.base_ref == 'refs/heads/master'
-     runs-on: ubuntu-latest
-
-     steps:
-     - uses: actions/checkout@v3
-    
-     - name: Set up JDK 1.8
-       uses: actions/setup-java@v3
-       with:
-        java-version: 8
-        distribution: 'temurin'
-        cache: maven
-        
-     - name: Setup Maven Version
-       uses: s4u/setup-maven-action@v1.2.1
-       with:
-        java-version: 8
-        maven-version: 3.5.4
-        
-     - name: Reconfigure Maven Settings
-       uses: whelk-io/maven-settings-xml-action@v20
-       with:
-        servers: |
-          [{
-              "id": "sonatype-nexus-staging",
-              "username": "${{ secrets.REPO_USERNAME }}",
-              "password": "${{ secrets.REPO_PASSWORD }}"
-          }] 
-        repositories: |
-          [{
-              "id": "sonatype-nexus-staging",
-              "name": "Sonatype Nexus Staging",
-              "url": "http://oss.sonatype.org/service/local/staging/deploy/maven2/",
-              "releases": {
-                "enabled": "true"
-              },
-              "snapshots": {
-                "enabled": "false"
-              }
-          }] 
-          
-     - name: Import GPG Key
-       uses: crazy-max/ghaction-import-gpg@v1
-       env:
-        GPG_PRIVATE_KEY: ${{ secrets.MVN_GPG_SECRET_KEY }}
-        PASSPHRASE: ${{ secrets.MVN_GPG_PASSPHRASE }} 
+	build:
+		if: github.event.base_ref == 'refs/heads/master'
+		runs-on: ubuntu-latest
 		
-     - name: Extract Project Version
-       id: project
-       run: echo ::set-output name=version::$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-               
-     - name: Deploy Release with Maven
-       if:  ${{ endsWith(steps.project.outputs.version, '-SNAPSHOT') != true }}
-       run: mvn clean deploy -B -DrepoDeployMode=true
+		steps:
+			- uses: actions/checkout@v
+			
+			- name: Set up JDK 1.8
+				uses: actions/setup-java@v3
+			  with:
+				java-version: 8
+				distribution: 'temurin'
+				cache: maven
+        
+			- name: Setup Maven Version
+			  uses: s4u/setup-maven-action@v1.2.1
+			  with:
+				java-version: 8
+				maven-version: 3.5.4
+        
+			- name: Reconfigure Maven Settings
+			  uses: whelk-io/maven-settings-xml-action@v20
+			  with:
+				servers: |
+				  [{
+					  "id": "sonatype-nexus-staging",
+					  "username": "${{ secrets.REPO_USERNAME }}",
+					  "password": "${{ secrets.REPO_PASSWORD }}"
+				  }] 
+				repositories: |
+				  [{
+					  "id": "sonatype-nexus-staging",
+					  "name": "Sonatype Nexus Staging",
+					  "url": "http://oss.sonatype.org/service/local/staging/deploy/maven2/",
+					  "releases": {
+						"enabled": "true"
+					  },
+					  "snapshots": {
+						"enabled": "false"
+					  }
+				  }] 
+          
+			- name: Import GPG Key
+			  uses: crazy-max/ghaction-import-gpg@v1
+			  env:
+				 GPG_PRIVATE_KEY: ${{ secrets.MVN_GPG_SECRET_KEY }}
+				 PASSPHRASE: ${{ secrets.MVN_GPG_PASSPHRASE }} 
+
+			- name: Extract Project Version
+			  id: project
+			  run: echo ::set-output name=version::$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+
+			- name: Deploy Release with Maven
+			  if:  ${{ endsWith(steps.project.outputs.version, '-SNAPSHOT') != true }}
+			  run: mvn clean deploy -B -DrepoDeployMode=true
