@@ -1,0 +1,65 @@
+# This workflow will build and deploy unify framework snapshot
+
+name: Deploy Snapshot
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up JDK 1.8
+      uses: actions/setup-java@v3
+      with:
+        java-version: 8
+        distribution: 'temurin'
+        cache: maven
+        
+    - name: Setup Maven Version
+      uses: s4u/setup-maven-action@v1.2.1
+      with:
+        java-version: 8
+        maven-version: 3.5.4
+        
+    - name: Reconfigure Maven Settings
+      uses: whelk-io/maven-settings-xml-action@v20
+      with:
+        servers: |
+          [{
+              "id": "sonatype-nexus-snapshots",
+              "username": "${{ secrets.REPO_USERNAME }}",
+              "password": "${{ secrets.REPO_PASSWORD }}"
+          }] 
+        repositories: |
+          [{
+              "id": "sonatype-nexus-snapshots",
+              "name": "Sonatype Nexus Snapshots",
+              "url": "https://oss.sonatype.org/content/repositories/snapshots/",
+              "releases": {
+                "enabled": "false"
+              },
+              "snapshots": {
+                "enabled": "true"
+              }
+          }] 
+          
+    - name: Import GPG Key
+      uses: crazy-max/ghaction-import-gpg@v1
+      env:
+        GPG_PRIVATE_KEY: ${{ secrets.MVN_GPG_SECRET_KEY }}
+        PASSPHRASE: ${{ secrets.MVN_GPG_PASSPHRASE }} 
+    
+    - name: Extract Project Version
+      id: project
+      run: echo ::set-output name=version::$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+       
+        
+    - name: Deploy Snapshot with Maven
+      if:  ${{ endsWith(steps.project.outputs.version, '-SNAPSHOT') }}
+      run: mvn clean deploy -B -DrepoDeployMode=true
