@@ -4344,6 +4344,10 @@ ux.buildObjParams = function(trgObj, evp, param) {
 		}
 	}
 	
+	if (evp.uId && evp.uId.startsWith("row_")) {
+		trgObj = ux.findParent(trgObj, "tr");
+	}
+	
 	if (trgObj) {
 		if (evp.isUniqueTrg) {
 			ux.extractObjParams(trgObj, param);
@@ -4351,29 +4355,27 @@ ux.buildObjParams = function(trgObj, evp, param) {
 			ux.buildNameParams(trgObj.id, builtNames, param)
 		}
 
+		var _val;
 		if (trgObj.id) {
-			// Used for sending target value for target control
 			var hiddenElem = _id("trg_" + trgObj.id);
 			if (hiddenElem) {
-				if (isForm) {
-					pb.append("req_trg", hiddenElem.value);
-				} else {
-					pb += ("&req_trg=" + _enc(hiddenElem.value));
-				}
+				_val = hiddenElem.value;
 			}
+		} else if (trgObj.dispIdx) {
+			_val = trgObj.dispIdx;
 		}
 
 		if (evp.uReqTrg) {
-			if (isForm) {
-				pb.append("req_trg", evp.uReqTrg);
-			} else {
-				pb += ("&req_trg=" + _enc(evp.uReqTrg));
-			}
+			_val = evp.uReqTrg;
 		} else if (evp.uIsReqTrg) {
+			_val = trgObj.value;
+		}
+		
+		if (_val !== undefined) {
 			if (isForm) {
-				pb.append("req_trg", trgObj.value);
+				pb.append("req_trg", _val);
 			} else {
-				pb += ("&req_trg=" + _enc(trgObj.value));
+				pb += ("&req_trg=" + _enc(_val));
 			}
 		}
 	}
@@ -5288,11 +5290,14 @@ ux.decodeHtml = function(html) {
 }
 
 ux.findParent = function(domObject, tagName) {
-	while (domObject = domObject.parentNode) {
-		if (domObject.tagName.toLowerCase() == tagName.toLowerCase()) {
-			return domObject;
+	if (domObject) {
+		while (domObject = domObject.parentNode) {
+			if (domObject.tagName.toLowerCase() == tagName.toLowerCase()) {
+				return domObject;
+			}
 		}
 	}
+	
 	return null;
 }
 
