@@ -34,6 +34,16 @@ public abstract class AbstractMenuPanel extends AbstractContainer implements Pan
     }
 
     @Override
+    public boolean isControl() {
+        return false;
+    }
+
+    @Override
+    public boolean isPanel() {
+        return true;
+    }
+
+    @Override
     @Action
     public void switchState() throws UnifyException {
 

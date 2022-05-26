@@ -399,6 +399,14 @@ public abstract class AbstractMultiControl extends AbstractControl implements Mu
             return widget.isConforming();
         }
 
+        public boolean isControl() {
+            return widget.isControl();
+        }
+
+        public boolean isPanel() {
+            return widget.isPanel();
+        }
+
         public boolean isPrivilegeVisible() throws UnifyException {
             return widget.isVisible();
         }

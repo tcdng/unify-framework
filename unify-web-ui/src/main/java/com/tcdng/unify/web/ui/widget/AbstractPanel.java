@@ -134,6 +134,16 @@ public abstract class AbstractPanel extends AbstractContainer implements Panel {
         return getUplAttribute(String.class, "legend");
     }
 
+    @Override
+    public boolean isControl() {
+        return false;
+    }
+
+    @Override
+    public boolean isPanel() {
+        return true;
+    }
+
     /**
      * Hints user in current request with supplied message in INFO mode.
      * 
