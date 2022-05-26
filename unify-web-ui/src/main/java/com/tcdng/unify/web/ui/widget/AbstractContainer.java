@@ -69,6 +69,16 @@ public abstract class AbstractContainer extends AbstractWidget implements Contai
     }
 
     @Override
+    public boolean isControl() {
+        return false;
+    }
+
+    @Override
+    public boolean isPanel() {
+        return false;
+    }
+
+    @Override
     public void setWidgetRepository(WidgetRepository widgetRepository) throws UnifyException {
         this.widgetRepository = widgetRepository;
     }

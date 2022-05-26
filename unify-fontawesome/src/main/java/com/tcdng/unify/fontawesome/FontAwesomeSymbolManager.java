@@ -161,6 +161,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("tasks", "f0ae");
         registerSymbol("thumbtack", "f08d");
         registerSymbol("times-circle", "f057");
+        registerSymbol("trash", "f2ed");
         registerSymbol("undo", "f2ea");
         registerSymbol("unlock", "f09c");
         registerSymbol("user", "f007");

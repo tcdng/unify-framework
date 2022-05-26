@@ -20,7 +20,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
-import com.tcdng.unify.web.ui.widget.AbstractWidget;
+import com.tcdng.unify.web.ui.widget.AbstractControl;
 
 /**
  * A bell widget.
@@ -31,7 +31,7 @@ import com.tcdng.unify.web.ui.widget.AbstractWidget;
 @Component("ui-bell")
 @UplAttributes({
         @UplAttribute(name = "imageSrc", type = String.class, defaultVal = "$t{images/notification_gray.png}") })
-public class Bell extends AbstractWidget {
+public class Bell extends AbstractControl {
 
     public String getImageSrc() throws UnifyException {
         return getUplAttribute(String.class, "imageSrc");

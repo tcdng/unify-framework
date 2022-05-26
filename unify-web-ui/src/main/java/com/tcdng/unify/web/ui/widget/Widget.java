@@ -591,4 +591,14 @@ public interface Widget extends UplComponent {
      *                        if an error occurs
      */
     WriteWork getWriteWork() throws UnifyException;
+    
+    /**
+     * Returns true if widget is a control.
+     */
+    boolean isControl();
+    
+    /**
+     * Returns true if widget is a panel.
+     */
+    boolean isPanel();
 }

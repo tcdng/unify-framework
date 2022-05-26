@@ -143,6 +143,16 @@ public abstract class AbstractControl extends AbstractWidget implements Control 
         return colorMode;
     }
 
+    @Override
+    public boolean isControl() {
+        return true;
+    }
+
+    @Override
+    public boolean isPanel() {
+        return false;
+    }
+
     protected List<String> getPageNames(UplElementReferences uer) throws UnifyException {
         if (uer != null) {
             return getPageManager().getPageNames(uer.getLongNames());
