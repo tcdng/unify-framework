@@ -59,16 +59,16 @@ public abstract class AbstractControl extends AbstractWidget implements Control 
 
     @Override
     public String getId() throws UnifyException {
+        String prefix = getValuePrefix();
+        if (prefix != null) {
+            return prefix + '.' + super.getId();
+        }
+        
         int index = getValueIndex();
         if (index >= 0) {
             return WidgetUtils.getDataIndexId(super.getId(), index);
         }
 
-        return super.getId();
-    }
-
-    @Override
-    public String getBaseId() throws UnifyException {
         return super.getId();
     }
 

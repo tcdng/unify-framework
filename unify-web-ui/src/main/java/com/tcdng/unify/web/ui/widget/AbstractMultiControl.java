@@ -101,6 +101,9 @@ public abstract class AbstractMultiControl extends AbstractControl implements Mu
 
     @Override
     public void populate(DataTransferBlock transferBlock) throws UnifyException {
+        System.out.println("@Stripe: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+        System.out.println("@Stripe: longName = " + getLongName());
+        System.out.println("@Stripe: transferBlock = " + transferBlock);
         if (transferBlock != null) {
             DataTransferBlock childBlock = transferBlock.getChildBlock();
             if (childBlock == null) {
@@ -189,7 +192,7 @@ public abstract class AbstractMultiControl extends AbstractControl implements Mu
         doAddChildWidget(widget, true, false, false, true);
         return widget;
     }
-
+    
     /**
      * Creates and adds a non-conforming external child standalone panel that
      * doesn't ignore parent state.

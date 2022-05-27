@@ -46,14 +46,6 @@ public interface Control extends DataTransferWidget {
     void setRequired(TriState required) throws UnifyException;
 
     /**
-     * Returns the control non-indexed Id
-     * 
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    String getBaseId() throws UnifyException;
-
-    /**
      * Returns the control border Id
      * 
      * @throws UnifyException

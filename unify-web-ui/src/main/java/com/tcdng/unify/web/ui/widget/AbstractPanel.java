@@ -67,6 +67,19 @@ public abstract class AbstractPanel extends AbstractContainer implements Panel {
     }
 
     @Override
+    public void addPageAliases() throws UnifyException {
+        for (String longName : getLayoutWidgetLongNames()) {
+            Widget widget = getWidgetByLongName(longName);
+            if (widget.isVisible() || widget.isHidden()) {
+                getRequestContextUtil().addPageAlias(getId(), widget.getId());
+                if (widget.isPanel()) {
+                    ((Panel) widget).addPageAliases();
+                }
+            }
+        }
+    }
+
+    @Override
     public boolean isVisible() throws UnifyException {
         if (getUplAttribute(boolean.class, "hideOnNoComponents")) {
             if (isNoReferencedComponents()) {

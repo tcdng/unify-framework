@@ -33,8 +33,20 @@ import com.tcdng.unify.core.util.ReflectUtils;
  */
 public abstract class AbstractValueStore implements ValueStore {
 
+    private String dataPrefix;
+    
     private ValueStorePolicy policy;
     
+    @Override
+    public String getDataPrefix() {
+        return dataPrefix;
+    }
+
+    @Override
+    public void setDataPrefix(String dataPrefix) {
+        this.dataPrefix = dataPrefix;
+    }
+
     @Override
     public void setPolicy(ValueStorePolicy policy) {
         this.policy = policy;

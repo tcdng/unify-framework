@@ -64,6 +64,16 @@ public abstract class AbstractContainer extends AbstractWidget implements Contai
     }
 
     @Override
+    public String getId() throws UnifyException {
+        int index = getValueIndex();
+        if (index >= 0) {
+            return WidgetUtils.getDataIndexId(super.getId(), index);
+        }
+
+        return super.getId();
+    }
+
+    @Override
     public boolean isField() {
         return false;
     }
@@ -187,7 +197,10 @@ public abstract class AbstractContainer extends AbstractWidget implements Contai
     public void populate(DataTransferBlock transferBlock) throws UnifyException {
         if (transferBlock != null) {
             DataTransferBlock childBlock = transferBlock.getChildBlock();
-            DataTransferWidget childWidget = (DataTransferWidget) internalWidgets.get(childBlock.getId());
+            DataTransferWidget childWidget = internalWidgets != null
+                    ? (DataTransferWidget) internalWidgets.get(childBlock.getId())
+                    : (DataTransferWidget) widgetRepository
+                            .getWidgetByBaseId(childBlock.getShortId(transferBlock.getId())); // TODO Unchain
             childWidget.populate(childBlock);
         }
     }
@@ -242,7 +255,7 @@ public abstract class AbstractContainer extends AbstractWidget implements Contai
         if (getValueStore() != null) {
             return getValueStore().getValueObject();
         }
-        
+
         return null;
     }
 
@@ -311,7 +324,7 @@ public abstract class AbstractContainer extends AbstractWidget implements Contai
         if (internalWidgets != null) {
             return internalWidgets.get(childId);
         }
-        
+
         return null;
     }
 
@@ -327,10 +340,10 @@ public abstract class AbstractContainer extends AbstractWidget implements Contai
      * Adds an internal child widget to this container.
      * 
      * @param descriptor
-     *            the internal control descriptor
+     *                   the internal control descriptor
      * @return the child control
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     protected Widget addInternalWidget(String descriptor) throws UnifyException {
         Widget widget = (Widget) getUplComponent(getSessionLocale(), descriptor, false);
@@ -352,9 +365,9 @@ public abstract class AbstractContainer extends AbstractWidget implements Contai
      * Sets the source of the value store of widget to
      * 
      * @param shortName
-     *            the component short name
+     *                  the component short name
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     protected void setComponentValueBeanToThis(String shortName) throws UnifyException {
         Widget widget = getWidgetByShortName(shortName);
@@ -365,11 +378,11 @@ public abstract class AbstractContainer extends AbstractWidget implements Contai
      * Sets the visibility of a widget in this container by short name.
      * 
      * @param shortName
-     *            the component short name
+     *                  the component short name
      * @param visible
-     *            the visible flag
+     *                  the visible flag
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     protected void setVisible(String shortName, boolean visible) throws UnifyException {
         getWidgetByShortName(shortName).setVisible(visible);
@@ -379,11 +392,11 @@ public abstract class AbstractContainer extends AbstractWidget implements Contai
      * Sets the editability of a widget in this container by short name.
      * 
      * @param shortName
-     *            the component short name
+     *                  the component short name
      * @param editable
-     *            the editable flag
+     *                  the editable flag
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     protected void setEditable(String shortName, boolean editable) throws UnifyException {
         getWidgetByShortName(shortName).setEditable(editable);
@@ -393,11 +406,11 @@ public abstract class AbstractContainer extends AbstractWidget implements Contai
      * Sets if a widget is disabled in this container by short name.
      * 
      * @param shortName
-     *            the component short name
+     *                  the component short name
      * @param disabled
-     *            the disabled flag
+     *                  the disabled flag
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     protected void setDisabled(String shortName, boolean disabled) throws UnifyException {
         getWidgetByShortName(shortName).setDisabled(disabled);

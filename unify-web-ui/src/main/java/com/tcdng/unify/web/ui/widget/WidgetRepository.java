@@ -36,17 +36,20 @@ public class WidgetRepository {
     private static FactoryMaps<String, String, String> longNamesByShortName;
 
     static {
-        longNamesByShortName = new FactoryMaps<String, String, String>() {
+        longNamesByShortName = new FactoryMaps<String, String, String>()
+            {
 
-            @Override
-            protected String createObject(String parentName, String shortName, Object... params) throws Exception {
-                return StringUtils.dotify(parentName, shortName);
-            }
+                @Override
+                protected String createObject(String parentName, String shortName, Object... params) throws Exception {
+                    return StringUtils.dotify(parentName, shortName);
+                }
 
-        };
+            };
     }
 
     private Map<String, Widget> widgets;
+
+    private Map<String, Widget> widgetsByBase;
 
     private Map<String, WidgetNameInfo> widgetNameInfos;
 
@@ -57,6 +60,21 @@ public class WidgetRepository {
 
     public Widget getWidget(String longName) throws UnifyException {
         return widgets.get(longName);
+    }
+
+    public Widget getWidgetByBaseId(String baseId) throws UnifyException {
+        if (widgetsByBase == null) {
+            synchronized (this) {
+                if (widgetsByBase == null) {
+                    widgetsByBase = new HashMap<String, Widget>();
+                    for (Widget widget : widgets.values()) {
+                        widgetsByBase.put(widget.getBaseId(), widget);
+                    }
+                }
+            }
+        }
+
+        return widgetsByBase.get(baseId);
     }
 
     public Widget getWidget(String parentName, String shortName) throws UnifyException {
@@ -74,17 +92,17 @@ public class WidgetRepository {
     public WidgetNameInfo getWidgetInfo(String ownerLongName) {
         return widgetNameInfos.get(ownerLongName);
     }
-    
+
     public Set<String> getWidgetLongNames() {
         return widgets.keySet();
     }
-    
+
     public List<String> getWidgetIds() throws UnifyException {
         List<String> list = new ArrayList<String>();
-        for(Widget widget: widgets.values()) {
+        for (Widget widget : widgets.values()) {
             list.add(widget.getId());
         }
-        
+
         return list;
     }
 }
