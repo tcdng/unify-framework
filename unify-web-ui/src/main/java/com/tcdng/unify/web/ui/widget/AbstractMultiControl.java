@@ -101,9 +101,6 @@ public abstract class AbstractMultiControl extends AbstractControl implements Mu
 
     @Override
     public void populate(DataTransferBlock transferBlock) throws UnifyException {
-        System.out.println("@Stripe: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-        System.out.println("@Stripe: longName = " + getLongName());
-        System.out.println("@Stripe: transferBlock = " + transferBlock);
         if (transferBlock != null) {
             DataTransferBlock childBlock = transferBlock.getChildBlock();
             if (childBlock == null) {

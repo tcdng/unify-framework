@@ -41,7 +41,7 @@ import com.tcdng.unify.web.ui.util.WidgetUtils;
         @UplAttribute(name = "alternate", type = boolean.class, defaultVal = "false"),
         @UplAttribute(name = "arrayCascade", type = boolean.class, defaultVal = "false"),
         @UplAttribute(name = "space", type = boolean.class, defaultVal = "false") })
-public abstract class AbstractContainer extends AbstractWidget implements Container {
+public abstract class AbstractContainer extends AbstractDataTransferWidget implements Container {
 
     private WidgetRepository widgetRepository;
 
@@ -61,16 +61,6 @@ public abstract class AbstractContainer extends AbstractWidget implements Contai
 
     public AbstractContainer(boolean useLayoutIfPresent) {
         this.useLayoutIfPresent = useLayoutIfPresent;
-    }
-
-    @Override
-    public String getId() throws UnifyException {
-        int index = getValueIndex();
-        if (index >= 0) {
-            return WidgetUtils.getDataIndexId(super.getId(), index);
-        }
-
-        return super.getId();
     }
 
     @Override
@@ -334,6 +324,18 @@ public abstract class AbstractContainer extends AbstractWidget implements Contai
 
     protected List<String> getAllWidgetIds() throws UnifyException {
         return widgetRepository.getWidgetIds();
+    }
+
+    @Override
+    protected ValueStore createValueStore(Object storageObject) throws UnifyException {
+        ValueStore valueStore = super.createValueStore(storageObject);
+        ValueStore _valueStore = getValueStore();
+        if (_valueStore != null) {
+            valueStore.setDataIndex(_valueStore.getDataIndex());
+            valueStore.setDataPrefix(_valueStore.getDataPrefix());
+        }
+        
+        return valueStore;
     }
 
     /**
