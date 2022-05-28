@@ -24,7 +24,6 @@ import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.constant.TriState;
 import com.tcdng.unify.core.upl.UplElementReferences;
 import com.tcdng.unify.web.ui.DataTransferBlock;
-import com.tcdng.unify.web.ui.util.WidgetUtils;
 import com.tcdng.unify.web.ui.widget.control.ControlColorMode;
 
 /**
@@ -37,7 +36,7 @@ import com.tcdng.unify.web.ui.widget.control.ControlColorMode;
         @UplAttribute(name = "sortable", type = boolean.class),
         @UplAttribute(name = "required", type = boolean.class, defaultVal = "false"),
         @UplAttribute(name = "layoutColorMode", type = boolean.class, defaultVal = "false") })
-public abstract class AbstractControl extends AbstractWidget implements Control {
+public abstract class AbstractControl extends AbstractDataTransferWidget implements Control {
 
     private TriState required;
 
@@ -59,16 +58,11 @@ public abstract class AbstractControl extends AbstractWidget implements Control 
 
     @Override
     public String getId() throws UnifyException {
-        int index = getValueIndex();
-        if (index >= 0) {
-            return WidgetUtils.getDataIndexId(super.getId(), index);
+        String prefix = getValuePrefix();
+        if (prefix != null) {
+            return prefix + '.' + super.getId();
         }
-
-        return super.getId();
-    }
-
-    @Override
-    public String getBaseId() throws UnifyException {
+        
         return super.getId();
     }
 

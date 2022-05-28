@@ -55,6 +55,14 @@ public interface Widget extends UplComponent {
     void setId(String id) throws UnifyException;
 
     /**
+     * Returns the control non-indexed Id
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    String getBaseId() throws UnifyException;
+
+    /**
      * Returns the group id
      * 
      * @throws UnifyException
@@ -214,9 +222,14 @@ public interface Widget extends UplComponent {
     ValueStore getValueStore();
 
     /**
-     * Returns value index prefix.
+     * Returns value marker.
      */
     String getValueMarker();
+
+    /**
+     * Returns value prefix.
+     */
+    String getValuePrefix();
 
     /**
      * Returns value index.

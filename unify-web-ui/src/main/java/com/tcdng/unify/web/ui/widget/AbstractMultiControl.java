@@ -189,7 +189,7 @@ public abstract class AbstractMultiControl extends AbstractControl implements Mu
         doAddChildWidget(widget, true, false, false, true);
         return widget;
     }
-
+    
     /**
      * Creates and adds a non-conforming external child standalone panel that
      * doesn't ignore parent state.

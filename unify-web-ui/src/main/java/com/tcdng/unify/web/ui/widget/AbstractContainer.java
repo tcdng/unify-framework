@@ -41,7 +41,7 @@ import com.tcdng.unify.web.ui.util.WidgetUtils;
         @UplAttribute(name = "alternate", type = boolean.class, defaultVal = "false"),
         @UplAttribute(name = "arrayCascade", type = boolean.class, defaultVal = "false"),
         @UplAttribute(name = "space", type = boolean.class, defaultVal = "false") })
-public abstract class AbstractContainer extends AbstractWidget implements Container {
+public abstract class AbstractContainer extends AbstractDataTransferWidget implements Container {
 
     private WidgetRepository widgetRepository;
 
@@ -187,7 +187,10 @@ public abstract class AbstractContainer extends AbstractWidget implements Contai
     public void populate(DataTransferBlock transferBlock) throws UnifyException {
         if (transferBlock != null) {
             DataTransferBlock childBlock = transferBlock.getChildBlock();
-            DataTransferWidget childWidget = (DataTransferWidget) internalWidgets.get(childBlock.getId());
+            DataTransferWidget childWidget = internalWidgets != null
+                    ? (DataTransferWidget) internalWidgets.get(childBlock.getId())
+                    : (DataTransferWidget) widgetRepository
+                            .getWidgetByBaseId(childBlock.getShortId(transferBlock.getId())); // TODO Unchain
             childWidget.populate(childBlock);
         }
     }
@@ -242,7 +245,7 @@ public abstract class AbstractContainer extends AbstractWidget implements Contai
         if (getValueStore() != null) {
             return getValueStore().getValueObject();
         }
-        
+
         return null;
     }
 
@@ -311,7 +314,7 @@ public abstract class AbstractContainer extends AbstractWidget implements Contai
         if (internalWidgets != null) {
             return internalWidgets.get(childId);
         }
-        
+
         return null;
     }
 
@@ -323,14 +326,26 @@ public abstract class AbstractContainer extends AbstractWidget implements Contai
         return widgetRepository.getWidgetIds();
     }
 
+    @Override
+    protected ValueStore createValueStore(Object storageObject) throws UnifyException {
+        ValueStore valueStore = super.createValueStore(storageObject);
+        ValueStore _valueStore = getValueStore();
+        if (_valueStore != null) {
+            valueStore.setDataIndex(_valueStore.getDataIndex());
+            valueStore.setDataPrefix(_valueStore.getDataPrefix());
+        }
+        
+        return valueStore;
+    }
+
     /**
      * Adds an internal child widget to this container.
      * 
      * @param descriptor
-     *            the internal control descriptor
+     *                   the internal control descriptor
      * @return the child control
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     protected Widget addInternalWidget(String descriptor) throws UnifyException {
         Widget widget = (Widget) getUplComponent(getSessionLocale(), descriptor, false);
@@ -352,9 +367,9 @@ public abstract class AbstractContainer extends AbstractWidget implements Contai
      * Sets the source of the value store of widget to
      * 
      * @param shortName
-     *            the component short name
+     *                  the component short name
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     protected void setComponentValueBeanToThis(String shortName) throws UnifyException {
         Widget widget = getWidgetByShortName(shortName);
@@ -365,11 +380,11 @@ public abstract class AbstractContainer extends AbstractWidget implements Contai
      * Sets the visibility of a widget in this container by short name.
      * 
      * @param shortName
-     *            the component short name
+     *                  the component short name
      * @param visible
-     *            the visible flag
+     *                  the visible flag
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     protected void setVisible(String shortName, boolean visible) throws UnifyException {
         getWidgetByShortName(shortName).setVisible(visible);
@@ -379,11 +394,11 @@ public abstract class AbstractContainer extends AbstractWidget implements Contai
      * Sets the editability of a widget in this container by short name.
      * 
      * @param shortName
-     *            the component short name
+     *                  the component short name
      * @param editable
-     *            the editable flag
+     *                  the editable flag
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     protected void setEditable(String shortName, boolean editable) throws UnifyException {
         getWidgetByShortName(shortName).setEditable(editable);
@@ -393,11 +408,11 @@ public abstract class AbstractContainer extends AbstractWidget implements Contai
      * Sets if a widget is disabled in this container by short name.
      * 
      * @param shortName
-     *            the component short name
+     *                  the component short name
      * @param disabled
-     *            the disabled flag
+     *                  the disabled flag
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     protected void setDisabled(String shortName, boolean disabled) throws UnifyException {
         getWidgetByShortName(shortName).setDisabled(disabled);

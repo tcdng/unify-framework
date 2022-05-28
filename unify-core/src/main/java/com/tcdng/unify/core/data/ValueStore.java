@@ -318,6 +318,19 @@ public interface ValueStore {
     void setDataIndex(int dataIndex);
 
     /**
+     * Returns the value store data prefix.
+     */
+    String getDataPrefix();
+
+    /**
+     * Sets the value store data prefix.
+     * 
+     * @param prefix
+     *               the prefix to set
+     */
+    void setDataPrefix(String prefix);
+    
+    /**
      * Returns the storage size for this value store
      * 
      * @return the storage size

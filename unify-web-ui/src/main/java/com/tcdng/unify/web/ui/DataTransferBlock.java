@@ -108,6 +108,18 @@ public class DataTransferBlock {
         }
     }
 
+    public String getShortId(String parentId) {
+        if (id.startsWith(parentId)) {
+            int fromIndex = id.indexOf('p', parentId.length());
+            if (fromIndex > 0) {
+                int endIndex = id.indexOf('.', fromIndex);
+                return endIndex > 0 ? id.substring(fromIndex, endIndex) : id.substring(fromIndex);
+            }
+        }
+
+        return id;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

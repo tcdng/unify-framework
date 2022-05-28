@@ -96,6 +96,11 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 		this.id = id;
 	}
 
+    @Override
+    public final String getBaseId() throws UnifyException {
+        return id;
+    }
+
 	@Override
 	public String getGroupId() throws UnifyException {
 		return groupId;
@@ -232,6 +237,15 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 	}
 
 	@Override
+    public String getValuePrefix() {
+        if (valueStore != null) {
+            return valueStore.getDataPrefix();
+        }
+
+        return null;
+    }
+
+    @Override
 	public int getValueIndex() {
 		if (valueStore != null) {
 			return valueStore.getDataIndex();
