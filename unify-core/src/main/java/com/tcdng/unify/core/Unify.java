@@ -15,11 +15,16 @@
  */
 package com.tcdng.unify.core;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
-import com.tcdng.unify.core.util.CommandInterfaceUtils;
 import com.tcdng.unify.core.util.IOUtils;
 import com.tcdng.unify.core.util.TypeRepository;
 import com.tcdng.unify.core.util.TypeUtils;
@@ -33,25 +38,24 @@ import com.tcdng.unify.core.util.UnifyConfigUtils;
  */
 public class Unify {
 
+    private static final Logger LOGGER = Logger.getLogger(Unify.class.getName());
+
     private static UnifyContainer uc;
 
     public static void main(String[] args) {
         if (args.length == 0) {
-            System.err.println("Operation argument is required");
+            LOGGER.log(Level.SEVERE, "Operation argument is required");
             System.exit(1);
         }
 
         String operation = args[0];
         String workingFolder = null;
         String configFile = null;
-        String host = UnifyCoreConstants.DEFAULT_UNIFY_HOST;
         short port = 0;
 
         for (int i = 1; i <= (args.length - 2); i += 2) {
             if ("-w".equals(args[i])) {
                 workingFolder = args[i + 1];
-            } else if ("-h".equals(args[i])) {
-                host = args[i + 1];
             } else if ("-p".equals(args[i])) {
                 port = Short.valueOf(args[i + 1]);
             } else if ("-c".equals(args[i])) {
@@ -65,16 +69,13 @@ public class Unify {
             Unify.doStartup(workingFolder, configFile, null, port, false);
         } else if ("install".equalsIgnoreCase(operation)) {
             Unify.doStartup(workingFolder, configFile, null, port, true);
-        } else if ("shutdown".equalsIgnoreCase(operation)) {
-            if (port <= 0) {
-                port = UnifyCoreConstants.DEFAULT_COMMAND_PORT;
-            }
-            
-            Unify.doShutdown(host, port);
+        } else if ("install-onejar-fat".equalsIgnoreCase(operation)) {
+            URL[] _baseUrls = Unify.getOneJarFatBaseUrls();
+            Unify.doStartup(workingFolder, configFile, _baseUrls, port, true);
         } else if ("help".equalsIgnoreCase(operation)) {
             Unify.doHelp();
         } else {
-            System.err.println("Unknown operation - " + operation);
+            LOGGER.log(Level.SEVERE, "Unknown operation - " + operation);
             System.exit(1);
         }
     }
@@ -121,7 +122,8 @@ public class Unify {
         return uc;
     }
 
-    private static void doStartup(String workingFolder, String configFile, URL[] baseUrls, short preferredPort, boolean deploymentMode) {
+    private static void doStartup(String workingFolder, String configFile, URL[] baseUrls, short preferredPort,
+            boolean deploymentMode) {
         // Java 9 an 10 temp fix for jaxb binding and warnings
         // This is a temporary fix and should be removed and resolved with jaxb-api
         // 2.3.1 when moving to minimum Java 9
@@ -140,8 +142,7 @@ public class Unify {
             UnifyConfigUtils.readConfigFromTypeRepository(uccb, tr);
             uccb.deploymentMode(deploymentMode);
         } catch (Exception e) {
-            System.err.println("Failed scanning classpath type repository.");
-            e.printStackTrace(System.err);
+            LOGGER.log(Level.SEVERE, "Failed scanning classpath type repository.", e);
             System.exit(1);
         }
 
@@ -153,9 +154,8 @@ public class Unify {
         try {
             xmlInputStream = IOUtils.openFileResourceInputStream(configFile, workingFolder);
         } catch (Exception e) {
-            System.err
-                    .println("Unable to open configuration file - " + IOUtils.buildFilename(workingFolder, configFile));
-            e.printStackTrace(System.err);
+            LOGGER.log(Level.SEVERE,
+                    "Unable to open configuration file - " + IOUtils.buildFilename(workingFolder, configFile), e);
             System.exit(1);
         }
 
@@ -163,9 +163,8 @@ public class Unify {
             UnifyConfigUtils.readConfigFromXml(uccb, xmlInputStream, workingFolder);
         } catch (UnifyException e) {
             IOUtils.close(xmlInputStream);
-            System.err
-                    .println("Failed reading configuration file - " + IOUtils.buildFilename(workingFolder, configFile));
-            e.printStackTrace(System.err);
+            LOGGER.log(Level.SEVERE,
+                    "Failed reading configuration file - " + IOUtils.buildFilename(workingFolder, configFile), e);
             System.exit(1);
         } finally {
             IOUtils.close(xmlInputStream);
@@ -175,30 +174,51 @@ public class Unify {
             if (preferredPort > 0) {
                 uccb.preferredPort(preferredPort);
             }
-            
+
             UnifyContainerConfig ucc = uccb.build();
             Unify.startup(uce, ucc);
         } catch (UnifyException e) {
-            System.err.println("Error initializing Unify container.");
-            e.printStackTrace(System.err);
+            LOGGER.log(Level.SEVERE, "Error initializing Unify container.", e);
             System.exit(1);
         }
     }
 
-    private static void doShutdown(String host, short port) {
-        try {
-            System.out.println("Sending shutdown command to container on host '" + host + "' and port " + port + "...");
-            CommandInterfaceUtils.sendCommand(host, port, "shutdown", "");
-            System.out.println("Shutdown command successfully sent.");
-        } catch (Exception e) {
-            System.err.println("Error sending shutdown command. Unable to reach container instance running on '" + host
-                    + "' and listening for commands on port " + port + ".");
-        }
-        System.exit(1);
-    }
-
     private static void doHelp() {
-        System.out.println("Usage:");
 
+    }
+    
+    private static URL[] getOneJarFatBaseUrls() {
+        List<URL> baseUrls = new ArrayList<URL>();
+        try {
+            ClassLoader cl = Thread.currentThread().getContextClassLoader();
+            Enumeration<URL> urls = cl.getResources("META-INF/MANIFEST.MF");
+            String base = null;
+            List<String[]> partList = new ArrayList<String[]>();
+            while (urls.hasMoreElements()) {
+                String url = urls.nextElement().toString();
+                if (url.startsWith("jar:file:")) {
+                    String[] parts = url.split("\\!/");
+                    if (parts.length == 2) {
+                        if (base == null || base.length() < parts[0].length()) {
+                            base = parts[0];
+                        }
+                    }
+
+                    partList.add(parts);
+                }
+            }
+
+            if (base != null) {
+                for (String[] parts : partList) {
+                    if (parts.length == 3) {
+                        baseUrls.add(new URL(base + "!/" + parts[1]));
+                    }
+                }
+            }
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "Error resolving packaged JARs.", e);
+        }
+
+        return baseUrls.isEmpty() ? null : baseUrls.toArray(new URL[baseUrls.size()]);
     }
 }
