@@ -55,4 +55,16 @@ public class DataTransferUtilsTest {
         assertEquals("p7.c0d0.c1", dtb.getId());
         assertEquals(-1, dtb.getItemIndex());        
     }
+    
+    @Test
+    public void testStripTransferDataIndexPart() throws Exception {
+        String s = DataTransferUtils.stripTransferDataIndexPart("p10029345");
+        assertEquals("p10029345", s);
+        
+        s = DataTransferUtils.stripTransferDataIndexPart("p100293d0");
+        assertEquals("p100293", s);
+        
+        s = DataTransferUtils.stripTransferDataIndexPart("p1002955d023");
+        assertEquals("p1002955", s);      
+    }
 }
