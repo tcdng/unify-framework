@@ -59,24 +59,16 @@ import com.tcdng.unify.web.ui.widget.ResponseWriterPool;
  */
 public abstract class AbstractUIController extends AbstractController implements UIController {
 
-    private static final Set<String> skipOnPopulateSet = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(
-            PageRequestParameterConstants.DOCUMENT,
-            PageRequestParameterConstants.TARGET_VALUE,
-            PageRequestParameterConstants.WINDOW_NAME,
-            PageRequestParameterConstants.VALIDATION_ACTION,
-            PageRequestParameterConstants.CONFIRM_MSG,
-            PageRequestParameterConstants.CONFIRM_MSGICON,
-            PageRequestParameterConstants.CONFIRM_PARAM,
-            RequestParameterConstants.REMOTE_VIEWER,
-            RequestParameterConstants.REMOTE_ROLECD,
-            RequestParameterConstants.REMOTE_SESSION_ID,
-            RequestParameterConstants.REMOTE_USERLOGINID,
-            RequestParameterConstants.REMOTE_USERNAME,
-            RequestParameterConstants.REMOTE_BRANCH_CODE,
-            RequestParameterConstants.REMOTE_ZONE_CODE,
-            RequestParameterConstants.REMOTE_GLOBAL_ACCESS,
-            RequestParameterConstants.REMOTE_COLOR_SCHEME,
-            RequestParameterConstants.REMOTE_TENANT_CODE)));
+    private static final Set<String> skipOnPopulateSet = Collections
+            .unmodifiableSet(new HashSet<String>(Arrays.asList(PageRequestParameterConstants.DOCUMENT,
+                    PageRequestParameterConstants.TARGET_VALUE, PageRequestParameterConstants.WINDOW_NAME,
+                    PageRequestParameterConstants.VALIDATION_ACTION, PageRequestParameterConstants.CONFIRM_MSG,
+                    PageRequestParameterConstants.CONFIRM_MSGICON, PageRequestParameterConstants.CONFIRM_PARAM,
+                    RequestParameterConstants.REMOTE_VIEWER, RequestParameterConstants.REMOTE_ROLECD,
+                    RequestParameterConstants.REMOTE_SESSION_ID, RequestParameterConstants.REMOTE_USERLOGINID,
+                    RequestParameterConstants.REMOTE_USERNAME, RequestParameterConstants.REMOTE_BRANCH_CODE,
+                    RequestParameterConstants.REMOTE_ZONE_CODE, RequestParameterConstants.REMOTE_GLOBAL_ACCESS,
+                    RequestParameterConstants.REMOTE_COLOR_SCHEME, RequestParameterConstants.REMOTE_TENANT_CODE)));
 
     @Configurable
     private UIControllerUtil uiControllerUtil;
@@ -137,7 +129,7 @@ public abstract class AbstractUIController extends AbstractController implements
             }
 
             pageRequestContextUtil.extractRequestParameters(request);
-            
+
             ensureSecureAccess(reqPathParts, pageRequestContextUtil.isRemoteViewer());
             doProcess(request, response, docPageController, docPathParts);
         } catch (Exception e) {
@@ -182,7 +174,7 @@ public abstract class AbstractUIController extends AbstractController implements
 
     protected abstract void doProcess(ClientRequest request, ClientResponse response,
             PageController<?> docPageController, ControllerPathParts docPathParts) throws UnifyException;
-    
+
     protected class DataTransferParam {
 
         private UIControllerInfo uiControllerInfo;
@@ -235,7 +227,8 @@ public abstract class AbstractUIController extends AbstractController implements
                 }
 
                 for (int i = 0; i < strings.length; i++) {
-                    strings[i] = pageManager.getLongName(strings[i]);
+                    String pageName = DataTransferUtils.stripTransferDataIndexPart(strings[i]);
+                    strings[i] = pageManager.getLongName(pageName);
                 }
                 pageRequestContextUtil.setResponseRefreshPanels(strings);
                 continue;
@@ -294,7 +287,7 @@ public abstract class AbstractUIController extends AbstractController implements
         return new DataTransfer(dataTransferParam.getValidationClass(), dataTransferParam.getValidationIdClass(),
                 actionId, transferBlocks);
     }
-    
+
     protected void populate(DataTransfer dataTransfer) throws UnifyException {
         if (!isReadOnly()) {
             logDebug("Populating controller [{0}]", getName());
@@ -335,7 +328,7 @@ public abstract class AbstractUIController extends AbstractController implements
                 writer.write(",\"remoteView\":{");
                 writer.write("\"view\":\"").write(pageRequestContextUtil.getRemoteViewer()).write("\"}");
             }
-            
+
             writer.write(",\"scrollReset\":").write(pageRequestContextUtil.isContentScrollReset());
             writer.write("}");
         } else {
@@ -382,15 +375,16 @@ public abstract class AbstractUIController extends AbstractController implements
             Result result = null;
             if (StringUtils.isBlank((String) request.getParameter(PageRequestParameterConstants.DOCUMENT))
                     && !pageRequestContextUtil.isRemoteViewer()) {
-                respPathParts =
-                        pathInfoRepository.getControllerPathParts(SystemInfoConstants.UNAUTHORIZED_CONTROLLER_NAME);
+                respPathParts = pathInfoRepository
+                        .getControllerPathParts(SystemInfoConstants.UNAUTHORIZED_CONTROLLER_NAME);
                 pageController = (PageController<?>) getControllerFinder().findController(respPathParts);
                 page = uiControllerUtil.loadRequestPage(respPathParts);
                 page.setWidgetVisible("stackTrace", !loginRequired);
-                result = uiControllerUtil.getPageControllerInfo(pageController.getName()).getResult(ResultMappingConstants.INDEX);
+                result = uiControllerUtil.getPageControllerInfo(pageController.getName())
+                        .getResult(ResultMappingConstants.INDEX);
             } else {
-                respPathParts =
-                        pathInfoRepository.getControllerPathParts(SystemInfoConstants.SYSTEMINFO_CONTROLLER_NAME);
+                respPathParts = pathInfoRepository
+                        .getControllerPathParts(SystemInfoConstants.SYSTEMINFO_CONTROLLER_NAME);
                 pageController = (PageController<?>) getControllerFinder().findController(respPathParts);
                 page = uiControllerUtil.loadRequestPage(respPathParts);
                 page.setWidgetVisible("stackTrace", !loginRequired);
@@ -405,7 +399,8 @@ public abstract class AbstractUIController extends AbstractController implements
             writer.writeTo(response.getWriter());
         } catch (UnifyException e1) {
             throw e1;
-        } catch (Exception e1) {e1.printStackTrace();
+        } catch (Exception e1) {
+            e1.printStackTrace();
             throwOperationErrorException(e1);
         } finally {
             responseWriterPool.restore(writer);

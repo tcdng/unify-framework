@@ -62,4 +62,13 @@ public final class DataTransferUtils {
       
       return transferBlock;
     }
+    
+    public static String stripTransferDataIndexPart(String id) {
+        int dIndex = id.lastIndexOf('d');
+        if (dIndex > 0) {
+            return id.substring(0, dIndex);
+        }
+        
+        return id;
+    }
 }
