@@ -256,7 +256,6 @@ public class Unify {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
             LOGGER.log(Level.SEVERE, "Error resolving packaged JARs.", e);
         }
 
