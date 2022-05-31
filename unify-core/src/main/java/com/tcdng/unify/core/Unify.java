@@ -72,6 +72,9 @@ public class Unify {
         } else if ("install-onejar-fat".equalsIgnoreCase(operation)) {
             URL[] _baseUrls = Unify.getOneJarFatBaseUrls();
             Unify.doStartup(workingFolder, configFile, _baseUrls, port, true);
+        } else if ("install-spring-fat".equalsIgnoreCase(operation)) {
+            URL[] _baseUrls = Unify.getSpringFatBaseUrls();
+            Unify.doStartup(workingFolder, configFile, _baseUrls, port, true);
         } else if ("help".equalsIgnoreCase(operation)) {
             Unify.doHelp();
         } else {
@@ -216,6 +219,44 @@ public class Unify {
                 }
             }
         } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "Error resolving packaged JARs.", e);
+        }
+
+        return baseUrls.isEmpty() ? null : baseUrls.toArray(new URL[baseUrls.size()]);
+    }
+    
+    private static URL[] getSpringFatBaseUrls() {
+        List<URL> baseUrls = new ArrayList<URL>();
+        try {
+            ClassLoader cl = Thread.currentThread().getContextClassLoader();
+            Enumeration<URL> urls = cl.getResources("META-INF/MANIFEST.MF");
+            String base = null;
+            List<String[]> partList = new ArrayList<String[]>();
+            while (urls.hasMoreElements()) {
+                String url = urls.nextElement().toString();
+                if (url.startsWith("jar:file:")) {
+                    String[] parts = url.split("\\!/");
+                    if (parts.length == 2) {
+                        if (base == null || base.length() < parts[0].length()) {
+                            base = parts[0];
+                        }
+                    }
+
+                    partList.add(parts);
+                }
+            }
+
+            if (base != null) {
+                String classPath = base.substring("jar:".length());
+                baseUrls.add(new URL(classPath));
+                for (String[] parts : partList) {
+                    if (parts.length == 3) {
+                        baseUrls.add(new URL(base + "!/" + parts[1]));
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
             LOGGER.log(Level.SEVERE, "Error resolving packaged JARs.", e);
         }
 
