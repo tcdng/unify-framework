@@ -398,7 +398,7 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 		buf.append(",\"html\":");
 		buf.appendJsonQuoted(htmlLsw);
 		buf.append(",\"script\":");
-		buf.appendJsonQuoted(scriptLsw);
+		buf.append(scriptLsw);
 		buf.append('}');
 		return this;
 	}
@@ -418,7 +418,7 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 		buf.append(",\"html\":");
 		buf.appendJsonQuoted(htmlLsw);
 		buf.append(",\"script\":");
-		buf.appendJsonQuoted(scriptLsw);
+		buf.append(scriptLsw);
 		buf.append('}');
 		return this;
 	}
@@ -561,7 +561,7 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
             bracketOpen = true;
         }
         
-        buf.append("{\"fnc\":\"").append(functionName).append("\",\"prm\":{");
+        buf.append("{\"fnc\":").append(functionName).append(",\"prm\":{");
         openFunction = true;
         paramAppendSym =  false;
         return this;

@@ -437,10 +437,12 @@ ux.refreshSection = function(resp) {
 	}
 }
 
-ux.perform = function(behavior) {
-	if (behavior) {
-		for (var i = 0; i < length; i++) {
-			console.log("@perform: behavior = " + JSON.stringify(behavior[i]));
+ux.perform = function(funcs) {
+	if (funcs) {
+		for (var i = 0; i < funcs.length; i++) {
+			var _func = funcs[i];
+			console.log("@perform: _func = " + JSON.stringify(_func));
+			_func.fnc(_func.prm);
 		}
 	}
 }
