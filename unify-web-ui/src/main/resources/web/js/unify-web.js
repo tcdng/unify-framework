@@ -135,14 +135,18 @@ ux.setupDocument = function(docPath, docPopupBaseId, docPopupId, docSysInfoId, d
 }
 
 ux.processJSON = function(jsonstring) {
-	var jsonEval = eval("(" + jsonstring + ")");
-	ux.remoteView = jsonEval.remoteView;
-	if (jsonEval.jsonResp) {
-		for (var j = 0; j < jsonEval.jsonResp.length; j++) {
-			var resp = jsonEval.jsonResp[j];
+	console.log("@processJSON: XXXXXXXXXXXXXXXXX");
+	console.log("@processJSON: jsonstring = " + jsonstring);
+	console.log("@processJSON: XXXXXXXXXXXXXXXXX");
+
+	const fullResp = JSON.parse(jsonstring);
+	ux.remoteView = fullResp.remoteView;
+	if (fullResp.jsonResp) {
+		for (var j = 0; j < fullResp.jsonResp.length; j++) {
+			var resp = fullResp.jsonResp[j];
 			ux.respHandler[resp.handler](resp);
 			if (resp.focusOnWidget) {
-				ux.setFocus(resp.focusOnWidget);
+				ux.setFocus({wdgid: resp.focusOnWidget});
 			}
 		}
 		ux.cascadeStretch();
@@ -151,7 +155,7 @@ ux.processJSON = function(jsonstring) {
 	if (ux.cntId) {
 		var elem = _id(ux.cntId);
 		if (elem) {
-			if (jsonEval.scrollReset) {
+			if (fullResp.scrollReset) {
 				elem.scrollTop = 0;
 			} else if (ux.cntScrollY >= 0) {
 				elem.scrollTop = ux.cntScrollY;
@@ -196,7 +200,7 @@ ux.respHandler = {
 		var trg = _id(resp.remoteTarget);
 		if (trg) {
 			trg.innerHTML = resp.docView.html;
-			eval(resp.docView.script);
+			ux.perform(resp.docView.script);
 		}
 	},
 
@@ -329,9 +333,7 @@ ux.respHandler = {
 					ux.centralize(basePanel, sysInfoPanel);
 					sysInfoPanel.style.visibility = "visible";
 					basePanel.style.display = "block";
-					if (resp.showSysInfoPopup.script) {
-						eval(resp.showSysInfoPopup.script);
-					}
+					ux.perform(resp.showSysInfoPopup.script);
 				}
 			}
 		} else if (resp.showPopup) {
@@ -351,10 +353,7 @@ ux.respHandler = {
 					ux.centralize(basePanel, targetPanel);
 					targetPanel.style.visibility = "visible";
 					ux.popupVisible = true;
-
-					if (resp.showPopup.script) {
-						eval(resp.showPopup.script);
-					}
+					ux.perform(resp.showPopup.script);
 				}
 			}
 		}
@@ -422,9 +421,7 @@ ux.refreshPanels = function(resp) {
 		}
 
 		for (var i = 0; i < resp.refreshPanels.length; i++) {
-			if (resp.refreshPanels[i].script) {
-				eval(resp.refreshPanels[i].script);
-			}
+			ux.perform(resp.refreshPanels[i].script);
 		}
 	}
 }
@@ -436,8 +433,14 @@ ux.refreshSection = function(resp) {
 			trg.innerHTML = resp.section.html;
 		}
 
-		if (resp.section.script) {
-			eval(resp.section.script);
+		ux.perform(resp.section.script);
+	}
+}
+
+ux.perform = function(behavior) {
+	if (behavior) {
+		for (var i = 0; i < length; i++) {
+			console.log("@perform: behavior = " + JSON.stringify(behavior[i]));
 		}
 	}
 }
@@ -664,8 +667,8 @@ ux.post = function(uEv) {
 	ux.postCommit(uEv.evp);
 }
 
-ux.postToPath = function(url) {
-	var ajaxPrms = ux.ajaxConstructCallParam(url,
+ux.postToPath = function(evp) {
+	var ajaxPrms = ux.ajaxConstructCallParam(evp.uPath,
 			"req_doc=" + _enc(ux.docPath), false, true, false, ux.processJSON);
 	ux.ajaxCall(ajaxPrms);
 }
@@ -864,8 +867,8 @@ ux.repositionMenuPopup = function(paramObject) {
 	}
 }
 
-ux.setFocus = function(id) {
-	var elem = _id(id);
+ux.setFocus = function(evp) {
+	var elem = _id(evp.wdgid);
 	if (elem) {
 		elem.focus();
 		ux.setCaretPosition(elem, 10000, 10000);
@@ -1018,7 +1021,7 @@ ux.rigContentPanel = function(rgp) {
 	ux.cntSaveIsRemote = rgp.pSaveIsRem;
 
 	if (rgp.pImmURL) {
-		ux.postToPath(rgp.pImmURL);
+		ux.postToPath({uPath:rgp.pImmURL});
 	} else {
 		const currIdx = rgp.pCurIdx;
 		const menuId = rgp.pMenuId;
@@ -1320,8 +1323,8 @@ ux.tabbedPanelTabClickHandler = function(uEv) {
 
 /** ********************* CONTROLS ********************* */
 /** Common */
-ux.rigValueAccessor = function(id) {
-	const elem = _id(id);
+ux.rigValueAccessor = function(evp) {
+	const elem = _id(evp.uId);
 	if(elem) {
 		elem.setValue = function(val) {
 			this.value = val;
@@ -2378,7 +2381,7 @@ ux.mfAmountChange = function(uEv) {
 }
 
 ux.mfOnShow = function(rgp) {
-	ux.setFocus(rgp.pFrmId);
+	ux.setFocus({wdgid: rgp.pFrmId});
 }
 
 /** Multi select */
@@ -2600,7 +2603,7 @@ ux.pfMagnitudeChange = function(uEv) {
 }
 
 ux.pfOnShow = function(rgp) {
-	ux.setFocus(rgp.pFrmId);
+	ux.setFocus({wdgid: rgp.pFrmId});
 }
 
 /** Photo Upload */
@@ -2711,7 +2714,7 @@ ux.sfWireResult = function(rgp) {
 }
 
 ux.sfOnShow = function(rgp) {
-	ux.setFocus(rgp.pFilId);
+	ux.setFocus({wdgid: rgp.pFilId});
 }
 
 ux.sfSelect = function(uEv) {
@@ -2867,7 +2870,7 @@ ux.otaTokenEnd = function(txt, end) {
 
 
 ux.optionsTextAreaOnShow = function(frmId) {
-	ux.setFocus(frmId);
+	ux.setFocus({wdgid: frmId});
 }
 
 /** Single Select */
@@ -2966,7 +2969,7 @@ ux.rigSingleSelect = function(rgp) {
 }
 
 ux.ssOnShow = function(rgp) {
-	ux.setFocus(rgp.pFrmId);
+	ux.setFocus({wdgid: rgp.pFrmId});
 }
 
 
@@ -5130,8 +5133,8 @@ ux.onSpecialKeyHandler = function(uEv) {
 	}
 }
 
-ux.setShortcut = function(shortcut, evp) {
-	ux.shortcuts[shortcut] = evp;
+ux.setShortcut = function(evp) {
+	ux.shortcuts[evp.uShortcut] = evp;
 }
 
 ux.setOnEvent = function(evp) {

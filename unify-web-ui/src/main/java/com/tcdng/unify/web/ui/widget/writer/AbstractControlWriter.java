@@ -75,7 +75,9 @@ public abstract class AbstractControlWriter extends AbstractWidgetWriter impleme
     }
 
     protected void writeValueAccessor(ResponseWriter writer, Widget widget) throws UnifyException {
-        writer.write("ux.rigValueAccessor(\"").write(widget.getId()).write("\");");
+        writer.beginFunction("ux.rigValueAccessor");
+        writer.writeParam("uId", widget.getId());
+        writer.endFunction();
     }
     
     protected void addPageAlias(String parentPageName, Widget widget) throws UnifyException {

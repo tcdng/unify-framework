@@ -18,11 +18,11 @@ package com.tcdng.unify.web.ui.widget;
 import java.io.IOException;
 import java.io.Writer;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.RequestContext;
@@ -74,7 +74,7 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 
 	private WebStringWriter buf;
 
-	private List<WebStringWriter> secordaryList;
+	private Stack<HistoryEntry> history;
 
 	private Map<Class<? extends UplComponent>, UplComponentWriter> writers;
 
@@ -82,10 +82,14 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 
     private boolean openFunction;
 
+    private boolean functionAppendSym;
+
     private boolean paramAppendSym;
+
+    private boolean bracketOpen;
 	
 	public ResponseWriterImpl() {
-        secordaryList = new ArrayList<WebStringWriter>();
+	    history = new Stack<HistoryEntry>();
 	}
 	
 	public void setThemeManager(ThemeManager themeManager) {
@@ -549,7 +553,15 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
             }
         }
 
-        buf.append(functionName).append("({");
+        if (functionAppendSym) {
+            buf.append(',');
+        } else {
+            buf.append('[');
+            functionAppendSym = true;
+            bracketOpen = true;
+        }
+        
+        buf.append("{\"fnc\":\"").append(functionName).append("\",\"prm\":{");
         openFunction = true;
         paramAppendSym =  false;
         return this;
@@ -565,7 +577,7 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
             }
         }
         
-        buf.append("});");
+        buf.append("}}");
         openFunction = false;
         return this;
     }
@@ -773,24 +785,35 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 
 	@Override
 	public void useSecondary(int initialCapacity) {
-		secordaryList.add(buf);
+	    history.push(new HistoryEntry(buf, functionAppendSym, bracketOpen));
 		buf = new WebStringWriter(initialCapacity);
+        functionAppendSym = false;
+        bracketOpen = false;
 	}
 
 	@Override
 	public WebStringWriter discardSecondary() {
+	    if (bracketOpen) {
+	        buf.append(']');
+	    }
+	    
 		WebStringWriter discLsw = buf;
-		buf = secordaryList.remove(secordaryList.size() - 1);
+		HistoryEntry entry = history.pop();
+		buf = entry.buf;
+		functionAppendSym = entry.functionAppendSym;
+		bracketOpen = entry.bracketOpen;
 		return discLsw;
 	}
 
 	@Override
 	public void reset(Map<Class<? extends UplComponent>, UplComponentWriter> writers) {
 		this.writers = writers;
-		if (buf == null || !buf.isEmpty() || !secordaryList.isEmpty()) {
+		if (buf == null || !buf.isEmpty() || !history.isEmpty()) {
 			buf = new WebStringWriter(initialBufferCapacity);
-			secordaryList.clear();
+			history.clear();
 			openFunction = false;
+	        functionAppendSym = false;
+            bracketOpen = false;
 	        paramAppendSym =  false;
 		}
 	}
@@ -820,6 +843,22 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 
 	}
 
+	private class HistoryEntry {
+	    
+	    private final WebStringWriter buf;
+	    
+	    private final boolean functionAppendSym;
+	    
+	    private final boolean bracketOpen;
+	    
+        public HistoryEntry(WebStringWriter buf, boolean functionAppendSym, boolean bracketOpen) {
+            this.buf = buf;
+            this.functionAppendSym = functionAppendSym;
+            this.bracketOpen = bracketOpen;
+        }
+	    
+	}
+	
     private void preParamWrite() throws UnifyException {
         if (!openFunction) {
             try {
