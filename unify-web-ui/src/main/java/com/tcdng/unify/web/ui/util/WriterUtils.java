@@ -126,7 +126,6 @@ public final class WriterUtils {
         jsAliasMap.put("ux.setOnEvent", "ux40"); 
         jsAliasMap.put("ux.setDelayedPanelPost", "ux41");
         jsAliasMap.put("ux.optionsTextAreaOnShow", "ux42");
-        jsAliasMap = Collections.unmodifiableMap(jsAliasMap);
         
         eventToJSMap = new HashMap<String, String>();
         eventToJSMap.put("onblur", "blur");
@@ -145,6 +144,10 @@ public final class WriterUtils {
 
     }
 
+    public static void registerJSAlias(String function, String alias) {
+        jsAliasMap.put(function, alias);
+    }
+    
     public static String getActionJSFunction(String actionType) throws UnifyException {
         String functionName = actionToJSMap.get(actionType);
         if (functionName == null) {
