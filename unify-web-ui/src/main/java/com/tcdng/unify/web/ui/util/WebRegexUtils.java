@@ -56,7 +56,7 @@ public final class WebRegexUtils {
     public static String getNameFormatRegex(boolean underscore, boolean dollar, boolean period, boolean dash)
             throws UnifyException {
         StringBuilder sb = new StringBuilder();
-        sb.append("/^[\\\\w");
+        sb.append("^[\\\\w");
         if (underscore) {
             sb.append("\\\\_");
         }
@@ -72,7 +72,7 @@ public final class WebRegexUtils {
         if (dash) {
             sb.append("-");
         }
-        sb.append("]*$/");
+        sb.append("]*$");
         return sb.toString();
     }
 
@@ -85,7 +85,7 @@ public final class WebRegexUtils {
      */
     public static String getNameAndSpecialCharactersFormatRegex()
             throws UnifyException {
-        return "/^[\\\\w\\\\^\\\\$\\\\?\\\\*\\\\+\\\\.\\\\<\\\\>\\\\-\\\\=\\\\!\\\\_\\\\@\\\\#\\\\%]*$/";
+        return "^[\\\\w\\\\^\\\\$\\\\?\\\\*\\\\+\\\\.\\\\<\\\\>\\\\-\\\\=\\\\!\\\\_\\\\@\\\\#\\\\%,]*$";
     }
 
     /**
@@ -96,7 +96,7 @@ public final class WebRegexUtils {
      *             if an error occurs
      */
     public static String getIdentifierFormatRegex() throws UnifyException {
-        return "/^([_a-zA-Z][_a-zA-Z0-9]*)?$/";
+        return "^([_a-zA-Z][_a-zA-Z0-9]*)?$";
     }
 
     /**
@@ -111,17 +111,17 @@ public final class WebRegexUtils {
     public static String getAlphanumericFormatRegex(boolean special, boolean space) throws UnifyException {
         if (special) {
             if (space) {
-                return "/^[ 0-9a-zA-Z/&%\\\\-\\\\.\\\\(\\\\)]*$/";
+                return "^[ 0-9a-zA-Z/&%\\\\-\\\\.\\\\(\\\\),]*$";
             }
 
-            return "/^[0-9a-zA-Z/&%\\\\-\\\\.\\\\(\\\\)]*$/";
+            return "^[0-9a-zA-Z/&%\\\\-\\\\.\\\\(\\\\),]*$";
         }
         
         if (space) {
-            return "/^[ 0-9a-zA-Z]*$/";
+            return "^[ 0-9a-zA-Z]*$";
         }
         
-        return "/^[0-9a-zA-Z]*$/";
+        return "^[0-9a-zA-Z]*$";
     }
 
     /**
@@ -132,19 +132,19 @@ public final class WebRegexUtils {
      *             if an error occurs
      */
     public static String getWordFormatRegex() throws UnifyException {
-        return "/^[a-zA-Z]*$/";
+        return "^[a-zA-Z]*$";
     }
 
     public static String getFullNameFormatRegex(boolean special)  throws UnifyException {
         if (special) {
-            return "/^[a-zA-Z][ a-zA-Z/&%\\\\-\\\\.\\\\(\\\\)]*$/";
+            return "^[a-zA-Z][ a-zA-Z/&%\\\\-\\\\.\\\\(\\\\),]*$";
         }
         
-        return "/^[a-zA-Z][ a-zA-Z]*$/";
+        return "^[a-zA-Z][ a-zA-Z]*$";
     }
 
     public static String getSeriesRegex()  throws UnifyException {
-        return "/^[a-zA-Z][a-zA-Z]*[0-9]*$/";
+        return "^[a-zA-Z][a-zA-Z]*[0-9]*$";
     }
     
     /**
@@ -158,18 +158,18 @@ public final class WebRegexUtils {
      */
     public static String getIntegerTextFormatRegex(boolean allowPlus, boolean allowMinus) throws UnifyException {
         if (allowPlus && allowMinus) {
-            return "/^(\\\\+|\\\\-)?[0-9]*$/";
+            return "^(\\\\+|\\\\-)?[0-9]*$";
         }
         
         if (allowPlus) {
-            return "/^(\\\\+)?[0-9]*$/";
+            return "^(\\\\+)?[0-9]*$";
         }
         
         if (allowMinus) {
-            return "/^(\\\\-)?[0-9]*$/";
+            return "^(\\\\-)?[0-9]*$";
         }
         
-        return "/^[0-9]*$/";
+        return "^[0-9]*$";
     }
 
     /**
@@ -193,7 +193,7 @@ public final class WebRegexUtils {
     public static String getNumberFormatRegex(NumberSymbols numberSymbols, int precision, int scale,
             boolean acceptNegative, boolean useGrouping, boolean strictFormat) throws UnifyException {
         StringBuilder sb = new StringBuilder();
-        sb.append("/^");
+        sb.append("^");
         if (acceptNegative) {
             appendOptionalFormattingRegex(sb, numberSymbols.getNegativePrefix(), numberSymbols.getPositivePrefix());
         } else {
@@ -255,7 +255,7 @@ public final class WebRegexUtils {
         } else {
             appendOptionalFormattingRegex(sb, numberSymbols.getPositiveSuffix());
         }
-        sb.append("$/");
+        sb.append("$");
         return sb.toString();
     }
 

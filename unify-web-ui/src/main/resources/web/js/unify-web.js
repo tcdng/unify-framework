@@ -4914,7 +4914,7 @@ ux.setTextRegexFormatting = function(prm) {
 	}
 
 	if (prm.pRegex) {
-		evp.sFormatRegex = eval(prm.pRegex);
+		evp.sFormatRegex = (!prm.pRegex || prm.pRegex === "") ? null: new RegExp(prm.pRegex);
 	}
 
 	var elem = _id(prm.pId);
@@ -4970,8 +4970,8 @@ ux.textInputKeydown = function(uEv) {
 		var string = trgObj.value;
 		string = string.substring(0, pos.start) + uEv.uChar + string.substring(pos.end);
 
-		var formatRegex = evp.sFormatRegex;
-		if (formatRegex && !formatRegex.test(string)) {
+		var _rejex = evp.sFormatRegex;
+		if (_rejex && !_rejex.test(string)) {
 			uEv.uStop();
 			return;
 		}
@@ -5058,7 +5058,7 @@ ux.textValidationOnBlurHandler = function(uEv) {
 	if (trgObj.sError == null) {
 		var validationRegex = null;
 		if (evp.sValidationRegex) {
-			validationRegex = eval(evp.sValidationRegex);
+			validationRegex = (!evp.sValidationRegex || evp.sValidationRegex === "") ? null: new RegExp(evp.sValidationRegex);
 		}
 
 		if (validationRegex) {
