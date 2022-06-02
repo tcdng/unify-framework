@@ -119,4 +119,18 @@ public class WebStringWriter extends LargeStringWriter {
 
         return this;
     }
+
+    public WebStringWriter appendArrayJsonQuoted(WebStringWriter wsw) {
+        if (wsw == null) {
+            append("null");
+        } else {
+            char[] data = wsw.getData();
+            int len = wsw.length();
+            for (int i = 0; i < len; i++) {
+                JsonUtils.writeChar(this, data[i]);
+            }
+        }
+
+        return this;
+    }
 }

@@ -97,6 +97,8 @@ ux.extensionregistry = {};
 
 ux.lastUserActTime=0;
 
+ux.fnaliases = [];
+
 /** Utilities */
 function _id(id) {
 	return document.getElementById(id);
@@ -442,7 +444,7 @@ ux.perform = function(funcs) {
 		for (var i = 0; i < funcs.length; i++) {
 			var _func = funcs[i];
 			console.log("@perform: _func = " + JSON.stringify(_func));
-			_func.fnc(_func.prm);
+			ux.getfn(_func.fn)(_func.prm);
 		}
 	}
 }
@@ -2780,7 +2782,7 @@ ux.rigOptionsTextArea = function(rgp) {
 		evp.popupId=rgp.pPopupId;
 		evp.frameId=rgp.pId;
 		evp.stayOpenForMillSec = 0;
-		evp.showHandler = ux.optionsTextAreaOnShow;
+		evp.showHandler = "ux42";
 		evp.showParam=rgp.pFrmId;
 		ux.addHdl(ota, "keypress", ux.otaTxtKeypress, evp);
 		ux.addHdl(ota, "keydown", ux.otaTxtKeydown, evp);	
@@ -5146,19 +5148,20 @@ ux.setOnEvent = function(evp) {
 	}
 	
 	var elem = _id(evp.uId);
+	const _fn = ux.getfn(evp.uFunc);
 	if (elem) {
 		if (elem.value == "pushr_") {
-			ux.addHdlMany(evp.uId, eventName, evp.uFunc,
+			ux.addHdlMany(evp.uId, eventName, _fn,
 					evp);
 		} else {
-			ux.addHdl(elem, eventName, evp.uFunc,
+			ux.addHdl(elem, eventName, _fn,
 					evp);
 			if (evp.uFire) {
 				ux.fireEvent(elem, eventName);
 			}
 		}
 	} else {
-		ux.addHdlMany(evp.uId, eventName, evp.uFunc,
+		ux.addHdlMany(evp.uId, eventName, _fn,
 				evp);
 	}
 }
@@ -5251,6 +5254,82 @@ ux.init = function() {
 	if (UNIFY_POST_COMMIT_QUEUE) {
 		ux.postCommitProcessor();
 	}
+	
+	//Perform
+    ux.setfn(ux.forward, "ux01");
+    ux.setfn(ux.submit, "ux02"); 
+    ux.setfn(ux.post, "ux03");   
+    ux.setfn(ux.postToPath, "ux04");   
+    ux.setfn(ux.postCommand, "ux05");   
+    ux.setfn(ux.openWindow, "ux06");
+    ux.setfn(ux.download, "ux07");
+    ux.setfn(ux.clear, "ux08");
+    ux.setfn(ux.disable, "ux09");
+    ux.setfn(ux.show, "ux0a");
+    ux.setfn(ux.hide, "ux0b");
+    ux.setfn(ux.delegate, "ux0c");
+    ux.setfn(ux.setAllChecked, "ux0d");
+    ux.setfn(ux.populateSelectOptions, "ux0e");
+    ux.setfn(ux.openPopup, "ux0f");  
+    ux.setfn(ux.hidePopup, "ux10");
+    ux.setfn(ux.repositionMenuPopup, "ux11");
+    ux.setfn(ux.setFocus, "ux12");
+    ux.setfn(ux.rigAssignmentBox, "ux13");  
+    ux.setfn(ux.rigCheckbox, "ux14");  
+    ux.setfn(ux.rigChecklist, "ux15");  
+    ux.setfn(ux.rigDateField, "ux16");  
+    ux.setfn(ux.rigDebitCreditField, "ux17");  
+    ux.setfn(ux.rigDropdownChecklist, "ux18");  
+    ux.setfn(ux.dcHidePopup, "ux19"); 
+    ux.setfn(ux.rigDurationSelect, "ux1a");  
+    ux.setfn(ux.rigFileAttachment, "ux1b");  
+    ux.setfn(ux.rigFileDownload, "ux1c");  
+    ux.setfn(ux.rigFileUploadView, "ux1d");  
+    ux.setfn(ux.rigFileUpload, "ux1e");  
+    ux.setfn(ux.rigDragAndDropPopup, "ux1f");  
+    ux.setfn(ux.rigLinkGrid, "ux20");  
+    ux.setfn(ux.rigMoneyField, "ux21");  
+    ux.setfn(ux.mfOnShow, "ux22"); 
+    ux.setfn(ux.rigMultiSelect, "ux23");  
+    ux.setfn(ux.rigOptionsTextArea, "ux24");  
+    ux.setfn(ux.rigPeriodField, "ux25");  
+    ux.setfn(ux.pfOnShow, "ux26");
+    ux.setfn(ux.rigPhotoUpload, "ux27");  
+    ux.setfn(ux.rigRadioButtons, "ux28");  
+    ux.setfn(ux.rigSearchField, "ux29");  
+    ux.setfn(ux.sfWireResult, "ux2a");  
+    ux.setfn(ux.sfOnShow, "ux2b"); 
+    ux.setfn(ux.rigSingleSelect, "ux2c");  
+    ux.setfn(ux.ssOnShow, "ux2d");
+    ux.setfn(ux.rigTable, "ux2e");  
+    ux.setfn(ux.rigTextArea, "ux2f");  
+    ux.setfn(ux.rigTextClock, "ux30");  
+    ux.setfn(ux.setTextRegexFormatting, "ux31");  
+    ux.setfn(ux.rigTimeField, "ux32");  
+    ux.setfn(ux.rigDragAndDropPopup, "ux33");  
+    ux.setfn(ux.rigTreeExplorer, "ux34");  
+    ux.setfn(ux.rigDesktopType2, "ux35");  
+    ux.setfn(ux.rigAccordion, "ux36");  
+    ux.setfn(ux.rigContentPanel, "ux37");  
+    ux.setfn(ux.rigDetachedPanel, "ux38");  
+    ux.setfn(ux.rigFixedContentPanel, "ux39");  
+    ux.setfn(ux.loadRemoteDocViewPanel, "ux3a");  
+    ux.setfn(ux.rigSplitPanel, "ux3b");  
+    ux.setfn(ux.rigStretchPanel, "ux3c");  
+    ux.setfn(ux.rigTabbedPanel, "ux3d");  
+    ux.setfn(ux.rigValueAccessor, "ux3e");
+    ux.setfn(ux.setShortcut, "ux3f");
+    ux.setfn(ux.setOnEvent, "ux40"); 
+    ux.setfn(ux.setDelayedPanelPost, "ux41");
+    ux.setfn(ux.optionsTextAreaOnShow, "ux42");
+}
+
+ux.setfn = function(fn, id) {
+	ux.fnaliases[id] = fn;
+}
+
+ux.getfn = function(id) {
+	return ux.fnaliases[id];
 }
 
 ux.setHintTimeout = function(millisec) {
@@ -5280,7 +5359,7 @@ ux.documentKeydownHandler = function(uEv) {
 	if (evp) {
 		if (_id(evp.uId)) { // Containing panel must be visible for shortcut
 			uEv.evp = evp;
-			evp.uFunc(uEv);
+			ux.getfn(evp.uFunc)(uEv);
 			uEv.uStop();
 		}
 	}
@@ -5679,7 +5758,7 @@ ux.doOpenPopup = function(openPrm) {
 
 		ux.openPrm = openPrm;
 		if (openPrm.showHandler) {
-			openPrm.showHandler(openPrm.showParam);
+			ux.getfn(openPrm.showHandler)(openPrm.showParam);
 		}
 	}
 }
@@ -5702,7 +5781,7 @@ ux.hidePopup = function(uEv) {
 		ux.popCurr.style.visibility = 'hidden';
 		ux.popCurr = null;
 		if (openPrm && openPrm.hideHandler) {
-			openPrm.hideHandler(openPrm.hideParam);
+			ux.getfn(openPrm.hideHandler)(openPrm.hideParam);
 		}
 	}
 }

@@ -794,8 +794,7 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
         writer.beginFunction("ux.setOnEvent");
         event = WriterUtils.getEventJS(event.toLowerCase());
         String function = WriterUtils.getActionJSFunction(action);
-        writeActionParamsJS(writer, event, function, pageName, cmdTag, null, targetPageNames, null,
-                null);
+        writeActionParamsJS(writer, event, function, pageName, cmdTag, null, targetPageNames, null, null);
         writer.endFunction();
     }
 
@@ -819,13 +818,13 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
 
         psb.append(",\"stayOpenForMillSec\":").append(stayOpenForMillSec);
         if (onShowAction != null) {
-            psb.append(",\"showHandler\":").append(WriterUtils.getActionJSFunctionOptional(onShowAction));
+            psb.append(",\"showHandler\":\"").append(WriterUtils.getActionJSAliasOptional(onShowAction)).append("\"");
             if (onShowParamObject != null) {
                 psb.append(",\"showParam\":").append(onShowParamObject);
             }
         }
         if (onHideAction != null) {
-            psb.append(",\"hideHandler\":").append(WriterUtils.getActionJSFunctionOptional(onHideAction));
+            psb.append(",\"hideHandler\":\"").append(WriterUtils.getActionJSAliasOptional(onHideAction)).append("\"");
             if (onHideParamObject != null) {
                 psb.append(",\"hideParam\":").append(onHideParamObject);
             }
@@ -866,9 +865,9 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
                 if (shortcut != null) {
                     shortcut = WebUtils.encodeShortcut(shortcut);
                     writer.write(",\"uShortcut\":\"").write(shortcut).write("\"");
-               }
+                }
             }
-            
+
             if (pageAction.isUplAttribute("command")) {
                 String cmd = pageAction.getUplAttribute(String.class, "command");
                 if (cmd != null) {
@@ -1008,8 +1007,7 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
         writer.beginFunction("ux.setOnEvent");
         String event = WriterUtils.getEventJS(eventType.toLowerCase());
         String function = WriterUtils.getActionJSFunction(action.toLowerCase());
-        writeActionParamsJS(writer, event, function, pageName, cmdTag, null, null, refObject,
-                null);
+        writeActionParamsJS(writer, event, function, pageName, cmdTag, null, null, refObject, null);
         writer.endFunction();
     }
 

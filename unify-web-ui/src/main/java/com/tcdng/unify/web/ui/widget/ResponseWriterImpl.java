@@ -47,6 +47,7 @@ import com.tcdng.unify.web.ui.PageRequestContextUtil;
 import com.tcdng.unify.web.ui.UnifyWebUIErrorConstants;
 import com.tcdng.unify.web.ui.WebUIApplicationComponents;
 import com.tcdng.unify.web.ui.util.UrlUtils;
+import com.tcdng.unify.web.ui.util.WriterUtils;
 import com.tcdng.unify.web.ui.widget.writer.BehaviorWriter;
 import com.tcdng.unify.web.ui.widget.writer.DocumentLayoutWriter;
 import com.tcdng.unify.web.ui.widget.writer.LayoutWriter;
@@ -398,7 +399,7 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 		buf.append(",\"html\":");
 		buf.appendJsonQuoted(htmlLsw);
 		buf.append(",\"script\":");
-		buf.append(scriptLsw);
+		buf.appendArrayJsonQuoted(scriptLsw);
 		buf.append('}');
 		return this;
 	}
@@ -418,7 +419,7 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 		buf.append(",\"html\":");
 		buf.appendJsonQuoted(htmlLsw);
 		buf.append(",\"script\":");
-		buf.append(scriptLsw);
+		buf.appendArrayJsonQuoted(scriptLsw);
 		buf.append('}');
 		return this;
 	}
@@ -561,7 +562,8 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
             bracketOpen = true;
         }
         
-        buf.append("{\"fnc\":").append(functionName).append(",\"prm\":{");
+        String alias = WriterUtils.getActionJSAlias(functionName);
+        buf.append("{\"fn\":\"").append(alias).append("\",\"prm\":{");
         openFunction = true;
         paramAppendSym =  false;
         return this;
