@@ -61,11 +61,11 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      * Writes tag attributes id, name, class, style and title.
      * 
      * @param writer
-     *            the writer to use to write
+     *               the writer to use to write
      * @param widget
-     *            the widget whose attributes to write
+     *               the widget whose attributes to write
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     protected final void writeTagAttributes(ResponseWriter writer, Widget widget) throws UnifyException {
         writeTagAttributesUsingStyleClass(writer, widget, widget.getStyleClass());
@@ -76,13 +76,13 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      * style class
      * 
      * @param writer
-     *            the writer to use to write
+     *                        the writer to use to write
      * @param widget
-     *            the widget whose attributes to write
+     *                        the widget whose attributes to write
      * @param extraStyleClass
-     *            the extra style class
+     *                        the extra style class
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     protected final void writeTagAttributesWithLeadingExtraStyleClass(ResponseWriter writer, Widget widget,
             String extraStyleClass) throws UnifyException {
@@ -94,13 +94,13 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      * style class
      * 
      * @param writer
-     *            the writer to use to write
+     *                        the writer to use to write
      * @param widget
-     *            the widget whose attributes to write
+     *                        the widget whose attributes to write
      * @param extraStyleClass
-     *            the extra style class
+     *                        the extra style class
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     protected final void writeTagAttributesWithTrailingExtraStyleClass(ResponseWriter writer, Widget widget,
             String extraStyleClass) throws UnifyException {
@@ -111,13 +111,13 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      * Writes tag attributes id, name, class, style and title.
      * 
      * @param writer
-     *            the writer to use to write
+     *                   the writer to use to write
      * @param widget
-     *            the widget whose attributes to write
+     *                   the widget whose attributes to write
      * @param styleClass
-     *            the style class to use
+     *                   the style class to use
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     protected final void writeTagAttributesUsingStyleClass(ResponseWriter writer, Widget widget, String styleClass)
             throws UnifyException {
@@ -160,11 +160,11 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      * Writes tag identification attributes id and name.
      * 
      * @param writer
-     *            the writer to use to write
+     *               the writer to use to write
      * @param widget
-     *            the widget whose attributes to write
+     *               the widget whose attributes to write
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     protected final void writeTagIdentificationAttributes(ResponseWriter writer, Widget widget) throws UnifyException {
         writer.write(" id=\"").write(widget.getId()).write("\"");
@@ -179,11 +179,11 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      * Writes tag visual attributes class, style and title.
      * 
      * @param writer
-     *            the writer to use to write
+     *               the writer to use to write
      * @param widget
-     *            the widget whose attributes to write
+     *               the widget whose attributes to write
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     protected final void writeTagVisualAttributes(ResponseWriter writer, Widget widget) throws UnifyException {
         writeTagVisualAttributesUsingStyleClass(writer, widget, widget.getStyleClass());
@@ -194,13 +194,13 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      * class.
      * 
      * @param writer
-     *            the writer to use to write
+     *                        the writer to use to write
      * @param widget
-     *            the widget whose attributes to write
+     *                        the widget whose attributes to write
      * @param extraStyleClass
-     *            the extra style class
+     *                        the extra style class
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     protected final void writeTagVisualAttributesWithLeadingExtraStyleClass(ResponseWriter writer, Widget widget,
             String extraStyleClass) throws UnifyException {
@@ -212,13 +212,13 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      * class.
      * 
      * @param writer
-     *            the writer to use to write
+     *                        the writer to use to write
      * @param widget
-     *            the widget whose attributes to write
+     *                        the widget whose attributes to write
      * @param extraStyleClass
-     *            the extra style class
+     *                        the extra style class
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     protected final void writeTagVisualAttributesWithTrailingExtraStyleClass(ResponseWriter writer, Widget widget,
             String extraStyleClass) throws UnifyException {
@@ -229,13 +229,13 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      * Writes tag visual attributes class, style and title.
      * 
      * @param writer
-     *            the writer to use to write
+     *                   the writer to use to write
      * @param widget
-     *            the widget whose attributes to write
+     *                   the widget whose attributes to write
      * @param styleClass
-     *            the style class to use
+     *                   the style class to use
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     protected final void writeTagVisualAttributesUsingStyleClass(ResponseWriter writer, Widget widget,
             String styleClass) throws UnifyException {
@@ -271,11 +271,11 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      * Writes tag edit attributes
      * 
      * @param writer
-     *            the writer to use to write
+     *               the writer to use to write
      * @param widget
-     *            the widget whose attributes to write
+     *               the widget whose attributes to write
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     protected final void writeTagEditAttributes(ResponseWriter writer, Widget widget) throws UnifyException {
         if (widget.isContainerDisabled() || (!widget.isSupportReadOnly() && !widget.isContainerEditable())) {
@@ -291,11 +291,11 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      * Writes tag id attribute.
      * 
      * @param writer
-     *            the writer to use to write
+     *               the writer to use to write
      * @param widget
-     *            the widget whose id to write
+     *               the widget whose id to write
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     protected final void writeTagId(ResponseWriter writer, Widget widget) throws UnifyException {
         writer.write(" id=\"").write(widget.getId()).write("\"");
@@ -305,11 +305,11 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      * Writes tag id attribute.
      * 
      * @param writer
-     *            the writer to use to write
+     *               the writer to use to write
      * @param id
-     *            the id to write
+     *               the id to write
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     protected final void writeTagId(ResponseWriter writer, String id) throws UnifyException {
         writer.write(" id=\"").write(id).write("\"");
@@ -319,11 +319,11 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      * Writes tag name attribute.
      * 
      * @param writer
-     *            the writer to use to write
+     *               the writer to use to write
      * @param widget
-     *            the widget whose name to write
+     *               the widget whose name to write
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     protected final void writeTagName(ResponseWriter writer, Widget widget) throws UnifyException {
         String name = widget.getGroupId();
@@ -336,11 +336,11 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      * Writes tag name attribute.
      * 
      * @param writer
-     *            the writer to use to write
+     *               the writer to use to write
      * @param name
-     *            the name to write
+     *               the name to write
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     protected final void writeTagName(ResponseWriter writer, String name) throws UnifyException {
         writer.write(" name=\"").write(name).write("\"");
@@ -350,11 +350,11 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      * Writes tag class attribute.
      * 
      * @param writer
-     *            the writer to use to write
+     *               the writer to use to write
      * @param widget
-     *            the widget whose style class to write
+     *               the widget whose style class to write
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     protected final void writeTagStyleClass(ResponseWriter writer, Widget widget) throws UnifyException {
         writer.write(" class=\"").write(widget.getStyleClass());
@@ -369,15 +369,15 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      * Writes tag class attribute with extra classes.
      * 
      * @param writer
-     *            the writer to use to write
+     *                     the writer to use to write
      * @param widget
-     *            the widget whose style class to write
+     *                     the widget whose style class to write
      * @param extraLeading
-     *            indicates extra classes should be leading
+     *                     indicates extra classes should be leading
      * @param extraClasses
-     *            the extra classes to write
+     *                     the extra classes to write
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     @Deprecated
     protected final void writeTagStyleClass(ResponseWriter writer, Widget widget, boolean extraLeading,
@@ -410,13 +410,13 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      * Writes tag class attribute with leading extra classes.
      * 
      * @param writer
-     *            the writer to use to write
+     *                     the writer to use to write
      * @param widget
-     *            the widget whose style class to write
+     *                     the widget whose style class to write
      * @param extraClasses
-     *            the extra classes to write
+     *                     the extra classes to write
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     protected final void writeTagStyleClassWithLeadingExtraStyleClasses(ResponseWriter writer, Widget widget,
             String... extraClasses) throws UnifyException {
@@ -439,13 +439,13 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      * Writes tag class attribute with trailing extra classes.
      * 
      * @param writer
-     *            the writer to use to write
+     *                     the writer to use to write
      * @param widget
-     *            the widget whose style class to write
+     *                     the widget whose style class to write
      * @param extraClasses
-     *            the extra classes to write
+     *                     the extra classes to write
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     protected final void writeTagStyleClassWithTrailingExtraStyleClasses(ResponseWriter writer, Widget widget,
             String... extraClasses) throws UnifyException {
@@ -468,11 +468,11 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      * Writes tag class attribute.
      * 
      * @param writer
-     *            the writer to use to write
+     *                   the writer to use to write
      * @param styleClass
-     *            the styleClass to write
+     *                   the styleClass to write
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     protected final void writeTagStyleClass(ResponseWriter writer, String styleClass) throws UnifyException {
         writer.write(" class=\"").write(styleClass).write("\"");
@@ -482,11 +482,11 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      * Writes tag style attribute.
      * 
      * @param writer
-     *            the writer to use to write
+     *               the writer to use to write
      * @param widget
-     *            the widget whose style to write
+     *               the widget whose style to write
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     protected final void writeTagStyle(ResponseWriter writer, Widget widget) throws UnifyException {
         if (StringUtils.isNotBlank(widget.getStyle())) {
@@ -498,11 +498,11 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      * Writes tag style attribute.
      * 
      * @param writer
-     *            the writer to use to write
+     *               the writer to use to write
      * @param style
-     *            the style to write
+     *               the style to write
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     protected final void writeTagStyle(ResponseWriter writer, String style) throws UnifyException {
         if (StringUtils.isNotBlank(style)) {
@@ -514,13 +514,13 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      * Writes combined tag style attribute.
      * 
      * @param writer
-     *            the writer to use to write
+     *               the writer to use to write
      * @param widget
-     *            the widget whose style to write
+     *               the widget whose style to write
      * @param style
-     *            the style to write
+     *               the style to write
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     protected final void writeTagStyle(ResponseWriter writer, Widget widget, String style) throws UnifyException {
         if (StringUtils.isNotBlank(style) || StringUtils.isNotBlank(widget.getStyle())) {
@@ -540,11 +540,11 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      * Writes tag title attribute.
      * 
      * @param writer
-     *            the writer to use to write
+     *               the writer to use to write
      * @param widget
-     *            the widget whose title to write
+     *               the widget whose title to write
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     protected final void writeTagTitle(ResponseWriter writer, Widget widget) throws UnifyException {
         if (StringUtils.isNotBlank(widget.getHint())) {
@@ -556,11 +556,11 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      * Writes tag title attribute.
      * 
      * @param writer
-     *            the writer to use to write
+     *               the writer to use to write
      * @param title
-     *            the title to write
+     *               the title to write
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     protected final void writeTagTitle(ResponseWriter writer, String title) throws UnifyException {
         if (StringUtils.isNotBlank(title)) {
@@ -572,11 +572,11 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      * Writes tag value attribute.
      * 
      * @param writer
-     *            the writer to use to write
+     *               the writer to use to write
      * @param widget
-     *            the widget whose value to write
+     *               the widget whose value to write
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     protected final void writeTagValue(ResponseWriter writer, Widget widget) throws UnifyException {
         String value = widget.getStringValue();
@@ -589,11 +589,11 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      * Writes tag value attribute.
      * 
      * @param writer
-     *            the writer to use to write
+     *               the writer to use to write
      * @param value
-     *            the value to write
+     *               the value to write
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     protected final void writeTagValue(ResponseWriter writer, Object value) throws UnifyException {
         if (value != null) {
@@ -605,9 +605,9 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      * Writes tag readonly attribute
      * 
      * @param writer
-     *            the writer to use
+     *               the writer to use
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     protected final void writeTagReadOnly(ResponseWriter writer) throws UnifyException {
         writer.write(" readonly");
@@ -617,11 +617,11 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      * Writes tag readonly attribute
      * 
      * @param writer
-     *            the writer to use
+     *               the writer to use
      * @param widget
-     *            the widget
+     *               the widget
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     protected final void writeTagReadOnly(ResponseWriter writer, Widget widget) throws UnifyException {
         if (widget.isSupportReadOnly() && !widget.isContainerEditable()) {
@@ -633,11 +633,11 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      * Writes tag disabled attribute
      * 
      * @param writer
-     *            the writer to use
+     *               the writer to use
      * @param widget
-     *            the widget
+     *               the widget
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     protected final void writeTagDisabled(ResponseWriter writer, Widget widget) throws UnifyException {
         if (widget.isContainerDisabled()) {
@@ -649,11 +649,11 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      * Writes tag id attribute.
      * 
      * @param sb
-     *            the sting builder to use to write
+     *           the sting builder to use to write
      * @param id
-     *            the id to write
+     *           the id to write
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     protected final void writeTagId(StringBuilder sb, String id) throws UnifyException {
         sb.append(" id=\"").append(id).append("\"");
@@ -663,11 +663,11 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      * Writes tag name attribute.
      * 
      * @param sb
-     *            the sting builder to use to write
+     *             the sting builder to use to write
      * @param name
-     *            the name to write
+     *             the name to write
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     protected final void writeTagName(StringBuilder sb, String name) throws UnifyException {
         sb.append(" name=\"").append(name).append("\"");
@@ -677,11 +677,11 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      * Writes tag class attribute.
      * 
      * @param sb
-     *            the sting builder to use to write
+     *                   the sting builder to use to write
      * @param styleClass
-     *            the styleClass to write
+     *                   the styleClass to write
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     protected final void writeTagStyleClass(StringBuilder sb, String styleClass) throws UnifyException {
         sb.append(" class=\"").append(styleClass).append("\"");
@@ -691,11 +691,11 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      * Writes tag style attribute.
      * 
      * @param sb
-     *            the sting builder to use to write
+     *              the sting builder to use to write
      * @param style
-     *            the style to write
+     *              the style to write
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     protected final void writeTagStyle(StringBuilder sb, String style) throws UnifyException {
         sb.append(" style=\"").append(style).append("\"");
@@ -705,11 +705,11 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      * Writes tag title attribute.
      * 
      * @param sb
-     *            the sting builder to use to write
+     *              the sting builder to use to write
      * @param title
-     *            the title to write
+     *              the title to write
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     protected final void writeTagTitle(StringBuilder sb, String title) throws UnifyException {
         sb.append(" title=\"").append(title).append("\"");
@@ -719,17 +719,17 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      * Writes file image HTML element.
      * 
      * @param writer
-     *            the writer to use
+     *                   the writer to use
      * @param src
-     *            the image source file
+     *                   the image source file
      * @param id
-     *            the image id
+     *                   the image id
      * @param styleClass
-     *            the style class
+     *                   the style class
      * @param style
-     *            the style
+     *                   the style
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     protected void writeFileImageHtmlElement(ResponseWriter writer, String src, String id, String styleClass,
             String style) throws UnifyException {
@@ -773,35 +773,38 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
     }
 
     protected void writePostToPathJs(ResponseWriter writer, String path) throws UnifyException {
-        writer.write(WriterUtils.getActionJSFunction("posttopath")).write("(\"");
+        String function = WriterUtils.getActionJSFunction("posttopath");
+        writer.beginFunction(function);
+        writer.write("\"uPath\":\"");
         writer.writeContextURL(path);
-        writer.write("\");");
+        writer.write("\"");
+        writer.endFunction();
     }
 
     protected void writeShortcutHandlerJs(ResponseWriter writer, String pageControllerName, String id, String cmdTag,
             PageAction pageAction) throws UnifyException {
+        writer.beginFunction("ux.setShortcut");
         String function = WriterUtils.getActionJSFunction(pageAction.getAction().toLowerCase());
-        String eventParams = writeActionParamsJS(writer, null, function, id, cmdTag, pageAction, null, null, null);
-        String shortcut = pageAction.getUplAttribute(String.class, "shortcut");
-        writer.write("ux.setShortcut(\"").write(WebUtils.encodeShortcut(shortcut)).write("\",");
-        writer.write(eventParams).write(");");
+        writeActionParamsJS(writer, null, function, id, cmdTag, pageAction, null, null, null);
+        writer.endFunction();
     }
 
     protected void writeEventJs(ResponseWriter writer, String event, String action, String pageName, String cmdTag,
             String... targetPageNames) throws UnifyException {
+        writer.beginFunction("ux.setOnEvent");
         event = WriterUtils.getEventJS(event.toLowerCase());
         String function = WriterUtils.getActionJSFunction(action);
-        String eventParams = writeActionParamsJS(writer, event, function, pageName, cmdTag, null, targetPageNames, null,
-                null);
-        writer.write("ux.setOnEvent(").write(eventParams).write(");");
+        writeActionParamsJS(writer, event, function, pageName, cmdTag, null, targetPageNames, null, null);
+        writer.endFunction();
     }
 
     protected void writePathEventHandlerJS(ResponseWriter writer, String id, String cmdTag, String eventType,
             String action, String path) throws UnifyException {
+        writer.beginFunction("ux.setOnEvent");
         String event = WriterUtils.getEventJS(eventType.toLowerCase());
         String function = WriterUtils.getActionJSFunction(action.toLowerCase());
-        String eventParams = writeActionParamsJS(writer, event, function, id, cmdTag, null, null, null, path);
-        writer.write("ux.setOnEvent(").write(eventParams).write(");");
+        writeActionParamsJS(writer, event, function, id, cmdTag, null, null, null, path);
+        writer.endFunction();
     }
 
     protected void writeOpenPopupJS(ResponseWriter writer, String event, String pageName, String cmdTag, String frameId,
@@ -815,13 +818,13 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
 
         psb.append(",\"stayOpenForMillSec\":").append(stayOpenForMillSec);
         if (onShowAction != null) {
-            psb.append(",\"showHandler\":").append(WriterUtils.getActionJSFunctionOptional(onShowAction));
+            psb.append(",\"showHandler\":\"").append(WriterUtils.getActionJSAlias(onShowAction)).append("\"");
             if (onShowParamObject != null) {
                 psb.append(",\"showParam\":").append(onShowParamObject);
             }
         }
         if (onHideAction != null) {
-            psb.append(",\"hideHandler\":").append(WriterUtils.getActionJSFunctionOptional(onHideAction));
+            psb.append(",\"hideHandler\":\"").append(WriterUtils.getActionJSAlias(onHideAction)).append("\"");
             if (onHideParamObject != null) {
                 psb.append(",\"hideParam\":").append(onHideParamObject);
             }
@@ -830,17 +833,16 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
         writeRefObjectEventHandlerJS(writer, pageName, cmdTag, event, "openpopup", psb.toString());
     }
 
-    protected String writeActionParamsJS(ResponseWriter writer, String event, String function, String id, String cmdTag,
+    protected void writeActionParamsJS(ResponseWriter writer, String event, String function, String id, String cmdTag,
             PageAction pageAction, String[] refPageNames, String refObject, String path) throws UnifyException {
         String pathId = getRequestContextUtil().getResponsePathParts().getControllerPathId();
         PageManager pageManager = getPageManager();
-        String eventParams = "_act" + (WriterUtils.getNextRefId()) + "Prm";
-        writer.write("var ").write(eventParams).write("={");
         if (StringUtils.isNotBlank(event)) {
             writer.write("\"uEvnt\":\"").write(event).write("\",");
         }
         if (StringUtils.isNotBlank(function)) {
-            writer.write("\"uFunc\":").write(function).write(",");
+            String alias = WriterUtils.getActionJSAlias(function);
+            writer.write("\"uFunc\":\"").write(alias).write("\",");
         }
         writer.write("\"uId\":\"").write(id).write("\"");
 
@@ -856,6 +858,14 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
             if (pageAction.isUplAttribute("validations")) {
                 if (pageAction.getUplAttribute(Object.class, "validations") != null) {
                     writer.write(",\"uValidateAct\":\"").write(pageAction.getId()).write("\"");
+                }
+            }
+
+            if (pageAction.isUplAttribute("shortcut")) {
+                String shortcut = pageAction.getUplAttribute(String.class, "shortcut");
+                if (shortcut != null) {
+                    shortcut = WebUtils.encodeShortcut(shortcut);
+                    writer.write(",\"uShortcut\":\"").write(shortcut).write("\"");
                 }
             }
 
@@ -904,7 +914,7 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
             if (pageAction.getUplAttribute(boolean.class, "pushSrc")) {
                 writer.write(",\"uPushSrc\":true");
             }
-            
+
             List<String> componentList = pageManager.getExpandedReferences(pageAction.getId());
             writer.write(",\"uRef\":").writeJsonArray(componentList);
 
@@ -969,15 +979,12 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
                 path = pathId + TokenUtils.extractTokenValue(path);
             } else if (TokenUtils.isRequestPathActionTag(path)) {
                 path = pathId + getRequestAttribute(TokenUtils.extractTokenValue(path));
-            } 
+            }
 
             writer.write(",\"uURL\":\"");
             writer.writeContextURL(path);
             writer.write('"');
         }
-
-        writer.write("};");
-        return eventParams;
     }
 
     protected PageRequestContextUtil getRequestContextUtil() throws UnifyException {
@@ -998,11 +1005,11 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
 
     private void writeRefObjectEventHandlerJS(ResponseWriter writer, String pageName, String cmdTag, String eventType,
             String action, String refObject) throws UnifyException {
+        writer.beginFunction("ux.setOnEvent");
         String event = WriterUtils.getEventJS(eventType.toLowerCase());
         String function = WriterUtils.getActionJSFunction(action.toLowerCase());
-        String eventParams = writeActionParamsJS(writer, event, function, pageName, cmdTag, null, null, refObject,
-                null);
-        writer.write("ux.setOnEvent(").write(eventParams).write(");");
+        writeActionParamsJS(writer, event, function, pageName, cmdTag, null, null, refObject, null);
+        writer.endFunction();
     }
 
 }

@@ -53,8 +53,8 @@ public abstract class AbstractPanelWriter extends AbstractContainerWriter implem
             int refreshEvery = panel.getRefreshEvery();
             if (refreshEvery > 0) {
                 // Append delayed post
+                writer.beginFunction("ux.setDelayedPanelPost");
                 String path = panel.getRefreshPath();
-                writer.write("ux.setDelayedPanelPost({");
                 writer.write("\"pId\":\"").write(panel.getId()).write('"');
                 writer.write(",\"pURL\":\"");
                 if (path == null) {
@@ -65,7 +65,7 @@ public abstract class AbstractPanelWriter extends AbstractContainerWriter implem
                 writer.write('"');
                 writer.write(",\"pOnUserAct\":").write(panel.isRefreshOnUserAct());
                 writer.write(",\"pPeriodMilliSec\":").write(refreshEvery);
-                writer.write("});");
+                writer.endFunction();
             }
         }
     }

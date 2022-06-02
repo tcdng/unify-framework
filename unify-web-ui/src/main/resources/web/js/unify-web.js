@@ -97,6 +97,8 @@ ux.extensionregistry = {};
 
 ux.lastUserActTime=0;
 
+ux.fnaliases = [];
+
 /** Utilities */
 function _id(id) {
 	return document.getElementById(id);
@@ -135,14 +137,14 @@ ux.setupDocument = function(docPath, docPopupBaseId, docPopupId, docSysInfoId, d
 }
 
 ux.processJSON = function(jsonstring) {
-	var jsonEval = eval("(" + jsonstring + ")");
-	ux.remoteView = jsonEval.remoteView;
-	if (jsonEval.jsonResp) {
-		for (var j = 0; j < jsonEval.jsonResp.length; j++) {
-			var resp = jsonEval.jsonResp[j];
+	const fullResp = JSON.parse(jsonstring);
+	ux.remoteView = fullResp.remoteView;
+	if (fullResp.jsonResp) {
+		for (var j = 0; j < fullResp.jsonResp.length; j++) {
+			var resp = fullResp.jsonResp[j];
 			ux.respHandler[resp.handler](resp);
 			if (resp.focusOnWidget) {
-				ux.setFocus(resp.focusOnWidget);
+				ux.setFocus({wdgid: resp.focusOnWidget});
 			}
 		}
 		ux.cascadeStretch();
@@ -151,7 +153,7 @@ ux.processJSON = function(jsonstring) {
 	if (ux.cntId) {
 		var elem = _id(ux.cntId);
 		if (elem) {
-			if (jsonEval.scrollReset) {
+			if (fullResp.scrollReset) {
 				elem.scrollTop = 0;
 			} else if (ux.cntScrollY >= 0) {
 				elem.scrollTop = ux.cntScrollY;
@@ -196,7 +198,7 @@ ux.respHandler = {
 		var trg = _id(resp.remoteTarget);
 		if (trg) {
 			trg.innerHTML = resp.docView.html;
-			eval(resp.docView.script);
+			ux.perform(resp.docView.script);
 		}
 	},
 
@@ -329,9 +331,7 @@ ux.respHandler = {
 					ux.centralize(basePanel, sysInfoPanel);
 					sysInfoPanel.style.visibility = "visible";
 					basePanel.style.display = "block";
-					if (resp.showSysInfoPopup.script) {
-						eval(resp.showSysInfoPopup.script);
-					}
+					ux.perform(resp.showSysInfoPopup.script);
 				}
 			}
 		} else if (resp.showPopup) {
@@ -351,10 +351,7 @@ ux.respHandler = {
 					ux.centralize(basePanel, targetPanel);
 					targetPanel.style.visibility = "visible";
 					ux.popupVisible = true;
-
-					if (resp.showPopup.script) {
-						eval(resp.showPopup.script);
-					}
+					ux.perform(resp.showPopup.script);
 				}
 			}
 		}
@@ -422,9 +419,7 @@ ux.refreshPanels = function(resp) {
 		}
 
 		for (var i = 0; i < resp.refreshPanels.length; i++) {
-			if (resp.refreshPanels[i].script) {
-				eval(resp.refreshPanels[i].script);
-			}
+			ux.perform(resp.refreshPanels[i].script);
 		}
 	}
 }
@@ -436,8 +431,15 @@ ux.refreshSection = function(resp) {
 			trg.innerHTML = resp.section.html;
 		}
 
-		if (resp.section.script) {
-			eval(resp.section.script);
+		ux.perform(resp.section.script);
+	}
+}
+
+ux.perform = function(funcs) {
+	if (funcs) {
+		for (var i = 0; i < funcs.length; i++) {
+			var _func = funcs[i];
+			ux.getfn(_func.fn)(_func.prm);
 		}
 	}
 }
@@ -664,8 +666,8 @@ ux.post = function(uEv) {
 	ux.postCommit(uEv.evp);
 }
 
-ux.postToPath = function(url) {
-	var ajaxPrms = ux.ajaxConstructCallParam(url,
+ux.postToPath = function(evp) {
+	var ajaxPrms = ux.ajaxConstructCallParam(evp.uPath,
 			"req_doc=" + _enc(ux.docPath), false, true, false, ux.processJSON);
 	ux.ajaxCall(ajaxPrms);
 }
@@ -864,8 +866,8 @@ ux.repositionMenuPopup = function(paramObject) {
 	}
 }
 
-ux.setFocus = function(id) {
-	var elem = _id(id);
+ux.setFocus = function(evp) {
+	var elem = _id(evp.wdgid);
 	if (elem) {
 		elem.focus();
 		ux.setCaretPosition(elem, 10000, 10000);
@@ -1018,7 +1020,7 @@ ux.rigContentPanel = function(rgp) {
 	ux.cntSaveIsRemote = rgp.pSaveIsRem;
 
 	if (rgp.pImmURL) {
-		ux.postToPath(rgp.pImmURL);
+		ux.postToPath({uPath:rgp.pImmURL});
 	} else {
 		const currIdx = rgp.pCurIdx;
 		const menuId = rgp.pMenuId;
@@ -1320,8 +1322,8 @@ ux.tabbedPanelTabClickHandler = function(uEv) {
 
 /** ********************* CONTROLS ********************* */
 /** Common */
-ux.rigValueAccessor = function(id) {
-	const elem = _id(id);
+ux.rigValueAccessor = function(evp) {
+	const elem = _id(evp.uId);
 	if(elem) {
 		elem.setValue = function(val) {
 			this.value = val;
@@ -2378,7 +2380,7 @@ ux.mfAmountChange = function(uEv) {
 }
 
 ux.mfOnShow = function(rgp) {
-	ux.setFocus(rgp.pFrmId);
+	ux.setFocus({wdgid: rgp.pFrmId});
 }
 
 /** Multi select */
@@ -2600,7 +2602,7 @@ ux.pfMagnitudeChange = function(uEv) {
 }
 
 ux.pfOnShow = function(rgp) {
-	ux.setFocus(rgp.pFrmId);
+	ux.setFocus({wdgid: rgp.pFrmId});
 }
 
 /** Photo Upload */
@@ -2711,7 +2713,7 @@ ux.sfWireResult = function(rgp) {
 }
 
 ux.sfOnShow = function(rgp) {
-	ux.setFocus(rgp.pFilId);
+	ux.setFocus({wdgid: rgp.pFilId});
 }
 
 ux.sfSelect = function(uEv) {
@@ -2775,7 +2777,7 @@ ux.rigOptionsTextArea = function(rgp) {
 		evp.popupId=rgp.pPopupId;
 		evp.frameId=rgp.pId;
 		evp.stayOpenForMillSec = 0;
-		evp.showHandler = ux.optionsTextAreaOnShow;
+		evp.showHandler = "ux42";
 		evp.showParam=rgp.pFrmId;
 		ux.addHdl(ota, "keypress", ux.otaTxtKeypress, evp);
 		ux.addHdl(ota, "keydown", ux.otaTxtKeydown, evp);	
@@ -2867,7 +2869,7 @@ ux.otaTokenEnd = function(txt, end) {
 
 
 ux.optionsTextAreaOnShow = function(frmId) {
-	ux.setFocus(frmId);
+	ux.setFocus({wdgid: frmId});
 }
 
 /** Single Select */
@@ -2966,7 +2968,7 @@ ux.rigSingleSelect = function(rgp) {
 }
 
 ux.ssOnShow = function(rgp) {
-	ux.setFocus(rgp.pFrmId);
+	ux.setFocus({wdgid: rgp.pFrmId});
 }
 
 
@@ -4912,7 +4914,7 @@ ux.setTextRegexFormatting = function(prm) {
 	}
 
 	if (prm.pRegex) {
-		evp.sFormatRegex = eval(prm.pRegex);
+		evp.sFormatRegex = (!prm.pRegex || prm.pRegex === "") ? null: new RegExp(prm.pRegex);
 	}
 
 	var elem = _id(prm.pId);
@@ -4968,8 +4970,8 @@ ux.textInputKeydown = function(uEv) {
 		var string = trgObj.value;
 		string = string.substring(0, pos.start) + uEv.uChar + string.substring(pos.end);
 
-		var formatRegex = evp.sFormatRegex;
-		if (formatRegex && !formatRegex.test(string)) {
+		var _rejex = evp.sFormatRegex;
+		if (_rejex && !_rejex.test(string)) {
 			uEv.uStop();
 			return;
 		}
@@ -5056,7 +5058,7 @@ ux.textValidationOnBlurHandler = function(uEv) {
 	if (trgObj.sError == null) {
 		var validationRegex = null;
 		if (evp.sValidationRegex) {
-			validationRegex = eval(evp.sValidationRegex);
+			validationRegex = (!evp.sValidationRegex || evp.sValidationRegex === "") ? null: new RegExp(evp.sValidationRegex);
 		}
 
 		if (validationRegex) {
@@ -5130,8 +5132,8 @@ ux.onSpecialKeyHandler = function(uEv) {
 	}
 }
 
-ux.setShortcut = function(shortcut, evp) {
-	ux.shortcuts[shortcut] = evp;
+ux.setShortcut = function(evp) {
+	ux.shortcuts[evp.uShortcut] = evp;
 }
 
 ux.setOnEvent = function(evp) {
@@ -5141,19 +5143,20 @@ ux.setOnEvent = function(evp) {
 	}
 	
 	var elem = _id(evp.uId);
+	const _fn = ux.getfn(evp.uFunc);
 	if (elem) {
 		if (elem.value == "pushr_") {
-			ux.addHdlMany(evp.uId, eventName, evp.uFunc,
+			ux.addHdlMany(evp.uId, eventName, _fn,
 					evp);
 		} else {
-			ux.addHdl(elem, eventName, evp.uFunc,
+			ux.addHdl(elem, eventName, _fn,
 					evp);
 			if (evp.uFire) {
 				ux.fireEvent(elem, eventName);
 			}
 		}
 	} else {
-		ux.addHdlMany(evp.uId, eventName, evp.uFunc,
+		ux.addHdlMany(evp.uId, eventName, _fn,
 				evp);
 	}
 }
@@ -5246,6 +5249,82 @@ ux.init = function() {
 	if (UNIFY_POST_COMMIT_QUEUE) {
 		ux.postCommitProcessor();
 	}
+	
+	//Perform
+    ux.setfn(ux.forward, "ux01");
+    ux.setfn(ux.submit, "ux02"); 
+    ux.setfn(ux.post, "ux03");   
+    ux.setfn(ux.postToPath, "ux04");   
+    ux.setfn(ux.postCommand, "ux05");   
+    ux.setfn(ux.openWindow, "ux06");
+    ux.setfn(ux.download, "ux07");
+    ux.setfn(ux.clear, "ux08");
+    ux.setfn(ux.disable, "ux09");
+    ux.setfn(ux.show, "ux0a");
+    ux.setfn(ux.hide, "ux0b");
+    ux.setfn(ux.delegate, "ux0c");
+    ux.setfn(ux.setAllChecked, "ux0d");
+    ux.setfn(ux.populateSelectOptions, "ux0e");
+    ux.setfn(ux.openPopup, "ux0f");  
+    ux.setfn(ux.hidePopup, "ux10");
+    ux.setfn(ux.repositionMenuPopup, "ux11");
+    ux.setfn(ux.setFocus, "ux12");
+    ux.setfn(ux.rigAssignmentBox, "ux13");  
+    ux.setfn(ux.rigCheckbox, "ux14");  
+    ux.setfn(ux.rigChecklist, "ux15");  
+    ux.setfn(ux.rigDateField, "ux16");  
+    ux.setfn(ux.rigDebitCreditField, "ux17");  
+    ux.setfn(ux.rigDropdownChecklist, "ux18");  
+    ux.setfn(ux.dcHidePopup, "ux19"); 
+    ux.setfn(ux.rigDurationSelect, "ux1a");  
+    ux.setfn(ux.rigFileAttachment, "ux1b");  
+    ux.setfn(ux.rigFileDownload, "ux1c");  
+    ux.setfn(ux.rigFileUploadView, "ux1d");  
+    ux.setfn(ux.rigFileUpload, "ux1e");  
+    ux.setfn(ux.rigDragAndDropPopup, "ux1f");  
+    ux.setfn(ux.rigLinkGrid, "ux20");  
+    ux.setfn(ux.rigMoneyField, "ux21");  
+    ux.setfn(ux.mfOnShow, "ux22"); 
+    ux.setfn(ux.rigMultiSelect, "ux23");  
+    ux.setfn(ux.rigOptionsTextArea, "ux24");  
+    ux.setfn(ux.rigPeriodField, "ux25");  
+    ux.setfn(ux.pfOnShow, "ux26");
+    ux.setfn(ux.rigPhotoUpload, "ux27");  
+    ux.setfn(ux.rigRadioButtons, "ux28");  
+    ux.setfn(ux.rigSearchField, "ux29");  
+    ux.setfn(ux.sfWireResult, "ux2a");  
+    ux.setfn(ux.sfOnShow, "ux2b"); 
+    ux.setfn(ux.rigSingleSelect, "ux2c");  
+    ux.setfn(ux.ssOnShow, "ux2d");
+    ux.setfn(ux.rigTable, "ux2e");  
+    ux.setfn(ux.rigTextArea, "ux2f");  
+    ux.setfn(ux.rigTextClock, "ux30");  
+    ux.setfn(ux.setTextRegexFormatting, "ux31");  
+    ux.setfn(ux.rigTimeField, "ux32");  
+    ux.setfn(ux.rigDragAndDropPopup, "ux33");  
+    ux.setfn(ux.rigTreeExplorer, "ux34");  
+    ux.setfn(ux.rigDesktopType2, "ux35");  
+    ux.setfn(ux.rigAccordion, "ux36");  
+    ux.setfn(ux.rigContentPanel, "ux37");  
+    ux.setfn(ux.rigDetachedPanel, "ux38");  
+    ux.setfn(ux.rigFixedContentPanel, "ux39");  
+    ux.setfn(ux.loadRemoteDocViewPanel, "ux3a");  
+    ux.setfn(ux.rigSplitPanel, "ux3b");  
+    ux.setfn(ux.rigStretchPanel, "ux3c");  
+    ux.setfn(ux.rigTabbedPanel, "ux3d");  
+    ux.setfn(ux.rigValueAccessor, "ux3e");
+    ux.setfn(ux.setShortcut, "ux3f");
+    ux.setfn(ux.setOnEvent, "ux40"); 
+    ux.setfn(ux.setDelayedPanelPost, "ux41");
+    ux.setfn(ux.optionsTextAreaOnShow, "ux42");
+}
+
+ux.setfn = function(fn, id) {
+	ux.fnaliases[id] = fn;
+}
+
+ux.getfn = function(id) {
+	return ux.fnaliases[id];
 }
 
 ux.setHintTimeout = function(millisec) {
@@ -5275,7 +5354,7 @@ ux.documentKeydownHandler = function(uEv) {
 	if (evp) {
 		if (_id(evp.uId)) { // Containing panel must be visible for shortcut
 			uEv.evp = evp;
-			evp.uFunc(uEv);
+			ux.getfn(evp.uFunc)(uEv);
 			uEv.uStop();
 		}
 	}
@@ -5476,7 +5555,6 @@ ux.handleOrConfirmRedirect = function(event, handler, evp) {
 		ux.hidePopup(null);
 		ux.postCommit(evPrmConf);
 	} else {
-		// Handle now
 		handler(ux.normaliseEvent(event, evp));
 	}
 }
@@ -5674,7 +5752,7 @@ ux.doOpenPopup = function(openPrm) {
 
 		ux.openPrm = openPrm;
 		if (openPrm.showHandler) {
-			openPrm.showHandler(openPrm.showParam);
+			ux.getfn(openPrm.showHandler)(openPrm.showParam);
 		}
 	}
 }
@@ -5697,7 +5775,7 @@ ux.hidePopup = function(uEv) {
 		ux.popCurr.style.visibility = 'hidden';
 		ux.popCurr = null;
 		if (openPrm && openPrm.hideHandler) {
-			openPrm.hideHandler(openPrm.hideParam);
+			ux.getfn(openPrm.hideHandler)(openPrm.hideParam);
 		}
 	}
 }
@@ -5761,7 +5839,7 @@ ux.callPageResets = function() {
 		try {
 			ux.pageresets[id]();
 		} catch(e) {
-			console.log(e.message);
+			//console.log(e.message);
 		}
 	}
 }

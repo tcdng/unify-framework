@@ -40,10 +40,11 @@ public abstract class AbstractEventHandlerWriter extends AbstractBehaviorWriter 
             if (eventHandler.getPageAction() != null) {
                 event = WriterUtils.getEventJS(event.toLowerCase());
                 for (PageAction pageAction : eventHandler.getPageAction()) {
+                    writer.beginFunction("ux.setOnEvent");
                     String function = WriterUtils.getActionJSFunction(pageAction.getAction().toLowerCase());
-                    String eventParams = writeActionParamsJS(writer, event, function, id, cmdTag, pageAction, null,
+                    writeActionParamsJS(writer, event, function, id, cmdTag, pageAction, null,
                             null, null);
-                    writer.write("ux.setOnEvent(").write(eventParams).write(");");
+                    writer.endFunction();
                 }
             }
         }

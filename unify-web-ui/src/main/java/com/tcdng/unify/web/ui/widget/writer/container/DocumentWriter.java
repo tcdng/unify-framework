@@ -22,6 +22,7 @@ import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ControllerPathParts;
+import com.tcdng.unify.web.data.WebStringWriter;
 import com.tcdng.unify.web.ui.PagePathInfoRepository;
 import com.tcdng.unify.web.ui.widget.DocumentLayout;
 import com.tcdng.unify.web.ui.widget.Panel;
@@ -171,6 +172,7 @@ public class DocumentWriter extends AbstractPageWriter {
                 .write(document.getPopupBaseId()).write("\", \"").write(document.getPopupWinId()).write("\", \"")
                 .write(document.getPopupSysId()).write("\", \"").write(getSessionContext().getId()).write("\");");
 
+        writer.useSecondary();
         // Write layout behavior
         DocumentLayout documentLayout = document.getUplAttribute(DocumentLayout.class, "layout");
         writer.writeBehavior(documentLayout, document);
@@ -183,6 +185,9 @@ public class DocumentWriter extends AbstractPageWriter {
         writeBehaviour(writer, document.getMenuPanel());
         writeBehaviour(writer, document.getContentPanel());
         writeBehaviour(writer, document.getFooterPanel());
+        WebStringWriter scriptLsw = writer.discardSecondary();
+        writer.write("var behaviorPrm = ").write(scriptLsw).write(";");
+        writer.write("ux.perform(behaviorPrm);");
 
         // Write page aliases
         writer.write("var aliasPrms = {");
@@ -202,7 +207,7 @@ public class DocumentWriter extends AbstractPageWriter {
         // Set focus
         getRequestContextUtil().considerDefaultFocusOnWidget();
         if (getRequestContextUtil().isFocusOnWidgetOrDefault()) {
-            writer.write("ux.setFocus(\"").write(getRequestContextUtil().getFocusOnWidgetIdOrDefault()).write("\");");
+            writer.write("ux.setFocus({wdgid:\"").write(getRequestContextUtil().getFocusOnWidgetIdOrDefault()).write("\"});");
             getRequestContextUtil().clearFocusOnWidget();
         }
         writer.write("</script>");
