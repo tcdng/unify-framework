@@ -399,7 +399,7 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 		buf.append(",\"html\":");
 		buf.appendJsonQuoted(htmlLsw);
 		buf.append(",\"script\":");
-		buf.appendArrayJsonQuoted(scriptLsw);
+		buf.append(scriptLsw);
 		buf.append('}');
 		return this;
 	}
@@ -419,7 +419,7 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 		buf.append(",\"html\":");
 		buf.appendJsonQuoted(htmlLsw);
 		buf.append(",\"script\":");
-		buf.appendArrayJsonQuoted(scriptLsw);
+		buf.append(scriptLsw);
 		buf.append('}');
 		return this;
 	}

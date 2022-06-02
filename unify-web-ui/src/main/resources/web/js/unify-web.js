@@ -137,10 +137,6 @@ ux.setupDocument = function(docPath, docPopupBaseId, docPopupId, docSysInfoId, d
 }
 
 ux.processJSON = function(jsonstring) {
-	console.log("@processJSON: XXXXXXXXXXXXXXXXX");
-	console.log("@processJSON: jsonstring = " + jsonstring);
-	console.log("@processJSON: XXXXXXXXXXXXXXXXX");
-
 	const fullResp = JSON.parse(jsonstring);
 	ux.remoteView = fullResp.remoteView;
 	if (fullResp.jsonResp) {
@@ -443,7 +439,6 @@ ux.perform = function(funcs) {
 	if (funcs) {
 		for (var i = 0; i < funcs.length; i++) {
 			var _func = funcs[i];
-			console.log("@perform: _func = " + JSON.stringify(_func));
 			ux.getfn(_func.fn)(_func.prm);
 		}
 	}
@@ -5560,7 +5555,6 @@ ux.handleOrConfirmRedirect = function(event, handler, evp) {
 		ux.hidePopup(null);
 		ux.postCommit(evPrmConf);
 	} else {
-		// Handle now
 		handler(ux.normaliseEvent(event, evp));
 	}
 }
@@ -5845,7 +5839,7 @@ ux.callPageResets = function() {
 		try {
 			ux.pageresets[id]();
 		} catch(e) {
-			console.log(e.message);
+			//console.log(e.message);
 		}
 	}
 }

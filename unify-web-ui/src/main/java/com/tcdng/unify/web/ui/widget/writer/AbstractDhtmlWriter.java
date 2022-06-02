@@ -818,13 +818,13 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
 
         psb.append(",\"stayOpenForMillSec\":").append(stayOpenForMillSec);
         if (onShowAction != null) {
-            psb.append(",\"showHandler\":\"").append(WriterUtils.getActionJSAliasOptional(onShowAction)).append("\"");
+            psb.append(",\"showHandler\":\"").append(WriterUtils.getActionJSAlias(onShowAction)).append("\"");
             if (onShowParamObject != null) {
                 psb.append(",\"showParam\":").append(onShowParamObject);
             }
         }
         if (onHideAction != null) {
-            psb.append(",\"hideHandler\":\"").append(WriterUtils.getActionJSAliasOptional(onHideAction)).append("\"");
+            psb.append(",\"hideHandler\":\"").append(WriterUtils.getActionJSAlias(onHideAction)).append("\"");
             if (onHideParamObject != null) {
                 psb.append(",\"hideParam\":").append(onHideParamObject);
             }
@@ -841,7 +841,8 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
             writer.write("\"uEvnt\":\"").write(event).write("\",");
         }
         if (StringUtils.isNotBlank(function)) {
-            writer.write("\"uFunc\":").write(function).write(",");
+            String alias = WriterUtils.getActionJSAlias(function);
+            writer.write("\"uFunc\":\"").write(alias).write("\",");
         }
         writer.write("\"uId\":\"").write(id).write("\"");
 

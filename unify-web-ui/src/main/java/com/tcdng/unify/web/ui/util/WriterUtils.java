@@ -177,15 +177,6 @@ public final class WriterUtils {
         return alias;
     }
 
-    public static String getActionJSAliasOptional(String function) throws UnifyException {
-        String functionName = actionToJSMap.get(function);
-        if (functionName == null) {
-            return jsAliasMap.get(functionName);
-        }
-        
-        return jsAliasMap.get(functionName);
-    }
-
     public static long getNextRefId() {
         return ++refCounter;
     }
