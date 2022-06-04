@@ -439,7 +439,12 @@ ux.perform = function(funcs) {
 	if (funcs) {
 		for (var i = 0; i < funcs.length; i++) {
 			var _func = funcs[i];
-			ux.getfn(_func.fn)(_func.prm);
+			try {
+				ux.getfn(_func.fn)(_func.prm);
+			} catch(e) {
+				console.log("_func = " + JSON.stringify(_func));
+				throw e;
+			}
 		}
 	}
 }
@@ -5227,6 +5232,7 @@ ux.setHiddenValues = function(references, hiddenValues) {
 
 /** Document functions and event handlers */
 ux.init = function() {
+	console.log("@Prime: ux.init()");
 	ux.resizeTimeout = null;
 	// Set document keydown handler
 	ux.addHdl(document, "keydown", ux.documentKeydownHandler,
