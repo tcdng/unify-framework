@@ -44,9 +44,11 @@ public class ChildFieldInfo extends OnDeleteCascadeInfo {
 
     private boolean list;
 
+    private boolean idNumber;
+
     public ChildFieldInfo(Class<? extends Entity> childEntityClass, String category, Field childFkIdField, Method childFkIdSetter,
             Field childFkTypeField, Method childFkTypeSetter, Field childCatField, Method childCatSetter, Field field,
-            Method getter, Method setter, boolean list) {
+            Method getter, Method setter, boolean list, boolean idNumber) {
         super(childEntityClass, childFkIdField, childFkTypeField, childCatField);
         this.category = category;
         this.childFkIdSetter = childFkIdSetter;
@@ -56,6 +58,7 @@ public class ChildFieldInfo extends OnDeleteCascadeInfo {
         this.getter = getter;
         this.setter = setter;
         this.list = list;
+        this.idNumber = idNumber;
     }
 
     public String getName() {
@@ -93,5 +96,9 @@ public class ChildFieldInfo extends OnDeleteCascadeInfo {
 
     public boolean isList() {
         return list;
+    }
+
+    public boolean isIdNumber() {
+        return idNumber;
     }
 }

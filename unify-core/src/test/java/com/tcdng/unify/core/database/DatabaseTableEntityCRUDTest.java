@@ -17,6 +17,7 @@ package com.tcdng.unify.core.database;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -2266,6 +2267,42 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             Report report = new Report("weeklyReport", "Weekly Report");
             report.addParameter(new ReportParameter("startDate")).addParameter(new ReportParameter("endDate"));
             Long reportId = (Long) db.create(report);
+            List<ReportParameter> paramList = report.getParameters();
+            Long[] originalIds = new Long[] {paramList.get(0).getId(), paramList.get(1).getId()};
+
+            report.setDescription("New Weekly Report");
+            report.getParameters().get(0).setName("beginDate");
+            report.getParameters().get(1).setName("stopDate");
+            db.updateByIdVersion(report);
+
+            Report fetchedReport = db.find(Report.class, reportId);
+            assertNotNull(fetchedReport);
+            assertEquals("weeklyReport", fetchedReport.getName());
+            assertEquals("New Weekly Report", fetchedReport.getDescription());
+
+            List<ReportParameter> fetchedParamList = fetchedReport.getParameters();
+            assertNotNull(fetchedParamList);
+            assertEquals(2, fetchedParamList.size());
+            assertEquals("beginDate", fetchedParamList.get(0).getName());
+            assertEquals("stopDate", fetchedParamList.get(1).getName());
+            
+            // Ensure child records where just updated
+            assertEquals(originalIds[0], fetchedParamList.get(0).getId());
+            assertEquals(originalIds[1], fetchedParamList.get(1).getId());           
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
+    public void testUpdateRecordByIdVersionWithChildListNew() throws Exception {
+        tm.beginTransaction();
+        try {
+            Report report = new Report("weeklyReport", "Weekly Report");
+            report.addParameter(new ReportParameter("startDate")).addParameter(new ReportParameter("endDate"));
+            Long reportId = (Long) db.create(report);
+            List<ReportParameter> paramList = report.getParameters();
+            Long[] originalIds = new Long[] {paramList.get(0).getId()};
 
             report.setDescription("New Weekly Report");
             report.setParameters(Arrays.asList(new ReportParameter("resolutionDate")));
@@ -2276,10 +2313,45 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             assertEquals("weeklyReport", fetchedReport.getName());
             assertEquals("New Weekly Report", fetchedReport.getDescription());
 
-            List<ReportParameter> reportParamList = fetchedReport.getParameters();
-            assertNotNull(reportParamList);
-            assertEquals(1, reportParamList.size());
-            assertEquals("resolutionDate", reportParamList.get(0).getName());
+            List<ReportParameter> fetchedParamList = fetchedReport.getParameters();
+            assertNotNull(fetchedParamList);
+            assertEquals(1, fetchedParamList.size());
+            assertEquals("resolutionDate", fetchedParamList.get(0).getName());
+            
+            // New IDs must have been created
+            assertNotEquals(originalIds[0], fetchedParamList.get(0).getId());
+            
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
+    public void testUpdateRecordByIdVersionWithChildListRemainderDeletion() throws Exception {
+        tm.beginTransaction();
+        try {
+            Report report = new Report("weeklyReport", "Weekly Report");
+            report.addParameter(new ReportParameter("startDate")).addParameter(new ReportParameter("endDate"));
+            Long reportId = (Long) db.create(report);
+
+            report.setDescription("New Weekly Report");
+            report.getParameters().remove(0);
+            db.updateByIdVersion(report);
+
+            Report fetchedReport = db.find(Report.class, reportId);
+            assertNotNull(fetchedReport);
+            assertEquals("weeklyReport", fetchedReport.getName());
+            assertEquals("New Weekly Report", fetchedReport.getDescription());
+
+            List<ReportParameter> fetchedParamList = fetchedReport.getParameters();
+            assertNotNull(fetchedParamList);
+            assertEquals(1, fetchedParamList.size());
+            assertEquals("endDate", fetchedParamList.get(0).getName());
+            
+            // Ensure child records where just updated
+            List<ReportParameter> paramList = report.getParameters();
+            assertEquals(paramList.get(0).getId(), fetchedParamList.get(0).getId());
+            
         } finally {
             tm.endTransaction();
         }
@@ -2345,12 +2417,12 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             assertNotNull(fetchedReport);
             assertEquals("weeklyReport", fetchedReport.getName());
             assertEquals("New Weekly Report", fetchedReport.getDescription());
-
-            List<ReportParameter> reportParamList = fetchedReport.getParameters();
-            assertNotNull(reportParamList);
-            assertEquals(2, reportParamList.size());
-            assertEquals("startDate", reportParamList.get(0).getName());
-            assertEquals("endDate", reportParamList.get(1).getName());
+            
+            List<ReportParameter> fetchedParamList = fetchedReport.getParameters();
+            assertNotNull(fetchedParamList);
+            assertEquals(2, fetchedParamList.size());
+            assertEquals("startDate", fetchedParamList.get(0).getName());
+            assertEquals("endDate", fetchedParamList.get(1).getName());
         } finally {
             tm.endTransaction();
         }

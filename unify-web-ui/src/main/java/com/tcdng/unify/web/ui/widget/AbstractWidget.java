@@ -51,7 +51,8 @@ import com.tcdng.unify.web.ui.widget.panel.StandalonePanel;
 		@UplAttribute(name = "columnStyle", type = String.class),
 		@UplAttribute(name = "columnSelectSummary", type = boolean.class),
 		@UplAttribute(name = "hint", type = String.class), @UplAttribute(name = "hintBinding", type = String.class),
-		@UplAttribute(name = "readOnly", type = boolean.class, defaultVal = "false"),
+        @UplAttribute(name = "readOnly", type = boolean.class, defaultVal = "false"),
+        @UplAttribute(name = "disabled", type = boolean.class, defaultVal = "false"),
 		@UplAttribute(name = "ignoreParentState", type = boolean.class, defaultVal = "false"),
 		@UplAttribute(name = "privilege", type = String.class),
 		@UplAttribute(name = "fixedConforming", type = boolean.class, defaultVal = "false"),
@@ -318,7 +319,7 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 
 	@Override
 	public boolean isDisabled() throws UnifyException {
-		return disabled || getViewDirective().isDisabled();
+		return disabled || getViewDirective().isDisabled() || getUplAttribute(boolean.class, "disabled");
 	}
 
 	@Override

@@ -1709,6 +1709,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
     private ChildFieldInfo getChildFieldInfo(Class<?> parentClass, String category, Field childField,
             Class<? extends Entity> childClass, ChildFkFields childFkFields, boolean list) throws UnifyException {
+        boolean idNumber = Number.class.isAssignableFrom(ReflectUtils.getGetterInfo(childClass, "id").getType());
         GetterSetterInfo getterSetterInfo = ReflectUtils.getGetterSetterInfo(parentClass, childField.getName());
         Method childFkIdSetter = ReflectUtils.getGetterSetterInfo(childClass, childFkFields.getFkIdField().getName())
                 .getSetter();
@@ -1720,7 +1721,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                 : null;
         return new ChildFieldInfo(childClass, category, childFkFields.getFkIdField(), childFkIdSetter,
                 childFkFields.getFkTypeField(), childFkTypeSetter, childFkFields.getCategoryField(), childCatSetter,
-                childField, getterSetterInfo.getGetter(), getterSetterInfo.getSetter(), list);
+                childField, getterSetterInfo.getGetter(), getterSetterInfo.getSetter(), list, idNumber);
     }
 
     private ChildFkFields getFosterParentChildFkFields(Class<?> argumentType) throws UnifyException {
