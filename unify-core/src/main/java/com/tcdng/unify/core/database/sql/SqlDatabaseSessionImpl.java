@@ -19,6 +19,7 @@ import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Savepoint;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -1401,15 +1402,20 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
                                 create(childRecord);
                             }
                         } else {
+                            Set<Object> targetIds = getDeleteChildRecordIds(alfi, tableName, id);
                             if (versionNo) {
                                 for (Entity childRecord : childList) {
                                     updateByIdVersion(childRecord);
+                                    targetIds.remove(childRecord.getId());
                                 }
                             } else {
                                 for (Entity childRecord : childList) {
                                     updateById(childRecord);
+                                    targetIds.remove(childRecord.getId());
                                 }
                             }
+                            
+                            deleteChildRecords(alfi, targetIds); // Delete the rest
                         }
                     } else {
                         deleteChildRecords(alfi, tableName, id);
@@ -1421,9 +1427,6 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
         } catch (Exception e) {
             throw new UnifyOperationException(e, getClass().getSimpleName());
         }
-
-        deleteChildRecords(sqlEntityInfo, id);
-        createChildRecords(sqlEntityInfo, record, id);
     }
 
     private void deleteChildRecords(SqlEntityInfo sqlEntityInfo, Object id) throws UnifyException {
@@ -1445,6 +1448,29 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
         query.addEquals(odci.getChildFkIdField().getName(), id);
         deleteAll(query);
+    }
+
+    private Set<Object> getDeleteChildRecordIds(OnDeleteCascadeInfo odci, String tableName, Object id)
+            throws UnifyException {
+        Query<? extends Entity> query = Query.of(odci.getChildEntityClass());
+        if (odci.isWithChildFkType()) {
+            query.addEquals(odci.getChildFkTypeField().getName(), tableName);
+        }
+
+        if (odci.isWithChildCat()) {
+            query.addEquals(odci.getChildCatField().getName(), odci.getCategory());
+        }
+
+        query.addEquals(odci.getChildFkIdField().getName(), id);
+        return valueSet(Object.class, "id", query);
+    }
+
+    private void deleteChildRecords(OnDeleteCascadeInfo odci, Collection<Object> targetIds) throws UnifyException {
+        if (!targetIds.isEmpty()) {
+            Query<? extends Entity> query = Query.of(odci.getChildEntityClass());
+            query.addAmongst("id", targetIds);
+            deleteAll(query);
+        }
     }
 
     private SqlEntityInfo resolveSqlEntityInfo(Entity record) throws UnifyException {
