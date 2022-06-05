@@ -439,8 +439,8 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
                     if (fkId != null) {
                         SqlEntityInfo fkSqlEntityInfo = fkSqlFieldInfo.getForeignEntityInfo();
                         Object fkRecord = null;
-                        SqlStatement sqlStatement =
-                                sqlDataSourceDialect.prepareListByPkStatement(fkSqlEntityInfo.getKeyClass(), fkId);
+                        SqlStatement sqlStatement = sqlDataSourceDialect
+                                .prepareListByPkStatement(fkSqlEntityInfo.getKeyClass(), fkId);
                         try {
                             fkRecord = getSqlStatementExecutor().executeSingleRecordResultQuery(connection,
                                     sqlStatement, MustMatch.TRUE);
@@ -708,11 +708,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
                         if (odci.isWithChildFkType()) {
                             attrQuery.addEquals(odci.getChildFkTypeField().getName(), tableName);
                         }
-                        
+
                         if (odci.isWithChildCat()) {
                             attrQuery.addEquals(odci.getChildCatField().getName(), odci.getCategory());
                         }
-                        
+
                         attrQuery.addAmongst(odci.getChildFkIdField().getName(), idList);
                         deleteAll(attrQuery);
                     }
@@ -918,8 +918,8 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
         SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(clazz);
         SqlStatement sqlStatement = sqlDataSourceDialect.prepareFindByPkStatement(clazz, id);
         try {
-            T record =
-                    getSqlStatementExecutor().executeSingleRecordResultQuery(connection, sqlStatement, MustMatch.TRUE);
+            T record = getSqlStatementExecutor().executeSingleRecordResultQuery(connection, sqlStatement,
+                    MustMatch.TRUE);
             if (record == null) {
                 throw new UnifyException(UnifyCoreErrorConstants.RECORD_WITH_PK_NOT_FOUND, clazz, id);
             }
@@ -938,8 +938,8 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
         SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(clazz);
         SqlStatement sqlStatement = sqlDataSourceDialect.prepareFindByPkVersionStatement(clazz, id, versionNo);
         try {
-            T record =
-                    getSqlStatementExecutor().executeSingleRecordResultQuery(connection, sqlStatement, MustMatch.TRUE);
+            T record = getSqlStatementExecutor().executeSingleRecordResultQuery(connection, sqlStatement,
+                    MustMatch.TRUE);
             if (record == null) {
                 throw new UnifyException(UnifyCoreErrorConstants.RECORD_WITH_PK_VERSION_NOT_FOUND, clazz, id,
                         versionNo);
@@ -988,8 +988,8 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
         SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(clazz);
         SqlStatement sqlStatement = sqlDataSourceDialect.prepareListByPkStatement(clazz, id);
         try {
-            T record =
-                    getSqlStatementExecutor().executeSingleRecordResultQuery(connection, sqlStatement, MustMatch.TRUE);
+            T record = getSqlStatementExecutor().executeSingleRecordResultQuery(connection, sqlStatement,
+                    MustMatch.TRUE);
             if (record == null) {
                 throw new UnifyException(UnifyCoreErrorConstants.RECORD_WITH_PK_NOT_FOUND, clazz, id);
             }
@@ -1002,14 +1002,14 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
             sqlDataSourceDialect.restoreStatement(sqlStatement);
         }
     }
-    
+
     private <T extends Entity> T list(Class<T> clazz, Object id, final Object versionNo, FetchChild fetchChild)
             throws UnifyException {
         SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(clazz);
         SqlStatement sqlStatement = sqlDataSourceDialect.prepareListByPkVersionStatement(clazz, id, versionNo);
         try {
-            T record =
-                    getSqlStatementExecutor().executeSingleRecordResultQuery(connection, sqlStatement, MustMatch.TRUE);
+            T record = getSqlStatementExecutor().executeSingleRecordResultQuery(connection, sqlStatement,
+                    MustMatch.TRUE);
             if (record == null) {
                 throw new UnifyException(UnifyCoreErrorConstants.RECORD_WITH_PK_VERSION_NOT_FOUND, clazz, id,
                         versionNo);
@@ -1055,17 +1055,17 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
                                 continue;
                             }
 
-                            SqlEntityInfo childSqlEntityInfo =
-                                    sqlDataSourceDialect.findSqlEntityInfo(clfi.getChildEntityClass());
+                            SqlEntityInfo childSqlEntityInfo = sqlDataSourceDialect
+                                    .findSqlEntityInfo(clfi.getChildEntityClass());
                             Query<? extends Entity> query = Query.of(clfi.getChildEntityClass());
                             if (clfi.isWithChildFkType()) {
                                 query.addEquals(clfi.getChildFkTypeField().getName(), tableName);
                             }
-                            
+
                             if (clfi.isWithChildCat()) {
                                 query.addEquals(clfi.getChildCatField().getName(), clfi.getCategory());
                             }
-                            
+
                             query.addEquals(clfi.getChildFkIdField().getName(), id)
                                     .addOrder(childSqlEntityInfo.getIdFieldInfo().getName());
                             List<? extends Entity> childList = null;
@@ -1101,8 +1101,8 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
                                 continue;
                             }
 
-                            SqlEntityInfo childSqlEntityInfo =
-                                    sqlDataSourceDialect.findSqlEntityInfo(clfi.getChildEntityClass());
+                            SqlEntityInfo childSqlEntityInfo = sqlDataSourceDialect
+                                    .findSqlEntityInfo(clfi.getChildEntityClass());
                             Query<? extends Entity> query = Query.of(clfi.getChildEntityClass());
                             if (clfi.isWithChildFkType()) {
                                 query.addEquals(clfi.getChildFkTypeField().getName(), tableName);
@@ -1111,7 +1111,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
                             if (clfi.isWithChildCat()) {
                                 query.addEquals(clfi.getChildCatField().getName(), clfi.getCategory());
                             }
-                            
+
                             query.addEquals(clfi.getChildFkIdField().getName(), id)
                                     .addOrder(childSqlEntityInfo.getIdFieldInfo().getName());
                             List<? extends Entity> childList = null;
@@ -1138,8 +1138,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
             } catch (UnifyException e) {
                 throw e;
             } catch (Exception e) {
-                throw new UnifyOperationException(e,
-                        getClass().getSimpleName());
+                throw new UnifyOperationException(e, getClass().getSimpleName());
             }
         }
     }
@@ -1171,7 +1170,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
             }
 
             if (updateChild.isTrue() && sqlEntityInfo.isChildList()) {
-                updateChildRecords(sqlEntityInfo, record);
+                updateChildRecords(sqlEntityInfo, record, false);
             }
         } catch (UnifyException e) {
             if (entityPolicy != null) {
@@ -1226,7 +1225,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
             }
 
             if (updateChild.isTrue() && sqlEntityInfo.isChildList()) {
-                updateChildRecords(sqlEntityInfo, record);
+                updateChildRecords(sqlEntityInfo, record, true);
             }
         } catch (Exception e) {
             if (entityPolicy != null) {
@@ -1262,7 +1261,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
         } else {
             sqlStatement = sqlDataSourceDialect.prepareCreateStatementWithUnmanagedIdentity(record);
         }
-        
+
         try {
             getSqlStatementExecutor().executeUpdate(connection, sqlStatement);
 
@@ -1289,11 +1288,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
                         if (alfi.isWithChildFkType()) {
                             alfi.getChildFkTypeSetter().invoke(childRecord, tableName);
                         }
-                        
+
                         if (alfi.isWithChildCat()) {
                             alfi.getChildCatSetter().invoke(childRecord, alfi.getCategory());
                         }
-                        
+
                         create(childRecord);
                     }
                 }
@@ -1329,8 +1328,100 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
         }
     }
 
-    private void updateChildRecords(SqlEntityInfo sqlEntityInfo, Entity record) throws UnifyException {
+    @SuppressWarnings("unchecked")
+    private void updateChildRecords(SqlEntityInfo sqlEntityInfo, Entity record, boolean versionNo)
+            throws UnifyException {
         Object id = record.getId();
+        try {
+            final String tableName = sqlEntityInfo.getTableName();
+            if (sqlEntityInfo.isSingleChildList()) {
+                for (ChildFieldInfo alfi : sqlEntityInfo.getSingleChildInfoList()) {
+                    Entity childRecord = (Entity) alfi.getGetter().invoke(record);
+                    if (childRecord != null) {
+                        if (childRecord.getId() == null) {
+                            alfi.getChildFkIdSetter().invoke(childRecord, id);
+                            if (alfi.isWithChildFkType()) {
+                                alfi.getChildFkTypeSetter().invoke(childRecord, tableName);
+                            }
+
+                            if (alfi.isWithChildCat()) {
+                                alfi.getChildCatSetter().invoke(childRecord, alfi.getCategory());
+                            }
+
+                            deleteChildRecords(alfi, tableName, id);
+                            create(childRecord);
+                        } else {
+                            if (versionNo) {
+                                updateByIdVersion(childRecord);
+                            } else {
+                                updateById(childRecord);
+                            }
+                        }
+                    } else {
+                        deleteChildRecords(alfi, tableName, id);
+                    }
+                }
+            }
+
+            if (sqlEntityInfo.isManyChildList()) {
+                for (ChildFieldInfo alfi : sqlEntityInfo.getManyChildInfoList()) {
+                    List<? extends Entity> childList = (List<? extends Entity>) alfi.getGetter().invoke(record);
+                    if (childList != null) {
+                        boolean clear = false;
+                        if (alfi.isIdNumber()) {
+                            Number last = null;
+                            for (Entity childRecord : childList) {
+                                Number cid = (Number) childRecord.getId();
+                                if (cid == null || (last != null && cid.longValue() < last.longValue())) {
+                                    clear = true;
+                                    break;
+                                }
+
+                                last = cid;
+                            }
+                        }
+
+                        if (clear) {
+                            deleteChildRecords(alfi, tableName, id);
+
+                            Method childFkIdSetter = alfi.getChildFkIdSetter();
+                            Method childFkTypeSetter = alfi.getChildFkTypeSetter();
+                            Method childCatSetter = alfi.getChildCatSetter();
+                            String category = alfi.getCategory();
+                            for (Entity childRecord : childList) {
+                                childFkIdSetter.invoke(childRecord, id);
+                                if (childFkTypeSetter != null) {
+                                    childFkTypeSetter.invoke(childRecord, tableName);
+                                }
+
+                                if (childCatSetter != null) {
+                                    childCatSetter.invoke(childRecord, category);
+                                }
+
+                                create(childRecord);
+                            }
+                        } else {
+                            if (versionNo) {
+                                for (Entity childRecord : childList) {
+                                    updateByIdVersion(childRecord);
+                                }
+                            } else {
+                                for (Entity childRecord : childList) {
+                                    updateById(childRecord);
+                                }
+                            }
+                        }
+                    } else {
+                        deleteChildRecords(alfi, tableName, id);
+                    }
+                }
+            }
+        } catch (UnifyException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new UnifyOperationException(e, getClass().getSimpleName());
+        }
+
         deleteChildRecords(sqlEntityInfo, id);
         createChildRecords(sqlEntityInfo, record, id);
     }
@@ -1338,18 +1429,22 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     private void deleteChildRecords(SqlEntityInfo sqlEntityInfo, Object id) throws UnifyException {
         final String tableName = sqlEntityInfo.getTableName();
         for (OnDeleteCascadeInfo odci : sqlEntityInfo.getOnDeleteCascadeInfoList()) {
-            Query<? extends Entity> query = Query.of(odci.getChildEntityClass());
-            if (odci.isWithChildFkType()) {
-                query.addEquals(odci.getChildFkTypeField().getName(), tableName);
-            }
-            
-            if (odci.isWithChildCat()) {
-                query.addEquals(odci.getChildCatField().getName(), odci.getCategory());
-            }
-
-            query.addEquals(odci.getChildFkIdField().getName(), id);
-            deleteAll(query);
+            deleteChildRecords(odci, tableName, id);
         }
+    }
+
+    private void deleteChildRecords(OnDeleteCascadeInfo odci, String tableName, Object id) throws UnifyException {
+        Query<? extends Entity> query = Query.of(odci.getChildEntityClass());
+        if (odci.isWithChildFkType()) {
+            query.addEquals(odci.getChildFkTypeField().getName(), tableName);
+        }
+
+        if (odci.isWithChildCat()) {
+            query.addEquals(odci.getChildCatField().getName(), odci.getCategory());
+        }
+
+        query.addEquals(odci.getChildFkIdField().getName(), id);
+        deleteAll(query);
     }
 
     private SqlEntityInfo resolveSqlEntityInfo(Entity record) throws UnifyException {
@@ -1365,7 +1460,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
         if (sqlEntityInfo.isExtended()) {
             return sqlEntityInfo.getExtensionSqlEntityInfo();
         }
-        
+
         return sqlEntityInfo;
     }
 
