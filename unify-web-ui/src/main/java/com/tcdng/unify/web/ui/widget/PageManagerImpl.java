@@ -94,173 +94,183 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
 
         pageNameMap = new PageNameMap();
 
-        standalonePanelInfoByNameMap = new LocaleFactoryMaps<String, StandalonePanelInfo>() {
+        standalonePanelInfoByNameMap = new LocaleFactoryMaps<String, StandalonePanelInfo>()
+            {
 
-            @SuppressWarnings("unchecked")
-            @Override
-            protected StandalonePanelInfo createObject(Locale locale, String name, Object... params) throws Exception {
-                UplDocumentAttributes uplDocumentAttributes = null;
-                if (params.length > 0) {
-                    uplDocumentAttributes = (UplDocumentAttributes) params[0];
-                } else {
-                    uplDocumentAttributes = uplCompiler.compileComponentDocuments(locale, name);
-                }
-
-                expandReferences(uplDocumentAttributes, uplDocumentAttributes);
-
-                // Sort reusable and non-reusable elements and process
-                // reusable ones.
-                Set<String> nonreusableComponentLongNames = new HashSet<String>();
-                Map<String, PageValidation> reusablePageValidations = new LinkedHashMap<String, PageValidation>();
-                Map<String, PageAction> reusablePageActions = new LinkedHashMap<String, PageAction>();
-                for (String longName : uplDocumentAttributes.getLongNames()) {
-                    UplElementAttributes uea = uplDocumentAttributes.getChildElementByLongName(longName);
-                    Class<? extends UplComponent> type =
-                            (Class<? extends UplComponent>) getComponentType(uea.getComponentName());
-
-                    // Only page action and page validation components are
-                    // reusable
-                    boolean isPageAction = false;
-                    if ((isPageAction = PageAction.class.isAssignableFrom(type))
-                            || PageValidation.class.isAssignableFrom(type)) {
-                        UplComponent uplComponent = getUplComponent(locale, uea.getKey());
-                        String pageName = getPageName(longName);
-
-                        if (isPageAction) {
-                            PageAction pageAction = (PageAction) uplComponent;
-                            pageAction.setId(pageName);
-                            expandReferences(uplDocumentAttributes, uea);
-
-                            if (pageAction.isUplAttribute("valueComponentList")) {
-                                if (!valueReferences.containsKey(pageName)) {
-                                    UplElementReferences uer =
-                                            uea.getAttributeValue(UplElementReferences.class, "valueComponentList");
-                                    if (uer != null) {
-                                        valueReferences.put(pageName, Collections.unmodifiableList(
-                                                StringUtils.removeDuplicates(getPageNames(uer.getLongNames()))));
-                                    }
-                                }
-                            }
-
-                            reusablePageActions.put(longName, pageAction);
-                        } else {
-                            PageValidation pageValidation = (PageValidation) uplComponent;
-                            pageValidation.setId(pageName);
-                            expandReferences(uplDocumentAttributes, uea);
-                            reusablePageValidations.put(longName, pageValidation);
-                        }
+                @SuppressWarnings("unchecked")
+                @Override
+                protected StandalonePanelInfo createObject(Locale locale, String name, Object... params)
+                        throws Exception {
+                    UplDocumentAttributes uplDocumentAttributes = null;
+                    if (params.length > 0) {
+                        uplDocumentAttributes = (UplDocumentAttributes) params[0];
                     } else {
-                        if(uea.isAttribute("dataComponents")) {
-                            expandReferences(uplDocumentAttributes, uea);
-                        }
-
-                        nonreusableComponentLongNames.add(longName);
+                        uplDocumentAttributes = uplCompiler.compileComponentDocuments(locale, name);
                     }
-                }
 
-                // Validate page action validations
-                for (Map.Entry<String, PageAction> entry : reusablePageActions.entrySet()) {
-                    PageAction pageAction = entry.getValue();
-                    if (pageAction.isUplAttribute("validations")) {
-                        UplElementReferences uer =
-                                pageAction.getUplAttribute(UplElementReferences.class, "validations");
-                        if (uer != null) {
-                            for (String validationLongName : uer.getLongNames()) {
-                                if (reusablePageValidations.get(validationLongName) == null) {
-                                    throw new UnifyException(
-                                            UnifyWebUIErrorConstants.PAGEACTION_REFERS_UNKNOWN_PAGEVALIDATION,
-                                            entry.getKey(), validationLongName);
-                                }
-                            }
-                        }
-                    }
-                }
+                    expandReferences(uplDocumentAttributes, uplDocumentAttributes);
 
-                // Process event handlers and create widget info for non
-                // reusable components
-                Map<String, WidgetNameInfo> widgetNameInfos = new HashMap<String, WidgetNameInfo>();
-                for (String longName : nonreusableComponentLongNames) {
-                    UplElementAttributes uea = uplDocumentAttributes.getChildElementByLongName(longName);
-                    // Widget info
-                    widgetNameInfos.put(longName, createWidgetInfo(uea, nonreusableComponentLongNames));
+                    // Sort reusable and non-reusable elements and process
+                    // reusable ones.
+                    Set<String> nonreusableComponentLongNames = new HashSet<String>();
+                    Map<String, PageValidation> reusablePageValidations = new LinkedHashMap<String, PageValidation>();
+                    Map<String, PageAction> reusablePageActions = new LinkedHashMap<String, PageAction>();
+                    for (String longName : uplDocumentAttributes.getLongNames()) {
+                        UplElementAttributes uea = uplDocumentAttributes.getChildElementByLongName(longName);
+                        Class<? extends UplComponent> type = (Class<? extends UplComponent>) getComponentType(
+                                uea.getComponentName());
 
-                    // Go through event handler attributes
-                    for (String attribute : uea.getAttributeNames()) {
-                        Object value = uea.getAttributeValue(Object.class, attribute);
-                        if (value instanceof EventHandler[]) {
-                            EventHandler[] eventHandlers = (EventHandler[]) value;
-                            for (EventHandler eventHandler : eventHandlers) {
-                                UplElementReferences uer =
-                                        eventHandler.getUplAttribute(UplElementReferences.class, "action");
-                                if (uer != null) {
-                                    List<PageAction> pageActionList = new ArrayList<PageAction>();
-                                    for (String actionLongName : uer.getLongNames()) {
-                                        PageAction pageAction = reusablePageActions.get(actionLongName);
-                                        if (pageAction == null) {
-                                            throw new UnifyException(
-                                                    UnifyWebUIErrorConstants.EVENTHANDLER_REFERENCING_UNKNOWN_ACTION,
-                                                    longName, actionLongName);
+                        // Only page action and page validation components are
+                        // reusable
+                        boolean isPageAction = false;
+                        if ((isPageAction = PageAction.class.isAssignableFrom(type))
+                                || PageValidation.class.isAssignableFrom(type)) {
+                            UplComponent uplComponent = getUplComponent(locale, uea.getKey());
+                            String pageName = getPageName(longName);
+
+                            if (isPageAction) {
+                                PageAction pageAction = (PageAction) uplComponent;
+                                pageAction.setId(pageName);
+                                expandReferences(uplDocumentAttributes, uea);
+
+                                if (pageAction.isUplAttribute("valueComponentList")) {
+                                    if (!valueReferences.containsKey(pageName)) {
+                                        UplElementReferences uer = uea.getAttributeValue(UplElementReferences.class,
+                                                "valueComponentList");
+                                        if (uer != null) {
+                                            valueReferences.put(pageName, Collections.unmodifiableList(
+                                                    StringUtils.removeDuplicates(getPageNames(uer.getLongNames()))));
                                         }
-
-                                        pageActionList.add(pageAction);
                                     }
-                                    eventHandler.setPageAction(
-                                            DataUtils.toArray(PageAction.class, pageActionList));
+                                }
+
+                                reusablePageActions.put(longName, pageAction);
+                            } else {
+                                PageValidation pageValidation = (PageValidation) uplComponent;
+                                pageValidation.setId(pageName);
+                                expandReferences(uplDocumentAttributes, uea);
+                                reusablePageValidations.put(longName, pageValidation);
+                            }
+                        } else {
+                            if (uea.isAttribute("dataComponents")) {
+                                expandReferences(uplDocumentAttributes, uea);
+                            }
+
+                            nonreusableComponentLongNames.add(longName);
+                        }
+                    }
+
+                    // Validate page action validations
+                    for (Map.Entry<String, PageAction> entry : reusablePageActions.entrySet()) {
+                        PageAction pageAction = entry.getValue();
+                        if (pageAction.isUplAttribute("validations")) {
+                            UplElementReferences uer = pageAction.getUplAttribute(UplElementReferences.class,
+                                    "validations");
+                            if (uer != null) {
+                                for (String validationLongName : uer.getLongNames()) {
+                                    if (reusablePageValidations.get(validationLongName) == null) {
+                                        throw new UnifyException(
+                                                UnifyWebUIErrorConstants.PAGEACTION_REFERS_UNKNOWN_PAGEVALIDATION,
+                                                entry.getKey(), validationLongName);
+                                    }
                                 }
                             }
                         }
                     }
+
+                    // Process event handlers and create widget info for non
+                    // reusable components
+                    Map<String, WidgetNameInfo> widgetNameInfos = new HashMap<String, WidgetNameInfo>();
+                    for (String longName : nonreusableComponentLongNames) {
+                        UplElementAttributes uea = uplDocumentAttributes.getChildElementByLongName(longName);
+                        // Widget info
+                        widgetNameInfos.put(longName, createWidgetInfo(uea, nonreusableComponentLongNames));
+
+                        // Go through event handler attributes
+                        for (String attribute : uea.getAttributeNames()) {
+                            Object value = uea.getAttributeValue(Object.class, attribute);
+                            if (value instanceof EventHandler[]) {
+                                EventHandler[] eventHandlers = (EventHandler[]) value;
+                                for (EventHandler eventHandler : eventHandlers) {
+                                    setEventHandlerPageActions(eventHandler, longName, reusablePageActions);
+                                }
+                            } else if (value instanceof EventHandler) {
+                                EventHandler eventHandler = (EventHandler) value;
+                                setEventHandlerPageActions(eventHandler, longName, reusablePageActions);
+                            }
+                        }
+                    }
+
+                    widgetNameInfos.put(uplDocumentAttributes.getLongName(),
+                            createWidgetInfo(uplDocumentAttributes, nonreusableComponentLongNames));
+                    StandalonePanelInfo standalonePanelInfo = new StandalonePanelInfo(
+                            Collections.unmodifiableMap(widgetNameInfos),
+                            Collections.unmodifiableMap(reusablePageValidations),
+                            Collections.unmodifiableMap(reusablePageActions));
+                    return standalonePanelInfo;
                 }
 
-                widgetNameInfos.put(uplDocumentAttributes.getLongName(),
-                        createWidgetInfo(uplDocumentAttributes, nonreusableComponentLongNames));
-                StandalonePanelInfo standalonePanelInfo =
-                        new StandalonePanelInfo(Collections.unmodifiableMap(widgetNameInfos),
-                                Collections.unmodifiableMap(reusablePageValidations),
-                                Collections.unmodifiableMap(reusablePageActions));
-                return standalonePanelInfo;
-            }
-        };
-
-        pageNamePropertyBindings = new FactoryMap<String, Map<String, PropertyInfo>>() {
-
-            @Override
-            protected Map<String, PropertyInfo> create(String name, Object... params) throws Exception {
-                Map<String, PropertyInfo> propertyBindingMap = new HashMap<String, PropertyInfo>();
-                StandalonePanel sp = createStandalonePanel(Locale.getDefault(), name);
-                for (String longName : sp.getWidgetLongNames()) {
-                    Widget widget = sp.getWidgetByLongName(longName);
-                    String property = widget.getBinding();
-                    if (property != null) {
-                        String id = widget.getId();
-                        boolean masked = widget.isMasked();
-
-                        // Compute long property
-                        StringBuilder longSb = new StringBuilder();
-                        longSb.append(property);
-                        Widget container = null;
-                        while ((container = widget.getContainer()) != null) {
-                            String containerProperty = container.getBinding();
-                            if (StringUtils.isBlank(containerProperty)) {
-                                break;
+                private void setEventHandlerPageActions(EventHandler eventHandler, String longName, Map<String, PageAction> reusablePageActions)
+                        throws UnifyException {
+                    UplElementReferences uer = eventHandler.getUplAttribute(UplElementReferences.class, "action");
+                    if (uer != null) {
+                        List<PageAction> pageActionList = new ArrayList<PageAction>();
+                        for (String actionLongName : uer.getLongNames()) {
+                            PageAction pageAction = reusablePageActions.get(actionLongName);
+                            if (pageAction == null) {
+                                throw new UnifyException(
+                                        UnifyWebUIErrorConstants.EVENTHANDLER_REFERENCING_UNKNOWN_ACTION, longName,
+                                        actionLongName);
                             }
 
-                            longSb.insert(0, '.');
-                            longSb.insert(0, containerProperty);
-                            widget = container;
+                            pageActionList.add(pageAction);
                         }
-
-                        String shortProperty = property;
-                        int index = property.lastIndexOf('.');
-                        if (index >= 0) {
-                            shortProperty = property.substring(index + 1);
-                        }
-                        propertyBindingMap.put(id, new PropertyInfo(property, shortProperty, longSb.toString(), masked));
+                        eventHandler.setPageAction(DataUtils.toArray(PageAction.class, pageActionList));
                     }
                 }
-                return propertyBindingMap;
-            }
-        };
+            };
+
+        pageNamePropertyBindings = new FactoryMap<String, Map<String, PropertyInfo>>()
+            {
+
+                @Override
+                protected Map<String, PropertyInfo> create(String name, Object... params) throws Exception {
+                    Map<String, PropertyInfo> propertyBindingMap = new HashMap<String, PropertyInfo>();
+                    StandalonePanel sp = createStandalonePanel(Locale.getDefault(), name);
+                    for (String longName : sp.getWidgetLongNames()) {
+                        Widget widget = sp.getWidgetByLongName(longName);
+                        String property = widget.getBinding();
+                        if (property != null) {
+                            String id = widget.getId();
+                            boolean masked = widget.isMasked();
+
+                            // Compute long property
+                            StringBuilder longSb = new StringBuilder();
+                            longSb.append(property);
+                            Widget container = null;
+                            while ((container = widget.getContainer()) != null) {
+                                String containerProperty = container.getBinding();
+                                if (StringUtils.isBlank(containerProperty)) {
+                                    break;
+                                }
+
+                                longSb.insert(0, '.');
+                                longSb.insert(0, containerProperty);
+                                widget = container;
+                            }
+
+                            String shortProperty = property;
+                            int index = property.lastIndexOf('.');
+                            if (index >= 0) {
+                                shortProperty = property.substring(index + 1);
+                            }
+                            propertyBindingMap.put(id,
+                                    new PropertyInfo(property, shortProperty, longSb.toString(), masked));
+                        }
+                    }
+                    return propertyBindingMap;
+                }
+            };
 
     }
 
@@ -308,8 +318,8 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
         String id = getPageName(spLongName);
 
         // Construct
-        StandalonePanelContext ctx =
-                new StandalonePanelContext(standalonePanelInfoByNameMap.get(locale, name, uplDocumentAttributes));
+        StandalonePanelContext ctx = new StandalonePanelContext(
+                standalonePanelInfoByNameMap.get(locale, name, uplDocumentAttributes));
         StandalonePanelInfo standalonePanelInfo = ctx.getStandalonePanelInfo();
         StandalonePanel standalonePanel = (StandalonePanel) getUplComponent(locale, uplDocumentAttributes.getKey());
         standalonePanel.setId(id);
@@ -399,7 +409,7 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
         if (resultList != null) {
             return resultList;
         }
-        
+
         return Collections.emptyList();
     }
 
@@ -573,8 +583,8 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
         }
 
         if (childElements.isEmpty() && !expandedList.contains(uea.getLongName())) {
-            Class<? extends UplComponent> type =
-                    (Class<? extends UplComponent>) getComponentType(uea.getComponentName());
+            Class<? extends UplComponent> type = (Class<? extends UplComponent>) getComponentType(
+                    uea.getComponentName());
             if (!PageAction.class.isAssignableFrom(type) && !PageValidation.class.isAssignableFrom(type)) {
                 expandedList.add(uea.getLongName());
             }
