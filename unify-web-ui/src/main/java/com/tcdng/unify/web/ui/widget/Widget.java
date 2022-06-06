@@ -58,7 +58,7 @@ public interface Widget extends UplComponent {
      * Returns the control non-indexed Id
      * 
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     String getBaseId() throws UnifyException;
 
@@ -604,14 +604,44 @@ public interface Widget extends UplComponent {
      *                        if an error occurs
      */
     WriteWork getWriteWork() throws UnifyException;
-    
+
     /**
      * Returns true if widget is a control.
      */
     boolean isControl();
-    
+
     /**
      * Returns true if widget is a panel.
      */
     boolean isPanel();
+
+    /**
+     * Returns true if widget supports value store memory.
+     * 
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    boolean supportsValueStoreMemory() throws UnifyException;
+
+    /**
+     * Initializes value store memory.
+     * 
+     * @param size
+     *             the memory size
+     * @return true if supports value store
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    boolean initValueStoreMemory(int size) throws UnifyException;
+    
+    /**
+     * Recalls value store at memory index.
+     * 
+     * @param memoryIndex
+     *                    memory index
+     * @return the value store if found otherwise false.
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    ValueStore recallValueStore(int memoryIndex) throws UnifyException;
 }
