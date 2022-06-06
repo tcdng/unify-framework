@@ -57,6 +57,13 @@ public abstract class AbstractControlWriter extends AbstractWidgetWriter impleme
         writer.write("/>");
     }
 
+    protected void writeTargetHidden(ResponseWriter writer, String id, Object value) throws UnifyException {
+        writer.write("<input type=\"hidden\"");
+        writeTagId(writer, "trg_" + id);
+        writeTagValue(writer, value);
+        writer.write("/>");
+    }
+
     protected void writeButton(ResponseWriter writer, String id, String styleClass, String style, String caption)
             throws UnifyException {
         writer.write("<button type=\"button\"");
