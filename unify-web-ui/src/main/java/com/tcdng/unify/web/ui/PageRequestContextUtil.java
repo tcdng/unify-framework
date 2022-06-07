@@ -193,6 +193,15 @@ public interface PageRequestContextUtil extends UnifyComponent {
     TargetPath getCommandResponsePath() throws UnifyException;
 
     /**
+     * Returns request trigger data index from current request context.
+     * 
+     * @return the return data index otherwise -1
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    int getRequestTriggerDataIndex() throws UnifyException;
+
+    /**
      * Returns a converted value of the request target from current request context.
      * 
      * @param targetClazz

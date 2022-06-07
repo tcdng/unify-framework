@@ -639,9 +639,9 @@ public interface Widget extends UplComponent {
      * 
      * @param memoryIndex
      *                    memory index
-     * @return the value store if found otherwise false.
+     * @return true if value store was recalled.
      * @throws UnifyException
      *                        if an error occurs
      */
-    ValueStore recallValueStore(int memoryIndex) throws UnifyException;
+    boolean recallValueStore(int memoryIndex) throws UnifyException;
 }

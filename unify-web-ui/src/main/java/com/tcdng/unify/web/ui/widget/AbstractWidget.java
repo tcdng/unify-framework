@@ -280,10 +280,13 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
     }
 
     @Override
-    public ValueStore recallValueStore(int memoryIndex) throws UnifyException {
-        return valueStoreMem != null && memoryIndex >= 0 && memoryIndex < valueStoreMem.length
-                ? valueStoreMem[memoryIndex]
-                : null;
+    public boolean recallValueStore(int memoryIndex) throws UnifyException {
+        if (valueStoreMem != null && memoryIndex >= 0 && memoryIndex < valueStoreMem.length) {
+            valueStore = valueStoreMem[memoryIndex];
+            return true;
+        }
+        
+        return false;
     }
 
     @Override
@@ -589,6 +592,10 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
         }
 
         return getViewDirective(getUplAttribute(String.class, "privilege"));
+    }
+
+    protected int getRequestTriggerDataIndex() throws UnifyException {
+        return getRequestContextUtil().getRequestTriggerDataIndex();
     }
 
     protected <T> T getRequestTarget(Class<T> clazz) throws UnifyException {

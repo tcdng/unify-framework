@@ -177,6 +177,22 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
     }
 
     @Override
+    public int getRequestTriggerDataIndex() throws UnifyException {
+        String widgetId = (String) getRequestAttribute(TRIGGER_WIDGETID);
+        if (widgetId != null) {
+            int dindex = widgetId.lastIndexOf('d');
+            if (dindex > 0) {
+                try {
+                    return Integer.parseInt(widgetId.substring(dindex + 1));
+                } catch (Exception e) {
+                }
+            }
+        }
+
+        return -1;
+    }
+
+    @Override
     public <T> T getRequestTargetValue(Class<T> targetClazz) throws UnifyException {
         return DataUtils.convert(targetClazz, getRequestAttribute(PageRequestParameterConstants.TARGET_VALUE));
     }
