@@ -52,6 +52,7 @@ public class Unify {
         String workingFolder = null;
         String configFile = null;
         short port = 0;
+        boolean restrictedJARMode = false;
 
         for (int i = 1; i <= (args.length - 2); i += 2) {
             if ("-w".equals(args[i])) {
@@ -60,6 +61,8 @@ public class Unify {
                 port = Short.valueOf(args[i + 1]);
             } else if ("-c".equals(args[i])) {
                 configFile = args[i + 1];
+            } else if ("-j".equals(args[i])) {
+                restrictedJARMode = Boolean.parseBoolean(args[i + 1]);
             } else {
                 Unify.doHelp();
             }
@@ -70,9 +73,17 @@ public class Unify {
         } else if ("install".equalsIgnoreCase(operation)) {
             Unify.doStartup(workingFolder, configFile, null, port, true);
         } else if ("install-onejar-fat".equalsIgnoreCase(operation)) {
+            if (restrictedJARMode) {
+                IOUtils.enterRestrictedJARMode();
+            }
+            
             URL[] _baseUrls = Unify.getOneJarFatBaseUrls();
             Unify.doStartup(workingFolder, configFile, _baseUrls, port, true);
         } else if ("install-spring-fat".equalsIgnoreCase(operation)) {
+            if (restrictedJARMode) {
+                IOUtils.enterRestrictedJARMode();
+            }
+            
             URL[] _baseUrls = Unify.getSpringFatBaseUrls();
             Unify.doStartup(workingFolder, configFile, _baseUrls, port, true);
         } else if ("help".equalsIgnoreCase(operation)) {
