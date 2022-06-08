@@ -44,9 +44,12 @@ import com.tcdng.unify.core.database.sql.SqlEntitySchemaInfo;
 import com.tcdng.unify.core.database.sql.SqlFieldSchemaInfo;
 import com.tcdng.unify.core.database.sql.data.policy.BlobPolicy;
 import com.tcdng.unify.core.database.sql.data.policy.ClobPolicy;
+import com.tcdng.unify.core.database.sql.data.policy.DatePolicy;
 import com.tcdng.unify.core.database.sql.data.policy.IntegerPolicy;
 import com.tcdng.unify.core.database.sql.data.policy.LongPolicy;
 import com.tcdng.unify.core.database.sql.data.policy.ShortPolicy;
+import com.tcdng.unify.core.database.sql.data.policy.TimestampPolicy;
+import com.tcdng.unify.core.database.sql.data.policy.TimestampUTCPolicy;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
 
@@ -65,6 +68,9 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
     static {
         Map<ColumnType, SqlDataTypePolicy> tempMap1 = new EnumMap<ColumnType, SqlDataTypePolicy>(ColumnType.class);
         populateDefaultSqlDataTypePolicies(tempMap1);
+        tempMap1.put(ColumnType.DATE, new OracleDatePolicy());
+        tempMap1.put(ColumnType.TIMESTAMP, new OracleTimestampPolicy());
+        tempMap1.put(ColumnType.TIMESTAMP_UTC, new OracleTimestampUTCPolicy());
         tempMap1.put(ColumnType.BLOB, new OracleBlobPolicy());
         tempMap1.put(ColumnType.CLOB, new OracleClobPolicy());
         tempMap1.put(ColumnType.LONG, new OracleLongPolicy());
@@ -266,6 +272,33 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
             return sb.toString();
         }
     }
+}
+
+class OracleDatePolicy extends DatePolicy {
+
+    @Override
+    public String getAltDefault(Class<?> fieldType) {
+        return "CURRENT_TIMESTAMP";
+    }
+
+}
+
+class OracleTimestampPolicy extends TimestampPolicy {
+
+    @Override
+    public String getAltDefault(Class<?> fieldType) {
+        return "CURRENT_TIMESTAMP";
+    }
+
+}
+
+class OracleTimestampUTCPolicy extends TimestampUTCPolicy {
+
+    @Override
+    public String getAltDefault(Class<?> fieldType) {
+        return "CURRENT_TIMESTAMP";
+    }
+
 }
 
 class OracleLongPolicy extends LongPolicy {
