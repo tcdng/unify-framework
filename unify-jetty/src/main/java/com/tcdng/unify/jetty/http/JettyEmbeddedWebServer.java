@@ -17,6 +17,7 @@ package com.tcdng.unify.jetty.http;
 
 import javax.servlet.MultipartConfigElement;
 
+import org.eclipse.jetty.http.HttpGenerator;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -69,6 +70,7 @@ public class JettyEmbeddedWebServer extends AbstractEmbeddedHttpWebServer {
             context.getSessionHandler().setMaxInactiveInterval(
                     getContainerSetting(int.class, UnifyCorePropertyConstants.APPLICATION_SESSION_TIMEOUT,
                             UnifyCoreConstants.DEFAULT_APPLICATION_SESSION_TIMEOUT_MILLISEC));
+            context.getSessionHandler().getSessionCookieConfig().setHttpOnly(true);
             httpServer.setHandler(context);
 
             ServletHolder mainHolder = new ServletHolder(new HttpApplicationServlet(createHttpServletModule()));
@@ -76,6 +78,7 @@ public class JettyEmbeddedWebServer extends AbstractEmbeddedHttpWebServer {
                     getMultipartMaxFileSize(), getMultipartMaxRequestSize(), getMultipartFileSizeThreshold()));
             context.addServlet(mainHolder, getServletPath());
             httpServer.start();
+            HttpGenerator.setJettyVersion("jetty");
             logInfo("HTTP server initialization completed.");
         } catch (Exception e) {
             throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_INITIALIZATION_ERROR, getName());
