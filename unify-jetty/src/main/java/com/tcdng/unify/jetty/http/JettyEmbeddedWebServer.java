@@ -15,10 +15,15 @@
  */
 package com.tcdng.unify.jetty.http;
 
+import java.io.IOException;
+import java.io.Writer;
+
 import javax.servlet.MultipartConfigElement;
+import javax.servlet.http.HttpServletRequest;
 
 import org.eclipse.jetty.http.HttpGenerator;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.ErrorHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
@@ -77,6 +82,8 @@ public class JettyEmbeddedWebServer extends AbstractEmbeddedHttpWebServer {
             mainHolder.getRegistration().setMultipartConfig(new MultipartConfigElement(getMultipartLocation(),
                     getMultipartMaxFileSize(), getMultipartMaxRequestSize(), getMultipartFileSizeThreshold()));
             context.addServlet(mainHolder, getServletPath());
+            context.setErrorHandler(new CustomErrorHandler());
+            httpServer.addBean(new CustomErrorHandler());
             httpServer.start();
             HttpGenerator.setJettyVersion("jetty");
             logInfo("HTTP server initialization completed.");
@@ -102,5 +109,20 @@ public class JettyEmbeddedWebServer extends AbstractEmbeddedHttpWebServer {
     @Override
     protected void onStopServicingRequests() throws UnifyException {
 
+    }
+    
+    public class CustomErrorHandler extends ErrorHandler {
+
+        protected void writeErrorPageBody(HttpServletRequest request, Writer writer, int code, String message, boolean showStacks)
+            throws IOException
+        {
+            String uri = request.getRequestURI();
+
+            writeErrorPageMessage(request, writer, code, message, uri);
+            if (showStacks) {
+                writeErrorPageStacks(request, writer);
+            }
+        }
+        
     }
 }
