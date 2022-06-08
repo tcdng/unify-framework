@@ -36,6 +36,8 @@ import com.tcdng.unify.core.UserToken;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.constant.ClientPlatform;
+import com.tcdng.unify.core.constant.LocaleType;
+import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.data.FactoryMap;
 import com.tcdng.unify.core.data.UploadedFile;
 import com.tcdng.unify.core.util.CalendarUtils;
@@ -187,8 +189,24 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
                 }
             }
 
-            Controller controller = controllerFinder
-                    .findController(clientRequest.getRequestPathParts().getControllerPathParts());
+            Controller controller;
+            try {
+                controller = controllerFinder
+                        .findController(clientRequest.getRequestPathParts().getControllerPathParts());
+            } catch (Exception e) {
+                try {
+                    String message = getExceptionMessage(LocaleType.SESSION, e);
+                    clientResponse.setContentType(MimeType.TEXT_PLAIN_UTF8.template());
+                    clientResponse.getWriter().write(message);
+                } catch (IOException e1) {
+                    logError(e);
+                } finally {
+                    clientResponse.close();
+                }
+                
+                return;
+            }
+            
             controller.process(clientRequest, clientResponse);
         } catch (UnifyException ue) {
             logError(ue);
