@@ -31,6 +31,15 @@ import com.tcdng.unify.web.ui.widget.Page;
 public interface UIControllerUtil extends UnifyComponent {
 
     /**
+     * Indicates UI controller should hide error trace.
+     * 
+     * @return the hide erro trace flag
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    boolean isHideErrorTrace() throws UnifyException;
+
+    /**
      * Gets container additional response headers.
      * 
      * @return the response headers

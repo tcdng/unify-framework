@@ -95,6 +95,8 @@ public class UIControllerUtilImpl extends AbstractUnifyComponent implements UICo
 
     private String commonUtilitiesControllerName;
 
+    private boolean hideErrorTrace;
+
     @SuppressWarnings("rawtypes")
     public UIControllerUtilImpl() {
         skipOnPopulateSet = new HashSet<String>();
@@ -186,6 +188,11 @@ public class UIControllerUtilImpl extends AbstractUnifyComponent implements UICo
 
     public void setControllerFinder(ControllerFinder controllerFinder) {
         this.controllerFinder = controllerFinder;
+    }
+
+    @Override
+    public boolean isHideErrorTrace() throws UnifyException {
+        return hideErrorTrace;
     }
 
     @Override
@@ -356,6 +363,7 @@ public class UIControllerUtilImpl extends AbstractUnifyComponent implements UICo
                 (PageControllerResponse) getUplComponent(defaultLocale, "!validationerrorresponse", false) }));
         defaultResultMap = Collections.unmodifiableMap(defaultResultMap);
 
+        hideErrorTrace = getContainerSetting(boolean.class, UnifyWebPropertyConstants.APPLICATION_WEB_HIDE_ERRORTRACE);
         additionalResponseHeaders = new HashMap<String, String>();
         List<String> headers = DataUtils.convert(ArrayList.class, String.class,
                 getContainerSetting(Object.class, UnifyWebPropertyConstants.APPLICATION_WEB_RESPONSE_HEADER));

@@ -84,7 +84,7 @@ public abstract class AbstractUIController extends AbstractController implements
 
     @Configurable
     private ResponseWriterPool responseWriterPool;
-
+    
     private boolean readOnly;
 
     private boolean resetOnWrite;
@@ -156,6 +156,13 @@ public abstract class AbstractUIController extends AbstractController implements
     @Override
     public boolean isResetOnWrite() {
         return resetOnWrite;
+    }
+    
+    @Override
+    protected void onInitialize() throws UnifyException {
+        super.onInitialize();
+        
+        
     }
 
     protected PageRequestContextUtil getPageRequestContextUtil() throws UnifyException {
@@ -387,7 +394,7 @@ public abstract class AbstractUIController extends AbstractController implements
                         .getControllerPathParts(SystemInfoConstants.UNAUTHORIZED_CONTROLLER_NAME);
                 pageController = (PageController<?>) getControllerFinder().findController(respPathParts);
                 page = uiControllerUtil.loadRequestPage(respPathParts);
-                page.setWidgetVisible("stackTrace", !loginRequired);
+                page.setWidgetVisible("stackTrace", !loginRequired && !uiControllerUtil.isHideErrorTrace());
                 result = uiControllerUtil.getPageControllerInfo(pageController.getName())
                         .getResult(ResultMappingConstants.INDEX);
             } else {
@@ -395,7 +402,7 @@ public abstract class AbstractUIController extends AbstractController implements
                         .getControllerPathParts(SystemInfoConstants.SYSTEMINFO_CONTROLLER_NAME);
                 pageController = (PageController<?>) getControllerFinder().findController(respPathParts);
                 page = uiControllerUtil.loadRequestPage(respPathParts);
-                page.setWidgetVisible("stackTrace", !loginRequired);
+                page.setWidgetVisible("stackTrace", !loginRequired && !uiControllerUtil.isHideErrorTrace());
                 result = uiControllerUtil.getPageControllerInfo(pageController.getName())
                         .getResult(SystemInfoConstants.SHOW_SYSTEM_EXCEPTION_MAPPING);
             }

@@ -1187,10 +1187,10 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 		return exception.getMessage();
 	}
 
-	protected String getErrorMessage(LocaleType localeType, UnifyError ue) throws UnifyException {
-		return unifyComponentContext.getMessages().getMessage(getLocale(localeType), ue.getErrorCode(),
-				ue.getErrorParams());
-	}
+    protected String getErrorMessage(LocaleType localeType, UnifyError ue) throws UnifyException {
+        return ue.getErrorCode() + ": " + unifyComponentContext.getMessages().getMessage(getLocale(localeType),
+                ue.getErrorCode(), ue.getErrorParams());
+    }
 
 	/**
 	 * Gets a message for an error.
