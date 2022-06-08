@@ -131,12 +131,26 @@ public abstract class AbstractUIController extends AbstractController implements
             pageRequestContextUtil.extractRequestParameters(request);
 
             ensureSecureAccess(reqPathParts, pageRequestContextUtil.isRemoteViewer());
+            setAdditionalResponseHeaders(response);
             doProcess(request, response, docPageController, docPathParts);
         } catch (Exception e) {
             e.printStackTrace();
             writeExceptionResponse(request, response, e);
         } finally {
             response.close();
+        }
+    }
+
+    private void setAdditionalResponseHeaders(ClientResponse response) throws UnifyException {
+        Map<String, String> additionalResponseHeaders = uiControllerUtil.getAdditionalResponseHeaders();
+        for (Map.Entry<String, String> entry : additionalResponseHeaders.entrySet()) {
+            response.setMetaData(entry.getKey(), entry.getValue());
+        }
+
+        if (uiControllerUtil.isCSPNonce()) {
+            String policy = "default-src 'self'; script-src 'nonce-" + pageRequestContextUtil.getNonce()
+                    + "' 'unsafe-inline' 'strict-dynamic' 'self';";
+            response.setMetaData("Content-Security-Policy", policy);
         }
     }
 
@@ -148,6 +162,12 @@ public abstract class AbstractUIController extends AbstractController implements
     @Override
     public boolean isResetOnWrite() {
         return resetOnWrite;
+    }
+
+    @Override
+    protected void onInitialize() throws UnifyException {
+        super.onInitialize();
+
     }
 
     protected PageRequestContextUtil getPageRequestContextUtil() throws UnifyException {
@@ -379,7 +399,7 @@ public abstract class AbstractUIController extends AbstractController implements
                         .getControllerPathParts(SystemInfoConstants.UNAUTHORIZED_CONTROLLER_NAME);
                 pageController = (PageController<?>) getControllerFinder().findController(respPathParts);
                 page = uiControllerUtil.loadRequestPage(respPathParts);
-                page.setWidgetVisible("stackTrace", !loginRequired);
+                page.setWidgetVisible("stackTrace", !loginRequired && !uiControllerUtil.isHideErrorTrace());
                 result = uiControllerUtil.getPageControllerInfo(pageController.getName())
                         .getResult(ResultMappingConstants.INDEX);
             } else {
@@ -387,7 +407,7 @@ public abstract class AbstractUIController extends AbstractController implements
                         .getControllerPathParts(SystemInfoConstants.SYSTEMINFO_CONTROLLER_NAME);
                 pageController = (PageController<?>) getControllerFinder().findController(respPathParts);
                 page = uiControllerUtil.loadRequestPage(respPathParts);
-                page.setWidgetVisible("stackTrace", !loginRequired);
+                page.setWidgetVisible("stackTrace", !loginRequired && !uiControllerUtil.isHideErrorTrace());
                 result = uiControllerUtil.getPageControllerInfo(pageController.getName())
                         .getResult(SystemInfoConstants.SHOW_SYSTEM_EXCEPTION_MAPPING);
             }

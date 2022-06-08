@@ -15,6 +15,8 @@
  */
 package com.tcdng.unify.web.ui;
 
+import java.util.Map;
+
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.web.ControllerPathParts;
@@ -28,6 +30,33 @@ import com.tcdng.unify.web.ui.widget.Page;
  */
 public interface UIControllerUtil extends UnifyComponent {
 
+    /**
+     * Indicates if content security policy (CSP) with nonce should be applied to requests
+     * 
+     * @return the CSP nonce flag
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    boolean isCSPNonce() throws UnifyException;
+
+    /**
+     * Indicates UI controller should hide error trace.
+     * 
+     * @return the hide error trace flag
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    boolean isHideErrorTrace() throws UnifyException;
+
+    /**
+     * Gets container additional response headers.
+     * 
+     * @return the response headers
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    Map<String, String> getAdditionalResponseHeaders() throws UnifyException;
+    
     /**
      * Returns a page controller information.
      * 

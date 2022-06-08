@@ -33,6 +33,12 @@ public interface UnifyWebPropertyConstants {
 
     String APPLICATION_DOCUMENT_SCRIPT = "application.web.script";
 
+    String APPLICATION_WEB_RESPONSE_HEADER = "application.web.response.header";
+
+    String APPLICATION_WEB_CSP_NONCE = "application.web.csp.nonce";
+
+    String APPLICATION_WEB_HIDE_ERRORTRACE = "application.web.hideerrortrace";
+
     String APPLICATION_REMOTE_VIEWING_ENABLED = "application.web.remote.viewing";
 
     String APPLICATION_REMOTE_VIEWERS = "application.web.remote.viewers";

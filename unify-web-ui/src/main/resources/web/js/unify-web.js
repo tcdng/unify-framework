@@ -4924,6 +4924,11 @@ ux.setTextRegexFormatting = function(prm) {
 
 	var elem = _id(prm.pId);
 	if (elem) {
+		if (evp.sFormatRegex) {
+			ux.addHdl(elem, "paste", ux.textInputPaste,
+					evp);
+		}
+		
 		ux.addHdl(elem, "keypress", ux.textInputKeypress,
 				evp);
 		ux.addHdl(elem,  "keydown", ux.textInputKeydown,
@@ -4932,6 +4937,17 @@ ux.setTextRegexFormatting = function(prm) {
 			ux.addHdl(elem,  "keyup", ux.textInputKeyup,
 					evp);
 		}
+	}
+}
+
+ux.textInputPaste = function(uEv) {
+	var evp = uEv.evp;
+    const clipboard = uEv.clipboardData || window.clipboardData;
+    var pasted = clipboard ? clipboard.getData('Text') : "";
+	var _rejex = evp.sFormatRegex;
+	if (_rejex && !_rejex.test(pasted)) {
+		uEv.uStop();
+		return;
 	}
 }
 
@@ -4971,6 +4987,10 @@ ux.textInputKeydown = function(uEv) {
 	var evp = uEv.evp;
 
 	if (uEv.uChar && !trgObj.readOnly) {
+		if (uEv.ctrlKey && ((uEv.uChar == 'v') ||(uEv.uChar == 'V'))) {
+			return;
+		}
+		
 		var pos = ux.getCaretPosition(trgObj);
 		var string = trgObj.value;
 		string = string.substring(0, pos.start) + uEv.uChar + string.substring(pos.end);
@@ -5232,7 +5252,6 @@ ux.setHiddenValues = function(references, hiddenValues) {
 
 /** Document functions and event handlers */
 ux.init = function() {
-	console.log("@Prime: ux.init()");
 	ux.resizeTimeout = null;
 	// Set document keydown handler
 	ux.addHdl(document, "keydown", ux.documentKeydownHandler,

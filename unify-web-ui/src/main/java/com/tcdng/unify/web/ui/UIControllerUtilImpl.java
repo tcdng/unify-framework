@@ -91,60 +91,70 @@ public class UIControllerUtilImpl extends AbstractUnifyComponent implements UICo
 
     private Set<String> skipOnPopulateSet;
 
+    private Map<String, String> additionalResponseHeaders;
+
     private String commonUtilitiesControllerName;
+
+    private boolean hideErrorTrace;
+
+    private boolean cspNonce;
 
     @SuppressWarnings("rawtypes")
     public UIControllerUtilImpl() {
         skipOnPopulateSet = new HashSet<String>();
 
-        pageControllerActionInfoMap = new FactoryMap<Class<? extends PageController>, PageControllerActionInfo>() {
+        pageControllerActionInfoMap = new FactoryMap<Class<? extends PageController>, PageControllerActionInfo>()
+            {
 
-            @Override
-            protected PageControllerActionInfo create(Class<? extends PageController> clazz, Object... params)
-                    throws Exception {
-                PageControllerActionInfo pageControllerActionInfo = new PageControllerActionInfo();
-                Method[] methods = clazz.getMethods();
-                for (Method method : methods) {
-                    com.tcdng.unify.web.annotation.Action aa =
-                            method.getAnnotation(com.tcdng.unify.web.annotation.Action.class);
-                    if (aa != null) {
-                        if (isActionHandlerSignature(method)) {
-                            pageControllerActionInfo.addActionMethod(method);
+                @Override
+                protected PageControllerActionInfo create(Class<? extends PageController> clazz, Object... params)
+                        throws Exception {
+                    PageControllerActionInfo pageControllerActionInfo = new PageControllerActionInfo();
+                    Method[] methods = clazz.getMethods();
+                    for (Method method : methods) {
+                        com.tcdng.unify.web.annotation.Action aa = method
+                                .getAnnotation(com.tcdng.unify.web.annotation.Action.class);
+                        if (aa != null) {
+                            if (isActionHandlerSignature(method)) {
+                                pageControllerActionInfo.addActionMethod(method);
+                            } else {
+                                throw new UnifyException(
+                                        UnifyWebUIErrorConstants.CONTROLLER_INVALID_ACTION_HANDLER_SIGNATURE,
+                                        clazz.getName(), method.getName());
+                            }
                         } else {
-                            throw new UnifyException(UnifyWebUIErrorConstants.CONTROLLER_INVALID_ACTION_HANDLER_SIGNATURE,
-                                    clazz.getName(), method.getName());
-                        }
-                    } else {
-                        // Check if method has an action handler method signature and super class has
-                        // similar.
-                        // In other words, check inheritance of @Action from super class.
-                        // This implies that if a action handler method overrides a super action handler
-                        // method, we
-                        // don't have to apply the @Action annotation
-                        if (isActionHandlerSignature(method) && isSuperCommandMethod(clazz, method.getName())) {
-                            pageControllerActionInfo.addActionMethod(method);
+                            // Check if method has an action handler method signature and super class has
+                            // similar.
+                            // In other words, check inheritance of @Action from super class.
+                            // This implies that if a action handler method overrides a super action handler
+                            // method, we
+                            // don't have to apply the @Action annotation
+                            if (isActionHandlerSignature(method) && isSuperCommandMethod(clazz, method.getName())) {
+                                pageControllerActionInfo.addActionMethod(method);
+                            }
                         }
                     }
+
+                    return pageControllerActionInfo;
                 }
 
-                return pageControllerActionInfo;
-            }
+            };
 
-        };
+        pageControllerInfoMap = new FactoryMap<String, PageControllerInfo>()
+            {
+                @Override
+                protected PageControllerInfo create(String controllerName, Object... params) throws Exception {
+                    return createPageControllerInfo(controllerName);
+                }
+            };
 
-        pageControllerInfoMap = new FactoryMap<String, PageControllerInfo>() {
-            @Override
-            protected PageControllerInfo create(String controllerName, Object... params) throws Exception {
-                return createPageControllerInfo(controllerName);
-            }
-        };
-
-        resourceControllerInfoMap = new FactoryMap<String, ResourceControllerInfo>() {
-            @Override
-            protected ResourceControllerInfo create(String controllerName, Object... params) throws Exception {
-                return createResourceControllerInfo(controllerName);
-            }
-        };
+        resourceControllerInfoMap = new FactoryMap<String, ResourceControllerInfo>()
+            {
+                @Override
+                protected ResourceControllerInfo create(String controllerName, Object... params) throws Exception {
+                    return createResourceControllerInfo(controllerName);
+                }
+            };
 
         skipOnPopulateSet.add(PageRequestParameterConstants.DOCUMENT);
         skipOnPopulateSet.add(PageRequestParameterConstants.TARGET_VALUE);
@@ -165,7 +175,7 @@ public class UIControllerUtilImpl extends AbstractUnifyComponent implements UICo
         skipOnPopulateSet.add(RequestParameterConstants.REMOTE_COLOR_SCHEME);
         skipOnPopulateSet.add(RequestParameterConstants.REMOTE_TENANT_CODE);
     }
-    
+
     public void setPageManager(PageManager pageManager) {
         this.pageManager = pageManager;
     }
@@ -180,6 +190,21 @@ public class UIControllerUtilImpl extends AbstractUnifyComponent implements UICo
 
     public void setControllerFinder(ControllerFinder controllerFinder) {
         this.controllerFinder = controllerFinder;
+    }
+
+    @Override
+    public boolean isCSPNonce() throws UnifyException {
+        return cspNonce;
+    }
+
+    @Override
+    public boolean isHideErrorTrace() throws UnifyException {
+        return hideErrorTrace;
+    }
+
+    @Override
+    public Map<String, String> getAdditionalResponseHeaders() throws UnifyException {
+        return additionalResponseHeaders;
     }
 
     @Override
@@ -204,7 +229,8 @@ public class UIControllerUtilImpl extends AbstractUnifyComponent implements UICo
         Page currentPage = pageRequestContextUtil.getRequestPage();
         try {
             ControllerPathParts targetPathParts = pathInfoRepository.getControllerPathParts(fullActionPath);
-            PageController<?> targetPageController = (PageController<?>) controllerFinder.findController(targetPathParts);
+            PageController<?> targetPageController = (PageController<?>) controllerFinder
+                    .findController(targetPathParts);
             loadRequestPage(targetPathParts);
             return targetPageController.executePageCall(targetPathParts.getActionName());
         } finally {
@@ -237,12 +263,13 @@ public class UIControllerUtilImpl extends AbstractUnifyComponent implements UICo
         return page;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected void onInitialize() throws UnifyException {
-        commonUtilitiesControllerName =
-                getContainerSetting(String.class, UnifyWebPropertyConstants.APPLICATION_COMMON_UTILITIES,
-                        ReservedPageControllerConstants.COMMONUTILITIES);
-        
+        commonUtilitiesControllerName = getContainerSetting(String.class,
+                UnifyWebPropertyConstants.APPLICATION_COMMON_UTILITIES,
+                ReservedPageControllerConstants.COMMONUTILITIES);
+
         // Default result mappings
         defaultResultMap = new HashMap<String, Result>();
         Locale defaultLocale = Locale.getDefault();
@@ -318,9 +345,10 @@ public class UIControllerUtilImpl extends AbstractUnifyComponent implements UICo
         defaultResultMap.put(ResultMappingConstants.DOWNLOAD_FILE, new Result(new PageControllerResponse[] {
                 (PageControllerResponse) getUplComponent(defaultLocale, "!filedownloadresponse", false) }));
 
-        defaultResultMap.put(ResultMappingConstants.DOWNLOAD_FILE_HIDE_POPUP, new Result(new PageControllerResponse[] {
-                (PageControllerResponse) getUplComponent(defaultLocale, "!hidepopupresponse", false),
-                (PageControllerResponse) getUplComponent(defaultLocale, "!filedownloadresponse", false) }));
+        defaultResultMap.put(ResultMappingConstants.DOWNLOAD_FILE_HIDE_POPUP,
+                new Result(new PageControllerResponse[] {
+                        (PageControllerResponse) getUplComponent(defaultLocale, "!hidepopupresponse", false),
+                        (PageControllerResponse) getUplComponent(defaultLocale, "!filedownloadresponse", false) }));
 
         defaultResultMap.put(ResultMappingConstants.REFRESH_SHOW_POPUP,
                 new Result(new PageControllerResponse[] {
@@ -332,9 +360,8 @@ public class UIControllerUtilImpl extends AbstractUnifyComponent implements UICo
                         (PageControllerResponse) getUplComponent(defaultLocale, "!refreshpanelresponse", false),
                         (PageControllerResponse) getUplComponent(defaultLocale, "!hidepopupresponse", false) }));
 
-        defaultResultMap.put(ResultMappingConstants.REFRESH_PANELS,
-                new Result(new PageControllerResponse[] {
-                        (PageControllerResponse) getUplComponent(defaultLocale, "!refreshpanelresponse", false) }));
+        defaultResultMap.put(ResultMappingConstants.REFRESH_PANELS, new Result(new PageControllerResponse[] {
+                (PageControllerResponse) getUplComponent(defaultLocale, "!refreshpanelresponse", false) }));
 
         defaultResultMap.put(ResultMappingConstants.REFRESH_SECTION, new Result(new PageControllerResponse[] {
                 (PageControllerResponse) getUplComponent(defaultLocale, "!refreshsectionresponse", false) }));
@@ -342,6 +369,25 @@ public class UIControllerUtilImpl extends AbstractUnifyComponent implements UICo
         defaultResultMap.put(ResultMappingConstants.VALIDATION_ERROR, new Result(new PageControllerResponse[] {
                 (PageControllerResponse) getUplComponent(defaultLocale, "!validationerrorresponse", false) }));
         defaultResultMap = Collections.unmodifiableMap(defaultResultMap);
+
+        hideErrorTrace = getContainerSetting(boolean.class, UnifyWebPropertyConstants.APPLICATION_WEB_HIDE_ERRORTRACE);
+        cspNonce = getContainerSetting(boolean.class, UnifyWebPropertyConstants.APPLICATION_WEB_CSP_NONCE); 
+        additionalResponseHeaders = new HashMap<String, String>();
+        List<String> headers = DataUtils.convert(ArrayList.class, String.class,
+                getContainerSetting(Object.class, UnifyWebPropertyConstants.APPLICATION_WEB_RESPONSE_HEADER));
+        if (headers != null) {
+            for (String header : headers) {
+                int index = header.indexOf('=');
+                if (index > 0) {
+                    String[] parts = header.split("=");
+                    if (parts.length == 2) {
+                        additionalResponseHeaders.put(header.substring(0, index), header.substring(index + 1));
+                    }
+                }
+            }
+        }
+
+        additionalResponseHeaders = Collections.unmodifiableMap(additionalResponseHeaders);
     }
 
     @Override
@@ -446,8 +492,8 @@ public class UIControllerUtilImpl extends AbstractUnifyComponent implements UICo
     }
 
     private ResourceControllerInfo createResourceControllerInfo(String controllerName) throws UnifyException {
-        Class<? extends PageResourceController> resourceControllerClass =
-                getComponentType(PageResourceController.class, controllerName);
+        Class<? extends PageResourceController> resourceControllerClass = getComponentType(PageResourceController.class,
+                controllerName);
         Map<String, PropertyInfo> propertyBindingMap = new HashMap<String, PropertyInfo>();
         setIdRequestParameterBindings(resourceControllerClass, propertyBindingMap);
         return new ResourceControllerInfo(controllerName, propertyBindingMap);

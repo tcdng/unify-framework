@@ -165,7 +165,9 @@ public class DocumentWriter extends AbstractPageWriter {
     @Override
     protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
         BasicDocument document = (BasicDocument) widget;
-        writer.write("<script>");
+        writer.write("<script");
+        writeNonce(writer);
+        writer.write(">");
         // Set document properties
         ControllerPathParts controllerPathParts = pathInfoRepository.getControllerPathParts(document);
         writer.write("ux.setupDocument(\"").write(controllerPathParts.getControllerName()).write("\", \"")
@@ -283,9 +285,19 @@ public class DocumentWriter extends AbstractPageWriter {
     private void writeJavascript(ResponseWriter writer, String script) throws UnifyException {
         writer.write("<script src=\"");
         writer.writeContextResourceURL("/resource/file", MimeType.TEXT_JAVASCRIPT.template(), script);
-        writer.write("\"></script>");
+        writer.write("\"");
+        writeNonce(writer);
+        writer.write("></script>");
     }
 
+    private void writeNonce(ResponseWriter writer)  throws UnifyException {
+        if (getRequestContextUtil().isWithNonce()) {
+            writer.write(" nonce=\"");
+            writer.write(getRequestContextUtil().getNonce());
+            writer.write("\"");
+        }
+    }
+    
     private void writeBehaviour(ResponseWriter writer, Panel panel) throws UnifyException {
         if (panel != null) {
             writer.writeBehavior(panel);

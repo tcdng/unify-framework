@@ -55,10 +55,16 @@ public class IOUtils {
 
     private static final File[] ZEROLEN_FILES = new File[0];
 
+    private static boolean restrictedJARMode;
+    
     private IOUtils() {
 
     }
 
+    public static void enterRestrictedJARMode() {
+        restrictedJARMode = true;
+    }
+    
     /**
      * Detects an opens an input stream for a streamable object.
      * 
@@ -134,9 +140,11 @@ public class IOUtils {
      */
     public static InputStream openFileResourceInputStream(String resourceName, String realPath) throws UnifyException {
         try {
-            File file = IOUtils.fileInstance(resourceName, realPath);
-            if (file.exists()) {
-                return new FileInputStream(file);
+            if (!restrictedJARMode) {
+                File file = IOUtils.fileInstance(resourceName, realPath);
+                if (file.exists()) { 
+                    return new FileInputStream(file);
+                }
             }
 
             return IOUtils.openClassLoaderResourceInputStream(resourceName);
