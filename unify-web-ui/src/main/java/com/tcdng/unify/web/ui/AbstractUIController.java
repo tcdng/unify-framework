@@ -131,6 +131,7 @@ public abstract class AbstractUIController extends AbstractController implements
             pageRequestContextUtil.extractRequestParameters(request);
 
             ensureSecureAccess(reqPathParts, pageRequestContextUtil.isRemoteViewer());
+            setAdditionalResponseHeaders(response);
             doProcess(request, response, docPageController, docPathParts);
         } catch (Exception e) {
             e.printStackTrace();
@@ -140,6 +141,13 @@ public abstract class AbstractUIController extends AbstractController implements
         }
     }
 
+    private void setAdditionalResponseHeaders(ClientResponse response) throws UnifyException {
+        Map<String, String> additionalResponseHeaders = uiControllerUtil.getAdditionalResponseHeaders();
+        for (Map.Entry<String, String> entry: additionalResponseHeaders.entrySet()) {
+            response.setMetaData(entry.getKey(), entry.getValue());
+        }        
+    }
+    
     @Override
     public boolean isReadOnly() {
         return readOnly;

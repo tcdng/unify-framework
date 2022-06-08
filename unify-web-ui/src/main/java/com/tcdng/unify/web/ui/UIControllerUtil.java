@@ -15,6 +15,8 @@
  */
 package com.tcdng.unify.web.ui;
 
+import java.util.Map;
+
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.web.ControllerPathParts;
@@ -28,6 +30,15 @@ import com.tcdng.unify.web.ui.widget.Page;
  */
 public interface UIControllerUtil extends UnifyComponent {
 
+    /**
+     * Gets container additional response headers.
+     * 
+     * @return the response headers
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    Map<String, String> getAdditionalResponseHeaders() throws UnifyException;
+    
     /**
      * Returns a page controller information.
      * 
