@@ -18,12 +18,15 @@ package com.tcdng.unify.web.ui;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.apache.commons.codec.binary.Base64;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyException;
@@ -73,6 +76,8 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
     private static final String REQUEST_PAGE = "REQUEST_PAGE";
 
     private static final String REQUEST_POPUP_NAME = "REQUEST_POPUP_NAME";
+
+    private static final String REQUEST_NONCE = "REQUEST_NONCE";
 
     private static final String RESPONSE_PATHPARTS = "RESPONSE_PATHPARTS";
 
@@ -215,6 +220,23 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
     @Override
     public String getRemoteViewer() throws UnifyException {
         return DataUtils.convert(String.class, getRequestAttribute(RequestParameterConstants.REMOTE_VIEWER));
+    }
+
+    @Override
+    public String getNonce() throws UnifyException {
+        String nonce = (String) getRequestAttribute(REQUEST_NONCE);
+        if (nonce == null) {
+            String base = Long.toString(new Date().getTime());
+            nonce = Base64.encodeBase64String(base.getBytes());
+            setRequestAttribute(REQUEST_NONCE, nonce);
+        }
+        
+        return nonce;
+    }
+
+    @Override
+    public boolean isWithNonce() throws UnifyException {
+        return getRequestAttribute(REQUEST_NONCE) != null;
     }
 
     @Override

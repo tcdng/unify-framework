@@ -31,9 +31,18 @@ import com.tcdng.unify.web.ui.widget.Page;
 public interface UIControllerUtil extends UnifyComponent {
 
     /**
+     * Indicates if content security policy (CSP) with nonce should be applied to requests
+     * 
+     * @return the CSP nonce flag
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    boolean isCSPNonce() throws UnifyException;
+
+    /**
      * Indicates UI controller should hide error trace.
      * 
-     * @return the hide erro trace flag
+     * @return the hide error trace flag
      * @throws UnifyException
      *                        if an error occurs
      */

@@ -247,6 +247,23 @@ public interface PageRequestContextUtil extends UnifyComponent {
     String getRemoteViewer() throws UnifyException;
 
     /**
+     * Gets the request nonce.
+     * 
+     * @return the nonce
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    String getNonce() throws UnifyException;
+    
+    /**
+     * Returns true if a nonce has been generated for this request.
+     * 
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    boolean isWithNonce() throws UnifyException;
+    
+    /**
      * Returns true if request is from a remote viewer.
      * 
      * @throws UnifyException

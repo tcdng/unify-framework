@@ -84,7 +84,7 @@ public abstract class AbstractUIController extends AbstractController implements
 
     @Configurable
     private ResponseWriterPool responseWriterPool;
-    
+
     private boolean readOnly;
 
     private boolean resetOnWrite;
@@ -143,11 +143,17 @@ public abstract class AbstractUIController extends AbstractController implements
 
     private void setAdditionalResponseHeaders(ClientResponse response) throws UnifyException {
         Map<String, String> additionalResponseHeaders = uiControllerUtil.getAdditionalResponseHeaders();
-        for (Map.Entry<String, String> entry: additionalResponseHeaders.entrySet()) {
+        for (Map.Entry<String, String> entry : additionalResponseHeaders.entrySet()) {
             response.setMetaData(entry.getKey(), entry.getValue());
-        }        
+        }
+
+        if (uiControllerUtil.isCSPNonce()) {
+            String policy = "default-src 'self'; script-src 'nonce-" + pageRequestContextUtil.getNonce()
+                    + "' 'unsafe-inline' 'strict-dynamic' 'self';";
+            response.setMetaData("Content-Security-Policy", policy);
+        }
     }
-    
+
     @Override
     public boolean isReadOnly() {
         return readOnly;
@@ -157,12 +163,11 @@ public abstract class AbstractUIController extends AbstractController implements
     public boolean isResetOnWrite() {
         return resetOnWrite;
     }
-    
+
     @Override
     protected void onInitialize() throws UnifyException {
         super.onInitialize();
-        
-        
+
     }
 
     protected PageRequestContextUtil getPageRequestContextUtil() throws UnifyException {
