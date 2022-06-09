@@ -198,6 +198,7 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
                     String message = getExceptionMessage(LocaleType.SESSION, e);
                     clientResponse.setContentType(MimeType.TEXT_PLAIN_UTF8.template());
                     clientResponse.getWriter().write(message);
+                    clientResponse.setStatusNotFound();
                 } catch (IOException e1) {
                     logError(e);
                 } finally {

@@ -86,6 +86,11 @@ public interface ClientResponse {
      * Sets response status to forbidden
      */
     void setStatusForbidden();
+    
+    /**
+     * Sets response status not found
+     */
+    void setStatusNotFound();
 
     /**
      * Sets a cookie in response.

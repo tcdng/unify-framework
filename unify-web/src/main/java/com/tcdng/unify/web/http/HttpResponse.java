@@ -44,6 +44,8 @@ public interface HttpResponse {
     
     void setStatusForbidden();
 
+    void setStatusNotFound();
+
     void setCookie(String name, String val);
 
     void setCookie(String name, String val, int maxAge);
