@@ -85,7 +85,7 @@ public class JettyEmbeddedWebServer extends AbstractEmbeddedHttpWebServer {
             context.setErrorHandler(new CustomErrorHandler());
             httpServer.addBean(new CustomErrorHandler());
             httpServer.start();
-            HttpGenerator.setJettyVersion("jetty");
+            HttpGenerator.setJettyVersion("");
             logInfo("HTTP server initialization completed.");
         } catch (Exception e) {
             throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_INITIALIZATION_ERROR, getName());

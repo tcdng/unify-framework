@@ -102,6 +102,11 @@ public class HttpClientResponse implements ClientResponse {
     }
 
     @Override
+    public void setStatusNotFound() {
+        response.setStatusNotFound();
+    }
+
+    @Override
     public void setCookie(String name, String val) {
         response.setCookie(name, val);
     }

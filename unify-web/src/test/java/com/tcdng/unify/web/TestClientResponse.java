@@ -97,6 +97,11 @@ public class TestClientResponse implements ClientResponse {
     }
 
     @Override
+    public void setStatusNotFound() {
+        
+    }
+
+    @Override
     public void setCookie(String name, String val) {
 
     }

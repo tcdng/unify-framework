@@ -80,4 +80,11 @@ public class RequestPathParts {
     public boolean isWithTenantPath() {
         return tenantPath != null;
     }
+
+    @Override
+    public String toString() {
+        return "RequestPathParts [getControllerPath()=" + getControllerPath() + ", getControllerName()="
+                + getControllerName() + ", getPathVariable()=" + getPathVariable() + ", getTenantPath()="
+                + getTenantPath() + "]";
+    }
 }

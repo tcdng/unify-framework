@@ -81,6 +81,11 @@ public class HttpResponseImpl implements HttpResponse {
     }
 
     @Override
+    public void setStatusNotFound() {
+        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+    }
+
+    @Override
     public void setCookie(String name, String val) {
         Cookie cookie = new Cookie(name, val);
         response.addCookie(cookie);
