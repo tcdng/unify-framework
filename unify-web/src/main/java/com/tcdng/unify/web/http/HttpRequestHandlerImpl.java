@@ -36,7 +36,6 @@ import com.tcdng.unify.core.UserToken;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.constant.ClientPlatform;
-import com.tcdng.unify.core.constant.LocaleType;
 import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.data.FactoryMap;
 import com.tcdng.unify.core.data.UploadedFile;
@@ -195,9 +194,14 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
                         .findController(clientRequest.getRequestPathParts().getControllerPathParts());
             } catch (Exception e) {
                 try {
-                    String message = getExceptionMessage(LocaleType.SESSION, e);
-                    clientResponse.setContentType(MimeType.TEXT_PLAIN_UTF8.template());
-                    clientResponse.getWriter().write(message);
+                    //String message = getExceptionMessage(LocaleType.SESSION, e);
+                    clientResponse.setContentType(MimeType.TEXT_HTML.template());
+                    clientResponse.getWriter().write("<html>\n<head>\n");
+                    clientResponse.getWriter().write("<meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\"/>\n");
+                    clientResponse.getWriter().write("<title>Error 404</title>\n");
+                    clientResponse.getWriter().write("</head>\n<body>");
+                    clientResponse.getWriter().write("<h2>HTTP ERROR 404 - Not found.</h2>\n");
+                    clientResponse.getWriter().write("</body>\n</html>\n");
                     clientResponse.setStatusNotFound();
                 } catch (IOException e1) {
                     logError(e);
