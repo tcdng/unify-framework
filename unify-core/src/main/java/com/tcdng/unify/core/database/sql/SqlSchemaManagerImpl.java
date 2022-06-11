@@ -162,17 +162,18 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
     @Override
     public List<Class<?>> buildDependencyList(SqlDataSource sqlDataSource, List<Class<?>> entityClasses)
             throws UnifyException {
+        logDebug("Building dependency list for [{0}] entities...", entityClasses.size());
         List<Class<?>> resultList = new ArrayList<Class<?>>();
         for (Class<?> entityClass : entityClasses) {
             buildDependencyList(sqlDataSource, resultList, entityClass);
         }
 
+        logDebug("Dependency list resolved to [{0}] entities...", resultList.size());
         return resultList;
     }
 
     private void buildDependencyList(SqlDataSource sqlDataSource, List<Class<?>> entityTypeList, Class<?> entityClass)
             throws UnifyException {
-        logDebug("Building dependency list for entity type [{0}]...", entityClass);
         SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.findSqlEntityInfo(entityClass);
 
@@ -780,10 +781,6 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
                     TableConstraint fkConst = managedTableConstraints.get(fkConstName);
                     boolean update = true;
                     if (fkConst != null) {
-                        logDebug(
-                                "Checking foreign key: fkConst = [{0}], entity.tableName = [{1}], field.columnName = [{2}]...",
-                                fkConst, sqlFieldInfo.getForeignEntityInfo().getTableName(),
-                                sqlFieldInfo.getForeignFieldInfo().getColumnName());
                         // Check if foreign key matches database constraint
                         if (fkConst.isForeignKey() /* && fkConst.getColumns().size() == 1 */
                                 && fkConst.getTableName().equals(sqlFieldInfo.getForeignEntityInfo().getTableName())
