@@ -94,15 +94,21 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
     }
 
     @Override
-    public String normalizeDefault(String defaultStr) {
-        if (defaultStr != null) {
-            int last = defaultStr.length() - 1;
-            if (defaultStr.charAt(0) == '(' && defaultStr.charAt(last) == ')') {
-                return defaultStr.substring(1, last);
+    public boolean matchColumnDefault(String nativeVal, String defaultVal) throws UnifyException {
+        if(super.matchColumnDefault(nativeVal, defaultVal)) {
+            return true;
+        }
+        
+        if (nativeVal != null && defaultVal != null) {
+            if (nativeVal.charAt(0) == '(') {
+                int last = nativeVal.length() - 1;
+                if (nativeVal.charAt(last) == ')') {
+                    return nativeVal.substring(1, last).equals(defaultVal);
+                }
             }
         }
-
-        return defaultStr;
+        
+        return false;
     }
 
     @Override

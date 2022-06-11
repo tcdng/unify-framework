@@ -44,7 +44,6 @@ import com.tcdng.unify.core.constant.LocaleType;
 import com.tcdng.unify.core.constant.PrintFormat;
 import com.tcdng.unify.core.data.Listable;
 import com.tcdng.unify.core.database.Entity;
-import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.SqlUtils;
 import com.tcdng.unify.core.util.StringUtils;
 
@@ -694,11 +693,12 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
         }
 
         SqlDataTypePolicy sqlDataTypePolicy = sqlDataSourceDialect.getSqlTypePolicy(sqlfieldInfo.getColumnType());
-        boolean defaultChange = !DataUtils.equals(columnInfo.getDefaultVal(), sqlfieldInfo.getDefaultVal())
+        boolean defaultChange = !sqlDataSourceDialect.matchColumnDefault(columnInfo.getDefaultVal(),
+                sqlfieldInfo.getDefaultVal())
                 && !isSwappableValues(sqlfieldInfo.getDefaultVal(), columnInfo.getDefaultVal());
         if (defaultChange && StringUtils.isBlank(sqlfieldInfo.getDefaultVal())) {
-            if (StringUtils.isBlank(columnInfo.getDefaultVal()) || columnInfo.getDefaultVal()
-                    .equals(sqlDataTypePolicy.getAltDefault(sqlfieldInfo.getFieldType()))) {
+            if (StringUtils.isBlank(columnInfo.getDefaultVal()) || sqlDataSourceDialect.matchColumnDefault(
+                    columnInfo.getDefaultVal(), sqlDataTypePolicy.getAltDefault(sqlfieldInfo.getFieldType()))) {
                 defaultChange = false;
             }
         }

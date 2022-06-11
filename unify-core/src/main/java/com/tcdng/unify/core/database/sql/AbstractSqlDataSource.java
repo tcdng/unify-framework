@@ -210,7 +210,7 @@ public abstract class AbstractSqlDataSource extends AbstractDataSource implement
                         Class<?> type = SqlUtils.getJavaType(sqlType);
                         String defaultVal = rs.getString("COLUMN_DEF");
                         if (defaultVal != null) {
-                            defaultVal = getDialect().normalizeDefault(defaultVal.trim());
+                            defaultVal = defaultVal.trim();
                         }
 
                         String decimalDigitsStr = rs.getString("DECIMAL_DIGITS");

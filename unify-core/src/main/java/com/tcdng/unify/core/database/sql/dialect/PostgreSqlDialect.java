@@ -87,15 +87,22 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
     }
 
     @Override
-    public String normalizeDefault(String defaultStr) {
-        if (defaultStr != null) {
-            int index = defaultStr.indexOf("::character varying");
-            if (index >= 0) {
-                return defaultStr.substring(0, index);
+    public boolean matchColumnDefault(String nativeVal, String defaultVal) throws UnifyException {
+        if(super.matchColumnDefault(nativeVal, defaultVal)) {
+            return true;
+        }
+        
+        if (nativeVal != null && defaultVal != null) {
+            if (nativeVal.charAt(0) == '\'') {
+                if (defaultVal.charAt(0) == '\'') {
+                    return nativeVal.startsWith(defaultVal);
+                }
+                
+                return nativeVal.startsWith("'" + defaultVal + "'");
             }
         }
-
-        return defaultStr;
+        
+        return false;
     }
 
     @Override

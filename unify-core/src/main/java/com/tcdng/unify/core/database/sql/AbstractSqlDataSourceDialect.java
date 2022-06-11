@@ -185,6 +185,11 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     }
 
     @Override
+    public boolean matchColumnDefault(String nativeVal, String defaultVal) throws UnifyException {
+        return DataUtils.equals(nativeVal, defaultVal);
+    }
+
+    @Override
     public String generateAllCreateSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, ForeignConstraints foreignConstraints,
             UniqueConstraints uniqueConstraints, Indexes indexes, Views views, PrintFormat format)
             throws UnifyException {
@@ -881,11 +886,6 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
     @Override
     public final int getMaxClauseValues() {
         return getSqlDataSourceDialectPolicies().getMaxClauseValues();
-    }
-
-    @Override
-    public String normalizeDefault(String defaultStr) {
-        return defaultStr;
     }
 
     @Override
