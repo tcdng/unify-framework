@@ -83,8 +83,9 @@ public class DynamicSqlEntityLoaderImpl extends AbstractUnifyComponent implement
         }
 
         logDebug("Compiling and loading [{0}] entity classes...", sourceList.size());
-        List<Class<? extends Entity>> classList = runtimeJavaClassManager.compileAndLoadJavaClasses(Entity.class, sourceList);
-        
+        List<Class<? extends Entity>> classList = runtimeJavaClassManager.compileAndLoadJavaClasses(Entity.class,
+                sourceList);
+
         final int len = dynamicEntityInfoList.size();
         List<Class<?>> managedClassList = new ArrayList<Class<?>>();
         for (int i = 0; i < len; i++) {
@@ -92,7 +93,7 @@ public class DynamicSqlEntityLoaderImpl extends AbstractUnifyComponent implement
                 managedClassList.add(classList.get(i));
             }
         }
-        
+
         SqlDataSource sqlDataSource = (SqlDataSource) db.getDataSource();
         SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
         for (Class<?> entityClass : managedClassList) {
@@ -117,17 +118,20 @@ public class DynamicSqlEntityLoaderImpl extends AbstractUnifyComponent implement
             SqlSchemaManagerOptions options = new SqlSchemaManagerOptions(PrintFormat.NONE,
                     ForceConstraints.fromBoolean(!getContainerSetting(boolean.class,
                             UnifyCorePropertyConstants.APPLICATION_FOREIGNKEY_EASE, false)));
-            if (sqlDataSource.getDialect().isReconstructViewsOnTableSchemaUpdate()) {
-                sqlSchemaManager.dropViewSchema(sqlDataSource, options, tableList);
+            boolean schemaChanged = sqlSchemaManager.detectTableSchemaChange(sqlDataSource, options, tableList);
+            if (schemaChanged) {
+                if (sqlDataSource.getDialect().isReconstructViewsOnTableSchemaUpdate()) {
+                    sqlSchemaManager.dropViewSchema(sqlDataSource, options, tableList);
+                }
+
+                sqlSchemaManager.manageTableSchema(sqlDataSource, options, tableList);
+                sqlSchemaManager.manageViewSchema(sqlDataSource, options, viewList);
             }
-            
-            sqlSchemaManager.manageTableSchema(sqlDataSource, options, tableList);
-            sqlSchemaManager.manageViewSchema(sqlDataSource, options, viewList);
         } finally {
             endClusterLock(DYNAMICSQLENTITYLOADER_LOCK);
         }
 
-        return classList ;
+        return classList;
     }
 
     @Override
