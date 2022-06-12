@@ -117,16 +117,15 @@ public class DynamicSqlEntityLoaderImpl extends AbstractUnifyComponent implement
             SqlSchemaManagerOptions options = new SqlSchemaManagerOptions(PrintFormat.NONE,
                     ForceConstraints.fromBoolean(!getContainerSetting(boolean.class,
                             UnifyCorePropertyConstants.APPLICATION_FOREIGNKEY_EASE, false)));
-            boolean schemaChanged = sqlSchemaManager.detectTableSchemaChange(sqlDataSource, options, tableList);
-            if (schemaChanged) {
-                logDebug("Managing schema for [{0}] entity classes...", tableList.size());
-                if (sqlDataSource.getDialect().isReconstructViewsOnTableSchemaUpdate()) {
-                    sqlSchemaManager.dropViewSchema(sqlDataSource, options, tableList);
-                }
-
-                sqlSchemaManager.manageTableSchema(sqlDataSource, options, tableList);
-                sqlSchemaManager.manageViewSchema(sqlDataSource, options, viewList);
+            // TODO Check table or view change
+            // boolean schemaChanged = sqlSchemaManager.detectTableSchemaChange(sqlDataSource, options, tableList);
+            logDebug("Managing schema for [{0}] entity classes...", tableList.size());
+            if (sqlDataSource.getDialect().isReconstructViewsOnTableSchemaUpdate()) {
+                sqlSchemaManager.dropViewSchema(sqlDataSource, options, tableList);
             }
+
+            sqlSchemaManager.manageTableSchema(sqlDataSource, options, tableList);
+            sqlSchemaManager.manageViewSchema(sqlDataSource, options, viewList);
         } finally {
             endClusterLock(DYNAMICSQLENTITYLOADER_LOCK);
         }
