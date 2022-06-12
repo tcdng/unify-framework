@@ -102,13 +102,16 @@ public abstract class AbstractSqlDataSourceManager extends AbstractUnifyComponen
             throws UnifyException {
         logDebug("Building SQL information for data source [{0}]...", dataSourceName);
         SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
-        for (Class<?> entityClass : getTableEntityTypes(dataSourceName, sqlDataSource)) {
-            logDebug("Building SQL information for entity type [{0}]...", entityClass);
+
+        List<Class<?>> tableEntityTypes = getTableEntityTypes(dataSourceName, sqlDataSource);
+        logDebug("Constructing SQL information for [{0}] table types...", tableEntityTypes.size());
+        for (Class<?> entityClass : tableEntityTypes) {
             sqlDataSourceDialect.createSqlEntityInfo(entityClass);
         }
 
-        for (Class<?> entityClass : getViewEntityTypes(dataSourceName, sqlDataSource)) {
-            logDebug("Building SQL information for view type [{0}]...", entityClass);
+        List<Class<? extends Entity>> viewEntityTypes = getViewEntityTypes(dataSourceName, sqlDataSource);
+        logDebug("Constructing SQL information for [{0}] view types...", viewEntityTypes.size());
+        for (Class<?> entityClass : viewEntityTypes) {
             sqlDataSourceDialect.createSqlEntityInfo(entityClass);
         }
     }
