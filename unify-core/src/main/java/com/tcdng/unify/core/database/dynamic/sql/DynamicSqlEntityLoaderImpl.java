@@ -74,17 +74,19 @@ public class DynamicSqlEntityLoaderImpl extends AbstractUnifyComponent implement
     @Override
     public List<Class<? extends Entity>> loadDynamicSqlEntities(SqlDatabase db,
             List<DynamicEntityInfo> dynamicEntityInfoList) throws UnifyException {
+        logDebug("Generating source files for [{0}] entity classes...", dynamicEntityInfoList.size());
         List<JavaClassSource> sourceList = new ArrayList<JavaClassSource>();
         for (DynamicEntityInfo dynamicEntityInfo : dynamicEntityInfoList) {
-            logDebug("Generating source file for entity class [{0}]...", dynamicEntityInfo.getClassName());
             JavaClassSource source = new JavaClassSource(dynamicEntityInfo.getClassName(),
                     DynamicEntityUtils.generateEntityJavaClassSource(dynamicEntityInfo));
             sourceList.add(source);
         }
+        logDebug("Source files successfully generated for [{0}] entity classes...", dynamicEntityInfoList.size());
 
         logDebug("Compiling and loading [{0}] entity classes...", sourceList.size());
-        List<Class<? extends Entity>> classList = runtimeJavaClassManager.compileAndLoadJavaClasses(Entity.class, sourceList);
-        
+        List<Class<? extends Entity>> classList = runtimeJavaClassManager.compileAndLoadJavaClasses(Entity.class,
+                sourceList);
+
         final int len = dynamicEntityInfoList.size();
         List<Class<?>> managedClassList = new ArrayList<Class<?>>();
         for (int i = 0; i < len; i++) {
@@ -92,11 +94,11 @@ public class DynamicSqlEntityLoaderImpl extends AbstractUnifyComponent implement
                 managedClassList.add(classList.get(i));
             }
         }
-        
+
+        logDebug("Creating entity class information for [{0}] managed classes ...", managedClassList.size());
         SqlDataSource sqlDataSource = (SqlDataSource) db.getDataSource();
         SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
         for (Class<?> entityClass : managedClassList) {
-            logDebug("Creating entity class information for managed class [{0}] ...", entityClass);
             sqlDataSourceDialect.createSqlEntityInfo(entityClass);
         }
 
@@ -112,22 +114,23 @@ public class DynamicSqlEntityLoaderImpl extends AbstractUnifyComponent implement
 
         beginClusterLock(DYNAMICSQLENTITYLOADER_LOCK);
         try {
-            // Manage schema
-            logDebug("Managing schema for entity classes...");
             SqlSchemaManagerOptions options = new SqlSchemaManagerOptions(PrintFormat.NONE,
                     ForceConstraints.fromBoolean(!getContainerSetting(boolean.class,
                             UnifyCorePropertyConstants.APPLICATION_FOREIGNKEY_EASE, false)));
+            // TODO Check table or view change
+            // boolean schemaChanged = sqlSchemaManager.detectTableSchemaChange(sqlDataSource, options, tableList);
+            logDebug("Managing schema for [{0}] entity classes...", tableList.size());
             if (sqlDataSource.getDialect().isReconstructViewsOnTableSchemaUpdate()) {
                 sqlSchemaManager.dropViewSchema(sqlDataSource, options, tableList);
             }
-            
+
             sqlSchemaManager.manageTableSchema(sqlDataSource, options, tableList);
             sqlSchemaManager.manageViewSchema(sqlDataSource, options, viewList);
         } finally {
             endClusterLock(DYNAMICSQLENTITYLOADER_LOCK);
         }
 
-        return classList ;
+        return classList;
     }
 
     @Override

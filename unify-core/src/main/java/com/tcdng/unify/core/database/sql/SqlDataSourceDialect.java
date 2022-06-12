@@ -45,6 +45,19 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
     String getDefaultSchema();
 
     /**
+     * Checks if column default value matches native default.
+     * 
+     * @param nativeVal
+     *                   the native value
+     * @param defaultVal
+     *                   column default value
+     * @return true if match otherwise false
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    boolean matchColumnDefault(String nativeVal, String defaultVal) throws UnifyException;
+    
+    /**
      * Returns the SQL policy for a data type.
      * 
      * @param clazz
@@ -424,15 +437,6 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
      * @return the maximum number. Zero or negative value if there is no limit
      */
     int getMaxClauseValues();
-
-    /**
-     * Normalizes default value based on this dialect.
-     * 
-     * @param defaultStr
-     *            the default value to normalize
-     * @return the normalized default value
-     */
-    String normalizeDefault(String defaultStr);
 
     /**
      * Checks if there's a query limit or offset
