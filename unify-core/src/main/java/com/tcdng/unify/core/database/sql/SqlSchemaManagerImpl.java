@@ -217,7 +217,6 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
                 schema = sqlDataSource.getAppSchema();
             }
 
-            logDebug("Getting metadata for table [{0}] in schema [{1}]...", sqlEntityInfo.getTableName(), schema);
             List<String> tableUpdateSql = new ArrayList<String>();
             rs = databaseMetaData.getTables(null, schema, sqlEntityInfo.getTableName(), null);
             if (rs.next()) {
@@ -419,14 +418,12 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 
             // Apply updates
             tableUpdateSql.addAll(viewUpdateSQL);
-            logDebug("Executing managed datasource [{0}] scripts...", tableUpdateSql.size());
             for (String sql : tableUpdateSql) {
                 pstmt = connection.prepareStatement(sql);
                 pstmt.executeUpdate();
                 SqlUtils.close(pstmt);
             }
             connection.commit();
-            logDebug("Managed datasource scripts successfully executed.");
 
             // Update static reference data
             if (EnumConst.class.isAssignableFrom(entityClass)) {
@@ -615,7 +612,6 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 
             // Apply updates
             for (String sql : viewUpdateSQL) {
-                logDebug("Executing managed datasource script {0}...", sql);
                 pstmt = connection.prepareStatement(sql);
                 pstmt.executeUpdate();
                 SqlUtils.close(pstmt);
@@ -670,7 +666,6 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 
             // Apply updates
             if (dropViewSQL != null) {
-                logDebug("Executing managed datasource script {0}...", dropViewSQL);
                 pstmt = connection.prepareStatement(dropViewSQL);
                 pstmt.executeUpdate();
                 SqlUtils.close(pstmt);

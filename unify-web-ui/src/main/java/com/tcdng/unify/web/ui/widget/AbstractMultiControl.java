@@ -373,6 +373,8 @@ public abstract class AbstractMultiControl extends AbstractControl implements Mu
 
         private Widget widget;
 
+        private String name;
+        
         private boolean external;
 
         private boolean ignoreParentState;
@@ -385,6 +387,14 @@ public abstract class AbstractMultiControl extends AbstractControl implements Mu
 
         public Widget getWidget() {
             return widget;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
         }
 
         public boolean isIgnoreParentState() {
@@ -410,11 +420,5 @@ public abstract class AbstractMultiControl extends AbstractControl implements Mu
         public boolean isPrivilegeVisible() throws UnifyException {
             return widget.isVisible();
         }
-
-        @Override
-        public String toString() {
-            return "ChildWidgetInfo [widget=" + widget + ", external=" + external + ", ignoreParentState="
-                    + ignoreParentState + "]";
-        }        
     }
 }
