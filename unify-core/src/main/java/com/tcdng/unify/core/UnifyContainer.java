@@ -337,6 +337,7 @@ public class UnifyContainer {
         Map<String, Map<String, Periodic>> componentPeriodMethodMap = new HashMap<String, Map<String, Periodic>>();
         Map<String, Set<String>> componentPluginSocketsMap = new HashMap<String, Set<String>>();
         List<UnifyComponentConfig> managedBusinessServiceConfigList = new ArrayList<UnifyComponentConfig>();
+        int businessServiceCount = 0;
         for (Map.Entry<String, InternalUnifyComponentInfo> entry : internalUnifyComponentInfos.entrySet()) {
             InternalUnifyComponentInfo iuci = entry.getValue();
             // Fetch periodic method information
@@ -373,20 +374,23 @@ public class UnifyContainer {
             }
 
             if (!periodicMethodMap.isEmpty()) {
-                logDebug("Periodic methods detected for component '" + iuci.getName() + "'.");
+                logDebug("[{0}] periodic methods detected for Component [{1}].", periodicMethodMap.size(),
+                        iuci.getName());
                 componentPeriodMethodMap.put(iuci.getName(), periodicMethodMap);
             }
 
             if (!pluginSockets.isEmpty()) {
-                logDebug("Plug-in sockets detected for component '" + iuci.getName() + "'.");
+                logDebug("[{0}] plug-in sockets detected for Component [{1}].", periodicMethodMap.size(),
+                        iuci.getName());
                 componentPluginSocketsMap.put(iuci.getName(), pluginSockets);
             }
 
             if (ReflectUtils.isInterface(iuci.getType(), BusinessService.class)) {
-                logDebug("Business component '" + iuci.getName() + "' detected.");
                 managedBusinessServiceConfigList.add(iuci.getUnifyComponentConfig());
+                businessServiceCount++;
             }
         }
+        logDebug("Total of [{0}] business components detected.", businessServiceCount);
 
         // Detect business logic plug-ins
         logDebug("Detecting business logic plugins...");
@@ -462,7 +466,8 @@ public class UnifyContainer {
             uplCompiler = (UplCompiler) getComponent(ApplicationComponents.APPLICATION_UPLCOMPILER);
 
             // Generate and install proxy business service objects
-            logInfo("Generating and installing proxy business service objects...");
+            logInfo("Generating and installing [{0}] proxy business service objects...",
+                    managedBusinessServiceConfigList.size());
             for (UnifyComponentConfig unifyComponentConfig : managedBusinessServiceConfigList) {
                 Map<String, List<UnifyPluginInfo>> pluginMap = allPluginsBySocketMap
                         .get(unifyComponentConfig.getName());
@@ -483,7 +488,8 @@ public class UnifyContainer {
                 broadcastInfo.setMethod(method);
             }
 
-            logInfo("Generation and installation of proxy objects completed");
+            logInfo("Generation and installation of [{0}] proxy objects completed.",
+                    managedBusinessServiceConfigList.size());
 
             // Cluster manager
             clusterService = (ClusterService) getComponent(ApplicationComponents.APPLICATION_CLUSTERSERVICE);
@@ -635,8 +641,8 @@ public class UnifyContainer {
         long totalMemory = runtime.totalMemory();
         long usedMemory = totalMemory - runtime.freeMemory();
         return new UnifyContainerInfo((String) unifySettings.get(UnifyCorePropertyConstants.APPLICATION_NAME), nodeId,
-                deploymentVersion, auxiliaryVersion, hostAddress, hostHome, startTime, usedMemory, totalMemory, clusterMode,
-                productionMode, deploymentMode, componentInfoList, interfaceInfoList, settingInfoList);
+                deploymentVersion, auxiliaryVersion, hostAddress, hostHome, startTime, usedMemory, totalMemory,
+                clusterMode, productionMode, deploymentMode, componentInfoList, interfaceInfoList, settingInfoList);
     }
 
     /**
@@ -1243,7 +1249,6 @@ public class UnifyContainer {
         Class<? extends BusinessService> proxyClazz = bspg.generateCompileLoadProxyBusinessServiceClass(
                 businessLogicConfig.getName(), (Class<? extends BusinessService>) businessLogicConfig.getType(),
                 pluginMap);
-        logDebug("Proxy business class [{0}] generated...", proxyClazz.getName());
         UnifyComponentConfig internalComponentConfig = new UnifyComponentConfig(businessLogicConfig.getSettings(),
                 businessLogicConfig.getName(), businessLogicConfig.getDescription(), proxyClazz,
                 businessLogicConfig.isSingleton());
@@ -1705,7 +1710,7 @@ public class UnifyContainer {
 
         public void initialize(UnifyComponentContext ctx) throws UnifyException {
             if (!unifyComponent.isInitialized()) {
-                synchronized(unifyComponent) {
+                synchronized (unifyComponent) {
                     if (!unifyComponent.isInitialized()) {
                         unifyComponent.initialize(ctx);
                     }
