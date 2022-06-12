@@ -106,13 +106,14 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
         Connection connection = (Connection) sqlDataSource.getConnection();
         try {
             logInfo("Scanning datasource {0} schema...", sqlDataSource.getPreferredName());
+            logDebug("Managing schema elements for [{0}] table entities...", entityClasses.size());
             DatabaseMetaData databaseMetaData = connection.getMetaData();
             for (Class<?> entityClass : entityClasses) {
-                logDebug("Managing schema elements for table entity type {0}...", entityClass);
                 Map<String, TableConstraint> managedTableConstraints = fetchManagedTableConstraints(databaseMetaData,
                         sqlDataSource, entityClass);
                 manageTableSchema(databaseMetaData, sqlDataSource, entityClass, managedTableConstraints, options);
             }
+            logDebug("Schema elements management completed for [{0}] table entities...", entityClasses.size());
         } catch (SQLException e) {
             throw new UnifyException(e, UnifyCoreErrorConstants.SQLSCHEMAMANAGER_MANAGE_SCHEMA_ERROR,
                     sqlDataSource.getPreferredName());
@@ -127,11 +128,12 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
         Connection connection = (Connection) sqlDataSource.getConnection();
         try {
             logInfo("Scanning datasource {0} schema...", sqlDataSource.getPreferredName());
+            logDebug("Managing schema elements for [{0}] view entities...", entityClasses.size());
             DatabaseMetaData databaseMetaData = connection.getMetaData();
             for (Class<? extends Entity> entityClass : entityClasses) {
-                logDebug("Managing schema elements for view entity type {0}...", entityClass);
                 manageViewSchema(databaseMetaData, sqlDataSource, entityClass, options);
             }
+            logDebug("Schema elements management completed for [{0}] view entities...", entityClasses.size());
         } catch (SQLException e) {
             throw new UnifyException(e, UnifyCoreErrorConstants.SQLSCHEMAMANAGER_MANAGE_SCHEMA_ERROR,
                     sqlDataSource.getPreferredName());
@@ -146,11 +148,12 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
         Connection connection = (Connection) sqlDataSource.getConnection();
         try {
             logInfo("Scanning datasource {0} schema...", sqlDataSource.getPreferredName());
+            logDebug("Dropping schema elements for [{0}] view entities...", entityClasses.size());
             DatabaseMetaData databaseMetaData = connection.getMetaData();
             for (Class<?> entityClass : entityClasses) {
-                logDebug("Dropping schema elements for view entity type {0}...", entityClass);
                 dropViewSchema(databaseMetaData, sqlDataSource, entityClass, options);
             }
+            logDebug("Schema elements deletion completed for [{0}] view entities...", entityClasses.size());
         } catch (SQLException e) {
             throw new UnifyException(e, UnifyCoreErrorConstants.SQLSCHEMAMANAGER_MANAGE_SCHEMA_ERROR,
                     sqlDataSource.getPreferredName());
@@ -268,10 +271,6 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
                                 TableConstraint fkConst = managedTableConstraints.get(fkConstName);
                                 boolean update = true;
                                 if (fkConst != null) {
-                                    logDebug(
-                                            "Checking foreign key: fkConst = [{0}], entity.tableName = [{1}], field.columnName = [{2}]...",
-                                            fkConst, sqlFieldInfo.getForeignEntityInfo().getTableName(),
-                                            sqlFieldInfo.getForeignFieldInfo().getColumnName());
                                     // Check if foreign key matches database constraint
                                     if (fkConst.isForeignKey() /* && fkConst.getColumns().size() == 1 */
                                             && fkConst.getTableName()
@@ -420,13 +419,14 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 
             // Apply updates
             tableUpdateSql.addAll(viewUpdateSQL);
+            logDebug("Executing managed datasource [{0}] scripts...", tableUpdateSql.size());
             for (String sql : tableUpdateSql) {
-                logDebug("Executing managed datasource script {0}...", sql);
                 pstmt = connection.prepareStatement(sql);
                 pstmt.executeUpdate();
                 SqlUtils.close(pstmt);
             }
             connection.commit();
+            logDebug("Managed datasource scripts successfully executed.");
 
             // Update static reference data
             if (EnumConst.class.isAssignableFrom(entityClass)) {
