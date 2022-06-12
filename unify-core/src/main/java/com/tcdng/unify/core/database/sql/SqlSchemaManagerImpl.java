@@ -70,9 +70,9 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
         SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
         Connection connection = (Connection) sqlDataSource.getConnection();
         try {
+            logInfo("Scanning table changes for [{0}] entities...", entityClasses.size());
             DatabaseMetaData databaseMetaData = connection.getMetaData();
             for (Class<?> entityClass : entityClasses) {
-                logDebug("Detecting table change for entity type [{0}]...", entityClass);
                 SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.findSqlEntityInfo(entityClass);
                 String schema = sqlEntityInfo.getSchema();
                 if (StringUtils.isBlank(schema)) {

@@ -74,13 +74,14 @@ public class DynamicSqlEntityLoaderImpl extends AbstractUnifyComponent implement
     @Override
     public List<Class<? extends Entity>> loadDynamicSqlEntities(SqlDatabase db,
             List<DynamicEntityInfo> dynamicEntityInfoList) throws UnifyException {
+        logDebug("Generating source files for [{0}] entity classes...", dynamicEntityInfoList.size());
         List<JavaClassSource> sourceList = new ArrayList<JavaClassSource>();
         for (DynamicEntityInfo dynamicEntityInfo : dynamicEntityInfoList) {
-            logDebug("Generating source file for entity class [{0}]...", dynamicEntityInfo.getClassName());
             JavaClassSource source = new JavaClassSource(dynamicEntityInfo.getClassName(),
                     DynamicEntityUtils.generateEntityJavaClassSource(dynamicEntityInfo));
             sourceList.add(source);
         }
+        logDebug("Source files successfully generated for [{0}] entity classes...", dynamicEntityInfoList.size());
 
         logDebug("Compiling and loading [{0}] entity classes...", sourceList.size());
         List<Class<? extends Entity>> classList = runtimeJavaClassManager.compileAndLoadJavaClasses(Entity.class,
@@ -94,10 +95,10 @@ public class DynamicSqlEntityLoaderImpl extends AbstractUnifyComponent implement
             }
         }
 
+        logDebug("Creating entity class information for [{0}] managed classes ...", managedClassList.size());
         SqlDataSource sqlDataSource = (SqlDataSource) db.getDataSource();
         SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
         for (Class<?> entityClass : managedClassList) {
-            logDebug("Creating entity class information for managed class [{0}] ...", entityClass);
             sqlDataSourceDialect.createSqlEntityInfo(entityClass);
         }
 
@@ -113,13 +114,12 @@ public class DynamicSqlEntityLoaderImpl extends AbstractUnifyComponent implement
 
         beginClusterLock(DYNAMICSQLENTITYLOADER_LOCK);
         try {
-            // Manage schema
-            logDebug("Managing schema for entity classes...");
             SqlSchemaManagerOptions options = new SqlSchemaManagerOptions(PrintFormat.NONE,
                     ForceConstraints.fromBoolean(!getContainerSetting(boolean.class,
                             UnifyCorePropertyConstants.APPLICATION_FOREIGNKEY_EASE, false)));
             boolean schemaChanged = sqlSchemaManager.detectTableSchemaChange(sqlDataSource, options, tableList);
             if (schemaChanged) {
+                logDebug("Managing schema for [{0}] entity classes...", tableList.size());
                 if (sqlDataSource.getDialect().isReconstructViewsOnTableSchemaUpdate()) {
                     sqlSchemaManager.dropViewSchema(sqlDataSource, options, tableList);
                 }
