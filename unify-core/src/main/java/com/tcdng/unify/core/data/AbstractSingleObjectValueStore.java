@@ -188,6 +188,11 @@ public abstract class AbstractSingleObjectValueStore<T> extends AbstractValueSto
     }
 
     @Override
+    public Object getValueObjectAtDataIndex() {
+        return null;
+    }
+
+    @Override
     public ValueStoreReader getReader() {
         if (reader == null) {
             synchronized (this) {
