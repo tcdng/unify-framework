@@ -292,6 +292,11 @@ public interface ValueStore {
     Object getValueObject();
 
     /**
+     * Returns the value store value object at data index.
+     */
+    Object getValueObjectAtDataIndex();
+
+    /**
      * Returns the value store data marker.
      */
     String getDataMarker();

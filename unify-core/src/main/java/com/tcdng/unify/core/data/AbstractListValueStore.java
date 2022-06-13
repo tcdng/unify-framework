@@ -201,6 +201,11 @@ public abstract class AbstractListValueStore<T> extends AbstractValueStore {
     }
 
     @Override
+    public Object getValueObjectAtDataIndex() {
+        return storage != null && dataIndex >= 0 ? storage.get(dataIndex) : null;
+    }
+
+    @Override
     public ValueStoreReader getReader() {
         if (reader == null) {
             synchronized (this) {
