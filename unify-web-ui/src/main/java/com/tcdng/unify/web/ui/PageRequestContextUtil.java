@@ -85,6 +85,24 @@ public interface PageRequestContextUtil extends UnifyComponent {
     String getRequestPopupName() throws UnifyException;
 
     /**
+     * Sets current request context's popup panel.
+     * 
+     * @param panel
+     *            the popup panel to set
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void setRequestPopupPanel(Panel panel) throws UnifyException;
+
+    /**
+     * Returns current request context's popup panel.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    Panel getRequestPopupPanel() throws UnifyException;
+
+    /**
      * Sets the document object for current request.
      * 
      * @param document

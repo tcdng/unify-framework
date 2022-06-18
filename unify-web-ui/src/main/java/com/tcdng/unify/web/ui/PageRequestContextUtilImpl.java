@@ -77,6 +77,8 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
 
     private static final String REQUEST_POPUP_NAME = "REQUEST_POPUP_NAME";
 
+    private static final String REQUEST_POPUP_PANEL = "REQUEST_POPUP_PANEL";
+
     private static final String REQUEST_NONCE = "REQUEST_NONCE";
 
     private static final String RESPONSE_PATHPARTS = "RESPONSE_PATHPARTS";
@@ -119,6 +121,16 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
     @Override
     public String getRequestPopupName() throws UnifyException {
         return (String) getRequestAttribute(REQUEST_POPUP_NAME);
+    }
+
+    @Override
+    public void setRequestPopupPanel(Panel panel) throws UnifyException {
+        setRequestAttribute(REQUEST_POPUP_PANEL, panel);
+    }
+
+    @Override
+    public Panel getRequestPopupPanel() throws UnifyException {
+        return (Panel) getRequestAttribute(REQUEST_POPUP_PANEL);
     }
 
     @Override
