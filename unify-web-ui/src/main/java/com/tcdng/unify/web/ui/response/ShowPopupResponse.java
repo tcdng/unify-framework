@@ -60,6 +60,8 @@ public class ShowPopupResponse extends AbstractJsonPageControllerResponse {
                 } else {
                     panel = page.getPanelByShortName(reqPopupName);
                 }
+            } else {
+                panel = getRequestContextUtil().getRequestPopupPanel();
             }
         }
 
