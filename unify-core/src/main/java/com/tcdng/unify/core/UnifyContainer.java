@@ -253,7 +253,7 @@ public class UnifyContainer {
             throw new UnifyException(UnifyCoreErrorConstants.CONTAINER_NODEID_REQUIRED);
         }
 
-        toConsole = true;
+        toConsole = false;
         if (unifySettings.get(UnifyCorePropertyConstants.APPLICATION_TOCONSOLE) != null) {
             toConsole = Boolean
                     .valueOf(String.valueOf(unifySettings.get(UnifyCorePropertyConstants.APPLICATION_TOCONSOLE)));

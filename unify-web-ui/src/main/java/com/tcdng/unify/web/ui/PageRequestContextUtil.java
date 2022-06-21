@@ -382,6 +382,25 @@ public interface PageRequestContextUtil extends UnifyComponent {
     String[] getResponseRefreshPanels() throws UnifyException;
 
     /**
+     * Sets the panels to refresh by response to current request.
+     * 
+     * @param longNames
+     *                  the panels
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    void setResponseRefreshPanels(Panel... panels) throws UnifyException;
+
+    /**
+     * Returns panels to refresh for current request.
+     * 
+     * @return panels
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    Panel[] getResponseRefreshWidgetPanels() throws UnifyException;
+
+    /**
      * Used to indicate panel state is switched for current request context.
      * 
      * @param panel

@@ -43,7 +43,7 @@ public class TwoWayStringCryptographImplTest extends AbstractUnifyComponentTest 
     }
 
     @Test
-    public void testEncryptString() throws Exception {
+    public void testEncryptString() throws Exception {//s3cr3tAcce$$
         TwoWayStringCryptograph stringCryptographA = (TwoWayStringCryptograph) getComponent("cryptographA");
         String encrypted = stringCryptographA.encrypt("Hello World!");
         assertNotNull(encrypted);
@@ -111,6 +111,7 @@ public class TwoWayStringCryptographImplTest extends AbstractUnifyComponentTest 
     protected void doAddSettingsAndDependencies() throws Exception {
         addDependency("cryptographA", TwoWayStringCryptographImpl.class, false, new Setting("encryptionKey", "Neptune"));
         addDependency("cryptographB", TwoWayStringCryptographImpl.class, new Setting("encryptionKey", "Pluto"));
+        addDependency("cryptographC", TwoWayStringCryptographImpl.class);
     }
 
     @Override
