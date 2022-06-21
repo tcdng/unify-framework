@@ -69,6 +69,8 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
 
     private static final String REFRESH_PANEL_LONGNAMES = "REFRESH_PANEL_LONGNAMES";
 
+    private static final String REFRESH_PANELS = "REFRESH_PANELS";
+
     private static final String SWITCHED_PANELS = "SWITCHED_PANELS";
 
     private static final String REQUEST_DOCUMENT = "REQUEST_DOCUMENT";
@@ -332,6 +334,16 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
     @Override
     public String[] getResponseRefreshPanels() throws UnifyException {
         return (String[]) getRequestAttribute(REFRESH_PANEL_LONGNAMES);
+    }
+
+    @Override
+    public void setResponseRefreshPanels(Panel... panels) throws UnifyException {
+        setRequestAttribute(REFRESH_PANELS, panels);
+    }
+
+    @Override
+    public Panel[] getResponseRefreshWidgetPanels() throws UnifyException {
+        return (Panel[]) getRequestAttribute(REFRESH_PANELS);
     }
 
     @Override

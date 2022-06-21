@@ -21,6 +21,7 @@ import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.web.ui.AbstractJsonPageControllerResponse;
 import com.tcdng.unify.web.ui.widget.Page;
+import com.tcdng.unify.web.ui.widget.Panel;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 
 /**
@@ -39,13 +40,12 @@ public class RefreshPanelResponse extends AbstractJsonPageControllerResponse {
 
     @Override
     protected void doGenerate(ResponseWriter writer, Page page) throws UnifyException {
-        boolean useLongNames = false;
-        String[] refreshList = getPanels();
-        if (refreshList == null || refreshList.length == 0) {
-            refreshList = getRequestContextUtil().getResponseRefreshPanels();
-            useLongNames = true;
+        Panel[] panels = getRequestContextUtil().getResponseRefreshWidgetPanels();
+        if (panels == null) {
+            panels = resolveRefreshPanels(page);
         }
-        appendRefreshPanelsJson(writer, page, refreshList, useLongNames);
+        
+        appendRefreshPanelsJson(writer, page, panels);
         writer.write(",");
         appendRefreshAttributesJson(writer, false);
         appendRegisteredDebounceWidgets(writer, false);
@@ -54,28 +54,48 @@ public class RefreshPanelResponse extends AbstractJsonPageControllerResponse {
     protected String[] getPanels() throws UnifyException {
         return getUplAttribute(String[].class, "panels");
     }
-
-    private void appendRefreshPanelsJson(ResponseWriter writer, Page page, String[] panelIds, boolean useLongNames)
+    
+    private void appendRefreshPanelsJson(ResponseWriter writer, Page page, Panel[] panels)
             throws UnifyException {
-        logDebug("Preparing refresh panel response: path ID = [{0}], useLongNames = [{1}]", page.getPathId(),
-                useLongNames);
+        logDebug("Preparing refresh panel response: path ID = [{0}]...", page.getPathId());
         writer.write(",\"refreshPanels\":[");
-        if (panelIds != null) {
+        if (panels != null) {
             boolean appendSym = false;
-            for (int i = 0; i < panelIds.length; i++) {
+            for (int i = 0; i < panels.length; i++) {
                 if (appendSym) {
                     writer.write(',');
                 } else {
                     appendSym = true;
                 }
 
-                if (useLongNames) {
-                    writer.writeJsonPanel(page.getPanelByLongName(panelIds[i]), true);
-                } else {
-                    writer.writeJsonPanel(page.getPanelByShortName(panelIds[i]), true);
-                }
+                writer.writeJsonPanel(panels[i], true);
             }
         }
         writer.write("]");
+    }
+
+    private Panel[] resolveRefreshPanels(Page page) throws UnifyException {
+        boolean useLongNames = false;
+        String[] refreshList = getPanels();
+        if (refreshList == null || refreshList.length == 0) {
+            refreshList = getRequestContextUtil().getResponseRefreshPanels();
+            useLongNames = true;
+        }
+        
+        if (refreshList != null && refreshList.length > 0) {
+            Panel[] panels = new Panel[refreshList.length];
+            for (int i = 0; i < refreshList.length; i++) {
+                String panelName = refreshList[i];
+                if (useLongNames) {
+                    panels[i] = page.getPanelByLongName(panelName);
+                } else {
+                    panels[i] = page.getPanelByShortName(panelName);
+                }
+            }
+            
+            return panels;
+        }
+        
+        return null;
     }
 }
