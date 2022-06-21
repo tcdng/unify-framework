@@ -52,6 +52,10 @@ public class ValueStoreReader {
         return valueStore.retrieve(type, fieldName);
     }
     
+    public ValueStore getValueStore() {
+        return valueStore;
+    }
+    
     public Object getValueObject() {
         return valueStore.getValueObject();
     }
