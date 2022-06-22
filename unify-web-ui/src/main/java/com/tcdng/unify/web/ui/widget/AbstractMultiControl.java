@@ -335,6 +335,10 @@ public abstract class AbstractMultiControl extends AbstractControl implements Mu
 
     }
 
+    protected Control createInternalHiddenControl(String binding) throws UnifyException {
+        return (Control) addInternalChildWidget("!ui-hidden binding:" + binding);
+    }
+
     protected abstract void doOnPageConstruct() throws UnifyException;
 
     private void doAddChildWidget(Widget widget, boolean pageConstruct, boolean conforming, boolean ignoreParentState,
