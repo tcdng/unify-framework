@@ -518,7 +518,7 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
      * @param widget
      *               the widget whose style to write
      * @param style
-     *               the style to write
+     *               the additional style to write
      * @throws UnifyException
      *                        if an error occurs
      */
