@@ -71,6 +71,8 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 
     private ValueStore[] valueStoreMem;
 
+    private String extraStyle;
+
     private int tabIndex;
 
     private boolean conforming;
@@ -182,12 +184,18 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
     }
 
     @Override
+    public void setExtraStyle(String extraStyle) throws UnifyException {
+        this.extraStyle = extraStyle;
+    }
+
+    @Override
     public String getStyle() throws UnifyException {
         if (isHidden()) {
             return "display:none;";
         }
 
-        return getUplAttribute(String.class, "style");
+        String style = getUplAttribute(String.class, "style");
+        return extraStyle != null ? (style != null ? style + extraStyle : extraStyle) : style;
     }
 
     @Override
