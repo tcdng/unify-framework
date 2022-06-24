@@ -337,8 +337,15 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
     }
 
     @Override
-    public void setResponseRefreshPanels(Panel... panels) throws UnifyException {
+    public boolean setResponseRefreshPanels(Panel... panels) throws UnifyException {
+        for (Panel panel : panels) {
+            if (panel == null) {
+                return false;
+            }
+        }
+        
         setRequestAttribute(REFRESH_PANELS, panels);
+        return true;
     }
 
     @Override
