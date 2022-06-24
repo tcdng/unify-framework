@@ -389,7 +389,7 @@ public interface PageRequestContextUtil extends UnifyComponent {
      * @throws UnifyException
      *                        if an error occurs
      */
-    void setResponseRefreshPanels(Panel... panels) throws UnifyException;
+    boolean setResponseRefreshPanels(Panel... panels) throws UnifyException;
 
     /**
      * Returns panels to refresh for current request.
