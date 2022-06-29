@@ -193,6 +193,7 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
                 controller = controllerFinder
                         .findController(clientRequest.getRequestPathParts().getControllerPathParts());
             } catch (Exception e) {
+                logError(e);
                 try {
                     //String message = getExceptionMessage(LocaleType.SESSION, e);
                     clientResponse.setContentType(MimeType.TEXT_HTML.template());
@@ -204,7 +205,7 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
                     clientResponse.getWriter().write("</body>\n</html>\n");
                     clientResponse.setStatusNotFound();
                 } catch (IOException e1) {
-                    logError(e);
+                    logError(e1);
                 } finally {
                     clientResponse.close();
                 }
