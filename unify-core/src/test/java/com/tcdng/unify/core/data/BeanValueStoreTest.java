@@ -68,6 +68,22 @@ public class BeanValueStoreTest {
     }
 
     @Test
+    public void testIsNull() throws Exception {
+        Address address = new Address();
+        BeanValueStore bvs = new BeanValueStore(address);
+        assertTrue(bvs.isNull("line1"));
+        assertTrue(bvs.isNull("line2"));
+    }
+
+    @Test
+    public void testIsNotNull() throws Exception {
+        Address address = new Address("24 Parklane", "Apapa Lagos");
+        BeanValueStore bvs = new BeanValueStore(address);
+        assertTrue(bvs.isNotNull("line1"));
+        assertTrue(bvs.isNotNull("line2"));
+    }
+
+    @Test
     public void testRetrieveUnkownBeanPropertyValue() throws Exception {
         Address address = new Address("24 Parklane", "Apapa Lagos");
         BeanValueStore bvs = new BeanValueStore(address);

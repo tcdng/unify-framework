@@ -37,6 +37,28 @@ public interface ValueStore {
     void setPolicy(ValueStorePolicy policy);
     
     /**
+     * Tests if field value is null
+     * 
+     * @param name
+     *             the field name
+     * @return true if field is null otherwise false
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    boolean isNull(String name) throws UnifyException;
+
+    /**
+     * Tests if field value is not null
+     * 
+     * @param name
+     *             the field name
+     * @return true if field is not null otherwise false
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    boolean isNotNull(String name) throws UnifyException;
+    
+    /**
      * Retrieves value from store using supplied name.
      * 
      * @param name

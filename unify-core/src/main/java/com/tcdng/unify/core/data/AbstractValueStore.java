@@ -53,6 +53,16 @@ public abstract class AbstractValueStore implements ValueStore {
     }
 
     @Override
+    public boolean isNull(String name) throws UnifyException {
+        return retrieve(name) == null;
+    }
+
+    @Override
+    public boolean isNotNull(String name) throws UnifyException {
+        return retrieve(name) != null;
+    }
+
+    @Override
     public Audit diff(ValueStore newSource) throws UnifyException {
         Audit.Builder ab = Audit.newBuilder();
         for (GetterSetterInfo getterSetterInfo : ReflectUtils.getGetterSetterList(getDataClass())) {
