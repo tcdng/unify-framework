@@ -15,17 +15,30 @@
  */
 package com.tcdng.unify.jetty.http;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.http.HttpServletRequest;
 
 import org.eclipse.jetty.http.HttpGenerator;
+import org.eclipse.jetty.http.HttpVersion;
+import org.eclipse.jetty.server.HttpConfiguration;
+import org.eclipse.jetty.server.HttpConnectionFactory;
+import org.eclipse.jetty.server.SecureRequestCustomizer;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.server.SslConnectionFactory;
 import org.eclipse.jetty.server.handler.ErrorHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.util.ssl.SslContextFactory;
 
 import com.tcdng.unify.core.UnifyCoreConstants;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
@@ -33,6 +46,7 @@ import com.tcdng.unify.core.UnifyCorePropertyConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.constant.NetworkSchemeType;
+import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.jetty.JettyApplicationComponents;
 import com.tcdng.unify.web.http.AbstractEmbeddedHttpWebServer;
 import com.tcdng.unify.web.http.HttpApplicationServlet;
@@ -67,9 +81,51 @@ public class JettyEmbeddedWebServer extends AbstractEmbeddedHttpWebServer {
     @Override
     protected void onInitialize() throws UnifyException {
         try {
-            logInfo("Initializing HTTP server on port {0}; using context path {1} and servlet path {2}...",
-                    Integer.toString(getHttpPort()), getContextPath(), getServletPath());
-            httpServer = new Server(getHttpPort());
+            httpServer = new Server();
+
+            List<Integer> portList = new ArrayList<Integer>();
+            String keyStorePath = getKeyStorePath();
+            if (!StringUtils.isBlank(keyStorePath)) {
+                final int httpsPort = getHttpsPort();
+                logInfo("Configuring HTTPS on port [{0}]...", Integer.toString(httpsPort));
+                HttpConfiguration https = new HttpConfiguration();
+                https.addCustomizer(new SecureRequestCustomizer());
+
+                SslContextFactory sslContextFactory = new SslContextFactory.Server();
+                Path _keyStorePath = Paths.get(keyStorePath).toAbsolutePath();
+                if (!Files.exists(_keyStorePath)) {
+                    throwOperationErrorException(new FileNotFoundException(_keyStorePath.toString()));
+                }
+                sslContextFactory.setKeyStorePath(_keyStorePath.toString());
+                String password = getKeyStorePass();
+                sslContextFactory.setKeyStorePassword(password);
+                sslContextFactory.setKeyManagerPassword(password);
+
+                ServerConnector sslConnector = new ServerConnector(httpServer,
+                        new SslConnectionFactory(sslContextFactory, HttpVersion.HTTP_1_1.asString()),
+                        new HttpConnectionFactory(https));
+                sslConnector.setPort(httpsPort);
+                httpServer.addConnector(sslConnector);
+                portList.add(httpsPort);
+            }
+
+            if (isHttpsOnly()) {
+                if (portList.isEmpty()) {
+                    throwOperationErrorException(new IllegalArgumentException(
+                            "You must provide SSL keystore properties since you have specified HTTPS only."));
+                }
+            } else {
+                // Setup HTTP
+                final int httpPort = getHttpPort();
+                logInfo("Configuring HTTP on port [{0}]...", Integer.toString(httpPort));
+                ServerConnector connector = new ServerConnector(httpServer);
+                connector.setPort(httpPort);
+                httpServer.addConnector(connector);
+                portList.add(httpPort);
+            }
+
+            logInfo("Initializing HTTP server on ports {0}; using context path {1} and servlet path {2}...",
+                    portList, getContextPath(), getServletPath());
             ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
             context.setContextPath(getContextPath());
             context.getSessionHandler().setMaxInactiveInterval(
@@ -110,12 +166,11 @@ public class JettyEmbeddedWebServer extends AbstractEmbeddedHttpWebServer {
     protected void onStopServicingRequests() throws UnifyException {
 
     }
-    
+
     public class CustomErrorHandler extends ErrorHandler {
 
-        protected void writeErrorPageBody(HttpServletRequest request, Writer writer, int code, String message, boolean showStacks)
-            throws IOException
-        {
+        protected void writeErrorPageBody(HttpServletRequest request, Writer writer, int code, String message,
+                boolean showStacks) throws IOException {
             String uri = request.getRequestURI();
 
             writeErrorPageMessage(request, writer, code, message, uri);
@@ -123,6 +178,6 @@ public class JettyEmbeddedWebServer extends AbstractEmbeddedHttpWebServer {
                 writeErrorPageStacks(request, writer);
             }
         }
-        
+
     }
 }
