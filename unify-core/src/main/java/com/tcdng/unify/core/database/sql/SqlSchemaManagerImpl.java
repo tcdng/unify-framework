@@ -498,47 +498,51 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
             if (StringUtils.isBlank(schema)) {
                 schema = sqlDataSource.getAppSchema();
             }
+            // 
+            try (ResultSet _rs = databaseMetaData.getTables(null, schema, sqlEntityInfo.getTableName(), null)) {           
+                if (_rs.next()) {
+                    // Fetch foreign keys
+                    rs = databaseMetaData.getImportedKeys(null, schema, sqlEntityInfo.getTableName());
+                    while (rs.next()) {
+                        String fkName = SqlUtils.resolveConstraintName(rs.getString("FK_NAME"),
+                                sqlDataSourceDialect.isAllObjectsInLowerCase());
+                        String pkTableName = rs.getString("PKTABLE_NAME");
+                        String pkColumnName = rs.getString("PKCOLUMN_NAME");
+                        if (StringUtils.isNotBlank(fkName) && StringUtils.isNotBlank(pkTableName)
+                                && StringUtils.isNotBlank(pkColumnName)) {
+                            TableConstraint tConst = managedTableConstraints.get(fkName);
+                            if (tConst == null) {
+                                tConst = new TableConstraint(fkName, pkTableName, false);
+                                managedTableConstraints.put(fkName, tConst);
+                            }
 
-            // Fetch foreign keys
-            rs = databaseMetaData.getImportedKeys(null, schema, sqlEntityInfo.getTableName());
-            while (rs.next()) {
-                String fkName = SqlUtils.resolveConstraintName(rs.getString("FK_NAME"),
-                        sqlDataSourceDialect.isAllObjectsInLowerCase());
-                String pkTableName = rs.getString("PKTABLE_NAME");
-                String pkColumnName = rs.getString("PKCOLUMN_NAME");
-                if (StringUtils.isNotBlank(fkName) && StringUtils.isNotBlank(pkTableName)
-                        && StringUtils.isNotBlank(pkColumnName)) {
-                    TableConstraint tConst = managedTableConstraints.get(fkName);
-                    if (tConst == null) {
-                        tConst = new TableConstraint(fkName, pkTableName, false);
-                        managedTableConstraints.put(fkName, tConst);
+                            tConst.addColumn(pkColumnName);
+                        }
                     }
 
-                    tConst.addColumn(pkColumnName);
-                }
-            }
+                    SqlUtils.close(rs);
+                    // Fetch indexes
+                    rs = databaseMetaData.getIndexInfo(null, schema, sqlEntityInfo.getTableName(), false, false);
+                    while (rs.next()) {
+                        String idxName = SqlUtils.resolveConstraintName(rs.getString("INDEX_NAME"),
+                                sqlDataSourceDialect.isAllObjectsInLowerCase());
+                        String idxColumnName = rs.getString("COLUMN_NAME");
+                        if (StringUtils.isNotBlank(idxName) && StringUtils.isNotBlank(idxColumnName)) {
+                            boolean unique = SqlUtils.isUniqueConstraintName(idxName);
+                            TableConstraint tConst = managedTableConstraints.get(idxName);
+                            if (tConst == null) {
+                                tConst = new TableConstraint(idxName, null, unique);
+                                managedTableConstraints.put(idxName, tConst);
+                            }
 
-            SqlUtils.close(rs);
-            // Fetch indexes
-            rs = databaseMetaData.getIndexInfo(null, schema, sqlEntityInfo.getTableName(), false, false);
-            while (rs.next()) {
-                String idxName = SqlUtils.resolveConstraintName(rs.getString("INDEX_NAME"),
-                        sqlDataSourceDialect.isAllObjectsInLowerCase());
-                String idxColumnName = rs.getString("COLUMN_NAME");
-                if (StringUtils.isNotBlank(idxName) && StringUtils.isNotBlank(idxColumnName)) {
-                    boolean unique = SqlUtils.isUniqueConstraintName(idxName);
-                    TableConstraint tConst = managedTableConstraints.get(idxName);
-                    if (tConst == null) {
-                        tConst = new TableConstraint(idxName, null, unique);
-                        managedTableConstraints.put(idxName, tConst);
+                            tConst.addColumn(idxColumnName);
+                        }
                     }
-
-                    tConst.addColumn(idxColumnName);
                 }
             }
         } catch (SQLException e) {
             throw new UnifyException(e, UnifyCoreErrorConstants.SQLSCHEMAMANAGER_MANAGE_SCHEMA_ERROR,
-                    sqlDataSource.getName());
+                    sqlDataSource.getName(), entityClass);
         } finally {
             SqlUtils.close(rs);
         }
