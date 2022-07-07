@@ -34,11 +34,23 @@ import com.tcdng.unify.web.http.HttpRequestHandler;
  */
 public abstract class AbstractEmbeddedHttpWebServer extends AbstractHttpWebInterface implements EmbeddedHttpWebServer {
 
-	@Configurable("8080")
-	private int httpPort;
+    @Configurable("8080")
+    private int httpPort;
 
-	@Configurable("/unify")
-	private String contextPath;
+    @Configurable("443")
+    private int httpsPort;
+
+    @Configurable("/unify")
+    private String contextPath;
+
+    @Configurable
+    private String keyStorePath;
+
+    @Configurable
+    private String keyStorePass;
+
+    @Configurable
+    private boolean httpsOnly;
 
 	@Configurable("/*")
 	private String servletPath;
@@ -59,8 +71,24 @@ public abstract class AbstractEmbeddedHttpWebServer extends AbstractHttpWebInter
         this.httpPort = httpPort;
     }
 
+    public void setHttpsPort(int httpsPort) {
+        this.httpsPort = httpsPort;
+    }
+
     public void setContextPath(String contextPath) {
         this.contextPath = contextPath;
+    }
+
+    public void setKeyStorePath(String keyStorePath) {
+        this.keyStorePath = keyStorePath;
+    }
+
+    public void setKeyStorePass(String keyStorePass) {
+        this.keyStorePass = keyStorePass;
+    }
+
+    public void setHttpsOnly(boolean httpsOnly) {
+        this.httpsOnly = httpsOnly;
     }
 
     public void setServletPath(String servletPath) {
@@ -102,7 +130,23 @@ public abstract class AbstractEmbeddedHttpWebServer extends AbstractHttpWebInter
 		return getPreferredPort() > 0 ? getPreferredPort(): httpPort;
 	}
 
-	protected String getServletPath() {
+	protected int getHttpsPort() {
+        return httpsPort;
+    }
+
+    protected String getKeyStorePath() {
+        return keyStorePath;
+    }
+
+    protected String getKeyStorePass() {
+        return keyStorePass;
+    }
+
+    protected boolean isHttpsOnly() {
+        return httpsOnly;
+    }
+
+    protected String getServletPath() {
 		return servletPath;
 	}
 
