@@ -40,6 +40,8 @@ public final class WidgetUtils {
     public static String getChildId(String parentId, String childId, int childIndex) {
         if (childId == null) {
             return parentId + ".c" + childIndex;
+        } else if (childId.startsWith(parentId)) {
+            return childId;
         }
 
         return parentId + '.' + childId;
