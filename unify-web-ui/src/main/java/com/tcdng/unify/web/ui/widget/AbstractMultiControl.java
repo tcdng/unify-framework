@@ -203,7 +203,7 @@ public abstract class AbstractMultiControl extends AbstractControl implements Mu
      *             if an error occurs
      */
     protected Widget addExternalChildStandalonePanel(String panelName, String cloneId) throws UnifyException {
-        String uniqueName = UplUtils.generateUplComponentCloneName(panelName, cloneId);
+        final String uniqueName = UplUtils.generateUplComponentCloneName(panelName, cloneId);
         Page page = getRequestContextUtil().getRequestPage();
         StandalonePanel standalonePanel = page.getStandalonePanel(uniqueName);
         if (standalonePanel == null) {
@@ -343,7 +343,7 @@ public abstract class AbstractMultiControl extends AbstractControl implements Mu
 
     private void doAddChildWidget(Widget widget, boolean pageConstruct, boolean conforming, boolean ignoreParentState,
             boolean external) throws UnifyException {
-        String childId = WidgetUtils.getChildId(getId(), widget.getId(), childIndex++);
+        final String childId = WidgetUtils.getChildId(getId(), widget.getBaseId(), childIndex++);
         widget.setId(childId);
         if (pageConstruct) {
             widget.onPageConstruct();
