@@ -94,6 +94,25 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
     }
 
     @Override
+    public boolean matchColumnDefault(String nativeVal, String defaultVal) throws UnifyException {
+        if(super.matchColumnDefault(nativeVal, defaultVal)) {
+            return true;
+        }
+        
+        if (nativeVal != null && defaultVal != null) {
+            if (nativeVal.charAt(0) == '\'') {
+                if (defaultVal.charAt(0) == '\'') {
+                    return nativeVal.startsWith(defaultVal);
+                }
+                
+                return nativeVal.startsWith("'" + defaultVal + "'");
+            }
+        }
+        
+        return false;
+    }
+
+    @Override
     public String generateTestSql() throws UnifyException {
         return "SELECT 1 FROM DUAL";
     }
