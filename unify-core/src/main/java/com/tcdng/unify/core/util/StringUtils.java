@@ -45,6 +45,24 @@ public final class StringUtils {
     }
 
     /**
+     * Gets printable stack trace from throwable with header message.
+     * 
+     * @param headerMessage
+     *                      the header message
+     * @param e
+     *                      the throwable
+     * @return the printable stack trace
+     */
+    public static String getPrintableStackTrace(Throwable e, String headerMessage) {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        pw.println(headerMessage);
+        e.printStackTrace(pw);
+        pw.flush();
+        return sw.toString();
+    }
+
+    /**
      * Gets printable stack trace from throwable.
      * 
      * @param e

@@ -40,6 +40,7 @@ import com.tcdng.unify.core.task.TaskMonitor;
 import com.tcdng.unify.core.upl.UplComponent;
 import com.tcdng.unify.core.util.AnnotationUtils;
 import com.tcdng.unify.core.util.DataUtils;
+import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.core.util.TokenUtils;
 import com.tcdng.unify.core.util.ValueStoreUtils;
 
@@ -1179,13 +1180,23 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 * @return the exception message
 	 * @throws UnifyException if an error occurs
 	 */
-	protected String getExceptionMessage(LocaleType localeType, Exception exception) throws UnifyException {
-		if (exception instanceof UnifyException) {
-			return getErrorMessage(localeType, ((UnifyException) exception).getUnifyError());
-		}
+    protected String getExceptionMessage(LocaleType localeType, Throwable exception) throws UnifyException {
+        if (exception instanceof UnifyException) {
+            return getErrorMessage(localeType, ((UnifyException) exception).getUnifyError());
+        }
 
-		return exception.getMessage();
-	}
+        return exception.getMessage();
+    }
+
+    protected String getPrintableStackTraceWithMessageHeader(LocaleType localeType, Throwable exception)
+            throws UnifyException {
+        String header = getExceptionMessage(localeType, exception);
+        return StringUtils.getPrintableStackTrace(exception, header);
+    }
+
+    protected String getPrintableStackTrace(Throwable exception) throws UnifyException {
+        return StringUtils.getPrintableStackTrace(exception);
+    }
 
     protected String getErrorMessage(LocaleType localeType, UnifyError ue) throws UnifyException {
         return ue.getErrorCode() + ": " + unifyComponentContext.getMessages().getMessage(getLocale(localeType),
