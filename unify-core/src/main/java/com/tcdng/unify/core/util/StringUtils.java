@@ -15,6 +15,8 @@
  */
 package com.tcdng.unify.core.util;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -42,6 +44,21 @@ public final class StringUtils {
 
     }
 
+    /**
+     * Gets printable stack trace from throwable.
+     * 
+     * @param e
+     *          the throwable
+     * @return the printable stack trace
+     */
+    public static String getPrintableStackTrace(Throwable e) {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        e.printStackTrace(pw);
+        pw.flush();
+        return sw.toString();
+    }
+    
     /**
      * Removes duplicates from a string list.
      * 
