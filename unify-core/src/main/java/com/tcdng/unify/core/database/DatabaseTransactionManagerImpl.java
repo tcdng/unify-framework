@@ -169,6 +169,7 @@ public class DatabaseTransactionManagerImpl extends AbstractUnifyComponent imple
     @Override
     public void rollbackToSavePoint() throws UnifyException {
         getCurrentTransaction().rollbackToSavePoint();
+        getCurrentTransaction().clearRollback();
     }
 
     @Override
