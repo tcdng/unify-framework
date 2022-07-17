@@ -555,6 +555,13 @@ public interface Widget extends UplComponent {
     boolean isSupportDisabled();
 
     /**
+     * Returns true if component's data should not be pushed from client to server
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    boolean isNoPush() throws UnifyException;
+
+    /**
      * Returns true if this components caption is layout based.
      */
     boolean isLayoutCaption() throws UnifyException;

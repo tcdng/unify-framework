@@ -104,6 +104,8 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
     private static final String CONTENT_SCROLL_RESET = "CONTENT_SCROLL_RESET";
 
     private static final String DEBOUNCE_WIDGET = "DEBOUNCE_WIDGET";
+
+    private static final String NO_PUSH_WIDGET_ID_LIST = "NO_PUSH_WIDGET_ID_LIST";
     
     @Override
     public void setRequestPage(Page page) throws UnifyException {
@@ -531,6 +533,27 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
     @Override
     public void clearFocusOnWidget() throws UnifyException {
         removeRequestAttribute(FOCUS_ON_WIDGET);       
+    }
+
+    @Override
+    public boolean isNoPushWidgets() throws UnifyException {
+        return getRequestAttribute(NO_PUSH_WIDGET_ID_LIST) != null;
+    }
+
+    @Override
+    public void addNoPushWidgetId(String id) throws UnifyException {
+        List<String> list = (List<String>) getRequestAttribute(NO_PUSH_WIDGET_ID_LIST);
+        if (list == null) {
+            list =  new ArrayList<String>();
+            setRequestAttribute(NO_PUSH_WIDGET_ID_LIST, list);
+        }
+        
+        list.add(id);
+    }
+
+    @Override
+    public List<String> getNoPushWidgetIds() throws UnifyException {
+        return (List<String>) getRequestAttribute(NO_PUSH_WIDGET_ID_LIST);
     }
 
     @Override

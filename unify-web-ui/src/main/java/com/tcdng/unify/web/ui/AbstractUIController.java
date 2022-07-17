@@ -15,8 +15,6 @@
  */
 package com.tcdng.unify.web.ui;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -381,10 +379,8 @@ public abstract class AbstractUIController extends AbstractController implements
         setSessionAttribute(SystemInfoConstants.LOGIN_REQUIRED_FLAG, loginRequired);
         setSessionAttribute(SystemInfoConstants.EXCEPTION_MESSAGE_KEY, message);
 
-        StringWriter sw = new StringWriter();
-        e.printStackTrace(new PrintWriter(sw));
-        sw.flush();
-        setSessionAttribute(SystemInfoConstants.EXCEPTION_STACKTRACE_KEY, sw.toString());
+        String trace = StringUtils.getPrintableStackTrace(e);
+        setSessionAttribute(SystemInfoConstants.EXCEPTION_STACKTRACE_KEY, trace);
 
         // Generate exception response
         ResponseWriter writer = responseWriterPool.getResponseWriter(request);

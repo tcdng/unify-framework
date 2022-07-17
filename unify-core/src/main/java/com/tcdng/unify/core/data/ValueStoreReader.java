@@ -59,4 +59,20 @@ public class ValueStoreReader {
     public Object getValueObject() {
         return valueStore.getValueObject();
     }
+
+    public Object getTempValue(String name) throws UnifyException {
+        return valueStore.getTempValue(name);
+    }
+
+    public <T> T getTempValue(Class<T> type, String name) throws UnifyException {
+        return valueStore.getTempValue(type, name);
+    }
+
+    public void setTempValue(String name, Object value) throws UnifyException {
+        valueStore.setTempValue(name, value);
+    }
+
+    public boolean isTempValue(String name) {
+        return valueStore.isTempValue(name);
+    }
 }

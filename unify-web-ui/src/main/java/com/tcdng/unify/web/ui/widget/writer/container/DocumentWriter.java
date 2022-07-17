@@ -204,6 +204,13 @@ public class DocumentWriter extends AbstractPageWriter {
             writer.write("ux.registerDebounce(debounceList);");
         }
 
+        // Write No-push
+        if (getRequestContextUtil().isNoPushWidgets()) {
+            writer.write("var noPushList = ")
+                    .writeJsonArray(getRequestContextUtil().getNoPushWidgetIds()).write(";");
+            writer.write("ux.markNoPushWidgets(noPushList);");
+        }
+
         writer.write("ux.cascadeStretch();");
         
         // Set focus

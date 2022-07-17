@@ -72,6 +72,9 @@ public class RefreshPanelResponse extends AbstractJsonPageControllerResponse {
             }
         }
         writer.write("]");
+        if (getRequestContextUtil().isNoPushWidgets()) {
+            writer.write(",\"noPushWidgets\":").writeJsonArray(getRequestContextUtil().getNoPushWidgetIds());
+        }
     }
 
     private Panel[] resolveRefreshPanels(Page page) throws UnifyException {

@@ -195,7 +195,6 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
             } catch (Exception e) {
                 logError(e);
                 try {
-                    //String message = getExceptionMessage(LocaleType.SESSION, e);
                     clientResponse.setContentType(MimeType.TEXT_HTML.template());
                     clientResponse.getWriter().write("<html>\n<head>\n");
                     clientResponse.getWriter().write("<meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\"/>\n");

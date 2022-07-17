@@ -617,6 +617,35 @@ public interface PageRequestContextUtil extends UnifyComponent {
     void clearFocusOnWidget() throws UnifyException;
 
     /**
+     * Checks if no-push widgets are set in this request.
+     * 
+     * @return a true value if no-push widgets exist in this request.
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean isNoPushWidgets() throws UnifyException;
+
+    /**
+     * Adds the ID of widget to skip when pushing data to the server to current
+     * request
+     * 
+     * @param id
+     *           the widget ID
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    void addNoPushWidgetId(String id) throws UnifyException;
+
+    /**
+     * Gets the no-push widget IDs associated with this request.
+     * 
+     * @return the widget IDs
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    List<String> getNoPushWidgetIds() throws UnifyException;
+    
+    /**
      * Registers a widget for debounce in current request.
      * 
      * @param widgetId

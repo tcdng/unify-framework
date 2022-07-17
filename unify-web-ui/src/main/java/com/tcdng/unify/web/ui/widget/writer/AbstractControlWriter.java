@@ -40,6 +40,10 @@ public abstract class AbstractControlWriter extends AbstractWidgetWriter impleme
                 getRequestContextUtil().setFocusOnWidgetId(control.getId());
             }
         }
+
+        if (widget.isNoPush()) {
+            getRequestContextUtil().addNoPushWidgetId(control.getId());
+        }
     }
 
     protected void writeHiddenPush(ResponseWriter writer, Widget widget, PushType type) throws UnifyException {
