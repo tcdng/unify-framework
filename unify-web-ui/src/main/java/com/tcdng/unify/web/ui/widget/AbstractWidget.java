@@ -440,6 +440,11 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
     }
 
     @Override
+    public boolean isNoPush() throws UnifyException {
+        return (isSupportReadOnly() && !isContainerEditable()) || (isSupportDisabled() && isContainerDisabled());
+    }
+
+    @Override
     public void setAlternateMode(boolean alternateMode) {
 
     }

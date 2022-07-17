@@ -59,6 +59,9 @@ public class UnloadContentResponse extends AbstractJsonPageControllerResponse {
             writer.write(",\"refreshPanels\":[");
             writer.writeJsonPanel(contentPanel, true);
             writer.write("]");
+            if (getRequestContextUtil().isNoPushWidgets()) {
+                writer.write(",\"noPushWidgets\":").writeJsonArray(getRequestContextUtil().getNoPushWidgetIds());
+            }
         } finally{
             removeSessionAttribute(PageRequestParameterConstants.UNLOAD_ORIGIN_PAGE);
         }

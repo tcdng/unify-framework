@@ -53,5 +53,8 @@ public class LoadContentResponse extends AbstractJsonPageControllerResponse {
         writer.write(",\"refreshPanels\":[");
         writer.writeJsonPanel(contentPanel, true);
         writer.write("]");
+        if (getRequestContextUtil().isNoPushWidgets()) {
+            writer.write(",\"noPushWidgets\":").writeJsonArray(getRequestContextUtil().getNoPushWidgetIds());
+        }
     }
 }

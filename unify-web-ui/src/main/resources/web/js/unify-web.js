@@ -421,6 +421,8 @@ ux.refreshPanels = function(resp) {
 		for (var i = 0; i < resp.refreshPanels.length; i++) {
 			ux.perform(resp.refreshPanels[i].script);
 		}
+		
+		ux.markNoPushWidgets(resp.noPushWidgets);
 	}
 }
 
@@ -4460,7 +4462,7 @@ ux.buildNameParams = function(name, builtNames, param) {
 }
 
 ux.extractObjParams = function(elem, param) {
-	if (elem && !elem.disabled && elem.type != "button") {
+	if (elem && !elem.disabled && !elem._nopush && elem.type != "button") {
 		var trnId = elem.id;
 		if (elem.type == "hidden") {
 			var pblank = false;
@@ -4610,6 +4612,17 @@ ux.setDisplayModeByName = function(name, mode) {
 	var elems = _name(name);
 	for (var j = 0; j < elems.length; j++) {
 		elems[j].style.display = mode;
+	}
+}
+
+ux.markNoPushWidgets = function(noPushList) {
+	if (noPushList) {
+		for (var i = 0; i < noPushList.length; i++) {
+			var elem = _id(noPushList[i]);
+			if (elem) {
+				elem._nopush = true;
+			}
+		}
 	}
 }
 
