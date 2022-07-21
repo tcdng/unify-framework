@@ -173,11 +173,6 @@ public abstract class AbstractSingleObjectValueStore<T> extends AbstractValueSto
     }
 
     @Override
-    public void setDataIndex(int dataIndex) {
-        this.dataIndex = dataIndex;
-    }
-
-    @Override
     public int size() {
         return 0;
     }
@@ -216,6 +211,11 @@ public abstract class AbstractSingleObjectValueStore<T> extends AbstractValueSto
         }
 
         return writer;
+    }
+
+    @Override
+    protected void doSetDataIndex(int dataIndex) {
+        this.dataIndex = dataIndex;
     }
 
     @Override

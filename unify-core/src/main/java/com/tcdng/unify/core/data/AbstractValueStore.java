@@ -17,7 +17,9 @@ package com.tcdng.unify.core.data;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import com.tcdng.unify.core.UnifyException;
@@ -37,6 +39,8 @@ public abstract class AbstractValueStore implements ValueStore {
     
     private ValueStorePolicy policy;
     
+    private Map<String, Object> savedValues;
+    
     @Override
     public String getDataPrefix() {
         return dataPrefix;
@@ -45,6 +49,12 @@ public abstract class AbstractValueStore implements ValueStore {
     @Override
     public void setDataPrefix(String dataPrefix) {
         this.dataPrefix = dataPrefix;
+    }
+
+    @Override
+    public final void setDataIndex(int dataIndex) {
+        savedValues = null;
+        doSetDataIndex(dataIndex);
     }
 
     @Override
@@ -150,10 +160,45 @@ public abstract class AbstractValueStore implements ValueStore {
         }
     }
 
+    @Override
+    public void save(String... fields) throws UnifyException {
+        if (savedValues == null) {
+            savedValues = new HashMap<String, Object>();
+        }
+        
+        for (String fieldName: fields) {
+            savedValues.put(fieldName, retrieve(fieldName));
+        }
+    }
+
+    @Override
+    public void save(Collection<String> fields) throws UnifyException {
+        if (savedValues == null) {
+            savedValues = new HashMap<String, Object>();
+        }
+        
+        for (String fieldName: fields) {
+            savedValues.put(fieldName, retrieve(fieldName));
+        }
+    }
+
+    @Override
+    public void restore() throws UnifyException {
+        if (savedValues != null) {
+            for (Map.Entry<String, Object> entry: savedValues.entrySet()) {
+                store(entry.getKey(), entry.getValue());
+            }
+        }
+        
+        savedValues = null;
+    }
+
     protected ValueStorePolicy getPolicy() {
         return policy;
     }
 
+    protected abstract void doSetDataIndex(int dataIndex);
+    
     protected abstract Class<?> getDataClass() throws UnifyException;
 
 }

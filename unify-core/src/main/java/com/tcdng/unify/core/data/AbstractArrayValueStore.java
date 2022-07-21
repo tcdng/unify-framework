@@ -183,11 +183,6 @@ public abstract class AbstractArrayValueStore<T> extends AbstractValueStore {
     }
 
     @Override
-    public void setDataIndex(int dataIndex) {
-        this.dataIndex = dataIndex;
-    }
-
-    @Override
     public int size() {
         return storage.length;
     }
@@ -226,6 +221,11 @@ public abstract class AbstractArrayValueStore<T> extends AbstractValueStore {
         }
 
         return writer;
+    }
+
+    @Override
+    protected void doSetDataIndex(int dataIndex) {
+        this.dataIndex = dataIndex;
     }
 
     @Override

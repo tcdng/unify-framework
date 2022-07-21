@@ -460,6 +460,34 @@ public interface ValueStore {
     void copyWithInclusions(ValueStore source, Collection<String> inclusionFieldNames) throws UnifyException;
     
     /**
+     * Saves specified fields
+     * 
+     * @param fields
+     *               the fields to save
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    void save(String... fields) throws UnifyException;
+
+    /**
+     * Saves the values specified fields
+     * 
+     * @param fields
+     *               the fields to save
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    void save(Collection<String> fields) throws UnifyException;
+    
+    /**
+     * Restores the values of all saved fields
+     * 
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    void restore() throws UnifyException;
+    
+    /**
      * Gets reader for this value store object.
      * 
      * @return the value store reader
