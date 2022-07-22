@@ -22,6 +22,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Date;
 
 import org.junit.Test;
@@ -133,6 +134,41 @@ public class BeanValueStoreTest {
         bvs.store("id", 16);
         bvs.store("address.line1", "17, I Close, 5th Avenue");
         bvs.store("address.line2", "Festac Town");
+        assertEquals("Lobsang Rampa", customer.getName());
+        assertEquals(birthDt, customer.getBirthDt());
+        assertEquals(BigDecimal.valueOf(20.25), customer.getBalance());
+        assertEquals(Long.valueOf(16), customer.getId());
+        assertEquals("17, I Close, 5th Avenue", customer.getAddress().getLine1());
+        assertEquals("Festac Town", customer.getAddress().getLine2());
+    }
+
+    @Test
+    public void testSaveAndRestore() throws Exception {
+        Date birthDt = new Date();
+        Customer customer = new Customer();
+        customer.setAddress(new Address());
+
+        BeanValueStore bvs = new BeanValueStore(customer);
+        bvs.store("name", "Lobsang Rampa");
+        bvs.store("birthDt", birthDt);
+        bvs.store("balance", BigDecimal.valueOf(20.25));
+        bvs.store("id", 16);
+        bvs.store("address.line1", "17, I Close, 5th Avenue");
+        bvs.store("address.line2", "Festac Town");
+        bvs.save(Arrays.asList("name", "balance"));
+        bvs.save("address.line1");
+        
+        bvs.store("name", "Brain Jotter");
+        bvs.store("balance", BigDecimal.valueOf(250.48));
+        bvs.store("address.line1", "52, J Close, 8th Avenue");
+        assertEquals("Brain Jotter", customer.getName());
+        assertEquals(birthDt, customer.getBirthDt());
+        assertEquals(BigDecimal.valueOf(250.48), customer.getBalance());
+        assertEquals(Long.valueOf(16), customer.getId());
+        assertEquals("52, J Close, 8th Avenue", customer.getAddress().getLine1());
+        assertEquals("Festac Town", customer.getAddress().getLine2());
+        
+        bvs.restore();
         assertEquals("Lobsang Rampa", customer.getName());
         assertEquals(birthDt, customer.getBirthDt());
         assertEquals(BigDecimal.valueOf(20.25), customer.getBalance());

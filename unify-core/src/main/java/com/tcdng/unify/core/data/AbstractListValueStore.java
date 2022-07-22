@@ -191,11 +191,6 @@ public abstract class AbstractListValueStore<T> extends AbstractValueStore {
     }
 
     @Override
-    public void setDataIndex(int dataIndex) {
-        this.dataIndex = dataIndex;
-    }
-
-    @Override
     public Object getValueObject() {
         return storage;
     }
@@ -234,6 +229,11 @@ public abstract class AbstractListValueStore<T> extends AbstractValueStore {
     @Override
     public int size() {
         return storage.size();
+    }
+
+    @Override
+    protected void doSetDataIndex(int dataIndex) {
+        this.dataIndex = dataIndex;
     }
 
     @Override
