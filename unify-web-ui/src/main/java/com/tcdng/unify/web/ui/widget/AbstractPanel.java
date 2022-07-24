@@ -32,6 +32,7 @@ import com.tcdng.unify.web.ui.widget.data.Hint.MODE;
 import com.tcdng.unify.web.ui.widget.data.MessageBox;
 import com.tcdng.unify.web.ui.widget.data.MessageIcon;
 import com.tcdng.unify.web.ui.widget.data.MessageMode;
+import com.tcdng.unify.web.ui.widget.data.MessageResult;
 
 /**
  * Serves as the base class for a panel.
@@ -272,5 +273,13 @@ public abstract class AbstractPanel extends AbstractContainer implements Panel {
         setSessionAttribute(UnifyWebSessionAttributeConstants.MESSAGEBOX,
                 new MessageBox(messageIcon, messageMode, caption, message, fullActionPath));
         setCommandResultMapping("showapplicationmessage");
+    }
+
+    protected MessageResult getMessageResult() throws UnifyException {
+        return getRequestTarget(MessageResult.class);
+    }
+    
+    protected String getCommandFullPath(String actionName) throws UnifyException {
+        return getPage().getPathId() + "/command?req_cmd=" + getId() + "->" + actionName;
     }
 }
