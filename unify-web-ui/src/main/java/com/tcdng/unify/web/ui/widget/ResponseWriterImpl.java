@@ -398,8 +398,10 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 		buf.append("{\"target\":\"").append(panel.getId()).append('"');
 		buf.append(",\"html\":");
 		buf.appendJsonQuoted(htmlLsw);
-		buf.append(",\"script\":");
-		buf.append(scriptLsw);
+        if (!scriptLsw.isEmpty()) {
+            buf.append(",\"script\":");
+            buf.append(scriptLsw);
+        }
 		buf.append('}');
 		return this;
 	}
@@ -418,8 +420,10 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 		buf.append("{\"target\":\"").append(sectionPageName).append('"');
 		buf.append(",\"html\":");
 		buf.appendJsonQuoted(htmlLsw);
-		buf.append(",\"script\":");
-		buf.append(scriptLsw);
+		if (!scriptLsw.isEmpty()) {
+	        buf.append(",\"script\":");
+	        buf.append(scriptLsw);
+		}
 		buf.append('}');
 		return this;
 	}
