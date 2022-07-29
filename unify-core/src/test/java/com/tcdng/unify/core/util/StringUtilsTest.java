@@ -28,8 +28,8 @@ import org.junit.Test;
 
 import com.tcdng.unify.core.data.BeanValueStore;
 import com.tcdng.unify.core.data.ListData;
+import com.tcdng.unify.core.data.StringToken;
 import com.tcdng.unify.core.data.ValueStore;
-import com.tcdng.unify.core.util.StringUtils.StringToken;
 
 /**
  * StringUtils tests.

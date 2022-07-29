@@ -77,6 +77,8 @@ public interface ApplicationComponents {
 
     String APPLICATION_PARAMETERSERVICE = "parameterservice";
 
+    String APPLICATION_PARAMGENERATORMANAGER = "application-paramgeneratormanager";
+
     String APPLICATION_PROXYBUSINESSSERVICEGENERATOR = "application-proxybusinessservicegenerator";
 
     String APPLICATION_REGEXPATTERNSTORE = "appication-regexpatternstore";

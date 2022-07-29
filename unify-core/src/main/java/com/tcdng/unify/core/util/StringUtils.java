@@ -26,6 +26,7 @@ import java.util.Map;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.data.ListData;
 import com.tcdng.unify.core.data.PackableDoc;
+import com.tcdng.unify.core.data.StringToken;
 import com.tcdng.unify.core.data.ValueStore;
 
 /**
@@ -860,6 +861,20 @@ public final class StringUtils {
         return sb.toString();
     }
 
+    public static String buildParameterizedString(List<StringToken> tokenList, ValueStore valueStore, int storageIndex)
+            throws UnifyException {
+        String result = null;
+        int _storageIndex = valueStore.getDataIndex();
+        try {
+            valueStore.setDataIndex(storageIndex);
+            result = StringUtils.buildParameterizedString(tokenList, valueStore);
+        } finally {
+            valueStore.setDataIndex(_storageIndex);
+        }
+
+        return result;
+    }
+
     public static String buildParameterizedString(List<StringToken> tokenList, ValueStore valueStore)
             throws UnifyException {
         if (DataUtils.isBlank(tokenList)) {
@@ -885,58 +900,9 @@ public final class StringUtils {
         return sb.toString();
     }
 
-    public static String buildParameterizedString(List<StringToken> tokenList, ValueStore valueStore, int storageIndex)
-            throws UnifyException {
-        if (DataUtils.isBlank(tokenList)) {
-            return "";
-        }
-
-        StringBuilder sb = new StringBuilder();
-        for (StringToken stringToken : tokenList) {
-            if (stringToken.isParam()) {
-                Object val = valueStore.getTempValue(stringToken.getToken());
-                if (val == null) {
-                    val = valueStore.retrieve(storageIndex, stringToken.getToken());
-                }
-
-                if (val != null) {
-                    sb.append(val);
-                }
-            } else {
-                sb.append(stringToken.getToken());
-            }
-        }
-
-        return sb.toString();
-    }
-
     public static void truncate(StringBuilder sb) {
         if (sb != null) {
             sb.delete(0, sb.length());
-        }
-    }
-
-    public static class StringToken {
-
-        private String token;
-
-        private boolean param;
-
-        public StringToken(String token) {
-            this(token, false);
-        }
-
-        public StringToken(String token, boolean param) {
-            this.token = token;
-            this.param = param;
-        }
-
-        public String getToken() {
-            return token;
-        }
-
-        public boolean isParam() {
-            return param;
         }
     }
 
