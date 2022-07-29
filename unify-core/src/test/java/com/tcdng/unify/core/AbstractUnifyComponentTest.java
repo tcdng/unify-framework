@@ -94,9 +94,9 @@ public abstract class AbstractUnifyComponentTest {
      * Returns names of all components that are of a particular type.
      * 
      * @param componentClass
-     *            the component type
+     *                       the component type
      * @throws Exception
-     *             if an error occurs
+     *                   if an error occurs
      */
     protected List<String> getComponentNames(Class<? extends UnifyComponent> componentClass) throws Exception {
         return container.getComponentNames(componentClass);
@@ -106,9 +106,9 @@ public abstract class AbstractUnifyComponentTest {
      * Returns all configurations that are of a particular type.
      * 
      * @param componentClass
-     *            the component type
+     *                       the component type
      * @throws Exception
-     *             if an error occurs
+     *                   if an error occurs
      */
     protected List<UnifyComponentConfig> getComponentConfigs(Class<? extends UnifyComponent> componentClass)
             throws Exception {
@@ -119,9 +119,9 @@ public abstract class AbstractUnifyComponentTest {
      * Returns a component configuration using supplied name.
      * 
      * @param name
-     *            the component name
+     *             the component name
      * @throws Exception
-     *             if an error occurs
+     *                   if an error occurs
      */
     protected UnifyComponentConfig getComponentConfig(String name) throws Exception {
         return container.getComponentConfig(name);
@@ -131,11 +131,11 @@ public abstract class AbstractUnifyComponentTest {
      * Returns a non-singleton component using supplied name and alternate settings.
      * 
      * @param name
-     *            the component name
+     *                    the component name
      * @param altSettings
-     *            the alternate settings
+     *                    the alternate settings
      * @throws Exception
-     *             if an error occurs
+     *                   if an error occurs
      */
     protected UnifyComponent getComponent(String name, Setting... altSettings) throws Exception {
         return container.getComponent(name, altSettings);
@@ -145,23 +145,58 @@ public abstract class AbstractUnifyComponentTest {
      * Returns a component using supplied name.
      * 
      * @param name
-     *            the component name
+     *             the component name
      * @throws Exception
-     *             if an error occurs
+     *                   if an error occurs
      */
     protected UnifyComponent getComponent(String name) throws Exception {
         return container.getComponent(name);
     }
 
     /**
+     * Returns a non-singleton component using supplied name and alternate settings.
+     * 
+     * @param componentType
+     *                      the component type
+     * @param name
+     *                      the component name
+     * @param altSettings
+     *                      the alternate settings
+     * @return the component instance
+     * @throws Exception
+     *                   if an error occurs
+     */
+    @SuppressWarnings("unchecked")
+    protected <T extends UnifyComponent> T getComponent(Class<T> componentType, String name, Setting... altSettings)
+            throws Exception {
+        return (T) container.getComponent(name, altSettings);
+    }
+
+    /**
+     * Returns a component using supplied name.
+     * 
+     * @param componentType
+     *                      the component type
+     * @param name
+     *                      the component name
+     * @return the component instance
+     * @throws Exception
+     *                   if an error occurs
+     */
+    @SuppressWarnings("unchecked")
+    protected <T extends UnifyComponent> T getComponent(Class<T> componentType, String name) throws Exception {
+        return (T) container.getComponent(name);
+    }
+
+    /**
      * Returns a UPL component using supplied name.
      * 
      * @param locale
-     *            the locale
+     *                   the locale
      * @param descriptor
-     *            the component name
+     *                   the component name
      * @throws Exception
-     *             if an error occurs
+     *                   if an error occurs
      */
     protected UnifyComponent getUplComponent(Locale locale, String descriptor) throws Exception {
         return container.getUplComponent(locale, descriptor, false);
@@ -171,7 +206,7 @@ public abstract class AbstractUnifyComponentTest {
      * Returns application context.
      * 
      * @throws UnifyException
-     *             if an error occurs
+     *                        if an error occurs
      */
     protected ApplicationContext getApplicationContext() throws UnifyException {
         return container.getApplicationContext();
@@ -181,7 +216,7 @@ public abstract class AbstractUnifyComponentTest {
      * Adds settings and dependencies to test.
      * 
      * @throws Exception
-     *             if an error occurs
+     *                   if an error occurs
      */
     private static void addSettingsAndDependencies() throws Exception {
         addContainerSetting(UnifyCorePropertyConstants.APPLICATION_TOCONSOLE, "false");
@@ -197,7 +232,7 @@ public abstract class AbstractUnifyComponentTest {
      * Setup settings and dependencies required for test.
      * 
      * @throws Exception
-     *             if an error occurs
+     *                   if an error occurs
      */
     protected void doAddSettingsAndDependencies() throws Exception {
 
@@ -207,11 +242,11 @@ public abstract class AbstractUnifyComponentTest {
      * Adds a container setting.
      * 
      * @param name
-     *            the setting's name
+     *              the setting's name
      * @param value
-     *            the setting value
+     *              the setting value
      * @throws Exception
-     *             if an error occurs
+     *                   if an error occurs
      */
     protected static void addContainerSetting(String name, Object value) throws Exception {
         uccb.setProperty(name, value);
@@ -222,13 +257,13 @@ public abstract class AbstractUnifyComponentTest {
      * more than one dependency.
      * 
      * @param name
-     *            the component name
+     *                       the component name
      * @param componentClass
-     *            the component class
+     *                       the component class
      * @param settings
-     *            the configuration parameters
+     *                       the configuration parameters
      * @throws Exception
-     *             if an error occurs
+     *                   if an error occurs
      */
     protected static void addDependency(String name, Class<? extends UnifyComponent> componentClass,
             Setting... settings) throws Exception {
@@ -240,15 +275,15 @@ public abstract class AbstractUnifyComponentTest {
      * more than one dependency.
      * 
      * @param name
-     *            the component name
+     *                       the component name
      * @param componentClass
-     *            the component class
+     *                       the component class
      * @param singleton
-     *            indicates if component should be a singleton
+     *                       indicates if component should be a singleton
      * @param settings
-     *            the configuration parameters
+     *                       the configuration parameters
      * @throws Exception
-     *             if an error occurs
+     *                   if an error occurs
      */
     protected static void addDependency(String name, Class<? extends UnifyComponent> componentClass, boolean singleton,
             Setting... settings) throws Exception {
@@ -260,17 +295,17 @@ public abstract class AbstractUnifyComponentTest {
      * more than one dependency.
      * 
      * @param name
-     *            the component name
+     *                       the component name
      * @param componentClass
-     *            the component class
+     *                       the component class
      * @param singleton
-     *            indicates if component should be a singleton
+     *                       indicates if component should be a singleton
      * @param overwrite
-     *            indicates if component overwrite is allowed
+     *                       indicates if component overwrite is allowed
      * @param settings
-     *            the configuration parameters
+     *                       the configuration parameters
      * @throws Exception
-     *             if an error occurs
+     *                   if an error occurs
      */
     protected static void addDependency(String name, Class<? extends UnifyComponent> componentClass, boolean singleton,
             boolean overwrite, Setting... settings) throws Exception {
@@ -285,8 +320,8 @@ public abstract class AbstractUnifyComponentTest {
 
     protected Object createRecord(Entity record) throws Exception {
         Database db = (Database) getComponent(ApplicationComponents.APPLICATION_DATABASE);
-        DatabaseTransactionManager tm =
-                (DatabaseTransactionManager) getComponent(ApplicationComponents.APPLICATION_DATABASETRANSACTIONMANAGER);
+        DatabaseTransactionManager tm = (DatabaseTransactionManager) getComponent(
+                ApplicationComponents.APPLICATION_DATABASETRANSACTIONMANAGER);
         tm.beginTransaction();
         try {
             return db.create(record);
@@ -297,8 +332,8 @@ public abstract class AbstractUnifyComponentTest {
 
     protected <T extends Entity> T findRecord(Class<T> clazz, Object id) throws Exception {
         Database db = (Database) getComponent(ApplicationComponents.APPLICATION_DATABASE);
-        DatabaseTransactionManager tm =
-                (DatabaseTransactionManager) getComponent(ApplicationComponents.APPLICATION_DATABASETRANSACTIONMANAGER);
+        DatabaseTransactionManager tm = (DatabaseTransactionManager) getComponent(
+                ApplicationComponents.APPLICATION_DATABASETRANSACTIONMANAGER);
         tm.beginTransaction();
         try {
             return db.list(clazz, id);
@@ -310,8 +345,8 @@ public abstract class AbstractUnifyComponentTest {
     @SuppressWarnings("unchecked")
     protected void deleteAll(Class<? extends Entity>... typeList) throws Exception {
         Database db = (Database) getComponent(ApplicationComponents.APPLICATION_DATABASE);
-        DatabaseTransactionManager tm =
-                (DatabaseTransactionManager) getComponent(ApplicationComponents.APPLICATION_DATABASETRANSACTIONMANAGER);
+        DatabaseTransactionManager tm = (DatabaseTransactionManager) getComponent(
+                ApplicationComponents.APPLICATION_DATABASETRANSACTIONMANAGER);
         tm.beginTransaction();
         try {
             for (Class<? extends Entity> type : typeList) {
@@ -328,8 +363,8 @@ public abstract class AbstractUnifyComponentTest {
 
     protected int countAll(Class<? extends Entity> typeClass) throws Exception {
         Database db = (Database) getComponent(ApplicationComponents.APPLICATION_DATABASE);
-        DatabaseTransactionManager tm =
-                (DatabaseTransactionManager) getComponent(ApplicationComponents.APPLICATION_DATABASETRANSACTIONMANAGER);
+        DatabaseTransactionManager tm = (DatabaseTransactionManager) getComponent(
+                ApplicationComponents.APPLICATION_DATABASETRANSACTIONMANAGER);
         tm.beginTransaction();
         try {
             return db.countAll(Query.of(typeClass).addGreaterThan("id", 0L).ignoreEmptyCriteria(true));
