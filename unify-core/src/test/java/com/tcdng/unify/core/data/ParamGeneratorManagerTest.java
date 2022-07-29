@@ -49,7 +49,7 @@ public class ParamGeneratorManagerTest extends AbstractUnifyComponentTest {
                 generatorValueStore, tokenList);
         assertNotNull(generator);
 
-        String txt = generator.generate(tokenList);
+        String txt = generator.generate();
         assertEquals("Hello John. You are 25 years old.", txt);
     }
 
@@ -66,11 +66,11 @@ public class ParamGeneratorManagerTest extends AbstractUnifyComponentTest {
                 generatorValueStore, tokenList);
         assertNotNull(generator);
 
-        String txt = generator.generate(tokenList);
+        String txt = generator.generate();
         assertEquals("Hello John. You are 25 years old.", txt);
 
         generator.setDataIndex(1);
-        txt = generator.generate(tokenList);
+        txt = generator.generate();
         assertEquals("Hello Bashir. You are 45 years old.", txt);
     }
 
@@ -86,7 +86,7 @@ public class ParamGeneratorManagerTest extends AbstractUnifyComponentTest {
                 generatorValueStore, tokenList);
         assertNotNull(generator);
 
-        String txt = generator.generate(tokenList);
+        String txt = generator.generate();
         assertEquals("My address: Apapa Lagos - (B) 38 Warehouse Road - (A).", txt);
     }
 
@@ -102,7 +102,7 @@ public class ParamGeneratorManagerTest extends AbstractUnifyComponentTest {
                 generatorValueStore, tokenList);
         assertNotNull(generator);
 
-        String txt = generator.generate(tokenList);
+        String txt = generator.generate();
         assertEquals("Apapa Lagos - (B) Hello Sam 38 Warehouse Road - (A).", txt);
     }
 
@@ -119,11 +119,11 @@ public class ParamGeneratorManagerTest extends AbstractUnifyComponentTest {
                 generatorValueStore, tokenList);
         assertNotNull(generator);
 
-        String txt = generator.generate(tokenList);
+        String txt = generator.generate();
         assertEquals("Apapa Lagos - (B) Hello Samuel 38 Warehouse Road - (A).", txt);
 
         generator.setDataIndex(1);
-        txt = generator.generate(tokenList);
+        txt = generator.generate();
         assertEquals("Apapa Lagos - (B) Hello James 38 Warehouse Road - (A).", txt);
     }
 

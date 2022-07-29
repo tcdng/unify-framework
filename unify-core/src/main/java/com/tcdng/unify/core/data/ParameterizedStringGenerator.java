@@ -34,16 +34,19 @@ public class ParameterizedStringGenerator {
 
     private ValueStore generatorValueStore;
 
+    private List<StringToken> tokenList;
+    
     private Map<StringToken, ParamGenerator> generators;
 
     public ParameterizedStringGenerator(ValueStore paramValueStore, ValueStore generatorValueStore,
-            Map<StringToken, ParamGenerator> generators) {
+            List<StringToken> tokenList, Map<StringToken, ParamGenerator> generators) {
         this.paramValueStore = paramValueStore;
         this.generatorValueStore = generatorValueStore;
+        this.tokenList = tokenList;
         this.generators = generators;
     }
 
-    public String generate(List<StringToken> tokenList) throws UnifyException {
+    public String generate() throws UnifyException {
         if (DataUtils.isBlank(tokenList)) {
             return "";
         }

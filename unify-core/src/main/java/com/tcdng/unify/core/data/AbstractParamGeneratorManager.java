@@ -69,7 +69,7 @@ public abstract class AbstractParamGeneratorManager extends AbstractUnifyCompone
             }
         }
 
-        return new ParameterizedStringGenerator(paramValueStore, generatorValueStore, _generators);
+        return new ParameterizedStringGenerator(paramValueStore, generatorValueStore, tokenList, _generators);
     }
 
     @Override
