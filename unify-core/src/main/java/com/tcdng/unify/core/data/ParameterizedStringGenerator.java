@@ -66,8 +66,9 @@ public class ParameterizedStringGenerator {
         return paramValueStore.getDataIndex();
     }
 
-    public void setDataIndex(int dataIndex) {
+    public ParameterizedStringGenerator setDataIndex(int dataIndex) {
         paramValueStore.setDataIndex(dataIndex);
+        return this;
     }
 
     private Object getParam(StringToken key) throws UnifyException {
