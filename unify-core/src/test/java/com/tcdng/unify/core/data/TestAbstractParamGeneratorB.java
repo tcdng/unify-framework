@@ -29,8 +29,9 @@ import com.tcdng.unify.core.annotation.Component;
 public class TestAbstractParamGeneratorB extends AbstractParamGenerator {
 
     @Override
-    public Object generate(ValueStoreReader reader, StringToken key) throws UnifyException {
-        return reader.read("address2") + " - (B)";
+    public Object generate(ValueStoreReader itemReader, ValueStoreReader parentReader, StringToken key)
+            throws UnifyException {
+        return parentReader.read("address2") + " - " + itemReader.read("name");
     }
 
 }

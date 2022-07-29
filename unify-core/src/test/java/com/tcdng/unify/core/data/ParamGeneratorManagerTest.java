@@ -87,7 +87,7 @@ public class ParamGeneratorManagerTest extends AbstractUnifyComponentTest {
         assertNotNull(generator);
 
         String txt = generator.generate();
-        assertEquals("My address: Apapa Lagos - (B) 38 Warehouse Road - (A).", txt);
+        assertEquals("My address: Apapa Lagos - John 38 Warehouse Road - 25.", txt);
     }
 
     @Test
@@ -103,7 +103,7 @@ public class ParamGeneratorManagerTest extends AbstractUnifyComponentTest {
         assertNotNull(generator);
 
         String txt = generator.generate();
-        assertEquals("Apapa Lagos - (B) Hello Sam 38 Warehouse Road - (A).", txt);
+        assertEquals("Apapa Lagos - Sam Hello Sam 38 Warehouse Road - 25.", txt);
     }
 
     @Test
@@ -120,11 +120,11 @@ public class ParamGeneratorManagerTest extends AbstractUnifyComponentTest {
         assertNotNull(generator);
 
         String txt = generator.generate();
-        assertEquals("Apapa Lagos - (B) Hello Samuel 38 Warehouse Road - (A).", txt);
+        assertEquals("Apapa Lagos - Samuel Hello Samuel 38 Warehouse Road - 25.", txt);
 
         generator.setDataIndex(1);
         txt = generator.generate();
-        assertEquals("Apapa Lagos - (B) Hello James 38 Warehouse Road - (A).", txt);
+        assertEquals("Apapa Lagos - James Hello James 38 Warehouse Road - 45.", txt);
     }
 
     @Test(expected = UnifyException.class)

@@ -30,13 +30,15 @@ public interface ParamGenerator extends UnifyComponent {
     /**
      * Generates parameter value
      * 
-     * @param reader
-     *               the value store reader
+     * @param itemReader
+     *               the item reader
+     * @param parentReader
+     *               the parent reader
      * @param key
      *               the generator key
      * @return the generated parameter value
      * @throws UnifyException
      *                        if an error occurs
      */
-    Object generate(ValueStoreReader reader, StringToken key) throws UnifyException;
+    Object generate(ValueStoreReader itemReader, ValueStoreReader parentReader, StringToken key) throws UnifyException;
 }

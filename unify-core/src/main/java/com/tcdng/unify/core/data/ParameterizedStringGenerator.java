@@ -30,18 +30,18 @@ import com.tcdng.unify.core.util.DataUtils;
  */
 public class ParameterizedStringGenerator {
 
-    private ValueStore paramValueStore;
+    private ValueStore itemValueStore;
 
-    private ValueStore generatorValueStore;
+    private ValueStore parentValueStore;
 
     private List<StringToken> tokenList;
-    
+
     private Map<StringToken, ParamGenerator> generators;
 
-    public ParameterizedStringGenerator(ValueStore paramValueStore, ValueStore generatorValueStore,
+    public ParameterizedStringGenerator(ValueStore itemValueStore, ValueStore parentValueStore,
             List<StringToken> tokenList, Map<StringToken, ParamGenerator> generators) {
-        this.paramValueStore = paramValueStore;
-        this.generatorValueStore = generatorValueStore;
+        this.itemValueStore = itemValueStore;
+        this.parentValueStore = parentValueStore;
         this.tokenList = tokenList;
         this.generators = generators;
     }
@@ -63,11 +63,11 @@ public class ParameterizedStringGenerator {
     }
 
     public int getDataIndex() {
-        return paramValueStore.getDataIndex();
+        return itemValueStore.getDataIndex();
     }
 
     public ParameterizedStringGenerator setDataIndex(int dataIndex) {
-        paramValueStore.setDataIndex(dataIndex);
+        itemValueStore.setDataIndex(dataIndex);
         return this;
     }
 
@@ -76,11 +76,13 @@ public class ParameterizedStringGenerator {
         if (key.isParam()) {
             if (key.isGenerator()) {
                 ParamGenerator generator = generators.get(key);
-                val = generator != null ? generator.generate(generatorValueStore.getReader(), key) : null;
+                val = generator != null
+                        ? generator.generate(itemValueStore.getReader(), parentValueStore.getReader(), key)
+                        : null;
             } else {
-                val = paramValueStore.getTempValue(key.getToken());
+                val = itemValueStore.getTempValue(key.getToken());
                 if (val == null) {
-                    val = paramValueStore.retrieve(key.getToken());
+                    val = itemValueStore.retrieve(key.getToken());
                 }
             }
         } else {
