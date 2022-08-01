@@ -76,9 +76,8 @@ public class ParameterizedStringGenerator {
         if (key.isParam()) {
             if (key.isGenerator()) {
                 ParamGenerator generator = generators.get(key);
-                val = generator != null
-                        ? generator.generate(itemValueStore.getReader(), parentValueStore.getReader(), key)
-                        : null;
+                val = generator != null ? generator.generate(itemValueStore != null ? itemValueStore.getReader() : null,
+                        parentValueStore != null ? parentValueStore.getReader() : null, key) : null;
             } else {
                 val = itemValueStore.getTempValue(key.getToken());
                 if (val == null) {
