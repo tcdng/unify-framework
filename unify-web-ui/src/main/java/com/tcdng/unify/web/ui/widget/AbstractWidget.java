@@ -717,6 +717,18 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
         return list;
     }
 
+    protected boolean resolveBooleanAttribute(String attribute, String bindingAttribute) throws UnifyException {
+        boolean result = getUplAttribute(boolean.class, attribute);
+        if (!result) {
+            String binding = getUplAttribute(String.class, bindingAttribute);
+            if (!StringUtils.isBlank(binding)) {
+                return getValue(boolean.class, binding);
+            }
+        }
+
+        return result;
+    }
+    
     private String getWorkId() throws UnifyException {
         return getPrefixedId("wrk_");
     }
