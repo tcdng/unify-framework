@@ -17,9 +17,6 @@
 package com.tcdng.unify.core.data;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
-
-import com.tcdng.unify.core.UnifyException;
 
 /**
  * Value store simple calculator
@@ -27,51 +24,13 @@ import com.tcdng.unify.core.UnifyException;
  * @author The Code Department
  * @since 1.0
  */
-public class ValueStoreSimpleCalculator {
-
-    private ValueStore valueStore;
-
-    private BigDecimal result;
-
-    public ValueStoreSimpleCalculator(ValueStore valueStore) {
-        this.valueStore = valueStore;
-        this.result = BigDecimal.ZERO;
-    }
+public class ValueStoreSimpleCalculator extends ValueStoreReaderSimpleCalculator {
 
     public ValueStoreSimpleCalculator(ValueStore valueStore, BigDecimal initial) {
-        this.valueStore = valueStore;
-        this.result = initial;
+        super(valueStore.getReader(), initial);
     }
 
-    public ValueStoreSimpleCalculator add(String fieldName) throws UnifyException {
-        BigDecimal fieldValue = valueStore.retrieve(BigDecimal.class, fieldName);
-        result = result.add(fieldValue != null ? fieldValue : BigDecimal.ZERO);
-        return this;
-    }
-
-    public ValueStoreSimpleCalculator subtract(String fieldName) throws UnifyException {
-        BigDecimal fieldValue = valueStore.retrieve(BigDecimal.class, fieldName);
-        result = result.subtract(fieldValue != null ? fieldValue : BigDecimal.ZERO);
-        return this;
-    }
-
-    public ValueStoreSimpleCalculator multiply(String fieldName) throws UnifyException {
-        BigDecimal fieldValue = valueStore.retrieve(BigDecimal.class, fieldName);
-        result = result.multiply(fieldValue != null ? fieldValue : BigDecimal.ZERO);
-        return this;
-    }
-
-    public ValueStoreSimpleCalculator divide(String fieldName, RoundingMode roundingMode) throws UnifyException {
-        BigDecimal fieldValue = valueStore.retrieve(BigDecimal.class, fieldName);
-        result = result.divide(fieldValue != null ? fieldValue : BigDecimal.ZERO, roundingMode);
-        return this;
-    }
-
-    public BigDecimal getResult() {
-        return result;
-    }
-
-    public void clear() {
-        result = BigDecimal.ZERO;
+    public ValueStoreSimpleCalculator(ValueStore valueStore) {
+        super(valueStore.getReader());
     }
 }
