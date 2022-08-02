@@ -5406,6 +5406,18 @@ ux.decodeHtml = function(html) {
     return elem.value;	
 }
 
+const UNESCAPE_MAP = {
+		  '&amp;' : '&',
+		  '&lt;' : '<',
+		  '&gt;' : '>',
+		  '&quot;' : '"',
+		  '&#039;' : "'"
+		};
+
+ux.unescape = function (str) {
+  return str ? str.replace(/&lt;|&gt;|&quot;|&#039;|&amp;/g , function(k) { return UNESCAPE_MAP[k]; }): "";
+}
+
 ux.findParent = function(domObject, tagName) {
 	if (domObject) {
 		while (domObject = domObject.parentNode) {
