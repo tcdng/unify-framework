@@ -5415,7 +5415,7 @@ const UNESCAPE_MAP = {
 		};
 
 ux.unescape = function (str) {
-  return str.replace(/&lt;|&gt;|&quot;|&#039;|&amp;/g , function(k) { return UNESCAPE_MAP[k]; });
+  return str ? str.replace(/&lt;|&gt;|&quot;|&#039;|&amp;/g , function(k) { return UNESCAPE_MAP[k]; }): "";
 }
 
 ux.findParent = function(domObject, tagName) {
