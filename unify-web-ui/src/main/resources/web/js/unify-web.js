@@ -1569,8 +1569,9 @@ ux.rigDateField = function(rgp) {
 		df._disableClass = rgp.pDisableClass;
 		df._standard = rgp.pType == "standard";
 		df._past = rgp.pType == "past";
+		df._past_today = rgp.pType == "past_today";
 		df._future = rgp.pType == "future";
-		df._supportYear = df._standard | df._past | df._future;
+		df._supportYear = df._standard | df._past | df._past_today | df._future;
 		df._pop = rgp.pEnabled;
 		
 		// Month Select
@@ -1602,7 +1603,7 @@ ux.rigDateField = function(rgp) {
 			
 			var currYear = new Date().getFullYear();
 			var start_year = df._future ? currYear: currYear - 100;
-			var end_year = df._past ? currYear: currYear + 50;
+			var end_year = (df._past || df._past_today) ? currYear: currYear + 50;
 
 			var html = [];
 			for (var i = start_year; i <= end_year; i++) {
@@ -1718,7 +1719,7 @@ ux.rigDateField = function(rgp) {
 						calendarHtml += "</th>";
 					}
 					calendarHtml += "</tr>";
-					if (this._past) {
+					if (this._past || this._past_today) {
 						_id("btnt_" + id).disabled = true;
 					}
 					while (!done) {
@@ -1733,7 +1734,8 @@ ux.rigDateField = function(rgp) {
 								}
 								if (dayCount <= daysInMonth) {
 									var disableDay = (this._future && (selectCheck.getTime() < todayCheck.getTime()))
-											|| (this._past && (selectCheck.getTime() >= todayCheck.getTime()));
+											|| (this._past && (selectCheck.getTime() >= todayCheck.getTime()))
+											|| (this._past_today && (selectCheck.getTime() > todayCheck.getTime()));
 									if (disableDay) {
 										calendarHtml += "<span class=\"" + this._disableClass
 										+ "\">" + dayCount + "</span>";
