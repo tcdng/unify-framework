@@ -30,6 +30,7 @@ public enum DateFieldType implements EnumConst {
     STANDARD("STN"),
     FUTURE("FTR"),
     PAST("PST"),
+    PAST_TODAY("PTT"),
     YEAR_END("YND");
 
     private final String code;
