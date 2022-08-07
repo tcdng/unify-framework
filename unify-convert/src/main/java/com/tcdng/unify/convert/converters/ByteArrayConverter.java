@@ -15,6 +15,10 @@
  */
 package com.tcdng.unify.convert.converters;
 
+import java.nio.charset.StandardCharsets;
+
+import org.apache.commons.codec.binary.Base64;
+
 /**
  * Byte array converter.
  * 
@@ -29,6 +33,10 @@ public class ByteArrayConverter extends AbstractConverter<byte[]> {
             return (byte[]) value;
         }
 
+        if (value instanceof String) {
+            return Base64.decodeBase64(((String) value).getBytes(StandardCharsets.UTF_8));
+        }
+        
         return null;
     }
 
