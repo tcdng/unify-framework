@@ -43,4 +43,8 @@ public class Hint {
     public String getMessage() {
         return message;
     }
+    
+    public String key() {
+        return mode + message;
+    }
 }
