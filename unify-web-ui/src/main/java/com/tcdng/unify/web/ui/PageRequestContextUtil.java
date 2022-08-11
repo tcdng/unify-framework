@@ -29,6 +29,7 @@ import com.tcdng.unify.web.ui.widget.Document;
 import com.tcdng.unify.web.ui.widget.Page;
 import com.tcdng.unify.web.ui.widget.Panel;
 import com.tcdng.unify.web.ui.widget.data.Hint;
+import com.tcdng.unify.web.ui.widget.data.Hints;
 import com.tcdng.unify.web.ui.widget.data.MessageIcon;
 import com.tcdng.unify.web.ui.widget.data.ValidationInfo;
 
@@ -532,7 +533,7 @@ public interface PageRequestContextUtil extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    List<Hint> getUserHints() throws UnifyException;
+    Hints getUserHints() throws UnifyException;
     
     /**
      * Clears all hint user in current request.

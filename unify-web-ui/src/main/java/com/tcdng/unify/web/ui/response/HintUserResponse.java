@@ -15,8 +15,6 @@
  */
 package com.tcdng.unify.web.ui.response;
 
-import java.util.List;
-
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.web.annotation.ResultMapping;
@@ -24,6 +22,7 @@ import com.tcdng.unify.web.ui.AbstractJsonPageControllerResponse;
 import com.tcdng.unify.web.ui.widget.Page;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.data.Hint;
+import com.tcdng.unify.web.ui.widget.data.Hints;
 
 /**
  * Used for generating a hint user response. This response is implicitly added
@@ -43,12 +42,12 @@ public class HintUserResponse extends AbstractJsonPageControllerResponse {
     @Override
     protected void doGenerate(ResponseWriter writer, Page page) throws UnifyException {
         logDebug("Preparing hint user response: path ID = [{0}]", page.getPathId());
-        List<Hint> hintList = getRequestContextUtil().getUserHints();
-        if (hintList != null && !hintList.isEmpty()) {
+        Hints hints = getRequestContextUtil().getUserHints();
+        if (hints != null && hints.isPresent()) {
             writer.write(",\"hintUserHtml\":");
             StringBuilder hsb = new StringBuilder();
             hsb.append("<div class=\"ui-user-hint\">");
-            for (Hint hint : hintList) {
+            for (Hint hint : hints.getHints()) {
                 hsb.append("<span class=\"");
                 switch (hint.getMode()) {
                     case ERROR:

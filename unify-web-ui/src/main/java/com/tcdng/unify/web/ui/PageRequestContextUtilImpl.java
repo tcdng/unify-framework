@@ -42,6 +42,7 @@ import com.tcdng.unify.web.ui.widget.Document;
 import com.tcdng.unify.web.ui.widget.Page;
 import com.tcdng.unify.web.ui.widget.Panel;
 import com.tcdng.unify.web.ui.widget.data.Hint;
+import com.tcdng.unify.web.ui.widget.data.Hints;
 import com.tcdng.unify.web.ui.widget.data.MessageIcon;
 import com.tcdng.unify.web.ui.widget.data.ValidationInfo;
 
@@ -466,18 +467,18 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
 
     @Override
     public void hintUser(Hint.MODE mode, String message, Object... params) throws UnifyException {
-        List<Hint> hintList = (List<Hint>) getRequestAttribute(USER_HINT_LIST);
-        if (hintList == null) {
-            hintList = new ArrayList<Hint>();
-            setRequestAttribute(USER_HINT_LIST, hintList);
+        Hints hints = (Hints) getRequestAttribute(USER_HINT_LIST);
+        if (hints == null) {
+            hints = new Hints();
+            setRequestAttribute(USER_HINT_LIST, hints);
         }
 
-        hintList.add(new Hint(mode, resolveSessionMessage(message, params)));
+        hints.add(mode, resolveSessionMessage(message, params));
     }
 
     @Override
-    public List<Hint> getUserHints() throws UnifyException {
-        return (List<Hint>) getRequestAttribute(USER_HINT_LIST);
+    public Hints getUserHints() throws UnifyException {
+        return (Hints) getRequestAttribute(USER_HINT_LIST);
     }
 
     @Override
