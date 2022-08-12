@@ -647,6 +647,18 @@ public interface PageRequestContextUtil extends UnifyComponent {
     List<String> getNoPushWidgetIds() throws UnifyException;
     
     /**
+     * Adds a list item to the current request context.
+     * 
+     * @param listName
+     *                 the list name
+     * @param item
+     *                 the item to add
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    void addListItem(String listName, String item) throws UnifyException;
+    
+    /**
      * Registers a widget for debounce in current request.
      * 
      * @param widgetId

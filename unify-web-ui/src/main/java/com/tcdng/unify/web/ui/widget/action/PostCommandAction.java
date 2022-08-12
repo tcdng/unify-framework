@@ -30,6 +30,7 @@ import com.tcdng.unify.web.ui.widget.AbstractPageAction;
 @Component("ui-postcommand")
 @UplAttributes({ @UplAttribute(name = "command", type = String.class, defaultVal = "switchState"),
         @UplAttribute(name = "target", type = String.class),
+        @UplAttribute(name = "pushComponents", type = String.class),
         @UplAttribute(name = "validations", type = UplElementReferences.class),
         @UplAttribute(name = "refresh", type = UplElementReferences.class),
         @UplAttribute(name = "debounce", type = boolean.class, defaultVal = "true")})
