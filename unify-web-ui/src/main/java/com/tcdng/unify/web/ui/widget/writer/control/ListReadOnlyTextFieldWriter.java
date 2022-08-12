@@ -19,6 +19,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.constant.LocaleType;
+import com.tcdng.unify.core.data.Listable;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ui.widget.control.ListReadOnlyTextField;
 import com.tcdng.unify.web.ui.widget.control.TextField;
@@ -38,8 +39,13 @@ public class ListReadOnlyTextFieldWriter extends TextFieldWriter {
         ListReadOnlyTextField listReadOnlyTextField = (ListReadOnlyTextField) textField;
         String list = listReadOnlyTextField.getList();
         String itemKey = listReadOnlyTextField.getStringValue();
-        return !StringUtils.isBlank(itemKey) ? getListItemByKey(LocaleType.SESSION, list, itemKey).getListDescription()
-                : null;
+        if (!StringUtils.isBlank(itemKey)) {
+            Listable listable = getListItemByKey(LocaleType.SESSION, list, itemKey);
+            if (listable != null) {
+                return listable.getListDescription();
+            }
+        }
+        return null;
     }
 
 }
