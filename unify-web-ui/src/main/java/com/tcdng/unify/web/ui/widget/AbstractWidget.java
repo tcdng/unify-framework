@@ -33,6 +33,7 @@ import com.tcdng.unify.web.ui.PageRequestContextUtil;
 import com.tcdng.unify.web.ui.UIControllerUtil;
 import com.tcdng.unify.web.ui.WebUIApplicationComponents;
 import com.tcdng.unify.web.ui.util.WidgetUtils;
+import com.tcdng.unify.web.ui.widget.data.Hint.MODE;
 import com.tcdng.unify.web.ui.widget.panel.StandalonePanel;
 
 /**
@@ -727,6 +728,36 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
         }
 
         return result;
+    }
+
+    /**
+     * Hints user in current request with supplied message in INFO mode.
+     * 
+     * @param messageKey
+     *            the message key
+     * @param params
+     *            the message parameters
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected void hintUser(String messageKey, Object... params) throws UnifyException {
+        getRequestContextUtil().hintUser(MODE.INFO, messageKey, params);
+    }
+
+    /**
+     * Hints user in current request with supplied message.
+     * 
+     * @param mode
+     *            the hint mode
+     * @param messageKey
+     *            the message key
+     * @param params
+     *            the message parameters
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    protected void hintUser(MODE mode, String messageKey, Object... params) throws UnifyException {
+        getRequestContextUtil().hintUser(mode, messageKey, params);
     }
     
     private String getWorkId() throws UnifyException {

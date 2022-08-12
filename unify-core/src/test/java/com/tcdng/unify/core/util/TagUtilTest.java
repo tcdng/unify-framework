@@ -39,10 +39,10 @@ public class TagUtilTest {
 
     @Test
     public void testIsRequestPathActionTag() throws Exception {
-        assertTrue(TokenUtils.isRequestPathActionTag("$r{}"));
-        assertTrue(TokenUtils.isRequestPathActionTag("$r{hello.world}"));
-        assertFalse(TokenUtils.isRequestPathActionTag("$s{sky}"));
-        assertFalse(TokenUtils.isRequestPathActionTag("s{hello}"));
+        assertTrue(TokenUtils.isRequestAttributeTag("$r{}"));
+        assertTrue(TokenUtils.isRequestAttributeTag("$r{hello.world}"));
+        assertFalse(TokenUtils.isRequestAttributeTag("$s{sky}"));
+        assertFalse(TokenUtils.isRequestAttributeTag("s{hello}"));
     }
 
     @Test

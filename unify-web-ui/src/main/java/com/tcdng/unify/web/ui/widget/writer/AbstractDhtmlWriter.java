@@ -15,6 +15,7 @@
  */
 package com.tcdng.unify.web.ui.widget.writer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.tcdng.unify.core.UnifyException;
@@ -23,6 +24,7 @@ import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.data.ValueStore;
 import com.tcdng.unify.core.upl.AbstractUplComponentWriter;
 import com.tcdng.unify.core.upl.UplElementReferences;
+import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.core.util.TokenUtils;
 import com.tcdng.unify.web.ThemeManager;
@@ -912,6 +914,7 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
         writeRefObjectEventHandlerJS(writer, pageName, cmdTag, event, "openpopup", psb.toString());
     }
 
+    @SuppressWarnings("unchecked")
     protected void writeActionParamsJS(ResponseWriter writer, String event, String function, String id, String cmdTag,
             PageAction pageAction, String[] refPageNames, String refObject, String path) throws UnifyException {
         String pathId = getRequestContextUtil().getResponsePathParts().getControllerPathId();
@@ -995,6 +998,19 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
             }
 
             List<String> componentList = pageManager.getExpandedReferences(pageAction.getId());
+            if (pageAction.isUplAttribute("pushComponents")) {
+                String components = pageAction.getUplAttribute(String.class, "pushComponents");
+                if (components != null) {
+                    if (TokenUtils.isRequestAttributeTag(components)) {
+                        List<String> pushList = (List<String>) getRequestAttribute(TokenUtils.extractTokenValue(components));
+                        if(!DataUtils.isBlank(pushList)) {
+                            List<String> _componentList = new ArrayList<String>(componentList);
+                            _componentList.addAll(pushList);
+                            componentList = _componentList;
+                        }
+                    }
+                }
+            }
             writer.write(",\"uRef\":").writeJsonArray(componentList);
 
             List<String> valueComponentList = pageManager.getValueReferences(pageAction.getId());
@@ -1012,7 +1028,7 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
                 if (actionPath != null) {
                     if (TokenUtils.isNameTag(actionPath) || TokenUtils.isPathTag(actionPath)) {
                         actionPath = pathId + TokenUtils.extractTokenValue(actionPath);
-                    } else if (TokenUtils.isRequestPathActionTag(actionPath)) {
+                    } else if (TokenUtils.isRequestAttributeTag(actionPath)) {
                         actionPath = pathId + getRequestAttribute(TokenUtils.extractTokenValue(actionPath));
                     } else if (TokenUtils.isQuickReferenceTag(actionPath)) {
                         actionPath = (String) ((ValueStore) getRequestContext().getQuickReference())
@@ -1056,7 +1072,7 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
         } else if (path != null) {
             if (TokenUtils.isNameTag(path) || TokenUtils.isPathTag(path)) {
                 path = pathId + TokenUtils.extractTokenValue(path);
-            } else if (TokenUtils.isRequestPathActionTag(path)) {
+            } else if (TokenUtils.isRequestAttributeTag(path)) {
                 path = pathId + getRequestAttribute(TokenUtils.extractTokenValue(path));
             }
 

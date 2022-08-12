@@ -139,12 +139,12 @@ public final class TokenUtils {
     }
 
     /**
-     * Tests if a string is a path configured action tag value.
+     * Tests if a string is a request attribute tag value.
      * 
      * @param string
      *            the string to test
      */
-    public static boolean isRequestPathActionTag(String string) {
+    public static boolean isRequestAttributeTag(String string) {
         return string.startsWith("$r{") && string.endsWith("}");
     }
 
