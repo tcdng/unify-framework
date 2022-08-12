@@ -1019,7 +1019,12 @@ public final class DataUtils {
         
         if (clazz.isEnum()) {
             Class<? extends Enum> enumClass = (Class<? extends Enum>) clazz;
-            return (T) Enum.valueOf(enumClass, jsonValue.asString());
+            try {
+                return (T) Enum.valueOf(enumClass, jsonValue.asString());
+            } catch (Exception e) {
+            }
+            
+            return null;
         }
         
         // Array
