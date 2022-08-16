@@ -157,6 +157,7 @@ public class Unify {
             uccb.deploymentMode(deploymentMode);
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Failed scanning classpath type repository.", e);
+            e.printStackTrace();
             System.exit(1);
         }
 
@@ -170,6 +171,7 @@ public class Unify {
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE,
                     "Unable to open configuration file - " + IOUtils.buildFilename(workingFolder, configFile), e);
+            e.printStackTrace();
             System.exit(1);
         }
 
@@ -179,6 +181,7 @@ public class Unify {
             IOUtils.close(xmlInputStream);
             LOGGER.log(Level.SEVERE,
                     "Failed reading configuration file - " + IOUtils.buildFilename(workingFolder, configFile), e);
+            e.printStackTrace();
             System.exit(1);
         } finally {
             IOUtils.close(xmlInputStream);
@@ -193,6 +196,7 @@ public class Unify {
             Unify.startup(uce, ucc);
         } catch (UnifyException e) {
             LOGGER.log(Level.SEVERE, "Error initializing Unify container.", e);
+            e.printStackTrace();
             System.exit(1);
         }
     }
@@ -231,7 +235,8 @@ public class Unify {
             }
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "Error resolving packaged JARs.", e);
-        }
+            e.printStackTrace();
+       }
 
         return baseUrls.isEmpty() ? null : baseUrls.toArray(new URL[baseUrls.size()]);
     }
@@ -268,7 +273,8 @@ public class Unify {
             }
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "Error resolving packaged JARs.", e);
-        }
+            e.printStackTrace();
+       }
 
         return baseUrls.isEmpty() ? null : baseUrls.toArray(new URL[baseUrls.size()]);
     }
