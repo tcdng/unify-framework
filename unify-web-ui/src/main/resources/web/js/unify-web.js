@@ -2931,7 +2931,9 @@ ux.rigSingleSelect = function(rgp) {
 				if(this._oldSelIdx != index) {
 					const label = index >= 0 ? _id(this._selectIds[index]) : this._blank;
 					const olabel = this._oldSelIdx >= 0 ? _id(this._selectIds[this._oldSelIdx]) : this._blank;
-					label.className = this._sel;
+					if (label) {
+						label.className = this._sel;
+					}
 					if (olabel && label != olabel) {
 						olabel.className = this._norm;
 					}

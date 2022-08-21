@@ -27,13 +27,21 @@ import com.tcdng.unify.core.UnifyException;
 public class ValueStoreReader {
     
     private ValueStore valueStore;
-
+    
     public ValueStoreReader(ValueStore valueStore) {
         this.valueStore = valueStore;
     }
 
     public ValueStoreReader(Object valueObject) {
         this.valueStore = new BeanValueStore(valueObject);
+    }
+    
+    public boolean isNull(String name) throws UnifyException {
+    	return valueStore.isNull(name);
+    }
+
+    public boolean isNotNull(String name) throws UnifyException {
+    	return valueStore.isNotNull(name);
     }
 
     public Object readScratch(String fieldName) throws UnifyException {
