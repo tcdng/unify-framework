@@ -2948,7 +2948,7 @@ ux.rigSingleSelect = function(rgp) {
 			if (choose && (this._selIdx != index)) {
 				var txt = this._blank ? this._blank.innerHTML:"";
 				var val = null;
-				if (index >= 0) {
+				if (index >= 0 && this._labels.length > 0) {
 					txt = this._labels[index];
 					val = this._keys[index];
 				}
