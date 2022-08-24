@@ -238,6 +238,14 @@ public class JsonWriter {
         DataUtils.writeJsonObject(object, new JsonWriterOutputStream());
         return this;
     }
+
+    public JsonWriter writeScript(String fieldName, String script)
+            throws UnifyException {
+        preWrite();
+        sb.append('"').append(fieldName).append("\":");
+        sb.append(script);
+        return this;
+    }
     
     @Override
     public String toString() {
