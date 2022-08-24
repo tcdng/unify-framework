@@ -55,6 +55,15 @@ public class JsonWriterTest {
     }
 
     @Test
+    public void testWriteScript() throws Exception {
+        String str = new JsonWriter()
+                        .beginObject()
+                        .writeScript("formatter", "function(val){return val;}")
+                        .endObject().toString();
+        assertEquals("{\"formatter\":function(val){return val;}}", str);
+    }
+
+    @Test
     public void testWriteSimpleObject() throws Exception {
         String str1 = new JsonWriter()
                         .beginObject()
