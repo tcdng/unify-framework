@@ -773,6 +773,32 @@ public interface ResponseWriter extends UnifyComponent {
     ResponseWriter writeParam(String paramName, boolean val) throws UnifyException;
 
     /**
+     * Write a object parameter.
+     * 
+     * @param paramName
+     *                  the parameter name
+     * @param val
+     *                  the parameter value
+     * @return this writer
+     * @throws UnifyException
+     *                        if write function is not begun. If an error occurs
+     */
+    ResponseWriter writeObjectParam(String paramName, Object val) throws UnifyException;
+
+    /**
+     * Write a object array parameter.
+     * 
+     * @param paramName
+     *                  the parameter name
+     * @param val
+     *                  the parameter value
+     * @return this writer
+     * @throws UnifyException
+     *                        if write function is not begun. If an error occurs
+     */
+    ResponseWriter writeObjectParam(String paramName, Object[] val) throws UnifyException;
+
+    /**
      * Write a function parameter.
      * 
      * @param paramName

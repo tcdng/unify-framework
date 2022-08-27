@@ -673,6 +673,20 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
     }
 
     @Override
+	public ResponseWriter writeObjectParam(String paramName, Object val) throws UnifyException {
+        preParamWrite();
+        JsonUtils.writeField(buf, paramName, val);
+        return this;
+	}
+
+	@Override
+	public ResponseWriter writeObjectParam(String paramName, Object[] val) throws UnifyException {
+        preParamWrite();
+        JsonUtils.writeField(buf, paramName, val);
+        return this;
+	}
+
+	@Override
     public ResponseWriter writeParam(String paramName, short[] val) throws UnifyException {
         preParamWrite();
         JsonUtils.writeField(buf, paramName, val);

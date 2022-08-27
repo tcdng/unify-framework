@@ -18,6 +18,8 @@ package com.tcdng.unify.core.util.json;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Arrays;
+
 import org.junit.Test;
 
 /**
@@ -61,6 +63,16 @@ public class JsonWriterTest {
                         .writeScript("formatter", "function(val){return val;}")
                         .endObject().toString();
         assertEquals("{\"formatter\":function(val){return val;}}", str);
+    }
+
+    @Test
+    public void testWriteObject() throws Exception {
+    	Contact contact = new Contact("Jones", "+2348020000000", "24 Parklane Apapa", "Lagos, State");
+        new JsonWriter()
+                        .writeObject(contact).toString();
+        
+        new JsonWriter()
+                .writeObject(Arrays.asList(null, contact)).toString();
     }
 
     @Test

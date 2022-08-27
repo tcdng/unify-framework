@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.tcdng.unify</groupId>
 		<artifactId>unify</artifactId>
-		<version>2.1.42</version>
+		<version>2.1.43-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>unify-web-jakarta</artifactId>
