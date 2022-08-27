@@ -1002,6 +1002,7 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
             if (dataIndex >= 0 && !componentList.isEmpty()) {
             	final String dataSuffix = "d" + dataIndex;
                 List<String> _componentList = new ArrayList<String>(componentList);
+                _componentList.add(id);
                 for (String component: componentList) {
                 	_componentList.add(component);
                 	_componentList.add(component + dataSuffix);
