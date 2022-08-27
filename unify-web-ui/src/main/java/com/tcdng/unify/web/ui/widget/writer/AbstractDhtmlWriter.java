@@ -998,6 +998,17 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
             }
 
             List<String> componentList = pageManager.getExpandedReferences(pageAction.getId());
+            int dataIndex = writer.getDataIndex();
+            if (dataIndex >= 0 && !componentList.isEmpty()) {
+            	final String dataSuffix = "d" + dataIndex;
+                List<String> _componentList = new ArrayList<String>(componentList);
+                for (String component: componentList) {
+                	_componentList.add(component);
+                	_componentList.add(component + dataSuffix);
+                }
+                componentList = _componentList;
+            }
+            
             if (pageAction.isUplAttribute("pushComponents")) {
                 String components = pageAction.getUplAttribute(String.class, "pushComponents");
                 if (components != null) {

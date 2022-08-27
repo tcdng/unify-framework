@@ -79,6 +79,8 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 
 	private Map<Class<? extends UplComponent>, UplComponentWriter> writers;
 
+	private int dataIndex;
+	
 	private boolean tableMode;
 
     private boolean openFunction;
@@ -90,7 +92,8 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
     private boolean bracketOpen;
 	
 	public ResponseWriterImpl() {
-	    history = new Stack<HistoryEntry>();
+		this.history = new Stack<HistoryEntry>();
+	    this.dataIndex = -1;
 	}
 	
 	public void setThemeManager(ThemeManager themeManager) {
@@ -851,6 +854,16 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 	@Override
 	public String toString() {
 		return buf.toString();
+	}
+
+	@Override
+	public int getDataIndex() {
+		return dataIndex;
+	}
+
+	@Override
+	public void setDataIndex(int dataIndex) {
+		this.dataIndex = dataIndex;
 	}
 
 	@Override

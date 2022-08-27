@@ -16,6 +16,7 @@
 package com.tcdng.unify.web.ui.widget.writer;
 
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.data.ValueStore;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ui.widget.Panel;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
@@ -47,27 +48,34 @@ public abstract class AbstractPanelWriter extends AbstractContainerWriter implem
 
     @Override
     protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-        super.doWriteBehavior(writer, widget);
         Panel panel = (Panel) widget;
-        if (panel.isAllowRefresh()) {
-            int refreshEvery = panel.getRefreshEvery();
-            if (refreshEvery > 0) {
-                // Append delayed post
-                writer.beginFunction("ux.setDelayedPanelPost");
-                String path = panel.getRefreshPath();
-                writer.write("\"pId\":\"").write(panel.getId()).write('"');
-                writer.write(",\"pURL\":\"");
-                if (path == null) {
-                    writer.writeCommandURL();
-                } else {
-                    writer.writeContextURL(path);
-                }
-                writer.write('"');
-                writer.write(",\"pOnUserAct\":").write(panel.isRefreshOnUserAct());
-                writer.write(",\"pPeriodMilliSec\":").write(refreshEvery);
-                writer.endFunction();
-            }
-        }
+    	final int _dataIndex = writer.getDataIndex();
+    	ValueStore _valueStore = panel.getValueStore();
+    	writer.setDataIndex(_valueStore.getDataIndex());  	
+        try {
+			super.doWriteBehavior(writer, widget);
+			if (panel.isAllowRefresh()) {
+			    int refreshEvery = panel.getRefreshEvery();
+			    if (refreshEvery > 0) {
+			        // Append delayed post
+			        writer.beginFunction("ux.setDelayedPanelPost");
+			        String path = panel.getRefreshPath();
+			        writer.write("\"pId\":\"").write(panel.getId()).write('"');
+			        writer.write(",\"pURL\":\"");
+			        if (path == null) {
+			            writer.writeCommandURL();
+			        } else {
+			            writer.writeContextURL(path);
+			        }
+			        writer.write('"');
+			        writer.write(",\"pOnUserAct\":").write(panel.isRefreshOnUserAct());
+			        writer.write(",\"pPeriodMilliSec\":").write(refreshEvery);
+			        writer.endFunction();
+			    }
+			}
+		} finally {
+	    	writer.setDataIndex(_dataIndex);  	
+		}
     }
 
     protected void writePanelTagAttributes(ResponseWriter writer, Panel panel) throws UnifyException {

@@ -913,4 +913,18 @@ public interface ResponseWriter extends UnifyComponent {
      * @return a true value if table mode is set
      */
     boolean isTableMode();
+
+	/**
+	 * Gets the current writer context data index.
+	 * 
+	 * @return the context data index;
+	 */
+	int getDataIndex();
+
+	/**
+	 * Sets the current context data index
+	 * 
+	 * @param dataIndex the data index to set
+	 */
+	void setDataIndex(int dataIndex);
 }
