@@ -352,12 +352,12 @@ public final class JsonUtils {
 
 	public static void writeField(LargeStringWriter lsw, String fieldName, Object val) throws UnifyException {
 		JsonUtils.writeFieldPrefix(lsw, fieldName);
-		JsonUtils.write(lsw, new JsonWriter().writeObject(val).toString());
+		JsonUtils.writeObject(lsw, new JsonWriter().writeObject(val).toString());
 	}
 
 	public static void writeField(LargeStringWriter lsw, String fieldName, Object[] val) throws UnifyException {
 		JsonUtils.writeFieldPrefix(lsw, fieldName);
-		JsonUtils.write(lsw, new JsonWriter().writeObject(val).toString());
+		JsonUtils.writeObject(lsw, new JsonWriter().writeObject(val).toString());
 	}
 
 	public static void write(StringBuilder sb, String[] val) {
@@ -704,7 +704,14 @@ public final class JsonUtils {
 		} else {
 			lsw.append("null");
 		}
+	}
 
+	public static void writeObject(LargeStringWriter lsw, String val) {
+		if (val != null) {
+			lsw.append(val);
+		} else {
+			lsw.append("null");
+		}
 	}
 
 	public static void write(LargeStringWriter lsw, Number[] val) {
