@@ -51,7 +51,7 @@ public abstract class AbstractPanelWriter extends AbstractContainerWriter implem
         Panel panel = (Panel) widget;
     	final int _dataIndex = writer.getDataIndex();
     	ValueStore _valueStore = panel.getValueStore();
-    	writer.setDataIndex(_valueStore.getDataIndex());  	
+    	writer.setDataIndex(_valueStore != null ? _valueStore.getDataIndex() : -1);  	
         try {
 			super.doWriteBehavior(writer, widget);
 			if (panel.isAllowRefresh()) {
