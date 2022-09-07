@@ -2269,9 +2269,11 @@ ux.rigDebitCreditField = function(rgp) {
 	evp.fac = _id(rgp.pFacId);
 	evp.btn = _id(rgp.pBtnId);
 
-	evp.btn.innerHTML = evp.options[evp.index];
-	ux.addHdl(evp.btn, "click", ux.dcfOptionToggle, evp);	
-	ux.addHdl(evp.fac, "input", ux.dcfInput, evp);	
+	if (evp.btn) {
+		evp.btn.innerHTML = evp.options[evp.index];
+		ux.addHdl(evp.btn, "click", ux.dcfOptionToggle, evp);	
+		ux.addHdl(evp.fac, "input", ux.dcfInput, evp);	
+	}
 }
 
 ux.dcfOptionToggle = function(uEv) {
