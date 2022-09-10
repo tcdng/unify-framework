@@ -41,10 +41,8 @@ public abstract class AbstractDataSource extends AbstractUnifyComponent implemen
 	@Configurable("false")
 	private boolean readOnly;
 
-	@Configurable
-	private String entityListProvider;
-
-	private DataSourceEntityListProvider _entityListProvider;
+	@Configurable(ApplicationComponents.APPLICATION_DATASOURCE_ENTITYLIST_PROVIDER)
+	private DataSourceEntityListProvider entityListProvider;
 
 	public void setDialect(DataSourceDialect dialect) throws UnifyException {
 		this.dialect = dialect;
@@ -62,7 +60,7 @@ public abstract class AbstractDataSource extends AbstractUnifyComponent implemen
 		this.readOnly = readOnly;
 	}
 
-	public final void setEntityListProvider(String entityListProvider) {
+	public final void setEntityListProvider(DataSourceEntityListProvider entityListProvider) {
 		this.entityListProvider = entityListProvider;
 	}
 
@@ -73,12 +71,12 @@ public abstract class AbstractDataSource extends AbstractUnifyComponent implemen
 
 	@Override
 	public List<Class<?>> getTableEntityTypes() throws UnifyException {
-		return _entityListProvider.getTableEntityTypes(getEntityMatchingName());
+		return entityListProvider.getTableEntityTypes(getEntityMatchingName());
 	}
 
 	@Override
 	public List<Class<? extends Entity>> getViewEntityTypes() throws UnifyException {
-		return _entityListProvider.getViewEntityTypes(getEntityMatchingName());
+		return entityListProvider.getViewEntityTypes(getEntityMatchingName());
 	}
 
 	@Override
@@ -92,10 +90,6 @@ public abstract class AbstractDataSource extends AbstractUnifyComponent implemen
 			dialect.setDataSourceName(getEntityMatchingName());
 			dialect.setAllObjectsInLowerCase(allObjectsInLowercase);
 		}
-
-		String provider = !StringUtils.isBlank(entityListProvider) ? entityListProvider
-				: ApplicationComponents.APPLICATION_DATASOURCE_ENTITYLIST_PROVIDER;
-		_entityListProvider = getComponent(DataSourceEntityListProvider.class, provider);
 	}
 
 	@Override
