@@ -20,6 +20,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import com.tcdng.unify.core.util.DataUtils;
+
 /**
  * Unify component settings.
  * 
@@ -50,6 +52,11 @@ public class UnifyComponentSettings {
     public Setting getSetting(String property) {
         return settings.get(property);
     }
+
+	public <T> T getSettingValue(Class<T> typeClass, String property, T defaultVal) throws UnifyException {
+		Setting setting = settings.get(property);
+		return setting != null ? DataUtils.convert(typeClass, setting.getValue()) : defaultVal;
+	}
 
     public boolean isProperty(String property) {
         return settings.containsKey(property);

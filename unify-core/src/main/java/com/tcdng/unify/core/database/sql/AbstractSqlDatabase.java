@@ -37,6 +37,11 @@ public abstract class AbstractSqlDatabase extends AbstractDatabase implements Sq
     }
 
     @Override
+	public boolean isReadOnly() throws UnifyException {
+		return getDataSource().isReadOnly();
+	}
+
+	@Override
     public DatabaseSession createDatabaseSession() throws UnifyException {
         return new SqlDatabaseSessionImpl((SqlDataSource) getDataSource(), sqlStatementExecutor);
     }

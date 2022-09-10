@@ -294,6 +294,21 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	}
 
 	/**
+	 * Gets a reference to an instance of a component by name.
+	 * 
+	 * @param type the component type
+	 * @param name the component name
+	 * @return the same reference is always returned for singleton components. A new
+	 *         reference is returned for non-singleton components.
+	 * @throws UnifyException if component with name is unknown. If an instantiation
+	 *                        error occurs.
+	 */
+	@SuppressWarnings("unchecked")
+	protected <T extends UnifyComponent> T getComponent(Class<T> type, String name) throws UnifyException {
+		return (T) unifyComponentContext.getComponent(name);
+	}
+
+	/**
 	 * Gets a component by name using alternate settings. Applies to non-singletons
 	 * only..
 	 * 

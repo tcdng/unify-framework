@@ -36,6 +36,15 @@ import com.tcdng.unify.core.data.GroupAggregation;
  */
 public interface Database extends UnifyComponent {
 
+	/**
+	 * Checks if database is read-only
+	 * 
+	 * @return true if database is read-only otherwise false
+     * @throws UnifyException
+     *             if an error occurs
+	 */
+	boolean isReadOnly() throws UnifyException;
+
     /**
      * Gets the database dataSource.
      * 
