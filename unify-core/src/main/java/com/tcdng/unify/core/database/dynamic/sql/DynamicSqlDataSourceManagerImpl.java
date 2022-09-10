@@ -172,9 +172,9 @@ public class DynamicSqlDataSourceManagerImpl extends AbstractSqlDataSourceManage
 
     @Override
     public void terminateConfiguration(String dataSourceConfigName) throws UnifyException {
-        DynamicSqlDataSource dynamicSqlDataSource = getDynamicSqlDataSource(dataSourceConfigName);
+        SqlDataSource sqlDataSource = getDynamicSqlDataSource(dataSourceConfigName);
         try {
-            dynamicSqlDataSource.terminate();
+            sqlDataSource.terminate();
         } finally {
             dynamicSqlDataSourceMap.remove(dataSourceConfigName);
         }
@@ -202,7 +202,11 @@ public class DynamicSqlDataSourceManagerImpl extends AbstractSqlDataSourceManage
         terminateAll();
     }
 
-    private DynamicSqlDataSource getDynamicSqlDataSource(String dataSourceConfigName) throws UnifyException {
+    private SqlDataSource getDynamicSqlDataSource(String dataSourceConfigName) throws UnifyException {
+    	if (isComponent(dataSourceConfigName)) {
+    		return getComponent(SqlDataSource.class, dataSourceConfigName);
+    	}
+    	
         if (!dynamicSqlDataSourceMap.isKey(dataSourceConfigName)) {
             throw new UnifyException(UnifyCoreErrorConstants.DYNAMIC_DATASOURCE_IS_UNKNOWN, dataSourceConfigName);
         }
