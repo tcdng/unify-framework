@@ -120,9 +120,8 @@ public abstract class AbstractBusinessService extends AbstractUnifyComponent imp
 	 * @throws UnifyException if an error occurs
 	 */
 	protected Database db(String dataSourceConfigName) throws UnifyException {
-		return ApplicationComponents.APPLICATION_DATABASE.equals(dataSourceConfigName) ? db
-				: (isComponent(dataSourceConfigName) ? getComponent(Database.class, dataSourceConfigName)
-						: dynamicSqlDatabaseManager.getDynamicSqlDatabase(dataSourceConfigName));
+		return ApplicationComponents.APPLICATION_DATASOURCE.equals(dataSourceConfigName) ? db
+				: dynamicSqlDatabaseManager.getDynamicSqlDatabase(dataSourceConfigName);
 	}
 
 	/**
