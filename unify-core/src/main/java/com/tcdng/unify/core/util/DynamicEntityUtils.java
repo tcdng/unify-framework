@@ -35,6 +35,7 @@ import com.tcdng.unify.core.annotation.ForeignKey;
 import com.tcdng.unify.core.annotation.ListOnly;
 import com.tcdng.unify.core.annotation.Table;
 import com.tcdng.unify.core.annotation.TableExt;
+import com.tcdng.unify.core.annotation.TableName;
 import com.tcdng.unify.core.constant.EntityFieldType;
 import com.tcdng.unify.core.database.dynamic.DynamicChildFieldInfo;
 import com.tcdng.unify.core.database.dynamic.DynamicChildListFieldInfo;
@@ -197,6 +198,11 @@ public final class DynamicEntityUtils {
             } else {
                 esb.append("import ").append(TableExt.class.getCanonicalName()).append(";\n");
                 esb.append("@TableExt\n");
+            }
+        } else {
+        	if (DynamicEntityType.TABLE.equals(dynamicEntityInfo.getType())) {
+                esb.append("import ").append(TableName.class.getCanonicalName()).append(";\n");
+                esb.append("@TableName(\"").append(dynamicEntityInfo.getTableName()).append("\")\n");
             }
         }
 
