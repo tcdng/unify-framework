@@ -41,6 +41,9 @@ public abstract class AbstractDataSource extends AbstractUnifyComponent implemen
 	@Configurable("false")
 	private boolean readOnly;
 
+	@Configurable("false")
+	private boolean initDelayed;
+
 	@Configurable(ApplicationComponents.APPLICATION_DATASOURCE_ENTITYLIST_PROVIDER)
 	private DataSourceEntityListProvider entityListProvider;
 
@@ -60,6 +63,10 @@ public abstract class AbstractDataSource extends AbstractUnifyComponent implemen
 		this.readOnly = readOnly;
 	}
 
+	public final void setInitDelayed(boolean initDelayed) {
+		this.initDelayed = initDelayed;
+	}
+
 	public final void setEntityListProvider(DataSourceEntityListProvider entityListProvider) {
 		this.entityListProvider = entityListProvider;
 	}
@@ -67,6 +74,11 @@ public abstract class AbstractDataSource extends AbstractUnifyComponent implemen
 	@Override
 	public final boolean isReadOnly() {
 		return readOnly;
+	}
+
+	@Override
+	public boolean isInitDelayed() throws UnifyException {
+		return initDelayed;
 	}
 
 	@Override
