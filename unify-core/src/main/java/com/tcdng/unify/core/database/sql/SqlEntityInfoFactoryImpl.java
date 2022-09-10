@@ -226,11 +226,13 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
             	TableName tn = entityClass.getAnnotation(TableName.class);
                 Table ta = entityClass.getAnnotation(Table.class);
                 String tableName = tn != null ? tn.value() : AnnotationUtils.getAnnotationString(ta.name());
-                if (ta != null && StringUtils.isBlank(tableName)) {
-                    tableName = AnnotationUtils.getAnnotationString(ta.value());
-                } else if (StringUtils.isNotBlank(AnnotationUtils.getAnnotationString(ta.value()))) {
-                    throw new UnifyException(UnifyCoreErrorConstants.ANNOTATION_BAD_ATTRIBUTE_COMBINATION, "value",
-                            "name", Table.class, entityClass);
+                if (ta != null) {
+                    if (StringUtils.isBlank(tableName)) {
+                        tableName = AnnotationUtils.getAnnotationString(ta.value());
+                    } else if (StringUtils.isNotBlank(AnnotationUtils.getAnnotationString(ta.value()))) {
+                        throw new UnifyException(UnifyCoreErrorConstants.ANNOTATION_BAD_ATTRIBUTE_COMBINATION, "value",
+                                "name", Table.class, entityClass);
+                    }
                 }
 
                 if (tableName == null) {
