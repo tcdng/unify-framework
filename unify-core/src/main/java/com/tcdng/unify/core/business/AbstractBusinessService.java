@@ -26,7 +26,6 @@ import com.tcdng.unify.core.annotation.Transactional;
 import com.tcdng.unify.core.database.Database;
 import com.tcdng.unify.core.database.DatabaseTransactionManager;
 import com.tcdng.unify.core.database.Entity;
-import com.tcdng.unify.core.database.dynamic.DynamicDatabase;
 import com.tcdng.unify.core.database.dynamic.sql.DynamicSqlDatabaseManager;
 import com.tcdng.unify.core.task.TaskLauncher;
 import com.tcdng.unify.core.task.TaskMonitor;
@@ -42,183 +41,171 @@ import com.tcdng.unify.core.util.CalendarUtils;
  */
 public abstract class AbstractBusinessService extends AbstractUnifyComponent implements BusinessService {
 
-    @Configurable(ApplicationComponents.APPLICATION_DATABASE)
-    private Database db;
+	@Configurable(ApplicationComponents.APPLICATION_DATABASE)
+	private Database db;
 
-    @Configurable
-    private DatabaseTransactionManager databaseTransactionManager;
+	@Configurable
+	private DatabaseTransactionManager databaseTransactionManager;
 
-    @Configurable
-    private DynamicSqlDatabaseManager dynamicSqlDatabaseManager;
+	@Configurable
+	private DynamicSqlDatabaseManager dynamicSqlDatabaseManager;
 
-    @Configurable
-    private TaskLauncher taskLauncher;
+	@Configurable
+	private TaskLauncher taskLauncher;
 
-    public void setDb(Database db) {
-        this.db = db;
-    }
+	public void setDb(Database db) {
+		this.db = db;
+	}
 
-    public void setDatabaseTransactionManager(DatabaseTransactionManager databaseTransactionManager) {
-        this.databaseTransactionManager = databaseTransactionManager;
-    }
+	public void setDatabaseTransactionManager(DatabaseTransactionManager databaseTransactionManager) {
+		this.databaseTransactionManager = databaseTransactionManager;
+	}
 
-    public void setDynamicSqlDatabaseManager(DynamicSqlDatabaseManager dynamicSqlDatabaseManager) {
-        this.dynamicSqlDatabaseManager = dynamicSqlDatabaseManager;
-    }
+	public void setDynamicSqlDatabaseManager(DynamicSqlDatabaseManager dynamicSqlDatabaseManager) {
+		this.dynamicSqlDatabaseManager = dynamicSqlDatabaseManager;
+	}
 
-    public void setTaskLauncher(TaskLauncher taskLauncher) {
-        this.taskLauncher = taskLauncher;
-    }
+	public void setTaskLauncher(TaskLauncher taskLauncher) {
+		this.taskLauncher = taskLauncher;
+	}
 
-    @Override
-    public DatabaseTransactionManager tm() throws UnifyException {
-        return databaseTransactionManager;
-    }
+	@Override
+	public DatabaseTransactionManager tm() throws UnifyException {
+		return databaseTransactionManager;
+	}
 
-    @Transactional
-    @Override
-    public Entity getExtendedInstance(Class<? extends Entity> entityClass) throws UnifyException {
-        return db().getExtendedInstance(entityClass);
-    }
+	@Transactional
+	@Override
+	public Entity getExtendedInstance(Class<? extends Entity> entityClass) throws UnifyException {
+		return db().getExtendedInstance(entityClass);
+	}
 
-    @Transactional
-    @Override
-    public Date getToday() throws UnifyException {
-        return CalendarUtils.getMidnightDate(db().getNow());
-    }
+	@Transactional
+	@Override
+	public Date getToday() throws UnifyException {
+		return CalendarUtils.getMidnightDate(db().getNow());
+	}
 
-    @Transactional
-    @Override
-    public Date getNow() throws UnifyException {
-        return db().getNow();
-    }
+	@Transactional
+	@Override
+	public Date getNow() throws UnifyException {
+		return db().getNow();
+	}
 
-    @Override
-    protected void onInitialize() throws UnifyException {
+	@Override
+	protected void onInitialize() throws UnifyException {
 
-    }
+	}
 
-    @Override
-    protected void onTerminate() throws UnifyException {
+	@Override
+	protected void onTerminate() throws UnifyException {
 
-    }
+	}
 
-    /**
-     * Returns application database
-     */
-    protected Database db() throws UnifyException {
-        return db;
-    }
+	/**
+	 * Returns application database
+	 */
+	protected Database db() throws UnifyException {
+		return db;
+	}
 
-    /**
-     * Gets a dynamic database instance using data source with supplied
-     * configuration name.
-     * 
-     * @param dataSourceConfigName
-     *            the data source configuration name. Data source must be already
-     *            registered in default application dynamic data source manager.
-     * @return the database instance
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    protected DynamicDatabase db(String dataSourceConfigName) throws UnifyException {
-        return dynamicSqlDatabaseManager.getDynamicSqlDatabase(dataSourceConfigName);
-    }
+	/**
+	 * Gets a dynamic database instance using data source with supplied
+	 * configuration name.
+	 * 
+	 * @param dataSourceConfigName the data source configuration name. Data source
+	 *                             must be already registered in default application
+	 *                             dynamic data source manager.
+	 * @return the database instance
+	 * @throws UnifyException if an error occurs
+	 */
+	protected Database db(String dataSourceConfigName) throws UnifyException {
+		return isComponent(dataSourceConfigName) ? getComponent(Database.class, dataSourceConfigName)
+				: dynamicSqlDatabaseManager.getDynamicSqlDatabase(dataSourceConfigName);
+	}
 
-    /**
-     * Executes a business logic unit.
-     * 
-     * @param taskMonitor
-     *            a task monitoring object
-     * @param unitName
-     *            the unit name
-     * @param parameters
-     *            logic input parameters
-     * @return the business logic output
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    protected BusinessLogicOutput executeBusinessLogic(TaskMonitor taskMonitor, String unitName,
-            Map<String, Object> parameters) throws UnifyException {
-        BusinessLogicUnit blu = (BusinessLogicUnit) getComponent(unitName);
-        BusinessLogicInput input = new BusinessLogicInput(taskMonitor);
-        input.setParameters(parameters);
+	/**
+	 * Executes a business logic unit.
+	 * 
+	 * @param taskMonitor a task monitoring object
+	 * @param unitName    the unit name
+	 * @param parameters  logic input parameters
+	 * @return the business logic output
+	 * @throws UnifyException if an error occurs
+	 */
+	protected BusinessLogicOutput executeBusinessLogic(TaskMonitor taskMonitor, String unitName,
+			Map<String, Object> parameters) throws UnifyException {
+		BusinessLogicUnit blu = (BusinessLogicUnit) getComponent(unitName);
+		BusinessLogicInput input = new BusinessLogicInput(taskMonitor);
+		input.setParameters(parameters);
 
-        BusinessLogicOutput output = new BusinessLogicOutput();
-        blu.execute(input, output);
-        return output;
-    }
+		BusinessLogicOutput output = new BusinessLogicOutput();
+		blu.execute(input, output);
+		return output;
+	}
 
-    /**
-     * Launches a task.
-     * 
-     * @param taskSetup
-     *            the task setup
-     * @return the task monitor
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    protected TaskMonitor launchTask(TaskSetup taskSetup) throws UnifyException {
-        return taskLauncher.launchTask(taskSetup);
-    }
+	/**
+	 * Launches a task.
+	 * 
+	 * @param taskSetup the task setup
+	 * @return the task monitor
+	 * @throws UnifyException if an error occurs
+	 */
+	protected TaskMonitor launchTask(TaskSetup taskSetup) throws UnifyException {
+		return taskLauncher.launchTask(taskSetup);
+	}
 
-    /**
-     * Commits all pending database transactions
-     * 
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    protected void commitTransactions() throws UnifyException {
-        databaseTransactionManager.commit();
-    }
+	/**
+	 * Commits all pending database transactions
+	 * 
+	 * @throws UnifyException if an error occurs
+	 */
+	protected void commitTransactions() throws UnifyException {
+		databaseTransactionManager.commit();
+	}
 
-    /**
-     * Sets roll back on current transactions in database session.
-     * 
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    protected void setRollbackTransactions() throws UnifyException {
-        databaseTransactionManager.setRollback();
-    }
+	/**
+	 * Sets roll back on current transactions in database session.
+	 * 
+	 * @throws UnifyException if an error occurs
+	 */
+	protected void setRollbackTransactions() throws UnifyException {
+		databaseTransactionManager.setRollback();
+	}
 
-    /**
-     * Clears roll back on current transactions in database session.
-     * 
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    protected void clearRollbackTransactions() throws UnifyException {
-        databaseTransactionManager.clearRollback();
-    }
+	/**
+	 * Clears roll back on current transactions in database session.
+	 * 
+	 * @throws UnifyException if an error occurs
+	 */
+	protected void clearRollbackTransactions() throws UnifyException {
+		databaseTransactionManager.clearRollback();
+	}
 
-    /**
-     * Sets save point.
-     * 
-     * @throws UnifyException
-     *                        if an error occurs
-     */
-    protected void setSavePoint() throws UnifyException {
-        databaseTransactionManager.setSavePoint();
-    }
+	/**
+	 * Sets save point.
+	 * 
+	 * @throws UnifyException if an error occurs
+	 */
+	protected void setSavePoint() throws UnifyException {
+		databaseTransactionManager.setSavePoint();
+	}
 
-    /**
-     * Clears save point.
-     * 
-     * @throws UnifyException
-     *                        if an error occurs
-     */
-    protected void clearSavePoint() throws UnifyException {
-        databaseTransactionManager.clearSavePoint();
-    }
+	/**
+	 * Clears save point.
+	 * 
+	 * @throws UnifyException if an error occurs
+	 */
+	protected void clearSavePoint() throws UnifyException {
+		databaseTransactionManager.clearSavePoint();
+	}
 
-    /**
-     * Rollback to savepoint
-     * 
-     * @throws UnifyException
-     *                        if an error occurs
-     */
-    protected void rollbackToSavePoint() throws UnifyException {
-        databaseTransactionManager.rollbackToSavePoint();
-    }
+	/**
+	 * Rollback to savepoint
+	 * 
+	 * @throws UnifyException if an error occurs
+	 */
+	protected void rollbackToSavePoint() throws UnifyException {
+		databaseTransactionManager.rollbackToSavePoint();
+	}
 }
