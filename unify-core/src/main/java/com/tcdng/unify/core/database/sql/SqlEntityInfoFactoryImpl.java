@@ -733,7 +733,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                 } while ((searchClass = searchClass.getSuperclass()) != null);
 
                 // Rename view if necessary
-                if (!listOnlyFieldMap.isEmpty() && viewName.equals(tableName)) {
+                if (!listOnlyFieldMap.isEmpty() && ta != null && viewName.equals(tableName)) {
                     viewName = SqlUtils.generateViewName(tableName);
                 }
 
