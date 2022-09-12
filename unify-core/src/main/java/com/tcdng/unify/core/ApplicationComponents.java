@@ -37,6 +37,8 @@ public interface ApplicationComponents {
 
     String APPLICATION_DATASOURCEMANAGER = "application-datasourcemanager";
 
+    String APPLICATION_DATASOURCE_ENTITYLIST_PROVIDER = "application-datasourceentitylistprovider";
+
     String APPLICATION_DEFAULTBOOTSERVICE = "default-bootservice";
 
     String APPLICATION_DEFAULTEMAILSERVER = "default-emailserver";

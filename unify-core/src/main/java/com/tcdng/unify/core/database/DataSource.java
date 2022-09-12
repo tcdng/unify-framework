@@ -32,6 +32,24 @@ import com.tcdng.unify.core.annotation.View;
  */
 public interface DataSource extends UnifyComponent {
 
+	/**
+	 * Checks if datasource is read-only
+	 * 
+	 * @return true if datasource is read-only otherwise false
+     * @throws UnifyException
+     *             if an error occurs
+	 */
+	boolean isReadOnly() throws UnifyException;
+
+	/**
+	 * Checks if datasource initialization is delayed.
+	 * 
+	 * @return true if datasource is delayed otherwise false
+     * @throws UnifyException
+     *             if an error occurs
+	 */
+	boolean isInitDelayed() throws UnifyException;
+	
     /**
      * Gets the data source preferred name.
      * 

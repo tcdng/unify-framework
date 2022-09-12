@@ -15,18 +15,12 @@
  */
 package com.tcdng.unify.core.database;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import com.tcdng.unify.convert.constants.EnumConst;
 import com.tcdng.unify.core.AbstractUnifyComponent;
+import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
-import com.tcdng.unify.core.annotation.StaticList;
-import com.tcdng.unify.core.annotation.Table;
-import com.tcdng.unify.core.annotation.TableExt;
-import com.tcdng.unify.core.annotation.View;
-import com.tcdng.unify.core.util.AnnotationUtils;
 import com.tcdng.unify.core.util.StringUtils;
 
 /**
@@ -38,97 +32,89 @@ import com.tcdng.unify.core.util.StringUtils;
  */
 public abstract class AbstractDataSource extends AbstractUnifyComponent implements DataSource {
 
-    @Configurable
-    private DataSourceDialect dialect;
+	@Configurable
+	private DataSourceDialect dialect;
 
-    @Configurable("false")
-    private boolean allObjectsInLowercase;
+	@Configurable("false")
+	private boolean allObjectsInLowercase;
 
-    public void setDialect(DataSourceDialect dialect) throws UnifyException {
-        this.dialect = dialect;
-        if (dialect != null) {
-            dialect.setDataSourceName(getEntityMatchingName());
-            dialect.setAllObjectsInLowerCase(allObjectsInLowercase);
-        }
-    }
+	@Configurable("false")
+	private boolean readOnly;
 
-    public void setAllObjectsInLowercase(boolean allObjectsInLowercase) {
-        this.allObjectsInLowercase = allObjectsInLowercase;
-    }
+	@Configurable("false")
+	private boolean initDelayed;
 
-    @Override
-    public List<Class<?>> getTableEntityTypes() throws UnifyException {
-        List<Class<?>> entityList = new ArrayList<Class<?>>();
-        String name = getEntityMatchingName();
-        // Enumeration constants
-        for (Class<? extends EnumConst> enumConstClass : getAnnotatedClasses(EnumConst.class, StaticList.class)) {
-            StaticList sa = enumConstClass.getAnnotation(StaticList.class);
-            if (AnnotationUtils.isStaticListDataSource(sa, name)) {
-                entityList.add(enumConstClass);
-            }
-        }
+	@Configurable(ApplicationComponents.APPLICATION_DATASOURCE_ENTITYLIST_PROVIDER)
+	private DataSourceEntityListProvider entityListProvider;
 
-        // Entities
-        for (Class<? extends Entity> entityClass : getAnnotatedClasses(Entity.class, Table.class)) {
-            Table ta = entityClass.getAnnotation(Table.class);
-            if (AnnotationUtils.isTableDataSource(ta, name)) {
-                entityList.add(entityClass);
-            }
-        }
+	public void setDialect(DataSourceDialect dialect) throws UnifyException {
+		this.dialect = dialect;
+		if (dialect != null) {
+			dialect.setDataSourceName(getEntityMatchingName());
+			dialect.setAllObjectsInLowerCase(allObjectsInLowercase);
+		}
+	}
 
-        // Extensions
-        for (Class<? extends Entity> entityClass : getAnnotatedClasses(Entity.class, TableExt.class)) {
-            Class<?> extendedEntityClass = entityClass.getSuperclass();
-            if (extendedEntityClass != null) {
-                Table ta = extendedEntityClass.getAnnotation(Table.class);
-                if (AnnotationUtils.isTableDataSource(ta, name)) {
-                    int index = entityList.indexOf(extendedEntityClass);
-                    entityList.add(index + 1, entityClass);
-                }
-            }
-        }
-        return entityList;
-    }
+	public final void setAllObjectsInLowercase(boolean allObjectsInLowercase) {
+		this.allObjectsInLowercase = allObjectsInLowercase;
+	}
 
-    @Override
-    public List<Class<? extends Entity>> getViewEntityTypes() throws UnifyException {
-        List<Class<? extends Entity>> entityList = new ArrayList<Class<? extends Entity>>();
-        String name = getEntityMatchingName();
-        // Entities
-        for (Class<? extends Entity> entityClass : getAnnotatedClasses(Entity.class, View.class)) {
-            View va = entityClass.getAnnotation(View.class);
-            if (AnnotationUtils.isViewDataSource(va, name)) {
-                entityList.add(entityClass);
-            }
-        }
+	public final void setReadOnly(boolean readOnly) {
+		this.readOnly = readOnly;
+	}
 
-        return entityList;
-    }
-    
-    @Override
-    public DataSourceDialect getDialect() throws UnifyException {
-        return dialect;
-    }
+	public final void setInitDelayed(boolean initDelayed) {
+		this.initDelayed = initDelayed;
+	}
 
-    @Override
-    protected void onInitialize() throws UnifyException {
-        if (dialect != null) {
-            dialect.setDataSourceName(getEntityMatchingName());
-            dialect.setAllObjectsInLowerCase(allObjectsInLowercase);
-        }
-    }
+	public final void setEntityListProvider(DataSourceEntityListProvider entityListProvider) {
+		this.entityListProvider = entityListProvider;
+	}
 
-    @Override
-    protected void onTerminate() throws UnifyException {
+	@Override
+	public final boolean isReadOnly() {
+		return readOnly;
+	}
 
-    }
+	@Override
+	public boolean isInitDelayed() throws UnifyException {
+		return initDelayed;
+	}
 
-    private String getEntityMatchingName() {
-        String name = getPreferredName();
-        if(StringUtils.isBlank(name)) {
-            name = getName();
-        }
-        
-        return name;
-    }
+	@Override
+	public List<Class<?>> getTableEntityTypes() throws UnifyException {
+		return entityListProvider.getTableEntityTypes(getEntityMatchingName());
+	}
+
+	@Override
+	public List<Class<? extends Entity>> getViewEntityTypes() throws UnifyException {
+		return entityListProvider.getViewEntityTypes(getEntityMatchingName());
+	}
+
+	@Override
+	public DataSourceDialect getDialect() throws UnifyException {
+		return dialect;
+	}
+
+	@Override
+	protected void onInitialize() throws UnifyException {
+		if (dialect != null) {
+			dialect.setDataSourceName(getEntityMatchingName());
+			dialect.setAllObjectsInLowerCase(allObjectsInLowercase);
+		}
+	}
+
+	@Override
+	protected void onTerminate() throws UnifyException {
+
+	}
+
+	private String getEntityMatchingName() {
+		String name = getPreferredName();
+		if (StringUtils.isBlank(name)) {
+			name = getName();
+		}
+
+		return name;
+	}
 }

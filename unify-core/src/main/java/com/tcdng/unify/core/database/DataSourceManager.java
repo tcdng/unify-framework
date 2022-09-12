@@ -26,26 +26,32 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface DataSourceManager extends UnifyComponent {
 
-    /**
-     * Initializes a data source.
-     * 
-     * @param datasource
-     *            the datasource name
-     * @param options the manager options to apply to this operation
-     * @throws UnifyException
-     *             if data source does not allow management. If an error occurs.
-     */
-    void initDataSource(String datasource, DataSourceManagerOptions options) throws UnifyException;
+	/**
+	 * Initializes a data source.
+	 * 
+	 * @param datasource the datasource name
+	 * @param options    the manager options to apply to this operation
+	 * @throws UnifyException if data source does not allow management. If an error
+	 *                        occurs.
+	 */
+	void initDataSource(String datasource, DataSourceManagerOptions options) throws UnifyException;
 
-    /**
-     * Manages a data source, making sure that entity models match datasource
-     * schema.
-     * 
-     * @param datasource
-     *            the datasource name
-     * @param options the manager options to apply to this operation
-     * @throws UnifyException
-     *             if data source does not allow management. If an error occurs.
-     */
-    void manageDataSource(String datasource, DataSourceManagerOptions options) throws UnifyException;
+	/**
+	 * Manages a data source, making sure that entity models match datasource
+	 * schema.
+	 * 
+	 * @param datasource the datasource name
+	 * @param options    the manager options to apply to this operation
+	 * @throws UnifyException if data source does not allow management. If an error
+	 *                        occurs.
+	 */
+	void manageDataSource(String datasource, DataSourceManagerOptions options) throws UnifyException;
+
+	/**
+	 * Run delayed datasource initialization.
+	 * 
+	 * @param options the manager options to apply to this operation
+	 * @throws UnifyException If an error occurs.
+	 */
+	void initDelayedDataSource() throws UnifyException;
 }

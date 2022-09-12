@@ -1036,4 +1036,9 @@ public interface UnifyCoreErrorConstants {
      * ID field not listable for recursive references. Type = {0}, Column = {1}
      */
     String RECORD_RECURSIVE_ID_NOT_LISTABLE = "UC_010A";
+
+    /**
+     * Datasource {0} is in read-only mode. Can not perform write operations.
+     */
+    String DATASOURCE_IN_READONLY_MODE = "UC_010B";
 }

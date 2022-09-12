@@ -171,8 +171,9 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
                 startupShutdownHook.onApplicationStartup();
             }
         }
-
+        
         onStartup();
+        dataSourceManager.initDelayedDataSource();
     }
 
     @Override

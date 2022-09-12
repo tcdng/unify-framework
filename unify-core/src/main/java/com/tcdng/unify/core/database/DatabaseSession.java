@@ -35,6 +35,15 @@ import com.tcdng.unify.core.data.GroupAggregation;
  */
 public interface DatabaseSession {
 
+	/**
+	 * Checks if database session is read-only
+	 * 
+	 * @return true if database session is read-only otherwise false
+     * @throws UnifyException
+     *             if an error occurs
+	 */
+	boolean isReadOnly() throws UnifyException;
+
     /**
      * Creates an record in the database.
      * 

@@ -59,6 +59,7 @@ import com.tcdng.unify.core.annotation.Policy;
 import com.tcdng.unify.core.annotation.ResultField;
 import com.tcdng.unify.core.annotation.Table;
 import com.tcdng.unify.core.annotation.TableExt;
+import com.tcdng.unify.core.annotation.TableName;
 import com.tcdng.unify.core.annotation.TableRef;
 import com.tcdng.unify.core.annotation.UniqueConstraint;
 import com.tcdng.unify.core.annotation.UniqueConstraints;
@@ -130,6 +131,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                     return createEnumConstEntityInfo(entityClass);
                 }
 
+                TableName tn = entityClass.getAnnotation(TableName.class);
                 Table ta = entityClass.getAnnotation(Table.class);
                 View va = entityClass.getAnnotation(View.class);
                 TableExt tae = entityClass.getAnnotation(TableExt.class);
@@ -138,12 +140,12 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                             entityClass);
                 }
 
-                if (ta == null && va == null && tae == null) {
+                if (tn == null && ta == null && va == null && tae == null) {
                     throw new UnifyException(UnifyCoreErrorConstants.RECORD_NO_TABLE_OR_VIEW_ANNOTATION, entityClass);
                 }
 
                 // Tables
-                if (ta != null) {
+                if (ta != null || tn != null) {
                     return createTableEntityInfo(entityClass, entityCycleDetector);
                 }
 
@@ -221,13 +223,16 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
             @SuppressWarnings("unchecked")
             private SqlEntityInfo createTableEntityInfo(Class<?> entityClass, EntityCycleDetector entityCycleDetector)
                     throws Exception {
+            	TableName tn = entityClass.getAnnotation(TableName.class);
                 Table ta = entityClass.getAnnotation(Table.class);
-                String tableName = AnnotationUtils.getAnnotationString(ta.name());
-                if (StringUtils.isBlank(tableName)) {
-                    tableName = AnnotationUtils.getAnnotationString(ta.value());
-                } else if (StringUtils.isNotBlank(AnnotationUtils.getAnnotationString(ta.value()))) {
-                    throw new UnifyException(UnifyCoreErrorConstants.ANNOTATION_BAD_ATTRIBUTE_COMBINATION, "value",
-                            "name", Table.class, entityClass);
+                String tableName = tn != null ? tn.value() : AnnotationUtils.getAnnotationString(ta.name());
+                if (ta != null) {
+                    if (StringUtils.isBlank(tableName)) {
+                        tableName = AnnotationUtils.getAnnotationString(ta.value());
+                    } else if (StringUtils.isNotBlank(AnnotationUtils.getAnnotationString(ta.value()))) {
+                        throw new UnifyException(UnifyCoreErrorConstants.ANNOTATION_BAD_ATTRIBUTE_COMBINATION, "value",
+                                "name", Table.class, entityClass);
+                    }
                 }
 
                 if (tableName == null) {
@@ -237,23 +242,27 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
                 String preferredTableName = sqlDataSourceDialect.getPreferredName(tableName);
 
-                String viewName = AnnotationUtils.getAnnotationString(ta.view());
+                String viewName = ta != null ? AnnotationUtils.getAnnotationString(ta.view()) : null;
                 if (viewName == null) {
                     viewName = tableName;
                 }
 
-                final String schema = getWorkingSchema(AnnotationUtils.getAnnotationString(ta.schema()),
+                final String schema = getWorkingSchema(ta != null ? AnnotationUtils.getAnnotationString(ta.schema()) : null,
                         sqlDataSourceDialect.getDataSourceName());
                 String schemaTableName = SqlUtils.generateFullSchemaElementName(schema, preferredTableName);
                 
                 Map<String, ForeignKeyOverride> fkOverrideMap = new HashMap<String, ForeignKeyOverride>();
-                for (ForeignKeyOverride fkoa : ta.foreignKeyOverrides()) {
-                    fkOverrideMap.put(fkoa.key(), fkoa);
+                if (ta != null) {
+                    for (ForeignKeyOverride fkoa : ta.foreignKeyOverrides()) {
+                        fkOverrideMap.put(fkoa.key(), fkoa);
+                    }
                 }
 
                 Map<String, ColumnOverride> colOverrideMap = new HashMap<String, ColumnOverride>();
-                for (ColumnOverride coa : ta.columnOverrides()) {
-                    colOverrideMap.put(coa.field(), coa);
+                if (ta != null) {
+	                for (ColumnOverride coa : ta.columnOverrides()) {
+	                    colOverrideMap.put(coa.field(), coa);
+	                }
                 }
 
                 // Process all fields including super class fields
@@ -311,7 +320,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                             isPrimaryKey = true;
                             position = ia.position();
 
-                            column = AnnotationUtils.getAnnotationString(ta.idColumn());
+                            column = ta != null ? AnnotationUtils.getAnnotationString(ta.idColumn()) : null;
                             if (column == null) {
                                 column = AnnotationUtils.getAnnotationString(ia.name());
                             }
@@ -339,7 +348,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                             isPersistent = true;
                             position = va.position();
 
-                            column = AnnotationUtils.getAnnotationString(ta.versionColumn());
+                            column = ta != null ? AnnotationUtils.getAnnotationString(ta.versionColumn()) : null;
                             if (column == null) {
                                 column = AnnotationUtils.getAnnotationString(va.name());
                             }
@@ -724,7 +733,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                 } while ((searchClass = searchClass.getSuperclass()) != null);
 
                 // Rename view if necessary
-                if (!listOnlyFieldMap.isEmpty() && viewName.equals(tableName)) {
+                if (!listOnlyFieldMap.isEmpty() && ta != null && viewName.equals(tableName)) {
                     viewName = SqlUtils.generateViewName(tableName);
                 }
 
@@ -822,9 +831,9 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
                 List<Class<?>> heirachyList = ReflectUtils.getClassHierachyList(entityClass);
                 Map<String, SqlUniqueConstraintInfo> uniqueConstraintMap =
-                        extractUniqueConstraints(tableName, entityClass, heirachyList, propertyInfoMap, ta.uniqueConstraints());
+                        extractUniqueConstraints(tableName, entityClass, heirachyList, propertyInfoMap, ta != null ? ta.uniqueConstraints() : new UniqueConstraint[]{});
                 Map<String, SqlIndexInfo> indexMap =
-                        extractIndexes(tableName, entityClass, heirachyList, propertyInfoMap, ta.indexes());
+                        extractIndexes(tableName, entityClass, heirachyList, propertyInfoMap, ta != null ? ta.indexes() : new Index[] {});
 
                 if (sqlOrderColumns) {
                     List<SqlFieldInfo> tempList = new ArrayList<SqlFieldInfo>(propertyInfoMap.values());
@@ -843,7 +852,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                         preferredViewName, schemaViewName, idFieldInfo, versionFieldInfo, fosterParentTypeFieldInfo,
                         fosterParentIdFieldInfo, categoryFieldInfo, propertyInfoMap, childInfoList, childListInfoList,
                         uniqueConstraintMap, indexMap, null, null, null,
-                        sqlDataSourceDialect.isAllObjectsInLowerCase(), ta.identityManaged());
+                        sqlDataSourceDialect.isAllObjectsInLowerCase(), ta != null ? ta.identityManaged() : true);
                 return sqlEntityInfo;
             }
 

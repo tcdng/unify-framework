@@ -77,6 +77,14 @@ public class UnifyComponentConfig {
         return settings;
     }
 
+    public <T> T getSetting(Class<T> typeClass, String name) throws UnifyException {
+        return settings.getSettingValue(typeClass, name, null);
+    }
+
+    public <T> T getSetting(Class<T> typeClass, String name, T defaultVal) throws UnifyException {
+        return settings.getSettingValue(typeClass, name, defaultVal);
+    }
+
     public void addConflict(UnifyComponentConfig conflictUnifyComponentConfig) {
         if (conflictList == null) {
             conflictList = new ArrayList<UnifyComponentConfig>();
@@ -92,17 +100,5 @@ public class UnifyComponentConfig {
     public boolean isWithConfict() {
         return !DataUtils.isBlank(conflictList);
     }
-    
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("{\n");
-        sb.append("\tname = ").append(name).append(",\n");
-        sb.append("\ttype = ").append(type).append(",\n");
-        sb.append("\tdescription = ").append(description).append(",\n");
-        sb.append("\tsingleton = ").append(singleton).append(",\n");
-        sb.append("\tsettings = ").append(this.settings);
-        sb.append("}");
-        return sb.toString();
-    }
+
 }

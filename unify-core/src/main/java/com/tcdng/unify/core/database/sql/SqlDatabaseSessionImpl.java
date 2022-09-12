@@ -64,10 +64,12 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     private SqlStatementExecutor sqlStatementExecutor;
     private Connection connection;
     private Stack<Savepoint> savepointStack;
+    private final boolean readOnly;
     private boolean closed;
 
     public SqlDatabaseSessionImpl(SqlDataSource sqlDataSource, SqlStatementExecutor sqlStatementExecutor)
             throws UnifyException {
+    	this.readOnly = sqlDataSource.isReadOnly();
         this.sqlDataSource = sqlDataSource;
         this.sqlStatementExecutor = sqlStatementExecutor;
         sqlDataSourceDialect = (SqlDataSourceDialect) sqlDataSource.getDialect();
@@ -76,12 +78,18 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
     }
 
     @Override
+	public boolean isReadOnly() throws UnifyException {
+		return readOnly;
+	}
+
+	@Override
     public String getDataSourceName() {
         return sqlDataSource.getName();
     }
 
     @Override
     public Object create(Entity record) throws UnifyException {
+    	ensureWritable();
         SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.findSqlEntityInfo(SqlUtils.getEntityClass(record));
         if (sqlEntityInfo.isViewOnly()) {
             throw new UnifyException(UnifyCoreErrorConstants.RECORD_VIEW_OPERATION_UNSUPPORTED,
@@ -478,32 +486,38 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
     @Override
     public int updateById(Entity record) throws UnifyException {
+    	ensureWritable();
         return updateById(record, UpdateChild.TRUE);
     }
 
     @Override
     public int updateByIdVersion(Entity record) throws UnifyException {
+    	ensureWritable();
         return updateByIdVersion(record, UpdateChild.TRUE);
     }
 
     @Override
     public int updateLeanById(Entity record) throws UnifyException {
+    	ensureWritable();
         return updateById(record, UpdateChild.FALSE);
     }
 
     @Override
     public int updateLeanByIdVersion(Entity record) throws UnifyException {
+    	ensureWritable();
         return updateByIdVersion(record, UpdateChild.FALSE);
     }
 
     @Override
     public int updateById(Class<? extends Entity> clazz, Object id, Update update) throws UnifyException {
+    	ensureWritable();
         return getSqlStatementExecutor().executeUpdate(connection,
                 sqlDataSourceDialect.prepareUpdateStatement(clazz, id, update));
     }
 
     @Override
     public int updateAll(Query<? extends Entity> query, Update update) throws UnifyException {
+    	ensureWritable();
         try {
             SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
             EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
@@ -545,6 +559,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
     @Override
     public int deleteById(Entity record) throws UnifyException {
+    	ensureWritable();
         SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(record);
         if (sqlEntityInfo.isViewOnly()) {
             throw new UnifyException(UnifyCoreErrorConstants.RECORD_VIEW_OPERATION_UNSUPPORTED,
@@ -590,6 +605,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
     @Override
     public int deleteByIdVersion(Entity record) throws UnifyException {
+    	ensureWritable();
         SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(record);
         if (sqlEntityInfo.isViewOnly()) {
             throw new UnifyException(UnifyCoreErrorConstants.RECORD_VIEW_OPERATION_UNSUPPORTED,
@@ -652,6 +668,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
     @Override
     public int delete(Class<? extends Entity> clazz, final Object id) throws UnifyException {
+    	ensureWritable();
         SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(clazz);
         if (sqlEntityInfo.isViewOnly()) {
             throw new UnifyException(UnifyCoreErrorConstants.RECORD_VIEW_OPERATION_UNSUPPORTED,
@@ -681,6 +698,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
     @Override
     public int deleteAll(Query<? extends Entity> query) throws UnifyException {
+    	ensureWritable();
         try {
             SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
             if (sqlEntityInfo.isViewOnly()) {
@@ -915,6 +933,12 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
         return closed;
     }
 
+    private void ensureWritable() throws UnifyException {
+    	if (readOnly) {
+            throw new UnifyException(UnifyCoreErrorConstants.DATASOURCE_IN_READONLY_MODE, sqlDataSource.getName());
+    	}
+    }
+    
     private <T extends Entity> T find(Class<T> clazz, Object id, FetchChild fetchChild) throws UnifyException {
         SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(clazz);
         SqlStatement sqlStatement = sqlDataSourceDialect.prepareFindByPkStatement(clazz, id);
