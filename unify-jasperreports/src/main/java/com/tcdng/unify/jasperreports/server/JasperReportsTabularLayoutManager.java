@@ -40,7 +40,7 @@ import net.sf.jasperreports.engine.design.JRDesignSection;
 import net.sf.jasperreports.engine.design.JRDesignTextField;
 import net.sf.jasperreports.engine.design.JRDesignVariable;
 import net.sf.jasperreports.engine.design.JasperDesign;
-import net.sf.jasperreports.engine.type.HorizontalAlignEnum;
+import net.sf.jasperreports.engine.type.HorizontalTextAlignEnum;
 import net.sf.jasperreports.engine.type.PositionTypeEnum;
 import net.sf.jasperreports.engine.type.StretchTypeEnum;
 
@@ -141,15 +141,15 @@ public class JasperReportsTabularLayoutManager extends AbstractJasperReportsLayo
         if (report.isShadeOddRows()) {
             JRDesignRectangle jRDesignRectangle =
                     newJRDesignRectangle(jasperDesign, 0, 0, actualColumnWidth, detailHeight, theme.getShadeTheme());
-            jRDesignRectangle.getLinePen().setLineWidth(0);
+            jRDesignRectangle.getLinePen().setLineWidth(FLOAT_ZERO);
             jRDesignRectangle.setPrintWhenExpression(getOnOddJRDesignExpression());
-            jRDesignRectangle.setStretchType(StretchTypeEnum.RELATIVE_TO_BAND_HEIGHT);
+            jRDesignRectangle.setStretchType(StretchTypeEnum.CONTAINER_HEIGHT);
             detailBand.addElement(jRDesignRectangle);
         }
 
         if (report.isUnderlineRows()) {
             JRDesignLine jRDesignLine = newJRDesignLine(0, detailHeight - 1, actualColumnWidth, 0, Color.BLACK);
-            jRDesignLine.getLinePen().setLineWidth(0.5f);
+            jRDesignLine.getLinePen().setLineWidth(FLOAT_ZERO_POINT_FIVE);
             jRDesignLine.setPositionType(PositionTypeEnum.FIX_RELATIVE_TO_BOTTOM);
             detailBand.addElement(jRDesignLine);
         }
@@ -189,7 +189,7 @@ public class JasperReportsTabularLayoutManager extends AbstractJasperReportsLayo
             ThemeColors groupTheme = theme.getGroupTheme(i, invertGroupColors);
             JRDesignRectangle grpJRDesignRectangle =
                     newJRDesignRectangle(jasperDesign, 0, 1, actualColumnWidth, columnHeaderHeight - 2, groupTheme);
-            grpJRDesignRectangle.getLinePen().setLineWidth(0);
+            grpJRDesignRectangle.getLinePen().setLineWidth(FLOAT_ZERO);
             groupHeaderBand.addElement(grpJRDesignRectangle);
 
             JRDesignElement jRDesignElement = newColumnJRDesignElement(jasperDesign, groupTheme,
@@ -215,7 +215,7 @@ public class JasperReportsTabularLayoutManager extends AbstractJasperReportsLayo
                 groupFooterBand.setHeight(columnHeaderHeight);
                 grpJRDesignRectangle =
                         newJRDesignRectangle(jasperDesign, 0, 1, actualColumnWidth, columnHeaderHeight - 2, groupTheme);
-                grpJRDesignRectangle.getLinePen().setLineWidth(0);
+                grpJRDesignRectangle.getLinePen().setLineWidth(FLOAT_ZERO);
                 groupFooterBand.addElement(grpJRDesignRectangle);
 
                 int sumStartX = actualColumnWidth;
@@ -335,8 +335,8 @@ public class JasperReportsTabularLayoutManager extends AbstractJasperReportsLayo
             boolean isListFormat) throws UnifyException {
         JRDesignRectangle jRDesignRectangle =
                 newJRDesignRectangle(jasperDesign, 0, y, actualColumnWidth, columnHeaderHeight, columnHeaderColors);
-        jRDesignRectangle.getLinePen().setLineWidth(0);
-        jRDesignRectangle.setStretchType(StretchTypeEnum.RELATIVE_TO_BAND_HEIGHT);
+        jRDesignRectangle.getLinePen().setLineWidth(FLOAT_ZERO);
+        jRDesignRectangle.setStretchType(StretchTypeEnum.CONTAINER_HEIGHT);
         jrDesignBand.addElement(jRDesignRectangle);
 
         Color colHeaderColor = columnHeaderColors.getFontColor();
@@ -346,7 +346,7 @@ public class JasperReportsTabularLayoutManager extends AbstractJasperReportsLayo
 
         for (ReportColumn reportColumn : detailColumnList) {
             JRDesignElement colHeaderJRDesignElement = newTitleJRDesignStaticText(columnStyles, colHeaderColor,
-                    HorizontalAlignEnum.CENTER, reportColumn.getTitle());
+                    HorizontalTextAlignEnum.CENTER, reportColumn.getTitle());
             JRDesignElement jRDesignElement = detailJRElementMap.get(reportColumn);
             colHeaderJRDesignElement.setX(jRDesignElement.getX());
             colHeaderJRDesignElement.setY(y + 2);
