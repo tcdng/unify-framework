@@ -46,10 +46,6 @@ jobs:
             "snapshots": {
             "enabled": "false"
             }
-            },{
-            "id": "jaspersoft-thirdparty",
-            "name": "JasperSoft Thirdparty",
-            "url": "http://jaspersoft.jfrog.io/jaspersoft/third-party-ce-artifacts/"
             }] 
           
       - name: Import GPG Key
