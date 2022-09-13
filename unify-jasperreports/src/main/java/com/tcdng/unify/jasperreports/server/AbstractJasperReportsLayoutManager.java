@@ -72,6 +72,10 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
 	protected static final Float FLOAT_ZERO = Float.valueOf(0);
 
 	protected static final Float FLOAT_ZERO_POINT_FIVE = Float.valueOf(0.5f);
+
+	protected static final int LEFT_PADDING = 2;
+
+	protected static final int TOTAL_X_PADDING = LEFT_PADDING  + 2;
 	
     private FactoryMap<String, ColumnStyles> columnStylesMap;
 
@@ -267,7 +271,7 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
         textField.setHorizontalTextAlign(getHorizontalAlign(reportColumn.getHorizontalAlignment()));
         textField.setExpression(newJRDesignExpression(reportColumn));
         textField.setBlankWhenNull(true);
-
+ 
         textField.addPropertyExpression(
                 newJRDesignPropertyExpression("net.sf.jasperreports.print.keep.full.text", true));
 

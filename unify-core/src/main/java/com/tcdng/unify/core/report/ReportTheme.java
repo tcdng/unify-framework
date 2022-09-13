@@ -42,13 +42,13 @@ public class ReportTheme {
 
     private static final String DEFAULT_COLUMN_FONTNAME = "Times-Roman";
 
-    private static final int DEFAULT_COLUMN_FONTSIZE = 10;
+    private static final int DEFAULT_COLUMN_FONTSIZE = 9;
 
-    private static final int DEFAULT_GROUP_FONTSIZE = 12;
+    private static final int DEFAULT_GROUP_FONTSIZE = 11;
 
-    private static final int DEFAULT_COLUMNHEADER_HEIGHT = 18;
+    private static final int DEFAULT_COLUMNHEADER_HEIGHT = 16;
 
-    private static final int DEFAULT_DETAIL_HEIGHT = 18;
+    private static final int DEFAULT_DETAIL_HEIGHT = 16;
 
     private static final int DEFAULT_DETAIL_IMAGE_WIDTH = 360;
 

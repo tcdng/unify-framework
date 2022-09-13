@@ -95,8 +95,8 @@ public class JasperReportsTabularLayoutManager extends AbstractJasperReportsLayo
         for (ReportColumn reportColumn : detailColumnList) {
             JRDesignElement jRDesignElement = detailJRElementMap.get(reportColumn);
             int newWidth = (jRDesignElement.getWidth() * actualColumnWidth) / reportWidth;
-            jRDesignElement.setWidth(newWidth);
-            jRDesignElement.setX(x);
+            jRDesignElement.setWidth(newWidth - TOTAL_X_PADDING);
+            jRDesignElement.setX(x + LEFT_PADDING);
             lastJRDesignElement = jRDesignElement;
             x += newWidth;
         }
