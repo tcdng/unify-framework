@@ -91,7 +91,7 @@ public class JasperReportsTabularThumbnailImagesOnlyLayoutManager extends Abstra
 
         if (report.isUnderlineRows()) {
             JRDesignLine jRDesignLine = newJRDesignLine(0, detailHeight - 1, actualColumnWidth, 0, Color.BLACK);
-            jRDesignLine.getLinePen().setLineWidth(0.5f);
+            jRDesignLine.getLinePen().setLineWidth(FLOAT_ZERO_POINT_FIVE);
             jRDesignLine.setPositionType(PositionTypeEnum.FIX_RELATIVE_TO_BOTTOM);
             detailBand.addElement(jRDesignLine);
         }
@@ -135,7 +135,7 @@ public class JasperReportsTabularThumbnailImagesOnlyLayoutManager extends Abstra
             ThemeColors groupTheme = theme.getGroupTheme(i, invertGroupColors);
             JRDesignRectangle grpJRDesignRectangle =
                     newJRDesignRectangle(jasperDesign, 0, 1, actualColumnWidth, columnHeaderHeight - 2, groupTheme);
-            grpJRDesignRectangle.getLinePen().setLineWidth(0);
+            grpJRDesignRectangle.getLinePen().setLineWidth(FLOAT_ZERO);
             groupHeaderBand.addElement(grpJRDesignRectangle);
 
             JRDesignElement jRDesignElement = newColumnJRDesignElement(jasperDesign, groupTheme,
@@ -153,7 +153,7 @@ public class JasperReportsTabularThumbnailImagesOnlyLayoutManager extends Abstra
                 groupFooterBand.setHeight(columnHeaderHeight);
                 grpJRDesignRectangle =
                         newJRDesignRectangle(jasperDesign, 0, 1, actualColumnWidth, columnHeaderHeight - 2, groupTheme);
-                grpJRDesignRectangle.getLinePen().setLineWidth(0);
+                grpJRDesignRectangle.getLinePen().setLineWidth(FLOAT_ZERO);
                 groupFooterBand.addElement(grpJRDesignRectangle);
 
                 int sumX = 4 + sumWidth * (6 - summationColumnList.size()) - 2;

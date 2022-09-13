@@ -34,7 +34,7 @@ import net.sf.jasperreports.engine.design.JRDesignLine;
 import net.sf.jasperreports.engine.design.JRDesignRectangle;
 import net.sf.jasperreports.engine.design.JRDesignSection;
 import net.sf.jasperreports.engine.design.JasperDesign;
-import net.sf.jasperreports.engine.type.HorizontalAlignEnum;
+import net.sf.jasperreports.engine.type.HorizontalTextAlignEnum;
 
 /**
  * Used for columnar report layout.
@@ -83,7 +83,7 @@ public class JasperReportsColumnarLayoutManager extends AbstractJasperReportsLay
 
                 if (isPrintColumnNames) {
                     JRDesignElement colHeaderJRDesignElement = newTitleJRDesignStaticText(columnStyles, Color.WHITE,
-                            HorizontalAlignEnum.LEFT, reportColumn.getTitle());
+                            HorizontalTextAlignEnum.LEFT, reportColumn.getTitle());
                     colHeaderJRDesignElement.setBackcolor(new Color(0xD0, 0xD0, 0xD0));
                     colHeaderJRDesignElement.setX(0);
                     colHeaderJRDesignElement.setY(jRDesignElement.getY());
@@ -107,7 +107,7 @@ public class JasperReportsColumnarLayoutManager extends AbstractJasperReportsLay
         if (report.isShadeOddRows()) {
             JRDesignRectangle jRDesignRectangle = newJRDesignRectangle(jasperDesign, 0, 0, actualColumnWidth,
                     calcDetailHeight, theme.getShadeTheme());
-            jRDesignRectangle.getLinePen().setLineWidth(0);
+            jRDesignRectangle.getLinePen().setLineWidth(FLOAT_ZERO);
             jRDesignRectangle.setPrintWhenExpression(getOnOddJRDesignExpression());
             detailBand.addElement(jRDesignRectangle);
         }
@@ -146,7 +146,7 @@ public class JasperReportsColumnarLayoutManager extends AbstractJasperReportsLay
             ThemeColors groupTheme = theme.getGroupTheme(i, invertGroupColors);
             JRDesignRectangle grpJRDesignRectangle =
                     newJRDesignRectangle(jasperDesign, 0, 1, actualColumnWidth, columnHeaderHeight - 2, groupTheme);
-            grpJRDesignRectangle.getLinePen().setLineWidth(0);
+            grpJRDesignRectangle.getLinePen().setLineWidth(FLOAT_ZERO);
             groupBand.addElement(grpJRDesignRectangle);
 
             JRDesignElement jRDesignElement = newColumnJRDesignElement(jasperDesign, groupTheme,

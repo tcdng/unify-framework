@@ -51,12 +51,13 @@ import net.sf.jasperreports.engine.design.JRDesignTextField;
 import net.sf.jasperreports.engine.design.JRDesignVariable;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.type.CalculationEnum;
-import net.sf.jasperreports.engine.type.HorizontalAlignEnum;
+import net.sf.jasperreports.engine.type.HorizontalImageAlignEnum;
+import net.sf.jasperreports.engine.type.HorizontalTextAlignEnum;
 import net.sf.jasperreports.engine.type.ModeEnum;
 import net.sf.jasperreports.engine.type.ResetTypeEnum;
 import net.sf.jasperreports.engine.type.ScaleImageEnum;
 import net.sf.jasperreports.engine.type.StretchTypeEnum;
-import net.sf.jasperreports.engine.type.VerticalAlignEnum;
+import net.sf.jasperreports.engine.type.VerticalTextAlignEnum;
 
 /**
  * Abstract jasper report layout manager that provides methods for easy
@@ -68,9 +69,17 @@ import net.sf.jasperreports.engine.type.VerticalAlignEnum;
 public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyComponent
         implements JasperReportsLayoutManager {
 
+	protected static final Float FLOAT_ZERO = Float.valueOf(0);
+
+	protected static final Float FLOAT_ZERO_POINT_FIVE = Float.valueOf(0.5f);
+
+	protected static final int LEFT_PADDING = 2;
+
+	protected static final int TOTAL_X_PADDING = LEFT_PADDING  + 2;
+	
     private FactoryMap<String, ColumnStyles> columnStylesMap;
 
-    private Map<HAlignType, HorizontalAlignEnum> horizontalAlignmentMap;
+    private Map<HAlignType, HorizontalTextAlignEnum> horizontalAlignmentMap;
 
     public AbstractJasperReportsLayoutManager() {
         columnStylesMap = new FactoryMap<String, ColumnStyles>() {
@@ -80,11 +89,11 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
             }
         };
 
-        horizontalAlignmentMap = new HashMap<HAlignType, HorizontalAlignEnum>();
-        horizontalAlignmentMap.put(HAlignType.LEFT, HorizontalAlignEnum.LEFT);
-        horizontalAlignmentMap.put(HAlignType.CENTER, HorizontalAlignEnum.CENTER);
-        horizontalAlignmentMap.put(HAlignType.RIGHT, HorizontalAlignEnum.RIGHT);
-        horizontalAlignmentMap.put(HAlignType.JUSTIFIED, HorizontalAlignEnum.JUSTIFIED);
+        horizontalAlignmentMap = new HashMap<HAlignType, HorizontalTextAlignEnum>();
+        horizontalAlignmentMap.put(HAlignType.LEFT, HorizontalTextAlignEnum.LEFT);
+        horizontalAlignmentMap.put(HAlignType.CENTER, HorizontalTextAlignEnum.CENTER);
+        horizontalAlignmentMap.put(HAlignType.RIGHT, HorizontalTextAlignEnum.RIGHT);
+        horizontalAlignmentMap.put(HAlignType.JUSTIFIED, HorizontalTextAlignEnum.JUSTIFIED);
     }
 
     @Override
@@ -133,7 +142,7 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
     protected abstract void doApplyLayout(JasperDesign jasperDesign, ColumnStyles columnStyles, Report report)
             throws UnifyException;
 
-    protected HorizontalAlignEnum getHorizontalAlign(HAlignType hAlignType) {
+    protected HorizontalTextAlignEnum getHorizontalAlign(HAlignType hAlignType) {
         return horizontalAlignmentMap.get(hAlignType);
     }
 
@@ -157,8 +166,8 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
         // Draw background
         JRDesignRectangle jRDesignRectangle =
                 newJRDesignRectangle(jasperDesign, x, y + 2, width, height - 4, paramHeaderColors);
-        jRDesignRectangle.getLinePen().setLineWidth(0);
-        jRDesignRectangle.setStretchType(StretchTypeEnum.RELATIVE_TO_BAND_HEIGHT);
+        jRDesignRectangle.getLinePen().setLineWidth(FLOAT_ZERO);
+        jRDesignRectangle.setStretchType(StretchTypeEnum.CONTAINER_HEIGHT);
         jrDesignBand.addElement(jRDesignRectangle);
 
         Color fontColor = paramHeaderColors.getFontColor();
@@ -175,7 +184,7 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
                 // Label
                 String paramLabel = StringUtils.concatenate(reportParameter.getDescription(), " :");
                 JRDesignElement paramLabelJRDesignElement =
-                        newTitleJRDesignStaticText(columnStyles, fontColor, HorizontalAlignEnum.LEFT, paramLabel);
+                        newTitleJRDesignStaticText(columnStyles, fontColor, HorizontalTextAlignEnum.LEFT, paramLabel);
                 paramLabelJRDesignElement.setX(penX + 2);
                 paramLabelJRDesignElement.setY(penY + 2);
                 paramLabelJRDesignElement.setWidth(sectionWidth - 4);
@@ -190,7 +199,7 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
                 // Value
                 String paramVal = ReportFormatUtils.format(reportParameter.getFormatter(), reportParameter.getValue());
                 JRDesignElement paramValJRDesignElement =
-                        newTitleJRDesignStaticText(columnStyles, fontColor, HorizontalAlignEnum.LEFT, paramVal);
+                        newTitleJRDesignStaticText(columnStyles, fontColor, HorizontalTextAlignEnum.LEFT, paramVal);
                 paramValJRDesignElement.setX(penX + sectionWidth + 2);
                 paramValJRDesignElement.setY(penY + 2);
                 paramValJRDesignElement.setWidth(sectionWidth - 4);
@@ -247,7 +256,7 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
             JRDesignStyle fontStyle, ReportColumn reportColumn, boolean isListFormat) throws UnifyException {
         if (reportColumn.isBlob()) {
             JRDesignImage jrDesignImage = new JRDesignImage(jasperDesign);
-            jrDesignImage.setHorizontalAlignment(HorizontalAlignEnum.CENTER);
+            jrDesignImage.setHorizontalImageAlign(HorizontalImageAlignEnum.CENTER);
             jrDesignImage.setWidth(reportColumn.getWidthRatio());
             jrDesignImage.setScaleImage(ScaleImageEnum.FILL_FRAME);
             jrDesignImage.setExpression(newJRDesignExpression(reportColumn));
@@ -259,10 +268,10 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
         textField.setWidth(reportColumn.getWidthRatio());
         textField.setForecolor(themeColors.getFontColor());
         textField.setStyle(fontStyle);
-        textField.setHorizontalAlignment(getHorizontalAlign(reportColumn.getHorizontalAlignment()));
+        textField.setHorizontalTextAlign(getHorizontalAlign(reportColumn.getHorizontalAlignment()));
         textField.setExpression(newJRDesignExpression(reportColumn));
         textField.setBlankWhenNull(true);
-
+ 
         textField.addPropertyExpression(
                 newJRDesignPropertyExpression("net.sf.jasperreports.print.keep.full.text", true));
 
@@ -281,13 +290,13 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
     }
 
     protected JRDesignStaticText newTitleJRDesignStaticText(ColumnStyles columnStyles, Color foreColor,
-            HorizontalAlignEnum horizontalAlignment, String text) throws UnifyException {
+            HorizontalTextAlignEnum horizontalAlignment, String text) throws UnifyException {
         JRDesignStaticText staticText = new JRDesignStaticText();
         staticText.setForecolor(foreColor);
         staticText.setMode(ModeEnum.TRANSPARENT);
         staticText.setStyle(columnStyles.getBoldStyle());
         staticText.setText(text);
-        staticText.setHorizontalAlignment(horizontalAlignment);
+        staticText.setHorizontalTextAlign(horizontalAlignment);
         return staticText;
     }
 
@@ -302,7 +311,7 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
         jRDesignTextField.setBackcolor(themeColors.getBackColor());
         jRDesignTextField.setStyle(style);
         jRDesignTextField.setMode(ModeEnum.OPAQUE);
-        jRDesignTextField.setHorizontalAlignment(getHorizontalAlign(alignType));
+        jRDesignTextField.setHorizontalTextAlign(getHorizontalAlign(alignType));
         jRDesignTextField.setExpression(expression);
         return jRDesignTextField;
     }
@@ -466,7 +475,7 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
             parentStyle.setDefault(true);
             parentStyle.setFontName(fontName);
             parentStyle.setFontSize((float) fontSize);
-            parentStyle.setVerticalAlignment(VerticalAlignEnum.MIDDLE);
+            parentStyle.setVerticalTextAlign(VerticalTextAlignEnum.MIDDLE);
 
             normalStyle = new JRDesignStyle();
             normalStyle.setParentStyle(parentStyle);
@@ -480,13 +489,13 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
             boldStyle = new JRDesignStyle();
             boldStyle.setParentStyle(parentStyle);
             boldStyle.setName("bold_" + nameSuffix);
-            boldStyle.setBold(true);
+            boldStyle.setBold(Boolean.TRUE);
 
             boldLargeStyle = new JRDesignStyle();
             boldLargeStyle.setParentStyle(parentStyle);
             boldLargeStyle.setName("boldlarge_" + nameSuffix);
             boldLargeStyle.setFontSize((float) largeFontSize);
-            boldLargeStyle.setBold(true);
+            boldLargeStyle.setBold(Boolean.TRUE);
         }
 
         public JRDesignStyle getParentStyle() {
