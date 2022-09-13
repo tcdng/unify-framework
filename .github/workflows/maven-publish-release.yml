@@ -47,7 +47,7 @@ jobs:
             "enabled": "false"
             }
             },{
-            "id": "jaspersoft-thirdparty,
+            "id": "jaspersoft-thirdparty",
             "name": "JasperSoft Thirdparty",
             "url": "http://jaspersoft.jfrog.io/jaspersoft/third-party-ce-artifacts/"
             }] 
