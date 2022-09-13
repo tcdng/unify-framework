@@ -35,12 +35,12 @@
 		<module>unify-jetty</module>
 		<module>unify-xchart</module>
 		<module>unify-fontawesome</module>
-    	<module>unify-web-ui</module>
-    	<module>unify-web-javax</module>
-    	<module>unify-web-jakarta</module>
-    	<module>unify-nashorn</module>
-    	<module>unify-convert</module>
-  	</modules>
+		<module>unify-web-ui</module>
+		<module>unify-web-javax</module>
+		<module>unify-web-jakarta</module>
+		<module>unify-nashorn</module>
+		<module>unify-convert</module>
+	</modules>
 
 	<scm>
 		<connection>scm:git:git://github.com/tcdng/unify-framework.git</connection>
@@ -90,11 +90,11 @@
 								</goals>
 							</execution>
 						</executions>
-			            <configuration>
-			                <additionalOptions>
-			                    <additionalOption>-Xdoclint:none</additionalOption>
-			                </additionalOptions>
-			            </configuration>
+						<configuration>
+							<additionalOptions>
+								<additionalOption>-Xdoclint:none</additionalOption>
+							</additionalOptions>
+						</configuration>
 					</plugin>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
