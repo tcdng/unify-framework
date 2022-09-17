@@ -195,7 +195,29 @@ public enum FilterConditionType implements EnumConst {
             return new Between(fieldName, paramA, paramB);
         }
     },
+    BETWEEN_LINGUAL("BTL", RestrictionType.BETWEEN, "condition.betweenlngual.label", "condition.between.symbol", FilterParamType.IMMEDIATE, false, true) {
+        @Override
+        public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
+            cb.addBetween(fieldName, paramA, paramB);
+        }
+
+        @Override
+        public Restriction createSimpleCriteria(String fieldName, Object paramA, Object paramB) {
+            return new Between(fieldName, paramA, paramB);
+        }
+    },
     NOT_BETWEEN("NBT", RestrictionType.NOT_BETWEEN, "condition.notbetween.label", "condition.notbetween.symbol", FilterParamType.IMMEDIATE, false, false) {
+        @Override
+        public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
+            cb.addNotBetween(fieldName, paramA, paramB);
+        }
+
+        @Override
+        public Restriction createSimpleCriteria(String fieldName, Object paramA, Object paramB) {
+            return new NotBetween(fieldName, paramA, paramB);
+        }
+    },
+    NOT_BETWEEN_LINGUAL("NBL", RestrictionType.NOT_BETWEEN, "condition.notbetweenlingual.label", "condition.notbetween.symbol", FilterParamType.IMMEDIATE, false, true) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
             cb.addNotBetween(fieldName, paramA, paramB);
