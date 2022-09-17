@@ -195,7 +195,7 @@ public enum FilterConditionType implements EnumConst {
             return new Between(fieldName, paramA, paramB);
         }
     },
-    BETWEEN_LINGUAL("BTL", RestrictionType.BETWEEN, "condition.betweenlngual.label", "condition.between.symbol", FilterParamType.IMMEDIATE, false, true) {
+    BETWEEN_LINGUAL("BTL", RestrictionType.BETWEEN, "condition.betweenlingual.label", "condition.between.symbol", FilterParamType.IMMEDIATE, false, true) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
             cb.addBetween(fieldName, paramA, paramB);
