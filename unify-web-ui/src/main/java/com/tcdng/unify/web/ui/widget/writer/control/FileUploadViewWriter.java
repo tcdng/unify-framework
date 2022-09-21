@@ -18,6 +18,7 @@ package com.tcdng.unify.web.ui.widget.writer.control;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
+import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.web.ui.widget.Control;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.Widget;
@@ -96,6 +97,7 @@ public class FileUploadViewWriter extends AbstractControlWriter {
         writer.writeParam("pViewId", fileAttachment.getViewCtrl().getBaseId());
         writer.writeParam("pRemId", fileAttachment.getRemoveCtrl().getBaseId());
         writer.writeParam("pEditable", fileAttachment.isContainerEditable());
+        writer.writeParam("pRef", DataUtils.toArray(String.class, writer.getPostCommandRefs()));
         writer.endFunction();
     }
 }

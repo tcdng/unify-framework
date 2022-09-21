@@ -633,6 +633,11 @@ public interface Widget extends UplComponent {
     boolean isPanel();
 
     /**
+     * Returns true if widget refreshes container
+     */
+    boolean isRefreshesContainer();
+    
+    /**
      * Returns true if widget supports value store memory.
      * 
      * @throws UnifyException

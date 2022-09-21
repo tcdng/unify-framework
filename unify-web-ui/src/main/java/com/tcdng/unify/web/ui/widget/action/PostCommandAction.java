@@ -39,4 +39,9 @@ public class PostCommandAction extends AbstractPageAction {
     public PostCommandAction() {
         super("postcommand");
     }
+
+	@Override
+	public boolean isPostCommand() {
+		return true;
+	}
 }

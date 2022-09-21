@@ -1257,6 +1257,11 @@ public final class DataUtils {
             throw new UnifyException(UnifyCoreErrorConstants.DATAUTIL_ERROR, e);
         }
     }
+    
+    public static <T> T[] toArray(Class<T> clazz, Set<T> set) {
+    	return DataUtils.toArray(clazz, (List<T>) (set != null ? new ArrayList<T>(set) : null));
+    }
+
 
     @SuppressWarnings("unchecked")
     public static <T> T[] toArray(Class<T> clazz, List<T> list) {

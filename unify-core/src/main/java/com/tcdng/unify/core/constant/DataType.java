@@ -45,8 +45,8 @@ public enum DataType implements EnumConst {
     DOUBLE("DB", Double.class, ColumnType.DOUBLE, FLOAT),
     DECIMAL("DC", BigDecimal.class, ColumnType.DECIMAL, DOUBLE, FLOAT, LONG, INTEGER, SHORT),
     DATE("DT", Date.class, ColumnType.DATE),
-    TIMESTAMP_UTC("TU", Date.class, ColumnType.TIMESTAMP_UTC, DATE),
     TIMESTAMP("TS", Date.class, ColumnType.TIMESTAMP, DATE),
+    TIMESTAMP_UTC("TU", Date.class, ColumnType.TIMESTAMP_UTC, DATE, TIMESTAMP),
     CLOB("CT", String.class, ColumnType.CLOB),
     BLOB("BT", byte[].class, ColumnType.BLOB),
     STRING("ST", String.class, ColumnType.STRING, CHAR, BOOLEAN, DECIMAL, DOUBLE, FLOAT, LONG, INTEGER, SHORT, CLOB);

@@ -1023,7 +1023,12 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
                     }
                 }
             }
-            writer.write(",\"uRef\":").writeJsonArray(componentList);
+            
+            if (pageAction.isPostCommand() && writer.isKeepPostCommandRefs()) {
+            	writer.keepPostCommandRefs(componentList);
+            } else {
+            	writer.write(",\"uRef\":").writeJsonArray(componentList);
+            }
 
             List<String> valueComponentList = pageManager.getValueReferences(pageAction.getId());
             writer.write(",\"uVRef\":").writeJsonArray(valueComponentList);

@@ -2133,10 +2133,11 @@ ux.rigFileUploadView = function(rgp) {
 		var remId = rgp.pRemId;
 
 		var fileElem = _id(fileId)
-//		var evp = ux.newEvPrm(rgp);
-//		evp.uPanels = [ rgp.pContId ];
-//		evp.isUniqueTrg = true;
-//		ux.addHdl(fileElem, "change", ux.post, evp);
+		var evp = ux.newEvPrm(rgp);
+		evp.uPanels = [ rgp.pContId ];
+		evp.uRef = rgp.pRef;
+		evp.isUniqueTrg = true;
+		ux.addHdl(fileElem, "change", ux.post, evp);
 
 		// Attach
 		evp = {fileId:fileElem.id};
@@ -2145,12 +2146,13 @@ ux.rigFileUploadView = function(rgp) {
 
 		// View
 		if (rgp.pViewURL) {
-			evp = {uURL:rgp.pViewURL, uPanels:[ rgp.pContId ]};
+			evp = {uURL:rgp.pViewURL, uPanels:[ rgp.pContId ], uRef:rgp.pRef};
 			ux.addHdl(_id(viewId), "click", ux.post, evp);
 		} else {
 			evp = ux.newEvPrm(rgp);
 			evp.uCmd = id + "->view";
 			evp.uPanels = [ rgp.pContId ];
+			evp.uRef = rgp.pRef;
 			ux.addHdl(_id(viewId), "click", ux.post, evp);
 		}
 
@@ -2158,6 +2160,7 @@ ux.rigFileUploadView = function(rgp) {
 		evp = ux.newEvPrm(rgp);
 		evp.uCmd = id + "->detach";
 		evp.uPanels = [ rgp.pContId ];
+		evp.uRef = rgp.pRef;
 		ux.addHdl(_id(remId), "click", ux.post, evp);
 	}
 }
@@ -2622,6 +2625,7 @@ ux.rigPhotoUpload = function(rgp) {
 		const fileElem = _id(rgp.pFileId);
 		const evp = ux.newEvPrm(rgp);
 		evp.uPanels = [ rgp.pContId ];
+		evp.uRef = rgp.pRef;
 		ux.addHdl(fileElem, "change", ux.post, evp);
 		ux.addHdl(_id(rgp.pImgId), "click", function(uEv) {
 			fileElem.click();
@@ -4515,8 +4519,7 @@ ux.extractObjParams = function(elem, param) {
 			if (elem.value) {
 				var files = elem.files;
 				for (var i = 0; i < files.length; i++) {
-					param.value.append(trnId, files[i],
-							files[i].name);
+					param.value.append(trnId, files[i], files[i].name);
 				}
 			}
 		} else {

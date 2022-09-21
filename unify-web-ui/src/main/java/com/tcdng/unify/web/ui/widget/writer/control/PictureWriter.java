@@ -18,6 +18,7 @@ package com.tcdng.unify.web.ui.widget.writer.control;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
+import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.Widget;
 import com.tcdng.unify.web.ui.widget.control.Picture;
@@ -53,6 +54,7 @@ public class PictureWriter extends AbstractControlWriter {
         writer.writeParam("pFileId", picture.getFileCtrl().getId());
         writer.writeParam("pImgId", picture.getImageCtrl().getId());
         writer.writeParam("pEditable", picture.isContainerEditable());
+        writer.writeParam("pRef", DataUtils.toArray(String.class, writer.getPostCommandRefs()));
         writer.endFunction();
     }
 

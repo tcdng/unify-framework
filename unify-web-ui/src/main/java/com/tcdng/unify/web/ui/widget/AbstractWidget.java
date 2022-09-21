@@ -579,6 +579,11 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
         return work;
     }
 
+    @Override
+	public boolean isRefreshesContainer() {
+		return false;
+	}
+
     protected void setPageAttribute(String name, Object value) throws UnifyException {
         getRequestContextUtil().getRequestPage().setAttribute(name, value);
     }

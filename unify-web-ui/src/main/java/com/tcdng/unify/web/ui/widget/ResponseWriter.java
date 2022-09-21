@@ -19,6 +19,7 @@ import java.io.Writer;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
@@ -927,4 +928,37 @@ public interface ResponseWriter extends UnifyComponent {
 	 * @param dataIndex the data index to set
 	 */
 	void setDataIndex(int dataIndex);
+	
+	/**
+	 * Indicates post command references should be kept.
+	 * 
+	 * @return true if set otherwise false
+	 */
+	boolean isKeepPostCommandRefs();
+
+	/**
+	 * Enables keeping of post command references for this writer
+	 * 
+	 * @return true if no command references is currently kept otherwise false
+	 */
+	boolean setKeepPostCommandRefs();
+
+	/**
+	 * Disables keeping of post command references for this writer
+	 */
+	void clearKeepPostCommandRefs();
+
+	/**
+	 * Keeps post command references.
+	 * 
+	 * @param widgetIds the references to keep.
+	 */
+	void keepPostCommandRefs(Collection<String> widgetIds);
+
+	/**
+	 * Gets the post command references kept so far by this writer
+	 * 
+	 * @return the references
+	 */
+	Set<String> getPostCommandRefs();
 }

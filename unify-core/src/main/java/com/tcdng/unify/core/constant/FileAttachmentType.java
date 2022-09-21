@@ -39,7 +39,7 @@ public enum FileAttachmentType implements EnumConst {
     IMAGE_BMP("BMP", ".bmp", MimeType.IMAGE_BMP),
     PDF("PDF", ".pdf", MimeType.APPLICATION_PDF),
     XML("XML", ".xml", MimeType.APPLICATION_XML),
-    TEXT("TXT", "text/*", MimeType.TEXT),
+    TEXT("TXT", ".txt", MimeType.TEXT),
     VIDEO("VID", "video/*,video/mp4", MimeType.VIDEO),
     WILDCARD("WILD", "", MimeType.APPLICATION_OCTETSTREAM),
     WORD("DOC", ".doc,.docx", MimeType.APPLICATION_WORD);
@@ -74,6 +74,45 @@ public enum FileAttachmentType implements EnumConst {
         return mimeType;
     }
 
+    public String appendDefaultExtension(String filename) {
+    	if (filename != null && filename.indexOf('.') < 0) {
+    		switch(this) {
+			case AUDIO:
+				break;
+			case CSV:
+				return filename + ".csv";
+			case EXCEL:
+				break;
+			case IMAGE:
+				return filename + ".jpg";
+			case IMAGE_BMP:
+				return filename + ".bmp";
+			case IMAGE_GIF:
+				return filename + ".gif";
+			case IMAGE_JPG:
+				return filename + ".jpg";
+			case IMAGE_PNG:
+				return filename + ".png";
+			case PDF:
+				return filename + ".pdf";
+			case TEXT:
+				return filename + ".txt";
+			case VIDEO:
+				break;
+			case WILDCARD:
+				break;
+			case WORD:
+				break;
+			case XML:
+				return filename + ".xml";
+			default:
+				break;    		
+    		}
+    	}
+    	
+    	return filename;
+    }
+    
     public static FileAttachmentType detectFromFileName(String fileName) {
         if (!StringUtils.isBlank(fileName)) {
             int index = fileName.indexOf('.');
@@ -97,4 +136,5 @@ public enum FileAttachmentType implements EnumConst {
     public static FileAttachmentType fromName(String name) {
         return EnumUtils.fromName(FileAttachmentType.class, name);
     }
+
 }
