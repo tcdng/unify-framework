@@ -39,6 +39,7 @@ import com.tcdng.unify.web.ui.widget.data.FileAttachmentInfo;
  */
 @Component("ui-fileuploadview")
 @UplAttributes({ @UplAttribute(name = "type", type = FileAttachmentType.class, defaultVal = "wildcard"),
+    	@UplAttribute(name = "filenameBinding", type = String.class),
         @UplAttribute(name = "handler", type = String.class, mandatory = false),
         @UplAttribute(name = "category", type = String.class),
         @UplAttribute(name = "parentCategory", type = String.class),
@@ -55,8 +56,6 @@ public class FileUploadView extends AbstractMultiControl {
     private Control removeCtrl;
 
     private FileUploadViewHandler handler;
-
-    private String localFilename;
     
     @Override
     public void populate(DataTransferBlock transferBlock) throws UnifyException {
@@ -65,7 +64,7 @@ public class FileUploadView extends AbstractMultiControl {
             Object value = nextBlock.getValue();
             UploadedFile uploadedFile = ((UploadedFile[]) value)[0];
             if (handler == null) {
-            	localFilename = uploadedFile.getFilename();
+            	setFilename(uploadedFile.getFilename());
                 setValue(uploadedFile.getData());
             } else {
                 String category = getUplAttribute(String.class, "category");
@@ -83,7 +82,8 @@ public class FileUploadView extends AbstractMultiControl {
     		byte[] data =  getValue(byte[].class);
     		if (data != null) {
 				FileAttachmentInfo fileAttachmentInfo = new FileAttachmentInfo(getType());
-				fileAttachmentInfo.setFilename(!StringUtils.isBlank(localFilename) ? localFilename : "file");
+				String filename = getFilename();
+				fileAttachmentInfo.setFilename(!StringUtils.isBlank(filename) ? filename : "file");
 				fileAttachmentInfo.setAttachment(data);
                 setRequestAttribute(UnifyWebRequestAttributeConstants.FILEATTACHMENTS_INFO, fileAttachmentInfo);
                 setCommandResultMapping(ResultMappingConstants.SHOW_ATTACHMENT);
@@ -104,7 +104,7 @@ public class FileUploadView extends AbstractMultiControl {
     @Action
     public void detach() throws UnifyException {
     	if (handler == null) {
-    		localFilename = null;
+        	setFilename(null);
     		setValue(null);
     	} else {
             // Detach
@@ -134,6 +134,10 @@ public class FileUploadView extends AbstractMultiControl {
 
     public FileAttachmentType getType() throws UnifyException {
         return getUplAttribute(FileAttachmentType.class, "type");
+    }
+
+    public String getFilenameBinding() throws UnifyException {
+        return getUplAttribute(String.class, "filenameBinding");
     }
 
     public Object getUploadId() throws UnifyException {
@@ -178,5 +182,21 @@ public class FileUploadView extends AbstractMultiControl {
 
     protected void setUploadId(Object uploadId) throws UnifyException {
         setValue(uploadId);
+    }
+    
+    protected void setFilename(String filename) throws UnifyException {
+    	String filenameBinding = getFilenameBinding();
+    	if (!StringUtils.isBlank(filenameBinding)) {
+    		setValue(filenameBinding, filename);
+    	}
+    }
+    
+    protected String getFilename() throws UnifyException {
+    	String filenameBinding = getFilenameBinding();
+    	if (!StringUtils.isBlank(filenameBinding)) {
+    		return getValue(String.class, filenameBinding);
+    	}
+    	
+    	return null;
     }
 }
