@@ -84,7 +84,7 @@ public enum FileAttachmentType implements EnumConst {
 			case EXCEL:
 				break;
 			case IMAGE:
-				break;
+				return filename + ".jpg";
 			case IMAGE_BMP:
 				return filename + ".bmp";
 			case IMAGE_GIF:
