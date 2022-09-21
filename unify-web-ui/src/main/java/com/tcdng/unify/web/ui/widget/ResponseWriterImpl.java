@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.io.Writer;
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -79,50 +81,52 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 
 	private Map<Class<? extends UplComponent>, UplComponentWriter> writers;
 
+	private Set<String> postCommandRefs;
+
 	private int dataIndex;
-	
+
 	private boolean tableMode;
 
-    private boolean openFunction;
+	private boolean openFunction;
 
-    private boolean functionAppendSym;
+	private boolean functionAppendSym;
 
-    private boolean paramAppendSym;
+	private boolean paramAppendSym;
 
-    private boolean bracketOpen;
-	
+	private boolean bracketOpen;
+
 	public ResponseWriterImpl() {
 		this.history = new Stack<HistoryEntry>();
-	    this.dataIndex = -1;
+		this.dataIndex = -1;
 	}
-	
+
 	public void setThemeManager(ThemeManager themeManager) {
-        this.themeManager = themeManager;
-    }
+		this.themeManager = themeManager;
+	}
 
-    public void setPageRequestContextUtil(PageRequestContextUtil pageRequestContextUtil) {
-        this.pageRequestContextUtil = pageRequestContextUtil;
-    }
+	public void setPageRequestContextUtil(PageRequestContextUtil pageRequestContextUtil) {
+		this.pageRequestContextUtil = pageRequestContextUtil;
+	}
 
-    public void setInitialBufferCapacity(int initialBufferCapacity) {
-        this.initialBufferCapacity = initialBufferCapacity;
-    }
+	public void setInitialBufferCapacity(int initialBufferCapacity) {
+		this.initialBufferCapacity = initialBufferCapacity;
+	}
 
-    @Override
-    public ResponseWriter writeResolvedApplicationMessage(String message, Object... params) throws UnifyException {
-        String msg = super.resolveApplicationMessage(message, params);
-        writeWithHtmlEscape(msg);
-        return this;
-    }
+	@Override
+	public ResponseWriter writeResolvedApplicationMessage(String message, Object... params) throws UnifyException {
+		String msg = super.resolveApplicationMessage(message, params);
+		writeWithHtmlEscape(msg);
+		return this;
+	}
 
-    @Override
-    public ResponseWriter writeResolvedSessionMessage(String message, Object... params) throws UnifyException {
-        String msg = super.resolveSessionMessage(message, params);
-        writeWithHtmlEscape(msg);
-        return this;
-    }
+	@Override
+	public ResponseWriter writeResolvedSessionMessage(String message, Object... params) throws UnifyException {
+		String msg = super.resolveSessionMessage(message, params);
+		writeWithHtmlEscape(msg);
+		return this;
+	}
 
-    @Override
+	@Override
 	public ResponseWriter writeStructureAndContent(Widget component) throws UnifyException {
 		((WidgetWriter) getWriter(component)).writeStructureAndContent(this, component);
 		return this;
@@ -172,10 +176,10 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 	}
 
 	@Override
-    public ResponseWriter writeBehavior(Behavior behavior, String id, String cmdTag) throws UnifyException {
-        ((BehaviorWriter) getWriter(behavior)).writeBehavior(this, behavior, id, cmdTag);
-        return this;
-    }
+	public ResponseWriter writeBehavior(Behavior behavior, String id, String cmdTag) throws UnifyException {
+		((BehaviorWriter) getWriter(behavior)).writeBehavior(this, behavior, id, cmdTag);
+		return this;
+	}
 
 	@Override
 	public ResponseWriter write(Object object) {
@@ -260,14 +264,14 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 		return this;
 	}
 
-    @Override
-    public ResponseWriter writeParam(String paramName, Pattern[] pa) throws UnifyException {
-        preParamWrite();
-        buf.append('"').append(paramName).append("\":");
-        writeJsonPatternObject(pa);
-        return this;
-    }
-	
+	@Override
+	public ResponseWriter writeParam(String paramName, Pattern[] pa) throws UnifyException {
+		preParamWrite();
+		buf.append('"').append(paramName).append("\":");
+		writeJsonPatternObject(pa);
+		return this;
+	}
+
 	@Override
 	public ResponseWriter writeJsonPatternObject(Pattern[] pa) throws UnifyException {
 		buf.append("[");
@@ -291,13 +295,13 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 		return this;
 	}
 
-    @Override
-    public ResponseWriter writeParam(String paramName, DateTimeFormat[] dateTimeFormat) throws UnifyException {
-        preParamWrite();
-        buf.append('"').append(paramName).append("\":");
-        writeJsonDateTimeFormatObject(dateTimeFormat);
-        return this;
-    }
+	@Override
+	public ResponseWriter writeParam(String paramName, DateTimeFormat[] dateTimeFormat) throws UnifyException {
+		preParamWrite();
+		buf.append('"').append(paramName).append("\":");
+		writeJsonDateTimeFormatObject(dateTimeFormat);
+		return this;
+	}
 
 	@Override
 	public ResponseWriter writeJsonDateTimeFormatObject(DateTimeFormat[] dateTimeFormat) throws UnifyException {
@@ -401,10 +405,10 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 		buf.append("{\"target\":\"").append(panel.getId()).append('"');
 		buf.append(",\"html\":");
 		buf.appendJsonQuoted(htmlLsw);
-        if (!scriptLsw.isEmpty()) {
-            buf.append(",\"script\":");
-            buf.append(scriptLsw);
-        }
+		if (!scriptLsw.isEmpty()) {
+			buf.append(",\"script\":");
+			buf.append(scriptLsw);
+		}
 		buf.append('}');
 		return this;
 	}
@@ -424,8 +428,8 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 		buf.append(",\"html\":");
 		buf.appendJsonQuoted(htmlLsw);
 		if (!scriptLsw.isEmpty()) {
-	        buf.append(",\"script\":");
-	        buf.append(scriptLsw);
+			buf.append(",\"script\":");
+			buf.append(scriptLsw);
 		}
 		buf.append('}');
 		return this;
@@ -449,7 +453,7 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 		}
 		return this;
 	}
-	
+
 	@Override
 	public ResponseWriter writeContextURL(StringBuilder sb, String path, String... pathElement) throws UnifyException {
 		RequestContext requestContext = getRequestContext();
@@ -552,242 +556,242 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 	}
 
 	@Override
-    public ResponseWriter beginFunction(String functionName) throws UnifyException {
-        if (openFunction) {
-            try {
-                throw new RuntimeException("Function write already started.");
-            } catch (Exception e) {
-                throwOperationErrorException(e);
-            }
-        }
+	public ResponseWriter beginFunction(String functionName) throws UnifyException {
+		if (openFunction) {
+			try {
+				throw new RuntimeException("Function write already started.");
+			} catch (Exception e) {
+				throwOperationErrorException(e);
+			}
+		}
 
-        if (functionAppendSym) {
-            buf.append(',');
-        } else {
-            buf.append('[');
-            functionAppendSym = true;
-            bracketOpen = true;
-        }
-        
-        String alias = WriterUtils.getActionJSAlias(functionName);
-        buf.append("{\"fn\":\"").append(alias).append("\",\"prm\":{");
-        openFunction = true;
-        paramAppendSym =  false;
-        return this;
-    }
+		if (functionAppendSym) {
+			buf.append(',');
+		} else {
+			buf.append('[');
+			functionAppendSym = true;
+			bracketOpen = true;
+		}
 
-    @Override
-    public ResponseWriter endFunction() throws UnifyException {
-        if (!openFunction) {
-            try {
-                throw new RuntimeException("Function write is not started");
-            } catch (Exception e) {
-                throwOperationErrorException(e);
-            }
-        }
-        
-        buf.append("}}");
-        openFunction = false;
-        return this;
-    }
+		String alias = WriterUtils.getActionJSAlias(functionName);
+		buf.append("{\"fn\":\"").append(alias).append("\",\"prm\":{");
+		openFunction = true;
+		paramAppendSym = false;
+		return this;
+	}
 
-    @Override
-    public ResponseWriter writeParam(String paramName, String[] val) throws UnifyException {
-        preParamWrite();
-        JsonUtils.writeField(buf, paramName, val);
-        return this;
-    }
+	@Override
+	public ResponseWriter endFunction() throws UnifyException {
+		if (!openFunction) {
+			try {
+				throw new RuntimeException("Function write is not started");
+			} catch (Exception e) {
+				throwOperationErrorException(e);
+			}
+		}
 
-    @Override
-    public ResponseWriter writeParam(String paramName, String val) throws UnifyException {
-        preParamWrite();
-        JsonUtils.writeField(buf, paramName, val);
-        return this;
-    }
+		buf.append("}}");
+		openFunction = false;
+		return this;
+	}
 
-    @Override
-    public ResponseWriter writeParam(String paramName, Number[] val) throws UnifyException {
-        preParamWrite();
-        JsonUtils.writeField(buf, paramName, val);
-        return this;
-    }
+	@Override
+	public ResponseWriter writeParam(String paramName, String[] val) throws UnifyException {
+		preParamWrite();
+		JsonUtils.writeField(buf, paramName, val);
+		return this;
+	}
 
-    @Override
-    public ResponseWriter writeParam(String paramName, Number val) throws UnifyException {
-        preParamWrite();
-        JsonUtils.writeField(buf, paramName, val);
-        return this;
-    }
+	@Override
+	public ResponseWriter writeParam(String paramName, String val) throws UnifyException {
+		preParamWrite();
+		JsonUtils.writeField(buf, paramName, val);
+		return this;
+	}
 
-    @Override
-    public ResponseWriter writeParam(String paramName, Boolean[] val) throws UnifyException {
-        preParamWrite();
-        JsonUtils.writeField(buf, paramName, val);
-        return this;
-    }
+	@Override
+	public ResponseWriter writeParam(String paramName, Number[] val) throws UnifyException {
+		preParamWrite();
+		JsonUtils.writeField(buf, paramName, val);
+		return this;
+	}
 
-    @Override
-    public ResponseWriter writeParam(String paramName, Boolean val) throws UnifyException {
-        preParamWrite();
-        JsonUtils.writeField(buf, paramName, val);
-        return this;
-    }
+	@Override
+	public ResponseWriter writeParam(String paramName, Number val) throws UnifyException {
+		preParamWrite();
+		JsonUtils.writeField(buf, paramName, val);
+		return this;
+	}
 
-    @Override
-    public ResponseWriter writeParam(String paramName, char[] val) throws UnifyException {
-        preParamWrite();
-        JsonUtils.writeField(buf, paramName, val);
-        return this;
-    }
+	@Override
+	public ResponseWriter writeParam(String paramName, Boolean[] val) throws UnifyException {
+		preParamWrite();
+		JsonUtils.writeField(buf, paramName, val);
+		return this;
+	}
 
-    @Override
-    public ResponseWriter writeParam(String paramName, char val) throws UnifyException {
-        preParamWrite();
-        JsonUtils.writeField(buf, paramName, val);
-        return this;
-    }
+	@Override
+	public ResponseWriter writeParam(String paramName, Boolean val) throws UnifyException {
+		preParamWrite();
+		JsonUtils.writeField(buf, paramName, val);
+		return this;
+	}
 
-    @Override
-    public ResponseWriter writeParam(String paramName, int[] val) throws UnifyException {
-        preParamWrite();
-        JsonUtils.writeField(buf, paramName, val);
-        return this;
-    }
+	@Override
+	public ResponseWriter writeParam(String paramName, char[] val) throws UnifyException {
+		preParamWrite();
+		JsonUtils.writeField(buf, paramName, val);
+		return this;
+	}
 
-    @Override
-    public ResponseWriter writeParam(String paramName, int val) throws UnifyException {
-        preParamWrite();
-        JsonUtils.writeField(buf, paramName, val);
-        return this;
-    }
+	@Override
+	public ResponseWriter writeParam(String paramName, char val) throws UnifyException {
+		preParamWrite();
+		JsonUtils.writeField(buf, paramName, val);
+		return this;
+	}
 
-    @Override
-    public ResponseWriter writeParam(String paramName, long[] val) throws UnifyException {
-        preParamWrite();
-        JsonUtils.writeField(buf, paramName, val);
-        return this;
-    }
+	@Override
+	public ResponseWriter writeParam(String paramName, int[] val) throws UnifyException {
+		preParamWrite();
+		JsonUtils.writeField(buf, paramName, val);
+		return this;
+	}
 
-    @Override
-    public ResponseWriter writeParam(String paramName, long val) throws UnifyException {
-        preParamWrite();
-        JsonUtils.writeField(buf, paramName, val);
-        return this;
-    }
+	@Override
+	public ResponseWriter writeParam(String paramName, int val) throws UnifyException {
+		preParamWrite();
+		JsonUtils.writeField(buf, paramName, val);
+		return this;
+	}
 
-    @Override
+	@Override
+	public ResponseWriter writeParam(String paramName, long[] val) throws UnifyException {
+		preParamWrite();
+		JsonUtils.writeField(buf, paramName, val);
+		return this;
+	}
+
+	@Override
+	public ResponseWriter writeParam(String paramName, long val) throws UnifyException {
+		preParamWrite();
+		JsonUtils.writeField(buf, paramName, val);
+		return this;
+	}
+
+	@Override
 	public ResponseWriter writeObjectParam(String paramName, Object val) throws UnifyException {
-        preParamWrite();
-        JsonUtils.writeField(buf, paramName, val);
-        return this;
+		preParamWrite();
+		JsonUtils.writeField(buf, paramName, val);
+		return this;
 	}
 
 	@Override
 	public ResponseWriter writeObjectParam(String paramName, Object[] val) throws UnifyException {
-        preParamWrite();
-        JsonUtils.writeField(buf, paramName, val);
-        return this;
+		preParamWrite();
+		JsonUtils.writeField(buf, paramName, val);
+		return this;
 	}
 
 	@Override
-    public ResponseWriter writeParam(String paramName, short[] val) throws UnifyException {
-        preParamWrite();
-        JsonUtils.writeField(buf, paramName, val);
-        return this;
-    }
+	public ResponseWriter writeParam(String paramName, short[] val) throws UnifyException {
+		preParamWrite();
+		JsonUtils.writeField(buf, paramName, val);
+		return this;
+	}
 
-    @Override
-    public ResponseWriter writeParam(String paramName, short val) throws UnifyException {
-        preParamWrite();
-        JsonUtils.writeField(buf, paramName, val);
-        return this;
-    }
+	@Override
+	public ResponseWriter writeParam(String paramName, short val) throws UnifyException {
+		preParamWrite();
+		JsonUtils.writeField(buf, paramName, val);
+		return this;
+	}
 
-    @Override
-    public ResponseWriter writeParam(String paramName, float[] val) throws UnifyException {
-        preParamWrite();
-        JsonUtils.writeField(buf, paramName, val);
-        return this;
-    }
+	@Override
+	public ResponseWriter writeParam(String paramName, float[] val) throws UnifyException {
+		preParamWrite();
+		JsonUtils.writeField(buf, paramName, val);
+		return this;
+	}
 
-    @Override
-    public ResponseWriter writeParam(String paramName, float val) throws UnifyException {
-        preParamWrite();
-        JsonUtils.writeField(buf, paramName, val);
-        return this;
-    }
+	@Override
+	public ResponseWriter writeParam(String paramName, float val) throws UnifyException {
+		preParamWrite();
+		JsonUtils.writeField(buf, paramName, val);
+		return this;
+	}
 
-    @Override
-    public ResponseWriter writeParam(String paramName, double[] val) throws UnifyException {
-        preParamWrite();
-        JsonUtils.writeField(buf, paramName, val);
-        return this;
-    }
+	@Override
+	public ResponseWriter writeParam(String paramName, double[] val) throws UnifyException {
+		preParamWrite();
+		JsonUtils.writeField(buf, paramName, val);
+		return this;
+	}
 
-    @Override
-    public ResponseWriter writeParam(String paramName, double val) throws UnifyException {
-        preParamWrite();
-        JsonUtils.writeField(buf, paramName, val);
-        return this;
-    }
+	@Override
+	public ResponseWriter writeParam(String paramName, double val) throws UnifyException {
+		preParamWrite();
+		JsonUtils.writeField(buf, paramName, val);
+		return this;
+	}
 
-    @Override
-    public ResponseWriter writeParam(String paramName, boolean[] val) throws UnifyException {
-        preParamWrite();
-        JsonUtils.writeField(buf, paramName, val);
-        return this;
-    }
+	@Override
+	public ResponseWriter writeParam(String paramName, boolean[] val) throws UnifyException {
+		preParamWrite();
+		JsonUtils.writeField(buf, paramName, val);
+		return this;
+	}
 
-    @Override
-    public ResponseWriter writeParam(String paramName, boolean val) throws UnifyException {
-        preParamWrite();
-        JsonUtils.writeField(buf, paramName, val);
-        return this;
-    }
-    
-    @Override
-    public ResponseWriter writeParam(String paramName, JsonWriter val) throws UnifyException {
-        preParamWrite();
-        buf.append('"').append(paramName).append("\":").append(val.toString());
-        return this;
-    }
+	@Override
+	public ResponseWriter writeParam(String paramName, boolean val) throws UnifyException {
+		preParamWrite();
+		JsonUtils.writeField(buf, paramName, val);
+		return this;
+	}
 
-    @Override
-    public ResponseWriter writeContextURLParam(String paramName, String path, String... pathElement)
-            throws UnifyException {
-        preParamWrite();
-        buf.append('"').append(paramName).append("\":\"");
-        writeContextURL(path, pathElement);
-        buf.append('"');
-        return this;
-    }
+	@Override
+	public ResponseWriter writeParam(String paramName, JsonWriter val) throws UnifyException {
+		preParamWrite();
+		buf.append('"').append(paramName).append("\":").append(val.toString());
+		return this;
+	}
 
-    @Override
-    public ResponseWriter writeCommandURLParam(String paramName) throws UnifyException {
-        preParamWrite();
-        buf.append('"').append(paramName).append("\":\"");
-        writeCommandURL();
-        buf.append('"');
-        return this;
-    }
+	@Override
+	public ResponseWriter writeContextURLParam(String paramName, String path, String... pathElement)
+			throws UnifyException {
+		preParamWrite();
+		buf.append('"').append(paramName).append("\":\"");
+		writeContextURL(path, pathElement);
+		buf.append('"');
+		return this;
+	}
 
-    @Override
-    public ResponseWriter writeCommandURLParam(String paramName, String pageControllerName) throws UnifyException {
-        preParamWrite();
-        buf.append('"').append(paramName).append("\":\"");
-        writeCommandURL(pageControllerName);
-        buf.append('"');
-        return this;
-    }
+	@Override
+	public ResponseWriter writeCommandURLParam(String paramName) throws UnifyException {
+		preParamWrite();
+		buf.append('"').append(paramName).append("\":\"");
+		writeCommandURL();
+		buf.append('"');
+		return this;
+	}
 
-    @Override
-    public ResponseWriter writeResolvedParam(String paramName, String val) throws UnifyException {
-        preParamWrite();
-        buf.append('"').append(paramName).append("\":").append(val);
-        return this;
-    }
+	@Override
+	public ResponseWriter writeCommandURLParam(String paramName, String pageControllerName) throws UnifyException {
+		preParamWrite();
+		buf.append('"').append(paramName).append("\":\"");
+		writeCommandURL(pageControllerName);
+		buf.append('"');
+		return this;
+	}
 
-    @Override
+	@Override
+	public ResponseWriter writeResolvedParam(String paramName, String val) throws UnifyException {
+		preParamWrite();
+		buf.append('"').append(paramName).append("\":").append(val);
+		return this;
+	}
+
+	@Override
 	public WebStringWriter getStringWriter() {
 		return buf;
 	}
@@ -808,18 +812,18 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 
 	@Override
 	public void useSecondary(int initialCapacity) {
-	    history.push(new HistoryEntry(buf, functionAppendSym, bracketOpen));
+		history.push(new HistoryEntry(buf, functionAppendSym, bracketOpen));
 		buf = new WebStringWriter(initialCapacity);
-        functionAppendSym = false;
-        bracketOpen = false;
+		functionAppendSym = false;
+		bracketOpen = false;
 	}
 
 	@Override
 	public WebStringWriter discardSecondary() {
-	    if (bracketOpen) {
-	        buf.append(']');
-	    }
-	    
+		if (bracketOpen) {
+			buf.append(']');
+		}
+
 		WebStringWriter discLsw = buf;
 		HistoryEntry entry = history.pop();
 		buf = entry.buf;
@@ -831,13 +835,14 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 	@Override
 	public void reset(Map<Class<? extends UplComponent>, UplComponentWriter> writers) {
 		this.writers = writers;
+		this.postCommandRefs = null;
 		if (buf == null || !buf.isEmpty() || !history.isEmpty()) {
 			buf = new WebStringWriter(initialBufferCapacity);
 			history.clear();
 			openFunction = false;
-	        functionAppendSym = false;
-            bracketOpen = false;
-	        paramAppendSym =  false;
+			functionAppendSym = false;
+			bracketOpen = false;
+			paramAppendSym = false;
 		}
 	}
 
@@ -867,6 +872,37 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 	}
 
 	@Override
+	public boolean isKeepPostCommandRefs() {
+		return postCommandRefs != null;
+	}
+
+	@Override
+	public boolean setKeepPostCommandRefs() {
+		if (postCommandRefs == null) {
+			postCommandRefs = new HashSet<String>();
+		}
+
+		return false;
+	}
+
+	@Override
+	public void clearKeepPostCommandRefs() {
+		postCommandRefs = null;
+	}
+
+	@Override
+	public void keepPostCommandRefs(Collection<String> widgetIds) {
+		if (postCommandRefs != null) {
+			postCommandRefs.addAll(widgetIds);
+		}
+	}
+
+	@Override
+	public Set<String> getPostCommandRefs() {
+		return postCommandRefs != null ? postCommandRefs : Collections.emptySet();
+	}
+
+	@Override
 	protected void onInitialize() throws UnifyException {
 
 	}
@@ -877,36 +913,36 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 	}
 
 	private class HistoryEntry {
-	    
-	    private final WebStringWriter buf;
-	    
-	    private final boolean functionAppendSym;
-	    
-	    private final boolean bracketOpen;
-	    
-        public HistoryEntry(WebStringWriter buf, boolean functionAppendSym, boolean bracketOpen) {
-            this.buf = buf;
-            this.functionAppendSym = functionAppendSym;
-            this.bracketOpen = bracketOpen;
-        }
-	    
+
+		private final WebStringWriter buf;
+
+		private final boolean functionAppendSym;
+
+		private final boolean bracketOpen;
+
+		public HistoryEntry(WebStringWriter buf, boolean functionAppendSym, boolean bracketOpen) {
+			this.buf = buf;
+			this.functionAppendSym = functionAppendSym;
+			this.bracketOpen = bracketOpen;
+		}
+
 	}
-	
-    private void preParamWrite() throws UnifyException {
-        if (!openFunction) {
-            try {
-                throw new RuntimeException("Function write is not started");
-            } catch (Exception e) {
-                throwOperationErrorException(e);
-            }
-        }
-        
-        if (paramAppendSym) {
-            buf.append(',');
-        } else {
-            paramAppendSym = true;
-        }
-    }
+
+	private void preParamWrite() throws UnifyException {
+		if (!openFunction) {
+			try {
+				throw new RuntimeException("Function write is not started");
+			} catch (Exception e) {
+				throwOperationErrorException(e);
+			}
+		}
+
+		if (paramAppendSym) {
+			buf.append(',');
+		} else {
+			paramAppendSym = true;
+		}
+	}
 
 	private UplComponentWriter getWriter(UplComponent component) throws UnifyException {
 		UplComponentWriter writer = writers.get(component.getClass());

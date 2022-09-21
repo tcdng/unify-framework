@@ -64,6 +64,11 @@ public class Picture extends AbstractMultiControl {
     }
 
     @Override
+	public boolean isRefreshesContainer() {
+		return true;
+	}
+
+    @Override
     protected void doOnPageConstruct() throws UnifyException {
         fileControl = (Control) addInternalChildWidget(
                 "!ui-fileupload accept:$s{image} binding:uploadedFile selectOnly:true hidden:true");

@@ -157,6 +157,11 @@ public class FileUploadView extends AbstractMultiControl {
     }
 
     @Override
+	public boolean isRefreshesContainer() {
+		return true;
+	}
+
+	@Override
     protected void doOnPageConstruct() throws UnifyException {
         FileAttachmentType _type = getType();
         fileCtrl = (FileUpload) addInternalChildWidget(

@@ -40,4 +40,6 @@ public interface PageAction extends Behavior {
      *            the id to set
      */
     void setId(String id);
+    
+    boolean isPostCommand();
 }

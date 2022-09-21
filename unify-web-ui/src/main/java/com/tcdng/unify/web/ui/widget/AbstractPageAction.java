@@ -54,4 +54,9 @@ public abstract class AbstractPageAction extends AbstractBehavior implements Pag
     public void setId(String pageName) {
         this.pageName = pageName;
     }
+
+	@Override
+	public boolean isPostCommand() {
+		return false;
+	}
 }

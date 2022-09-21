@@ -33,6 +33,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -689,7 +690,8 @@ public class DataUtilsTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testToArrayNull() throws Exception {
-        assertNull(DataUtils.toArray(String.class, null));
+        assertNull(DataUtils.toArray(String.class, (List<String>) null));
+        assertNull(DataUtils.toArray(String.class, (Set<String>) null));
     }
 
     @Test
