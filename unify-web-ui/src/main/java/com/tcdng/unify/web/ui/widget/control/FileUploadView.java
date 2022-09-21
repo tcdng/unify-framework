@@ -83,9 +83,8 @@ public class FileUploadView extends AbstractMultiControl {
 			if (data != null) {
 				final FileAttachmentType type = getType();
 				FileAttachmentInfo fileAttachmentInfo = new FileAttachmentInfo(type);
-				String filename = getFilename(type);
-				filename = !StringUtils.isBlank(filename) ? filename : type.appendDefaultExtension("file");
-				fileAttachmentInfo.setFilename(filename);
+				String filename = getFilename();
+				fileAttachmentInfo.setFilename(!StringUtils.isBlank(filename) ? filename : type.appendDefaultExtension("file"));
 				fileAttachmentInfo.setAttachment(data);
 				setRequestAttribute(UnifyWebRequestAttributeConstants.FILEATTACHMENTS_INFO, fileAttachmentInfo);
 				setCommandResultMapping(ResultMappingConstants.SHOW_ATTACHMENT);
@@ -194,7 +193,7 @@ public class FileUploadView extends AbstractMultiControl {
 		}
 	}
 
-	protected String getFilename(FileAttachmentType type) throws UnifyException {
+	protected String getFilename() throws UnifyException {
 		String filenameBinding = getFilenameBinding();
 		if (!StringUtils.isBlank(filenameBinding)) {
 			return getValue(String.class, filenameBinding);

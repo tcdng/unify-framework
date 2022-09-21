@@ -39,7 +39,7 @@ public enum FileAttachmentType implements EnumConst {
     IMAGE_BMP("BMP", ".bmp", MimeType.IMAGE_BMP),
     PDF("PDF", ".pdf", MimeType.APPLICATION_PDF),
     XML("XML", ".xml", MimeType.APPLICATION_XML),
-    TEXT("TXT", "text/*", MimeType.TEXT),
+    TEXT("TXT", ".txt", MimeType.TEXT),
     VIDEO("VID", "video/*,video/mp4", MimeType.VIDEO),
     WILDCARD("WILD", "", MimeType.APPLICATION_OCTETSTREAM),
     WORD("DOC", ".doc,.docx", MimeType.APPLICATION_WORD);
@@ -136,4 +136,5 @@ public enum FileAttachmentType implements EnumConst {
     public static FileAttachmentType fromName(String name) {
         return EnumUtils.fromName(FileAttachmentType.class, name);
     }
+
 }
