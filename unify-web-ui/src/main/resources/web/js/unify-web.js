@@ -4515,8 +4515,9 @@ ux.extractObjParams = function(elem, param) {
 			if (elem.value) {
 				var files = elem.files;
 				for (var i = 0; i < files.length; i++) {
-					param.value.append(trnId, files[i],
-							files[i].name);
+					if(param.value.append) {
+						param.value.append(trnId, files[i], files[i].name);
+					}
 				}
 			}
 		} else {
@@ -4529,7 +4530,9 @@ ux.extractObjParams = function(elem, param) {
 
 ux.appendParam = function(id, value, param) {
 	if (param.isForm) {
-		param.value.append(id, value);
+		if (param.value.append) {
+			param.value.append(id, value);
+		}
 	} else {
 		param.value += "&" + id + "="
 				+ _enc(value);

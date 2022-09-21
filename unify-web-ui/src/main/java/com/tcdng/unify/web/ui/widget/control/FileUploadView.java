@@ -56,7 +56,7 @@ public class FileUploadView extends AbstractMultiControl {
 
     private FileUploadViewHandler handler;
 
-    private FileAttachmentInfo localFileAttachmentInfo;
+    private String localFilename;
     
     @Override
     public void populate(DataTransferBlock transferBlock) throws UnifyException {
@@ -65,12 +65,9 @@ public class FileUploadView extends AbstractMultiControl {
             Object value = nextBlock.getValue();
             UploadedFile uploadedFile = ((UploadedFile[]) value)[0];
             if (handler == null) {
-            	localFileAttachmentInfo = new FileAttachmentInfo(getType());
-            	localFileAttachmentInfo.setFilename(uploadedFile.getFilename());
-            	localFileAttachmentInfo.setAttachment(uploadedFile.getData());
+            	localFilename = uploadedFile.getFilename();
                 setValue(uploadedFile.getData());
             } else {
-            	localFileAttachmentInfo = null;
                 String category = getUplAttribute(String.class, "category");
                 FileAttachmentType type = getUplAttribute(FileAttachmentType.class, "type");
                 Object uploadId = handler.save(getUploadId(), category, type, uploadedFile.getFilename(),
@@ -83,8 +80,14 @@ public class FileUploadView extends AbstractMultiControl {
     @Action
     public void view() throws UnifyException {
     	if (handler == null) {
-            setRequestAttribute(UnifyWebRequestAttributeConstants.FILEATTACHMENTS_INFO, localFileAttachmentInfo);
-            setCommandResultMapping(ResultMappingConstants.SHOW_ATTACHMENT);
+    		byte[] data =  getValue(byte[].class);
+    		if (data != null) {
+				FileAttachmentInfo fileAttachmentInfo = new FileAttachmentInfo(getType());
+				fileAttachmentInfo.setFilename(!StringUtils.isBlank(localFilename) ? localFilename : "file");
+				fileAttachmentInfo.setAttachment(data);
+                setRequestAttribute(UnifyWebRequestAttributeConstants.FILEATTACHMENTS_INFO, fileAttachmentInfo);
+                setCommandResultMapping(ResultMappingConstants.SHOW_ATTACHMENT);
+    		}
     	} else {
             // Setup view
             Object uploadId = getUploadId();
@@ -101,7 +104,7 @@ public class FileUploadView extends AbstractMultiControl {
     @Action
     public void detach() throws UnifyException {
     	if (handler == null) {
-    		localFileAttachmentInfo = null;
+    		localFilename = null;
     		setValue(null);
     	} else {
             // Detach
