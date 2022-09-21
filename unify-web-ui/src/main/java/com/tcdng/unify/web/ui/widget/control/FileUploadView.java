@@ -81,9 +81,10 @@ public class FileUploadView extends AbstractMultiControl {
     	if (handler == null) {
     		byte[] data =  getValue(byte[].class);
     		if (data != null) {
-				FileAttachmentInfo fileAttachmentInfo = new FileAttachmentInfo(getType());
+    			final FileAttachmentType type = getType();
+				FileAttachmentInfo fileAttachmentInfo = new FileAttachmentInfo(type);
 				String filename = getFilename();
-				fileAttachmentInfo.setFilename(!StringUtils.isBlank(filename) ? filename : "file");
+				fileAttachmentInfo.setFilename(!StringUtils.isBlank(filename) ? filename : type.appendDefaultExtension("file"));
 				fileAttachmentInfo.setAttachment(data);
                 setRequestAttribute(UnifyWebRequestAttributeConstants.FILEATTACHMENTS_INFO, fileAttachmentInfo);
                 setCommandResultMapping(ResultMappingConstants.SHOW_ATTACHMENT);
