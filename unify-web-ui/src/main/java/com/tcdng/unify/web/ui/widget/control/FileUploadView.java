@@ -22,6 +22,7 @@ import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.constant.FileAttachmentType;
 import com.tcdng.unify.core.data.UploadedFile;
 import com.tcdng.unify.core.database.Entity;
+import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.annotation.Action;
 import com.tcdng.unify.web.constant.ResultMappingConstants;
 import com.tcdng.unify.web.constant.UnifyWebRequestAttributeConstants;
@@ -38,7 +39,7 @@ import com.tcdng.unify.web.ui.widget.data.FileAttachmentInfo;
  */
 @Component("ui-fileuploadview")
 @UplAttributes({ @UplAttribute(name = "type", type = FileAttachmentType.class, defaultVal = "wildcard"),
-        @UplAttribute(name = "handler", type = String.class, mandatory = true),
+        @UplAttribute(name = "handler", type = String.class, mandatory = false),
         @UplAttribute(name = "category", type = String.class),
         @UplAttribute(name = "parentCategory", type = String.class),
         @UplAttribute(name = "parentFieldName", type = String.class),
@@ -55,49 +56,68 @@ public class FileUploadView extends AbstractMultiControl {
 
     private FileUploadViewHandler handler;
 
+    private FileAttachmentInfo localFileAttachmentInfo;
+    
     @Override
     public void populate(DataTransferBlock transferBlock) throws UnifyException {
         if (transferBlock != null) {
             DataTransferBlock nextBlock = transferBlock.getChildBlock();
             Object value = nextBlock.getValue();
             UploadedFile uploadedFile = ((UploadedFile[]) value)[0];
-
-            String category = getUplAttribute(String.class, "category");
-            FileAttachmentType type = getUplAttribute(FileAttachmentType.class, "type");
-            Object uploadId = handler.save(getUploadId(), category, type, uploadedFile.getFilename(),
-                    uploadedFile.getData());
-            setUploadId(uploadId);
+            if (handler == null) {
+            	localFileAttachmentInfo = new FileAttachmentInfo(getType());
+            	localFileAttachmentInfo.setFilename(uploadedFile.getFilename());
+            	localFileAttachmentInfo.setAttachment(uploadedFile.getData());
+                setValue(uploadedFile.getData());
+            } else {
+            	localFileAttachmentInfo = null;
+                String category = getUplAttribute(String.class, "category");
+                FileAttachmentType type = getUplAttribute(FileAttachmentType.class, "type");
+                Object uploadId = handler.save(getUploadId(), category, type, uploadedFile.getFilename(),
+                        uploadedFile.getData());
+                setUploadId(uploadId);
+            }
         }
     }
 
     @Action
     public void view() throws UnifyException {
-        // Setup view
-        Object uploadId = getUploadId();
-        if (uploadId != null) {
-            String category = getUplAttribute(String.class, "category");
-            FileAttachmentType type = getUplAttribute(FileAttachmentType.class, "type");
-            FileAttachmentInfo fileAttachmentInfo = handler.retrive(uploadId, category, type);
-            setRequestAttribute(UnifyWebRequestAttributeConstants.FILEATTACHMENTS_INFO, fileAttachmentInfo);
+    	if (handler == null) {
+            setRequestAttribute(UnifyWebRequestAttributeConstants.FILEATTACHMENTS_INFO, localFileAttachmentInfo);
             setCommandResultMapping(ResultMappingConstants.SHOW_ATTACHMENT);
-        }
+    	} else {
+            // Setup view
+            Object uploadId = getUploadId();
+            if (uploadId != null) {
+                String category = getUplAttribute(String.class, "category");
+                FileAttachmentType type = getUplAttribute(FileAttachmentType.class, "type");
+                FileAttachmentInfo fileAttachmentInfo = handler.retrive(uploadId, category, type);
+                setRequestAttribute(UnifyWebRequestAttributeConstants.FILEATTACHMENTS_INFO, fileAttachmentInfo);
+                setCommandResultMapping(ResultMappingConstants.SHOW_ATTACHMENT);
+            }
+    	}
     }
 
     @Action
     public void detach() throws UnifyException {
-        // Detach
-        Object uploadId = getUploadId();
-        Object parentId = null;
-        Object valueObject = getValueStore().getValueObject();
-        if (valueObject instanceof Entity) {
-            parentId = ((Entity) valueObject).getId();
-        }
+    	if (handler == null) {
+    		localFileAttachmentInfo = null;
+    		setValue(null);
+    	} else {
+            // Detach
+            Object uploadId = getUploadId();
+            Object parentId = null;
+            Object valueObject = getValueStore().getValueObject();
+            if (valueObject instanceof Entity) {
+                parentId = ((Entity) valueObject).getId();
+            }
 
-        if (uploadId != null) {
-            handler.delete(uploadId, getUplAttribute(String.class, "category"), parentId,
-                    getUplAttribute(String.class, "parentCategory"), getUplAttribute(String.class, "parentFieldName"));
-            setUploadId(null);
-        }
+            if (uploadId != null) {
+                handler.delete(uploadId, getUplAttribute(String.class, "category"), parentId,
+                        getUplAttribute(String.class, "parentCategory"), getUplAttribute(String.class, "parentFieldName"));
+                setUploadId(null);
+            }
+    	}
     }
 
     @Override
@@ -107,6 +127,10 @@ public class FileUploadView extends AbstractMultiControl {
 
     public String getViewPath() throws UnifyException {
         return getUplAttribute(String.class, "viewPath");
+    }
+
+    public FileAttachmentType getType() throws UnifyException {
+        return getUplAttribute(FileAttachmentType.class, "type");
     }
 
     public Object getUploadId() throws UnifyException {
@@ -131,7 +155,7 @@ public class FileUploadView extends AbstractMultiControl {
 
     @Override
     protected void doOnPageConstruct() throws UnifyException {
-        FileAttachmentType _type = getUplAttribute(FileAttachmentType.class, "type");
+        FileAttachmentType _type = getType();
         fileCtrl = (FileUpload) addInternalChildWidget(
                 "!ui-fileupload accept:" + _type + " selectOnly:true hidden:true");
         attachCtrl = (Control) addInternalChildWidget(
@@ -141,7 +165,7 @@ public class FileUploadView extends AbstractMultiControl {
         removeCtrl = (Control) addInternalChildWidget(
                 "!ui-button styleClass:$e{fabutton-alert} caption:$m{button.remove} hint:$m{button.remove} debounce:false");
         String _handler = getUplAttribute(String.class, "handler");
-        handler = (FileUploadViewHandler) getComponent(_handler);
+        handler = !StringUtils.isBlank(_handler) ?  (FileUploadViewHandler) getComponent(_handler) : null;
     }
 
     protected void setUploadId(Object uploadId) throws UnifyException {
