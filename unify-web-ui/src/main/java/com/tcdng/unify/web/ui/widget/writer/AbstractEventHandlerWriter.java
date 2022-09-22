@@ -31,22 +31,27 @@ import com.tcdng.unify.web.ui.widget.ResponseWriter;
  */
 public abstract class AbstractEventHandlerWriter extends AbstractBehaviorWriter implements EventHandlerWriter {
 
-    @Override
-    public void writeBehavior(ResponseWriter writer, Behavior behavior, String id, String cmdTag)
-            throws UnifyException {
-        EventHandler eventHandler = (EventHandler) behavior;
-        String event = eventHandler.getUplAttribute(String.class, "event");
-        if (!"none".equals(event)) {
-            if (eventHandler.getPageAction() != null) {
-                event = WriterUtils.getEventJS(event.toLowerCase());
-                for (PageAction pageAction : eventHandler.getPageAction()) {
-                    writer.beginFunction("ux.setOnEvent");
-                    String function = WriterUtils.getActionJSFunction(pageAction.getAction().toLowerCase());
-                    writeActionParamsJS(writer, event, function, id, cmdTag, pageAction, null,
-                            null, null);
-                    writer.endFunction();
-                }
-            }
-        }
-    }
+	@Override
+	public void writeBehavior(ResponseWriter writer, Behavior behavior, String id, String cmdTag)
+			throws UnifyException {
+		EventHandler eventHandler = (EventHandler) behavior;
+		String event = eventHandler.getUplAttribute(String.class, "event");
+		if (!"none".equals(event)) {
+			if (eventHandler.getPageAction() != null) {
+				if (writer.isKeepPostCommandRefs()) {
+					for (PageAction pageAction : eventHandler.getPageAction()) {
+						keepPostCommandRefs(writer, id, pageAction);
+					}
+				} else {
+					event = WriterUtils.getEventJS(event.toLowerCase());
+					for (PageAction pageAction : eventHandler.getPageAction()) {
+						writer.beginFunction("ux.setOnEvent");
+						String function = WriterUtils.getActionJSFunction(pageAction.getAction().toLowerCase());
+						writeActionParamsJS(writer, event, function, id, cmdTag, pageAction, null, null, null);
+						writer.endFunction();
+					}
+				}
+			}
+		}
+	}
 }
