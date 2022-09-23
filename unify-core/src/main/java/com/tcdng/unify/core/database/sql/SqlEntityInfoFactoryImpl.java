@@ -386,17 +386,17 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
                                 if (StringUtils.isNotBlank(AnnotationUtils.getAnnotationString(coa.name()))) {
                                     column = coa.name();
                                 }
-                                columnType = coa.type();
+                                columnType = !coa.type().isAuto() ? coa.type() : columnType;
 
                                 String transformerName = AnnotationUtils.getAnnotationString(coa.transformer());
                                 if (transformerName != null) {
                                     transformer = (Transformer<?, ?>) getComponent(transformerName);
                                 }
 
-                                isNullable = coa.nullable();
-                                length = coa.length();
-                                precision = coa.precision();
-                                scale = coa.scale();
+                                isNullable = coa.nullable() ? coa.nullable() : isNullable;
+                                length = coa.length() > 0 ? coa.length() : length;
+                                precision = coa.precision() > 0 ? coa.precision() : precision;
+                                scale = coa.scale() > 0 ? coa.scale() : scale;
                             } else {
                                 if (StringUtils.isNotBlank(AnnotationUtils.getAnnotationString(ca.name()))) {
                                     column = ca.name();

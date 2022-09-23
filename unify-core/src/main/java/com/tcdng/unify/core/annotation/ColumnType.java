@@ -66,6 +66,10 @@ public enum ColumnType implements EnumConst {
         return AUTO.code;
     }
 
+    public boolean isAuto() {
+    	return AUTO.equals(this);
+    }
+    
     public static ColumnType fromCode(String code) {
         return EnumUtils.fromCode(ColumnType.class, code);
     }

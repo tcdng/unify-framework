@@ -29,6 +29,7 @@ import com.tcdng.unify.core.UnifyOperationException;
 import com.tcdng.unify.core.annotation.Child;
 import com.tcdng.unify.core.annotation.ChildList;
 import com.tcdng.unify.core.annotation.Column;
+import com.tcdng.unify.core.annotation.ColumnOverride;
 import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.annotation.DynamicEntityType;
 import com.tcdng.unify.core.annotation.ForeignKey;
@@ -82,6 +83,7 @@ public final class DynamicEntityUtils {
 
 		// Evaluate fields
 		Set<String> fieldNames = new HashSet<String>();
+		List<DynamicFieldInfo> overrides = new ArrayList<DynamicFieldInfo>();
 		List<String> descList = null;
 		for (DynamicFieldInfo dynamicFieldInfo : dynamicEntityInfo.getFieldInfos()) {
 			final String fieldName = dynamicFieldInfo.getFieldName();
@@ -197,6 +199,10 @@ public final class DynamicEntityUtils {
 				msb.append(" public void set").append(capField).append("(").append(simpleName).append(" ")
 						.append(fieldName).append(") {this.").append(fieldName).append(" = ").append(fieldName)
 						.append(";}\n");
+			} else {
+				if (!StringUtils.isBlank(dynamicFieldInfo.getColumnName())) {
+					overrides.add(dynamicFieldInfo);
+				}
 			}
 		}
 
@@ -215,7 +221,28 @@ public final class DynamicEntityUtils {
 		if (managed) {
 			if (DynamicEntityType.TABLE.equals(dynamicEntityInfo.getType())) {
 				esb.append("import ").append(Table.class.getCanonicalName()).append(";\n");
-				esb.append("@Table(\"").append(dynamicEntityInfo.getTableName()).append("\")\n");
+				if (overrides.isEmpty()) {
+					esb.append("@Table(\"").append(dynamicEntityInfo.getTableName()).append("\")\n");
+				} else {
+					esb.append("import ").append(ColumnOverride.class.getCanonicalName()).append(";\n");					
+					esb.append("@Table(name = \"").append(dynamicEntityInfo.getTableName()).append("\",\n");
+					esb.append("\tcolumnOverrides = {\n");
+					boolean appendSym = false;
+					for (DynamicFieldInfo dynamicFieldInfo: overrides) {
+						if (appendSym) {
+							esb.append("),\n");
+						} else {
+							appendSym = true;
+						}
+						
+						esb.append("\t\t@ColumnOverride(");
+						esb.append("field = \"").append(dynamicFieldInfo.getFieldName()).append("\",");
+						esb.append("name = \"").append(dynamicFieldInfo.getColumnName()).append("\"");
+					}
+					esb.append(")\n");
+					esb.append("\t}\n");
+					esb.append(")\n");
+				}
 			} else {
 				esb.append("import ").append(TableExt.class.getCanonicalName()).append(";\n");
 				esb.append("@TableExt\n");
