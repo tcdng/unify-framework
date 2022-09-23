@@ -2095,6 +2095,7 @@ ux.rigFileAttachment = function(rgp) {
 			var evp = ux.newEvPrm(rgp);
 			evp.uPanels = [ rgp.pContId ];
 			evp.isUniqueTrg = true;
+			evp.uRef = rgp.pRef;
 			ux.addHdl(fileElem, "change", ux.post, evp);
 
 			// Attach
@@ -2104,12 +2105,13 @@ ux.rigFileAttachment = function(rgp) {
 
 			// View
 			if (rgp.pViewURL) {
-				evp = {uURL:rgp.pViewURL, uPanels:[ rgp.pContId ]};
+				evp = {uURL:rgp.pViewURL, uPanels:[ rgp.pContId ], uRef:rgp.pRef};
 				ux.addHdl(_id(viewId + idx), "click", ux.post, evp);
 			} else {
 				evp = ux.newEvPrm(rgp);
 				evp.uCmd = id + "->view";
 				evp.uPanels = [ rgp.pContId ];
+				evp.uRef = rgp.pRef;
 				ux.addHdl(_id(viewId + idx), "click", ux.post, evp);
 			}
 
@@ -2117,6 +2119,7 @@ ux.rigFileAttachment = function(rgp) {
 			evp = ux.newEvPrm(rgp);
 			evp.uCmd = id + "->detach";
 			evp.uPanels = [ rgp.pContId ];
+			evp.uRef = rgp.pRef;
 			ux.addHdl(_id(remId + idx), "click", ux.post, evp);
 		}
 	}
@@ -2230,7 +2233,7 @@ ux.rigFileUpload = function(rgp) {
 			btnUpElem.disabled = true;
 			if (!rgp.pDisabled) {
 				if (rgp.pUploadURL) {
-					const evp = {uURL:rgp.pUploadURL, uRef:[ id ], uPanels:[ rgp.pContId ]};
+					const evp = {uURL:rgp.pUploadURL, uRef:[ id ], uPanels:[ rgp.pContId ], uRef:rgp.pRef};
 					ux.addHdl(btnUpElem, "click", ux.post, evp);
 					ux.addHdl(fileElem, "change", function(uEv) {
 						if (fileElem.value) {

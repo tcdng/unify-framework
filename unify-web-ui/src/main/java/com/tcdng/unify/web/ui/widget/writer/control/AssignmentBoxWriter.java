@@ -18,6 +18,7 @@ package com.tcdng.unify.web.ui.widget.writer.control;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
+import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.web.ui.widget.Control;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.Widget;
@@ -99,7 +100,7 @@ public class AssignmentBoxWriter extends AbstractControlWriter {
             writer.writeBehavior(filter2);
         }
 
-        // Append rigging
+        // Append rigging 
         writer.beginFunction("ux.rigAssignmentBox");
         writer.writeParam("pId", assignmentBox.getId());
         writer.writeCommandURLParam("pCmdURL");
@@ -123,6 +124,7 @@ public class AssignmentBoxWriter extends AbstractControlWriter {
             writer.writeParam("pUnassnAllBtnId", assignmentBox.getUnassignAllBtn().getId());
         }
         writer.writeParam("pEditable", assignmentBox.isContainerEditable());
+        writer.writeParam("pRef", DataUtils.toArray(String.class, writer.getPostCommandRefs()));
         writer.endFunction();
     }
 

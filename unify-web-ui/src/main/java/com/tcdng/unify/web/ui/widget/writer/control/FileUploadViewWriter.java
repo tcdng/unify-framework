@@ -91,7 +91,7 @@ public class FileUploadViewWriter extends AbstractControlWriter {
             writer.writeContextURLParam("pViewURL", viewPath);
         }
 
-        writer.writeParam("pContId", fileAttachment.getContainerId());
+        writer.writeParam("pContId", fileAttachment.getContainerId()); 
         writer.writeParam("pFileId", fileAttachment.getFileCtrl().getBaseId());
         writer.writeParam("pAttchId", fileAttachment.getAttachCtrl().getBaseId());
         writer.writeParam("pViewId", fileAttachment.getViewCtrl().getBaseId());

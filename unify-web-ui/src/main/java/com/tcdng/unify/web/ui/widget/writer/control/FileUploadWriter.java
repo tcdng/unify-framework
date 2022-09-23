@@ -19,6 +19,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.constant.FileAttachmentType;
+import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.Widget;
@@ -110,7 +111,7 @@ public class FileUploadWriter extends AbstractControlWriter {
             // Append rigging
             writer.beginFunction("ux.rigFileUpload");
             writer.writeParam("pId", fileUpload.getId());
-            writer.writeParam("pContId", fileUpload.getContainerId());
+            writer.writeParam("pContId", fileUpload.getContainerId()); 
             writer.writeParam("pBtnId", fileUpload.getButtonId());
             writer.writeParam("pSpanId", fileUpload.getSpanId());
             writer.writeParam("pUpBtnId", fileUpload.getUploadButtonId());
@@ -126,6 +127,7 @@ public class FileUploadWriter extends AbstractControlWriter {
                 writer.writeParam("pMaxSize", maxSize);
                 writer.writeParam("pMaxMsg", getSessionMessage("fileupload.maxsize", maxSize));
             }
+            writer.writeParam("pRef", DataUtils.toArray(String.class, writer.getPostCommandRefs()));
             writer.endFunction();
         }
     }
