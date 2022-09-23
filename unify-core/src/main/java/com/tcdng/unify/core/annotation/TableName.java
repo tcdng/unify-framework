@@ -20,6 +20,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import com.tcdng.unify.core.constant.AnnotationConstants;
+
 /**
  * Annotation for specifying table name.
  * 
@@ -30,5 +32,11 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface TableName {
 
-    String value();
+    String value() default AnnotationConstants.NONE;
+
+    /** The name of the table. */
+    String name() default AnnotationConstants.NONE;
+
+    /** Column overrides */
+    ColumnOverride[] columnOverrides() default {};
 }

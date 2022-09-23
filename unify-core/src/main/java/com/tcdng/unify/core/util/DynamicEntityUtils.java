@@ -224,23 +224,9 @@ public final class DynamicEntityUtils {
 				if (overrides.isEmpty()) {
 					esb.append("@Table(\"").append(dynamicEntityInfo.getTableName()).append("\")\n");
 				} else {
-					esb.append("import ").append(ColumnOverride.class.getCanonicalName()).append(";\n");					
+					esb.append("import ").append(ColumnOverride.class.getCanonicalName()).append(";\n");
 					esb.append("@Table(name = \"").append(dynamicEntityInfo.getTableName()).append("\",\n");
-					esb.append("\tcolumnOverrides = {\n");
-					boolean appendSym = false;
-					for (DynamicFieldInfo dynamicFieldInfo: overrides) {
-						if (appendSym) {
-							esb.append("),\n");
-						} else {
-							appendSym = true;
-						}
-						
-						esb.append("\t\t@ColumnOverride(");
-						esb.append("field = \"").append(dynamicFieldInfo.getFieldName()).append("\",");
-						esb.append("name = \"").append(dynamicFieldInfo.getColumnName()).append("\"");
-					}
-					esb.append(")\n");
-					esb.append("\t}\n");
+					DynamicEntityUtils.generateOverrides(esb, overrides);
 					esb.append(")\n");
 				}
 			} else {
@@ -250,7 +236,14 @@ public final class DynamicEntityUtils {
 		} else {
 			if (DynamicEntityType.TABLE.equals(dynamicEntityInfo.getType())) {
 				esb.append("import ").append(TableName.class.getCanonicalName()).append(";\n");
-				esb.append("@TableName(\"").append(dynamicEntityInfo.getTableName()).append("\")\n");
+				if (overrides.isEmpty()) {
+					esb.append("@TableName(\"").append(dynamicEntityInfo.getTableName()).append("\")\n");
+				} else {
+					esb.append("import ").append(ColumnOverride.class.getCanonicalName()).append(";\n");
+					esb.append("@TableName(name = \"").append(dynamicEntityInfo.getTableName()).append("\",\n");
+					DynamicEntityUtils.generateOverrides(esb, overrides);
+					esb.append(")\n");
+				}
 			}
 		}
 
@@ -283,6 +276,24 @@ public final class DynamicEntityUtils {
 		esb.append(msb);
 		esb.append("}\n");
 		return esb.toString();
+	}
+
+	private static void generateOverrides(StringBuilder esb, List<DynamicFieldInfo> overrides) {
+		esb.append("\tcolumnOverrides = {\n");
+		boolean appendSym = false;
+		for (DynamicFieldInfo dynamicFieldInfo : overrides) {
+			if (appendSym) {
+				esb.append("),\n");
+			} else {
+				appendSym = true;
+			}
+
+			esb.append("\t\t@ColumnOverride(");
+			esb.append("field = \"").append(dynamicFieldInfo.getFieldName()).append("\",");
+			esb.append("name = \"").append(dynamicFieldInfo.getColumnName()).append("\"");
+		}
+		esb.append(")\n");
+		esb.append("\t}\n");
 	}
 
 	private static void generateChildAnnotation(StringBuilder fsb, DynamicChildFieldInfo childInfo) {
