@@ -463,6 +463,7 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
                 .build();
         authorDynamicEntityInfo = DynamicEntityInfo.newBuilder(DynamicEntityType.TABLE, "com.tcdng.test.Author", DynamicEntityInfo.ManagedType.MANAGED)
                 .tableName("TAUTHOR").version(1L)
+                .addField(DynamicFieldType.INFO_ONLY, DataType.LONG, "PASCAL_ID", "id", null, null, 0, 0, 0, false, false)
                 .addField(DynamicFieldType.GENERATION, DataType.STRING, "TAUTHOR_NM", "name", defaultVal, 32, 0, 0, false, true)
                 .addForeignKeyField(DynamicFieldType.GENERATION, DynamicEntityInfo.SELF_REFERENCE, "PARENT_AUTHOR_ID",
                         "parentAuthorId", defaultVal, true)

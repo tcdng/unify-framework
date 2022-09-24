@@ -21,6 +21,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.data.ValueStore;
+import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.web.ui.widget.Control;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.Widget;
@@ -159,13 +160,14 @@ public class FileAttachmentWriter extends AbstractControlWriter {
             len = valueStoreList.size();
         }
 
-        writer.writeParam("pContId", fileAttachment.getContainerId());
+        writer.writeParam("pContId", fileAttachment.getContainerId()); 
         writer.writeParam("pFileId", fileAttachment.getFileCtrl().getBaseId());
         writer.writeParam("pAttchId", fileAttachment.getAttachCtrl().getBaseId());
         writer.writeParam("pViewId", fileAttachment.getViewCtrl().getBaseId());
         writer.writeParam("pRemId", fileAttachment.getRemoveCtrl().getBaseId());
         writer.writeParam("pLen", len);
         writer.writeParam("pEditable", fileAttachment.isContainerEditable());
+        writer.writeParam("pRef", DataUtils.toArray(String.class, writer.getPostCommandRefs()));
         writer.endFunction();
     }
 }

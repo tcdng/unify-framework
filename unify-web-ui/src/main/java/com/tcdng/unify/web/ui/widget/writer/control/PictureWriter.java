@@ -49,7 +49,7 @@ public class PictureWriter extends AbstractControlWriter {
         Picture picture = (Picture) widget;
         writer.beginFunction("ux.rigPhotoUpload");
         writer.writeParam("pId", picture.getId());
-        writer.writeCommandURLParam("pCmdURL");
+        writer.writeCommandURLParam("pCmdURL"); 
         writer.writeParam("pContId", picture.getContainerId());
         writer.writeParam("pFileId", picture.getFileCtrl().getId());
         writer.writeParam("pImgId", picture.getImageCtrl().getId());
