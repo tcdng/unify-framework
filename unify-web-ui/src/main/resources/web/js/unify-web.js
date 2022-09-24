@@ -5701,13 +5701,15 @@ ux.isPrintable = function(keyCode) {
 }
 
 ux.fireEvent = function(domObject, eventName) {
-	if (document.createEvent) {
-		var event = document.createEvent("HTMLEvents");
-		event.initEvent(eventName, true, true);
-		return !domObject.dispatchEvent(event);
-	} else {
-		var event = document.createEventObject();
-		return domObject.fireEvent("on" + eventName, event);
+	if (domObject) {
+		if (document.createEvent) {
+			var event = document.createEvent("HTMLEvents");
+			event.initEvent(eventName, true, true);
+			return !domObject.dispatchEvent(event);
+		} else {
+			var event = document.createEventObject();
+			return domObject.fireEvent("on" + eventName, event);
+		}
 	}
 }
 
