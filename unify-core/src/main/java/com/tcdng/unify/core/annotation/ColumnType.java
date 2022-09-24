@@ -69,6 +69,14 @@ public enum ColumnType implements EnumConst {
     public boolean isAuto() {
     	return AUTO.equals(this);
     }
+
+    public boolean isDate() {
+    	return DATE.equals(this);
+    }
+
+    public boolean isTimestamp() {
+    	return TIMESTAMP.equals(this) || TIMESTAMP_UTC.equals(this);
+    }
     
     public static ColumnType fromCode(String code) {
         return EnumUtils.fromCode(ColumnType.class, code);
