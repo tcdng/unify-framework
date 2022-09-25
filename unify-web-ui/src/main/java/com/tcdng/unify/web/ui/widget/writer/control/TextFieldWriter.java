@@ -18,6 +18,7 @@ package com.tcdng.unify.web.ui.widget.writer.control;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
+import com.tcdng.unify.core.util.json.JsonWriter;
 import com.tcdng.unify.web.constant.ExtensionType;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.Widget;
@@ -58,6 +59,14 @@ public class TextFieldWriter extends AbstractControlWriter {
         if (textField.getCase() != null) {
             writer.writeParam("pCase", textField.getCase().toString().toLowerCase());
         }
+        
+        if (textField.isClientFormat()) {
+            JsonWriter jw = new JsonWriter();
+            jw.beginObject();
+            addClientFormatParams(textField, jw);
+            jw.endObject();
+            writer.writeParam("pFmt", jw);
+        }
 
         writer.endFunction();
 
@@ -66,6 +75,10 @@ public class TextFieldWriter extends AbstractControlWriter {
         }
     }
 
+    protected void addClientFormatParams(TextField textField, JsonWriter jw) throws UnifyException {
+    	
+    }
+    
     protected void writeTextField(ResponseWriter writer, TextField textField, String type) throws UnifyException {
         writeTextField(writer, textField, type, textField.getExtensionType());
     }

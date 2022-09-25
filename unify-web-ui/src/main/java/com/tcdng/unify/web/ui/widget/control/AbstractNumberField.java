@@ -32,6 +32,7 @@ import com.tcdng.unify.web.constant.ExtensionType;
 		@UplAttribute(name = "useGrouping", type = boolean.class),
 		@UplAttribute(name = "formatter", type = Formatter.class),
 		@UplAttribute(name = "mimic", type = boolean.class),
+	    @UplAttribute(name = "clientFormat", type = boolean.class, defaultVal = "true"),
 		@UplAttribute(name = "strictFormat", type = boolean.class) })
 public abstract class AbstractNumberField extends TextField {
 
@@ -47,6 +48,26 @@ public abstract class AbstractNumberField extends TextField {
 	@Override
 	public boolean isHiddenMimic() throws UnifyException {
 		return getUplAttribute(boolean.class, "mimic");
+	}
+
+	public int getScale() throws UnifyException {
+		return isUplAttribute("scale") ?  getUplAttribute(int.class, "scale") : 0;
+	}
+
+	public int getPrecision() throws UnifyException {
+		return getUplAttribute(int.class, "precision");
+	}
+
+	public boolean isAcceptNegative() throws UnifyException {
+		return getUplAttribute(boolean.class, "acceptNegative");
+	}
+
+	public boolean isUseGrouping() throws UnifyException {
+		return getUplAttribute(boolean.class, "useGrouping");
+	}
+
+	public boolean isStrictFormat() throws UnifyException {
+		return getUplAttribute(boolean.class, "strictFormat");
 	}
 
 }

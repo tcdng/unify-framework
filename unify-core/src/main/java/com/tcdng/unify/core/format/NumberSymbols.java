@@ -35,12 +35,12 @@ public class NumberSymbols {
 
     private int groupSize;
 
-    private char groupingSeparator;
+    private String groupingSeparator;
 
-    private char decimalSeparator;
+    private String decimalSeparator;
 
     public NumberSymbols(NumberType numberType, String negativePrefix, String negativeSuffix, String positivePrefix,
-            String positiveSuffix, int groupSize, char groupingSeparator, char decimalSeparator) {
+            String positiveSuffix, int groupSize, String groupingSeparator, String decimalSeparator) {
         this.numberType = numberType;
         this.negativePrefix = negativePrefix;
         this.negativeSuffix = negativeSuffix;
@@ -75,11 +75,11 @@ public class NumberSymbols {
         return groupSize;
     }
 
-    public char getGroupingSeparator() {
+    public String getGroupingSeparator() {
         return groupingSeparator;
     }
 
-    public char getDecimalSeparator() {
+    public String getDecimalSeparator() {
         return decimalSeparator;
     }
 }

@@ -21,10 +21,18 @@ package com.tcdng.unify.core.util;
  * @author The Code Department
  * @since 1.0
  */
-public final class AccountingUtils {
+public final class FormattingUtils {
 
-    private AccountingUtils() {
+    private FormattingUtils() {
 
+    }
+
+    public static String makeParsableGroupedAmount(String amount, String groupSeparator) {
+    	if (amount != null && !amount.isEmpty()) {
+    		return amount.replaceAll(groupSeparator, "");
+    	}
+    	
+    	return amount;
     }
 
     public static String makeParsableNegativeAmount(String amount) {

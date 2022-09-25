@@ -214,7 +214,7 @@ public final class WebRegexUtils {
                 }
                 if (fullGroupCount > 0) {
                     sb.append("(");
-                    appendOptionalFormattingRegex(sb, String.valueOf(numberSymbols.getGroupingSeparator()));
+                    appendOptionalFormattingRegex(sb, numberSymbols.getGroupingSeparator());
                     appendRangeOption(sb, digit, groupSize);
                     sb.append("){0,").append(fullGroupCount).append('}');
                 }
@@ -226,7 +226,7 @@ public final class WebRegexUtils {
                 if (useGrouping) {
                     appendRangeOption(sb, digit, groupSize);
                     sb.append("(");
-                    appendOptionalFormattingRegex(sb, String.valueOf(numberSymbols.getGroupingSeparator()));
+                    appendOptionalFormattingRegex(sb, numberSymbols.getGroupingSeparator());
                     appendRangeOption(sb, digit, groupSize);
                     sb.append(")*");
                 } else {
@@ -238,11 +238,11 @@ public final class WebRegexUtils {
         if (!numberSymbols.getNumberType().isInteger()) {
             sb.append('(');
             if (scale > 0) {
-                escapeSpecial(sb, String.valueOf(numberSymbols.getDecimalSeparator()));
+                escapeSpecial(sb, numberSymbols.getDecimalSeparator());
                 appendRangeOption(sb, digit, scale);
             } else {
                 if (!strictFormat) {
-                    escapeSpecial(sb, String.valueOf(numberSymbols.getDecimalSeparator()));
+                    escapeSpecial(sb, numberSymbols.getDecimalSeparator());
                     sb.append("[").append(digit).append("]*");
                 }
             }

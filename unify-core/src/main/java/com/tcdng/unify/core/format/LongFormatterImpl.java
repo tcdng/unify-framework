@@ -19,6 +19,7 @@ import java.text.ParseException;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.util.FormattingUtils;
 
 /**
  * Default long formatter implementation.
@@ -36,6 +37,10 @@ public class LongFormatterImpl extends AbstractNumberFormatter<Long> implements 
     @Override
     public Long parse(String string) throws UnifyException {
         try {
+			if (isGroupingUsed()) {
+				string = FormattingUtils.makeParsableGroupedAmount(string, getNumberSymbols().getGroupingSeparator());
+			}
+
             return Long.valueOf(getNumberFormat().parse(string).intValue());
         } catch (ParseException e) {
             throwOperationErrorException(e);

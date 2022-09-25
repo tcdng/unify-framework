@@ -35,9 +35,9 @@ public class IntegerField extends AbstractNumberField {
     @Override
     public void onPageConstruct() throws UnifyException {
         NumberFormatter<?> numberFormatter = (NumberFormatter<?>) getFormatter();
-        numberFormatter.setPrecision(getUplAttribute(int.class, "precision"));
-        numberFormatter.setGroupingUsed(getUplAttribute(boolean.class, "useGrouping"));
-        numberFormatter.setStrictFormat(getUplAttribute(boolean.class, "strictFormat"));
+        numberFormatter.setPrecision(getPrecision());
+        numberFormatter.setGroupingUsed(isUseGrouping());
+        numberFormatter.setStrictFormat(isStrictFormat());
 
         super.onPageConstruct();
     }

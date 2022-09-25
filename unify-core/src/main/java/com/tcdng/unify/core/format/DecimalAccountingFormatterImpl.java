@@ -19,7 +19,7 @@ import java.text.ParseException;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
-import com.tcdng.unify.core.util.AccountingUtils;
+import com.tcdng.unify.core.util.FormattingUtils;
 
 /**
  * Default decimal (accounting) number formatter implementation.
@@ -30,22 +30,26 @@ import com.tcdng.unify.core.util.AccountingUtils;
 @Component(name = "decimalaccountingformat", description = "$m{format.decimal.accounting}")
 public class DecimalAccountingFormatterImpl extends AbstractNumberFormatter<Number> implements DecimalFormatter {
 
-    public DecimalAccountingFormatterImpl() {
-        super(Number.class, NumberType.DECIMAL_ACCOUNTING);
-    }
+	public DecimalAccountingFormatterImpl() {
+		super(Number.class, NumberType.DECIMAL_ACCOUNTING);
+	}
 
-    @Override
-    public Number parse(String string) throws UnifyException {
-        try {
-        	string = AccountingUtils.makeParsableNegativeAmount(string);
-            return getNumberFormat().parse(string);
-        } catch (ParseException e) {
-            throwOperationErrorException(e);
-        }
-        return null;
-    }
+	@Override
+	public Number parse(String string) throws UnifyException {
+		try {
+			if (isGroupingUsed()) {
+				string = FormattingUtils.makeParsableGroupedAmount(string, getNumberSymbols().getGroupingSeparator());
+			}
 
-    protected DecimalAccountingFormatterImpl(NumberType type) {
-        super(Number.class, type);
-    }
+			string = FormattingUtils.makeParsableNegativeAmount(string);
+			return getNumberFormat().parse(string);
+		} catch (ParseException e) {
+			throwOperationErrorException(e);
+		}
+		return null;
+	}
+
+	protected DecimalAccountingFormatterImpl(NumberType type) {
+		super(Number.class, type);
+	}
 }

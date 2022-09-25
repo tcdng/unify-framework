@@ -148,7 +148,7 @@ public class FormatHelperImpl extends AbstractUnifyComponent implements FormatHe
                 DecimalFormatSymbols dfs = df.getDecimalFormatSymbols();
                 return new NumberSymbols(numberType, df.getNegativePrefix(), df.getNegativeSuffix(),
                         df.getPositivePrefix(), df.getPositiveSuffix(), df.getGroupingSize(),
-                        dfs.getGroupingSeparator(), dfs.getDecimalSeparator());
+                        String.valueOf(dfs.getGroupingSeparator()), String.valueOf(dfs.getDecimalSeparator()));
             }
         };
 
