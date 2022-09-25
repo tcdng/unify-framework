@@ -477,7 +477,7 @@ z-index:400;}
 .ui-minibutton:disabled {cursor:default;}
 .ui-minibutton:hover:enabled {color: #FFF; background-color: #6080F0;}
 .ui-minibutton span {padding-left:10px;}
-.ui-minibutton-alert {padding: 0px 10px; min-height:18px; font-size:7pt background-color: #E8E8E8; border: 1px solid #C8C8C8; cursor: pointer;}
+.ui-minibutton-alert {padding: 0px 10px; min-height:18px; font-size:7pt; background-color: #E8E8E8; border: 1px solid #C8C8C8; cursor: pointer;}
 .ui-minibutton-alert:disabled {cursor:default;}
 .ui-minibutton-alert:hover:enabled {color: #FFF; background-color: #F06060;}
 
@@ -489,6 +489,14 @@ z-index:400;}
 .ui-checklist {width:20px; height:20px;}
 .ui-checklist input {display:none;}
 
+/** Color Legend */
+.ui-colorlegend {display:inline-block}
+.ui-colorlegend .key {width:32px;}
+.ui-colorlegend .key span {display: block;width:28px; height:12px;border: solid 1px #A0A0A0;margin: 2px;}
+.ui-colorlegend .label {font-size:7pt;font-weight: bold;padding-left: 4px;vertical-align: middle;}
+
+/** Color span */
+.ui-colorspan {display:inline-block; width:64px; height:24px;border: solid 1px #A0A0A0;}
 
 /** Date field */
 .ui-date {width: 160px;}
