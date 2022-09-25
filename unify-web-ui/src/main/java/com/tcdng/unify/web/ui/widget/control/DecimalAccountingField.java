@@ -15,30 +15,20 @@
  */
 package com.tcdng.unify.web.ui.widget.control;
 
-import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.format.Formatter;
-import com.tcdng.unify.core.format.NumberFormatter;
 
 /**
- * Input field for entering whole numbers.
+ * Represents an input field for entering a decimal (accounting) amount.
  * 
  * @author The Code Department
  * @since 1.0
  */
-@Component("ui-integer")
-@UplAttributes({ @UplAttribute(name = "formatter", type = Formatter.class, defaultVal = "$d{!integerformat}") })
-public class IntegerField extends AbstractNumberField {
+@Component("ui-decimal-accounting")
+@UplAttributes({
+        @UplAttribute(name = "formatter", type = Formatter.class, defaultVal = "$d{!decimalaccountingformat}")})
+public class DecimalAccountingField extends DecimalField {
 
-    @Override
-    public void onPageConstruct() throws UnifyException {
-        NumberFormatter<?> numberFormatter = (NumberFormatter<?>) getFormatter();
-        numberFormatter.setPrecision(getPrecision());
-        numberFormatter.setGroupingUsed(isUseGrouping());
-        numberFormatter.setStrictFormat(isStrictFormat());
-
-        super.onPageConstruct();
-    }
 }

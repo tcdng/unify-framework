@@ -19,6 +19,8 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.format.NumberFormatter;
+import com.tcdng.unify.core.format.NumberSymbols;
+import com.tcdng.unify.core.util.json.JsonWriter;
 import com.tcdng.unify.web.ui.util.WebRegexUtils;
 import com.tcdng.unify.web.ui.widget.control.AbstractNumberField;
 import com.tcdng.unify.web.ui.widget.control.TextField;
@@ -36,15 +38,21 @@ public class NumberFieldWriter extends TextFieldWriter {
     @Override
     protected String getFormatRegex(TextField textField) throws UnifyException {
         AbstractNumberField numberField = (AbstractNumberField) textField;
-        int scale = 0;
-        if (textField.isUplAttribute("scale")) {
-            scale = numberField.getUplAttribute(int.class, "scale");
-        }
-
         return WebRegexUtils.getNumberFormatRegex(((NumberFormatter<?>) numberField.getFormatter()).getNumberSymbols(),
-                numberField.getUplAttribute(int.class, "precision"), scale,
-                numberField.getUplAttribute(boolean.class, "acceptNegative"),
-                numberField.getUplAttribute(boolean.class, "useGrouping"),
-                numberField.getUplAttribute(boolean.class, "strictFormat"));
+        		numberField.getPrecision(), numberField.getScale(),
+        		numberField.isAcceptNegative(),
+                numberField.isUseGrouping(),
+                numberField.isStrictFormat());
+    }
+
+    protected void addClientFormatParams(TextField textField, JsonWriter jw) throws UnifyException {
+        AbstractNumberField numberField = (AbstractNumberField) textField;
+    	NumberSymbols ns = ((NumberFormatter<?>) numberField.getFormatter()).getNumberSymbols();
+        jw.write("grouping", numberField.isUseGrouping());
+        jw.write("groupSize", ns.getGroupSize()); // TODO For Indian this should be 2
+        jw.write("comma", ns.getGroupingSeparator());
+        jw.write("decimal", ns.getDecimalSeparator());
+        jw.write("negPrefix", ns.getNegativePrefix());
+        jw.write("negSuffix", ns.getNegativeSuffix());
     }
 }

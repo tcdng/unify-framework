@@ -35,15 +35,20 @@ import com.tcdng.unify.web.ui.widget.AbstractFormattedControl;
         @UplAttribute(name = "spellCheck", type = boolean.class, defaultVal = "false"),
         @UplAttribute(name = "extStyleClass", type = String.class, defaultVal = "tread"),
         @UplAttribute(name = "extReadOnly", type = boolean.class, defaultVal = "true"),
+        @UplAttribute(name = "clientFormat", type = boolean.class, defaultVal = "false"),
         @UplAttribute(name = "autocomplete", type = boolean.class)})
 public class TextField extends AbstractFormattedControl {
 
     public TextCase getCase() throws UnifyException {
         return getUplAttribute(TextCase.class, "case");
     }
-
+    
     public boolean isSpellCheck() throws UnifyException {
         return getUplAttribute(boolean.class, "spellCheck");
+    }
+
+    public boolean isClientFormat() throws UnifyException {
+        return getUplAttribute(boolean.class, "clientFormat");
     }
 
     public String getExtStyleClass() throws UnifyException {
@@ -63,8 +68,12 @@ public class TextField extends AbstractFormattedControl {
         return !getExtReadOnly();
     }
     
-	public ExtensionType getExtensionType() {
+	public ExtensionType getExtensionType() throws UnifyException {
         return ExtensionType.NONE;
+    }
+    
+	public boolean isHiddenMimic() throws UnifyException {
+        return false;
     }
 
     @Override

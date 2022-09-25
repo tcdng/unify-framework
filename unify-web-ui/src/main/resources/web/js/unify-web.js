@@ -4949,6 +4949,20 @@ ux.setTextRegexFormatting = function(prm) {
 
 	var elem = _id(prm.pId);
 	if (elem) {
+		if (prm.pFmt || prm.pMimic) {
+			if (prm.pMimic) {
+				evp.mFac = prm.pId;
+				evp.mHid = prm.pHid;
+				evp.mimic = true;
+				ux.addHdl(elem, "focus", ux.textInputFocus,
+						evp);
+			}
+			
+			evp.cFmt = prm.pFmt;
+			ux.addHdl(elem, "blur", ux.textInputBlur,
+					evp);
+		}
+		
 		if (evp.sFormatRegex) {
 			ux.addHdl(elem, "paste", ux.textInputPaste,
 					evp);
@@ -4958,9 +4972,34 @@ ux.setTextRegexFormatting = function(prm) {
 				evp);
 		ux.addHdl(elem,  "keydown", ux.textInputKeydown,
 				evp);
-		if (prm.pCase) {
+		if (prm.pMimic || prm.pCase) {
 			ux.addHdl(elem,  "keyup", ux.textInputKeyup,
 					evp);
+		}
+	}
+}
+
+ux.textInputFocus = function(uEv) {
+	var trgObj = uEv.uTrg;
+	if (!trgObj.readOnly) {
+		var evp = uEv.evp;
+		if (evp.mimic) {
+			_id(evp.mFac).value = _id(evp.mHid).value;
+		}
+	}
+}
+
+ux.textInputBlur = function(uEv) {
+	var trgObj = uEv.uTrg;
+	if (!trgObj.readOnly) {
+		var evp = uEv.evp;
+		if (evp.cFmt) {
+			trgObj.value = ux.formatInput(trgObj.value, evp.cFmt);
+		}
+		
+		if (evp.mimic) {
+			// TODO Format FAC
+			//_id(evp.mFac).value = _id(evp.mHid).value;
 		}
 	}
 }
@@ -4974,6 +5013,10 @@ ux.textInputPaste = function(uEv) {
 		uEv.uStop();
 		return;
 	}
+		
+	if (evp.mimic)	{
+		_id(evp.mHid).value = pasted;
+	}	
 }
 
 ux.textInputKeypress = function(uEv) {
@@ -4982,11 +5025,11 @@ ux.textInputKeypress = function(uEv) {
 
 ux.textInputKeyup = function(uEv) {
 	var trgObj = uEv.uTrg;
-	var evp = uEv.evp;
 	if (!trgObj.readOnly) {
-		var pos = ux.getCaretPosition(trgObj);
-		var string = trgObj.value;
+		var evp = uEv.evp;
 		if (evp.sTextCase) {
+			var pos = ux.getCaretPosition(trgObj);
+			var string = trgObj.value;
 			if ("upper" == evp.sTextCase) {
 				trgObj.value = string.toUpperCase();
 			} else if ("camel" == evp.sTextCase) {
@@ -5002,16 +5045,18 @@ ux.textInputKeyup = function(uEv) {
 			}
 			
 			ux.setCaretPosition(trgObj, pos.start, pos.start);
-			return;
-		}		
+		}
+		
+		if (evp.mimic)	{
+			_id(evp.mHid).value = _id(evp.mFac).value;
+		}	
 	}
 }
 
 ux.textInputKeydown = function(uEv) {
 	var trgObj = uEv.uTrg;
-	var evp = uEv.evp;
-
 	if (uEv.uChar && !trgObj.readOnly) {
+		var evp = uEv.evp;
 		if (uEv.ctrlKey && ((uEv.uChar == 'v') ||(uEv.uChar == 'V'))) {
 			return;
 		}
@@ -5026,6 +5071,59 @@ ux.textInputKeydown = function(uEv) {
 			return;
 		}
 	}
+}
+
+ux.formatInput = function(val, fmt) {
+	if (val) {
+		val = val.trim();
+		if (val.length > 0) {
+			// Strip negatives
+			var neg = false;
+			if (fmt.negPrefix.length > 0 && val.startsWith(fmt.negPrefix)){
+				val = val.substring(fmt.negPrefix.length);
+				neg = true;
+			}
+			
+			if (fmt.negSuffix.length > 0 && val.endsWith(fmt.negSuffix)) {
+				val = val.substring(0, val.length - fmt.negSuffix.length);
+				neg = true;
+			}
+			
+			// Strip decimal
+			var fraction = "";
+			var dindex = val.lastIndexOf(fmt.decimal);
+			if (dindex >= 0) {
+				fraction = val.substring(dindex);
+				val = val.substring(0, dindex);
+			}
+			
+			// Remove any grouping
+			val = val.replace(new RegExp(fmt.comma, 'g'), '');
+			
+			// Reconstruct
+			var _val = val;
+			if (fmt.grouping) {
+				_val = "";
+				var gsize = 3;
+				var gcount = 0;
+				for (var i = val.length - 1; i >= 0; i--) {
+				  _val = val[i] + _val;
+				  gcount++;
+				  if (i != 0 && gcount == gsize) {
+					_val = fmt.comma + _val;
+					gcount = 0;
+					gsize = fmt.groupSize;
+				  }
+				}			
+			}
+			
+			_val = _val.length == 0 ? "0" + fraction : _val += fraction;
+			_val = neg ? fmt.negPrefix + _val + fmt.negSuffix : _val;
+			return _val;
+		}
+	}
+	
+	return val;
 }
 
 ux.getCaretPosition = function(trgObj) {

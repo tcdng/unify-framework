@@ -22,16 +22,16 @@ import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.util.FormattingUtils;
 
 /**
- * Default long formatter implementation.
+ * Default long (accounting) formatter implementation.
  * 
  * @author The Code Department
  * @since 1.0
  */
-@Component(name = "longformat", description = "$m{format.long}")
-public class LongFormatterImpl extends AbstractNumberFormatter<Long> implements LongFormatter {
+@Component(name = "longaccountingformat", description = "$m{format.long.accounting}")
+public class LongAccountingFormatterImpl extends AbstractNumberFormatter<Long> implements LongFormatter {
 
-    public LongFormatterImpl() {
-        super(Long.class, NumberType.INTEGER);
+    public LongAccountingFormatterImpl() {
+        super(Long.class, NumberType.INTEGER_ACCOUNTING);
     }
 
     @Override
@@ -41,7 +41,8 @@ public class LongFormatterImpl extends AbstractNumberFormatter<Long> implements 
 				string = FormattingUtils.makeParsableGroupedAmount(string, getNumberSymbols().getGroupingSeparator());
 			}
 
-            return Long.valueOf(getNumberFormat().parse(string).intValue());
+        	string = FormattingUtils.makeParsableNegativeAmount(string);
+            return Long.valueOf(getNumberFormat().parse(string).longValue());
         } catch (ParseException e) {
             throwOperationErrorException(e);
         }

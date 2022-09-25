@@ -22,7 +22,6 @@ import java.util.Set;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.format.NumberSymbols;
-import com.tcdng.unify.core.format.NumberType;
 
 /**
  * Web regex utilities.
@@ -200,7 +199,7 @@ public final class WebRegexUtils {
             appendOptionalFormattingRegex(sb, numberSymbols.getPositivePrefix());
         }
 
-        if (scale > 0 && !NumberType.INTEGER.equals(numberSymbols.getNumberType())) {
+        if (scale > 0 && !numberSymbols.getNumberType().isInteger()) {
             precision = precision - scale;
         }
 
@@ -215,7 +214,7 @@ public final class WebRegexUtils {
                 }
                 if (fullGroupCount > 0) {
                     sb.append("(");
-                    appendOptionalFormattingRegex(sb, String.valueOf(numberSymbols.getGroupingSeparator()));
+                    appendOptionalFormattingRegex(sb, numberSymbols.getGroupingSeparator());
                     appendRangeOption(sb, digit, groupSize);
                     sb.append("){0,").append(fullGroupCount).append('}');
                 }
@@ -227,7 +226,7 @@ public final class WebRegexUtils {
                 if (useGrouping) {
                     appendRangeOption(sb, digit, groupSize);
                     sb.append("(");
-                    appendOptionalFormattingRegex(sb, String.valueOf(numberSymbols.getGroupingSeparator()));
+                    appendOptionalFormattingRegex(sb, numberSymbols.getGroupingSeparator());
                     appendRangeOption(sb, digit, groupSize);
                     sb.append(")*");
                 } else {
@@ -236,14 +235,14 @@ public final class WebRegexUtils {
             }
         }
 
-        if (!NumberType.INTEGER.equals(numberSymbols.getNumberType())) {
+        if (!numberSymbols.getNumberType().isInteger()) {
             sb.append('(');
             if (scale > 0) {
-                escapeSpecial(sb, String.valueOf(numberSymbols.getDecimalSeparator()));
+                escapeSpecial(sb, numberSymbols.getDecimalSeparator());
                 appendRangeOption(sb, digit, scale);
             } else {
                 if (!strictFormat) {
-                    escapeSpecial(sb, String.valueOf(numberSymbols.getDecimalSeparator()));
+                    escapeSpecial(sb, numberSymbols.getDecimalSeparator());
                     sb.append("[").append(digit).append("]*");
                 }
             }

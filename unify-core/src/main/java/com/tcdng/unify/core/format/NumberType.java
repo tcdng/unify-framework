@@ -22,5 +22,17 @@ package com.tcdng.unify.core.format;
  * @since 1.0
  */
 public enum NumberType {
-    INTEGER, DECIMAL, PERCENT
+	INTEGER,
+	INTEGER_ACCOUNTING,
+	DECIMAL,
+	DECIMAL_ACCOUNTING,
+	PERCENT;
+	
+	public boolean isInteger() {
+		return INTEGER.equals(this) || INTEGER_ACCOUNTING.equals(this);
+	}
+	
+	public boolean isAccounting() {
+		return INTEGER_ACCOUNTING.equals(this) || DECIMAL_ACCOUNTING.equals(this);
+	}
 }

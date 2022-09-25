@@ -130,21 +130,28 @@ public abstract class AbstractNumberFormatter<T extends Number> extends Abstract
             numberSymbols = getFormatHelper().getNumberSymbols(type, locale);
 
             switch (type) {
-                case INTEGER:
+	            case INTEGER:
+	            case INTEGER_ACCOUNTING:
                     nf = NumberFormat.getIntegerInstance(locale);
                     break;
                 case PERCENT:
                     nf = NumberFormat.getPercentInstance(locale);
                     break;
                 case DECIMAL:
+                case DECIMAL_ACCOUNTING:
                 default:
                     nf = NumberFormat.getNumberInstance(locale);
                     break;
             }
 
             DecimalFormat df = (DecimalFormat) nf;
+            if (type.isAccounting()) {
+            	df.setNegativePrefix("(");
+            	df.setNegativeSuffix(")");
+            }
+            
             nf.setGroupingUsed(isGroupingUsed());
-            if (NumberType.INTEGER.equals(type)) {
+            if (type.isInteger()) {
                 df.setParseBigDecimal(false);
                 if (getPrecision() > 0) {
                     nf.setMaximumIntegerDigits(getPrecision());

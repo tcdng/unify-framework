@@ -22,34 +22,34 @@ import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.util.FormattingUtils;
 
 /**
- * Default long formatter implementation.
+ * Default decimal (accounting) number formatter implementation.
  * 
  * @author The Code Department
  * @since 1.0
  */
-@Component(name = "longformat", description = "$m{format.long}")
-public class LongFormatterImpl extends AbstractNumberFormatter<Long> implements LongFormatter {
+@Component(name = "decimalaccountingformat", description = "$m{format.decimal.accounting}")
+public class DecimalAccountingFormatterImpl extends AbstractNumberFormatter<Number> implements DecimalFormatter {
 
-    public LongFormatterImpl() {
-        super(Long.class, NumberType.INTEGER);
-    }
+	public DecimalAccountingFormatterImpl() {
+		super(Number.class, NumberType.DECIMAL_ACCOUNTING);
+	}
 
-    @Override
-    public Long parse(String string) throws UnifyException {
-        try {
+	@Override
+	public Number parse(String string) throws UnifyException {
+		try {
 			if (isGroupingUsed()) {
 				string = FormattingUtils.makeParsableGroupedAmount(string, getNumberSymbols().getGroupingSeparator());
 			}
 
-            return Long.valueOf(getNumberFormat().parse(string).intValue());
-        } catch (ParseException e) {
-            throwOperationErrorException(e);
-        }
-        return null;
-    }
+			string = FormattingUtils.makeParsableNegativeAmount(string);
+			return getNumberFormat().parse(string);
+		} catch (ParseException e) {
+			throwOperationErrorException(e);
+		}
+		return null;
+	}
 
-    @Override
-    public void setScale(int scale) {
-
-    }
+	protected DecimalAccountingFormatterImpl(NumberType type) {
+		super(Number.class, type);
+	}
 }

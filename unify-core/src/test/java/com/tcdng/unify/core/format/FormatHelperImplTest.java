@@ -127,10 +127,24 @@ public class FormatHelperImplTest {
         assertEquals("", ns.getPositiveSuffix());
         assertUkSeparatorsAndGroupSizel(ns);
 
+        ns = dfh.getNumberSymbols(NumberType.DECIMAL_ACCOUNTING, Locale.UK);
+        assertEquals("(", ns.getNegativePrefix());
+        assertEquals("", ns.getPositivePrefix());
+        assertEquals(")", ns.getNegativeSuffix());
+        assertEquals("", ns.getPositiveSuffix());
+        assertUkSeparatorsAndGroupSizel(ns);
+
         ns = dfh.getNumberSymbols(NumberType.INTEGER, Locale.UK);
         assertEquals("-", ns.getNegativePrefix());
         assertEquals("", ns.getPositivePrefix());
         assertEquals("", ns.getNegativeSuffix());
+        assertEquals("", ns.getPositiveSuffix());
+        assertUkSeparatorsAndGroupSizel(ns);
+
+        ns = dfh.getNumberSymbols(NumberType.INTEGER_ACCOUNTING, Locale.UK);
+        assertEquals("(", ns.getNegativePrefix());
+        assertEquals("", ns.getPositivePrefix());
+        assertEquals(")", ns.getNegativeSuffix());
         assertEquals("", ns.getPositiveSuffix());
         assertUkSeparatorsAndGroupSizel(ns);
     }
