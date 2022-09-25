@@ -22,7 +22,6 @@ import java.util.Set;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.format.NumberSymbols;
-import com.tcdng.unify.core.format.NumberType;
 
 /**
  * Web regex utilities.
@@ -236,7 +235,7 @@ public final class WebRegexUtils {
             }
         }
 
-        if (!NumberType.INTEGER.equals(numberSymbols.getNumberType())) {
+        if (!numberSymbols.getNumberType().isInteger()) {
             sb.append('(');
             if (scale > 0) {
                 escapeSpecial(sb, String.valueOf(numberSymbols.getDecimalSeparator()));
