@@ -63,8 +63,12 @@ public class TextField extends AbstractFormattedControl {
         return !getExtReadOnly();
     }
     
-	public ExtensionType getExtensionType() {
+	public ExtensionType getExtensionType() throws UnifyException {
         return ExtensionType.NONE;
+    }
+    
+	public boolean isHiddenMimic() throws UnifyException {
+        return false;
     }
 
     @Override

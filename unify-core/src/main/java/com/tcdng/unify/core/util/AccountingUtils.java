@@ -13,26 +13,32 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.format;
+package com.tcdng.unify.core.util;
 
 /**
- * Number types.
+ * Provides utility methods for string manipulation.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public enum NumberType {
-	INTEGER,
-	INTEGER_ACCOUNTING,
-	DECIMAL,
-	DECIMAL_ACCOUNTING,
-	PERCENT;
-	
-	public boolean isInteger() {
-		return INTEGER.equals(this) || INTEGER_ACCOUNTING.equals(this);
-	}
-	
-	public boolean isAccounting() {
-		return INTEGER_ACCOUNTING.equals(this) || DECIMAL_ACCOUNTING.equals(this);
-	}
+public final class AccountingUtils {
+
+    private AccountingUtils() {
+
+    }
+
+    public static String makeParsableNegativeAmount(String amount) {
+    	if (amount != null && !amount.isEmpty()) {
+    		int last = amount.length() - 1;
+    		if (amount.charAt(0) == '(' && amount.charAt(last) != ')') {
+    			return amount + ')';
+    		}
+    			
+    		if (amount.charAt(last) == ')' && amount.charAt(0) != '(') {
+    			return '(' + amount;
+    		}
+    	}
+    	
+    	return amount;
+    }
 }

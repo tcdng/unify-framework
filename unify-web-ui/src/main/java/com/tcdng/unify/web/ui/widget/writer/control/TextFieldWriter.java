@@ -51,6 +51,9 @@ public class TextFieldWriter extends AbstractControlWriter {
         } else {
             writer.writeParam("pId", textField.getId());
         }
+        
+        writer.writeParam("pHid", textField.getId());
+        writer.writeParam("pMimic", textField.isHiddenMimic());
         writer.writeResolvedParam("pRegex", "\"" + getFormatRegex(textField) + "\"");
         if (textField.getCase() != null) {
             writer.writeParam("pCase", textField.getCase().toString().toLowerCase());
@@ -96,7 +99,10 @@ public class TextFieldWriter extends AbstractControlWriter {
         if (extensionType.isExtended()) {
             writer.write("<div ");
             writeTagId(writer, textField.getBorderId());
-            writeTagStyleClass(writer, textField);
+            if (!textField.isHiddenMimic()) {
+            	writeTagStyleClass(writer, textField);
+            }
+            
             writeTagStyle(writer, textField);
             writer.write(">");
             writer.write("<div style=\"display:flex;width:100%;\">");
@@ -144,7 +150,12 @@ public class TextFieldWriter extends AbstractControlWriter {
                 value = textField.getStringValue();
             }
 
-            writeTagStyleClass(writer, textField.getExtStyleClass());
+            if (textField.isHiddenMimic()) {
+            	writeTagStyleClass(writer, textField);
+            } else {
+            	writeTagStyleClass(writer, textField.getExtStyleClass());
+            }
+            
             if (!extensionType.isEdit() && textField.getExtReadOnly()) {
                 writeTagReadOnly(writer);
                 writeTagDisabled(writer, textField);
@@ -170,6 +181,8 @@ public class TextFieldWriter extends AbstractControlWriter {
             writer.write(" value=\"");
             writer.writeWithHtmlEscape(value);
             writer.write("\"");
+        } else if (textField.isHiddenMimic()) {
+            writer.write(" value=\"\"");
         }
 
         writer.write(" spellcheck=\"").write(textField.isSpellCheck()).write("\"");

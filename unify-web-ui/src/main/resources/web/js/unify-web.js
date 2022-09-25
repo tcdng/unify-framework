@@ -4949,6 +4949,16 @@ ux.setTextRegexFormatting = function(prm) {
 
 	var elem = _id(prm.pId);
 	if (elem) {
+		if (prm.pMimic) {
+			evp.mFac = prm.pId;
+			evp.mHid = prm.pHid;
+			evp.mimic = true;
+			ux.addHdl(elem, "focus", ux.textInputFocus,
+					evp);
+			ux.addHdl(elem, "blur", ux.textInputBlur,
+					evp);
+		}
+		
 		if (evp.sFormatRegex) {
 			ux.addHdl(elem, "paste", ux.textInputPaste,
 					evp);
@@ -4958,9 +4968,30 @@ ux.setTextRegexFormatting = function(prm) {
 				evp);
 		ux.addHdl(elem,  "keydown", ux.textInputKeydown,
 				evp);
-		if (prm.pCase) {
+		if (prm.pMimic || prm.pCase) {
 			ux.addHdl(elem,  "keyup", ux.textInputKeyup,
 					evp);
+		}
+	}
+}
+
+ux.textInputFocus = function(uEv) {
+	var trgObj = uEv.uTrg;
+	if (!trgObj.readOnly) {
+		var evp = uEv.evp;
+		if (evp.mimic) {
+			_id(evp.mFac).value = _id(evp.mHid).value;
+		}
+	}
+}
+
+ux.textInputBlur = function(uEv) {
+	var trgObj = uEv.uTrg;
+	if (!trgObj.readOnly) {
+		var evp = uEv.evp;
+		if (evp.mimic) {
+			// TODO Format FAC
+			//_id(evp.mFac).value = _id(evp.mHid).value;
 		}
 	}
 }
@@ -4974,6 +5005,10 @@ ux.textInputPaste = function(uEv) {
 		uEv.uStop();
 		return;
 	}
+		
+	if (evp.mimic)	{
+		_id(evp.mHid).value = pasted;
+	}	
 }
 
 ux.textInputKeypress = function(uEv) {
@@ -4982,11 +5017,11 @@ ux.textInputKeypress = function(uEv) {
 
 ux.textInputKeyup = function(uEv) {
 	var trgObj = uEv.uTrg;
-	var evp = uEv.evp;
 	if (!trgObj.readOnly) {
-		var pos = ux.getCaretPosition(trgObj);
-		var string = trgObj.value;
+		var evp = uEv.evp;
 		if (evp.sTextCase) {
+			var pos = ux.getCaretPosition(trgObj);
+			var string = trgObj.value;
 			if ("upper" == evp.sTextCase) {
 				trgObj.value = string.toUpperCase();
 			} else if ("camel" == evp.sTextCase) {
@@ -5002,16 +5037,18 @@ ux.textInputKeyup = function(uEv) {
 			}
 			
 			ux.setCaretPosition(trgObj, pos.start, pos.start);
-			return;
-		}		
+		}
+		
+		if (evp.mimic)	{
+			_id(evp.mHid).value = _id(evp.mFac).value;
+		}	
 	}
 }
 
 ux.textInputKeydown = function(uEv) {
 	var trgObj = uEv.uTrg;
-	var evp = uEv.evp;
-
 	if (uEv.uChar && !trgObj.readOnly) {
+		var evp = uEv.evp;
 		if (uEv.ctrlKey && ((uEv.uChar == 'v') ||(uEv.uChar == 'V'))) {
 			return;
 		}

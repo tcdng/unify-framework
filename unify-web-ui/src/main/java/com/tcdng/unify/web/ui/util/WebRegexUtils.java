@@ -200,7 +200,7 @@ public final class WebRegexUtils {
             appendOptionalFormattingRegex(sb, numberSymbols.getPositivePrefix());
         }
 
-        if (scale > 0 && !NumberType.INTEGER.equals(numberSymbols.getNumberType())) {
+        if (scale > 0 && !numberSymbols.getNumberType().isInteger()) {
             precision = precision - scale;
         }
 

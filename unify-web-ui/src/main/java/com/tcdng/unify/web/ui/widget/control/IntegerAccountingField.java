@@ -13,26 +13,21 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.format;
+package com.tcdng.unify.web.ui.widget.control;
+
+import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.annotation.UplAttribute;
+import com.tcdng.unify.core.annotation.UplAttributes;
+import com.tcdng.unify.core.format.Formatter;
 
 /**
- * Number types.
+ * Input field for entering accounting whole numbers.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public enum NumberType {
-	INTEGER,
-	INTEGER_ACCOUNTING,
-	DECIMAL,
-	DECIMAL_ACCOUNTING,
-	PERCENT;
-	
-	public boolean isInteger() {
-		return INTEGER.equals(this) || INTEGER_ACCOUNTING.equals(this);
-	}
-	
-	public boolean isAccounting() {
-		return INTEGER_ACCOUNTING.equals(this) || DECIMAL_ACCOUNTING.equals(this);
-	}
+@Component("ui-integer-accounting")
+@UplAttributes({ @UplAttribute(name = "formatter", type = Formatter.class, defaultVal = "$d{!integeraccountingformat}") })
+public class IntegerAccountingField extends IntegerField {
+
 }

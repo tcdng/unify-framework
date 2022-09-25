@@ -126,18 +126,25 @@ public class FormatHelperImpl extends AbstractUnifyComponent implements FormatHe
                     throws Exception {
                 DecimalFormat df = null;
                 switch (numberType) {
-                    case INTEGER:
+	                case INTEGER:
+	                case INTEGER_ACCOUNTING:
                         df = (DecimalFormat) DecimalFormat.getIntegerInstance(locale);
                         break;
                     case PERCENT:
                         df = (DecimalFormat) DecimalFormat.getPercentInstance(locale);
                         break;
                     case DECIMAL:
+	                case DECIMAL_ACCOUNTING:
                     default:
                         df = (DecimalFormat) DecimalFormat.getNumberInstance(locale);
                         break;
-
                 }
+                
+                if (numberType.isAccounting()) {
+                	df.setNegativePrefix("(");
+                	df.setNegativeSuffix(")");
+                }
+                
                 DecimalFormatSymbols dfs = df.getDecimalFormatSymbols();
                 return new NumberSymbols(numberType, df.getNegativePrefix(), df.getNegativeSuffix(),
                         df.getPositivePrefix(), df.getPositiveSuffix(), df.getGroupingSize(),
