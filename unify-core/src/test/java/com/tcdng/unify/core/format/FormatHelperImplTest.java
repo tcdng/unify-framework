@@ -212,8 +212,8 @@ public class FormatHelperImplTest {
     }
 
     private void assertUkSeparatorsAndGroupSizel(NumberSymbols ns) throws Exception {
-        assertEquals('.', ns.getDecimalSeparator());
-        assertEquals(',', ns.getGroupingSeparator());
+        assertEquals(".", ns.getDecimalSeparator());
+        assertEquals(",", ns.getGroupingSeparator());
         assertEquals(3, ns.getGroupSize());
     }
 }
