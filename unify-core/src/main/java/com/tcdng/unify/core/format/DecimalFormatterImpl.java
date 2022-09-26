@@ -40,7 +40,11 @@ public class DecimalFormatterImpl extends AbstractNumberFormatter<Number> implem
 			if (isGroupingUsed()) {
 				string = FormattingUtils.makeParsableGroupedAmount(string, getNumberSymbols().getGroupingSeparator());
 			}
-
+			
+			if (isGlobalAccounting()) {
+				string = FormattingUtils.makeParsableNegativeAmount(string);
+			}
+			
 			return getNumberFormat().parse(string);
 		} catch (ParseException e) {
 			throwOperationErrorException(e);

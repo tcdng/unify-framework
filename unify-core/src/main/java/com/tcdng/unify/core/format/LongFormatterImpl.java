@@ -41,6 +41,10 @@ public class LongFormatterImpl extends AbstractNumberFormatter<Long> implements 
 				string = FormattingUtils.makeParsableGroupedAmount(string, getNumberSymbols().getGroupingSeparator());
 			}
 
+			if (isGlobalAccounting()) {
+				string = FormattingUtils.makeParsableNegativeAmount(string);
+			}
+			
             return Long.valueOf(getNumberFormat().parse(string).intValue());
         } catch (ParseException e) {
             throwOperationErrorException(e);

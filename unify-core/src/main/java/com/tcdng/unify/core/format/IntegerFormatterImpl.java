@@ -40,7 +40,11 @@ public class IntegerFormatterImpl extends AbstractNumberFormatter<Integer> imple
 			if (isGroupingUsed()) {
 				string = FormattingUtils.makeParsableGroupedAmount(string, getNumberSymbols().getGroupingSeparator());
 			}
-
+			
+			if (isGlobalAccounting()) {
+				string = FormattingUtils.makeParsableNegativeAmount(string);
+			}
+			
             return Integer.valueOf(getNumberFormat().parse(string).intValue());
         } catch (ParseException e) {
             throwOperationErrorException(e);

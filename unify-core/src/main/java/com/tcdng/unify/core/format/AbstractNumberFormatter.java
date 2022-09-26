@@ -145,7 +145,7 @@ public abstract class AbstractNumberFormatter<T extends Number> extends Abstract
             }
 
             DecimalFormat df = (DecimalFormat) nf;
-            if (type.isAccounting()) {
+            if (type.isAccounting() || isGlobalAccounting()) {
             	df.setNegativePrefix("(");
             	df.setNegativeSuffix(")");
             }

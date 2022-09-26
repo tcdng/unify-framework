@@ -753,6 +753,19 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	}
 
 	/**
+	 * Gets converted attribute value from current session.
+	 * 
+	 * @param typeClass the type
+	 * @param name the attribute name
+	 * @return the attribute value
+	 * @throws UnifyException if an error occurs
+	 */
+	protected <T> T getSessionAttribute(Class<T> typeClass, String name) throws UnifyException {
+		Object val = unifyComponentContext.getSessionContext().getAttribute(name);
+		return  DataUtils.convert(typeClass, val) ;
+	}
+
+	/**
 	 * Checks if session context has an attribute.
 	 * 
 	 * @param name the attribute name
@@ -869,6 +882,16 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 */
 	protected boolean isUserLoggedIn() throws UnifyException {
 		return unifyComponentContext.getSessionContext().isUserLoggedIn();
+	}
+	
+	/**
+	 * Checks if user session is in global accounting mode
+	 * 
+	 * @return the global accounting mode flag
+	 * @throws UnifyException if an error occurs
+	 */
+	protected boolean isGlobalAccounting() throws UnifyException {
+		return getSessionAttribute(boolean.class, UnifyCoreSessionAttributeConstants.INPUT_GLOBAL_ACCOUNTING_FLAG);
 	}
 
 	/**
