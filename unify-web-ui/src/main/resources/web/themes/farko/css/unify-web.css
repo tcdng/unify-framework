@@ -496,7 +496,7 @@ z-index:400;}
 .ui-colorlegend .label {font-size:7pt;font-weight: bold;padding-left: 4px;vertical-align: middle;}
 
 /** Color span */
-.ui-colorspan {display:inline-block; width:64px; height:24px;border: solid 1px #A0A0A0;}
+.ui-colorspan {display:inline-block; width:64px; height:16px;border: solid 1px #A0A0A0;}
 
 /** Date field */
 .ui-date {width: 160px;}
