@@ -18,6 +18,8 @@ package com.tcdng.unify.web.http;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import com.tcdng.unify.core.SessionAttributeProvider;
+
 import jakarta.servlet.http.HttpSessionBindingEvent;
 import jakarta.servlet.http.HttpSessionBindingListener;
 
@@ -29,18 +31,20 @@ import jakarta.servlet.http.HttpSessionBindingListener;
  */
 public class HttpUserSessionImpl extends AbstractHttpUserSession implements HttpSessionBindingListener {
 
-    public HttpUserSessionImpl(Locale locale, TimeZone timeZone, String sessionId, String uriBase, String contextPath,
-            String tenantPath, String remoteHost, String remoteIpAddress, String remoteUser) {
-        super(locale, timeZone, sessionId, uriBase, contextPath, tenantPath, remoteHost, remoteIpAddress, remoteUser);
-    }
+	public HttpUserSessionImpl(SessionAttributeProvider attributeProvider, Locale locale, TimeZone timeZone,
+			String sessionId, String uriBase, String contextPath, String tenantPath, String remoteHost,
+			String remoteIpAddress, String remoteUser) {
+		super(attributeProvider, locale, timeZone, sessionId, uriBase, contextPath, tenantPath, remoteHost,
+				remoteIpAddress, remoteUser);
+	}
 
-    @Override
-    public void valueBound(HttpSessionBindingEvent event) {
+	@Override
+	public void valueBound(HttpSessionBindingEvent event) {
 
-    }
+	}
 
-    @Override
-    public void valueUnbound(HttpSessionBindingEvent event) {
-        invalidate();
-    }
+	@Override
+	public void valueUnbound(HttpSessionBindingEvent event) {
+		invalidate();
+	}
 }

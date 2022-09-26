@@ -29,139 +29,153 @@ import com.tcdng.unify.core.data.Context;
  */
 public class SessionContext extends Context {
 
-    public static final String TRUE_ATTRIBUTE = "trueAttribute";
+	public static final String TRUE_ATTRIBUTE = "trueAttribute";
 
-    public static final String FALSE_ATTRIBUTE = "falseAttribute";
+	public static final String FALSE_ATTRIBUTE = "falseAttribute";
 
-    private UserToken userToken;
+	private SessionAttributeProvider attributeProvider;
 
-    private Locale locale;
+	private UserToken userToken;
 
-    private TimeZone timeZone;
+	private Locale locale;
 
-    private String id;
+	private TimeZone timeZone;
 
-    private String uriBase;
+	private String id;
 
-    private String contextPath;
+	private String uriBase;
 
-    private String tenantPath;
+	private String contextPath;
 
-    private String remoteHost;
+	private String tenantPath;
 
-    private String remoteAddress;
+	private String remoteHost;
 
-    private String remoteUser;
+	private String remoteAddress;
 
-    private Date lastAccessTime;
+	private String remoteUser;
 
-    private boolean isNewLastAccessTime;
-    
-    private boolean useDaylightSavings;
+	private Date lastAccessTime;
 
-    public SessionContext(String id, Locale locale, TimeZone timeZone, String uriBase, String contextPath,
-            String tenantPath, String remoteHost, String remoteAddress, String remoteUser) {
-        this.id = id;
-        this.locale = locale;
-        this.timeZone = timeZone;
-        this.uriBase = uriBase;
-        this.contextPath = contextPath;
-        this.tenantPath = tenantPath;
-        this.remoteHost = remoteHost;
-        this.remoteAddress = remoteAddress;
-        this.remoteUser = remoteUser;
-        this.isNewLastAccessTime = true;
-        setAttribute(TRUE_ATTRIBUTE, Boolean.TRUE);
-        setAttribute(FALSE_ATTRIBUTE, Boolean.FALSE);
-    }
+	private boolean isNewLastAccessTime;
 
-    public UserToken getUserToken() {
-        return userToken;
-    }
+	private boolean useDaylightSavings;
 
-    public void setUserToken(UserToken userToken) {
-        this.userToken = userToken;
-    }
+	public SessionContext(SessionAttributeProvider attributeProvider, String id, Locale locale, TimeZone timeZone,
+			String uriBase, String contextPath, String tenantPath, String remoteHost, String remoteAddress,
+			String remoteUser) {
+		this.attributeProvider = attributeProvider;
+		this.id = id;
+		this.locale = locale;
+		this.timeZone = timeZone;
+		this.uriBase = uriBase;
+		this.contextPath = contextPath;
+		this.tenantPath = tenantPath;
+		this.remoteHost = remoteHost;
+		this.remoteAddress = remoteAddress;
+		this.remoteUser = remoteUser;
+		this.isNewLastAccessTime = true;
+		setAttribute(TRUE_ATTRIBUTE, Boolean.TRUE);
+		setAttribute(FALSE_ATTRIBUTE, Boolean.FALSE);
+	}
 
-    public Locale getLocale() {
-        return locale;
-    }
+	@Override
+	public Object getAttribute(String name) throws UnifyException {
+		Object val = super.getAttribute(name);
+		if (val == null && attributeProvider != null) {
+			return attributeProvider.getAttribute(name);
+		}
+		
+		return val;
+	}
 
-    public void setLocale(Locale locale) {
-        this.locale = locale;
-    }
+	public UserToken getUserToken() {
+		return userToken;
+	}
 
-    public String getId() {
-        return id;
-    }
+	public void setUserToken(UserToken userToken) {
+		this.userToken = userToken;
+	}
 
-    public String getUriBase() {
-        return uriBase;
-    }
+	public Locale getLocale() {
+		return locale;
+	}
 
-    public String getContextPath() {
-        return contextPath;
-    }
+	public void setLocale(Locale locale) {
+		this.locale = locale;
+	}
 
-    public String getTenantPath() {
-        return tenantPath;
-    }
+	public String getId() {
+		return id;
+	}
 
-    public String getRemoteHost() {
-        return remoteHost;
-    }
+	public String getUriBase() {
+		return uriBase;
+	}
 
-    public String getRemoteAddress() {
-        return remoteAddress;
-    }
+	public String getContextPath() {
+		return contextPath;
+	}
 
-    public String getRemoteUser() {
-        return remoteUser;
-    }
+	public String getTenantPath() {
+		return tenantPath;
+	}
 
-    public boolean isWithTenantPath() {
-        return tenantPath != null;
-    }
+	public String getRemoteHost() {
+		return remoteHost;
+	}
 
-    public boolean isUserLoggedIn() {
-        return userToken != null;
-    }
+	public String getRemoteAddress() {
+		return remoteAddress;
+	}
 
-    public boolean isNewLastAccessTime() {
-        return isNewLastAccessTime;
-    }
+	public String getRemoteUser() {
+		return remoteUser;
+	}
 
-    public Date getLastAccessTime() {
-        isNewLastAccessTime = false;
-        return lastAccessTime;
-    }
+	public boolean isWithTenantPath() {
+		return tenantPath != null;
+	}
 
-    public void setLastAccessTime(Date lastAccessTime) {
-        this.lastAccessTime = lastAccessTime;
-        isNewLastAccessTime = true;
-    }
+	public boolean isUserLoggedIn() {
+		return userToken != null;
+	}
 
-    public TimeZone getTimeZone() {
-        return timeZone;
-    }
+	public boolean isNewLastAccessTime() {
+		return isNewLastAccessTime;
+	}
 
-    public void setTimeZone(TimeZone timeZone) {
-        this.timeZone = timeZone;
-    }
+	public Date getLastAccessTime() {
+		isNewLastAccessTime = false;
+		return lastAccessTime;
+	}
 
-    public boolean isUseDaylightSavings() {
-        return useDaylightSavings;
-    }
+	public void setLastAccessTime(Date lastAccessTime) {
+		this.lastAccessTime = lastAccessTime;
+		isNewLastAccessTime = true;
+	}
 
-    public void setUseDaylightSavings(boolean useDaylightSavings) {
-        this.useDaylightSavings = useDaylightSavings;
-    }
+	public TimeZone getTimeZone() {
+		return timeZone;
+	}
 
-    public long getTimeZoneOffset() {
-        if (useDaylightSavings) {
-            return timeZone.getRawOffset() + timeZone.getDSTSavings();
-        }
+	public void setTimeZone(TimeZone timeZone) {
+		this.timeZone = timeZone;
+	}
 
-        return timeZone.getRawOffset();
-    }
+	public boolean isUseDaylightSavings() {
+		return useDaylightSavings;
+	}
+
+	public void setUseDaylightSavings(boolean useDaylightSavings) {
+		this.useDaylightSavings = useDaylightSavings;
+	}
+
+	public long getTimeZoneOffset() {
+		if (useDaylightSavings) {
+			return timeZone.getRawOffset() + timeZone.getDSTSavings();
+		}
+
+		return timeZone.getRawOffset();
+	}
 }

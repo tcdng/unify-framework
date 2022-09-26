@@ -25,6 +25,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
+import com.tcdng.unify.core.SessionAttributeProvider;
 import com.tcdng.unify.web.ClientCookie;
 
 /**
@@ -35,50 +36,50 @@ import com.tcdng.unify.web.ClientCookie;
  */
 public interface HttpRequest {
 
-    String getContentType();
+	String getContentType();
 
-    String getPathInfo();
+	String getPathInfo();
 
-    String getCharacterEncoding();
+	String getCharacterEncoding();
 
-    String getRemoteAddr();
+	String getRemoteAddr();
 
-    String getRemoteHost();
+	String getRemoteHost();
 
-    String getRemoteUser();
+	String getRemoteUser();
 
-    String getServletPath();
-    
-    String getScheme();
+	String getServletPath();
 
-    String getServerName();
+	String getScheme();
 
-    int getServerPort();
+	String getServerName();
 
-    String getHeader(String headerName);
+	int getServerPort();
 
-    String getParameter(String paramName);
+	String getHeader(String headerName);
 
-    HttpUserSession createHttpUserSession(Locale locale, TimeZone timeZone, String sessionId, String uriBase,
-            String contextPath, String tenantPath, String remoteIpAddress);
+	String getParameter(String paramName);
 
-    BufferedReader getReader() throws IOException;
+	HttpUserSession createHttpUserSession(SessionAttributeProvider attributeProvider, Locale locale, TimeZone timeZone,
+			String sessionId, String uriBase, String contextPath, String tenantPath, String remoteIpAddress);
 
-    InputStream getInputStream() throws IOException;
+	BufferedReader getReader() throws IOException;
 
-    Map<String, String[]> getParameterMap();
+	InputStream getInputStream() throws IOException;
 
-    Collection<HttpPart> getParts() throws Exception;
+	Map<String, String[]> getParameterMap();
 
-    List<ClientCookie> getCookies();
-    
-    void invalidateSession();
+	Collection<HttpPart> getParts() throws Exception;
 
-    void setSessionAttribute(String name, Object val);
+	List<ClientCookie> getCookies();
 
-    Object getSessionAttribute(String name);
+	void invalidateSession();
 
-    void removeSessionAttribute(String name);
+	void setSessionAttribute(String name, Object val);
 
-    Object getSessionSychObject();
+	Object getSessionAttribute(String name);
+
+	void removeSessionAttribute(String name);
+
+	Object getSessionSychObject();
 }
