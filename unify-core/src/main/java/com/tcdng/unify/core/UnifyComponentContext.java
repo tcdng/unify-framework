@@ -242,6 +242,10 @@ public class UnifyComponentContext {
 		return getRequestContextManager().getRequestContext().getSessionContext();
 	}
 
+	public boolean isWithSessionContext() throws UnifyException {
+		return getRequestContextManager().getRequestContext().getSessionContext() != null;
+	}
+	
 	/**
 	 * Sets an attribute in application context.
 	 * 
