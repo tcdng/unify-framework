@@ -28,19 +28,31 @@ public abstract class AbstractSessionAttributeProvider extends AbstractUnifyComp
 
 	private Map<String, Object> attributes;
 	
+	private boolean load;
+	
 	public AbstractSessionAttributeProvider() {
 		this.attributes = new HashMap<String, Object>();
+		this.load = true;
 	}
 	
 	@Override
 	public Object getAttribute(String name) throws UnifyException {
+		if (load) {
+			synchronized(this) {
+				if (load) {
+					load(attributes);
+					load = false;
+				}
+			}
+		}
+		
 		return attributes.get(name);
 	}
 
 	@Override
 	public void reset() throws UnifyException {
 		attributes.clear();
-		doReset(attributes);
+		load = true;
 	}
 
 	@Override
@@ -53,5 +65,5 @@ public abstract class AbstractSessionAttributeProvider extends AbstractUnifyComp
 
 	}
 
-	protected abstract void doReset(Map<String, Object> attributes) throws UnifyException;
+	protected abstract void load(Map<String, Object> attributes) throws UnifyException;
 }
