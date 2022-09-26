@@ -35,4 +35,12 @@ public enum NumberType {
 	public boolean isAccounting() {
 		return INTEGER_ACCOUNTING.equals(this) || DECIMAL_ACCOUNTING.equals(this);
 	}
+	
+	public NumberType getAccounting(boolean accounting) {
+		if (accounting) {
+			return INTEGER.equals(this) ? INTEGER_ACCOUNTING : (DECIMAL.equals(this) ? DECIMAL_ACCOUNTING: this);
+		}
+		
+		return this;
+	}
 }

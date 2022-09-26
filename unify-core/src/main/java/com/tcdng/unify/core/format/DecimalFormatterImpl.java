@@ -19,7 +19,6 @@ import java.text.ParseException;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
-import com.tcdng.unify.core.util.FormattingUtils;
 
 /**
  * Default decimal number formatter implementation.
@@ -37,14 +36,7 @@ public class DecimalFormatterImpl extends AbstractNumberFormatter<Number> implem
 	@Override
 	public Number parse(String string) throws UnifyException {
 		try {
-			if (isGroupingUsed()) {
-				string = FormattingUtils.makeParsableGroupedAmount(string, getNumberSymbols().getGroupingSeparator());
-			}
-			
-			if (isGlobalAccounting()) {
-				string = FormattingUtils.makeParsableNegativeAmount(string);
-			}
-			
+			string = ensureParsable(string);
 			return getNumberFormat().parse(string);
 		} catch (ParseException e) {
 			throwOperationErrorException(e);

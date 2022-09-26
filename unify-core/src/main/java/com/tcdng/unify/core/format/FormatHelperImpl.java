@@ -140,7 +140,7 @@ public class FormatHelperImpl extends AbstractUnifyComponent implements FormatHe
                         break;
                 }
                 
-                if (numberType.isAccounting() || isGlobalAccounting()) {
+                if (numberType.isAccounting()) {
                 	df.setNegativePrefix("(");
                 	df.setNegativeSuffix(")");
                 }

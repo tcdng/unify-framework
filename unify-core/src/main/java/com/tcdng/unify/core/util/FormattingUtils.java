@@ -15,6 +15,8 @@
  */
 package com.tcdng.unify.core.util;
 
+import com.tcdng.unify.core.format.NumberSymbols;
+
 /**
  * Provides utility methods for string manipulation.
  * 
@@ -27,26 +29,32 @@ public final class FormattingUtils {
 
     }
 
-    public static String makeParsableGroupedAmount(String amount, String groupSeparator) {
+    public static String makeParsableGroupedAmount(String amount, NumberSymbols ns) {
     	if (amount != null && !amount.isEmpty()) {
-    		return amount.replaceAll(groupSeparator, "");
+    		return amount.replaceAll(ns.getGroupingSeparator(), "");
     	}
     	
     	return amount;
     }
 
-    public static String makeParsableNegativeAmount(String amount) {
-    	if (amount != null && !amount.isEmpty()) {
-    		int last = amount.length() - 1;
-    		if (amount.charAt(0) == '(' && amount.charAt(last) != ')') {
-    			return amount + ')';
-    		}
-    			
-    		if (amount.charAt(last) == ')' && amount.charAt(0) != '(') {
-    			return '(' + amount;
-    		}
-    	}
-    	
-    	return amount;
-    }
+	public static String makeParsableNegativeAmount(String amount, NumberSymbols ns) {
+		if (amount != null && !amount.isEmpty()) {
+			int startIndex = 0;
+			if (amount.charAt(0) == '-' || amount.charAt(0) == '(') {
+				startIndex = 1;
+			}
+
+			final int len = amount.length();
+			int endIndex = len - 1;
+			if (amount.charAt(endIndex) != ')') {
+				endIndex++;
+			}
+
+			if (startIndex > 0 || endIndex < len) {
+				return ns.getNegativePrefix() + amount.substring(startIndex, endIndex) + ns.getNegativeSuffix();
+			}
+		}
+
+		return amount;
+	}
 }
