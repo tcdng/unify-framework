@@ -584,6 +584,16 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 		return false;
 	}
 
+	@Override
+	public void setPrecision(int precision) throws UnifyException {
+
+	}
+
+	@Override
+	public void setScale(int scale) throws UnifyException {
+
+	}
+
     protected void setPageAttribute(String name, Object value) throws UnifyException {
         getRequestContextUtil().getRequestPage().setAttribute(name, value);
     }
