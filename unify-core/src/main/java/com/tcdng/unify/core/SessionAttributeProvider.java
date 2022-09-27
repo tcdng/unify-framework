@@ -13,34 +13,27 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.format;
+package com.tcdng.unify.core;
 
 /**
- * Number types.
+ * Session attribute provider.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public enum NumberType {
-	INTEGER,
-	INTEGER_ACCOUNTING,
-	DECIMAL,
-	DECIMAL_ACCOUNTING,
-	PERCENT;
+public interface SessionAttributeProvider extends UnifyComponent {
+
+	/**
+	 * Gets a session attribute.
+	 * @param name the attribute name
+	 * @return the attribute value
+	 * @throws UnifyException if an error occurs
+	 */
+	Object getAttribute(String name) throws UnifyException;
 	
-	public boolean isInteger() {
-		return INTEGER.equals(this) || INTEGER_ACCOUNTING.equals(this);
-	}
-	
-	public boolean isAccounting() {
-		return INTEGER_ACCOUNTING.equals(this) || DECIMAL_ACCOUNTING.equals(this);
-	}
-	
-	public NumberType getAccounting(boolean accounting) {
-		if (accounting) {
-			return INTEGER.equals(this) ? INTEGER_ACCOUNTING : (DECIMAL.equals(this) ? DECIMAL_ACCOUNTING: this);
-		}
-		
-		return this;
-	}
+	/**
+	 * Resets this session attribute provider
+	 * @throws UnifyException if an error occurs
+	 */
+	void reset() throws UnifyException; 
 }

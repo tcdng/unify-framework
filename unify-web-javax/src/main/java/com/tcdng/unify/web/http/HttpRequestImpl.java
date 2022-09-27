@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
+import com.tcdng.unify.core.SessionAttributeProvider;
 import com.tcdng.unify.web.ClientCookie;
 
 /**
@@ -42,146 +43,147 @@ import com.tcdng.unify.web.ClientCookie;
  */
 public class HttpRequestImpl implements HttpRequest {
 
-    private HttpServletRequest request;
+	private HttpServletRequest request;
 
-    public HttpRequestImpl(HttpServletRequest request) {
-        this.request = request;
-    }
+	public HttpRequestImpl(HttpServletRequest request) {
+		this.request = request;
+	}
 
-    @Override
-    public String getContentType() {
-        return request.getContentType();
-    }
+	@Override
+	public String getContentType() {
+		return request.getContentType();
+	}
 
-    @Override
-    public String getPathInfo() {
-        return request.getPathInfo();
-    }
+	@Override
+	public String getPathInfo() {
+		return request.getPathInfo();
+	}
 
-    @Override
-    public String getCharacterEncoding() {
-        return request.getCharacterEncoding();
-    }
+	@Override
+	public String getCharacterEncoding() {
+		return request.getCharacterEncoding();
+	}
 
-    @Override
-    public String getHeader(String headerName) {
-        return request.getHeader(headerName);
-    }
+	@Override
+	public String getHeader(String headerName) {
+		return request.getHeader(headerName);
+	}
 
-    @Override
-    public String getParameter(String paramName) {
-        return request.getParameter(paramName);
-    }
+	@Override
+	public String getParameter(String paramName) {
+		return request.getParameter(paramName);
+	}
 
-    @Override
-    public BufferedReader getReader() throws IOException {
-        return request.getReader();
-    }
+	@Override
+	public BufferedReader getReader() throws IOException {
+		return request.getReader();
+	}
 
-    @Override
-    public InputStream getInputStream() throws IOException {
-        return request.getInputStream();
-    }
+	@Override
+	public InputStream getInputStream() throws IOException {
+		return request.getInputStream();
+	}
 
-    @Override
-    public Map<String, String[]> getParameterMap() {
-        return request.getParameterMap();
-    }
+	@Override
+	public Map<String, String[]> getParameterMap() {
+		return request.getParameterMap();
+	}
 
-    @Override
-    public Collection<HttpPart> getParts() throws Exception {
-        List<HttpPart> partList = new ArrayList<HttpPart>();
-        for (Part part : request.getParts()) {
-            partList.add(new HttpPartImpl(part));
-        }
+	@Override
+	public Collection<HttpPart> getParts() throws Exception {
+		List<HttpPart> partList = new ArrayList<HttpPart>();
+		for (Part part : request.getParts()) {
+			partList.add(new HttpPartImpl(part));
+		}
 
-        return partList;
-    }
+		return partList;
+	}
 
-    @Override
-    public List<ClientCookie> getCookies() {
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null && cookies.length > 0) {
-            List<ClientCookie> list = new ArrayList<ClientCookie>();
-            for (Cookie cookie : cookies) {
-                list.add(new ClientCookie(cookie.getDomain(), cookie.getPath(), cookie.getName(), cookie.getValue(),
-                        cookie.getMaxAge()));
-            }
+	@Override
+	public List<ClientCookie> getCookies() {
+		Cookie[] cookies = request.getCookies();
+		if (cookies != null && cookies.length > 0) {
+			List<ClientCookie> list = new ArrayList<ClientCookie>();
+			for (Cookie cookie : cookies) {
+				list.add(new ClientCookie(cookie.getDomain(), cookie.getPath(), cookie.getName(), cookie.getValue(),
+						cookie.getMaxAge()));
+			}
 
-            return list;
-        }
+			return list;
+		}
 
-        return Collections.emptyList();
-    }
+		return Collections.emptyList();
+	}
 
-    @Override
-    public String getRemoteAddr() {
-        return request.getRemoteAddr();
-    }
+	@Override
+	public String getRemoteAddr() {
+		return request.getRemoteAddr();
+	}
 
-    @Override
-    public String getRemoteHost() {
-        return request.getRemoteHost();
-    }
+	@Override
+	public String getRemoteHost() {
+		return request.getRemoteHost();
+	}
 
-    @Override
-    public String getRemoteUser() {
-        return request.getRemoteUser();
-    }
+	@Override
+	public String getRemoteUser() {
+		return request.getRemoteUser();
+	}
 
-    @Override
-    public String getServletPath() {
-        return request.getServletPath();
-    }
+	@Override
+	public String getServletPath() {
+		return request.getServletPath();
+	}
 
-    @Override
-    public String getScheme() {
-        return request.getScheme();
-    }
+	@Override
+	public String getScheme() {
+		return request.getScheme();
+	}
 
-    @Override
-    public String getServerName() {
-        return request.getServerName();
-    }
+	@Override
+	public String getServerName() {
+		return request.getServerName();
+	}
 
-    @Override
-    public int getServerPort() {
-        return request.getServerPort();
-    }
+	@Override
+	public int getServerPort() {
+		return request.getServerPort();
+	}
 
-    @Override
-    public HttpUserSession createHttpUserSession(Locale locale, TimeZone timeZone, String sessionId, String uriBase,
-            String contextPath, String tenantPath, String remoteIpAddress) {
-        return new HttpUserSessionImpl(locale, timeZone, sessionId, uriBase.toString(), contextPath, tenantPath,
-                request.getRemoteHost(), remoteIpAddress, request.getRemoteUser());
-    }
+	@Override
+	public HttpUserSession createHttpUserSession(SessionAttributeProvider attributeProvider, Locale locale,
+			TimeZone timeZone, String sessionId, String uriBase, String contextPath, String tenantPath,
+			String remoteIpAddress) {
+		return new HttpUserSessionImpl(attributeProvider, locale, timeZone, sessionId, uriBase.toString(), contextPath,
+				tenantPath, request.getRemoteHost(), remoteIpAddress, request.getRemoteUser());
+	}
 
-    @Override
-    public void invalidateSession() {
-        HttpSession httpSession = request.getSession(false);
-        if (httpSession != null) {
-            httpSession.invalidate();
-        }
-    }
+	@Override
+	public void invalidateSession() {
+		HttpSession httpSession = request.getSession(false);
+		if (httpSession != null) {
+			httpSession.invalidate();
+		}
+	}
 
-    @Override
-    public void setSessionAttribute(String name, Object val) {
-        request.getSession().setAttribute(name, val);
-    }
+	@Override
+	public void setSessionAttribute(String name, Object val) {
+		request.getSession().setAttribute(name, val);
+	}
 
-    @Override
-    public Object getSessionAttribute(String name) {
-        return request.getSession().getAttribute(name);
-    }
+	@Override
+	public Object getSessionAttribute(String name) {
+		return request.getSession().getAttribute(name);
+	}
 
-    @Override
-    public void removeSessionAttribute(String name) {
-        request.getSession().removeAttribute(name);
-    }
+	@Override
+	public void removeSessionAttribute(String name) {
+		request.getSession().removeAttribute(name);
+	}
 
-    @Override
-    public Object getSessionSychObject() {
-        return request.getSession();
-    }
+	@Override
+	public Object getSessionSychObject() {
+		return request.getSession();
+	}
 
 }

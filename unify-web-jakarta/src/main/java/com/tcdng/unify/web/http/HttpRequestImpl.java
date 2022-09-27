@@ -27,6 +27,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
+import com.tcdng.unify.core.SessionAttributeProvider;
 import com.tcdng.unify.web.ClientCookie;
 
 import jakarta.servlet.http.Cookie;
@@ -150,9 +151,9 @@ public class HttpRequestImpl implements HttpRequest {
     }
 
     @Override
-    public HttpUserSession createHttpUserSession(Locale locale, TimeZone timeZone, String sessionId, String uriBase,
+    public HttpUserSession createHttpUserSession(SessionAttributeProvider attributeProvider, Locale locale, TimeZone timeZone, String sessionId, String uriBase,
             String contextPath, String tenantPath, String remoteIpAddress) {
-        return new HttpUserSessionImpl(locale, timeZone, sessionId, uriBase.toString(), contextPath, tenantPath,
+        return new HttpUserSessionImpl(attributeProvider, locale, timeZone, sessionId, uriBase.toString(), contextPath, tenantPath,
                 request.getRemoteHost(), remoteIpAddress, request.getRemoteUser());
     }
 

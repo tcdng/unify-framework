@@ -21,6 +21,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.format.Formatter;
+import com.tcdng.unify.core.format.NumberFormatter;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.web.ui.DataTransferBlock;
 
@@ -60,4 +61,20 @@ public abstract class AbstractFormattedControl extends AbstractControl {
     public Formatter<Object> getFormatter() throws UnifyException {
         return (Formatter<Object>) getUplAttribute(Formatter.class, "formatter");
     }
+
+	@Override
+	public void setPrecision(int precision) throws UnifyException {
+		Formatter<?> formatter = getFormatter();
+		if (formatter instanceof NumberFormatter) {
+			((NumberFormatter<?>) formatter).setPrecision(precision);
+		}
+	}
+
+	@Override
+	public void setScale(int scale) throws UnifyException {
+		Formatter<?> formatter = getFormatter();
+		if (formatter instanceof NumberFormatter) {
+			((NumberFormatter<?>) formatter).setScale(scale);
+		}
+	}
 }

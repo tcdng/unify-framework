@@ -82,4 +82,8 @@ public class NumberSymbols {
     public String getDecimalSeparator() {
         return decimalSeparator;
     }
+	
+	public boolean isAccounting() {
+		return numberType.isAccounting();
+	}
 }

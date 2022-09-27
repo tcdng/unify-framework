@@ -21,6 +21,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import com.tcdng.unify.core.UnifyException;
+
 /**
  * An abstract class that represents a context. Manages basic context attribute
  * storage and retrieval.
@@ -52,7 +54,7 @@ public abstract class Context {
         attributes.put(name, new Attribute(value, true));
     }
 
-    public Object getAttribute(String name) {
+    public Object getAttribute(String name) throws UnifyException {
         Attribute attr = attributes.get(name);
         if (attr != null) {
             return attr.getValue();

@@ -666,4 +666,18 @@ public interface Widget extends UplComponent {
      *                        if an error occurs
      */
     boolean recallValueStore(int memoryIndex) throws UnifyException;
+
+    /**
+     * Sets the widget number precision.
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    void setPrecision(int precision) throws UnifyException;
+
+    /**
+     * Sets the widget number scale.
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    void setScale(int scale) throws UnifyException;
 }

@@ -31,7 +31,7 @@ import com.tcdng.unify.core.util.ApplicationUtils;
  */
 @Component(ApplicationComponents.APPLICATION_REQUESTCONTEXTMANAGER)
 public class RequestContextManagerImpl extends AbstractUnifyComponent implements RequestContextManager {
-
+	
     private static Locale applicationLocale;
 
     private static TimeZone applicationTimeZone;
@@ -45,7 +45,7 @@ public class RequestContextManagerImpl extends AbstractUnifyComponent implements
                 }
             };
 
-    @Override
+	@Override
     public RequestContext getRequestContext() {
         RequestContext requestContext = requestContextThreadLocal.get().getRequestContext();
         return requestContext != null ? requestContext : requestContextThreadLocal.get().getDefaultRequestContext();
@@ -92,7 +92,7 @@ public class RequestContextManagerImpl extends AbstractUnifyComponent implements
         try {
             InetAddress inetAddress = InetAddress.getLocalHost();
             return new RequestContext(null,
-                    new SessionContext(ApplicationUtils.generateSessionContextId(), applicationLocale,
+                    new SessionContext(null, ApplicationUtils.generateSessionContextId(), applicationLocale,
                             applicationTimeZone, "http://localhost", "/default", null, inetAddress.getHostName(),
                             inetAddress.getHostAddress(), null));
         } catch (UnknownHostException e) {

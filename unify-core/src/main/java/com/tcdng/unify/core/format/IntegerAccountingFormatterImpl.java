@@ -19,7 +19,6 @@ import java.text.ParseException;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
-import com.tcdng.unify.core.util.FormattingUtils;
 
 /**
  * Default integer (accounting) formatter implementation.
@@ -37,11 +36,7 @@ public class IntegerAccountingFormatterImpl extends AbstractNumberFormatter<Inte
     @Override
     public Integer parse(String string) throws UnifyException {
         try {
-			if (isGroupingUsed()) {
-				string = FormattingUtils.makeParsableGroupedAmount(string, getNumberSymbols().getGroupingSeparator());
-			}
-
-        	string = FormattingUtils.makeParsableNegativeAmount(string);
+			string = ensureParsable(string);
             return Integer.valueOf(getNumberFormat().parse(string).intValue());
         } catch (ParseException e) {
             throwOperationErrorException(e);

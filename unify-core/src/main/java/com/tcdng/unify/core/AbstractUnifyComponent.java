@@ -727,7 +727,9 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 * @throws UnifyException if an error occurs
 	 */
 	protected void setSessionAttribute(String name, Object value) throws UnifyException {
-		unifyComponentContext.getSessionContext().setAttribute(name, value);
+		if (unifyComponentContext != null) {
+			unifyComponentContext.getSessionContext().setAttribute(name, value);
+		}
 	}
 
 	/**
@@ -738,7 +740,9 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 * @throws UnifyException if an error occurs
 	 */
 	protected void setSessionStickyAttribute(String name, Object value) throws UnifyException {
-		unifyComponentContext.getSessionContext().setStickyAttribute(name, value);
+		if (unifyComponentContext != null) {
+			unifyComponentContext.getSessionContext().setStickyAttribute(name, value);
+		}
 	}
 
 	/**
@@ -749,7 +753,24 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 * @throws UnifyException if an error occurs
 	 */
 	protected Object getSessionAttribute(String name) throws UnifyException {
-		return unifyComponentContext.getSessionContext().getAttribute(name);
+		return unifyComponentContext != null
+				? unifyComponentContext.getSessionContext().getAttribute(name)
+				: null;
+	}
+
+	/**
+	 * Gets converted attribute value from current session.
+	 * 
+	 * @param typeClass the type
+	 * @param name the attribute name
+	 * @return the attribute value
+	 * @throws UnifyException if an error occurs
+	 */
+	protected <T> T getSessionAttribute(Class<T> typeClass, String name) throws UnifyException {
+		Object val = unifyComponentContext != null
+				? unifyComponentContext.getSessionContext().getAttribute(name)
+				: null;
+		return DataUtils.convert(typeClass, val);
 	}
 
 	/**
@@ -760,7 +781,8 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 * @throws UnifyException if an error occurs
 	 */
 	protected boolean isSessionAttribute(String name) throws UnifyException {
-		return unifyComponentContext.getSessionContext().isAttribute(name);
+		return unifyComponentContext != null
+				&& unifyComponentContext.getSessionContext().isAttribute(name);
 	}
 
 	/**
@@ -771,7 +793,11 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 * @throws UnifyException if an error occurs
 	 */
 	protected Object removeSessionAttribute(String name) throws UnifyException {
-		return unifyComponentContext.getSessionContext().removeAttribute(name);
+		if (unifyComponentContext != null) {
+			return unifyComponentContext.getSessionContext().removeAttribute(name);
+		}
+		
+		return null;
 	}
 
 	/**
@@ -781,7 +807,9 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 * @throws UnifyException if an error occurs
 	 */
 	protected void removeSessionAttributes(String... names) throws UnifyException {
-		unifyComponentContext.getSessionContext().removeAttributes(names);
+		if (unifyComponentContext != null) {
+			unifyComponentContext.getSessionContext().removeAttributes(names);
+		}
 	}
 
 	/**
@@ -869,6 +897,16 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 */
 	protected boolean isUserLoggedIn() throws UnifyException {
 		return unifyComponentContext.getSessionContext().isUserLoggedIn();
+	}
+	
+	/**
+	 * Checks if user session is in global accounting mode
+	 * 
+	 * @return the global accounting mode flag
+	 * @throws UnifyException if an error occurs
+	 */
+	protected boolean isGlobalAccounting() throws UnifyException {
+		return getSessionAttribute(boolean.class, UnifyCoreSessionAttributeConstants.INPUT_GLOBAL_ACCOUNTING_FLAG);
 	}
 
 	/**

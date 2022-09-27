@@ -22,6 +22,7 @@ import java.util.Locale;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
+import com.tcdng.unify.core.util.FormattingUtils;
 
 /**
  * Abstract base class for a number formatter.
@@ -47,7 +48,7 @@ public abstract class AbstractNumberFormatter<T extends Number> extends Abstract
     private boolean groupingUsed;
 
     private boolean strictFormat;
-
+    
     private String pattern;
 
     public AbstractNumberFormatter(Class<T> dataType, NumberType type) {
@@ -123,13 +124,23 @@ public abstract class AbstractNumberFormatter<T extends Number> extends Abstract
         return numberSymbols;
     }
 
+    protected String ensureParsable(String string) throws UnifyException {
+    	NumberSymbols ns = getNumberSymbols();
+		if (isGroupingUsed()) {
+			string = FormattingUtils.makeParsableGroupedAmount(string, ns);
+		}
+
+		return FormattingUtils.makeParsableNegativeAmount(string, ns);
+    }
+    
     protected NumberFormat getNumberFormat() throws UnifyException {
-        if (nf == null) {
+        final NumberType _type = type.getAccounting(isGlobalAccounting());
+        if (nf == null || (!_type.equals(numberSymbols.getNumberType()))) {
             pattern = null;
             Locale locale = getLocale();
-            numberSymbols = getFormatHelper().getNumberSymbols(type, locale);
+            numberSymbols = getFormatHelper().getNumberSymbols(_type, locale);
 
-            switch (type) {
+            switch (_type) {
 	            case INTEGER:
 	            case INTEGER_ACCOUNTING:
                     nf = NumberFormat.getIntegerInstance(locale);
@@ -145,13 +156,11 @@ public abstract class AbstractNumberFormatter<T extends Number> extends Abstract
             }
 
             DecimalFormat df = (DecimalFormat) nf;
-            if (type.isAccounting()) {
-            	df.setNegativePrefix("(");
-            	df.setNegativeSuffix(")");
-            }
+        	df.setNegativePrefix(numberSymbols.getNegativePrefix());
+        	df.setNegativeSuffix(numberSymbols.getNegativeSuffix());
             
             nf.setGroupingUsed(isGroupingUsed());
-            if (type.isInteger()) {
+            if (_type.isInteger()) {
                 df.setParseBigDecimal(false);
                 if (getPrecision() > 0) {
                     nf.setMaximumIntegerDigits(getPrecision());
