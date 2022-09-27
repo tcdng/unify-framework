@@ -17,6 +17,7 @@
 package com.tcdng.unify.core.database.dynamic;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,265 +37,303 @@ import com.tcdng.unify.core.system.entities.AbstractSequencedEntity;
  */
 public class DynamicEntityInfo {
 
-    public static final DynamicEntityInfo SELF_REFERENCE = new DynamicEntityInfo(true);
+	public static final DynamicEntityInfo SELF_REFERENCE = new DynamicEntityInfo(true);
 
-    public enum ManagedType {
-        MANAGED,
-        NOT_MANAGED
-    }
-    
-    private DynamicEntityType type;
+	public enum ManagedType {
+		MANAGED, NOT_MANAGED
+	}
 
-    private String tableName;
+	private DynamicEntityType type;
 
-    private String baseClassName;
+	private String tableName;
 
-    private String className;
+	private String baseClassName;
 
-    private Map<String, DynamicFieldInfo> fieldInfos;
+	private String className;
 
-    private boolean withChildField;
+	private Map<String, DynamicFieldInfo> fieldInfos;
 
-    private boolean selfReference;
-    
-    private ManagedType managed;
+	private boolean withChildField;
 
-    private long version;
+	private boolean selfReference;
 
-    private DynamicEntityInfo(boolean selfReference) {
-        this.selfReference = selfReference;
-    }
+	private ManagedType managed;
 
-    private DynamicEntityInfo(DynamicEntityType type, String tableName, String baseClassName, String className,
-            ManagedType managed, Map<String, DynamicFieldInfo> fieldInfos, long version) {
-        this.type = type;
-        this.tableName = tableName;
-        this.baseClassName = baseClassName;
-        this.className = className;
-        this.managed = managed;
-        this.fieldInfos = fieldInfos;
-        this.version = version;
-    }
+	private boolean resolved;
+	
+	private long version;
 
-    public DynamicEntityType getType() {
-        return type;
-    }
+	private DynamicEntityInfo(boolean selfReference) {
+		this.selfReference = selfReference;
+	}
 
-    public boolean isWithChildField() {
-        return withChildField;
-    }
+	private DynamicEntityInfo(DynamicEntityType type, String tableName, String baseClassName, String className,
+			ManagedType managed, long version) {
+		this.type = type;
+		this.tableName = tableName;
+		this.baseClassName = baseClassName;
+		this.className = className;
+		this.managed = managed;
+		this.version = version;
+		this.fieldInfos = Collections.emptyMap();
+	}
 
-    public boolean isGeneration() {
-        return type.isGeneration();
-    }
+	public DynamicEntityType getType() {
+		return type;
+	}
 
-    public boolean isManaged() {
-        return ManagedType.MANAGED.equals(managed);
-    }
+	public boolean isWithChildField() {
+		return withChildField;
+	}
 
-    public String getTableName() {
-        return tableName;
-    }
+	public boolean isGeneration() {
+		return type.isGeneration();
+	}
 
-    public String getBaseClassName() {
-        return baseClassName;
-    }
+	public boolean isManaged() {
+		return ManagedType.MANAGED.equals(managed);
+	}
 
-    public String getClassName() {
-        return className;
-    }
+	public String getTableName() {
+		return tableName;
+	}
 
-    public List<DynamicFieldInfo> getFieldInfos() {
-        return new ArrayList<DynamicFieldInfo>(fieldInfos.values());
-    }
+	public String getBaseClassName() {
+		return baseClassName;
+	}
 
-    public DynamicFieldInfo getDynamicFieldInfo(String fieldName) throws UnifyException {
-        DynamicFieldInfo dynamicFieldInfo = fieldInfos.get(fieldName);
-        if (dynamicFieldInfo == null) {
-            throw new UnifyOperationException(getClass(),
-                    "Class [" + className + "] field with name [" + fieldName + "] is unknown.");
-        }
+	public String getClassName() {
+		return className;
+	}
 
-        return dynamicFieldInfo;
-    }
+	public List<DynamicFieldInfo> getFieldInfos() {
+		return new ArrayList<DynamicFieldInfo>(fieldInfos.values());
+	}
 
-    public DynamicEntityInfo addChildField(DynamicFieldType type, DynamicEntityInfo childDynamicEntityInfo,
-            String fieldName) throws UnifyException {
-        checkFieldNameExist(fieldName);
-        fieldInfos.put(fieldName, new DynamicChildFieldInfo(type, childDynamicEntityInfo, fieldName));
-        withChildField = true;
-        return this;
-    }
+	public DynamicFieldInfo getDynamicFieldInfo(String fieldName) throws UnifyException {
+		DynamicFieldInfo dynamicFieldInfo = fieldInfos.get(fieldName);
+		if (dynamicFieldInfo == null) {
+			throw new UnifyOperationException(getClass(),
+					"Class [" + className + "] field with name [" + fieldName + "] is unknown.");
+		}
 
-    public DynamicEntityInfo addChildListField(DynamicFieldType type, DynamicEntityInfo childDynamicEntityInfo,
-            String fieldName) throws UnifyException {
-        checkFieldNameExist(fieldName);
-        fieldInfos.put(fieldName, new DynamicChildListFieldInfo(type, childDynamicEntityInfo, fieldName));
-        withChildField = true;
-        return this;
-    }
+		return dynamicFieldInfo;
+	}
 
-    public boolean isSelfReference() {
-        return selfReference;
-    }
+	public boolean isSelfReference() {
+		return selfReference;
+	}
 
-    public long getVersion() {
-        return version;
-    }
+	public long getVersion() {
+		return version;
+	}
 
-    private void checkFieldNameExist(String fieldName) throws UnifyException {
-        if (fieldInfos.containsKey(fieldName)) {
-            throw new UnifyOperationException(getClass(),
-                    "Class [" + className + "] field with name [" + fieldName + "] already exists.");
-        }
-    }
+	public boolean isResolved() {
+		return resolved;
+	}
 
-    public static Builder newBuilder(DynamicEntityType type, String className, ManagedType managed) {
-        return new Builder(type, className, managed);
-    }
+	public void finalizeResolution() throws UnifyException {
+		if (!resolved) {
+			synchronized(this) {
+				if (!resolved) {
+					for (DynamicFieldInfo dynamicFieldInfo: fieldInfos.values()) {
+						dynamicFieldInfo.finalizeResolution();
+					}
+					
+					resolved = true;
+				}
+			}
+		}
+	}
 
-    public static Builder newBuilder(String className, ManagedType managed) {
-        return new Builder(DynamicEntityType.INFO_ONLY, className, managed);
-    }
+	public static Builder newBuilder(DynamicEntityType type, String className, ManagedType managed) {
+		return new Builder(type, className, managed);
+	}
 
-    public static class Builder {
+	public static Builder newBuilder(String className, ManagedType managed) {
+		return new Builder(DynamicEntityType.INFO_ONLY, className, managed);
+	}
 
-        private DynamicEntityType type;
+	public static class Builder {
 
-        private String tableName;
+		private DynamicEntityInfo info;
 
-        private String baseClassName;
+		private DynamicEntityType type;
 
-        private String className;
+		private String tableName;
 
-        private Map<String, DynamicForeignKeyFieldInfo> fkFields;
+		private String baseClassName;
 
-        private Map<String, DynamicColumnFieldInfo> columnFields;
+		private String className;
 
-        private Map<String, DynamicListOnlyFieldInfo> listOnlyFields;
+		private Map<String, DynamicForeignKeyFieldInfo> fkFields;
 
-        private ManagedType managed;
-        
-        private long version;
+		private Map<String, DynamicColumnFieldInfo> columnFields;
 
-        private Builder(DynamicEntityType type, String className, ManagedType managed) {
-            this.type = type;
-            this.className = className;
-            this.managed = managed;
-            baseClassName = AbstractSequencedEntity.class.getCanonicalName();
-            fkFields = new LinkedHashMap<String, DynamicForeignKeyFieldInfo>();
-            columnFields = new LinkedHashMap<String, DynamicColumnFieldInfo>();
-            listOnlyFields = new LinkedHashMap<String, DynamicListOnlyFieldInfo>();
-        }
+		private Map<String, DynamicListOnlyFieldInfo> listOnlyFields;
+		
+		private Map<String, DynamicFieldInfo> childFieldInfos;
+		
+		private ManagedType managed;
 
-        public Builder tableName(String tableName) {
-            this.tableName = tableName;
-            return this;
-        }
+		private long version;
+		
+		private boolean withChildField;
 
-        public Builder baseClassName(String baseClassName) {
-            this.baseClassName = baseClassName;
-            return this;
-        }
+		private Builder(DynamicEntityType type, String className, ManagedType managed) {
+			this.type = type;
+			this.className = className;
+			this.managed = managed;
+			baseClassName = AbstractSequencedEntity.class.getCanonicalName();
+			fkFields = new LinkedHashMap<String, DynamicForeignKeyFieldInfo>();
+			columnFields = new LinkedHashMap<String, DynamicColumnFieldInfo>();
+			listOnlyFields = new LinkedHashMap<String, DynamicListOnlyFieldInfo>();
+			childFieldInfos =  new LinkedHashMap<String, DynamicFieldInfo>();
+		}
 
-        public Builder version(long version) {
-            this.version = version;
-            return this;
-        }
+		public Builder tableName(String tableName) {
+			this.tableName = tableName;
+			return this;
+		}
 
-        public Builder addForeignKeyField(DynamicFieldType type, DynamicEntityInfo parentDynamicEntityInfo,
-                String columnName, String fieldName, String defaultVal, boolean nullable) throws UnifyException {
-            checkFieldNameExist(fieldName);
-            fkFields.put(fieldName,
-                    new DynamicForeignKeyFieldInfo(type, parentDynamicEntityInfo, columnName, fieldName, defaultVal, nullable));
-            return this;
-        }
+		public Builder baseClassName(String baseClassName) {
+			this.baseClassName = baseClassName;
+			return this;
+		}
 
-        public Builder addForeignKeyField(DynamicFieldType type, String enumClassName, String columnName,
-                String fieldName, String defaultVal, boolean nullable) throws UnifyException {
-            checkFieldNameExist(fieldName);
-            fkFields.put(fieldName,
-                    new DynamicForeignKeyFieldInfo(type, enumClassName, columnName, fieldName, defaultVal, nullable));
-            return this;
-        }
+		public Builder version(long version) {
+			this.version = version;
+			return this;
+		}
 
-        public Builder addField(DynamicFieldType type, DataType dataType, String columnName, String fieldName,
-                String defaultVal, int length, int precision, int scale, boolean nullable, boolean descriptive) throws UnifyException {
-            return addField(type, dataType, columnName, fieldName, null, defaultVal, length, precision, scale, nullable,
-                    descriptive);
-        }
+		public Builder addForeignKeyField(DynamicFieldType type, DynamicEntityInfo parentDynamicEntityInfo,
+				String columnName, String fieldName, String defaultVal, boolean nullable) throws UnifyException {
+			checkFieldNameExist(fieldName);
+			fkFields.put(fieldName, new DynamicForeignKeyFieldInfo(type, parentDynamicEntityInfo, columnName, fieldName,
+					defaultVal, nullable));
+			return this;
+		}
 
-        public Builder addField(DynamicFieldType type, DataType dataType, String columnName, String fieldName,
-                String transformer, String defaultVal, int length, int precision, int scale, boolean nullable,
-                boolean descriptive) throws UnifyException {
-            checkFieldNameExist(fieldName);
-            columnFields.put(fieldName, new DynamicColumnFieldInfo(type, dataType, columnName, fieldName, transformer,
-                    defaultVal, length, precision, scale, nullable, descriptive));
-            return this;
-        }
+		public Builder addForeignKeyField(DynamicFieldType type, String enumClassName, String columnName,
+				String fieldName, String defaultVal, boolean nullable) throws UnifyException {
+			checkFieldNameExist(fieldName);
+			fkFields.put(fieldName,
+					new DynamicForeignKeyFieldInfo(type, enumClassName, columnName, fieldName, defaultVal, nullable));
+			return this;
+		}
 
-        public Builder addField(DynamicFieldType type, String enumClassName, String columnName, String fieldName,
-                String defaultVal, boolean nullable, boolean descriptive) throws UnifyException {
-            checkFieldNameExist(fieldName);
-            columnFields.put(fieldName,
-                    new DynamicColumnFieldInfo(type, enumClassName, columnName, fieldName, nullable, descriptive));
-            return this;
-        }
+		public Builder addField(DynamicFieldType type, DataType dataType, String columnName, String fieldName,
+				String defaultVal, int length, int precision, int scale, boolean nullable, boolean descriptive)
+				throws UnifyException {
+			return addField(type, dataType, columnName, fieldName, null, defaultVal, length, precision, scale, nullable,
+					descriptive);
+		}
 
-        public Builder addListOnlyField(DynamicFieldType type, String columnName, String fieldName, String key,
-                String property, boolean descriptive) throws UnifyException {
-            checkFieldNameExist(fieldName);
-            DynamicForeignKeyFieldInfo fkFieldInfo = fkFields.get(key);
-            if (fkFieldInfo == null) {
-                throw new UnifyOperationException(getClass(), "Class [" + className + "] unknown foreign key [" + key
-                        + "] referenced by [" + fieldName + "].");
-            }
+		public Builder addField(DynamicFieldType type, DataType dataType, String columnName, String fieldName,
+				String transformer, String defaultVal, int length, int precision, int scale, boolean nullable,
+				boolean descriptive) throws UnifyException {
+			checkFieldNameExist(fieldName);
+			columnFields.put(fieldName, new DynamicColumnFieldInfo(type, dataType, columnName, fieldName, transformer,
+					defaultVal, length, precision, scale, nullable, descriptive));
+			return this;
+		}
 
-            if (fkFieldInfo.isEnum()) {
-                if (!"name".equals(property) && !"description".equals(property)) {
-                    throw new UnifyOperationException(getClass(), "Class [" + className + "] enumeration property ["
-                            + property + "] referenced by [" + fieldName + "] is not supported.");
-                }
+		public Builder addField(DynamicFieldType type, String enumClassName, String columnName, String fieldName,
+				String defaultVal, boolean nullable, boolean descriptive) throws UnifyException {
+			checkFieldNameExist(fieldName);
+			columnFields.put(fieldName,
+					new DynamicColumnFieldInfo(type, enumClassName, columnName, fieldName, nullable, descriptive));
+			return this;
+		}
 
-                listOnlyFields.put(fieldName,
-                        new DynamicListOnlyFieldInfo(type, columnName, fieldName, key, property, false));
-            } else {
-                DynamicFieldInfo _dynamicFieldInfo = null;
-                if (fkFieldInfo.getParentDynamicEntityInfo().isSelfReference()) {
-                    _dynamicFieldInfo = columnFields.get(property);
-                    if (_dynamicFieldInfo == null) {
-                        _dynamicFieldInfo = fkFields.get(property);
-                    }
-                } else {
-                    _dynamicFieldInfo = fkFieldInfo.getParentDynamicEntityInfo().getDynamicFieldInfo(property);
-                }
+		public Builder addListOnlyField(DynamicFieldType type, String columnName, String fieldName, String key,
+				String property, boolean descriptive) throws UnifyException {
+			checkFieldNameExist(fieldName);
+			DynamicForeignKeyFieldInfo fkFieldInfo = fkFields.get(key);
+			if (fkFieldInfo == null) {
+				throw new UnifyOperationException(getClass(), "Class [" + className + "] unknown foreign key [" + key
+						+ "] referenced by [" + fieldName + "].");
+			}
 
-                listOnlyFields.put(fieldName, new DynamicListOnlyFieldInfo(type, _dynamicFieldInfo, columnName,
-                        fieldName, key, property, descriptive));
-            }
-            return this;
-        }
+			if (fkFieldInfo.isEnum()) {
+				if (!"name".equals(property) && !"description".equals(property)) {
+					throw new UnifyOperationException(getClass(), "Class [" + className + "] enumeration property ["
+							+ property + "] referenced by [" + fieldName + "] is not supported.");
+				}
 
-        private void checkFieldNameExist(String fieldName) throws UnifyException {
-            if (fkFields.containsKey(fieldName) || columnFields.containsKey(fieldName)
-                    || listOnlyFields.containsKey(fieldName)) {
-                throw new UnifyOperationException(getClass(), "Field with name [" + fieldName + "] already exists.");
-            }
-        }
+				listOnlyFields.put(fieldName,
+						new DynamicListOnlyFieldInfo(type, columnName, fieldName, key, property, false));
+			} else {
+				DynamicFieldInfo _dynamicFieldInfo = null;
+				boolean resolved = false;
+				if (fkFieldInfo.getParentDynamicEntityInfo().isSelfReference()) {
+					_dynamicFieldInfo = columnFields.get(property);
+					if (_dynamicFieldInfo == null) {
+						_dynamicFieldInfo = fkFields.get(property);
+					}
+					
+					resolved = true;
+				} else {
+					_dynamicFieldInfo = fkFieldInfo;
+				}
 
-        public DynamicEntityInfo build() {
-            Map<String, DynamicFieldInfo> fieldInfos = new LinkedHashMap<String, DynamicFieldInfo>();
-            fieldInfos.putAll(fkFields);
-            fieldInfos.putAll(columnFields);
-            fieldInfos.putAll(listOnlyFields);
-            DynamicEntityInfo info = new DynamicEntityInfo(type, tableName, baseClassName, className, managed,
-                    fieldInfos, version);
-            for (DynamicForeignKeyFieldInfo fkField : fkFields.values()) {
-                fkField.updateParentDynamicEntityInfo(info);
-            }
+				listOnlyFields.put(fieldName, new DynamicListOnlyFieldInfo(type, _dynamicFieldInfo, columnName,
+						fieldName, key, property, descriptive, resolved));
+			}
+			
+			return this;
+		}
+		
+		public Builder addChildField(DynamicFieldType type, DynamicEntityInfo childDynamicEntityInfo,
+				String fieldName) throws UnifyException {
+			checkFieldNameExist(fieldName);
+			childFieldInfos.put(fieldName, new DynamicChildFieldInfo(type, childDynamicEntityInfo, fieldName));
+			withChildField = true;
+			return this;
+		}
 
-            return info;
-        }
-    }
+		public Builder addChildListField(DynamicFieldType type, DynamicEntityInfo childDynamicEntityInfo,
+				String fieldName) throws UnifyException {
+			checkFieldNameExist(fieldName);
+			childFieldInfos.put(fieldName, new DynamicChildListFieldInfo(type, childDynamicEntityInfo, fieldName));
+			withChildField = true;
+			return this;
+		}
+
+		private void checkFieldNameExist(String fieldName) throws UnifyException {
+			if (fkFields.containsKey(fieldName) || columnFields.containsKey(fieldName)
+					|| listOnlyFields.containsKey(fieldName) || childFieldInfos.containsKey(fieldName)) {
+				throw new UnifyOperationException(getClass(), "Field with name [" + fieldName + "] already exists.");
+			}
+		}
+
+		public DynamicEntityInfo prefetch() {
+			if (info == null) {
+				synchronized (this) {
+					if (info == null) {
+						info = new DynamicEntityInfo(type, tableName, baseClassName, className, managed, version);
+					}
+				}
+			}
+
+			return info;
+		}
+
+		public DynamicEntityInfo build() {
+			Map<String, DynamicFieldInfo> fieldInfos = new LinkedHashMap<String, DynamicFieldInfo>();
+			fieldInfos.putAll(fkFields);
+			fieldInfos.putAll(columnFields);
+			fieldInfos.putAll(listOnlyFields);
+			fieldInfos.putAll(childFieldInfos);
+			DynamicEntityInfo _info = prefetch();
+			_info.fieldInfos = fieldInfos;
+			_info.withChildField = withChildField;
+			for (DynamicForeignKeyFieldInfo fkField : fkFields.values()) {
+				fkField.updateParentDynamicEntityInfo(_info);
+			}
+
+			return _info;
+		}
+	}
 
 }

@@ -16,6 +16,7 @@
 
 package com.tcdng.unify.core.database.dynamic;
 
+import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.DynamicFieldType;
 import com.tcdng.unify.core.constant.DataType;
 import com.tcdng.unify.core.constant.EntityFieldType;
@@ -28,38 +29,58 @@ import com.tcdng.unify.core.constant.EntityFieldType;
  */
 public class DynamicListOnlyFieldInfo extends DynamicFieldInfo {
 
-    private DynamicFieldInfo propertyFieldInfo;
+	private DynamicFieldInfo propertyFieldInfo;
 
-    private String key;
+	private String key;
 
-    private String property;
+	private String property;
 
-    public DynamicListOnlyFieldInfo(DynamicFieldType type, DynamicFieldInfo propertyFieldInfo, String columnName,
-            String fieldName, String key, String property, boolean descriptive) {
-        super(type, EntityFieldType.LIST_ONLY, propertyFieldInfo.getDataType(), columnName, fieldName,
-                propertyFieldInfo.getEnumClassName(), descriptive);
-        this.propertyFieldInfo = propertyFieldInfo;
-        this.key = key;
-        this.property = property;
-    }
+	private boolean resolved;
 
-    public DynamicListOnlyFieldInfo(DynamicFieldType type, String columnName, String fieldName, String key,
-            String property, boolean descriptive) {
-        super(type, EntityFieldType.LIST_ONLY, DataType.STRING, columnName, fieldName, descriptive);
-        this.key = key;
-        this.property = property;
-    }
+	public DynamicListOnlyFieldInfo(DynamicFieldType type, DynamicFieldInfo propertyFieldInfo, String columnName,
+			String fieldName, String key, String property, boolean descriptive, boolean resolved) {
+		super(type, EntityFieldType.LIST_ONLY, propertyFieldInfo.getDataType(), columnName, fieldName,
+				propertyFieldInfo.getEnumClassName(), descriptive);
+		this.propertyFieldInfo = propertyFieldInfo;
+		this.key = key;
+		this.property = property;
+		this.resolved = resolved;
+	}
 
-    public DynamicFieldInfo getPropertyFieldInfo() {
-        return propertyFieldInfo;
-    }
+	public DynamicListOnlyFieldInfo(DynamicFieldType type, String columnName, String fieldName, String key,
+			String property, boolean descriptive) {
+		super(type, EntityFieldType.LIST_ONLY, DataType.STRING, columnName, fieldName, descriptive);
+		this.key = key;
+		this.property = property;
+		this.resolved = true;
+	}
 
-    public String getKey() {
-        return key;
-    }
+	public DynamicFieldInfo getPropertyFieldInfo() {
+		return propertyFieldInfo;
+	}
 
-    public String getProperty() {
-        return property;
+	public String getKey() {
+		return key;
+	}
+
+	public String getProperty() {
+		return property;
+	}
+    
+    protected Resolution doFinalizeResolution() throws UnifyException {
+		if (!resolved) {
+			synchronized (this) {
+				if (!resolved) {
+					DynamicEntityInfo parentDynamicEntityInfo = ((DynamicForeignKeyFieldInfo) propertyFieldInfo).getParentDynamicEntityInfo();
+					parentDynamicEntityInfo.finalizeResolution();
+					propertyFieldInfo = parentDynamicEntityInfo.getDynamicFieldInfo(property);
+					resolved = true;
+			    	return new Resolution(propertyFieldInfo.getDataType(), propertyFieldInfo.getEnumClassName());
+				}
+			}
+		}
+		
+    	return super.doFinalizeResolution();
     }
 
 }
