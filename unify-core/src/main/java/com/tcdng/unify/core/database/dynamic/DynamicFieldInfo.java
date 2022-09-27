@@ -16,6 +16,7 @@
 
 package com.tcdng.unify.core.database.dynamic;
 
+import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.DynamicFieldType;
 import com.tcdng.unify.core.constant.DataType;
 import com.tcdng.unify.core.constant.EntityFieldType;
@@ -92,5 +93,35 @@ public abstract class DynamicFieldInfo {
 
     public boolean isGeneration() {
         return DynamicFieldType.GENERATION.equals(type);
+    }
+    
+    public final void finalizeResolution() throws UnifyException {
+    	Resolution resolution = doFinalizeResolution();
+    	dataType = resolution.dataType;
+    	enumClassName = resolution.enumClassName;
+    }
+    
+    protected Resolution doFinalizeResolution() throws UnifyException {
+    	return new Resolution(dataType, enumClassName);
+    }
+    
+    protected class Resolution {
+
+        private final DataType dataType;
+
+        private final String enumClassName;
+
+		public Resolution(DataType dataType, String enumClassName) {
+			this.dataType = dataType;
+			this.enumClassName = enumClassName;
+		}
+
+		public DataType getDataType() {
+			return dataType;
+		}
+
+		public String getEnumClassName() {
+			return enumClassName;
+		}
     }
 }
