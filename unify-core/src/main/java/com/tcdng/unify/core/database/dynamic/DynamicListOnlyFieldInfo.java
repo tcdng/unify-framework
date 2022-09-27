@@ -71,8 +71,9 @@ public class DynamicListOnlyFieldInfo extends DynamicFieldInfo {
 		if (!resolved) {
 			synchronized (this) {
 				if (!resolved) {
-					propertyFieldInfo = ((DynamicForeignKeyFieldInfo) propertyFieldInfo).getParentDynamicEntityInfo()
-							.getDynamicFieldInfo(property);
+					DynamicEntityInfo parentDynamicEntityInfo = ((DynamicForeignKeyFieldInfo) propertyFieldInfo).getParentDynamicEntityInfo();
+					parentDynamicEntityInfo.finalizeResolution();
+					propertyFieldInfo = parentDynamicEntityInfo.getDynamicFieldInfo(property);
 					resolved = true;
 			    	return new Resolution(propertyFieldInfo.getDataType(), propertyFieldInfo.getEnumClassName());
 				}
