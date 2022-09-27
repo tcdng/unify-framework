@@ -52,6 +52,7 @@ public class DynamicListOnlyFieldInfo extends DynamicFieldInfo {
 		super(type, EntityFieldType.LIST_ONLY, DataType.STRING, columnName, fieldName, descriptive);
 		this.key = key;
 		this.property = property;
+		this.resolved = true;
 	}
 
 	public DynamicFieldInfo getPropertyFieldInfo() {
