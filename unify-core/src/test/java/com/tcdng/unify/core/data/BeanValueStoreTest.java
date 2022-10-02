@@ -308,7 +308,7 @@ public class BeanValueStoreTest {
         assertEquals("Ungwan Dosa, Kaduna", address.getLine2());
     }
    
-    private class TestValueStorePolicy implements ValueStorePolicy {
+    private class TestValueStorePolicy extends AbstractValueStorePolicy {
 
         @Override
         public Object onRetrieve(ValueStore valueStore, String name, Object val) throws UnifyException {
