@@ -16,7 +16,6 @@
 
 package com.tcdng.unify.core.data;
 
-import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 
 /**
@@ -25,7 +24,7 @@ import com.tcdng.unify.core.UnifyException;
  * @author The Code Department
  * @since 1.0
  */
-public interface ValueStorePolicy extends UnifyComponent {
+public interface ValueStorePolicy {
 
     /**
      * Executed on retrieval of value from store
