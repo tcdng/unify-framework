@@ -48,6 +48,11 @@ public class ButtonGroupInfo {
 			this.infoList = new ArrayList<ButtonInfo> ();
 		}
 		
+		public Builder addItems(List<ButtonInfo> infoList) {
+			this.infoList.addAll(infoList);
+			return this;
+		}
+		
 		public Builder addItem(ButtonInfo buttonInfo) {
 			infoList.add(buttonInfo);
 			return this;
