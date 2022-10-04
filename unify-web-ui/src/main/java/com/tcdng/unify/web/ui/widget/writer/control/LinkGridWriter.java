@@ -47,7 +47,7 @@ public class LinkGridWriter extends AbstractControlWriter {
         writer.write("<div");
         writeTagAttributes(writer, linkGrid);
         writer.write(">");
-        LinkGridInfo linkGridInfo = linkGrid.getValue(LinkGridInfo.class);
+        LinkGridInfo linkGridInfo = linkGrid.getLinkGridInfo();
         if (linkGridInfo != null) {
             for (LinkCategoryInfo linkCategoryInfo : linkGridInfo.getLinkCategoryList()) {
                 writer.write("<div>");
@@ -103,10 +103,9 @@ public class LinkGridWriter extends AbstractControlWriter {
         writer.beginFunction("ux.rigLinkGrid");
         JsonWriter jw = new JsonWriter();
         jw.beginArray();
-        LinkGridInfo linkGridInfo = linkGrid.getValue(LinkGridInfo.class);
+        LinkGridInfo linkGridInfo = linkGrid.getLinkGridInfo();
         if (linkGridInfo != null) {
             for (LinkCategoryInfo linkCategoryInfo : linkGridInfo.getLinkCategoryList()) {
-
                 jw.beginObject();
                 jw.write("pURL", getContextURL(linkCategoryInfo.getPath()));
                 jw.beginArray("links");

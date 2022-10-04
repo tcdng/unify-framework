@@ -17,37 +17,38 @@ package com.tcdng.unify.web.ui.widget.control;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
-import com.tcdng.unify.core.annotation.UplAttribute;
-import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.web.ui.widget.AbstractMultiControl;
-import com.tcdng.unify.web.ui.widget.data.LinkGridInfo;
+import com.tcdng.unify.web.ui.widget.Control;
+import com.tcdng.unify.web.ui.widget.data.ButtonGroupInfo;
 
 /**
- * A link grid widget.
+ * Button group widget.
  * 
  * @author The Code Department
  * @since 1.0
  */
-@Component("ui-linkgrid")
-@UplAttributes({ @UplAttribute(name = "columns", type = int.class) })
-public class LinkGrid extends AbstractMultiControl {
+@Component("ui-buttongroup")
+public class ButtonGroup extends AbstractMultiControl {
 
-    public int getColumns() throws UnifyException {
-        return getUplAttribute(int.class, "columns");
-    }
+    private Control buttonCtrl;
 
-    public LinkGridInfo getLinkGridInfo() throws UnifyException {
-    	return getValue(LinkGridInfo.class);
+    public ButtonGroupInfo getButtonGroupInfo() throws UnifyException {
+    	return getValue(ButtonGroupInfo.class);
     }
     
-    @Override
+    public Control getButtonCtrl() {
+		return buttonCtrl;
+	}
+
+	@Override
     public boolean isLayoutCaption() throws UnifyException {
         return false;
     }
 
     @Override
     protected void doOnPageConstruct() throws UnifyException {
-        
+        buttonCtrl =  (Control) addInternalChildWidget(
+                "!ui-button styleClass:$e{btn} captionBinding:label binding:value");
     }
 
 }

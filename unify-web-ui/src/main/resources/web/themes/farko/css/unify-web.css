@@ -472,6 +472,10 @@ z-index:400;}
 .ui-button-alert:disabled {cursor:default;}
 .ui-button-alert:hover:enabled {color: #FFF; background-color: #F06060;}
 
+/** Button Group */
+.ui-buttongroup {}
+.ui-buttongroup .btn {margin: 2px 2px;}
+
 /** Button (Mini)*/ 
 .ui-minibutton {padding: 0px 10px; min-height:18px; font-size:7pt; background-color: #E8E8E8; border: 1px solid #C8C8C8; cursor: pointer;}
 .ui-minibutton:disabled {cursor:default;}
