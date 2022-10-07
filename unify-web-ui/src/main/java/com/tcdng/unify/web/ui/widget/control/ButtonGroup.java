@@ -40,6 +40,11 @@ public class ButtonGroup extends AbstractMultiControl {
 		return buttonCtrl;
 	}
 
+    @Override
+	public boolean isSupportStretch() {
+		return false;
+	}
+
 	@Override
     public boolean isLayoutCaption() throws UnifyException {
         return false;

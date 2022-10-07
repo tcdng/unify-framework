@@ -38,6 +38,11 @@ public class CheckBox extends AbstractControl {
     }
 
     @Override
+	public boolean isSupportStretch() {
+		return false;
+	}
+
+	@Override
 	public boolean isUseFacade() throws UnifyException {
 		return true;
 	}

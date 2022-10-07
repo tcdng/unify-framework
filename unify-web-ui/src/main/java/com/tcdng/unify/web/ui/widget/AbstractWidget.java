@@ -501,6 +501,11 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
     }
 
     @Override
+	public boolean isSupportStretch() {
+		return true;
+	}
+
+    @Override
     public boolean isLayoutCaption() throws UnifyException {
         return true;
     }
