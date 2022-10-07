@@ -33,6 +33,11 @@ public class RadioButtons extends AbstractGroupListControl {
     }
 
     @Override
+	public boolean isSupportStretch() {
+		return false;
+	}
+
+    @Override
     public boolean isSupportReadOnly() {
         return false;
     }

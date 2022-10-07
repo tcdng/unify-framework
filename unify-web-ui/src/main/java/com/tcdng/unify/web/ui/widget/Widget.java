@@ -555,6 +555,12 @@ public interface Widget extends UplComponent {
     boolean isSupportDisabled();
 
     /**
+     * Returns true if component's rendered element supports stretching
+     * otherwise false. Subclasses should override this if necessary.
+     */
+    boolean isSupportStretch();
+
+    /**
      * Returns true if component's data should not be pushed from client to server
      * @throws UnifyException
      *                        if an error occurs

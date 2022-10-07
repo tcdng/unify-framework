@@ -45,6 +45,11 @@ public class Button extends AbstractTargetControl {
     }
 
     @Override
+	public boolean isSupportStretch() {
+		return false;
+	}
+
+    @Override
     public boolean isLayoutCaption() {
         return false;
     }

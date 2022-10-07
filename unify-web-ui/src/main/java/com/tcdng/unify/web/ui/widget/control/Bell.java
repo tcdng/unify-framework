@@ -33,6 +33,11 @@ import com.tcdng.unify.web.ui.widget.AbstractControl;
         @UplAttribute(name = "imageSrc", type = String.class, defaultVal = "$t{images/notification_gray.png}") })
 public class Bell extends AbstractControl {
 
+    @Override
+	public boolean isSupportStretch() {
+		return false;
+	}
+
     public String getImageSrc() throws UnifyException {
         return getUplAttribute(String.class, "imageSrc");
     }
