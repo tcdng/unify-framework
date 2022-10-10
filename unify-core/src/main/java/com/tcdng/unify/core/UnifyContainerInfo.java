@@ -34,6 +34,8 @@ public class UnifyContainerInfo {
 
     private String auxiliaryVersion;
     
+    private String applicationLocale;
+    
     private String hostAddress;
 
     private String hostHome;
@@ -56,26 +58,27 @@ public class UnifyContainerInfo {
 
     private List<UnifyContainerSettingInfo> settingInfoList;
 
-    public UnifyContainerInfo(String name, String id, String version, String hostAddress, String auxiliaryVersion,
-            String hostHome, Date startTime, long usedMemory, long totalMemory, boolean clusterMode,
-            boolean productionMode, boolean deploymentMode, List<UnifyComponentInfo> componentInfoList,
-            List<UnifyInterfaceInfo> interfaceInfoList, List<UnifyContainerSettingInfo> settingInfoList) {
-        this.name = name;
-        this.id = id;
-        this.version = version;
-        this.auxiliaryVersion = auxiliaryVersion;
-        this.hostAddress = hostAddress;
-        this.hostHome = hostHome;
-        this.startTime = startTime;
-        this.usedMemory = usedMemory;
-        this.totalMemory = totalMemory;
-        this.clusterMode = clusterMode;
-        this.productionMode = productionMode;
-        this.deploymentMode = deploymentMode;
-        this.componentInfoList = componentInfoList;
-        this.interfaceInfoList = interfaceInfoList;
-        this.settingInfoList = settingInfoList;
-    }
+	public UnifyContainerInfo(String name, String id, String version, String auxiliaryVersion, String applicationLocale,
+			String hostAddress, String hostHome, Date startTime, long usedMemory, long totalMemory, boolean clusterMode,
+			boolean productionMode, boolean deploymentMode, List<UnifyComponentInfo> componentInfoList,
+			List<UnifyInterfaceInfo> interfaceInfoList, List<UnifyContainerSettingInfo> settingInfoList) {
+		this.name = name;
+		this.id = id;
+		this.version = version;
+		this.auxiliaryVersion = auxiliaryVersion;
+		this.hostAddress = hostAddress;
+		this.applicationLocale = applicationLocale;
+		this.hostHome = hostHome;
+		this.startTime = startTime;
+		this.usedMemory = usedMemory;
+		this.totalMemory = totalMemory;
+		this.clusterMode = clusterMode;
+		this.productionMode = productionMode;
+		this.deploymentMode = deploymentMode;
+		this.componentInfoList = componentInfoList;
+		this.interfaceInfoList = interfaceInfoList;
+		this.settingInfoList = settingInfoList;
+	}
 
     public String getName() {
         return name;
@@ -97,7 +100,11 @@ public class UnifyContainerInfo {
         return hostAddress;
     }
 
-    public String getHostHome() {
+    public String getApplicationLocale() {
+		return applicationLocale;
+	}
+
+	public String getHostHome() {
         return hostHome;
     }
 
