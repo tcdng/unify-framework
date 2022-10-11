@@ -22,10 +22,11 @@
 !ui-panel:detailBody layout:$d{!ui-horizontal style:$s{width:100%;}} components:$c{detailPanel refreshBtn}
 !ui-panel:detailPanel layout:$d{!ui-vertical styleClass:$e{ui-vertical cm-detail-layout} showCaption:true captionSuffix:$s{:} }
     components:$c{instanceName instanceId version hostHome hostAddress}
-    components:$c{clusterMode productionMode usedMemory totalMemory elapsedTime}
+    components:$c{applicationLocale clusterMode productionMode usedMemory totalMemory elapsedTime}
 !ui-label:instanceName caption:$m{container.details.instancename} layoutCaption:true binding:info.name
 !ui-label:instanceId caption:$m{container.details.instanceid} layoutCaption:true binding:info.id
 !ui-label:version caption:$m{container.details.version} layoutCaption:true binding:info.version
+!ui-label:applicationLocale caption:$m{container.details.applicationlocale} layoutCaption:true binding:info.applicationLocale
 !ui-label:hostHome caption:$m{container.details.hostname} layoutCaption:true binding:info.hostHome
 !ui-label:hostAddress caption:$m{container.details.ipaddress} layoutCaption:true binding:info.hostAddress
 !ui-label:clusterMode caption:$m{container.details.clustermode} layoutCaption:true binding:info.clusterMode
