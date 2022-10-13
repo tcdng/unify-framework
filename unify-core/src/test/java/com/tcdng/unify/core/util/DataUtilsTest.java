@@ -732,7 +732,7 @@ public class DataUtilsTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testAddBigDecimal() throws Exception {
-        assertNull(DataUtils.add(null, null));
+        assertEquals(BigDecimal.ZERO, DataUtils.add(null, null));
         assertEquals(BigDecimal.TEN, DataUtils.add(BigDecimal.TEN, null));
         assertEquals(BigDecimal.TEN, DataUtils.add(null, BigDecimal.TEN));
         assertEquals(BigDecimal.valueOf(20), DataUtils.add(BigDecimal.TEN, BigDecimal.TEN));

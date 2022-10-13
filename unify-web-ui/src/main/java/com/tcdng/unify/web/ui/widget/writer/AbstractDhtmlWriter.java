@@ -978,7 +978,9 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
 		List<String> alwaysPushList = (List<String>) getRequestAttribute(
 				UnifyCoreRequestAttributeConstants.ALWAYS_PUSH_COMPOMENT_LIST);
 		if (!DataUtils.isBlank(alwaysPushList)) {
-			resultList.addAll(alwaysPushList);
+			for (String pId : alwaysPushList) {
+				resultList.addAll(pageManager.getExpandedReferences(pId));
+			}
 		}
 		
 		return DataUtils.removeDuplicatesUnordered(resultList);
