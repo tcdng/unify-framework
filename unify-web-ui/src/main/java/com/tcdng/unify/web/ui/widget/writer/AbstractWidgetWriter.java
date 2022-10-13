@@ -117,18 +117,19 @@ public abstract class AbstractWidgetWriter extends AbstractDhtmlWriter implement
     }
 
     protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-        if (!widget.isContainerDisabled()) {
-            EventHandler[] eventHandlers = widget.getUplAttribute(EventHandler[].class, "eventHandler");
-            if (eventHandlers != null) {
-                String id = widget.getId();
-                if (widget.isBindEventsToFacade()) {
-                    id = widget.getFacadeId();
-                }
+    	doWriteBehavior(writer, widget, widget.getUplAttribute(EventHandler[].class, "eventHandler"));
+    }
 
-                getRequestContext().setQuickReference(widget.getValueStore());
-                for (EventHandler eventHandler : eventHandlers) {
-                    writer.writeBehavior(eventHandler, id, widget.getBinding());
-                }
+    protected void doWriteBehavior(ResponseWriter writer, Widget widget, EventHandler[] eventHandlers) throws UnifyException {
+        if (eventHandlers != null && !widget.isContainerDisabled()) {
+            String id = widget.getId();
+            if (widget.isBindEventsToFacade()) {
+                id = widget.getFacadeId();
+            }
+
+            getRequestContext().setQuickReference(widget.getValueStore());
+            for (EventHandler eventHandler : eventHandlers) {
+                writer.writeBehavior(eventHandler, id, widget.getBinding());
             }
         }
     }
