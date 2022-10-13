@@ -184,7 +184,7 @@ public abstract class AbstractSingleObjectValueStore<T> extends AbstractValueSto
 
     @Override
     public Object getValueObjectAtDataIndex() {
-        return null;
+        return storage;
     }
 
     @Override
