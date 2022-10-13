@@ -431,9 +431,8 @@ ux.refreshSection = function(resp) {
 		var trg = _id(resp.section.target);
 		if (trg) {
 			trg.innerHTML = resp.section.html;
+			ux.perform(resp.section.script);
 		}
-
-		ux.perform(resp.section.script);
 	}
 }
 
@@ -5940,6 +5939,8 @@ ux.hidePopup = function(uEv) {
 			ux.getfn(openPrm.hideHandler)(openPrm.hideParam);
 		}
 	}
+	
+	ux.popCurr = null;
 }
 
 ux.startClosePopupTimer = function() {
