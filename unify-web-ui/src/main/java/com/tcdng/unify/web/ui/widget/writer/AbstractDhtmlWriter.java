@@ -18,6 +18,7 @@ package com.tcdng.unify.web.ui.widget.writer;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.tcdng.unify.core.UnifyCoreRequestAttributeConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.constant.MimeType;
@@ -948,18 +949,17 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
 	@SuppressWarnings("unchecked")
 	private List<String> getActionRefComponentList(ResponseWriter writer, String id, PageAction pageAction)
 			throws UnifyException {
+		List<String> resultList = new ArrayList<String>();
 		PageManager pageManager = getPageManager();
 		List<String> componentList = pageManager.getExpandedReferences(pageAction.getId());
+		resultList.addAll(componentList);
 		int dataIndex = writer.getDataIndex();
 		if (dataIndex >= 0 && !componentList.isEmpty()) {
 			final String dataSuffix = "d" + dataIndex;
-			List<String> _componentList = new ArrayList<String>(componentList);
-			_componentList.add(id);
+			resultList.add(id);
 			for (String component : componentList) {
-				_componentList.add(component);
-				_componentList.add(component + dataSuffix);
+				resultList.add(component + dataSuffix);
 			}
-			componentList = _componentList;
 		}
 
 		if (pageAction.isUplAttribute("pushComponents")) {
@@ -969,15 +969,19 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
 					List<String> pushList = (List<String>) getRequestAttribute(
 							TokenUtils.extractTokenValue(components));
 					if (!DataUtils.isBlank(pushList)) {
-						List<String> _componentList = new ArrayList<String>(componentList);
-						_componentList.addAll(pushList);
-						componentList = _componentList;
+						resultList.addAll(pushList);
 					}
 				}
 			}
 		}
 
-		return componentList;
+		List<String> alwaysPushList = (List<String>) getRequestAttribute(
+				UnifyCoreRequestAttributeConstants.ALWAYS_PUSH_COMPOMENT_LIST);
+		if (!DataUtils.isBlank(alwaysPushList)) {
+			resultList.addAll(alwaysPushList);
+		}
+		
+		return DataUtils.removeDuplicatesUnordered(resultList);
 	}
 
 	protected PageRequestContextUtil getRequestContextUtil() throws UnifyException {

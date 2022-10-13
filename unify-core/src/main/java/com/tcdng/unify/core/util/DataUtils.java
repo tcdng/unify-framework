@@ -37,6 +37,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -1507,17 +1509,52 @@ public final class DataUtils {
         return paramObject;
     }
 
-    public static BigDecimal add(BigDecimal a, BigDecimal b) {
-        if (a != null) {
-            if(b != null) {
-                return a.add(b);
-            }
-            
-            return a;
-        }
-        
-        return b;
-    }
+	/**
+	 * Removes duplicates from a list (unordered)
+	 * 
+	 * @param list the list
+	 * @return new list with duplicates removed
+	 */
+	public static List<String> removeDuplicatesUnordered(List<String> list) {
+		if (list != null) {
+			return new ArrayList<String>(new HashSet<String>(list));
+		}
+
+		return list;
+	}
+
+	/**
+	 * Removes duplicates from a list (ordered)
+	 * 
+	 * @param list the list
+	 * @return new list with duplicates removed
+	 */
+	public static List<String> removeDuplicatesOrdered(List<String> list) {
+		if (list != null) {
+			return new ArrayList<String>(new LinkedHashSet<String>(list));
+		}
+
+		return list;
+	}
+
+	/**
+	 * Adds two decimal numbers with null values replace with zero
+	 * 
+	 * @param first  first number
+	 * @param second second number
+	 * @return
+	 */
+	public static BigDecimal add(BigDecimal first, BigDecimal second) {
+		if (first != null) {
+			if (second != null) {
+				return first.add(second);
+			}
+
+			return first;
+		}
+
+		return second != null ? second : BigDecimal.ZERO;
+	}
    
     @SuppressWarnings("unchecked")
     private static <T> void sort(List<?> list, Class<T> beanClass, String property, boolean ascending)
