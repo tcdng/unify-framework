@@ -18,7 +18,6 @@ package com.tcdng.unify.web.ui.widget.writer;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.tcdng.unify.core.UnifyCoreRequestAttributeConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.constant.MimeType;
@@ -972,14 +971,6 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
 						resultList.addAll(pushList);
 					}
 				}
-			}
-		}
-
-		List<String> alwaysPushList = (List<String>) getRequestAttribute(
-				UnifyCoreRequestAttributeConstants.ALWAYS_PUSH_COMPOMENT_LIST);
-		if (!DataUtils.isBlank(alwaysPushList)) {
-			for (String pId : alwaysPushList) {
-				resultList.addAll(pageManager.getExpandedReferences(pId));
 			}
 		}
 		
