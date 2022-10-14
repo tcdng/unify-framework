@@ -98,6 +98,7 @@ ux.extensionregistry = {};
 ux.lastUserActTime=0;
 
 ux.fnaliases = [];
+ux.allpush = null;
 
 /** Utilities */
 function _id(id) {
@@ -140,6 +141,7 @@ ux.processJSON = function(jsonstring) {
 	const fullResp = JSON.parse(jsonstring);
 	ux.remoteView = fullResp.remoteView;
 	if (fullResp.jsonResp) {
+		ux.allpush = fullResp.allPush;
 		for (var j = 0; j < fullResp.jsonResp.length; j++) {
 			var resp = fullResp.jsonResp[j];
 			ux.respHandler[resp.handler](resp);
@@ -147,6 +149,8 @@ ux.processJSON = function(jsonstring) {
 				ux.setFocus({wdgid: resp.focusOnWidget});
 			}
 		}
+		
+		ux.allpush = null;
 		ux.cascadeStretch();
 	}
 
@@ -431,9 +435,8 @@ ux.refreshSection = function(resp) {
 		var trg = _id(resp.section.target);
 		if (trg) {
 			trg.innerHTML = resp.section.html;
+			ux.perform(resp.section.script);
 		}
-
-		ux.perform(resp.section.script);
 	}
 }
 
@@ -599,12 +602,13 @@ ux.ajaxCallWithJSONResp = function(trgObj, evp) {
 	if (evp.uURL) {	
 		var uEncoded = true;
 		var uPrm;
-		if (ux.detectFormElement(trgObj, evp.uRef)) {
-			var param = ux.buildFormParams(trgObj, evp); 
+		const refs = ux.getPushRefs(evp);
+		if (ux.detectFormElement(trgObj, refs)) {
+			var param = ux.buildFormParams(trgObj, evp, refs); 
 			uPrm = param.value;
 			uEncoded = false;
 		} else {
-			var param = ux.buildReqParams(trgObj, evp);
+			var param = ux.buildReqParams(trgObj, evp, refs);
 			uPrm = param.value;
 		}
 		var ajaxPrms = ux.ajaxConstructCallParam(evp.uURL, uPrm, evp.uSync,
@@ -720,8 +724,9 @@ ux.openWindow = function(uEv) {
 	var evp = uEv.evp;
 	ux.setHiddenValues(evp.uRef, evp.uVal);
 	if (evp.uURL) {
+		const refs = ux.getPushRefs(evp);
 		var url = evp.uURL;
-		var param = ux.buildReqParams(null, evp);
+		var param = ux.buildReqParams(null, evp, refs);
 		if (param.value) {
 			url = url + "?" + param.value;
 		}
@@ -4278,29 +4283,41 @@ ux.treeSelect = function(evp, tElem, selObj, i, select) {
 }
 
 /** ************************* PARAMETERS ********************************** */
+ux.getPushRefs = function(evp) {
+	var refs = [];
+	if (evp.uRef) {
+		refs = refs.concat(evp.uRef);
+	}
+	
+	if (evp.uAllRef) {
+		refs = refs.concat(evp.uAllRef);
+	}
+	
+	return refs;
+}
 
-ux.buildFormParams = function(trgObj, evp) {
+ux.buildFormParams = function(trgObj, evp, refs) {
 	var param = {};
 	param.value = new FormData();
 	param.isForm = true;
-	ux.buildObjParams(trgObj, evp, param);
+	ux.buildObjParams(trgObj, evp, param, refs);
 	return param;
 }
 
-ux.buildReqParams = function(trgObj, evp) {
+ux.buildReqParams = function(trgObj, evp, refs) {
 	var param = {};
 	param.value = "morsic=" + new Date().getTime();
 	param.isForm = false;
-	ux.buildObjParams(trgObj, evp, param);
+	ux.buildObjParams(trgObj, evp, param, refs);
 	return param;
 }
 
-ux.buildObjParams = function(trgObj, evp, param) {
+ux.buildObjParams = function(trgObj, evp, param, refs) {
 	var builtNames = []; // Added to prevent double build of a parameter.
 	// Expanded component references and page aliases can cause double builds
-	if (evp.uRef) {
-		for (var i = 0; i < evp.uRef.length; i++) {
-			ux.buildNameParams(evp.uRef[i], builtNames, param);
+	if (refs) {
+		for (var i = 0; i < refs.length; i++) {
+			ux.buildNameParams(refs[i], builtNames, param);
 		}
 	}
 
@@ -5286,6 +5303,7 @@ ux.setShortcut = function(evp) {
 
 ux.setOnEvent = function(evp) {
 	const eventName = evp.uEvnt;
+	evp.uAllRef = ux.allpush;
 	if (evp.uPushSrc && evp.uRef && !evp.uRef.includes(evp.uId)) {
 		evp.uRef.push(evp.uId);
 	}
@@ -5940,6 +5958,8 @@ ux.hidePopup = function(uEv) {
 			ux.getfn(openPrm.hideHandler)(openPrm.hideParam);
 		}
 	}
+	
+	ux.popCurr = null;
 }
 
 ux.startClosePopupTimer = function() {

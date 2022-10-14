@@ -48,6 +48,7 @@ public class ButtonGroupWriter extends AbstractControlWriter {
 		if (buttonGroupInfo != null) {
 			ValueStore valueStore = new BeanValueListStore(buttonGroupInfo.getInfoList());
 			final Control buttonCtrl = buttonGroup.getButtonCtrl();
+			buttonCtrl.setDisabled(buttonGroup.isDisabled());
 			final int len = valueStore.size();
 			for (int i = 0; i < len; i++) {
 				valueStore.setDataIndex(i);

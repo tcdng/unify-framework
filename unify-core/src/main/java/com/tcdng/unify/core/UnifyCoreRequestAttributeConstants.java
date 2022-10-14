@@ -24,4 +24,6 @@ package com.tcdng.unify.core;
 public interface UnifyCoreRequestAttributeConstants {
 
     String SUPPRESS_BROADCAST = "UNIFYCORE.SUPRESSBROADCAST";
+
+    String ALWAYS_PUSH_COMPOMENT_LIST = "UNIFYCORE.ALWAYSPUSHCOMPLIST";
 }

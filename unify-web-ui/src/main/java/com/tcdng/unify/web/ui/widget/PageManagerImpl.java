@@ -152,9 +152,13 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
                                 reusablePageValidations.put(longName, pageValidation);
                             }
                         } else {
-                            if (uea.isAttribute("dataComponents")) {
+                        	if (Panel.class.isAssignableFrom(type)) {
                                 expandReferences(uplDocumentAttributes, uea);
-                            }
+                        	} else {
+                                if (uea.isAttribute("dataComponents")) {
+                                    expandReferences(uplDocumentAttributes, uea);
+                                }
+                        	}
 
                             nonreusableComponentLongNames.add(longName);
                         }
@@ -406,11 +410,7 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
     @Override
     public List<String> getExpandedReferences(String pageName) throws UnifyException {
         List<String> resultList = expandedReferences.get(pageName);
-        if (resultList != null) {
-            return resultList;
-        }
-
-        return Collections.emptyList();
+        return resultList != null ? resultList : Collections.emptyList();
     }
 
     @Override

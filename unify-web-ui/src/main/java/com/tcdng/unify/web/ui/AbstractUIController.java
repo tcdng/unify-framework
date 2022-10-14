@@ -19,14 +19,17 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.tcdng.unify.core.UnifyCoreRequestAttributeConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.UnifyOperationException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.constant.LocaleType;
 import com.tcdng.unify.core.constant.MimeType;
+import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.core.util.SystemUtils;
 import com.tcdng.unify.web.AbstractController;
@@ -329,7 +332,8 @@ public abstract class AbstractUIController extends AbstractController implements
         }
     }
 
-    protected void writeResponse(ResponseWriter writer, Page page, Result result) throws UnifyException {
+    @SuppressWarnings("unchecked")
+	protected void writeResponse(ResponseWriter writer, Page page, Result result) throws UnifyException {
         if (MimeType.APPLICATION_JSON.equals(result.getMimeType())) {
             writer.write("{\"jsonResp\":[");
             boolean appendSym = false;
@@ -342,6 +346,18 @@ public abstract class AbstractUIController extends AbstractController implements
                 pageControllerResponse.generate(writer, page);
             }
             writer.write("]");
+
+    		List<String> alwaysPushList = (List<String>) getRequestAttribute(
+    				UnifyCoreRequestAttributeConstants.ALWAYS_PUSH_COMPOMENT_LIST);
+    		if (!DataUtils.isBlank(alwaysPushList)) {
+    			Set<String> _alwaysPush = new HashSet<String>();
+    			for (String pId : alwaysPushList) {
+    				_alwaysPush.addAll(pageManager.getExpandedReferences(pId));
+    			}
+
+                writer.write(",\"allPush\":").writeJsonArray(_alwaysPush);
+    		}
+            
             if (pageRequestContextUtil.isRemoteViewer()) {
                 writer.write(",\"remoteView\":{");
                 writer.write("\"view\":\"").write(pageRequestContextUtil.getRemoteViewer()).write("\"}");
