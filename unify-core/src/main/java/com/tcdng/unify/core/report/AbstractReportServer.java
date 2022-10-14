@@ -51,11 +51,11 @@ public abstract class AbstractReportServer extends AbstractUnifyComponent
 
     private Map<String, ReportTheme> reportThemes;
 
-    private Map<String, ReportLayoutManager> reportLayoutManagers;
+    private Map<ReportLayoutType, ReportLayoutManager> reportLayoutManagers;
 
     public AbstractReportServer() {
         reportThemes = new HashMap<String, ReportTheme>();
-        reportLayoutManagers = new HashMap<String, ReportLayoutManager>();
+        reportLayoutManagers = new HashMap<ReportLayoutType, ReportLayoutManager>();
     }
 
     public void setDefaultDatasource(String defaultDatasource) {
@@ -78,7 +78,7 @@ public abstract class AbstractReportServer extends AbstractUnifyComponent
     }
 
     @Override
-    public void registerReportLayoutManager(String layoutName, ReportLayoutManager reportLayoutManager)
+    public void registerReportLayoutManager(ReportLayoutType layoutName, ReportLayoutManager reportLayoutManager)
             throws UnifyException {
         reportLayoutManagers.put(layoutName, reportLayoutManager);
     }
@@ -151,10 +151,10 @@ public abstract class AbstractReportServer extends AbstractUnifyComponent
         return reportTheme;
     }
 
-    protected ReportLayoutManager getReportLayoutManager(String layoutName) throws UnifyException {
-        ReportLayoutManager reportLayoutManager = reportLayoutManagers.get(layoutName);
+    protected ReportLayoutManager getReportLayoutManager(ReportLayoutType type) throws UnifyException {
+        ReportLayoutManager reportLayoutManager = reportLayoutManagers.get(type);
         if (reportLayoutManager == null) {
-            throw new UnifyException(UnifyCoreErrorConstants.REPORTSERVER_NO_AVAILABLE_REPORTLAYOUTMANAGER, layoutName,
+            throw new UnifyException(UnifyCoreErrorConstants.REPORTSERVER_NO_AVAILABLE_REPORTLAYOUTMANAGER, type,
                     getName());
         }
 

@@ -25,7 +25,6 @@ import com.tcdng.unify.core.constant.HAlignType;
 import com.tcdng.unify.core.data.FactoryMap;
 import com.tcdng.unify.core.report.Report;
 import com.tcdng.unify.core.report.ReportColumn;
-import com.tcdng.unify.core.report.ReportEmbeddedHtml;
 import com.tcdng.unify.core.report.ReportFormat;
 import com.tcdng.unify.core.report.ReportFormatUtils;
 import com.tcdng.unify.core.report.ReportParameter;
@@ -80,8 +79,6 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
 	protected static final int LEFT_PADDING = 2;
 
 	protected static final int TOTAL_X_PADDING = LEFT_PADDING  + 2;
-	
-	protected static final String PARAMETER_PREFIX_HTML = "html_ ";
 	
     private FactoryMap<String, ColumnStyles> columnStylesMap;
 
@@ -164,18 +161,34 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
         JRDesignSection detailJRDesignSection = ((JRDesignSection) jasperDesign.getDetailSection());
         detailJRDesignSection.addBand(detailBand);
     }
+
     
-    protected void addReportParameter(JasperDesign jasperDesign, String name, String val) throws UnifyException {
+    protected void setTitleBand(JasperDesign jasperDesign, JRDesignBand titleBand) {
+    	jasperDesign.setTitle(titleBand);
+    }
+    
+    protected void defineParameter(JasperDesign jasperDesign, String name, Class<?> valueClass) throws UnifyException {
         try {
 			JRDesignParameter jrParameter = new JRDesignParameter();
 			jrParameter.setName(name);
-			jrParameter.setValueClass(String.class);
-			jrParameter.setDefaultValueExpression(newJRDesignExpression(val));
+			jrParameter.setValueClass(valueClass);
 			jasperDesign.addParameter(jrParameter);
 		} catch (JRException e) {
             throwOperationErrorException(e);
 		}
     }
+    
+    protected void defineField(JasperDesign jasperDesign, String name, Class<?> valueClass) throws UnifyException {
+        try {
+			JRDesignField jrField = new JRDesignField();
+			jrField.setName(name);
+			jrField.setValueClass(valueClass);
+			jasperDesign.addField(jrField);
+		} catch (JRException e) {
+            throwOperationErrorException(e);
+		}
+    }
+    
     protected void constructParamHeaderToBand(JasperDesign jasperDesign, JRDesignBand jrDesignBand,
             ThemeColors paramHeaderColors, ColumnStyles columnStyles, ReportParameters reportParameters,
             final int actualColumnWidth, final int detailHeight, boolean isListFormat) throws UnifyException {
@@ -311,15 +324,18 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
         return textField;
     }
 
-    protected JRDesignElement newColumnJRDesignElement(JasperDesign jasperDesign, ThemeColors themeColors,
-            JRDesignStyle fontStyle, ReportEmbeddedHtml reportEmbeddedHtml, int width) throws UnifyException {
+    protected JRDesignElement newEmbeddedHtmlColumnJRDesignElement(JasperDesign jasperDesign, ThemeColors themeColors,
+            JRDesignStyle fontStyle, int width) throws UnifyException {
         JRDesignTextField textField = new JRDesignTextField();
         textField.setPositionType(PositionTypeEnum.FLOAT);
         textField.setMode(ModeEnum.OPAQUE);
         textField.setWidth(width);
+        textField.setHeight(110);
         textField.setStyle(fontStyle);
         textField.setMarkup("html");
-        textField.setExpression(newJRDesignExpression(reportEmbeddedHtml));
+        JRDesignExpression expression = new JRDesignExpression();
+        expression.setText("$F{html}");
+        textField.setExpression(expression);
         textField.setStretchWithOverflow(true);
         textField.setBlankWhenNull(true);
         return textField;
@@ -394,12 +410,6 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
         JRDesignExpression jRDesignExpression = new JRDesignExpression();
         jRDesignExpression.setText(expression);
         return jRDesignExpression;
-    }
-
-    protected JRDesignExpression newJRDesignExpression(ReportEmbeddedHtml reportEmbeddedHtml) {
-        JRDesignExpression expression = new JRDesignExpression();
-        expression.setText("$P{" + PARAMETER_PREFIX_HTML + reportEmbeddedHtml.getName() + "}");
-        return expression;
     }
 
     protected JRDesignExpression newJRDesignExpression(ReportColumn reportColumn) throws UnifyException {

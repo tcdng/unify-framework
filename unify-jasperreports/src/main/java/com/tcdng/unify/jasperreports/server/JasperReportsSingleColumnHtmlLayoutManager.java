@@ -15,19 +15,17 @@
  */
 package com.tcdng.unify.jasperreports.server;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.report.Report;
-import com.tcdng.unify.core.report.ReportEmbeddedHtml;
 import com.tcdng.unify.core.report.ReportTheme;
 import com.tcdng.unify.core.report.ReportTheme.ThemeColors;
 
 import net.sf.jasperreports.engine.design.JRDesignBand;
+import net.sf.jasperreports.engine.design.JRDesignBreak;
 import net.sf.jasperreports.engine.design.JRDesignElement;
 import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.type.BreakTypeEnum;
 
 /**
  * Single column embedded HTML layout
@@ -43,25 +41,23 @@ public class JasperReportsSingleColumnHtmlLayoutManager extends AbstractJasperRe
 			throws UnifyException {
 		ReportTheme theme = report.getReportTheme();
 		ThemeColors detailColors = theme.getDetailTheme();
-		final int width = jasperDesign.getPageWidth() - jasperDesign.getLeftMargin() - jasperDesign.getRightMargin();
-		List<JRDesignElement> htmlJRElements = new ArrayList<JRDesignElement>();
-		for (ReportEmbeddedHtml html : report.getEmbeddedHtmls()) {
-			// Register HTML as parameter
-			addReportParameter(jasperDesign, PARAMETER_PREFIX_HTML + html.getName(), html.getHtml());
-			JRDesignElement jRDesignElement = newColumnJRDesignElement(jasperDesign, detailColors,
-					columnStyles.getNormalStyle(), html, width);
-			htmlJRElements.add(jRDesignElement);
-		}
+		
+		final int width = jasperDesign.getPageWidth() - jasperDesign.getLeftMargin() - jasperDesign.getRightMargin();		
+		defineField(jasperDesign, "html", String.class);
+		JRDesignElement htmlJRElement = newEmbeddedHtmlColumnJRDesignElement(jasperDesign, detailColors,
+				columnStyles.getNormalStyle(), width);
 
 		// Construct detail band
+		JRDesignBand detailBand = new JRDesignBand();
+		detailBand.setHeight(300);
+		detailBand.addElement(htmlJRElement);
+		JRDesignBreak jrBreak = new JRDesignBreak();
+		jrBreak.setType(BreakTypeEnum.PAGE);
+		detailBand.addElement(jrBreak);
+		
 		clearDetailSection(jasperDesign);
-		for (JRDesignElement htmlJRElement : htmlJRElements) {
-			JRDesignBand detailBand = new JRDesignBand();
-			// detailBand.setHeight(detailHeight);
-			detailBand.addElement(htmlJRElement);
-			addDetailBand(jasperDesign, detailBand);
-		}
-
+		addDetailBand(jasperDesign, detailBand);
+		
 	}
 
 }

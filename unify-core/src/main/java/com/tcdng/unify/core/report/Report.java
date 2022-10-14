@@ -17,6 +17,7 @@ package com.tcdng.unify.core.report;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +52,7 @@ public class Report {
 
 	private String theme;
 
-	private String layout;
+	private ReportLayoutType layout;
 
 	private List<?> beanCollection;
 
@@ -100,7 +101,7 @@ public class Report {
 	private Report(String code, String title, String template, String processor, String dataSource, String query,
 			String theme, List<?> beanCollection, ReportTable table, List<ReportTableJoin> joins,
 			List<ReportColumn> columns, List<ReportEmbeddedHtml> embeddedHtmls, ReportFilter filter,
-			ReportFormat format, String layout, ReportParameters reportParameters, int pageWidth, int pageHeight,
+			ReportFormat format, ReportLayoutType layout, ReportParameters reportParameters, int pageWidth, int pageHeight,
 			String summationLegend, String groupSummationLegend, boolean dynamicDataSource, boolean printColumnNames,
 			boolean printGroupColumnNames, boolean invertGroupColors, boolean showParameterHeader,
 			boolean showGrandFooter, boolean underlineRows, boolean shadeOddRows, boolean landscape) {
@@ -143,7 +144,7 @@ public class Report {
 		return format;
 	}
 
-	public String getLayout() {
+	public ReportLayoutType getLayout() {
 		return layout;
 	}
 
@@ -259,8 +260,12 @@ public class Report {
 		return landscape;
 	}
 
-	public boolean isDynamic() {
-		return !columns.isEmpty();
+	public boolean isGenerated() {
+		return !columns.isEmpty() || isEmbeddedHtml();
+	}
+
+	public boolean isEmbeddedHtml() {
+		return ReportLayoutType.SINGLECOLUMN_EMBEDDED_HTML.equals(layout);
 	}
 
 	public boolean isWithBeanCollection() {
@@ -273,6 +278,21 @@ public class Report {
 
 	public ReportParameters getReportParameters() {
 		return reportParameters;
+	}
+
+	public Map<String, Object> getParameters() {
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		if (reportParameters != null) {
+			parameters.putAll(reportParameters.getParameterValues());
+		}
+//
+//		if (embeddedHtmls != null) {
+//			for (ReportEmbeddedHtml html: embeddedHtmls) {
+//				parameters.put(html.getParamName(), html.getHtml());
+//			}
+//		}
+		
+		return parameters;
 	}
 
 	public void setReportParameters(ReportParameters reportParameters) {
@@ -329,10 +349,14 @@ public class Report {
 		columns.add(reportColumn);
 	}
 
-	public static Builder newBuilder() {
-		return new Builder();
+	public static Builder newBuilder(ReportLayoutType layout) {
+		return new Builder(layout);
 	}
-
+	
+	public static Builder newBuilder() {
+		return new Builder(ReportLayoutType.TABULAR);
+	}
+	
 	public static class Builder {
 
 		private String code;
@@ -367,7 +391,7 @@ public class Report {
 
 		private Stack<ReportFilter> filters;
 
-		private String layout;
+		private ReportLayoutType layout;
 
 		private int pageWidth;
 
@@ -395,9 +419,9 @@ public class Report {
 
 		private boolean landscape;
 
-		private Builder() {
+		private Builder(ReportLayoutType layout) {
 			this.format = ReportFormat.PDF;
-			this.layout = ReportLayoutManagerConstants.TABULAR_REPORTLAYOUTMANAGER;
+			this.layout = layout;
 			this.reportParameters = new ReportParameters();
 			this.joins = new ArrayList<ReportTableJoin>();
 			this.columns = new ArrayList<ReportColumn>();
@@ -451,11 +475,6 @@ public class Report {
 
 		public Builder format(ReportFormat format) {
 			this.format = format;
-			return this;
-		}
-
-		public Builder layout(String layout) {
-			this.layout = layout;
 			return this;
 		}
 

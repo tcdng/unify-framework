@@ -17,18 +17,15 @@
 package com.tcdng.unify.core.report;
 
 /**
- * Report layout name manager constants.
+ * Report layout types.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public interface ReportLayoutManagerConstants {
-
-    String TABULAR_REPORTLAYOUTMANAGER = "tabular-reportlayoutmanager";
-
-    String TABULAR_IMAGESONLY_REPORTLAYOUTMANAGER  = "tabularimagesonly-reportlayoutmanager";
-
-    String TABULAR_THUMBIMAGESONLY_REPORTLAYOUTMANAGER  = "tabularthumbimagesonly-reportlayoutmanager";
-
-    String COLUMNAR_REPORTLAYOUTMANAGER = "columnar-reportlayoutmanager";
+public enum ReportLayoutType {
+    TABULAR,
+    TABULAR_IMAGESONLY,
+    TABULAR_THUMBIMAGESONLY,
+    COLUMNAR,
+    SINGLECOLUMN_EMBEDDED_HTML;
 }
