@@ -16,17 +16,44 @@
 
 package com.tcdng.unify.core.report;
 
+import com.tcdng.unify.convert.constants.EnumConst;
+import com.tcdng.unify.core.util.EnumUtils;
+
 /**
  * Report layout types.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public enum ReportLayoutType {
-    TABULAR,
-    TABULAR_IMAGESONLY,
-    TABULAR_THUMBIMAGESONLY,
-    COLUMNAR,
-    SINGLECOLUMN_EMBEDDED_HTML,
-    MULTIDOCHTML_PDF;
+public enum ReportLayoutType implements EnumConst {
+    TABULAR("TBL"),
+    TABULAR_IMAGESONLY("TIO"),
+    TABULAR_THUMBIMAGESONLY("TTO"),
+    COLUMNAR("CMN"),
+    SINGLECOLUMN_EMBEDDED_HTML("SCH"),
+    MULTIDOCHTML_PDF("MDH");
+
+    private final String code;
+    
+    private ReportLayoutType(String code) {
+        this.code = code;
+    }
+
+    @Override
+    public String code() {
+        return this.code;
+    }
+
+    @Override
+    public String defaultCode() {
+        return TABULAR.code;
+    }
+
+    public static ReportLayoutType fromCode(String code) {
+        return EnumUtils.fromCode(ReportLayoutType.class, code);
+    }
+
+    public static ReportLayoutType fromName(String name) {
+        return EnumUtils.fromName(ReportLayoutType.class, name);
+    }
 }
