@@ -60,7 +60,7 @@ public class Report {
 
 	private List<ReportColumn> columns;
 
-	private List<ReportEmbeddedHtml> embeddedHtmls;
+	private List<ReportHtml> embeddedHtmls;
 
 	private ReportTable table;
 
@@ -72,9 +72,7 @@ public class Report {
 
 	private ReportTheme reportTheme;
 
-	private int pageWidth;
-
-	private int pageHeight;
+	private ReportPageProperties pageProperties;
 
 	private String summationLegend;
 
@@ -96,15 +94,13 @@ public class Report {
 
 	private boolean shadeOddRows;
 
-	private boolean landscape;
-
 	private Report(String code, String title, String template, String processor, String dataSource, String query,
 			String theme, List<?> beanCollection, ReportTable table, List<ReportTableJoin> joins,
-			List<ReportColumn> columns, List<ReportEmbeddedHtml> embeddedHtmls, ReportFilter filter,
-			ReportFormat format, ReportLayoutType layout, ReportParameters reportParameters, int pageWidth, int pageHeight,
+			List<ReportColumn> columns, List<ReportHtml> embeddedHtmls, ReportFilter filter, ReportFormat format,
+			ReportLayoutType layout, ReportParameters reportParameters, ReportPageProperties pageProperties,
 			String summationLegend, String groupSummationLegend, boolean dynamicDataSource, boolean printColumnNames,
 			boolean printGroupColumnNames, boolean invertGroupColors, boolean showParameterHeader,
-			boolean showGrandFooter, boolean underlineRows, boolean shadeOddRows, boolean landscape) {
+			boolean showGrandFooter, boolean underlineRows, boolean shadeOddRows) {
 		this.code = code;
 		this.title = title;
 		this.template = template;
@@ -121,8 +117,7 @@ public class Report {
 		this.format = format;
 		this.layout = layout;
 		this.reportParameters = reportParameters;
-		this.pageWidth = pageWidth;
-		this.pageHeight = pageHeight;
+		this.pageProperties = pageProperties;
 		this.summationLegend = summationLegend;
 		this.groupSummationLegend = groupSummationLegend;
 		this.dynamicDataSource = dynamicDataSource;
@@ -133,7 +128,6 @@ public class Report {
 		this.showGrandFooter = showGrandFooter;
 		this.underlineRows = underlineRows;
 		this.shadeOddRows = shadeOddRows;
-		this.landscape = landscape;
 	}
 
 	public String getCode() {
@@ -204,12 +198,8 @@ public class Report {
 		this.reportTheme = reportTheme;
 	}
 
-	public int getPageWidth() {
-		return pageWidth;
-	}
-
-	public int getPageHeight() {
-		return pageHeight;
+	public ReportPageProperties getPageProperties() {
+		return pageProperties;
 	}
 
 	public String getSummationLegend() {
@@ -256,12 +246,12 @@ public class Report {
 		return shadeOddRows;
 	}
 
-	public boolean isLandscape() {
-		return landscape;
-	}
-
 	public boolean isGenerated() {
 		return !columns.isEmpty() || isEmbeddedHtml();
+	}
+
+	public boolean isMultiDocHtmlToPDF() {
+		return ReportLayoutType.MULTIDOCHTML_PDF.equals(layout);
 	}
 
 	public boolean isEmbeddedHtml() {
@@ -285,13 +275,7 @@ public class Report {
 		if (reportParameters != null) {
 			parameters.putAll(reportParameters.getParameterValues());
 		}
-//
-//		if (embeddedHtmls != null) {
-//			for (ReportEmbeddedHtml html: embeddedHtmls) {
-//				parameters.put(html.getParamName(), html.getHtml());
-//			}
-//		}
-		
+
 		return parameters;
 	}
 
@@ -337,7 +321,7 @@ public class Report {
 		return DataUtils.unmodifiableList(columns);
 	}
 
-	public List<ReportEmbeddedHtml> getEmbeddedHtmls() {
+	public List<ReportHtml> getEmbeddedHtmls() {
 		return embeddedHtmls;
 	}
 
@@ -349,14 +333,14 @@ public class Report {
 		columns.add(reportColumn);
 	}
 
-	public static Builder newBuilder(ReportLayoutType layout) {
-		return new Builder(layout);
+	public static Builder newBuilder(ReportLayoutType layout, ReportPageProperties pageProperties) {
+		return new Builder(layout, pageProperties);
 	}
-	
-	public static Builder newBuilder() {
-		return new Builder(ReportLayoutType.TABULAR);
+
+	public static Builder newBuilder(ReportPageProperties pageProperties) {
+		return new Builder(ReportLayoutType.TABULAR, pageProperties);
 	}
-	
+
 	public static class Builder {
 
 		private String code;
@@ -387,15 +371,13 @@ public class Report {
 
 		private List<ReportColumn> columns;
 
-		private Map<String, ReportEmbeddedHtml> embeddedHtmls;
+		private Map<String, ReportHtml> embeddedHtmls;
 
 		private Stack<ReportFilter> filters;
 
 		private ReportLayoutType layout;
 
-		private int pageWidth;
-
-		private int pageHeight;
+		private ReportPageProperties pageProperties;
 
 		private String summationLegend;
 
@@ -417,15 +399,14 @@ public class Report {
 
 		private boolean shadeOddRows;
 
-		private boolean landscape;
-
-		private Builder(ReportLayoutType layout) {
+		private Builder(ReportLayoutType layout, ReportPageProperties pageProperties) {
 			this.format = ReportFormat.PDF;
 			this.layout = layout;
+			this.pageProperties = pageProperties;
 			this.reportParameters = new ReportParameters();
 			this.joins = new ArrayList<ReportTableJoin>();
 			this.columns = new ArrayList<ReportColumn>();
-			this.embeddedHtmls = new LinkedHashMap<String, ReportEmbeddedHtml>();
+			this.embeddedHtmls = new LinkedHashMap<String, ReportHtml>();
 			this.filters = new Stack<ReportFilter>();
 			this.printColumnNames = true;
 			this.printGroupColumnNames = true;
@@ -475,16 +456,6 @@ public class Report {
 
 		public Builder format(ReportFormat format) {
 			this.format = format;
-			return this;
-		}
-
-		public Builder pageWidth(int pageWidth) {
-			this.pageWidth = pageWidth;
-			return this;
-		}
-
-		public Builder pageHeight(int pageHeight) {
-			this.pageHeight = pageHeight;
 			return this;
 		}
 
@@ -538,11 +509,6 @@ public class Report {
 			return this;
 		}
 
-		public Builder landscape(boolean landscape) {
-			this.landscape = landscape;
-			return this;
-		}
-
 		public Builder table(String tableName) {
 			this.table = new ReportTable(tableName);
 			return this;
@@ -563,11 +529,18 @@ public class Report {
 			return this;
 		}
 
-		public Builder addEmbeddedHtml(String name, String html) {
-			return addEmbeddedHtml(new ReportEmbeddedHtml(name, html));
+		public Builder addCompleteHtml(String name, String completeHtml) {
+			ReportHtml reportHtml = ReportHtml.newBuilder(pageProperties, name).completeHtml(completeHtml).build();
+			return addReportHtml(reportHtml);
 		}
 
-		public Builder addEmbeddedHtml(ReportEmbeddedHtml reportEmbeddedHtml) {
+		public Builder addBodyContentHtml(String name, String style, String bodyContent) {
+			ReportHtml reportHtml = ReportHtml.newBuilder(pageProperties, name).style(style).bodyContent(bodyContent)
+					.build();
+			return addReportHtml(reportHtml);
+		}
+
+		public Builder addReportHtml(ReportHtml reportEmbeddedHtml) {
 			if (embeddedHtmls.containsKey(reportEmbeddedHtml.getName())) {
 				throw new IllegalArgumentException(
 						"Embedded HTML with name [" + reportEmbeddedHtml.getName() + "] already added to this report.");
@@ -678,9 +651,9 @@ public class Report {
 			Report report = new Report(code, title, template, processor, dataSource, query, theme, beanCollection,
 					table, Collections.unmodifiableList(joins), columns,
 					DataUtils.unmodifiableList(embeddedHtmls.values()), rootFilter, format, layout, reportParameters,
-					pageWidth, pageHeight, summationLegend, groupSummationLegend, dynamicDataSource, printColumnNames,
+					pageProperties, summationLegend, groupSummationLegend, dynamicDataSource, printColumnNames,
 					printGroupColumnNames, invertGroupColors, showParameterHeader, showGrandFooter, underlineRows,
-					shadeOddRows, landscape);
+					shadeOddRows);
 			return report;
 		}
 	}

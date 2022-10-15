@@ -28,6 +28,7 @@ import com.tcdng.unify.core.AbstractUnifyComponentTest;
 import com.tcdng.unify.core.report.Report;
 import com.tcdng.unify.core.report.ReportFormat;
 import com.tcdng.unify.core.report.ReportLayoutType;
+import com.tcdng.unify.core.report.ReportPageProperties;
 import com.tcdng.unify.core.report.ReportServer;
 import com.tcdng.unify.core.util.IOUtils;
 import com.tcdng.unify.jasperreports.JasperReportsApplicationComponents;
@@ -44,7 +45,8 @@ public class JasperReportsServerTest extends AbstractUnifyComponentTest {
     public void testGenerateCsvReport() throws Exception {
         ReportServer reportServer = (ReportServer) getComponent(
                 JasperReportsApplicationComponents.JASPERREPORTS_SERVER);
-        Report report = Report.newBuilder()
+        ReportPageProperties pageProperties = ReportPageProperties.newBuilder().build();
+        Report report = Report.newBuilder(pageProperties)
                 .template("report/templates/dynamicreportportrait.jrxml")
                 .format(ReportFormat.CSV)
                 .addColumn("Name", "name", String.class, 1)
@@ -63,7 +65,8 @@ public class JasperReportsServerTest extends AbstractUnifyComponentTest {
     public void testGeneratePdfReport() throws Exception {
         ReportServer reportServer = (ReportServer) getComponent(
                 JasperReportsApplicationComponents.JASPERREPORTS_SERVER);
-        Report report = Report.newBuilder()
+        ReportPageProperties pageProperties = ReportPageProperties.newBuilder().build();
+        Report report = Report.newBuilder(pageProperties)
                 .template("report/templates/dynamicreportportrait.jrxml")
                 .format(ReportFormat.PDF)
                 .addColumn("Name", "name", String.class, 1)
@@ -75,14 +78,15 @@ public class JasperReportsServerTest extends AbstractUnifyComponentTest {
         byte[] gen = baos.toByteArray();
         assertNotNull(gen);
         assertTrue(gen.length > 0);
-        IOUtils.writeToFile("d:\\data\\report.pdf", gen);
+//        IOUtils.writeToFile("d:\\data\\report.pdf", gen);
     }
 
     @Test
     public void testGenerateXlsReport() throws Exception {
         ReportServer reportServer = (ReportServer) getComponent(
                 JasperReportsApplicationComponents.JASPERREPORTS_SERVER);
-        Report report = Report.newBuilder()
+        ReportPageProperties pageProperties = ReportPageProperties.newBuilder().build();
+        Report report = Report.newBuilder(pageProperties)
                 .template("report/templates/dynamicreportportrait.jrxml")
                 .format(ReportFormat.XLS)
                 .addColumn("Name", "name", String.class, 1)
@@ -101,7 +105,8 @@ public class JasperReportsServerTest extends AbstractUnifyComponentTest {
     public void testGenerateXlsxReport() throws Exception {
         ReportServer reportServer = (ReportServer) getComponent(
                 JasperReportsApplicationComponents.JASPERREPORTS_SERVER);
-        Report report = Report.newBuilder()
+        ReportPageProperties pageProperties = ReportPageProperties.newBuilder().build();
+        Report report = Report.newBuilder(pageProperties)
                 .template("report/templates/dynamicreportportrait.jrxml")
                 .format(ReportFormat.XLSX)
                 .addColumn("Name", "name", String.class, 1)
@@ -117,13 +122,14 @@ public class JasperReportsServerTest extends AbstractUnifyComponentTest {
     }
 
     @Test
-    public void testGenerateHtmlToPdfReport() throws Exception {
+    public void testGenerateSingleColumnEmbeddedHtmlToPdfReport() throws Exception {
         ReportServer reportServer = (ReportServer) getComponent(
                 JasperReportsApplicationComponents.JASPERREPORTS_SERVER);
-        Report report = Report.newBuilder(ReportLayoutType.SINGLECOLUMN_EMBEDDED_HTML)
+        ReportPageProperties pageProperties = ReportPageProperties.newBuilder().build();
+        Report report = Report.newBuilder(ReportLayoutType.SINGLECOLUMN_EMBEDDED_HTML, pageProperties)
                 .template("report/templates/dynamicreportportrait.jrxml")
                 .format(ReportFormat.PDF)
-                .addEmbeddedHtml("first", "<HTML>\r\n"
+                .addCompleteHtml("first", "<HTML>\r\n"
                 		+ "<BODY LANG=\"en-US\" DIR=\"LTR\">\r\n"
                 		+ "<P ALIGN=LEFT STYLE=\"margin-bottom: 0in\"><FONT FACE=\"DejaVu Sans, sans-serif\"><FONT SIZE=4 STYLE=\"font-size: 16pt\"><FONT COLOR=\"#000000\">This\r\n"
                 		+ "is a </FONT><FONT COLOR=\"#000000\"><I><U><B>text field</B></U></I></FONT><FONT COLOR=\"#000000\"><I><B>\r\n"
@@ -176,7 +182,102 @@ public class JasperReportsServerTest extends AbstractUnifyComponentTest {
         byte[] gen = baos.toByteArray();
         assertNotNull(gen);
         assertTrue(gen.length > 0);
-        IOUtils.writeToFile("d:\\data\\report.pdf", gen);
+//        IOUtils.writeToFile("d:\\data\\report.pdf", gen);
+    }
+
+    @Test
+    public void testGenerateMultiDocHtmlToPdfReport() throws Exception {
+        ReportServer reportServer = (ReportServer) getComponent(
+                JasperReportsApplicationComponents.JASPERREPORTS_SERVER);
+        ReportPageProperties pageProperties = ReportPageProperties.newBuilder().allMargin(10).build();
+        Report report = Report.newBuilder(ReportLayoutType.MULTIDOCHTML_PDF, pageProperties)
+                .addCompleteHtml("first", "<html>\r\n"
+            			+ "<body>\r\n"
+            			+ "\r\n"
+            			+ "<h1 style=\"color:blue;\">A Blue Heading</h1>\r\n"
+            			+ "\r\n"
+            			+ "<p style=\"color:red;\">A red paragraph.</p>\r\n"
+            			+ "\r\n"
+            			+ "</body>\r\n"
+            			+ "</html>")
+                .addBodyContentHtml("second", ".fc-formlisting {max-width:1240px;}\r\n"
+            			+ ".fc-formlisting .flsection {}\r\n"
+            			+ ".fc-formlisting .flsection span {display: block; padding: 5px 4px; margin-bottom: 8px; font-size: 11px;font-weight: bold;\r\n"
+            			+ "	background-color:#6e819d; color: #ffffff; /*border-radius: 4px;*/}\r\n"
+            			+ ".fc-formlisting .flsectionbody {display:table;margin-bottom:8px;}\r\n"
+            			+ ".fc-formlisting .flsectionbodyrow {display:table-row;}\r\n"
+            			+ ".fc-formlisting .flsectionbodycell {display:table-cell;padding-left: 8px;padding-right: 8px;padding-bottom: 5px;font-size:11px}\r\n"
+            			+ ".fc-formlisting .flgray {background-color:#f4f4f4;}\r\n"
+            			+ ".fc-formlisting .fltable {display:table;width:100%;}\r\n"
+            			+ ".fc-formlisting .flrow {display:table-row;}\r\n"
+            			+ ".fc-formlisting .flcell {display:table-cell;box-sizing: border-box;padding: 4px 2px;}\r\n"
+            			+ ".fc-formlisting .flcontent {display:block;}\r\n"
+            			+ ".fc-formlisting .flboldlabel {font-weight:bold;}\r\n"
+            			+ ".fc-formlisting .flboldtext {font-weight:bold;}\r\n"
+            			+ ".fc-formlisting .haleft {text-align:left;}\r\n"
+            			+ ".fc-formlisting .hacenter {text-align:center;}\r\n"
+            			+ ".fc-formlisting .haright {text-align:right;}\r\n"
+            			+ ".fc-formlisting .hajustified {text-align:justify;}\r\n",
+            			"<div id=\"p2391453920\" class=\"fc-formlisting\">\r\n"
+//            					+ "         <div><img src=\"file:///D:/data/web/images/microchip.png\" width=\"40px;\"/></div>\r\n"
+            					+ "         <div class=\"flsection\"><span>Date: 15-10-2022      Risk / Debit Note      No.:22/516/1</span></div>\r\n"
+            					+ "         <div class=\"flsectionbody\" style=\"width:100%;margin-left:0%;\">\r\n"
+            					+ "            <div class=\"flsectionbodyrow\">\r\n"
+            					+ "               <div class=\"flsectionbodycell\" style=\"width:50%;\">\r\n"
+            					+ "                  <div class=\"fltable\">\r\n"
+            					+ "                     <div class=\"flrow\">\r\n"
+            					+ "                        <div class=\"flcell\" style=\"width:30%;\"><span class=\"flcontent  haleft\">Insured Name:</span></div>\r\n"
+            					+ "                        <div class=\"flcell\" style=\"width:70%;\"><span class=\"flcontent  haleft\"></span></div>\r\n"
+            					+ "                     </div>\r\n"
+            					+ "                     <div class=\"flrow\">\r\n"
+            					+ "                        <div class=\"flcell\" style=\"width:30%;\"><span class=\"flcontent  haleft\">Insured Address:</span></div>\r\n"
+            					+ "                        <div class=\"flcell\" style=\"width:70%;\"><span class=\"flcontent  haleft\">P O Box 098878-6555, </span></div>\r\n"
+            					+ "                     </div>\r\n"
+            					+ "                     <div class=\"flrow\">\r\n"
+            					+ "                        <div class=\"flcell\" style=\"width:30%;\"><span class=\"flcontent  haleft\">Insurer Name:</span></div>\r\n"
+            					+ "                        <div class=\"flcell\" style=\"width:70%;\"><span class=\"flcontent  haleft\">Geminia Insurance Company Ltd, P O Box 61316-00200, Nairobi</span></div>\r\n"
+            					+ "                     </div>\r\n"
+            					+ "                     <div class=\"flrow\">\r\n"
+            					+ "                        <div class=\"flcell\" style=\"width:30%;\"><span class=\"flcontent  haleft\">Type of Business:</span></div>\r\n"
+            					+ "                        <div class=\"flcell\" style=\"width:70%;\"><span class=\"flcontent  haleft\">New - New</span></div>\r\n"
+            					+ "                     </div>\r\n"
+            					+ "                     <div class=\"flrow\">\r\n"
+            					+ "                        <div class=\"flcell\" style=\"width:30%;\"><span class=\"flcontent  haleft\">PIN No.:</span></div>\r\n"
+            					+ "                        <div class=\"flcell\" style=\"width:70%;\"><span class=\"flcontent  haleft\">45557766777</span></div>\r\n"
+            					+ "                     </div>\r\n"
+            					+ "                  </div>\r\n"
+            					+ "               </div>\r\n"
+            					+ "               <div class=\"flsectionbodycell\" style=\"width:50%;\">\r\n"
+            					+ "                  <div class=\"fltable\">\r\n"
+            					+ "                     <div class=\"flrow\">\r\n"
+            					+ "                        <div class=\"flcell\" style=\"width:30%;\"><span class=\"flcontent  haleft\">Motor Cover:</span></div>\r\n"
+            					+ "                        <div class=\"flcell\" style=\"width:70%;\"><span class=\"flcontent  haleft\">Comprehensive</span></div>\r\n"
+            					+ "                     </div>\r\n"
+            					+ "                     <div class=\"flrow\">\r\n"
+            					+ "                        <div class=\"flcell\" style=\"width:30%;\"><span class=\"flcontent  haleft\">Product:</span></div>\r\n"
+            					+ "                        <div class=\"flcell\" style=\"width:70%;\"><span class=\"flcontent  haleft\">Private Comprehensive</span></div>\r\n"
+            					+ "                     </div>\r\n"
+            					+ "                     <div class=\"flrow\">\r\n"
+            					+ "                        <div class=\"flcell\" style=\"width:30%;\"><span class=\"flcontent  haleft\">Policy No.:</span></div>\r\n"
+            					+ "                        <div class=\"flcell\" style=\"width:70%;\"><span class=\"flcontent  haleft\">TBA/22/516/1</span></div>\r\n"
+            					+ "                     </div>\r\n"
+            					+ "                     <div class=\"flrow\">\r\n"
+            					+ "                        <div class=\"flcell\" style=\"width:30%;\"><span class=\"flcontent  haleft\">Period of Cover:</span></div>\r\n"
+            					+ "                        <div class=\"flcell\" style=\"width:70%;\"><span class=\"flcontent  haleft\">03-10-2022 to 02-10-2023</span></div>\r\n"
+            					+ "                     </div>\r\n"
+            					+ "                  </div>\r\n"
+            					+ "               </div>\r\n"
+            					+ "            </div>\r\n"
+            					+ "         </div>\r\n"
+            					+ "      </div>\r\n")
+                .build();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        reportServer.generateReport(report, baos);
+        baos.flush();
+        byte[] gen = baos.toByteArray();
+        assertNotNull(gen);
+        assertTrue(gen.length > 0);
+//        IOUtils.writeToFile("d:\\data\\report.pdf", gen);
     }
 
     @Override

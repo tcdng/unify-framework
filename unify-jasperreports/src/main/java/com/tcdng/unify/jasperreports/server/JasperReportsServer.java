@@ -193,14 +193,16 @@ public class JasperReportsServer extends AbstractReportServer {
 				jasperDesign.setProperty("net.sf.jasperreports.export.xls.detect.cell.type", "true");
 			}
 
-			if (report.getPageWidth() > 0) {
-				jasperDesign.setPageWidth(report.getPageWidth());
+			final int pageWidth = report.getPageProperties().getPageWidth();
+			if (pageWidth > 0) {
+				jasperDesign.setPageWidth(pageWidth);
 				jasperDesign.setColumnWidth(
-						report.getPageWidth() - jasperDesign.getLeftMargin() - jasperDesign.getRightMargin());
+						pageWidth - jasperDesign.getLeftMargin() - jasperDesign.getRightMargin());
 			}
 
-			if (report.getPageHeight() > 0) {
-				jasperDesign.setPageHeight(report.getPageHeight());
+			final int pageHeight = report.getPageProperties().getPageHeight();
+			if (pageHeight > 0) {
+				jasperDesign.setPageHeight(pageHeight);
 			}
 
 			jasperDesign.setWhenNoDataType(WhenNoDataTypeEnum.ALL_SECTIONS_NO_DETAIL);

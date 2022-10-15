@@ -40,6 +40,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<openhtml.version>1.0.6</openhtml.version>
 	</properties>
 
 	<build>
@@ -121,6 +122,17 @@
 			<groupId>com.eclipsesource.minimal-json</groupId>
 			<artifactId>minimal-json</artifactId>
 			<version>0.9.5</version>
+		</dependency>
+		<!-- Common HTML to PDF reporting. -->
+		<dependency>
+			<groupId>com.openhtmltopdf</groupId>
+			<artifactId>openhtmltopdf-core</artifactId>
+			<version>${openhtml.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.openhtmltopdf</groupId>
+			<artifactId>openhtmltopdf-pdfbox</artifactId>
+			<version>${openhtml.version}</version>
 		</dependency>
 		<!-- Java 9 and above -->
         <dependency>
