@@ -340,6 +340,27 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
         textField.setBlankWhenNull(true);
         return textField;
     }
+    
+//    protected JRDesignElement newEmbeddedHtmlColumnJRDesignElement(JasperDesign jasperDesign, ThemeColors themeColors,
+//            JRDesignStyle fontStyle, int width) throws UnifyException {
+//    	JRDesignGenericElement generic = new JRDesignGenericElement(jasperDesign);
+//    	generic.setGenericType(new JRGenericElementType("http://jasperreports.sourceforge.net/jasperreports/html", "htmlelement"));
+//    	JRDesignGenericElementParameter parameter = new JRDesignGenericElementParameter();
+//    	// Content
+//    	parameter.setName("htmlContent");
+//    	parameter.setValueExpression(new JRDesignExpression("$F{html}"));
+//    	generic.addParameter(parameter);
+//    	// Scaling
+//    	parameter = new JRDesignGenericElementParameter();
+//    	parameter.setName("scaleType");
+//    	parameter.setValueExpression(new JRDesignExpression("String.valueOf(\"RealSize\")"));
+//    	generic.addParameter(parameter);
+//
+//    	generic.setPositionType(PositionTypeEnum.FLOAT);
+//    	generic.setMode(ModeEnum.OPAQUE);
+//    	generic.setWidth(width);
+//        return generic;
+//    }
 
     protected JRDesignPropertyExpression newJRDesignPropertyExpression(String key, Object value) {
         JRDesignPropertyExpression propertyExpression = new JRDesignPropertyExpression();
