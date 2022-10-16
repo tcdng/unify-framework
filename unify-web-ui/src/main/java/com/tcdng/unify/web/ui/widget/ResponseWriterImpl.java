@@ -524,7 +524,7 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 
 	@Override
 	public ResponseWriter writeFileImageContextURL(String src) throws UnifyException {
-		writeContextResourceURL("/resource/file", MimeType.IMAGE.template(), src);
+		writeContextResourceURL("/resource/fileimage", null, src);
 		return this;
 	}
 

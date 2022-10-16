@@ -59,8 +59,6 @@ public class ReportHtml {
 		private ReportPageProperties pageProperties;
 		
 	    private String name;
-
-	    private String resourceBaseUri;
 	    
 	    private String completeHtml;
 
@@ -71,11 +69,6 @@ public class ReportHtml {
 	    public Builder(ReportPageProperties pageProperties, String name) {
 	    	this.pageProperties = pageProperties;
 	    	this.name = name;
-	    }
-
-	    public Builder resourceBaseUri(String resourceBaseUri) {
-	    	this.resourceBaseUri = resourceBaseUri;
-	    	return this;
 	    }
 	    
 	    public Builder completeHtml(String completeHtml) {
@@ -143,9 +136,9 @@ public class ReportHtml {
 	    		sb.append(bodyContent);
 	    		sb.append("</body>");
 	    		sb.append("</html>");	    		
-	    		return new ReportHtml(name, sb.toString(), resourceBaseUri);
+	    		return new ReportHtml(name, sb.toString(), pageProperties.getResourceBaseUri());
 	    	} else if (!StringUtils.isBlank(completeHtml)) {
-	    		return new ReportHtml(name, completeHtml, resourceBaseUri);
+	    		return new ReportHtml(name, completeHtml, pageProperties.getResourceBaseUri());
 	    	}
 	    	
 	    	throw new IllegalArgumentException("You must provide either complete html or body content.");
