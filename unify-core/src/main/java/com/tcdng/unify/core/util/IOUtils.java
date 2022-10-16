@@ -906,6 +906,37 @@ public class IOUtils {
         return lines;
     }
 
+	/**
+	 * Reads a file resource, obtained from file system or class loader, as lines
+	 * into a single string.
+	 * 
+	 * @param resourceName the resource name
+	 * @param realPath     an optional real path
+	 * @return the lines read
+	 * @throws UnifyException if an error occurs
+	 */
+	public static String readAllLines(String resourceName, String realPath) throws UnifyException {
+		StringBuilder lines = new StringBuilder();
+		InputStream in = null;
+		try {
+			in = IOUtils.openFileResourceInputStream(resourceName, realPath);
+			BufferedReader br = new BufferedReader(new InputStreamReader(in));
+			String line = null;
+			String newline = System.lineSeparator();
+			while ((line = br.readLine()) != null) {
+				lines.append(line).append(newline);
+			}
+		} catch (FileNotFoundException e) {
+			throw new UnifyException(e, UnifyCoreErrorConstants.IOUTIL_UNABLE_TO_OPEN_RESOURCE_STREAM, resourceName);
+		} catch (IOException e) {
+			throw new UnifyException(e, UnifyCoreErrorConstants.IOUTIL_STREAM_RW_ERROR);
+		} finally {
+			IOUtils.close(in);
+		}
+
+		return lines.toString();
+	}
+
     /**
      * Creats an in-memory text file.
      * 
