@@ -61,7 +61,7 @@ jobs:
             "snapshots": {
             "enabled": "false"
             }
-            }] 
+          }] 
           
     - name: Import GPG Key
       uses: crazy-max/ghaction-import-gpg@v1
