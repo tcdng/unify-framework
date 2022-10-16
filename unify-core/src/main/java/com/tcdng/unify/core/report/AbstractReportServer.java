@@ -18,10 +18,16 @@ package com.tcdng.unify.core.report;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.apache.pdfbox.pdmodel.PDDocument;
+
+import com.openhtmltopdf.pdfboxout.PdfBoxRenderer;
+import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
@@ -30,6 +36,7 @@ import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.database.DataSource;
 import com.tcdng.unify.core.database.dynamic.sql.DynamicSqlDataSourceManager;
 import com.tcdng.unify.core.format.Formatter;
+import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.IOUtils;
 
 /**
@@ -51,11 +58,11 @@ public abstract class AbstractReportServer extends AbstractUnifyComponent
 
     private Map<String, ReportTheme> reportThemes;
 
-    private Map<String, ReportLayoutManager> reportLayoutManagers;
+    private Map<ReportLayoutType, ReportLayoutManager> reportLayoutManagers;
 
     public AbstractReportServer() {
         reportThemes = new HashMap<String, ReportTheme>();
-        reportLayoutManagers = new HashMap<String, ReportLayoutManager>();
+        reportLayoutManagers = new HashMap<ReportLayoutType, ReportLayoutManager>();
     }
 
     public void setDefaultDatasource(String defaultDatasource) {
@@ -78,7 +85,7 @@ public abstract class AbstractReportServer extends AbstractUnifyComponent
     }
 
     @Override
-    public void registerReportLayoutManager(String layoutName, ReportLayoutManager reportLayoutManager)
+    public void registerReportLayoutManager(ReportLayoutType layoutName, ReportLayoutManager reportLayoutManager)
             throws UnifyException {
         reportLayoutManagers.put(layoutName, reportLayoutManager);
     }
@@ -121,7 +128,29 @@ public abstract class AbstractReportServer extends AbstractUnifyComponent
             reportProcessor.process(report);
         }
 
-        doGenerateReport(report, outputStream);
+        if (report.isMultiDocHtmlToPDF()) {
+			try {
+				PDDocument doc = new PDDocument();	
+				List<ReportHtml> embeddedHtmls = report.getEmbeddedHtmls();
+				if (!DataUtils.isBlank(embeddedHtmls)) {
+					for (ReportHtml html : embeddedHtmls) {
+						PdfRendererBuilder builder = new PdfRendererBuilder();
+						builder.withHtmlContent(html.getHtml(), html.getResourceBaseUri());
+						builder.usePDDocument(doc);
+						builder.useFastMode();
+						PdfBoxRenderer renderer = builder.buildPdfRenderer();
+						renderer.createPDFWithoutClosing();
+						renderer.close();
+					}
+				}
+
+				doc.save(outputStream);
+			} catch (IOException e) {
+				throwOperationErrorException(e);
+			}
+        } else {
+        	doGenerateReport(report, outputStream);
+        }
     }
 
     @Override
@@ -151,10 +180,10 @@ public abstract class AbstractReportServer extends AbstractUnifyComponent
         return reportTheme;
     }
 
-    protected ReportLayoutManager getReportLayoutManager(String layoutName) throws UnifyException {
-        ReportLayoutManager reportLayoutManager = reportLayoutManagers.get(layoutName);
+    protected ReportLayoutManager getReportLayoutManager(ReportLayoutType type) throws UnifyException {
+        ReportLayoutManager reportLayoutManager = reportLayoutManagers.get(type);
         if (reportLayoutManager == null) {
-            throw new UnifyException(UnifyCoreErrorConstants.REPORTSERVER_NO_AVAILABLE_REPORTLAYOUTMANAGER, layoutName,
+            throw new UnifyException(UnifyCoreErrorConstants.REPORTSERVER_NO_AVAILABLE_REPORTLAYOUTMANAGER, type,
                     getName());
         }
 

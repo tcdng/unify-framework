@@ -51,7 +51,7 @@ public interface ReportServer extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    void registerReportLayoutManager(String layoutName, ReportLayoutManager reportLayoutManager) throws UnifyException;
+    void registerReportLayoutManager(ReportLayoutType layoutName, ReportLayoutManager reportLayoutManager) throws UnifyException;
 
     /**
      * Generates a report to file with specified file name.

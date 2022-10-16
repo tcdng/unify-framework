@@ -110,12 +110,8 @@ public class JasperReportsTabularThumbnailImagesOnlyLayoutManager extends Abstra
             }
         }
 
-        JRDesignSection detailJRDesignSection = ((JRDesignSection) jasperDesign.getDetailSection());
-        int len = detailJRDesignSection.getBands().length;
-        for (int i = 0; i < len; i++) { // Clear all template bands first
-            detailJRDesignSection.removeBand(i);
-        }
-        detailJRDesignSection.addBand(detailBand); // Add new detail band
+        clearDetailSection(jasperDesign);
+        addDetailBand(jasperDesign, detailBand);
 
         // Construct groups
         final int sumWidth = actualColumnWidth / 6;

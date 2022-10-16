@@ -43,8 +43,10 @@ import net.sf.jasperreports.engine.design.JRDesignField;
 import net.sf.jasperreports.engine.design.JRDesignGroup;
 import net.sf.jasperreports.engine.design.JRDesignImage;
 import net.sf.jasperreports.engine.design.JRDesignLine;
+import net.sf.jasperreports.engine.design.JRDesignParameter;
 import net.sf.jasperreports.engine.design.JRDesignPropertyExpression;
 import net.sf.jasperreports.engine.design.JRDesignRectangle;
+import net.sf.jasperreports.engine.design.JRDesignSection;
 import net.sf.jasperreports.engine.design.JRDesignStaticText;
 import net.sf.jasperreports.engine.design.JRDesignStyle;
 import net.sf.jasperreports.engine.design.JRDesignTextField;
@@ -54,6 +56,7 @@ import net.sf.jasperreports.engine.type.CalculationEnum;
 import net.sf.jasperreports.engine.type.HorizontalImageAlignEnum;
 import net.sf.jasperreports.engine.type.HorizontalTextAlignEnum;
 import net.sf.jasperreports.engine.type.ModeEnum;
+import net.sf.jasperreports.engine.type.PositionTypeEnum;
 import net.sf.jasperreports.engine.type.ResetTypeEnum;
 import net.sf.jasperreports.engine.type.ScaleImageEnum;
 import net.sf.jasperreports.engine.type.StretchTypeEnum;
@@ -146,6 +149,46 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
         return horizontalAlignmentMap.get(hAlignType);
     }
 
+    protected void clearDetailSection(JasperDesign jasperDesign) {
+        JRDesignSection detailJRDesignSection = ((JRDesignSection) jasperDesign.getDetailSection());
+        int len = detailJRDesignSection.getBands().length;
+        for (int i = 0; i < len; i++) {
+            detailJRDesignSection.removeBand(i);
+        }
+    }
+
+    protected void addDetailBand(JasperDesign jasperDesign, JRDesignBand detailBand ) {
+        JRDesignSection detailJRDesignSection = ((JRDesignSection) jasperDesign.getDetailSection());
+        detailJRDesignSection.addBand(detailBand);
+    }
+
+    
+    protected void setTitleBand(JasperDesign jasperDesign, JRDesignBand titleBand) {
+    	jasperDesign.setTitle(titleBand);
+    }
+    
+    protected void defineParameter(JasperDesign jasperDesign, String name, Class<?> valueClass) throws UnifyException {
+        try {
+			JRDesignParameter jrParameter = new JRDesignParameter();
+			jrParameter.setName(name);
+			jrParameter.setValueClass(valueClass);
+			jasperDesign.addParameter(jrParameter);
+		} catch (JRException e) {
+            throwOperationErrorException(e);
+		}
+    }
+    
+    protected void defineField(JasperDesign jasperDesign, String name, Class<?> valueClass) throws UnifyException {
+        try {
+			JRDesignField jrField = new JRDesignField();
+			jrField.setName(name);
+			jrField.setValueClass(valueClass);
+			jasperDesign.addField(jrField);
+		} catch (JRException e) {
+            throwOperationErrorException(e);
+		}
+    }
+    
     protected void constructParamHeaderToBand(JasperDesign jasperDesign, JRDesignBand jrDesignBand,
             ThemeColors paramHeaderColors, ColumnStyles columnStyles, ReportParameters reportParameters,
             final int actualColumnWidth, final int detailHeight, boolean isListFormat) throws UnifyException {
@@ -281,6 +324,44 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
         return textField;
     }
 
+    protected JRDesignElement newEmbeddedHtmlColumnJRDesignElement(JasperDesign jasperDesign, ThemeColors themeColors,
+            JRDesignStyle fontStyle, int width) throws UnifyException {
+        JRDesignTextField textField = new JRDesignTextField();
+        textField.setPositionType(PositionTypeEnum.FLOAT);
+        textField.setMode(ModeEnum.OPAQUE);
+        textField.setWidth(width);
+        textField.setHeight(110);
+        textField.setStyle(fontStyle);
+        textField.setMarkup("html");
+        JRDesignExpression expression = new JRDesignExpression();
+        expression.setText("$F{html}");
+        textField.setExpression(expression);
+        textField.setStretchWithOverflow(true);
+        textField.setBlankWhenNull(true);
+        return textField;
+    }
+    
+//    protected JRDesignElement newEmbeddedHtmlColumnJRDesignElement(JasperDesign jasperDesign, ThemeColors themeColors,
+//            JRDesignStyle fontStyle, int width) throws UnifyException {
+//    	JRDesignGenericElement generic = new JRDesignGenericElement(jasperDesign);
+//    	generic.setGenericType(new JRGenericElementType("http://jasperreports.sourceforge.net/jasperreports/html", "htmlelement"));
+//    	JRDesignGenericElementParameter parameter = new JRDesignGenericElementParameter();
+//    	// Content
+//    	parameter.setName("htmlContent");
+//    	parameter.setValueExpression(new JRDesignExpression("$F{html}"));
+//    	generic.addParameter(parameter);
+//    	// Scaling
+//    	parameter = new JRDesignGenericElementParameter();
+//    	parameter.setName("scaleType");
+//    	parameter.setValueExpression(new JRDesignExpression("String.valueOf(\"RealSize\")"));
+//    	generic.addParameter(parameter);
+//
+//    	generic.setPositionType(PositionTypeEnum.FLOAT);
+//    	generic.setMode(ModeEnum.OPAQUE);
+//    	generic.setWidth(width);
+//        return generic;
+//    }
+
     protected JRDesignPropertyExpression newJRDesignPropertyExpression(String key, Object value) {
         JRDesignPropertyExpression propertyExpression = new JRDesignPropertyExpression();
         propertyExpression.setName(key);
@@ -345,7 +426,7 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
     protected JRDesignExpression getOnOddJRDesignExpression() {
         return newJRDesignExpression("new Boolean($V{PAGE_COUNT}.intValue() % 2 > 0)");
     }
-
+    
     protected JRDesignExpression newJRDesignExpression(String expression) {
         JRDesignExpression jRDesignExpression = new JRDesignExpression();
         jRDesignExpression.setText(expression);

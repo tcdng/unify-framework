@@ -160,13 +160,9 @@ public class JasperReportsTabularLayoutManager extends AbstractJasperReportsLayo
             detailBand.addElement(jRDesignElement);
         }
 
-        JRDesignSection detailJRDesignSection = ((JRDesignSection) jasperDesign.getDetailSection());
-        int len = detailJRDesignSection.getBands().length;
-        for (int i = 0; i < len; i++) { // Clear all template bands first
-            detailJRDesignSection.removeBand(i);
-        }
-        detailJRDesignSection.addBand(detailBand); // Add new detail band
-
+        clearDetailSection(jasperDesign);
+        addDetailBand(jasperDesign, detailBand);
+        
         // Construct groups
         int groupHeaderX = 4;
         int groupCascade = 20;
