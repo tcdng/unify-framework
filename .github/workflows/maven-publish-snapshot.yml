@@ -35,7 +35,11 @@ jobs:
               "id": "sonatype-nexus-snapshots",
               "username": "${{ secrets.REPO_USERNAME }}",
               "password": "${{ secrets.REPO_PASSWORD }}"
-          }] 
+          },{
+            "id": "sonatype-nexus-staging",
+            "username": "${{ secrets.REPO_USERNAME }}",
+            "password": "${{ secrets.REPO_PASSWORD }}"
+            }] 
         repositories: |
           [{
               "id": "sonatype-nexus-snapshots",
@@ -47,7 +51,17 @@ jobs:
               "snapshots": {
                 "enabled": "true"
               }
-          }] 
+          },{
+            "id": "sonatype-nexus-staging",
+            "name": "Sonatype Nexus Staging",
+            "url": "http://oss.sonatype.org/service/local/staging/deploy/maven2/",
+            "releases": {
+            "enabled": "true"
+            },
+            "snapshots": {
+            "enabled": "false"
+            }
+            }] 
           
     - name: Import GPG Key
       uses: crazy-max/ghaction-import-gpg@v1
@@ -55,11 +69,5 @@ jobs:
         GPG_PRIVATE_KEY: ${{ secrets.MVN_GPG_SECRET_KEY }}
         PASSPHRASE: ${{ secrets.MVN_GPG_PASSPHRASE }} 
     
-    - name: Extract Project Version
-      id: project
-      run: echo ::set-output name=version::$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-       
-        
     - name: Deploy Snapshot with Maven
-      if:  ${{ endsWith(steps.project.outputs.version, '-SNAPSHOT') }}
       run: mvn clean deploy -B -DrepoDeployMode=true
