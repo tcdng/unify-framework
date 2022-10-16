@@ -26,7 +26,9 @@ import com.tcdng.unify.core.constant.PageSizeType;
 public class ReportPageProperties {
 
 	private PageSizeType size;
-	
+
+	private String resourceBaseUri;
+
 	private int pageWidth;
 
 	private int pageHeight;
@@ -41,9 +43,10 @@ public class ReportPageProperties {
 
 	private boolean landscape;
 
-	private ReportPageProperties(PageSizeType size, int pageWidth, int pageHeight, int marginTop, int marginBottom, int marginLeft,
-			int marginRight, boolean landscape) {
+	private ReportPageProperties(PageSizeType size, String resourceBaseUri, int pageWidth, int pageHeight,
+			int marginTop, int marginBottom, int marginLeft, int marginRight, boolean landscape) {
 		this.size = size;
+		this.resourceBaseUri = resourceBaseUri;
 		this.pageWidth = pageWidth;
 		this.pageHeight = pageHeight;
 		this.marginTop = marginTop;
@@ -55,6 +58,10 @@ public class ReportPageProperties {
 
 	public PageSizeType getSize() {
 		return size;
+	}
+
+	public String getResourceBaseUri() {
+		return resourceBaseUri;
 	}
 
 	public int getPageWidth() {
@@ -80,7 +87,7 @@ public class ReportPageProperties {
 	public int getMarginRight() {
 		return marginRight;
 	}
-	
+
 	public boolean isLandscape() {
 		return landscape;
 	}
@@ -88,11 +95,13 @@ public class ReportPageProperties {
 	public static Builder newBuilder() {
 		return new Builder();
 	}
-	
+
 	public static class Builder {
 
 		private PageSizeType size;
-		
+
+		private String resourceBaseUri;
+
 		private int pageWidth;
 
 		private int pageHeight;
@@ -106,7 +115,7 @@ public class ReportPageProperties {
 		private int marginRight;
 
 		private boolean landscape;
-		
+
 		public Builder() {
 			this.size = PageSizeType.A4;
 			this.pageWidth = -1;
@@ -117,22 +126,27 @@ public class ReportPageProperties {
 			this.marginRight = -1;
 			this.landscape = false;
 		}
-		
+
 		public Builder size(PageSizeType size) {
 			this.size = size;
 			return this;
 		}
-		
+
+		public Builder resourceBaseUri(String resourceBaseUri) {
+			this.resourceBaseUri = resourceBaseUri;
+			return this;
+		}
+
 		public Builder pageWidth(int pageWidth) {
 			this.pageWidth = pageWidth;
 			return this;
 		}
-		
+
 		public Builder pageHeight(int pageHeight) {
 			this.pageHeight = pageHeight;
 			return this;
 		}
-		
+
 		public Builder allMargin(int margin) {
 			this.marginTop = margin;
 			this.marginBottom = margin;
@@ -140,35 +154,35 @@ public class ReportPageProperties {
 			this.marginRight = margin;
 			return this;
 		}
-		
+
 		public Builder marginTop(int marginTop) {
 			this.marginTop = marginTop;
 			return this;
 		}
-		
+
 		public Builder marginBottom(int marginBottom) {
 			this.marginBottom = marginBottom;
 			return this;
 		}
-		
+
 		public Builder marginLeft(int marginLeft) {
 			this.marginLeft = marginLeft;
 			return this;
 		}
-		
+
 		public Builder marginRight(int marginRight) {
 			this.marginRight = marginRight;
 			return this;
 		}
-		
+
 		public Builder landscape(boolean landscape) {
 			this.landscape = landscape;
 			return this;
 		}
-		
+
 		public ReportPageProperties build() {
-			return new ReportPageProperties(size, pageWidth, pageHeight, marginTop, marginBottom, marginLeft,
-					marginRight, landscape);
+			return new ReportPageProperties(size, resourceBaseUri, pageWidth, pageHeight, marginTop, marginBottom,
+					marginLeft, marginRight, landscape);
 		}
 	}
 }

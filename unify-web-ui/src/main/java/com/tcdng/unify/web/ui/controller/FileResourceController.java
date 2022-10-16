@@ -47,7 +47,7 @@ public class FileResourceController extends AbstractPageResourceController {
         super(secured);
     }
 
-    public void setFileResourceProvider(FileResourceProvider fileResourceProvider) {
+    public final void setFileResourceProvider(FileResourceProvider fileResourceProvider) {
         this.fileResourceProvider = fileResourceProvider;
     }
 
