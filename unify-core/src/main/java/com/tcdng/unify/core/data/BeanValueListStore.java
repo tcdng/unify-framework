@@ -51,7 +51,8 @@ public class BeanValueListStore extends AbstractListValueStore<Object> {
 
     @Override
     protected Object doRetrieve(Object storage, String property) throws UnifyException {
-        return ReflectUtils.findNestedBeanProperty(storage, property);
+    	Object val = getTempValue(property);
+        return val == null ? ReflectUtils.findNestedBeanProperty(storage, property) : val;
     }
 
     @Override

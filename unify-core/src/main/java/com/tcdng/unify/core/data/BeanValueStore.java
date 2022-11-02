@@ -48,7 +48,8 @@ public class BeanValueStore extends AbstractSingleObjectValueStore<Object> {
 
     @Override
     protected Object doRetrieve(String property) throws UnifyException {
-        return ReflectUtils.findNestedBeanProperty(storage, property);
+    	Object val = getTempValue(property);
+        return val == null ? ReflectUtils.findNestedBeanProperty(storage, property) : val;
     }
 
     @Override

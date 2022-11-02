@@ -76,6 +76,11 @@ public class PackableDocStore extends AbstractSingleObjectValueStore<PackableDoc
 
     @Override
     protected Object doRetrieve(String property) throws UnifyException {
+    	Object val = getTempValue(property);
+    	if (val != null) {
+    		return val;
+    	}
+
         if (property.startsWith(PackableDoc.RESERVED_EXT_FIELD)) {
             int len = PackableDoc.RESERVED_EXT_FIELD.length();
             if (property.length() == len) {
