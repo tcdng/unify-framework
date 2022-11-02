@@ -43,7 +43,8 @@ public class PackableDocArrayStore extends AbstractArrayValueStore<PackableDoc> 
 
     @Override
     protected Object doRetrieve(PackableDoc storage, String property) throws UnifyException {
-        return storage.read(property);
+		Object val = getTempValue(property);
+        return val == null ? storage.read(property) : val;
     }
 
     @Override

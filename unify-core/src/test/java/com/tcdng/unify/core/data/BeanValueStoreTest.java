@@ -307,7 +307,29 @@ public class BeanValueStoreTest {
         assertEquals("surf.37 Pauwa Road", address.getLine1());
         assertEquals("Ungwan Dosa, Kaduna", address.getLine2());
     }
-   
+
+    @Test
+    public void testTempValueRetrievalPreference() throws Exception {
+        Date birthDt = new Date();
+        Customer customer = new Customer();
+        customer.setAddress(new Address());
+
+        BeanValueStore bvs = new BeanValueStore(customer);
+        bvs.store("name", "Lobsang Rampa");
+        bvs.store("birthDt", birthDt);
+        bvs.store("balance", BigDecimal.valueOf(20.25));
+        bvs.store("id", 16);
+        bvs.store("address.line1", "17, I Close, 5th Avenue");
+        bvs.store("address.line2", "Festac Town");
+        assertEquals(BigDecimal.valueOf(20.25), bvs.retrieve("balance"));
+        
+        bvs.setTempValue("balance", BigDecimal.valueOf(302.67));
+        assertEquals(BigDecimal.valueOf(302.67), bvs.retrieve("balance"));
+ 
+        bvs.setTempValue("balance", null);
+        assertEquals(BigDecimal.valueOf(20.25), bvs.retrieve("balance"));
+    }
+  
     private class TestValueStorePolicy implements ValueStorePolicy {
 
         @Override

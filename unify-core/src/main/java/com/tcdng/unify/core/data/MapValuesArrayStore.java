@@ -43,7 +43,8 @@ public class MapValuesArrayStore extends AbstractArrayValueStore<MapValues> {
 
     @Override
     protected Object doRetrieve(MapValues storage, String property) throws UnifyException {
-        return storage.getValue(property);
+		Object val = getTempValue(property);
+        return val == null ? storage.getValue(property) : val;
     }
 
     @Override
