@@ -42,7 +42,6 @@ public abstract class AbstractOpenWindowPageControllerResponse extends AbstractJ
         writer.writeContextResourceURL(windowResourceInfo.resourcePath, windowResourceInfo.getContentType(),
                 windowResourceInfo.getResourceName(), null, windowResourceInfo.isDownload(), false);
         WebStringWriter urlLsw = writer.discardSecondary();
-
         writer.writeJsonQuote(urlLsw);
         writer.write(",\"attachment\":").write(windowResourceInfo.isDownload());
     }

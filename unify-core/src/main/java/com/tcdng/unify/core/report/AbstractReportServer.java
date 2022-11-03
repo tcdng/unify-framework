@@ -129,6 +129,7 @@ public abstract class AbstractReportServer extends AbstractUnifyComponent
         }
 
         if (report.isMultiDocHtmlToPDF()) {
+        	logDebug("Generating multi-document HTML to PDF report [{0}]...", report.getTitle());
 			try {
 				PDDocument doc = new PDDocument();	
 				List<ReportHtml> embeddedHtmls = report.getEmbeddedHtmls();
@@ -149,6 +150,7 @@ public abstract class AbstractReportServer extends AbstractUnifyComponent
 				throwOperationErrorException(e);
 			}
         } else {
+        	logDebug("Generating report [{0}]...", report.getTitle());
         	doGenerateReport(report, outputStream);
         }
     }
