@@ -252,6 +252,11 @@ public class ContentPanelWriter extends AbstractPanelWriter {
             writer.write("</div>");
             writer.write("</div>");
             writer.write("</div>");
+        } else {
+        	if (contentPanelImpl.isTabbed()) {
+                writer.write("<div class=\"cpheaderbar\">");
+                writer.write("</div>");
+        	}
         }
         // End title bar
 
