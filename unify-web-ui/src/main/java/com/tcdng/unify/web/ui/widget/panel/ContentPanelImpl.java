@@ -101,6 +101,10 @@ public class ContentPanelImpl extends AbstractContentPanel {
         return getPrefixedId("busy_");
     }
 
+    public String getBodyPanelId() throws UnifyException {
+        return getPrefixedId("body_");
+    }
+
     public String getTabItemId(int index) throws UnifyException {
         return getPrefixedId("tabitem_") + index;
     }

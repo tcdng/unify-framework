@@ -52,6 +52,7 @@ public class ContentPanelWriter extends AbstractPanelWriter {
         writer.beginFunction("ux.rigContentPanel");
         writer.writeParam("pId", contentPanelImpl.getId());
         writer.writeParam("pHintPanelId", contentPanelImpl.getHintPanelId());
+        writer.writeParam("pBdyPanelId", contentPanelImpl.getBodyPanelId());
         if (contentPanelImpl.getPageCount() > 0) {
             // Close image
             String closeImgId = contentPanelImpl.getTabItemImgId(contentPanelImpl.getPageIndex());
@@ -86,6 +87,7 @@ public class ContentPanelWriter extends AbstractPanelWriter {
             writer.writeParam("pContent", jw);
         }
 
+        writer.writeParam("pTabbed", contentPanelImpl.isTabbed());
         if (contentPanelImpl.isTabbed() && contentPanelImpl.getPageCount() > 0) {
             writer.writeParam("pTabPaneId", contentPanelImpl.getTabPaneId());
             writer.writeParam("pMenuId", contentPanelImpl.getMenuId());
@@ -256,7 +258,7 @@ public class ContentPanelWriter extends AbstractPanelWriter {
         // Body
         writer.write("<div style=\"display:table-row;width:100%;height:100%;\">");
         writer.write("<div style=\"display:table-cell;\">");
-        writer.write("<div class=\"cpbody\">");
+        writer.write("<div id=\"").write(contentPanelImpl.getBodyPanelId()).write("\" class=\"cpbody\">");
 
         ControllerPathParts currentRespPathParts = rcUtil.getResponsePathParts();
         rcUtil.setResponsePathParts(currentContentInfo.getPathParts());

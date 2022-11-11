@@ -81,6 +81,8 @@ ux.cntSavePath = null;
 ux.cntSaveList = null;
 ux.cntSaveRemoteView = null;
 ux.cntScrollY = -1;
+ux.cntTabScrollId = null;
+ux.cntTabScrollY = {};
 ux.remoteView = null;
 ux.remoteredirect = [];
 ux.hintTimeout=UNIFY_HIDE_USER_HINT_DISPLAY_PERIOD;
@@ -174,6 +176,13 @@ ux.saveContentScroll = function() {
 		var elem = _id(ux.cntId);
 		if (elem) {
 			ux.cntScrollY = elem.scrollTop;
+		}
+	}
+	
+	if (ux.cntTabScrollId && ux.cntSavePath) {
+		var elem = _id(ux.cntTabScrollId);
+		if (elem) {
+			ux.cntTabScrollY[ux.cntSavePath] = elem.scrollTop;
 		}
 	}
 }
@@ -1061,6 +1070,35 @@ ux.rigContentPanel = function(rgp) {
 			}
 		}
 		
+		if (rgp.pTabbed) {	
+			const evp = {};
+			evp.cPanelId = rgp.pBdyPanelId;
+			ux.cntTabScrollId = rgp.pBdyPanelId;
+			ux.registerResizeFunc(rgp.pBdyPanelId, ux.rewireContent, evp);
+			ux.rewireContent(evp);
+			if (ux.cntSavePath && ux.cntTabScrollY.hasOwnProperty(ux.cntSavePath)) {
+				var elem = _id(ux.cntTabScrollId);
+				if (elem) {
+					setTimeout(function () {
+						elem.scrollTop = ux.cntTabScrollY[ux.cntSavePath];
+					        },4);
+				}
+			}
+		}
+	}
+}
+
+ux.rewireContent = function(evp) {
+	const cbody = _id(evp.cPanelId);
+	const cbrect = cbody.getBoundingClientRect();
+	const maxh = window.innerHeight - cbrect.top;
+	if (maxh > 0) {
+		cbody.style.overflowY = "scroll"; 
+		cbody.style.maxHeight = maxh + "px";
+		cbody.style.height = maxh + "px";
+	} else {
+		cbody.style.overflowY = "auto"; 
+		cbody.style.maxHeight = "none";
 	}
 }
 
