@@ -91,7 +91,7 @@ public class PageControllerTest extends AbstractUnifyWebTest {
 		assertEquals(Double.valueOf(24.22), authorPageBean.getHeight());
 
 		// Test result
-		assertEquals("{\"jsonResp\":[{\"handler\":\"hintUserHdl\"},{\"handler\":\"refreshMenuHdl\"}],\"scrollReset\":false}",
+		assertEquals("{\"jsonResp\":[{\"handler\":\"hintUserHdl\"},{\"handler\":\"refreshMenuHdl\"}],\"scrollReset\":true}",
 				response.toString());
 	}
 
