@@ -84,6 +84,7 @@ public abstract class AbstractPage extends AbstractStandalonePanel implements Pa
     @Override
     public void setPageBean(PageBean pageBean) throws UnifyException {
         setValueStore(ValueStoreUtils.getValueStore(pageBean, null, -1));
+        getRequestContextUtil().setContentScrollReset();;
     }
 
     @Override

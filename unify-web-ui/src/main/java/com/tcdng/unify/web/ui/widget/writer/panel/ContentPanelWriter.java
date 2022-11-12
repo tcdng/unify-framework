@@ -91,6 +91,8 @@ public class ContentPanelWriter extends AbstractPanelWriter {
         if (contentPanelImpl.isTabbed() && contentPanelImpl.getPageCount() > 0) {
             writer.writeParam("pTabPaneId", contentPanelImpl.getTabPaneId());
             writer.writeParam("pMenuId", contentPanelImpl.getMenuId());
+        } else {
+        	getRequestContextUtil().setContentScrollReset();
         }
 
         writer.endFunction();
