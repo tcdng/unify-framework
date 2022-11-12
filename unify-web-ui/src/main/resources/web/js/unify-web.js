@@ -161,6 +161,14 @@ ux.processJSON = function(jsonstring) {
 		if (elem) {
 			if (fullResp.scrollReset) {
 				elem.scrollTop = 0;
+				if (ux.cntTabScrollId) {
+					var cbdy = _id(ux.cntTabScrollId);
+					if (cbdy) {
+						setTimeout(function () {
+							cbdy.scrollTop = 0;
+						        },4);
+					}
+				}
 			} else if (ux.cntScrollY >= 0) {
 				elem.scrollTop = ux.cntScrollY;
 			}
