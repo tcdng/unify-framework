@@ -48,6 +48,8 @@ import com.tcdng.unify.web.ui.widget.Widget;
         @UplAttribute(name = "pathBinding", type = String.class),
         @UplAttribute(name = "tabbed", type = boolean.class),
         @UplAttribute(name = "tabbedBinding", type = String.class),
+        @UplAttribute(name = "highLatency", type = boolean.class),
+        @UplAttribute(name = "highLatencyBinding", type = String.class),
         @UplAttribute(name = "titlebar", type = boolean.class),
         @UplAttribute(name = "sidebar", type = UplElementReferences.class) })
 public class ContentPanelImpl extends AbstractContentPanel {
@@ -82,6 +84,15 @@ public class ContentPanelImpl extends AbstractContentPanel {
         
         return getUplAttribute(boolean.class, "tabbed");
     }
+
+	public boolean isHighLatency() throws UnifyException {
+		String highLatencyBinding = getUplAttribute(String.class, "highLatencyBinding");
+		if (StringUtils.isNotBlank(highLatencyBinding)) {
+			return getValue(boolean.class, highLatencyBinding);
+		}
+
+		return getUplAttribute(boolean.class, "highLatency");
+	}
 
     public boolean isTitleBar() throws UnifyException {
         return getUplAttribute(boolean.class, "titlebar");
