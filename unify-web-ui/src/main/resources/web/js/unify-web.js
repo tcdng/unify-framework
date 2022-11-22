@@ -1062,6 +1062,7 @@ ux.rigContentPanel = function(rgp) {
 				evp.uURL = rgp.pContentURL;
 				ux.postCommit(evp);
 		} else {
+			ux.hideBusyIndicator();
 			if (rgp.pTabbed) {
 				for (var i = 0; i < rgp.pContent.length; i++) {
 					const cnt = rgp.pContent[i];
