@@ -102,11 +102,6 @@ public class ContentPanelImpl extends AbstractContentPanel {
         return getPrefixedId("base_");
     }
 
-    @Override
-    public String getBusyIndicatorId() throws UnifyException {
-        return getPrefixedId("busy_");
-    }
-
     public String getBodyPanelId() throws UnifyException {
         return getPrefixedId("body_");
     }

@@ -33,7 +33,6 @@ const UNIFY_DEFAULT_POPUP_Y_SCALE = 3; // Pop-up Y offset scale
 const UNIFY_DEFAULT_POPUP_TIMEOUT = 400; // .4 seconds.
 const UNIFY_DELAYEDPOSTING_MIN_DELAY = 250; // .25 seconds.
 const UNIFY_BUSY_INDICATOR_DISPLAY_DELAY = 200; // .2 seconds.
-const UNIFY_LATENCY_INDICATOR_DISPLAY_DELAY = 200; // .2 seconds.
 const UNIFY_HIDE_USER_HINT_DISPLAY_PERIOD = 3000; // 3 seconds.
 const UNIFY_WINDOW_RESIZE_DEBOUNCE_DELAY = 400; // .4 seconds.
 const UNIFY_KEY_SEARCH_MAX_GAP = 1000; // 1 second.
@@ -71,7 +70,6 @@ ux.popupVisible = false;
 ux.submitting = false;
 ux.busyIndicator = "";
 ux.busyIndicatorTimer;
-ux.busyCounter = 0;
 
 ux.cntId = null
 ux.cntHintId = null
@@ -540,13 +538,9 @@ ux.ajaxCall = function(ajaxPrms) {
 	if (uAjaxReq == null)
 		return;
 
-	if (ajaxPrms.uBusy) {
-		ux.busyCounter++;
-		ux.prepareBusyIndicator();
-	}
-
 	if (ajaxPrms.uIsDebounce) {
 		ajaxPrms.uDebounced = ux.effectDebounce();
+		ux.prepareBusyIndicator();
 	}
 	
 	try {
@@ -563,12 +557,6 @@ ux.ajaxCall = function(ajaxPrms) {
 					ux.submitting = false;
 				}
 				
-				if (ajaxPrms.uBusy) {
-					if ((--ux.busyCounter) <= 0) {
-						ux.hideBusyIndicator();
-					}
-				}
-				
 				if (uAjaxReq.status == 200) {
 					ajaxPrms.uSuccessFunc(uAjaxReq.responseText);
 				} else {
@@ -580,6 +568,7 @@ ux.ajaxCall = function(ajaxPrms) {
 				}
 				
 				if (ajaxPrms.uIsDebounce) {
+					 ux.hideBusyIndicator();
 					 ux.clearDebounce(ajaxPrms.uDebounced);
 				}				
 				ux.postCommitExecuting = false;
@@ -593,18 +582,13 @@ ux.ajaxCall = function(ajaxPrms) {
 		}
 	} catch (ex) {
 		if (ajaxPrms.uIsDebounce) {
+			 ux.hideBusyIndicator();
 			 ux.clearDebounce(ajaxPrms.uDebounced);
 		}				
 		ux.postCommitExecuting = false;
 
 		if (ajaxPrms.uSync) {
 			ux.submitting = false;
-		}
-		
-		if (ajaxPrms.uBusy) {
-			if ((--ux.busyCounter) <= 0) {
-				ux.hideBusyIndicator();
-			}
 		}
 		
 		alert("Unable to connect to \'" + ajaxPrms.uURL + "\', exception = "
@@ -1072,13 +1056,7 @@ ux.rigContentPanel = function(rgp) {
 		}
 		
 		if (rgp.pLatency) {
-				const latencyPanelId = rgp.pLatencyPanelId;			
-				setTimeout(function () {
-							var latency = _id(latencyPanelId);
-							if (latency) {
-								latency.style.display = "block";
-							}
-						        }, UNIFY_LATENCY_INDICATOR_DISPLAY_DELAY);
+				ux.prepareBusyIndicator();
 				const evp = {};
 				evp.uTrg = uId;
 				evp.uURL = rgp.pContentURL;

@@ -134,11 +134,6 @@ public class ContentPanelWriter extends AbstractPanelWriter {
 	protected void writeLayoutContent(ResponseWriter writer, Container container) throws UnifyException {
 		ContentPanelImpl contentPanel = (ContentPanelImpl) container;
 		writer.write("<div id=\"").write(contentPanel.getHintPanelId()).write("\" class=\"cphint\"></div>");
-		writer.write("<div id=\"").write(contentPanel.getBusyIndicatorId()).write("\" class=\"cpbusy\">");
-		writer.write("<img class=\"cpimage\" src=\"");
-		writer.writeContextResourceURL("/resource/file", MimeType.IMAGE.template(), "$t{images/busy.gif}");
-		writer.write("\"></div>");
-
 		writer.write("<div id=\"").write(contentPanel.getBaseContentId())
 				.write("\" style=\"display:table;width:100%;height:100%;\">");
 		boolean isSidebar = contentPanel.isSidebar();
@@ -279,16 +274,15 @@ public class ContentPanelWriter extends AbstractPanelWriter {
 		writer.write("<div style=\"display:table-cell;\">");
 		writer.write("<div id=\"").write(contentPanel.getBodyPanelId()).write("\" class=\"cpbody\">");
 
+		writer.write("<div id=\"").write(contentPanel.getLatencyPanelId())
+				.write("\" class=\"cplatency\" style=\"display:none;\">");
+		writer.write("<img src=\"");
+		writer.writeContextResourceURL("/resource/file", MimeType.IMAGE.template(), "$t{images/latency.gif}");
+		writer.write("\">");
+		writer.write("</div>");
+		
 		if (rcUtil.isLowLatencyRequest()) {
-			writer.write("<div id=\"").write(contentPanel.getLatencyPanelId())
-					.write("\" class=\"cplatency\" style=\"display:none;\">");
-			writer.write("<div><span>");
-			writer.writeWithHtmlEscape(resolveSessionMessage("$m{contentpanel.pleasewait}"));
-			writer.write("</span></div>");
-			writer.write("<img src=\"");
-			writer.writeContextResourceURL("/resource/file", MimeType.IMAGE.template(), "$t{images/latency.gif}");
-			writer.write("\">");
-			writer.write("</div>");
+			// TODO
 		} else {
 			ControllerPathParts currentRespPathParts = rcUtil.getResponsePathParts();
 			try {
