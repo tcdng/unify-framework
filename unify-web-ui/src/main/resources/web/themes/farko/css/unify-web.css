@@ -250,7 +250,7 @@ z-index:400;}
 .ui-contentpanel .cptitlebar .cpspan {float:left; font-size: 10pt; font-weight: bold; text-align: left;}
 .ui-contentpanel .cpheaderbar {display:block; height:2px;}
 .ui-contentpanel .cplatency {display:block;text-align:center;}
-.ui-contentpanel .cplatency img {}
+.ui-contentpanel .cplatency img {width:480px;height:12px;}
 
 .contentpanel-popup {position: fixed; visibility: hidden; width: auto; z-index: 300;
     background-color: #F0F0F0;}

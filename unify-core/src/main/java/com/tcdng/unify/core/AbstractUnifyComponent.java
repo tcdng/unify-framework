@@ -942,6 +942,19 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	}
 
 	/**
+	 * Gets an attribute value from current request.
+	 * 
+	 * @param dataType the data type to convert to
+	 * @param name     the attribute name
+	 * @return the attribute value
+	 * @throws UnifyException if an error occurs
+	 */
+	protected <T> T getRequestAttribute(Class<T> dataType, String name) throws UnifyException {
+		Object val = unifyComponentContext.getRequestContext().getAttribute(name);
+		return DataUtils.convert(dataType, val);
+	}
+
+	/**
 	 * Removes an attribute value from current request.
 	 * 
 	 * @param name the attribute name

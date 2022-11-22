@@ -709,4 +709,18 @@ public interface PageRequestContextUtil extends UnifyComponent {
      *             if an error occurs
      */
     boolean isContentScrollReset() throws UnifyException;
+
+	/**
+	 * Sets low latency request.
+	 * 
+	 * @throws UnifyException if an error occurs
+	 */
+	void setLowLatencyRequest() throws UnifyException;
+
+	/**
+	 * Returns true if low latency request is set..
+	 * 
+	 * @throws UnifyException if an error occurs
+	 */
+	boolean isLowLatencyRequest() throws UnifyException;
 }

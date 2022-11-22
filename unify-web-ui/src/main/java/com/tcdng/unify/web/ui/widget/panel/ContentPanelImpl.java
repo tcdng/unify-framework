@@ -44,12 +44,12 @@ import com.tcdng.unify.web.ui.widget.Widget;
  * @since 1.0
  */
 @Component("ui-contentpanel")
-@UplAttributes({ @UplAttribute(name = "path", type = String.class),
+@UplAttributes({
+		@UplAttribute(name = "documentPath", type = String.class, mandatory = true),
+		@UplAttribute(name = "path", type = String.class),
         @UplAttribute(name = "pathBinding", type = String.class),
         @UplAttribute(name = "tabbed", type = boolean.class),
         @UplAttribute(name = "tabbedBinding", type = String.class),
-        @UplAttribute(name = "highLatency", type = boolean.class),
-        @UplAttribute(name = "highLatencyBinding", type = String.class),
         @UplAttribute(name = "titlebar", type = boolean.class),
         @UplAttribute(name = "sidebar", type = UplElementReferences.class) })
 public class ContentPanelImpl extends AbstractContentPanel {
@@ -72,6 +72,10 @@ public class ContentPanelImpl extends AbstractContentPanel {
         this.pathInfoRepository = pathInfoRepository;
     }
 
+    public String getDocumentPath() throws UnifyException {
+        return getUplAttribute(String.class, "documentPath");
+    }
+
     public String getPath() throws UnifyException {
         return getUplAttribute(String.class, "path", "pathBinding");
     }
@@ -85,15 +89,6 @@ public class ContentPanelImpl extends AbstractContentPanel {
         return getUplAttribute(boolean.class, "tabbed");
     }
 
-	public boolean isHighLatency() throws UnifyException {
-		String highLatencyBinding = getUplAttribute(String.class, "highLatencyBinding");
-		if (StringUtils.isNotBlank(highLatencyBinding)) {
-			return getValue(boolean.class, highLatencyBinding);
-		}
-
-		return getUplAttribute(boolean.class, "highLatency");
-	}
-
     public boolean isTitleBar() throws UnifyException {
         return getUplAttribute(boolean.class, "titlebar");
     }
@@ -101,7 +96,7 @@ public class ContentPanelImpl extends AbstractContentPanel {
     public String getHintPanelId() throws UnifyException {
         return getPrefixedId("hint_");
     }
-
+    
     @Override
     public String getBaseContentId() throws UnifyException {
         return getPrefixedId("base_");

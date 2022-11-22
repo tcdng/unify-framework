@@ -104,6 +104,8 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
 
     private static final String CONTENT_SCROLL_RESET = "CONTENT_SCROLL_RESET";
 
+    private static final String LOW_LATENCY_REQUEST = "LOW_LATENCY_REQUEST";
+
     private static final String DEBOUNCE_WIDGET = "DEBOUNCE_WIDGET";
 
     private static final String NO_PUSH_WIDGET_ID_LIST = "NO_PUSH_WIDGET_ID_LIST";
@@ -591,15 +593,25 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
 
     @Override
     public void setContentScrollReset() throws UnifyException {
-        setRequestAttribute(CONTENT_SCROLL_RESET, Boolean.TRUE);;
+        setRequestAttribute(CONTENT_SCROLL_RESET, Boolean.TRUE);
     }
 
     @Override
     public boolean isContentScrollReset() throws UnifyException {
-        return Boolean.TRUE.equals(getRequestAttribute(CONTENT_SCROLL_RESET));
+        return getRequestAttribute(boolean.class, CONTENT_SCROLL_RESET);
     }
 
     @Override
+	public void setLowLatencyRequest() throws UnifyException {
+        setRequestAttribute(LOW_LATENCY_REQUEST, Boolean.TRUE);
+	}
+
+	@Override
+	public boolean isLowLatencyRequest() throws UnifyException {
+        return getRequestAttribute(boolean.class, LOW_LATENCY_REQUEST);
+	}
+
+	@Override
     public void clearRequestContext() throws UnifyException {
         setRequestAttribute(PageRequestParameterConstants.TARGET_VALUE, null);
         setRequestAttribute(PageRequestParameterConstants.WINDOW_NAME, null);

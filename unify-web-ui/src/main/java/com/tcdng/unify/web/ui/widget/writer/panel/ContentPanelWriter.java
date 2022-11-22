@@ -58,6 +58,15 @@ public class ContentPanelWriter extends AbstractPanelWriter {
 			String closeImgId = contentPanel.getTabItemImgId(contentPanel.getPageIndex());
 			writer.writeParam("pCloseImgId", closeImgId);
 		}
+		
+		PageRequestContextUtil rcUtil = getRequestContextUtil();
+		final boolean lowLatency = rcUtil.isLowLatencyRequest();
+		if (lowLatency) {
+			writer.writeParam("pLatency", lowLatency);
+			writer.write(",\"pContentURL\":\"");
+			writer.writeContextURL(contentPanel.getDocumentPath(), "/content");
+			writer.write('"');
+		}
 
 		if (contentPanel.getPageCount() == 0) {
 			writer.writeParam("pImmURL", getContextURL(contentPanel.getPath()));
@@ -88,14 +97,12 @@ public class ContentPanelWriter extends AbstractPanelWriter {
 		}
 
 		final boolean tabbed = contentPanel.isTabbed();
-		final boolean latency = contentPanel.isHighLatency();		
 		writer.writeParam("pTabbed", tabbed);
-		writer.writeParam("pLatency", latency);
 		if (tabbed && contentPanel.getPageCount() > 0) {
 			writer.writeParam("pTabPaneId", contentPanel.getTabPaneId());
 			writer.writeParam("pMenuId", contentPanel.getMenuId());
 		} else {
-			getRequestContextUtil().setContentScrollReset();
+			rcUtil.setContentScrollReset();
 		}
 
 		writer.endFunction();
@@ -105,11 +112,10 @@ public class ContentPanelWriter extends AbstractPanelWriter {
 		}
 
 		if (contentPanel.getPageCount() > 0) {
-			if (latency) {
+			if (lowLatency) {
 				// TODO
 			} else {
 				// Set response page controller
-				PageRequestContextUtil rcUtil = getRequestContextUtil();
 				ControllerPathParts currentRespPathParts = rcUtil.getResponsePathParts();
 				ContentInfo currentContentInfo = contentPanel.getCurrentContentInfo();
 				try {
@@ -265,10 +271,10 @@ public class ContentPanelWriter extends AbstractPanelWriter {
 			writer.write("</div>");
 			writer.write("</div>");
 		} else {
-			if (tabbed) {
-				writer.write("<div class=\"cpheaderbar\">");
-				writer.write("</div>");
-			}
+//			if (tabbed) {
+//				writer.write("<div class=\"cpheaderbar\">");
+//				writer.write("</div>");
+//			}
 		}
 		// End title bar
 
@@ -277,10 +283,15 @@ public class ContentPanelWriter extends AbstractPanelWriter {
 		writer.write("<div style=\"display:table-cell;\">");
 		writer.write("<div id=\"").write(contentPanel.getBodyPanelId()).write("\" class=\"cpbody\">");
 
-		if (contentPanel.isHighLatency()) {
-	        writer.write("<div class=\"cplatency\"><img src=\"");
+		if (rcUtil.isLowLatencyRequest()) {
+	        writer.write("<div class=\"cplatency\">");
+	        writer.write("<div><span>");
+			writer.writeWithHtmlEscape(resolveSessionMessage("$m{contentpanel.pleasewait}"));
+	        writer.write("</span></div>");
+	        writer.write("<img src=\"");
 	        writer.writeContextResourceURL("/resource/file", MimeType.IMAGE.template(), "$t{images/latency.gif}");
-	        writer.write("\"></div>");
+	        writer.write("\">");
+	        writer.write("</div>");
 		} else {
 			ControllerPathParts currentRespPathParts = rcUtil.getResponsePathParts();
 			try {
@@ -296,39 +307,4 @@ public class ContentPanelWriter extends AbstractPanelWriter {
 		writer.write("</div>");
 		// End body
 	}
-
-	@Override
-	protected void doWriteSectionStructureAndContent(ResponseWriter writer, Widget widget, String sectionPageName)
-			throws UnifyException {
-		ContentPanelImpl contentPanel = (ContentPanelImpl) widget;
-		if (contentPanel.getBodyPanelId().equals(sectionPageName)) {
-			PageRequestContextUtil rcUtil = getRequestContextUtil();
-			ContentInfo currentContentInfo = contentPanel.getCurrentContentInfo();
-			ControllerPathParts currentRespPathParts = rcUtil.getResponsePathParts();
-			try {
-				rcUtil.setResponsePathParts(currentContentInfo.getPathParts());
-				writer.writeStructureAndContent(currentContentInfo.getPage());
-			} finally {
-				rcUtil.setResponsePathParts(currentRespPathParts);
-			}
-		}
-	}
-
-	@Override
-	protected void doWriteSectionBehavior(ResponseWriter writer, Widget widget, String sectionPageName)
-			throws UnifyException {
-		ContentPanelImpl contentPanel = (ContentPanelImpl) widget;
-		if (contentPanel.getBodyPanelId().equals(sectionPageName)) {
-			PageRequestContextUtil rcUtil = getRequestContextUtil();
-			ControllerPathParts currentRespPathParts = rcUtil.getResponsePathParts();
-			ContentInfo currentContentInfo = contentPanel.getCurrentContentInfo();
-			try {
-				rcUtil.setResponsePathParts(currentContentInfo.getPathParts());
-				writer.writeBehavior(currentContentInfo.getPage());
-			} finally {
-				rcUtil.setResponsePathParts(currentRespPathParts);
-			}
-		}
-	}
-
 }
