@@ -42,9 +42,9 @@ import com.tcdng.unify.web.ui.widget.writer.AbstractPanelWriter;
 @Component("contentpanel-writer")
 public class ContentPanelWriter extends AbstractPanelWriter {
 
-    private static final String CPREMOTE_CATEGORYBASE = "cpcat";
+	private static final String CPREMOTE_CATEGORYBASE = "cpcat";
 
-    @Override
+	@Override
 	protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
 		ContentPanelImpl contentPanel = (ContentPanelImpl) widget;
 
@@ -58,11 +58,12 @@ public class ContentPanelWriter extends AbstractPanelWriter {
 			String closeImgId = contentPanel.getTabItemImgId(contentPanel.getPageIndex());
 			writer.writeParam("pCloseImgId", closeImgId);
 		}
-		
+
 		PageRequestContextUtil rcUtil = getRequestContextUtil();
 		final boolean lowLatency = rcUtil.isLowLatencyRequest();
 		if (lowLatency) {
 			writer.writeParam("pLatency", lowLatency);
+			writer.writeParam("pLatencyPanelId", contentPanel.getLatencyPanelId());
 			writer.write(",\"pContentURL\":\"");
 			writer.writeContextURL(contentPanel.getDocumentPath(), "/content");
 			writer.write('"');
@@ -129,39 +130,39 @@ public class ContentPanelWriter extends AbstractPanelWriter {
 		}
 	}
 
-    @Override
-    protected void writeLayoutContent(ResponseWriter writer, Container container) throws UnifyException {
-        ContentPanelImpl contentPanel = (ContentPanelImpl) container;
-        writer.write("<div id=\"").write(contentPanel.getHintPanelId()).write("\" class=\"cphint\"></div>");
-        writer.write("<div id=\"").write(contentPanel.getBusyIndicatorId()).write("\" class=\"cpbusy\">");
-        writer.write("<img class=\"cpimage\" src=\"");
-        writer.writeContextResourceURL("/resource/file", MimeType.IMAGE.template(), "$t{images/busy.gif}");
-        writer.write("\"></div>");
+	@Override
+	protected void writeLayoutContent(ResponseWriter writer, Container container) throws UnifyException {
+		ContentPanelImpl contentPanel = (ContentPanelImpl) container;
+		writer.write("<div id=\"").write(contentPanel.getHintPanelId()).write("\" class=\"cphint\"></div>");
+		writer.write("<div id=\"").write(contentPanel.getBusyIndicatorId()).write("\" class=\"cpbusy\">");
+		writer.write("<img class=\"cpimage\" src=\"");
+		writer.writeContextResourceURL("/resource/file", MimeType.IMAGE.template(), "$t{images/busy.gif}");
+		writer.write("\"></div>");
 
-        writer.write("<div id=\"").write(contentPanel.getBaseContentId())
-                .write("\" style=\"display:table;width:100%;height:100%;\">");
-        boolean isSidebar = contentPanel.isSidebar();
-        // Frame
-        if (isSidebar) {
-            writer.write("<div style=\"display:table-row;width:100%;\">");
-            writer.write("<div style=\"display:table-cell;width:100%;height:100%;vertical-align:top;\">");
-            writer.write("<div style=\"display:table;width:100%;height:100%;\">");
-        }
+		writer.write("<div id=\"").write(contentPanel.getBaseContentId())
+				.write("\" style=\"display:table;width:100%;height:100%;\">");
+		boolean isSidebar = contentPanel.isSidebar();
+		// Frame
+		if (isSidebar) {
+			writer.write("<div style=\"display:table-row;width:100%;\">");
+			writer.write("<div style=\"display:table-cell;width:100%;height:100%;vertical-align:top;\">");
+			writer.write("<div style=\"display:table;width:100%;height:100%;\">");
+		}
 
-        if (contentPanel.getPageCount() > 0) {
-            writeContentPanel(writer, contentPanel);
-        }
+		if (contentPanel.getPageCount() > 0) {
+			writeContentPanel(writer, contentPanel);
+		}
 
-        if (isSidebar) {
-            writer.write("</div>");
-            writer.write("</div>");
-            writer.write("<div style=\"display:table-cell;height:100%;vertical-align:top;\">");
-            writer.writeStructureAndContent(contentPanel.getSidebar());
-            writer.write("</div>");
-            writer.write("</div>");
-        }
-        writer.write("</div>");
-    }
+		if (isSidebar) {
+			writer.write("</div>");
+			writer.write("</div>");
+			writer.write("<div style=\"display:table-cell;height:100%;vertical-align:top;\">");
+			writer.writeStructureAndContent(contentPanel.getSidebar());
+			writer.write("</div>");
+			writer.write("</div>");
+		}
+		writer.write("</div>");
+	}
 
 	private void writeContentPanel(ResponseWriter writer, ContentPanelImpl contentPanel) throws UnifyException {
 		logDebug("Writing structure for content panel [{0}]...", contentPanel.getLongName());
@@ -270,11 +271,6 @@ public class ContentPanelWriter extends AbstractPanelWriter {
 			writer.write("</div>");
 			writer.write("</div>");
 			writer.write("</div>");
-		} else {
-//			if (tabbed) {
-//				writer.write("<div class=\"cpheaderbar\">");
-//				writer.write("</div>");
-//			}
 		}
 		// End title bar
 
@@ -284,14 +280,15 @@ public class ContentPanelWriter extends AbstractPanelWriter {
 		writer.write("<div id=\"").write(contentPanel.getBodyPanelId()).write("\" class=\"cpbody\">");
 
 		if (rcUtil.isLowLatencyRequest()) {
-	        writer.write("<div class=\"cplatency\">");
-	        writer.write("<div><span>");
+			writer.write("<div id=\"").write(contentPanel.getLatencyPanelId())
+					.write("\" class=\"cplatency\" style=\"display:none;\">");
+			writer.write("<div><span>");
 			writer.writeWithHtmlEscape(resolveSessionMessage("$m{contentpanel.pleasewait}"));
-	        writer.write("</span></div>");
-	        writer.write("<img src=\"");
-	        writer.writeContextResourceURL("/resource/file", MimeType.IMAGE.template(), "$t{images/latency.gif}");
-	        writer.write("\">");
-	        writer.write("</div>");
+			writer.write("</span></div>");
+			writer.write("<img src=\"");
+			writer.writeContextResourceURL("/resource/file", MimeType.IMAGE.template(), "$t{images/latency.gif}");
+			writer.write("\">");
+			writer.write("</div>");
 		} else {
 			ControllerPathParts currentRespPathParts = rcUtil.getResponsePathParts();
 			try {

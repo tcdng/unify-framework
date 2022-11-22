@@ -33,6 +33,7 @@ const UNIFY_DEFAULT_POPUP_Y_SCALE = 3; // Pop-up Y offset scale
 const UNIFY_DEFAULT_POPUP_TIMEOUT = 400; // .4 seconds.
 const UNIFY_DELAYEDPOSTING_MIN_DELAY = 250; // .25 seconds.
 const UNIFY_BUSY_INDICATOR_DISPLAY_DELAY = 200; // .2 seconds.
+const UNIFY_LATENCY_INDICATOR_DISPLAY_DELAY = 200; // .2 seconds.
 const UNIFY_HIDE_USER_HINT_DISPLAY_PERIOD = 3000; // 3 seconds.
 const UNIFY_WINDOW_RESIZE_DEBOUNCE_DELAY = 400; // .4 seconds.
 const UNIFY_KEY_SEARCH_MAX_GAP = 1000; // 1 second.
@@ -1053,7 +1054,7 @@ ux.rigContentPanel = function(rgp) {
 	} else {
 		const currIdx = rgp.pCurIdx;
 		const menuId = rgp.pMenuId;
-		const uId = rgp.pId;		
+		const uId = rgp.pId;
 		if (rgp.pTabbed) {	
 			const evp = {};
 			evp.cPanelId = rgp.pBdyPanelId;
@@ -1068,38 +1069,48 @@ ux.rigContentPanel = function(rgp) {
 					        },4);
 				}
 			}
-			
-			if (rgp.pLatency) {
+		}
+		
+		if (rgp.pLatency) {
+				const latencyPanelId = rgp.pLatencyPanelId;			
+				setTimeout(function () {
+							var latency = _id(latencyPanelId);
+							if (latency) {
+								latency.style.display = "block";
+							}
+						        }, UNIFY_LATENCY_INDICATOR_DISPLAY_DELAY);
 				const evp = {};
 				evp.uTrg = uId;
 				evp.uURL = rgp.pContentURL;
 				ux.postCommit(evp);
-			} else {
-				for(var i = 0; i < rgp.pContent.length; i++) {
+		} else {
+			if (rgp.pTabbed) {
+				for (var i = 0; i < rgp.pContent.length; i++) {
 					const cnt = rgp.pContent[i];
 					if (i == currIdx) {
 						if (i > 0) {
-							const evp = {uTabPaneId:rgp.pTabPaneId, uMenuId:menuId};
+							const evp = { uTabPaneId: rgp.pTabPaneId, uMenuId: menuId };
 							ux.addHdl(_id(cnt.tabId), "rtclick", ux.contentOpenTabMenu,
-									evp);
+								evp);
 							ux.contentAttachClose(uId, cnt, "mic_", "CL");
 							ux.contentAttachClose(uId, cnt, "mico_", "CLO");
 							ux.contentAttachClose(uId, cnt, "mica_", "CLA");
 						}
 					} else {
-						const evp = {uOpenPath:cnt.openPath};
+						const evp = { uOpenPath: cnt.openPath };
 						ux.addHdl(_id(cnt.tabId), "click", ux.contentOpen,
-								evp);
+							evp);
 					}
-					
+
 					if (i > 0) {
-						const evp = {uURL:cnt.closePath};
+						const evp = { uURL: cnt.closePath };
 						ux.addHdl(_id(cnt.tabImgId), "click", ux.post,
-								evp);
+							evp);
 					}
 				}
 			}
 		}
+				
 	}
 }
 
