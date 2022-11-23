@@ -930,7 +930,6 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
         if (!toClosePathIdList.isEmpty()) {
             PageRequestContextUtil pageRequestContextUtil = getPageRequestContextUtil();
             Page currentPage = pageRequestContextUtil.getRequestPage();
-
             try {
                 if (isFireClose) {
                     // Fire closePage() for all targets

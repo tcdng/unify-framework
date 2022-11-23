@@ -121,6 +121,7 @@ public class ContentPanelWriter extends AbstractPanelWriter {
 				ContentInfo currentContentInfo = contentPanel.getCurrentContentInfo();
 				try {
 					rcUtil.setResponsePathParts(currentContentInfo.getPathParts());
+					rcUtil.setContentPage(currentContentInfo.getPage());
 					writer.writeBehavior(currentContentInfo.getPage());
 				} finally {
 					// Restore response controller
@@ -287,6 +288,7 @@ public class ContentPanelWriter extends AbstractPanelWriter {
 			ControllerPathParts currentRespPathParts = rcUtil.getResponsePathParts();
 			try {
 				rcUtil.setResponsePathParts(currentContentInfo.getPathParts());
+				rcUtil.setContentPage(currentContentInfo.getPage());
 				writer.writeStructureAndContent(currentContentInfo.getPage());
 			} finally {
 				rcUtil.setResponsePathParts(currentRespPathParts);

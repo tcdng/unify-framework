@@ -68,6 +68,24 @@ public interface PageRequestContextUtil extends UnifyComponent {
     Page getRequestPage() throws UnifyException;
 
     /**
+     * Sets the content page object for current request.
+     * 
+     * @param page
+     *            the page to set
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void setContentPage(Page page) throws UnifyException;
+
+    /**
+     * Returns the content page object for current request.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    Page getContentPage() throws UnifyException;
+
+    /**
      * Sets current request context's popup long name.
      * 
      * @param longName
