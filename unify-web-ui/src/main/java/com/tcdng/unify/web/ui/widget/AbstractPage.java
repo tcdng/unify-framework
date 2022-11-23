@@ -216,7 +216,7 @@ public abstract class AbstractPage extends AbstractStandalonePanel implements Pa
 
             for (StandalonePanel standalonePanel : standalonePanels.values()) {
                 if (standalonePanel.isWidget(longName)) {
-                    return standalonePanel.getWidgetByLongName(longName);
+                   return standalonePanel.getWidgetByLongName(longName);
                 }
             }
         }

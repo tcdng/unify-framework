@@ -600,26 +600,28 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 	}
 
     protected void setPageAttribute(String name, Object value) throws UnifyException {
-        getRequestContextUtil().getRequestPage().setAttribute(name, value);
+    	resolveRequestPage().setAttribute(name, value);
     }
 
     protected Object clearPageAttribute(String name) throws UnifyException {
-        return getRequestContextUtil().getRequestPage().clearAttribute(name);
+        return resolveRequestPage().clearAttribute(name);
     }
 
     protected Object getPageAttribute(String name) throws UnifyException {
-        return getRequestContextUtil().getRequestPage().getAttribute(name);
+        return resolveRequestPage().getAttribute(name);
     }
 
-    protected Page getPage() throws UnifyException {
-        return getRequestContextUtil().getRequestPage();
+    protected Page resolveRequestPage() throws UnifyException {
+		PageRequestContextUtil rcUtil = getRequestContextUtil();
+		Page contentPage = rcUtil.getContentPage();
+		return contentPage == null ? rcUtil.getRequestPage() : contentPage;
     }
 
     @SuppressWarnings("unchecked")
     protected <T> T getPageAttribute(Class<T> clazz, String name) throws UnifyException {
-        return (T) getRequestContextUtil().getRequestPage().getAttribute(name);
+        return (T) resolveRequestPage().getAttribute(name);
     }
-
+    
     protected ViewDirective getViewDirective() throws UnifyException {
         if (isApplicationIgnoreViewDirective()) {
             return ViewDirective.ALLOW_VIEW_DIRECTIVE;

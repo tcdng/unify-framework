@@ -38,14 +38,13 @@ public interface ContentPanel extends Panel {
      */
     String getBaseContentId() throws UnifyException;
     
-    /**
-     * Gets the busy indicator component ID for this content panel.
-     * 
-     * @return the indicator ID
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    String getBusyIndicatorId() throws UnifyException;
+	/**
+	 * Gets the latency panel ID for this content panel.
+	 * 
+	 * @return the latency panel ID
+	 * @throws UnifyException if an error occurs
+	 */
+	String getLatencyPanelId() throws UnifyException;
 
     /**
      * Gets the current active page.

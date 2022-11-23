@@ -44,7 +44,9 @@ import com.tcdng.unify.web.ui.widget.Widget;
  * @since 1.0
  */
 @Component("ui-contentpanel")
-@UplAttributes({ @UplAttribute(name = "path", type = String.class),
+@UplAttributes({
+		@UplAttribute(name = "documentPath", type = String.class, mandatory = true),
+		@UplAttribute(name = "path", type = String.class),
         @UplAttribute(name = "pathBinding", type = String.class),
         @UplAttribute(name = "tabbed", type = boolean.class),
         @UplAttribute(name = "tabbedBinding", type = String.class),
@@ -70,6 +72,10 @@ public class ContentPanelImpl extends AbstractContentPanel {
         this.pathInfoRepository = pathInfoRepository;
     }
 
+    public String getDocumentPath() throws UnifyException {
+        return getUplAttribute(String.class, "documentPath");
+    }
+
     public String getPath() throws UnifyException {
         return getUplAttribute(String.class, "path", "pathBinding");
     }
@@ -90,19 +96,18 @@ public class ContentPanelImpl extends AbstractContentPanel {
     public String getHintPanelId() throws UnifyException {
         return getPrefixedId("hint_");
     }
-
+    
     @Override
     public String getBaseContentId() throws UnifyException {
         return getPrefixedId("base_");
     }
 
-    @Override
-    public String getBusyIndicatorId() throws UnifyException {
-        return getPrefixedId("busy_");
-    }
-
     public String getBodyPanelId() throws UnifyException {
         return getPrefixedId("body_");
+    }
+
+    public String getLatencyPanelId() throws UnifyException {
+        return getPrefixedId("latency_");
     }
 
     public String getTabItemId(int index) throws UnifyException {

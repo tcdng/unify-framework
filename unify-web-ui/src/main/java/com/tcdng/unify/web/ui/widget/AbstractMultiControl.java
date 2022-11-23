@@ -204,7 +204,7 @@ public abstract class AbstractMultiControl extends AbstractControl implements Mu
      */
     protected Widget addExternalChildStandalonePanel(String panelName, String cloneId) throws UnifyException {
         final String uniqueName = UplUtils.generateUplComponentCloneName(panelName, cloneId);
-        Page page = getRequestContextUtil().getRequestPage();
+        Page page = resolveRequestPage();
         StandalonePanel standalonePanel = page.getStandalonePanel(uniqueName);
         if (standalonePanel == null) {
             standalonePanel = getPageManager().createStandalonePanel(getSessionLocale(), uniqueName);
@@ -228,7 +228,7 @@ public abstract class AbstractMultiControl extends AbstractControl implements Mu
         super.addPageAliases();
 
         if (standalonePanelNames != null) {
-            Page page = getRequestContextUtil().getRequestPage();
+            Page page = resolveRequestPage();
             for (String uniqueName : standalonePanelNames) {
                 StandalonePanel standalonePanel = page.getStandalonePanel(uniqueName);
                 if (standalonePanel != null) {
@@ -264,7 +264,7 @@ public abstract class AbstractMultiControl extends AbstractControl implements Mu
         widgetInfoMap =  map;
         
         if (standalonePanelNames != null) {
-            Page page = getRequestContextUtil().getRequestPage();
+            Page page = resolveRequestPage();
             for (String uniqueName : standalonePanelNames) {
                 page.removeStandalonePanel(uniqueName);
             }

@@ -42,242 +42,262 @@ import com.tcdng.unify.web.ui.widget.writer.AbstractPanelWriter;
 @Component("contentpanel-writer")
 public class ContentPanelWriter extends AbstractPanelWriter {
 
-    private static final String CPREMOTE_CATEGORYBASE = "cpcat";
+	private static final String CPREMOTE_CATEGORYBASE = "cpcat";
 
-    @Override
-    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-        ContentPanelImpl contentPanelImpl = (ContentPanelImpl) widget;
+	@Override
+	protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
+		ContentPanelImpl contentPanel = (ContentPanelImpl) widget;
 
-        // Write content variables
-        writer.beginFunction("ux.rigContentPanel");
-        writer.writeParam("pId", contentPanelImpl.getId());
-        writer.writeParam("pHintPanelId", contentPanelImpl.getHintPanelId());
-        writer.writeParam("pBdyPanelId", contentPanelImpl.getBodyPanelId());
-        if (contentPanelImpl.getPageCount() > 0) {
-            // Close image
-            String closeImgId = contentPanelImpl.getTabItemImgId(contentPanelImpl.getPageIndex());
-            writer.writeParam("pCloseImgId", closeImgId);
-        }
+		// Write content variables
+		writer.beginFunction("ux.rigContentPanel");
+		writer.writeParam("pId", contentPanel.getId());
+		writer.writeParam("pHintPanelId", contentPanel.getHintPanelId());
+		writer.writeParam("pBdyPanelId", contentPanel.getBodyPanelId());
+		if (contentPanel.getPageCount() > 0) {
+			// Close image
+			String closeImgId = contentPanel.getTabItemImgId(contentPanel.getPageIndex());
+			writer.writeParam("pCloseImgId", closeImgId);
+		}
 
-        if (contentPanelImpl.getPageCount() == 0) {
-            writer.writeParam("pImmURL", getContextURL(contentPanelImpl.getPath()));
-        } else {
-            writer.writeParam("pCurIdx", contentPanelImpl.getPageIndex());
-            ContentInfo currentContentInfo = contentPanelImpl.getCurrentContentInfo();
-            if (currentContentInfo.isRemoteSave()) {
-                writer.writeParam("pSavePath", currentContentInfo.getSavePath());
-                writer.writeParam("pSaveIsRem", true);
-            } else {
-                writer.writeParam("pSavePath", getContextURL(currentContentInfo.getSavePath()));
-                writer.writeParam("pSaveIsRem", false);
-            }
+		PageRequestContextUtil rcUtil = getRequestContextUtil();
+		final boolean lowLatency = rcUtil.isLowLatencyRequest();
+		if (lowLatency) {
+			writer.writeParam("pLatency", lowLatency);
+			writer.writeParam("pLatencyPanelId", contentPanel.getLatencyPanelId());
+			writer.write(",\"pContentURL\":\"");
+			writer.writeContextURL(contentPanel.getDocumentPath(), "/content");
+			writer.write('"');
+		}
 
-            JsonWriter jw = new JsonWriter();
-            jw.beginArray();
-            for (int i = 0; i < contentPanelImpl.getPageCount(); i++) {
-                ContentInfo contentInfo = contentPanelImpl.getContentInfo(i);
-                jw.beginObject();
-                jw.write("tabId", contentPanelImpl.getTabItemId(i));
-                jw.write("tabImgId", contentPanelImpl.getTabItemImgId(i));
-                jw.write("openPath", getContextURL(contentInfo.getOpenPath()));
-                jw.write("closePath", getContextURL(contentInfo.getClosePath()));
-                jw.endObject();
-            }
-            jw.endArray();
-            writer.writeParam("pContent", jw);
-        }
+		if (contentPanel.getPageCount() == 0) {
+			writer.writeParam("pImmURL", getContextURL(contentPanel.getPath()));
+		} else {
+			writer.writeParam("pCurIdx", contentPanel.getPageIndex());
+			ContentInfo currentContentInfo = contentPanel.getCurrentContentInfo();
+			if (currentContentInfo.isRemoteSave()) {
+				writer.writeParam("pSavePath", currentContentInfo.getSavePath());
+				writer.writeParam("pSaveIsRem", true);
+			} else {
+				writer.writeParam("pSavePath", getContextURL(currentContentInfo.getSavePath()));
+				writer.writeParam("pSaveIsRem", false);
+			}
 
-        writer.writeParam("pTabbed", contentPanelImpl.isTabbed());
-        if (contentPanelImpl.isTabbed() && contentPanelImpl.getPageCount() > 0) {
-            writer.writeParam("pTabPaneId", contentPanelImpl.getTabPaneId());
-            writer.writeParam("pMenuId", contentPanelImpl.getMenuId());
-        } else {
-        	getRequestContextUtil().setContentScrollReset();
-        }
+			JsonWriter jw = new JsonWriter();
+			jw.beginArray();
+			for (int i = 0; i < contentPanel.getPageCount(); i++) {
+				ContentInfo contentInfo = contentPanel.getContentInfo(i);
+				jw.beginObject();
+				jw.write("tabId", contentPanel.getTabItemId(i));
+				jw.write("tabImgId", contentPanel.getTabItemImgId(i));
+				jw.write("openPath", getContextURL(contentInfo.getOpenPath()));
+				jw.write("closePath", getContextURL(contentInfo.getClosePath()));
+				jw.endObject();
+			}
+			jw.endArray();
+			writer.writeParam("pContent", jw);
+		}
 
-        writer.endFunction();
+		final boolean tabbed = contentPanel.isTabbed();
+		writer.writeParam("pTabbed", tabbed);
+		if (tabbed && contentPanel.getPageCount() > 0) {
+			writer.writeParam("pTabPaneId", contentPanel.getTabPaneId());
+			writer.writeParam("pMenuId", contentPanel.getMenuId());
+		} else {
+			rcUtil.setContentScrollReset();
+		}
 
-        if (contentPanelImpl.isSidebar()) {
-            writer.writeBehavior(contentPanelImpl.getSidebar());
-        }
+		writer.endFunction();
 
-        if (contentPanelImpl.getPageCount() > 0) {
-            // Set response page controller
-            PageRequestContextUtil rcu = getRequestContextUtil();
-            ControllerPathParts currentRespPathParts = rcu.getResponsePathParts();
-            ContentInfo currentContentInfo = contentPanelImpl.getCurrentContentInfo();
-            rcu.setResponsePathParts(currentContentInfo.getPathParts());
-            writer.writeBehavior(currentContentInfo.getPage());
+		if (contentPanel.isSidebar()) {
+			writer.writeBehavior(contentPanel.getSidebar());
+		}
 
-            // Restore response controller
-            rcu.setResponsePathParts(currentRespPathParts);
-        }
-    }
+		if (contentPanel.getPageCount() > 0) {
+			if (lowLatency) {
+				// TODO
+			} else {
+				// Set response page controller
+				ControllerPathParts currentRespPathParts = rcUtil.getResponsePathParts();
+				ContentInfo currentContentInfo = contentPanel.getCurrentContentInfo();
+				try {
+					rcUtil.setResponsePathParts(currentContentInfo.getPathParts());
+					rcUtil.setContentPage(currentContentInfo.getPage());
+					writer.writeBehavior(currentContentInfo.getPage());
+				} finally {
+					// Restore response controller
+					rcUtil.setResponsePathParts(currentRespPathParts);
+				}
+			}
+		}
+	}
 
-    @Override
-    protected void writeLayoutContent(ResponseWriter writer, Container container) throws UnifyException {
-        ContentPanelImpl contentPanelImpl = (ContentPanelImpl) container;
-        writer.write("<div id=\"").write(contentPanelImpl.getHintPanelId()).write("\" class=\"cphint\"></div>");
-        writer.write("<div id=\"").write(contentPanelImpl.getBusyIndicatorId()).write("\" class=\"cpbusy\">");
-        writer.write("<img class=\"cpimage\" src=\"");
-        writer.writeContextResourceURL("/resource/file", MimeType.IMAGE.template(), "$t{images/busy.gif}");
-        writer.write("\"></div>");
+	@Override
+	protected void writeLayoutContent(ResponseWriter writer, Container container) throws UnifyException {
+		ContentPanelImpl contentPanel = (ContentPanelImpl) container;
+		writer.write("<div id=\"").write(contentPanel.getHintPanelId()).write("\" class=\"cphint\"></div>");
+		writer.write("<div id=\"").write(contentPanel.getBaseContentId())
+				.write("\" style=\"display:table;width:100%;height:100%;\">");
+		boolean isSidebar = contentPanel.isSidebar();
+		// Frame
+		if (isSidebar) {
+			writer.write("<div style=\"display:table-row;width:100%;\">");
+			writer.write("<div style=\"display:table-cell;width:100%;height:100%;vertical-align:top;\">");
+			writer.write("<div style=\"display:table;width:100%;height:100%;\">");
+		}
 
-        writer.write("<div id=\"").write(contentPanelImpl.getBaseContentId())
-                .write("\" style=\"display:table;width:100%;height:100%;\">");
-        boolean isSidebar = contentPanelImpl.isSidebar();
-        // Frame
-        if (isSidebar) {
-            writer.write("<div style=\"display:table-row;width:100%;\">");
-            writer.write("<div style=\"display:table-cell;width:100%;height:100%;vertical-align:top;\">");
-            writer.write("<div style=\"display:table;width:100%;height:100%;\">");
-        }
+		if (contentPanel.getPageCount() > 0) {
+			writeContentPanel(writer, contentPanel);
+		}
 
-        if (contentPanelImpl.getPageCount() > 0) {
-            writeContentPanel(writer, contentPanelImpl);
-        }
+		if (isSidebar) {
+			writer.write("</div>");
+			writer.write("</div>");
+			writer.write("<div style=\"display:table-cell;height:100%;vertical-align:top;\">");
+			writer.writeStructureAndContent(contentPanel.getSidebar());
+			writer.write("</div>");
+			writer.write("</div>");
+		}
+		writer.write("</div>");
+	}
 
-        if (isSidebar) {
-            writer.write("</div>");
-            writer.write("</div>");
-            writer.write("<div style=\"display:table-cell;height:100%;vertical-align:top;\">");
-            writer.writeStructureAndContent(contentPanelImpl.getSidebar());
-            writer.write("</div>");
-            writer.write("</div>");
-        }
-        writer.write("</div>");
-    }
+	private void writeContentPanel(ResponseWriter writer, ContentPanelImpl contentPanel) throws UnifyException {
+		logDebug("Writing structure for content panel [{0}]...", contentPanel.getLongName());
+		PageRequestContextUtil rcUtil = getRequestContextUtil();
+		ContentInfo currentContentInfo = contentPanel.getCurrentContentInfo();
 
-    private void writeContentPanel(ResponseWriter writer, ContentPanelImpl contentPanelImpl) throws UnifyException {
-        logDebug("Writing structure for content panel [{0}]...", contentPanelImpl.getLongName());
-        PageRequestContextUtil rcUtil = getRequestContextUtil();
-        ContentInfo currentContentInfo = contentPanelImpl.getCurrentContentInfo();
+		// Tabs
+		final boolean tabbed = contentPanel.isTabbed();
+		if (tabbed) {
+			writer.write("<div style=\"display:table-row;width:100%;\">");
+			writer.write("<div style=\"display:table-cell;\">");
+			writer.write("<div id=\"").write(contentPanel.getTabPaneId()).write("\" class=\"cptabbar\">");
 
-        // Tabs
-        if (contentPanelImpl.isTabbed()) {
-            writer.write("<div style=\"display:table-row;width:100%;\">");
-            writer.write("<div style=\"display:table-cell;\">");
-            writer.write("<div id=\"").write(contentPanelImpl.getTabPaneId()).write("\" class=\"cptabbar\">");
+			logDebug("Writing header tabs for content panel [{0}]...", contentPanel.getLongName());
+			writer.write("<ul class=\"cptab\">");
+			for (int i = 0; i < contentPanel.getPageCount(); i++) {
+				ContentInfo contentInfo = contentPanel.getContentInfo(i);
+				writer.write("<li");
+				if (i == contentPanel.getPageIndex()) {
+					writer.write(" class=\"cpactive\"");
+				} else {
+					writer.write(" class=\"cpinactive\"");
+				}
 
-            logDebug("Writing header tabs for content panel [{0}]...", contentPanelImpl.getLongName());
-            writer.write("<ul class=\"cptab\">");
-            for (int i = 0; i < contentPanelImpl.getPageCount(); i++) {
-                ContentInfo contentInfo = contentPanelImpl.getContentInfo(i);
-                writer.write("<li");
-                if (i == contentPanelImpl.getPageIndex()) {
-                    writer.write(" class=\"cpactive\"");
-                } else {
-                    writer.write(" class=\"cpinactive\"");
-                }
+				Page page = contentInfo.getPage();
+				String title = (String) page.getAttribute(PageAttributeConstants.PAGE_TITLE);
+				if (StringUtils.isBlank(title)) {
+					title = page.getCaption();
+				}
 
-                Page page = contentInfo.getPage();
-                String title = (String) page.getAttribute(PageAttributeConstants.PAGE_TITLE);
-                if (StringUtils.isBlank(title)) {
-                    title = page.getCaption();
-                }
+				String subTitle = page.getSubCaption();
 
-                String subTitle = page.getSubCaption();
+				writer.write("><div><a ");
+				if (page.getUplAttribute(boolean.class, "remote")) {
+					String cpcat = CPREMOTE_CATEGORYBASE;
+					if (StringUtils.isNotBlank(contentInfo.getColorScheme())) {
+						cpcat = CPREMOTE_CATEGORYBASE + contentInfo.getColorScheme();
+					}
 
-                writer.write("><div><a ");
-                if (page.getUplAttribute(boolean.class, "remote")) {
-                    String cpcat = CPREMOTE_CATEGORYBASE;
-                    if (StringUtils.isNotBlank(contentInfo.getColorScheme())) {
-                        cpcat = CPREMOTE_CATEGORYBASE + contentInfo.getColorScheme();
-                    }
+					writer.write("class=\"cpremote ").write(cpcat).write("\"");
+				} else {
+					if (subTitle != null) {
+						writer.write("class=\"cpt\"");
+					}
+				}
 
-                    writer.write("class=\"cpremote ").write(cpcat).write("\"");
-                } else {
-                    if (subTitle != null) {
-                        writer.write("class=\"cpt\"");
-                    }
-                }
+				writer.write(" id=\"").write(contentPanel.getTabItemId(i)).write("\">");
+				writer.write("<div class=\"cptitle\">");
+				writer.write("<span class=\"hd\" title=\"").writeWithHtmlEscape(title).write("\">")
+						.writeWithHtmlEscape(title).write("</span>");
+				if (subTitle != null) {
+					writer.write("<span class=\"hds\" title=\"").writeWithHtmlEscape(subTitle).write("\">")
+							.writeWithHtmlEscape(subTitle).write("</span>");
+				}
+				writer.write("</div>");
 
-                writer.write(" id=\"").write(contentPanelImpl.getTabItemId(i)).write("\">");
-                writer.write("<div class=\"cptitle\">");
-                writer.write("<span class=\"hd\" title=\"").writeWithHtmlEscape(title).write("\">")
-                        .writeWithHtmlEscape(title).write("</span>");
-                if (subTitle != null) {
-                    writer.write("<span class=\"hds\" title=\"").writeWithHtmlEscape(subTitle).write("\">")
-                            .writeWithHtmlEscape(subTitle).write("</span>");
-                }
-                writer.write("</div>");
+				writer.write("</a>");
 
-                writer.write("</a>");
+				if (i > 0) {
+					writer.write("<img id=\"").write(contentPanel.getTabItemImgId(i)).write("\" src=\"");
+					writer.writeFileImageContextURL("$t{images/cross_gray.png}");
+					writer.write("\"/>");
+				}
+				writer.write("</div></li>");
+			}
+			writer.write("</ul>");
 
-                if (i > 0) {
-                    writer.write("<img id=\"").write(contentPanelImpl.getTabItemImgId(i)).write("\" src=\"");
-                    writer.writeFileImageContextURL("$t{images/cross_gray.png}");
-                    writer.write("\"/>");
-                }
-                writer.write("</div></li>");
-            }
-            writer.write("</ul>");
+			writer.write("</div>");
+			writer.write("</div>");
+			writer.write("</div>");
 
-            writer.write("</div>");
-            writer.write("</div>");
-            writer.write("</div>");
+			// Menu
+			String menuId = contentPanel.getMenuId();
+			writer.write("<div");
+			writeTagId(writer, menuId);
+			writeTagStyleClass(writer, "contentpanel-popup");
+			writer.write(">");
+			writer.write("<ul id=\"").write(contentPanel.getMenuBaseId()).write("\">");
+			writer.write("<li><a class=\"mitem\" id=\"").write(contentPanel.getMenuCloseId()).write("\">");
+			writer.writeWithHtmlEscape(resolveSessionMessage("$m{contentpanel.close}"));
+			writer.write("</a></li>");
+			writer.write("<li><a class=\"mitem\" id=\"").write(contentPanel.getMenuCloseOtherId()).write("\">");
+			writer.writeWithHtmlEscape(resolveSessionMessage("$m{contentpanel.closeothertabs}"));
+			writer.write("</a></li>");
+			writer.write("<li class=\"msep\"><a class=\"mitem\" id=\"").write(contentPanel.getMenuCloseAllId())
+					.write("\">");
+			writer.writeWithHtmlEscape(resolveSessionMessage("$m{contentpanel.closealltabs}"));
+			writer.write("</a></li>");
+			writer.write("</ul>");
+			writer.write("</div>");
+		}
+		// End tabs
 
-            // Menu
-            String menuId = contentPanelImpl.getMenuId();
-            writer.write("<div");
-            writeTagId(writer, menuId);
-            writeTagStyleClass(writer, "contentpanel-popup");
-            writer.write(">");
-            writer.write("<ul id=\"").write(contentPanelImpl.getMenuBaseId()).write("\">");
-            writer.write("<li><a class=\"mitem\" id=\"").write(contentPanelImpl.getMenuCloseId()).write("\">");
-            writer.writeWithHtmlEscape(resolveSessionMessage("$m{contentpanel.close}"));
-            writer.write("</a></li>");
-            writer.write("<li><a class=\"mitem\" id=\"").write(contentPanelImpl.getMenuCloseOtherId()).write("\">");
-            writer.writeWithHtmlEscape(resolveSessionMessage("$m{contentpanel.closeothertabs}"));
-            writer.write("</a></li>");
-            writer.write("<li class=\"msep\"><a class=\"mitem\" id=\"").write(contentPanelImpl.getMenuCloseAllId())
-                    .write("\">");
-            writer.writeWithHtmlEscape(resolveSessionMessage("$m{contentpanel.closealltabs}"));
-            writer.write("</a></li>");
-            writer.write("</ul>");
-            writer.write("</div>");
-        }
-        // End tabs
+		// Title bar
+		if (contentPanel.isTitleBar()) {
+			writer.write("<div style=\"display:table-row;width:100%;\">");
+			writer.write("<div style=\"display:table-cell;\">");
+			writer.write("<div class=\"cptitlebar\">");
 
-        // Title bar
-        if (contentPanelImpl.isTitleBar()) {
-            writer.write("<div style=\"display:table-row;width:100%;\">");
-            writer.write("<div style=\"display:table-cell;\">");
-            writer.write("<div class=\"cptitlebar\">");
+			writer.write("<div class=\"cpbar\">");
+			writer.write("<span class=\"cpspan\">");
+			writer.writeWithHtmlEscape(currentContentInfo.getPage().getCaption());
+			writer.write("</span>");
+			writer.write("</div>");
 
-            writer.write("<div class=\"cpbar\">");
-            writer.write("<span class=\"cpspan\">");
-            writer.writeWithHtmlEscape(currentContentInfo.getPage().getCaption());
-            writer.write("</span>");
-            writer.write("</div>");
+			writer.write("</div>");
+			writer.write("</div>");
+			writer.write("</div>");
+		}
+		// End title bar
 
-            writer.write("</div>");
-            writer.write("</div>");
-            writer.write("</div>");
-        } else {
-        	if (contentPanelImpl.isTabbed()) {
-                writer.write("<div class=\"cpheaderbar\">");
-                writer.write("</div>");
-        	}
-        }
-        // End title bar
+		// Body
+		writer.write("<div style=\"display:table-row;width:100%;height:100%;\">");
+		writer.write("<div style=\"display:table-cell;\">");
+		writer.write("<div id=\"").write(contentPanel.getBodyPanelId()).write("\" class=\"cpbody\">");
 
-        // Body
-        writer.write("<div style=\"display:table-row;width:100%;height:100%;\">");
-        writer.write("<div style=\"display:table-cell;\">");
-        writer.write("<div id=\"").write(contentPanelImpl.getBodyPanelId()).write("\" class=\"cpbody\">");
+		writer.write("<div id=\"").write(contentPanel.getLatencyPanelId())
+				.write("\" class=\"cplatency\" style=\"display:none;\">");
+		writer.write("<img src=\"");
+		writer.writeContextResourceURL("/resource/file", MimeType.IMAGE.template(), "$t{images/latency.gif}");
+		writer.write("\">");
+		writer.write("</div>");
+		
+		if (rcUtil.isLowLatencyRequest()) {
+			// TODO
+		} else {
+			ControllerPathParts currentRespPathParts = rcUtil.getResponsePathParts();
+			try {
+				rcUtil.setResponsePathParts(currentContentInfo.getPathParts());
+				rcUtil.setContentPage(currentContentInfo.getPage());
+				writer.writeStructureAndContent(currentContentInfo.getPage());
+			} finally {
+				rcUtil.setResponsePathParts(currentRespPathParts);
+			}
+		}
 
-        ControllerPathParts currentRespPathParts = rcUtil.getResponsePathParts();
-        rcUtil.setResponsePathParts(currentContentInfo.getPathParts());
-        writer.writeStructureAndContent(currentContentInfo.getPage());
-
-        // Restore response controller
-        rcUtil.setResponsePathParts(currentRespPathParts);
-
-        writer.write("</div>");
-        writer.write("</div>");
-        writer.write("</div>");
-        // End body
-    }
-
+		writer.write("</div>");
+		writer.write("</div>");
+		writer.write("</div>");
+		// End body
+	}
 }

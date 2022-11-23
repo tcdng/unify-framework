@@ -68,6 +68,24 @@ public interface PageRequestContextUtil extends UnifyComponent {
     Page getRequestPage() throws UnifyException;
 
     /**
+     * Sets the content page object for current request.
+     * 
+     * @param page
+     *            the page to set
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void setContentPage(Page page) throws UnifyException;
+
+    /**
+     * Returns the content page object for current request.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    Page getContentPage() throws UnifyException;
+
+    /**
      * Sets current request context's popup long name.
      * 
      * @param longName
@@ -709,4 +727,18 @@ public interface PageRequestContextUtil extends UnifyComponent {
      *             if an error occurs
      */
     boolean isContentScrollReset() throws UnifyException;
+
+	/**
+	 * Sets low latency request.
+	 * 
+	 * @throws UnifyException if an error occurs
+	 */
+	void setLowLatencyRequest() throws UnifyException;
+
+	/**
+	 * Returns true if low latency request is set..
+	 * 
+	 * @throws UnifyException if an error occurs
+	 */
+	boolean isLowLatencyRequest() throws UnifyException;
 }

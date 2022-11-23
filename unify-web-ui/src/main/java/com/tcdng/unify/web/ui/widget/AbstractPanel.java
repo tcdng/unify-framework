@@ -248,6 +248,6 @@ public abstract class AbstractPanel extends AbstractContainer implements Panel {
 	}
 
 	protected String getCommandFullPath(String actionName) throws UnifyException {
-		return getPage().getPathId() + "/command?req_cmd=" + getId() + "->" + actionName;
+		return resolveRequestPage().getPathId() + "/command?req_cmd=" + getId() + "->" + actionName;
 	}
 }

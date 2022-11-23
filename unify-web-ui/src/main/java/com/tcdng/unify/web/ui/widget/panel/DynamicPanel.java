@@ -73,7 +73,7 @@ public class DynamicPanel extends AbstractPanel {
         String uniqueName =
                 UplUtils.generateUplComponentCloneName(panelName, getPageManager().getPageName(getLongName()));
 
-        Page page = getRequestContextUtil().getRequestPage();
+        Page page = resolveRequestPage();
         getPageManager().invalidateStaleDocument(uniqueName);
         if (page == null) {
             page = (Page) getSessionAttribute(PageRequestParameterConstants.UNLOAD_ORIGIN_PAGE);

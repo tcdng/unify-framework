@@ -186,6 +186,11 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
     }
 
     @Action
+    public String content() throws UnifyException {
+        return ResultMappingConstants.NONE;
+    }
+    
+    @Action
     public String command() throws UnifyException {
         RequestCommand requestCommand = getPageRequestContextUtil().getRequestCommand();
         if (requestCommand != null) {
@@ -925,7 +930,6 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
         if (!toClosePathIdList.isEmpty()) {
             PageRequestContextUtil pageRequestContextUtil = getPageRequestContextUtil();
             Page currentPage = pageRequestContextUtil.getRequestPage();
-
             try {
                 if (isFireClose) {
                     // Fire closePage() for all targets
