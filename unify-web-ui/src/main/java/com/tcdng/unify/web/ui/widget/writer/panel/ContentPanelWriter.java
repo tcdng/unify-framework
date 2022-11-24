@@ -18,7 +18,6 @@ package com.tcdng.unify.web.ui.widget.writer.panel;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
-import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.core.util.json.JsonWriter;
 import com.tcdng.unify.web.ControllerPathParts;
@@ -63,7 +62,6 @@ public class ContentPanelWriter extends AbstractPanelWriter {
 		final boolean lowLatency = rcUtil.isLowLatencyRequest();
 		if (lowLatency) {
 			writer.writeParam("pLatency", lowLatency);
-			writer.writeParam("pLatencyPanelId", contentPanel.getLatencyPanelId());
 			writer.write(",\"pContentURL\":\"");
 			writer.writeContextURL(contentPanel.getDocumentPath(), "/content");
 			writer.write('"');
@@ -273,15 +271,7 @@ public class ContentPanelWriter extends AbstractPanelWriter {
 		// Body
 		writer.write("<div style=\"display:table-row;width:100%;height:100%;\">");
 		writer.write("<div style=\"display:table-cell;\">");
-		writer.write("<div id=\"").write(contentPanel.getBodyPanelId()).write("\" class=\"cpbody\">");
-
-		writer.write("<div id=\"").write(contentPanel.getLatencyPanelId())
-				.write("\" class=\"cplatency\" style=\"display:none;\">");
-		writer.write("<img src=\"");
-		writer.writeContextResourceURL("/resource/file", MimeType.IMAGE.template(), "$t{images/latency.gif}");
-		writer.write("\">");
-		writer.write("</div>");
-		
+		writer.write("<div id=\"").write(contentPanel.getBodyPanelId()).write("\" class=\"cpbody\">");		
 		if (rcUtil.isLowLatencyRequest()) {
 			// TODO
 		} else {

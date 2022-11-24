@@ -38,6 +38,11 @@ import com.tcdng.unify.core.annotation.UplAttributes;
 public abstract class AbstractDocument extends AbstractPage implements Document {
 
     @Override
+    public String getLatencyPanelId() throws UnifyException {
+        return getPrefixedId("latency_");
+    }
+
+    @Override
     public Panel getHeaderPanel() throws UnifyException {
         String headerPanelId = getUplAttribute(String.class, "headerPanel");
         if (headerPanelId != null) {

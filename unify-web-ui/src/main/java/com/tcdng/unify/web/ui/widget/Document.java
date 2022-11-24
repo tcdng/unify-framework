@@ -15,6 +15,8 @@
  */
 package com.tcdng.unify.web.ui.widget;
 
+import com.tcdng.unify.core.UnifyException;
+
 /**
  * A user interface document.
  * 
@@ -22,5 +24,13 @@ package com.tcdng.unify.web.ui.widget;
  * @since 1.0
  */
 public interface Document extends Page, DocumentPanels {
+    
+	/**
+	 * Gets the latency panel ID for this document.
+	 * 
+	 * @return the latency panel ID
+	 * @throws UnifyException if an error occurs
+	 */
+	String getLatencyPanelId() throws UnifyException;
 
 }
