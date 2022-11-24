@@ -70,6 +70,7 @@ ux.popupVisible = false;
 ux.submitting = false;
 ux.busyIndicator = "";
 ux.busyIndicatorTimer;
+ux.busyCounter = 0;
 
 ux.cntId = null
 ux.cntHintId = null
@@ -540,7 +541,7 @@ ux.ajaxCall = function(ajaxPrms) {
 
 	if (ajaxPrms.uIsDebounce) {
 		ajaxPrms.uDebounced = ux.effectDebounce();
-		ux.prepareBusyIndicator();
+		ux.triggerBusyIndicator();
 	}
 	
 	try {
@@ -626,7 +627,8 @@ ux.ajaxConstructCallParam = function(url, param, sync, encoded, busy,
 }
 
 /** Busy indicator */
-ux.prepareBusyIndicator = function() {
+ux.triggerBusyIndicator = function() {
+	ux.busyCounter++;
 	if (ux.busyIndicatorTimer) {
 		return;
 	}
@@ -644,14 +646,19 @@ ux.showBusyIndicator = function() {
 }
 
 ux.hideBusyIndicator = function() {
-	if (ux.busyIndicatorTimer) {
-		window.clearTimeout(ux.busyIndicatorTimer);
-		ux.busyIndicatorTimer = null;
-	}
-	if (ux.busyIndicator) {
-		var busyElem = _id(ux.busyIndicator);
-		if (busyElem) {
-			busyElem.style.display = "none";
+	ux.busyCounter--;
+	if (ux.busyCounter <= 0) {
+		ux.busyCounter = 0;
+		if (ux.busyIndicatorTimer) {
+			window.clearTimeout(ux.busyIndicatorTimer);
+			ux.busyIndicatorTimer = null;
+		}
+		
+		if (ux.busyIndicator) {
+			var busyElem = _id(ux.busyIndicator);
+			if (busyElem) {
+				busyElem.style.display = "none";
+			}
 		}
 	}
 }
@@ -1056,10 +1063,10 @@ ux.rigContentPanel = function(rgp) {
 		}
 		
 		if (rgp.pLatency) {
-				ux.prepareBusyIndicator();
 				const evp = {};
 				evp.uTrg = uId;
 				evp.uURL = rgp.pContentURL;
+				evp.uIsDebounce = true;
 				ux.postCommit(evp);
 		} else {
 			ux.hideBusyIndicator();
