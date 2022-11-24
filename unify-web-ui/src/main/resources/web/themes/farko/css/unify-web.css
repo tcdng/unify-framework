@@ -108,6 +108,8 @@ z-index:400;}
     overflow:hidden; background-color: rgba(80, 80, 80, 0.25); z-index:100; display:none;}
 .ui-document .dcpop {position:absolute;width:auto; z-index:101;}
 .ui-document .dcsysinfo {position:absolute;width:auto; z-index:102;}
+.ui-document .dclatency {position:absolute;width:100%;text-align:center;z-index:101;}
+.ui-document .dclatency img {width:512px;height:8px;margin-top:2px;}
 
 /** Deck */
 .ui-tilegroup {}
@@ -218,8 +220,6 @@ z-index:400;}
 .ui-contentpanel .cpbusy {display: none; position: absolute; padding-top: 4px; padding-left: 4px; z-index:101;}
 .ui-contentpanel .cpbusy .cpimage {width:48px;border:1px solid #606060;background-color:#F0F0F0;}
 .ui-contentpanel .cpbody {width:100%; position: absolute;height:100%;}
-.ui-contentpanel .cplatency {width:100%;text-align:center;z-index:101;}
-.ui-contentpanel .cplatency img {width:480px;height:8px;background-color:#ffffff;}
 
 .ui-contentpanel .cptabbar {width: 100%; min-height:40px; padding-top:2px;}
 .ui-contentpanel .cptab {width:100%; list-style: none; display: inline-table; border-bottom:solid 1px #C0C0C0; margin: 0px; padding: 0px;}

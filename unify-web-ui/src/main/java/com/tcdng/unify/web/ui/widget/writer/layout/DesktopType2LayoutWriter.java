@@ -53,6 +53,7 @@ public class DesktopType2LayoutWriter extends AbstractDocumentLayoutWriter {
         boolean isCollapsible = layout.getUplAttribute(boolean.class, "collapsibleSidebar");
         String docPageName = document.getId();
         writeSection(writer, "header", document.getHeaderPanel());
+        writeLatencySection(writer, document);
         writer.write("<div class=\"midSection\">");
         writer.write("<div class=\"cell\">");
         writer.write("<div style=\"display:table; width:100%; height:100%\">");

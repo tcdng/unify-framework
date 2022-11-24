@@ -47,7 +47,6 @@ public class UnloadContentResponse extends AbstractJsonPageControllerResponse {
             writer.write(",");
             appendRefreshAttributesJson(writer, true);
             appendRegisteredDebounceWidgets(writer, false);
-            writer.write(",\"busyIndicator\":\"").write(contentPanel.getLatencyPanelId()).write("\"");
             writer.write(",\"scrollToTop\":true");
         }
     }

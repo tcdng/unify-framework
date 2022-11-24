@@ -131,11 +131,12 @@ ux.registerExtension = function(extLiteral, extObj) {
 }
 
 /** Basic * */
-ux.setupDocument = function(docPath, docPopupBaseId, docPopupId, docSysInfoId, docSessionId) {
+ux.setupDocument = function(docPath, docPopupBaseId, docPopupId, docSysInfoId, docLatencyId, docSessionId) {
 	ux.docPath = docPath;
 	ux.docPopupBaseId = docPopupBaseId;
 	ux.docPopupId = docPopupId;
 	ux.docSysInfoId = docSysInfoId;
+	ux.busyIndicator = docLatencyId;
 	ux.docSessionId = docSessionId;
 }
 
@@ -299,9 +300,6 @@ ux.respHandler = {
 			ux.refreshPageGlobals(resp);
 			ux.refreshPanels(resp);
 			ux.registerRespDebounce(resp);
-			if (resp.busyIndicator) {
-				ux.busyIndicator = resp.busyIndicator;
-			}
 			if (resp.scrollToTop) {
 				ux.scrollDocToTop();
 			}
@@ -1210,7 +1208,6 @@ ux.rigDetachedPanel = function(rgp) {
 /** Fixed content panel */
 ux.rigFixedContentPanel = function(rgp) {
 	ux.cntHintId = rgp.pHintPanelId;
-	ux.busyIndicator = rgp.pBusyIndId;
 }
 
 /** Split panel */

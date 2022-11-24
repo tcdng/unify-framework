@@ -163,64 +163,65 @@ public class DocumentWriter extends AbstractPageWriter {
     }
 
     @Override
-    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-        BasicDocument document = (BasicDocument) widget;
-        writer.write("<script");
-        writeNonce(writer);
-        writer.write(">");
-        // Set document properties
-        ControllerPathParts controllerPathParts = pathInfoRepository.getControllerPathParts(document);
-        writer.write("ux.setupDocument(\"").write(controllerPathParts.getControllerName()).write("\", \"")
-                .write(document.getPopupBaseId()).write("\", \"").write(document.getPopupWinId()).write("\", \"")
-                .write(document.getPopupSysId()).write("\", \"").write(getSessionContext().getId()).write("\");");
+	protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
+		BasicDocument document = (BasicDocument) widget;
+		writer.write("<script");
+		writeNonce(writer);
+		writer.write(">");
+		// Set document properties
+		ControllerPathParts controllerPathParts = pathInfoRepository.getControllerPathParts(document);
+		writer.write("ux.setupDocument(\"").write(controllerPathParts.getControllerName()).write("\", \"")
+				.write(document.getPopupBaseId()).write("\", \"").write(document.getPopupWinId()).write("\", \"")
+				.write(document.getPopupSysId()).write("\", \"").write(document.getLatencyPanelId()).write("\", \"")
+				.write(getSessionContext().getId()).write("\");");
 
-        writer.useSecondary();
-        // Write layout behavior
-        DocumentLayout documentLayout = document.getUplAttribute(DocumentLayout.class, "layout");
-        writer.writeBehavior(documentLayout, document);
+		writer.useSecondary();
+		// Write layout behavior
+		DocumentLayout documentLayout = document.getUplAttribute(DocumentLayout.class, "layout");
+		writer.writeBehavior(documentLayout, document);
 
-        // Write inherited behavior
-        super.doWriteBehavior(writer, document);
+		// Write inherited behavior
+		super.doWriteBehavior(writer, document);
 
-        // Write panel behaviors
-        writeBehaviour(writer, document.getHeaderPanel());
-        writeBehaviour(writer, document.getMenuPanel());
-        writeBehaviour(writer, document.getContentPanel());
-        writeBehaviour(writer, document.getFooterPanel());
-        WebStringWriter scriptLsw = writer.discardSecondary();
-        writer.write("var behaviorPrm = ").write(scriptLsw).write(";");
-        writer.write("ux.perform(behaviorPrm);");
+		// Write panel behaviors
+		writeBehaviour(writer, document.getHeaderPanel());
+		writeBehaviour(writer, document.getMenuPanel());
+		writeBehaviour(writer, document.getContentPanel());
+		writeBehaviour(writer, document.getFooterPanel());
+		WebStringWriter scriptLsw = writer.discardSecondary();
+		writer.write("var behaviorPrm = ").write(scriptLsw).write(";");
+		writer.write("ux.perform(behaviorPrm);");
 
-        // Write page aliases
-        writer.write("var aliasPrms = {");
-        writer.write("\"pageNameAliases\":");
-        writer.writeJsonPageNameAliasesArray();
-        writer.write("}; ux.setPageNameAliases(aliasPrms);");
+		// Write page aliases
+		writer.write("var aliasPrms = {");
+		writer.write("\"pageNameAliases\":");
+		writer.writeJsonPageNameAliasesArray();
+		writer.write("}; ux.setPageNameAliases(aliasPrms);");
 
-        // Write debouncing
-        if (getRequestContextUtil().isRegisteredDebounceWidgets()) {
-            writer.write("var debounceList = ")
-                    .writeJsonArray(getRequestContextUtil().getAndClearRegisteredDebounceWidgetIds()).write(";");
-            writer.write("ux.registerDebounce(debounceList);");
-        }
+		// Write debouncing
+		if (getRequestContextUtil().isRegisteredDebounceWidgets()) {
+			writer.write("var debounceList = ")
+					.writeJsonArray(getRequestContextUtil().getAndClearRegisteredDebounceWidgetIds()).write(";");
+			writer.write("ux.registerDebounce(debounceList);");
+		}
 
-        // Write No-push
-        if (getRequestContextUtil().isNoPushWidgets()) {
-            writer.write("var noPushList = ")
-                    .writeJsonArray(getRequestContextUtil().getNoPushWidgetIds()).write(";");
-            writer.write("ux.markNoPushWidgets(noPushList);");
-        }
+		// Write No-push
+		if (getRequestContextUtil().isNoPushWidgets()) {
+			writer.write("var noPushList = ").writeJsonArray(getRequestContextUtil().getNoPushWidgetIds()).write(";");
+			writer.write("ux.markNoPushWidgets(noPushList);");
+		}
 
-        writer.write("ux.cascadeStretch();");
-        
-        // Set focus
-        getRequestContextUtil().considerDefaultFocusOnWidget();
-        if (getRequestContextUtil().isFocusOnWidgetOrDefault()) {
-            writer.write("ux.setFocus({wdgid:\"").write(getRequestContextUtil().getFocusOnWidgetIdOrDefault()).write("\"});");
-            getRequestContextUtil().clearFocusOnWidget();
-        }
-        writer.write("</script>");
-    }
+		writer.write("ux.cascadeStretch();");
+
+		// Set focus
+		getRequestContextUtil().considerDefaultFocusOnWidget();
+		if (getRequestContextUtil().isFocusOnWidgetOrDefault()) {
+			writer.write("ux.setFocus({wdgid:\"").write(getRequestContextUtil().getFocusOnWidgetIdOrDefault())
+					.write("\"});");
+			getRequestContextUtil().clearFocusOnWidget();
+		}
+		writer.write("</script>");
+	}
 
     @Override
     protected void doWriteInnerStructureAndContent(ResponseWriter writer, Panel panel) throws UnifyException {

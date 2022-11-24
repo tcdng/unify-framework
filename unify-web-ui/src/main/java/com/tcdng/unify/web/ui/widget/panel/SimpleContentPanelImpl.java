@@ -39,11 +39,6 @@ public class SimpleContentPanelImpl extends AbstractContentPanel {
     }
 
     @Override
-    public String getLatencyPanelId() throws UnifyException {
-        return getPrefixedId("latency_");
-    }
-
-    @Override
     public void clearPages() throws UnifyException {
         
     }
