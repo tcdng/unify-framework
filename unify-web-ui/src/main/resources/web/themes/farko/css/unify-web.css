@@ -216,8 +216,10 @@ z-index:400;}
 .ui-contentpanel {display:block;  position: relative; left: 0px; top: 0px; width: 100%; height: 100%; background-color: #FFF;}
 .ui-contentpanel .cphint {position: absolute; top: 2px; width: 100%; z-index:100;}
 .ui-contentpanel .cpbusy {display: none; position: absolute; padding-top: 4px; padding-left: 4px; z-index:101;}
-.ui-contentpanel .cpbusy .cpimage {width:48px; border: 1px solid #606060; background-color:#F0F0F0;}
-.ui-contentpanel .cpbody {width: 100%; height: 100%;}
+.ui-contentpanel .cpbusy .cpimage {width:48px;border:1px solid #606060;background-color:#F0F0F0;}
+.ui-contentpanel .cpbody {width:100%; position: absolute;height:100%;}
+.ui-contentpanel .cplatency {width:100%;text-align:center;z-index:101;}
+.ui-contentpanel .cplatency img {width:480px;height:8px;background-color:#ffffff;}
 
 .ui-contentpanel .cptabbar {width: 100%; min-height:40px; padding-top:2px;}
 .ui-contentpanel .cptab {width:100%; list-style: none; display: inline-table; border-bottom:solid 1px #C0C0C0; margin: 0px; padding: 0px;}
@@ -249,8 +251,6 @@ z-index:400;}
 	border-bottom: 2px solid #000000;}
 .ui-contentpanel .cptitlebar .cpspan {float:left; font-size: 10pt; font-weight: bold; text-align: left;}
 .ui-contentpanel .cpheaderbar {display:block; height:2px;}
-.ui-contentpanel .cplatency {text-align:center;}
-.ui-contentpanel .cplatency img {width:480px;height:8px;}
 
 .contentpanel-popup {position: fixed; visibility: hidden; width: auto; z-index: 300;
     background-color: #F0F0F0;}
