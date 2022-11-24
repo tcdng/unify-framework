@@ -109,7 +109,7 @@ z-index:400;}
 .ui-document .dcpop {position:absolute;width:auto; z-index:101;}
 .ui-document .dcsysinfo {position:absolute;width:auto; z-index:102;}
 .ui-document .dclatency {position:absolute;width:100%;text-align:center;z-index:101;}
-.ui-document .dclatency img {width:512px;height:8px;background-color:#ffffff;}
+.ui-document .dclatency img {width:512px;height:8px;background-color:#b1b8c1;}
 
 /** Deck */
 .ui-tilegroup {}
