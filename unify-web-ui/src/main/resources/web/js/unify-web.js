@@ -3228,6 +3228,7 @@ ux.rigTable = function(rgp) {
 				evp.uColIdx = colInfo.idx;
 				evp.uAscend = colInfo.ascend;
 				evp.uRef = [ rgp.pColIdxId, rgp.pSortDirId, id ];
+				evp.uIsDebounce = true;
 				var imgId = null;
 				if (colInfo.ascend) {
 					imgId = colInfo.field + '_' + rgp.pSortAscId;
@@ -3580,6 +3581,7 @@ ux.tableDisableMultiSelElements = function(rigTbl) {
 ux.tableAttachPageNavClick = function(id, pageSel, rgp) {
 	var evp = ux.newEvPrm(rgp);
 	evp.uSelectPage = pageSel;
+	evp.uIsDebounce = true;
 	if (rgp.pMultiSel) {
 		evp.uRef = [ rgp.pCurrPgCtrlId, rgp.pSelGrpId ];
 	} else {
@@ -3591,6 +3593,7 @@ ux.tableAttachPageNavClick = function(id, pageSel, rgp) {
 
 ux.tablePageNavClickHandler = function(uEv) {
 	var evp = uEv.evp;
+	evp.uIsDebounce = true;
 	var currPgCtrl = _id(evp.uRef[0]);
 	if (currPgCtrl) {
 		currPgCtrl.value = evp.uSelectPage;
