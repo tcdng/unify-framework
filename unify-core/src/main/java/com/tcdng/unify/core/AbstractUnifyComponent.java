@@ -224,6 +224,17 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	}
 
 	/**
+	 * Gets the configuration for a component by name.
+	 * 
+	 * @param name the component name
+	 * @return the component configuration if found, otherwise null.
+	 * @throws UnifyException if an error occurs
+	 */
+	protected UnifyComponentConfig getComponentConfig(String name) throws UnifyException {
+		return unifyComponentContext.getComponentConfig(name);
+	}
+
+	/**
 	 * Gets a component type by name. Looks for a component configuration in context
 	 * by name and returns the configured component type.
 	 * 
