@@ -583,6 +583,17 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
     }
 
     @Override
+	public void addListItem(String listName, List<String> items) throws UnifyException {
+        List<String> list = (List<String>) getRequestAttribute(listName);
+        if (list == null) {
+            list = new ArrayList<String>();
+            setRequestAttribute(listName, list);
+        }
+        
+        list.addAll(items);
+	}
+
+	@Override
     public void registerWidgetDebounce(String widgetId) throws UnifyException {
         Collection<String> widgetIds = (Collection<String>) getRequestAttribute(DEBOUNCE_WIDGET);
         if (widgetIds == null) {
