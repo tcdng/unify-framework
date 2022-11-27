@@ -41,4 +41,9 @@ public class ListData implements Listable {
     public String getListDescription() {
         return listDescription;
     }
+
+	@Override
+	public String toString() {
+		return "(" + listKey + ", " + listDescription + ")";
+	}
 }
