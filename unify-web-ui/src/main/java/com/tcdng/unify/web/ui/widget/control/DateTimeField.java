@@ -54,7 +54,10 @@ public class DateTimeField extends AbstractMultiControl {
     @Override
     public void updateInternalState() throws UnifyException {
         Date dateTime = getValue(Date.class);
-        if (dateTime != null) {
+        if (dateTime == null) {
+        	date = null;
+        	time = null;
+        } else {
         	date = CalendarUtils.getMidnightDate(dateTime);
         	time = CalendarUtils.getTimeOfDay(dateTime);
         }
