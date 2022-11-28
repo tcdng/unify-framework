@@ -33,6 +33,7 @@ import com.tcdng.unify.web.ui.widget.Control;
  */
 @Component("ui-datetime")
 @UplAttributes({
+    @UplAttribute(name = "clearable", type = boolean.class),
     @UplAttribute(name = "dateButtonImgSrc", type = String.class, defaultVal = "$t{images/calendar.png}"),
     @UplAttribute(name = "dateButtonSymbol", type = String.class, defaultVal = "calendar-alt"),
     @UplAttribute(name = "dateFormatter", type = String.class, defaultVal = "$s{!dateformat style:customshort}"),
@@ -108,6 +109,7 @@ public class DateTimeField extends AbstractMultiControl {
 		sb.append(" buttonSymbol:$s{").append(getUplAttribute(String.class, "dateButtonSymbol")).append("}");
 		sb.append(" formatter:$d{").append(getUplAttribute(String.class, "dateFormatter")).append("}");
 		sb.append(" type:").append(getUplAttribute(String.class, "dateType"));
+		sb.append(" clearable:").append(getUplAttribute(boolean.class, "clearable"));
 		sb.append(" binding:date style:$s{width:100%;}");
 		return sb.toString();
 	}
@@ -117,6 +119,7 @@ public class DateTimeField extends AbstractMultiControl {
 		sb.append("!ui-time buttonImgSrc:$s{").append(getUplAttribute(String.class, "timeButtonImgSrc")).append("}");
 		sb.append(" buttonSymbol:$s{").append(getUplAttribute(String.class, "timeButtonSymbol")).append("}");
 		sb.append(" formatter:$d{").append(getUplAttribute(String.class, "timeFormatter")).append("}");
+		sb.append(" clearable:").append(getUplAttribute(boolean.class, "clearable"));
 		sb.append(" binding:time style:$s{width:100%;}");
 		return sb.toString();
 	}
