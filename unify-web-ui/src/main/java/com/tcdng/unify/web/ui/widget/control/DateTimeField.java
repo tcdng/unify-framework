@@ -21,7 +21,6 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
-import com.tcdng.unify.core.format.Formatter;
 import com.tcdng.unify.core.util.CalendarUtils;
 import com.tcdng.unify.web.ui.widget.AbstractMultiControl;
 import com.tcdng.unify.web.ui.widget.Control;
@@ -36,11 +35,11 @@ import com.tcdng.unify.web.ui.widget.Control;
 @UplAttributes({
     @UplAttribute(name = "dateButtonImgSrc", type = String.class, defaultVal = "$t{images/calendar.png}"),
     @UplAttribute(name = "dateButtonSymbol", type = String.class, defaultVal = "calendar-alt"),
-    @UplAttribute(name = "dateFormatter", type = Formatter.class, defaultVal = "$d{!dateformat style:customshort}"),
-    @UplAttribute(name = "dateType", type = DateFieldType.class, defaultVal = "standard"),
+    @UplAttribute(name = "dateFormatter", type = String.class, defaultVal = "$s{!dateformat style:customshort}"),
+    @UplAttribute(name = "dateType", type = String.class, defaultVal = "standard"),
     @UplAttribute(name = "timeButtonImgSrc", type = String.class, defaultVal = "$t{images/clock.png}"),
     @UplAttribute(name = "timeButtonSymbol", type = String.class, defaultVal = "clock"),
-    @UplAttribute(name = "timeFormatter", type = Formatter.class, defaultVal = "$d{!timeformat style:short}")})
+    @UplAttribute(name = "timeFormatter", type = String.class, defaultVal = "$s{!timeformat style:short}")})
 public class DateTimeField extends AbstractMultiControl {
 
     private Control dateCtrl;
@@ -54,13 +53,16 @@ public class DateTimeField extends AbstractMultiControl {
     @Override
     public void updateInternalState() throws UnifyException {
         Date dateTime = getValue(Date.class);
-        if (dateTime == null) {
-        	date = null;
-        	time = null;
-        } else {
+        if (dateTime != null) {
         	date = CalendarUtils.getMidnightDate(dateTime);
         	time = CalendarUtils.getTimeOfDay(dateTime);
         }
+    }
+
+    @Override
+    public void addPageAliases() throws UnifyException {
+        addPageAlias(dateCtrl);
+        addPageAlias(timeCtrl);
     }
 
     public Control getDateCtrl() {
@@ -100,24 +102,22 @@ public class DateTimeField extends AbstractMultiControl {
 		setValue(dateTime);
 	}
 
-    private String constructDate() throws UnifyException {
-        StringBuilder sb = new StringBuilder();
-        sb.append("!ui-date buttonImgSrc:")
-                .append(getUplAttribute(String.class, "dateButtonImgSrc"));
-        sb.append(" buttonSymbol:").append(getUplAttribute(String.class, "dateButtonSymbol"));
-        sb.append(" formatter:").append(getUplAttribute(String.class, "dateFormatter"));
-        sb.append(" type:").append(getUplAttribute(String.class, "dateType"));
-        sb.append(" binding:date style:$s{width:100%;}");
-        return sb.toString();
-    }
+	private String constructDate() throws UnifyException {
+		StringBuilder sb = new StringBuilder();
+		sb.append("!ui-date buttonImgSrc:$s{").append(getUplAttribute(String.class, "dateButtonImgSrc")).append("}");
+		sb.append(" buttonSymbol:$s{").append(getUplAttribute(String.class, "dateButtonSymbol")).append("}");
+		sb.append(" formatter:$d{").append(getUplAttribute(String.class, "dateFormatter")).append("}");
+		sb.append(" type:").append(getUplAttribute(String.class, "dateType"));
+		sb.append(" binding:date style:$s{width:100%;}");
+		return sb.toString();
+	}
 
-    private String constructTime() throws UnifyException {
-        StringBuilder sb = new StringBuilder();
-        sb.append("!ui-time buttonImgSrc:")
-                .append(getUplAttribute(String.class, "timeButtonImgSrc"));
-        sb.append(" buttonSymbol:").append(getUplAttribute(String.class, "timeButtonSymbol"));
-        sb.append(" formatter:").append(getUplAttribute(String.class, "timeFormatter"));
-        sb.append(" binding:time style:$s{width:100%;}");
-        return sb.toString();
-    }
+	private String constructTime() throws UnifyException {
+		StringBuilder sb = new StringBuilder();
+		sb.append("!ui-time buttonImgSrc:$s{").append(getUplAttribute(String.class, "timeButtonImgSrc")).append("}");
+		sb.append(" buttonSymbol:$s{").append(getUplAttribute(String.class, "timeButtonSymbol")).append("}");
+		sb.append(" formatter:$d{").append(getUplAttribute(String.class, "timeFormatter")).append("}");
+		sb.append(" binding:time style:$s{width:100%;}");
+		return sb.toString();
+	}
 }

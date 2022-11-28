@@ -228,7 +228,11 @@ public final class CalendarUtils {
 	 * @return the date time if date and time are supplied otherwise null
 	 */
 	public static Date getDateTime(Date date, Date time) {
-		if (date != null && time != null) {
+		if (date != null) {
+			if (time == null) {
+				return CalendarUtils.getMidnightDate(date);
+			}
+			
 			Calendar dcal = Calendar.getInstance();
 			Calendar tcal = Calendar.getInstance();
 			dcal.setTime(date);
