@@ -220,6 +220,28 @@ public final class CalendarUtils {
         return cal.getTime();
     }
 
+	/**
+	 * Gets date time from supplied date and time.
+	 * 
+	 * @param date the date
+	 * @param time the time
+	 * @return the date time if date and time are supplied otherwise null
+	 */
+	public static Date getDateTime(Date date, Date time) {
+		if (date != null && time != null) {
+			Calendar dcal = Calendar.getInstance();
+			Calendar tcal = Calendar.getInstance();
+			dcal.setTime(date);
+			tcal.setTime(time);
+			dcal.set(Calendar.HOUR_OF_DAY, tcal.get(Calendar.HOUR_OF_DAY));
+			dcal.set(Calendar.MINUTE, tcal.get(Calendar.MINUTE));
+			dcal.set(Calendar.SECOND, tcal.get(Calendar.SECOND));
+			return dcal.getTime();
+		}
+
+		return null;
+	}
+    
     /**
      * Returns the date with time-only elements of supplied date using default
      * locale.
