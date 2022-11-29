@@ -4664,6 +4664,27 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
     }
 
     @Test
+	public void testValueListDistinct() throws Exception {
+		tm.beginTransaction();
+		try {
+			db.create(new Fruit("apple", "red", 20.00, 25));
+			db.create(new Fruit("pineapple", "cyan", 60.00, 3));
+			db.create(new Fruit("banana", "yellow", 45.00, 45));
+			db.create(new Fruit("pear", "yellow", 65.00, 45));
+			db.create(new Fruit("orange", "orange", 15.00, 11));
+
+			List<String> nameList = db.valueList(String.class, "color",
+					new FruitQuery().addGreaterThan("price", Double.valueOf(15.00)).setDistinct(true));
+			assertEquals(3, nameList.size());
+			assertTrue(nameList.contains("red"));
+			assertTrue(nameList.contains("cyan"));
+			assertTrue(nameList.contains("yellow"));
+		} finally {
+			tm.endTransaction();
+		}
+	}
+
+    @Test
     public void testValueListCaseInsensitive() throws Exception {
         tm.beginTransaction();
         try {
@@ -4688,14 +4709,15 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             db.create(new Fruit("apple", "red", 20.00, 25));
             db.create(new Fruit("pineapple", "cyan", 60.00, 3));
             db.create(new Fruit("banana", "yellow", 45.00, 45));
+            db.create(new Fruit("pear", "yellow", 65.00, 45));
             db.create(new Fruit("orange", "orange", 15.00, 11));
 
             Set<String> nameSet =
-                    db.valueSet(String.class, "name", new FruitQuery().addGreaterThan("price", Double.valueOf(15.00)));
+                    db.valueSet(String.class, "color", new FruitQuery().addGreaterThan("price", Double.valueOf(15.00)));
             assertEquals(3, nameSet.size());
-            assertTrue(nameSet.contains("apple"));
-            assertTrue(nameSet.contains("pineapple"));
-            assertTrue(nameSet.contains("banana"));
+            assertTrue(nameSet.contains("red"));
+            assertTrue(nameSet.contains("cyan"));
+            assertTrue(nameSet.contains("yellow"));
         } finally {
             tm.endTransaction();
         }
@@ -4966,6 +4988,7 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
     protected void doAddSettingsAndDependencies() throws Exception {
 //        addContainerSetting(UnifyCorePropertyConstants.APPLICATION_LOG_LEVEL, "debug");
 //        addContainerSetting(UnifyCorePropertyConstants.APPLICATION_LOG_TO_CONSOLE, "true");
+//        addContainerSetting(UnifyCorePropertyConstants.APPLICATION_SQL_DEBUGGING, "true");
         addContainerSetting(UnifyCorePropertyConstants.APPLICATION_QUERY_LIMIT, 8);
     }
 

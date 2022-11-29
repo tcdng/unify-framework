@@ -86,7 +86,7 @@ public class SqlParameter {
     @Override
     public String toString() {
         if (this.isMultiple) {
-            return StringUtils.buildCommaSeparatedString((Collection<Object>) this.value, true);
+            return StringUtils.buildCommaSeparatedString((Collection<Object>) this.value, false, true);
         }
 
         return String.valueOf(this.value);

@@ -5949,14 +5949,7 @@ ux.doOpenPopup = function(openPrm) {
 			ux.popCurr.style.display = 'block';
 			
 			var frameRect = ux.boundingRect(_id(openPrm.frameId));
-			var y = frameRect.bottom;
-			var h = ux.boundingHeight(ux.popCurr).height;
-			if ((y + h) > window.innerHeight) {
-				y = frameRect.top - h;
-			}
-
-			y = y - frameRect.top;
-			
+			var y = frameRect.bottom - frameRect.top;			
 			ux.popCurr.style.top = y + 'px';
 			ux.popCurr.style.left = '0px';
 			ux.popCurr.style.minWidth = frameRect.width + 'px';
