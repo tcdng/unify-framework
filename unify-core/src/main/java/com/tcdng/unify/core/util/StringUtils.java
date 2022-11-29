@@ -18,6 +18,7 @@ package com.tcdng.unify.core.util;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -300,33 +301,23 @@ public final class StringUtils {
      */
     public static String buildCommaSeparatedString(String[] strings, boolean includeBrackets) {
         if (strings != null) {
-            StringBuilder sb = new StringBuilder();
-            if (includeBrackets) {
-                sb.append('[');
-            }
-
-            boolean appendSym = false;
-            for (String string : strings) {
-                if (appendSym) {
-                    sb.append(',');
-                } else {
-                    appendSym = true;
-                }
-                if (string.indexOf(',') >= 0) {
-                    sb.append('"').append(string).append('"');
-                } else {
-                    sb.append(string);
-                }
-            }
-
-            if (includeBrackets) {
-                sb.append(']');
-            }
-
-            return sb.toString();
+            return StringUtils.buildCommaSeparatedString(Arrays.asList(strings), includeBrackets);
         }
 
         return null;
+    }
+
+    /**
+     * Builds a CSV string from an array of string. A CSV string is a string with
+     * tokens separated with the comma symbol. Any element of the string array with
+     * a comma is surrounded with a double quote.
+     * 
+     * @param objects
+     *                the supplied collection
+     * @return the CSV string
+     */
+    public static String buildCommaSeparatedString(Collection<? extends Object> objects) {
+        return StringUtils.buildCommaSeparatedString(objects, false);
     }
 
     /**
@@ -340,32 +331,32 @@ public final class StringUtils {
      *                        indicates if enclosing brackets are to be included.
      * @return the CSV string
      */
-    public static String buildCommaSeparatedString(Collection<Object> objects, boolean includeBrackets) {
-        StringBuilder sb = new StringBuilder();
-        if (includeBrackets) {
-            sb.append('[');
-        }
+	public static String buildCommaSeparatedString(Collection<? extends Object> objects, boolean includeBrackets) {
+		StringBuilder sb = new StringBuilder();
+		if (includeBrackets) {
+			sb.append('[');
+		}
 
-        boolean appendSym = false;
-        for (Object obj : objects) {
-            if (appendSym) {
-                sb.append(',');
-            } else {
-                appendSym = true;
-            }
-            if ((obj instanceof String) && ((String) obj).indexOf(',') >= 0) {
-                sb.append('"').append(obj).append('"');
-            } else {
-                sb.append(obj);
-            }
-        }
+		boolean appendSym = false;
+		for (Object obj : objects) {
+			if (appendSym) {
+				sb.append(',');
+			} else {
+				appendSym = true;
+			}
+			if ((obj instanceof String) && ((String) obj).indexOf(',') >= 0) {
+				sb.append('"').append(obj).append('"');
+			} else {
+				sb.append(obj);
+			}
+		}
 
-        if (includeBrackets) {
-            sb.append(']');
-        }
+		if (includeBrackets) {
+			sb.append(']');
+		}
 
-        return sb.toString();
-    }
+		return sb.toString();
+	}
 
     /**
      * Builds a CSV string from an array of string. A CSV string is a string with
