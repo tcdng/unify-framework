@@ -294,6 +294,19 @@ public final class StringUtils {
      * a comma is surrounded with a double quote.
      * 
      * @param strings
+     *                the supplied array
+     * @return the CSV string
+     */
+    public static String buildSpacedCommaSeparatedString(String[] strings) {
+        return StringUtils.buildCommaSeparatedString(Arrays.asList(strings), true, false);
+    }
+
+    /**
+     * Builds a CSV string from an array of string. A CSV string is a string with
+     * tokens separated with the comma symbol. Any element of the string array with
+     * a comma is surrounded with a double quote.
+     * 
+     * @param strings
      *                        the supplied array
      * @param includeBrackets
      *                        indicates if enclosing brackets are to be included.
@@ -301,7 +314,7 @@ public final class StringUtils {
      */
     public static String buildCommaSeparatedString(String[] strings, boolean includeBrackets) {
         if (strings != null) {
-            return StringUtils.buildCommaSeparatedString(Arrays.asList(strings), includeBrackets);
+            return StringUtils.buildCommaSeparatedString(Arrays.asList(strings), false, includeBrackets);
         }
 
         return null;
@@ -317,8 +330,20 @@ public final class StringUtils {
      * @return the CSV string
      */
     public static String buildCommaSeparatedString(Collection<? extends Object> objects) {
-        return StringUtils.buildCommaSeparatedString(objects, false);
+        return StringUtils.buildCommaSeparatedString(objects, false, false);
     }
+
+	/**
+	 * Builds a CSV string from an array of string. A CSV string is a string with
+	 * tokens separated with the comma symbol. Any element of the string array with
+	 * a comma is surrounded with a double quote.
+	 * 
+	 * @param objects the supplied collection
+	 * @return the CSV string
+	 */
+	public static String buildSpacedCommaSeparatedString(Collection<? extends Object> objects) {
+		return StringUtils.buildCommaSeparatedString(objects, true, false);
+	}
 
     /**
      * Builds a CSV string from a collection of objects. A CSV string is a string
@@ -327,11 +352,14 @@ public final class StringUtils {
      * 
      * @param objects
      *                        the object list
+     * @param spaced
+     *                        indicates if space between items.
      * @param includeBrackets
      *                        indicates if enclosing brackets are to be included.
      * @return the CSV string
      */
-	public static String buildCommaSeparatedString(Collection<? extends Object> objects, boolean includeBrackets) {
+	public static String buildCommaSeparatedString(Collection<? extends Object> objects, boolean spaced,
+			boolean includeBrackets) {
 		StringBuilder sb = new StringBuilder();
 		if (includeBrackets) {
 			sb.append('[');
@@ -341,6 +369,9 @@ public final class StringUtils {
 		for (Object obj : objects) {
 			if (appendSym) {
 				sb.append(',');
+				if (spaced) {
+					sb.append(' ');
+				}
 			} else {
 				appendSym = true;
 			}
