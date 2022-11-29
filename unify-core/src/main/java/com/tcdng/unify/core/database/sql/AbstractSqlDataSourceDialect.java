@@ -1136,7 +1136,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         } else {
             findSql.append("SELECT ");
             if (select != null && select.isDistinct()) {
-                findSql.append(" DISTINCT ");
+                findSql.append("DISTINCT ");
             }
 
             appendLimitOffsetInfixClause(findSql, query);
@@ -1172,16 +1172,18 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
                     }
                 }
 
-                // Select must always fetch primary keys because of child lists
-                SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getIdFieldInfo();
-                if (!select.contains(sqlFieldInfo.getName())) {
-                    if (appendSym) {
-                        findSql.append(", ");
-                    } else {
-                        appendSym = true;
+                if (!select.isDistinct()) {
+                    // Select must always fetch primary keys because of child lists
+                    SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getIdFieldInfo();
+                    if (!select.contains(sqlFieldInfo.getName())) {
+                        if (appendSym) {
+                            findSql.append(", ");
+                        } else {
+                            appendSym = true;
+                        }
+                        findSql.append(sqlFieldInfo.getPreferredColumnName());
+                        returnFieldInfoList.add(sqlFieldInfo);
                     }
-                    findSql.append(sqlFieldInfo.getPreferredColumnName());
-                    returnFieldInfoList.add(sqlFieldInfo);
                 }
             } else {
                 if (sqlEntityInfo.isViewOnly()) {
@@ -1248,7 +1250,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
         } else {
             listSql.append("SELECT ");
             if (select.isDistinct()) {
-                listSql.append(" DISTINCT ");
+                listSql.append("DISTINCT ");
             }
 
             appendLimitOffsetInfixClause(listSql, query);
@@ -1271,15 +1273,17 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
                 }
 
                 // Select must always fetch primary keys because of child lists
-                SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getIdFieldInfo();
-                if (!select.contains(sqlFieldInfo.getName())) {
-                    if (appendSym) {
-                        listSql.append(", ");
-                    } else {
-                        appendSym = true;
+                if (!select.isDistinct()) {
+                    SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getIdFieldInfo();
+                    if (!select.contains(sqlFieldInfo.getName())) {
+                        if (appendSym) {
+                            listSql.append(", ");
+                        } else {
+                            appendSym = true;
+                        }
+                        listSql.append(sqlFieldInfo.getPreferredColumnName());
+                        returnFieldInfoList.add(sqlFieldInfo);
                     }
-                    listSql.append(sqlFieldInfo.getPreferredColumnName());
-                    returnFieldInfoList.add(sqlFieldInfo);
                 }
             } else {
                 returnFieldInfoList = sqlEntityInfo.getListFieldInfos();
