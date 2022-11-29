@@ -552,25 +552,23 @@ ux.ajaxCall = function(ajaxPrms) {
 		
 		uAjaxReq.onreadystatechange = function() {
 			if (uAjaxReq.readyState == 4) {
-				if (ajaxPrms.uSync) {
-					ux.submitting = false;
-				}
-				
-				if (uAjaxReq.status == 200) {
-					ajaxPrms.uSuccessFunc(uAjaxReq.responseText);
-				} else {
-					if (!uAjaxReq.responseText || uAjaxReq.responseText.trim().length == 0) {
-						alert("Unable to connect to server.");
-					} else {
-						alert(uAjaxReq.responseText);
+				try {
+					if (ajaxPrms.uSync) {
+						ux.submitting = false;
 					}
-				}
-				
-				if (ajaxPrms.uIsDebounce) {
-					 ux.hideBusyIndicator();
-					 ux.clearDebounce(ajaxPrms.uDebounced);
+					
+					if (uAjaxReq.status == 200) {
+						ajaxPrms.uSuccessFunc(uAjaxReq.responseText);
+					} else {
+						if (!uAjaxReq.responseText || uAjaxReq.responseText.trim().length == 0) {
+							alert("Unable to connect to server.");
+						} else {
+							alert(uAjaxReq.responseText);
+						}
+					}
+				} finally {
+					ux.ajaxCallExit(ajaxPrms);
 				}				
-				ux.postCommitExecuting = false;
 			}
 		};
 		
@@ -580,18 +578,21 @@ ux.ajaxCall = function(ajaxPrms) {
 			uAjaxReq.send();
 		}
 	} catch (ex) {
-		if (ajaxPrms.uIsDebounce) {
-			 ux.hideBusyIndicator();
-			 ux.clearDebounce(ajaxPrms.uDebounced);
-		}				
-		ux.postCommitExecuting = false;
-
-		if (ajaxPrms.uSync) {
-			ux.submitting = false;
-		}
-		
+		ux.ajaxCallExit(ajaxPrms);
 		alert("Unable to connect to \'" + ajaxPrms.uURL + "\', exception = "
 				+ ex);
+	}
+}
+
+ux.ajaxCallExit = function(ajaxPrms) {
+	if (ajaxPrms.uIsDebounce) {
+		 ux.hideBusyIndicator();
+		 ux.clearDebounce(ajaxPrms.uDebounced);
+	}				
+	ux.postCommitExecuting = false;
+
+	if (ajaxPrms.uSync) {
+		ux.submitting = false;
 	}
 }
 
