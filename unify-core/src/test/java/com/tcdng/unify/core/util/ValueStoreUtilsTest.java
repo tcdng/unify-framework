@@ -28,7 +28,6 @@ import com.tcdng.unify.core.data.Customer;
 import com.tcdng.unify.core.data.PackableDoc;
 import com.tcdng.unify.core.data.PackableDocConfig;
 import com.tcdng.unify.core.data.ValueStore;
-import com.tcdng.unify.core.util.ValueStoreUtils;
 
 /**
  * Default value store utilities tests.

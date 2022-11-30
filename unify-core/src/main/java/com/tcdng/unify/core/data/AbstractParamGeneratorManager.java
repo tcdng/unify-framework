@@ -22,6 +22,10 @@ import java.util.Map;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.annotation.Configurable;
+import com.tcdng.unify.core.format.FormatHelper;
+import com.tcdng.unify.core.format.Formatter;
+import com.tcdng.unify.core.format.StandardFormatType;
 import com.tcdng.unify.core.util.DataUtils;
 
 /**
@@ -32,45 +36,56 @@ import com.tcdng.unify.core.util.DataUtils;
  */
 public abstract class AbstractParamGeneratorManager extends AbstractUnifyComponent implements ParamGeneratorManager {
 
-    private FactoryMap<StringToken, ParamGenerator> generators;
+	@Configurable
+	private FormatHelper formarHelper;
+	
+    private FactoryMap<ParamToken, ParamGenerator> generators;
 
     public AbstractParamGeneratorManager() {
-        this.generators = new FactoryMap<StringToken, ParamGenerator>()
-            {
-
+        this.generators = new FactoryMap<ParamToken, ParamGenerator>() {
                 @Override
-                protected ParamGenerator create(StringToken key, Object... params) throws Exception {
-                    if ("g".equals(key.getGenType())) {
-                        return (ParamGenerator) getComponent(key.getGenKey());
+                protected ParamGenerator create(ParamToken token, Object... params) throws Exception {
+                    if ("g".equals(token.getComponent())) {
+                        return (ParamGenerator) getComponent(token.getParam());
                     }
 
-                    ParamGenerator generator = resolveParamGenerator(key);
+                    ParamGenerator generator = resolveParamGenerator(token);
                     if (generator == null) {
                         throwOperationErrorException(new IllegalArgumentException(
-                                "Could not resolve generator for [" + key.getToken() + "]."));
+                                "Could not resolve generator for [" + token.getToken() + "]."));
                     }
 
                     return generator;
                 }
-
             };
     }
 
-    @Override
-    public ParameterizedStringGenerator getParameterizedStringGenerator(ValueStore paramValueStore,
-            ValueStore generatorValueStore, List<StringToken> tokenList) throws UnifyException {
-        Map<StringToken, ParamGenerator> _generators = new HashMap<StringToken, ParamGenerator>();
-        if (!DataUtils.isBlank(tokenList)) {
-            for (StringToken token : tokenList) {
-                if (token.isGenerator()) {
-                    ParamGenerator _generator = generators.get(token);
-                    _generators.put(token, _generator);
-                }
-            }
-        }
+    public final void setFormarHelper(FormatHelper formarHelper) {
+		this.formarHelper = formarHelper;
+	}
 
-        return new ParameterizedStringGenerator(paramValueStore, generatorValueStore, tokenList, _generators);
-    }
+	@Override
+	public ParameterizedStringGenerator getParameterizedStringGenerator(ValueStore paramValueStore,
+			ValueStore generatorValueStore, List<StringToken> tokenList) throws UnifyException {
+		Map<StringToken, ParamGenerator> _generators = new HashMap<StringToken, ParamGenerator>();
+		Map<StandardFormatType, Formatter<?>> _formatters = new HashMap<StandardFormatType, Formatter<?>>();
+		if (!DataUtils.isBlank(tokenList)) {
+			for (StringToken token : tokenList) {
+				if (token.isFormattedParam()) {
+					StandardFormatType formatType = ((ParamToken) token).getFormatType();
+					if (!_formatters.containsKey(formatType)) {
+						_formatters.put(formatType, formarHelper.newFormatter(formatType));
+					}
+				} else if (token.isGeneratorParam()) {
+					ParamGenerator _generator = generators.get((ParamToken) token);
+					_generators.put(token, _generator);
+				}
+			}
+		}
+
+		return new ParameterizedStringGenerator(paramValueStore, generatorValueStore, tokenList, _generators,
+				_formatters);
+	}
 
     @Override
     protected void onInitialize() throws UnifyException {

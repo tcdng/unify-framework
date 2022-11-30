@@ -17,35 +17,28 @@
 package com.tcdng.unify.core.data;
 
 /**
- * Parameter generator.
+ * String token.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public class StringToken {
+public abstract class StringToken {
 
-    private String token;
-
-    private String genType;
-
-    private String genKey;
+	public enum Type {
+		TEXT,
+		NEWLINE,
+		PARAM,
+		FORMATTED_PARAM,
+		GENERATOR_PARAM
+	}
     
-    private boolean param;
+    private final Type type;
+	
+    private final String token;
 
-    public StringToken(String token) {
-        this(token, false);
-    }
-
-    public StringToken(String token, boolean param) {
+    protected StringToken(Type type, String token) {
+        this.type = type;
         this.token = token;
-        this.param = param;
-        if (param) {
-            String[] tokens = token.split(":");
-            if (tokens.length == 2) {
-                genType = tokens[0];
-                genKey = tokens[1];
-            }
-        }
     }
 
     @Override
@@ -62,19 +55,19 @@ public class StringToken {
         return token;
     }
 
-    public String getGenType() {
-        return genType;
+    public Type getType() {
+		return type;
+	}
+
+	public boolean isParam() {
+        return Type.PARAM.equals(type) ||Type.FORMATTED_PARAM.equals(type) ||Type.GENERATOR_PARAM.equals(type);
     }
 
-    public String getGenKey() {
-        return genKey;
+    public boolean isFormattedParam() {
+        return Type.FORMATTED_PARAM.equals(type);
     }
 
-    public boolean isParam() {
-        return param;
-    }
-
-    public boolean isGenerator() {
-        return genType != null && genKey != null;
+    public boolean isGeneratorParam() {
+        return Type.GENERATOR_PARAM.equals(type);
     }
 }

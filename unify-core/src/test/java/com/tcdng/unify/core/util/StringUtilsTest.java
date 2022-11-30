@@ -26,10 +26,8 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.tcdng.unify.core.data.BeanValueStore;
 import com.tcdng.unify.core.data.ListData;
 import com.tcdng.unify.core.data.StringToken;
-import com.tcdng.unify.core.data.ValueStore;
 
 /**
  * StringUtils tests.
@@ -418,7 +416,8 @@ public class StringUtilsTest {
     public void testBreakdownParameterizedStringBlank() throws Exception {
         List<StringToken> tokenList = StringUtils.breakdownParameterizedString("   ");
         assertNotNull(tokenList);
-        assertEquals(0, tokenList.size());
+        assertEquals(1, tokenList.size());
+        assertEquals("   ", tokenList.get(0).getToken());
     }
 
     @Test
@@ -426,8 +425,43 @@ public class StringUtilsTest {
         List<StringToken> tokenList = StringUtils.breakdownParameterizedString("Hello world!");
         assertNotNull(tokenList);
         assertEquals(1, tokenList.size());
-
         assertEquals("Hello world!", tokenList.get(0).getToken());
+    }
+
+    @Test
+    public void testBreakdownParameterizedStringNewline() throws Exception {
+        List<StringToken> tokenList = StringUtils.breakdownParameterizedString("Hello!\n");
+        assertNotNull(tokenList);
+        assertEquals(2, tokenList.size());
+        assertEquals("Hello!", tokenList.get(0).getToken());
+        assertEquals("\n", tokenList.get(1).getToken());
+        
+        tokenList = StringUtils.breakdownParameterizedString("\n");
+        assertNotNull(tokenList);
+        assertEquals(1, tokenList.size());
+        assertEquals("\n", tokenList.get(0).getToken());
+        
+        tokenList = StringUtils.breakdownParameterizedString("\n\n\n");
+        assertNotNull(tokenList);
+        assertEquals(3, tokenList.size());
+        assertEquals("\n", tokenList.get(0).getToken());
+        assertEquals("\n", tokenList.get(1).getToken());
+        assertEquals("\n", tokenList.get(2).getToken());
+        
+        tokenList = StringUtils.breakdownParameterizedString("\nHello\nWorld\n");
+        assertNotNull(tokenList);
+        assertEquals(5, tokenList.size());
+        assertEquals("\n", tokenList.get(0).getToken());
+        assertEquals("Hello", tokenList.get(1).getToken());
+        assertEquals("\n", tokenList.get(2).getToken());
+        assertEquals("World", tokenList.get(3).getToken());
+        assertEquals("\n", tokenList.get(4).getToken());
+                
+        tokenList = StringUtils.breakdownParameterizedString("\nHello!");
+        assertNotNull(tokenList);
+        assertEquals(2, tokenList.size());
+        assertEquals("\n", tokenList.get(0).getToken());
+        assertEquals("Hello!", tokenList.get(1).getToken());
     }
 
     @Test
@@ -542,17 +576,6 @@ public class StringUtilsTest {
         token = tokenList.get(2);
         assertEquals("adj", token.getToken());
         assertTrue(token.isParam());
-    }
-    
-    @Test
-    public void testBuildParameterizedStringUsingValueStore() throws Exception {
-        List<StringToken> tokenList = StringUtils
-                .breakdownParameterizedString("Mr {{lastName}}'s phone number is {{phoneNumber}}.");
-        ValueStore vs = new BeanValueStore(new Customer());
-        vs.store("lastName", "Shinzo");
-        vs.setTempValue("phoneNumber", "+81203948574909090");
-        assertEquals("Mr Shinzo's phone number is +81203948574909090.",
-                StringUtils.buildParameterizedString(tokenList, vs));
     }
 
     @Test
