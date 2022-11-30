@@ -66,6 +66,12 @@ public abstract class AbstractParamGeneratorManager extends AbstractUnifyCompone
 
 	@Override
 	public ParameterizedStringGenerator getParameterizedStringGenerator(ValueStore paramValueStore,
+			List<StringToken> tokenList) throws UnifyException {
+		return getParameterizedStringGenerator(paramValueStore, paramValueStore, tokenList);
+	}
+
+	@Override
+	public ParameterizedStringGenerator getParameterizedStringGenerator(ValueStore paramValueStore,
 			ValueStore generatorValueStore, List<StringToken> tokenList) throws UnifyException {
 		Map<StringToken, ParamGenerator> _generators = new HashMap<StringToken, ParamGenerator>();
 		Map<StandardFormatType, Formatter<?>> _formatters = new HashMap<StandardFormatType, Formatter<?>>();
