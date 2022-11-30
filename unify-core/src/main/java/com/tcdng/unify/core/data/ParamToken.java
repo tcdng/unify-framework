@@ -47,23 +47,26 @@ public class ParamToken extends StringToken {
 		return param;
 	}
 
-	public ParamToken getGeneratorParamToken(String component, String param) {
-		return new ParamToken(Type.GENERATOR_PARAM, component + ":" + param, component, param);
+	public static ParamToken getGeneratorParamToken(String param) {
+		return new ParamToken(Type.GENERATOR_PARAM, "g:" + param, "g", param);
 	}
 
-	public ParamToken getFormattedParamToken(StandardFormatType formatType, String param) {
+	public static ParamToken getFormattedParamToken(StandardFormatType formatType, String param) {
 		return new ParamToken(Type.FORMATTED_PARAM, param + "#" + formatType.code(), formatType.code(), param);
 	}
 
 	public static ParamToken getParamToken(String token) {
 		String[] tokens = token.split(":");
-		if (tokens.length == 2) {
-			return new ParamToken(Type.GENERATOR_PARAM, token, tokens[0], tokens[1]);
+		if (tokens.length == 2 && "g".equals(tokens[0])) {
+			return getGeneratorParamToken(tokens[1]);
 		}
 
 		tokens = token.split("#");
 		if (tokens.length == 2) {
-			return new ParamToken(Type.FORMATTED_PARAM, token, tokens[1], tokens[0]);
+			StandardFormatType formatType = StandardFormatType.fromCode(tokens[1]);
+			if (formatType != null) {
+				return getFormattedParamToken(formatType, tokens[0]);
+			}
 		}
 
 		return new ParamToken(Type.PARAM, token, null, token);

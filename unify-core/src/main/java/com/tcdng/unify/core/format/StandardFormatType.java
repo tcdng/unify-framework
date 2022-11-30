@@ -30,18 +30,18 @@ public enum StandardFormatType implements EnumConst  {
 	INTEGER_GROUPED("ING","!integerformat useGrouping:true","###,###"),
 	DECIMAL("DEC","!decimalformat scale:2","######.00"),
 	DECIMAL_GROUPED("DEG","!decimalformat scale:2 useGrouping:true","###,###.00"),
-	DATE_DDMMYYYY_SLASH("DDS","!dateformat pattern:$s{dd/MM/yyyy}","dd/MM/yyyy"),
-	DATE_MMDDYYYY_SLASH("DMS","!dateformat pattern:$s{MM/dd/yyyy}","MM/dd/yyyy"),
-	DATE_YYYYMMDD_SLASH("DYS","!dateformat pattern:$s{yyyy/MM/dd}","yyyy/MM/dd"),
-	DATE_DDMMYYYY_DASH("DDD","!dateformat pattern:$s{dd-MM-yyyy}","dd-MM-yyyy"),
-	DATE_MMDDYYYY_DASH("DMD","!dateformat pattern:$s{MM-dd-yyyy}","MM-dd-yyyy"),
-	DATE_YYYYMMDD_DASH("DYD","!dateformat pattern:$s{yyyy-MM-dd}","yyyy-MM-dd"),
-	DATETIME_DDMMYYYY_SLASH("TDS","!datetimeformat pattern:$s{dd/MM/yyyy HH:mm:ss}","dd/MM/yyyy HH:mm:ss"),
-	DATETIME_MMDDYYYY_SLASH("TMS","!datetimeformat pattern:$s{MM/dd/yyyy HH:mm:ss}","MM/dd/yyyy HH:mm:ss"),
-	DATETIME_YYYYMMDD_SLASH("TYS","!datetimeformat pattern:$s{yyyy/MM/dd HH:mm:ss}","yyyy/MM/dd HH:mm:ss"),
-	DATETIME_DDMMYYYY_DASH("TDD","!datetimeformat pattern:$s{dd-MM-yyyy HH:mm:ss}","dd-MM-yyyy HH:mm:ss"),
-	DATETIME_MMDDYYYY_DASH("TMD","!datetimeformat pattern:$s{MM-dd-yyyy HH:mm:ss}","MM-dd-yyyy HH:mm:ss"),
-	DATETIME_YYYYMMDD_DASH("TYD","!datetimeformat pattern:$s{yyyy-MM-dd HH:mm:ss}","yyyy-MM-dd HH:mm:ss");
+	DATE_DDMMYYYY_SLASH("DDS","!fixeddatetimeformat pattern:$s{dd/MM/yyyy}","dd/MM/yyyy"),
+	DATE_MMDDYYYY_SLASH("DMS","!fixeddatetimeformat pattern:$s{MM/dd/yyyy}","MM/dd/yyyy"),
+	DATE_YYYYMMDD_SLASH("DYS","!fixeddatetimeformat pattern:$s{yyyy/MM/dd}","yyyy/MM/dd"),
+	DATE_DDMMYYYY_DASH("DDD","!fixeddatetimeformat pattern:$s{dd-MM-yyyy}","dd-MM-yyyy"),
+	DATE_MMDDYYYY_DASH("DMD","!fixeddatetimeformat pattern:$s{MM-dd-yyyy}","MM-dd-yyyy"),
+	DATE_YYYYMMDD_DASH("DYD","!fixeddatetimeformat pattern:$s{yyyy-MM-dd}","yyyy-MM-dd"),
+	DATETIME_DDMMYYYY_SLASH("TDS","!fixeddatetimeformat pattern:$s{dd/MM/yyyy HH:mm:ss}","dd/MM/yyyy HH:mm:ss"),
+	DATETIME_MMDDYYYY_SLASH("TMS","!fixeddatetimeformat pattern:$s{MM/dd/yyyy HH:mm:ss}","MM/dd/yyyy HH:mm:ss"),
+	DATETIME_YYYYMMDD_SLASH("TYS","!fixeddatetimeformat pattern:$s{yyyy/MM/dd HH:mm:ss}","yyyy/MM/dd HH:mm:ss"),
+	DATETIME_DDMMYYYY_DASH("TDD","!fixeddatetimeformat pattern:$s{dd-MM-yyyy HH:mm:ss}","dd-MM-yyyy HH:mm:ss"),
+	DATETIME_MMDDYYYY_DASH("TMD","!fixeddatetimeformat pattern:$s{MM-dd-yyyy HH:mm:ss}","MM-dd-yyyy HH:mm:ss"),
+	DATETIME_YYYYMMDD_DASH("TYD","!fixeddatetimeformat pattern:$s{yyyy-MM-dd HH:mm:ss}","yyyy-MM-dd HH:mm:ss");
 	
 	private final String code;
 	

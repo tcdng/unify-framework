@@ -27,7 +27,11 @@ import java.util.List;
 import org.junit.Test;
 
 import com.tcdng.unify.core.data.ListData;
+import com.tcdng.unify.core.data.NewlineToken;
+import com.tcdng.unify.core.data.ParamToken;
 import com.tcdng.unify.core.data.StringToken;
+import com.tcdng.unify.core.data.TextToken;
+import com.tcdng.unify.core.format.StandardFormatType;
 
 /**
  * StringUtils tests.
@@ -398,6 +402,15 @@ public class StringUtilsTest {
         assertEquals("e", result[3]);
     }
 
+    @Test
+	public void testBuildParameterizedString() throws Exception {
+		List<StringToken> tokens = Arrays.asList(new TextToken("Hello "), ParamToken.getParamToken("name"),
+				new TextToken(" ID="), ParamToken.getGeneratorParamToken("id-generator"), new TextToken(" dob="),
+				ParamToken.getFormattedParamToken(StandardFormatType.DATE_YYYYMMDD_DASH, "dob"), new NewlineToken());
+		String pstring = StringUtils.buildParameterizedString(tokens);
+		assertEquals("Hello {{name}} ID={{g:id-generator}} dob={{dob#DYD}}\n", pstring);
+	}
+    
     @Test
     public void testBreakdownParameterizedStringNull() throws Exception {
         List<StringToken> tokenList = StringUtils.breakdownParameterizedString(null);

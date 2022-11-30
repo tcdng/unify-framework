@@ -22,12 +22,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
-import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.data.ListData;
 import com.tcdng.unify.core.data.NewlineToken;
-import com.tcdng.unify.core.data.PackableDoc;
 import com.tcdng.unify.core.data.ParamToken;
 import com.tcdng.unify.core.data.StringToken;
 import com.tcdng.unify.core.data.TextToken;
@@ -809,6 +806,22 @@ public final class StringUtils {
         return null;
     }
 
+    public static String buildParameterizedString(List<StringToken> tokens) {
+    	if (!tokens.isEmpty()) {
+    		StringBuilder sb = new StringBuilder();
+    		for (StringToken token: tokens) {
+    			if (token.isParam()) {
+    				sb.append("{{").append(token.getToken()).append("}}");
+    			} else {
+    				sb.append(token.getToken());
+    			}
+    		}
+    		return sb.toString();
+    	}
+    	
+    	return null;
+    }
+    
 	public static List<StringToken> breakdownParameterizedString(String string) {
 		if (string == null) {
 			return Collections.emptyList();
@@ -847,47 +860,6 @@ public final class StringUtils {
 
 		return tokenList;
 	}
-	
-    public static String buildParameterizedString(List<StringToken> tokenList, Map<String, Object> parameters) {
-        if (DataUtils.isBlank(tokenList)) {
-            return "";
-        }
-
-        StringBuilder sb = new StringBuilder();
-        for (StringToken stringToken : tokenList) {
-            if (stringToken.isParam()) {
-                Object val = parameters.get(stringToken.getToken());
-                if (val != null) {
-                    sb.append(val);
-                }
-            } else {
-                sb.append(stringToken.getToken());
-            }
-        }
-
-        return sb.toString();
-    }
-
-    public static String buildParameterizedString(List<StringToken> tokenList, PackableDoc packableDoc)
-            throws UnifyException {
-        if (DataUtils.isBlank(tokenList)) {
-            return "";
-        }
-
-        StringBuilder sb = new StringBuilder();
-        for (StringToken stringToken : tokenList) {
-            if (stringToken.isParam()) {
-                Object val = packableDoc.read(stringToken.getToken());
-                if (val != null) {
-                    sb.append(val);
-                }
-            } else {
-                sb.append(stringToken.getToken());
-            }
-        }
-
-        return sb.toString();
-    }
 
     public static void truncate(StringBuilder sb) {
         if (sb != null) {

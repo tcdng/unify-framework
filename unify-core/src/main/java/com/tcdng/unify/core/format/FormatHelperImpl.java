@@ -319,7 +319,7 @@ public class FormatHelperImpl extends AbstractUnifyComponent implements FormatHe
 
 	@Override
 	public Formatter<?> newFormatter(StandardFormatType formatType) throws UnifyException {
-		return this.getComponent(Formatter.class, formatType.formatter());
+		return (Formatter<?>) getUplComponent(getApplicationLocale(), formatType.formatter(), false);
 	}
 
 	@Override

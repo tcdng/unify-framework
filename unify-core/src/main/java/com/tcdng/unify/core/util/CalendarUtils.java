@@ -383,6 +383,22 @@ public final class CalendarUtils {
         }
     }
 
+	/**
+	 * Get date using supplied year, month and day
+	 * 
+	 * @param year  the year
+	 * @param month the month
+	 * @param day   the day of month
+	 * @return the equivalent date
+	 */
+	public static Date getDate(int year, int month, int day) {
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.YEAR, year);
+		cal.set(Calendar.MONTH, month);
+		cal.set(Calendar.DAY_OF_MONTH, day);
+		return cal.getTime();
+	}
+    
     /**
      * Returns a cached simple date format pool for specified locale and pattern.
      * 
