@@ -24,7 +24,7 @@ package com.tcdng.unify.core.data;
 public class TextToken extends StringToken {
 
 	public TextToken(String token) {
-		super(Type.TEXT, token);
+		super(StringTokenType.TEXT, token);
 	}
 
 }

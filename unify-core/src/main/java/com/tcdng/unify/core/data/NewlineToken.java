@@ -24,7 +24,7 @@ package com.tcdng.unify.core.data;
 public class NewlineToken extends StringToken {
 
 	public NewlineToken() {
-		super(Type.NEWLINE, "\n");
+		super(StringTokenType.NEWLINE, "\n");
 	}
 
 }

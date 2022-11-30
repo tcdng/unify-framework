@@ -29,7 +29,7 @@ public class ParamToken extends StringToken {
 
 	private final String param;
 
-	private ParamToken(Type type, String token, String component, String param) {
+	private ParamToken(StringTokenType type, String token, String component, String param) {
 		super(type, token);
 		this.component = component;
 		this.param = param;
@@ -48,15 +48,16 @@ public class ParamToken extends StringToken {
 	}
 
 	public static ParamToken getGeneratorParamToken(String param) {
-		return new ParamToken(Type.GENERATOR_PARAM, "g:" + param, "g", param);
+		return new ParamToken(StringTokenType.GENERATOR_PARAM, "g:" + param, "g", param);
 	}
 
 	public static ParamToken getGeneratorParamToken(String component, String param) {
-		return new ParamToken(Type.GENERATOR_PARAM, component + ":" + param, component, param);
+		return new ParamToken(StringTokenType.GENERATOR_PARAM, component + ":" + param, component, param);
 	}
 
 	public static ParamToken getFormattedParamToken(StandardFormatType formatType, String param) {
-		return new ParamToken(Type.FORMATTED_PARAM, param + "#" + formatType.code(), formatType.code(), param);
+		return new ParamToken(StringTokenType.FORMATTED_PARAM, param + "#" + formatType.code(), formatType.code(),
+				param);
 	}
 
 	public static ParamToken getParamToken(String token) {
@@ -73,6 +74,6 @@ public class ParamToken extends StringToken {
 			}
 		}
 
-		return new ParamToken(Type.PARAM, token, null, token);
+		return new ParamToken(StringTokenType.PARAM, token, null, token);
 	}
 }

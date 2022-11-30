@@ -23,20 +23,12 @@ package com.tcdng.unify.core.data;
  * @since 1.0
  */
 public abstract class StringToken {
-
-	public enum Type {
-		TEXT,
-		NEWLINE,
-		PARAM,
-		FORMATTED_PARAM,
-		GENERATOR_PARAM
-	}
     
-    private final Type type;
+    private final StringTokenType type;
 	
     private final String token;
 
-    protected StringToken(Type type, String token) {
+    protected StringToken(StringTokenType type, String token) {
         this.type = type;
         this.token = token;
     }
@@ -55,19 +47,27 @@ public abstract class StringToken {
         return token;
     }
 
-    public Type getType() {
+    public StringTokenType getType() {
 		return type;
 	}
 
+	public boolean isText() {
+        return type.isText();
+    }
+
+	public boolean isNewline() {
+        return type.isNewline();
+    }
+
 	public boolean isParam() {
-        return Type.PARAM.equals(type) ||Type.FORMATTED_PARAM.equals(type) ||Type.GENERATOR_PARAM.equals(type);
+        return type.isParam();
     }
 
     public boolean isFormattedParam() {
-        return Type.FORMATTED_PARAM.equals(type);
+        return type.isFormattedParam();
     }
 
     public boolean isGeneratorParam() {
-        return Type.GENERATOR_PARAM.equals(type);
+        return type.isGeneratorParam();
     }
 }
