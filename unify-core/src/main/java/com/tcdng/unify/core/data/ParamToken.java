@@ -51,13 +51,17 @@ public class ParamToken extends StringToken {
 		return new ParamToken(Type.GENERATOR_PARAM, "g:" + param, "g", param);
 	}
 
+	public static ParamToken getGeneratorParamToken(String component, String param) {
+		return new ParamToken(Type.GENERATOR_PARAM, component + ":" + param, component, param);
+	}
+
 	public static ParamToken getFormattedParamToken(StandardFormatType formatType, String param) {
 		return new ParamToken(Type.FORMATTED_PARAM, param + "#" + formatType.code(), formatType.code(), param);
 	}
 
 	public static ParamToken getParamToken(String token) {
 		String[] tokens = token.split(":");
-		if (tokens.length == 2 && "g".equals(tokens[0])) {
+		if (tokens.length == 2) {
 			return getGeneratorParamToken(tokens[1]);
 		}
 

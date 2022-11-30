@@ -103,5 +103,5 @@ public abstract class AbstractParamGeneratorManager extends AbstractUnifyCompone
 
     }
 
-    protected abstract ParamGenerator resolveParamGenerator(StringToken key) throws UnifyException;
+    protected abstract ParamGenerator resolveParamGenerator(ParamToken token) throws UnifyException;
 }
