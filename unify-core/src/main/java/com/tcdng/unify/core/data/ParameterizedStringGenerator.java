@@ -93,7 +93,7 @@ public class ParameterizedStringGenerator {
 			} else if (token.isGeneratorParam()) {
 				ParamGenerator generator = generators.get(token);
 				val = generator != null ? generator.generate(itemValueStore != null ? itemValueStore.getReader() : null,
-						parentValueStore != null ? parentValueStore.getReader() : null, token) : null;
+						parentValueStore != null ? parentValueStore.getReader() : null, (ParamToken) token) : null;
 			} else {
 				val = itemValueStore.getTempValue(token.getToken());
 				if (val == null) {

@@ -27,18 +27,14 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface ParamGenerator extends UnifyComponent {
 
-    /**
-     * Generates parameter value
-     * 
-     * @param itemReader
-     *               the item reader
-     * @param parentReader
-     *               the parent reader
-     * @param key
-     *               the generator key
-     * @return the generated parameter value
-     * @throws UnifyException
-     *                        if an error occurs
-     */
-    Object generate(ValueStoreReader itemReader, ValueStoreReader parentReader, StringToken key) throws UnifyException;
+	/**
+	 * Generates parameter value
+	 * 
+	 * @param itemReader   the item reader
+	 * @param parentReader the parent reader
+	 * @param token        the generator token
+	 * @return the generated parameter value
+	 * @throws UnifyException if an error occurs
+	 */
+	Object generate(ValueStoreReader itemReader, ValueStoreReader parentReader, ParamToken token) throws UnifyException;
 }
