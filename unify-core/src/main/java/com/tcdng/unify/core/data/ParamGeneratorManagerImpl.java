@@ -30,7 +30,7 @@ import com.tcdng.unify.core.annotation.Component;
 public class ParamGeneratorManagerImpl extends AbstractParamGeneratorManager {
 
     @Override
-    protected ParamGenerator resolveParamGenerator(StringToken key) throws UnifyException {
+    protected ParamGenerator resolveParamGenerator(ParamToken token) throws UnifyException {
         return null;
     }
 

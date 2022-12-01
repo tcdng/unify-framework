@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.format.Formatter;
+import com.tcdng.unify.core.format.StandardFormatType;
 import com.tcdng.unify.core.util.DataUtils;
 
 /**
@@ -30,64 +32,78 @@ import com.tcdng.unify.core.util.DataUtils;
  */
 public class ParameterizedStringGenerator {
 
-    private ValueStore itemValueStore;
+	private final ValueStore itemValueStore;
 
-    private ValueStore parentValueStore;
+	private final ValueStore parentValueStore;
 
-    private List<StringToken> tokenList;
+	private final List<StringToken> tokenList;
 
-    private Map<StringToken, ParamGenerator> generators;
+	private final Map<StringToken, ParamGenerator> generators;
 
-    public ParameterizedStringGenerator(ValueStore itemValueStore, ValueStore parentValueStore,
-            List<StringToken> tokenList, Map<StringToken, ParamGenerator> generators) {
-        this.itemValueStore = itemValueStore;
-        this.parentValueStore = parentValueStore;
-        this.tokenList = tokenList;
-        this.generators = generators;
-    }
+	private final Map<StandardFormatType, Formatter<?>> formatters;
 
-    public String generate() throws UnifyException {
-        if (DataUtils.isBlank(tokenList)) {
-            return "";
-        }
+	public ParameterizedStringGenerator(ValueStore itemValueStore, ValueStore parentValueStore,
+			List<StringToken> tokenList, Map<StringToken, ParamGenerator> generators,
+			Map<StandardFormatType, Formatter<?>> formatters) {
+		this.itemValueStore = itemValueStore;
+		this.parentValueStore = parentValueStore;
+		this.tokenList = tokenList;
+		this.generators = generators;
+		this.formatters = formatters;
+	}
 
-        StringBuilder sb = new StringBuilder();
-        for (StringToken stringToken : tokenList) {
-            Object val = getParam(stringToken);
-            if (val != null) {
-                sb.append(val);
-            }
-        }
+	public String generate() throws UnifyException {
+		if (DataUtils.isBlank(tokenList)) {
+			return "";
+		}
 
-        return sb.toString();
-    }
+		StringBuilder sb = new StringBuilder();
+		for (StringToken stringToken : tokenList) {
+			Object val = getParam(stringToken);
+			if (val != null) {
+				sb.append(val);
+			}
+		}
 
-    public int getDataIndex() {
-        return itemValueStore.getDataIndex();
-    }
+		return sb.toString();
+	}
 
-    public ParameterizedStringGenerator setDataIndex(int dataIndex) {
-        itemValueStore.setDataIndex(dataIndex);
-        return this;
-    }
+	public int getDataIndex() {
+		return itemValueStore.getDataIndex();
+	}
 
-    private Object getParam(StringToken key) throws UnifyException {
-        Object val = null;
-        if (key.isParam()) {
-            if (key.isGenerator()) {
-                ParamGenerator generator = generators.get(key);
-                val = generator != null ? generator.generate(itemValueStore != null ? itemValueStore.getReader() : null,
-                        parentValueStore != null ? parentValueStore.getReader() : null, key) : null;
-            } else {
-                val = itemValueStore.getTempValue(key.getToken());
-                if (val == null) {
-                    val = itemValueStore.retrieve(key.getToken());
-                }
-            }
-        } else {
-            val = key.getToken();
-        }
+	public ParameterizedStringGenerator setDataIndex(int dataIndex) {
+		itemValueStore.setDataIndex(dataIndex);
+		return this;
+	}
 
-        return val;
-    }
+	@SuppressWarnings("unchecked")
+	private Object getParam(StringToken token) throws UnifyException {
+		Object val = null;
+		if (token.isParam()) {
+			if (token.isFormattedParam()) {
+				String param = ((ParamToken) token).getParam();
+				val = itemValueStore.getTempValue(param);
+				if (val == null) {
+					val = itemValueStore.retrieve(param);
+				}
+
+				Formatter<Object> formatter = (Formatter<Object>) formatters.get(((ParamToken) token).getFormatType());
+				val = formatter != null ? formatter.format(val) : val;
+			} else if (token.isGeneratorParam()) {
+				ParamGenerator generator = generators.get(token);
+				val = generator != null ? generator.generate(itemValueStore != null ? itemValueStore.getReader() : null,
+						parentValueStore != null ? parentValueStore.getReader() : null, (ParamToken) token) : null;
+			} else {
+				val = itemValueStore.getTempValue(token.getToken());
+				if (val == null) {
+					val = itemValueStore.retrieve(token.getToken());
+				}
+			}
+		} else {
+			val = token.getToken();
+		}
+
+		return val;
+	}
 }

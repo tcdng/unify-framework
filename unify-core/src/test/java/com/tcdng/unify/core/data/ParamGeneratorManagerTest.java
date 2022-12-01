@@ -19,7 +19,9 @@ package com.tcdng.unify.core.data;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.Test;
@@ -27,6 +29,7 @@ import org.junit.Test;
 import com.tcdng.unify.core.AbstractUnifyComponentTest;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.util.CalendarUtils;
 import com.tcdng.unify.core.util.StringUtils;
 
 /**
@@ -52,6 +55,28 @@ public class ParamGeneratorManagerTest extends AbstractUnifyComponentTest {
         String txt = generator.generate();
         assertEquals("Hello John. You are 25 years old.", txt);
     }
+
+    @Test
+	public void testGenerateFormatted() throws Exception {
+		ParamGeneratorManager manager = getComponent(ParamGeneratorManager.class,
+				ApplicationComponents.APPLICATION_PARAMGENERATORMANAGER);
+		ValueStore paramValueStore = new BeanValueListStore(
+				Arrays.asList(new Candidate("John", CalendarUtils.getDate(1995, 0, 28), BigDecimal.valueOf(12500), 25),
+						new Candidate("Bashir", CalendarUtils.getDate(1978, 4, 12), BigDecimal.valueOf(4300.25), 45)));
+		ValueStore generatorValueStore = new BeanValueStore(new Address("38 Warehouse Road", "Apapa Lagos"));
+		List<StringToken> tokenList = StringUtils.breakdownParameterizedString(
+				"Name:{{name}}, age:{{age}}, employment:{{employmentDt#DYD}}, salary:{{salary#DEG}}\n");
+		ParameterizedStringGenerator generator = manager.getParameterizedStringGenerator(paramValueStore,
+				generatorValueStore, tokenList);
+		assertNotNull(generator);
+
+		String txt = generator.generate();
+		assertEquals("Name:John, age:25, employment:1995-01-28, salary:12,500.00\n", txt);
+
+		generator.setDataIndex(1);
+		txt = generator.generate();
+		assertEquals("Name:Bashir, age:45, employment:1978-05-12, salary:4,300.25\n", txt);
+	}
 
     @Test
     public void testGenerationNoGenList() throws Exception {
@@ -153,6 +178,10 @@ public class ParamGeneratorManagerTest extends AbstractUnifyComponentTest {
 
         private String name;
 
+        private Date employmentDt;
+
+        private BigDecimal salary;
+
         private int age;
 
         public Candidate(String name, int age) {
@@ -160,11 +189,34 @@ public class ParamGeneratorManagerTest extends AbstractUnifyComponentTest {
             this.age = age;
         }
 
-        public Candidate() {
+        private Candidate(String name, Date employmentDt, BigDecimal salary, int age) {
+			this.name = name;
+			this.employmentDt = employmentDt;
+			this.salary = salary;
+			this.age = age;
+		}
+
+		public Candidate() {
 
         }
 
-        public String getName() {
+        public Date getEmploymentDt() {
+			return employmentDt;
+		}
+
+		public void setEmploymentDt(Date employmentDt) {
+			this.employmentDt = employmentDt;
+		}
+
+		public BigDecimal getSalary() {
+			return salary;
+		}
+
+		public void setSalary(BigDecimal salary) {
+			this.salary = salary;
+		}
+
+		public String getName() {
             return name;
         }
 

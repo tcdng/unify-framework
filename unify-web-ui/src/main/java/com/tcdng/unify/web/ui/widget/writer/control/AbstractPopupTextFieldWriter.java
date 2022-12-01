@@ -29,128 +29,122 @@ import com.tcdng.unify.web.ui.widget.control.AbstractPopupTextField;
  */
 public abstract class AbstractPopupTextFieldWriter extends TextFieldWriter {
 
-    @Override
-    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-        AbstractPopupTextField popupTextField = (AbstractPopupTextField) widget;
-        super.doWriteBehavior(writer, popupTextField);
+	@Override
+	protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
+		AbstractPopupTextField popupTextField = (AbstractPopupTextField) widget;
+		super.doWriteBehavior(writer, popupTextField);
 
-        ExtensionType extensionType = popupTextField.getExtensionType();
-        boolean popupEnabled = isPopupEnabled(popupTextField);
-        if (popupEnabled) {
-            // Append popup JS
-            if (popupTextField.isPopupAlways()
-                    || (popupTextField.isContainerEditable() && !popupTextField.isContainerDisabled())) {
-                String facId = popupTextField.getId();
-                if (extensionType.isExtended()) {
-                    facId = popupTextField.getFacadeId();
-                }
+		ExtensionType extensionType = popupTextField.getExtensionType();
+		boolean popupEnabled = isPopupEnabled(popupTextField);
+		if (popupEnabled) {
+			// Append popup JS
+			if (popupTextField.isPopupAlways()
+					|| (popupTextField.isContainerEditable() && !popupTextField.isContainerDisabled())) {
+				String facId = popupTextField.getId();
+				if (extensionType.isExtended()) {
+					facId = popupTextField.getFacadeId();
+				}
 
-                String cmdTag = popupTextField.getBinding();
-                if (!popupTextField.getExtensionType().isFacadeEdit()) {
-                    writeOpenPopupJS(writer, "onenter", facId, cmdTag, popupTextField.getBorderId(),
-                            popupTextField.getPopupId(), popupTextField.getDisplayTimeOut(), getOnShowAction(),
-                            getOnShowParam(popupTextField), getOnHideAction(), getOnHideParam(popupTextField));
+				String cmdTag = popupTextField.getBinding();
+				if (!popupTextField.getExtensionType().isFacadeEdit()) {
+					writeOpenPopupJS(writer, popupTextField, "onenter", facId, cmdTag, popupTextField.getBorderId(),
+							popupTextField.getPopupId(), popupTextField.getDisplayTimeOut(), getOnShowAction(),
+							getOnShowParam(popupTextField), getOnHideAction(), getOnHideParam(popupTextField));
 
-                    if (popupTextField.isOpenPopupOnFac()) {
-                        writeOpenPopupJS(writer, "onclick", facId, cmdTag, popupTextField.getBorderId(),
-                                popupTextField.getPopupId(), popupTextField.getDisplayTimeOut(), getOnShowAction(),
-                                getOnShowParam(popupTextField), getOnHideAction(), getOnHideParam(popupTextField));
-                    }
+					if (popupTextField.isOpenPopupOnFac()) {
+						writeOpenPopupJS(writer, popupTextField, "onclick", facId, cmdTag, popupTextField.getBorderId(),
+								popupTextField.getPopupId(), popupTextField.getDisplayTimeOut(), getOnShowAction(),
+								getOnShowParam(popupTextField), getOnHideAction(), getOnHideParam(popupTextField));
+					}
 
-                    writeOpenPopupJS(writer, "onclick", popupTextField.getPopupButtonId(), cmdTag,
-                            popupTextField.getBorderId(), popupTextField.getPopupId(), popupTextField.getDisplayTimeOut(),
-                            getOnShowAction(), getOnShowParam(popupTextField), getOnHideAction(),
-                            getOnHideParam(popupTextField));
-                }
-            }
-        }
+					writeOpenPopupJS(writer, popupTextField, "onclick", popupTextField.getPopupButtonId(), cmdTag,
+							popupTextField.getBorderId(), popupTextField.getPopupId(),
+							popupTextField.getDisplayTimeOut(), getOnShowAction(), getOnShowParam(popupTextField),
+							getOnHideAction(), getOnHideParam(popupTextField));
+				}
+			}
+		}
 
-        doWritePopupTextFieldBehaviour(writer, popupTextField, popupEnabled);
-    }
+		doWritePopupTextFieldBehaviour(writer, popupTextField, popupEnabled);
+	}
 
-    @Override
-    protected void writeTrailingAddOn(ResponseWriter writer, Widget widget) throws UnifyException {
-        AbstractPopupTextField popupTextField = (AbstractPopupTextField) widget;
-        writer.write("<button tabindex=\"-1\"");
-        writeTagId(writer, popupTextField.getPopupButtonId());
-        writeTagStyleClass(writer, "tpbutton g_fsm");
-        if (popupTextField.isContainerDisabled()) {
-            writer.write(" disabled");
-        }
-        writer.write(">");
+	@Override
+	protected void writeTrailingAddOn(ResponseWriter writer, Widget widget) throws UnifyException {
+		AbstractPopupTextField popupTextField = (AbstractPopupTextField) widget;
+		writer.write("<button tabindex=\"-1\"");
+		writeTagId(writer, popupTextField.getPopupButtonId());
+		writeTagStyleClass(writer, "tpbutton g_fsm");
+		if (popupTextField.isContainerDisabled()) {
+			writer.write(" disabled");
+		}
+		writer.write(">");
 
-        if (isWithFontSymbolManager()) {
-            writer.write(resolveSymbolHtmlHexCode(popupTextField.getButtonSymbol()));
-        } else {
-            writer.write("<img src=\"");
-            writer.writeFileImageContextURL(popupTextField.getButtonImageSrc());
-            writer.write("\"/>");
-        }
-        writer.write("</button>");
-    }
+		if (isWithFontSymbolManager()) {
+			writer.write(resolveSymbolHtmlHexCode(popupTextField.getButtonSymbol()));
+		} else {
+			writer.write("<img src=\"");
+			writer.writeFileImageContextURL(popupTextField.getButtonImageSrc());
+			writer.write("\"/>");
+		}
+		writer.write("</button>");
+	}
 
-    @Override
-    protected void writeBaseAddOn(ResponseWriter writer, Widget widget) throws UnifyException {
-        AbstractPopupTextField popupTextField = (AbstractPopupTextField) widget;
-        if (isPopupEnabled(popupTextField)) {
-            writer.write("<div");
-            writeTagId(writer, popupTextField.getPopupId());
-            writeTagStyleClass(writer, "ui-text-popup-win");
-            writer.write(">");
-            writePopupContent(writer, popupTextField);
-            writer.write("</div>");
-        }
-    }
+	@Override
+	protected void writeBaseAddOn(ResponseWriter writer, Widget widget) throws UnifyException {
+		AbstractPopupTextField popupTextField = (AbstractPopupTextField) widget;
+		if (isPopupEnabled(popupTextField)) {
+			writer.write("<div");
+			writeTagId(writer, popupTextField.getPopupId());
+			writeTagStyleClass(writer, "ui-text-popup-win");
+			writer.write(">");
+			writePopupContent(writer, popupTextField);
+			writer.write("</div>");
+		}
+	}
 
-    protected boolean isPopupEnabled(AbstractPopupTextField popupTextField) throws UnifyException {
-        if (popupTextField.isPopupOnEditableOnly()) {
-            return popupTextField.isContainerEditable() && !popupTextField.isContainerDisabled();
-        }
-        return true;
-    }
-    
-    protected abstract void writePopupContent(ResponseWriter writer, AbstractPopupTextField popupTextField)
-            throws UnifyException;
+	protected boolean isPopupEnabled(AbstractPopupTextField popupTextField) throws UnifyException {
+		if (popupTextField.isPopupOnEditableOnly()) {
+			return popupTextField.isContainerEditable() && !popupTextField.isContainerDisabled();
+		}
+		return true;
+	}
 
-    protected abstract void doWritePopupTextFieldBehaviour(ResponseWriter writer, AbstractPopupTextField popupTextField,
-            boolean popupEnabled) throws UnifyException;
+	protected abstract void writePopupContent(ResponseWriter writer, AbstractPopupTextField popupTextField)
+			throws UnifyException;
 
-    /**
-     * Returns the name of action to fire on show of popup.
-     * 
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    protected abstract String getOnShowAction() throws UnifyException;
+	protected abstract void doWritePopupTextFieldBehaviour(ResponseWriter writer, AbstractPopupTextField popupTextField,
+			boolean popupEnabled) throws UnifyException;
 
-    /**
-     * Generates a JSON object for show action parameter
-     * 
-     * @param popupTextField
-     *            the popup text field
-     * @return the generated object
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    protected abstract String getOnShowParam(AbstractPopupTextField popupTextField) throws UnifyException;
+	/**
+	 * Returns the name of action to fire on show of popup.
+	 * 
+	 * @throws UnifyException if an error occurs
+	 */
+	protected abstract String getOnShowAction() throws UnifyException;
 
-    /**
-     * Returns the name of action to fire on hide of popup.
-     * 
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    protected abstract String getOnHideAction() throws UnifyException;
+	/**
+	 * Generates a JSON object for show action parameter
+	 * 
+	 * @param popupTextField the popup text field
+	 * @return the generated object
+	 * @throws UnifyException if an error occurs
+	 */
+	protected abstract String getOnShowParam(AbstractPopupTextField popupTextField) throws UnifyException;
 
-    /**
-     * Generates a JSON object for hide action parameter
-     * 
-     * @param popupTextField
-     *            the popup text field
-     * @return the generated object
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    protected abstract String getOnHideParam(AbstractPopupTextField popupTextField) throws UnifyException;
+	/**
+	 * Returns the name of action to fire on hide of popup.
+	 * 
+	 * @throws UnifyException if an error occurs
+	 */
+	protected abstract String getOnHideAction() throws UnifyException;
+
+	/**
+	 * Generates a JSON object for hide action parameter
+	 * 
+	 * @param popupTextField the popup text field
+	 * @return the generated object
+	 * @throws UnifyException if an error occurs
+	 */
+	protected abstract String getOnHideParam(AbstractPopupTextField popupTextField) throws UnifyException;
 
 }

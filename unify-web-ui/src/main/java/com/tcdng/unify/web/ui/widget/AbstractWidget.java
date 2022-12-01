@@ -730,14 +730,14 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
     }
 
     protected <T> T getUplAttribute(Class<T> type, String attribute, String attributeBinding) throws UnifyException {
-        T list = getUplAttribute(type, attribute);
-        if (list == null) {
+        T attrbVal = getUplAttribute(type, attribute);
+        if (attrbVal == null) {
             String listBinding = getUplAttribute(String.class, attributeBinding);
             if (StringUtils.isNotBlank(listBinding)) {
-                list = getValue(type, listBinding);
+                attrbVal = getValue(type, listBinding);
             }
         }
-        return list;
+        return attrbVal;
     }
 
     protected boolean resolveBooleanAttribute(String attribute, String bindingAttribute) throws UnifyException {

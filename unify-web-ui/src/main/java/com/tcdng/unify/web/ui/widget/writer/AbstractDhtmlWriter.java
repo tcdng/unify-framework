@@ -758,9 +758,9 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
 		writer.endFunction();
 	}
 
-	protected void writeOpenPopupJS(ResponseWriter writer, String event, String pageName, String cmdTag, String frameId,
-			String popupId, long stayOpenForMillSec, String onShowAction, String onShowParamObject, String onHideAction,
-			String onHideParamObject) throws UnifyException {
+	protected void writeOpenPopupJS(ResponseWriter writer, Widget widget, String event, String pageName, String cmdTag,
+			String frameId, String popupId, long stayOpenForMillSec, String onShowAction, String onShowParamObject,
+			String onHideAction, String onHideParamObject) throws UnifyException {
 		StringBuilder psb = new StringBuilder();
 		psb.append("{\"popupId\":\"").append(popupId).append("\"");
 		if (frameId != null) {

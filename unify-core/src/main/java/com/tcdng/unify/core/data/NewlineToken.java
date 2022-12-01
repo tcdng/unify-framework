@@ -13,25 +13,18 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
 package com.tcdng.unify.core.data;
 
-import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.annotation.Component;
-
 /**
- * Test parameter generator A
+ * Newline token.
  * 
- * @author Lateef Ojulari
+ * @author The Code Department
  * @since 1.0
  */
-@Component(name = "test-gen-a")
-public class TestAbstractParamGeneratorA extends AbstractParamGenerator {
+public class NewlineToken extends StringToken {
 
-    @Override
-    public Object generate(ValueStoreReader itemReader, ValueStoreReader parentReader, ParamToken key)
-            throws UnifyException {
-        return parentReader.read("address1") + " - " + itemReader.read("age");
-    }
+	public NewlineToken() {
+		super(StringTokenType.NEWLINE, "\n");
+	}
 
 }

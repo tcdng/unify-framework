@@ -307,6 +307,22 @@ public class FormatHelperImpl extends AbstractUnifyComponent implements FormatHe
     }
 
     @Override
+	public Formatter<?> newFormatter(String standardTypeCode) throws UnifyException {
+		StandardFormatType formatType = StandardFormatType.fromCode(standardTypeCode);
+		if (formatType == null) {
+			throw new IllegalArgumentException(
+					"Could not resolve standard format type from code [" + standardTypeCode + "]");
+		}
+
+		return newFormatter(formatType);
+	}
+
+	@Override
+	public Formatter<?> newFormatter(StandardFormatType formatType) throws UnifyException {
+		return (Formatter<?>) getUplComponent(getApplicationLocale(), formatType.formatter(), false);
+	}
+
+	@Override
     protected void onInitialize() throws UnifyException {
 
     }

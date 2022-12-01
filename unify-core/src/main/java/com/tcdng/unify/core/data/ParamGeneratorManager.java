@@ -34,6 +34,20 @@ public interface ParamGeneratorManager extends UnifyComponent {
      * 
      * @param paramValueStore
      *                            the parameter value store
+     * @param tokenList
+     *                            the target token list
+     * @return the parameterized string generator
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    ParameterizedStringGenerator getParameterizedStringGenerator(ValueStore paramValueStore,
+            List<StringToken> tokenList) throws UnifyException;
+
+    /**
+     * Gets a parameterized string generator.
+     * 
+     * @param paramValueStore
+     *                            the parameter value store
      * @param generatorValueStore
      *                            the generator value store
      * @param tokenList

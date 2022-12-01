@@ -128,4 +128,22 @@ public interface FormatHelper extends UnifyComponent {
      *             if an error occurs
      */
     String format(String pattern, Date date) throws UnifyException;
+    
+	/**
+	 * Creates a new formatter component based on supplied standard type code.
+	 * 
+	 * @param standardTypeCode the standard type code
+	 * @return the new formatter component
+	 * @throws UnifyException if an error occurs
+	 */
+	Formatter<?> newFormatter(String standardTypeCode) throws UnifyException;
+
+	/**
+	 * Creates a new formatter component based on supplied standard type.
+	 * 
+	 * @param formatType the format type
+	 * @return the new formatter component
+	 * @throws UnifyException if an error occurs
+	 */
+	Formatter<?> newFormatter(StandardFormatType formatType) throws UnifyException;
 }

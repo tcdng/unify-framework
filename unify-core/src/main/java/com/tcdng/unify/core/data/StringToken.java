@@ -17,35 +17,20 @@
 package com.tcdng.unify.core.data;
 
 /**
- * Parameter generator.
+ * String token.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public class StringToken {
-
-    private String token;
-
-    private String genType;
-
-    private String genKey;
+public abstract class StringToken {
     
-    private boolean param;
+    private final StringTokenType type;
+	
+    private final String token;
 
-    public StringToken(String token) {
-        this(token, false);
-    }
-
-    public StringToken(String token, boolean param) {
+    protected StringToken(StringTokenType type, String token) {
+        this.type = type;
         this.token = token;
-        this.param = param;
-        if (param) {
-            String[] tokens = token.split(":");
-            if (tokens.length == 2) {
-                genType = tokens[0];
-                genKey = tokens[1];
-            }
-        }
     }
 
     @Override
@@ -62,19 +47,27 @@ public class StringToken {
         return token;
     }
 
-    public String getGenType() {
-        return genType;
+    public StringTokenType getType() {
+		return type;
+	}
+
+	public boolean isText() {
+        return type.isText();
     }
 
-    public String getGenKey() {
-        return genKey;
+	public boolean isNewline() {
+        return type.isNewline();
     }
 
-    public boolean isParam() {
-        return param;
+	public boolean isParam() {
+        return type.isParam();
     }
 
-    public boolean isGenerator() {
-        return genType != null && genKey != null;
+    public boolean isFormattedParam() {
+        return type.isFormattedParam();
+    }
+
+    public boolean isGeneratorParam() {
+        return type.isGeneratorParam();
     }
 }
