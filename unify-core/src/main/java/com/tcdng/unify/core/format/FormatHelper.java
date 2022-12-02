@@ -18,7 +18,7 @@ package com.tcdng.unify.core.format;
 import java.util.Date;
 import java.util.Locale;
 
-import com.tcdng.unify.convert.constants.StandardFormatType;
+import com.tcdng.unify.common.constants.StandardFormatType;
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 

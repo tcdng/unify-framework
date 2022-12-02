@@ -22,8 +22,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import com.tcdng.unify.convert.util.StringToken;
-import com.tcdng.unify.convert.util.StringTokenUtils;
+import com.tcdng.unify.common.util.StringToken;
+import com.tcdng.unify.common.util.StringTokenUtils;
 import com.tcdng.unify.core.data.ListData;
 
 /**

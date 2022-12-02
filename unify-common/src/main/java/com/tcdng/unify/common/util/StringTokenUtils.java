@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.convert.util;
+package com.tcdng.unify.common.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;

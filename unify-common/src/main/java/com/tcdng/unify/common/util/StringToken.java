@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.tcdng.unify.convert.util;
+package com.tcdng.unify.common.util;
 
 /**
  * String token.

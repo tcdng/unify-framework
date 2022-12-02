@@ -15,7 +15,7 @@
  */
 package com.tcdng.unify.core;
 
-import com.tcdng.unify.convert.constants.ApplicationConstants;
+import com.tcdng.unify.common.constants.ApplicationCommonConstants;
 
 /**
  * Application component constants.
@@ -35,7 +35,7 @@ public interface ApplicationComponents {
 
     String APPLICATION_DATABASETRANSACTIONMANAGER = "application-databasetxnmanager";
 
-    String APPLICATION_DATASOURCE = ApplicationConstants.APPLICATION_DATASOURCE;
+    String APPLICATION_DATASOURCE = ApplicationCommonConstants.APPLICATION_DATASOURCE;
 
     String APPLICATION_DATASOURCEMANAGER = "application-datasourcemanager";
 

@@ -16,7 +16,7 @@
 
 package com.tcdng.unify.web.ui.widget.control;
 
-import com.tcdng.unify.convert.constants.EnumConst;
+import com.tcdng.unify.common.constants.EnumConst;
 import com.tcdng.unify.core.util.EnumUtils;
 
 /**

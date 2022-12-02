@@ -13,13 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.convert.util;
+package com.tcdng.unify.common.util;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.tcdng.unify.convert.constants.EnumConst;
+import com.tcdng.unify.common.constants.EnumConst;
 
 /**
  * Enumeration utilities.
@@ -28,6 +28,8 @@ import com.tcdng.unify.convert.constants.EnumConst;
  * @version 1.0
  */
 public final class EnumUtils {
+
+    public static final Object[] ZEROLEN_OBJECT_ARRAY = new Object[0];
 
     private static FactoryMap<Class<? extends EnumConst>, EnumConstMap> enumConstMap =
             new FactoryMap<Class<? extends EnumConst>, EnumConstMap>() {
@@ -99,7 +101,7 @@ public final class EnumUtils {
                 throw new IllegalArgumentException("Parameter key can not be null!");
             }
 
-            return get(key, ConverterUtils.ZEROLEN_OBJECT_ARRAY);
+            return get(key, ZEROLEN_OBJECT_ARRAY);
         }
 
         public U get(T key, Object... params) throws Exception {

@@ -13,18 +13,18 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.convert.util;
+package com.tcdng.unify.common.util;
 
 /**
- * Newline token.
+ * Text token.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public class NewlineToken extends StringToken {
+public class TextToken extends StringToken {
 
-	public NewlineToken() {
-		super(StringTokenType.NEWLINE, "\n");
+	public TextToken(String token) {
+		super(StringTokenType.TEXT, token);
 	}
 
 }

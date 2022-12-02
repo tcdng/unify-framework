@@ -18,7 +18,7 @@ package com.tcdng.unify.core.data;
 
 import java.util.List;
 
-import com.tcdng.unify.convert.util.StringToken;
+import com.tcdng.unify.common.util.StringToken;
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 

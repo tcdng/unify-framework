@@ -17,7 +17,7 @@ package com.tcdng.unify.core.database;
 
 import java.util.List;
 
-import com.tcdng.unify.convert.annotation.StaticList;
+import com.tcdng.unify.common.annotation.StaticList;
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Table;

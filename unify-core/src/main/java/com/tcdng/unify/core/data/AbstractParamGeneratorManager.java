@@ -20,9 +20,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.tcdng.unify.convert.constants.StandardFormatType;
-import com.tcdng.unify.convert.util.ParamToken;
-import com.tcdng.unify.convert.util.StringToken;
+import com.tcdng.unify.common.constants.StandardFormatType;
+import com.tcdng.unify.common.util.ParamToken;
+import com.tcdng.unify.common.util.StringToken;
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;

@@ -48,7 +48,7 @@ import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.eclipsesource.json.PrettyPrint;
-import com.tcdng.unify.convert.constants.EnumConst;
+import com.tcdng.unify.common.constants.EnumConst;
 import com.tcdng.unify.convert.converters.ConverterFormatter;
 import com.tcdng.unify.convert.util.ConverterUtils;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;

@@ -32,7 +32,8 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
-import com.tcdng.unify.convert.constants.EnumConst;
+import com.tcdng.unify.common.constants.EnumConst;
+import com.tcdng.unify.common.util.EnumUtils;
 import com.tcdng.unify.convert.converters.BigDecimalConverter;
 import com.tcdng.unify.convert.converters.BooleanConverter;
 import com.tcdng.unify.convert.converters.ByteArrayConverter;

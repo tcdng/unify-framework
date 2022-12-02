@@ -13,19 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.convert.constants;
+package com.tcdng.unify.common.constants;
 
 /**
- * Enumeration constant interface.
+ * Application common constants.
  * 
  * @author The Code Department
  * @version 1.0
  */
-public interface EnumConst {
+public interface ApplicationCommonConstants {
 
-    String code();
-
-    String name();
-
-    String defaultCode();
+    String APPLICATION_DATASOURCE = "application-datasource";
 }
