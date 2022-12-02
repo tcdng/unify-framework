@@ -21,7 +21,6 @@ import java.util.Date;
 import com.tcdng.unify.core.annotation.Callable;
 import com.tcdng.unify.core.annotation.CallableDataType;
 import com.tcdng.unify.core.annotation.InParam;
-import com.tcdng.unify.core.database.AbstractCallableProc;
 
 /**
  * Test callable procedure with parameters, results and return.

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2020 The Code Department.
+ * Copyright 2018-2022 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -13,18 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.data;
+package com.tcdng.unify.common.constants;
 
 /**
- * Text token.
+ * Application common constants.
  * 
  * @author The Code Department
- * @since 1.0
+ * @version 1.0
  */
-public class TextToken extends StringToken {
+public interface ApplicationCommonConstants {
 
-	public TextToken(String token) {
-		super(StringTokenType.TEXT, token);
-	}
-
+    String APPLICATION_DATASOURCE = "application-datasource";
 }

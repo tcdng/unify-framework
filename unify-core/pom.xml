@@ -68,6 +68,11 @@
 		<!-- Main dependencies -->
         <dependency>
             <groupId>com.tcdng.unify</groupId>
+            <artifactId>unify-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.tcdng.unify</groupId>
             <artifactId>unify-convert</artifactId>
             <version>${project.version}</version>
         </dependency>

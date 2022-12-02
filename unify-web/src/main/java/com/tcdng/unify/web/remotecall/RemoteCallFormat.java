@@ -15,7 +15,7 @@
  */
 package com.tcdng.unify.web.remotecall;
 
-import com.tcdng.unify.convert.constants.EnumConst;
+import com.tcdng.unify.common.constants.EnumConst;
 import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.util.EnumUtils;
 import com.tcdng.unify.web.constant.RequestHeaderConstants;

@@ -24,7 +24,6 @@ import com.tcdng.unify.core.annotation.CallableDataType;
 import com.tcdng.unify.core.annotation.InOutParam;
 import com.tcdng.unify.core.annotation.InParam;
 import com.tcdng.unify.core.annotation.OutParam;
-import com.tcdng.unify.core.database.AbstractCallableProc;
 
 
 /**

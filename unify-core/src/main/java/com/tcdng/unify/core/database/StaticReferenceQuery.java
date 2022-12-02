@@ -15,7 +15,7 @@
  */
 package com.tcdng.unify.core.database;
 
-import com.tcdng.unify.convert.constants.EnumConst;
+import com.tcdng.unify.common.constants.EnumConst;
 
 /**
  * Static reference query.

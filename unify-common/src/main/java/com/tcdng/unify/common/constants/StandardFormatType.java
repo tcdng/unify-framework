@@ -13,10 +13,9 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.format;
+package com.tcdng.unify.common.constants;
 
-import com.tcdng.unify.convert.constants.EnumConst;
-import com.tcdng.unify.core.util.EnumUtils;
+import com.tcdng.unify.common.util.EnumUtils;
 
 /**
  * Standard format type.

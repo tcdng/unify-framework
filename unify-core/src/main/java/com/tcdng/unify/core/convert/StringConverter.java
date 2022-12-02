@@ -18,7 +18,7 @@ package com.tcdng.unify.core.convert;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import com.tcdng.unify.convert.constants.EnumConst;
+import com.tcdng.unify.common.constants.EnumConst;
 import com.tcdng.unify.convert.converters.AbstractConverter;
 import com.tcdng.unify.convert.converters.ConverterFormatter;
 import com.tcdng.unify.convert.util.ConverterUtils;

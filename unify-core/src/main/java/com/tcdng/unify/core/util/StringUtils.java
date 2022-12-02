@@ -20,14 +20,11 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
+import com.tcdng.unify.common.util.StringToken;
+import com.tcdng.unify.common.util.StringTokenUtils;
 import com.tcdng.unify.core.data.ListData;
-import com.tcdng.unify.core.data.NewlineToken;
-import com.tcdng.unify.core.data.ParamToken;
-import com.tcdng.unify.core.data.StringToken;
-import com.tcdng.unify.core.data.TextToken;
 
 /**
  * Provides utility methods for string manipulation.
@@ -807,58 +804,11 @@ public final class StringUtils {
     }
 
     public static String buildParameterizedString(List<StringToken> tokens) {
-    	if (!tokens.isEmpty()) {
-    		StringBuilder sb = new StringBuilder();
-    		for (StringToken token: tokens) {
-    			if (token.isParam()) {
-    				sb.append("{{").append(token.getToken()).append("}}");
-    			} else {
-    				sb.append(token.getToken());
-    			}
-    		}
-    		return sb.toString();
-    	}
-    	
-    	return null;
+    	return StringTokenUtils.buildParameterizedString(tokens);
     }
     
 	public static List<StringToken> breakdownParameterizedString(String string) {
-		if (string == null) {
-			return Collections.emptyList();
-		}
-
-		if ("\n".equals(string)) {
-			return Arrays.asList(new NewlineToken());
-		}
-
-		List<StringToken> tokenList = new ArrayList<StringToken>();
-		int index = 0;
-		int pStartIndex = 0;
-		while ((pStartIndex = string.indexOf("{{", index)) >= 0) {
-			int pEndIndex = string.indexOf("}}", pStartIndex);
-			if (pEndIndex <= 0) {
-				throw new RuntimeException("Invalid parameterized string: parameter closure expected.");
-			}
-
-			if ((pEndIndex - pStartIndex) < 4) {
-				throw new RuntimeException(
-						"Invalid parameterized string: parameter name expected at index " + (pStartIndex + 1) + ".");
-			}
-
-			if (index < pStartIndex) {
-				tokenList.addAll(StringUtils.breakdownTextString(string.substring(index, pStartIndex)));
-			}
-
-			tokenList.add(ParamToken.getParamToken(string.substring(pStartIndex + 2, pEndIndex)));
-
-			index = pEndIndex + 2;
-		}
-
-		if (index < string.length()) {
-			tokenList.addAll(StringUtils.breakdownTextString((string.substring(index))));
-		}
-
-		return tokenList;
+		return StringTokenUtils.breakdownParameterizedString(string);
 	}
 
     public static void truncate(StringBuilder sb) {
@@ -866,24 +816,5 @@ public final class StringUtils {
             sb.delete(0, sb.length());
         }
     }
-
-	private static List<StringToken> breakdownTextString(String text) {		
-		List<StringToken> resultList = new ArrayList<StringToken>();
-		String[] parts = text.split("\n", -1);
-		int lim = parts.length - 1;
-		for (int i = 0; i < lim; i++) {
-			if (parts[i].length() > 0) {
-				resultList.add(new TextToken(parts[i]));
-			}
-
-			resultList.add(new NewlineToken());
-		}
-
-		if (parts[lim].length() > 0) {
-			resultList.add(new TextToken(parts[lim]));
-		}
-
-		return resultList;
-	}
 
 }

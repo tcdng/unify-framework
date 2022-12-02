@@ -16,6 +16,7 @@
 
 package com.tcdng.unify.core.data;
 
+import com.tcdng.unify.common.util.ParamToken;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;

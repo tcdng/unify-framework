@@ -27,7 +27,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.tcdng.unify.convert.constants.EnumConst;
+import com.tcdng.unify.common.constants.EnumConst;
 import com.tcdng.unify.core.criterion.FilterConditionListType;
 import com.tcdng.unify.core.criterion.FilterConditionType;
 import com.tcdng.unify.core.filter.ObjectFilterPolicy;

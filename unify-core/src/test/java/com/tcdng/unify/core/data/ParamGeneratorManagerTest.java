@@ -26,6 +26,7 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.tcdng.unify.common.util.StringToken;
 import com.tcdng.unify.core.AbstractUnifyComponentTest;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;

@@ -17,7 +17,6 @@
 package com.tcdng.unify.core.database;
 
 import com.tcdng.unify.core.annotation.Callable;
-import com.tcdng.unify.core.database.AbstractCallableProc;
 
 /**
  * Test callable procedure with no parameters and with results.
