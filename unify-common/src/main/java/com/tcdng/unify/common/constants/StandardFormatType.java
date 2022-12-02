@@ -25,33 +25,36 @@ import com.tcdng.unify.common.util.EnumUtils;
  */
 public enum StandardFormatType implements EnumConst  {
 	
-	INTEGER("INT","!integerformat","######"),
-	INTEGER_GROUPED("ING","!integerformat useGrouping:true","###,###"),
-	DECIMAL("DEC","!decimalformat scale:2","######.00"),
-	DECIMAL_GROUPED("DEG","!decimalformat scale:2 useGrouping:true","###,###.00"),
-	DATE_DDMMYYYY_SLASH("DDS","!fixeddatetimeformat pattern:$s{dd/MM/yyyy}","dd/MM/yyyy"),
-	DATE_MMDDYYYY_SLASH("DMS","!fixeddatetimeformat pattern:$s{MM/dd/yyyy}","MM/dd/yyyy"),
-	DATE_YYYYMMDD_SLASH("DYS","!fixeddatetimeformat pattern:$s{yyyy/MM/dd}","yyyy/MM/dd"),
-	DATE_DDMMYYYY_DASH("DDD","!fixeddatetimeformat pattern:$s{dd-MM-yyyy}","dd-MM-yyyy"),
-	DATE_MMDDYYYY_DASH("DMD","!fixeddatetimeformat pattern:$s{MM-dd-yyyy}","MM-dd-yyyy"),
-	DATE_YYYYMMDD_DASH("DYD","!fixeddatetimeformat pattern:$s{yyyy-MM-dd}","yyyy-MM-dd"),
-	DATETIME_DDMMYYYY_SLASH("TDS","!fixeddatetimeformat pattern:$s{dd/MM/yyyy HH:mm:ss}","dd/MM/yyyy HH:mm:ss"),
-	DATETIME_MMDDYYYY_SLASH("TMS","!fixeddatetimeformat pattern:$s{MM/dd/yyyy HH:mm:ss}","MM/dd/yyyy HH:mm:ss"),
-	DATETIME_YYYYMMDD_SLASH("TYS","!fixeddatetimeformat pattern:$s{yyyy/MM/dd HH:mm:ss}","yyyy/MM/dd HH:mm:ss"),
-	DATETIME_DDMMYYYY_DASH("TDD","!fixeddatetimeformat pattern:$s{dd-MM-yyyy HH:mm:ss}","dd-MM-yyyy HH:mm:ss"),
-	DATETIME_MMDDYYYY_DASH("TMD","!fixeddatetimeformat pattern:$s{MM-dd-yyyy HH:mm:ss}","MM-dd-yyyy HH:mm:ss"),
-	DATETIME_YYYYMMDD_DASH("TYD","!fixeddatetimeformat pattern:$s{yyyy-MM-dd HH:mm:ss}","yyyy-MM-dd HH:mm:ss");
+	INTEGER("INT","!integerformat","######", true),
+	INTEGER_GROUPED("ING","!integerformat useGrouping:true","###,###", true),
+	DECIMAL("DEC","!decimalformat scale:2","#####0.00", true),
+	DECIMAL_GROUPED("DEG","!decimalformat scale:2 useGrouping:true","###,##0.00", true),
+	DATE_DDMMYYYY_SLASH("DDS","!fixeddatetimeformat pattern:$s{dd/MM/yyyy}","dd/MM/yyyy", false),
+	DATE_MMDDYYYY_SLASH("DMS","!fixeddatetimeformat pattern:$s{MM/dd/yyyy}","MM/dd/yyyy", false),
+	DATE_YYYYMMDD_SLASH("DYS","!fixeddatetimeformat pattern:$s{yyyy/MM/dd}","yyyy/MM/dd", false),
+	DATE_DDMMYYYY_DASH("DDD","!fixeddatetimeformat pattern:$s{dd-MM-yyyy}","dd-MM-yyyy", false),
+	DATE_MMDDYYYY_DASH("DMD","!fixeddatetimeformat pattern:$s{MM-dd-yyyy}","MM-dd-yyyy", false),
+	DATE_YYYYMMDD_DASH("DYD","!fixeddatetimeformat pattern:$s{yyyy-MM-dd}","yyyy-MM-dd", false),
+	DATETIME_DDMMYYYY_SLASH("TDS","!fixeddatetimeformat pattern:$s{dd/MM/yyyy HH:mm:ss}","dd/MM/yyyy HH:mm:ss", false),
+	DATETIME_MMDDYYYY_SLASH("TMS","!fixeddatetimeformat pattern:$s{MM/dd/yyyy HH:mm:ss}","MM/dd/yyyy HH:mm:ss", false),
+	DATETIME_YYYYMMDD_SLASH("TYS","!fixeddatetimeformat pattern:$s{yyyy/MM/dd HH:mm:ss}","yyyy/MM/dd HH:mm:ss", false),
+	DATETIME_DDMMYYYY_DASH("TDD","!fixeddatetimeformat pattern:$s{dd-MM-yyyy HH:mm:ss}","dd-MM-yyyy HH:mm:ss", false),
+	DATETIME_MMDDYYYY_DASH("TMD","!fixeddatetimeformat pattern:$s{MM-dd-yyyy HH:mm:ss}","MM-dd-yyyy HH:mm:ss", false),
+	DATETIME_YYYYMMDD_DASH("TYD","!fixeddatetimeformat pattern:$s{yyyy-MM-dd HH:mm:ss}","yyyy-MM-dd HH:mm:ss", false);
 	
 	private final String code;
 	
 	private final String formatter;
 	
-	private final String label;
+	private final String format;
+	
+	private final boolean number;
 
-	private StandardFormatType(String code, String formatter, String label) {
+	private StandardFormatType(String code, String formatter, String format, boolean number) {
 		this.code = code;
 		this.formatter = formatter;
-		this.label = label;
+		this.format = format;
+		this.number = number;
 	}
 
     @Override
@@ -68,10 +71,22 @@ public enum StandardFormatType implements EnumConst  {
 		return formatter;
 	}
 
-	public String label() {
-		return label;
+	public String format() {
+		return format;
 	}
 
+	public String label() {
+		return format;
+	}
+
+	public boolean isNumberType() {
+		return number;
+	}
+
+	public boolean isDateType() {
+		return !number;
+	}
+	
     public static StandardFormatType fromCode(String code) {
         return EnumUtils.fromCode(StandardFormatType.class, code);
     }
