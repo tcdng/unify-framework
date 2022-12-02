@@ -13,14 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.annotation;
+package com.tcdng.unify.convert.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.tcdng.unify.core.ApplicationComponents;
+import com.tcdng.unify.convert.constants.ApplicationConstants;
 
 /**
  * Annotation used to specify the static reference list used to populate a
@@ -35,9 +35,9 @@ public @interface StaticList {
 
     /**
      * The datasource that static reference belongs to. Defaults to
-     * {@link ApplicationComponents#APPLICATION_DATASOURCE}
+     * {@link ApplicationConstants#APPLICATION_DATASOURCE}
      */
-    String datasource() default ApplicationComponents.APPLICATION_DATASOURCE;
+    String datasource() default ApplicationConstants.APPLICATION_DATASOURCE;
 
     /** The static reference list */
     String name();

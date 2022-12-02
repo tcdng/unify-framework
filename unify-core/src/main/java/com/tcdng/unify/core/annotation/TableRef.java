@@ -20,6 +20,8 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+import com.tcdng.unify.convert.annotation.StaticList;
+
 
 /**
  * Defines a table reference.

@@ -20,12 +20,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.tcdng.unify.convert.constants.StandardFormatType;
+import com.tcdng.unify.convert.util.ParamToken;
+import com.tcdng.unify.convert.util.StringToken;
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.format.FormatHelper;
 import com.tcdng.unify.core.format.Formatter;
-import com.tcdng.unify.core.format.StandardFormatType;
 import com.tcdng.unify.core.util.DataUtils;
 
 /**

@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.data;
+package com.tcdng.unify.convert.util;
 
 /**
  * Text token.

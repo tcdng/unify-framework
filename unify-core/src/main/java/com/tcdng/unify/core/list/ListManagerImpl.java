@@ -23,13 +23,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import com.tcdng.unify.convert.annotation.StaticList;
 import com.tcdng.unify.convert.constants.EnumConst;
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
-import com.tcdng.unify.core.annotation.StaticList;
 import com.tcdng.unify.core.data.Listable;
 import com.tcdng.unify.core.data.LocaleFactoryMap;
 import com.tcdng.unify.core.util.DataUtils;

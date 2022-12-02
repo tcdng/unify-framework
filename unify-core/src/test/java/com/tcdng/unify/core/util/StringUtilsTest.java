@@ -26,12 +26,12 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.tcdng.unify.convert.constants.StandardFormatType;
+import com.tcdng.unify.convert.util.NewlineToken;
+import com.tcdng.unify.convert.util.ParamToken;
+import com.tcdng.unify.convert.util.StringToken;
+import com.tcdng.unify.convert.util.TextToken;
 import com.tcdng.unify.core.data.ListData;
-import com.tcdng.unify.core.data.NewlineToken;
-import com.tcdng.unify.core.data.ParamToken;
-import com.tcdng.unify.core.data.StringToken;
-import com.tcdng.unify.core.data.TextToken;
-import com.tcdng.unify.core.format.StandardFormatType;
 
 /**
  * StringUtils tests.

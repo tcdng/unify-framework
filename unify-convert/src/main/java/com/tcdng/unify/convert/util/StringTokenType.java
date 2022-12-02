@@ -13,11 +13,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.data;
+package com.tcdng.unify.convert.util;
 
+import com.tcdng.unify.convert.annotation.StaticList;
 import com.tcdng.unify.convert.constants.EnumConst;
-import com.tcdng.unify.core.annotation.StaticList;
-import com.tcdng.unify.core.util.EnumUtils;
 
 /**
  * String token type.

@@ -20,12 +20,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.tcdng.unify.convert.annotation.StaticList;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Parameter;
 import com.tcdng.unify.core.annotation.Parameters;
 import com.tcdng.unify.core.annotation.Schedulable;
-import com.tcdng.unify.core.annotation.StaticList;
 import com.tcdng.unify.core.annotation.Table;
 import com.tcdng.unify.core.annotation.View;
 import com.tcdng.unify.core.constant.AnnotationConstants;

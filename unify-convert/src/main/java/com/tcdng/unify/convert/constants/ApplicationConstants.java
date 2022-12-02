@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2020 The Code Department.
+ * Copyright 2018-2022 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -13,18 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.convert.util;
+package com.tcdng.unify.convert.constants;
 
 /**
- * Newline token.
+ * Application constants.
  * 
  * @author The Code Department
- * @since 1.0
+ * @version 1.0
  */
-public class NewlineToken extends StringToken {
+public interface ApplicationConstants {
 
-	public NewlineToken() {
-		super(StringTokenType.NEWLINE, "\n");
-	}
-
+    String APPLICATION_DATASOURCE = "application-datasource";
 }

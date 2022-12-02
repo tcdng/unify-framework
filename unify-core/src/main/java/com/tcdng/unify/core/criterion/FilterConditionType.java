@@ -17,8 +17,8 @@ package com.tcdng.unify.core.criterion;
 
 import java.util.Collection;
 
+import com.tcdng.unify.convert.annotation.StaticList;
 import com.tcdng.unify.convert.constants.EnumConst;
-import com.tcdng.unify.core.annotation.StaticList;
 import com.tcdng.unify.core.util.EnumUtils;
 
 /**
