@@ -327,13 +327,22 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 							isPrimaryKey = true;
 							position = ia.position();
 
-							column = ta != null ? AnnotationUtils.getAnnotationString(ta.idColumn()) : null;
-							if (column == null) {
-								column = AnnotationUtils.getAnnotationString(ia.name());
+							ColumnOverride coa = colOverrideMap.get(field.getName());
+							if (coa != null) {
+								if (StringUtils.isNotBlank(AnnotationUtils.getAnnotationString(coa.name()))) {
+									column = coa.name();
+								}
 							}
 
 							if (column == null) {
-								column = tableName + "_ID";
+								column = ta != null ? AnnotationUtils.getAnnotationString(ta.idColumn()) : null;
+								if (column == null) {
+									column = AnnotationUtils.getAnnotationString(ia.name());
+								}
+
+								if (column == null) {
+									column = tableName + "_ID";
+								}
 							}
 
 							if (idFieldInfo != null) {
@@ -355,13 +364,22 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 							isPersistent = true;
 							position = va.position();
 
-							column = ta != null ? AnnotationUtils.getAnnotationString(ta.versionColumn()) : null;
-							if (column == null) {
-								column = AnnotationUtils.getAnnotationString(va.name());
+							ColumnOverride coa = colOverrideMap.get(field.getName());
+							if (coa != null) {
+								if (StringUtils.isNotBlank(AnnotationUtils.getAnnotationString(coa.name()))) {
+									column = coa.name();
+								}
 							}
 
 							if (column == null) {
-								column = "VERSION_NO";
+								column = ta != null ? AnnotationUtils.getAnnotationString(ta.versionColumn()) : null;
+								if (column == null) {
+									column = AnnotationUtils.getAnnotationString(va.name());
+								}
+
+								if (column == null) {
+									column = "VERSION_NO";
+								}
 							}
 
 							if (versionFieldInfo != null) {
@@ -1641,6 +1659,10 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 				if (entityClass.getAnnotation(TableExt.class).adhoc()) {
 					return sqlEntityInfoMap.get(entityClass);
 				}
+			}
+
+			if (entityClass.isAnnotationPresent(TableName.class)) {
+				return sqlEntityInfoMap.get(entityClass);
 			}
 
 			throw new UnifyException(UnifyCoreErrorConstants.SQLENTITYINFOFACTORY_ENTITYINFO_NOT_FOUND, entityClass);

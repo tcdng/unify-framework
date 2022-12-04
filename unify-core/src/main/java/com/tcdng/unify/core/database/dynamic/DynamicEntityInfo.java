@@ -28,6 +28,7 @@ import com.tcdng.unify.core.annotation.DynamicEntityType;
 import com.tcdng.unify.core.annotation.DynamicFieldType;
 import com.tcdng.unify.core.constant.DataType;
 import com.tcdng.unify.core.system.entities.AbstractSequencedEntity;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * Dynamic entity information.
@@ -130,6 +131,11 @@ public class DynamicEntityInfo {
 
 	public boolean isResolved() {
 		return resolved;
+	}
+    
+    @Override
+	public String toString() {
+		return StringUtils.toXmlString(this);
 	}
 
 	public void finalizeResolution() throws UnifyException {
