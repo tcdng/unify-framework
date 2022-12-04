@@ -20,6 +20,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.DynamicFieldType;
 import com.tcdng.unify.core.constant.DataType;
 import com.tcdng.unify.core.constant.EntityFieldType;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * Dynamic field information.
@@ -101,7 +102,12 @@ public abstract class DynamicFieldInfo {
     	enumClassName = resolution.enumClassName;
     }
     
-    protected Resolution doFinalizeResolution() throws UnifyException {
+    @Override
+	public String toString() {
+		return StringUtils.toXmlString(this);
+	}
+
+	protected Resolution doFinalizeResolution() throws UnifyException {
     	return new Resolution(dataType, enumClassName);
     }
     
