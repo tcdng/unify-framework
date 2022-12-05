@@ -409,7 +409,7 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 	 * @return the result mapping
 	 * @throws UnifyException if an error occurs
 	 */
-	protected String commandShowPopup(Popup popup) throws UnifyException {
+	protected String showPopup(Popup popup) throws UnifyException {
 		setSessionAttribute(UnifyWebSessionAttributeConstants.POPUP, popup);
 		return popup.getResultMapping();
 	}
