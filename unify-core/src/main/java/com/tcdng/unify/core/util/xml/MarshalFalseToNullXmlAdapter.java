@@ -23,7 +23,7 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
  * @author The Code Department
  * @since 1.0
  */
-public class FalseToNullXmlAdapter extends XmlAdapter<String, Boolean> {
+public class MarshalFalseToNullXmlAdapter extends XmlAdapter<String, Boolean> {
 
 	@Override
 	public String marshal(Boolean bound) throws Exception {

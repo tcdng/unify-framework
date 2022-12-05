@@ -18,12 +18,12 @@ package com.tcdng.unify.core.util.xml;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
- * True to NULL XML adapter class.
+ * Marshal true to NULL XML adapter class.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public class TrueToNullXmlAdapter extends XmlAdapter<String, Boolean> {
+public class MarshalTrueToNullXmlAdapter extends XmlAdapter<String, Boolean> {
 
 	@Override
 	public String marshal(Boolean bound) throws Exception {
