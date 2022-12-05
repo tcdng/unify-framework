@@ -55,6 +55,7 @@ import com.tcdng.unify.web.ui.widget.data.MessageBox;
 import com.tcdng.unify.web.ui.widget.data.MessageIcon;
 import com.tcdng.unify.web.ui.widget.data.MessageMode;
 import com.tcdng.unify.web.ui.widget.data.MessageResult;
+import com.tcdng.unify.web.ui.widget.data.Popup;
 import com.tcdng.unify.web.ui.widget.data.TaskMonitorInfo;
 
 /**
@@ -401,6 +402,38 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
         return ResultMappingConstants.DOWNLOAD_FILE;
     }
 
+	/**
+	 * Shows popup.
+	 * 
+	 * @param popup the popup details
+	 * @return the result mapping
+	 * @throws UnifyException if an error occurs
+	 */
+	protected String commandShowPopup(Popup popup) throws UnifyException {
+		setSessionAttribute(UnifyWebSessionAttributeConstants.POPUP, popup);
+		return popup.getResultMapping();
+	}
+
+	/**
+	 * Gets current popup.
+	 * 
+	 * @return the current popup otherwise null
+	 * @throws UnifyException if an error occurs
+	 */
+	protected Popup getCurrentPopup() throws UnifyException {
+		return getSessionAttribute(Popup.class, UnifyWebSessionAttributeConstants.POPUP);
+	}
+
+	/**
+	 * Gets current popup.
+	 * 
+	 * @return the current popup otherwise null
+	 * @throws UnifyException if an error occurs
+	 */
+	protected Popup removeCurrentPopup() throws UnifyException {
+		return (Popup) removeSessionAttribute(UnifyWebSessionAttributeConstants.POPUP);
+	}
+	
     /**
      * Sets up a response that shows a message box with default info icon and OK
      * button. {@link MessageBox} value of the session attribute

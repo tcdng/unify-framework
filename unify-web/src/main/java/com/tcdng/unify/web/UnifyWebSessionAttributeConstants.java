@@ -30,4 +30,7 @@ public interface UnifyWebSessionAttributeConstants extends com.tcdng.unify.core.
 
     /** Task monitor info */
     String TASKMONITORINFO = "UNIFYWEB.TASKMONITORINFO";
+    
+    String POPUP = "UNIFYWEB.POPUP";
+
 }

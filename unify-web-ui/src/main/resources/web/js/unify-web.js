@@ -366,6 +366,11 @@ ux.respHandler = {
 
 					var targetPanel = _id(ux.docPopupId);
 					targetPanel.style.visibility = "hidden";
+					if (resp.dimension) {
+						targetPanel.style.width = resp.popupWidth + "px";
+						targetPanel.style.height = resp.popupHeight + "px";
+					}
+					
 					targetPanel.innerHTML = resp.showPopup.html;
 					ux.centralize(basePanel, targetPanel);
 					targetPanel.style.visibility = "visible";

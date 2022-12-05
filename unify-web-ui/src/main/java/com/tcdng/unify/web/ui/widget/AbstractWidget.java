@@ -34,6 +34,7 @@ import com.tcdng.unify.web.ui.UIControllerUtil;
 import com.tcdng.unify.web.ui.WebUIApplicationComponents;
 import com.tcdng.unify.web.ui.util.WidgetUtils;
 import com.tcdng.unify.web.ui.widget.data.Hint.MODE;
+import com.tcdng.unify.web.ui.widget.data.Popup;
 import com.tcdng.unify.web.ui.widget.panel.StandalonePanel;
 
 /**
@@ -662,6 +663,19 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
         setCommandResultMapping(ResultMappingConstants.SHOW_POPUP);
     }
 
+    protected void commandShowPopup(Popup popup) throws UnifyException {
+        setSessionAttribute(UnifyWebSessionAttributeConstants.POPUP, popup);
+        setCommandResultMapping(popup.getResultMapping());
+    }
+
+	protected Popup getCurrentPopup() throws UnifyException {
+		return getSessionAttribute(Popup.class, UnifyWebSessionAttributeConstants.POPUP);
+	}
+
+	protected Popup removeCurrentPopup() throws UnifyException {
+		return (Popup) removeSessionAttribute(UnifyWebSessionAttributeConstants.POPUP);
+	}
+   
     protected void commandHidePopup() throws UnifyException {
         setCommandResultMapping(ResultMappingConstants.HIDE_POPUP);
     }
