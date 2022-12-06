@@ -905,8 +905,9 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
 			}
 
 			if (pageAction.isUplAttribute("debounce")) {
-				writer.write(",\"uIsDebounce\":");
-				writer.write(pageAction.getUplAttribute(boolean.class, "debounce"));
+				if (pageAction.getUplAttribute(boolean.class, "debounce")) {
+					writer.write(",\"uIsDebounce\":true");
+				}
 			}
 
 			if (pageAction.isUplAttribute("confirm")) {
