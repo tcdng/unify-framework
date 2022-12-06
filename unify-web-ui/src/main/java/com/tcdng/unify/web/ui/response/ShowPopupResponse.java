@@ -19,10 +19,12 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
+import com.tcdng.unify.web.UnifyWebSessionAttributeConstants;
 import com.tcdng.unify.web.ui.AbstractJsonPageControllerResponse;
 import com.tcdng.unify.web.ui.widget.Page;
 import com.tcdng.unify.web.ui.widget.Panel;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
+import com.tcdng.unify.web.ui.widget.data.Popup;
 
 /**
  * Used for generating a show popup response.
@@ -65,7 +67,18 @@ public class ShowPopupResponse extends AbstractJsonPageControllerResponse {
             }
         }
 
-        if (panel != null) {
+        if (panel != null) {           
+            Popup popup = getSessionAttribute(Popup.class, UnifyWebSessionAttributeConstants.POPUP);
+            if (popup != null) {
+                if (popup.getWidth() > 0) {
+                	writer.write(",\"popupWidth\":").write(popup.getWidth());
+                }
+                
+                if (popup.getHeight() > 0) {
+                	writer.write(",\"popupHeight\":").write(popup.getHeight());
+                }
+            }
+            
             if (getUplAttribute(boolean.class, "systemInfo")) {
                 writer.write(",\"showSysInfoPopup\":");
             } else {

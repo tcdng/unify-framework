@@ -13,24 +13,26 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.web;
+package com.tcdng.unify.core.util.xml;
+
+import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
- * Unify web session attribute constants.
+ * Marshal true to NULL XML adapter class.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public interface UnifyWebSessionAttributeConstants extends com.tcdng.unify.core.UnifyCoreSessionAttributeConstants {
+public class MarshalTrueToNullXmlAdapter extends XmlAdapter<String, Boolean> {
 
-    String REFRESH_MENU = "UNIFYWEB.REFRESHMENU";
+	@Override
+	public String marshal(Boolean bound) throws Exception {
+		return Boolean.TRUE.equals(bound) ? null : (bound != null ? String.valueOf(bound) : null);
+	}
 
-    /** Message Box */
-    String MESSAGEBOX = "UNIFYWEB.MESSAGEBOX";
-
-    /** Task monitor info */
-    String TASKMONITORINFO = "UNIFYWEB.TASKMONITORINFO";
-    
-    String POPUP = "UNIFYWEB.POPUP";
+	@Override
+	public Boolean unmarshal(String val) throws Exception {
+		return val != null ? Boolean.valueOf(val) : null;
+	}
 
 }

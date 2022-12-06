@@ -199,6 +199,16 @@ public final class TokenUtils {
     }
 
     /**
+     * Tests if a string is a popup tag value.
+     * 
+     * @param string
+     *            the string to test
+     */
+    public static boolean isPopupTag(String string) {
+        return string.startsWith("$w{") && string.endsWith("}");
+    }
+
+    /**
      * Tests for a token prefix in a string starting from a specified offset.
      * 
      * @param string

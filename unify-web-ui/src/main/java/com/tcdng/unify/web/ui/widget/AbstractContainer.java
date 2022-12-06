@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.tcdng.unify.core.UnifyCoreSessionAttributeConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
@@ -29,6 +30,7 @@ import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ui.DataTransferBlock;
 import com.tcdng.unify.web.ui.UnifyWebUIErrorConstants;
 import com.tcdng.unify.web.ui.util.WidgetUtils;
+import com.tcdng.unify.web.ui.widget.data.Popup;
 
 /**
  * Abstract user interface container.
@@ -237,17 +239,22 @@ public abstract class AbstractContainer extends AbstractDataTransferWidget imple
     }
 
     @Override
-    public final Object getValue(String attribute) throws UnifyException {
-        if (attribute != null) {
-            return super.getValue(attribute);
-        }
+	public final Object getValue(String attribute) throws UnifyException {
+		if (attribute != null) {
+			if (UnifyCoreSessionAttributeConstants.POPUP_BACKING_BEAN.equals(attribute)) {
+				Popup popup = getCurrentPopup();
+				return popup != null ? popup.getBackingBean() : null;
+			}
 
-        if (getValueStore() != null) {
-            return getValueStore().getValueObject();
-        }
+			return super.getValue(attribute);
+		}
 
-        return null;
-    }
+		if (getValueStore() != null) {
+			return getValueStore().getValueObject();
+		}
+
+		return null;
+	}
 
     @SuppressWarnings("unchecked")
     @Override
