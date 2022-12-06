@@ -178,6 +178,7 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 
     @Action
     public String hidePopup() throws UnifyException {
+    	removeCurrentPopup();
         return ResultMappingConstants.HIDE_POPUP;
     }
 
