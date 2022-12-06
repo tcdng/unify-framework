@@ -76,9 +76,13 @@ public class ShowPopupResponse extends AbstractJsonPageControllerResponse {
             
             Popup popup = getSessionAttribute(Popup.class, UnifyWebSessionAttributeConstants.POPUP);
             if (popup != null && popup.isDimension()) {
-                writer.write(",\"dimension\":true");
-                writer.write(",\"popupWidth\":").write(popup.getWidth());
-                writer.write(",\"popupHeight\":").write(popup.getHeight());
+                if (popup.getWidth() > 0) {
+                	writer.write(",\"popupWidth\":").write(popup.getWidth());
+                }
+                
+                if (popup.getHeight() > 0) {
+                	writer.write(",\"popupHeight\":").write(popup.getHeight());
+                }
             }
 
             writer.writeJsonPanel(panel, false);
