@@ -31,6 +31,7 @@ import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyCorePropertyConstants;
+import com.tcdng.unify.core.UnifyCoreSessionAttributeConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
@@ -691,6 +692,8 @@ public class UplCompilerImpl extends AbstractUnifyComponent implements UplCompil
             value = getContainerSetting(String.class, TokenUtils.extractTokenValue(valueString).trim());
         } else if (TokenUtils.isJavaConstantToken(valueString)) {
             value = ReflectUtils.getPublicStaticStringConstant(TokenUtils.extractTokenValue(valueString));
+        } else if (TokenUtils.isPopupTag(valueString)) {
+            value = UnifyCoreSessionAttributeConstants.POPUP_BACKING_BEAN;
         } else if (TokenUtils.isListToken(valueString)
                 || (isComponentList = TokenUtils.isComponentListToken(valueString))) { // Handle
             // lists
