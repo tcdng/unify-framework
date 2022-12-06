@@ -59,7 +59,4 @@ public class Popup {
 		return height;
 	}
 
-	public boolean isDimension() {
-		return width > 0 && height > 0;
-	}
 }

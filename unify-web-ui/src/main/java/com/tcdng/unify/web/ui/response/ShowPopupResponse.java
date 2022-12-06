@@ -67,15 +67,9 @@ public class ShowPopupResponse extends AbstractJsonPageControllerResponse {
             }
         }
 
-        if (panel != null) {
-            if (getUplAttribute(boolean.class, "systemInfo")) {
-                writer.write(",\"showSysInfoPopup\":");
-            } else {
-                writer.write(",\"showPopup\":");
-            }
-            
+        if (panel != null) {           
             Popup popup = getSessionAttribute(Popup.class, UnifyWebSessionAttributeConstants.POPUP);
-            if (popup != null && popup.isDimension()) {
+            if (popup != null) {
                 if (popup.getWidth() > 0) {
                 	writer.write(",\"popupWidth\":").write(popup.getWidth());
                 }
@@ -83,6 +77,12 @@ public class ShowPopupResponse extends AbstractJsonPageControllerResponse {
                 if (popup.getHeight() > 0) {
                 	writer.write(",\"popupHeight\":").write(popup.getHeight());
                 }
+            }
+            
+            if (getUplAttribute(boolean.class, "systemInfo")) {
+                writer.write(",\"showSysInfoPopup\":");
+            } else {
+                writer.write(",\"showPopup\":");
             }
 
             writer.writeJsonPanel(panel, false);
