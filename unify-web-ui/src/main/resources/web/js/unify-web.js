@@ -225,11 +225,21 @@ ux.respHandler = {
 	},
 
 	downloadHdl : function(resp) {
-		window.location.assign(resp.downloadPath);
+		try {
+			ux.triggerBusyIndicator();
+			window.location.assign(resp.downloadPath);
+		} finally {
+		 	ux.hideBusyIndicator();
+		}
 	},
 
 	forwardHdl : function(resp) {
-		window.location.assign(resp.loadDocument);
+		try {
+			ux.triggerBusyIndicator();
+			window.location.assign(resp.loadDocument);
+		} finally {
+		 	ux.hideBusyIndicator();
+		}
 	},
 
 	firePreConfirmHdl : function(resp) {
