@@ -16,6 +16,7 @@
 
 package com.tcdng.unify.core.criterion;
 
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -26,6 +27,13 @@ import java.util.Set;
  */
 public interface Restriction {
 
+	/**
+	 * Swaps the fields in this restriction.
+	 * 
+	 * @param map the swap map
+	 */
+	void fieldSwap(Map<String, String> map);
+	
     /**
      * Gets the condition type.
      * 

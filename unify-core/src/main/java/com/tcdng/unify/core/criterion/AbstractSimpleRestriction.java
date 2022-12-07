@@ -16,7 +16,10 @@
 
 package com.tcdng.unify.core.criterion;
 
+import java.util.Map;
 import java.util.Set;
+
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * Convenient abstract base class for simple restrictions.
@@ -33,6 +36,14 @@ public abstract class AbstractSimpleRestriction extends AbstractRestriction impl
     }
 
     @Override
+	public void fieldSwap(Map<String, String> map) {
+		String newFieldName = map.get(fieldName);
+		if (!StringUtils.isBlank(newFieldName)) {
+			fieldName = newFieldName;
+		}
+	}
+
+	@Override
     public void writeRestrictedFields(Set<String> restrictedFields) {
         restrictedFields.add(fieldName);
     }

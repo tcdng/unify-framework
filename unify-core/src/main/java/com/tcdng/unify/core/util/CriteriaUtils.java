@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.tcdng.unify.core.criterion.AbstractCompoundRestriction;
@@ -110,6 +111,11 @@ public final class CriteriaUtils {
             return co.getConditionType();
         }
 
+    	@Override
+    	public void fieldSwap(Map<String, String> map) {
+            throw new UnsupportedOperationException();
+    	}
+
         @Override
         public void writeRestrictedFields(Set<String> restrictedFields) {
             co.writeRestrictedFields(restrictedFields);
@@ -178,6 +184,11 @@ public final class CriteriaUtils {
         public UnAbstractSimpleRestriction(AbstractSimpleRestriction ao) {
             this.ao = ao;
         }
+
+    	@Override
+    	public void fieldSwap(Map<String, String> map) {
+            throw new UnsupportedOperationException();
+    	}
 
         @Override
         public void writeRestrictedFields(Set<String> restrictedFields) {

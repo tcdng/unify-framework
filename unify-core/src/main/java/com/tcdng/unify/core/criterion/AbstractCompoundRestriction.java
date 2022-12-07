@@ -19,6 +19,7 @@ package com.tcdng.unify.core.criterion;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -29,118 +30,126 @@ import java.util.Set;
  */
 public abstract class AbstractCompoundRestriction extends AbstractRestriction implements CompoundRestriction {
 
-    private List<Restriction> restrictionList;
+	private List<Restriction> restrictionList;
 
-    public AbstractCompoundRestriction() {
-        restrictionList = new ArrayList<Restriction> ();
-    }
-    
-    @Override
-    public void writeRestrictedFields(Set<String> propertyBucket) {
-        for (Restriction restriction : restrictionList) {
-            restriction.writeRestrictedFields(propertyBucket);
-        }
-    }
+	public AbstractCompoundRestriction() {
+		restrictionList = new ArrayList<Restriction>();
+	}
 
-    @Override
-    public CompoundRestriction add(Restriction restriction) {
-        restrictionList.add(restriction);
-        return this;
-    }
+	@Override
+	public void fieldSwap(Map<String, String> map) {
+		for (Restriction restriction : restrictionList) {
+			restriction.fieldSwap(map);
+		}
+	}
 
-    @Override
-    public List<Restriction> getRestrictionList() {
-        return restrictionList;
-    }
+	@Override
+	public void writeRestrictedFields(Set<String> propertyBucket) {
+		for (Restriction restriction : restrictionList) {
+			restriction.writeRestrictedFields(propertyBucket);
+		}
+	}
 
-    @Override
-    public boolean isRestrictedField(String fieldName) {
-        for (Restriction restriction : restrictionList) {
-            if (restriction.isRestrictedField(fieldName)) {
-                return true;
-            }
-        }
+	@Override
+	public CompoundRestriction add(Restriction restriction) {
+		restrictionList.add(restriction);
+		return this;
+	}
 
-        return false;
-    }
+	@Override
+	public List<Restriction> getRestrictionList() {
+		return restrictionList;
+	}
 
-    @Override
-    public boolean isEmpty() {
-        return restrictionList.isEmpty();
-    }
+	@Override
+	public boolean isRestrictedField(String fieldName) {
+		for (Restriction restriction : restrictionList) {
+			if (restriction.isRestrictedField(fieldName)) {
+				return true;
+			}
+		}
 
-    @Override
-    public boolean isSimple() {
-        return false;
-    }
+		return false;
+	}
 
-    @Override
-    public boolean isValid() {
-        if (restrictionList.isEmpty()) {
-            return false;
-        }
+	@Override
+	public boolean isEmpty() {
+		return restrictionList.isEmpty();
+	}
 
-        for (Restriction restriction : restrictionList) {
-            if (!restriction.isValid()) {
-                return false;
-            }
-        }
-        
-        return true;
-    }
+	@Override
+	public boolean isSimple() {
+		return false;
+	}
 
-    @Override
-    public int size() {
-        return restrictionList.size();
-    }
+	@Override
+	public boolean isValid() {
+		if (restrictionList.isEmpty()) {
+			return false;
+		}
 
-    @Override
-    public void clear() {
-        restrictionList.clear();;
-    }
+		for (Restriction restriction : restrictionList) {
+			if (!restriction.isValid()) {
+				return false;
+			}
+		}
 
-    @Override
-    public boolean replaceAll(String propertyName, Object val) {
-        boolean replaced = false;
-        for (Restriction restriction : restrictionList) {
-            if (restriction.getConditionType().isSingleParam()) {
-                ((SingleParamRestriction) restriction).setParam(val);
-                replaced = true;
-            } else if (restriction.getConditionType().isCompound()) {
-                ((CompoundRestriction) restriction).replaceAll(propertyName, val);
-            }
-        }
+		return true;
+	}
 
-        return replaced;
-    }
+	@Override
+	public int size() {
+		return restrictionList.size();
+	}
 
-    @Override
-    public boolean replaceAll(String propertyName, Object val1, Object val2) {
-        boolean replaced = false;
-        for (Restriction restriction : restrictionList) {
-            if (restriction.getConditionType().isRange()) {
-                ((DoubleParamRestriction) restriction).setParams(val1, val2);
-                replaced = true;
-            } else if (restriction.getConditionType().isCompound()) {
-                ((CompoundRestriction) restriction).replaceAll(propertyName, val1, val2);
-            }
-        }
+	@Override
+	public void clear() {
+		restrictionList.clear();
+		;
+	}
 
-        return replaced;
-    }
+	@Override
+	public boolean replaceAll(String propertyName, Object val) {
+		boolean replaced = false;
+		for (Restriction restriction : restrictionList) {
+			if (restriction.getConditionType().isSingleParam()) {
+				((SingleParamRestriction) restriction).setParam(val);
+				replaced = true;
+			} else if (restriction.getConditionType().isCompound()) {
+				((CompoundRestriction) restriction).replaceAll(propertyName, val);
+			}
+		}
 
-    @Override
-    public boolean replaceAll(String propertyName, Collection<Object> val) {
-        boolean replaced = false;
-        for (Restriction restriction : restrictionList) {
-            if (restriction.getConditionType().isAmongst()) {
-                ((MultipleParamRestriction) restriction).setParams(val);
-                replaced = true;
-            } else if (restriction.getConditionType().isCompound()) {
-                ((CompoundRestriction) restriction).replaceAll(propertyName, val);
-            }
-        }
+		return replaced;
+	}
 
-        return replaced;
-    }
+	@Override
+	public boolean replaceAll(String propertyName, Object val1, Object val2) {
+		boolean replaced = false;
+		for (Restriction restriction : restrictionList) {
+			if (restriction.getConditionType().isRange()) {
+				((DoubleParamRestriction) restriction).setParams(val1, val2);
+				replaced = true;
+			} else if (restriction.getConditionType().isCompound()) {
+				((CompoundRestriction) restriction).replaceAll(propertyName, val1, val2);
+			}
+		}
+
+		return replaced;
+	}
+
+	@Override
+	public boolean replaceAll(String propertyName, Collection<Object> val) {
+		boolean replaced = false;
+		for (Restriction restriction : restrictionList) {
+			if (restriction.getConditionType().isAmongst()) {
+				((MultipleParamRestriction) restriction).setParams(val);
+				replaced = true;
+			} else if (restriction.getConditionType().isCompound()) {
+				((CompoundRestriction) restriction).replaceAll(propertyName, val);
+			}
+		}
+
+		return replaced;
+	}
 }

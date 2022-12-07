@@ -378,10 +378,14 @@ ux.respHandler = {
 					targetPanel.style.visibility = "hidden";
 					if (resp.popupWidth && resp.popupWidth > 0) {
 						targetPanel.style.width = resp.popupWidth + "px";
+					} else {
+						targetPanel.style.width = "initial";
 					}
 					
 					if (resp.popupHeight && resp.popupHeight > 0) {
 						targetPanel.style.height = resp.popupHeight + "px";
+					} else {
+						targetPanel.style.height = "initial";
 					}
 					
 					targetPanel.innerHTML = resp.showPopup.html;
