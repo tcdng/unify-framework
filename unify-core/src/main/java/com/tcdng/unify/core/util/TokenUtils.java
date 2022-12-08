@@ -31,7 +31,7 @@ public final class TokenUtils {
 
     static {
         tokenChars = new HashSet<Character>(
-                Arrays.asList('m', 's', 'c', 'j', 'd', 'l', 'n', 't', 'x', 'o', 'f', 'g', 'e', 'q', 'p', 'r'));
+                Arrays.asList('m', 's', 'c', 'j', 'd', 'l', 'n', 't', 'x', 'o', 'f', 'g', 'e', 'q', 'p', 'r', 'w', 'u'));
     }
 
     private TokenUtils() {
@@ -46,6 +46,16 @@ public final class TokenUtils {
      */
     public static boolean isMessageToken(String string) {
         return string.startsWith("$m{") && string.endsWith("}");
+    }
+
+    /**
+     * Tests if a string is a unify property token value
+     * 
+     * @param string
+     *            the string to test
+     */
+    public static boolean isUnifyPropertyToken(String string) {
+        return string.startsWith("$u{") && string.endsWith("}");
     }
 
     /**

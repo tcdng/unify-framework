@@ -60,6 +60,14 @@ public class MessageResolverTest extends AbstractUnifyComponentTest {
         assertEquals("The sky is blue", mr.resolveMessage(Locale.getDefault(), "$m{messageresolver.theskyis}", "blue"));
     }
 
+    @Test
+    public void testResolveUnifyPropertyMessages() throws Exception {
+        MessageResolver mr = getMessageResolver();
+        assertEquals("Currency", mr.resolveMessage(Locale.getDefault(), "$u{chart.label.a}"));
+        assertEquals("Currency NGN", mr.resolveMessage(Locale.getDefault(), "$u{chart.label.b}", "NGN"));
+        assertEquals("Currency XAF on 2022-12-08", mr.resolveMessage(Locale.getDefault(), "$u{chart.label.c}", "XAF", "2022-12-08"));
+    }
+
     @Override
     protected void onSetup() throws Exception {
 
@@ -69,6 +77,13 @@ public class MessageResolverTest extends AbstractUnifyComponentTest {
     protected void onTearDown() throws Exception {
 
     }
+
+    @Override
+	protected void doAddSettingsAndDependencies() throws Exception {
+        addContainerSetting("chart.label.a", "Currency");
+        addContainerSetting("chart.label.b", "Currency {0}");
+        addContainerSetting("chart.label.c", "Currency {0} on {1}");
+	}
 
     private MessageResolver getMessageResolver() throws Exception {
         return (MessageResolver) getComponent(ApplicationComponents.APPLICATION_MESSAGE_RESOLVER);

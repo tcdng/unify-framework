@@ -86,11 +86,11 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	}
 
 	@Override
-    public final boolean isInitialized() {
-        return unifyComponentContext != null;
-    }
+	public final boolean isInitialized() {
+		return unifyComponentContext != null;
+	}
 
-    /**
+	/**
 	 * Gets the component context.
 	 *
 	 * @return the component context
@@ -131,26 +131,26 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	protected String getApplicationName() throws UnifyException {
 		return unifyComponentContext.getInstanceName();
 	}
-	
-    /**
-     * Gets the container deployment version.
-     * 
-     * @return the deployment version
-     * @throws UnifyException if an error occurs
-     */
-    protected String getDeploymentVersion() throws UnifyException {
-        return unifyComponentContext.getDeploymentVersion();
-    }
 
-    /**
-     * Gets the container application auxiliary version.
-     * 
-     * @return the auxiliary version
-     * @throws UnifyException if an error occurs
-     */
-    protected String getAuxiliaryVersion() throws UnifyException {
-        return unifyComponentContext.getAuxiliaryVersion();
-    }
+	/**
+	 * Gets the container deployment version.
+	 * 
+	 * @return the deployment version
+	 * @throws UnifyException if an error occurs
+	 */
+	protected String getDeploymentVersion() throws UnifyException {
+		return unifyComponentContext.getDeploymentVersion();
+	}
+
+	/**
+	 * Gets the container application auxiliary version.
+	 * 
+	 * @return the auxiliary version
+	 * @throws UnifyException if an error occurs
+	 */
+	protected String getAuxiliaryVersion() throws UnifyException {
+		return unifyComponentContext.getAuxiliaryVersion();
+	}
 
 	/**
 	 * Returns the component context container information object.
@@ -547,26 +547,26 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 		return unifyComponentContext.isDeploymentMode();
 	}
 
-    /**
-     * Gets the component container node ID.
-     * 
-     * @return the node ID. A null value is returned if container is not in cluster
-     *         mode.
-     * @throws UnifyException if an error occurs
-     */
-    protected String getNodeId() throws UnifyException {
-        return unifyComponentContext.getNodeId();
-    }
+	/**
+	 * Gets the component container node ID.
+	 * 
+	 * @return the node ID. A null value is returned if container is not in cluster
+	 *         mode.
+	 * @throws UnifyException if an error occurs
+	 */
+	protected String getNodeId() throws UnifyException {
+		return unifyComponentContext.getNodeId();
+	}
 
-    /**
-     * Gets the component container preferred port.
-     * 
-     * @return the container preferred port.
-     * @throws UnifyException if an error occurs
-     */
-    protected short getPreferredPort() throws UnifyException {
-        return unifyComponentContext.getPreferredPort();
-    }
+	/**
+	 * Gets the component container preferred port.
+	 * 
+	 * @return the container preferred port.
+	 * @throws UnifyException if an error occurs
+	 */
+	protected short getPreferredPort() throws UnifyException {
+		return unifyComponentContext.getPreferredPort();
+	}
 
 	/**
 	 * Gets the component context line separator.
@@ -764,22 +764,19 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 * @throws UnifyException if an error occurs
 	 */
 	protected Object getSessionAttribute(String name) throws UnifyException {
-		return unifyComponentContext != null
-				? unifyComponentContext.getSessionContext().getAttribute(name)
-				: null;
+		return unifyComponentContext != null ? unifyComponentContext.getSessionContext().getAttribute(name) : null;
 	}
 
 	/**
 	 * Gets converted attribute value from current session.
 	 * 
 	 * @param typeClass the type
-	 * @param name the attribute name
+	 * @param name      the attribute name
 	 * @return the attribute value
 	 * @throws UnifyException if an error occurs
 	 */
 	protected <T> T getSessionAttribute(Class<T> typeClass, String name) throws UnifyException {
-		Object val = unifyComponentContext != null
-				? unifyComponentContext.getSessionContext().getAttribute(name)
+		Object val = unifyComponentContext != null ? unifyComponentContext.getSessionContext().getAttribute(name)
 				: null;
 		return DataUtils.convert(typeClass, val);
 	}
@@ -792,8 +789,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 * @throws UnifyException if an error occurs
 	 */
 	protected boolean isSessionAttribute(String name) throws UnifyException {
-		return unifyComponentContext != null
-				&& unifyComponentContext.getSessionContext().isAttribute(name);
+		return unifyComponentContext != null && unifyComponentContext.getSessionContext().isAttribute(name);
 	}
 
 	/**
@@ -807,7 +803,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 		if (unifyComponentContext != null) {
 			return unifyComponentContext.getSessionContext().removeAttribute(name);
 		}
-		
+
 		return null;
 	}
 
@@ -909,7 +905,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	protected boolean isUserLoggedIn() throws UnifyException {
 		return unifyComponentContext.getSessionContext().isUserLoggedIn();
 	}
-	
+
 	/**
 	 * Checks if user session is in global accounting mode
 	 * 
@@ -1138,19 +1134,17 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 		return unifyComponentContext.getMessages().getMessage(getLocale(LocaleType.APPLICATION), messageKey, params);
 	}
 
-    /**
-     * Gets an array of application messages using supplied message keys.
-     * 
-     * @param messageKeys
-     *                    the message keys
-     * @return array of messages
-     * @throws UnifyException
-     *                        if an error occurs
-     */
-    protected String[] getApplicationMessages(String... messageKeys) throws UnifyException {
-        return getMessages(LocaleType.APPLICATION, messageKeys);
-    }
-	
+	/**
+	 * Gets an array of application messages using supplied message keys.
+	 * 
+	 * @param messageKeys the message keys
+	 * @return array of messages
+	 * @throws UnifyException if an error occurs
+	 */
+	protected String[] getApplicationMessages(String... messageKeys) throws UnifyException {
+		return getMessages(LocaleType.APPLICATION, messageKeys);
+	}
+
 	/**
 	 * Gets a formatted message using current session locale. Obtains a message from
 	 * application messages component using supplied messageKey and then formats
@@ -1165,18 +1159,17 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	protected String getSessionMessage(String messageKey, Object... params) throws UnifyException {
 		return unifyComponentContext.getMessages().getMessage(getLocale(LocaleType.SESSION), messageKey, params);
 	}
-    /**
-     * Gets an array of session messages using supplied message keys.
-     * 
-     * @param messageKeys
-     *                    the message keys
-     * @return array of messages
-     * @throws UnifyException
-     *                        if an error occurs
-     */
-    protected String[] getSessionMessages(String... messageKeys) throws UnifyException {
-        return getMessages(LocaleType.SESSION, messageKeys);
-    }
+
+	/**
+	 * Gets an array of session messages using supplied message keys.
+	 * 
+	 * @param messageKeys the message keys
+	 * @return array of messages
+	 * @throws UnifyException if an error occurs
+	 */
+	protected String[] getSessionMessages(String... messageKeys) throws UnifyException {
+		return getMessages(LocaleType.SESSION, messageKeys);
+	}
 
 	/**
 	 * Resolves a message string using application locale. A message is resolved by
@@ -1235,9 +1228,17 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 				return getUnifyComponentContext().getMessages().getMessage(locale,
 						TokenUtils.extractTokenValue(message), params);
 			}
+
+			if (TokenUtils.isUnifyPropertyToken(message)) {
+				String resolved = getContainerSetting(String.class, TokenUtils.extractTokenValue(message));
+				return resolved != null && params != null && params.length > 0 ? MessageFormat.format(resolved, params)
+						: resolved;
+			}
+
 			if (TokenUtils.isStringToken(message)) {
 				message = TokenUtils.extractTokenValue(message);
 			}
+
 			if (params != null && params.length > 0) {
 				return MessageFormat.format(message, params);
 			}
@@ -1257,28 +1258,28 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 * @return the exception message
 	 * @throws UnifyException if an error occurs
 	 */
-    protected String getExceptionMessage(LocaleType localeType, Throwable exception) throws UnifyException {
-        if (exception instanceof UnifyException) {
-            return getErrorMessage(localeType, ((UnifyException) exception).getUnifyError());
-        }
+	protected String getExceptionMessage(LocaleType localeType, Throwable exception) throws UnifyException {
+		if (exception instanceof UnifyException) {
+			return getErrorMessage(localeType, ((UnifyException) exception).getUnifyError());
+		}
 
-        return exception.getMessage();
-    }
+		return exception.getMessage();
+	}
 
-    protected String getPrintableStackTraceWithMessageHeader(LocaleType localeType, Throwable exception)
-            throws UnifyException {
-        String header = getExceptionMessage(localeType, exception);
-        return StringUtils.getPrintableStackTrace(exception, header);
-    }
+	protected String getPrintableStackTraceWithMessageHeader(LocaleType localeType, Throwable exception)
+			throws UnifyException {
+		String header = getExceptionMessage(localeType, exception);
+		return StringUtils.getPrintableStackTrace(exception, header);
+	}
 
-    protected String getPrintableStackTrace(Throwable exception) throws UnifyException {
-        return StringUtils.getPrintableStackTrace(exception);
-    }
+	protected String getPrintableStackTrace(Throwable exception) throws UnifyException {
+		return StringUtils.getPrintableStackTrace(exception);
+	}
 
-    protected String getErrorMessage(LocaleType localeType, UnifyError ue) throws UnifyException {
-        return ue.getErrorCode() + ": " + unifyComponentContext.getMessages().getMessage(getLocale(localeType),
-                ue.getErrorCode(), ue.getErrorParams());
-    }
+	protected String getErrorMessage(LocaleType localeType, UnifyError ue) throws UnifyException {
+		return ue.getErrorCode() + ": " + unifyComponentContext.getMessages().getMessage(getLocale(localeType),
+				ue.getErrorCode(), ue.getErrorParams());
+	}
 
 	/**
 	 * Gets a message for an error.
@@ -1320,77 +1321,77 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 * @throws UnifyException if list with supplied name is unknown by the list
 	 *                        manager
 	 */
-    protected Listable getListItemByKey(LocaleType localeType, String listName, String itemKey)
-            throws UnifyException {
-        return unifyComponentContext.getListManager().getListItemByKey(getLocale(localeType), listName, itemKey);
-    }
+	protected Listable getListItemByKey(LocaleType localeType, String listName, String itemKey) throws UnifyException {
+		return unifyComponentContext.getListManager().getListItemByKey(getLocale(localeType), listName, itemKey);
+	}
 
-    protected Listable getListItemByDescription(LocaleType localeType, String listName, String itemDesc)
-            throws UnifyException {
-        return unifyComponentContext.getListManager().getListItemByDescription(getLocale(localeType), listName,
-                itemDesc);
-    }
+	protected Listable getListItemByDescription(LocaleType localeType, String listName, String itemDesc)
+			throws UnifyException {
+		return unifyComponentContext.getListManager().getListItemByDescription(getLocale(localeType), listName,
+				itemDesc);
+	}
 
-    /**
-     * Gets a list based on supplied parameters.
-     * 
-     * @param localeType the locale type
-     * @param listName   the list name
-     * @param params     the list parameters
-     * @return a list object containing listable items
-     * @throws UnifyException if an error occurs
-     */
-    protected List<? extends Listable> getList(LocaleType localeType, String listName, Object... params)
-            throws UnifyException {
-        return unifyComponentContext.getListManager().getList(getLocale(localeType), listName, params);
-    }
+	/**
+	 * Gets a list based on supplied parameters.
+	 * 
+	 * @param localeType the locale type
+	 * @param listName   the list name
+	 * @param params     the list parameters
+	 * @return a list object containing listable items
+	 * @throws UnifyException if an error occurs
+	 */
+	protected List<? extends Listable> getList(LocaleType localeType, String listName, Object... params)
+			throws UnifyException {
+		return unifyComponentContext.getListManager().getList(getLocale(localeType), listName, params);
+	}
 
-    /**
-     * Gets a list based on supplied parameters.
-     * 
-     * @param localeType the locale type
-     * @param listName   the list name
-     * @param filter optional filter
-     * @param limit result limit
-     * @param params     the list parameters
-     * @return a list object containing listable items
-     * @throws UnifyException if an error occurs
-     */
-    protected List<? extends Listable> getList(LocaleType localeType, String listName, String filter, int limit,
-            Object... params) throws UnifyException {
-        return unifyComponentContext.getListManager().getSubList(getLocale(localeType), listName, filter, limit, params);
-    }
+	/**
+	 * Gets a list based on supplied parameters.
+	 * 
+	 * @param localeType the locale type
+	 * @param listName   the list name
+	 * @param filter     optional filter
+	 * @param limit      result limit
+	 * @param params     the list parameters
+	 * @return a list object containing listable items
+	 * @throws UnifyException if an error occurs
+	 */
+	protected List<? extends Listable> getList(LocaleType localeType, String listName, String filter, int limit,
+			Object... params) throws UnifyException {
+		return unifyComponentContext.getListManager().getSubList(getLocale(localeType), listName, filter, limit,
+				params);
+	}
 
-    /**
-     * Gets a list map using application locale.
-     * 
-     * @param localeType the locale type
-     * @param listName   the list name
-     * @param params     the list parameters
-     * @return a list map
-     * @throws UnifyException if an error occurs
-     */
-    protected Map<String, Listable> getListMap(LocaleType localeType, String listName, Object... params)
-            throws UnifyException {
-        return unifyComponentContext.getListManager().getListMap(getLocale(localeType), listName, params);
-    }
+	/**
+	 * Gets a list map using application locale.
+	 * 
+	 * @param localeType the locale type
+	 * @param listName   the list name
+	 * @param params     the list parameters
+	 * @return a list map
+	 * @throws UnifyException if an error occurs
+	 */
+	protected Map<String, Listable> getListMap(LocaleType localeType, String listName, Object... params)
+			throws UnifyException {
+		return unifyComponentContext.getListManager().getListMap(getLocale(localeType), listName, params);
+	}
 
-    /**
-     * Gets a list map using application locale.
-     * 
-     * @param localeType the locale type
-     * @param listName   the list name
-     * @param filter optional filter
-     * @param limit result limit
-     * @param params     the list parameters
-     * @return a list map
-     * @throws UnifyException if an error occurs
-     */
-    protected Map<String, Listable> getListMap(LocaleType localeType, String listName, String filter, int limit,
-            Object... params) throws UnifyException {
-        return unifyComponentContext.getListManager().getSubListMap(getLocale(localeType), listName, filter, limit,
-                params);
-    }
+	/**
+	 * Gets a list map using application locale.
+	 * 
+	 * @param localeType the locale type
+	 * @param listName   the list name
+	 * @param filter     optional filter
+	 * @param limit      result limit
+	 * @param params     the list parameters
+	 * @return a list map
+	 * @throws UnifyException if an error occurs
+	 */
+	protected Map<String, Listable> getListMap(LocaleType localeType, String listName, String filter, int limit,
+			Object... params) throws UnifyException {
+		return unifyComponentContext.getListManager().getSubListMap(getLocale(localeType), listName, filter, limit,
+				params);
+	}
 
 	/**
 	 * Gets the application locale
@@ -1544,31 +1545,31 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 		throw new UnifyOperationException(e, getName(), e.getMessage());
 	}
 
-    protected List<ParamConfig> getComponentParamConfigs(Class<? extends UnifyComponent> componentType, String name)
-            throws UnifyException {
-        UnifyComponentConfig ucc = getComponentConfig(componentType, name);
-        List<ParamConfig> list = new ArrayList<ParamConfig>();
-        List<Parameter> pal = AnnotationUtils.getParameters(ucc.getType());
-        for (Parameter pa : pal) {
-            list.add(createParamConfig(pa));
-        }
+	protected List<ParamConfig> getComponentParamConfigs(Class<? extends UnifyComponent> componentType, String name)
+			throws UnifyException {
+		UnifyComponentConfig ucc = getComponentConfig(componentType, name);
+		List<ParamConfig> list = new ArrayList<ParamConfig>();
+		List<Parameter> pal = AnnotationUtils.getParameters(ucc.getType());
+		for (Parameter pa : pal) {
+			list.add(createParamConfig(pa));
+		}
 
-        return list;
-    }
+		return list;
+	}
 
-    protected ParamConfig createParamConfig(Parameter pa) throws UnifyException {
-        String paramName = AnnotationUtils.getAnnotationString(pa.name());
-        if (paramName == null) {
-            paramName = AnnotationUtils.getAnnotationString(pa.value());
-        }
+	protected ParamConfig createParamConfig(Parameter pa) throws UnifyException {
+		String paramName = AnnotationUtils.getAnnotationString(pa.name());
+		if (paramName == null) {
+			paramName = AnnotationUtils.getAnnotationString(pa.value());
+		}
 
-        String description = AnnotationUtils.getAnnotationString(pa.description());
-        if (description != null) {
-            description = resolveApplicationMessage(description);
-        }
+		String description = AnnotationUtils.getAnnotationString(pa.description());
+		if (description != null) {
+			description = resolveApplicationMessage(description);
+		}
 
-        return new ParamConfig(pa.type(), paramName, description, pa.editor(), pa.mandatory());
-    }
+		return new ParamConfig(pa.type(), paramName, description, pa.editor(), pa.mandatory());
+	}
 
 	/**
 	 * Executes on initialization. Called after the component's context has been
@@ -1593,16 +1594,16 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 		return getUnifyComponentContext().getApplicationLocale();
 	}
 
-    private String[] getMessages(LocaleType localeType, String... messageKeys) throws UnifyException {
-        ResourceBundles resourceBundles = unifyComponentContext.getMessages();
-        Locale locale = getLocale(localeType);
-        String[] messages =  new String[messageKeys.length];
-        for(int i = 0; i < messages.length; i++) {
-            messages[i] = resourceBundles.getMessage(locale, messageKeys[i]);
-        }
-        
-        return messages;
-    }
+	private String[] getMessages(LocaleType localeType, String... messageKeys) throws UnifyException {
+		ResourceBundles resourceBundles = unifyComponentContext.getMessages();
+		Locale locale = getLocale(localeType);
+		String[] messages = new String[messageKeys.length];
+		for (int i = 0; i < messages.length; i++) {
+			messages[i] = resourceBundles.getMessage(locale, messageKeys[i]);
+		}
+
+		return messages;
+	}
 
 	private void log(TaskMonitor taskMonitor, LoggingLevel loggingLevel, String message, Object... params) {
 		try {

@@ -152,6 +152,22 @@ public class UplCompilerTest extends AbstractUnifyComponentTest {
     }
 
     @Test
+    public void testCompileDescriptorWithUnifyProperties() throws Exception {
+        UplElementAttributes uplElementAttributes = uplCompiler.compileDescriptor(Locale.getDefault(),
+                "!test-uplelementa name:$u{uplcompiler.test.tiger} friendList:$m{uplcompiler.test.joe}"
+                        + " friendList:$u{uplcompiler.test.sanders} friendList:$l{Mink Pink Link}");
+        assertEquals("Unify Tiger", uplElementAttributes.getAttributeValue(String.class, "name"));
+        String[] friendList = uplElementAttributes.getAttributeValue(String[].class, "friendList");
+        assertFalse(friendList == null);
+        assertEquals(5, friendList.length);
+        assertEquals("Joe", friendList[0]);
+        assertEquals("Unify Sanders", friendList[1]);
+        assertEquals("Mink", friendList[2]);
+        assertEquals("Pink", friendList[3]);
+        assertEquals("Link", friendList[4]);
+    }
+
+    @Test
     public void testCompileDescriptorWithInlineDeclaration() throws Exception {
         UplElementAttributes uplElementAttributes = uplCompiler.compileDescriptor(Locale.getDefault(),
                 "!test-uplelementb title:$s{Complex Test}" + " user:$d{!test-uplelementa name:$s{John Doe} "
@@ -919,6 +935,12 @@ public class UplCompilerTest extends AbstractUnifyComponentTest {
     }
 
     @Override
+	protected void doAddSettingsAndDependencies() throws Exception {
+        addContainerSetting("uplcompiler.test.tiger", "Unify Tiger");
+        addContainerSetting("uplcompiler.test.sanders", "Unify Sanders");
+	}
+
+	@Override
     protected void onSetup() throws Exception {
         uplCompiler = (UplCompiler) getComponent(ApplicationComponents.APPLICATION_UPLCOMPILER);
     }
