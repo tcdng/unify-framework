@@ -391,6 +391,15 @@ public interface PageRequestContextUtil extends UnifyComponent {
      */
     void setResponseRefreshPanels(String... longNames) throws UnifyException;
 
+	/**
+	 * Removes panel from response refresh panel list
+	 * 
+	 * @param longName the long name of the panel to remove
+	 * @return true if present and removed otherwise false
+	 * @throws UnifyException if an error occurs
+	 */
+	boolean removeResponseRefreshPanel(String longName) throws UnifyException;
+
     /**
      * Returns panels to refresh for current request.
      * 
@@ -398,7 +407,7 @@ public interface PageRequestContextUtil extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    String[] getResponseRefreshPanels() throws UnifyException;
+    List<String> getResponseRefreshPanels() throws UnifyException;
 
     /**
      * Sets the panels to refresh by response to current request.

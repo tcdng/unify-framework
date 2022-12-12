@@ -53,8 +53,8 @@ const UNIFY_KEY_BACKSPACE = '8';
 const UNIFY_KEY_TAB = '9';
 const UNIFY_KEY_DELETE = '46';
 
-const UNIFY_DEFAULT_POPUP_WIDTH = "580px";
-const UNIFY_DEFAULT_POPUP_HEIGHT = "initial";
+const UNIFY_DEFAULT_POPUP_WIDTH = "auto";
+const UNIFY_DEFAULT_POPUP_HEIGHT = "auto";
 
 const UNIFY_POST_COMMIT_QUEUE = true; // Set to false to switch off commit queuing
 const UNIFY_POST_COMMIT_QUEUE_REPEAT_DELAY = 20; // 20 milliseconds
