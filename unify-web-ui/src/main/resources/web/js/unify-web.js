@@ -53,6 +53,9 @@ const UNIFY_KEY_BACKSPACE = '8';
 const UNIFY_KEY_TAB = '9';
 const UNIFY_KEY_DELETE = '46';
 
+const UNIFY_DEFAULT_POPUP_WIDTH = "580px";
+const UNIFY_DEFAULT_POPUP_HEIGHT = "initial";
+
 const UNIFY_POST_COMMIT_QUEUE = true; // Set to false to switch off commit queuing
 const UNIFY_POST_COMMIT_QUEUE_REPEAT_DELAY = 20; // 20 milliseconds
 const UNIFY_POST_COMMIT_QUEUE_FIRE_DELAY = 100; // 100 milliseconds
@@ -379,13 +382,13 @@ ux.respHandler = {
 					if (resp.popupWidth && resp.popupWidth > 0) {
 						targetPanel.style.width = resp.popupWidth + "px";
 					} else {
-						targetPanel.style.width = "initial";
+						targetPanel.style.width = UNIFY_DEFAULT_POPUP_WIDTH;
 					}
 					
 					if (resp.popupHeight && resp.popupHeight > 0) {
 						targetPanel.style.height = resp.popupHeight + "px";
 					} else {
-						targetPanel.style.height = "initial";
+						targetPanel.style.height = UNIFY_DEFAULT_POPUP_HEIGHT;
 					}
 					
 					targetPanel.innerHTML = resp.showPopup.html;
