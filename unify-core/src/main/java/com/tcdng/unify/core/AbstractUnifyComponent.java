@@ -292,6 +292,19 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	}
 
 	/**
+	 * Gets a component by type.
+	 * 
+	 * @param componentType the component type
+	 * @return the component
+	 * @throws UnifyException if container is not started. If component of type
+	 *                        unknown. If multiple implementations of type is found.
+	 *                        If component instantiation error occurs.
+	 */
+	public UnifyComponent getComponent(Class<? extends UnifyComponent> componentType) throws UnifyException {
+		return unifyComponentContext.getComponent(componentType);
+	}
+
+	/**
 	 * Gets a reference to an instance of a component by name.
 	 * 
 	 * @param name the component name

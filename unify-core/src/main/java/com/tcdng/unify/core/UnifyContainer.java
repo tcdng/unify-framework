@@ -172,24 +172,24 @@ public class UnifyContainer {
 	private boolean shutdown;
 
 	public UnifyContainer() {
-		accessKey = UUID.randomUUID().toString();
+		this.accessKey = UUID.randomUUID().toString();
 
-		internalUnifyComponentInfos = new ConcurrentHashMap<String, InternalUnifyComponentInfo>();
-		periodicTaskMonitorList = new ArrayList<TaskMonitor>();
-		singletonTerminationList = new ArrayList<UnifyComponent>();
-		interfaces = new HashSet<UnifyContainerInterface>();
-		containerCommandQueue = new ConcurrentLinkedQueue<ContainerCommand>();
-		broadcastInfoMap = new HashMap<String, BroadcastInfo>();
-		namelessConfigurableSuggestions = new HashMap<Class<? extends UnifyComponent>, List<String>>();
+		this.internalUnifyComponentInfos = new ConcurrentHashMap<String, InternalUnifyComponentInfo>();
+		this.periodicTaskMonitorList = new ArrayList<TaskMonitor>();
+		this.singletonTerminationList = new ArrayList<UnifyComponent>();
+		this.interfaces = new HashSet<UnifyContainerInterface>();
+		this.containerCommandQueue = new ConcurrentLinkedQueue<ContainerCommand>();
+		this.broadcastInfoMap = new HashMap<String, BroadcastInfo>();
+		this.namelessConfigurableSuggestions = new HashMap<Class<? extends UnifyComponent>, List<String>>();
 
-		componentContextMap = new FactoryMap<String, UnifyComponentContext>() {
+		this.componentContextMap = new FactoryMap<String, UnifyComponentContext>() {
 			@Override
 			protected UnifyComponentContext create(String name, Object... params) throws Exception {
 				return new UnifyComponentContext(applicationContext, getLogger(name), name);
 			}
 		};
 
-		singletonComponentMap = new FactoryMap<String, UnifyComponentInst>() {
+		this.singletonComponentMap = new FactoryMap<String, UnifyComponentInst>() {
 			@Override
 			protected UnifyComponentInst create(String name, Object... params) throws Exception {
 				InternalUnifyComponentInfo iuci = (InternalUnifyComponentInfo) params[0];
@@ -199,7 +199,7 @@ public class UnifyContainer {
 			}
 		};
 
-		cachedLocaleUplComponentMap = new LocaleFactoryMaps<String, UplComponent>() {
+		this.cachedLocaleUplComponentMap = new LocaleFactoryMaps<String, UplComponent>() {
 			@Override
 			protected UplComponent createObject(Locale locale, String descriptor, Object... params) throws Exception {
 				UplComponent localeComponent = getUplComponent(locale, descriptor, false);
@@ -866,6 +866,29 @@ public class UnifyContainer {
 
 	public ApplicationContext getApplicationContext() {
 		return applicationContext;
+	}
+
+	/**
+	 * Gets a component by type.
+	 * 
+	 * @param componentType the component type
+	 * @return the component
+	 * @throws UnifyException if container is not started. If component of type
+	 *                        unknown. If multiple implementations of type is found.
+	 *                        If component instantiation error occurs.
+	 */
+	public UnifyComponent getComponent(Class<? extends UnifyComponent> componentType) throws UnifyException {
+		List<UnifyComponentConfig> configs = getComponentConfigs(componentType);
+		if (configs.isEmpty()) {
+			throw new UnifyException(UnifyCoreErrorConstants.NO_IMPLEMENTATION_OF_TYPE_FOUND, componentType.toString());
+		}
+
+		if (configs.size() > 1) {
+			throw new UnifyException(UnifyCoreErrorConstants.MULTIPLE_IMPLEMENTATIONS_OF_TYPE_FOUND,
+					componentType.toString());
+		}
+
+		return getComponent(configs.get(0).getName(), null, null);
 	}
 
 	/**
