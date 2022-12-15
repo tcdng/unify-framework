@@ -877,7 +877,8 @@ public class UnifyContainer {
 	 *                        unknown. If multiple implementations of type is found.
 	 *                        If component instantiation error occurs.
 	 */
-	public UnifyComponent getComponent(Class<? extends UnifyComponent> componentType) throws UnifyException {
+	@SuppressWarnings("unchecked")
+	public <T extends UnifyComponent> T getComponent(Class<T> componentType) throws UnifyException {
 		List<UnifyComponentConfig> configs = getComponentConfigs(componentType);
 		if (configs.isEmpty()) {
 			throw new UnifyException(UnifyCoreErrorConstants.NO_IMPLEMENTATION_OF_TYPE_FOUND, componentType.toString());
@@ -888,7 +889,7 @@ public class UnifyContainer {
 					componentType.toString());
 		}
 
-		return getComponent(configs.get(0).getName(), null, null);
+		return (T) getComponent(configs.get(0).getName(), null, null);
 	}
 
 	/**

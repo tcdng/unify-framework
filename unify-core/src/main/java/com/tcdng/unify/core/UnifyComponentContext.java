@@ -90,7 +90,7 @@ public class UnifyComponentContext {
 	 *                        unknown. If multiple implementations of type is found.
 	 *                        If component instantiation error occurs.
 	 */
-	public UnifyComponent getComponent(Class<? extends UnifyComponent> componentType) throws UnifyException {
+	public <T extends UnifyComponent> T getComponent(Class<T> componentType) throws UnifyException {
 		return applicationContext.getContainer().getComponent(componentType);
 	}
 
