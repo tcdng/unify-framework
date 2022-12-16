@@ -18,6 +18,7 @@ package com.tcdng.unify.web.ui.widget.data;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
 
 /**
@@ -46,6 +47,10 @@ public class ColorLegendInfo {
 		return items.size();
 	}
 	
+	public boolean isEmpty() {
+		return items.isEmpty();
+	}
+	
 	public static Builder newBuilder() {
 		return new Builder();
 	}
@@ -68,7 +73,7 @@ public class ColorLegendInfo {
 		}
 		
 		public ColorLegendInfo build() {
-			return new ColorLegendInfo(items);
+			return new ColorLegendInfo(DataUtils.unmodifiableList(items));
 		}
 	}
 }

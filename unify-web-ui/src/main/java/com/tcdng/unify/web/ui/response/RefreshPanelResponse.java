@@ -19,6 +19,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
+import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.web.ui.AbstractJsonPageControllerResponse;
 import com.tcdng.unify.web.ui.widget.Page;
 import com.tcdng.unify.web.ui.widget.Panel;
@@ -77,28 +78,28 @@ public class RefreshPanelResponse extends AbstractJsonPageControllerResponse {
         }
     }
 
-    private Panel[] resolveRefreshPanels(Page page) throws UnifyException {
-        boolean useLongNames = false;
-        String[] refreshList = getPanels();
-        if (refreshList == null || refreshList.length == 0) {
-            refreshList = getRequestContextUtil().getResponseRefreshPanels();
-            useLongNames = true;
-        }
-        
-        if (refreshList != null && refreshList.length > 0) {
-            Panel[] panels = new Panel[refreshList.length];
-            for (int i = 0; i < refreshList.length; i++) {
-                String panelName = refreshList[i];
-                if (useLongNames) {
-                    panels[i] = page.getPanelByLongName(panelName);
-                } else {
-                    panels[i] = page.getPanelByShortName(panelName);
-                }
-            }
-            
-            return panels;
-        }
-        
-        return null;
-    }
+	private Panel[] resolveRefreshPanels(Page page) throws UnifyException {
+		boolean useLongNames = false;
+		String[] refreshList = getPanels();
+		if (refreshList == null || refreshList.length == 0) {
+			refreshList = DataUtils.toArray(String.class, getRequestContextUtil().getResponseRefreshPanels());
+			useLongNames = true;
+		}
+
+		if (refreshList != null && refreshList.length > 0) {
+			Panel[] panels = new Panel[refreshList.length];
+			for (int i = 0; i < refreshList.length; i++) {
+				String panelName = refreshList[i];
+				if (useLongNames) {
+					panels[i] = page.getPanelByLongName(panelName);
+				} else {
+					panels[i] = page.getPanelByShortName(panelName);
+				}
+			}
+
+			return panels;
+		}
+
+		return null;
+	}
 }

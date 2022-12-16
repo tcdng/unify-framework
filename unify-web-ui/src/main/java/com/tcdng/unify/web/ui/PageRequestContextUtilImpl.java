@@ -16,6 +16,7 @@
 package com.tcdng.unify.web.ui;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -345,15 +346,22 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
 
     @Override
     public void setResponseRefreshPanels(String... longNames) throws UnifyException {
-        setRequestAttribute(REFRESH_PANEL_LONGNAMES, longNames);
+    	List<String> list = new ArrayList<String>(Arrays.asList(longNames));
+        setRequestAttribute(REFRESH_PANEL_LONGNAMES, list);
     }
 
     @Override
-    public String[] getResponseRefreshPanels() throws UnifyException {
-        return (String[]) getRequestAttribute(REFRESH_PANEL_LONGNAMES);
+    public List<String> getResponseRefreshPanels() throws UnifyException {
+        return (List<String>) getRequestAttribute(REFRESH_PANEL_LONGNAMES);
     }
 
     @Override
+	public boolean removeResponseRefreshPanel(String longName) throws UnifyException {
+    	List<String> list = getResponseRefreshPanels();
+		return list != null && list.remove(longName);
+	}
+
+	@Override
     public boolean setResponseRefreshPanels(Panel... panels) throws UnifyException {
         for (Panel panel : panels) {
             if (panel == null) {

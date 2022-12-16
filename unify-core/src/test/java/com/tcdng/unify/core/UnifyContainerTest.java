@@ -55,6 +55,25 @@ public class UnifyContainerTest extends AbstractUnifyComponentTest {
     }
 
     @Test
+    public void testGetSingletonComponentByType() throws Exception {
+        UnifyComponent c1 = getComponent(TestComponentA1.class);
+        assertNotNull(c1);
+        assertTrue(c1.getClass().equals(TestComponentA1.class));
+    }
+    
+    @Test
+    public void testGetNonSingletonComponentByType() throws Exception {
+        UnifyComponent c1 = getComponent(TestComponentA2.class);
+        assertNotNull(c1);
+        assertTrue(c1.getClass().equals(TestComponentA2.class));
+    }
+
+    @Test(expected = UnifyException.class)
+    public void testGetComponentByTypeMultiple() throws Exception {
+        getComponent(TestComponentG.class);
+    }
+
+    @Test
     public void testGetNonSingletonComponent() throws Exception {
         UnifyComponent c1 = getComponent("component-a2");
         UnifyComponent c2 = getComponent("component-a2");
@@ -300,6 +319,27 @@ public class UnifyContainerTest extends AbstractUnifyComponentTest {
         }
     }
 
+    public static abstract class TestComponentG extends AbstractUnifyComponent {
+
+        @Override
+        protected void onInitialize() throws UnifyException {
+
+        }
+
+        @Override
+        protected void onTerminate() throws UnifyException {
+
+        }
+    }
+
+    public static class TestComponentGA extends TestComponentG {
+
+    }
+
+    public static abstract class TestComponentGB extends TestComponentG {
+
+    }
+
     @Override
     protected void doAddSettingsAndDependencies() throws Exception {
         // Customise for tiger
@@ -313,6 +353,8 @@ public class UnifyContainerTest extends AbstractUnifyComponentTest {
         addDependency("component-d", TestComponentD.class);
         addDependency("component-e", TestComponentE.class);
         addDependency("component-f", TestComponentF.class);
+        addDependency("component-ga", TestComponentGA.class);
+        addDependency("component-gb", TestComponentGB.class);
     }
 
     @Override

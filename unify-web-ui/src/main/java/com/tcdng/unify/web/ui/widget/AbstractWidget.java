@@ -678,6 +678,7 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
    
     protected void commandHidePopup() throws UnifyException {
         removeCurrentPopup();
+		getRequestContextUtil().removeResponseRefreshPanel(getLongName());
         setCommandResultMapping(ResultMappingConstants.HIDE_POPUP);
     }
 

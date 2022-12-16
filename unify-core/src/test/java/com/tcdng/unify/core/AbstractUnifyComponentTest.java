@@ -141,6 +141,16 @@ public abstract class AbstractUnifyComponentTest {
         return container.getComponent(name, altSettings);
     }
 
+	/**
+	 * Returns a component using supplied type.
+	 * 
+	 * @param componentType the component type
+	 * @throws Exception if an error occurs
+	 */
+	protected UnifyComponent getComponent(Class<? extends UnifyComponent> componentType) throws Exception {
+		return container.getComponent(componentType);
+	}
+
     /**
      * Returns a component using supplied name.
      * 

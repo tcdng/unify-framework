@@ -1041,4 +1041,15 @@ public interface UnifyCoreErrorConstants {
      * Datasource {0} is in read-only mode. Can not perform write operations.
      */
     String DATASOURCE_IN_READONLY_MODE = "UC_010B";
+
+    /**
+     * No implementation of type [{0}] found.
+     */
+    String NO_IMPLEMENTATION_OF_TYPE_FOUND = "UC_010C";
+
+    /**
+     * Multiple implementations of type [{0}] found.
+     */
+    String MULTIPLE_IMPLEMENTATIONS_OF_TYPE_FOUND = "UC_010D";
+
 }

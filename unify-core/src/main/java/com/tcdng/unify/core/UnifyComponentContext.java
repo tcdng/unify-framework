@@ -82,6 +82,19 @@ public class UnifyComponentContext {
 	}
 
 	/**
+	 * Gets a component by type.
+	 * 
+	 * @param componentType the component type
+	 * @return the component
+	 * @throws UnifyException if container is not started. If component of type
+	 *                        unknown. If multiple implementations of type is found.
+	 *                        If component instantiation error occurs.
+	 */
+	public <T extends UnifyComponent> T getComponent(Class<T> componentType) throws UnifyException {
+		return applicationContext.getContainer().getComponent(componentType);
+	}
+
+	/**
 	 * Gets component by name.
 	 * 
 	 * @param name the component name
