@@ -50,6 +50,8 @@ public interface SqlEntitySchemaInfo {
     SqlFieldSchemaInfo getIdFieldInfo();
 
     SqlFieldSchemaInfo getVersionFieldInfo();
+
+    SqlFieldSchemaInfo getTenantIdFieldInfo();
     
     SqlFieldInfo getFosterParentTypeFieldInfo();
     
@@ -84,6 +86,8 @@ public interface SqlEntitySchemaInfo {
     Map<String, ? extends SqlIndexSchemaInfo> getIndexList();
 
     List<Map<String, Object>> getStaticValueList();
+    
+    boolean isWithTenantId();
     
     boolean isIdentityManaged();
 

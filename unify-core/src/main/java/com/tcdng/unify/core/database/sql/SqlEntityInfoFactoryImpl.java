@@ -218,8 +218,8 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 				}
 				return new SqlEntityInfo(null, StaticReference.class, (Class<? extends EnumConst>) entityClass, null,
 						schema, tableName, preferredTableName, schemaTableName, tableAlias, tableName,
-						preferredTableName, schemaTableName, idFieldInfo, null, null, null, null, propertyInfoMap, null,
-						null, null, null, null, null, null, sqlDataSourceDialect.isAllObjectsInLowerCase(), true);
+						preferredTableName, schemaTableName, idFieldInfo, null, null, null, null, null, propertyInfoMap,
+						null, null, null, null, null, null, null, sqlDataSourceDialect.isAllObjectsInLowerCase(), true);
 			}
 
 			@SuppressWarnings("unchecked")
@@ -282,6 +282,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 				List<ChildFieldInfo> childListInfoList = new ArrayList<ChildFieldInfo>();
 				SqlFieldInfo idFieldInfo = null;
 				SqlFieldInfo versionFieldInfo = null;
+				SqlFieldInfo tenantIdFieldInfo = null;
 				SqlFieldInfo fosterParentTypeFieldInfo = null;
 				SqlFieldInfo fosterParentIdFieldInfo = null;
 				SqlFieldInfo categoryFieldInfo = null;
@@ -326,6 +327,11 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
 						final boolean isTenantId = tid != null;
 						if (isTenantId) {
+							if (tenantIdFieldInfo != null) {
+								throw new UnifyException(UnifyCoreErrorConstants.RECORD_MULTIPLE_TENANTID_ANNOTATION,
+										searchClass, field);
+							}
+
 							if (ia != null || va != null || loa != null || fka != null || clda != null || cla != null
 									|| fpta != null || fpia != null || cca != null) {
 								throw new UnifyException(
@@ -776,6 +782,10 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 								versionFieldInfo = sqlFieldInfo;
 							}
 
+							if (tid != null) {
+								tenantIdFieldInfo = sqlFieldInfo;
+							}
+
 							if (fpta != null) {
 								fosterParentTypeFieldInfo = sqlFieldInfo;
 							}
@@ -913,10 +923,10 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 				String tableAlias = "T" + (++tAliasCounter);
 				SqlEntityInfo sqlEntityInfo = new SqlEntityInfo(null, (Class<? extends Entity>) entityClass, null,
 						entityPolicy, schema, tableName, preferredTableName, schemaTableName, tableAlias, viewName,
-						preferredViewName, schemaViewName, idFieldInfo, versionFieldInfo, fosterParentTypeFieldInfo,
-						fosterParentIdFieldInfo, categoryFieldInfo, propertyInfoMap, childInfoList, childListInfoList,
-						uniqueConstraintMap, indexMap, null, null, null, sqlDataSourceDialect.isAllObjectsInLowerCase(),
-						ta != null ? ta.identityManaged() : true);
+						preferredViewName, schemaViewName, idFieldInfo, versionFieldInfo, tenantIdFieldInfo,
+						fosterParentTypeFieldInfo, fosterParentIdFieldInfo, categoryFieldInfo, propertyInfoMap,
+						childInfoList, childListInfoList, uniqueConstraintMap, indexMap, null, null, null,
+						sqlDataSourceDialect.isAllObjectsInLowerCase(), ta != null ? ta.identityManaged() : true);
 				return sqlEntityInfo;
 			}
 
@@ -1392,8 +1402,8 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
 				SqlEntityInfo sqlEntityInfo = new SqlEntityInfo(null, (Class<? extends Entity>) entityClass, null, null,
 						schema, viewName, preferredViewName, schemaViewName, null, viewName, preferredViewName,
-						schemaViewName, idFieldInfo, null, null, null, null, propertyInfoMap, null, null, null, null,
-						null, tableReferences.getBaseTables(), viewRestrictionList,
+						schemaViewName, idFieldInfo, null, null, null, null, null, propertyInfoMap, null, null, null,
+						null, null, tableReferences.getBaseTables(), viewRestrictionList,
 						sqlDataSourceDialect.isAllObjectsInLowerCase(), true);
 				return sqlEntityInfo;
 			}

@@ -1061,4 +1061,7 @@ public interface UnifyCoreErrorConstants {
     /** Tenant ID annotation should applied to field of type Long only. Type = {0}, field = {1} */
     String APPLY_TENANT_ID_TO_LONG_FIELD_ONLY = "UC_0110";
 
+    /** Entity has multiple tenant Id annotated fields. Type = {0}, field = {1} */
+    String RECORD_MULTIPLE_TENANTID_ANNOTATION = "UC_0111";
+
 }

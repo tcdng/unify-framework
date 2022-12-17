@@ -78,4 +78,6 @@ public interface UnifyCorePropertyConstants {
     String APPLICATION_SESSION_TIMEOUT = "application.session.timeout";
 
     String APPLICATION_VIEW_DIRECTIVE_IGNORE = "application.viewdirective.ignore";
+
+    String APPLICATION_TENANCY_ENABLED = "application.tenancy.enabled";
 }

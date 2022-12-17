@@ -93,6 +93,8 @@ public class Query<T extends Entity> implements Cloneable {
 
     private int limit;
 
+    private boolean ignoreTenantId;
+
     private boolean ignoreEmptyCriteria;
 
     private boolean applyAppQueryLimit;
@@ -525,6 +527,15 @@ public class Query<T extends Entity> implements Cloneable {
 
     public Query<T> ignoreEmptyCriteria(boolean ignoreEmptyCriteria) {
         this.ignoreEmptyCriteria = ignoreEmptyCriteria;
+        return this;
+    }
+
+    public boolean isIgnoreTenantId() {
+        return ignoreTenantId;
+    }
+
+    public Query<T> ignoreTenantId(boolean ignoreTenantId) {
+        this.ignoreTenantId = ignoreTenantId;
         return this;
     }
 
