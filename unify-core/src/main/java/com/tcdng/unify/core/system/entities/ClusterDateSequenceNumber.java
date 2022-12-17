@@ -19,6 +19,7 @@ import java.util.Date;
 
 import com.tcdng.unify.core.annotation.Column;
 import com.tcdng.unify.core.annotation.Table;
+import com.tcdng.unify.core.annotation.TenantId;
 import com.tcdng.unify.core.annotation.UniqueConstraint;
 
 /**
@@ -35,6 +36,10 @@ public class ClusterDateSequenceNumber extends AbstractSystemSequencedEntity {
 
     @Column(name = "SEQUENCE_DT")
     private Date sequenceDate;
+
+    @TenantId
+    @Column(nullable = true)
+    private Long tenantId;
 
     @Column
     private Long sequenceCounter;
@@ -55,7 +60,15 @@ public class ClusterDateSequenceNumber extends AbstractSystemSequencedEntity {
         this.sequenceDate = sequenceDate;
     }
 
-    public Long getSequenceCounter() {
+    public Long getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(Long tenantId) {
+		this.tenantId = tenantId;
+	}
+
+	public Long getSequenceCounter() {
         return sequenceCounter;
     }
 

@@ -17,6 +17,7 @@ package com.tcdng.unify.core.system.entities;
 
 import com.tcdng.unify.core.annotation.Column;
 import com.tcdng.unify.core.annotation.Table;
+import com.tcdng.unify.core.annotation.TenantId;
 import com.tcdng.unify.core.annotation.UniqueConstraint;
 
 /**
@@ -31,6 +32,10 @@ public class ClusterSequenceNumber extends AbstractSystemSequencedEntity {
     @Column(name = "SEQUENCE_NM", length = 256)
     private String sequenceName;
 
+    @TenantId
+    @Column(nullable = true)
+    private Long tenantId;
+
     @Column
     private Long sequenceCounter;
 
@@ -42,7 +47,15 @@ public class ClusterSequenceNumber extends AbstractSystemSequencedEntity {
         this.sequenceName = sequenceName;
     }
 
-    public Long getSequenceCounter() {
+    public Long getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(Long tenantId) {
+		this.tenantId = tenantId;
+	}
+
+	public Long getSequenceCounter() {
         return sequenceCounter;
     }
 

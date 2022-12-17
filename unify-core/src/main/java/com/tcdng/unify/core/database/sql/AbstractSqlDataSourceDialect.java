@@ -180,6 +180,17 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 	}
 
 	@Override
+	public boolean isTenancyEnabled() throws UnifyException {
+		return tenancyEnabled;
+	}
+
+	@Override
+	public Long getUserTenantId() throws UnifyException {
+		UserToken userToken = getUserToken();
+		return userToken != null ? getUserToken().getTenantId() : null;
+	}
+
+	@Override
 	public String getDataSourceName() {
 		return dataSourceName;
 	}
@@ -1792,7 +1803,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 		Restriction restriction = query.getRestrictions();
 		if (tenancyEnabled && sqlEntityInfo.isWithTenantId() && !query.isIgnoreTenantId()) {
 			UserToken userToken = getUserToken();
-			if (userToken.isWithTenantId()) {
+			if (userToken != null && userToken.isWithTenantId()) {
 				restriction = new And().add(restriction)
 						.add(new Equals(sqlEntityInfo.getTenantIdFieldInfo().getName(), userToken.getTenantId()));
 			}

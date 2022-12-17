@@ -37,6 +37,23 @@ import com.tcdng.unify.core.database.Query;
  */
 public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
 
+	/**
+	 * Checks if data source is read-only
+	 * 
+	 * @return true if data source is read-only otherwise false
+     * @throws UnifyException
+     *             if an error occurs
+	 */
+	boolean isTenancyEnabled() throws UnifyException;
+
+	/**
+	 * Gets the current user tenant ID.
+	 * 
+	 * @return the tenant ID
+	 * @throws UnifyException if an error occurs
+	 */
+	Long getUserTenantId() throws UnifyException;
+	
     /**
      * Gets the data source dialect default schema.
      * 
