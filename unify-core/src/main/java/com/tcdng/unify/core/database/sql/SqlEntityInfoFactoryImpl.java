@@ -904,7 +904,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
 				List<Class<?>> heirachyList = ReflectUtils.getClassHierachyList(entityClass);
 				Map<String, SqlUniqueConstraintInfo> uniqueConstraintMap = extractUniqueConstraints(tableName,
-						entityClass, heirachyList, propertyInfoMap,
+						entityClass, heirachyList, propertyInfoMap, tenantIdFieldInfo,
 						ta != null ? ta.uniqueConstraints() : new UniqueConstraint[] {});
 				Map<String, SqlIndexInfo> indexMap = extractIndexes(tableName, entityClass, heirachyList,
 						propertyInfoMap, ta != null ? ta.indexes() : new Index[] {});
@@ -1212,7 +1212,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
 				List<Class<?>> heirachyList = ReflectUtils.getClassHierachyList(entityClass);
 				Map<String, SqlUniqueConstraintInfo> uniqueConstraintMap = extractUniqueConstraints(tableName,
-						entityClass, heirachyList, propertyInfoMap, tae.uniqueConstraints());
+						entityClass, heirachyList, propertyInfoMap, null, tae.uniqueConstraints());
 				Map<String, SqlIndexInfo> indexMap = extractIndexes(tableName, entityClass, heirachyList,
 						propertyInfoMap, tae.indexes());
 
@@ -1435,7 +1435,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
 			private Map<String, SqlUniqueConstraintInfo> extractUniqueConstraints(String tableName,
 					Class<?> entityClass, List<Class<?>> heirachyList, Map<String, SqlFieldInfo> propertyInfoMap,
-					UniqueConstraint[] uniqueConstraints) throws UnifyException {
+					SqlFieldInfo tenantIdFieldInfo, UniqueConstraint[] uniqueConstraints) throws UnifyException {
 				// Unique constraints
 				List<UniqueConstraint> resolvedConstraints = new ArrayList<UniqueConstraint>();
 				for (Class<?> clazz : heirachyList) {
@@ -1481,7 +1481,15 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 							}
 						}
 
-						uniqueConstraintMap.put(name, new SqlUniqueConstraintInfo(name, Arrays.asList(fieldNames)));
+						List<String> fieldNameList = Arrays.asList(fieldNames);
+						// Include tenant ID if necessary
+						if (sqlDataSourceDialect.isTenancyEnabled() && tenantIdFieldInfo != null
+								&& !fieldNameList.contains(tenantIdFieldInfo.getName())) {
+							fieldNameList = new ArrayList<>(fieldNameList);
+							fieldNameList.add(0, tenantIdFieldInfo.getName());
+						}
+
+						uniqueConstraintMap.put(name, new SqlUniqueConstraintInfo(name, fieldNameList));
 					}
 				}
 				return uniqueConstraintMap;
