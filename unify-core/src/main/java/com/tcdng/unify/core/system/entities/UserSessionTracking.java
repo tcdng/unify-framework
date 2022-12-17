@@ -60,6 +60,12 @@ public class UserSessionTracking extends AbstractSystemEntity {
     @Column(type = ColumnType.TIMESTAMP_UTC)
     private Date lastAccessTime;
 
+    @Column(nullable = true)
+    private Long tenantId;
+
+    @Column(nullable = true, length = 128)
+    private String tenantName;
+    
     @Override
     public Object getId() {
         return sessionId;
@@ -136,4 +142,20 @@ public class UserSessionTracking extends AbstractSystemEntity {
     public void setLastAccessTime(Date lastAccessTime) {
         this.lastAccessTime = lastAccessTime;
     }
+
+	public Long getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(Long tenantId) {
+		this.tenantId = tenantId;
+	}
+
+	public String getTenantName() {
+		return tenantName;
+	}
+
+	public void setTenantName(String tenantName) {
+		this.tenantName = tenantName;
+	}
 }

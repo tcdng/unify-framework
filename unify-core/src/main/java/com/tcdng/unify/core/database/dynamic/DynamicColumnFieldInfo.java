@@ -28,57 +28,58 @@ import com.tcdng.unify.core.constant.EntityFieldType;
  */
 public class DynamicColumnFieldInfo extends DynamicFieldInfo {
 
-    private String transformer;
+	private String transformer;
 
-    private String defaultVal;
+	private String defaultVal;
 
-    private int length;
+	private int length;
 
-    private int precision;
+	private int precision;
 
-    private int scale;
+	private int scale;
 
-    private boolean nullable;
+	private boolean nullable;
 
-    public DynamicColumnFieldInfo(DynamicFieldType type, String enumClassName, String columnName, String fieldName,
-            boolean nullable, boolean descriptive) {
-        super(type, EntityFieldType.TABLE_COLUMN, DataType.STRING, columnName, fieldName, enumClassName, descriptive);
-    }
+	public DynamicColumnFieldInfo(DynamicFieldType type, String enumClassName, String columnName, String fieldName,
+			boolean nullable, boolean descriptive, boolean tenantId) {
+		super(type, EntityFieldType.TABLE_COLUMN, DataType.STRING, columnName, fieldName, enumClassName, descriptive,
+				tenantId);
+	}
 
-    public DynamicColumnFieldInfo(DynamicFieldType type, DataType dataType, String columnName, String fieldName,
-            String transformer, String defaultVal, int length, int precision, int scale, boolean nullable,
-            boolean descriptive) {
-        super(type, EntityFieldType.TABLE_COLUMN, dataType, columnName, fieldName, descriptive);
-        this.transformer = transformer;
-        this.defaultVal = defaultVal;
-        this.length = length;
-        this.precision = precision;
-        this.scale = scale;
-        this.nullable = nullable;
-    }
+	public DynamicColumnFieldInfo(DynamicFieldType type, DataType dataType, String columnName, String fieldName,
+			String transformer, String defaultVal, int length, int precision, int scale, boolean nullable,
+			boolean descriptive, boolean tenantId) {
+		super(type, EntityFieldType.TABLE_COLUMN, dataType, columnName, fieldName, descriptive, tenantId);
+		this.transformer = transformer;
+		this.defaultVal = defaultVal;
+		this.length = length;
+		this.precision = precision;
+		this.scale = scale;
+		this.nullable = nullable;
+	}
 
-    public String getTransformer() {
-        return transformer;
-    }
+	public String getTransformer() {
+		return transformer;
+	}
 
-    public String getDefaultVal() {
-        return defaultVal;
-    }
+	public String getDefaultVal() {
+		return defaultVal;
+	}
 
-    public int getLength() {
-        return length;
-    }
+	public int getLength() {
+		return length;
+	}
 
-    public int getPrecision() {
-        return precision;
-    }
+	public int getPrecision() {
+		return precision;
+	}
 
-    public int getScale() {
-        return scale;
-    }
+	public int getScale() {
+		return scale;
+	}
 
-    public boolean isNullable() {
-        return nullable;
-    }
+	public boolean isNullable() {
+		return nullable;
+	}
 
 }

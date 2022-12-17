@@ -35,6 +35,8 @@ public class UserToken {
 
 	private String tenantCode;
 
+	private String tenantName;
+
 	private String colorScheme;
 
 	private String ipAddress;
@@ -56,13 +58,14 @@ public class UserToken {
 	private boolean remote;
 
 	private UserToken(String userLoginId, String userName, String ipAddress, String branchCode, String zoneCode,
-			String tenantCode, String colorScheme, Long tenantId, boolean globalAccess, boolean reservedUser,
-			boolean allowMultipleLogin, boolean remote) {
+			String tenantCode, String tenantName, String colorScheme, Long tenantId, boolean globalAccess,
+			boolean reservedUser, boolean allowMultipleLogin, boolean remote) {
 		this.userLoginId = userLoginId;
 		this.userName = userName;
 		this.zoneCode = zoneCode;
 		this.branchCode = branchCode;
 		this.tenantCode = tenantCode;
+		this.tenantName = tenantName;
 		this.colorScheme = colorScheme;
 		this.ipAddress = ipAddress;
 		this.tenantId = tenantId;
@@ -86,6 +89,10 @@ public class UserToken {
 
 	public String getTenantCode() {
 		return tenantCode;
+	}
+
+	public String getTenantName() {
+		return tenantName;
 	}
 
 	public String getZoneCode() {
@@ -162,6 +169,8 @@ public class UserToken {
 
 		private String tenantCode;
 
+		private String tenantName;
+
 		private String colorScheme;
 
 		private String ipAddress;
@@ -199,6 +208,11 @@ public class UserToken {
 
 		public Builder tenantCode(String tenantCode) {
 			this.tenantCode = tenantCode;
+			return this;
+		}
+
+		public Builder tenantName(String tenantName) {
+			this.tenantName = tenantName;
 			return this;
 		}
 
@@ -247,8 +261,8 @@ public class UserToken {
 				throw new RuntimeException("Login ID is required!");
 			}
 
-			return new UserToken(userLoginId, userName, ipAddress, branchCode, zoneCode, tenantCode, colorScheme,
-					tenantId, globalAccess, reservedUser, allowMultipleLogin, remote);
+			return new UserToken(userLoginId, userName, ipAddress, branchCode, zoneCode, tenantCode, tenantName,
+					colorScheme, tenantId, globalAccess, reservedUser, allowMultipleLogin, remote);
 		}
 	}
 

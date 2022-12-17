@@ -30,92 +30,99 @@ import com.tcdng.unify.core.util.StringUtils;
  */
 public abstract class DynamicFieldInfo {
 
-    private DynamicFieldType type;
+	private DynamicFieldType type;
 
-    private EntityFieldType fieldType;
+	private EntityFieldType fieldType;
 
-    private DataType dataType;
+	private DataType dataType;
 
-    private String columnName;
+	private String columnName;
 
-    private String fieldName;
+	private String fieldName;
 
-    private String enumClassName;
+	private String enumClassName;
 
-    private boolean descriptive;
-    
-    public DynamicFieldInfo(DynamicFieldType type, EntityFieldType fieldType, DataType dataType, String columnName,
-            String fieldName, boolean descriptive) {
-        this(type, fieldType, dataType, columnName, fieldName, null, descriptive);
-    }
+	private boolean descriptive;
 
-    public DynamicFieldInfo(DynamicFieldType type, EntityFieldType fieldType, DataType dataType, String columnName,
-            String fieldName, String enumClassName, boolean descriptive) {
-        this.type = type;
-        this.fieldType = fieldType;
-        this.dataType = dataType;
-        this.columnName = columnName;
-        this.fieldName = fieldName;
-        this.enumClassName = enumClassName;
-        this.descriptive = descriptive;
-    }
+	private boolean tenantId;
 
-    public DynamicFieldType getType() {
-        return type;
-    }
+	public DynamicFieldInfo(DynamicFieldType type, EntityFieldType fieldType, DataType dataType, String columnName,
+			String fieldName, boolean descriptive, boolean tenantId) {
+		this(type, fieldType, dataType, columnName, fieldName, null, descriptive, tenantId);
+	}
 
-    public EntityFieldType getFieldType() {
-        return fieldType;
-    }
+	public DynamicFieldInfo(DynamicFieldType type, EntityFieldType fieldType, DataType dataType, String columnName,
+			String fieldName, String enumClassName, boolean descriptive, boolean tenantId) {
+		this.type = type;
+		this.fieldType = fieldType;
+		this.dataType = dataType;
+		this.columnName = columnName;
+		this.fieldName = fieldName;
+		this.enumClassName = enumClassName;
+		this.descriptive = descriptive;
+		this.tenantId = tenantId;
+	}
 
-    public DataType getDataType() {
-        return dataType;
-    }
+	public DynamicFieldType getType() {
+		return type;
+	}
 
-    public String getColumnName() {
-        return columnName;
-    }
+	public EntityFieldType getFieldType() {
+		return fieldType;
+	}
 
-    public String getFieldName() {
-        return fieldName;
-    }
+	public DataType getDataType() {
+		return dataType;
+	}
 
-    public String getEnumClassName() {
-        return enumClassName;
-    }
+	public String getColumnName() {
+		return columnName;
+	}
 
-    public boolean isEnum() {
-        return enumClassName != null;
-    }
+	public String getFieldName() {
+		return fieldName;
+	}
 
-    public boolean isDescriptive() {
-        return descriptive;
-    }
+	public String getEnumClassName() {
+		return enumClassName;
+	}
 
-    public boolean isGeneration() {
-        return DynamicFieldType.GENERATION.equals(type);
-    }
-    
-    public final void finalizeResolution() throws UnifyException {
-    	Resolution resolution = doFinalizeResolution();
-    	dataType = resolution.dataType;
-    	enumClassName = resolution.enumClassName;
-    }
-    
-    @Override
+	public boolean isEnum() {
+		return enumClassName != null;
+	}
+
+	public boolean isDescriptive() {
+		return descriptive;
+	}
+
+	public boolean isTenantId() {
+		return tenantId;
+	}
+
+	public boolean isGeneration() {
+		return DynamicFieldType.GENERATION.equals(type);
+	}
+
+	public final void finalizeResolution() throws UnifyException {
+		Resolution resolution = doFinalizeResolution();
+		dataType = resolution.dataType;
+		enumClassName = resolution.enumClassName;
+	}
+
+	@Override
 	public String toString() {
 		return StringUtils.toXmlString(this);
 	}
 
 	protected Resolution doFinalizeResolution() throws UnifyException {
-    	return new Resolution(dataType, enumClassName);
-    }
-    
-    protected class Resolution {
+		return new Resolution(dataType, enumClassName);
+	}
 
-        private final DataType dataType;
+	protected class Resolution {
 
-        private final String enumClassName;
+		private final DataType dataType;
+
+		private final String enumClassName;
 
 		public Resolution(DataType dataType, String enumClassName) {
 			this.dataType = dataType;
@@ -129,5 +136,5 @@ public abstract class DynamicFieldInfo {
 		public String getEnumClassName() {
 			return enumClassName;
 		}
-    }
+	}
 }

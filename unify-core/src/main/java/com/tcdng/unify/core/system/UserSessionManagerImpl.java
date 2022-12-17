@@ -131,7 +131,8 @@ public class UserSessionManagerImpl extends AbstractBusinessService implements U
         String userLoginId = userToken.getUserLoginId();
         String sessionId = sessionContext.getId();
         db().updateAll(new UserSessionTrackingQuery().id(sessionId), new Update().add("userLoginId", userLoginId)
-                .add("userLoginId", userToken.getUserLoginId()).add("userName", userToken.getUserName()));
+                .add("userLoginId", userToken.getUserLoginId()).add("userName", userToken.getUserName())
+                .add("tenantId", userToken.getTenantId()).add("tenantName", userToken.getTenantName()));
 
         if (!userToken.isAllowMultipleLogin()) {
             List<String> sessionIdList = db().valueList(String.class, "sessionId",

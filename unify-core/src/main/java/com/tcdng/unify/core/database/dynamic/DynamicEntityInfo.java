@@ -56,12 +56,14 @@ public class DynamicEntityInfo {
 
 	private boolean withChildField;
 
+	private boolean withTenantIdField;
+
 	private boolean selfReference;
 
 	private ManagedType managed;
 
 	private boolean resolved;
-	
+
 	private long version;
 
 	private DynamicEntityInfo(boolean selfReference) {
@@ -85,6 +87,10 @@ public class DynamicEntityInfo {
 
 	public boolean isWithChildField() {
 		return withChildField;
+	}
+
+	public boolean isWithTenantIdField() {
+		return withTenantIdField;
 	}
 
 	public boolean isGeneration() {
@@ -132,20 +138,20 @@ public class DynamicEntityInfo {
 	public boolean isResolved() {
 		return resolved;
 	}
-    
-    @Override
+
+	@Override
 	public String toString() {
 		return StringUtils.toXmlString(this);
 	}
 
 	public void finalizeResolution() throws UnifyException {
 		if (!resolved) {
-			synchronized(this) {
+			synchronized (this) {
 				if (!resolved) {
-					for (DynamicFieldInfo dynamicFieldInfo: fieldInfos.values()) {
+					for (DynamicFieldInfo dynamicFieldInfo : fieldInfos.values()) {
 						dynamicFieldInfo.finalizeResolution();
 					}
-					
+
 					resolved = true;
 				}
 			}
@@ -177,14 +183,16 @@ public class DynamicEntityInfo {
 		private Map<String, DynamicColumnFieldInfo> columnFields;
 
 		private Map<String, DynamicListOnlyFieldInfo> listOnlyFields;
-		
+
 		private Map<String, DynamicFieldInfo> childFieldInfos;
-		
+
 		private ManagedType managed;
 
 		private long version;
-		
+
 		private boolean withChildField;
+
+		private boolean withTenantIdField;
 
 		private Builder(DynamicEntityType type, String className, ManagedType managed) {
 			this.type = type;
@@ -194,7 +202,7 @@ public class DynamicEntityInfo {
 			fkFields = new LinkedHashMap<String, DynamicForeignKeyFieldInfo>();
 			columnFields = new LinkedHashMap<String, DynamicColumnFieldInfo>();
 			listOnlyFields = new LinkedHashMap<String, DynamicListOnlyFieldInfo>();
-			childFieldInfos =  new LinkedHashMap<String, DynamicFieldInfo>();
+			childFieldInfos = new LinkedHashMap<String, DynamicFieldInfo>();
 		}
 
 		public Builder tableName(String tableName) {
@@ -228,6 +236,19 @@ public class DynamicEntityInfo {
 			return this;
 		}
 
+		public Builder addTenantIdField(DynamicFieldType type, String columnName, String fieldName, String defaultVal,
+				int length, int precision, int scale, boolean nullable) throws UnifyException {
+			checkFieldNameExist(fieldName);
+			if (withTenantIdField) {
+				throw new UnifyOperationException(getClass(), "Tenant ID field already exists");
+			}
+
+			withTenantIdField = true;
+			columnFields.put(fieldName, new DynamicColumnFieldInfo(type, DataType.LONG, columnName, fieldName, null,
+					defaultVal, length, precision, scale, nullable, false, true));
+			return this;
+		}
+
 		public Builder addField(DynamicFieldType type, DataType dataType, String columnName, String fieldName,
 				String defaultVal, int length, int precision, int scale, boolean nullable, boolean descriptive)
 				throws UnifyException {
@@ -240,15 +261,15 @@ public class DynamicEntityInfo {
 				boolean descriptive) throws UnifyException {
 			checkFieldNameExist(fieldName);
 			columnFields.put(fieldName, new DynamicColumnFieldInfo(type, dataType, columnName, fieldName, transformer,
-					defaultVal, length, precision, scale, nullable, descriptive));
+					defaultVal, length, precision, scale, nullable, descriptive, false));
 			return this;
 		}
 
 		public Builder addField(DynamicFieldType type, String enumClassName, String columnName, String fieldName,
 				String defaultVal, boolean nullable, boolean descriptive) throws UnifyException {
 			checkFieldNameExist(fieldName);
-			columnFields.put(fieldName,
-					new DynamicColumnFieldInfo(type, enumClassName, columnName, fieldName, nullable, descriptive));
+			columnFields.put(fieldName, new DynamicColumnFieldInfo(type, enumClassName, columnName, fieldName, nullable,
+					descriptive, false));
 			return this;
 		}
 
@@ -277,7 +298,7 @@ public class DynamicEntityInfo {
 					if (_dynamicFieldInfo == null) {
 						_dynamicFieldInfo = fkFields.get(property);
 					}
-					
+
 					resolved = true;
 				} else {
 					_dynamicFieldInfo = fkFieldInfo;
@@ -286,12 +307,12 @@ public class DynamicEntityInfo {
 				listOnlyFields.put(fieldName, new DynamicListOnlyFieldInfo(type, _dynamicFieldInfo, columnName,
 						fieldName, key, property, descriptive, resolved));
 			}
-			
+
 			return this;
 		}
-		
-		public Builder addChildField(DynamicFieldType type, DynamicEntityInfo childDynamicEntityInfo,
-				String fieldName) throws UnifyException {
+
+		public Builder addChildField(DynamicFieldType type, DynamicEntityInfo childDynamicEntityInfo, String fieldName)
+				throws UnifyException {
 			checkFieldNameExist(fieldName);
 			childFieldInfos.put(fieldName, new DynamicChildFieldInfo(type, childDynamicEntityInfo, fieldName));
 			withChildField = true;
@@ -334,6 +355,7 @@ public class DynamicEntityInfo {
 			DynamicEntityInfo _info = prefetch();
 			_info.fieldInfos = fieldInfos;
 			_info.withChildField = withChildField;
+			_info.withTenantIdField = withTenantIdField;
 			for (DynamicForeignKeyFieldInfo fkField : fkFields.values()) {
 				fkField.updateParentDynamicEntityInfo(_info);
 			}
