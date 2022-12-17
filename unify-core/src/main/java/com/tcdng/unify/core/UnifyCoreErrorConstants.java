@@ -1052,4 +1052,13 @@ public interface UnifyCoreErrorConstants {
      */
     String MULTIPLE_IMPLEMENTATIONS_OF_TYPE_FOUND = "UC_010D";
 
+    /** Bad combination of annotations with tenant ID annotation. Type = {0}, field = {1} */
+    String BAD_COMBINATION_OF_ANNOTATION_WITH_TENANT_ID = "UC_010E";
+
+    /** Column annotation required with tenant ID annotation. Type = {0}, field = {1} */
+    String COLUMN_ANNOTATION_REQUIRED_WITH_TENANT_ID = "UC_010F";
+
+    /** Tenant ID annotation should applied to field of type Long only. Type = {0}, field = {1} */
+    String APPLY_TENANT_ID_TO_LONG_FIELD_ONLY = "UC_0110";
+
 }

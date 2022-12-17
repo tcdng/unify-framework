@@ -116,6 +116,11 @@ public interface SqlFieldSchemaInfo {
      */
     boolean isListOnly();
 
+	/**
+	 * Returns true if field is tenant ID.
+	 */
+	boolean isTenantId();
+
     /**
      * Returns true if this schema info is the same with supplied info, otherwise
      * false.
