@@ -1231,7 +1231,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 						entityPolicy.preUpdate(record, null);
 					}
 				}
-				
+
 				setRecordTenantId(sqlEntityInfo, record);
 				sqlStatement = sqlDataSourceDialect.prepareUpdateByPkVersionStatement(record, oldVersionNo);
 			} else {
@@ -1242,7 +1242,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 						entityPolicy.preUpdate(record, null);
 					}
 				}
-				
+
 				setRecordTenantId(sqlEntityInfo, record);
 				sqlStatement = sqlDataSourceDialect.prepareUpdateByPkStatement(record);
 			}
@@ -1305,7 +1305,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 		}
 		return id;
 	}
-	
+
 	@SuppressWarnings({ "unchecked" })
 	private void createChildRecords(SqlEntityInfo sqlEntityInfo, Entity record, Object id) throws UnifyException {
 		try {
@@ -1503,9 +1503,10 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 	}
 
 	private void setRecordTenantId(SqlEntityInfo sqlEntityInfo, Entity record) throws UnifyException {
-		if (sqlDataSourceDialect.isTenancyEnabled() && sqlEntityInfo.isWithTenantId()) {
-			DataUtils.setBeanProperty(record, sqlEntityInfo.getTenantIdFieldInfo().getName(),
-					sqlDataSourceDialect.getUserTenantId());
+		if (sqlEntityInfo.isWithTenantId()) {
+			final Long tenantId = sqlDataSourceDialect.isTenancyEnabled() ? sqlDataSourceDialect.getUserTenantId()
+					: Entity.BLANK_TENANT_ID;
+			DataUtils.setBeanProperty(record, sqlEntityInfo.getTenantIdFieldInfo().getName(), tenantId);
 		}
 	}
 

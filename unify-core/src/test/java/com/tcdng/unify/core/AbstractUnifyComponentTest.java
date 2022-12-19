@@ -90,6 +90,11 @@ public abstract class AbstractUnifyComponentTest {
         onTearDown();
     }
 
+	protected void setSessionAltTenantUserToken(String tenantCode, String tenantName, Long tenantId) throws Exception {
+		((RequestContextManager) getComponent(ApplicationComponents.APPLICATION_REQUESTCONTEXTMANAGER))
+				.getRequestContext().getSessionContext().setAltTenantUserToken(tenantCode, tenantName, tenantId);
+	}
+	
     /**
      * Returns names of all components that are of a particular type.
      * 

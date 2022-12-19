@@ -27,4 +27,8 @@ public class CompanyAccountQuery extends AbstractTestTableEntityQuery<CompanyAcc
 		super(CompanyAccount.class);
 	}
 
+	public CompanyAccountQuery accountNo(String accountNo) {
+		addEquals("accountNo", accountNo);
+		return this;
+	}
 }

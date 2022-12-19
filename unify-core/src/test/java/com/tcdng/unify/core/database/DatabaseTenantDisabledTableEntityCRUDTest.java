@@ -29,12 +29,12 @@ import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyCorePropertyConstants;
 
 /**
- * Database tenant table entity CRUD tests.
+ * Database tenant (disabled) table entity CRUD tests.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public class DatabaseTenantTableEntityCRUDTest extends AbstractUnifyComponentTest {
+public class DatabaseTenantDisabledTableEntityCRUDTest extends AbstractUnifyComponentTest {
 
 	private DatabaseTransactionManager tm;
 
@@ -103,24 +103,19 @@ public class DatabaseTenantTableEntityCRUDTest extends AbstractUnifyComponentTes
 		}
 	}
 
-	@Test
+	@Test(expected = Exception.class)
 	public void testCreateTenantRecordMultipleTenants() throws Exception {
 		tm.beginTransaction();
 		try {
 			setSessionAltTenantUserToken("company-001", "Company A", 2L);
 			CompanyAccount companyAccount = new CompanyAccount("0193884777", "Team Green", BigDecimal.valueOf(340.62));
 			db.create(companyAccount);
-			assertEquals(Long.valueOf(2L), companyAccount.getCompanyId());
+			assertEquals(Long.valueOf(0L), companyAccount.getCompanyId());
 
 			setSessionAltTenantUserToken("company-002", "Company B", 3L);
 			companyAccount = new CompanyAccount("0193884777", "Team Green", BigDecimal.valueOf(340.62));
 			db.create(companyAccount);
 			assertEquals(Long.valueOf(3L), companyAccount.getCompanyId());
-
-			setSessionAltTenantUserToken("company-003", "Company C", 4L);
-			companyAccount = new CompanyAccount("0193884777", "Team Green", BigDecimal.valueOf(340.62));
-			db.create(companyAccount);
-			assertEquals(Long.valueOf(4L), companyAccount.getCompanyId());
 		} catch (Exception e) {
 			tm.setRollback();
 			throw e;
@@ -136,7 +131,7 @@ public class DatabaseTenantTableEntityCRUDTest extends AbstractUnifyComponentTes
 			setSessionAltTenantUserToken("company-001", "Company A", 2L);
 			CompanyAccount companyAccount = new CompanyAccount("0193884777", "Team Green", BigDecimal.valueOf(340.62));
 			db.create(companyAccount);
-			assertEquals(Long.valueOf(2L), companyAccount.getCompanyId());
+			assertEquals(Long.valueOf(0L), companyAccount.getCompanyId());
 
 			companyAccount = new CompanyAccount("0193884777", "Team Green", BigDecimal.valueOf(340.62));
 			db.create(companyAccount);
@@ -157,34 +152,34 @@ public class DatabaseTenantTableEntityCRUDTest extends AbstractUnifyComponentTes
 			db.create(companyAccount);
 
 			setSessionAltTenantUserToken("company-002", "Company B", 3L);
-			companyAccount = new CompanyAccount("0193884111", "Team Blue", BigDecimal.valueOf(350.21));
+			companyAccount = new CompanyAccount("0193884222", "Team Blue", BigDecimal.valueOf(350.21));
 			db.create(companyAccount);
 
 			setSessionAltTenantUserToken("company-003", "Company C", 4L);
-			companyAccount = new CompanyAccount("0193884111", "Team Red", BigDecimal.valueOf(400.54));
+			companyAccount = new CompanyAccount("0193884333", "Team Red", BigDecimal.valueOf(400.54));
 			db.create(companyAccount);
 
 			setSessionAltTenantUserToken("company-001", "Company A", 2L);
 			CompanyAccount foundCompanyAccount = db.find(new CompanyAccountQuery().accountNo("0193884111"));
 			assertNotNull(foundCompanyAccount);
-			assertEquals(Long.valueOf(2L), foundCompanyAccount.getCompanyId());
+			assertEquals(Long.valueOf(0L), foundCompanyAccount.getCompanyId());
 			assertEquals("0193884111", foundCompanyAccount.getAccountNo());
 			assertEquals("Team Green", foundCompanyAccount.getAccountName());
 			assertEquals(BigDecimal.valueOf(340.62), foundCompanyAccount.getBalance());
 
 			setSessionAltTenantUserToken("company-002", "Company B", 3L);
-			foundCompanyAccount = db.find(new CompanyAccountQuery().accountNo("0193884111"));
+			foundCompanyAccount = db.find(new CompanyAccountQuery().accountNo("0193884222"));
 			assertNotNull(foundCompanyAccount);
-			assertEquals(Long.valueOf(3L), foundCompanyAccount.getCompanyId());
-			assertEquals("0193884111", foundCompanyAccount.getAccountNo());
+			assertEquals(Long.valueOf(0L), foundCompanyAccount.getCompanyId());
+			assertEquals("0193884222", foundCompanyAccount.getAccountNo());
 			assertEquals("Team Blue", foundCompanyAccount.getAccountName());
 			assertEquals(BigDecimal.valueOf(350.21), foundCompanyAccount.getBalance());
 
 			setSessionAltTenantUserToken("company-003", "Company C", 4L);
-			foundCompanyAccount = db.find(new CompanyAccountQuery().accountNo("0193884111"));
+			foundCompanyAccount = db.find(new CompanyAccountQuery().accountNo("0193884333"));
 			assertNotNull(foundCompanyAccount);
-			assertEquals(Long.valueOf(4L), foundCompanyAccount.getCompanyId());
-			assertEquals("0193884111", foundCompanyAccount.getAccountNo());
+			assertEquals(Long.valueOf(0L), foundCompanyAccount.getCompanyId());
+			assertEquals("0193884333", foundCompanyAccount.getAccountNo());
 			assertEquals("Team Red", foundCompanyAccount.getAccountName());
 			assertEquals(BigDecimal.valueOf(400.54), foundCompanyAccount.getBalance());
 		} catch (Exception e) {
@@ -204,11 +199,11 @@ public class DatabaseTenantTableEntityCRUDTest extends AbstractUnifyComponentTes
 			db.create(companyAccount);
 
 			setSessionAltTenantUserToken("company-002", "Company B", 3L);
-			companyAccount = new CompanyAccount("0193884111", "Team Blue", BigDecimal.valueOf(350.21));
+			companyAccount = new CompanyAccount("0193884222", "Team Blue", BigDecimal.valueOf(350.21));
 			db.create(companyAccount);
 
 			setSessionAltTenantUserToken("company-003", "Company C", 4L);
-			companyAccount = new CompanyAccount("0193884111", "Team Red", BigDecimal.valueOf(400.54));
+			companyAccount = new CompanyAccount("0193884333", "Team Red", BigDecimal.valueOf(400.54));
 			db.create(companyAccount);
 
 			setSessionAltTenantUserToken("company-001", "Company A", 2L);
@@ -216,28 +211,28 @@ public class DatabaseTenantTableEntityCRUDTest extends AbstractUnifyComponentTes
 			assertEquals(1, list.size());
 			CompanyAccount foundCompanyAccount = list.get(0);
 			assertNotNull(foundCompanyAccount);
-			assertEquals(Long.valueOf(2L), foundCompanyAccount.getCompanyId());
+			assertEquals(Long.valueOf(0L), foundCompanyAccount.getCompanyId());
 			assertEquals("0193884111", foundCompanyAccount.getAccountNo());
 			assertEquals("Team Green", foundCompanyAccount.getAccountName());
 			assertEquals(BigDecimal.valueOf(340.62), foundCompanyAccount.getBalance());
 
 			setSessionAltTenantUserToken("company-002", "Company B", 3L);
-			list = db.findAll(new CompanyAccountQuery().accountNo("0193884111"));
+			list = db.findAll(new CompanyAccountQuery().accountNo("0193884222"));
 			assertEquals(1, list.size());
 			foundCompanyAccount = list.get(0);
 			assertNotNull(foundCompanyAccount);
-			assertEquals(Long.valueOf(3L), foundCompanyAccount.getCompanyId());
-			assertEquals("0193884111", foundCompanyAccount.getAccountNo());
+			assertEquals(Long.valueOf(0L), foundCompanyAccount.getCompanyId());
+			assertEquals("0193884222", foundCompanyAccount.getAccountNo());
 			assertEquals("Team Blue", foundCompanyAccount.getAccountName());
 			assertEquals(BigDecimal.valueOf(350.21), foundCompanyAccount.getBalance());
 
 			setSessionAltTenantUserToken("company-003", "Company C", 4L);
-			list = db.findAll(new CompanyAccountQuery().accountNo("0193884111"));
+			list = db.findAll(new CompanyAccountQuery().accountNo("0193884333"));
 			assertEquals(1, list.size());
 			foundCompanyAccount = list.get(0);
 			assertNotNull(foundCompanyAccount);
-			assertEquals(Long.valueOf(4L), foundCompanyAccount.getCompanyId());
-			assertEquals("0193884111", foundCompanyAccount.getAccountNo());
+			assertEquals(Long.valueOf(0L), foundCompanyAccount.getCompanyId());
+			assertEquals("0193884333", foundCompanyAccount.getAccountNo());
 			assertEquals("Team Red", foundCompanyAccount.getAccountName());
 			assertEquals(BigDecimal.valueOf(400.54), foundCompanyAccount.getBalance());
 		} catch (Exception e) {
@@ -251,7 +246,7 @@ public class DatabaseTenantTableEntityCRUDTest extends AbstractUnifyComponentTes
 	@Override
 	protected void doAddSettingsAndDependencies() throws Exception {
 		addContainerSetting(UnifyCorePropertyConstants.APPLICATION_QUERY_LIMIT, 8);
-		addContainerSetting(UnifyCorePropertyConstants.APPLICATION_TENANCY_ENABLED, "true");
+		addContainerSetting(UnifyCorePropertyConstants.APPLICATION_TENANCY_ENABLED, "false");
 	}
 
 	@Override

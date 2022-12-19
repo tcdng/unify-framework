@@ -940,6 +940,27 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	}
 
 	/**
+	 * Sets the alternate tenant user token for current session.
+	 * 
+	 * @param tenantCode the tenant code
+	 * @param tenantName the tenant name
+	 * @param tenantId   the tenant ID
+	 * @throws UnifyException if an error occurs
+	 */
+	protected void setAltTenantUserToken(String tenantCode, String tenantName, Long tenantId) throws UnifyException {
+		unifyComponentContext.getSessionContext().setAltTenantUserToken(tenantCode, tenantName, tenantId);
+	}
+	
+	/**
+	 * Clears alternate tenant user token for current session.
+	 * 
+	 * @throws UnifyException if an error occurs
+	 */
+	public void clearAltTenantUserToken() throws UnifyException {
+		unifyComponentContext.getSessionContext().clearAltTenantUserToken();
+	}
+
+	/**
 	 * Sets an attribute in current request.
 	 * 
 	 * @param name  the attribute name

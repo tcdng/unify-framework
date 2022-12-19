@@ -188,7 +188,11 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 	public Long getUserTenantId() throws UnifyException {
 		UserToken userToken = getUserToken();
 		Long tenantId = userToken != null ? getUserToken().getTenantId() : null;
-		return tenantId != null ? tenantId : Long.valueOf(0L);
+		if (tenantId == null) {
+			return Entity.BLANK_TENANT_ID;
+		}
+
+		return tenantId;
 	}
 
 	@Override
