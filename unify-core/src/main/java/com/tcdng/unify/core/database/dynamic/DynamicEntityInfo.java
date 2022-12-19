@@ -236,8 +236,8 @@ public class DynamicEntityInfo {
 			return this;
 		}
 
-		public Builder addTenantIdField(DynamicFieldType type, String columnName, String fieldName, String defaultVal,
-				int length, int precision, int scale, boolean nullable) throws UnifyException {
+		public Builder addTenantIdField(DynamicFieldType type, String columnName, String fieldName, int precision,
+				int scale) throws UnifyException {
 			checkFieldNameExist(fieldName);
 			if (withTenantIdField) {
 				throw new UnifyOperationException(getClass(), "Tenant ID field already exists");
@@ -245,7 +245,7 @@ public class DynamicEntityInfo {
 
 			withTenantIdField = true;
 			columnFields.put(fieldName, new DynamicColumnFieldInfo(type, DataType.LONG, columnName, fieldName, null,
-					defaultVal, length, precision, scale, nullable, false, true));
+					"0", 0, precision, scale, false, false, true));
 			return this;
 		}
 

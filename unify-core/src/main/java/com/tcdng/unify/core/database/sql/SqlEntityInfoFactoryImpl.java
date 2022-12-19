@@ -470,6 +470,13 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 								precision = ca.precision();
 								scale = ca.scale();
 							}
+
+							if (isTenantId) {
+								defaultVal = "0";
+								isNullable = false;
+								length = 0;
+								scale = 0;
+							}
 						}
 
 						// Process foreign key

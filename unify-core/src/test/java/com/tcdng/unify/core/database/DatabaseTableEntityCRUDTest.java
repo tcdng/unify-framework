@@ -145,6 +145,20 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
         }
     }
 
+    @Test(expected = Exception.class)
+    public void testUniqueConstraintViolation() throws Exception {
+        tm.beginTransaction();
+        try {
+            db.create(new Fruit("Apple", "red", 20.00));
+            db.create(new Fruit("Apple", "green", 20.00));
+        } catch (Exception e) {
+            tm.setRollback();
+            throw e;
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
     @Test
     public void testAggregateSingleListCriteria() throws Exception {
         tm.beginTransaction();
