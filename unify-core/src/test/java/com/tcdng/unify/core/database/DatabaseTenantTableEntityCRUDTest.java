@@ -50,7 +50,7 @@ public class DatabaseTenantTableEntityCRUDTest extends AbstractUnifyComponentTes
 			assertEquals(id, companyAccount.getId());
 
 			CompanyAccount createdCompanyAccount = db.find(CompanyAccount.class, id);
-			assertEquals(Entity.BLANK_TENANT_ID, createdCompanyAccount.getCompanyId());
+			assertEquals(Entity.SYSTEM_TENANT_ID, createdCompanyAccount.getCompanyId());
 			assertEquals(createdCompanyAccount, companyAccount);
 			assertFalse(createdCompanyAccount
 					.equals(new CompanyAccount("0193884776", "Team Gray", BigDecimal.valueOf(340.62))));
@@ -68,15 +68,15 @@ public class DatabaseTenantTableEntityCRUDTest extends AbstractUnifyComponentTes
 		try {
 			CompanyAccount companyAccount = new CompanyAccount("0193884777", "Team Green", BigDecimal.valueOf(340.62));
 			db.create(companyAccount);
-			assertEquals(Entity.BLANK_TENANT_ID, companyAccount.getCompanyId());
+			assertEquals(Entity.SYSTEM_TENANT_ID, companyAccount.getCompanyId());
 
 			companyAccount = new CompanyAccount("0193884222", "Team Red", BigDecimal.valueOf(340.62));
 			db.create(companyAccount);
-			assertEquals(Entity.BLANK_TENANT_ID, companyAccount.getCompanyId());
+			assertEquals(Entity.SYSTEM_TENANT_ID, companyAccount.getCompanyId());
 
 			companyAccount = new CompanyAccount("0193884444", "Team Blue", BigDecimal.valueOf(340.62));
 			db.create(companyAccount);
-			assertEquals(Entity.BLANK_TENANT_ID, companyAccount.getCompanyId());
+			assertEquals(Entity.SYSTEM_TENANT_ID, companyAccount.getCompanyId());
 		} catch (Exception e) {
 			tm.setRollback();
 			throw e;

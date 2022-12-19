@@ -190,7 +190,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 		UserToken userToken = getUserToken();
 		Long tenantId = userToken != null ? getUserToken().getTenantId() : null;
 		if (tenantId == null) {
-			return Entity.BLANK_TENANT_ID;
+			return Entity.SYSTEM_TENANT_ID;
 		}
 
 		return tenantId;
