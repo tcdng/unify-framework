@@ -1186,7 +1186,9 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 				}
 			}
 
-			setRecordTenantId(sqlEntityInfo, record);
+			// System should not manage tenant ID on updates. Changing a record's tenant ID
+			// should be explicitly performed by programmer
+			// setRecordTenantId(sqlEntityInfo, record);
 			sqlStatement = sqlDataSourceDialect.prepareUpdateByPkStatement(record);
 			result = getSqlStatementExecutor().executeUpdate(connection, sqlStatement);
 			if (result == 0) {
@@ -1232,7 +1234,9 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 					}
 				}
 
-				setRecordTenantId(sqlEntityInfo, record);
+				// System should not manage tenant ID on updates. Changing a record's tenant ID
+				// should be explicitly performed by programmer
+				// setRecordTenantId(sqlEntityInfo, record);
 				sqlStatement = sqlDataSourceDialect.prepareUpdateByPkVersionStatement(record, oldVersionNo);
 			} else {
 				if (entityPolicy != null) {
@@ -1243,7 +1247,9 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 					}
 				}
 
-				setRecordTenantId(sqlEntityInfo, record);
+				// System should not manage tenant ID on updates. Changing a record's tenant ID
+				// should be explicitly performed by programmer
+				// setRecordTenantId(sqlEntityInfo, record);
 				sqlStatement = sqlDataSourceDialect.prepareUpdateByPkStatement(record);
 			}
 
