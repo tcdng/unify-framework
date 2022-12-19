@@ -196,6 +196,54 @@ public class DatabaseTenantTableEntityCRUDTest extends AbstractUnifyComponentTes
 	}
 
 	@Test
+	public void testFindTenantRecordMultipleTenantsIgnoreTenancy() throws Exception {
+		tm.beginTransaction();
+		try {
+			setSessionAltTenantUserToken("company-001", "Company A", 2L);
+			CompanyAccount companyAccount = new CompanyAccount("0193884111", "Team Green", BigDecimal.valueOf(340.62));
+			db.create(companyAccount);
+
+			setSessionAltTenantUserToken("company-002", "Company B", 3L);
+			companyAccount = new CompanyAccount("0193884111", "Team Blue", BigDecimal.valueOf(350.21));
+			db.create(companyAccount);
+
+			setSessionAltTenantUserToken("company-003", "Company C", 4L);
+			companyAccount = new CompanyAccount("0193884111", "Team Red", BigDecimal.valueOf(400.54));
+			db.create(companyAccount);
+
+			setSessionAltTenantUserToken("company-001", "Company A", 2L);
+			List<CompanyAccount> list = db.findAll(
+					new CompanyAccountQuery().accountNo("0193884111").ignoreTenancy(true).addOrder("companyId"));
+			assertEquals(3, list.size());
+			CompanyAccount foundCompanyAccount = list.get(0);
+			assertNotNull(foundCompanyAccount);
+			assertEquals(Long.valueOf(2L), foundCompanyAccount.getCompanyId());
+			assertEquals("0193884111", foundCompanyAccount.getAccountNo());
+			assertEquals("Team Green", foundCompanyAccount.getAccountName());
+			assertEquals(BigDecimal.valueOf(340.62), foundCompanyAccount.getBalance());
+
+			foundCompanyAccount = list.get(1);
+			assertNotNull(foundCompanyAccount);
+			assertEquals(Long.valueOf(3L), foundCompanyAccount.getCompanyId());
+			assertEquals("0193884111", foundCompanyAccount.getAccountNo());
+			assertEquals("Team Blue", foundCompanyAccount.getAccountName());
+			assertEquals(BigDecimal.valueOf(350.21), foundCompanyAccount.getBalance());
+
+			foundCompanyAccount = list.get(2);
+			assertNotNull(foundCompanyAccount);
+			assertEquals(Long.valueOf(4L), foundCompanyAccount.getCompanyId());
+			assertEquals("0193884111", foundCompanyAccount.getAccountNo());
+			assertEquals("Team Red", foundCompanyAccount.getAccountName());
+			assertEquals(BigDecimal.valueOf(400.54), foundCompanyAccount.getBalance());
+		} catch (Exception e) {
+			tm.setRollback();
+			throw e;
+		} finally {
+			tm.endTransaction();
+		}
+	}
+
+	@Test
 	public void testFindAllTenantRecordMultipleTenants() throws Exception {
 		tm.beginTransaction();
 		try {

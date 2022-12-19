@@ -1806,7 +1806,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 	private Restriction resolveRestriction(SqlEntityInfo sqlEntityInfo, Query<? extends Entity> query)
 			throws UnifyException {
 		Restriction restriction = query.getRestrictions();
-		if (tenancyEnabled && sqlEntityInfo.isWithTenantId() && !query.isIgnoreTenantId()) {
+		if (tenancyEnabled && sqlEntityInfo.isWithTenantId() && !query.isIgnoreTenancy()) {
 			UserToken userToken = getUserToken();
 			if (userToken != null && userToken.isWithTenantId()) {
 				restriction = new And().add(restriction)
