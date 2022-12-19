@@ -106,6 +106,7 @@ import com.tcdng.unify.core.database.sql.data.policy.TimestampPolicy;
 import com.tcdng.unify.core.database.sql.data.policy.TimestampUTCPolicy;
 import com.tcdng.unify.core.transform.Transformer;
 import com.tcdng.unify.core.util.DataUtils;
+import com.tcdng.unify.core.util.QueryUtils;
 import com.tcdng.unify.core.util.SqlUtils;
 
 /**
@@ -1163,6 +1164,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
 			boolean appendSym = false;
 			if (select != null && !select.isEmpty()) {
+				QueryUtils.setEssentialSelectFields(sqlEntityInfo, select);
 				returnFieldInfoList = new ArrayList<SqlFieldInfo>();
 				if (sqlEntityInfo.isViewOnly()) {
 					for (String name : select.values()) {
@@ -1277,6 +1279,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
 			boolean appendSym = false;
 			if (!select.isEmpty()) {
+				QueryUtils.setEssentialSelectFields(sqlEntityInfo, select);
 				returnFieldInfoList = new ArrayList<SqlFieldInfo>();
 				for (String name : select.values()) {
 					if (!sqlEntityInfo.isChildFieldInfo(name)) {
@@ -1342,6 +1345,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
 			appendLimitOffsetInfixClause(listSql, query);
 
+			QueryUtils.setEssentialSelectFields(sqlEntityInfo, select);
 			StringBuilder fieldsSql = new StringBuilder();
 			for (String name : select.values()) {
 				SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(name);

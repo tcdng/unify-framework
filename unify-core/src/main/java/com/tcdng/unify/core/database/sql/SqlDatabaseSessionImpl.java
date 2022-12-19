@@ -319,7 +319,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
 		Select select = query.getSelect();
 		try {
-			query.setSelect(new Select(fieldName).setDistinct(select != null && select.isDistinct()));
+			query.setSelect(new Select(fieldName).setDistinct(true));
 			return getSqlStatementExecutor().executeMultipleObjectListResultQuery(connection, fieldClass,
 					sqlDataSourceDialect.getSqlTypePolicy(sqlEntityInfo.getListFieldInfo(fieldName).getColumnType()),
 					sqlDataSourceDialect.prepareListStatement(query));
@@ -359,7 +359,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
 		Select select = query.getSelect();
 		try {
-			query.setSelect(new Select(keyName, valueName));
+			query.setSelect(new Select(keyName, valueName).setDistinct(true));
 			return getSqlStatementExecutor().executeMultipleObjectMapResultQuery(connection, keyClass, keyName,
 					valueClass, valueName, sqlDataSourceDialect.prepareListStatement(query));
 		} finally {
@@ -378,7 +378,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
 		Select select = query.getSelect();
 		try {
-			query.setSelect(new Select(keyName, valueName));
+			query.setSelect(new Select(keyName, valueName).setDistinct(true));
 			return getSqlStatementExecutor().executeMultipleObjectListMapResultQuery(connection, keyClass, keyName,
 					valueClass, valueName, sqlDataSourceDialect.prepareListStatement(query));
 		} finally {
@@ -396,7 +396,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
 		Select select = query.getSelect();
 		try {
-			query.setSelect(new Select(fieldName));
+			query.setSelect(new Select(fieldName).setDistinct(true));
 			return getSqlStatementExecutor().executeSingleObjectResultQuery(connection, fieldClass,
 					sqlDataSourceDialect.getSqlTypePolicy(sqlEntityInfo.getListFieldInfo(fieldName).getColumnType()),
 					sqlDataSourceDialect.prepareListStatement(query), MustMatch.fromBoolean(query.isMustMatch()));

@@ -17,6 +17,9 @@ package com.tcdng.unify.core.util;
 
 import java.util.List;
 
+import com.tcdng.unify.core.criterion.Select;
+import com.tcdng.unify.core.database.sql.SqlEntityInfo;
+
 /**
  * Provides utility methods for queries.
  * 
@@ -28,7 +31,7 @@ public final class QueryUtils {
     private QueryUtils() {
 
     }
-
+    
     /**
      * Tests if supplied string is not null and is not blank.
      * 
@@ -90,4 +93,17 @@ public final class QueryUtils {
     public static boolean isReserved(Long value) {
         return value <= 0L;
     }
+
+	public static void setEssentialSelectFields(SqlEntityInfo sqlEntityInfo, Select select) {
+		if (!select.isDistinct()) {
+			select.add(sqlEntityInfo.getIdFieldInfo().getName());
+			if (sqlEntityInfo.isVersioned()) {
+				select.add(sqlEntityInfo.getVersionFieldInfo().getName());
+			}
+		}
+
+		if (sqlEntityInfo.isWithTenantId()) {
+			select.add(sqlEntityInfo.getTenantIdFieldInfo().getName());
+		}
+	}
 }
