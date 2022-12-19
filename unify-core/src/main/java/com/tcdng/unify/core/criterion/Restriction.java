@@ -26,8 +26,6 @@ import java.util.Set;
  * @since 1.0
  */
 public interface Restriction {
-
-	final static Restriction ID_NULL = new IsNull("id");
 	
 	/**
 	 * Swaps the fields in this restriction.

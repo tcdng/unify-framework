@@ -26,7 +26,7 @@ import com.tcdng.unify.core.data.Listable;
  */
 public interface Entity extends Listable, Describable {
 
-	static final Long SYSTEM_TENANT_ID = 0L;
+	static final Long PRIMARY_TENANT_ID = 0L;
 	
     Object getId();
     

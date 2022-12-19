@@ -1511,7 +1511,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 	private void setRecordTenantId(SqlEntityInfo sqlEntityInfo, Entity record) throws UnifyException {
 		if (sqlEntityInfo.isWithTenantId()) {
 			final Long tenantId = sqlDataSourceDialect.isTenancyEnabled() ? sqlDataSourceDialect.getUserTenantId()
-					: Entity.SYSTEM_TENANT_ID;
+					: Entity.PRIMARY_TENANT_ID;
 			DataUtils.setBeanProperty(record, sqlEntityInfo.getTenantIdFieldInfo().getName(), tenantId);
 		}
 	}
