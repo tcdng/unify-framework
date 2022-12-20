@@ -129,6 +129,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("list", "f03a");
         registerSymbol("lock", "f023");
         registerSymbol("logs", "f46d");
+        registerSymbol("man", "f183");
         registerSymbol("magic", "f0d0");
         registerSymbol("mail", "f0e0");
         registerSymbol("mail-bulk", "f674");
@@ -173,6 +174,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("vector-square", "f5cb");
         registerSymbol("window-maximize", "f2d0");
         registerSymbol("window-restore", "f2d2");
+        registerSymbol("woman", "f182");
     }
 
 }
