@@ -15,6 +15,7 @@
  */
 package com.tcdng.unify.core;
 
+import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.util.StringUtils;
 
 /**
@@ -172,6 +173,10 @@ public class UserToken {
 
 	public boolean isWithTenantId() {
 		return tenantId != null;
+	}
+
+	public boolean isPrimaryTenant() {
+		return tenantId == null || Entity.PRIMARY_TENANT_ID.equals(tenantId);
 	}
 
 	public static Builder newBuilder() {
