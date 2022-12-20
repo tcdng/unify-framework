@@ -1300,6 +1300,10 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 		return exception.getMessage();
 	}
 
+	protected boolean isTenancyEnabled() throws UnifyException {
+		return getContainerSetting(boolean.class, UnifyCorePropertyConstants.APPLICATION_TENANCY_ENABLED);
+	}
+	
 	protected String getPrintableStackTraceWithMessageHeader(LocaleType localeType, Throwable exception)
 			throws UnifyException {
 		String header = getExceptionMessage(localeType, exception);
