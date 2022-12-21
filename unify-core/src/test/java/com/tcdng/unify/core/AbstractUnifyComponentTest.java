@@ -90,9 +90,9 @@ public abstract class AbstractUnifyComponentTest {
         onTearDown();
     }
 
-	protected void setSessionAltTenantUserToken(Long tenantId) throws Exception {
+	protected void setSessionUserTokenTenantId(Long tenantId) throws Exception {
 		((RequestContextManager) getComponent(ApplicationComponents.APPLICATION_REQUESTCONTEXTMANAGER))
-				.getRequestContext().getSessionContext().setAltTenantUserToken(tenantId);
+				.getRequestContext().getSessionContext().setUserTokenTenantId(tenantId);
 	}
 	
     /**

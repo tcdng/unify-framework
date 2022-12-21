@@ -58,25 +58,6 @@ public class UserToken {
 
 	private boolean remote;
 
-	public UserToken(UserToken userToken, Long tenantId) {
-		if (userToken != null) {
-			this.userLoginId = userToken.userLoginId;
-			this.userName = userToken.userName;
-			this.zoneCode = userToken.zoneCode;
-			this.branchCode = userToken.branchCode;
-			this.colorScheme = userToken.colorScheme;
-			this.ipAddress = userToken.ipAddress;
-			this.globalAccess = userToken.globalAccess;
-			this.reservedUser = userToken.reservedUser;
-			this.allowMultipleLogin = userToken.allowMultipleLogin;
-			this.remote = userToken.remote;
-			this.tenantCode = userToken.tenantCode;
-			this.tenantName = userToken.tenantName;
-		}
-
-		this.tenantId = tenantId;
-	}
-
 	private UserToken(String userLoginId, String userName, String ipAddress, String branchCode, String zoneCode,
 			String tenantCode, String tenantName, String colorScheme, Long tenantId, boolean globalAccess,
 			boolean reservedUser, boolean allowMultipleLogin, boolean remote) {
@@ -121,6 +102,10 @@ public class UserToken {
 
 	public String getColorScheme() {
 		return colorScheme;
+	}
+
+	public void setTenantId(Long tenantId) {
+		this.tenantId = tenantId;
 	}
 
 	public Long getTenantId() {

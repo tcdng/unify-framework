@@ -37,8 +37,6 @@ public class SessionContext extends Context {
 
 	private UserToken userToken;
 
-	private UserToken altTenantUserToken;
-
 	private Locale locale;
 
 	private TimeZone timeZone;
@@ -91,16 +89,12 @@ public class SessionContext extends Context {
 		return val;
 	}
 
-	public void setAltTenantUserToken(Long tenantId) {
-		altTenantUserToken = new UserToken(userToken, tenantId);
-	}
-	
-	public void clearAltTenantUserToken() {
-		altTenantUserToken = null;
+	public void setUserTokenTenantId(Long tenantId) {
+		userToken.setTenantId(tenantId);;
 	}
 	
 	public UserToken getUserToken() {
-		return altTenantUserToken != null  ? altTenantUserToken : userToken;
+		return userToken;
 	}
 
 	public void setUserToken(UserToken userToken) {
