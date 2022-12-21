@@ -58,6 +58,10 @@ public class UserToken {
 
 	private boolean remote;
 
+	public UserToken(Long tenantId) {
+		this.tenantId = tenantId;
+	}
+	
 	private UserToken(String userLoginId, String userName, String ipAddress, String branchCode, String zoneCode,
 			String tenantCode, String tenantName, String colorScheme, Long tenantId, boolean globalAccess,
 			boolean reservedUser, boolean allowMultipleLogin, boolean remote) {

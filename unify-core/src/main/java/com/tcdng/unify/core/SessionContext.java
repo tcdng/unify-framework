@@ -90,7 +90,11 @@ public class SessionContext extends Context {
 	}
 
 	public void setUserTokenTenantId(Long tenantId) {
-		userToken.setTenantId(tenantId);;
+		if (userToken == null) {
+			userToken = new UserToken(tenantId);
+		} else {
+			userToken.setTenantId(tenantId);;
+		}
 	}
 	
 	public UserToken getUserToken() {
