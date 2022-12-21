@@ -58,7 +58,7 @@ public class UserToken {
 
 	private boolean remote;
 
-	public UserToken(UserToken userToken, String tenantCode, String tenantName, Long tenantId) {
+	public UserToken(UserToken userToken, Long tenantId) {
 		if (userToken != null) {
 			this.userLoginId = userToken.userLoginId;
 			this.userName = userToken.userName;
@@ -70,10 +70,10 @@ public class UserToken {
 			this.reservedUser = userToken.reservedUser;
 			this.allowMultipleLogin = userToken.allowMultipleLogin;
 			this.remote = userToken.remote;
+			this.tenantCode = userToken.tenantCode;
+			this.tenantName = userToken.tenantName;
 		}
 
-		this.tenantCode = tenantCode;
-		this.tenantName = tenantName;
 		this.tenantId = tenantId;
 	}
 

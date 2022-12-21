@@ -107,12 +107,12 @@ public class DatabaseTenantDisabledTableEntityCRUDTest extends AbstractUnifyComp
 	public void testCreateTenantRecordMultipleTenants() throws Exception {
 		tm.beginTransaction();
 		try {
-			setSessionAltTenantUserToken("company-001", "Company A", 2L);
+			setSessionAltTenantUserToken(2L);
 			CompanyAccount companyAccount = new CompanyAccount("0193884777", "Team Green", BigDecimal.valueOf(340.62));
 			db.create(companyAccount);
 			assertEquals(Long.valueOf(0L), companyAccount.getCompanyId());
 
-			setSessionAltTenantUserToken("company-002", "Company B", 3L);
+			setSessionAltTenantUserToken(3L);
 			companyAccount = new CompanyAccount("0193884777", "Team Green", BigDecimal.valueOf(340.62));
 			db.create(companyAccount);
 			assertEquals(Long.valueOf(3L), companyAccount.getCompanyId());
@@ -128,7 +128,7 @@ public class DatabaseTenantDisabledTableEntityCRUDTest extends AbstractUnifyComp
 	public void testCreateTenantRecordUniqueViolationSingleTenant() throws Exception {
 		tm.beginTransaction();
 		try {
-			setSessionAltTenantUserToken("company-001", "Company A", 2L);
+			setSessionAltTenantUserToken(2L);
 			CompanyAccount companyAccount = new CompanyAccount("0193884777", "Team Green", BigDecimal.valueOf(340.62));
 			db.create(companyAccount);
 			assertEquals(Long.valueOf(0L), companyAccount.getCompanyId());
@@ -147,19 +147,19 @@ public class DatabaseTenantDisabledTableEntityCRUDTest extends AbstractUnifyComp
 	public void testFindTenantRecordMultipleTenants() throws Exception {
 		tm.beginTransaction();
 		try {
-			setSessionAltTenantUserToken("company-001", "Company A", 2L);
+			setSessionAltTenantUserToken(2L);
 			CompanyAccount companyAccount = new CompanyAccount("0193884111", "Team Green", BigDecimal.valueOf(340.62));
 			db.create(companyAccount);
 
-			setSessionAltTenantUserToken("company-002", "Company B", 3L);
+			setSessionAltTenantUserToken(3L);
 			companyAccount = new CompanyAccount("0193884222", "Team Blue", BigDecimal.valueOf(350.21));
 			db.create(companyAccount);
 
-			setSessionAltTenantUserToken("company-003", "Company C", 4L);
+			setSessionAltTenantUserToken(4L);
 			companyAccount = new CompanyAccount("0193884333", "Team Red", BigDecimal.valueOf(400.54));
 			db.create(companyAccount);
 
-			setSessionAltTenantUserToken("company-001", "Company A", 2L);
+			setSessionAltTenantUserToken(2L);
 			CompanyAccount foundCompanyAccount = db.find(new CompanyAccountQuery().accountNo("0193884111"));
 			assertNotNull(foundCompanyAccount);
 			assertEquals(Long.valueOf(0L), foundCompanyAccount.getCompanyId());
@@ -167,7 +167,7 @@ public class DatabaseTenantDisabledTableEntityCRUDTest extends AbstractUnifyComp
 			assertEquals("Team Green", foundCompanyAccount.getAccountName());
 			assertEquals(BigDecimal.valueOf(340.62), foundCompanyAccount.getBalance());
 
-			setSessionAltTenantUserToken("company-002", "Company B", 3L);
+			setSessionAltTenantUserToken(3L);
 			foundCompanyAccount = db.find(new CompanyAccountQuery().accountNo("0193884222"));
 			assertNotNull(foundCompanyAccount);
 			assertEquals(Long.valueOf(0L), foundCompanyAccount.getCompanyId());
@@ -175,7 +175,7 @@ public class DatabaseTenantDisabledTableEntityCRUDTest extends AbstractUnifyComp
 			assertEquals("Team Blue", foundCompanyAccount.getAccountName());
 			assertEquals(BigDecimal.valueOf(350.21), foundCompanyAccount.getBalance());
 
-			setSessionAltTenantUserToken("company-003", "Company C", 4L);
+			setSessionAltTenantUserToken(4L);
 			foundCompanyAccount = db.find(new CompanyAccountQuery().accountNo("0193884333"));
 			assertNotNull(foundCompanyAccount);
 			assertEquals(Long.valueOf(0L), foundCompanyAccount.getCompanyId());
@@ -194,19 +194,19 @@ public class DatabaseTenantDisabledTableEntityCRUDTest extends AbstractUnifyComp
 	public void testFindAllTenantRecordMultipleTenants() throws Exception {
 		tm.beginTransaction();
 		try {
-			setSessionAltTenantUserToken("company-001", "Company A", 2L);
+			setSessionAltTenantUserToken(2L);
 			CompanyAccount companyAccount = new CompanyAccount("0193884111", "Team Green", BigDecimal.valueOf(340.62));
 			db.create(companyAccount);
 
-			setSessionAltTenantUserToken("company-002", "Company B", 3L);
+			setSessionAltTenantUserToken(3L);
 			companyAccount = new CompanyAccount("0193884222", "Team Blue", BigDecimal.valueOf(350.21));
 			db.create(companyAccount);
 
-			setSessionAltTenantUserToken("company-003", "Company C", 4L);
+			setSessionAltTenantUserToken(4L);
 			companyAccount = new CompanyAccount("0193884333", "Team Red", BigDecimal.valueOf(400.54));
 			db.create(companyAccount);
 
-			setSessionAltTenantUserToken("company-001", "Company A", 2L);
+			setSessionAltTenantUserToken(2L);
 			List<CompanyAccount> list = db.findAll(new CompanyAccountQuery().accountNo("0193884111"));
 			assertEquals(1, list.size());
 			CompanyAccount foundCompanyAccount = list.get(0);
@@ -216,7 +216,7 @@ public class DatabaseTenantDisabledTableEntityCRUDTest extends AbstractUnifyComp
 			assertEquals("Team Green", foundCompanyAccount.getAccountName());
 			assertEquals(BigDecimal.valueOf(340.62), foundCompanyAccount.getBalance());
 
-			setSessionAltTenantUserToken("company-002", "Company B", 3L);
+			setSessionAltTenantUserToken(3L);
 			list = db.findAll(new CompanyAccountQuery().accountNo("0193884222"));
 			assertEquals(1, list.size());
 			foundCompanyAccount = list.get(0);
@@ -226,7 +226,7 @@ public class DatabaseTenantDisabledTableEntityCRUDTest extends AbstractUnifyComp
 			assertEquals("Team Blue", foundCompanyAccount.getAccountName());
 			assertEquals(BigDecimal.valueOf(350.21), foundCompanyAccount.getBalance());
 
-			setSessionAltTenantUserToken("company-003", "Company C", 4L);
+			setSessionAltTenantUserToken(4L);
 			list = db.findAll(new CompanyAccountQuery().accountNo("0193884333"));
 			assertEquals(1, list.size());
 			foundCompanyAccount = list.get(0);

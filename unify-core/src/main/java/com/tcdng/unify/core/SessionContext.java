@@ -91,8 +91,8 @@ public class SessionContext extends Context {
 		return val;
 	}
 
-	public void setAltTenantUserToken(String tenantCode, String tenantName, Long tenantId) {
-		altTenantUserToken = new UserToken(userToken, tenantCode, tenantName, tenantId);
+	public void setAltTenantUserToken(Long tenantId) {
+		altTenantUserToken = new UserToken(userToken, tenantId);
 	}
 	
 	public void clearAltTenantUserToken() {
