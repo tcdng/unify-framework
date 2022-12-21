@@ -15,6 +15,7 @@
  */
 package com.tcdng.unify.core;
 
+import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.util.StringUtils;
 
 /**
@@ -25,213 +26,257 @@ import com.tcdng.unify.core.util.StringUtils;
  */
 public class UserToken {
 
-    private String userLoginId;
+	private String userLoginId;
 
-    private String userName;
+	private String userName;
 
-    private String roleCode;
+	private String roleCode;
 
-    private String branchCode;
+	private String branchCode;
 
-    private String tenantCode;
+	private String tenantCode;
 
-    private String colorScheme;
+	private String tenantName;
 
-    private String ipAddress;
+	private String colorScheme;
 
-    private String departmentCode;
+	private String ipAddress;
 
-    private String themePath;
+	private String departmentCode;
 
-    private String zoneCode;
+	private String themePath;
 
-    private boolean globalAccess;
+	private String zoneCode;
 
-    private boolean reservedUser;
+	private Long tenantId;
 
-    private boolean allowMultipleLogin;
+	private boolean globalAccess;
 
-    private boolean remote;
+	private boolean reservedUser;
 
-    private UserToken(String userLoginId, String userName, String ipAddress, String branchCode, String zoneCode,
-            String tenantCode, String colorScheme, boolean globalAccess, boolean reservedUser,
-            boolean allowMultipleLogin, boolean remote) {
-        this.userLoginId = userLoginId;
-        this.userName = userName;
-        this.zoneCode = zoneCode;
-        this.branchCode = branchCode;
-        this.tenantCode = tenantCode;
-        this.colorScheme = colorScheme;
-        this.ipAddress = ipAddress;
-        this.globalAccess = globalAccess;
-        this.reservedUser = reservedUser;
-        this.allowMultipleLogin = allowMultipleLogin;
-        this.remote = remote;
-    }
+	private boolean allowMultipleLogin;
 
-    public String getUserLoginId() {
-        return userLoginId;
-    }
+	private boolean remote;
 
-    public String getUserName() {
-        return userName;
-    }
+	public UserToken(Long tenantId) {
+		this.tenantId = tenantId;
+	}
+	
+	private UserToken(String userLoginId, String userName, String ipAddress, String branchCode, String zoneCode,
+			String tenantCode, String tenantName, String colorScheme, Long tenantId, boolean globalAccess,
+			boolean reservedUser, boolean allowMultipleLogin, boolean remote) {
+		this.userLoginId = userLoginId;
+		this.userName = userName;
+		this.zoneCode = zoneCode;
+		this.branchCode = branchCode;
+		this.tenantCode = tenantCode;
+		this.tenantName = tenantName;
+		this.colorScheme = colorScheme;
+		this.ipAddress = ipAddress;
+		this.tenantId = tenantId;
+		this.globalAccess = globalAccess;
+		this.reservedUser = reservedUser;
+		this.allowMultipleLogin = allowMultipleLogin;
+		this.remote = remote;
+	}
 
-    public String getBranchCode() {
-        return branchCode;
-    }
+	public String getUserLoginId() {
+		return userLoginId;
+	}
 
-    public String getTenantCode() {
-        return tenantCode;
-    }
+	public String getUserName() {
+		return userName;
+	}
 
-    public String getZoneCode() {
-        return zoneCode;
-    }
+	public String getBranchCode() {
+		return branchCode;
+	}
 
-    public String getColorScheme() {
-        return colorScheme;
-    }
+	public String getTenantCode() {
+		return tenantCode;
+	}
 
-    public String getIpAddress() {
-        return ipAddress;
-    }
+	public String getTenantName() {
+		return tenantName;
+	}
 
-    public String getDepartmentCode() {
-        return departmentCode;
-    }
+	public String getZoneCode() {
+		return zoneCode;
+	}
 
-    public void setDepartmentCode(String departmentCode) {
-        this.departmentCode = departmentCode;
-    }
+	public String getColorScheme() {
+		return colorScheme;
+	}
 
-    public String getRoleCode() {
-        return roleCode;
-    }
+	public void setTenantId(Long tenantId) {
+		this.tenantId = tenantId;
+	}
 
-    public void setRoleCode(String roleCode) {
-        this.roleCode = roleCode;
-    }
+	public Long getTenantId() {
+		return tenantId;
+	}
 
-    public String getThemePath() {
-        return themePath;
-    }
+	public String getIpAddress() {
+		return ipAddress;
+	}
 
-    public void setThemePath(String themePath) {
-        this.themePath = themePath;
-    }
+	public String getDepartmentCode() {
+		return departmentCode;
+	}
 
-    public boolean isGlobalAccess() {
-        return globalAccess;
-    }
+	public void setDepartmentCode(String departmentCode) {
+		this.departmentCode = departmentCode;
+	}
 
-    public boolean isReservedUser() {
-        return reservedUser;
-    }
+	public String getRoleCode() {
+		return roleCode;
+	}
 
-    public boolean isAllowMultipleLogin() {
-        return allowMultipleLogin;
-    }
+	public void setRoleCode(String roleCode) {
+		this.roleCode = roleCode;
+	}
 
-    public boolean isRemote() {
-        return remote;
-    }
+	public String getThemePath() {
+		return themePath;
+	}
 
-    public static Builder newBuilder() {
-        return new Builder();
-    }
+	public void setThemePath(String themePath) {
+		this.themePath = themePath;
+	}
 
-    public static class Builder {
+	public boolean isGlobalAccess() {
+		return globalAccess;
+	}
 
-        private String userLoginId;
+	public boolean isReservedUser() {
+		return reservedUser;
+	}
 
-        private String userName;
+	public boolean isAllowMultipleLogin() {
+		return allowMultipleLogin;
+	}
 
-        private String branchCode;
+	public boolean isRemote() {
+		return remote;
+	}
 
-        private String tenantCode;
+	public boolean isWithTenantId() {
+		return tenantId != null;
+	}
 
-        private String colorScheme;
+	public boolean isPrimaryTenant() {
+		return tenantId == null || Entity.PRIMARY_TENANT_ID.equals(tenantId);
+	}
 
-        private String ipAddress;
+	public static Builder newBuilder() {
+		return new Builder();
+	}
 
-        private String zoneCode;
+	public static class Builder {
 
-        private boolean globalAccess;
+		private String userLoginId;
 
-        private boolean reservedUser;
+		private String userName;
 
-        private boolean allowMultipleLogin;
+		private String branchCode;
 
-        private boolean remote;
+		private String tenantCode;
 
-        private Builder() {
+		private String tenantName;
 
-        }
+		private String colorScheme;
 
-        public Builder userLoginId(String userLoginId) {
-            this.userLoginId = userLoginId;
-            return this;
-        }
+		private String ipAddress;
 
-        public Builder userName(String userName) {
-            this.userName = userName;
-            return this;
-        }
+		private String zoneCode;
 
-        public Builder branchCode(String branchCode) {
-            this.branchCode = branchCode;
-            return this;
-        }
+		private Long tenantId;
 
-        public Builder tenantCode(String tenantCode) {
-            this.tenantCode = tenantCode;
-            return this;
-        }
+		private boolean globalAccess;
 
-        public Builder colorScheme(String colorScheme) {
-            this.colorScheme = colorScheme;
-            return this;
-        }
+		private boolean reservedUser;
 
-        public Builder ipAddress(String ipAddress) {
-            this.ipAddress = ipAddress;
-            return this;
-        }
+		private boolean allowMultipleLogin;
 
-        public Builder zoneCode(String zoneCode) {
-            this.zoneCode = zoneCode;
-            return this;
-        }
+		private boolean remote;
 
-        public Builder globalAccess(boolean globalAccess) {
-            this.globalAccess = globalAccess;
-            return this;
-        }
+		private Builder() {
 
-        public Builder reservedUser(boolean reservedUser) {
-            this.reservedUser = reservedUser;
-            return this;
-        }
+		}
 
-        public Builder allowMultipleLogin(boolean allowMultipleLogin) {
-            this.allowMultipleLogin = allowMultipleLogin;
-            return this;
-        }
+		public Builder userLoginId(String userLoginId) {
+			this.userLoginId = userLoginId;
+			return this;
+		}
 
-        public Builder remote(boolean remote) {
-            this.remote = remote;
-            return this;
-        }
+		public Builder userName(String userName) {
+			this.userName = userName;
+			return this;
+		}
 
-        public UserToken build() {
-            if (StringUtils.isBlank(userLoginId)) {
-                throw new RuntimeException("Login ID is required!");
-            }
+		public Builder branchCode(String branchCode) {
+			this.branchCode = branchCode;
+			return this;
+		}
 
-            return new UserToken(userLoginId, userName, ipAddress, branchCode, zoneCode, tenantCode, colorScheme,
-                    globalAccess, reservedUser, allowMultipleLogin, remote);
-        }
-    }
+		public Builder tenantCode(String tenantCode) {
+			this.tenantCode = tenantCode;
+			return this;
+		}
+
+		public Builder tenantName(String tenantName) {
+			this.tenantName = tenantName;
+			return this;
+		}
+
+		public Builder colorScheme(String colorScheme) {
+			this.colorScheme = colorScheme;
+			return this;
+		}
+
+		public Builder ipAddress(String ipAddress) {
+			this.ipAddress = ipAddress;
+			return this;
+		}
+
+		public Builder zoneCode(String zoneCode) {
+			this.zoneCode = zoneCode;
+			return this;
+		}
+
+		public Builder globalAccess(boolean globalAccess) {
+			this.globalAccess = globalAccess;
+			return this;
+		}
+
+		public Builder reservedUser(boolean reservedUser) {
+			this.reservedUser = reservedUser;
+			return this;
+		}
+
+		public Builder allowMultipleLogin(boolean allowMultipleLogin) {
+			this.allowMultipleLogin = allowMultipleLogin;
+			return this;
+		}
+
+		public Builder remote(boolean remote) {
+			this.remote = remote;
+			return this;
+		}
+
+		public Builder tenantId(Long tenantId) {
+			this.tenantId = tenantId;
+			return this;
+		}
+
+		public UserToken build() {
+			if (StringUtils.isBlank(userLoginId)) {
+				throw new RuntimeException("Login ID is required!");
+			}
+
+			return new UserToken(userLoginId, userName, ipAddress, branchCode, zoneCode, tenantCode, tenantName,
+					colorScheme, tenantId, globalAccess, reservedUser, allowMultipleLogin, remote);
+		}
+	}
 
 }

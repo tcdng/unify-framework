@@ -31,303 +31,312 @@ import com.tcdng.unify.core.util.StringUtils;
  */
 public class SqlFieldInfo implements SqlFieldSchemaInfo {
 
-    private Long marker;
+	private Long marker;
 
-    private ColumnType columnType;
+	private ColumnType columnType;
 
-    private SqlEntityInfo foreignEntityInfo;
+	private SqlEntityInfo foreignEntityInfo;
 
-    private SqlFieldInfo foreignFieldInfo;
+	private SqlFieldInfo foreignFieldInfo;
 
-    private SqlFieldInfo foreignKeyFieldInfo;
+	private SqlFieldInfo foreignKeyFieldInfo;
 
-    private String name;
+	private String name;
 
-    private String columnName;
+	private String columnName;
 
-    private String preferredColumnName;
+	private String preferredColumnName;
 
-    private String constraintName;
+	private String constraintName;
 
-    private String defaultVal;
+	private String defaultVal;
 
-    private String foreignEntityPreferredAlias;
+	private String foreignEntityPreferredAlias;
 
-    private Transformer<?, ?> transformer;
+	private Transformer<?, ?> transformer;
 
-    private boolean primaryKey;
+	private boolean primaryKey;
 
-    private boolean foreignKey;
+	private boolean foreignKey;
 
-    private boolean ignoreFkConstraint;
+	private boolean ignoreFkConstraint;
 
-    private boolean listOnly;
+	private boolean listOnly;
 
-    private boolean nullable;
-    
-    private boolean fosterParentType;
-    
-    private boolean fosterParentId;
-    
-    private boolean categoryColumn;
+	private boolean nullable;
 
-    private SqlFieldDimensions sqlFieldDimensions;
+	private boolean fosterParentType;
 
-    private Field field;
+	private boolean fosterParentId;
 
-    private Method getter;
+	private boolean categoryColumn;
 
-    private Method setter;
+	private boolean tenantId;
+	
+	private SqlFieldDimensions sqlFieldDimensions;
 
-    private int orderIndex;
+	private Field field;
 
-    public SqlFieldInfo(int orderIndex, ColumnType columnType, SqlEntityInfo foreignSqlEntityInfo,
-            SqlFieldInfo foreignSqlFieldInfo, SqlFieldInfo foreignKeySqlFieldInfo, String name, String columnName,
-            String preferredColumnName, String constraintName, String foreignEntityPreferredAlias, boolean primaryKey,
-            boolean foreignKey, boolean listOnly, boolean ignoreFkConstraint, Transformer<?, ?> transformer,
-            SqlFieldDimensions sqlFieldDimensions, boolean nullable, boolean fosterParentType, boolean fosterParentId,
-            boolean categoryColumn, String defaultVal, Field field, Method getter, Method setter,
-            boolean isAllObjectsInLowerCase) {
-        this(null, orderIndex, columnType, foreignSqlEntityInfo, foreignSqlFieldInfo, foreignKeySqlFieldInfo, name,
-                columnName, preferredColumnName, constraintName, foreignEntityPreferredAlias, primaryKey, foreignKey,
-                listOnly, ignoreFkConstraint, transformer, sqlFieldDimensions, nullable, fosterParentType,
-                fosterParentId, categoryColumn, defaultVal, field, getter, setter, isAllObjectsInLowerCase);
-    }
+	private Method getter;
 
-    public SqlFieldInfo(Long marker, int orderIndex, ColumnType columnType, SqlEntityInfo foreignSqlEntityInfo,
-            SqlFieldInfo foreignSqlFieldInfo, SqlFieldInfo foreignKeySqlFieldInfo, String name, String columnName,
-            String preferredColumnName, String constraintName, String foreignEntityPreferredAlias, boolean primaryKey,
-            boolean foreignKey, boolean listOnly, boolean ignoreFkConstraint, Transformer<?, ?> transformer,
-            SqlFieldDimensions sqlFieldDimensions, boolean nullable, boolean fosterParentType, boolean fosterParentId,
-            boolean categoryColumn, String defaultVal, Field field, Method getter, Method setter, boolean isAllObjectsInLowerCase) {
-        this.marker = marker;
-        this.columnType = columnType;
-        this.foreignEntityInfo = foreignSqlEntityInfo;
-        this.foreignFieldInfo = foreignSqlFieldInfo;
-        this.foreignKeyFieldInfo = foreignKeySqlFieldInfo;
-        this.name = name;
-        this.columnName = columnName;
-        this.preferredColumnName = preferredColumnName;
-        this.constraintName = constraintName;
-        this.primaryKey = primaryKey;
-        this.foreignKey = foreignKey;
-        this.foreignEntityPreferredAlias = foreignEntityPreferredAlias;
-        this.listOnly = listOnly;
-        this.ignoreFkConstraint = ignoreFkConstraint;
-        this.transformer = transformer;
-        this.nullable = nullable;
-        this.fosterParentType = fosterParentType;
-        this.fosterParentId = fosterParentId;
-        this.categoryColumn = categoryColumn;
-        this.sqlFieldDimensions = sqlFieldDimensions;
-        this.defaultVal = defaultVal;
-        this.field = field;
-        this.getter = getter;
-        this.setter = setter;
-        this.orderIndex = orderIndex;
-        
-        if (isAllObjectsInLowerCase) {
-            this.columnName = StringUtils.toLowerCase(columnName);
-            this.preferredColumnName = StringUtils.toLowerCase(preferredColumnName);
-            this.constraintName = StringUtils.toLowerCase(constraintName);
-        }
-    }
+	private Method setter;
 
-    @Override
-    public Long getMarker() {
-        return marker;
-    }
+	private int orderIndex;
 
-    public int getOrderIndex() {
-        return orderIndex;
-    }
+	public SqlFieldInfo(int orderIndex, ColumnType columnType, SqlEntityInfo foreignSqlEntityInfo,
+			SqlFieldInfo foreignSqlFieldInfo, SqlFieldInfo foreignKeySqlFieldInfo, String name, String columnName,
+			String preferredColumnName, String constraintName, String foreignEntityPreferredAlias, boolean primaryKey,
+			boolean foreignKey, boolean listOnly, boolean ignoreFkConstraint, Transformer<?, ?> transformer,
+			SqlFieldDimensions sqlFieldDimensions, boolean nullable, boolean fosterParentType, boolean fosterParentId,
+			boolean categoryColumn, boolean tenantId, String defaultVal, Field field, Method getter, Method setter,
+			boolean isAllObjectsInLowerCase) {
+		this(null, orderIndex, columnType, foreignSqlEntityInfo, foreignSqlFieldInfo, foreignKeySqlFieldInfo, name,
+				columnName, preferredColumnName, constraintName, foreignEntityPreferredAlias, primaryKey, foreignKey,
+				listOnly, ignoreFkConstraint, transformer, sqlFieldDimensions, nullable, fosterParentType,
+				fosterParentId, categoryColumn, tenantId, defaultVal, field, getter, setter, isAllObjectsInLowerCase);
+	}
 
-    public String getName() {
-        return name;
-    }
+	public SqlFieldInfo(Long marker, int orderIndex, ColumnType columnType, SqlEntityInfo foreignSqlEntityInfo,
+			SqlFieldInfo foreignSqlFieldInfo, SqlFieldInfo foreignKeySqlFieldInfo, String name, String columnName,
+			String preferredColumnName, String constraintName, String foreignEntityPreferredAlias, boolean primaryKey,
+			boolean foreignKey, boolean listOnly, boolean ignoreFkConstraint, Transformer<?, ?> transformer,
+			SqlFieldDimensions sqlFieldDimensions, boolean nullable, boolean fosterParentType, boolean fosterParentId,
+			boolean categoryColumn, boolean tenantId, String defaultVal, Field field, Method getter, Method setter,
+			boolean isAllObjectsInLowerCase) {
+		this.marker = marker;
+		this.columnType = columnType;
+		this.foreignEntityInfo = foreignSqlEntityInfo;
+		this.foreignFieldInfo = foreignSqlFieldInfo;
+		this.foreignKeyFieldInfo = foreignKeySqlFieldInfo;
+		this.name = name;
+		this.columnName = columnName;
+		this.preferredColumnName = preferredColumnName;
+		this.constraintName = constraintName;
+		this.primaryKey = primaryKey;
+		this.foreignKey = foreignKey;
+		this.foreignEntityPreferredAlias = foreignEntityPreferredAlias;
+		this.listOnly = listOnly;
+		this.ignoreFkConstraint = ignoreFkConstraint;
+		this.transformer = transformer;
+		this.nullable = nullable;
+		this.fosterParentType = fosterParentType;
+		this.fosterParentId = fosterParentId;
+		this.categoryColumn = categoryColumn;
+		this.tenantId = tenantId;
+		this.sqlFieldDimensions = sqlFieldDimensions;
+		this.defaultVal = defaultVal;
+		this.field = field;
+		this.getter = getter;
+		this.setter = setter;
+		this.orderIndex = orderIndex;
 
-    @Override
-    public String getColumnName() {
-        return columnName;
-    }
+		if (isAllObjectsInLowerCase) {
+			this.columnName = StringUtils.toLowerCase(columnName);
+			this.preferredColumnName = StringUtils.toLowerCase(preferredColumnName);
+			this.constraintName = StringUtils.toLowerCase(constraintName);
+		}
+	}
 
-    @Override
-    public String getPreferredColumnName() {
-        return preferredColumnName;
-    }
+	@Override
+	public Long getMarker() {
+		return marker;
+	}
 
-    @Override
-    public String getConstraint() {
-        return constraintName;
-    }
+	public int getOrderIndex() {
+		return orderIndex;
+	}
 
-    @Override
-    public String getDefaultVal() {
-        return defaultVal;
-    }
+	public String getName() {
+		return name;
+	}
 
-    @Override
-    public String getForeignEntityPreferredAlias() {
-        return foreignEntityPreferredAlias;
-    }
+	@Override
+	public String getColumnName() {
+		return columnName;
+	}
 
-    @Override
-    public boolean isListOnly() {
-        return listOnly;
-    }
+	@Override
+	public String getPreferredColumnName() {
+		return preferredColumnName;
+	}
 
-    public Transformer<?, ?> getTransformer() {
-        return transformer;
-    }
+	@Override
+	public String getConstraint() {
+		return constraintName;
+	}
 
-    public boolean isTransformed() {
-        return transformer != null;
-    }
+	@Override
+	public String getDefaultVal() {
+		return defaultVal;
+	}
 
-    @Override
-    public boolean isNullable() {
-        return nullable;
-    }
+	@Override
+	public String getForeignEntityPreferredAlias() {
+		return foreignEntityPreferredAlias;
+	}
 
-    @Override
-    public boolean isFosterParentType() {
-        return fosterParentType;
-    }
+	@Override
+	public boolean isListOnly() {
+		return listOnly;
+	}
 
-    @Override
-    public boolean isFosterParentId() {
-        return fosterParentId;
-    }
+	public Transformer<?, ?> getTransformer() {
+		return transformer;
+	}
 
-    @Override
-    public boolean isCategoryColumn() {
-        return categoryColumn;
-    }
+	public boolean isTransformed() {
+		return transformer != null;
+	}
 
-    public SqlFieldDimensions getSqlFieldDimensions() {
-        return sqlFieldDimensions;
-    }
+	@Override
+	public boolean isNullable() {
+		return nullable;
+	}
 
-    @Override
-    public int getLength() {
-        return sqlFieldDimensions.getLength();
-    }
+	@Override
+	public boolean isFosterParentType() {
+		return fosterParentType;
+	}
 
-    @Override
-    public int getPrecision() {
-        return sqlFieldDimensions.getPrecision();
-    }
+	@Override
+	public boolean isFosterParentId() {
+		return fosterParentId;
+	}
 
-    @Override
-    public int getScale() {
-        return sqlFieldDimensions.getScale();
-    }
+	@Override
+	public boolean isCategoryColumn() {
+		return categoryColumn;
+	}
 
-    @Override
-    public ColumnType getColumnType() {
-        return columnType;
-    }
+	@Override
+	public boolean isTenantId() {
+		return tenantId;
+	}
 
-    @Override
-    public boolean isWithDefaultVal() {
-        return defaultVal != null;
-    }
+	public SqlFieldDimensions getSqlFieldDimensions() {
+		return sqlFieldDimensions;
+	}
 
-    @Override
-    public boolean isPrimaryKey() {
-        return primaryKey;
-    }
+	@Override
+	public int getLength() {
+		return sqlFieldDimensions.getLength();
+	}
 
-    public boolean isForeignKey() {
-        return foreignKey;
-    }
+	@Override
+	public int getPrecision() {
+		return sqlFieldDimensions.getPrecision();
+	}
 
-    @Override
-    public boolean isIgnoreFkConstraint() {
-        return ignoreFkConstraint;
-    }
+	@Override
+	public int getScale() {
+		return sqlFieldDimensions.getScale();
+	}
 
-    public Field getField() {
-        return field;
-    }
+	@Override
+	public ColumnType getColumnType() {
+		return columnType;
+	}
 
-    public Method getGetter() {
-        return getter;
-    }
+	@Override
+	public boolean isWithDefaultVal() {
+		return defaultVal != null;
+	}
 
-    public Method getSetter() {
-        return setter;
-    }
+	@Override
+	public boolean isPrimaryKey() {
+		return primaryKey;
+	}
 
-    @Override
-    public Class<?> getFieldType() {
-        return field.getType();
-    }
+	public boolean isForeignKey() {
+		return foreignKey;
+	}
 
-    @Override
-    public boolean isSameSchema(SqlFieldSchemaInfo sqlFieldSchemaInfo) {
-        if (defaultVal != null) {
-            if (!defaultVal.equals(sqlFieldSchemaInfo.getDefaultVal())) {
-                return false;
-            }
-        }
+	@Override
+	public boolean isIgnoreFkConstraint() {
+		return ignoreFkConstraint;
+	}
 
-        return columnType.equals(sqlFieldSchemaInfo.getColumnType())
-                && columnName.equals(sqlFieldSchemaInfo.getColumnName())
-                && getLength() == sqlFieldSchemaInfo.getLength() && getPrecision() == sqlFieldSchemaInfo.getPrecision()
-                && getScale() == sqlFieldSchemaInfo.getScale();
-    }
+	public Field getField() {
+		return field;
+	}
 
-    @Override
-    public SqlEntityInfo getForeignEntityInfo() {
-        return foreignEntityInfo;
-    }
+	public Method getGetter() {
+		return getter;
+	}
 
-    @Override
-    public SqlFieldInfo getForeignFieldInfo() {
-        return foreignFieldInfo;
-    }
+	public Method getSetter() {
+		return setter;
+	}
 
-    @Override
-    public SqlFieldInfo getForeignKeyFieldInfo() {
-        return foreignKeyFieldInfo;
-    }
+	@Override
+	public Class<?> getFieldType() {
+		return field.getType();
+	}
 
-    public boolean isUnresolvedForeignKey() {
-        return foreignKey && foreignEntityInfo == null;
-    }
+	@Override
+	public boolean isSameSchema(SqlFieldSchemaInfo sqlFieldSchemaInfo) {
+		if (defaultVal != null) {
+			if (!defaultVal.equals(sqlFieldSchemaInfo.getDefaultVal())) {
+				return false;
+			}
+		}
 
-    public boolean isUnresolvedListOnly() {
-        return listOnly && foreignEntityInfo == null;
-    }
-    
-    public void resolveForeignKey(SqlEntityInfo foreignEntityInfo, SqlFieldInfo foreignFieldInfo) {
-        if (isUnresolvedForeignKey()) {
-            this.foreignEntityInfo = foreignEntityInfo;
-            this.foreignFieldInfo = foreignFieldInfo;
-            this.sqlFieldDimensions = foreignFieldInfo.sqlFieldDimensions;
-        }
-    }
-    
-    public void resolveListOnly(SqlEntityInfo foreignEntityInfo) {
-        if (isUnresolvedListOnly()) {
-            this.foreignEntityInfo = foreignEntityInfo;
-        }
-    }
-    
-    public String toDimensionString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("{columnName = ").append(columnName);
-        sb.append(", columnType = ").append(columnType);
-        sb.append(", length = ").append(getLength());
-        sb.append(", precision = ").append(getPrecision());
-        sb.append(", scale = ").append(getScale());
-        sb.append(", defaultVal = ").append(defaultVal).append("}");
-        return sb.toString();
-    }
+		return columnType.equals(sqlFieldSchemaInfo.getColumnType())
+				&& columnName.equals(sqlFieldSchemaInfo.getColumnName())
+				&& getLength() == sqlFieldSchemaInfo.getLength() && getPrecision() == sqlFieldSchemaInfo.getPrecision()
+				&& getScale() == sqlFieldSchemaInfo.getScale();
+	}
 
-    @Override
-    public String toString() {
-        return toDimensionString();
-    }
+	@Override
+	public SqlEntityInfo getForeignEntityInfo() {
+		return foreignEntityInfo;
+	}
+
+	@Override
+	public SqlFieldInfo getForeignFieldInfo() {
+		return foreignFieldInfo;
+	}
+
+	@Override
+	public SqlFieldInfo getForeignKeyFieldInfo() {
+		return foreignKeyFieldInfo;
+	}
+
+	public boolean isUnresolvedForeignKey() {
+		return foreignKey && foreignEntityInfo == null;
+	}
+
+	public boolean isUnresolvedListOnly() {
+		return listOnly && foreignEntityInfo == null;
+	}
+
+	public void resolveForeignKey(SqlEntityInfo foreignEntityInfo, SqlFieldInfo foreignFieldInfo) {
+		if (isUnresolvedForeignKey()) {
+			this.foreignEntityInfo = foreignEntityInfo;
+			this.foreignFieldInfo = foreignFieldInfo;
+			this.sqlFieldDimensions = foreignFieldInfo.sqlFieldDimensions;
+		}
+	}
+
+	public void resolveListOnly(SqlEntityInfo foreignEntityInfo) {
+		if (isUnresolvedListOnly()) {
+			this.foreignEntityInfo = foreignEntityInfo;
+		}
+	}
+
+	public String toDimensionString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("{columnName = ").append(columnName);
+		sb.append(", columnType = ").append(columnType);
+		sb.append(", length = ").append(getLength());
+		sb.append(", precision = ").append(getPrecision());
+		sb.append(", scale = ").append(getScale());
+		sb.append(", defaultVal = ").append(defaultVal).append("}");
+		return sb.toString();
+	}
+
+	@Override
+	public String toString() {
+		return toDimensionString();
+	}
 }

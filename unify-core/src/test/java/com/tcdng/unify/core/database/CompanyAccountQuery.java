@@ -16,14 +16,19 @@
 package com.tcdng.unify.core.database;
 
 /**
- * Abstract base test entity query.
+ * Test company account query.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public abstract class AbstractTestTableEntityQuery<T extends AbstractTestTableEntity> extends Query<T> {
+public class CompanyAccountQuery extends AbstractTestTableEntityQuery<CompanyAccount> {
 
-    public AbstractTestTableEntityQuery(Class<T> entityClass) {
-        super(entityClass);
-    }
+	public CompanyAccountQuery() {
+		super(CompanyAccount.class);
+	}
+
+	public CompanyAccountQuery accountNo(String accountNo) {
+		addEquals("accountNo", accountNo);
+		return this;
+	}
 }

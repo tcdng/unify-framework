@@ -17,6 +17,7 @@
 package com.tcdng.unify.core.system.entities;
 
 import com.tcdng.unify.core.annotation.Column;
+import com.tcdng.unify.core.annotation.TenantId;
 
 /**
  * Abstract base class for single version large objects.
@@ -34,7 +35,11 @@ public abstract class AbstractSingleVersionLobEntity extends AbstractSequencedEn
     
     @Column(name = "OBJECT_NM", length = 128)
     private String objectName;
-    
+
+    @TenantId
+    @Column(nullable = true)
+    private Long tenantId;
+
     @Column
     private long version;
     
@@ -67,7 +72,15 @@ public abstract class AbstractSingleVersionLobEntity extends AbstractSequencedEn
         this.objectName = objectName;
     }
 
-    public long getVersion() {
+    public Long getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(Long tenantId) {
+		this.tenantId = tenantId;
+	}
+
+	public long getVersion() {
         return version;
     }
 

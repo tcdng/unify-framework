@@ -89,6 +89,14 @@ public class SessionContext extends Context {
 		return val;
 	}
 
+	public void setUserTokenTenantId(Long tenantId) {
+		if (userToken == null) {
+			userToken = new UserToken(tenantId);
+		} else {
+			userToken.setTenantId(tenantId);;
+		}
+	}
+	
 	public UserToken getUserToken() {
 		return userToken;
 	}

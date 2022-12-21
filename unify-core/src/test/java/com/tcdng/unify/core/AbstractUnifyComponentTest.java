@@ -90,6 +90,11 @@ public abstract class AbstractUnifyComponentTest {
         onTearDown();
     }
 
+	protected void setSessionUserTokenTenantId(Long tenantId) throws Exception {
+		((RequestContextManager) getComponent(ApplicationComponents.APPLICATION_REQUESTCONTEXTMANAGER))
+				.getRequestContext().getSessionContext().setUserTokenTenantId(tenantId);
+	}
+	
     /**
      * Returns names of all components that are of a particular type.
      * 
@@ -361,9 +366,9 @@ public abstract class AbstractUnifyComponentTest {
         try {
             for (Class<? extends Entity> type : typeList) {
                 if (AbstractSequencedEntity.class.isAssignableFrom(type)) {
-                    db.deleteAll(Query.of(type).addGreaterThan("id", 0L));
+                    db.deleteAll(Query.of(type).addGreaterThan("id", 0L).ignoreTenancy(true));
                 } else {
-                    db.deleteAll(Query.of(type).ignoreEmptyCriteria(true));
+                    db.deleteAll(Query.of(type).ignoreEmptyCriteria(true).ignoreTenancy(true));
                 }
             }
         } finally {

@@ -13,17 +13,26 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.database;
+package com.tcdng.unify.core.annotation;
+
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Abstract base test entity query.
+ * Annotation for indicating a entity field is a tenant ID. This annotation is
+ * used in the implementation of tenancy support. Field must also be annotated
+ * with the @Column annotation and must be of type long. Also, an entity can
+ * have one tenant ID field only.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public abstract class AbstractTestTableEntityQuery<T extends AbstractTestTableEntity> extends Query<T> {
+@Documented
+@Target(ElementType.FIELD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface TenantId {
 
-    public AbstractTestTableEntityQuery(Class<T> entityClass) {
-        super(entityClass);
-    }
 }

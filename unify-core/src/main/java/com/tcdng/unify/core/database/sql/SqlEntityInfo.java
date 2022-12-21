@@ -70,6 +70,8 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 
     private SqlFieldInfo versionFieldInfo;
 
+    private SqlFieldInfo tenantIdFieldInfo;
+
     private SqlFieldInfo fosterParentTypeFieldInfo;
 
     private SqlFieldInfo fosterParentIdFieldInfo;
@@ -121,7 +123,7 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
     public SqlEntityInfo(Long index, Class<? extends Entity> entityClass, Class<? extends EnumConst> enumConstClass,
             EntityPolicy recordPolicy, String schema, String tableName, String preferredTableName,
             String schemaTableName, String tableAlias, String viewName, String preferredViewName, String schemaViewName,
-            SqlFieldInfo idFieldInfo, SqlFieldInfo versionFieldInfo, SqlFieldInfo fosterParentTypeFieldInfo,
+            SqlFieldInfo idFieldInfo, SqlFieldInfo versionFieldInfo, SqlFieldInfo tenantIdFieldInfo, SqlFieldInfo fosterParentTypeFieldInfo,
             SqlFieldInfo fosterParentIdFieldInfo, SqlFieldInfo categoryFieldInfo, Map<String, SqlFieldInfo> sQLFieldInfoMap,
             List<ChildFieldInfo> childInfoList, List<ChildFieldInfo> childListInfoList,
             Map<String, SqlUniqueConstraintInfo> uniqueConstraintMap, Map<String, SqlIndexInfo> indexMap,
@@ -142,6 +144,7 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
         this.schemaViewName = schemaViewName;
         this.idFieldInfo = idFieldInfo;
         this.versionFieldInfo = versionFieldInfo;
+        this.tenantIdFieldInfo = tenantIdFieldInfo;
         this.fosterParentTypeFieldInfo = fosterParentTypeFieldInfo;
         this.fosterParentIdFieldInfo = fosterParentIdFieldInfo;
         this.categoryFieldInfo = categoryFieldInfo;
@@ -202,6 +205,7 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
         this.schemaViewName = originSqlEntityInfo.schemaViewName;
         this.idFieldInfo = originSqlEntityInfo.idFieldInfo;
         this.versionFieldInfo = originSqlEntityInfo.versionFieldInfo;
+        this.tenantIdFieldInfo = originSqlEntityInfo.tenantIdFieldInfo;
         this.fosterParentTypeFieldInfo = originSqlEntityInfo.fosterParentTypeFieldInfo;
         this.fosterParentIdFieldInfo = originSqlEntityInfo.fosterParentIdFieldInfo;
         this.categoryFieldInfo = originSqlEntityInfo.categoryFieldInfo;
@@ -327,6 +331,16 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
     }
 
     @Override
+	public SqlFieldSchemaInfo getTenantIdFieldInfo() {
+		return tenantIdFieldInfo;
+	}
+
+	@Override
+	public boolean isWithTenantId() {
+		return tenantIdFieldInfo != null;
+	}
+
+	@Override
     public SqlFieldInfo getFieldInfo(String name) throws UnifyException {
         SqlFieldInfo sqlFieldInfo = fieldInfoByName.get(name);
         if (sqlFieldInfo == null) {

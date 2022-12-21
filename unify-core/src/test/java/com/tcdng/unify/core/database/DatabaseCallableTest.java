@@ -141,7 +141,7 @@ public class DatabaseCallableTest extends AbstractUnifyComponentTest {
             db.executeCallable(callableProcE);
 
             assertEquals("Trip_313", callableProcE.getReturnValue());
-        } finally {
+        } catch(Exception e) {e.printStackTrace(); throw e;} finally {
             tm.endTransaction();
         }
     }
