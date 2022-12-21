@@ -1686,13 +1686,14 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 	protected boolean appendWhereClause(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Query<? extends Entity> query,
 			SqlQueryType queryType) throws UnifyException {
 		boolean isAppend = false;
-		if (!query.isEmptyCriteria()) {
+		final Restriction restriction = resolveRestriction(sqlEntityInfo, query);
+		if (!restriction.isEmpty()) {
 			sql.append(" WHERE ");
-			translateCriteria(sql, sqlEntityInfo, query);
+			translateCriteria(sql, sqlEntityInfo, restriction);
 			if (query.isMinMax()) {
 				sql.append(" AND ");
 				StringBuilder critSql = new StringBuilder();
-				translateCriteria(critSql, sqlEntityInfo, query);
+				translateCriteria(critSql, sqlEntityInfo, restriction);
 				appendMinMax(sql, sqlEntityInfo, query, critSql);
 			}
 			isAppend = true;
@@ -1745,8 +1746,8 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 					.append(sqlEntityInfo.getSchemaViewName());
 		}
 
-		if (!query.isEmptyCriteria()) {
-			Restriction restriction = resolveRestriction(sqlEntityInfo, query);
+		final Restriction restriction = resolveRestriction(sqlEntityInfo, query);
+		if (!restriction.isEmpty()) {
 			SqlCriteriaPolicy sqlCriteriaPolicy = getSqlCriteriaPolicy(
 					restriction.getConditionType().restrictionType());
 			StringBuilder critSql = new StringBuilder();
@@ -1811,8 +1812,12 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 			throws UnifyException {
 		Restriction restriction = query.getRestrictions();
 		if (tenancyEnabled && sqlEntityInfo.isWithTenantId() && !query.isIgnoreTenancy()) {
-			restriction = new And().add(restriction)
-					.add(new Equals(sqlEntityInfo.getTenantIdFieldInfo().getName(), getUserTenantId()));
+			if (restriction.isEmpty()) {
+				restriction = new Equals(sqlEntityInfo.getTenantIdFieldInfo().getName(), getUserTenantId());
+			} else {
+				restriction = new And().add(restriction)
+						.add(new Equals(sqlEntityInfo.getTenantIdFieldInfo().getName(), getUserTenantId()));
+			}
 		}
 
 		return restriction;
@@ -2302,13 +2307,6 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 					getSqlDataSourceDialectPolicies().getSqlTypePolicy(sqlFieldInfo.getColumnType()), value));
 		}
 		return updateParams.toString();
-	}
-
-	private void translateCriteria(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Query<? extends Entity> query)
-			throws UnifyException {
-		Restriction restriction = resolveRestriction(sqlEntityInfo, query);
-		getSqlDataSourceDialectPolicies().getSqlCriteriaPolicy(restriction.getConditionType().restrictionType())
-				.translate(sql, sqlEntityInfo, restriction);
 	}
 
 	private void translateCriteria(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Restriction restriction)

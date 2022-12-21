@@ -366,9 +366,9 @@ public abstract class AbstractUnifyComponentTest {
         try {
             for (Class<? extends Entity> type : typeList) {
                 if (AbstractSequencedEntity.class.isAssignableFrom(type)) {
-                    db.deleteAll(Query.of(type).addGreaterThan("id", 0L));
+                    db.deleteAll(Query.of(type).addGreaterThan("id", 0L).ignoreTenancy(true));
                 } else {
-                    db.deleteAll(Query.of(type).ignoreEmptyCriteria(true));
+                    db.deleteAll(Query.of(type).ignoreEmptyCriteria(true).ignoreTenancy(true));
                 }
             }
         } finally {
