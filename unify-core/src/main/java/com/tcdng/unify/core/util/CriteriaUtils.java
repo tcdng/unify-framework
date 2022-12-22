@@ -106,6 +106,11 @@ public final class CriteriaUtils {
             restrictionList = Collections.unmodifiableList(restrictionList);
         }
 
+    	@Override
+    	public boolean isIdEqualsRestricted() {
+    		return false;
+    	}
+
         @Override
         public FilterConditionType getConditionType() {
             return co.getConditionType();
@@ -205,6 +210,11 @@ public final class CriteriaUtils {
             return ao.isRestrictedField(fieldName);
         }
 
+    	@Override
+    	public boolean isIdEqualsRestricted() {
+    		return ao.isIdEqualsRestricted();
+    	}
+
         @Override
         public boolean isEmpty() {
             return ao.isEmpty();
@@ -266,6 +276,11 @@ public final class CriteriaUtils {
         public void setParams(Object firstParam, Object secondParam) {
             throw new UnsupportedOperationException();
         }
+
+    	@Override
+    	public boolean isIdEqualsRestricted() {
+    		return false;
+    	}
 
     }
 

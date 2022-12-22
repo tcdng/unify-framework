@@ -31,4 +31,9 @@ public class Equals extends AbstractSingleParamRestriction {
     public FilterConditionType getConditionType() {
         return FilterConditionType.EQUALS;
     }
+
+	@Override
+	public boolean isIdEqualsRestricted() {
+		return "id".equals(getFieldName());
+	}
 }

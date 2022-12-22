@@ -37,6 +37,11 @@ public abstract class AbstractCompoundRestriction extends AbstractRestriction im
 	}
 
 	@Override
+	public boolean isIdEqualsRestricted() {
+		return false;
+	}
+
+	@Override
 	public void fieldSwap(Map<String, String> map) {
 		for (Restriction restriction : restrictionList) {
 			restriction.fieldSwap(map);

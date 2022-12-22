@@ -1814,7 +1814,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 		if (tenancyEnabled && sqlEntityInfo.isWithTenantId() && !query.isIgnoreTenancy()) {
 			if (restriction.isEmpty()) {
 				restriction = new Equals(sqlEntityInfo.getTenantIdFieldInfo().getName(), getUserTenantId());
-			} else if (!restriction.isRestrictedField("id")) {
+			} else if (!restriction.isIdEqualsRestricted()) {
 				restriction = new And().add(restriction)
 						.add(new Equals(sqlEntityInfo.getTenantIdFieldInfo().getName(), getUserTenantId()));
 			}
