@@ -454,8 +454,9 @@ public class Query<T extends Entity> implements Cloneable {
         return select;
     }
 
-    public void setSelect(Select select) {
+    public Query<T>  setSelect(Select select) {
         this.select = select;
+        return this;
     }
 
     public boolean isSelect() {
@@ -631,6 +632,7 @@ public class Query<T extends Entity> implements Cloneable {
         query.offset = offset;
         query.limit = limit;
         query.ignoreEmptyCriteria = ignoreEmptyCriteria;
+        query.ignoreTenancy = ignoreTenancy;
         query.mustMatch = mustMatch;
         return query;
     }

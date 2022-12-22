@@ -317,7 +317,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 			entityPolicy.preQuery(query);
 		}
 
-		Select select = query.getSelect();
+		final Select select = query.getSelect();
 		try {
 			query.setSelect(new Select(fieldName).setDistinct(true));
 			return getSqlStatementExecutor().executeMultipleObjectListResultQuery(connection, fieldClass,
@@ -337,7 +337,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 			entityPolicy.preQuery(query);
 		}
 
-		Select select = query.getSelect();
+		final Select select = query.getSelect();
 		try {
 			query.setSelect(new Select(fieldName).setDistinct(true));
 			return getSqlStatementExecutor().executeMultipleObjectSetResultQuery(connection, fieldClass,
@@ -357,7 +357,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 			entityPolicy.preQuery(query);
 		}
 
-		Select select = query.getSelect();
+		final Select select = query.getSelect();
 		try {
 			query.setSelect(new Select(keyName, valueName).setDistinct(true));
 			return getSqlStatementExecutor().executeMultipleObjectMapResultQuery(connection, keyClass, keyName,
@@ -376,7 +376,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 			entityPolicy.preQuery(query);
 		}
 
-		Select select = query.getSelect();
+		final Select select = query.getSelect();
 		try {
 			query.setSelect(new Select(keyName, valueName).setDistinct(true));
 			return getSqlStatementExecutor().executeMultipleObjectListMapResultQuery(connection, keyClass, keyName,
@@ -394,7 +394,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 			entityPolicy.preQuery(query);
 		}
 
-		Select select = query.getSelect();
+		final Select select = query.getSelect();
 		try {
 			query.setSelect(new Select(fieldName).setDistinct(true));
 			return getSqlStatementExecutor().executeSingleObjectResultQuery(connection, fieldClass,
