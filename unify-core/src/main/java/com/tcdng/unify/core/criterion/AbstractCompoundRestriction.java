@@ -37,17 +37,6 @@ public abstract class AbstractCompoundRestriction extends AbstractRestriction im
 	}
 
 	@Override
-	public boolean isIdEqualsRestricted() {
-		for (Restriction restriction : restrictionList) {
-			if (restriction.isIdEqualsRestricted()) {
-				return true;
-			}
-		}
-		
-		return false;
-	}
-
-	@Override
 	public void fieldSwap(Map<String, String> map) {
 		for (Restriction restriction : restrictionList) {
 			restriction.fieldSwap(map);
@@ -70,6 +59,17 @@ public abstract class AbstractCompoundRestriction extends AbstractRestriction im
 	@Override
 	public List<Restriction> getRestrictionList() {
 		return restrictionList;
+	}
+
+	@Override
+	public boolean isIdEqualsRestricted() {
+		for (Restriction restriction : restrictionList) {
+			if (restriction.isIdEqualsRestricted()) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 
 	@Override
