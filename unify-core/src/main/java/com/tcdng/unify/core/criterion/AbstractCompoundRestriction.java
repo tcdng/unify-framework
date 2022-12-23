@@ -38,6 +38,12 @@ public abstract class AbstractCompoundRestriction extends AbstractRestriction im
 
 	@Override
 	public boolean isIdEqualsRestricted() {
+		for (Restriction restriction : restrictionList) {
+			if (restriction.isIdEqualsRestricted()) {
+				return true;
+			}
+		}
+		
 		return false;
 	}
 
@@ -157,4 +163,8 @@ public abstract class AbstractCompoundRestriction extends AbstractRestriction im
 
 		return replaced;
 	}
+    
+    public String toString() {
+    	return "" + restrictionList;
+    }
 }

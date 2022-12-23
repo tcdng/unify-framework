@@ -72,4 +72,8 @@ public abstract class AbstractSimpleRestriction extends AbstractRestriction impl
     public boolean isSimple() {
         return true;
     }
+    
+    public String toString() {
+    	return StringUtils.toXmlString(this);
+    }
 }
