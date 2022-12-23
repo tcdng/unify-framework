@@ -33,7 +33,6 @@ import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyCorePropertyConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.UnifyOperationException;
-import com.tcdng.unify.core.UserToken;
 import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.Singleton;
@@ -187,13 +186,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
 	@Override
 	public Long getUserTenantId() throws UnifyException {
-		UserToken userToken = getUserToken();
-		Long tenantId = userToken != null ? getUserToken().getTenantId() : null;
-		if (tenantId == null) {
-			return Entity.PRIMARY_TENANT_ID;
-		}
-
-		return tenantId;
+		return super.getUserTenantId();
 	}
 
 	@Override

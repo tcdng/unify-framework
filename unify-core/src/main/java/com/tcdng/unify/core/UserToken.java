@@ -165,7 +165,7 @@ public class UserToken {
 	}
 
 	public boolean isPrimaryTenant() {
-		return tenantId == null || Entity.PRIMARY_TENANT_ID.equals(tenantId);
+		return Entity.PRIMARY_TENANT_ID.equals(tenantId);
 	}
 
 	public static Builder newBuilder() {
