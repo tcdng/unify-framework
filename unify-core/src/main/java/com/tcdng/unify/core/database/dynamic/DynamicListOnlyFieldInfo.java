@@ -49,7 +49,7 @@ public class DynamicListOnlyFieldInfo extends DynamicFieldInfo {
 
 	public DynamicListOnlyFieldInfo(DynamicFieldType type, String columnName, String fieldName, String key,
 			String property, boolean descriptive) {
-		super(type, EntityFieldType.LIST_ONLY, DataType.STRING, columnName, fieldName, descriptive, false);
+		super(type, EntityFieldType.LIST_ONLY, DataType.STRING, columnName, fieldName, null, descriptive, false);
 		this.key = key;
 		this.property = property;
 		this.resolved = true;

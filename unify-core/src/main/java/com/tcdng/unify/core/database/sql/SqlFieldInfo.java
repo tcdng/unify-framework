@@ -49,6 +49,8 @@ public class SqlFieldInfo implements SqlFieldSchemaInfo {
 
 	private String constraintName;
 
+	private String mapped;
+
 	private String defaultVal;
 
 	private String foreignEntityPreferredAlias;
@@ -72,7 +74,7 @@ public class SqlFieldInfo implements SqlFieldSchemaInfo {
 	private boolean categoryColumn;
 
 	private boolean tenantId;
-	
+
 	private SqlFieldDimensions sqlFieldDimensions;
 
 	private Field field;
@@ -88,12 +90,13 @@ public class SqlFieldInfo implements SqlFieldSchemaInfo {
 			String preferredColumnName, String constraintName, String foreignEntityPreferredAlias, boolean primaryKey,
 			boolean foreignKey, boolean listOnly, boolean ignoreFkConstraint, Transformer<?, ?> transformer,
 			SqlFieldDimensions sqlFieldDimensions, boolean nullable, boolean fosterParentType, boolean fosterParentId,
-			boolean categoryColumn, boolean tenantId, String defaultVal, Field field, Method getter, Method setter,
-			boolean isAllObjectsInLowerCase) {
+			boolean categoryColumn, boolean tenantId, String mapped, String defaultVal, Field field, Method getter,
+			Method setter, boolean isAllObjectsInLowerCase) {
 		this(null, orderIndex, columnType, foreignSqlEntityInfo, foreignSqlFieldInfo, foreignKeySqlFieldInfo, name,
 				columnName, preferredColumnName, constraintName, foreignEntityPreferredAlias, primaryKey, foreignKey,
 				listOnly, ignoreFkConstraint, transformer, sqlFieldDimensions, nullable, fosterParentType,
-				fosterParentId, categoryColumn, tenantId, defaultVal, field, getter, setter, isAllObjectsInLowerCase);
+				fosterParentId, categoryColumn, tenantId, mapped, defaultVal, field, getter, setter,
+				isAllObjectsInLowerCase);
 	}
 
 	public SqlFieldInfo(Long marker, int orderIndex, ColumnType columnType, SqlEntityInfo foreignSqlEntityInfo,
@@ -101,8 +104,8 @@ public class SqlFieldInfo implements SqlFieldSchemaInfo {
 			String preferredColumnName, String constraintName, String foreignEntityPreferredAlias, boolean primaryKey,
 			boolean foreignKey, boolean listOnly, boolean ignoreFkConstraint, Transformer<?, ?> transformer,
 			SqlFieldDimensions sqlFieldDimensions, boolean nullable, boolean fosterParentType, boolean fosterParentId,
-			boolean categoryColumn, boolean tenantId, String defaultVal, Field field, Method getter, Method setter,
-			boolean isAllObjectsInLowerCase) {
+			boolean categoryColumn, boolean tenantId, String mapped, String defaultVal, Field field, Method getter,
+			Method setter, boolean isAllObjectsInLowerCase) {
 		this.marker = marker;
 		this.columnType = columnType;
 		this.foreignEntityInfo = foreignSqlEntityInfo;
@@ -211,6 +214,16 @@ public class SqlFieldInfo implements SqlFieldSchemaInfo {
 	@Override
 	public boolean isTenantId() {
 		return tenantId;
+	}
+
+	@Override
+	public boolean isWithMapping() {
+		return mapped != null;
+	}
+
+	@Override
+	public String getMapping() {
+		return mapped;
 	}
 
 	public SqlFieldDimensions getSqlFieldDimensions() {

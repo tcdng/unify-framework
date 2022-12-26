@@ -36,7 +36,7 @@ public class DynamicForeignKeyFieldInfo extends DynamicFieldInfo {
 
     public DynamicForeignKeyFieldInfo(DynamicFieldType type, DynamicEntityInfo parentDynamicEntityInfo,
             String columnName, String fieldName, String defaultVal, boolean nullable) {
-        super(type, EntityFieldType.FOREIGN_KEY, DataType.LONG, columnName, fieldName, false, false);
+        super(type, EntityFieldType.FOREIGN_KEY, DataType.LONG, columnName, fieldName, null, false, false);
         this.parentDynamicEntityInfo = parentDynamicEntityInfo;
         this.defaultVal = defaultVal;
         this.nullable = nullable;

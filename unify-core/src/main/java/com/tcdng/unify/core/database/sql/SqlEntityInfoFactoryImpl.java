@@ -54,6 +54,7 @@ import com.tcdng.unify.core.annotation.InParam;
 import com.tcdng.unify.core.annotation.Index;
 import com.tcdng.unify.core.annotation.Indexes;
 import com.tcdng.unify.core.annotation.ListOnly;
+import com.tcdng.unify.core.annotation.Mapped;
 import com.tcdng.unify.core.annotation.OutParam;
 import com.tcdng.unify.core.annotation.Policy;
 import com.tcdng.unify.core.annotation.ResultField;
@@ -191,11 +192,12 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 				final boolean isFosterParentId = false;
 				final boolean isCategoryColumn = false;
 				final boolean isTenantId = false;
+				final String mapped = null;
 				SqlFieldInfo idFieldInfo = new SqlFieldInfo(DefaultColumnPositionConstants.ID_POSITION,
 						ColumnType.STRING, null, null, null, "code", "REF_CD",
 						sqlDataSourceDialect.getPreferredName("REF_CD"), null, null, true, isForeignKey, isListOnly,
 						isIgnoreFkConstraint, null, sqlFieldDimensions, isNullable, isFosterParentType,
-						isFosterParentId, isCategoryColumn, isTenantId, null,
+						isFosterParentId, isCategoryColumn, isTenantId, mapped, null,
 						ReflectUtils.getField(StaticReference.class, "code"), getterSetterInfo.getGetter(),
 						getterSetterInfo.getSetter(), sqlDataSourceDialect.isAllObjectsInLowerCase());
 
@@ -205,7 +207,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 						ColumnType.STRING, null, null, null, "description", "REF_DESC",
 						sqlDataSourceDialect.getPreferredName("REF_DESC"), null, null, false, isForeignKey, isListOnly,
 						isIgnoreFkConstraint, null, sqlFieldDimensions, isNullable, isFosterParentType,
-						isFosterParentId, isCategoryColumn, isTenantId, null,
+						isFosterParentId, isCategoryColumn, isTenantId, mapped, null,
 						ReflectUtils.getField(StaticReference.class, "description"), getterSetterInfo.getGetter(),
 						getterSetterInfo.getSetter(), sqlDataSourceDialect.isAllObjectsInLowerCase());
 
@@ -313,7 +315,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 						SqlEntityInfo foreignEntityInfo = null;
 						SqlFieldInfo foreignFieldInfo = null;
 
-						TenantId tid = field.getAnnotation(TenantId.class);
+						TenantId tia = field.getAnnotation(TenantId.class);
 						Column ca = field.getAnnotation(Column.class);
 						Id ia = field.getAnnotation(Id.class);
 						Version va = field.getAnnotation(Version.class);
@@ -324,8 +326,30 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 						FosterParentType fpta = field.getAnnotation(FosterParentType.class);
 						FosterParentId fpia = field.getAnnotation(FosterParentId.class);
 						CategoryColumn cca = field.getAnnotation(CategoryColumn.class);
+						Mapped mpa = field.getAnnotation(Mapped.class);
 
-						final boolean isTenantId = tid != null;
+						final String mapped = mpa != null ? mpa.value() : null;
+						if (mapped != null) {
+							if (ia != null || va != null || loa != null || fka != null || clda != null || cla != null
+									|| fpta != null || fpia != null || cca != null) {
+								throw new UnifyException(
+										UnifyCoreErrorConstants.BAD_COMBINATION_OF_ANNOTATION_WITH_MAPPED,
+										searchClass, field);
+							}
+
+							if (ca == null) {
+								throw new UnifyException(
+										UnifyCoreErrorConstants.COLUMN_ANNOTATION_REQUIRED_WITH_MAPPED, searchClass,
+										field);
+							}
+
+							if (!Long.class.equals(field.getType())) {
+								throw new UnifyException(UnifyCoreErrorConstants.APPLY_MAPPED_TO_LONG_FIELD_ONLY,
+										searchClass, field);
+							}
+						}
+						
+						final boolean isTenantId = tia != null;
 						if (isTenantId) {
 							if (tenantIdFieldInfo != null) {
 								throw new UnifyException(UnifyCoreErrorConstants.RECORD_MULTIPLE_TENANTID_ANNOTATION,
@@ -778,7 +802,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 									sqlDataSourceDialect.getPreferredName(column), constraintName, null, isPrimaryKey,
 									isForeignKey, isListOnly, isIgnoreFkConstraint, transformer, sqlFieldDimensions,
 									isNullable, isFosterParentType, isFosterParentId, isCategoryColumn, isTenantId,
-									defaultVal, field, getterSetterInfo.getGetter(), getterSetterInfo.getSetter(),
+									mapped, defaultVal, field, getterSetterInfo.getGetter(), getterSetterInfo.getSetter(),
 									sqlDataSourceDialect.isAllObjectsInLowerCase());
 
 							if (ia != null) {
@@ -789,7 +813,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 								versionFieldInfo = sqlFieldInfo;
 							}
 
-							if (tid != null) {
+							if (tia != null) {
 								tenantIdFieldInfo = sqlFieldInfo;
 							}
 
@@ -870,13 +894,14 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 						final boolean isFosterParentId = false;
 						final boolean isCategoryColumn = false;
 						final boolean isTenantId = false;
+						final String mapped = null;
 						SqlFieldInfo sqlFieldInfo = new SqlFieldInfo(DefaultColumnPositionConstants.LIST_POSITION,
 								foreignPropSqlFieldInfo.getColumnType(), foreignEntityInfo, foreignPropSqlFieldInfo,
 								foreignKeySqlFieldInfo, field.getName(), column,
 								sqlDataSourceDialect.getPreferredName(column), null, null, isPrimaryKey, isForeignKey,
 								isListOnly, isIgnoreFkConstraint, foreignPropSqlFieldInfo.getTransformer(),
 								sqlFieldDimensions, foreignPropSqlFieldInfo.isNullable(), isFosterParentType,
-								isFosterParentId, isCategoryColumn, isTenantId, null, field,
+								isFosterParentId, isCategoryColumn, isTenantId, mapped, null, field,
 								getterSetterInfo.getGetter(), getterSetterInfo.getSetter(),
 								sqlDataSourceDialect.isAllObjectsInLowerCase());
 
@@ -980,6 +1005,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 					final boolean isFosterParentId = false;
 					final boolean isCategoryColumn = false;
 					final boolean isNullable = true; // All extension fields are nullable
+					final String mapped = null;
 					int length = -1;
 					int precision = -1;
 					int scale = -1;
@@ -1137,7 +1163,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 								sqlDataSourceDialect.getPreferredName(column), constraintName, null, isPrimaryKey,
 								isForeignKey, isListOnly, isIgnoreFkConstraint, transformer, sqlFieldDimensions,
 								isNullable, isFosterParentType, isFosterParentId, isCategoryColumn, isTenantId,
-								defaultVal, field, getterSetterInfo.getGetter(), getterSetterInfo.getSetter(),
+								mapped, defaultVal, field, getterSetterInfo.getGetter(), getterSetterInfo.getSetter(),
 								sqlDataSourceDialect.isAllObjectsInLowerCase());
 						propertyInfoMap.put(sqlFieldInfo.getName(), sqlFieldInfo);
 					}
@@ -1204,13 +1230,14 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 						final boolean isFosterParentId = false;
 						final boolean isCategoryColumn = false;
 						final boolean isTenantId = false;
+						final String mapped = null;
 						SqlFieldInfo sqlFieldInfo = new SqlFieldInfo(DefaultColumnPositionConstants.LIST_POSITION,
 								foreignFieldInfo.getColumnType(), foreignEntityInfo, foreignFieldInfo,
 								foreignKeySQLFieldInfo, field.getName(), column,
 								sqlDataSourceDialect.getPreferredName(column), null, null, isPrimaryKey, isForeignKey,
 								isListOnly, isIgnoreFkConstraint, foreignFieldInfo.getTransformer(), sqlFieldDimensions,
 								foreignFieldInfo.isNullable(), isFosterParentType, isFosterParentId, isCategoryColumn,
-								isTenantId, null, field, getterSetterInfo.getGetter(), getterSetterInfo.getSetter(),
+								isTenantId, mapped, null, field, getterSetterInfo.getGetter(), getterSetterInfo.getSetter(),
 								sqlDataSourceDialect.isAllObjectsInLowerCase());
 
 						propertyInfoMap.put(sqlFieldInfo.getName(), sqlFieldInfo);
@@ -1323,12 +1350,13 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 						final boolean isFosterParentId = false;
 						final boolean isCategoryColumn = false;
 						final boolean isTenantId = false;
+						final String mapped = null;
 						SqlFieldInfo sqlFieldInfo = new SqlFieldInfo(DefaultColumnPositionConstants.LIST_POSITION,
 								refFieldInfo.getColumnType(), refEntityInfo, refFieldInfo, null, field.getName(),
 								column, sqlDataSourceDialect.getPreferredName(column), null,
 								refEntityPreferredAlias.toUpperCase(), isPrimaryKey, isForeignKey, isListOnly,
 								isIgnoreFkConstraint, refFieldInfo.getTransformer(), sqlFieldDimensions, isNullable,
-								isFosterParentType, isFosterParentId, isCategoryColumn, isTenantId, null, field,
+								isFosterParentType, isFosterParentId, isCategoryColumn, isTenantId, mapped, null, field,
 								getterSetterInfo.getGetter(), getterSetterInfo.getSetter(),
 								sqlDataSourceDialect.isAllObjectsInLowerCase());
 

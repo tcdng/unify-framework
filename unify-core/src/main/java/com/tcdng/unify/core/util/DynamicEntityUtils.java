@@ -34,6 +34,7 @@ import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.annotation.DynamicEntityType;
 import com.tcdng.unify.core.annotation.ForeignKey;
 import com.tcdng.unify.core.annotation.ListOnly;
+import com.tcdng.unify.core.annotation.Mapped;
 import com.tcdng.unify.core.annotation.Table;
 import com.tcdng.unify.core.annotation.TableExt;
 import com.tcdng.unify.core.annotation.TableName;
@@ -129,6 +130,10 @@ public final class DynamicEntityUtils {
 						if (dynamicFieldInfo.isTenantId()) {
 							importSet.add(TenantId.class.getCanonicalName());
 						}
+						
+						if (dynamicFieldInfo.isWithMapping()) {
+							importSet.add(Mapped.class.getCanonicalName());
+						}
 					} else if (type.isChild()) {
 						DynamicChildFieldInfo childInfo = (DynamicChildFieldInfo) dynamicFieldInfo;
 						DynamicEntityUtils.generateChildAnnotation(fsb, childInfo);
@@ -167,6 +172,10 @@ public final class DynamicEntityUtils {
 						importSet.add(Column.class.getCanonicalName());
 						if (dynamicFieldInfo.isTenantId()) {
 							importSet.add(TenantId.class.getCanonicalName());
+						}
+						
+						if (dynamicFieldInfo.isWithMapping()) {
+							importSet.add(Mapped.class.getCanonicalName());
 						}
 					} else if (type.isChild()) {
 						DynamicChildFieldInfo childInfo = (DynamicChildFieldInfo) dynamicFieldInfo;
@@ -369,6 +378,11 @@ public final class DynamicEntityUtils {
 
 		if (dynamicColumnFieldInfo.isTenantId()) {
 			fsb.append(" @TenantId\n");
+		}
+		
+
+		if (dynamicColumnFieldInfo.isWithMapping()) {
+			fsb.append(" @Mapped(\"" + dynamicColumnFieldInfo.getMapping() + "\")\n");
 		}
 		
 		fsb.append(" @Column");
