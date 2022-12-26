@@ -30,7 +30,7 @@ public class DynamicChildFieldInfo extends DynamicFieldInfo {
     private DynamicEntityInfo childDynamicEntityInfo;
 
     public DynamicChildFieldInfo(DynamicFieldType type, DynamicEntityInfo childDynamicEntityInfo, String fieldName) {
-        super(type, EntityFieldType.CHILD, null, null, fieldName, null, false, false);
+        super(type, EntityFieldType.CHILD, null, null, fieldName, null, null, false, false);
         this.childDynamicEntityInfo = childDynamicEntityInfo;
     }
 

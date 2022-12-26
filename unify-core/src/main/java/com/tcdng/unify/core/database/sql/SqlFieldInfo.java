@@ -127,6 +127,7 @@ public class SqlFieldInfo implements SqlFieldSchemaInfo {
 		this.categoryColumn = categoryColumn;
 		this.tenantId = tenantId;
 		this.sqlFieldDimensions = sqlFieldDimensions;
+		this.mapped = mapped;
 		this.defaultVal = defaultVal;
 		this.field = field;
 		this.getter = getter;

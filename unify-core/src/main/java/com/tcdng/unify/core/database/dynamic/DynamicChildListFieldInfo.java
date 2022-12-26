@@ -31,7 +31,7 @@ public class DynamicChildListFieldInfo extends DynamicFieldInfo {
 
     public DynamicChildListFieldInfo(DynamicFieldType type, DynamicEntityInfo childDynamicEntityInfo,
             String fieldName) {
-        super(type, EntityFieldType.CHILDLIST, null, null, fieldName, null, false, false);
+        super(type, EntityFieldType.CHILDLIST, null, null, fieldName, null, null, false, false);
         this.childDynamicEntityInfo = childDynamicEntityInfo;
     }
 

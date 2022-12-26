@@ -49,7 +49,7 @@ public class DynamicColumnFieldInfo extends DynamicFieldInfo {
 	public DynamicColumnFieldInfo(DynamicFieldType type, DataType dataType, String columnName, String fieldName,
 			String mapped, String transformer, String defaultVal, int length, int precision, int scale,
 			boolean nullable, boolean descriptive, boolean tenantId) {
-		super(type, EntityFieldType.TABLE_COLUMN, dataType, columnName, fieldName, mapped, descriptive, tenantId);
+		super(type, EntityFieldType.TABLE_COLUMN, dataType, columnName, fieldName, mapped, null, descriptive, tenantId);
 		this.transformer = transformer;
 		this.defaultVal = defaultVal;
 		this.length = length;
