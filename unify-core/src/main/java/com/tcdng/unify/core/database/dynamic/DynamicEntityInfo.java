@@ -252,7 +252,7 @@ public class DynamicEntityInfo {
 		public Builder addField(DynamicFieldType type, DataType dataType, String columnName, String fieldName,
 				String mapped, String defaultVal, int length, int precision, int scale, boolean nullable,
 				boolean descriptive) throws UnifyException {
-			return addField(type, dataType, columnName, fieldName, null, defaultVal, length, precision, scale, nullable,
+			return addField(type, dataType, columnName, fieldName, mapped, null, defaultVal, length, precision, scale, nullable,
 					descriptive);
 		}
 
