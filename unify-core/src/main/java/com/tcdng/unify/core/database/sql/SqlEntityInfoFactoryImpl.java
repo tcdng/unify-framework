@@ -328,7 +328,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 						CategoryColumn cca = field.getAnnotation(CategoryColumn.class);
 						Mapped mpa = field.getAnnotation(Mapped.class);
 
-						final String mapped = mpa != null ? mpa.value() : null;
+						final String mapped = mpa != null ? AnnotationUtils.getAnnotationString(mpa.value()) : null;
 						if (mapped != null) {
 							if (ia != null || va != null || loa != null || fka != null || clda != null || cla != null
 									|| fpta != null || fpia != null || cca != null) {

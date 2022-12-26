@@ -21,6 +21,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import com.tcdng.unify.core.constant.AnnotationConstants;
+
 /**
  * Annotation for indicating a type or field is mapped.
  * 
@@ -32,5 +34,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Mapped {
 
-	String value();
+	String value() default AnnotationConstants.NONE;
 }
