@@ -1510,9 +1510,12 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
 	private void setRecordTenantId(SqlEntityInfo sqlEntityInfo, Entity record) throws UnifyException {
 		if (sqlEntityInfo.isWithTenantId()) {
-			final Long tenantId = sqlDataSourceDialect.isTenancyEnabled() ? sqlDataSourceDialect.getUserTenantId()
-					: Entity.PRIMARY_TENANT_ID;
-			DataUtils.setBeanProperty(record, sqlEntityInfo.getTenantIdFieldInfo().getName(), tenantId);
+			final String tenantFieldName = sqlEntityInfo.getTenantIdFieldInfo().getName();
+			if (DataUtils.getBeanProperty(Long.class, record, tenantFieldName) == null) {
+				final Long tenantId = sqlDataSourceDialect.isTenancyEnabled() ? sqlDataSourceDialect.getUserTenantId()
+						: Entity.PRIMARY_TENANT_ID;
+				DataUtils.setBeanProperty(record, tenantFieldName, tenantId);
+			}
 		}
 	}
 
