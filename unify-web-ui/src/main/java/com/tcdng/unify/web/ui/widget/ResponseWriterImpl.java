@@ -833,6 +833,13 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 	}
 
 	@Override
+	public WebStringWriter discardMergeSecondary() {
+		WebStringWriter secLsw = discardSecondary();
+		buf.append(secLsw);
+		return secLsw;
+	}
+
+	@Override
 	public void reset(Map<Class<? extends UplComponent>, UplComponentWriter> writers) {
 		this.writers = writers;
 		this.postCommandRefs = null;
