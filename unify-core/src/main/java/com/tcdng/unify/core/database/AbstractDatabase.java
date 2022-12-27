@@ -269,7 +269,7 @@ public abstract class AbstractDatabase extends AbstractUnifyComponent implements
     }
 
     @Override
-    public int countAll(Query<?> query) throws UnifyException {
+    public <T extends Entity> int countAll(Query<T> query) throws UnifyException {
         return getDatabaseSession().count(query);
     }
 

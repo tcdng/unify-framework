@@ -719,7 +719,7 @@ public interface Database extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    int countAll(Query<? extends Entity> query) throws UnifyException;
+    <T extends Entity> int countAll(Query<T> query) throws UnifyException;
 
     /**
      * Executes an aggregate function for single selected field of records that

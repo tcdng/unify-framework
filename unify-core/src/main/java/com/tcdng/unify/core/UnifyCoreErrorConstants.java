@@ -1064,4 +1064,13 @@ public interface UnifyCoreErrorConstants {
     /** Entity has multiple tenant Id annotated fields. Type = {0}, field = {1} */
     String RECORD_MULTIPLE_TENANTID_ANNOTATION = "UC_0111";
 
+    /** Bad combination of annotations with mapped annotation. Type = {0}, field = {1} */
+    String BAD_COMBINATION_OF_ANNOTATION_WITH_MAPPED = "UC_0112";
+
+    /** Column annotation required with mapped annotation. Type = {0}, field = {1} */
+    String COLUMN_ANNOTATION_REQUIRED_WITH_MAPPED = "UC_0113";
+
+    /** Mapped annotation should applied to field of type Long only. Type = {0}, field = {1} */
+    String APPLY_MAPPED_TO_LONG_FIELD_ONLY = "UC_0114";
+
 }

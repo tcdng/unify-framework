@@ -13,27 +13,26 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.criterion;
+package com.tcdng.unify.core.annotation;
+
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+import com.tcdng.unify.core.constant.AnnotationConstants;
 
 /**
- * Restriction for a property equals to a value.
+ * Annotation for indicating a type or field is mapped.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public class Equals extends AbstractSingleParamRestriction {
+@Documented
+@Target({ElementType.TYPE, ElementType.FIELD})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Mapped {
 
-    public Equals(String propertyName, Object value) {
-        super(propertyName, value);
-    }
-
-    @Override
-    public FilterConditionType getConditionType() {
-        return FilterConditionType.EQUALS;
-    }
-
-	@Override
-	public boolean isIdEqualsRestricted() {
-		return "id".equals(getFieldName());
-	}
+	String value() default AnnotationConstants.NONE;
 }

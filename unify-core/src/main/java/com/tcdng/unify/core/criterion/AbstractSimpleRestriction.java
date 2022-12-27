@@ -58,6 +58,11 @@ public abstract class AbstractSimpleRestriction extends AbstractRestriction impl
         return this.fieldName.equals(fieldName);
     }
 
+	@Override
+	public boolean isIdEqualsRestricted() {
+		return false;
+	}
+
     @Override
     public boolean isEmpty() {
         return false;
@@ -66,5 +71,9 @@ public abstract class AbstractSimpleRestriction extends AbstractRestriction impl
     @Override
     public boolean isSimple() {
         return true;
+    }
+    
+    public String toString() {
+    	return StringUtils.toXmlString(this);
     }
 }

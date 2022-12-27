@@ -893,6 +893,13 @@ public interface ResponseWriter extends UnifyComponent {
     WebStringWriter discardSecondary();
 
     /**
+     * Discards current secondary buffer with merge.
+     * 
+     * @return the discarded buffer otherwise null
+     */
+    WebStringWriter discardMergeSecondary();
+
+    /**
      * Resets this response writer for reuse.
      * 
      * @param writers

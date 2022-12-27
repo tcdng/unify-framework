@@ -33,7 +33,6 @@ import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyCorePropertyConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.UnifyOperationException;
-import com.tcdng.unify.core.UserToken;
 import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.Singleton;
@@ -187,13 +186,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
 	@Override
 	public Long getUserTenantId() throws UnifyException {
-		UserToken userToken = getUserToken();
-		Long tenantId = userToken != null ? getUserToken().getTenantId() : null;
-		if (tenantId == null) {
-			return Entity.PRIMARY_TENANT_ID;
-		}
-
-		return tenantId;
+		return super.getUserTenantId();
 	}
 
 	@Override
@@ -1812,11 +1805,13 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 			throws UnifyException {
 		Restriction restriction = query.getRestrictions();
 		if (tenancyEnabled && sqlEntityInfo.isWithTenantId() && !query.isIgnoreTenancy()) {
-			if (restriction.isEmpty()) {
-				restriction = new Equals(sqlEntityInfo.getTenantIdFieldInfo().getName(), getUserTenantId());
-			} else {
-				restriction = new And().add(restriction)
-						.add(new Equals(sqlEntityInfo.getTenantIdFieldInfo().getName(), getUserTenantId()));
+			final String tenantIdFieldName = sqlEntityInfo.getTenantIdFieldInfo().getName();
+			if (!query.isRestrictedField(tenantIdFieldName)) {
+				if (restriction.isEmpty()) {
+					restriction = new Equals(tenantIdFieldName, getUserTenantId());
+				} else if (!restriction.isIdEqualsRestricted()) {
+					restriction = new And().add(restriction).add(new Equals(tenantIdFieldName, getUserTenantId()));
+				}
 			}
 		}
 

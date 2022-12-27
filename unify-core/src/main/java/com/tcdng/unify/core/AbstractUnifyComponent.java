@@ -32,6 +32,7 @@ import com.tcdng.unify.core.constant.LocaleType;
 import com.tcdng.unify.core.data.Listable;
 import com.tcdng.unify.core.data.ParamConfig;
 import com.tcdng.unify.core.data.ValueStore;
+import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.format.Formatter;
 import com.tcdng.unify.core.logging.Logger;
 import com.tcdng.unify.core.logging.LoggingLevel;
@@ -1570,6 +1571,16 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	protected void throwUnsupportedOperationException() throws UnifyException {
 		Exception e = new UnsupportedOperationException();
 		throw new UnifyOperationException(e, getName(), e.getMessage());
+	}
+	
+	protected Long getUserTenantId() throws UnifyException {
+		UserToken userToken = getUserToken();
+		Long tenantId = userToken != null ? getUserToken().getTenantId() : null;
+		if (tenantId == null) {
+			return Entity.PRIMARY_TENANT_ID;
+		}
+
+		return tenantId;
 	}
 
 	protected List<ParamConfig> getComponentParamConfigs(Class<? extends UnifyComponent> componentType, String name)

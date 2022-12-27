@@ -62,6 +62,17 @@ public abstract class AbstractCompoundRestriction extends AbstractRestriction im
 	}
 
 	@Override
+	public boolean isIdEqualsRestricted() {
+		for (Restriction restriction : restrictionList) {
+			if (restriction.isIdEqualsRestricted()) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
+	@Override
 	public boolean isRestrictedField(String fieldName) {
 		for (Restriction restriction : restrictionList) {
 			if (restriction.isRestrictedField(fieldName)) {
@@ -152,4 +163,8 @@ public abstract class AbstractCompoundRestriction extends AbstractRestriction im
 
 		return replaced;
 	}
+    
+    public String toString() {
+    	return "" + restrictionList;
+    }
 }

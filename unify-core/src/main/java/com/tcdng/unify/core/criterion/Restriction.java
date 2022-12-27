@@ -59,6 +59,13 @@ public interface Restriction {
     boolean isRestrictedField(String fieldname);
 
     /**
+     * Checks if ID field restriction by equals.
+     * 
+     * @return true is property is part of this restriction otherwise false
+     */
+    boolean isIdEqualsRestricted();
+
+    /**
      * Checks if restriction is empty.
      * 
      * @return a true if empty otherwise false

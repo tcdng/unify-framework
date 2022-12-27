@@ -236,40 +236,40 @@ public class DynamicEntityInfo {
 			return this;
 		}
 
-		public Builder addTenantIdField(DynamicFieldType type, String columnName, String fieldName, int precision,
-				int scale) throws UnifyException {
+		public Builder addTenantIdField(DynamicFieldType type, String columnName, String fieldName, String mapped,
+				int precision, int scale) throws UnifyException {
 			checkFieldNameExist(fieldName);
 			if (withTenantIdField) {
 				throw new UnifyOperationException(getClass(), "Tenant ID field already exists");
 			}
 
 			withTenantIdField = true;
-			columnFields.put(fieldName, new DynamicColumnFieldInfo(type, DataType.LONG, columnName, fieldName, null,
-					"0", 0, precision, scale, false, false, true));
+			columnFields.put(fieldName, new DynamicColumnFieldInfo(type, DataType.LONG, columnName, fieldName, mapped,
+					null, "0", 0, precision, scale, false, false, true));
 			return this;
 		}
 
 		public Builder addField(DynamicFieldType type, DataType dataType, String columnName, String fieldName,
-				String defaultVal, int length, int precision, int scale, boolean nullable, boolean descriptive)
-				throws UnifyException {
-			return addField(type, dataType, columnName, fieldName, null, defaultVal, length, precision, scale, nullable,
+				String mapped, String defaultVal, int length, int precision, int scale, boolean nullable,
+				boolean descriptive) throws UnifyException {
+			return addField(type, dataType, columnName, fieldName, mapped, null, defaultVal, length, precision, scale, nullable,
 					descriptive);
 		}
 
 		public Builder addField(DynamicFieldType type, DataType dataType, String columnName, String fieldName,
-				String transformer, String defaultVal, int length, int precision, int scale, boolean nullable,
-				boolean descriptive) throws UnifyException {
+				String mapped, String transformer, String defaultVal, int length, int precision, int scale,
+				boolean nullable, boolean descriptive) throws UnifyException {
 			checkFieldNameExist(fieldName);
-			columnFields.put(fieldName, new DynamicColumnFieldInfo(type, dataType, columnName, fieldName, transformer,
-					defaultVal, length, precision, scale, nullable, descriptive, false));
+			columnFields.put(fieldName, new DynamicColumnFieldInfo(type, dataType, columnName, fieldName, mapped,
+					transformer, defaultVal, length, precision, scale, nullable, descriptive, false));
 			return this;
 		}
 
 		public Builder addField(DynamicFieldType type, String enumClassName, String columnName, String fieldName,
-				String defaultVal, boolean nullable, boolean descriptive) throws UnifyException {
+				String mapped, String defaultVal, boolean nullable, boolean descriptive) throws UnifyException {
 			checkFieldNameExist(fieldName);
-			columnFields.put(fieldName, new DynamicColumnFieldInfo(type, enumClassName, columnName, fieldName, nullable,
-					descriptive, false));
+			columnFields.put(fieldName, new DynamicColumnFieldInfo(type, enumClassName, columnName, fieldName, mapped,
+					nullable, descriptive, false));
 			return this;
 		}
 

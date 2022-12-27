@@ -40,7 +40,7 @@ public class DynamicListOnlyFieldInfo extends DynamicFieldInfo {
 	public DynamicListOnlyFieldInfo(DynamicFieldType type, DynamicFieldInfo propertyFieldInfo, String columnName,
 			String fieldName, String key, String property, boolean descriptive, boolean resolved) {
 		super(type, EntityFieldType.LIST_ONLY, propertyFieldInfo.getDataType(), columnName, fieldName,
-				propertyFieldInfo.getEnumClassName(), descriptive, false);
+				null, propertyFieldInfo.getEnumClassName(), descriptive, false);
 		this.propertyFieldInfo = propertyFieldInfo;
 		this.key = key;
 		this.property = property;
@@ -49,7 +49,7 @@ public class DynamicListOnlyFieldInfo extends DynamicFieldInfo {
 
 	public DynamicListOnlyFieldInfo(DynamicFieldType type, String columnName, String fieldName, String key,
 			String property, boolean descriptive) {
-		super(type, EntityFieldType.LIST_ONLY, DataType.STRING, columnName, fieldName, descriptive, false);
+		super(type, EntityFieldType.LIST_ONLY, DataType.STRING, columnName, fieldName, null, null, descriptive, false);
 		this.key = key;
 		this.property = property;
 		this.resolved = true;

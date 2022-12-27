@@ -121,6 +121,16 @@ public interface SqlFieldSchemaInfo {
 	 */
 	boolean isTenantId();
 
+	/**
+	 * Returns true if field is mapped.
+	 */
+	boolean isWithMapping();
+
+	/**
+	 * Return field mapping
+	 */
+	String getMapping();
+
     /**
      * Returns true if this schema info is the same with supplied info, otherwise
      * false.

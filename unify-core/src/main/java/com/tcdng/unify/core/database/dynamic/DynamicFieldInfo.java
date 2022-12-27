@@ -40,6 +40,8 @@ public abstract class DynamicFieldInfo {
 
 	private String fieldName;
 
+	private String mapped;
+
 	private String enumClassName;
 
 	private boolean descriptive;
@@ -47,17 +49,18 @@ public abstract class DynamicFieldInfo {
 	private boolean tenantId;
 
 	public DynamicFieldInfo(DynamicFieldType type, EntityFieldType fieldType, DataType dataType, String columnName,
-			String fieldName, boolean descriptive, boolean tenantId) {
-		this(type, fieldType, dataType, columnName, fieldName, null, descriptive, tenantId);
+			String fieldName, String mapped, boolean descriptive, boolean tenantId) {
+		this(type, fieldType, dataType, columnName, fieldName, mapped, null, descriptive, tenantId);
 	}
 
 	public DynamicFieldInfo(DynamicFieldType type, EntityFieldType fieldType, DataType dataType, String columnName,
-			String fieldName, String enumClassName, boolean descriptive, boolean tenantId) {
+			String fieldName, String mapped, String enumClassName, boolean descriptive, boolean tenantId) {
 		this.type = type;
 		this.fieldType = fieldType;
 		this.dataType = dataType;
 		this.columnName = columnName;
 		this.fieldName = fieldName;
+		this.mapped = mapped;
 		this.enumClassName = enumClassName;
 		this.descriptive = descriptive;
 		this.tenantId = tenantId;
@@ -101,6 +104,14 @@ public abstract class DynamicFieldInfo {
 
 	public boolean isGeneration() {
 		return DynamicFieldType.GENERATION.equals(type);
+	}
+
+	public boolean isWithMapping() {
+		return mapped != null;
+	}
+
+	public String getMapping() {
+		return mapped;
 	}
 
 	public final void finalizeResolution() throws UnifyException {
