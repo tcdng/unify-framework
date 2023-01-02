@@ -16,16 +16,14 @@
 package com.tcdng.unify.core;
 
 /**
- * Unify core session attribute constants.
+ * Unify core application attribute constants.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public interface UnifyCoreSessionAttributeConstants {
+public interface UnifyCoreApplicationAttributeConstants {
 
-    String FORCE_LOGOUT = "UNIFYCORE.FORCELOGOUT";
+    String INPUT_GLOBAL_ACCOUNTING_FLAG = "UNIFYCORE.INPUTGLOBALACCOUTING";
 
-    String POPUP_BACKING_BEAN = "UNIFYCORE.POPUPBACKINGBEAN";
-
-    String WIDGET_DATEFORMAT_OVERRIDE = "UNIFYCORE.WIDGETDATEFORMATOVERRIDE";
+    String OVERRIDE_WIDGET_DATEFORMAT_FLAG = "UNIFYCORE.OVERRIDEWIDGETDATEFORMAT";
 }

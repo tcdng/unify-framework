@@ -454,6 +454,9 @@ public class UnifyContainer {
 		// Initialization
 		started = true;
 		try {
+			ApplicationAttributeProvider applicationAttributeProvider = getComponent(
+					ApplicationAttributeProvider.class);
+			applicationContext.setAttributeProvider(applicationAttributeProvider);
 			requestContextManager = (RequestContextManager) getComponent(
 					ApplicationComponents.APPLICATION_REQUESTCONTEXTMANAGER);
 			uplCompiler = (UplCompiler) getComponent(ApplicationComponents.APPLICATION_UPLCOMPILER);

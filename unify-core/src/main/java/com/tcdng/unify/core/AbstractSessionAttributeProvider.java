@@ -15,55 +15,12 @@
  */
 package com.tcdng.unify.core;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Convenient abstract base class for session attribute providers
  * 
  * @author The Code Department
  * @since 1.0
  */
-public abstract class AbstractSessionAttributeProvider extends AbstractUnifyComponent implements SessionAttributeProvider {
+public abstract class AbstractSessionAttributeProvider extends AbstractAttributeProvider {
 
-	private Map<String, Object> attributes;
-	
-	private boolean load;
-	
-	public AbstractSessionAttributeProvider() {
-		this.attributes = new HashMap<String, Object>();
-		this.load = true;
-	}
-	
-	@Override
-	public Object getAttribute(String name) throws UnifyException {
-		if (load) {
-			synchronized(this) {
-				if (load) {
-					load(attributes);
-					load = false;
-				}
-			}
-		}
-		
-		return attributes.get(name);
-	}
-
-	@Override
-	public void reset() throws UnifyException {
-		attributes.clear();
-		load = true;
-	}
-
-	@Override
-	protected void onInitialize() throws UnifyException {
-
-	}
-
-	@Override
-	protected void onTerminate() throws UnifyException {
-
-	}
-
-	protected abstract void load(Map<String, Object> attributes) throws UnifyException;
 }

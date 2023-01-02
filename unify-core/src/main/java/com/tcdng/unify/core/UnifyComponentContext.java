@@ -22,6 +22,7 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
 
+import com.tcdng.unify.core.format.Formatter;
 import com.tcdng.unify.core.list.ListManager;
 import com.tcdng.unify.core.logging.Logger;
 import com.tcdng.unify.core.message.ResourceBundles;
@@ -312,6 +313,10 @@ public class UnifyComponentContext {
 	 */
 	public boolean isApplicationAttribute(String name) throws UnifyException {
 		return applicationContext.isAttribute(name);
+	}
+
+	public Formatter<Object> getWidgetDateFormatOverride(String formatterUpl) throws UnifyException {
+		return applicationContext.getWidgetDateFormatOverride(formatterUpl);
 	}
 
 	/**

@@ -24,6 +24,7 @@ import java.util.Set;
 import java.util.TimeZone;
 
 import com.tcdng.unify.core.data.Context;
+import com.tcdng.unify.core.format.Formatter;
 
 /**
  * Application context class.
@@ -33,119 +34,137 @@ import com.tcdng.unify.core.data.Context;
  */
 public class ApplicationContext extends Context {
 
-    private UnifyContainer container;
+	private final UnifyContainer container;
 
-    private Locale applicationLocale;
-    
-    private TimeZone timeZone;
+	private final Locale applicationLocale;
 
-    private String lineSeparator;
+	private final TimeZone timeZone;
 
-    private boolean ignoreViewDirective;
-    
-    private Map<String, RoleAttributes> roleAttributes;
+	private final String lineSeparator;
 
-    public ApplicationContext(UnifyContainer container, Locale applicationLocale, TimeZone timeZone, String lineSeparator, boolean ignoreViewDirective) {
-        this.container = container;
-        this.applicationLocale = applicationLocale;
-        this.timeZone = timeZone;
-        this.lineSeparator = lineSeparator;
-        this.ignoreViewDirective = ignoreViewDirective;
-        this.roleAttributes = new HashMap<String, RoleAttributes>();
-    }
+	private final boolean ignoreViewDirective;
 
-    /**
-     * Tests if context has role attributes loaded for the supplied role code.
-     * 
-     * @param roleCode
-     *            the role code
-     * @return true if context has attributes for role
-     */
-    public boolean isRoleAttributes(String roleCode) {
-        return this.roleAttributes.containsKey(roleCode);
-    }
+	private final Map<String, RoleAttributes> roleAttributes;
 
-    /**
-     * Sets attributes for specified role.
-     * 
-     * @param roleCode
-     *            the role code
-     * @param roleAttributes
-     *            the attributes to load.
-     */
-    public void setRoleAttributes(String roleCode, RoleAttributes roleAttributes) {
-        this.roleAttributes.put(roleCode, roleAttributes);
-    }
+	private ApplicationAttributeProvider attributeProvider;
 
-    /**
-     * Gets supplied role privilege code view directive.
-     * 
-     * @param roleCode
-     *            the role code
-     * @param privilege
-     *            the privilege to test
-     * @return the role's view directive for supplied privilege
-     */
-    public ViewDirective getRoleViewDirective(String roleCode, String privilege) {
-        if (roleCode != null && privilege != null && !privilege.isEmpty()) {
-            RoleAttributes roleAttributes = this.roleAttributes.get(roleCode);
-            if (roleAttributes != null) {
-                if (roleAttributes.isStaticViewDirectivePrivilege(privilege)) {
-                    return ViewDirective.ALLOW_VIEW_DIRECTIVE;
-                }
+	public ApplicationContext(UnifyContainer container, Locale applicationLocale, TimeZone timeZone,
+			String lineSeparator, boolean ignoreViewDirective) {
+		this.container = container;
+		this.applicationLocale = applicationLocale;
+		this.timeZone = timeZone;
+		this.lineSeparator = lineSeparator;
+		this.ignoreViewDirective = ignoreViewDirective;
+		this.roleAttributes = new HashMap<String, RoleAttributes>();
+	}
 
-                ViewDirective directive = roleAttributes.getDynamicViewDirective(privilege);
-                if (directive != null) {
-                    return directive;
-                }
-            }
-            return ViewDirective.DISALLOW_VIEW_DIRECTIVE;
-        }
-        return ViewDirective.ALLOW_VIEW_DIRECTIVE;
-    }
+	/**
+	 * Tests if context has role attributes loaded for the supplied role code.
+	 * 
+	 * @param roleCode the role code
+	 * @return true if context has attributes for role
+	 */
+	public boolean isRoleAttributes(String roleCode) {
+		return this.roleAttributes.containsKey(roleCode);
+	}
 
-    public Set<String> getPrivilegeCodes(String roleCode, String privilegeCategoryCode) {
-        if (roleCode != null && privilegeCategoryCode != null && !privilegeCategoryCode.isEmpty()) {
-            RoleAttributes roleAttributes = this.roleAttributes.get(roleCode);
-            if (roleAttributes != null) {
-                Set<String> privilegeCodes = roleAttributes.getPrivilegeCodes(privilegeCategoryCode);
-                if (privilegeCodes != null) {
-                    return privilegeCodes;
-                }
-            }
-        }
-        return Collections.emptySet();
-    }
+	/**
+	 * Sets attributes for specified role.
+	 * 
+	 * @param roleCode       the role code
+	 * @param roleAttributes the attributes to load.
+	 */
+	public void setRoleAttributes(String roleCode, RoleAttributes roleAttributes) {
+		this.roleAttributes.put(roleCode, roleAttributes);
+	}
 
-    public Set<String> getStepCodes(String roleCode) {
-        if (roleCode != null) {
-            return this.roleAttributes.get(roleCode).getStepCodes();
-        }
+	/**
+	 * Gets supplied role privilege code view directive.
+	 * 
+	 * @param roleCode  the role code
+	 * @param privilege the privilege to test
+	 * @return the role's view directive for supplied privilege
+	 */
+	public ViewDirective getRoleViewDirective(String roleCode, String privilege) {
+		if (roleCode != null && privilege != null && !privilege.isEmpty()) {
+			RoleAttributes roleAttributes = this.roleAttributes.get(roleCode);
+			if (roleAttributes != null) {
+				if (roleAttributes.isStaticViewDirectivePrivilege(privilege)) {
+					return ViewDirective.ALLOW_VIEW_DIRECTIVE;
+				}
 
-        return Collections.emptySet();
-    }
+				ViewDirective directive = roleAttributes.getDynamicViewDirective(privilege);
+				if (directive != null) {
+					return directive;
+				}
+			}
+			return ViewDirective.DISALLOW_VIEW_DIRECTIVE;
+		}
 
-    public List<String> getApplicationBanner() throws UnifyException {
-        return container.getApplicationBanner();
-    }
+		return ViewDirective.ALLOW_VIEW_DIRECTIVE;
+	}
 
-    public Locale getApplicationLocale() {
-        return applicationLocale;
-    }
+	@SuppressWarnings("unchecked")
+	public Formatter<Object> getWidgetDateFormatOverride(String formatterUpl) throws UnifyException {
+		return (Formatter<Object>) container.getUplComponent(applicationLocale, formatterUpl, true);
+	}
 
-    public TimeZone getTimeZone() {
-        return timeZone;
-    }
+	@Override
+	public Object getAttribute(String name) throws UnifyException {
+		Object val = super.getAttribute(name);
+		if (val == null && attributeProvider != null) {
+			return attributeProvider.getAttribute(name);
+		}
 
-    public String getLineSeparator() {
-        return lineSeparator;
-    }
+		return val;
+	}
 
-    public boolean isIgnoreViewDirective() {
+	public void setAttributeProvider(ApplicationAttributeProvider attributeProvider) {
+		this.attributeProvider = attributeProvider;
+	}
+
+	public Set<String> getPrivilegeCodes(String roleCode, String privilegeCategoryCode) {
+		if (roleCode != null && privilegeCategoryCode != null && !privilegeCategoryCode.isEmpty()) {
+			RoleAttributes roleAttributes = this.roleAttributes.get(roleCode);
+			if (roleAttributes != null) {
+				Set<String> privilegeCodes = roleAttributes.getPrivilegeCodes(privilegeCategoryCode);
+				if (privilegeCodes != null) {
+					return privilegeCodes;
+				}
+			}
+		}
+		return Collections.emptySet();
+	}
+
+	public Set<String> getStepCodes(String roleCode) {
+		if (roleCode != null) {
+			return this.roleAttributes.get(roleCode).getStepCodes();
+		}
+
+		return Collections.emptySet();
+	}
+
+	public List<String> getApplicationBanner() throws UnifyException {
+		return container.getApplicationBanner();
+	}
+
+	public Locale getApplicationLocale() {
+		return applicationLocale;
+	}
+
+	public TimeZone getTimeZone() {
+		return timeZone;
+	}
+
+	public String getLineSeparator() {
+		return lineSeparator;
+	}
+
+	public boolean isIgnoreViewDirective() {
 		return ignoreViewDirective;
 	}
 
 	public UnifyContainer getContainer() {
-        return container;
-    }
+		return container;
+	}
 }

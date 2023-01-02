@@ -21,19 +21,6 @@ package com.tcdng.unify.core;
  * @author The Code Department
  * @since 1.0
  */
-public interface SessionAttributeProvider extends UnifyComponent {
+public interface SessionAttributeProvider extends AttributeProvider {
 
-	/**
-	 * Gets a session attribute.
-	 * @param name the attribute name
-	 * @return the attribute value
-	 * @throws UnifyException if an error occurs
-	 */
-	Object getAttribute(String name) throws UnifyException;
-	
-	/**
-	 * Resets this session attribute provider
-	 * @throws UnifyException if an error occurs
-	 */
-	void reset() throws UnifyException; 
 }

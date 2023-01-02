@@ -16,16 +16,24 @@
 package com.tcdng.unify.core;
 
 /**
- * Unify core session attribute constants.
+ * Attribute attribute provider.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public interface UnifyCoreSessionAttributeConstants {
+public interface AttributeProvider extends UnifyComponent {
 
-    String FORCE_LOGOUT = "UNIFYCORE.FORCELOGOUT";
-
-    String POPUP_BACKING_BEAN = "UNIFYCORE.POPUPBACKINGBEAN";
-
-    String WIDGET_DATEFORMAT_OVERRIDE = "UNIFYCORE.WIDGETDATEFORMATOVERRIDE";
+	/**
+	 * Gets an attribute.
+	 * @param name the attribute name
+	 * @return the attribute value
+	 * @throws UnifyException if an error occurs
+	 */
+	Object getAttribute(String name) throws UnifyException;
+	
+	/**
+	 * Resets this attribute provider
+	 * @throws UnifyException if an error occurs
+	 */
+	void reset() throws UnifyException; 
 }
