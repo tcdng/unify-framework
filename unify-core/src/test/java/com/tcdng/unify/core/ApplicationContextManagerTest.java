@@ -30,7 +30,7 @@ public class ApplicationContextManagerTest extends AbstractUnifyComponentTest {
     @Test
     public void testLoadRequestContext() throws Exception {
         RequestContextManager requestContextManager =
-                (RequestContextManager) this.getComponent(ApplicationComponents.APPLICATION_REQUESTCONTEXTMANAGER);
+                (RequestContextManager) getComponent(ApplicationComponents.APPLICATION_REQUESTCONTEXTMANAGER);
         requestContextManager.reset();
         requestContextManager.loadRequestContext(null);
         assertNotNull(requestContextManager.getRequestContext());
@@ -39,7 +39,7 @@ public class ApplicationContextManagerTest extends AbstractUnifyComponentTest {
     @Test
     public void testUnloadRequestContext() throws Exception {
         RequestContextManager requestContextManager =
-                (RequestContextManager) this.getComponent(ApplicationComponents.APPLICATION_REQUESTCONTEXTMANAGER);
+                (RequestContextManager) getComponent(ApplicationComponents.APPLICATION_REQUESTCONTEXTMANAGER);
         requestContextManager.reset();
         requestContextManager.loadRequestContext(null);
         assertNotNull(requestContextManager.getRequestContext());

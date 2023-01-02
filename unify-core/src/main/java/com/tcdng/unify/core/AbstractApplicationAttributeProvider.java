@@ -21,6 +21,7 @@ package com.tcdng.unify.core;
  * @author The Code Department
  * @since 1.0
  */
-public abstract class AbstractApplicationAttributeProvider extends AbstractAttributeProvider {
+public abstract class AbstractApplicationAttributeProvider extends AbstractAttributeProvider
+		implements ApplicationAttributeProvider {
 
 }
