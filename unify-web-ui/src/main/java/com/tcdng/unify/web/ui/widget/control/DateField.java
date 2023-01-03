@@ -60,6 +60,12 @@ public class DateField extends AbstractTimeField {
     }
 
     @Override
+	public Formatter<Object> getFormatter() throws UnifyException {
+		Formatter<Object> overrideFormatter = getWidgetDateFormatOverrideFormatter();
+		return overrideFormatter != null ? overrideFormatter : super.getFormatter();
+	}
+
+	@Override
     public Pattern[] getPattern() throws UnifyException {
         Pattern[] pattern = super.getPattern();
         for (Pattern p : pattern) {

@@ -16,11 +16,11 @@
 package com.tcdng.unify.core;
 
 /**
- * Session attribute provider.
+ * Unify core application attribute constants.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public interface SessionAttributeProvider extends AttributeProvider {
+public interface UnifyCoreApplicationAttributeConstants {
 
 }

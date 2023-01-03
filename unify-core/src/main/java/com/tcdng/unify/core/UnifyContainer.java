@@ -50,6 +50,7 @@ import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.Periodic;
 import com.tcdng.unify.core.annotation.PeriodicType;
 import com.tcdng.unify.core.annotation.Plugin;
+import com.tcdng.unify.core.annotation.Preferred;
 import com.tcdng.unify.core.application.BootService;
 import com.tcdng.unify.core.business.BusinessLogicUnit;
 import com.tcdng.unify.core.business.BusinessService;
@@ -533,6 +534,10 @@ public class UnifyContainer {
 				}
 			}
 			logInfo("Periodic task scheduling completed.");
+			
+			ApplicationAttributeProvider applicationAttributeProvider = getComponent(
+					ApplicationAttributeProvider.class);
+			applicationContext.setAttributeProvider(applicationAttributeProvider);
 
 			// Open container interfaces to start servicing requests
 			openInterfaces();
@@ -884,12 +889,23 @@ public class UnifyContainer {
 			throw new UnifyException(UnifyCoreErrorConstants.NO_IMPLEMENTATION_OF_TYPE_FOUND, componentType.toString());
 		}
 
+		UnifyComponentConfig config = configs.get(0);
 		if (configs.size() > 1) {
-			throw new UnifyException(UnifyCoreErrorConstants.MULTIPLE_IMPLEMENTATIONS_OF_TYPE_FOUND,
-					componentType.toString());
+			int preferred = 0;
+			for (final UnifyComponentConfig _config: configs) {
+				if (_config.getType().isAnnotationPresent(Preferred.class)) {
+					config = _config;
+					preferred++;
+				}
+			}
+			
+			if (preferred != 1) {
+				throw new UnifyException(UnifyCoreErrorConstants.MULTIPLE_IMPLEMENTATIONS_OF_TYPE_FOUND,
+						componentType.toString());
+			}
 		}
 
-		return (T) getComponent(configs.get(0).getName(), null, null);
+		return (T) getComponent(config.getName(), null, null);
 	}
 
 	/**

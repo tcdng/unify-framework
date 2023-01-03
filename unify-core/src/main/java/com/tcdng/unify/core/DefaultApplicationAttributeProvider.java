@@ -15,12 +15,22 @@
  */
 package com.tcdng.unify.core;
 
+import java.util.Map;
+
+import com.tcdng.unify.core.annotation.Component;
+
 /**
- * Session attribute provider.
+ * Default application attribute providers
  * 
  * @author The Code Department
  * @since 1.0
  */
-public interface SessionAttributeProvider extends AttributeProvider {
+@Component("default-applicationattributeprovider")
+public class DefaultApplicationAttributeProvider extends AbstractApplicationAttributeProvider {
+
+	@Override
+	protected void load(Map<String, Object> attributes) throws UnifyException {
+
+	}
 
 }

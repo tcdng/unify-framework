@@ -16,11 +16,12 @@
 package com.tcdng.unify.core;
 
 /**
- * Session attribute provider.
+ * Convenient abstract base class for application attribute providers
  * 
  * @author The Code Department
  * @since 1.0
  */
-public interface SessionAttributeProvider extends AttributeProvider {
+public abstract class AbstractApplicationAttributeProvider extends AbstractAttributeProvider
+		implements ApplicationAttributeProvider {
 
 }

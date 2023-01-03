@@ -693,7 +693,21 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 * @throws UnifyException if an error occurs
 	 */
 	protected Object getApplicationAttribute(String name) throws UnifyException {
-		return unifyComponentContext.getApplicationAttribute(name);
+		return unifyComponentContext != null ? unifyComponentContext.getApplicationAttribute(name)
+				: null;
+	}
+
+	/**
+	 * Gets an attribute value from application context with a conversion to the appropriate type.
+	 * 
+	 * @param name the attribute name
+	 * @return the attribute value
+	 * @throws UnifyException if an error occurs
+	 */
+	protected <T> T getApplicationAttribute(Class<T> typeClass, String name) throws UnifyException {
+		Object val = unifyComponentContext != null ? unifyComponentContext.getApplicationAttribute(name)
+				: null;
+		return DataUtils.convert(typeClass, val);
 	}
 
 	/**
@@ -814,11 +828,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 * @throws UnifyException if an error occurs
 	 */
 	protected Object removeSessionAttribute(String name) throws UnifyException {
-		if (unifyComponentContext != null) {
-			return unifyComponentContext.getSessionContext().removeAttribute(name);
-		}
-
-		return null;
+		return unifyComponentContext != null ? unifyComponentContext.getSessionContext().removeAttribute(name):null;
 	}
 
 	/**
@@ -921,15 +931,45 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	}
 
 	/**
-	 * Checks if user session is in global accounting mode
+	 * Checks if session is in global accounting mode
 	 * 
 	 * @return the global accounting mode flag
 	 * @throws UnifyException if an error occurs
 	 */
 	protected boolean isGlobalAccounting() throws UnifyException {
-		return getSessionAttribute(boolean.class, UnifyCoreSessionAttributeConstants.INPUT_GLOBAL_ACCOUNTING_FLAG);
+		return getSessionAttribute(boolean.class,
+				UnifyCoreSessionAttributeConstants.INPUT_GLOBAL_ACCOUNTING_FLAG);
 	}
 
+	/**
+	 * Checks if session is in widget date format override mode
+	 * 
+	 * @return the widget date format override flag
+	 * @throws UnifyException if an error occurs
+	 */
+	protected boolean isWidgetDateFormatOverride() throws UnifyException {
+		return getSessionAttribute(boolean.class,
+				UnifyCoreSessionAttributeConstants.OVERRIDE_WIDGET_DATEFORMAT_FLAG);
+	}
+
+	/**
+	 * Gets widget date format override formatter.
+	 * 
+	 * @return the override formatter otherwise null
+	 * @throws UnifyException if an error occurs
+	 */
+	protected Formatter<Object> getWidgetDateFormatOverrideFormatter() throws UnifyException {
+		if (isWidgetDateFormatOverride()) {
+			String formatterUpl = getSessionAttribute(String.class,
+					UnifyCoreSessionAttributeConstants.WIDGET_DATEFORMAT_OVERRIDE);
+			if (!StringUtils.isBlank(formatterUpl)) {
+				return unifyComponentContext.getWidgetDateFormatOverride(formatterUpl);
+			}
+		}
+
+		return null;
+	}
+	
 	/**
 	 * Gets current session user token.
 	 * 
