@@ -931,25 +931,25 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	}
 
 	/**
-	 * Checks if application is in global accounting mode
+	 * Checks if session is in global accounting mode
 	 * 
 	 * @return the global accounting mode flag
 	 * @throws UnifyException if an error occurs
 	 */
 	protected boolean isGlobalAccounting() throws UnifyException {
-		return getApplicationAttribute(boolean.class,
-				UnifyCoreApplicationAttributeConstants.INPUT_GLOBAL_ACCOUNTING_FLAG);
+		return getSessionAttribute(boolean.class,
+				UnifyCoreSessionAttributeConstants.INPUT_GLOBAL_ACCOUNTING_FLAG);
 	}
 
 	/**
-	 * Checks if application is in widget date format override mode
+	 * Checks if session is in widget date format override mode
 	 * 
 	 * @return the widget date format override flag
 	 * @throws UnifyException if an error occurs
 	 */
 	protected boolean isWidgetDateFormatOverride() throws UnifyException {
-		return getApplicationAttribute(boolean.class,
-				UnifyCoreApplicationAttributeConstants.OVERRIDE_WIDGET_DATEFORMAT_FLAG);
+		return getSessionAttribute(boolean.class,
+				UnifyCoreSessionAttributeConstants.OVERRIDE_WIDGET_DATEFORMAT_FLAG);
 	}
 
 	/**

@@ -23,7 +23,4 @@ package com.tcdng.unify.core;
  */
 public interface UnifyCoreApplicationAttributeConstants {
 
-    String INPUT_GLOBAL_ACCOUNTING_FLAG = "UNIFYCORE.INPUTGLOBALACCOUTING";
-
-    String OVERRIDE_WIDGET_DATEFORMAT_FLAG = "UNIFYCORE.OVERRIDEWIDGETDATEFORMAT";
 }
