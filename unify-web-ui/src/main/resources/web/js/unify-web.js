@@ -5438,11 +5438,15 @@ ux.applyPattern = function(df) {
 					if(df._lists && df._lists[i].list) {
 						dat = df._lists[i].list[parseInt(dat)];
 					}
-
-					if (df._padLeft) {
-						val += ux.padLeft(dat, '0', fmt.length);
+					
+					if (fmt.target == 'year_' && fmt.length == 2) {
+						val += (dat + '').substring(2);
 					} else {
-						val += dat;
+						if (df._padLeft) {
+							val += ux.padLeft(dat, '0', fmt.length);
+						} else {
+							val += dat;
+						}
 					}
 				} else {
 					return "";

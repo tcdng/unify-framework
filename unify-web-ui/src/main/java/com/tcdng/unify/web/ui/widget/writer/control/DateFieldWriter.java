@@ -128,7 +128,7 @@ public class DateFieldWriter extends AbstractPopupTextFieldWriter {
         }
         writer.writeParam("pEnabled", popupEnabled);
         writer.endFunction();
-    }
+     }
 
     @Override
     protected String getOnShowAction() throws UnifyException {
