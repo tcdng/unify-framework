@@ -410,6 +410,15 @@ public class StringUtilsTest {
 		String pstring = StringUtils.buildParameterizedString(tokens);
 		assertEquals("Hello {{name}} ID={{g:id-generator}} dob={{dob#DYD}}\n", pstring);
 	}
+
+    @Test
+	public void testBuildParameterizedStringCustomGenerator() throws Exception {
+		List<StringToken> tokens = Arrays.asList(new TextToken("Hello "), ParamToken.getParamToken("name"),
+				new TextToken(" ID="), ParamToken.getGeneratorParamToken("cgen", "id-generator"), new TextToken(" dob="),
+				ParamToken.getFormattedParamToken(StandardFormatType.DATE_YYYYMMDD_DASH, "dob"), new NewlineToken());
+		String pstring = StringUtils.buildParameterizedString(tokens);
+		assertEquals("Hello {{name}} ID={{cgen:id-generator}} dob={{dob#DYD}}\n", pstring);
+	}
     
     @Test
     public void testBreakdownParameterizedStringNull() throws Exception {
@@ -544,6 +553,73 @@ public class StringUtilsTest {
         assertEquals(" sky.", token.getToken());
         assertFalse(token.isParam());
     }
+
+    @Test
+    public void testBreakdownParameterizedStringImplicitGeneratorParameter() throws Exception {
+        List<StringToken> tokenList = StringUtils.breakdownParameterizedString("The {{:color}} sky.");
+        assertNotNull(tokenList);
+        assertEquals(3, tokenList.size());
+
+        StringToken token = tokenList.get(0);
+        assertEquals("The ", token.getToken());
+        assertFalse(token.isParam());
+
+        token = tokenList.get(1);
+        assertEquals("g:color", token.getToken());       
+        assertTrue(token.isParam());
+        assertTrue(token.isGeneratorParam());
+        assertEquals("g", ((ParamToken) token).getComponent());       
+        
+
+        token = tokenList.get(2);
+        assertEquals(" sky.", token.getToken());
+        assertFalse(token.isParam());
+    }
+
+    @Test
+    public void testBreakdownParameterizedStringCustomParameter() throws Exception {
+        List<StringToken> tokenList = StringUtils.breakdownParameterizedString("The {{m:color}} sky.");
+        assertNotNull(tokenList);
+        assertEquals(3, tokenList.size());
+
+        StringToken token = tokenList.get(0);
+        assertEquals("The ", token.getToken());
+        assertFalse(token.isParam());
+
+        token = tokenList.get(1);
+        assertEquals("m:color", token.getToken());       
+        assertTrue(token.isParam());
+        assertTrue(token.isGeneratorParam());
+        assertEquals("m", ((ParamToken) token).getComponent());       
+        
+
+        token = tokenList.get(2);
+        assertEquals(" sky.", token.getToken());
+        assertFalse(token.isParam());
+    }
+
+    @Test
+    public void testBreakdownParameterizedStringBigCustomParameter() throws Exception {
+        List<StringToken> tokenList = StringUtils.breakdownParameterizedString("The {{map:color}} sky.");
+        assertNotNull(tokenList);
+        assertEquals(3, tokenList.size());
+
+        StringToken token = tokenList.get(0);
+        assertEquals("The ", token.getToken());
+        assertFalse(token.isParam());
+
+        token = tokenList.get(1);
+        assertEquals("map:color", token.getToken());       
+        assertTrue(token.isParam());
+        assertTrue(token.isGeneratorParam());
+        assertEquals("map", ((ParamToken) token).getComponent());       
+        
+
+        token = tokenList.get(2);
+        assertEquals(" sky.", token.getToken());
+        assertFalse(token.isParam());
+    }
+
 
     @Test
     public void testBreakdownParameterizedStringMultipleParameterSeparate() throws Exception {
