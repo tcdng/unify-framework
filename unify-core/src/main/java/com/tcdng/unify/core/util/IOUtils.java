@@ -35,6 +35,8 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -986,6 +988,42 @@ public class IOUtils {
         return new CustomFilenameFilter(prefixes, extensions, signatures);
     }
 
+	/**
+	 * Posts JSON string to an end point.
+	 * 
+	 * @param endpoint the end point
+	 * @param json     the json to post
+	 * @return the response
+	 * @throws UnifyException if an error occurs
+	 */
+	public static String postJsonToEndpoint(String endpoint, String json) throws UnifyException {
+		StringBuilder response = new StringBuilder();
+		try {
+			URL url = new URL(endpoint);
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setRequestMethod("POST");
+			conn.setRequestProperty("Content-Type", "application/json; utf-8");
+			conn.setRequestProperty("Accept", "application/json");
+			conn.setDoOutput(true);
+
+			try (OutputStream out = conn.getOutputStream()) {
+				out.write(json.getBytes("utf-8"));
+				out.flush();
+			}
+
+			try (BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"))) {
+				String responseLine = null;
+				while ((responseLine = br.readLine()) != null) {
+					response.append(responseLine.trim());
+				}
+			}
+		} catch (Exception e) {
+			throw new UnifyException(e, UnifyCoreErrorConstants.IOUTIL_STREAM_RW_ERROR);
+		}
+
+		return response.toString();
+	}
+    
     public static class CustomFilenameFilter implements FilenameFilter {
 
         private static String SEPERATOR = ",";
