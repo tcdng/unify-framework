@@ -41,6 +41,7 @@ import org.junit.Test;
 import com.tcdng.unify.core.AbstractUnifyComponentTest;
 import com.tcdng.unify.core.constant.OrderType;
 import com.tcdng.unify.core.constant.PrintFormat;
+import com.tcdng.unify.core.criterion.Order;
 import com.tcdng.unify.core.format.Formatter;
 
 /**
@@ -310,6 +311,49 @@ public class DataUtilsTest extends AbstractUnifyComponentTest {
         assertEquals(16, customer.getOrders()[0].intValue());
         assertEquals(100, customer.getOrders()[1].intValue());
         assertEquals(-5, customer.getOrders()[2].intValue());
+    }
+
+    @Test
+    public void testSortByOrderNull() throws Exception {
+        DataUtils.sort(bookList, Book.class, null);
+        assertEquals("Saladin", bookList.get(0).getAuthor());
+        assertEquals("Paladin", bookList.get(1).getAuthor());
+        assertEquals("Aladin", bookList.get(2).getAuthor());
+        assertEquals("Maladin", bookList.get(3).getAuthor());
+    }
+
+    @Test
+    public void testSortByOrderAscending() throws Exception {
+    	Order order = new Order().add("author");
+        DataUtils.sort(bookList, Book.class, order);
+        assertEquals("Aladin", bookList.get(0).getAuthor());
+        assertEquals("Maladin", bookList.get(1).getAuthor());
+        assertEquals("Paladin", bookList.get(2).getAuthor());
+        assertEquals("Saladin", bookList.get(3).getAuthor());
+
+    	order = new Order().add("price");
+        DataUtils.sort(bookList, Book.class, order);
+        assertEquals("Saladin", bookList.get(0).getAuthor());
+        assertEquals("Maladin", bookList.get(1).getAuthor());
+        assertEquals("Aladin", bookList.get(2).getAuthor());
+        assertEquals("Paladin", bookList.get(3).getAuthor());
+    }
+
+    @Test
+    public void testSortByOrderDescending() throws Exception {
+    	Order order = new Order().add("author", OrderType.DESCENDING);
+        DataUtils.sort(bookList, Book.class, order);
+        assertEquals("Saladin", bookList.get(0).getAuthor());
+        assertEquals("Paladin", bookList.get(1).getAuthor());
+        assertEquals("Maladin", bookList.get(2).getAuthor());
+        assertEquals("Aladin", bookList.get(3).getAuthor());
+
+    	order = new Order().add("price", OrderType.DESCENDING);
+        DataUtils.sort(bookList, Book.class, order);
+        assertEquals("Paladin", bookList.get(0).getAuthor());
+        assertEquals("Aladin", bookList.get(1).getAuthor());
+        assertEquals("Maladin", bookList.get(2).getAuthor());
+        assertEquals("Saladin", bookList.get(3).getAuthor());
     }
 
     @Test

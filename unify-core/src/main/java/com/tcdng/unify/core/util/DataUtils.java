@@ -64,6 +64,7 @@ import com.tcdng.unify.core.convert.PeriodConverter;
 import com.tcdng.unify.core.convert.StringConverter;
 import com.tcdng.unify.core.convert.UplElementReferencesConverter;
 import com.tcdng.unify.core.convert.UploadedFileConverter;
+import com.tcdng.unify.core.criterion.Order;
 import com.tcdng.unify.core.data.Input;
 import com.tcdng.unify.core.data.Money;
 import com.tcdng.unify.core.data.Period;
@@ -654,6 +655,26 @@ public final class DataUtils {
         }
         return blocks;
     }
+
+    /**
+     * Sorts a list by order
+     * 
+     * @param list
+     *                  the list to sort
+     * @param beanClass
+     *                  the bean type
+     * @param order
+     *                  the sorting order
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+	public static <T> void sort(List<?> list, Class<T> beanClass, Order order) throws UnifyException {
+		if (order != null) {
+			for (Order.Part part : order.getParts()) {
+				DataUtils.sort(list, beanClass, part.getField(), part.isAscending());
+			}
+		}
+	}
 
     /**
      * Sorts a list by bean property ascending.
