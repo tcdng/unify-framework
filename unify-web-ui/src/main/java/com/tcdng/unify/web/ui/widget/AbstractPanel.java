@@ -247,6 +247,10 @@ public abstract class AbstractPanel extends AbstractContainer implements Panel {
 		return getRequestTarget(MessageResult.class);
 	}
 
+	protected String getActionFullPath(String actionName) throws UnifyException {
+		return resolveRequestPage().getPathId() +  actionName;
+	}
+
 	protected String getCommandFullPath(String actionName) throws UnifyException {
 		return resolveRequestPage().getPathId() + "/command?req_cmd=" + getId() + "->" + actionName;
 	}

@@ -937,10 +937,14 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
         pathInfo.setRemoteSave(remoteSave);
     }
 
+    protected void closeAllPages() throws UnifyException {
+    	performClosePage(ClosePageMode.CLOSE_ALL, true);
+    }
+
     private MessageResult getMessageResult() throws UnifyException {
         return getRequestTarget(MessageResult.class);
     }
-
+    
     private void performClosePage(ClosePageMode closePageMode, boolean isFireClose) throws UnifyException {
         PageRequestContextUtil pageRequestContextUtil = getPageRequestContextUtil();
         Page currentPage = pageRequestContextUtil.getRequestPage();

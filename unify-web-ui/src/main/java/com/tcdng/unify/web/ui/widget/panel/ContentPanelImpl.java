@@ -272,6 +272,7 @@ public class ContentPanelImpl extends AbstractContentPanel {
             ContentInfo contentInfo = contentByPathIdMap.remove(removePathId);
             if (contentInfo == null) {
                 // TODO throw some exception here
+            	continue;
             }
 
             int pageIndex = contentInfo.getPageIndex();
