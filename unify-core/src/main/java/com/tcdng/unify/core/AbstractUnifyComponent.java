@@ -1092,6 +1092,16 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	}
 
 	/**
+	 * Logs a exception at ERROR level.
+	 * 
+	 * @param taskMonitor the task monitor
+	 * @param exception the exception to log
+	 */
+	protected void logError(TaskMonitor taskMonitor, Exception exception) {
+		log(taskMonitor, LoggingLevel.ERROR, exception);
+	}
+
+	/**
 	 * Logs a message at DEBUG level.
 	 * 
 	 * @param message the message to log
@@ -1137,7 +1147,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 * @param exception the exception to log
 	 */
 	protected void logError(Exception exception) {
-		log(LoggingLevel.ERROR, exception);
+		log(null, LoggingLevel.ERROR, exception);
 	}
 
 	/**
@@ -1165,7 +1175,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 * @param exception the exception to log
 	 */
 	protected void logSevere(Exception exception) {
-		log(LoggingLevel.SEVERE, exception);
+		log(null, LoggingLevel.SEVERE, exception);
 	}
 
 	/**
@@ -1713,11 +1723,19 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 		}
 	}
 
-	private void log(LoggingLevel loggingLevel, Exception exception) {
+	private void log(TaskMonitor taskMonitor, LoggingLevel loggingLevel, Exception exception) {
 		try {
 			Logger logger = unifyComponentContext.getLogger();
-			if (logger.isEnabled(loggingLevel)) {
-				logger.log(loggingLevel, getExceptionMessage(LocaleType.APPLICATION, exception), exception);
+			boolean enabled = logger.isEnabled(loggingLevel);
+			if (enabled || taskMonitor != null) {
+				String msg = getExceptionMessage(LocaleType.APPLICATION, exception);
+				if (enabled) {
+					logger.log(loggingLevel, msg, exception);
+				}
+				
+				if (taskMonitor != null) {
+					taskMonitor.addMessage(msg);
+				}
 			}
 		} catch (UnifyException e) {
 			e.printStackTrace();
