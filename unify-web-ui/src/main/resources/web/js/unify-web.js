@@ -1126,15 +1126,17 @@ ux.rigContentPanel = function(rgp) {
 
 ux.rewireContent = function(evp) {
 	const cbody = _id(evp.cPanelId);
-	const cbrect = cbody.getBoundingClientRect();
-	const maxh = window.innerHeight - cbrect.top;
-	if (maxh > 0) {
-		cbody.style.overflowY = "scroll"; 
-		cbody.style.maxHeight = maxh + "px";
-		cbody.style.height = maxh + "px";
-	} else {
-		cbody.style.overflowY = "auto"; 
-		cbody.style.maxHeight = "none";
+	if (cbody) {
+		const cbrect = cbody.getBoundingClientRect();
+		const maxh = window.innerHeight - cbrect.top;
+		if (maxh > 0) {
+			cbody.style.overflowY = "scroll"; 
+			cbody.style.maxHeight = maxh + "px";
+			cbody.style.height = maxh + "px";
+		} else {
+			cbody.style.overflowY = "auto"; 
+			cbody.style.maxHeight = "none";
+		}
 	}
 }
 
