@@ -68,12 +68,13 @@ public class LinkGridWriter extends AbstractControlWriter {
                         columns = 1;
                     }
 
-                    Integer colWidth = 100 / columns; // Column with in percentage
-                    int len = linkInfoList.size();
-                    for (int i = 0; i < len;) {
+                    final int colWidthPercent = 100 / columns;
+                    final int len = linkInfoList.size();
+                    final int rows = len / columns + (len % columns > 0 ? 1: 0);
+                    for (int r = 0; r < rows; r++) {
                         writer.write("<tr>");
-                        for (int k = 0; k < columns; k++, i++) {
-                            writer.write("<td style=\"width:").write(colWidth).write("%;\">");
+                        for (int c = 0, i = r * columns; c < columns; c++, i++) {
+                            writer.write("<td style=\"width:").write(colWidthPercent).write("%;\">");
                             if (i < len) {
                                 LinkInfo linkInfo = linkInfoList.get(i);
                                 writer.write("<a class=\"lglink\"");
