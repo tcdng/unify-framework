@@ -27,6 +27,8 @@ public class LinkInfo {
 
     private String caption;
 
+    private int layoutIndex;
+    
     public LinkInfo(String code, String caption) {
         this.code = code;
         this.caption = caption;
@@ -39,4 +41,12 @@ public class LinkInfo {
     public String getCaption() {
         return caption;
     }
+
+	public int getLayoutIndex() {
+		return layoutIndex;
+	}
+
+	public void setLayoutIndex(int layoutIndex) {
+		this.layoutIndex = layoutIndex;
+	}
 }

@@ -654,6 +654,7 @@ overflow-x:hidden;overflow-y:scroll;border-top: solid 1px #A0A0A0;border-left: s
 
 /** Link grid */
 .ui-linkgrid {}
+.ui-linkgrid .col {width:220px;}
 .ui-linkgrid .lgcatcap{display:block; background-color:#F0F0F0; font-size:18px;
 	padding:4px 4px; vertical-align:middle; margin-bottom:8px;}
 .ui-linkgrid .lgcatsec{padding-left:8px; padding-bottom:24px;}
