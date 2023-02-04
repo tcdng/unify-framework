@@ -38,7 +38,7 @@ public class BeanValueStore extends AbstractSingleObjectValueStore<Object> {
 
     @Override
     public boolean isGettable(String name) throws UnifyException {
-        return storage != null && ReflectUtils.isGettableField(storage.getClass(), name);
+        return isTempValue(name) || (storage != null && ReflectUtils.isGettableField(storage.getClass(), name));
     }
 
     @Override

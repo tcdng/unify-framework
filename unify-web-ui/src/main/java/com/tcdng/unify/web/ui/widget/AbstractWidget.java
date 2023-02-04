@@ -799,7 +799,7 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 	protected void applyOverrideTenantId(Query<? extends Entity> query, String tenantIdFieldName)
 			throws UnifyException {
 		Long overrideTenantId = getValue(Long.class, WidgetTempValueConstants.OVERRIDE_TENANT_ID);
-		if (overrideTenantId != null) {
+ 		if (overrideTenantId != null) {
 			query.addEquals(tenantIdFieldName, overrideTenantId);
 		}
 	}
