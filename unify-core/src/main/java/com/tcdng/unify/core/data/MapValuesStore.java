@@ -36,7 +36,7 @@ public class MapValuesStore extends AbstractSingleObjectValueStore<MapValues> {
 
     @Override
     public boolean isGettable(String name) throws UnifyException {
-        return storage.isMapValue(name);
+        return isTempValue(name) || storage.isMapValue(name);
     }
 
     @Override

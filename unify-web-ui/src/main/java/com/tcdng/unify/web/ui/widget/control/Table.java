@@ -770,7 +770,7 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
                 return true;
             }
 
-            return ReflectUtils.isGettableField(storage.item.getClass(), name);
+            return isTempValue(name) || ReflectUtils.isGettableField(storage.item.getClass(), name);
         }
 
         @Override

@@ -52,7 +52,7 @@ public class PackableDocStore extends AbstractSingleObjectValueStore<PackableDoc
             }
         }
         
-        return storage != null && storage.isField(name);
+        return isTempValue(name) || (storage != null && storage.isField(name));
     }
 
     @Override
