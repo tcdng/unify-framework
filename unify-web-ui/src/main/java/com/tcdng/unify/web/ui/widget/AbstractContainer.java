@@ -81,6 +81,11 @@ public abstract class AbstractContainer extends AbstractDataTransferWidget imple
     }
 
     @Override
+	public boolean isSwitchStateAlways() {
+		return false;
+	}
+
+	@Override
     public void setWidgetRepository(WidgetRepository widgetRepository) throws UnifyException {
         this.widgetRepository = widgetRepository;
     }

@@ -35,39 +35,33 @@ import com.tcdng.unify.web.ui.widget.Layout;
  */
 @Component("ui-repeatpanel")
 @UplAttributes({ @UplAttribute(name = "layout", type = Layout.class, mandatory = true),
-        @UplAttribute(name = "components", type = UplElementReferences.class, mandatory = true) })
+		@UplAttribute(name = "components", type = UplElementReferences.class, mandatory = true) })
 public class RepeatPanel extends AbstractPanel {
 
-    private List<ValueStore> valueStoreList;
+	private List<ValueStore> valueStoreList;
 
-    private List<?> oldValue;
+	@Override
+	public void cascadeValueStore() throws UnifyException {
+		List<?> value = getValue(List.class);
+		if (value != null) {
+			valueStoreList = new ArrayList<ValueStore>();
+			final int len = value.size();
+			for (int i = 0; i < len; i++) {
+				valueStoreList.add(createValueStore(value.get(i), i));
+			}
+		} else {
+			valueStoreList = null;
+		}
+	}
 
-    @Override
-    public void cascadeValueStore() throws UnifyException {
-    	List<?> value = getValue(List.class);
-        if (oldValue != value || (oldValue != null && oldValue.size() != value.size())) {
-            if (value != null) {
-                valueStoreList = new ArrayList<ValueStore>();
-                int i = 0;
-                for (Object valueObject : value) {
-                    valueStoreList.add(createValueStore(valueObject, i++));
-                }
-            } else {
-                valueStoreList = null;
-            }
+	@Override
+	public List<ValueStore> getRepeatValueStores() throws UnifyException {
+		return valueStoreList;
+	}
 
-            oldValue = value;
-        }
-    }
-
-    @Override
-    public List<ValueStore> getRepeatValueStores() throws UnifyException {
-        return valueStoreList;
-    }
-
-    @Override
-    public boolean isRepeater() {
-        return true;
-    }
+	@Override
+	public boolean isRepeater() {
+		return true;
+	}
 
 }

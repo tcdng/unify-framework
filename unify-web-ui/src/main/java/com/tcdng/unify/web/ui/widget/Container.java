@@ -220,6 +220,11 @@ public interface Container extends DataTransferWidget, WidgetContainer {
     boolean isRepeater();
 
     /**
+     * Returns true if container should switch state always
+     */
+    boolean isSwitchStateAlways();
+
+    /**
      * Returns use-layout-if-present flag.
      */
     boolean isUseLayoutIfPresent();
