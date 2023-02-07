@@ -106,7 +106,7 @@ public abstract class AbstractPanelWriter extends AbstractContainerWriter implem
             writer.write("</legend>");
         }
 
-        if (!getRequestContextUtil().isPanelSwitched(panel)) {
+        if (panel.isRepeater() || !getRequestContextUtil().isPanelSwitched(panel)) {
             panel.switchState();
         }
 

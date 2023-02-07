@@ -40,16 +40,16 @@ public class RepeatPanel extends AbstractPanel {
 
     private List<ValueStore> valueStoreList;
 
-    private Object oldValue;
+    private List<?> oldValue;
 
     @Override
     public void cascadeValueStore() throws UnifyException {
-        Object value = getValue();
-        if (oldValue != value) {
+    	List<?> value = getValue(List.class);
+        if (oldValue != value || (oldValue != null && oldValue.size() != value.size())) {
             if (value != null) {
                 valueStoreList = new ArrayList<ValueStore>();
                 int i = 0;
-                for (Object valueObject : (List<?>) value) {// Support lists only!
+                for (Object valueObject : value) {
                     valueStoreList.add(createValueStore(valueObject, i++));
                 }
             } else {
