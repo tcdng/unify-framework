@@ -20,6 +20,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -34,6 +35,30 @@ import com.tcdng.unify.core.constant.FrequencyUnit;
  * @since 1.0
  */
 public class CalendarUtilsTest {
+
+    @Test
+	public void testGetFirstDayOfMonthDate() throws Exception {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+		Date date = CalendarUtils.getFirstDayOfMonthDate(sdf.parse("07-02-2023"));
+		assertNotNull(date);
+		assertEquals("01-02-2023",  sdf.format(date));
+		
+		date = CalendarUtils.getFirstDayOfMonthDate(sdf.parse("07-02-2024"));
+		assertNotNull(date);
+		assertEquals("01-02-2024",  sdf.format(date));
+	}
+
+    @Test
+	public void testGetLastDayOfMonthDate() throws Exception {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+		Date date = CalendarUtils.getLastDayOfMonthDate(sdf.parse("07-02-2023"));
+		assertNotNull(date);
+		assertEquals("28-02-2023",  sdf.format(date));
+		
+		date = CalendarUtils.getLastDayOfMonthDate(sdf.parse("07-02-2024"));
+		assertNotNull(date);
+		assertEquals("29-02-2024",  sdf.format(date));
+	}
 
     @Test
     public void testGetMilliSecondsByFrequency() throws Exception {
