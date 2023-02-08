@@ -154,8 +154,34 @@ public final class CalendarUtils {
 	 */
 	public static Date getFirstDayOfMonthDate(Date date) {
 		Calendar cal = Calendar.getInstance();
-		cal.setTime(CalendarUtils.getMidnightDate(date));
+		cal.setTime(date);
 		cal.set(Calendar.DAY_OF_MONTH, 1);
+		return cal.getTime();
+	}
+
+	/**
+	 * Returns the days ago date for a specified date.
+	 * 
+	 * @param date the supplied date
+	 * @param days the days ago
+	 */
+	public static Date getDaysAgoDate(Date date, int days) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.add(Calendar.DAY_OF_YEAR, -days);
+		return cal.getTime();
+	}
+
+	/**
+	 * Returns the months ago date for a specified date.
+	 * 
+	 * @param date   the supplied date
+	 * @param months the months ago
+	 */
+	public static Date getMonthsAgoDate(Date date, int months) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.add(Calendar.MONTH, -months);
 		return cal.getTime();
 	}
 
@@ -166,7 +192,7 @@ public final class CalendarUtils {
 	 */
 	public static Date getLastDayOfMonthDate(Date date) {
 		Calendar cal = Calendar.getInstance();
-		cal.setTime(CalendarUtils.getMidnightDate(date));
+		cal.setTime(date);
 		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DATE));
 		return cal.getTime();
 	}
