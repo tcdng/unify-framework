@@ -93,7 +93,7 @@ public class SessionContext extends Context {
 		if (userToken == null) {
 			userToken = new UserToken(tenantId);
 		} else {
-			userToken.setTenantId(tenantId);;
+			userToken.setTenantId(tenantId);
 		}
 	}
 	
