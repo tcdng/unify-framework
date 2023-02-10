@@ -30,7 +30,8 @@ import com.tcdng.unify.core.util.FormattingUtils;
  * @author The Code Department
  * @since 1.0
  */
-@UplAttributes({ @UplAttribute(name = "precision", type = int.class), @UplAttribute(name = "scale", type = int.class),
+@UplAttributes({
+		@UplAttribute(name = "precision", type = int.class), @UplAttribute(name = "scale", type = int.class),
         @UplAttribute(name = "useGrouping", type = boolean.class) })
 public abstract class AbstractNumberFormatter<T extends Number> extends AbstractFormatter<T>
         implements NumberFormatter<T> {
@@ -109,10 +110,12 @@ public abstract class AbstractNumberFormatter<T extends Number> extends Abstract
         nf = null;
     }
 
-    public boolean isStrictFormat() {
-        return strictFormat;
+    @Override
+    public boolean isStrictFormat() throws UnifyException {
+        return strictFormat || super.isStrictFormat();
     }
 
+    @Override
     public void setStrictFormat(boolean strictFormat) {
         this.strictFormat = strictFormat;
         nf = null;

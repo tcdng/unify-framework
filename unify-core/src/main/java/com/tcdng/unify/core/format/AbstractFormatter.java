@@ -19,6 +19,8 @@ import java.util.Locale;
 
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.annotation.UplAttribute;
+import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.upl.AbstractUplComponent;
 
 /**
@@ -27,6 +29,8 @@ import com.tcdng.unify.core.upl.AbstractUplComponent;
  * @author The Code Department
  * @since 1.0
  */
+@UplAttributes({
+	@UplAttribute(name = "strictFormat", type = boolean.class) })
 public abstract class AbstractFormatter<T> extends AbstractUplComponent implements Formatter<T> {
 
     private Class<T> dataType;
@@ -58,6 +62,11 @@ public abstract class AbstractFormatter<T> extends AbstractUplComponent implemen
     @Override
     public boolean isArrayFormat() {
         return Object[].class.isAssignableFrom(dataType);
+    }
+
+    @Override
+    public boolean isStrictFormat() throws UnifyException {
+        return getUplAttribute(boolean.class, "strictFormat");
     }
 
     @Override
