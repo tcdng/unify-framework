@@ -30,7 +30,8 @@ public enum MessageType implements EnumConst {
 
     INFO("INF", "$t{images/info.png}", "ui-msginfo", 0),
     WARNING("WRN", "$t{images/warning.png}", "ui-msgwarning", 1),
-    ERROR("ERR", "$t{images/error.png}", "ui-msgerror", 2);
+    ERROR("ERR", "$t{images/error.png}", "ui-msgerror", 2),
+    PASS("PSS", "$t{images/pass.png}", "ui-msgpass", 3);
 
     private final String code;
 

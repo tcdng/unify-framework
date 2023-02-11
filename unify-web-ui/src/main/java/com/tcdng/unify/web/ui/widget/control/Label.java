@@ -19,6 +19,8 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
+import com.tcdng.unify.core.util.StringUtils;
+import com.tcdng.unify.web.ui.constant.MessageType;
 import com.tcdng.unify.web.ui.widget.AbstractFormattedControl;
 
 /**
@@ -28,10 +30,14 @@ import com.tcdng.unify.web.ui.widget.AbstractFormattedControl;
  * @since 1.0
  */
 @Component("ui-label")
-@UplAttributes({ @UplAttribute(name = "htmlEscape", type = boolean.class, defaultVal = "true"),
+@UplAttributes({
+		@UplAttribute(name = "htmlEscape", type = boolean.class, defaultVal = "true"),
         @UplAttribute(name = "layoutCaption", type = boolean.class, defaultVal = "false"),
         @UplAttribute(name = "bindingOptional", type = boolean.class, defaultVal = "false"),
-        @UplAttribute(name = "draggable", type = boolean.class, defaultVal = "false") })
+        @UplAttribute(name = "inline", type = boolean.class, defaultVal = "false"),
+        @UplAttribute(name = "draggable", type = boolean.class, defaultVal = "false"),
+        @UplAttribute(name = "type", type = MessageType.class),
+        @UplAttribute(name = "typeBinding", type = String.class)})
 public class Label extends AbstractFormattedControl {
 
     public Label() {
@@ -53,6 +59,20 @@ public class Label extends AbstractFormattedControl {
         return getUplAttribute(boolean.class, "bindingOptional");
     }
 
+    public boolean isInline() throws UnifyException {
+        return getUplAttribute(boolean.class, "inline");
+    }
+
+    public MessageType getType() throws UnifyException {
+    	MessageType type = null;
+		final String typeBinding = getUplAttribute(String.class, "typeBinding");
+		if (!StringUtils.isBlank(typeBinding)) {
+			type = getValue(MessageType.class, typeBinding);
+		}
+
+		return type != null ? type : getUplAttribute(MessageType.class, "type");
+    }
+    
     @Override
     public boolean isSupportReadOnly() {
         return false;

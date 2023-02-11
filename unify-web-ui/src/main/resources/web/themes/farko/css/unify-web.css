@@ -24,6 +24,7 @@ z-index:400;}
 .ui-msginfo {background-color: #eff1fe; border: 1px solid #cce4ff; color:#2164b0;}
 .ui-msgwarn {background-color: #ffffe6; border: 1px solid #ffefc6; color:#b06421;}
 .ui-msgerror {background-color: #ffe0da; border: 1px solid #fbd6d1; color: #ae6f6a;}
+.ui-msgpass {background-color: #e0ffda; border: 1px solid #d6fbd1; color: #6fae6a;}
 
 /** Document layout */
 .ui-desktoptype0 {display:table; width:100%; height:100%; min-width:800px !important; min-height:600px !important;}
@@ -646,6 +647,7 @@ overflow-x:hidden;overflow-y:scroll;border-top: solid 1px #A0A0A0;border-left: s
 
 /** Label */
 .ui-label {display:block; word-wrap:break-word;}
+.ui-label .inl {display:inline-block;}
 .ui-label-ellipsis {white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
 
 /** Label text */

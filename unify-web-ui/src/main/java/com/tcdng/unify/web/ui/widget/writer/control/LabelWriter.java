@@ -19,6 +19,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.util.StringUtils;
+import com.tcdng.unify.web.ui.constant.MessageType;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.Widget;
 import com.tcdng.unify.web.ui.widget.control.Label;
@@ -41,7 +42,18 @@ public class LabelWriter extends AbstractControlWriter {
         if (writer.isTableMode()) {
             writeTagStyle(writer, label);
         } else {
-            writeTagAttributes(writer, label);
+        	String extraClasses = null;
+         	MessageType type = label.getType();
+        	if (type != null) {
+        		extraClasses = type.styleClass();
+        	}
+        	
+        	extraClasses = label.isInline() ? (extraClasses == null ? "inl" : extraClasses + " inl") : extraClasses;
+            if (extraClasses == null ) {
+            	writeTagAttributes(writer, label);
+            } else {
+            	writeTagAttributesWithTrailingExtraStyleClass(writer, label, extraClasses);
+            }
         }
         writer.write(">");
         String value = label.getStringValue();
