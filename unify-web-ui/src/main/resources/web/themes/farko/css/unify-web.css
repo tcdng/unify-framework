@@ -21,6 +21,10 @@ z-index:400;}
 .ui-event-green {color: white; background: #6DBC6D;}
 .ui-event-yellow {color: white; background: #BCBC6D;}
 
+.ui-msginfo {background-color: #eff1fe; border: 1px solid #cce4ff; color:#2164b0;}
+.ui-msgwarn {background-color: #ffffe6; border: 1px solid #ffefc6; color:#b06421;}
+.ui-msgerror {background-color: #ffe0da; border: 1px solid #fbd6d1; color: #ae6f6a;}
+
 /** Document layout */
 .ui-desktoptype0 {display:table; width:100%; height:100%; min-width:800px !important; min-height:600px !important;}
 .ui-desktoptype0 .dt0row {display:table-row; width:100%;height:100%;}
