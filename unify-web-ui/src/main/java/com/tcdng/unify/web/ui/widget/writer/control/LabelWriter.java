@@ -42,17 +42,11 @@ public class LabelWriter extends AbstractControlWriter {
         if (writer.isTableMode()) {
             writeTagStyle(writer, label);
         } else {
-        	String extraClasses = null;
          	MessageType type = label.getType();
-        	if (type != null) {
-        		extraClasses = type.styleClass();
-        	}
-        	
-        	extraClasses = label.isInline() ? (extraClasses == null ? "inl" : extraClasses + " inl") : extraClasses;
-            if (extraClasses == null ) {
+            if (type == null) {
             	writeTagAttributes(writer, label);
             } else {
-            	writeTagAttributesWithTrailingExtraStyleClass(writer, label, extraClasses);
+            	writeTagAttributesWithTrailingExtraStyleClass(writer, label, type.styleClass());
             }
         }
         writer.write(">");

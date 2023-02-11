@@ -21,10 +21,12 @@ z-index:400;}
 .ui-event-green {color: white; background: #6DBC6D;}
 .ui-event-yellow {color: white; background: #BCBC6D;}
 
-.ui-msginfo {background-color: #eff1fe; border: 1px solid #cce4ff; color:#2164b0;}
-.ui-msgwarn {background-color: #ffffe6; border: 1px solid #ffefc6; color:#b06421;}
-.ui-msgerror {background-color: #ffe0da; border: 1px solid #fbd6d1; color: #ae6f6a;}
-.ui-msgpass {background-color: #e0ffda; border: 1px solid #d6fbd1; color: #6fae6a;}
+.ui-alert {display:inline-block; padding:2px;}
+.ui-msginfo {background-color: #eff1fe; border: 1px solid #cce4ff; color:#2164b0; font-weight:bold;}
+.ui-msgwarn {background-color: #ffffe6; border: 1px solid #ffefc6; color:#b06421; font-weight:bold;}
+.ui-msgerror {background-color: #ffe0da; border: 1px solid #fbd6d1; color: #ae6f6a; font-weight:bold;}
+.ui-msgpass {background-color: #e0ffda; border: 1px solid #d6fbd1; color: #6fae6a; font-weight:bold;}
+
 
 /** Document layout */
 .ui-desktoptype0 {display:table; width:100%; height:100%; min-width:800px !important; min-height:600px !important;}
