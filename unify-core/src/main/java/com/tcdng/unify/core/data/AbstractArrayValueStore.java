@@ -149,6 +149,15 @@ public abstract class AbstractArrayValueStore<T> extends AbstractValueStore {
     }
 
     @Override
+	public Object removeTempValue(String name) throws UnifyException {
+        if (temp != null) {
+            return temp.remove(name);
+        }
+        
+		return null;
+	}
+
+    @Override
     public boolean isTempValue(String name) {
         if (temp != null) {
             return temp.containsKey(name);

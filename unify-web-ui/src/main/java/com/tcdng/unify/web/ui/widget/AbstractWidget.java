@@ -603,6 +603,20 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 
 	}
 
+	protected void setTempValue(String name, Object value) throws UnifyException {
+		if (valueStore != null) {
+			valueStore.setTempValue(name, value);
+		}
+	}
+
+	protected Object removeTempValue(String name) throws UnifyException {
+		if (valueStore != null) {
+			return valueStore.removeTempValue(name);
+		}
+		
+		return null;
+	}
+
 	protected void setPageAttribute(String name, Object value) throws UnifyException {
 		resolveRequestPage().setAttribute(name, value);
 	}
