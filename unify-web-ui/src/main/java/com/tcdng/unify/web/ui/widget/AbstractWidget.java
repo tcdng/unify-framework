@@ -603,6 +603,10 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 
 	}
 
+	protected boolean isTempValue(String name) throws UnifyException {
+		return valueStore != null ? valueStore.isTempValue(name) : false;
+	}
+	
 	protected void setTempValue(String name, Object value) throws UnifyException {
 		if (valueStore != null) {
 			valueStore.setTempValue(name, value);
