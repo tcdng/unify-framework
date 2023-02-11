@@ -21,7 +21,7 @@ z-index:400;}
 .ui-event-green {color: white; background: #6DBC6D;}
 .ui-event-yellow {color: white; background: #BCBC6D;}
 
-.ui-alert {display:inline-block; padding:2px;}
+.ui-alert {display: inline-block !important; padding: 3px 4px; border-radius: 3px;}
 .ui-msginfo {background-color: #eff1fe; border: 1px solid #cce4ff; color:#2164b0; font-weight:bold;}
 .ui-msgwarn {background-color: #ffffe6; border: 1px solid #ffefc6; color:#b06421; font-weight:bold;}
 .ui-msgerror {background-color: #ffe0da; border: 1px solid #fbd6d1; color: #ae6f6a; font-weight:bold;}
