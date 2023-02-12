@@ -115,10 +115,12 @@ function _name(name) {
 function _name_0(name) {
 	return document.getElementsByName(name)[0];
 }
-function _enc(value) {
-	return encodeURIComponent(value);
+function _enc(val) {
+	return encodeURIComponent(val);
 }
-
+function _df(val) {
+	return val !== undefined;
+}
 function _proc(name) {
 	var i = name.indexOf('.');
 	if (i > 0) {
@@ -4401,7 +4403,7 @@ ux.buildObjParams = function(trgObj, evp, param, refs) {
 
 	var pb = param.value;
 	var isForm = param.isForm;
-	if (evp.uLoginId) {
+	if (_df(evp.uLoginId)) {
 		if (isForm) {
 			pb.append("req_uid", evp.uLoginId);
 			pb.append("req_unm", evp.uUserName);
@@ -4435,7 +4437,7 @@ ux.buildObjParams = function(trgObj, evp, param, refs) {
 		}
 	}
 
-	if (evp.uConfMsg) {
+	if (_df(evp.uConfMsg)) {
 		if (isForm) {
 			pb.append("req_cmsg", evp.uConfMsg);
 			pb.append("req_cmsgicon", evp.uIconIndex);
@@ -4445,7 +4447,7 @@ ux.buildObjParams = function(trgObj, evp, param, refs) {
 		}
 	}
 
-	if (evp.uConfPrm) {
+	if (_df(evp.uConfPrm)) {
 		if (isForm) {
 			pb.append("req_cprm", evp.uConfPrm);
 		} else {
@@ -4453,7 +4455,7 @@ ux.buildObjParams = function(trgObj, evp, param, refs) {
 		}
 	}
 
-	if (evp.uSendTrg) {
+	if (_df(evp.uSendTrg)) {
 		if (isForm) {
 			pb.append("req_trg", evp.uSendTrg);
 		} else {
@@ -4461,7 +4463,7 @@ ux.buildObjParams = function(trgObj, evp, param, refs) {
 		}
 	}
 	
-	if (evp.uId && evp.uId.startsWith("row_")) {
+	if (_df(evp.uId) && evp.uId.startsWith("row_")) {
 		trgObj = ux.findParent(trgObj, "tr");
 	}
 	
