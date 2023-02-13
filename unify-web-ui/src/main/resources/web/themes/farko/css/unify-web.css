@@ -21,6 +21,13 @@ z-index:400;}
 .ui-event-green {color: white; background: #6DBC6D;}
 .ui-event-yellow {color: white; background: #BCBC6D;}
 
+.ui-alert {display: inline-block !important; padding: 3px 4px; border-radius: 3px;}
+.ui-msginfo {background-color: #eff1fe; border: 1px solid #cce4ff; color:#2164b0; font-weight:bold;}
+.ui-msgwarn {background-color: #ffffe6; border: 1px solid #ffefc6; color:#b06421; font-weight:bold;}
+.ui-msgerror {background-color: #ffe0da; border: 1px solid #fbd6d1; color: #ae6f6a; font-weight:bold;}
+.ui-msgpass {background-color: #e0ffda; border: 1px solid #d6fbd1; color: #6fae6a; font-weight:bold;}
+
+
 /** Document layout */
 .ui-desktoptype0 {display:table; width:100%; height:100%; min-width:800px !important; min-height:600px !important;}
 .ui-desktoptype0 .dt0row {display:table-row; width:100%;height:100%;}
@@ -227,7 +234,7 @@ z-index:400;}
 .ui-contentpanel .cptab li a {display: block; text-decoration: none;}
 .ui-contentpanel .cptab .cpactive {border:solid 1px #C0C0C0; margin-bottom: -1px; border-bottom:solid 1px #FFF !important;}
 .ui-contentpanel .cptab .cpactive a {float:left; font-size:12px; padding: 8px 8px; color: #454545;}
-.ui-contentpanel .cptab .cpactive .cpt {padding: 2px 8px}
+.ui-contentpanel .cptab .cpactive .cpt {padding: 2px 8px 3px 8px;}
 .ui-contentpanel .cptab .cpactive .cpremote {margin:3px; padding:4px;}
 .ui-contentpanel .cptab .cpactive .cpcat {border: 2px solid #5970B2; color: #454545; background-color: #BFD6FF;}
 .ui-contentpanel .cptab .cpactive .cpcatred {border: 2px solid #C03333; color: #454545; background-color: #FF9999;}
@@ -642,6 +649,7 @@ overflow-x:hidden;overflow-y:scroll;border-top: solid 1px #A0A0A0;border-left: s
 
 /** Label */
 .ui-label {display:block; word-wrap:break-word;}
+.ui-label .inl {display:inline-block;}
 .ui-label-ellipsis {white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
 
 /** Label text */

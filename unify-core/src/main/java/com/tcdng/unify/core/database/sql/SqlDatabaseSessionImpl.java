@@ -1186,9 +1186,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 				}
 			}
 
-			// System should not manage tenant ID on updates. Changing a record's tenant ID
-			// should be explicitly performed by programmer
-			// setRecordTenantId(sqlEntityInfo, record);
+			ensureRecordTenantId(sqlEntityInfo, record);
 			sqlStatement = sqlDataSourceDialect.prepareUpdateByPkStatement(record);
 			result = getSqlStatementExecutor().executeUpdate(connection, sqlStatement);
 			if (result == 0) {
@@ -1234,9 +1232,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 					}
 				}
 
-				// System should not manage tenant ID on updates. Changing a record's tenant ID
-				// should be explicitly performed by programmer
-				// setRecordTenantId(sqlEntityInfo, record);
+				ensureRecordTenantId(sqlEntityInfo, record);
 				sqlStatement = sqlDataSourceDialect.prepareUpdateByPkVersionStatement(record, oldVersionNo);
 			} else {
 				if (entityPolicy != null) {
@@ -1247,9 +1243,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 					}
 				}
 
-				// System should not manage tenant ID on updates. Changing a record's tenant ID
-				// should be explicitly performed by programmer
-				// setRecordTenantId(sqlEntityInfo, record);
+				ensureRecordTenantId(sqlEntityInfo, record);
 				sqlStatement = sqlDataSourceDialect.prepareUpdateByPkStatement(record);
 			}
 
@@ -1290,7 +1284,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 			}
 		}
 
-		setRecordTenantId(sqlEntityInfo, record);
+		ensureRecordTenantId(sqlEntityInfo, record);
 		SqlStatement sqlStatement = null;
 		if (sqlEntityInfo.isIdentityManaged()) {
 			sqlStatement = sqlDataSourceDialect.prepareCreateStatement(record);
@@ -1508,7 +1502,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 		}
 	}
 
-	private void setRecordTenantId(SqlEntityInfo sqlEntityInfo, Entity record) throws UnifyException {
+	private void ensureRecordTenantId(SqlEntityInfo sqlEntityInfo, Entity record) throws UnifyException {
 		if (sqlEntityInfo.isWithTenantId()) {
 			final String tenantFieldName = sqlEntityInfo.getTenantIdFieldInfo().getName();
 			if (DataUtils.getBeanProperty(Long.class, record, tenantFieldName) == null) {

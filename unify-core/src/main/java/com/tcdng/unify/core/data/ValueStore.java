@@ -280,6 +280,15 @@ public interface ValueStore {
      */
     void setTempValue(String name, Object value) throws UnifyException;
 
+	/**
+	 * Removes temporary value from value store.
+	 * 
+	 * @param name the name of the temporary value
+	 * @return the temporary value if removed
+	 * @throws UnifyException if an error occurs
+	 */
+	Object removeTempValue(String name) throws UnifyException;
+
     /**
      * Returns true if supplied name is a temporary value
      * 

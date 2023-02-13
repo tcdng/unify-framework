@@ -160,6 +160,10 @@ public class UserToken {
 		return remote;
 	}
 
+	public boolean isWithUserLoginId() {
+		return userLoginId != null;
+	}
+
 	public boolean isWithTenantId() {
 		return tenantId != null;
 	}

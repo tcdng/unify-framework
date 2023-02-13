@@ -1163,12 +1163,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 					for (String name : select.values()) {
 						if (!sqlEntityInfo.isChildFieldInfo(name)) {
 							SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(name);
-							if (appendSym) {
-								findSql.append(", ");
-							} else {
-								appendSym = true;
-							}
-							findSql.append(sqlFieldInfo.getPreferredColumnName());
+							appendSym = appendPreferredColumn(findSql, sqlFieldInfo, appendSym);
 							returnFieldInfoList.add(sqlFieldInfo);
 						}
 					}
@@ -1176,12 +1171,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 					for (String name : select.values()) {
 						if (!sqlEntityInfo.isChildFieldInfo(name)) {
 							SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getFieldInfo(name);
-							if (appendSym) {
-								findSql.append(", ");
-							} else {
-								appendSym = true;
-							}
-							findSql.append(sqlFieldInfo.getPreferredColumnName());
+							appendSym = appendPreferredColumn(findSql, sqlFieldInfo, appendSym);
 							returnFieldInfoList.add(sqlFieldInfo);
 						}
 					}
@@ -1191,14 +1181,16 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 					// Select must always fetch primary keys because of child lists
 					SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getIdFieldInfo();
 					if (!select.contains(sqlFieldInfo.getName())) {
-						if (appendSym) {
-							findSql.append(", ");
-						} else {
-							appendSym = true;
-						}
-						findSql.append(sqlFieldInfo.getPreferredColumnName());
+						appendSym = appendPreferredColumn(findSql, sqlFieldInfo, appendSym);
 						returnFieldInfoList.add(sqlFieldInfo);
 					}
+				}
+				
+				// Always include tenant Id
+				if (sqlEntityInfo.isWithTenantId()) {
+					SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getTenantIdFieldInfo();
+					appendSym = appendPreferredColumn(findSql, sqlFieldInfo, appendSym);
+					returnFieldInfoList.add(sqlFieldInfo);
 				}
 			} else {
 				if (sqlEntityInfo.isViewOnly()) {
@@ -1208,12 +1200,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 				}
 
 				for (SqlFieldInfo sqlFieldInfo : returnFieldInfoList) {
-					if (appendSym) {
-						findSql.append(", ");
-					} else {
-						appendSym = true;
-					}
-					findSql.append(sqlFieldInfo.getPreferredColumnName());
+					appendSym = appendPreferredColumn(findSql, sqlFieldInfo, appendSym);
 				}
 			}
 
@@ -1226,7 +1213,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 		return new SqlStatement(sqlEntityInfo, SqlStatementType.FIND, findSql.toString(), parameterInfoList,
 				getSqlResultList(returnFieldInfoList));
 	}
-
+	
 	@Override
 	public SqlStatement prepareListByPkStatement(Class<?> clazz, Object pk) throws UnifyException {
 		if (EnumConst.class.isAssignableFrom(clazz)) {
@@ -2049,6 +2036,18 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 		}
 
 		return 0;
+	}
+
+	private boolean appendPreferredColumn(StringBuilder sql, SqlFieldInfo sqlFieldInfo, boolean appendSym)
+			throws UnifyException {
+		if (appendSym) {
+			sql.append(", ");
+		} else {
+			appendSym = true;
+		}
+
+		sql.append(sqlFieldInfo.getPreferredColumnName());
+		return true;
 	}
 
 	private String generateCreateViewSqlForTableEntity(SqlEntitySchemaInfo sqlEntitySchemaInfo, PrintFormat format)

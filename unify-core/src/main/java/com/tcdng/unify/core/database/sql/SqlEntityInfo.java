@@ -331,7 +331,7 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
     }
 
     @Override
-	public SqlFieldSchemaInfo getTenantIdFieldInfo() {
+	public SqlFieldInfo getTenantIdFieldInfo() {
 		return tenantIdFieldInfo;
 	}
 

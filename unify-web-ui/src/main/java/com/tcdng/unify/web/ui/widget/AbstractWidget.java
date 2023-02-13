@@ -49,12 +49,14 @@ import com.tcdng.unify.web.ui.widget.panel.StandalonePanel;
 @UplAttributes({ @UplAttribute(name = "binding", type = String.class),
 		@UplAttribute(name = "styleClass", type = String.class, defaultVal = "$e{}"),
 		@UplAttribute(name = "styleClassBinding", type = String.class),
-		@UplAttribute(name = "style", type = String.class), @UplAttribute(name = "caption", type = String.class),
+		@UplAttribute(name = "style", type = String.class),
+		@UplAttribute(name = "caption", type = String.class),
 		@UplAttribute(name = "captionBinding", type = String.class),
 		@UplAttribute(name = "captionParamBinding", type = String.class),
 		@UplAttribute(name = "columnStyle", type = String.class),
 		@UplAttribute(name = "columnSelectSummary", type = boolean.class),
-		@UplAttribute(name = "hint", type = String.class), @UplAttribute(name = "hintBinding", type = String.class),
+		@UplAttribute(name = "hint", type = String.class),
+		@UplAttribute(name = "hintBinding", type = String.class),
 		@UplAttribute(name = "readOnly", type = boolean.class, defaultVal = "false"),
 		@UplAttribute(name = "disabled", type = boolean.class, defaultVal = "false"),
 		@UplAttribute(name = "ignoreParentState", type = boolean.class, defaultVal = "false"),
@@ -601,6 +603,24 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 	@Override
 	public void setScale(int scale) throws UnifyException {
 
+	}
+
+	protected boolean isTempValue(String name) throws UnifyException {
+		return valueStore != null ? valueStore.isTempValue(name) : false;
+	}
+	
+	protected void setTempValue(String name, Object value) throws UnifyException {
+		if (valueStore != null) {
+			valueStore.setTempValue(name, value);
+		}
+	}
+
+	protected Object removeTempValue(String name) throws UnifyException {
+		if (valueStore != null) {
+			return valueStore.removeTempValue(name);
+		}
+		
+		return null;
 	}
 
 	protected void setPageAttribute(String name, Object value) throws UnifyException {

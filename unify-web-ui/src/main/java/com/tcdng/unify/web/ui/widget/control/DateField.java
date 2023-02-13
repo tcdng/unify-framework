@@ -61,8 +61,13 @@ public class DateField extends AbstractTimeField {
 
     @Override
 	public Formatter<Object> getFormatter() throws UnifyException {
+    	Formatter<Object> formatter = super.getFormatter();
+    	if (formatter.isStrictFormat()) {
+    		return formatter;
+    	}
+    	
 		Formatter<Object> overrideFormatter = getWidgetDateFormatOverrideFormatter();
-		return overrideFormatter != null ? overrideFormatter : super.getFormatter();
+		return overrideFormatter != null ? overrideFormatter : formatter;
 	}
 
 	@Override

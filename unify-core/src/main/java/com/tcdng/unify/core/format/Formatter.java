@@ -51,6 +51,13 @@ public interface Formatter<T> extends UplComponent, ConverterFormatter<T> {
      */
     String format(T value) throws UnifyException;
 
+	/**
+	 * Return true if formatter is strict
+	 * 
+	 * @throws UnifyException if an error occurs
+	 */
+	boolean isStrictFormat() throws UnifyException;
+    
     /**
      * Parses a formatted string to a value.
      * 

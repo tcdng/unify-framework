@@ -717,6 +717,22 @@ public class StringUtilsTest {
         assertEquals("Tom:Don", StringUtils.concatenateUsingSeparator(':', "Tom", "Don"));
         assertEquals("Henry:Tom:Don", StringUtils.concatenateUsingSeparator(':', "Henry", "Tom", "Don"));
     }
+
+    @Test
+    public void testConcatenateList() throws Exception {
+        assertEquals("", StringUtils.concatenate(Arrays.asList()));
+        assertEquals("Tom", StringUtils.concatenate(Arrays.asList("Tom")));
+        assertEquals("TomDon", StringUtils.concatenate(Arrays.asList("Tom", "Don")));
+        assertEquals("HenryTomDon", StringUtils.concatenate(Arrays.asList("Henry", "Tom", "Don")));
+    }
+
+    @Test
+    public void concatenateWithSeparatorList() throws Exception {
+        assertEquals("", StringUtils.concatenateUsingSeparator(':', Arrays.asList()));
+        assertEquals("Tom", StringUtils.concatenateUsingSeparator(':', Arrays.asList("Tom")));
+        assertEquals("Tom:Don", StringUtils.concatenateUsingSeparator(':', Arrays.asList("Tom", "Don")));
+        assertEquals("Henry:Tom:Don", StringUtils.concatenateUsingSeparator(':', Arrays.asList("Henry", "Tom", "Don")));
+    }
     
     @Test(expected=IllegalArgumentException.class)
     public void testSplitToLengthsBadSize() throws Exception {

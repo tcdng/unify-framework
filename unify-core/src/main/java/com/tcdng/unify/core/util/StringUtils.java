@@ -734,6 +734,30 @@ public final class StringUtils {
         return "";
     }
 
+
+    /**
+     * Builds a string by concatenating supplied list of objects.
+     * 
+     * @param objects
+     *                the composing objects
+     * @return the built string
+     */
+    public static String concatenate(List<? extends Object> objects) {
+        if (objects.size() == 1) {
+            return String.valueOf(objects.get(0));
+        }
+
+        if (objects.size() > 0) {
+            StringBuilder sb = new StringBuilder();
+            for (Object object : objects) {
+                sb.append(object);
+            }
+            return sb.toString();
+        }
+
+        return "";
+    }
+
     /**
      * Builds a string by concatenating supplied objects separated by supplied character.
      * 
@@ -765,6 +789,100 @@ public final class StringUtils {
 
         return "";
     }
+
+    /**
+     * Builds a string by concatenating supplied objects separated by supplied separator.
+     * 
+     * @param sp
+     *                the separator
+     * @param objects
+     *                the composing objects
+     * @return the built string
+     */
+    public static String concatenateUsingSeparator(String sp, Object... objects) {
+        if (objects.length == 1) {
+            return String.valueOf(objects[0]);
+        }
+
+        if (objects.length > 0) {
+            StringBuilder sb = new StringBuilder();
+            boolean appendSym = false;
+            for (Object object : objects) {
+                if (appendSym) {
+                    sb.append(sp);
+                } else {
+                    appendSym = true;
+                }
+                
+                sb.append(object);
+            }
+            return sb.toString();
+        }
+
+        return "";
+    }
+
+	/**
+	 * Builds a string by concatenating supplied list of objects separated by
+	 * supplied character.
+	 * 
+	 * @param ch      the separator character
+	 * @param objects the composing objects
+	 * @return the built string
+	 */
+	public static String concatenateUsingSeparator(char ch, List<? extends Object> objects) {
+		if (objects.size() == 1) {
+			return String.valueOf(objects.get(0));
+		}
+
+		if (objects.size() > 0) {
+			StringBuilder sb = new StringBuilder();
+			boolean appendSym = false;
+			for (Object object : objects) {
+				if (appendSym) {
+					sb.append(ch);
+				} else {
+					appendSym = true;
+				}
+
+				sb.append(object);
+			}
+			return sb.toString();
+		}
+
+		return "";
+	}
+
+	/**
+	 * Builds a string by concatenating supplied list of objects separated by
+	 * supplied separator.
+	 * 
+	 * @param sp      the separator
+	 * @param objects the composing objects
+	 * @return the built string
+	 */
+	public static String concatenateUsingSeparator(String sp, List<? extends Object> objects) {
+		if (objects.size() == 1) {
+			return String.valueOf(objects.get(0));
+		}
+
+		if (objects.size() > 0) {
+			StringBuilder sb = new StringBuilder();
+			boolean appendSym = false;
+			for (Object object : objects) {
+				if (appendSym) {
+					sb.append(sp);
+				} else {
+					appendSym = true;
+				}
+
+				sb.append(object);
+			}
+			return sb.toString();
+		}
+
+		return "";
+	}
 
     /**
      * Returns the string representation of a bean.
