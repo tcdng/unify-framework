@@ -19,6 +19,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.sql.Connection;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.Map;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -27,6 +30,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.constant.FrequencyUnit;
+import com.tcdng.unify.core.constant.PageSizeType;
 import com.tcdng.unify.core.database.DataSource;
 import com.tcdng.unify.core.database.DataSourceDialect;
 import com.tcdng.unify.core.database.NativeQuery;
@@ -36,6 +40,7 @@ import com.tcdng.unify.core.report.ReportColumn;
 import com.tcdng.unify.core.report.ReportFilter;
 import com.tcdng.unify.core.report.ReportFormat;
 import com.tcdng.unify.core.report.ReportLayoutType;
+import com.tcdng.unify.core.report.ReportPageProperties;
 import com.tcdng.unify.core.report.ReportTableJoin;
 import com.tcdng.unify.core.util.CalendarUtils;
 import com.tcdng.unify.core.util.IOUtils;
@@ -78,7 +83,21 @@ import net.sf.jasperreports.export.SimpleXmlExporterOutput;
 @Component(name = JasperReportsApplicationComponents.JASPERREPORTS_SERVER, description = "Jasper Reports Server")
 public class JasperReportsServer extends AbstractReportServer {
 
-	private JasperReportsCache jasperReportsCache;
+	@SuppressWarnings("serial")
+	private static final Map<PageSizeType, DPIPageDimension> PAGESIZE_TO_DPI = Collections
+			.unmodifiableMap(new EnumMap<PageSizeType, DPIPageDimension>(PageSizeType.class) {
+				{
+					put(PageSizeType.A3, new DPIPageDimension(842, 1191));
+					put(PageSizeType.A4, new DPIPageDimension(595, 842));
+					put(PageSizeType.A5, new DPIPageDimension(420, 595));
+					put(PageSizeType.B4, new DPIPageDimension(709, 1001));
+					put(PageSizeType.B5, new DPIPageDimension(499, 709));
+					put(PageSizeType.JIS_B4, new DPIPageDimension(709, 1001));
+					put(PageSizeType.JIS_B5, new DPIPageDimension(499, 709));
+					put(PageSizeType.LEGAL, new DPIPageDimension(612, 1009));
+					put(PageSizeType.LETTER, new DPIPageDimension(612, 791));
+				}
+			});
 
 	@Configurable("20")
 	private int reportExpirationPeriod;
@@ -86,15 +105,17 @@ public class JasperReportsServer extends AbstractReportServer {
 	@Configurable
 	private boolean logDebug;
 
+	private JasperReportsCache jasperReportsCache;
+
 	public void setJasperReportCache(JasperReportsCache jasperReportsCache) {
 		this.jasperReportsCache = jasperReportsCache;
 	}
 
-	public void setReportExpirationPeriod(int reportExpirationPeriod) {
+	public final void setReportExpirationPeriod(int reportExpirationPeriod) {
 		this.reportExpirationPeriod = reportExpirationPeriod;
 	}
 
-	public void setLogDebug(boolean logDebug) {
+	public final void setLogDebug(boolean logDebug) {
 		this.logDebug = logDebug;
 	}
 
@@ -112,6 +133,8 @@ public class JasperReportsServer extends AbstractReportServer {
 				(JasperReportsLayoutManager) getComponent("jasperreports-tabularlayoutmanager"));
 		registerReportLayoutManager(ReportLayoutType.SINGLECOLUMN_EMBEDDED_HTML,
 				(JasperReportsLayoutManager) getComponent("jasperreports-singlecolumnhtmllayoutmanager"));
+		registerReportLayoutManager(ReportLayoutType.PLACEMENT_PDF,
+				(JasperReportsLayoutManager) getComponent("jasperreports-placementlayoutmanager"));
 
 		if (!logDebug) {
 			Logger.getLogger("net.sf.jasperreports").setLevel((Level) Level.ERROR);
@@ -136,19 +159,17 @@ public class JasperReportsServer extends AbstractReportServer {
 			Collection<?> content = report.getBeanCollection();
 			if (report.isWithBeanCollection()) {
 				JRBeanCollectionDataSource jrBeanDataSource = new JRBeanCollectionDataSource(content);
-				jasperPrint = JasperFillManager.fillReport(jasperReport,
-						report.getParameters(), jrBeanDataSource);
+				jasperPrint = JasperFillManager.fillReport(jasperReport, report.getParameters(), jrBeanDataSource);
 			} else if (report.isEmbeddedHtml()) {
 				JRBeanCollectionDataSource jrBeanDataSource = new JRBeanCollectionDataSource(report.getEmbeddedHtmls());
-				jasperPrint = JasperFillManager.fillReport(jasperReport,
-						report.getParameters(), jrBeanDataSource);
+				jasperPrint = JasperFillManager.fillReport(jasperReport, report.getParameters(), jrBeanDataSource);
 			} else {
 				connection = (Connection) dataSource.getConnection();
-				jasperPrint = JasperFillManager.fillReport(jasperReport,
-						report.getParameters(), connection);
+				jasperPrint = JasperFillManager.fillReport(jasperReport, report.getParameters(), connection);
 			}
 
-			Exporter<ExporterInput, ?, ?, ?> exporter = getExporter(report.getFormat(), outputStream);
+			ReportFormat reportFormat = report.isPlacements() ? ReportFormat.PDF : report.getFormat();
+			Exporter<ExporterInput, ?, ?, ?> exporter = getExporter(reportFormat, outputStream);
 			exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
 			exporter.exportReport();
 		} catch (UnifyException e) {
@@ -185,27 +206,38 @@ public class JasperReportsServer extends AbstractReportServer {
 	private JasperReport generateJasperReport(Report report) throws UnifyException {
 		InputStream inputStream = null;
 		try {
-			inputStream = IOUtils.openFileResourceInputStream(report.getTemplate(),
-					getUnifyComponentContext().getWorkingPath());
+			JasperDesign jasperDesign = null;
+			if (report.isWithTemplate()) {
+				inputStream = IOUtils.openFileResourceInputStream(report.getTemplate(),
+						getUnifyComponentContext().getWorkingPath());
 
-			JasperDesign jasperDesign = JRXmlLoader.load(inputStream);
-			if (ReportFormat.XLS.equals(report.getFormat()) || ReportFormat.XLSX.equals(report.getFormat())) {
-				jasperDesign.setProperty("net.sf.jasperreports.export.xls.detect.cell.type", "true");
+				jasperDesign = JRXmlLoader.load(inputStream);
+				if (ReportFormat.XLS.equals(report.getFormat()) || ReportFormat.XLSX.equals(report.getFormat())) {
+					jasperDesign.setProperty("net.sf.jasperreports.export.xls.detect.cell.type", "true");
+				}
+
+				jasperDesign.setWhenNoDataType(WhenNoDataTypeEnum.ALL_SECTIONS_NO_DETAIL);
+			} else {
+				jasperDesign = new JasperDesign();
+				final ReportPageProperties properties = report.getPageProperties();
+				final PageSizeType size = properties.getSize();
+				final int pageWidth = size.isCustom() ? report.getPageProperties().getPageWidth()
+						: (properties.isLandscape() ? PAGESIZE_TO_DPI.get(size).getHeight()
+								: PAGESIZE_TO_DPI.get(size).getWidth());
+				if (pageWidth > 0) {
+					jasperDesign.setPageWidth(pageWidth);
+					jasperDesign
+							.setColumnWidth(pageWidth - jasperDesign.getLeftMargin() - jasperDesign.getRightMargin());
+				}
+
+				final int pageHeight = size.isCustom() ? report.getPageProperties().getPageHeight()
+						: (properties.isLandscape() ? PAGESIZE_TO_DPI.get(size).getWidth()
+								: PAGESIZE_TO_DPI.get(size).getHeight());
+				if (pageHeight > 0) {
+					jasperDesign.setPageHeight(pageHeight);
+				}
 			}
 
-			final int pageWidth = report.getPageProperties().getPageWidth();
-			if (pageWidth > 0) {
-				jasperDesign.setPageWidth(pageWidth);
-				jasperDesign.setColumnWidth(
-						pageWidth - jasperDesign.getLeftMargin() - jasperDesign.getRightMargin());
-			}
-
-			final int pageHeight = report.getPageProperties().getPageHeight();
-			if (pageHeight > 0) {
-				jasperDesign.setPageHeight(pageHeight);
-			}
-
-			jasperDesign.setWhenNoDataType(WhenNoDataTypeEnum.ALL_SECTIONS_NO_DETAIL);
 			if (!report.isWithBeanCollection() && !report.isEmbeddedHtml()) {
 				String query = null;
 				if (report.isQuery()) {
@@ -316,5 +348,25 @@ public class JasperReportsServer extends AbstractReportServer {
 			}
 		}
 		nqb.endCompoundFilter();
+	}
+
+	private static class DPIPageDimension {
+
+		final int width;
+
+		final int height;
+
+		public DPIPageDimension(int width, int height) {
+			this.width = width;
+			this.height = height;
+		}
+
+		public int getWidth() {
+			return width;
+		}
+
+		public int getHeight() {
+			return height;
+		}
 	}
 }

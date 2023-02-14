@@ -18,7 +18,6 @@ package com.tcdng.unify.core.report;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.constant.HAlignType;
 import com.tcdng.unify.core.constant.OrderType;
-import com.tcdng.unify.core.util.DataUtils;
 
 /**
  * A report column.
@@ -26,211 +25,161 @@ import com.tcdng.unify.core.util.DataUtils;
  * @author The Code Department
  * @since 1.0
  */
-public class ReportColumn {
+public class ReportColumn extends ReportField {
 
-    private String title;
+	private String title;
 
-    private String table;
+	private String table;
 
-    private String name;
+	private OrderType order;
 
-    private String className;
+	private int widthRatio;
 
-    private String sqlBlobTypeName;
+	private boolean group;
 
-    private String formatterUpl;
+	private boolean groupOnNewPage;
 
-    private OrderType order;
+	private boolean sum;
 
-    private HAlignType horizontalAlignment;
+	private ReportColumn(String title, String table, String name, String className, String sqlBlobTypeName,
+			String formatterUpl, OrderType order, HAlignType horizontalAlignment, int widthRatio, boolean group,
+			boolean groupOnNewPage, boolean sum) {
+		super(name, className, sqlBlobTypeName, formatterUpl, horizontalAlignment);
+		this.title = title;
+		this.table = table;
+		this.widthRatio = widthRatio;
+		this.order = order;
+		this.group = group;
+		this.groupOnNewPage = groupOnNewPage;
+		this.sum = sum;
+	}
 
-    private int widthRatio;
+	public String getTitle() {
+		return title;
+	}
 
-    private boolean group;
+	public String getTable() {
+		return table;
+	}
 
-    private boolean groupOnNewPage;
+	public int getWidthRatio() {
+		return widthRatio;
+	}
 
-    private boolean sum;
+	public OrderType getOrder() {
+		return order;
+	}
 
-    private ReportColumn(String title, String table, String name, String className, String sqlBlobTypeName,
-            String formatterUpl, OrderType order, HAlignType horizontalAlignment, int widthRatio, boolean group,
-            boolean groupOnNewPage, boolean sum) {
-        this.title = title;
-        this.table = table;
-        this.name = name;
-        this.className = className;
-        this.sqlBlobTypeName = sqlBlobTypeName;
-        this.formatterUpl = formatterUpl;
-        this.horizontalAlignment = horizontalAlignment;
-        this.widthRatio = widthRatio;
-        this.order = order;
-        this.group = group;
-        this.groupOnNewPage = groupOnNewPage;
-        this.sum = sum;
-    }
+	public boolean isGroup() {
+		return group;
+	}
 
-    public String getTitle() {
-        return title;
-    }
+	public boolean isGroupOnNewPage() {
+		return groupOnNewPage;
+	}
 
-    public String getTable() {
-        return table;
-    }
+	public boolean isSum() {
+		return sum;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public static Builder newBuilder() {
+		return new Builder();
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public static class Builder {
 
-    public String getTypeName() {
-        return className;
-    }
+		private String title;
 
-    public boolean isNumber() {
-        return DataUtils.isNumberType(className);
-    }
+		private String table;
 
-    public boolean isDate() {
-        return "java.util.Date".equals(className);
-    }
+		private String name;
 
-    public boolean isBlob() {
-        return "[B".equals(className);
-    }
+		private String className;
 
-    public String getSqlBlobTypeName() {
-        return sqlBlobTypeName;
-    }
+		private String sqlBlobTypeName;
 
-    public HAlignType getHorizontalAlignment() {
-        return horizontalAlignment;
-    }
+		private String formatterUpl;
 
-    public int getWidthRatio() {
-        return widthRatio;
-    }
+		private OrderType order;
 
-    public String getFormatterUpl() {
-        return formatterUpl;
-    }
+		private HAlignType horizontalAlignment;
 
-    public OrderType getOrder() {
-        return order;
-    }
+		private int widthRatio;
 
-    public boolean isGroup() {
-        return group;
-    }
+		private boolean group;
 
-    public boolean isGroupOnNewPage() {
-        return groupOnNewPage;
-    }
+		private boolean groupOnNewPage;
 
-    public boolean isSum() {
-        return sum;
-    }
+		private boolean sum;
 
-    public static Builder newBuilder() {
-        return new Builder();
-    }
+		private Builder() {
 
-    public static class Builder {
+		}
 
-        private String title;
+		public Builder title(String title) {
+			this.title = title;
+			return this;
+		}
 
-        private String table;
+		public Builder table(String table) {
+			this.table = table;
+			return this;
+		}
 
-        private String name;
+		public Builder name(String name) {
+			this.name = name;
+			return this;
+		}
 
-        private String className;
+		public Builder className(String className) {
+			this.className = className;
+			return this;
+		}
 
-        private String sqlBlobTypeName;
+		public Builder sqlBlobTypeName(String sqlBlobTypeName) {
+			this.sqlBlobTypeName = sqlBlobTypeName;
+			return this;
+		}
 
-        private String formatterUpl;
+		public Builder formatter(String formatterUpl) {
+			this.formatterUpl = formatterUpl;
+			return this;
+		}
 
-        private OrderType order;
+		public Builder horizontalAlignment(HAlignType horizontalAlignment) {
+			this.horizontalAlignment = horizontalAlignment;
+			return this;
+		}
 
-        private HAlignType horizontalAlignment;
+		public Builder widthRatio(int widthRatio) {
+			this.widthRatio = widthRatio;
+			return this;
+		}
 
-        private int widthRatio;
+		public Builder order(OrderType order) {
+			this.order = order;
+			return this;
+		}
 
-        private boolean group;
+		public Builder group(boolean group) {
+			this.group = group;
+			return this;
+		}
 
-        private boolean groupOnNewPage;
+		public Builder groupOnNewPage(boolean groupOnNewPage) {
+			this.groupOnNewPage = groupOnNewPage;
+			return this;
+		}
 
-        private boolean sum;
+		public Builder sum(boolean sum) {
+			this.sum = sum;
+			return this;
+		}
 
-        private Builder() {
-
-        }
-
-        public Builder title(String title) {
-            this.title = title;
-            return this;
-        }
-
-        public Builder table(String table) {
-            this.table = table;
-            return this;
-        }
-
-        public Builder name(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public Builder className(String className) {
-            this.className = className;
-            return this;
-        }
-
-        public Builder sqlBlobTypeName(String sqlBlobTypeName) {
-            this.sqlBlobTypeName = sqlBlobTypeName;
-            return this;
-        }
-
-        public Builder formatter(String formatterUpl) {
-            this.formatterUpl = formatterUpl;
-            return this;
-        }
-
-        public Builder horizontalAlignment(HAlignType horizontalAlignment) {
-            this.horizontalAlignment = horizontalAlignment;
-            return this;
-        }
-
-        public Builder widthRatio(int widthRatio) {
-            this.widthRatio = widthRatio;
-            return this;
-        }
-
-        public Builder order(OrderType order) {
-            this.order = order;
-            return this;
-        }
-
-        public Builder group(boolean group) {
-            this.group = group;
-            return this;
-        }
-
-        public Builder groupOnNewPage(boolean groupOnNewPage) {
-            this.groupOnNewPage = groupOnNewPage;
-            return this;
-        }
-
-        public Builder sum(boolean sum) {
-            this.sum = sum;
-            return this;
-        }
-
-        public ReportColumn build() throws UnifyException {
-            ReportColumn reportColumn = new ReportColumn(title, table, name, className, sqlBlobTypeName, formatterUpl,
-                    order, horizontalAlignment, widthRatio, group, groupOnNewPage, sum);
-            return reportColumn;
-        }
-    }
+		public ReportColumn build() throws UnifyException {
+			ReportColumn reportColumn = new ReportColumn(title, table, name, className, sqlBlobTypeName, formatterUpl,
+					order, horizontalAlignment, widthRatio, group, groupOnNewPage, sum);
+			return reportColumn;
+		}
+	}
 }

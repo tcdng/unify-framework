@@ -29,6 +29,7 @@ import com.tcdng.unify.core.constant.OrderType;
 import com.tcdng.unify.core.criterion.RestrictionType;
 import com.tcdng.unify.core.database.sql.SqlJoinType;
 import com.tcdng.unify.core.util.DataUtils;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * Used to define a report for generation at runtime.
@@ -158,6 +159,10 @@ public class Report {
 		this.template = template;
 	}
 
+	public boolean isWithTemplate() {
+		return !StringUtils.isBlank(template);
+	}
+
 	public String getProcessor() {
 		return processor;
 	}
@@ -252,6 +257,10 @@ public class Report {
 
 	public boolean isGenerated() {
 		return !columns.isEmpty() || !placements.isEmpty() || isEmbeddedHtml();
+	}
+
+	public boolean isPlacements() {
+		return !placements.isEmpty();
 	}
 
 	public boolean isMultiDocHtmlToPDF() {
@@ -594,18 +603,19 @@ public class Report {
 			return this;
 		}
 
-		public Builder addPlacement(String name, int x, int y) throws UnifyException {
-			return addPlacement(name, null, x, y, 0, 0, null);
+		public Builder addPlacement(String name, String className, int x, int y) throws UnifyException {
+			return addPlacement(name, className, null, x, y, 0, 0, null);
 		}
 
-		public Builder addPlacement(String name, int x, int y, int width, int height) throws UnifyException {
-			return addPlacement(name, null, x, y, width, height, null);
+		public Builder addPlacement(String name, String className, int x, int y, int width, int height)
+				throws UnifyException {
+			return addPlacement(name, className, null, x, y, width, height, null);
 		}
-		
-		public Builder addPlacement(String name, String formatter, int x, int y, int width, int height,
-				HAlignType horizontalAlignment) throws UnifyException {
-			ReportPlacement rp = ReportPlacement.newBuilder(name).formatter(formatter).position(x, y)
-					.dimension(width, height).horizontalAlignment(horizontalAlignment).build();
+
+		public Builder addPlacement(String name, String className, String formatter, int x, int y, int width,
+				int height, HAlignType horizontalAlignment) throws UnifyException {
+			ReportPlacement rp = ReportPlacement.newBuilder(name).className(className).formatter(formatter)
+					.position(x, y).dimension(width, height).horizontalAlignment(horizontalAlignment).build();
 			placements.add(rp);
 			return this;
 		}

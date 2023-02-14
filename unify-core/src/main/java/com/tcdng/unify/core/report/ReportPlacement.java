@@ -24,39 +24,23 @@ import com.tcdng.unify.core.constant.HAlignType;
  * @author The Code Department
  * @since 1.0
  */
-public class ReportPlacement {
+public class ReportPlacement extends ReportField {
 
-    private String name;
+	private int x;
 
-    private String formatter;
+	private int y;
 
-    private int x;
+	private int width;
 
-    private int y;
+	private int height;
 
-    private int width;
-
-    private int height;
-
-    private HAlignType horizontalAlignment;
-
-    private ReportPlacement(String name, String formatter, int x, int y, int width, int height,
-			HAlignType horizontalAlignment) {
-		this.name = name;
-		this.formatter = formatter;
+	private ReportPlacement(String name, String className, String sqlBlobTypeName, String formatter, int x, int y,
+			int width, int height, HAlignType horizontalAlignment) {
+		super(name, className, sqlBlobTypeName, formatter, horizontalAlignment);
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
-		this.horizontalAlignment = horizontalAlignment;
-	}
-
-    public String getName() {
-		return name;
-	}
-
-	public String getFormatter() {
-		return formatter;
 	}
 
 	public int getX() {
@@ -75,59 +59,69 @@ public class ReportPlacement {
 		return height;
 	}
 
-	public HAlignType getHorizontalAlignment() {
-		return horizontalAlignment;
+	public static Builder newBuilder(String name) {
+		return new Builder(name);
 	}
-
-    public static Builder newBuilder(String name) {
-        return new Builder(name);
-    }
 
 	public static class Builder {
 
-	    private String name;
+		private String name;
 
-	    private String formatter;
+		private String className;
 
-	    private int x;
+		private String formatter;
 
-	    private int y;
+		private String sqlBlobTypeName;
 
-	    private int width;
+		private int x;
 
-	    private int height;
+		private int y;
 
-	    private HAlignType horizontalAlignment;
+		private int width;
 
-	    private Builder(String name) {
-	    	this.name = name;
-        }
+		private int height;
 
-        public Builder position(int x, int y) {
-            this.x = x;
-            this.y = y;
-            return this;
-        }
+		private HAlignType horizontalAlignment;
 
-        public Builder dimension(int width, int height) {
-            this.width = width;
-            this.height = height;
-            return this;
-        }
+		private Builder(String name) {
+			this.name = name;
+		}
 
-        public Builder formatter(String formatter) {
-            this.formatter = formatter;
-            return this;
-        }
+		public Builder className(String className) {
+			this.className = className;
+			return this;
+		}
 
-        public Builder horizontalAlignment(HAlignType horizontalAlignment) {
-            this.horizontalAlignment = horizontalAlignment;
-            return this;
-        }
+		public Builder sqlBlobTypeName(String sqlBlobTypeName) {
+			this.sqlBlobTypeName = sqlBlobTypeName;
+			return this;
+		}
 
-        public ReportPlacement build() throws UnifyException {
-            return new ReportPlacement(name, formatter, x, y, width, height,
-        			horizontalAlignment);
-        }
-    }
+		public Builder position(int x, int y) {
+			this.x = x;
+			this.y = y;
+			return this;
+		}
+
+		public Builder dimension(int width, int height) {
+			this.width = width;
+			this.height = height;
+			return this;
+		}
+
+		public Builder formatter(String formatter) {
+			this.formatter = formatter;
+			return this;
+		}
+
+		public Builder horizontalAlignment(HAlignType horizontalAlignment) {
+			this.horizontalAlignment = horizontalAlignment;
+			return this;
+		}
+
+		public ReportPlacement build() throws UnifyException {
+			return new ReportPlacement(name, className, sqlBlobTypeName, formatter, x, y, width, height,
+					horizontalAlignment);
+		}
+	}
 }
