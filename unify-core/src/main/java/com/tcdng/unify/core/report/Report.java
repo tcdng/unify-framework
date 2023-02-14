@@ -60,6 +60,8 @@ public class Report {
 
 	private List<ReportColumn> columns;
 
+	private List<ReportPlacement> placements;
+
 	private List<ReportHtml> embeddedHtmls;
 
 	private ReportTable table;
@@ -96,11 +98,12 @@ public class Report {
 
 	private Report(String code, String title, String template, String processor, String dataSource, String query,
 			String theme, List<?> beanCollection, ReportTable table, List<ReportTableJoin> joins,
-			List<ReportColumn> columns, List<ReportHtml> embeddedHtmls, ReportFilter filter, ReportFormat format,
-			ReportLayoutType layout, ReportParameters reportParameters, ReportPageProperties pageProperties,
-			String summationLegend, String groupSummationLegend, boolean dynamicDataSource, boolean printColumnNames,
-			boolean printGroupColumnNames, boolean invertGroupColors, boolean showParameterHeader,
-			boolean showGrandFooter, boolean underlineRows, boolean shadeOddRows) {
+			List<ReportColumn> columns, List<ReportPlacement> placements, List<ReportHtml> embeddedHtmls,
+			ReportFilter filter, ReportFormat format, ReportLayoutType layout, ReportParameters reportParameters,
+			ReportPageProperties pageProperties, String summationLegend, String groupSummationLegend,
+			boolean dynamicDataSource, boolean printColumnNames, boolean printGroupColumnNames,
+			boolean invertGroupColors, boolean showParameterHeader, boolean showGrandFooter, boolean underlineRows,
+			boolean shadeOddRows) {
 		this.code = code;
 		this.title = title;
 		this.template = template;
@@ -112,6 +115,7 @@ public class Report {
 		this.table = table;
 		this.joins = joins;
 		this.columns = columns;
+		this.placements = placements;
 		this.embeddedHtmls = embeddedHtmls;
 		this.filter = filter;
 		this.format = format;
@@ -247,7 +251,7 @@ public class Report {
 	}
 
 	public boolean isGenerated() {
-		return !columns.isEmpty() || isEmbeddedHtml();
+		return !columns.isEmpty() || !placements.isEmpty() || isEmbeddedHtml();
 	}
 
 	public boolean isMultiDocHtmlToPDF() {
@@ -318,7 +322,11 @@ public class Report {
 	}
 
 	public List<ReportColumn> getColumns() {
-		return DataUtils.unmodifiableList(columns);
+		return columns;
+	}
+
+	public List<ReportPlacement> getPlacements() {
+		return placements;
 	}
 
 	public List<ReportHtml> getEmbeddedHtmls() {
@@ -371,6 +379,8 @@ public class Report {
 
 		private List<ReportColumn> columns;
 
+		private List<ReportPlacement> placements;
+
 		private Map<String, ReportHtml> embeddedHtmls;
 
 		private Stack<ReportFilter> filters;
@@ -406,6 +416,7 @@ public class Report {
 			this.reportParameters = new ReportParameters();
 			this.joins = new ArrayList<ReportTableJoin>();
 			this.columns = new ArrayList<ReportColumn>();
+			this.placements = new ArrayList<ReportPlacement>();
 			this.embeddedHtmls = new LinkedHashMap<String, ReportHtml>();
 			this.filters = new Stack<ReportFilter>();
 			this.printColumnNames = true;
@@ -578,6 +589,27 @@ public class Report {
 			return this;
 		}
 
+		public Builder addPlacement(ReportPlacement reportPlacement) {
+			placements.add(reportPlacement);
+			return this;
+		}
+
+		public Builder addPlacement(String name, int x, int y) throws UnifyException {
+			return addPlacement(name, null, x, y, 0, 0, null);
+		}
+
+		public Builder addPlacement(String name, int x, int y, int width, int height) throws UnifyException {
+			return addPlacement(name, null, x, y, width, height, null);
+		}
+		
+		public Builder addPlacement(String name, String formatter, int x, int y, int width, int height,
+				HAlignType horizontalAlignment) throws UnifyException {
+			ReportPlacement rp = ReportPlacement.newBuilder(name).formatter(formatter).position(x, y)
+					.dimension(width, height).horizontalAlignment(horizontalAlignment).build();
+			placements.add(rp);
+			return this;
+		}
+
 		public Builder beginCompoundFilter(RestrictionType op) {
 			if (!op.isCompound()) {
 				throw new IllegalArgumentException(op + " is not a compound restriction type.");
@@ -649,11 +681,11 @@ public class Report {
 			}
 
 			Report report = new Report(code, title, template, processor, dataSource, query, theme, beanCollection,
-					table, Collections.unmodifiableList(joins), columns,
-					DataUtils.unmodifiableList(embeddedHtmls.values()), rootFilter, format, layout, reportParameters,
-					pageProperties, summationLegend, groupSummationLegend, dynamicDataSource, printColumnNames,
-					printGroupColumnNames, invertGroupColors, showParameterHeader, showGrandFooter, underlineRows,
-					shadeOddRows);
+					table, Collections.unmodifiableList(joins), DataUtils.unmodifiableList(columns),
+					DataUtils.unmodifiableList(placements), DataUtils.unmodifiableList(embeddedHtmls.values()),
+					rootFilter, format, layout, reportParameters, pageProperties, summationLegend, groupSummationLegend,
+					dynamicDataSource, printColumnNames, printGroupColumnNames, invertGroupColors, showParameterHeader,
+					showGrandFooter, underlineRows, shadeOddRows);
 			return report;
 		}
 	}
