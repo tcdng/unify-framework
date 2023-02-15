@@ -15,6 +15,7 @@
  */
 package com.tcdng.unify.core.constant;
 
+import com.tcdng.unify.common.annotation.StaticList;
 import com.tcdng.unify.common.constants.EnumConst;
 import com.tcdng.unify.core.util.EnumUtils;
 
@@ -24,6 +25,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * @author The Code Department
  * @since 1.0
  */
+@StaticList(name = "pagesizetypelist", description="$m{staticlist.pagesizetypelist}")
 public enum PageSizeType implements EnumConst {
 
 	A5("A5"),
