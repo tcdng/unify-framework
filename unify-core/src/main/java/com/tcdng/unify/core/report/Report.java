@@ -28,6 +28,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.constant.Bold;
 import com.tcdng.unify.core.constant.HAlignType;
 import com.tcdng.unify.core.constant.OrderType;
+import com.tcdng.unify.core.constant.VAlignType;
 import com.tcdng.unify.core.criterion.RestrictionType;
 import com.tcdng.unify.core.database.sql.SqlJoinType;
 import com.tcdng.unify.core.util.DataUtils;
@@ -594,8 +595,8 @@ public class Report {
 				String formatterUpl, OrderType order, HAlignType hAlignType, int widthRatio, boolean group,
 				boolean groupOnNewPage, boolean sum) throws UnifyException {
 			ReportColumn rc = ReportColumn.newBuilder().title(title).table(table).name(name).className(className)
-					.horizontalAlignment(hAlignType).widthRatio(widthRatio).sqlBlobTypeName(sqlBlobTypeName)
-					.formatter(formatterUpl).order(order).group(group).groupOnNewPage(groupOnNewPage).sum(sum).build();
+					.hAlign(hAlignType).widthRatio(widthRatio).sqlBlobTypeName(sqlBlobTypeName).formatter(formatterUpl)
+					.order(order).group(group).groupOnNewPage(groupOnNewPage).sum(sum).build();
 			columns.add(rc);
 			return this;
 		}
@@ -615,40 +616,36 @@ public class Report {
 			return this;
 		}
 
-		public Builder addField(Color color, String fieldName, Class<?> type, Bold bold, int x, int y, int width,
-				int height) throws UnifyException {
-			return addField(color, fieldName, type.getName(), null, null, bold, x, y, width, height);
+		public Builder addField(Color color, String fieldName, Class<?> type, int x, int y, int width, int height)
+				throws UnifyException {
+			return addField(color, fieldName, type.getName(), null, HAlignType.LEFT, VAlignType.MIDDLE, Bold.FALSE, x,
+					y, width, height);
 		}
 
-		public Builder addField(Color color, String fieldName, Class<?> type, HAlignType horizontalAlignment, Bold bold,
-				int x, int y, int width, int height) throws UnifyException {
-			return addField(color, fieldName, type.getName(), null, horizontalAlignment, bold, x, y, width, height);
+		public Builder addField(Color color, String fieldName, String className, int x, int y, int width, int height)
+				throws UnifyException {
+			return addField(color, fieldName, className, null, HAlignType.LEFT, VAlignType.MIDDLE, Bold.FALSE, x, y,
+					width, height);
 		}
 
-		public Builder addField(Color color, String fieldName, String className, Bold bold, int x, int y, int width,
-				int height) throws UnifyException {
-			return addField(color, fieldName, className, null, null, bold, x, y, width, height);
-		}
-
-		public Builder addField(Color color, String fieldName, String className, HAlignType horizontalAlignment,
-				Bold bold, int x, int y, int width, int height) throws UnifyException {
-			return addField(color, fieldName, className, null, horizontalAlignment, bold, x, y, width, height);
-		}
-
-		public Builder addField(Color color, String fieldName, String className, String formatter,
-				HAlignType horizontalAlignment, Bold bold, int x, int y, int width, int height) throws UnifyException {
+		public Builder addField(Color color, String fieldName, String className, String formatter, HAlignType hAlign,
+				VAlignType vAlign, Bold bold, int x, int y, int width, int height) throws UnifyException {
 			ReportPlacement rp = ReportPlacement.newBuilder(ReportPlacementType.FIELD, fieldName).className(className)
-					.formatter(formatter).bold(bold).position(x, y).dimension(width, height)
-					.horizontalAlignment(horizontalAlignment).colors(color, null, null).build();
+					.formatter(formatter).bold(bold).position(x, y).dimension(width, height).hAlign(hAlign)
+					.vAlign(vAlign).colors(color, null, null).build();
 			placements.add(rp);
 			return this;
 		}
 
-		public Builder addText(Color color, String text, HAlignType horizontalAlignment, Bold bold, int x, int y,
+		public Builder addText(Color color, String text, int x, int y, int width, int height) throws UnifyException {
+			return addText(color, text, null, null, null, x, y, width, height);
+		}
+
+		public Builder addText(Color color, String text, HAlignType hAlign, VAlignType vAlign, Bold bold, int x, int y,
 				int width, int height) throws UnifyException {
 			ReportPlacement rp = ReportPlacement.newBuilder(ReportPlacementType.TEXT).text(text).bold(bold)
-					.position(x, y).dimension(width, height).horizontalAlignment(horizontalAlignment)
-					.colors(color, color, null).build();
+					.position(x, y).dimension(width, height).hAlign(hAlign).vAlign(vAlign).colors(color, color, null)
+					.build();
 			placements.add(rp);
 			return this;
 		}

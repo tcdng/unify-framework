@@ -24,6 +24,7 @@ import java.util.Map;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.constant.HAlignType;
+import com.tcdng.unify.core.constant.VAlignType;
 import com.tcdng.unify.core.report.Report;
 import com.tcdng.unify.core.report.ReportColumn;
 import com.tcdng.unify.core.report.ReportParameters;
@@ -252,14 +253,15 @@ public class JasperReportsTabularLayoutManager extends AbstractJasperReportsLayo
 					JRDesignExpression totalExpression = newJRDesignExpression(
 							"$V{" + jRDesignGroup.getName() + "_COUNT} + \" line item(s)  Total :\"");
 					jRDesignElement = newJRDesignTextField(groupTheme, columnStyles.getNormalStyle(), sumStartX, 2,
-							totalElemWidth, columnHeaderHeight - 4, totalExpression, HAlignType.RIGHT);
+							totalElemWidth, columnHeaderHeight - 4, totalExpression, HAlignType.RIGHT,
+							VAlignType.MIDDLE);
 					groupFooterBand.addElement(jRDesignElement);
 
 					sumStartX -= totalElemWidth;
 					if (sumStartX >= 0) {
 						jRDesignElement = newJRDesignTextField(groupTheme, columnStyles.getNormalStyle(), sumStartX, 2,
 								totalElemWidth, columnHeaderHeight - 4, newJRDesignExpression(grpReportColumn),
-								HAlignType.RIGHT);
+								HAlignType.RIGHT, VAlignType.MIDDLE);
 						groupFooterBand.addElement(jRDesignElement);
 					}
 				}
@@ -317,7 +319,8 @@ public class JasperReportsTabularLayoutManager extends AbstractJasperReportsLayo
 				JRDesignExpression totalExpression = newJRDesignExpression(
 						"$V{REPORT_COUNT} + \" line item(s)  Grand Total :\"");
 				JRDesignElement jRDesignElement = newJRDesignTextField(grandTheme, columnStyles.getNormalStyle(),
-						sumStartX, 2, totalElemWidth, columnHeaderHeight - 4, totalExpression, HAlignType.RIGHT);
+						sumStartX, 2, totalElemWidth, columnHeaderHeight - 4, totalExpression, HAlignType.RIGHT,
+						VAlignType.MIDDLE);
 				summaryBand.addElement(jRDesignElement);
 			}
 

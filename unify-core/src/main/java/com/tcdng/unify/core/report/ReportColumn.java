@@ -19,6 +19,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.constant.Bold;
 import com.tcdng.unify.core.constant.HAlignType;
 import com.tcdng.unify.core.constant.OrderType;
+import com.tcdng.unify.core.constant.VAlignType;
 
 /**
  * A report column.
@@ -43,9 +44,9 @@ public class ReportColumn extends ReportField {
 	private boolean sum;
 
 	private ReportColumn(String title, String table, String name, String className, String sqlBlobTypeName,
-			String formatterUpl, OrderType order, HAlignType horizontalAlignment, int widthRatio, Bold bold,
+			String formatterUpl, OrderType order, HAlignType hAlign, VAlignType vAlign, int widthRatio, Bold bold,
 			boolean group, boolean groupOnNewPage, boolean sum) {
-		super(name, className, sqlBlobTypeName, formatterUpl, horizontalAlignment, bold);
+		super(name, className, sqlBlobTypeName, formatterUpl, hAlign, vAlign, bold);
 		this.title = title;
 		this.table = table;
 		this.widthRatio = widthRatio;
@@ -103,7 +104,9 @@ public class ReportColumn extends ReportField {
 
 		private OrderType order;
 
-		private HAlignType horizontalAlignment;
+		private HAlignType hAlign;
+
+		private VAlignType vAlign;
 
 		private int widthRatio;
 
@@ -149,8 +152,13 @@ public class ReportColumn extends ReportField {
 			return this;
 		}
 
-		public Builder horizontalAlignment(HAlignType horizontalAlignment) {
-			this.horizontalAlignment = horizontalAlignment;
+		public Builder hAlign(HAlignType hAlign) {
+			this.hAlign = hAlign;
+			return this;
+		}
+
+		public Builder vAlign(VAlignType vAlign) {
+			this.vAlign = vAlign;
 			return this;
 		}
 
@@ -186,7 +194,7 @@ public class ReportColumn extends ReportField {
 
 		public ReportColumn build() throws UnifyException {
 			ReportColumn reportColumn = new ReportColumn(title, table, name, className, sqlBlobTypeName, formatterUpl,
-					order, horizontalAlignment, widthRatio, bold, group, groupOnNewPage, sum);
+					order, hAlign, vAlign, widthRatio, bold, group, groupOnNewPage, sum);
 			return reportColumn;
 		}
 	}
