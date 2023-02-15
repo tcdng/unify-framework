@@ -631,7 +631,7 @@ public class Report {
 
 		public Builder addField(Color color, String fieldName, String className, String formatter, HAlignType hAlign,
 				VAlignType vAlign, Bold bold, int x, int y, int width, int height) throws UnifyException {
-			ReportPlacement rp = ReportPlacement.newBuilder(ReportPlacementType.FIELD, fieldName).className(className)
+			ReportPlacement rp = ReportPlacement.newBuilder(ReportPlacementType.FIELD).name(fieldName).className(className)
 					.formatter(formatter).bold(bold).position(x, y).dimension(width, height).hAlign(hAlign)
 					.vAlign(vAlign).colors(color, null, null).build();
 			placements.add(rp);

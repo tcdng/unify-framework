@@ -106,10 +106,6 @@ public class ReportPlacement extends ReportField {
 		return type.isImage();
 	}
 
-	public static Builder newBuilder(ReportPlacementType type, String name) {
-		return new Builder(type, name);
-	}
-
 	public static Builder newBuilder(ReportPlacementType type) {
 		return new Builder(type);
 	}
@@ -144,15 +140,14 @@ public class ReportPlacement extends ReportField {
 
 		private Bold bold;
 
-		private Builder(ReportPlacementType type, String name) {
-			this.colors = ReportTheme.DEFAULT_THEME.getDetailTheme();
-			this.type = type;
-			this.name = name;
-		}
-
 		private Builder(ReportPlacementType type) {
 			this.colors = ReportTheme.DEFAULT_THEME.getDetailTheme();
 			this.type = type;
+		}
+
+		public Builder name(String name) {
+			this.name = name;
+			return this;
 		}
 
 		public Builder className(String className) {
