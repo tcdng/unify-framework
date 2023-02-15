@@ -74,7 +74,7 @@ public class JasperReportsColumnarLayoutManager extends AbstractJasperReportsLay
                 }
 
                 JRDesignElement jRDesignElement = newColumnJRDesignElement(jasperDesign, detailColors,
-                        columnStyles.getNormalStyle(), reportColumn, isListFormat);
+                        columnStyles, reportColumn, isListFormat);
                 jRDesignElement.setX(titleWidth);
                 jRDesignElement.setY(calcDetailHeight + 2);
                 jRDesignElement.setWidth(actualDetailWidth);
@@ -146,7 +146,7 @@ public class JasperReportsColumnarLayoutManager extends AbstractJasperReportsLay
             groupBand.addElement(grpJRDesignRectangle);
 
             JRDesignElement jRDesignElement = newColumnJRDesignElement(jasperDesign, groupTheme,
-                    columnStyles.getBoldLargeStyle(), reportColumn, isListFormat);
+                    columnStyles, reportColumn, isListFormat);
             jRDesignElement.setX(groupHeaderX);
             jRDesignElement.setY(2);
             jRDesignElement.setWidth(actualColumnWidth - jRDesignElement.getX());

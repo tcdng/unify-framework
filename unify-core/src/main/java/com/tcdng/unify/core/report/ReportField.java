@@ -15,6 +15,7 @@
  */
 package com.tcdng.unify.core.report;
 
+import com.tcdng.unify.core.constant.Bold;
 import com.tcdng.unify.core.constant.HAlignType;
 import com.tcdng.unify.core.util.DataUtils;
 
@@ -36,13 +37,16 @@ public abstract class ReportField {
 
 	private HAlignType horizontalAlignment;
 
+	private Bold bold;
+
 	protected ReportField(String name, String className, String sqlBlobTypeName, String formatterUpl,
-			HAlignType horizontalAlignment) {
+			HAlignType horizontalAlignment, Bold bold) {
 		this.name = name;
 		this.className = className;
 		this.sqlBlobTypeName = sqlBlobTypeName;
 		this.formatterUpl = formatterUpl;
 		this.horizontalAlignment = horizontalAlignment;
+		this.bold = bold;
 	}
 
 	public String getName() {
@@ -55,6 +59,10 @@ public abstract class ReportField {
 
 	public String getTypeName() {
 		return className;
+	}
+
+	public boolean isBold() {
+		return bold != null && bold.isTrue();
 	}
 
 	public boolean isNumber() {

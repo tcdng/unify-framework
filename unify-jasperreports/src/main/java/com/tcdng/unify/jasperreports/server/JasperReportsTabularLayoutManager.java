@@ -53,307 +53,307 @@ import net.sf.jasperreports.engine.type.StretchTypeEnum;
 @Component("jasperreports-tabularlayoutmanager")
 public class JasperReportsTabularLayoutManager extends AbstractJasperReportsLayoutManager {
 
-    @Override
-    protected void doApplyLayout(JasperDesign jasperDesign, ColumnStyles columnStyles, Report report)
-            throws UnifyException {
-        ReportTheme theme = report.getReportTheme();
-        boolean isListFormat = isListFormat(report.getFormat());
-        final int actualColumnWidth = jasperDesign.getColumnWidth();
-        final int columnHeaderHeight = theme.getColumnHeaderHeight();
-        final int detailHeight = theme.getDetailHeight();
+	@Override
+	protected void doApplyLayout(JasperDesign jasperDesign, ColumnStyles columnStyles, Report report)
+			throws UnifyException {
+		ReportTheme theme = report.getReportTheme();
+		boolean isListFormat = isListFormat(report.getFormat());
+		final int actualColumnWidth = jasperDesign.getColumnWidth();
+		final int columnHeaderHeight = theme.getColumnHeaderHeight();
+		final int detailHeight = theme.getDetailHeight();
 
-        // Organize layout
-        List<ReportColumn> reportColumnList = report.getColumns();
-        List<ReportColumn> groupingColumnList = new ArrayList<ReportColumn>();
-        List<ReportColumn> detailColumnList = new ArrayList<ReportColumn>();
-        List<ReportColumn> summationColumnList = new ArrayList<ReportColumn>();
-        Map<ReportColumn, JRDesignElement> detailJRElementMap = new HashMap<ReportColumn, JRDesignElement>();
+		// Organize layout
+		List<ReportColumn> reportColumnList = report.getColumns();
+		List<ReportColumn> groupingColumnList = new ArrayList<ReportColumn>();
+		List<ReportColumn> detailColumnList = new ArrayList<ReportColumn>();
+		List<ReportColumn> summationColumnList = new ArrayList<ReportColumn>();
+		Map<ReportColumn, JRDesignElement> detailJRElementMap = new HashMap<ReportColumn, JRDesignElement>();
 
-        ThemeColors detailColors = theme.getDetailTheme();
-        int reportWidth = 0;
-        for (ReportColumn reportColumn : reportColumnList) {
-            if (reportColumn.isGroup()) {
-                groupingColumnList.add(reportColumn);
-            } else {
-                detailColumnList.add(reportColumn);
-                if (reportColumn.isSum() && reportColumn.isNumber()) {
-                    summationColumnList.add(reportColumn);
-                }
+		ThemeColors detailColors = theme.getDetailTheme();
+		int reportWidth = 0;
+		for (ReportColumn reportColumn : reportColumnList) {
+			if (reportColumn.isGroup()) {
+				groupingColumnList.add(reportColumn);
+			} else {
+				detailColumnList.add(reportColumn);
+				if (reportColumn.isSum() && reportColumn.isNumber()) {
+					summationColumnList.add(reportColumn);
+				}
 
-                JRDesignElement jRDesignElement = newColumnJRDesignElement(jasperDesign, detailColors,
-                        columnStyles.getNormalStyle(), reportColumn, isListFormat);
-                jRDesignElement.setX(reportWidth);
-                jRDesignElement.setY(2);
-                reportWidth += jRDesignElement.getWidth();
-                detailJRElementMap.put(reportColumn, jRDesignElement);
-            }
-        }
+				JRDesignElement jRDesignElement = newColumnJRDesignElement(jasperDesign, detailColors, columnStyles,
+						reportColumn, isListFormat);
+				jRDesignElement.setX(reportWidth);
+				jRDesignElement.setY(2);
+				reportWidth += jRDesignElement.getWidth();
+				detailJRElementMap.put(reportColumn, jRDesignElement);
+			}
+		}
 
-        // Fit details to width
-        JRDesignElement lastJRDesignElement = null;
-        int x = 0;
-        for (ReportColumn reportColumn : detailColumnList) {
-            JRDesignElement jRDesignElement = detailJRElementMap.get(reportColumn);
-            int newWidth = (jRDesignElement.getWidth() * actualColumnWidth) / reportWidth;
-            jRDesignElement.setWidth(newWidth - TOTAL_X_PADDING);
-            jRDesignElement.setX(x + LEFT_PADDING);
-            lastJRDesignElement = jRDesignElement;
-            x += newWidth;
-        }
+		// Fit details to width
+		JRDesignElement lastJRDesignElement = null;
+		int x = 0;
+		for (ReportColumn reportColumn : detailColumnList) {
+			JRDesignElement jRDesignElement = detailJRElementMap.get(reportColumn);
+			int newWidth = (jRDesignElement.getWidth() * actualColumnWidth) / reportWidth;
+			jRDesignElement.setWidth(newWidth - TOTAL_X_PADDING);
+			jRDesignElement.setX(x + LEFT_PADDING);
+			lastJRDesignElement = jRDesignElement;
+			x += newWidth;
+		}
 
-        if (x < actualColumnWidth && lastJRDesignElement != null) {
-            lastJRDesignElement.setWidth(lastJRDesignElement.getWidth() + actualColumnWidth - x);
-        }
+		if (x < actualColumnWidth && lastJRDesignElement != null) {
+			lastJRDesignElement.setWidth(lastJRDesignElement.getWidth() + actualColumnWidth - x);
+		}
 
-        // Construct column header (or title header in case of list layout)
-        boolean isWithGroupColumns =
-                report.isPrintColumnNames() && report.isPrintGroupColumnNames() && !groupingColumnList.isEmpty();
-        if (report.isPrintColumnNames()) {
-            JRDesignBand columnHeaderBand = new JRDesignBand();
-            columnHeaderBand.setHeight(columnHeaderHeight);
+		// Construct column header (or title header in case of list layout)
+		boolean isWithGroupColumns = report.isPrintColumnNames() && report.isPrintGroupColumnNames()
+				&& !groupingColumnList.isEmpty();
+		if (report.isPrintColumnNames()) {
+			JRDesignBand columnHeaderBand = new JRDesignBand();
+			columnHeaderBand.setHeight(columnHeaderHeight);
 
-            constructColumnHeaderToBand(jasperDesign, columnHeaderBand, theme.getColumnTheme(), columnStyles,
-                    detailColumnList, detailJRElementMap, 0, columnHeaderHeight, actualColumnWidth, isListFormat);
+			constructColumnHeaderToBand(jasperDesign, columnHeaderBand, theme.getColumnTheme(), columnStyles,
+					detailColumnList, detailJRElementMap, 0, columnHeaderHeight, actualColumnWidth, isListFormat);
 
-            if (!isWithGroupColumns) {
-                if (isListFormat) {
-                    jasperDesign.setTitle(columnHeaderBand);
-                } else {
-                    jasperDesign.setColumnHeader(columnHeaderBand);
-                }
-            }
-        }
+			if (!isWithGroupColumns) {
+				if (isListFormat) {
+					jasperDesign.setTitle(columnHeaderBand);
+				} else {
+					jasperDesign.setColumnHeader(columnHeaderBand);
+				}
+			}
+		}
 
-        // Construct parameter header
-        if (report.isShowParameterHeader()) {
-            ReportParameters reportParameters = report.getReportParameters();
-            if (reportParameters != null && reportParameters.isWithShowInHeader()) {
-                JRDesignBand titleBand = (JRDesignBand) jasperDesign.getTitle();
-                constructParamHeaderToBand(jasperDesign, titleBand, theme.getParamTheme(), columnStyles,
-                        reportParameters, actualColumnWidth, theme.getDetailHeight(), isListFormat);
-            }
-        }
+		// Construct parameter header
+		if (report.isShowParameterHeader()) {
+			ReportParameters reportParameters = report.getReportParameters();
+			if (reportParameters != null && reportParameters.isWithShowInHeader()) {
+				JRDesignBand titleBand = (JRDesignBand) jasperDesign.getTitle();
+				constructParamHeaderToBand(jasperDesign, titleBand, theme.getParamTheme(), columnStyles,
+						reportParameters, actualColumnWidth, theme.getDetailHeight(), isListFormat);
+			}
+		}
 
-        // Construct detail band
-        JRDesignBand detailBand = new JRDesignBand();
-        detailBand.setHeight(detailHeight);
+		// Construct detail band
+		JRDesignBand detailBand = new JRDesignBand();
+		detailBand.setHeight(detailHeight);
 
-        if (report.isShadeOddRows()) {
-            JRDesignRectangle jRDesignRectangle =
-                    newJRDesignRectangle(jasperDesign, 0, 0, actualColumnWidth, detailHeight, theme.getShadeTheme());
-            jRDesignRectangle.getLinePen().setLineWidth(FLOAT_ZERO);
-            jRDesignRectangle.setPrintWhenExpression(getOnOddJRDesignExpression());
-            jRDesignRectangle.setStretchType(StretchTypeEnum.CONTAINER_HEIGHT);
-            detailBand.addElement(jRDesignRectangle);
-        }
+		if (report.isShadeOddRows()) {
+			JRDesignRectangle jRDesignRectangle = newJRDesignRectangle(jasperDesign, 0, 0, actualColumnWidth,
+					detailHeight, theme.getShadeTheme());
+			jRDesignRectangle.getLinePen().setLineWidth(FLOAT_ZERO);
+			jRDesignRectangle.setPrintWhenExpression(getOnOddJRDesignExpression());
+			jRDesignRectangle.setStretchType(StretchTypeEnum.CONTAINER_HEIGHT);
+			detailBand.addElement(jRDesignRectangle);
+		}
 
-        if (report.isUnderlineRows()) {
-            JRDesignLine jRDesignLine = newJRDesignLine(0, detailHeight - 1, actualColumnWidth, 0, Color.BLACK);
-            jRDesignLine.getLinePen().setLineWidth(FLOAT_ZERO_POINT_FIVE);
-            jRDesignLine.setPositionType(PositionTypeEnum.FIX_RELATIVE_TO_BOTTOM);
-            detailBand.addElement(jRDesignLine);
-        }
+		if (report.isUnderlineRows()) {
+			JRDesignLine jRDesignLine = newJRDesignLine(0, detailHeight - 1, actualColumnWidth, 0, Color.BLACK);
+			jRDesignLine.getLinePen().setLineWidth(FLOAT_ZERO_POINT_FIVE);
+			jRDesignLine.setPositionType(PositionTypeEnum.FIX_RELATIVE_TO_BOTTOM);
+			detailBand.addElement(jRDesignLine);
+		}
 
-        for (ReportColumn reportColumn : detailColumnList) {
-            JRDesignElement jRDesignElement = detailJRElementMap.get(reportColumn);
-            jRDesignElement.setHeight(detailHeight - (4));
-            detailBand.addElement(jRDesignElement);
-        }
+		for (ReportColumn reportColumn : detailColumnList) {
+			JRDesignElement jRDesignElement = detailJRElementMap.get(reportColumn);
+			jRDesignElement.setHeight(detailHeight - (4));
+			detailBand.addElement(jRDesignElement);
+		}
 
-        clearDetailSection(jasperDesign);
-        addDetailBand(jasperDesign, detailBand);
-        
-        // Construct groups
-        int groupHeaderX = 4;
-        int groupCascade = 20;
-        int glen = groupingColumnList.size();
-        boolean invertGroupColors = report.isInvertGroupColors();
-        for (int i = 0; i < glen; i++) {
-            ReportColumn grpReportColumn = groupingColumnList.get(i);
-            JRDesignGroup jRDesignGroup = newJRDesignGroup(jasperDesign, grpReportColumn);
+		clearDetailSection(jasperDesign);
+		addDetailBand(jasperDesign, detailBand);
 
-            // Grouping header
-            boolean showColumnHeader = isWithGroupColumns && ((i + 1) == glen);
-            JRDesignBand groupHeaderBand = new JRDesignBand();
-            if (showColumnHeader) {
-                // Add vertical space for column header
-                groupHeaderBand.setHeight(columnHeaderHeight + columnHeaderHeight);
-            } else {
-                groupHeaderBand.setHeight(columnHeaderHeight);
-            }
+		// Construct groups
+		int groupHeaderX = 4;
+		int groupCascade = 20;
+		int glen = groupingColumnList.size();
+		boolean invertGroupColors = report.isInvertGroupColors();
+		for (int i = 0; i < glen; i++) {
+			ReportColumn grpReportColumn = groupingColumnList.get(i);
+			JRDesignGroup jRDesignGroup = newJRDesignGroup(jasperDesign, grpReportColumn);
 
-            ThemeColors groupTheme = theme.getGroupTheme(i, invertGroupColors);
-            JRDesignRectangle grpJRDesignRectangle =
-                    newJRDesignRectangle(jasperDesign, 0, 1, actualColumnWidth, columnHeaderHeight - 2, groupTheme);
-            grpJRDesignRectangle.getLinePen().setLineWidth(FLOAT_ZERO);
-            groupHeaderBand.addElement(grpJRDesignRectangle);
+			// Grouping header
+			boolean showColumnHeader = isWithGroupColumns && ((i + 1) == glen);
+			JRDesignBand groupHeaderBand = new JRDesignBand();
+			if (showColumnHeader) {
+				// Add vertical space for column header
+				groupHeaderBand.setHeight(columnHeaderHeight + columnHeaderHeight);
+			} else {
+				groupHeaderBand.setHeight(columnHeaderHeight);
+			}
 
-            JRDesignElement jRDesignElement = newColumnJRDesignElement(jasperDesign, groupTheme,
-                    columnStyles.getBoldLargeStyle(), grpReportColumn, isListFormat);
-            jRDesignElement.setX(groupHeaderX);
-            jRDesignElement.setY(2);
-            jRDesignElement.setWidth(actualColumnWidth - jRDesignElement.getX());
-            jRDesignElement.setHeight(columnHeaderHeight - (4));
-            groupHeaderBand.addElement(jRDesignElement);
+			ThemeColors groupTheme = theme.getGroupTheme(i, invertGroupColors);
+			JRDesignRectangle grpJRDesignRectangle = newJRDesignRectangle(jasperDesign, 0, 1, actualColumnWidth,
+					columnHeaderHeight - 2, groupTheme);
+			grpJRDesignRectangle.getLinePen().setLineWidth(FLOAT_ZERO);
+			groupHeaderBand.addElement(grpJRDesignRectangle);
 
-            if (showColumnHeader) {
-                // Add column header strip
-                constructColumnHeaderToBand(jasperDesign, groupHeaderBand, theme.getColumnTheme(), columnStyles,
-                        detailColumnList, detailJRElementMap, columnHeaderHeight, columnHeaderHeight, actualColumnWidth,
-                        isListFormat);
-            }
+			JRDesignElement jRDesignElement = newColumnJRDesignElement(jasperDesign, groupTheme, columnStyles,
+					grpReportColumn, isListFormat);
+			jRDesignElement.setX(groupHeaderX);
+			jRDesignElement.setY(2);
+			jRDesignElement.setWidth(actualColumnWidth - jRDesignElement.getX());
+			jRDesignElement.setHeight(columnHeaderHeight - (4));
+			groupHeaderBand.addElement(jRDesignElement);
 
-            ((JRDesignSection) jRDesignGroup.getGroupHeaderSection()).addBand(groupHeaderBand);
+			if (showColumnHeader) {
+				// Add column header strip
+				constructColumnHeaderToBand(jasperDesign, groupHeaderBand, theme.getColumnTheme(), columnStyles,
+						detailColumnList, detailJRElementMap, columnHeaderHeight, columnHeaderHeight, actualColumnWidth,
+						isListFormat);
+			}
 
-            if (!summationColumnList.isEmpty()) {
-                // Grouping footer
-                JRDesignBand groupFooterBand = new JRDesignBand();
-                groupFooterBand.setHeight(columnHeaderHeight);
-                grpJRDesignRectangle =
-                        newJRDesignRectangle(jasperDesign, 0, 1, actualColumnWidth, columnHeaderHeight - 2, groupTheme);
-                grpJRDesignRectangle.getLinePen().setLineWidth(FLOAT_ZERO);
-                groupFooterBand.addElement(grpJRDesignRectangle);
+			((JRDesignSection) jRDesignGroup.getGroupHeaderSection()).addBand(groupHeaderBand);
 
-                int sumStartX = actualColumnWidth;
-                for (ReportColumn sumReportColumn : summationColumnList) {
-                    JRDesignVariable sumJRDesignVariable =
-                            newGroupSumJRDesignVariable(jasperDesign, jRDesignGroup, sumReportColumn);
+			if (!summationColumnList.isEmpty()) {
+				// Grouping footer
+				JRDesignBand groupFooterBand = new JRDesignBand();
+				groupFooterBand.setHeight(columnHeaderHeight);
+				grpJRDesignRectangle = newJRDesignRectangle(jasperDesign, 0, 1, actualColumnWidth,
+						columnHeaderHeight - 2, groupTheme);
+				grpJRDesignRectangle.getLinePen().setLineWidth(FLOAT_ZERO);
+				groupFooterBand.addElement(grpJRDesignRectangle);
 
-                    JRDesignTextField sumJRDesignElement = (JRDesignTextField) newColumnJRDesignElement(jasperDesign,
-                            groupTheme, columnStyles.getNormalStyle(), sumReportColumn, isListFormat);
+				int sumStartX = actualColumnWidth;
+				for (ReportColumn sumReportColumn : summationColumnList) {
+					JRDesignVariable sumJRDesignVariable = newGroupSumJRDesignVariable(jasperDesign, jRDesignGroup,
+							sumReportColumn);
 
-                    JRDesignElement refJRDesignElement = detailJRElementMap.get(sumReportColumn);
-                    int sumX = refJRDesignElement.getX();
-                    if (sumStartX > sumX) {
-                        sumStartX = sumX;
-                    }
+					JRDesignTextField sumJRDesignElement = (JRDesignTextField) newColumnJRDesignElement(jasperDesign,
+							groupTheme, columnStyles, sumReportColumn, isListFormat);
 
-                    sumJRDesignElement.setX(sumX);
-                    sumJRDesignElement.setY(refJRDesignElement.getY());
-                    sumJRDesignElement.setWidth(refJRDesignElement.getWidth());
-                    sumJRDesignElement.setHeight(columnHeaderHeight - (4));
-                    if (sumReportColumn.getFormatterUpl() != null) {
-                        sumJRDesignElement.setExpression(
-                                newJRDesignExpression("com.tcdng.unify.core.report.ReportFormatUtils.format(\""
-                                        + sumReportColumn.getFormatterUpl() + "\", $V{" + sumJRDesignVariable.getName()
-                                        + "})"));
-                    } else {
-                        sumJRDesignElement
-                                .setExpression(newJRDesignExpression("$V{" + sumJRDesignVariable.getName() + "}"));
-                    }
+					JRDesignElement refJRDesignElement = detailJRElementMap.get(sumReportColumn);
+					int sumX = refJRDesignElement.getX();
+					if (sumStartX > sumX) {
+						sumStartX = sumX;
+					}
 
-                    groupFooterBand.addElement(sumJRDesignElement);
-                }
-                
-                // Total legend
-                final int totalElemWidth = actualColumnWidth / 4;
-                sumStartX -= totalElemWidth;
-                if (sumStartX >= 0) {
-                    JRDesignExpression totalExpression = newJRDesignExpression(
-                            "$V{" + jRDesignGroup.getName() + "_COUNT} + \" line item(s)  Total :\"");
-                    jRDesignElement = newJRDesignTextField(groupTheme, columnStyles.getNormalStyle(), sumStartX, 2,
-                            totalElemWidth, columnHeaderHeight - 4, totalExpression, HAlignType.RIGHT);
-                    groupFooterBand.addElement(jRDesignElement);
+					sumJRDesignElement.setX(sumX);
+					sumJRDesignElement.setY(refJRDesignElement.getY());
+					sumJRDesignElement.setWidth(refJRDesignElement.getWidth());
+					sumJRDesignElement.setHeight(columnHeaderHeight - (4));
+					if (sumReportColumn.getFormatterUpl() != null) {
+						sumJRDesignElement.setExpression(
+								newJRDesignExpression("com.tcdng.unify.core.report.ReportFormatUtils.format(\""
+										+ sumReportColumn.getFormatterUpl() + "\", $V{" + sumJRDesignVariable.getName()
+										+ "})"));
+					} else {
+						sumJRDesignElement
+								.setExpression(newJRDesignExpression("$V{" + sumJRDesignVariable.getName() + "}"));
+					}
 
-                    sumStartX -= totalElemWidth;
-                    if (sumStartX >= 0) {
-                        jRDesignElement = newJRDesignTextField(groupTheme, columnStyles.getNormalStyle(), sumStartX, 2,
-                                totalElemWidth, columnHeaderHeight - 4, newJRDesignExpression(grpReportColumn), HAlignType.RIGHT);
-                        groupFooterBand.addElement(jRDesignElement);
-                    }
-                }
-                
-                ((JRDesignSection) jRDesignGroup.getGroupFooterSection()).addBand(groupFooterBand);
-            }
+					groupFooterBand.addElement(sumJRDesignElement);
+				}
 
-            groupHeaderX += groupCascade;
-        }
+				// Total legend
+				final int totalElemWidth = actualColumnWidth / 4;
+				sumStartX -= totalElemWidth;
+				if (sumStartX >= 0) {
+					JRDesignExpression totalExpression = newJRDesignExpression(
+							"$V{" + jRDesignGroup.getName() + "_COUNT} + \" line item(s)  Total :\"");
+					jRDesignElement = newJRDesignTextField(groupTheme, columnStyles.getNormalStyle(), sumStartX, 2,
+							totalElemWidth, columnHeaderHeight - 4, totalExpression, HAlignType.RIGHT);
+					groupFooterBand.addElement(jRDesignElement);
 
-        // Construct final summary if necessary
-        final boolean isGrandSummation = report.isShowGrandFooter();
-        if (isGrandSummation && !summationColumnList.isEmpty()) {
-            final int grandSummaryHeight = columnHeaderHeight * 2;
-            JRDesignBand summaryBand = new JRDesignBand();
-            summaryBand.setHeight(grandSummaryHeight);
+					sumStartX -= totalElemWidth;
+					if (sumStartX >= 0) {
+						jRDesignElement = newJRDesignTextField(groupTheme, columnStyles.getNormalStyle(), sumStartX, 2,
+								totalElemWidth, columnHeaderHeight - 4, newJRDesignExpression(grpReportColumn),
+								HAlignType.RIGHT);
+						groupFooterBand.addElement(jRDesignElement);
+					}
+				}
 
-            ThemeColors grandTheme = theme.getGrandSummaryTheme();
-            JRDesignRectangle jRDesignRectangle =
-                    newJRDesignRectangle(jasperDesign, 0, 2, actualColumnWidth, grandSummaryHeight - 2, grandTheme);
-            summaryBand.addElement(jRDesignRectangle);
+				((JRDesignSection) jRDesignGroup.getGroupFooterSection()).addBand(groupFooterBand);
+			}
 
-            int sumStartX = actualColumnWidth;
-            for (ReportColumn sumReportColumn : summationColumnList) {
-                JRDesignVariable sumJRDesignVariable = newReportSumJRDesignVariable(jasperDesign, sumReportColumn);
-                JRDesignElement jRDesignElement = detailJRElementMap.get(sumReportColumn);
+			groupHeaderX += groupCascade;
+		}
 
-                JRDesignTextField sumJRDesignElement = (JRDesignTextField) newColumnJRDesignElement(jasperDesign,
-                        grandTheme, columnStyles.getNormalStyle(), sumReportColumn, isListFormat);
-                int sumX = jRDesignElement.getX();
-                if (sumStartX > sumX) {
-                    sumStartX = sumX;
-                }
+		// Construct final summary if necessary
+		final boolean isGrandSummation = report.isShowGrandFooter();
+		if (isGrandSummation && !summationColumnList.isEmpty()) {
+			final int grandSummaryHeight = columnHeaderHeight * 2;
+			JRDesignBand summaryBand = new JRDesignBand();
+			summaryBand.setHeight(grandSummaryHeight);
 
-                sumJRDesignElement.setX(sumX);
-                sumJRDesignElement.setY(jRDesignElement.getY());
-                sumJRDesignElement.setWidth(jRDesignElement.getWidth());
-                sumJRDesignElement.setHeight(columnHeaderHeight - (4));
-                if (sumReportColumn.getFormatterUpl() != null) {
-                    sumJRDesignElement.setExpression(
-                            newJRDesignExpression("com.tcdng.unify.core.report.ReportFormatUtils.format(\""
-                                    + sumReportColumn.getFormatterUpl() + "\", $V{" + sumJRDesignVariable.getName()
-                                    + "})"));
-                } else {
-                    sumJRDesignElement
-                            .setExpression(newJRDesignExpression("$V{" + sumJRDesignVariable.getName() + "}"));
-                }
-                summaryBand.addElement(sumJRDesignElement);
-            }
-            
-            
-            // Total legend
-            final int totalElemWidth = actualColumnWidth / 4;
-            sumStartX -= totalElemWidth;
-            if (sumStartX >= 0) {
-                JRDesignExpression totalExpression = newJRDesignExpression(
-                        "$V{REPORT_COUNT} + \" line item(s)  Grand Total :\"");
-                JRDesignElement jRDesignElement = newJRDesignTextField(grandTheme, columnStyles.getNormalStyle(), sumStartX, 2,
-                        totalElemWidth, columnHeaderHeight - 4, totalExpression, HAlignType.RIGHT);
-                summaryBand.addElement(jRDesignElement);
-            }
-            
-            jasperDesign.setSummary(summaryBand);
-        }
-    }
+			ThemeColors grandTheme = theme.getGrandSummaryTheme();
+			JRDesignRectangle jRDesignRectangle = newJRDesignRectangle(jasperDesign, 0, 2, actualColumnWidth,
+					grandSummaryHeight - 2, grandTheme);
+			summaryBand.addElement(jRDesignRectangle);
 
-    private void constructColumnHeaderToBand(JasperDesign jasperDesign, JRDesignBand jrDesignBand,
-            ThemeColors columnHeaderColors, ColumnStyles columnStyles, List<ReportColumn> detailColumnList,
-            Map<ReportColumn, JRDesignElement> detailJRElementMap, int y, int columnHeaderHeight, int actualColumnWidth,
-            boolean isListFormat) throws UnifyException {
-        JRDesignRectangle jRDesignRectangle =
-                newJRDesignRectangle(jasperDesign, 0, y, actualColumnWidth, columnHeaderHeight, columnHeaderColors);
-        jRDesignRectangle.getLinePen().setLineWidth(FLOAT_ZERO);
-        jRDesignRectangle.setStretchType(StretchTypeEnum.CONTAINER_HEIGHT);
-        jrDesignBand.addElement(jRDesignRectangle);
+			int sumStartX = actualColumnWidth;
+			for (ReportColumn sumReportColumn : summationColumnList) {
+				JRDesignVariable sumJRDesignVariable = newReportSumJRDesignVariable(jasperDesign, sumReportColumn);
+				JRDesignElement jRDesignElement = detailJRElementMap.get(sumReportColumn);
 
-        Color colHeaderColor = columnHeaderColors.getFontColor();
-        if (isListFormat) {
-            colHeaderColor = Color.BLACK;
-        }
+				JRDesignTextField sumJRDesignElement = (JRDesignTextField) newColumnJRDesignElement(jasperDesign,
+						grandTheme, columnStyles, sumReportColumn, isListFormat);
+				int sumX = jRDesignElement.getX();
+				if (sumStartX > sumX) {
+					sumStartX = sumX;
+				}
 
-        for (ReportColumn reportColumn : detailColumnList) {
-            JRDesignElement colHeaderJRDesignElement = newTitleJRDesignStaticText(columnStyles, colHeaderColor,
-                    HorizontalTextAlignEnum.CENTER, reportColumn.getTitle());
-            JRDesignElement jRDesignElement = detailJRElementMap.get(reportColumn);
-            colHeaderJRDesignElement.setX(jRDesignElement.getX());
-            colHeaderJRDesignElement.setY(y + 2);
-            colHeaderJRDesignElement.setWidth(jRDesignElement.getWidth());
-            colHeaderJRDesignElement.setHeight(columnHeaderHeight - (4));
+				sumJRDesignElement.setX(sumX);
+				sumJRDesignElement.setY(jRDesignElement.getY());
+				sumJRDesignElement.setWidth(jRDesignElement.getWidth());
+				sumJRDesignElement.setHeight(columnHeaderHeight - (4));
+				if (sumReportColumn.getFormatterUpl() != null) {
+					sumJRDesignElement.setExpression(
+							newJRDesignExpression("com.tcdng.unify.core.report.ReportFormatUtils.format(\""
+									+ sumReportColumn.getFormatterUpl() + "\", $V{" + sumJRDesignVariable.getName()
+									+ "})"));
+				} else {
+					sumJRDesignElement
+							.setExpression(newJRDesignExpression("$V{" + sumJRDesignVariable.getName() + "}"));
+				}
+				summaryBand.addElement(sumJRDesignElement);
+			}
 
-            if (isListFormat) {
-                colHeaderJRDesignElement.addPropertyExpression(
-                        newJRDesignPropertyExpression("net.sf.jasperreports.print.keep.full.text", true));
-            }
-            jrDesignBand.addElement(colHeaderJRDesignElement);
-        }
-    }
+			// Total legend
+			final int totalElemWidth = actualColumnWidth / 4;
+			sumStartX -= totalElemWidth;
+			if (sumStartX >= 0) {
+				JRDesignExpression totalExpression = newJRDesignExpression(
+						"$V{REPORT_COUNT} + \" line item(s)  Grand Total :\"");
+				JRDesignElement jRDesignElement = newJRDesignTextField(grandTheme, columnStyles.getNormalStyle(),
+						sumStartX, 2, totalElemWidth, columnHeaderHeight - 4, totalExpression, HAlignType.RIGHT);
+				summaryBand.addElement(jRDesignElement);
+			}
+
+			jasperDesign.setSummary(summaryBand);
+		}
+	}
+
+	private void constructColumnHeaderToBand(JasperDesign jasperDesign, JRDesignBand jrDesignBand,
+			ThemeColors columnHeaderColors, ColumnStyles columnStyles, List<ReportColumn> detailColumnList,
+			Map<ReportColumn, JRDesignElement> detailJRElementMap, int y, int columnHeaderHeight, int actualColumnWidth,
+			boolean isListFormat) throws UnifyException {
+		JRDesignRectangle jRDesignRectangle = newJRDesignRectangle(jasperDesign, 0, y, actualColumnWidth,
+				columnHeaderHeight, columnHeaderColors);
+		jRDesignRectangle.getLinePen().setLineWidth(FLOAT_ZERO);
+		jRDesignRectangle.setStretchType(StretchTypeEnum.CONTAINER_HEIGHT);
+		jrDesignBand.addElement(jRDesignRectangle);
+
+		Color colHeaderColor = columnHeaderColors.getFontColor();
+		if (isListFormat) {
+			colHeaderColor = Color.BLACK;
+		}
+
+		for (ReportColumn reportColumn : detailColumnList) {
+			JRDesignElement colHeaderJRDesignElement = newTitleJRDesignStaticText(columnStyles, colHeaderColor,
+					HorizontalTextAlignEnum.CENTER, reportColumn.getTitle());
+			JRDesignElement jRDesignElement = detailJRElementMap.get(reportColumn);
+			colHeaderJRDesignElement.setX(jRDesignElement.getX());
+			colHeaderJRDesignElement.setY(y + 2);
+			colHeaderJRDesignElement.setWidth(jRDesignElement.getWidth());
+			colHeaderJRDesignElement.setHeight(columnHeaderHeight - (4));
+
+			if (isListFormat) {
+				colHeaderJRDesignElement.addPropertyExpression(
+						newJRDesignPropertyExpression("net.sf.jasperreports.print.keep.full.text", true));
+			}
+			jrDesignBand.addElement(colHeaderJRDesignElement);
+		}
+	}
 }

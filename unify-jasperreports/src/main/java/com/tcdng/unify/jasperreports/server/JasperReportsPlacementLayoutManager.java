@@ -19,8 +19,6 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.report.Report;
 import com.tcdng.unify.core.report.ReportPlacement;
-import com.tcdng.unify.core.report.ReportTheme;
-import com.tcdng.unify.core.report.ReportTheme.ThemeColors;
 
 import net.sf.jasperreports.engine.design.JRDesignBand;
 import net.sf.jasperreports.engine.design.JRDesignElement;
@@ -35,22 +33,20 @@ import net.sf.jasperreports.engine.design.JasperDesign;
 @Component("jasperreports-placementlayoutmanager")
 public class JasperReportsPlacementLayoutManager extends AbstractJasperReportsLayoutManager {
 
-    @Override
-    protected void doApplyLayout(JasperDesign jasperDesign, ColumnStyles columnStyles, Report report)
-            throws UnifyException {
-        ReportTheme theme = report.getReportTheme();
-        ThemeColors detailColors = theme.getDetailTheme();
+	@Override
+	protected void doApplyLayout(JasperDesign jasperDesign, ColumnStyles columnStyles, Report report)
+			throws UnifyException {
+		clearAll(jasperDesign);
 
-        // Construct detail band
-        clearDetailSection(jasperDesign);
-        JRDesignBand detailBand = new JRDesignBand();
-        detailBand.setHeight(jasperDesign.getPageHeight());
-        for (ReportPlacement reportReplacement : report.getPlacements()) {
-            JRDesignElement jRDesignElement = newPlacementJRDesignElement(jasperDesign, detailColors,
-                    columnStyles.getNormalStyle(), reportReplacement);
-            detailBand.addElement(jRDesignElement);
-        }
-        
-        addDetailBand(jasperDesign, detailBand);
-    }
+		// Construct detail band
+		JRDesignBand detailBand = new JRDesignBand();
+		detailBand.setHeight(jasperDesign.getPageHeight());
+		for (ReportPlacement reportReplacement : report.getPlacements()) {
+			JRDesignElement jRDesignElement = newPlacementJRDesignElement(jasperDesign, columnStyles,
+					reportReplacement);
+			detailBand.addElement(jRDesignElement);
+		}
+
+		addDetailBand(jasperDesign, detailBand);
+	}
 }

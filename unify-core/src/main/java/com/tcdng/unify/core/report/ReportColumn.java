@@ -16,6 +16,7 @@
 package com.tcdng.unify.core.report;
 
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.constant.Bold;
 import com.tcdng.unify.core.constant.HAlignType;
 import com.tcdng.unify.core.constant.OrderType;
 
@@ -42,9 +43,9 @@ public class ReportColumn extends ReportField {
 	private boolean sum;
 
 	private ReportColumn(String title, String table, String name, String className, String sqlBlobTypeName,
-			String formatterUpl, OrderType order, HAlignType horizontalAlignment, int widthRatio, boolean group,
-			boolean groupOnNewPage, boolean sum) {
-		super(name, className, sqlBlobTypeName, formatterUpl, horizontalAlignment);
+			String formatterUpl, OrderType order, HAlignType horizontalAlignment, int widthRatio, Bold bold,
+			boolean group, boolean groupOnNewPage, boolean sum) {
+		super(name, className, sqlBlobTypeName, formatterUpl, horizontalAlignment, bold);
 		this.title = title;
 		this.table = table;
 		this.widthRatio = widthRatio;
@@ -105,6 +106,8 @@ public class ReportColumn extends ReportField {
 		private HAlignType horizontalAlignment;
 
 		private int widthRatio;
+
+		private Bold bold;
 
 		private boolean group;
 
@@ -176,9 +179,14 @@ public class ReportColumn extends ReportField {
 			return this;
 		}
 
+		public Builder bold(Bold bold) {
+			this.bold = bold;
+			return this;
+		}
+
 		public ReportColumn build() throws UnifyException {
 			ReportColumn reportColumn = new ReportColumn(title, table, name, className, sqlBlobTypeName, formatterUpl,
-					order, horizontalAlignment, widthRatio, group, groupOnNewPage, sum);
+					order, horizontalAlignment, widthRatio, bold, group, groupOnNewPage, sum);
 			return reportColumn;
 		}
 	}

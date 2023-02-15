@@ -126,6 +126,12 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
 				jasperDesign.addField(newJRDesignField(reportColumn, isQuery));
 			}
 
+			for (ReportPlacement reportPlacement : report.getPlacements()) {
+				if (reportPlacement.isText()) {
+					jasperDesign.addField(newJRDesignField(reportPlacement, isQuery));
+				}
+			}
+
 			jasperDesign.setProperty("net.sf.jasperreports.awt.ignore.missing.font", "true");
 
 			doApplyLayout(jasperDesign, columnStyles, report);
@@ -149,6 +155,16 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
 
 	protected HorizontalTextAlignEnum getHorizontalAlign(HAlignType hAlignType) {
 		return horizontalAlignmentMap.get(hAlignType);
+	}
+
+	protected void clearAll(JasperDesign jasperDesign) {
+		jasperDesign.setTopMargin(0);
+		jasperDesign.setBottomMargin(0);
+		jasperDesign.setLeftMargin(0);
+		jasperDesign.setRightMargin(0);
+		jasperDesign.setColumnHeader(null);
+		jasperDesign.setColumnFooter(null);
+		clearDetailSection(jasperDesign);
 	}
 
 	protected void clearDetailSection(JasperDesign jasperDesign) {
@@ -297,7 +313,7 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
 	}
 
 	protected JRDesignElement newColumnJRDesignElement(JasperDesign jasperDesign, ThemeColors themeColors,
-			JRDesignStyle fontStyle, ReportColumn reportColumn, boolean isListFormat) throws UnifyException {
+			ColumnStyles columnStyles, ReportColumn reportColumn, boolean isListFormat) throws UnifyException {
 		if (reportColumn.isBlob()) {
 			JRDesignImage jrDesignImage = new JRDesignImage(jasperDesign);
 			jrDesignImage.setHorizontalImageAlign(HorizontalImageAlignEnum.CENTER);
@@ -311,7 +327,7 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
 		JRDesignTextField textField = new JRDesignTextField();
 		textField.setWidth(reportColumn.getWidthRatio());
 		textField.setForecolor(themeColors.getFontColor());
-		textField.setStyle(fontStyle);
+		textField.setStyle(reportColumn.isBold() ? columnStyles.getBoldStyle() : columnStyles.getNormalStyle());
 		textField.setHorizontalTextAlign(getHorizontalAlign(reportColumn.getHorizontalAlignment()));
 		textField.setExpression(newJRDesignExpression(reportColumn));
 		textField.setBlankWhenNull(true);
@@ -325,19 +341,27 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
 		return textField;
 	}
 
-	protected JRDesignElement newPlacementJRDesignElement(JasperDesign jasperDesign, ThemeColors themeColors,
-			JRDesignStyle fontStyle, ReportPlacement reportPlacement) throws UnifyException {
-		if (reportPlacement.isBlob()) {
-			JRDesignImage jrDesignImage = new JRDesignImage(jasperDesign);
-			jrDesignImage.setHorizontalImageAlign(HorizontalImageAlignEnum.CENTER);
-			jrDesignImage.setX(reportPlacement.getX());
-			jrDesignImage.setY(reportPlacement.getY());
-			jrDesignImage.setWidth(reportPlacement.getWidth());
-			jrDesignImage.setHeight(reportPlacement.getHeight());
-			jrDesignImage.setScaleImage(ScaleImageEnum.FILL_FRAME);
-			jrDesignImage.setExpression(newJRDesignExpression(reportPlacement));
-			jrDesignImage.setPrintWhenExpression(newNotNullJRDesignExpression(reportPlacement));
-			return jrDesignImage;
+	protected JRDesignElement newPlacementJRDesignElement(JasperDesign jasperDesign, ColumnStyles columnStyles,
+			ReportPlacement reportPlacement) throws UnifyException {
+		if (reportPlacement.isImage()) {
+			if (reportPlacement.isBlob()) {
+				JRDesignImage jrDesignImage = new JRDesignImage(jasperDesign);
+				jrDesignImage.setHorizontalImageAlign(HorizontalImageAlignEnum.CENTER);
+				jrDesignImage.setX(reportPlacement.getX());
+				jrDesignImage.setY(reportPlacement.getY());
+				jrDesignImage.setWidth(reportPlacement.getWidth());
+				jrDesignImage.setHeight(reportPlacement.getHeight());
+				jrDesignImage.setScaleImage(ScaleImageEnum.FILL_FRAME);
+				jrDesignImage.setExpression(newJRDesignExpression(reportPlacement));
+				jrDesignImage.setPrintWhenExpression(newNotNullJRDesignExpression(reportPlacement));
+				return jrDesignImage;
+			}
+		} else if (reportPlacement.isRectangle()) {
+			return newJRDesignRectangle(jasperDesign, reportPlacement.getX(), reportPlacement.getY(),
+					reportPlacement.getWidth(), reportPlacement.getHeight(), reportPlacement.getColors());
+		} else if (reportPlacement.isLine()) {
+			return newJRDesignLine(reportPlacement.getX(), reportPlacement.getY(), reportPlacement.getWidth(),
+					reportPlacement.getHeight(), reportPlacement.getColors().getForeColor());
 		}
 
 		JRDesignTextField textField = new JRDesignTextField();
@@ -345,8 +369,9 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
 		textField.setY(reportPlacement.getY());
 		textField.setWidth(reportPlacement.getWidth());
 		textField.setHeight(reportPlacement.getHeight());
-		textField.setForecolor(themeColors.getFontColor());
-		textField.setStyle(fontStyle);
+		textField.setForecolor(reportPlacement.getColors().getFontColor());
+		textField.setBackcolor(reportPlacement.getColors().getBackColor());
+		textField.setStyle(reportPlacement.isBold() ? columnStyles.getBoldStyle() : columnStyles.getNormalStyle());
 		textField.setHorizontalTextAlign(getHorizontalAlign(reportPlacement.getHorizontalAlignment()));
 		textField.setExpression(newJRDesignExpression(reportPlacement));
 		textField.setBlankWhenNull(true);
@@ -522,15 +547,15 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
 		return !(ReportFormat.PDF.equals(reportFormatType) || ReportFormat.DOC.equals(reportFormatType));
 	}
 
-	private JRDesignField newJRDesignField(ReportColumn reportColumn, boolean isQuery) throws UnifyException {
+	private JRDesignField newJRDesignField(ReportField reportField, boolean isQuery) throws UnifyException {
 		JRDesignField field = new JRDesignField();
-		field.setName(reportColumn.getName());
-		String type = reportColumn.getTypeName();
+		field.setName(reportField.getName());
+		String type = reportField.getTypeName();
 		if (isQuery) {
-			if (reportColumn.isDate()) {
+			if (reportField.isDate()) {
 				type = "java.sql.Timestamp";
-			} else if (reportColumn.isBlob() && StringUtils.isNotBlank(reportColumn.getSqlBlobTypeName())) {
-				type = reportColumn.getSqlBlobTypeName();
+			} else if (reportField.isBlob() && StringUtils.isNotBlank(reportField.getSqlBlobTypeName())) {
+				type = reportField.getSqlBlobTypeName();
 			}
 		}
 

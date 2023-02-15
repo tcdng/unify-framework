@@ -15,6 +15,7 @@
  */
 package com.tcdng.unify.core.report;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,10 +25,12 @@ import java.util.Map;
 import java.util.Stack;
 
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.constant.Bold;
 import com.tcdng.unify.core.constant.HAlignType;
 import com.tcdng.unify.core.constant.OrderType;
 import com.tcdng.unify.core.criterion.RestrictionType;
 import com.tcdng.unify.core.database.sql.SqlJoinType;
+import com.tcdng.unify.core.report.ReportTheme.ThemeColors;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
 
@@ -598,24 +601,68 @@ public class Report {
 			return this;
 		}
 
+		public Builder addLine(Color color, int x, int y, int width, int height) throws UnifyException {
+			ReportPlacement rp = ReportPlacement.newBuilder(ReportPlacementType.LINE).position(x, y)
+					.dimension(width, height).colors(null, color, null).build();
+			placements.add(rp);
+			return this;
+		}
+
+		public Builder addLine(ThemeColors colors, int x, int y, int width, int height) throws UnifyException {
+			ReportPlacement rp = ReportPlacement.newBuilder(ReportPlacementType.LINE).position(x, y)
+					.dimension(width, height).colors(colors).build();
+			placements.add(rp);
+			return this;
+		}
+
+		public Builder addRectangle(Color foreColor, Color backColor, int x, int y, int width, int height)
+				throws UnifyException {
+			ReportPlacement rp = ReportPlacement.newBuilder(ReportPlacementType.RECTANGLE).position(x, y)
+					.dimension(width, height).colors(null, foreColor, backColor).build();
+			placements.add(rp);
+			return this;
+		}
+
+		public Builder addRectangle(ThemeColors colors, int x, int y, int width, int height)
+				throws UnifyException {
+			ReportPlacement rp = ReportPlacement.newBuilder(ReportPlacementType.RECTANGLE).position(x, y)
+					.dimension(width, height).colors(colors).build();
+			placements.add(rp);
+			return this;
+		}
+
+		public Builder addText(String name, Class<?> type, Bold bold, int x, int y, int width, int height)
+				throws UnifyException {
+			return addPlacement(ReportPlacementType.TEXT, name, type.getName(), null, null, bold, x, y, width, height);
+		}
+
+		public Builder addText(String name, Class<?> type, HAlignType horizontalAlignment, Bold bold, int x,
+				int y, int width, int height) throws UnifyException {
+			return addPlacement(ReportPlacementType.TEXT, name, type.getName(), null, horizontalAlignment, bold, x, y,
+					width, height);
+		}
+
+		public Builder addText(String name, String className, Bold bold, int x, int y, int width, int height)
+				throws UnifyException {
+			return addPlacement(ReportPlacementType.TEXT, name, className, null, null, bold, x, y, width, height);
+		}
+
+		public Builder addText(String name, String className, HAlignType horizontalAlignment, Bold bold, int x,
+				int y, int width, int height) throws UnifyException {
+			return addPlacement(ReportPlacementType.TEXT, name, className, null, horizontalAlignment, bold, x, y, width,
+					height);
+		}
+
 		public Builder addPlacement(ReportPlacement reportPlacement) {
 			placements.add(reportPlacement);
 			return this;
 		}
 
-		public Builder addPlacement(String name, String className, int x, int y) throws UnifyException {
-			return addPlacement(name, className, null, x, y, 0, 0, null);
-		}
-
-		public Builder addPlacement(String name, String className, int x, int y, int width, int height)
-				throws UnifyException {
-			return addPlacement(name, className, null, x, y, width, height, null);
-		}
-
-		public Builder addPlacement(String name, String className, String formatter, int x, int y, int width,
-				int height, HAlignType horizontalAlignment) throws UnifyException {
-			ReportPlacement rp = ReportPlacement.newBuilder(name).className(className).formatter(formatter)
-					.position(x, y).dimension(width, height).horizontalAlignment(horizontalAlignment).build();
+		public Builder addPlacement(ReportPlacementType type, String name, String className, String formatter,
+				HAlignType horizontalAlignment, Bold bold, int x, int y, int width, int height) throws UnifyException {
+			ReportPlacement rp = ReportPlacement.newBuilder(type, name).className(className).formatter(formatter)
+					.bold(bold).position(x, y).dimension(width, height).horizontalAlignment(horizontalAlignment)
+					.build();
 			placements.add(rp);
 			return this;
 		}

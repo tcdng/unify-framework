@@ -219,6 +219,7 @@ public class JasperReportsServer extends AbstractReportServer {
 				jasperDesign.setWhenNoDataType(WhenNoDataTypeEnum.ALL_SECTIONS_NO_DETAIL);
 			} else {
 				jasperDesign = new JasperDesign();
+				jasperDesign.setName(report.getTitle());
 				final ReportPageProperties properties = report.getPageProperties();
 				final PageSizeType size = properties.getSize();
 				final int pageWidth = size.isCustom() ? report.getPageProperties().getPageWidth()
