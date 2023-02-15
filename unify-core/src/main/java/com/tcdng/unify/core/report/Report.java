@@ -592,11 +592,12 @@ public class Report {
 		}
 
 		public Builder addColumn(String title, String table, String name, String className, String sqlBlobTypeName,
-				String formatterUpl, OrderType order, HAlignType hAlignType, int widthRatio, boolean group,
-				boolean groupOnNewPage, boolean sum) throws UnifyException {
+				String formatterUpl, OrderType order, HAlignType hAlignType, VAlignType vAlignType, int widthRatio,
+				Bold bold, boolean group, boolean groupOnNewPage, boolean sum) throws UnifyException {
 			ReportColumn rc = ReportColumn.newBuilder().title(title).table(table).name(name).className(className)
-					.hAlign(hAlignType).widthRatio(widthRatio).sqlBlobTypeName(sqlBlobTypeName).formatter(formatterUpl)
-					.order(order).group(group).groupOnNewPage(groupOnNewPage).sum(sum).build();
+					.hAlign(hAlignType).vAlign(vAlignType).widthRatio(widthRatio).sqlBlobTypeName(sqlBlobTypeName)
+					.formatter(formatterUpl).order(order).bold(bold).group(group).groupOnNewPage(groupOnNewPage)
+					.sum(sum).build();
 			columns.add(rc);
 			return this;
 		}
