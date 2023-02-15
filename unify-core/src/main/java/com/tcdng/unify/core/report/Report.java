@@ -15,6 +15,7 @@
  */
 package com.tcdng.unify.core.report;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,11 +25,13 @@ import java.util.Map;
 import java.util.Stack;
 
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.constant.Bold;
 import com.tcdng.unify.core.constant.HAlignType;
 import com.tcdng.unify.core.constant.OrderType;
 import com.tcdng.unify.core.criterion.RestrictionType;
 import com.tcdng.unify.core.database.sql.SqlJoinType;
 import com.tcdng.unify.core.util.DataUtils;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * Used to define a report for generation at runtime.
@@ -59,6 +62,8 @@ public class Report {
 	private List<ReportTableJoin> joins;
 
 	private List<ReportColumn> columns;
+
+	private List<ReportPlacement> placements;
 
 	private List<ReportHtml> embeddedHtmls;
 
@@ -96,11 +101,12 @@ public class Report {
 
 	private Report(String code, String title, String template, String processor, String dataSource, String query,
 			String theme, List<?> beanCollection, ReportTable table, List<ReportTableJoin> joins,
-			List<ReportColumn> columns, List<ReportHtml> embeddedHtmls, ReportFilter filter, ReportFormat format,
-			ReportLayoutType layout, ReportParameters reportParameters, ReportPageProperties pageProperties,
-			String summationLegend, String groupSummationLegend, boolean dynamicDataSource, boolean printColumnNames,
-			boolean printGroupColumnNames, boolean invertGroupColors, boolean showParameterHeader,
-			boolean showGrandFooter, boolean underlineRows, boolean shadeOddRows) {
+			List<ReportColumn> columns, List<ReportPlacement> placements, List<ReportHtml> embeddedHtmls,
+			ReportFilter filter, ReportFormat format, ReportLayoutType layout, ReportParameters reportParameters,
+			ReportPageProperties pageProperties, String summationLegend, String groupSummationLegend,
+			boolean dynamicDataSource, boolean printColumnNames, boolean printGroupColumnNames,
+			boolean invertGroupColors, boolean showParameterHeader, boolean showGrandFooter, boolean underlineRows,
+			boolean shadeOddRows) {
 		this.code = code;
 		this.title = title;
 		this.template = template;
@@ -112,6 +118,7 @@ public class Report {
 		this.table = table;
 		this.joins = joins;
 		this.columns = columns;
+		this.placements = placements;
 		this.embeddedHtmls = embeddedHtmls;
 		this.filter = filter;
 		this.format = format;
@@ -152,6 +159,10 @@ public class Report {
 
 	public void setTemplate(String template) {
 		this.template = template;
+	}
+
+	public boolean isWithTemplate() {
+		return !StringUtils.isBlank(template);
 	}
 
 	public String getProcessor() {
@@ -247,7 +258,11 @@ public class Report {
 	}
 
 	public boolean isGenerated() {
-		return !columns.isEmpty() || isEmbeddedHtml();
+		return !columns.isEmpty() || !placements.isEmpty() || isEmbeddedHtml();
+	}
+
+	public boolean isPlacements() {
+		return !placements.isEmpty();
 	}
 
 	public boolean isMultiDocHtmlToPDF() {
@@ -318,7 +333,11 @@ public class Report {
 	}
 
 	public List<ReportColumn> getColumns() {
-		return DataUtils.unmodifiableList(columns);
+		return columns;
+	}
+
+	public List<ReportPlacement> getPlacements() {
+		return placements;
 	}
 
 	public List<ReportHtml> getEmbeddedHtmls() {
@@ -371,6 +390,8 @@ public class Report {
 
 		private List<ReportColumn> columns;
 
+		private List<ReportPlacement> placements;
+
 		private Map<String, ReportHtml> embeddedHtmls;
 
 		private Stack<ReportFilter> filters;
@@ -406,6 +427,7 @@ public class Report {
 			this.reportParameters = new ReportParameters();
 			this.joins = new ArrayList<ReportTableJoin>();
 			this.columns = new ArrayList<ReportColumn>();
+			this.placements = new ArrayList<ReportPlacement>();
 			this.embeddedHtmls = new LinkedHashMap<String, ReportHtml>();
 			this.filters = new Stack<ReportFilter>();
 			this.printColumnNames = true;
@@ -578,6 +600,64 @@ public class Report {
 			return this;
 		}
 
+		public Builder addLine(Color color, int x, int y, int width, int height) throws UnifyException {
+			ReportPlacement rp = ReportPlacement.newBuilder(ReportPlacementType.LINE).position(x, y)
+					.dimension(width, height).colors(null, color, null).build();
+			placements.add(rp);
+			return this;
+		}
+
+		public Builder addRectangle(Color foreColor, Color backColor, int x, int y, int width, int height)
+				throws UnifyException {
+			ReportPlacement rp = ReportPlacement.newBuilder(ReportPlacementType.RECTANGLE).position(x, y)
+					.dimension(width, height).colors(null, foreColor, backColor).build();
+			placements.add(rp);
+			return this;
+		}
+
+		public Builder addField(Color color, String fieldName, Class<?> type, Bold bold, int x, int y, int width,
+				int height) throws UnifyException {
+			return addField(color, fieldName, type.getName(), null, null, bold, x, y, width, height);
+		}
+
+		public Builder addField(Color color, String fieldName, Class<?> type, HAlignType horizontalAlignment, Bold bold,
+				int x, int y, int width, int height) throws UnifyException {
+			return addField(color, fieldName, type.getName(), null, horizontalAlignment, bold, x, y, width, height);
+		}
+
+		public Builder addField(Color color, String fieldName, String className, Bold bold, int x, int y, int width,
+				int height) throws UnifyException {
+			return addField(color, fieldName, className, null, null, bold, x, y, width, height);
+		}
+
+		public Builder addField(Color color, String fieldName, String className, HAlignType horizontalAlignment,
+				Bold bold, int x, int y, int width, int height) throws UnifyException {
+			return addField(color, fieldName, className, null, horizontalAlignment, bold, x, y, width, height);
+		}
+
+		public Builder addField(Color color, String fieldName, String className, String formatter,
+				HAlignType horizontalAlignment, Bold bold, int x, int y, int width, int height) throws UnifyException {
+			ReportPlacement rp = ReportPlacement.newBuilder(ReportPlacementType.FIELD, fieldName).className(className)
+					.formatter(formatter).bold(bold).position(x, y).dimension(width, height)
+					.horizontalAlignment(horizontalAlignment).colors(color, null, null).build();
+			placements.add(rp);
+			return this;
+		}
+
+		public Builder addText(Color color, String text, HAlignType horizontalAlignment, Bold bold, int x, int y,
+				int width, int height) throws UnifyException {
+			ReportPlacement rp = ReportPlacement.newBuilder(ReportPlacementType.TEXT).text(text).bold(bold)
+					.position(x, y).dimension(width, height).horizontalAlignment(horizontalAlignment)
+					.colors(color, color, null).build();
+			placements.add(rp);
+			return this;
+		}
+
+		public Builder addPlacement(ReportPlacement reportPlacement) {
+			placements.add(reportPlacement);
+			return this;
+		}
+
 		public Builder beginCompoundFilter(RestrictionType op) {
 			if (!op.isCompound()) {
 				throw new IllegalArgumentException(op + " is not a compound restriction type.");
@@ -649,11 +729,11 @@ public class Report {
 			}
 
 			Report report = new Report(code, title, template, processor, dataSource, query, theme, beanCollection,
-					table, Collections.unmodifiableList(joins), columns,
-					DataUtils.unmodifiableList(embeddedHtmls.values()), rootFilter, format, layout, reportParameters,
-					pageProperties, summationLegend, groupSummationLegend, dynamicDataSource, printColumnNames,
-					printGroupColumnNames, invertGroupColors, showParameterHeader, showGrandFooter, underlineRows,
-					shadeOddRows);
+					table, Collections.unmodifiableList(joins), DataUtils.unmodifiableList(columns),
+					DataUtils.unmodifiableList(placements), DataUtils.unmodifiableList(embeddedHtmls.values()),
+					rootFilter, format, layout, reportParameters, pageProperties, summationLegend, groupSummationLegend,
+					dynamicDataSource, printColumnNames, printGroupColumnNames, invertGroupColors, showParameterHeader,
+					showGrandFooter, underlineRows, shadeOddRows);
 			return report;
 		}
 	}
