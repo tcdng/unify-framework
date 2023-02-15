@@ -34,6 +34,8 @@ public class ReportPlacement extends ReportField {
 
 	private ThemeColors colors;
 
+	private String text;
+
 	private int x;
 
 	private int y;
@@ -42,12 +44,13 @@ public class ReportPlacement extends ReportField {
 
 	private int height;
 
-	private ReportPlacement(ReportPlacementType type, ThemeColors colors, String name, String className,
+	private ReportPlacement(ReportPlacementType type, ThemeColors colors, String text, String name, String className,
 			String sqlBlobTypeName, String formatter, int x, int y, int width, int height,
 			HAlignType horizontalAlignment, Bold bold) {
 		super(name, className, sqlBlobTypeName, formatter, horizontalAlignment, bold);
 		this.type = type;
 		this.colors = colors;
+		this.text = text;
 		this.x = x;
 		this.y = y;
 		this.width = width;
@@ -60,6 +63,10 @@ public class ReportPlacement extends ReportField {
 
 	public ReportPlacementType getType() {
 		return type;
+	}
+
+	public String getText() {
+		return text;
 	}
 
 	public int getX() {
@@ -80,6 +87,10 @@ public class ReportPlacement extends ReportField {
 
 	public boolean isText() {
 		return type.isText();
+	}
+
+	public boolean isField() {
+		return type.isField();
 	}
 
 	public boolean isLine() {
@@ -115,6 +126,8 @@ public class ReportPlacement extends ReportField {
 		private String formatter;
 
 		private String sqlBlobTypeName;
+
+		private String text;
 
 		private int x;
 
@@ -166,6 +179,11 @@ public class ReportPlacement extends ReportField {
 			return this;
 		}
 
+		public Builder text(String text) {
+			this.text = text;
+			return this;
+		}
+
 		public Builder formatter(String formatter) {
 			this.formatter = formatter;
 			return this;
@@ -187,8 +205,8 @@ public class ReportPlacement extends ReportField {
 		}
 
 		public ReportPlacement build() throws UnifyException {
-			return new ReportPlacement(type, colors, name, className, sqlBlobTypeName, formatter, x, y, width, height,
-					horizontalAlignment, bold);
+			return new ReportPlacement(type, colors, text, name, className, sqlBlobTypeName, formatter, x, y, width,
+					height, horizontalAlignment, bold);
 		}
 	}
 }

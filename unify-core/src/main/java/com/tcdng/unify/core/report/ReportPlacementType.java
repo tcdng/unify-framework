@@ -27,6 +27,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  */
 public enum ReportPlacementType implements EnumConst {
 
+	FIELD("FLD"),
 	TEXT("TXT"),
 	LINE("LNE"),
 	RECTANGLE("REC"),
@@ -46,6 +47,10 @@ public enum ReportPlacementType implements EnumConst {
 	@Override
 	public String defaultCode() {
 		return TEXT.code;
+	}
+
+	public boolean isField() {
+		return FIELD.equals(this);
 	}
 
 	public boolean isText() {

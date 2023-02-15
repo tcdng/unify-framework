@@ -341,7 +341,7 @@ public class JasperReportsTabularLayoutManager extends AbstractJasperReportsLayo
 		}
 
 		for (ReportColumn reportColumn : detailColumnList) {
-			JRDesignElement colHeaderJRDesignElement = newTitleJRDesignStaticText(columnStyles, colHeaderColor,
+			JRDesignElement colHeaderJRDesignElement = newJRDesignStaticText(columnStyles, colHeaderColor,
 					HorizontalTextAlignEnum.CENTER, reportColumn.getTitle());
 			JRDesignElement jRDesignElement = detailJRElementMap.get(reportColumn);
 			colHeaderJRDesignElement.setX(jRDesignElement.getX());

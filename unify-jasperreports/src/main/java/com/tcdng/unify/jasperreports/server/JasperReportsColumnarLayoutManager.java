@@ -82,7 +82,7 @@ public class JasperReportsColumnarLayoutManager extends AbstractJasperReportsLay
                 detailElementList.add(jRDesignElement);
 
                 if (isPrintColumnNames) {
-                    JRDesignElement colHeaderJRDesignElement = newTitleJRDesignStaticText(columnStyles, Color.WHITE,
+                    JRDesignElement colHeaderJRDesignElement = newJRDesignStaticText(columnStyles, Color.WHITE,
                             HorizontalTextAlignEnum.LEFT, reportColumn.getTitle());
                     colHeaderJRDesignElement.setBackcolor(new Color(0xD0, 0xD0, 0xD0));
                     colHeaderJRDesignElement.setX(0);

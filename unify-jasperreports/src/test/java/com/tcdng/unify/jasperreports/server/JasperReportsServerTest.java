@@ -34,6 +34,7 @@ import com.tcdng.unify.core.report.ReportFormat;
 import com.tcdng.unify.core.report.ReportLayoutType;
 import com.tcdng.unify.core.report.ReportPageProperties;
 import com.tcdng.unify.core.report.ReportServer;
+import com.tcdng.unify.core.util.IOUtils;
 import com.tcdng.unify.jasperreports.JasperReportsApplicationComponents;
 
 /**
@@ -52,10 +53,10 @@ public class JasperReportsServerTest extends AbstractUnifyComponentTest {
 				.build();
 		Report report = Report.newBuilder(ReportLayoutType.PLACEMENT_PDF, pageProperties)
 				.title("Test Placement Report")
-				.addLine(Color.RED, 0, 81, 200, 1)
-				.addRectangle(Color.BLUE, Color.GREEN, 0, 84, 200, 40)
-				.addText("name", String.class, HAlignType.RIGHT, Bold.TRUE, 0, 0, 200, 40)
-				.addText("description", String.class, HAlignType.CENTER, Bold.FALSE, 0, 40, 200, 40)
+				.addLine(Color.RED, 0, 81, 200, 1).addRectangle(Color.BLUE, Color.GREEN, 0, 84, 200, 40)
+				.addText(Color.ORANGE, "Hello World!", HAlignType.LEFT, Bold.TRUE, 100, 300, 100, 40)
+				.addField(Color.MAGENTA, "name", String.class, HAlignType.RIGHT, Bold.TRUE, 0, 0, 200, 40)
+				.addField(Color.BLUE, "description", String.class, HAlignType.CENTER, Bold.FALSE, 0, 40, 200, 40)
 				.beanCollection(Arrays.asList(new Book("cross", "Cross"), new Book("crescent", "Crescent"))).build();
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		reportServer.generateReport(report, baos);
