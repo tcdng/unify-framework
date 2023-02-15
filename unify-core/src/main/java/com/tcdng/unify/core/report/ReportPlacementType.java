@@ -16,6 +16,7 @@
 
 package com.tcdng.unify.core.report;
 
+import com.tcdng.unify.common.annotation.StaticList;
 import com.tcdng.unify.common.constants.EnumConst;
 import com.tcdng.unify.core.util.EnumUtils;
 
@@ -25,6 +26,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * @author The Code Department
  * @since 1.0
  */
+@StaticList(name = "reportplacementlist", description = "$m{staticlist.reportplacementlist}")
 public enum ReportPlacementType implements EnumConst {
 
 	FIELD("FLD"),
