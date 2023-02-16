@@ -20,6 +20,7 @@ import java.awt.Color;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.constant.Bold;
 import com.tcdng.unify.core.constant.HAlignType;
+import com.tcdng.unify.core.constant.VAlignType;
 import com.tcdng.unify.core.report.ReportTheme.ThemeColors;
 
 /**
@@ -45,9 +46,9 @@ public class ReportPlacement extends ReportField {
 	private int height;
 
 	private ReportPlacement(ReportPlacementType type, ThemeColors colors, String text, String name, String className,
-			String sqlBlobTypeName, String formatter, int x, int y, int width, int height,
-			HAlignType horizontalAlignment, Bold bold) {
-		super(name, className, sqlBlobTypeName, formatter, horizontalAlignment, bold);
+			String sqlBlobTypeName, String formatter, int x, int y, int width, int height, HAlignType hAlign,
+			VAlignType vAlign, Bold bold) {
+		super(name, className, sqlBlobTypeName, formatter, hAlign, vAlign, bold);
 		this.type = type;
 		this.colors = colors;
 		this.text = text;
@@ -105,10 +106,6 @@ public class ReportPlacement extends ReportField {
 		return type.isImage();
 	}
 
-	public static Builder newBuilder(ReportPlacementType type, String name) {
-		return new Builder(type, name);
-	}
-
 	public static Builder newBuilder(ReportPlacementType type) {
 		return new Builder(type);
 	}
@@ -137,19 +134,20 @@ public class ReportPlacement extends ReportField {
 
 		private int height;
 
-		private HAlignType horizontalAlignment;
+		private HAlignType hAlign;
+
+		private VAlignType vAlign;
 
 		private Bold bold;
-
-		private Builder(ReportPlacementType type, String name) {
-			this.colors = ReportTheme.DEFAULT_THEME.getDetailTheme();
-			this.type = type;
-			this.name = name;
-		}
 
 		private Builder(ReportPlacementType type) {
 			this.colors = ReportTheme.DEFAULT_THEME.getDetailTheme();
 			this.type = type;
+		}
+
+		public Builder name(String name) {
+			this.name = name;
+			return this;
 		}
 
 		public Builder className(String className) {
@@ -189,8 +187,13 @@ public class ReportPlacement extends ReportField {
 			return this;
 		}
 
-		public Builder horizontalAlignment(HAlignType horizontalAlignment) {
-			this.horizontalAlignment = horizontalAlignment;
+		public Builder hAlign(HAlignType hAlign) {
+			this.hAlign = hAlign;
+			return this;
+		}
+
+		public Builder vAlign(VAlignType vAlign) {
+			this.vAlign = vAlign;
 			return this;
 		}
 
@@ -206,7 +209,7 @@ public class ReportPlacement extends ReportField {
 
 		public ReportPlacement build() throws UnifyException {
 			return new ReportPlacement(type, colors, text, name, className, sqlBlobTypeName, formatter, x, y, width,
-					height, horizontalAlignment, bold);
+					height, hAlign, vAlign, bold);
 		}
 	}
 }

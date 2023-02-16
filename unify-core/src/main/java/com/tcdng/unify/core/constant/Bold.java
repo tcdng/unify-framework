@@ -29,4 +29,8 @@ public enum Bold {
     public boolean isTrue() {
         return TRUE.equals(this);
     }
+    
+    public static Bold fromBoolean(boolean bold) {
+    	return bold ? TRUE : FALSE;
+    }
 }

@@ -15,7 +15,9 @@
  */
 package com.tcdng.unify.core.constant;
 
+import com.tcdng.unify.common.annotation.StaticList;
 import com.tcdng.unify.common.constants.EnumConst;
+import com.tcdng.unify.core.annotation.Tooling;
 import com.tcdng.unify.core.util.EnumUtils;
 
 /**
@@ -24,6 +26,8 @@ import com.tcdng.unify.core.util.EnumUtils;
  * @author The Code Department
  * @since 1.0
  */
+@Tooling(description = "Horizontal Alignment")
+@StaticList(name = "verticalalignlist", description = "$m{staticlist.verticalalignlist}")
 public enum VAlignType implements EnumConst {
     TOP("T"), MIDDLE("M"), BOTTOM("B");
 
