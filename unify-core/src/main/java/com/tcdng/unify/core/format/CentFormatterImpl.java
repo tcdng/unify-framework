@@ -40,7 +40,7 @@ public class CentFormatterImpl extends AbstractNumberFormatter<Number> implement
 
     @Override
     protected String doFormat(Number value) throws UnifyException {
-        return super.format(Double.valueOf(value.doubleValue() * 100));
+        return super.doFormat(Double.valueOf(value.doubleValue() * 100));
     }
 
     @Override

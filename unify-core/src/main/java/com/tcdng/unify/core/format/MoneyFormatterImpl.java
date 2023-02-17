@@ -33,7 +33,7 @@ public class MoneyFormatterImpl extends AmountFormatterImpl implements MoneyForm
     @Override
     protected Number doParse(String string) throws UnifyException {
         if (string != null) {
-            return super.parse(string.substring(getUplAttribute(String.class, "currency").length()));
+            return super.doParse(string.substring(getUplAttribute(String.class, "currency").length()));
         }
         
         return null;
@@ -42,7 +42,7 @@ public class MoneyFormatterImpl extends AmountFormatterImpl implements MoneyForm
     @Override
     protected String doFormat(Number value) throws UnifyException {
         if (value != null) {
-            return getUplAttribute(String.class, "currency") + super.format(value);
+            return getUplAttribute(String.class, "currency") + super.doFormat(value);
         }
         
         return null;
