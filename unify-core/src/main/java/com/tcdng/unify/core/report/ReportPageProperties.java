@@ -92,6 +92,14 @@ public class ReportPageProperties {
 		return landscape;
 	}
 
+	@Override
+	public String toString() {
+		return "[size=" + size + ", resourceBaseUri=" + resourceBaseUri + ", pageWidth="
+				+ pageWidth + ", pageHeight=" + pageHeight + ", marginTop=" + marginTop + ", marginBottom="
+				+ marginBottom + ", marginLeft=" + marginLeft + ", marginRight=" + marginRight + ", landscape="
+				+ landscape + "]";
+	}
+
 	public static Builder newBuilder() {
 		return new Builder();
 	}
@@ -120,10 +128,6 @@ public class ReportPageProperties {
 			this.size = PageSizeType.A4;
 			this.pageWidth = -1;
 			this.pageHeight = -1;
-			this.marginTop = -1;
-			this.marginBottom = -1;
-			this.marginLeft = -1;
-			this.marginRight = -1;
 			this.landscape = false;
 		}
 
