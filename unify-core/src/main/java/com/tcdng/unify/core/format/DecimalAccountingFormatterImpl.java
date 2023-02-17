@@ -34,7 +34,7 @@ public class DecimalAccountingFormatterImpl extends AbstractNumberFormatter<Numb
 	}
 
 	@Override
-	public Number parse(String string) throws UnifyException {
+	protected Number doParse(String string) throws UnifyException {
 		try {
 			string = ensureParsable(string);
 			return getNumberFormat().parse(string);

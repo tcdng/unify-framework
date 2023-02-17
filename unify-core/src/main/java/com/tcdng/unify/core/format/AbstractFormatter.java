@@ -30,6 +30,7 @@ import com.tcdng.unify.core.upl.AbstractUplComponent;
  * @since 1.0
  */
 @UplAttributes({
+	@UplAttribute(name = "template", type = String.class),
 	@UplAttribute(name = "strictFormat", type = boolean.class) })
 public abstract class AbstractFormatter<T> extends AbstractUplComponent implements Formatter<T> {
 
@@ -52,6 +53,17 @@ public abstract class AbstractFormatter<T> extends AbstractUplComponent implemen
     @Override
     public Class<T> getDataType() {
         return dataType;
+    }
+
+    @Override
+    public final String format(T value) throws UnifyException {
+    	final String template = getUplAttribute(String.class, "template");
+    	return template != null ? resolveSessionMessage(template, doFormat(value)) : doFormat(value);
+    }
+
+    @Override
+    public final T parse(String string) throws UnifyException {
+    	return doParse(string);
     }
 
     @Override
@@ -78,4 +90,8 @@ public abstract class AbstractFormatter<T> extends AbstractUplComponent implemen
     protected void onTerminate() throws UnifyException {
 
     }
+    
+    protected abstract String doFormat(T value) throws UnifyException;
+    
+    protected abstract T doParse(String string) throws UnifyException;
 }

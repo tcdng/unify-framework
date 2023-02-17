@@ -34,7 +34,7 @@ public class LongFormatterImpl extends AbstractNumberFormatter<Long> implements 
     }
 
     @Override
-    public Long parse(String string) throws UnifyException {
+    protected Long doParse(String string) throws UnifyException {
         try {
 			string = ensureParsable(string);
             return Long.valueOf(getNumberFormat().parse(string).intValue());

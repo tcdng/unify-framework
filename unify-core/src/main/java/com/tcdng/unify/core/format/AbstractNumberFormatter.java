@@ -58,7 +58,7 @@ public abstract class AbstractNumberFormatter<T extends Number> extends Abstract
     }
 
     @Override
-    public String format(T value) throws UnifyException {
+    protected String doFormat(T value) throws UnifyException {
         return getNumberFormat().format(value);
     }
 
