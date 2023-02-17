@@ -67,7 +67,7 @@ public class JasperReportsServerTest extends AbstractUnifyComponentTest {
 		byte[] gen = baos.toByteArray();
 		assertNotNull(gen);
 		assertTrue(gen.length > 0);
-		IOUtils.writeToFile("d:\\data\\report.pdf", gen);
+//		IOUtils.writeToFile("d:\\data\\report.pdf", gen);
 	}
 
 	@Test
