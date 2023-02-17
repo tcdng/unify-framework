@@ -254,7 +254,7 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
 			if (reportParameter.isHeaderDetail()) {
 				// Label
 				String paramLabel = StringUtils.concatenate(reportParameter.getDescription(), " :");
-				JRDesignElement paramLabelJRDesignElement = newJRDesignStaticText(columnStyles, fontColor,
+				JRDesignElement paramLabelJRDesignElement = newJRDesignStaticText(columnStyles, fontColor, null,
 						HorizontalTextAlignEnum.LEFT, paramLabel);
 				paramLabelJRDesignElement.setX(penX + 2);
 				paramLabelJRDesignElement.setY(penY + 2);
@@ -269,7 +269,7 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
 
 				// Value
 				String paramVal = ReportFormatUtils.format(reportParameter.getFormatter(), reportParameter.getValue());
-				JRDesignElement paramValJRDesignElement = newJRDesignStaticText(columnStyles, fontColor,
+				JRDesignElement paramValJRDesignElement = newJRDesignStaticText(columnStyles, fontColor, null,
 						HorizontalTextAlignEnum.LEFT, paramVal);
 				paramValJRDesignElement.setX(penX + sectionWidth + 2);
 				paramValJRDesignElement.setY(penY + 2);
@@ -355,17 +355,21 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
 
 	protected JRDesignElement newPlacementJRDesignElement(JasperDesign jasperDesign, ColumnStyles columnStyles,
 			ReportPlacement reportPlacement) throws UnifyException {
+		final int x = reportPlacement.getXOffsetType().isLeft() ? reportPlacement.getX()
+				: jasperDesign.getColumnWidth() - reportPlacement.getWidth() - reportPlacement.getX();
+		final int y = reportPlacement.getYOffsetType().isTop() ? reportPlacement.getY()
+				: (jasperDesign.getPageHeight() - (jasperDesign.getTopMargin() + jasperDesign.getBottomMargin()))
+						- reportPlacement.getHeight() - reportPlacement.getY();
 		if (reportPlacement.isText()) {
 			return newJRDesignStaticText(columnStyles, reportPlacement.getColors().getFontColor(),
-					getHorizontalAlign(reportPlacement.getHAlign()), reportPlacement.getX(),
-					reportPlacement.getY(), reportPlacement.getWidth(), reportPlacement.getHeight(),
-					reportPlacement.getText());
+					reportPlacement.getColors().getBackColor(), getHorizontalAlign(reportPlacement.getHAlign()), x, y,
+					reportPlacement.getWidth(), reportPlacement.getHeight(), reportPlacement.getText());
 		} else if (reportPlacement.isImage()) {
 			if (reportPlacement.isBlob()) {
 				JRDesignImage jrDesignImage = new JRDesignImage(jasperDesign);
 				jrDesignImage.setHorizontalImageAlign(HorizontalImageAlignEnum.CENTER);
-				jrDesignImage.setX(reportPlacement.getX());
-				jrDesignImage.setY(reportPlacement.getY());
+				jrDesignImage.setX(x);
+				jrDesignImage.setY(y);
 				jrDesignImage.setWidth(reportPlacement.getWidth());
 				jrDesignImage.setHeight(reportPlacement.getHeight());
 				jrDesignImage.setScaleImage(ScaleImageEnum.FILL_FRAME);
@@ -374,16 +378,16 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
 				return jrDesignImage;
 			}
 		} else if (reportPlacement.isRectangle()) {
-			return newJRDesignRectangle(jasperDesign, reportPlacement.getX(), reportPlacement.getY(),
-					reportPlacement.getWidth(), reportPlacement.getHeight(), reportPlacement.getColors());
+			return newJRDesignRectangle(jasperDesign, x, y, reportPlacement.getWidth(), reportPlacement.getHeight(),
+					reportPlacement.getColors());
 		} else if (reportPlacement.isLine()) {
-			return newJRDesignLine(reportPlacement.getX(), reportPlacement.getY(), reportPlacement.getWidth(),
-					reportPlacement.getHeight(), reportPlacement.getColors().getForeColor());
+			return newJRDesignLine(x, y, reportPlacement.getWidth(), reportPlacement.getHeight(),
+					reportPlacement.getColors().getForeColor());
 		}
 
 		JRDesignTextField textField = new JRDesignTextField();
-		textField.setX(reportPlacement.getX());
-		textField.setY(reportPlacement.getY());
+		textField.setX(x);
+		textField.setY(y);
 		textField.setWidth(reportPlacement.getWidth());
 		textField.setHeight(reportPlacement.getHeight());
 		textField.setForecolor(reportPlacement.getColors().getFontColor());
@@ -424,10 +428,11 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
 		return propertyExpression;
 	}
 
-	protected JRDesignStaticText newJRDesignStaticText(ColumnStyles columnStyles, Color foreColor,
+	protected JRDesignStaticText newJRDesignStaticText(ColumnStyles columnStyles, Color foreColor, Color backColor,
 			HorizontalTextAlignEnum hAlign, String text) throws UnifyException {
 		JRDesignStaticText staticText = new JRDesignStaticText();
 		staticText.setForecolor(foreColor);
+		staticText.setBackcolor(backColor);
 		staticText.setMode(ModeEnum.TRANSPARENT);
 		staticText.setStyle(columnStyles.getBoldStyle());
 		staticText.setText(text);
@@ -435,15 +440,15 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
 		return staticText;
 	}
 
-	protected JRDesignStaticText newJRDesignStaticText(ColumnStyles columnStyles, Color foreColor,
-			HorizontalTextAlignEnum hAlign, int x, int y, int width, int height, String text)
-			throws UnifyException {
+	protected JRDesignStaticText newJRDesignStaticText(ColumnStyles columnStyles, Color foreColor, Color backColor,
+			HorizontalTextAlignEnum hAlign, int x, int y, int width, int height, String text) throws UnifyException {
 		JRDesignStaticText staticText = new JRDesignStaticText();
 		staticText.setX(x);
 		staticText.setY(y);
 		staticText.setWidth(width);
 		staticText.setHeight(height);
 		staticText.setForecolor(foreColor);
+		staticText.setBackcolor(backColor);
 		staticText.setMode(ModeEnum.TRANSPARENT);
 		staticText.setStyle(columnStyles.getBoldStyle());
 		staticText.setText(text);
@@ -452,8 +457,8 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
 	}
 
 	protected JRDesignTextField newJRDesignTextField(ThemeColors themeColors, JRStyle style, int x, int y, int width,
-			int height, JRDesignExpression expression,
-			HAlignType hAlignType, VAlignType vAlignType) throws UnifyException {
+			int height, JRDesignExpression expression, HAlignType hAlignType, VAlignType vAlignType)
+			throws UnifyException {
 		JRDesignTextField jRDesignTextField = new JRDesignTextField();
 		jRDesignTextField.setX(x);
 		jRDesignTextField.setY(y);
