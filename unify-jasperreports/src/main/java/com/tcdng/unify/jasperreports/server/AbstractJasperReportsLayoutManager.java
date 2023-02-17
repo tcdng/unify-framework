@@ -173,10 +173,6 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
 	}
 
 	protected void clearAll(JasperDesign jasperDesign) {
-		jasperDesign.setTopMargin(0);
-		jasperDesign.setBottomMargin(0);
-		jasperDesign.setLeftMargin(0);
-		jasperDesign.setRightMargin(0);
 		jasperDesign.setColumnHeader(null);
 		jasperDesign.setColumnFooter(null);
 		clearDetailSection(jasperDesign);

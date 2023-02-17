@@ -39,12 +39,12 @@ public class CentFormatterImpl extends AbstractNumberFormatter<Number> implement
     }
 
     @Override
-    public String format(Number value) throws UnifyException {
-        return super.format(Double.valueOf(value.doubleValue() * 100));
+    protected String doFormat(Number value) throws UnifyException {
+        return super.doFormat(Double.valueOf(value.doubleValue() * 100));
     }
 
     @Override
-    public Number parse(String string) throws UnifyException {
+    protected Number doParse(String string) throws UnifyException {
         try {
             Number value = getNumberFormat().parse(string);
             return Double.valueOf(value.doubleValue() / 100);

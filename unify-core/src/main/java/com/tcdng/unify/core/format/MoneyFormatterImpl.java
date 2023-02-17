@@ -31,18 +31,18 @@ import com.tcdng.unify.core.annotation.UplAttributes;
 public class MoneyFormatterImpl extends AmountFormatterImpl implements MoneyFormatter {
 
     @Override
-    public Number parse(String string) throws UnifyException {
+    protected Number doParse(String string) throws UnifyException {
         if (string != null) {
-            return super.parse(string.substring(getUplAttribute(String.class, "currency").length()));
+            return super.doParse(string.substring(getUplAttribute(String.class, "currency").length()));
         }
         
         return null;
     }
 
     @Override
-    public String format(Number value) throws UnifyException {
+    protected String doFormat(Number value) throws UnifyException {
         if (value != null) {
-            return getUplAttribute(String.class, "currency") + super.format(value);
+            return getUplAttribute(String.class, "currency") + super.doFormat(value);
         }
         
         return null;

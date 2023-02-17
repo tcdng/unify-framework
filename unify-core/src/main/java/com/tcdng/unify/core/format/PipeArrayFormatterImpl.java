@@ -34,12 +34,12 @@ public class PipeArrayFormatterImpl extends AbstractFormatter<String[]> {
     }
 
     @Override
-    public String format(String[] value) throws UnifyException {
+    protected String doFormat(String[] value) throws UnifyException {
         return value != null ? StringUtils.concatenateUsingSeparator('|', (Object[]) value) : null;
     }
 
     @Override
-    public String[] parse(String string) throws UnifyException {
+    protected String[] doParse(String string) throws UnifyException {
         return string != null? StringUtils.split(string, "\\|") : null;
     }
 

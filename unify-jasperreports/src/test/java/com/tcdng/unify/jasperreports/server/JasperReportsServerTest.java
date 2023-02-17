@@ -47,7 +47,8 @@ public class JasperReportsServerTest extends AbstractUnifyComponentTest {
 	public void testGeneratePlacementReport() throws Exception {
 		ReportServer reportServer = (ReportServer) getComponent(
 				JasperReportsApplicationComponents.JASPERREPORTS_SERVER);
-		ReportPageProperties pageProperties = ReportPageProperties.newBuilder().size(PageSizeType.A5).landscape(true)
+		ReportPageProperties pageProperties = ReportPageProperties.newBuilder().size(PageSizeType.A5)
+				.landscape(true)
 				.build();
 		Report report = Report.newBuilder(ReportLayoutType.PLACEMENT_PDF, pageProperties)
 				.title("Test Placement Report")

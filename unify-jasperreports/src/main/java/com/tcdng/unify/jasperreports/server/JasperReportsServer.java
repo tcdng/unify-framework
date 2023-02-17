@@ -221,10 +221,13 @@ public class JasperReportsServer extends AbstractReportServer {
 				jasperDesign = new JasperDesign();
 				jasperDesign.setName(report.getTitle());
 				final ReportPageProperties properties = report.getPageProperties();
+				logDebug("Generating report using properties {0}...", properties);
 				final PageSizeType size = properties.getSize();
 				final int pageWidth = size.isCustom() ? report.getPageProperties().getPageWidth()
 						: (properties.isLandscape() ? PAGESIZE_TO_DPI.get(size).getHeight()
 								: PAGESIZE_TO_DPI.get(size).getWidth());
+				jasperDesign.setLeftMargin(properties.getMarginLeft());
+				jasperDesign.setRightMargin(properties.getMarginRight());
 				if (pageWidth > 0) {
 					jasperDesign.setPageWidth(pageWidth);
 					jasperDesign
@@ -234,9 +237,13 @@ public class JasperReportsServer extends AbstractReportServer {
 				final int pageHeight = size.isCustom() ? report.getPageProperties().getPageHeight()
 						: (properties.isLandscape() ? PAGESIZE_TO_DPI.get(size).getWidth()
 								: PAGESIZE_TO_DPI.get(size).getHeight());
+				jasperDesign.setTopMargin(properties.getMarginTop());
+				jasperDesign.setBottomMargin(properties.getMarginBottom());
 				if (pageHeight > 0) {
 					jasperDesign.setPageHeight(pageHeight);
 				}
+				
+				logDebug("Using resolved dimensions [pageWidth = {0}, pageHeight = {1}]...", pageWidth, pageHeight);
 			}
 
 			if (!report.isWithBeanCollection() && !report.isEmbeddedHtml()) {

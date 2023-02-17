@@ -38,7 +38,7 @@ public class FileSizeFormatterImpl extends AbstractFormatter<Number> implements 
     }
 
     @Override
-    public String format(Number value) throws UnifyException {
+    protected String doFormat(Number value) throws UnifyException {
         if (value == null) {
             return null;
         }
@@ -55,7 +55,7 @@ public class FileSizeFormatterImpl extends AbstractFormatter<Number> implements 
     }
 
     @Override
-    public Number parse(String string) throws UnifyException {
+    protected Number doParse(String string) throws UnifyException {
         try {
             if (string != null) {
                 string = string.toUpperCase();

@@ -39,7 +39,7 @@ public class StringConcatFormatterImpl extends AbstractFormatter<Object> impleme
 
     @SuppressWarnings("unchecked")
     @Override
-    public String format(Object value) throws UnifyException {
+    protected String doFormat(Object value) throws UnifyException {
         String result = null;
         if (value != null) {
             String separator = "";
@@ -81,7 +81,7 @@ public class StringConcatFormatterImpl extends AbstractFormatter<Object> impleme
     }
 
     @Override
-    public Object parse(String string) throws UnifyException {
+    protected Object doParse(String string) throws UnifyException {
         return null;
     }
 

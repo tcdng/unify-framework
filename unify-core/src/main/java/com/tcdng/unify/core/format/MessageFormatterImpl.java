@@ -32,12 +32,12 @@ public class MessageFormatterImpl extends AbstractFormatter<Object> implements M
     }
 
     @Override
-    public String format(Object value) throws UnifyException {
+    protected String doFormat(Object value) throws UnifyException {
         return resolveSessionMessage(String.valueOf(value));
     }
 
     @Override
-    public Object parse(String string) throws UnifyException {
+    protected Object doParse(String string) throws UnifyException {
         return string;
     }
 

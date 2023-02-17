@@ -71,12 +71,12 @@ public abstract class AbstractDateFormatter extends AbstractFormatter<Date> impl
     }
 
     @Override
-    public String format(Date date) throws UnifyException {
+    protected String doFormat(Date date) throws UnifyException {
         return getSimpleDateFormatPool().format(date);
     }
 
     @Override
-    public Date parse(String string) throws UnifyException {
+    protected Date doParse(String string) throws UnifyException {
         return getSimpleDateFormatPool().parse(string);
     }
 

@@ -35,7 +35,7 @@ public class ElapsedTimeFormatterImpl extends AbstractFormatter<Date> implements
     }
 
     @Override
-    public String format(Date fromDate) throws UnifyException {
+    protected String doFormat(Date fromDate) throws UnifyException {
         CalendarUtils.DateDifference difference = CalendarUtils.getDateDifference(fromDate, new Date());
         String elapsedTime = getSessionMessage("elapsedtimeformat.message", difference.getDays(), difference.getHours(),
                 difference.getMinutes());
@@ -43,7 +43,7 @@ public class ElapsedTimeFormatterImpl extends AbstractFormatter<Date> implements
     }
 
     @Override
-    public Date parse(String string) throws UnifyException {
+    protected Date doParse(String string) throws UnifyException {
         return null;
     }
 

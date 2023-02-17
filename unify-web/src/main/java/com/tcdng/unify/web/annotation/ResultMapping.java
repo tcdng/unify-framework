@@ -34,4 +34,7 @@ public @interface ResultMapping {
 
     /** List of page bean responses */
     String[] response() default {};
+    
+    /** Reload indicator */
+    boolean reload() default false;
 }

@@ -28,66 +28,75 @@ import com.tcdng.unify.web.ui.widget.ResponseWriter;
  */
 public abstract class AbstractOpenWindowPageControllerResponse extends AbstractJsonPageControllerResponse {
 
-    public AbstractOpenWindowPageControllerResponse() {
-        super("openWindowHdl", false);
-    }
+	public AbstractOpenWindowPageControllerResponse() {
+		super("openWindowHdl", false);
+	}
 
-    @Override
-    protected void doGenerate(ResponseWriter writer, Page page) throws UnifyException {
-        WindowResourceInfo windowResourceInfo = prepareWindowResource();
-        setSessionAttribute(windowResourceInfo.getResourceName(), windowResourceInfo.getResourceObject());
+	@Override
+	protected void doGenerate(ResponseWriter writer, Page page) throws UnifyException {
+		WindowResourceInfo windowResourceInfo = prepareWindowResource();
+		setSessionAttribute(windowResourceInfo.getResourceName(), windowResourceInfo.getResourceObject());
+		if (windowResourceInfo.isValid()) {
+			writer.write(",\"openWindow\":");
+			writer.useSecondary(128);
+			writer.writeContextResourceURL(windowResourceInfo.getResourcePath(), windowResourceInfo.getContentType(),
+					windowResourceInfo.getResourceName(), null, windowResourceInfo.isDownload(), false);
+			WebStringWriter urlLsw = writer.discardSecondary();
+			writer.writeJsonQuote(urlLsw);
+			writer.write(",\"attachment\":").write(windowResourceInfo.isDownload());
+		}
+	}
 
-        writer.write(",\"openWindow\":");
-        writer.useSecondary(128);
-        writer.writeContextResourceURL(windowResourceInfo.resourcePath, windowResourceInfo.getContentType(),
-                windowResourceInfo.getResourceName(), null, windowResourceInfo.isDownload(), false);
-        WebStringWriter urlLsw = writer.discardSecondary();
-        writer.writeJsonQuote(urlLsw);
-        writer.write(",\"attachment\":").write(windowResourceInfo.isDownload());
-    }
+	protected abstract WindowResourceInfo prepareWindowResource() throws UnifyException;
 
-    protected abstract WindowResourceInfo prepareWindowResource() throws UnifyException;
+	protected class WindowResourceInfo {
 
-    protected class WindowResourceInfo {
+		private Object resourceObject;
 
-        private Object resourceObject;
+		private String resourcePath;
 
-        private String resourcePath;
+		private String resourceName;
 
-        private String resourceName;
+		private String contentType;
 
-        private String contentType;
+		private boolean download;
 
-        private boolean download;
+		public WindowResourceInfo(Object resourceObject, String resourcePath, String resourceName, String contentType,
+				boolean download) {
+			this.resourceObject = resourceObject;
+			this.resourcePath = resourcePath;
+			this.resourceName = resourceName;
+			this.contentType = contentType;
+			this.download = download;
+		}
 
-        public WindowResourceInfo(Object resourceObject, String resourcePath, String resourceName, String contentType,
-                boolean download) {
-            this.resourceObject = resourceObject;
-            this.resourcePath = resourcePath;
-            this.resourceName = resourceName;
-            this.contentType = contentType;
-            this.download = download;
-        }
+		public WindowResourceInfo() {
 
-        public Object getResourceObject() {
-            return resourceObject;
-        }
+		}
 
-        public String getResourcePath() {
-            return resourcePath;
-        }
+		public Object getResourceObject() {
+			return resourceObject;
+		}
 
-        public String getResourceName() {
-            return resourceName;
-        }
+		public String getResourcePath() {
+			return resourcePath;
+		}
 
-        public String getContentType() {
-            return contentType;
-        }
+		public String getResourceName() {
+			return resourceName;
+		}
 
-        public boolean isDownload() {
-            return download;
-        }
+		public String getContentType() {
+			return contentType;
+		}
 
-    }
+		public boolean isDownload() {
+			return download;
+		}
+
+		public boolean isValid() {
+			return resourceObject != null && resourcePath != null && resourceName != null;
+		}
+
+	}
 }

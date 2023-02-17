@@ -39,8 +39,9 @@ public class JasperReportsPlacementLayoutManager extends AbstractJasperReportsLa
 		clearAll(jasperDesign);
 
 		// Construct detail band
-		JRDesignBand detailBand = new JRDesignBand();
-		detailBand.setHeight(jasperDesign.getPageHeight());
+		final JRDesignBand detailBand = new JRDesignBand();
+		detailBand.setHeight(
+				jasperDesign.getPageHeight() - (jasperDesign.getTopMargin() + jasperDesign.getBottomMargin()));
 		for (ReportPlacement reportReplacement : report.getPlacements()) {
 			JRDesignElement jRDesignElement = newPlacementJRDesignElement(jasperDesign, columnStyles,
 					reportReplacement);

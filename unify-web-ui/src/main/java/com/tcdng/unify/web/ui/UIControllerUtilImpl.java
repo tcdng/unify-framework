@@ -470,7 +470,7 @@ public class UIControllerUtilImpl extends AbstractUnifyComponent implements UICo
 
                     // Set result object
                     resultByNameMap.put(ra.name(),
-                            new Result(DataUtils.toArray(PageControllerResponse.class, responses)));
+                            new Result(DataUtils.toArray(PageControllerResponse.class, responses), ra.reload()));
                 }
             }
         }

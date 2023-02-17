@@ -64,6 +64,13 @@ public interface PageController<T extends PageBean> extends UIController {
      *             if an error occurs
      */
     String openPage() throws UnifyException;
+    
+    /**
+     * Loads current page with data.
+     * 
+     * @throws UnifyException if an error occurs
+     */
+    void loadPage() throws UnifyException;
 
     /**
      * Executes a page save action.

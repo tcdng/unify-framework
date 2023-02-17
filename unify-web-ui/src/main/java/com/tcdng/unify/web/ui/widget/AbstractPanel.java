@@ -196,6 +196,14 @@ public abstract class AbstractPanel extends AbstractContainer implements Panel {
 		}
 	}
 
+	protected void setCommandIndexPage() throws UnifyException {
+		setCommandResultMapping(ResultMappingConstants.INDEX);
+	}
+
+	protected void setCommandOpenPage() throws UnifyException {
+		setCommandResultMapping(ResultMappingConstants.OPEN);
+	}
+
 	/**
 	 * Sets up a file for download in current request context and returns a file
 	 * download response.

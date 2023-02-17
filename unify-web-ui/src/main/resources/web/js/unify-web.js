@@ -322,11 +322,13 @@ ux.respHandler = {
 	},
 
 	openWindowHdl : function(resp) {
-		if (resp.attachment) {
-			window.location.assign(resp.openWindow);
-		} else {
-			window.open(resp.openWindow, "_blank",
-					"toolbar=0,location=0,menubar=0");
+		if (resp.openWindow) {
+			if (resp.attachment) {
+				window.location.assign(resp.openWindow);
+			} else {
+				window.open(resp.openWindow, "_blank",
+						"toolbar=0,location=0,menubar=0");
+			}
 		}
 	},
 

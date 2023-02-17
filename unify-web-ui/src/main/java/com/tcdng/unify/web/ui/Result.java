@@ -25,24 +25,39 @@ import com.tcdng.unify.core.constant.MimeType;
  */
 public class Result {
 
-    private MimeType mimeType;
+	private final MimeType mimeType;
 
-    private PageControllerResponse[] pageControllerResponses;
+	private final PageControllerResponse[] pageControllerResponses;
 
-    public Result(PageControllerResponse[] responses) {
-        this(MimeType.APPLICATION_JSON, responses);
-    }
+	private final boolean reload;
 
-    public Result(MimeType mimeType, PageControllerResponse[] responses) {
-        this.mimeType = mimeType;
-        this.pageControllerResponses = responses;
-    }
+	public Result(PageControllerResponse[] responses) {
+		this(MimeType.APPLICATION_JSON, responses);
+	}
 
-    public MimeType getMimeType() {
-        return mimeType;
-    }
+	public Result(PageControllerResponse[] responses, boolean reload) {
+		this(MimeType.APPLICATION_JSON, responses, reload);
+	}
 
-    public PageControllerResponse[] getResponses() {
-        return pageControllerResponses;
-    }
+	public Result(MimeType mimeType, PageControllerResponse[] responses) {
+		this(mimeType, responses, false);
+	}
+
+	public Result(MimeType mimeType, PageControllerResponse[] responses, boolean reload) {
+		this.mimeType = mimeType;
+		this.pageControllerResponses = responses;
+		this.reload = reload;
+	}
+
+	public MimeType getMimeType() {
+		return mimeType;
+	}
+
+	public PageControllerResponse[] getResponses() {
+		return pageControllerResponses;
+	}
+
+	public boolean isReload() {
+		return reload;
+	}
 }
