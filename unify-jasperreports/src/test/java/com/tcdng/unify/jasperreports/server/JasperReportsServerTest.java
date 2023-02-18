@@ -27,6 +27,8 @@ import org.junit.Test;
 
 import com.tcdng.unify.core.AbstractUnifyComponentTest;
 import com.tcdng.unify.core.constant.PageSizeType;
+import com.tcdng.unify.core.constant.XOffsetType;
+import com.tcdng.unify.core.constant.YOffsetType;
 import com.tcdng.unify.core.report.Report;
 import com.tcdng.unify.core.report.ReportFormat;
 import com.tcdng.unify.core.report.ReportLayoutType;
@@ -54,9 +56,9 @@ public class JasperReportsServerTest extends AbstractUnifyComponentTest {
 				.title("Test Placement Report")
 				.addLine(Color.RED, 0, 81, 200, 1)
 				.addRectangle(Color.BLUE, Color.GREEN, 0, 84, 200, 40)
-				.addText(Color.BLACK, "Hello World!", 100, 300, 100, 40)
+				.addText(Color.BLACK, "Hello World!", XOffsetType.RIGHT, YOffsetType.TOP, 20, 30, 100, 40)
 				.addField(Color.BLACK, "name", String.class, 0, 0, 200, 40)
-				.addField(Color.BLACK, "description", String.class, 0, 40, 200, 40)
+				.addField(Color.BLACK, "description", String.class, XOffsetType.RIGHT, YOffsetType.BOTTOM, 0, 40, 200, 40)
 				.beanCollection(Arrays.asList(new Book("cross", "Cross Airs"), new Book("crescent", "Crescent Moon")))
 				.build();
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();

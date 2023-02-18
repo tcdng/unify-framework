@@ -21,6 +21,8 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.constant.Bold;
 import com.tcdng.unify.core.constant.HAlignType;
 import com.tcdng.unify.core.constant.VAlignType;
+import com.tcdng.unify.core.constant.XOffsetType;
+import com.tcdng.unify.core.constant.YOffsetType;
 import com.tcdng.unify.core.report.ReportTheme.ThemeColors;
 
 /**
@@ -37,6 +39,10 @@ public class ReportPlacement extends ReportField {
 
 	private String text;
 
+	private XOffsetType xOffsetType;
+
+	private YOffsetType yOffsetType;
+
 	private int x;
 
 	private int y;
@@ -46,10 +52,12 @@ public class ReportPlacement extends ReportField {
 	private int height;
 
 	private ReportPlacement(ReportPlacementType type, ThemeColors colors, String text, String name, String className,
-			String sqlBlobTypeName, String formatter, int x, int y, int width, int height, HAlignType hAlign,
-			VAlignType vAlign, Bold bold) {
+			String sqlBlobTypeName, String formatter, XOffsetType xOffsetType, YOffsetType yOffsetType, int x, int y,
+			int width, int height, HAlignType hAlign, VAlignType vAlign, Bold bold) {
 		super(name, className, sqlBlobTypeName, formatter, hAlign, vAlign, bold);
 		this.type = type;
+		this.xOffsetType = xOffsetType;
+		this.yOffsetType = yOffsetType;
 		this.colors = colors;
 		this.text = text;
 		this.x = x;
@@ -68,6 +76,14 @@ public class ReportPlacement extends ReportField {
 
 	public String getText() {
 		return text;
+	}
+
+	public XOffsetType getXOffsetType() {
+		return xOffsetType;
+	}
+
+	public YOffsetType getYOffsetType() {
+		return yOffsetType;
 	}
 
 	public int getX() {
@@ -126,6 +142,10 @@ public class ReportPlacement extends ReportField {
 
 		private String text;
 
+		private XOffsetType xOffsetType;
+
+		private YOffsetType yOffsetType;
+
 		private int x;
 
 		private int y;
@@ -142,6 +162,8 @@ public class ReportPlacement extends ReportField {
 
 		private Builder(ReportPlacementType type) {
 			this.colors = ReportTheme.DEFAULT_THEME.getDetailTheme();
+			this.xOffsetType = XOffsetType.LEFT;
+			this.yOffsetType = YOffsetType.TOP;
 			this.type = type;
 		}
 
@@ -157,6 +179,16 @@ public class ReportPlacement extends ReportField {
 
 		public Builder sqlBlobTypeName(String sqlBlobTypeName) {
 			this.sqlBlobTypeName = sqlBlobTypeName;
+			return this;
+		}
+
+		public Builder xOffsetType(XOffsetType xOffsetType) {
+			this.xOffsetType = xOffsetType;
+			return this;
+		}
+
+		public Builder yOffsetType(YOffsetType yOffsetType) {
+			this.yOffsetType = yOffsetType;
 			return this;
 		}
 
@@ -208,8 +240,8 @@ public class ReportPlacement extends ReportField {
 		}
 
 		public ReportPlacement build() throws UnifyException {
-			return new ReportPlacement(type, colors, text, name, className, sqlBlobTypeName, formatter, x, y, width,
-					height, hAlign, vAlign, bold);
+			return new ReportPlacement(type, colors, text, name, className, sqlBlobTypeName, formatter, xOffsetType,
+					yOffsetType, x, y, width, height, hAlign, vAlign, bold);
 		}
 	}
 }

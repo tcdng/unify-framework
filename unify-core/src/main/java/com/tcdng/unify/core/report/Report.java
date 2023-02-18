@@ -29,6 +29,8 @@ import com.tcdng.unify.core.constant.Bold;
 import com.tcdng.unify.core.constant.HAlignType;
 import com.tcdng.unify.core.constant.OrderType;
 import com.tcdng.unify.core.constant.VAlignType;
+import com.tcdng.unify.core.constant.XOffsetType;
+import com.tcdng.unify.core.constant.YOffsetType;
 import com.tcdng.unify.core.criterion.RestrictionType;
 import com.tcdng.unify.core.database.sql.SqlJoinType;
 import com.tcdng.unify.core.util.DataUtils;
@@ -619,34 +621,56 @@ public class Report {
 
 		public Builder addField(Color color, String fieldName, Class<?> type, int x, int y, int width, int height)
 				throws UnifyException {
-			return addField(color, fieldName, type.getName(), null, HAlignType.LEFT, VAlignType.MIDDLE, Bold.FALSE, x,
-					y, width, height);
+			return addField(color, fieldName, type.getName(), null, HAlignType.LEFT, VAlignType.MIDDLE, Bold.FALSE,
+					XOffsetType.LEFT, YOffsetType.TOP, x, y, width, height);
+		}
+
+		public Builder addField(Color color, String fieldName, Class<?> type, XOffsetType xOffsetType,
+				YOffsetType yOffsetType, int x, int y, int width, int height) throws UnifyException {
+			return addField(color, fieldName, type.getName(), null, HAlignType.LEFT, VAlignType.MIDDLE, Bold.FALSE,
+					xOffsetType, yOffsetType, x, y, width, height);
+		}
+
+		public Builder addField(Color color, String fieldName, String className, XOffsetType xOffsetType,
+				YOffsetType yOffsetType, int x, int y, int width, int height) throws UnifyException {
+			return addField(color, fieldName, className, null, HAlignType.LEFT, VAlignType.MIDDLE, Bold.FALSE,
+					xOffsetType, yOffsetType, x, y, width, height);
 		}
 
 		public Builder addField(Color color, String fieldName, String className, int x, int y, int width, int height)
 				throws UnifyException {
-			return addField(color, fieldName, className, null, HAlignType.LEFT, VAlignType.MIDDLE, Bold.FALSE, x, y,
-					width, height);
+			return addField(color, fieldName, className, null, HAlignType.LEFT, VAlignType.MIDDLE, Bold.FALSE,
+					XOffsetType.LEFT, YOffsetType.TOP, x, y, width, height);
 		}
 
 		public Builder addField(Color color, String fieldName, String className, String formatter, HAlignType hAlign,
-				VAlignType vAlign, Bold bold, int x, int y, int width, int height) throws UnifyException {
-			ReportPlacement rp = ReportPlacement.newBuilder(ReportPlacementType.FIELD).name(fieldName).className(className)
-					.formatter(formatter).bold(bold).position(x, y).dimension(width, height).hAlign(hAlign)
-					.vAlign(vAlign).colors(color, null, null).build();
+				VAlignType vAlign, Bold bold, XOffsetType xOffsetType, YOffsetType yOffsetType, int x, int y, int width,
+				int height) throws UnifyException {
+			ReportPlacement rp = ReportPlacement.newBuilder(ReportPlacementType.FIELD).name(fieldName)
+					.className(className).formatter(formatter).bold(bold).position(x, y).dimension(width, height)
+					.hAlign(hAlign).vAlign(vAlign).xOffsetType(xOffsetType).yOffsetType(yOffsetType)
+					.colors(color, null, null).build();
 			placements.add(rp);
 			return this;
 		}
 
 		public Builder addText(Color color, String text, int x, int y, int width, int height) throws UnifyException {
-			return addText(color, text, null, null, null, x, y, width, height);
+			return addText(color, text, HAlignType.LEFT, VAlignType.MIDDLE, null, XOffsetType.LEFT, YOffsetType.TOP, x,
+					y, width, height);
 		}
 
-		public Builder addText(Color color, String text, HAlignType hAlign, VAlignType vAlign, Bold bold, int x, int y,
+		public Builder addText(Color color, String text, XOffsetType xOffsetType, YOffsetType yOffsetType, int x, int y,
 				int width, int height) throws UnifyException {
+			return addText(color, text, HAlignType.LEFT, VAlignType.MIDDLE, null, xOffsetType, yOffsetType, x, y, width,
+					height);
+		}
+
+		public Builder addText(Color color, String text, HAlignType hAlign, VAlignType vAlign, Bold bold,
+				XOffsetType xOffsetType, YOffsetType yOffsetType, int x, int y, int width, int height)
+				throws UnifyException {
 			ReportPlacement rp = ReportPlacement.newBuilder(ReportPlacementType.TEXT).text(text).bold(bold)
-					.position(x, y).dimension(width, height).hAlign(hAlign).vAlign(vAlign).colors(color, color, null)
-					.build();
+					.position(x, y).dimension(width, height).hAlign(hAlign).vAlign(vAlign).xOffsetType(xOffsetType)
+					.yOffsetType(yOffsetType).colors(color, color, null).build();
 			placements.add(rp);
 			return this;
 		}
