@@ -82,6 +82,11 @@ public class HttpServletModule  {
 				configFilename = IOUtils.buildFilename(workingFolder, UnifyCoreConstants.CONFIGURATION_FILE);
 			}
 
+	        final String environment = System.getProperty("unify.environment");
+	        if (!StringUtils.isBlank(environment)) {
+	        	configFilename = UnifyConfigUtils.resolveConfigFileToEnvironment(configFilename, environment);
+	        }
+
 			InputStream configInputStream = null;
 			try {
 				this.contextPath = contextPath;

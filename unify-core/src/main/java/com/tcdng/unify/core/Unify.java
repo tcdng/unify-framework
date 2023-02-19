@@ -172,8 +172,7 @@ public class Unify {
         if (!StringUtils.isBlank(environment)) {
             LOGGER.log(Level.INFO, "Environment specification detected...");
             LOGGER.log(Level.INFO, "Resolving container configuration file for environment...");
-        	int extIndex = configFile.lastIndexOf('.');
-        	configFile = configFile.substring(0, extIndex) + "-" + environment + configFile.substring(extIndex);
+            configFile = UnifyConfigUtils.resolveConfigFileToEnvironment(configFile, environment);
         }
         
         try {

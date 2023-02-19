@@ -61,6 +61,11 @@ public final class UnifyConfigUtils {
 
     }
 
+    public static final String resolveConfigFileToEnvironment(String configFile, String environment) {
+    	int extIndex = configFile.lastIndexOf('.');
+    	return configFile.substring(0, extIndex) + "-" + environment + configFile.substring(extIndex);
+    }
+    
     /**
      * Reads component configuration from an XML file.
      * 

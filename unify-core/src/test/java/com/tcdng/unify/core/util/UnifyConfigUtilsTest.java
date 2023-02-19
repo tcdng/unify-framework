@@ -41,6 +41,13 @@ import com.tcdng.unify.core.database.TestSqlDataSource;
 public class UnifyConfigUtilsTest {
 
     @Test
+    public void testResolveConfigFileToEnvironment() throws Exception {
+    	String resolvedFileName1 = UnifyConfigUtils.resolveConfigFileToEnvironment("conf/unify.xml", "banking-prod");
+    	assertNotNull(resolvedFileName1);
+    	assertEquals("conf/unify-banking-prod.xml", resolvedFileName1);
+    }
+    
+    @Test
     public void testScanTypeRepository() throws Exception {
         UnifyContainerConfig.Builder uccb = UnifyContainerConfig.newBuilder();
         TypeRepository typeRepository = TypeUtils.getTypeRepositoryFromClasspath();
