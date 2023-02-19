@@ -36,10 +36,14 @@ import com.tcdng.unify.core.constant.IncludeListOnly;
 import com.tcdng.unify.core.constant.MustMatch;
 import com.tcdng.unify.core.constant.QueryAgainst;
 import com.tcdng.unify.core.constant.UpdateChild;
+import com.tcdng.unify.core.criterion.AdditionExpression;
 import com.tcdng.unify.core.criterion.Aggregate;
 import com.tcdng.unify.core.criterion.AggregateFunction;
 import com.tcdng.unify.core.criterion.Amongst;
+import com.tcdng.unify.core.criterion.DivisionExpression;
+import com.tcdng.unify.core.criterion.MultiplicationExpression;
 import com.tcdng.unify.core.criterion.Select;
+import com.tcdng.unify.core.criterion.SubtractionExpression;
 import com.tcdng.unify.core.criterion.Update;
 import com.tcdng.unify.core.data.Aggregation;
 import com.tcdng.unify.core.data.GroupAggregation;
@@ -433,6 +437,30 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 				sqlDataSourceDialect.getSqlTypePolicy(sqlFieldInfo.getColumnType()),
 				sqlDataSourceDialect.prepareMaxStatement(sqlFieldInfo.getPreferredColumnName(), query),
 				MustMatch.FALSE);
+	}
+
+	@Override
+	public <T extends Number, U extends Entity> int add(Class<T> fieldClass, String fieldName, T val, Query<U> query)
+			throws UnifyException {
+		return updateAll(query, new Update().add(fieldName, new AdditionExpression(val)));
+	}
+
+	@Override
+	public <T extends Number, U extends Entity> int subtract(Class<T> fieldClass, String fieldName, T val,
+			Query<U> query) throws UnifyException {
+		return updateAll(query, new Update().add(fieldName, new SubtractionExpression(val)));
+	}
+
+	@Override
+	public <T extends Number, U extends Entity> int multiply(Class<T> fieldClass, String fieldName, T val,
+			Query<U> query) throws UnifyException {
+		return updateAll(query, new Update().add(fieldName, new MultiplicationExpression(val)));
+	}
+
+	@Override
+	public <T extends Number, U extends Entity> int divide(Class<T> fieldClass, String fieldName, T val, Query<U> query)
+			throws UnifyException {
+		return updateAll(query, new Update().add(fieldName, new DivisionExpression(val)));
 	}
 
 	@Override
