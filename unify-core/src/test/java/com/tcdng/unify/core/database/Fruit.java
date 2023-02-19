@@ -34,10 +34,10 @@ public class Fruit extends AbstractTestVersionedTableEntity {
     @Column
     private String color;
 
-    @Column
+    @Column(nullable = true)
     private Double price;
 
-    @Column
+    @Column(nullable = true)
     private Integer quantity;
 
     public Fruit(String name, String color, Double price) {

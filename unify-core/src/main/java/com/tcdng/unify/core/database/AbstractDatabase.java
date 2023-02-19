@@ -191,6 +191,30 @@ public abstract class AbstractDatabase extends AbstractUnifyComponent implements
     }
 
     @Override
+	public <T extends Number, U extends Entity> int add(Class<T> fieldClass, String fieldName, T val, Query<U> query)
+			throws UnifyException {
+		return getDatabaseSession().add(fieldClass, fieldName, val, query);
+	}
+
+	@Override
+	public <T extends Number, U extends Entity> int subtract(Class<T> fieldClass, String fieldName, T val,
+			Query<U> query) throws UnifyException {
+		return getDatabaseSession().subtract(fieldClass, fieldName, val, query);
+	}
+
+	@Override
+	public <T extends Number, U extends Entity> int multiply(Class<T> fieldClass, String fieldName, T val,
+			Query<U> query) throws UnifyException {
+		return getDatabaseSession().multiply(fieldClass, fieldName, val, query);
+	}
+
+	@Override
+	public <T extends Number, U extends Entity> int divide(Class<T> fieldClass, String fieldName, T val, Query<U> query)
+			throws UnifyException {
+		return getDatabaseSession().divide(fieldClass, fieldName, val, query);
+	}
+
+	@Override
     public <T, U extends Entity> Set<T> valueSet(Class<T> fieldClass, String fieldName, Query<U> query)
             throws UnifyException {
         return getDatabaseSession().valueSet(fieldClass, fieldName, query);

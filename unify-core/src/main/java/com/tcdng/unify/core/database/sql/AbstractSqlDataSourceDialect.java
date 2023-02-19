@@ -51,6 +51,7 @@ import com.tcdng.unify.core.criterion.Restriction;
 import com.tcdng.unify.core.criterion.RestrictionType;
 import com.tcdng.unify.core.criterion.Select;
 import com.tcdng.unify.core.criterion.Update;
+import com.tcdng.unify.core.criterion.UpdateExpression;
 import com.tcdng.unify.core.data.FactoryMap;
 import com.tcdng.unify.core.database.CallableProc;
 import com.tcdng.unify.core.database.Entity;
@@ -1185,7 +1186,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 						returnFieldInfoList.add(sqlFieldInfo);
 					}
 				}
-				
+
 				// Always include tenant Id
 				if (sqlEntityInfo.isWithTenantId()) {
 					SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getTenantIdFieldInfo();
@@ -1213,7 +1214,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 		return new SqlStatement(sqlEntityInfo, SqlStatementType.FIND, findSql.toString(), parameterInfoList,
 				getSqlResultList(returnFieldInfoList));
 	}
-	
+
 	@Override
 	public SqlStatement prepareListByPkStatement(Class<?> clazz, Object pk) throws UnifyException {
 		if (EnumConst.class.isAssignableFrom(clazz)) {
@@ -2283,9 +2284,16 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 			if (updateParams.length() > 0) {
 				updateParams.append(',');
 			}
-			updateParams.append(sqlFieldInfo.getPreferredColumnName()).append(" = ?");
 
 			Object value = entry.getValue();
+			if (value instanceof UpdateExpression) {
+				UpdateExpression expression = (UpdateExpression) value;
+				expression.appendSQLSetExpression(updateParams, sqlFieldInfo.getPreferredColumnName());
+				value = expression.getValue();
+			} else {
+				updateParams.append(sqlFieldInfo.getPreferredColumnName()).append(" = ?");
+			}
+
 			if (sqlFieldInfo.isTransformed()) {
 				value = ((Transformer<Object, Object>) sqlFieldInfo.getTransformer()).forwardTransform(value);
 			}
@@ -2300,6 +2308,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 			parameterInfoList.add(new SqlParameter(
 					getSqlDataSourceDialectPolicies().getSqlTypePolicy(sqlFieldInfo.getColumnType()), value));
 		}
+
 		return updateParams.toString();
 	}
 

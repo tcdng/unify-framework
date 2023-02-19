@@ -502,6 +502,24 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
     }
 
     @Test
+    public void testGetMaxValueNoMaxWithCriteria() throws Exception {
+        tm.beginTransaction();
+        try {
+            db.create(new Fruit("apple", "red", 20.00));
+            db.create(new Fruit("pineapple", "cyan", 60.00));
+            db.create(new Fruit("banana", "yellow", 45.00));
+            db.create(new Fruit("orange", "orange", 15.00));
+            Long maxId = db.max(Long.class, "id", new FruitQuery().addLessThan("id", 0L));
+            assertNull(maxId);
+        } catch (Exception e) {
+            tm.setRollback();
+            throw e;
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
     public void testGetMaxValueNoMatchRecords() throws Exception {
         tm.beginTransaction();
         try {
@@ -2242,6 +2260,24 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
         }
     }
 
+    @Test
+    public void testUpdateUsingUpdateNull() throws Exception {
+        tm.beginTransaction();
+        try {
+            db.create(new Fruit("apple", "red", 20.00));
+            db.create(new Fruit("lemon", "green", 45.00));
+            db.updateAll(new FruitQuery().addEquals("name", "lemon"), new Update().add("price", null));
+
+			List<Fruit> fruitList = db.findAll(new FruitQuery().addOrder("id").ignoreEmptyCriteria(true));
+			assertNotNull(fruitList);
+			assertEquals(2, fruitList.size());
+			assertEquals(Double.valueOf(20.00), fruitList.get(0).getPrice());
+			assertNull(fruitList.get(1).getPrice());
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
     @Test(expected = UnifyException.class)
     public void testUpdateRecordByIdWithInvalidId() throws Exception {
         tm.beginTransaction();
@@ -2670,6 +2706,110 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             tm.endTransaction();
         }
     }
+
+    @Test
+	public void testAddByCriteria() throws Exception {
+		tm.beginTransaction();
+		try {
+			db.create(new Fruit("apple", "red", 20.00));
+			db.create(new Fruit("pineapple", "cyan", 60.00));
+			db.create(new Fruit("banana", "yellow", 45.00));
+			db.create(new Fruit("orange", "orange", 15.00));
+			int updated = db.add(Double.class, "price", Double.valueOf(2), new FruitQuery().addNotLike("name", "app"));
+			assertEquals(2, updated);
+			
+			List<Fruit> fruitList = db.findAll(new FruitQuery().addOrder("id").ignoreEmptyCriteria(true));
+			assertNotNull(fruitList);
+			assertEquals(4, fruitList.size());
+			assertEquals(Double.valueOf(20.00), fruitList.get(0).getPrice());
+			assertEquals(Double.valueOf(60.00), fruitList.get(1).getPrice());
+			assertEquals(Double.valueOf(47.00), fruitList.get(2).getPrice());
+			assertEquals(Double.valueOf(17.00), fruitList.get(3).getPrice());
+		} catch (Exception e) {
+			tm.setRollback();
+			throw e;
+		} finally {
+			tm.endTransaction();
+		}
+	}
+
+    @Test
+	public void testSubtractByCriteria() throws Exception {
+		tm.beginTransaction();
+		try {
+			db.create(new Fruit("apple", "red", 20.00));
+			db.create(new Fruit("pineapple", "cyan", 60.00));
+			db.create(new Fruit("banana", "yellow", 45.00));
+			db.create(new Fruit("orange", "orange", 15.00));
+			int updated = db.subtract(Double.class, "price", Double.valueOf(3.25), new FruitQuery().addLike("name", "app"));
+			assertEquals(2, updated);
+			
+			List<Fruit> fruitList = db.findAll(new FruitQuery().addOrder("id").ignoreEmptyCriteria(true));
+			assertNotNull(fruitList);
+			assertEquals(4, fruitList.size());
+			assertEquals(Double.valueOf(16.75), fruitList.get(0).getPrice());
+			assertEquals(Double.valueOf(56.75), fruitList.get(1).getPrice());
+			assertEquals(Double.valueOf(45.00), fruitList.get(2).getPrice());
+			assertEquals(Double.valueOf(15.00), fruitList.get(3).getPrice());
+		} catch (Exception e) {
+			tm.setRollback();
+			throw e;
+		} finally {
+			tm.endTransaction();
+		}
+	}
+
+    @Test
+	public void testMultiplyByCriteria() throws Exception {
+		tm.beginTransaction();
+		try {
+			db.create(new Fruit("apple", "red", 20.00));
+			db.create(new Fruit("pineapple", "cyan", 60.00));
+			db.create(new Fruit("banana", "yellow", 45.00));
+			db.create(new Fruit("orange", "orange", 15.00));
+			int updated = db.multiply(Double.class, "price", Double.valueOf(0.25), new FruitQuery().addLike("name", "app"));
+			assertEquals(2, updated);
+			
+			List<Fruit> fruitList = db.findAll(new FruitQuery().addOrder("id").ignoreEmptyCriteria(true));
+			assertNotNull(fruitList);
+			assertEquals(4, fruitList.size());
+			assertEquals(Double.valueOf(5.00), fruitList.get(0).getPrice());
+			assertEquals(Double.valueOf(15.00), fruitList.get(1).getPrice());
+			assertEquals(Double.valueOf(45.00), fruitList.get(2).getPrice());
+			assertEquals(Double.valueOf(15.00), fruitList.get(3).getPrice());
+		} catch (Exception e) {
+			tm.setRollback();
+			throw e;
+		} finally {
+			tm.endTransaction();
+		}
+	}
+
+    @Test
+	public void testDivideByCriteria() throws Exception {
+		tm.beginTransaction();
+		try {
+			db.create(new Fruit("apple", "red", 20.00));
+			db.create(new Fruit("pineapple", "cyan", 60.00));
+			db.create(new Fruit("banana", "yellow", 45.00));
+			db.create(new Fruit("orange", "orange", 15.00));
+			int updated = db.divide(Double.class, "price", Double.valueOf(0.25), new FruitQuery().ignoreEmptyCriteria(true));
+			assertEquals(4, updated);
+			
+			List<Fruit> fruitList = db.findAll(new FruitQuery().addOrder("id").ignoreEmptyCriteria(true));
+			assertNotNull(fruitList);
+			assertEquals(4, fruitList.size());
+			assertEquals(Double.valueOf(80.00), fruitList.get(0).getPrice());
+			assertEquals(Double.valueOf(240.00), fruitList.get(1).getPrice());
+			assertEquals(Double.valueOf(180.00), fruitList.get(2).getPrice());
+			assertEquals(Double.valueOf(60.00), fruitList.get(3).getPrice());
+		} catch (Exception e) {
+			tm.setRollback();
+			throw e;
+		} finally {
+			tm.endTransaction();
+		}
+	}
 
     @Test
     public void testCreateRecordWithOnewayTransformation() throws Exception {

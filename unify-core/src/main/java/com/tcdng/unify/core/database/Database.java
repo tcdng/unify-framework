@@ -483,6 +483,58 @@ public interface Database extends UnifyComponent {
      */
     <T, U extends Entity> T value(Class<T> fieldClass, String fieldName, Query<U> query) throws UnifyException;
 
+	/**
+	 * Adds supplied value to field for all records that match criteria.
+	 * 
+	 * @param fieldClass the value type
+	 * @param fieldName  the field name
+	 * @param val        the value to add
+	 * @param query      the criteria
+	 * @return the number of records updated
+	 * @throws UnifyException if an error occurs
+	 */
+	<T extends Number, U extends Entity> int add(Class<T> fieldClass, String fieldName, T val, Query<U> query)
+			throws UnifyException;
+
+	/**
+	 * Subtracts supplied value to field for all records that match criteria.
+	 * 
+	 * @param fieldClass the value type
+	 * @param fieldName  the field name
+	 * @param val        the value to add
+	 * @param query      the criteria
+	 * @return the number of records updated
+	 * @throws UnifyException if an error occurs
+	 */
+	<T extends Number, U extends Entity> int subtract(Class<T> fieldClass, String fieldName, T val, Query<U> query)
+			throws UnifyException;
+
+	/**
+	 * Multiplies supplied value to field for all records that match criteria.
+	 * 
+	 * @param fieldClass the value type
+	 * @param fieldName  the field name
+	 * @param val        the value to add
+	 * @param query      the criteria
+	 * @return the number of records updated
+	 * @throws UnifyException if an error occurs
+	 */
+	<T extends Number, U extends Entity> int multiply(Class<T> fieldClass, String fieldName, T val, Query<U> query)
+			throws UnifyException;
+
+	/**
+	 * Divides supplied value to field for all records that match criteria.
+	 * 
+	 * @param fieldClass the value type
+	 * @param fieldName  the field name
+	 * @param val        the value to add
+	 * @param query      the criteria
+	 * @return the number of records updated
+	 * @throws UnifyException if an error occurs
+	 */
+	<T extends Number, U extends Entity> int divide(Class<T> fieldClass, String fieldName, T val, Query<U> query)
+			throws UnifyException;
+
     /**
      * Returns the minimum value of a record field by criteria.
      * 
