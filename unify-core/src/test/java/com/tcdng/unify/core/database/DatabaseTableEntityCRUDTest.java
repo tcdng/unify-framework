@@ -2260,6 +2260,24 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
         }
     }
 
+    @Test
+    public void testUpdateUsingUpdateNull() throws Exception {
+        tm.beginTransaction();
+        try {
+            db.create(new Fruit("apple", "red", 20.00));
+            db.create(new Fruit("lemon", "green", 45.00));
+            db.updateAll(new FruitQuery().addEquals("name", "lemon"), new Update().add("price", null));
+
+			List<Fruit> fruitList = db.findAll(new FruitQuery().addOrder("id").ignoreEmptyCriteria(true));
+			assertNotNull(fruitList);
+			assertEquals(2, fruitList.size());
+			assertEquals(Double.valueOf(20.00), fruitList.get(0).getPrice());
+			assertNull(fruitList.get(1).getPrice());
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
     @Test(expected = UnifyException.class)
     public void testUpdateRecordByIdWithInvalidId() throws Exception {
         tm.beginTransaction();
