@@ -26,6 +26,7 @@ import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 import com.tcdng.unify.core.util.IOUtils;
+import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.core.util.TypeRepository;
 import com.tcdng.unify.core.util.TypeUtils;
 import com.tcdng.unify.core.util.UnifyConfigUtils;
@@ -151,6 +152,7 @@ public class Unify {
         UnifyContainerEnvironment uce = null;
         UnifyContainerConfig.Builder uccb = UnifyContainerConfig.newBuilder();
         try {
+            LOGGER.log(Level.INFO, "Scanning classpath type repository...");
             TypeRepository tr = TypeUtils.getTypeRepositoryFromClasspath(baseUrls);
             uce = new UnifyContainerEnvironment(tr, workingFolder);
             UnifyConfigUtils.readConfigFromTypeRepository(uccb, tr);
@@ -166,7 +168,15 @@ public class Unify {
             configFile = UnifyCoreConstants.CONFIGURATION_FILE;
         }
 
+        final String environment = System.getProperty("unify.environment");
+        if (!StringUtils.isBlank(environment)) {
+            LOGGER.log(Level.INFO, "Environment specification detected...");
+            LOGGER.log(Level.INFO, "Resolving container configuration file for environment...");
+            configFile = UnifyConfigUtils.resolveConfigFileToEnvironment(configFile, environment);
+        }
+        
         try {
+            LOGGER.log(Level.INFO, "Reading container configuration file [{0}]...", configFile);
             xmlInputStream = IOUtils.openFileResourceInputStream(configFile, workingFolder);
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE,

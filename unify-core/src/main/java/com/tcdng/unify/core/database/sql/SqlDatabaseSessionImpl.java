@@ -323,7 +323,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
 		final Select select = query.getSelect();
 		try {
-			query.setSelect(new Select(fieldName).setDistinct(true));
+			query.setSelect(new Select(fieldName).setDistinct(query.isDistinct()));
 			return getSqlStatementExecutor().executeMultipleObjectListResultQuery(connection, fieldClass,
 					sqlDataSourceDialect.getSqlTypePolicy(sqlEntityInfo.getListFieldInfo(fieldName).getColumnType()),
 					sqlDataSourceDialect.prepareListStatement(query));
