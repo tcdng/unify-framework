@@ -4818,6 +4818,27 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
     }
 
     @Test
+	public void testValueListNonDistinct() throws Exception {
+		tm.beginTransaction();
+		try {
+			db.create(new Fruit("apple", "red", 20.00, 25));
+			db.create(new Fruit("pineapple", "cyan", 60.00, 3));
+			db.create(new Fruit("greenapple", "green", 60.00, 3));
+			db.create(new Fruit("banana", "yellow", 45.00, 45));
+			db.create(new Fruit("orange", "orange", 15.00, 11));
+
+			List<Double> colorList = db.valueList(Double.class, "price",
+					new FruitQuery().addLike("name", "apple").addOrder("price"));
+			assertEquals(3, colorList.size());
+			assertEquals(Double.valueOf(20.00), colorList.get(0));
+			assertEquals(Double.valueOf(60.00), colorList.get(1));
+			assertEquals(Double.valueOf(60.00), colorList.get(2));
+		} finally {
+			tm.endTransaction();
+		}
+	}
+
+    @Test
 	public void testValueListDistinct() throws Exception {
 		tm.beginTransaction();
 		try {
