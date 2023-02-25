@@ -110,11 +110,11 @@ public class JasperReportsServer extends AbstractReportServer {
 
 	private static final int MIN_NUMBEROFSWAPFILES = 1;
 
-	private static final int MIN_CACHEDPAGESPERVIRTUALIZER = 8;
+	private static final int MIN_CACHEDPAGESPERVIRTUALIZER = 32;
 
 	private static final int MAX_NUMBEROFSWAPFILES = 8;
 
-	private static final int MAX_CACHEDPAGESPERVIRTUALIZER = 100;
+	private static final int MAX_CACHEDPAGESPERVIRTUALIZER = 256;
 
 	@Configurable("20")
 	private int reportExpirationPeriod;
