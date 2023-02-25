@@ -38,6 +38,7 @@ import com.tcdng.unify.web.ui.WebUIApplicationComponents;
         @UplAttribute(name = "listKey", type = String.class),
         @UplAttribute(name = "listDescription", type = String.class),
         @UplAttribute(name = "listParamType", type = ListParamType.class, defaultVal = "control"),
+        @UplAttribute(name = "htmlEscape", type = boolean.class, defaultVal = "true"),
         @UplAttribute(name = "flow", type = boolean.class) })
 public abstract class AbstractListControl extends AbstractControl implements ListControl {
 
@@ -90,7 +91,12 @@ public abstract class AbstractListControl extends AbstractControl implements Lis
         return getUplAttribute(String.class, "listDescription");
     }
 
-    private ListControlUtils getListControlUtils() throws UnifyException {
+    @Override
+	public boolean isHtmlEscape() throws UnifyException {
+    	 return getUplAttribute(boolean.class, "htmlEscape");
+    }
+
+	private ListControlUtils getListControlUtils() throws UnifyException {
         return (ListControlUtils) getComponent(WebUIApplicationComponents.APPLICATION_LISTCONTROLUTIL);
     }
 }

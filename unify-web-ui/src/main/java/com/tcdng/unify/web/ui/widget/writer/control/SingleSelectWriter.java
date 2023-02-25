@@ -63,10 +63,16 @@ public class SingleSelectWriter extends AbstractPopupTextFieldWriter {
             writer.write("</a>");
         }
 
+        final boolean htmlescape = singleSelect.isHtmlEscape();
         for (int i = 0; i < length; i++) {
             writer.write("<a");
             writeTagId(writer, singleSelect.getNamingIndexedId(i));
-            writer.write(" class=\"norm\">");
+            if (htmlescape) {
+            	writer.write(" class=\"norm\">");
+            } else {
+            	writer.write(" class=\"norm g_fsm\">");
+            }
+            
             writer.write("</a>");
         }
         writer.write("</div>");
@@ -80,6 +86,7 @@ public class SingleSelectWriter extends AbstractPopupTextFieldWriter {
         ListControlInfo listControlInfo = singleSelect.getListControlInfo(singleSelect.getFormatter());
 
         // Append rigging
+        final boolean htmlescape = singleSelect.isHtmlEscape();
         writer.beginFunction("ux.rigSingleSelect");
         writer.writeParam("pId", singleSelect.getId());
         writer.writeParam("pFacId", singleSelect.getFacadeId());
@@ -91,8 +98,14 @@ public class SingleSelectWriter extends AbstractPopupTextFieldWriter {
         writer.writeParam("pKeys", listControlInfo.getKeys());
         writer.writeParam("pLabels", listControlInfo.getLabels());
         writer.writeParam("pIsBlankOption", singleSelect.getBlankOption() != null);
-        writer.writeParam("pNormCls", "norm");
-        writer.writeParam("pSelCls", getUserColorStyleClass("sel"));
+        if (htmlescape) {
+        	writer.writeParam("pNormCls", "norm");
+            writer.writeParam("pSelCls", getUserColorStyleClass("sel"));
+        } else {
+        	writer.writeParam("pNormCls", "norm g_fsm");
+            writer.writeParam("pSelCls", getUserColorStyleClass("sel") + " g_fsm");
+        }
+        
         writer.writeParam("pEnabled", popupEnabled);
         writer.writeParam("pColors", singleSelect.isColors());
         writer.writeParam("pSelColId", singleSelect.getPopupButtonColorId());

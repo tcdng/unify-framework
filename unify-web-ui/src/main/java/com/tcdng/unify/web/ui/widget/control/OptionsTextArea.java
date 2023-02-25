@@ -93,6 +93,11 @@ public class OptionsTextArea extends TextArea implements ListControl {
     }
 
     @Override
+	public boolean isHtmlEscape() throws UnifyException {
+		return true;
+	}
+
+	@Override
     public boolean isMultiple() {
         return false;
     }
