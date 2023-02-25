@@ -18,9 +18,11 @@ package com.tcdng.unify.jasperreports.server;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Level;
@@ -31,6 +33,7 @@ import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.constant.FrequencyUnit;
 import com.tcdng.unify.core.constant.PageSizeType;
+import com.tcdng.unify.core.data.AbstractRoundRobin;
 import com.tcdng.unify.core.database.DataSource;
 import com.tcdng.unify.core.database.DataSourceDialect;
 import com.tcdng.unify.core.database.NativeQuery;
@@ -45,8 +48,10 @@ import com.tcdng.unify.core.report.ReportTableJoin;
 import com.tcdng.unify.core.util.CalendarUtils;
 import com.tcdng.unify.core.util.IOUtils;
 import com.tcdng.unify.jasperreports.JasperReportsApplicationComponents;
+import com.tcdng.unify.jasperreports.JasperReportsPropertyConstants;
 
 import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -60,7 +65,9 @@ import net.sf.jasperreports.engine.export.JRRtfExporter;
 import net.sf.jasperreports.engine.export.JRXlsExporter;
 import net.sf.jasperreports.engine.export.JRXmlExporter;
 import net.sf.jasperreports.engine.export.ooxml.JRDocxExporter;
+import net.sf.jasperreports.engine.fill.JRSwapFileVirtualizer;
 import net.sf.jasperreports.engine.type.WhenNoDataTypeEnum;
+import net.sf.jasperreports.engine.util.JRConcurrentSwapFile;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import net.sf.jasperreports.export.Exporter;
 import net.sf.jasperreports.export.ExporterInput;
@@ -99,11 +106,25 @@ public class JasperReportsServer extends AbstractReportServer {
 				}
 			});
 
+	private static final String SWAP_FILE_FOLDER = "/jasperreports/swap";
+
+	private static final int MIN_NUMBEROFSWAPFILES = 1;
+
+	private static final int MIN_CACHEDPAGESPERVIRTUALIZER = 8;
+
+	private static final int MAX_NUMBEROFSWAPFILES = 8;
+
+	private static final int MAX_CACHEDPAGESPERVIRTUALIZER = 100;
+
 	@Configurable("20")
 	private int reportExpirationPeriod;
 
 	@Configurable
 	private boolean logDebug;
+
+	private boolean fileVirtualization;
+
+	private JRSwapFileVirtualizerRoundRobin virtualizers;
 
 	private JasperReportsCache jasperReportsCache;
 
@@ -141,6 +162,40 @@ public class JasperReportsServer extends AbstractReportServer {
 			Logger.getLogger("org.apache.commons.beanutils").setLevel((Level) Level.ERROR);
 			Logger.getLogger("org.apache.commons.digester").setLevel((Level) Level.ERROR);
 		}
+
+		fileVirtualization = getContainerSetting(boolean.class,
+				JasperReportsPropertyConstants.JASPERREPORTS_FILEVIRTUALIZATION);
+		if (fileVirtualization) {
+			logDebug("File virtualization enabled.");
+			final String swapFileFolder = getWorkingPathFilename(SWAP_FILE_FOLDER);
+			final int noOfSwapFiles = getContainerSetting(int.class,
+					JasperReportsPropertyConstants.JASPERREPORTS_FILEVIRTUALIZATION_NUMBEROFSWAPFILES,
+					MIN_NUMBEROFSWAPFILES);
+			final int actNoOfSwapFiles = noOfSwapFiles > 0
+					? (noOfSwapFiles > MAX_NUMBEROFSWAPFILES ? MAX_NUMBEROFSWAPFILES : noOfSwapFiles)
+					: MIN_NUMBEROFSWAPFILES;
+			final int cachedPagesPerVirtualizer = getContainerSetting(int.class,
+					JasperReportsPropertyConstants.JASPERREPORTS_FILEVIRTUALIZATION_CACHEDPAGESPERVIRTUALIZER,
+					MIN_CACHEDPAGESPERVIRTUALIZER);
+			final int actCachedPagesPerVirtualizer = cachedPagesPerVirtualizer > 0
+					? (cachedPagesPerVirtualizer > MAX_CACHEDPAGESPERVIRTUALIZER ? MAX_CACHEDPAGESPERVIRTUALIZER
+							: cachedPagesPerVirtualizer)
+					: MIN_CACHEDPAGESPERVIRTUALIZER;
+
+			logDebug("File virtualization using swap file folder [{0}]...", swapFileFolder);
+			IOUtils.ensureDirectoryExists(swapFileFolder);
+
+			logDebug("File virtualization using [{0}] swap files and [{1}] cached pages per virtualizer...",
+					actNoOfSwapFiles, actCachedPagesPerVirtualizer);
+			List<JRSwapFileVirtualizer> virtualizerList = new ArrayList<JRSwapFileVirtualizer>();
+			for (int i = 0; i < actNoOfSwapFiles; i++) {
+				JRSwapFileVirtualizer virtualizer = new JRSwapFileVirtualizer(actCachedPagesPerVirtualizer,
+						new JRConcurrentSwapFile(swapFileFolder, 2048, 1024));
+				virtualizerList.add(virtualizer);
+			}
+
+			virtualizers = new JRSwapFileVirtualizerRoundRobin(virtualizerList);
+		}
 	}
 
 	@Override
@@ -157,15 +212,21 @@ public class JasperReportsServer extends AbstractReportServer {
 
 			JasperPrint jasperPrint = null;
 			Collection<?> content = report.getBeanCollection();
+			Map<String, Object> parameters = report.getParameters();
+			if (fileVirtualization) {
+				JRSwapFileVirtualizer virtualizer = virtualizers.next();
+				parameters.put(JRParameter.REPORT_VIRTUALIZER, virtualizer);
+			}
+			
 			if (report.isWithBeanCollection()) {
 				JRBeanCollectionDataSource jrBeanDataSource = new JRBeanCollectionDataSource(content);
-				jasperPrint = JasperFillManager.fillReport(jasperReport, report.getParameters(), jrBeanDataSource);
+				jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, jrBeanDataSource);
 			} else if (report.isEmbeddedHtml()) {
 				JRBeanCollectionDataSource jrBeanDataSource = new JRBeanCollectionDataSource(report.getEmbeddedHtmls());
-				jasperPrint = JasperFillManager.fillReport(jasperReport, report.getParameters(), jrBeanDataSource);
+				jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, jrBeanDataSource);
 			} else {
 				connection = (Connection) dataSource.getConnection();
-				jasperPrint = JasperFillManager.fillReport(jasperReport, report.getParameters(), connection);
+				jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, connection);
 			}
 
 			ReportFormat reportFormat = report.isPlacements() ? ReportFormat.PDF : report.getFormat();
@@ -242,7 +303,7 @@ public class JasperReportsServer extends AbstractReportServer {
 				if (pageHeight > 0) {
 					jasperDesign.setPageHeight(pageHeight);
 				}
-				
+
 				logDebug("Using resolved dimensions [pageWidth = {0}, pageHeight = {1}]...", pageWidth, pageHeight);
 			}
 
@@ -358,6 +419,13 @@ public class JasperReportsServer extends AbstractReportServer {
 		nqb.endCompoundFilter();
 	}
 
+	private static class JRSwapFileVirtualizerRoundRobin extends AbstractRoundRobin<JRSwapFileVirtualizer> {
+
+		public JRSwapFileVirtualizerRoundRobin(List<JRSwapFileVirtualizer> virtualizers) {
+			super(virtualizers);
+		}
+	}
+
 	private static class DPIPageDimension {
 
 		final int width;
@@ -377,4 +445,5 @@ public class JasperReportsServer extends AbstractReportServer {
 			return height;
 		}
 	}
+
 }

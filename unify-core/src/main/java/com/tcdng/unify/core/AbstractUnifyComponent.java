@@ -191,6 +191,17 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 		}
 		return DataUtils.convert(clazz, value);
 	}
+	
+	/**
+	 * Gets filename based on container working path.
+	 * 
+	 * @param relativeFilename the relative file name
+	 * @return the working path file name
+	 * @throws UnifyException if an error occurs
+	 */
+	protected String getWorkingPathFilename(String relativeFilename) throws UnifyException {
+		return unifyComponentContext.getWorkingPathFilename(relativeFilename);
+	}
 
 	/**
 	 * Returns the container static settings.

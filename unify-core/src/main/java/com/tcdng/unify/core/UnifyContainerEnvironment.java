@@ -48,7 +48,7 @@ public class UnifyContainerEnvironment {
         return workingPath;
     }
 
-    public String getEnvironmentFilename(String relativeFilename) throws UnifyException {
+    public String getWorkingPathFilename(String relativeFilename) throws UnifyException {
         if (!StringUtils.isBlank(workingPath)) {
             return IOUtils.buildFilename(workingPath, relativeFilename);
         }
