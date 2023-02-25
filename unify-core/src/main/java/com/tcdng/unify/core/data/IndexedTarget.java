@@ -39,4 +39,8 @@ public class IndexedTarget {
 	public int getIndex() {
 		return index;
 	}
+	
+	public boolean isValidIndex() {
+		return index >= 0;
+	}
 }
