@@ -40,6 +40,7 @@ import com.tcdng.unify.convert.converters.IntegerConverter;
 import com.tcdng.unify.convert.converters.LongConverter;
 import com.tcdng.unify.convert.converters.ShortConverter;
 import com.tcdng.unify.core.AbstractUnifyComponentTest;
+import com.tcdng.unify.core.data.IndexedTarget;
 import com.tcdng.unify.core.format.DateFormatter;
 import com.tcdng.unify.core.format.DecimalFormatter;
 import com.tcdng.unify.core.upl.UplElementReferences;
@@ -279,6 +280,30 @@ public class ConverterTest extends AbstractUnifyComponentTest {
         assertEquals("Blue", ids.get(3));
         assertEquals("today", ids.get(4));
         assertEquals("only", ids.get(5));
+    }
+
+    @Test
+    public void testIndexedTargetConverter() throws Exception {
+        Converter<IndexedTarget> converter = new IndexedTargetConverter();
+        IndexedTarget target = converter.convert("", null);
+        assertNotNull(target);
+        assertEquals("", target.getTarget());
+        assertEquals(-1, target.getIndex());
+        
+        target = converter.convert("subtract", null);
+        assertNotNull(target);
+        assertEquals("subtract", target.getTarget());
+        assertEquals(-1, target.getIndex());
+        
+        target = converter.convert(":5", null);
+        assertNotNull(target);
+        assertEquals("", target.getTarget());
+        assertEquals(5, target.getIndex());
+        
+        target = converter.convert("add:1062", null);
+        assertNotNull(target);
+        assertEquals("add", target.getTarget());
+        assertEquals(1062, target.getIndex());       
     }
 
     @Override

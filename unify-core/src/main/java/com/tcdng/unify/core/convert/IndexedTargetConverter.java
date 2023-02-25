@@ -1,0 +1,52 @@
+/*
+ * Copyright 2018-2022 The Code Department.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
+package com.tcdng.unify.core.convert;
+
+import com.tcdng.unify.convert.converters.AbstractConverter;
+import com.tcdng.unify.convert.converters.ConverterFormatter;
+import com.tcdng.unify.core.data.IndexedTarget;
+
+/**
+ * A value to indexed target converter.
+ * 
+ * @author The Code Department
+ * @since 1.0
+ */
+public class IndexedTargetConverter extends AbstractConverter<IndexedTarget> {
+
+    @Override
+    protected IndexedTarget doConvert(Object value, ConverterFormatter<?> formatter) throws Exception {
+        if (value instanceof IndexedTarget) {
+            return (IndexedTarget) value;
+        }
+
+        if (value instanceof String) {
+        	String target = ((String) value).trim();
+        	int targetIndex = -1;
+        	final int cIndex = target.lastIndexOf(':');
+        	if (cIndex >= 0) {
+        		targetIndex = Integer.parseInt(target.substring(cIndex + 1));
+        		target = target.substring(0, cIndex);
+        	}
+
+        	return new IndexedTarget(target, targetIndex);
+        }
+
+        return null;
+    }
+
+}
