@@ -34,7 +34,10 @@ public abstract class AbstractTargetControlWriter extends AbstractControlWriter 
         TargetControl targetControl = (TargetControl) widget;
         writer.write("<input type=\"hidden\"");
         writeTagId(writer, targetControl.getTargetId());
-        String value = null;
+        String value = targetControl.getStaticBindingValue();;
+        if (value == null) {
+            value = targetControl.getStringValue();
+        }
         if (!targetControl.isAlwaysValueIndex()) {
             value = targetControl.getStaticBindingValue();
             if (value == null) {
@@ -42,17 +45,19 @@ public abstract class AbstractTargetControlWriter extends AbstractControlWriter 
             }
         }
 
-        if (value != null) {
-            writer.write(" value=\"").writeWithHtmlEscape(value).write("\"");
-        } else {
+        if (targetControl.isAlwaysValueIndex()) {
             int index = targetControl.getValueIndex();
             if (index >= 0) {
                 String indexPrefix = targetControl.getValueMarker();
                 if (indexPrefix != null) {
                     writer.write(" value=\"").write(indexPrefix).write(':').write(index).write("\"");
-                } else {
-                    writer.write(" value=\"").write(index).write("\"");
+                } else if (value != null) {
+                    writer.write(" value=\"").write(value).write(':').write(index).write("\"");
                 }
+            }
+        } else {
+        	if (value != null) {
+                writer.write(" value=\"").writeWithHtmlEscape(value).write("\"");
             }
         }
 

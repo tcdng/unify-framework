@@ -49,6 +49,7 @@ import com.tcdng.unify.web.ui.widget.WriteWork;
         @UplAttribute(name = "listKey", type = String.class),
         @UplAttribute(name = "listDescription", type = String.class),
         @UplAttribute(name = "listParamType", type = ListParamType.class, defaultVal = "control"),
+        @UplAttribute(name = "htmlEscape", type = boolean.class, defaultVal = "true"),
         @UplAttribute(name = "exclude", type = String[].class),})
 public abstract class AbstractListPopupTextField extends AbstractPopupTextField implements ListControl {
 
@@ -106,6 +107,11 @@ public abstract class AbstractListPopupTextField extends AbstractPopupTextField 
     }
 
     @Override
+	public boolean isHtmlEscape() throws UnifyException {
+        return getUplAttribute(boolean.class, "htmlEscape");
+	}
+
+	@Override
     public String getList() throws UnifyException {
         return getUplAttribute(String.class, "list", "listBinding");
     }

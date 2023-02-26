@@ -118,6 +118,18 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 	}
 
 	@Override
+	public <T extends Entity> T findFirst(Query<T> query) throws UnifyException {
+		final Long id = min(Long.class, "id", query);
+		return id != null ? find(query.getEntityClass(), id)  : null;
+	}
+
+	@Override
+	public <T extends Entity> T findLast(Query<T> query) throws UnifyException {
+		final Long id = max(Long.class, "id", query);
+		return id != null ? find(query.getEntityClass(), id)  : null;
+	}
+
+	@Override
 	public <T extends Entity> T findLean(Class<T> clazz, Object id) throws UnifyException {
 		return find(clazz, id, FetchChild.FALSE);
 	}
@@ -130,6 +142,18 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 	@Override
 	public <T extends Entity> T findLean(Query<T> query) throws UnifyException {
 		return find(query, FetchChild.FALSE);
+	}
+
+	@Override
+	public <T extends Entity> T findLeanFirst(Query<T> query) throws UnifyException {
+		final Long id = min(Long.class, "id", query);
+		return id != null ? findLean(query.getEntityClass(), id)  : null;
+	}
+
+	@Override
+	public <T extends Entity> T findLeanLast(Query<T> query) throws UnifyException {
+		final Long id = max(Long.class, "id", query);
+		return id != null ? findLean(query.getEntityClass(), id)  : null;
 	}
 
 	@SuppressWarnings({ "unchecked" })
@@ -241,6 +265,18 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 	}
 
 	@Override
+	public <T extends Entity> T listFirst(Query<T> query) throws UnifyException {
+		final Long id = min(Long.class, "id", query);
+		return id != null ? list(query.getEntityClass(), id)  : null;
+	}
+
+	@Override
+	public <T extends Entity> T listLast(Query<T> query) throws UnifyException {
+		final Long id = max(Long.class, "id", query);
+		return id != null ? list(query.getEntityClass(), id)  : null;
+	}
+
+	@Override
 	public <T extends Entity> T listLean(Class<T> clazz, Object id) throws UnifyException {
 		return list(clazz, id, FetchChild.FALSE);
 	}
@@ -253,6 +289,18 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 	@Override
 	public <T extends Entity> T listLean(Query<T> query) throws UnifyException {
 		return list(query, FetchChild.FALSE);
+	}
+
+	@Override
+	public <T extends Entity> T listLeanFirst(Query<T> query) throws UnifyException {
+		final Long id = min(Long.class, "id", query);
+		return id != null ? listLean(query.getEntityClass(), id)  : null;
+	}
+
+	@Override
+	public <T extends Entity> T listLeanLast(Query<T> query) throws UnifyException {
+		final Long id = max(Long.class, "id", query);
+		return id != null ? listLean(query.getEntityClass(), id)  : null;
 	}
 
 	@Override
@@ -410,7 +458,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 	}
 
 	@Override
-	public <T, U extends Entity> T min(Class<T> fieldClass, String fieldName, Query<U> query) throws UnifyException {
+	public <T extends Number, U extends Entity> T min(Class<T> fieldClass, String fieldName, Query<U> query) throws UnifyException {
 		SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
 		EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
 		if (entityPolicy != null) {
@@ -425,7 +473,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 	}
 
 	@Override
-	public <T, U extends Entity> T max(Class<T> fieldClass, String fieldName, Query<U> query) throws UnifyException {
+	public <T extends Number, U extends Entity> T max(Class<T> fieldClass, String fieldName, Query<U> query) throws UnifyException {
 		SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
 		EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
 		if (entityPolicy != null) {

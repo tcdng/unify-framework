@@ -848,6 +848,10 @@ public class UnifyContainer {
 	public String getWorkingPath() {
 		return unifyContainerEnvironment.getWorkingPath();
 	}
+	
+    public String getWorkingPathFilename(String relativeFilename) throws UnifyException {
+    	return unifyContainerEnvironment.getWorkingPathFilename(relativeFilename);
+    }
 
 	public boolean isClusterMode() {
 		return clusterMode;

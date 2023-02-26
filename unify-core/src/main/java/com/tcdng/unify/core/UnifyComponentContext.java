@@ -620,6 +620,10 @@ public class UnifyComponentContext {
 	public String getWorkingPath() throws UnifyException {
 		return applicationContext.getContainer().getWorkingPath();
 	}
+	
+    public String getWorkingPathFilename(String relativeFilename) throws UnifyException {
+    	return applicationContext.getContainer().getWorkingPathFilename(relativeFilename);
+    }
 
 	public boolean isProductionMode() throws UnifyException {
 		return applicationContext.getContainer().isProductionMode();

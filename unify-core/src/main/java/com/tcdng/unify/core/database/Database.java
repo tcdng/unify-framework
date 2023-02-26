@@ -125,6 +125,30 @@ public interface Database extends UnifyComponent {
     <T extends Entity> T find(Query<T> query) throws UnifyException;
 
     /**
+     * Retrieves first record matched by criteria. List-only properties of returned object are not
+     * populated. Child and child list properties are populated.
+     * 
+     * @param query
+     *            the query
+     * @return the record found otherwise null
+     * @throws UnifyException
+     *             if multiple records are found. If an error occurs
+     */
+    <T extends Entity> T findFirst(Query<T> query) throws UnifyException;
+
+    /**
+     * Retrieves last record matched by criteria. List-only properties of returned object are not
+     * populated. Child and child list properties are populated.
+     * 
+     * @param query
+     *            the query
+     * @return the record found otherwise null
+     * @throws UnifyException
+     *             if multiple records are found. If an error occurs
+     */
+    <T extends Entity> T findLast(Query<T> query) throws UnifyException;
+
+    /**
      * Finds record of specified type by id. List-only properties of returned object
      * are not populated. Child and child list properties are not populated.
      * 
@@ -166,6 +190,30 @@ public interface Database extends UnifyComponent {
      *             if multiple records are found. If an error occurs
      */
     <T extends Entity> T findLean(Query<T> query) throws UnifyException;
+
+    /**
+     * Retrieves first record matched by criteria. List-only properties of returned object are not
+     * populated. Child and child list properties are not populated.
+     * 
+     * @param query
+     *            the query
+     * @return the record found otherwise null
+     * @throws UnifyException
+     *             if multiple records are found. If an error occurs
+     */
+    <T extends Entity> T findLeanFirst(Query<T> query) throws UnifyException;
+
+    /**
+     * Retrieves last record matched by criteria. List-only properties of returned object are not
+     * populated. Child and child list properties are not populated.
+     * 
+     * @param query
+     *            the query
+     * @return the record found otherwise null
+     * @throws UnifyException
+     *             if multiple records are found. If an error occurs
+     */
+    <T extends Entity> T findLeanLast(Query<T> query) throws UnifyException;
 
     /**
      * Finds constraining record that may prevent supplied record from being
@@ -316,6 +364,30 @@ public interface Database extends UnifyComponent {
     <T extends Entity> T list(Query<T> query) throws UnifyException;
 
     /**
+     * Retrieves first record matched by criteria from associated view. List-only properties of
+     * returned object are populated. Child and child list properties are populated.
+     * 
+     * @param query
+     *            the query
+     * @return the record found otherwise null
+     * @throws UnifyException
+     *             if multiple records are found. If an error occurs
+     */
+    <T extends Entity> T listFirst(Query<T> query) throws UnifyException;
+
+    /**
+     * Retrieves last record matched by criteria from associated view. List-only properties of
+     * returned object are populated. Child and child list properties are populated.
+     * 
+     * @param query
+     *            the query
+     * @return the record found otherwise null
+     * @throws UnifyException
+     *             if multiple records are found. If an error occurs
+     */
+    <T extends Entity> T listLast(Query<T> query) throws UnifyException;
+
+    /**
      * Lists record of specified type by id. List-only properties of returned object
      * are populated. Child and child list properties are not populated.
      * 
@@ -356,6 +428,30 @@ public interface Database extends UnifyComponent {
      *             if multiple records are found. If an error occurs
      */
     <T extends Entity> T listLean(Query<T> query) throws UnifyException;
+
+    /**
+     * Retrieves first record matched by criteria from associated view. List-only properties of
+     * returned object are populated. Child and child list properties are not populated.
+     * 
+     * @param query
+     *            the query
+     * @return the record found otherwise null
+     * @throws UnifyException
+     *             if multiple records are found. If an error occurs
+     */
+    <T extends Entity> T listLeanFirst(Query<T> query) throws UnifyException;
+
+    /**
+     * Retrieves last record matched by criteria from associated view. List-only properties of
+     * returned object are populated. Child and child list properties are not populated.
+     * 
+     * @param query
+     *            the query
+     * @return the record found otherwise null
+     * @throws UnifyException
+     *             if multiple records are found. If an error occurs
+     */
+    <T extends Entity> T listLeanLast(Query<T> query) throws UnifyException;
 
     /**
      * Lists all records with fields that match criteria. List-only properties of
@@ -547,7 +643,7 @@ public interface Database extends UnifyComponent {
      * @throws UnifyException
      *             If an error occurs
      */
-    <T, U extends Entity> T min(Class<T> fieldClass, String fieldName, Query<U> query) throws UnifyException;
+    <T extends Number, U extends Entity> T min(Class<T> fieldClass, String fieldName, Query<U> query) throws UnifyException;
 
     /**
      * Returns the maximum value of a record field by criteria.
@@ -561,7 +657,7 @@ public interface Database extends UnifyComponent {
      * @throws UnifyException
      *             If an error occurs
      */
-    <T, U extends Entity> T max(Class<T> fieldClass, String fieldName, Query<U> query) throws UnifyException;
+    <T extends Number, U extends Entity> T max(Class<T> fieldClass, String fieldName, Query<U> query) throws UnifyException;
 
     /**
      * Returns a set of values of a particular field for all record that match

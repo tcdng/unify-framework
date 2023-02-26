@@ -105,4 +105,9 @@ public interface ListControl extends Control {
      * Returns true if list control allows multiple select.
      */
     boolean isMultiple();
+    
+    /**
+     * Returns true if list labels should be HTML escaped.
+     */
+    boolean isHtmlEscape() throws UnifyException;
 }

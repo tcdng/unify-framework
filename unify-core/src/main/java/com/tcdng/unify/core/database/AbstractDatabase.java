@@ -66,6 +66,16 @@ public abstract class AbstractDatabase extends AbstractUnifyComponent implements
     }
 
     @Override
+	public <T extends Entity> T findFirst(Query<T> query) throws UnifyException {
+        return getDatabaseSession().findFirst(query);
+	}
+
+	@Override
+	public <T extends Entity> T findLast(Query<T> query) throws UnifyException {
+        return getDatabaseSession().findLast(query);
+	}
+
+	@Override
     public <T extends Entity> T findLean(Class<T> clazz, Object pk) throws UnifyException {
         return getDatabaseSession().findLean(clazz, pk);
     }
@@ -78,6 +88,16 @@ public abstract class AbstractDatabase extends AbstractUnifyComponent implements
     @Override
     public <T extends Entity> T findLean(Query<T> query) throws UnifyException {
         return getDatabaseSession().findLean(query);
+    }
+
+    @Override
+    public <T extends Entity> T findLeanFirst(Query<T> query) throws UnifyException {
+        return getDatabaseSession().findLeanFirst(query);
+    }
+
+    @Override
+    public <T extends Entity> T findLeanLast(Query<T> query) throws UnifyException {
+        return getDatabaseSession().findLeanLast(query);
     }
 
     @Override
@@ -128,6 +148,16 @@ public abstract class AbstractDatabase extends AbstractUnifyComponent implements
     }
 
     @Override
+    public <T extends Entity> T listFirst(Query<T> query) throws UnifyException {
+        return getDatabaseSession().listFirst(query);
+    }
+
+    @Override
+    public <T extends Entity> T listLast(Query<T> query) throws UnifyException {
+        return getDatabaseSession().listLast(query);
+    }
+
+    @Override
     public <T extends Entity> T listLean(Class<T> clazz, Object pk) throws UnifyException {
         return getDatabaseSession().listLean(clazz, pk);
     }
@@ -140,6 +170,16 @@ public abstract class AbstractDatabase extends AbstractUnifyComponent implements
     @Override
     public <T extends Entity> T listLean(Query<T> query) throws UnifyException {
         return getDatabaseSession().listLean(query);
+    }
+
+    @Override
+    public <T extends Entity> T listLeanFirst(Query<T> query) throws UnifyException {
+        return getDatabaseSession().listLeanFirst(query);
+    }
+
+    @Override
+    public <T extends Entity> T listLeanLast(Query<T> query) throws UnifyException {
+        return getDatabaseSession().listLeanLast(query);
     }
 
     @Override
@@ -181,12 +221,12 @@ public abstract class AbstractDatabase extends AbstractUnifyComponent implements
     }
 
     @Override
-    public <T, U extends Entity> T min(Class<T> fieldClass, String fieldName, Query<U> query) throws UnifyException {
+    public <T extends Number, U extends Entity> T min(Class<T> fieldClass, String fieldName, Query<U> query) throws UnifyException {
         return getDatabaseSession().min(fieldClass, fieldName, query);
     }
 
     @Override
-    public <T, U extends Entity> T max(Class<T> fieldClass, String fieldName, Query<U> query) throws UnifyException {
+    public <T extends Number, U extends Entity> T max(Class<T> fieldClass, String fieldName, Query<U> query) throws UnifyException {
         return getDatabaseSession().max(fieldClass, fieldName, query);
     }
 

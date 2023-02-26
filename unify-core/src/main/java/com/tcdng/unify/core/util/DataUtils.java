@@ -59,12 +59,14 @@ import com.tcdng.unify.core.constant.DataType;
 import com.tcdng.unify.core.constant.PrintFormat;
 import com.tcdng.unify.core.convert.ByteArrayConverter;
 import com.tcdng.unify.core.convert.ClassConverter;
+import com.tcdng.unify.core.convert.IndexedTargetConverter;
 import com.tcdng.unify.core.convert.MoneyConverter;
 import com.tcdng.unify.core.convert.PeriodConverter;
 import com.tcdng.unify.core.convert.StringConverter;
 import com.tcdng.unify.core.convert.UplElementReferencesConverter;
 import com.tcdng.unify.core.convert.UploadedFileConverter;
 import com.tcdng.unify.core.criterion.Order;
+import com.tcdng.unify.core.data.IndexedTarget;
 import com.tcdng.unify.core.data.Input;
 import com.tcdng.unify.core.data.Money;
 import com.tcdng.unify.core.data.Period;
@@ -194,6 +196,7 @@ public final class DataUtils {
         ConverterUtils.registerConverter(UplElementReferences.class, new UplElementReferencesConverter());
         ConverterUtils.registerConverter(UploadedFile.class, new UploadedFileConverter());
         ConverterUtils.registerConverter(Class.class, new ClassConverter());
+        ConverterUtils.registerConverter(IndexedTarget.class, new IndexedTargetConverter());
     }
 
     private static final Map<Class<?>, Class<? extends Input>> classToInputMap;
