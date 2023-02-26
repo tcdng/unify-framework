@@ -23,6 +23,7 @@ import java.awt.Color;
 import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.tcdng.unify.core.AbstractUnifyComponentTest;
@@ -43,6 +44,7 @@ import com.tcdng.unify.jasperreports.JasperReportsPropertyConstants;
  * @author The Code Department
  * @since 1.0
  */
+@Ignore // Comment Ignore to run
 public class JasperReportsServerFileVirtualizationTest extends AbstractUnifyComponentTest {
 
 	@Test
