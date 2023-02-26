@@ -49,6 +49,12 @@ public class Report extends AbstractTestVersionedTableEntity {
         this.description = description;
     }
 
+    public Report(String name, String description, ReportForm reportForm) {
+        this.name = name;
+        this.description = description;
+        this.reportForm = reportForm;
+    }
+
     public Report() {
 
     }
