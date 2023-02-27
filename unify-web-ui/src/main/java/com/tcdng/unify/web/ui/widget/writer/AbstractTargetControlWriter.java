@@ -29,46 +29,40 @@ import com.tcdng.unify.web.ui.widget.Widget;
  */
 public abstract class AbstractTargetControlWriter extends AbstractControlWriter {
 
-    @Override
-    protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
-        TargetControl targetControl = (TargetControl) widget;
-        writer.write("<input type=\"hidden\"");
-        writeTagId(writer, targetControl.getTargetId());
-        String value = targetControl.getStaticBindingValue();;
-        if (value == null) {
-            value = targetControl.getStringValue();
-        }
-        if (!targetControl.isAlwaysValueIndex()) {
-            value = targetControl.getStaticBindingValue();
-            if (value == null) {
-                value = targetControl.getStringValue();
-            }
-        }
+	@Override
+	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
+		TargetControl targetControl = (TargetControl) widget;
+		writer.write("<input type=\"hidden\"");
+		writeTagId(writer, targetControl.getTargetId());
+		String value = targetControl.getStaticBindingValue();
+		if (value == null) {
+			value = targetControl.getStringValue();
+		}
 
-        if (targetControl.isAlwaysValueIndex()) {
-            int index = targetControl.getValueIndex();
-            if (index >= 0) {
-                String indexPrefix = targetControl.getValueMarker();
-                if (indexPrefix != null) {
-                    writer.write(" value=\"").write(indexPrefix).write(':').write(index).write("\"");
-                } else if (value != null) {
-                    writer.write(" value=\"").write(value).write(':').write(index).write("\"");
-                }
-            }
-        } else {
-        	if (value != null) {
-                writer.write(" value=\"").writeWithHtmlEscape(value).write("\"");
-            }
-        }
+		final int index = targetControl.getValueIndex();
+		if (targetControl.isAlwaysValueIndex() && index >= 0) {
+			String indexPrefix = targetControl.getValueMarker();
+			if (indexPrefix != null) {
+				writer.write(" value=\"").write(indexPrefix).write(':').write(index).write("\"");
+			} else if (value != null) {
+				writer.write(" value=\"").write(value).write(':').write(index).write("\"");
+			} else {
+				writer.write(" value=\"").write(index).write("\"");
+			}
+		} else {
+			if (value != null) {
+				writer.write(" value=\"").writeWithHtmlEscape(value).write("\"");
+			}
+		}
 
-        writer.write("/>");
-        doWriteTargetControl(writer, targetControl);
+		writer.write("/>");
+		doWriteTargetControl(writer, targetControl);
 
-        if (targetControl.isDebounce()) {
-            getRequestContextUtil().registerWidgetDebounce(targetControl.getId());
-        }
-    }
+		if (targetControl.isDebounce()) {
+			getRequestContextUtil().registerWidgetDebounce(targetControl.getId());
+		}
+	}
 
-    protected abstract void doWriteTargetControl(ResponseWriter writer, TargetControl targetControl)
-            throws UnifyException;
+	protected abstract void doWriteTargetControl(ResponseWriter writer, TargetControl targetControl)
+			throws UnifyException;
 }
