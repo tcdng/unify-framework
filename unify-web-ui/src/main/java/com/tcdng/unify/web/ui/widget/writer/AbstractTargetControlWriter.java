@@ -38,12 +38,6 @@ public abstract class AbstractTargetControlWriter extends AbstractControlWriter 
         if (value == null) {
             value = targetControl.getStringValue();
         }
-        if (!targetControl.isAlwaysValueIndex()) {
-            value = targetControl.getStaticBindingValue();
-            if (value == null) {
-                value = targetControl.getStringValue();
-            }
-        }
 
         if (targetControl.isAlwaysValueIndex()) {
             int index = targetControl.getValueIndex();
@@ -53,6 +47,8 @@ public abstract class AbstractTargetControlWriter extends AbstractControlWriter 
                     writer.write(" value=\"").write(indexPrefix).write(':').write(index).write("\"");
                 } else if (value != null) {
                     writer.write(" value=\"").write(value).write(':').write(index).write("\"");
+                } else {
+                    writer.write(" value=\"").write(index).write("\"");
                 }
             }
         } else {
