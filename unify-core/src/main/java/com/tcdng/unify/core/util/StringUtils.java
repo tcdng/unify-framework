@@ -34,300 +34,279 @@ import com.tcdng.unify.core.data.ListData;
  */
 public final class StringUtils {
 
-    public static final String MASK = "********";
+	public static final String MASK = "********";
 
-    public static final String NULL_STRING = null;
+	public static final String NULL_STRING = null;
 
-    private StringUtils() {
+	private StringUtils() {
 
-    }
+	}
 
-    /**
-     * Gets printable stack trace from throwable with header message.
-     * 
-     * @param headerMessage
-     *                      the header message
-     * @param e
-     *                      the throwable
-     * @return the printable stack trace
-     */
-    public static String getPrintableStackTrace(Throwable e, String headerMessage) {
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-        pw.println(headerMessage);
-        e.printStackTrace(pw);
-        pw.flush();
-        return sw.toString();
-    }
+	/**
+	 * Gets printable stack trace from throwable with header message.
+	 * 
+	 * @param headerMessage the header message
+	 * @param e             the throwable
+	 * @return the printable stack trace
+	 */
+	public static String getPrintableStackTrace(Throwable e, String headerMessage) {
+		StringWriter sw = new StringWriter();
+		PrintWriter pw = new PrintWriter(sw);
+		pw.println(headerMessage);
+		e.printStackTrace(pw);
+		pw.flush();
+		return sw.toString();
+	}
 
-    /**
-     * Gets printable stack trace from throwable.
-     * 
-     * @param e
-     *          the throwable
-     * @return the printable stack trace
-     */
-    public static String getPrintableStackTrace(Throwable e) {
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-        e.printStackTrace(pw);
-        pw.flush();
-        return sw.toString();
-    }
-    
-    /**
-     * Removes duplicates from a string list.
-     * 
-     * @param valueList
-     *                  the string list
-     * @return a new string list with no duplicates
-     */
-    public static List<String> removeDuplicates(List<String> valueList) {
-        List<String> resultList = new ArrayList<String>();
-        if (valueList != null && !valueList.isEmpty()) {
-            for (String value : valueList) {
-                if (!resultList.contains(value)) {
-                    resultList.add(value);
-                }
-            }
-            return resultList;
-        }
-        return valueList;
-    }
+	/**
+	 * Gets printable stack trace from throwable.
+	 * 
+	 * @param e the throwable
+	 * @return the printable stack trace
+	 */
+	public static String getPrintableStackTrace(Throwable e) {
+		StringWriter sw = new StringWriter();
+		PrintWriter pw = new PrintWriter(sw);
+		e.printStackTrace(pw);
+		pw.flush();
+		return sw.toString();
+	}
 
-    /**
-     * Split a string into tokens using the whitespace character.
-     * 
-     * @param string
-     *               the string to split
-     * @return the result tokens
-     */
-    public static String[] whiteSpaceSplit(String string) {
-        if (string != null) {
-            List<String> result = new ArrayList<String>();
-            String[] tokens = string.split("\\s+");
-            for (String token : tokens) {
-                if (!token.isEmpty()) {
-                    result.add(token);
-                }
-            }
+	/**
+	 * Removes duplicates from a string list.
+	 * 
+	 * @param valueList the string list
+	 * @return a new string list with no duplicates
+	 */
+	public static List<String> removeDuplicates(List<String> valueList) {
+		List<String> resultList = new ArrayList<String>();
+		if (valueList != null && !valueList.isEmpty()) {
+			for (String value : valueList) {
+				if (!resultList.contains(value)) {
+					resultList.add(value);
+				}
+			}
+			return resultList;
+		}
+		return valueList;
+	}
 
-            return result.toArray(new String[result.size()]);
-        }
-        return DataUtils.ZEROLEN_STRING_ARRAY;
-    }
+	/**
+	 * Split a string into tokens using the whitespace character.
+	 * 
+	 * @param string the string to split
+	 * @return the result tokens
+	 */
+	public static String[] whiteSpaceSplit(String string) {
+		if (string != null) {
+			List<String> result = new ArrayList<String>();
+			String[] tokens = string.split("\\s+");
+			for (String token : tokens) {
+				if (!token.isEmpty()) {
+					result.add(token);
+				}
+			}
 
-    /**
-     * Split a string into tokens using the comma character.
-     * 
-     * @param string
-     *               the string to split
-     * @return the result tokens
-     */
-    public static String[] commaSplit(String string) {
-        return StringUtils.charSplit(string, ',');
-    }
+			return result.toArray(new String[result.size()]);
+		}
+		return DataUtils.ZEROLEN_STRING_ARRAY;
+	}
 
-    /**
-     * Split a string into tokens using the dot character.
-     * 
-     * @param string
-     *               the string to split
-     * @return the result tokens
-     */
-    public static String[] dotSplit(String string) {
-        return StringUtils.charSplit(string, '.');
-    }
+	/**
+	 * Split a string into tokens using the comma character.
+	 * 
+	 * @param string the string to split
+	 * @return the result tokens
+	 */
+	public static String[] commaSplit(String string) {
+		return StringUtils.charSplit(string, ',');
+	}
 
-    /**
-     * Split a string into tokens using supplied character character.
-     * 
-     * @param string
-     *               the string to split
-     * @param ch
-     *               the character to use
-     * @return the result tokens
-     */
-    public static String[] charSplit(String string, char ch) {
-        if (string != null) {
-            List<String> list = StringUtils.charToListSplit(string, ch);
-            if (list != null) {
-                return list.toArray(new String[list.size()]);
-            }
-        }
+	/**
+	 * Split a string into tokens using the dot character.
+	 * 
+	 * @param string the string to split
+	 * @return the result tokens
+	 */
+	public static String[] dotSplit(String string) {
+		return StringUtils.charSplit(string, '.');
+	}
 
-        return DataUtils.ZEROLEN_STRING_ARRAY;
-    }
+	/**
+	 * Split a string into tokens using supplied character character.
+	 * 
+	 * @param string the string to split
+	 * @param ch     the character to use
+	 * @return the result tokens
+	 */
+	public static String[] charSplit(String string, char ch) {
+		if (string != null) {
+			List<String> list = StringUtils.charToListSplit(string, ch);
+			if (list != null) {
+				return list.toArray(new String[list.size()]);
+			}
+		}
 
-    /**
-     * Split a string into tokens using supplied character character.
-     * 
-     * @param string
-     *               the string to split
-     * @param ch
-     *               the character to use
-     * @return the result tokens
-     */
-    public static List<String> charToListSplit(String string, char ch) {
-        if (string != null) {
-            int len = string.length();
-            if (len > 0) {
-                List<String> list = new ArrayList<String>();
-                int start = 0;
-                while (start < len) {
-                    int end = string.indexOf(ch, start);
-                    if (end >= 0) {
-                        list.add(string.substring(start, end));
-                        start = end + 1;
-                    } else {
-                        list.add(string.substring(start));
-                        start = len;
-                    }
-                }
+		return DataUtils.ZEROLEN_STRING_ARRAY;
+	}
 
-                return list;
-            }
-        }
+	/**
+	 * Split a string into tokens using supplied character character.
+	 * 
+	 * @param string the string to split
+	 * @param ch     the character to use
+	 * @return the result tokens
+	 */
+	public static List<String> charToListSplit(String string, char ch) {
+		if (string != null) {
+			int len = string.length();
+			if (len > 0) {
+				List<String> list = new ArrayList<String>();
+				int start = 0;
+				while (start < len) {
+					int end = string.indexOf(ch, start);
+					if (end >= 0) {
+						list.add(string.substring(start, end));
+						start = end + 1;
+					} else {
+						list.add(string.substring(start));
+						start = len;
+					}
+				}
 
-        return null;
-    }
+				return list;
+			}
+		}
 
-    /**
-     * Split a string into tokens using supplied separator.
-     * 
-     * @param string
-     *                  the string to split
-     * @param separator
-     *                  the separator
-     * @return the result tokens
-     */
-    public static String[] split(String string, String separator) {
-        if (string != null) {
-            return string.split(separator);
-        }
-        return DataUtils.ZEROLEN_STRING_ARRAY;
-    }
+		return null;
+	}
 
-    /**
-     * Splits supplied string into lengths.
-     * 
-     * @param str
-     *             the string to split
-     * @param size
-     *             the lengths to split by
-     * @return array of split strings
-     */
-    public static String[] splitIntoLengths(String str, int size) {
-        if (size <= 0) {
-            throw new IllegalArgumentException("Length must be greater than zero.");
-        }
+	/**
+	 * Split a string into tokens using supplied separator.
+	 * 
+	 * @param string    the string to split
+	 * @param separator the separator
+	 * @return the result tokens
+	 */
+	public static String[] split(String string, String separator) {
+		if (string != null) {
+			return string.split(separator);
+		}
+		return DataUtils.ZEROLEN_STRING_ARRAY;
+	}
 
-        if (str != null) {
-            int len = str.length();
-            int times = len / size;
-            if ((len % size) > 0) {
-                times++;
-            }
+	/**
+	 * Splits supplied string into lengths.
+	 * 
+	 * @param str  the string to split
+	 * @param size the lengths to split by
+	 * @return array of split strings
+	 */
+	public static String[] splitIntoLengths(String str, int size) {
+		if (size <= 0) {
+			throw new IllegalArgumentException("Length must be greater than zero.");
+		}
 
-            String[] result = new String[times];
-            for (int start = 0, i = 0; start < len; i++) {
-                result[i] = str.substring(start, Math.min(len, start += size));
-            }
+		if (str != null) {
+			int len = str.length();
+			int times = len / size;
+			if ((len % size) > 0) {
+				times++;
+			}
 
-            return result;
-        }
+			String[] result = new String[times];
+			for (int start = 0, i = 0; start < len; i++) {
+				result[i] = str.substring(start, Math.min(len, start += size));
+			}
 
-        return null;
-    }
-    
-    /**
-     * Concatenates a set of string value of objects using dot.
-     * 
-     * @param objects
-     *                the objects to concatenate
-     * @return the dotified string
-     */
-    public static String dotify(Object... objects) {
-        if (objects.length == 1) {
-            return String.valueOf(objects[0]);
-        }
+			return result;
+		}
 
-        if (objects.length > 0) {
-            StringBuilder sb = new StringBuilder();
-            boolean appendSym = false;
-            for (Object obj : objects) {
-                if (appendSym) {
-                    sb.append('.');
-                } else {
-                    appendSym = true;
-                }
+		return null;
+	}
 
-                sb.append(obj);
-            }
+	/**
+	 * Concatenates a set of string value of objects using dot.
+	 * 
+	 * @param objects the objects to concatenate
+	 * @return the dotified string
+	 */
+	public static String dotify(Object... objects) {
+		if (objects.length == 1) {
+			return String.valueOf(objects[0]);
+		}
 
-            return sb.toString();
-        }
+		if (objects.length > 0) {
+			StringBuilder sb = new StringBuilder();
+			boolean appendSym = false;
+			for (Object obj : objects) {
+				if (appendSym) {
+					sb.append('.');
+				} else {
+					appendSym = true;
+				}
 
-        return "";
-    }
+				sb.append(obj);
+			}
 
-    /**
-     * Builds a CSV string from an array of string. A CSV string is a string with
-     * tokens separated with the comma symbol. Any element of the string array with
-     * a comma is surrounded with a double quote.
-     * 
-     * @param strings
-     *                the supplied array
-     * @return the CSV string
-     */
-    public static String buildCommaSeparatedString(String[] strings) {
-        return StringUtils.buildCommaSeparatedString(strings, false);
-    }
+			return sb.toString();
+		}
 
-    /**
-     * Builds a CSV string from an array of string. A CSV string is a string with
-     * tokens separated with the comma symbol. Any element of the string array with
-     * a comma is surrounded with a double quote.
-     * 
-     * @param strings
-     *                the supplied array
-     * @return the CSV string
-     */
-    public static String buildSpacedCommaSeparatedString(String[] strings) {
-        return StringUtils.buildCommaSeparatedString(Arrays.asList(strings), true, false);
-    }
+		return "";
+	}
 
-    /**
-     * Builds a CSV string from an array of string. A CSV string is a string with
-     * tokens separated with the comma symbol. Any element of the string array with
-     * a comma is surrounded with a double quote.
-     * 
-     * @param strings
-     *                        the supplied array
-     * @param includeBrackets
-     *                        indicates if enclosing brackets are to be included.
-     * @return the CSV string otherwise null
-     */
-    public static String buildCommaSeparatedString(String[] strings, boolean includeBrackets) {
-        if (strings != null) {
-            return StringUtils.buildCommaSeparatedString(Arrays.asList(strings), false, includeBrackets);
-        }
+	/**
+	 * Builds a CSV string from an array of string. A CSV string is a string with
+	 * tokens separated with the comma symbol. Any element of the string array with
+	 * a comma is surrounded with a double quote.
+	 * 
+	 * @param strings the supplied array
+	 * @return the CSV string
+	 */
+	public static String buildCommaSeparatedString(String[] strings) {
+		return StringUtils.buildCommaSeparatedString(strings, false);
+	}
 
-        return null;
-    }
+	/**
+	 * Builds a CSV string from an array of string. A CSV string is a string with
+	 * tokens separated with the comma symbol. Any element of the string array with
+	 * a comma is surrounded with a double quote.
+	 * 
+	 * @param strings the supplied array
+	 * @return the CSV string
+	 */
+	public static String buildSpacedCommaSeparatedString(String[] strings) {
+		return StringUtils.buildCommaSeparatedString(Arrays.asList(strings), true, false);
+	}
 
-    /**
-     * Builds a CSV string from an array of string. A CSV string is a string with
-     * tokens separated with the comma symbol. Any element of the string array with
-     * a comma is surrounded with a double quote.
-     * 
-     * @param objects
-     *                the supplied collection
-     * @return the CSV string
-     */
-    public static String buildCommaSeparatedString(Collection<? extends Object> objects) {
-        return StringUtils.buildCommaSeparatedString(objects, false, false);
-    }
+	/**
+	 * Builds a CSV string from an array of string. A CSV string is a string with
+	 * tokens separated with the comma symbol. Any element of the string array with
+	 * a comma is surrounded with a double quote.
+	 * 
+	 * @param strings         the supplied array
+	 * @param includeBrackets indicates if enclosing brackets are to be included.
+	 * @return the CSV string otherwise null
+	 */
+	public static String buildCommaSeparatedString(String[] strings, boolean includeBrackets) {
+		if (strings != null) {
+			return StringUtils.buildCommaSeparatedString(Arrays.asList(strings), false, includeBrackets);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Builds a CSV string from an array of string. A CSV string is a string with
+	 * tokens separated with the comma symbol. Any element of the string array with
+	 * a comma is surrounded with a double quote.
+	 * 
+	 * @param objects the supplied collection
+	 * @return the CSV string
+	 */
+	public static String buildCommaSeparatedString(Collection<? extends Object> objects) {
+		return StringUtils.buildCommaSeparatedString(objects, false, false);
+	}
 
 	/**
 	 * Builds a CSV string from an array of string. A CSV string is a string with
@@ -341,19 +320,16 @@ public final class StringUtils {
 		return StringUtils.buildCommaSeparatedString(objects, true, false);
 	}
 
-    /**
-     * Builds a CSV string from a collection of objects. A CSV string is a string
-     * with tokens separated with the comma symbol. Any element of the string array
-     * with a comma is surrounded with a double quote.
-     * 
-     * @param objects
-     *                        the object list
-     * @param spaced
-     *                        indicates if space between items.
-     * @param includeBrackets
-     *                        indicates if enclosing brackets are to be included.
-     * @return the CSV string
-     */
+	/**
+	 * Builds a CSV string from a collection of objects. A CSV string is a string
+	 * with tokens separated with the comma symbol. Any element of the string array
+	 * with a comma is surrounded with a double quote.
+	 * 
+	 * @param objects         the object list
+	 * @param spaced          indicates if space between items.
+	 * @param includeBrackets indicates if enclosing brackets are to be included.
+	 * @return the CSV string
+	 */
 	public static String buildCommaSeparatedString(Collection<? extends Object> objects, boolean spaced,
 			boolean includeBrackets) {
 		StringBuilder sb = new StringBuilder();
@@ -385,442 +361,424 @@ public final class StringUtils {
 		return sb.toString();
 	}
 
-    /**
-     * Builds a CSV string from an array of string. A CSV string is a string with
-     * tokens separated with the comma symbol. Any element of the string array with
-     * a comma is surrounded with a double quote.
-     * 
-     * @param values
-     *                        the supplied array
-     * @param includeBrackets
-     *                        indicates if enclosing brackets are to be included.
-     * @return the CSV string
-     */
-    public static String buildCommaSeparatedString(Object[] values, boolean includeBrackets) {
-        StringBuilder sb = new StringBuilder();
-        if (includeBrackets) {
-            sb.append('[');
-        }
+	/**
+	 * Builds a CSV string from an array of string. A CSV string is a string with
+	 * tokens separated with the comma symbol. Any element of the string array with
+	 * a comma is surrounded with a double quote.
+	 * 
+	 * @param values          the supplied array
+	 * @param includeBrackets indicates if enclosing brackets are to be included.
+	 * @return the CSV string
+	 */
+	public static String buildCommaSeparatedString(Object[] values, boolean includeBrackets) {
+		StringBuilder sb = new StringBuilder();
+		if (includeBrackets) {
+			sb.append('[');
+		}
 
-        boolean appendSym = false;
-        for (Object value : values) {
-            String string = String.valueOf(value);
-            if (appendSym) {
-                sb.append(',');
-            } else {
-                appendSym = true;
-            }
-            if (string.indexOf(',') >= 0) {
-                sb.append('"').append(string).append('"');
-            } else {
-                sb.append(string);
-            }
-        }
+		boolean appendSym = false;
+		for (Object value : values) {
+			String string = String.valueOf(value);
+			if (appendSym) {
+				sb.append(',');
+			} else {
+				appendSym = true;
+			}
+			if (string.indexOf(',') >= 0) {
+				sb.append('"').append(string).append('"');
+			} else {
+				sb.append(string);
+			}
+		}
 
-        if (includeBrackets) {
-            sb.append(']');
-        }
+		if (includeBrackets) {
+			sb.append(']');
+		}
 
-        return sb.toString();
-    }
+		return sb.toString();
+	}
 
-    /**
-     * Gets a list of string values from a CSV string.
-     * 
-     * @param string
-     *               the CSv string
-     * @return the string values
-     */
-    public static String[] getCommaSeparatedValues(String string) {
-        List<String> values = new ArrayList<String>();
-        int index = 0;
-        int lastIndex = string.length() - 1;
-        while (index <= lastIndex) {
-            char ch = string.charAt(index);
-            if (ch == ',') {
-                values.add("");
-                index++;
-            } else if (index == lastIndex) {
-                values.add(String.valueOf(ch));
-                break;
-            } else if (ch == '"') {
-                int quoteIndex = string.indexOf("\",", index + 1);
-                if (quoteIndex < 0) {
-                    if (ch == string.charAt(lastIndex)) {
-                        values.add(string.substring(index + 1, lastIndex));
-                    } else {
-                        values.add(string.substring(index + 1));
-                    }
-                    break;
-                }
-                values.add(string.substring(index + 1, quoteIndex));
-                index = quoteIndex + 2;
-            } else {
-                int commaIndex = string.indexOf(',', index + 1);
-                if (commaIndex < 0) {
-                    values.add(string.substring(index));
-                    break;
-                } else {
-                    values.add(string.substring(index, commaIndex));
-                    index = commaIndex + 1;
-                }
-            }
-        }
-        if (lastIndex >= 0 && string.charAt(lastIndex) == ',') {
-            values.add("");
-        }
-        return values.toArray(new String[values.size()]);
-    }
+	/**
+	 * Gets a list of string values from a CSV string.
+	 * 
+	 * @param string the CSv string
+	 * @return the string values
+	 */
+	public static String[] getCommaSeparatedValues(String string) {
+		List<String> values = new ArrayList<String>();
+		int index = 0;
+		int lastIndex = string.length() - 1;
+		while (index <= lastIndex) {
+			char ch = string.charAt(index);
+			if (ch == ',') {
+				values.add("");
+				index++;
+			} else if (index == lastIndex) {
+				values.add(String.valueOf(ch));
+				break;
+			} else if (ch == '"') {
+				int quoteIndex = string.indexOf("\",", index + 1);
+				if (quoteIndex < 0) {
+					if (ch == string.charAt(lastIndex)) {
+						values.add(string.substring(index + 1, lastIndex));
+					} else {
+						values.add(string.substring(index + 1));
+					}
+					break;
+				}
+				values.add(string.substring(index + 1, quoteIndex));
+				index = quoteIndex + 2;
+			} else {
+				int commaIndex = string.indexOf(',', index + 1);
+				if (commaIndex < 0) {
+					values.add(string.substring(index));
+					break;
+				} else {
+					values.add(string.substring(index, commaIndex));
+					index = commaIndex + 1;
+				}
+			}
+		}
+		if (lastIndex >= 0 && string.charAt(lastIndex) == ',') {
+			values.add("");
+		}
+		return values.toArray(new String[values.size()]);
+	}
 
-    /**
-     * Tests if supplied string is null or is white space.
-     * 
-     * @param string
-     *               the string to test
-     */
-    public static boolean isBlank(String string) {
-        return string == null || string.trim().isEmpty();
-    }
+	/**
+	 * Tests if supplied string is null or is white space.
+	 * 
+	 * @param string the string to test
+	 */
+	public static boolean isBlank(String string) {
+		return string == null || string.trim().isEmpty();
+	}
 
-    /**
-     * Tests if supplied string is not null and is not white space.
-     * 
-     * @param string
-     *               the string to test
-     */
-    public static boolean isNotBlank(String string) {
-        return string != null && !string.trim().isEmpty();
-    }
+	/**
+	 * Tests if supplied string is not null and is not white space.
+	 * 
+	 * @param string the string to test
+	 */
+	public static boolean isNotBlank(String string) {
+		return string != null && !string.trim().isEmpty();
+	}
 
-    public static String toNonNullString(Object obj, String nullDefault) {
-        if (obj == null) {
-            return nullDefault;
-        }
+	public static String toNonNullString(Object obj, String nullDefault) {
+		if (obj == null) {
+			return nullDefault;
+		}
 
-        return obj.toString();
-    }
-    
-    /**
-     * Tests if supplied string contains a whitespace character.
-     * 
-     * @param string
-     *               the supplied string
-     * @return true if string contains whitespace otherwise false
-     */
-    public static boolean containsWhitespace(String string) {
-        if (string != null && !string.isEmpty()) {
-            int len = string.length();
-            for (int i = 0; i < len; i++) {
-                if (Character.isWhitespace(string.charAt(i))) {
-                    return true;
-                }
-            }
-        }
+		return obj.toString();
+	}
 
-        return false;
-    }
+	/**
+	 * Tests if supplied string contains a whitespace character.
+	 * 
+	 * @param string the supplied string
+	 * @return true if string contains whitespace otherwise false
+	 */
+	public static boolean containsWhitespace(String string) {
+		if (string != null && !string.isEmpty()) {
+			int len = string.length();
+			for (int i = 0; i < len; i++) {
+				if (Character.isWhitespace(string.charAt(i))) {
+					return true;
+				}
+			}
+		}
 
-    /**
-     * Pads a string on the left with specified character until its as long as
-     * specified length. No padding occurs if length of supplied string is greater
-     * than or equal to specified length.
-     * 
-     * @param string
-     *               the string to pad
-     * @param ch
-     *               the padding character
-     * @param length
-     *               the length to pad supplied string to
-     * @return the padded string
-     */
-    public static String padLeft(String string, char ch, int length) {
-        int left = length - string.length();
-        if (left > 0) {
-            StringBuilder sb = new StringBuilder();
-            while (--left >= 0) {
-                sb.append(ch);
-            }
-            sb.append(string);
-            return sb.toString();
-        }
-        return string;
-    }
+		return false;
+	}
 
-    /**
-     * Pads a string on the right with specified character until its as long as
-     * specified length. No padding occurs if length of supplied string is greater
-     * than or equal to specified length.
-     * 
-     * @param string
-     *               the string to pad
-     * @param ch
-     *               the padding character
-     * @param length
-     *               the length to pad supplied string to
-     * @return the padded string
-     */
-    public static String padRight(String string, char ch, int length) {
-        int left = length - string.length();
-        if (left > 0) {
-            StringBuilder sb = new StringBuilder();
-            sb.append(string);
-            while (--left >= 0) {
-                sb.append(ch);
-            }
-            return sb.toString();
-        }
-        return string;
-    }
+	/**
+	 * Pads a string on the left with specified character until its as long as
+	 * specified length. No padding occurs if length of supplied string is greater
+	 * than or equal to specified length.
+	 * 
+	 * @param string the string to pad
+	 * @param ch     the padding character
+	 * @param length the length to pad supplied string to
+	 * @return the padded string
+	 */
+	public static String padLeft(String string, char ch, int length) {
+		int left = length - string.length();
+		if (left > 0) {
+			StringBuilder sb = new StringBuilder();
+			while (--left >= 0) {
+				sb.append(ch);
+			}
+			sb.append(string);
+			return sb.toString();
+		}
+		return string;
+	}
 
-    /**
-     * Reads a static list string into a listable data array. Static list should be
-     * in the format
-     * 
-     * <pre>
-     *     key1~description1|key2~description2|...keyN�descriptionN
-     * </pre>
-     * 
-     * @param string
-     *               the static list
-     * @return the listable data array
-     */
-    public static List<ListData> readStaticList(String string) {
-        List<ListData> list = new ArrayList<ListData>();
-        String[] namevalues = string.split("\\|");
-        for (String namevalue : namevalues) {
-            String[] pair = namevalue.split("~");
-            if (pair.length == 2) {
-                list.add(new ListData(pair[0], pair[1]));
-            }
-        }
-        return list;
-    }
+	/**
+	 * Pads a string on the right with specified character until its as long as
+	 * specified length. No padding occurs if length of supplied string is greater
+	 * than or equal to specified length.
+	 * 
+	 * @param string the string to pad
+	 * @param ch     the padding character
+	 * @param length the length to pad supplied string to
+	 * @return the padded string
+	 */
+	public static String padRight(String string, char ch, int length) {
+		int left = length - string.length();
+		if (left > 0) {
+			StringBuilder sb = new StringBuilder();
+			sb.append(string);
+			while (--left >= 0) {
+				sb.append(ch);
+			}
+			return sb.toString();
+		}
+		return string;
+	}
 
-    /**
-     * Ellipsizes a text if length is greater than supplied maximum length.
-     * 
-     * @param text
-     *               the text to ellipsize
-     * @param maxLen
-     *               the maximum length
-     * @return the ellipsized text
-     */
-    public static String ellipsize(String text, int maxLen) {
-        if (text != null && text.length() > maxLen) {
-            return text.substring(0, maxLen - 3) + "...";
-        }
+	/**
+	 * Reads a static list string into a listable data array. Static list should be
+	 * in the format
+	 * 
+	 * <pre>
+	 *     key1~description1|key2~description2|...keyN�descriptionN
+	 * </pre>
+	 * 
+	 * @param string the static list
+	 * @return the listable data array
+	 */
+	public static List<ListData> readStaticList(String string) {
+		List<ListData> list = new ArrayList<ListData>();
+		String[] namevalues = string.split("\\|");
+		for (String namevalue : namevalues) {
+			String[] pair = namevalue.split("~");
+			if (pair.length == 2) {
+				list.add(new ListData(pair[0], pair[1]));
+			}
+		}
+		return list;
+	}
 
-        return text;
-    }
+	/**
+	 * Ellipsizes a text if length is greater than supplied maximum length.
+	 * 
+	 * @param text   the text to ellipsize
+	 * @param maxLen the maximum length
+	 * @return the ellipsized text
+	 */
+	public static String ellipsize(String text, int maxLen) {
+		if (text != null && text.length() > maxLen) {
+			return text.substring(0, maxLen - 3) + "...";
+		}
 
-    /**
-     * Sets the first letter of a text to uppercase.
-     * 
-     * @param text
-     *             the input string
-     */
-    public static String capitalizeFirstLetter(String text) {
-        if (text != null && text.length() > 0) {
-            return Character.toUpperCase(text.charAt(0)) + text.substring(1);
-        }
-        return text;
-    }
+		return text;
+	}
 
-    /**
-     * Sets the first letter of a text to lowercase.
-     * 
-     * @param text
-     *             the input string
-     */
-    public static String decapitalize(String text) {
-        if (text != null && text.length() > 0) {
-            return Character.toLowerCase(text.charAt(0)) + text.substring(1);
-        }
-        return text;
-    }
+	/**
+	 * Sets the first letter of a text to uppercase.
+	 * 
+	 * @param text the input string
+	 */
+	public static String capitalizeFirstLetter(String text) {
+		if (text != null && text.length() > 0) {
+			return Character.toUpperCase(text.charAt(0)) + text.substring(1);
+		}
+		return text;
+	}
 
-    /**
-     * Dashens a string. Converts text to lower-case and replaces all white spaces
-     * with the dash character '-'.
-     * 
-     * @param text
-     *             the string to dashen
-     * @return the dashened string
-     */
-    public static String dashen(String text) {
-        if (text != null) {
-            return text.replaceAll(" ", "-").toLowerCase();
-        }
-        return null;
-    }
+	/**
+	 * Sets the first letter of a text to lowercase.
+	 * 
+	 * @param text the input string
+	 */
+	public static String decapitalize(String text) {
+		if (text != null && text.length() > 0) {
+			return Character.toLowerCase(text.charAt(0)) + text.substring(1);
+		}
+		return text;
+	}
 
-    /**
-     * Squeezes a string. Converts text to lower-case and removes all white spaces.
-     * 
-     * @param text
-     *             the string to squeeze
-     * @return the squeezed string
-     */
-    public static String squeeze(String text) {
-        if (text != null) {
-            return text.replaceAll(" ", "").toLowerCase();
-        }
-        return null;
-    }
+	/**
+	 * Dashens a string. Converts text to lower-case and replaces all white spaces
+	 * with the dash character '-'.
+	 * 
+	 * @param text the string to dashen
+	 * @return the dashened string
+	 */
+	public static String dashen(String text) {
+		if (text != null) {
+			return text.replaceAll(" ", "-").toLowerCase();
+		}
+		return null;
+	}
 
-    /**
-     * Flattens a string. Converts text to lower-case and replaces all white spaces
-     * with the underscore character '_'.
-     * 
-     * @param text
-     *             the string to flatten
-     * @return the flattened string
-     */
-    public static String flatten(String text) {
-        if (text != null) {
-            return text.replaceAll(" ", "_").toLowerCase();
-        }
-        return null;
-    }
+	/**
+	 * Squeezes a string. Converts text to lower-case and removes all white spaces.
+	 * 
+	 * @param text the string to squeeze
+	 * @return the squeezed string
+	 */
+	public static String squeeze(String text) {
+		if (text != null) {
+			return text.replaceAll(" ", "").toLowerCase();
+		}
+		return null;
+	}
 
-    /**
-     * Replaces all white spaces in a text with the underscore character '_'.
-     * 
-     * @param text
-     *             the string to underscore
-     * @return the underscored string
-     */
-    public static String underscore(String text) {
-        if (text != null) {
-            return text.replaceAll(" ", "_");
-        }
-        return null;
-    }
+	/**
+	 * Flattens a string. Converts text to lower-case and replaces all white spaces
+	 * with the underscore character '_'.
+	 * 
+	 * @param text the string to flatten
+	 * @return the flattened string
+	 */
+	public static String flatten(String text) {
+		if (text != null) {
+			return text.replaceAll(" ", "_").toLowerCase();
+		}
+		return null;
+	}
 
-    public static String toUpperCase(String text) {
-        if (text != null && text.length() > 0) {
-            return text.toUpperCase();
-        }
-        return text;
-    }
+	/**
+	 * Replaces all white spaces in a text with the underscore character '_'.
+	 * 
+	 * @param text the string to underscore
+	 * @return the underscored string
+	 */
+	public static String underscore(String text) {
+		if (text != null) {
+			return text.replaceAll(" ", "_");
+		}
+		return null;
+	}
 
-    public static String toLowerCase(String text) {
-        if (text != null && text.length() > 0) {
-            return text.toLowerCase();
-        }
-        return text;
-    }
+	public static String toUpperCase(String text) {
+		if (text != null && text.length() > 0) {
+			return text.toUpperCase();
+		}
+		return text;
+	}
 
-    /**
-     * Builds a string by concatenating supplied objects.
-     * 
-     * @param objects
-     *                the composing objects
-     * @return the built string
-     */
-    public static String concatenate(Object... objects) {
-        if (objects.length == 1) {
-            return String.valueOf(objects[0]);
-        }
+	public static String toLowerCase(String text) {
+		if (text != null && text.length() > 0) {
+			return text.toLowerCase();
+		}
+		return text;
+	}
 
-        if (objects.length > 0) {
-            StringBuilder sb = new StringBuilder();
-            for (Object object : objects) {
-                sb.append(object);
-            }
-            return sb.toString();
-        }
+	/**
+	 * Builds a string by concatenating supplied objects.
+	 * 
+	 * @param objects the composing objects
+	 * @return the built string
+	 */
+	public static String concatenate(Object... objects) {
+		if (objects.length == 1) {
+			return String.valueOf(objects[0]);
+		}
 
-        return "";
-    }
+		if (objects.length > 0) {
+			StringBuilder sb = new StringBuilder();
+			for (Object object : objects) {
+				if (object != null) {
+					sb.append(object);
+				}
+			}
+			return sb.toString();
+		}
 
+		return "";
+	}
 
-    /**
-     * Builds a string by concatenating supplied list of objects.
-     * 
-     * @param objects
-     *                the composing objects
-     * @return the built string
-     */
-    public static String concatenate(List<? extends Object> objects) {
-        if (objects.size() == 1) {
-            return String.valueOf(objects.get(0));
-        }
+	/**
+	 * Builds a string by concatenating supplied list of objects.
+	 * 
+	 * @param objects the composing objects
+	 * @return the built string
+	 */
+	public static String concatenate(List<? extends Object> objects) {
+		if (objects.size() == 1) {
+			return String.valueOf(objects.get(0));
+		}
 
-        if (objects.size() > 0) {
-            StringBuilder sb = new StringBuilder();
-            for (Object object : objects) {
-                sb.append(object);
-            }
-            return sb.toString();
-        }
+		if (objects.size() > 0) {
+			StringBuilder sb = new StringBuilder();
+			for (Object object : objects) {
+				if (object != null) {
+					sb.append(object);
+				}
+			}
+			return sb.toString();
+		}
 
-        return "";
-    }
+		return "";
+	}
 
-    /**
-     * Builds a string by concatenating supplied objects separated by supplied character.
-     * 
-     * @param ch
-     *                the separator character
-     * @param objects
-     *                the composing objects
-     * @return the built string
-     */
-    public static String concatenateUsingSeparator(char ch, Object... objects) {
-        if (objects.length == 1) {
-            return String.valueOf(objects[0]);
-        }
+	/**
+	 * Builds a string by concatenating supplied objects separated by supplied
+	 * character.
+	 * 
+	 * @param ch      the separator character
+	 * @param objects the composing objects
+	 * @return the built string
+	 */
+	public static String concatenateUsingSeparator(char ch, Object... objects) {
+		if (objects.length == 1) {
+			return String.valueOf(objects[0]);
+		}
 
-        if (objects.length > 0) {
-            StringBuilder sb = new StringBuilder();
-            boolean appendSym = false;
-            for (Object object : objects) {
-                if (appendSym) {
-                    sb.append(ch);
-                } else {
-                    appendSym = true;
-                }
-                
-                sb.append(object);
-            }
-            return sb.toString();
-        }
+		if (objects.length > 0) {
+			StringBuilder sb = new StringBuilder();
+			boolean appendSym = false;
+			for (Object object : objects) {
+				if (appendSym) {
+					sb.append(ch);
+				} else {
+					appendSym = true;
+				}
 
-        return "";
-    }
+				if (object != null) {
+					sb.append(object);
+				}
+			}
+			return sb.toString();
+		}
 
-    /**
-     * Builds a string by concatenating supplied objects separated by supplied separator.
-     * 
-     * @param sp
-     *                the separator
-     * @param objects
-     *                the composing objects
-     * @return the built string
-     */
-    public static String concatenateUsingSeparator(String sp, Object... objects) {
-        if (objects.length == 1) {
-            return String.valueOf(objects[0]);
-        }
+		return "";
+	}
 
-        if (objects.length > 0) {
-            StringBuilder sb = new StringBuilder();
-            boolean appendSym = false;
-            for (Object object : objects) {
-                if (appendSym) {
-                    sb.append(sp);
-                } else {
-                    appendSym = true;
-                }
-                
-                sb.append(object);
-            }
-            return sb.toString();
-        }
+	/**
+	 * Builds a string by concatenating supplied objects separated by supplied
+	 * separator.
+	 * 
+	 * @param sp      the separator
+	 * @param objects the composing objects
+	 * @return the built string
+	 */
+	public static String concatenateUsingSeparator(String sp, Object... objects) {
+		if (objects.length == 1) {
+			return String.valueOf(objects[0]);
+		}
 
-        return "";
-    }
+		if (objects.length > 0) {
+			StringBuilder sb = new StringBuilder();
+			boolean appendSym = false;
+			for (Object object : objects) {
+				if (appendSym) {
+					sb.append(sp);
+				} else {
+					appendSym = true;
+				}
+
+				if (object != null) {
+					sb.append(object);
+				}
+			}
+			return sb.toString();
+		}
+
+		return "";
+	}
 
 	/**
 	 * Builds a string by concatenating supplied list of objects separated by
@@ -845,7 +803,9 @@ public final class StringUtils {
 					appendSym = true;
 				}
 
-				sb.append(object);
+				if (object != null) {
+					sb.append(object);
+				}
 			}
 			return sb.toString();
 		}
@@ -876,7 +836,9 @@ public final class StringUtils {
 					appendSym = true;
 				}
 
-				sb.append(object);
+				if (object != null) {
+					sb.append(object);
+				}
 			}
 			return sb.toString();
 		}
@@ -884,55 +846,54 @@ public final class StringUtils {
 		return "";
 	}
 
-    /**
-     * Returns the string representation of a bean.
-     * 
-     * @param bean
-     *             the supplied bean
-     */
-    public static String toXmlString(Object bean) {
-        if (bean != null) {
-            StringBuilder sb = new StringBuilder();
-            sb.append("<").append(bean.getClass().getName()).append(">\n");
-            try {
-                for (GetterSetterInfo getterSetterInfo : ReflectUtils.getGetterSetterList(bean.getClass())) {
-                    if (getterSetterInfo != null && getterSetterInfo.isGetter()) {
-                        String fieldName = getterSetterInfo.getName();
-                        sb.append("\t<").append(fieldName).append(">").append(getterSetterInfo.getGetter().invoke(bean))
-                                .append("</").append(fieldName).append(">\n");
-                    }
-                }
-            } catch (Exception e) {
-            }
-            sb.append("</").append(bean.getClass().getName()).append(">\n");
-            return sb.toString();
-        }
+	/**
+	 * Returns the string representation of a bean.
+	 * 
+	 * @param bean the supplied bean
+	 */
+	public static String toXmlString(Object bean) {
+		if (bean != null) {
+			StringBuilder sb = new StringBuilder();
+			sb.append("<").append(bean.getClass().getName()).append(">\n");
+			try {
+				for (GetterSetterInfo getterSetterInfo : ReflectUtils.getGetterSetterList(bean.getClass())) {
+					if (getterSetterInfo != null && getterSetterInfo.isGetter()) {
+						String fieldName = getterSetterInfo.getName();
+						sb.append("\t<").append(fieldName).append(">").append(getterSetterInfo.getGetter().invoke(bean))
+								.append("</").append(fieldName).append(">\n");
+					}
+				}
+			} catch (Exception e) {
+			}
+			sb.append("</").append(bean.getClass().getName()).append(">\n");
+			return sb.toString();
+		}
 
-        return "";
-    }
+		return "";
+	}
 
-    public static String getFirstNonBlank(String... values) {
-        for (String val : values) {
-            if (StringUtils.isNotBlank(val)) {
-                return val;
-            }
-        }
+	public static String getFirstNonBlank(String... values) {
+		for (String val : values) {
+			if (StringUtils.isNotBlank(val)) {
+				return val;
+			}
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    public static String buildParameterizedString(List<StringToken> tokens) {
-    	return StringTokenUtils.buildParameterizedString(tokens);
-    }
-    
+	public static String buildParameterizedString(List<StringToken> tokens) {
+		return StringTokenUtils.buildParameterizedString(tokens);
+	}
+
 	public static List<StringToken> breakdownParameterizedString(String string) {
 		return StringTokenUtils.breakdownParameterizedString(string);
 	}
 
-    public static void truncate(StringBuilder sb) {
-        if (sb != null) {
-            sb.delete(0, sb.length());
-        }
-    }
+	public static void truncate(StringBuilder sb) {
+		if (sb != null) {
+			sb.delete(0, sb.length());
+		}
+	}
 
 }

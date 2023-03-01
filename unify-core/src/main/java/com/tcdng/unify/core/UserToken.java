@@ -48,6 +48,8 @@ public class UserToken {
 
 	private String zoneCode;
 
+	private Long userId;
+
 	private Long tenantId;
 
 	private boolean globalAccess;
@@ -61,9 +63,9 @@ public class UserToken {
 	public UserToken(Long tenantId) {
 		this.tenantId = tenantId;
 	}
-	
+
 	private UserToken(String userLoginId, String userName, String ipAddress, String branchCode, String zoneCode,
-			String tenantCode, String tenantName, String colorScheme, Long tenantId, boolean globalAccess,
+			String tenantCode, String tenantName, String colorScheme, Long userId, Long tenantId, boolean globalAccess,
 			boolean reservedUser, boolean allowMultipleLogin, boolean remote) {
 		this.userLoginId = userLoginId;
 		this.userName = userName;
@@ -73,6 +75,7 @@ public class UserToken {
 		this.tenantName = tenantName;
 		this.colorScheme = colorScheme;
 		this.ipAddress = ipAddress;
+		this.userId = userId;
 		this.tenantId = tenantId;
 		this.globalAccess = globalAccess;
 		this.reservedUser = reservedUser;
@@ -86,6 +89,10 @@ public class UserToken {
 
 	public String getUserName() {
 		return userName;
+	}
+
+	public Long getUserId() {
+		return userId;
 	}
 
 	public String getBranchCode() {
@@ -194,6 +201,8 @@ public class UserToken {
 
 		private String zoneCode;
 
+		private Long userId;
+
 		private Long tenantId;
 
 		private boolean globalAccess;
@@ -273,13 +282,18 @@ public class UserToken {
 			return this;
 		}
 
+		public Builder userId(Long userId) {
+			this.userId = userId;
+			return this;
+		}
+
 		public UserToken build() {
 			if (StringUtils.isBlank(userLoginId)) {
 				throw new RuntimeException("Login ID is required!");
 			}
 
 			return new UserToken(userLoginId, userName, ipAddress, branchCode, zoneCode, tenantCode, tenantName,
-					colorScheme, tenantId, globalAccess, reservedUser, allowMultipleLogin, remote);
+					colorScheme, userId, tenantId, globalAccess, reservedUser, allowMultipleLogin, remote);
 		}
 	}
 
