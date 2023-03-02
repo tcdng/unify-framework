@@ -60,6 +60,7 @@ public class ButtonWriter extends AbstractTargetControlWriter {
                 }
             }
 
+            caption = caption == null? resolveValue(button) : caption;
             if (caption != null) {
                 if (isSymbol) {
                     writer.write("&nbsp;&nbsp;");
