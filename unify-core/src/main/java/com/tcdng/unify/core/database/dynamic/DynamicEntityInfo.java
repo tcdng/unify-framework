@@ -46,6 +46,8 @@ public class DynamicEntityInfo {
 
 	private DynamicEntityType type;
 
+	private String alias;
+
 	private String tableName;
 
 	private String baseClassName;
@@ -111,6 +113,14 @@ public class DynamicEntityInfo {
 
 	public String getClassName() {
 		return className;
+	}
+
+	public String getAlias() {
+		return alias;
+	}
+
+	public void setAlias(String alias) {
+		this.alias = alias;
 	}
 
 	public List<DynamicFieldInfo> getFieldInfos() {
