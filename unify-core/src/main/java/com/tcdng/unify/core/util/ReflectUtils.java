@@ -1428,6 +1428,24 @@ public final class ReflectUtils {
         }
     }
 
+	/**
+	 * Gets the string value of a constant field.
+	 * 
+	 * @param type      the type
+	 * @param fieldName the field name
+	 * @throws UnifyException if an error occurs
+	 */
+	public static String getPublicStaticStringConstant(Class<?> type, String fieldName) throws UnifyException {
+		try {
+			Field field = type.getField(fieldName);
+			return ReflectUtils.getPublicStaticStringConstant(field);
+		} catch (UnifyException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new UnifyOperationException(e, ReflectUtils.class);
+		}
+	}
+
     public static String getMethodSignature(String typeName, Method method) {
         StringBuilder sb = new StringBuilder();
         if (typeName != null) {
