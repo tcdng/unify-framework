@@ -53,16 +53,16 @@ public class ObjectFilterByFieldTest {
         Product d = new Product("pants", "Wonder pants", 15.00, 17.45);
 
         ObjectFilter objectFilter = new ObjectFilter(new EqualsField("name", "description"));
-        assertTrue(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertFalse(objectFilter.match(d));
+        assertTrue(objectFilter.matchObject(a));
+        assertFalse(objectFilter.matchObject(b));
+        assertFalse(objectFilter.matchObject(c));
+        assertFalse(objectFilter.matchObject(d));
 
         objectFilter = new ObjectFilter(new EqualsField("costPrice", "salesPrice"));
-        assertFalse(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertFalse(objectFilter.match(d));
+        assertFalse(objectFilter.matchObject(a));
+        assertTrue(objectFilter.matchObject(b));
+        assertTrue(objectFilter.matchObject(c));
+        assertFalse(objectFilter.matchObject(d));
     }
 
     @Test
@@ -73,16 +73,16 @@ public class ObjectFilterByFieldTest {
         Product d = new Product("pants", "Wonder pants", 15.00, 17.45);
 
         ObjectFilter objectFilter = new ObjectFilter(new NotEqualsField("name", "description"));
-        assertFalse(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertFalse(objectFilter.matchObject(a));
+        assertTrue(objectFilter.matchObject(b));
+        assertTrue(objectFilter.matchObject(c));
+        assertTrue(objectFilter.matchObject(d));
 
         objectFilter = new ObjectFilter(new NotEqualsField("costPrice", "salesPrice"));
-        assertTrue(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertTrue(objectFilter.matchObject(a));
+        assertFalse(objectFilter.matchObject(b));
+        assertFalse(objectFilter.matchObject(c));
+        assertTrue(objectFilter.matchObject(d));
     }
 
     @Test
@@ -93,10 +93,10 @@ public class ObjectFilterByFieldTest {
         Product d = new Product("pants", "Wonder pants", 15.00, 17.45);
 
         ObjectFilter objectFilter = new ObjectFilter(new GreaterField("salesPrice", "costPrice"));
-        assertTrue(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertTrue(objectFilter.matchObject(a));
+        assertFalse(objectFilter.matchObject(b));
+        assertFalse(objectFilter.matchObject(c));
+        assertTrue(objectFilter.matchObject(d));
     }
 
     @Test
@@ -107,10 +107,10 @@ public class ObjectFilterByFieldTest {
         Product d = new Product("pants", "Wonder pants", 15.00, 17.45);
 
         ObjectFilter objectFilter = new ObjectFilter(new GreaterOrEqualField("salesPrice", "costPrice"));
-        assertFalse(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertFalse(objectFilter.matchObject(a));
+        assertTrue(objectFilter.matchObject(b));
+        assertFalse(objectFilter.matchObject(c));
+        assertTrue(objectFilter.matchObject(d));
     }
 
     @Test
@@ -121,10 +121,10 @@ public class ObjectFilterByFieldTest {
         Product d = new Product("pants", "Wonder pants", 15.00, 17.45);
 
         ObjectFilter objectFilter = new ObjectFilter(new LessField("salesPrice", "costPrice"));
-        assertFalse(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertFalse(objectFilter.match(d));
+        assertFalse(objectFilter.matchObject(a));
+        assertTrue(objectFilter.matchObject(b));
+        assertFalse(objectFilter.matchObject(c));
+        assertFalse(objectFilter.matchObject(d));
     }
 
     @Test
@@ -135,10 +135,10 @@ public class ObjectFilterByFieldTest {
         Product d = new Product("pants", "Wonder pants", 15.00, 17.45);
 
         ObjectFilter objectFilter = new ObjectFilter(new LessOrEqualField("salesPrice", "costPrice"));
-        assertTrue(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertFalse(objectFilter.match(d));
+        assertTrue(objectFilter.matchObject(a));
+        assertTrue(objectFilter.matchObject(b));
+        assertTrue(objectFilter.matchObject(c));
+        assertFalse(objectFilter.matchObject(d));
     }
 
     @Test
@@ -149,10 +149,10 @@ public class ObjectFilterByFieldTest {
         Product d = new Product("pants", "Wonder pants", 15.00, 17.45);
 
         ObjectFilter objectFilter = new ObjectFilter(new LikeField("description", "name"));
-        assertTrue(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertTrue(objectFilter.matchObject(a));
+        assertFalse(objectFilter.matchObject(b));
+        assertFalse(objectFilter.matchObject(c));
+        assertTrue(objectFilter.matchObject(d));
     }
 
     @Test
@@ -163,10 +163,10 @@ public class ObjectFilterByFieldTest {
         Product d = new Product("pants", "Wonder pants", 15.00, 17.45);
 
         ObjectFilter objectFilter = new ObjectFilter(new NotLikeField("description", "name"));
-        assertFalse(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertFalse(objectFilter.match(d));
+        assertFalse(objectFilter.matchObject(a));
+        assertTrue(objectFilter.matchObject(b));
+        assertTrue(objectFilter.matchObject(c));
+        assertFalse(objectFilter.matchObject(d));
     }
 
     @Test
@@ -177,10 +177,10 @@ public class ObjectFilterByFieldTest {
         Product d = new Product("pants", "Wonder pants", 15.00, 17.45);
 
         ObjectFilter objectFilter = new ObjectFilter(new BeginsWithField("description", "name"));
-        assertTrue(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertFalse(objectFilter.match(d));
+        assertTrue(objectFilter.matchObject(a));
+        assertTrue(objectFilter.matchObject(b));
+        assertFalse(objectFilter.matchObject(c));
+        assertFalse(objectFilter.matchObject(d));
     }
 
     @Test
@@ -191,10 +191,10 @@ public class ObjectFilterByFieldTest {
         Product d = new Product("pants", "Wonder pants", 15.00, 17.45);
 
         ObjectFilter objectFilter = new ObjectFilter(new NotBeginWithField("description", "name"));
-        assertFalse(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertFalse(objectFilter.matchObject(a));
+        assertFalse(objectFilter.matchObject(b));
+        assertTrue(objectFilter.matchObject(c));
+        assertTrue(objectFilter.matchObject(d));
     }
 
     @Test
@@ -205,10 +205,10 @@ public class ObjectFilterByFieldTest {
         Product d = new Product("pants", "Wonder pants", 15.00, 17.45);
 
         ObjectFilter objectFilter = new ObjectFilter(new EndsWithField("description", "name"));
-        assertTrue(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertTrue(objectFilter.matchObject(a));
+        assertFalse(objectFilter.matchObject(b));
+        assertFalse(objectFilter.matchObject(c));
+        assertTrue(objectFilter.matchObject(d));
     }
 
     @Test
@@ -219,10 +219,10 @@ public class ObjectFilterByFieldTest {
         Product d = new Product("pants", "Wonder pants", 15.00, 17.45);
 
         ObjectFilter objectFilter = new ObjectFilter(new NotEndWithField("description", "name"));
-        assertFalse(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertFalse(objectFilter.match(d));
+        assertFalse(objectFilter.matchObject(a));
+        assertTrue(objectFilter.matchObject(b));
+        assertTrue(objectFilter.matchObject(c));
+        assertFalse(objectFilter.matchObject(d));
     }
 
     @Test
@@ -234,10 +234,10 @@ public class ObjectFilterByFieldTest {
 
         ObjectFilter objectFilter = new ObjectFilter(new CriteriaBuilder().beginAnd()
                 .addEqualsField("salesPrice", "costPrice").addLikeField("description", "name").endCompound().build());
-        assertFalse(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertFalse(objectFilter.match(d));
+        assertFalse(objectFilter.matchObject(a));
+        assertTrue(objectFilter.matchObject(b));
+        assertFalse(objectFilter.matchObject(c));
+        assertFalse(objectFilter.matchObject(d));
     }
 
     @Test
@@ -249,10 +249,10 @@ public class ObjectFilterByFieldTest {
 
         ObjectFilter objectFilter = new ObjectFilter(new CriteriaBuilder().beginOr().addEqualsField("salesPrice", "costPrice")
                 .addLikeField("description", "name").endCompound().build());
-        assertFalse(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertFalse(objectFilter.matchObject(a));
+        assertTrue(objectFilter.matchObject(b));
+        assertTrue(objectFilter.matchObject(c));
+        assertTrue(objectFilter.matchObject(d));
     }
 
     @Test
@@ -263,16 +263,16 @@ public class ObjectFilterByFieldTest {
         ValueStore d = new BeanValueStore(new Product ("pants", "Wonder pants", 15.00, 17.45));
 
         ObjectFilter objectFilter = new ObjectFilter(new EqualsField("name", "description"));
-        assertTrue(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertFalse(objectFilter.match(d));
+        assertTrue(objectFilter.matchReader(a.getReader()));
+        assertFalse(objectFilter.matchReader(b.getReader()));
+        assertFalse(objectFilter.matchReader(c.getReader()));
+        assertFalse(objectFilter.matchReader(d.getReader()));
 
         objectFilter = new ObjectFilter(new EqualsField("costPrice", "salesPrice"));
-        assertFalse(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertFalse(objectFilter.match(d));
+        assertFalse(objectFilter.matchReader(a.getReader()));
+        assertTrue(objectFilter.matchReader(b.getReader()));
+        assertTrue(objectFilter.matchReader(c.getReader()));
+        assertFalse(objectFilter.matchReader(d.getReader()));
     }
 
     @Test
@@ -283,16 +283,16 @@ public class ObjectFilterByFieldTest {
         ValueStore d = new BeanValueStore(new Product ("pants", "Wonder pants", 15.00, 17.45));
 
         ObjectFilter objectFilter = new ObjectFilter(new NotEqualsField("name", "description"));
-        assertFalse(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertFalse(objectFilter.matchReader(a.getReader()));
+        assertTrue(objectFilter.matchReader(b.getReader()));
+        assertTrue(objectFilter.matchReader(c.getReader()));
+        assertTrue(objectFilter.matchReader(d.getReader()));
 
         objectFilter = new ObjectFilter(new NotEqualsField("costPrice", "salesPrice"));
-        assertTrue(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertTrue(objectFilter.matchReader(a.getReader()));
+        assertFalse(objectFilter.matchReader(b.getReader()));
+        assertFalse(objectFilter.matchReader(c.getReader()));
+        assertTrue(objectFilter.matchReader(d.getReader()));
     }
 
     @Test
@@ -303,10 +303,10 @@ public class ObjectFilterByFieldTest {
         ValueStore d = new BeanValueStore(new Product ("pants", "Wonder pants", 15.00, 17.45));
 
         ObjectFilter objectFilter = new ObjectFilter(new GreaterField("salesPrice", "costPrice"));
-        assertTrue(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertTrue(objectFilter.matchReader(a.getReader()));
+        assertFalse(objectFilter.matchReader(b.getReader()));
+        assertFalse(objectFilter.matchReader(c.getReader()));
+        assertTrue(objectFilter.matchReader(d.getReader()));
     }
 
     @Test
@@ -317,10 +317,10 @@ public class ObjectFilterByFieldTest {
         ValueStore d = new BeanValueStore(new Product ("pants", "Wonder pants", 15.00, 17.45));
 
         ObjectFilter objectFilter = new ObjectFilter(new GreaterOrEqualField("salesPrice", "costPrice"));
-        assertFalse(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertFalse(objectFilter.matchReader(a.getReader()));
+        assertTrue(objectFilter.matchReader(b.getReader()));
+        assertFalse(objectFilter.matchReader(c.getReader()));
+        assertTrue(objectFilter.matchReader(d.getReader()));
     }
 
     @Test
@@ -331,10 +331,10 @@ public class ObjectFilterByFieldTest {
         ValueStore d = new BeanValueStore(new Product ("pants", "Wonder pants", 15.00, 17.45));
 
         ObjectFilter objectFilter = new ObjectFilter(new LessField("salesPrice", "costPrice"));
-        assertFalse(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertFalse(objectFilter.match(d));
+        assertFalse(objectFilter.matchReader(a.getReader()));
+        assertTrue(objectFilter.matchReader(b.getReader()));
+        assertFalse(objectFilter.matchReader(c.getReader()));
+        assertFalse(objectFilter.matchReader(d.getReader()));
     }
 
     @Test
@@ -345,10 +345,10 @@ public class ObjectFilterByFieldTest {
         ValueStore d = new BeanValueStore(new Product ("pants", "Wonder pants", 15.00, 17.45));
 
         ObjectFilter objectFilter = new ObjectFilter(new LessOrEqualField("salesPrice", "costPrice"));
-        assertTrue(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertFalse(objectFilter.match(d));
+        assertTrue(objectFilter.matchReader(a.getReader()));
+        assertTrue(objectFilter.matchReader(b.getReader()));
+        assertTrue(objectFilter.matchReader(c.getReader()));
+        assertFalse(objectFilter.matchReader(d.getReader()));
     }
 
     @Test
@@ -359,10 +359,10 @@ public class ObjectFilterByFieldTest {
         ValueStore d = new BeanValueStore(new Product ("pants", "Wonder pants", 15.00, 17.45));
 
         ObjectFilter objectFilter = new ObjectFilter(new LikeField("description", "name"));
-        assertTrue(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertTrue(objectFilter.matchReader(a.getReader()));
+        assertFalse(objectFilter.matchReader(b.getReader()));
+        assertFalse(objectFilter.matchReader(c.getReader()));
+        assertTrue(objectFilter.matchReader(d.getReader()));
     }
 
     @Test
@@ -373,10 +373,10 @@ public class ObjectFilterByFieldTest {
         ValueStore d = new BeanValueStore(new Product ("pants", "Wonder pants", 15.00, 17.45));
 
         ObjectFilter objectFilter = new ObjectFilter(new NotLikeField("description", "name"));
-        assertFalse(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertFalse(objectFilter.match(d));
+        assertFalse(objectFilter.matchReader(a.getReader()));
+        assertTrue(objectFilter.matchReader(b.getReader()));
+        assertTrue(objectFilter.matchReader(c.getReader()));
+        assertFalse(objectFilter.matchReader(d.getReader()));
     }
 
     @Test
@@ -387,10 +387,10 @@ public class ObjectFilterByFieldTest {
         ValueStore d = new BeanValueStore(new Product ("pants", "Wonder pants", 15.00, 17.45));
 
         ObjectFilter objectFilter = new ObjectFilter(new BeginsWithField("description", "name"));
-        assertTrue(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertFalse(objectFilter.match(d));
+        assertTrue(objectFilter.matchReader(a.getReader()));
+        assertTrue(objectFilter.matchReader(b.getReader()));
+        assertFalse(objectFilter.matchReader(c.getReader()));
+        assertFalse(objectFilter.matchReader(d.getReader()));
     }
 
     @Test
@@ -401,10 +401,10 @@ public class ObjectFilterByFieldTest {
         ValueStore d = new BeanValueStore(new Product ("pants", "Wonder pants", 15.00, 17.45));
 
         ObjectFilter objectFilter = new ObjectFilter(new NotBeginWithField("description", "name"));
-        assertFalse(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertFalse(objectFilter.matchReader(a.getReader()));
+        assertFalse(objectFilter.matchReader(b.getReader()));
+        assertTrue(objectFilter.matchReader(c.getReader()));
+        assertTrue(objectFilter.matchReader(d.getReader()));
     }
 
     @Test
@@ -415,10 +415,10 @@ public class ObjectFilterByFieldTest {
         ValueStore d = new BeanValueStore(new Product ("pants", "Wonder pants", 15.00, 17.45));
 
         ObjectFilter objectFilter = new ObjectFilter(new EndsWithField("description", "name"));
-        assertTrue(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertTrue(objectFilter.matchReader(a.getReader()));
+        assertFalse(objectFilter.matchReader(b.getReader()));
+        assertFalse(objectFilter.matchReader(c.getReader()));
+        assertTrue(objectFilter.matchReader(d.getReader()));
     }
 
     @Test
@@ -429,10 +429,10 @@ public class ObjectFilterByFieldTest {
         ValueStore d = new BeanValueStore(new Product ("pants", "Wonder pants", 15.00, 17.45));
 
         ObjectFilter objectFilter = new ObjectFilter(new NotEndWithField("description", "name"));
-        assertFalse(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertFalse(objectFilter.match(d));
+        assertFalse(objectFilter.matchReader(a.getReader()));
+        assertTrue(objectFilter.matchReader(b.getReader()));
+        assertTrue(objectFilter.matchReader(c.getReader()));
+        assertFalse(objectFilter.matchReader(d.getReader()));
     }
 
     @Test
@@ -444,10 +444,10 @@ public class ObjectFilterByFieldTest {
 
         ObjectFilter objectFilter = new ObjectFilter(new CriteriaBuilder().beginAnd()
                 .addEqualsField("salesPrice", "costPrice").addLikeField("description", "name").endCompound().build());
-        assertFalse(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertFalse(objectFilter.match(d));
+        assertFalse(objectFilter.matchReader(a.getReader()));
+        assertTrue(objectFilter.matchReader(b.getReader()));
+        assertFalse(objectFilter.matchReader(c.getReader()));
+        assertFalse(objectFilter.matchReader(d.getReader()));
     }
 
     @Test
@@ -459,9 +459,9 @@ public class ObjectFilterByFieldTest {
 
         ObjectFilter objectFilter = new ObjectFilter(new CriteriaBuilder().beginOr().addEqualsField("salesPrice", "costPrice")
                 .addLikeField("description", "name").endCompound().build());
-        assertFalse(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertFalse(objectFilter.matchReader(a.getReader()));
+        assertTrue(objectFilter.matchReader(b.getReader()));
+        assertTrue(objectFilter.matchReader(c.getReader()));
+        assertTrue(objectFilter.matchReader(d.getReader()));
     }
 }

@@ -67,10 +67,10 @@ public class ObjectFilterByValueTest {
         Product d = new Product("pants", "Wonder pants", 15.00, 17.45);
 
         ObjectFilter objectFilter = new ObjectFilter(new Equals("name", "specs"));
-        assertFalse(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertFalse(objectFilter.match(d));
+        assertFalse(objectFilter.matchObject(a));
+        assertFalse(objectFilter.matchObject(b));
+        assertTrue(objectFilter.matchObject(c));
+        assertFalse(objectFilter.matchObject(d));
     }
 
     @Test
@@ -81,10 +81,10 @@ public class ObjectFilterByValueTest {
         Product d = new Product("pants", "Wonder pants", 15.00, 17.45);
 
         ObjectFilter objectFilter = new ObjectFilter(new NotEquals("name", "bandana"));
-        assertFalse(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertFalse(objectFilter.matchObject(a));
+        assertTrue(objectFilter.matchObject(b));
+        assertTrue(objectFilter.matchObject(c));
+        assertTrue(objectFilter.matchObject(d));
     }
 
     @Test
@@ -95,10 +95,10 @@ public class ObjectFilterByValueTest {
         Product d = new Product("pants", "Wonder pants", 15.00, 17.45);
 
         ObjectFilter objectFilter = new ObjectFilter(new Greater("costPrice", 10.00));
-        assertTrue(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertTrue(objectFilter.matchObject(a));
+        assertFalse(objectFilter.matchObject(b));
+        assertFalse(objectFilter.matchObject(c));
+        assertTrue(objectFilter.matchObject(d));
     }
 
     @Test
@@ -109,10 +109,10 @@ public class ObjectFilterByValueTest {
         Product d = new Product("pants", "Wonder pants", 15.00, 72.45);
 
         ObjectFilter objectFilter = new ObjectFilter(new GreaterOrEqual("salesPrice", 60.00));
-        assertFalse(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertFalse(objectFilter.matchObject(a));
+        assertTrue(objectFilter.matchObject(b));
+        assertFalse(objectFilter.matchObject(c));
+        assertTrue(objectFilter.matchObject(d));
     }
 
     @Test
@@ -123,10 +123,10 @@ public class ObjectFilterByValueTest {
         Product d = new Product("pants", "Wonder pants", 15.00, 17.45);
 
         ObjectFilter objectFilter = new ObjectFilter(new Less("costPrice", 20.00));
-        assertFalse(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertFalse(objectFilter.matchObject(a));
+        assertFalse(objectFilter.matchObject(b));
+        assertFalse(objectFilter.matchObject(c));
+        assertTrue(objectFilter.matchObject(d));
     }
 
     @Test
@@ -137,10 +137,10 @@ public class ObjectFilterByValueTest {
         Product d = new Product("pants", "Wonder pants", 15.00, 17.45);
 
         ObjectFilter objectFilter = new ObjectFilter(new LessOrEqual("costPrice", 20.00));
-        assertTrue(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertTrue(objectFilter.matchObject(a));
+        assertFalse(objectFilter.matchObject(b));
+        assertFalse(objectFilter.matchObject(c));
+        assertTrue(objectFilter.matchObject(d));
     }
 
     @Test
@@ -151,10 +151,10 @@ public class ObjectFilterByValueTest {
         Product d = new Product("pants", "Wonder pants", 15.00, 17.45);
 
         ObjectFilter objectFilter = new ObjectFilter(new Like("description", "an"));
-        assertTrue(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertTrue(objectFilter.matchObject(a));
+        assertFalse(objectFilter.matchObject(b));
+        assertFalse(objectFilter.matchObject(c));
+        assertTrue(objectFilter.matchObject(d));
     }
 
     @Test
@@ -165,10 +165,10 @@ public class ObjectFilterByValueTest {
         Product d = new Product("pants", "Wonder pants", 15.00, 17.45);
 
         ObjectFilter objectFilter = new ObjectFilter(new NotLike("description", "an"));
-        assertFalse(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertFalse(objectFilter.match(d));
+        assertFalse(objectFilter.matchObject(a));
+        assertTrue(objectFilter.matchObject(b));
+        assertTrue(objectFilter.matchObject(c));
+        assertFalse(objectFilter.matchObject(d));
     }
 
     @Test
@@ -179,10 +179,10 @@ public class ObjectFilterByValueTest {
         Product d = new Product("pants", "Wonder pants", 15.00, 17.45);
 
         ObjectFilter objectFilter = new ObjectFilter(new BeginsWith("description", "Blue"));
-        assertFalse(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertFalse(objectFilter.match(d));
+        assertFalse(objectFilter.matchObject(a));
+        assertFalse(objectFilter.matchObject(b));
+        assertTrue(objectFilter.matchObject(c));
+        assertFalse(objectFilter.matchObject(d));
     }
 
     @Test
@@ -193,10 +193,10 @@ public class ObjectFilterByValueTest {
         Product d = new Product("pants", "Wonder pants", 15.00, 17.45);
 
         ObjectFilter objectFilter = new ObjectFilter(new NotBeginWith("description", "hat"));
-        assertTrue(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertTrue(objectFilter.matchObject(a));
+        assertFalse(objectFilter.matchObject(b));
+        assertTrue(objectFilter.matchObject(c));
+        assertTrue(objectFilter.matchObject(d));
     }
 
     @Test
@@ -207,10 +207,10 @@ public class ObjectFilterByValueTest {
         Product d = new Product("pants", "Wonder pants", 15.00, 17.45);
 
         ObjectFilter objectFilter = new ObjectFilter(new EndsWith("description", "Red"));
-        assertFalse(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertFalse(objectFilter.match(d));
+        assertFalse(objectFilter.matchObject(a));
+        assertTrue(objectFilter.matchObject(b));
+        assertFalse(objectFilter.matchObject(c));
+        assertFalse(objectFilter.matchObject(d));
     }
 
     @Test
@@ -221,10 +221,10 @@ public class ObjectFilterByValueTest {
         Product d = new Product("pants", "Wonder pants", 15.00, 17.45);
 
         ObjectFilter objectFilter = new ObjectFilter(new NotEndWith("description", "ana"));
-        assertFalse(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertFalse(objectFilter.matchObject(a));
+        assertTrue(objectFilter.matchObject(b));
+        assertTrue(objectFilter.matchObject(c));
+        assertTrue(objectFilter.matchObject(d));
     }
 
     @Test
@@ -235,10 +235,10 @@ public class ObjectFilterByValueTest {
         Product d = new Product("pants", "Wonder pants", 49.50, 17.45);
 
         ObjectFilter objectFilter = new ObjectFilter(new Between("costPrice", 45.00, 50.00));
-        assertFalse(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertFalse(objectFilter.matchObject(a));
+        assertFalse(objectFilter.matchObject(b));
+        assertTrue(objectFilter.matchObject(c));
+        assertTrue(objectFilter.matchObject(d));
     }
 
     @Test
@@ -249,10 +249,10 @@ public class ObjectFilterByValueTest {
         Product d = new Product("pants", "Wonder pants", 49.50, 17.45);
 
         ObjectFilter objectFilter = new ObjectFilter(new NotBetween("costPrice", 45.00, 50.00));
-        assertTrue(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertFalse(objectFilter.match(d));
+        assertTrue(objectFilter.matchObject(a));
+        assertTrue(objectFilter.matchObject(b));
+        assertFalse(objectFilter.matchObject(c));
+        assertFalse(objectFilter.matchObject(d));
     }
 
     @Test
@@ -263,10 +263,10 @@ public class ObjectFilterByValueTest {
         Product d = new Product("pants", "Wonder pants", 49.50, null);
 
         ObjectFilter objectFilter = new ObjectFilter(new IsNull("salesPrice"));
-        assertFalse(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertFalse(objectFilter.matchObject(a));
+        assertFalse(objectFilter.matchObject(b));
+        assertTrue(objectFilter.matchObject(c));
+        assertTrue(objectFilter.matchObject(d));
     }
 
     @Test
@@ -277,10 +277,10 @@ public class ObjectFilterByValueTest {
         Product d = new Product("pants", "Wonder pants", 49.50, null);
 
         ObjectFilter objectFilter = new ObjectFilter(new IsNotNull("salesPrice"));
-        assertTrue(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertFalse(objectFilter.match(d));
+        assertTrue(objectFilter.matchObject(a));
+        assertTrue(objectFilter.matchObject(b));
+        assertFalse(objectFilter.matchObject(c));
+        assertFalse(objectFilter.matchObject(d));
     }
 
     @Test
@@ -291,10 +291,10 @@ public class ObjectFilterByValueTest {
         Product d = new Product("pants", "Wonder pants", 49.50, null);
 
         ObjectFilter objectFilter = new ObjectFilter(new Amongst("name", Arrays.asList("specs", "pants")));
-        assertFalse(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertFalse(objectFilter.matchObject(a));
+        assertFalse(objectFilter.matchObject(b));
+        assertTrue(objectFilter.matchObject(c));
+        assertTrue(objectFilter.matchObject(d));
     }
 
     @Test
@@ -305,10 +305,10 @@ public class ObjectFilterByValueTest {
         Product d = new Product("pants", "Wonder pants", 49.50, null);
 
         ObjectFilter objectFilter = new ObjectFilter(new NotAmongst("name", Arrays.asList("specs", "pants")));
-        assertTrue(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertFalse(objectFilter.match(d));
+        assertTrue(objectFilter.matchObject(a));
+        assertTrue(objectFilter.matchObject(b));
+        assertFalse(objectFilter.matchObject(c));
+        assertFalse(objectFilter.matchObject(d));
     }
 
     @Test
@@ -321,11 +321,11 @@ public class ObjectFilterByValueTest {
 
         ObjectFilter objectFilter = new ObjectFilter(new CriteriaBuilder().beginAnd()
                 .addBetween("costPrice", 45.00, 50.00).addBeginsWith("description", "B").endCompound().build());
-        assertFalse(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertFalse(objectFilter.match(d));
-        assertFalse(objectFilter.match(e));
+        assertFalse(objectFilter.matchObject(a));
+        assertFalse(objectFilter.matchObject(b));
+        assertTrue(objectFilter.matchObject(c));
+        assertFalse(objectFilter.matchObject(d));
+        assertFalse(objectFilter.matchObject(e));
     }
 
     @Test
@@ -339,11 +339,11 @@ public class ObjectFilterByValueTest {
         ObjectFilter objectFilter = new ObjectFilter(new CriteriaBuilder().beginAnd().beginAnd()
                 .addGreaterThanEqual("costPrice", 45.00).addLessThanEqual("costPrice", 50.00).endCompound()
                 .addBeginsWith("description", "B").endCompound().build());
-        assertFalse(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertFalse(objectFilter.match(d));
-        assertFalse(objectFilter.match(e));
+        assertFalse(objectFilter.matchObject(a));
+        assertFalse(objectFilter.matchObject(b));
+        assertTrue(objectFilter.matchObject(c));
+        assertFalse(objectFilter.matchObject(d));
+        assertFalse(objectFilter.matchObject(e));
     }
 
     @Test
@@ -356,11 +356,11 @@ public class ObjectFilterByValueTest {
 
         ObjectFilter objectFilter = new ObjectFilter(new CriteriaBuilder().beginOr()
                 .addBetween("costPrice", 45.00, 50.00).addBeginsWith("description", "B").endCompound().build());
-        assertFalse(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
-        assertTrue(objectFilter.match(e));
+        assertFalse(objectFilter.matchObject(a));
+        assertFalse(objectFilter.matchObject(b));
+        assertTrue(objectFilter.matchObject(c));
+        assertTrue(objectFilter.matchObject(d));
+        assertTrue(objectFilter.matchObject(e));
     }
 
     @Test
@@ -374,11 +374,11 @@ public class ObjectFilterByValueTest {
         ObjectFilter objectFilter = new ObjectFilter(new CriteriaBuilder().beginOr().beginAnd()
                 .addGreaterThanEqual("costPrice", 45.00).addLessThanEqual("costPrice", 50.00).endCompound()
                 .addBeginsWith("description", "B").endCompound().build());
-        assertFalse(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
-        assertTrue(objectFilter.match(e));
+        assertFalse(objectFilter.matchObject(a));
+        assertFalse(objectFilter.matchObject(b));
+        assertTrue(objectFilter.matchObject(c));
+        assertTrue(objectFilter.matchObject(d));
+        assertTrue(objectFilter.matchObject(e));
     }
 
     @Test
@@ -391,10 +391,10 @@ public class ObjectFilterByValueTest {
                 Arrays.asList(new Order("Abel", "24 Parklane", 2), new Order("Scott", "Oracle Avenue", 5)));
 
         ObjectFilter objectFilter = new ObjectFilter(new IsNull("orders"));
-        assertTrue(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertFalse(objectFilter.match(d));
+        assertTrue(objectFilter.matchObject(a));
+        assertFalse(objectFilter.matchObject(b));
+        assertFalse(objectFilter.matchObject(c));
+        assertFalse(objectFilter.matchObject(d));
     }
 
     @Test
@@ -407,10 +407,10 @@ public class ObjectFilterByValueTest {
                 Arrays.asList(new Order("Abel", "24 Parklane", 2), new Order("Scott", "Oracle Avenue", 5)));
 
         ObjectFilter objectFilter = new ObjectFilter(new IsNotNull("orders"));
-        assertFalse(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertFalse(objectFilter.matchObject(a));
+        assertTrue(objectFilter.matchObject(b));
+        assertTrue(objectFilter.matchObject(c));
+        assertTrue(objectFilter.matchObject(d));
     }
 
     @Test
@@ -423,10 +423,10 @@ public class ObjectFilterByValueTest {
                 Arrays.asList(new Order("Abel", "24 Parklane", 2), new Order("Scott", "Oracle Avenue", 5)));
 
         ObjectFilter objectFilter = new ObjectFilter(new EqualsCollection("orders", 2));
-        assertFalse(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertFalse(objectFilter.matchObject(a));
+        assertFalse(objectFilter.matchObject(b));
+        assertTrue(objectFilter.matchObject(c));
+        assertTrue(objectFilter.matchObject(d));
     }
 
     @Test
@@ -439,10 +439,10 @@ public class ObjectFilterByValueTest {
                 Arrays.asList(new Order("Abel", "24 Parklane", 2), new Order("Scott", "Oracle Avenue", 5)));
 
         ObjectFilter objectFilter = new ObjectFilter(new NotEqualsCollection("orders", 2));
-        assertTrue(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertFalse(objectFilter.match(d));
+        assertTrue(objectFilter.matchObject(a));
+        assertTrue(objectFilter.matchObject(b));
+        assertFalse(objectFilter.matchObject(c));
+        assertFalse(objectFilter.matchObject(d));
     }
 
     @Test
@@ -456,10 +456,10 @@ public class ObjectFilterByValueTest {
                         new Order("Scott", "Oracle Avenue", 5)));
 
         ObjectFilter objectFilter = new ObjectFilter(new GreaterCollection("orders", 2));
-        assertFalse(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertFalse(objectFilter.matchObject(a));
+        assertFalse(objectFilter.matchObject(b));
+        assertFalse(objectFilter.matchObject(c));
+        assertTrue(objectFilter.matchObject(d));
     }
 
     @Test
@@ -473,10 +473,10 @@ public class ObjectFilterByValueTest {
                         new Order("Scott", "Oracle Avenue", 5)));
 
         ObjectFilter objectFilter = new ObjectFilter(new GreaterOrEqualCollection("orders", 2));
-        assertFalse(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertFalse(objectFilter.matchObject(a));
+        assertFalse(objectFilter.matchObject(b));
+        assertTrue(objectFilter.matchObject(c));
+        assertTrue(objectFilter.matchObject(d));
     }
 
     @Test
@@ -488,10 +488,10 @@ public class ObjectFilterByValueTest {
         Product d = new Product("pants", "Wonder pants", 15.00, 17.45);
 
         ObjectFilter objectFilter = new ObjectFilter(new LessCollection("orders", 2));
-        assertFalse(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertFalse(objectFilter.match(d));
+        assertFalse(objectFilter.matchObject(a));
+        assertTrue(objectFilter.matchObject(b));
+        assertFalse(objectFilter.matchObject(c));
+        assertFalse(objectFilter.matchObject(d));
     }
 
     @Test
@@ -503,10 +503,10 @@ public class ObjectFilterByValueTest {
         Product d = new Product("pants", "Wonder pants", 15.00, 17.45);
 
         ObjectFilter objectFilter = new ObjectFilter(new LessOrEqualCollection("orders", 2));
-        assertFalse(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertFalse(objectFilter.match(d));
+        assertFalse(objectFilter.matchObject(a));
+        assertTrue(objectFilter.matchObject(b));
+        assertTrue(objectFilter.matchObject(c));
+        assertFalse(objectFilter.matchObject(d));
     }
 
     @Test
@@ -517,10 +517,10 @@ public class ObjectFilterByValueTest {
         Product d = new Product("pants", "Wonder pants", 15.00, 17.45, new String[] { "Monday", "Tuesday" });
 
         ObjectFilter objectFilter = new ObjectFilter(new IsNull("days"));
-        assertTrue(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertFalse(objectFilter.match(d));
+        assertTrue(objectFilter.matchObject(a));
+        assertFalse(objectFilter.matchObject(b));
+        assertFalse(objectFilter.matchObject(c));
+        assertFalse(objectFilter.matchObject(d));
     }
 
     @Test
@@ -531,10 +531,10 @@ public class ObjectFilterByValueTest {
         Product d = new Product("pants", "Wonder pants", 15.00, 17.45, new String[] { "Monday", "Tuesday" });
 
         ObjectFilter objectFilter = new ObjectFilter(new IsNotNull("days"));
-        assertFalse(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertFalse(objectFilter.matchObject(a));
+        assertTrue(objectFilter.matchObject(b));
+        assertTrue(objectFilter.matchObject(c));
+        assertTrue(objectFilter.matchObject(d));
     }
 
     @Test
@@ -545,10 +545,10 @@ public class ObjectFilterByValueTest {
         Product d = new Product("pants", "Wonder pants", 15.00, 17.45, new String[] { "Monday", "Tuesday" });
 
         ObjectFilter objectFilter = new ObjectFilter(new EqualsCollection("days", 2));
-        assertFalse(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertFalse(objectFilter.matchObject(a));
+        assertFalse(objectFilter.matchObject(b));
+        assertTrue(objectFilter.matchObject(c));
+        assertTrue(objectFilter.matchObject(d));
     }
 
     @Test
@@ -559,10 +559,10 @@ public class ObjectFilterByValueTest {
         Product d = new Product("pants", "Wonder pants", 15.00, 17.45, new String[] { "Monday", "Tuesday" });
 
         ObjectFilter objectFilter = new ObjectFilter(new NotEqualsCollection("days", 2));
-        assertTrue(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertFalse(objectFilter.match(d));
+        assertTrue(objectFilter.matchObject(a));
+        assertTrue(objectFilter.matchObject(b));
+        assertFalse(objectFilter.matchObject(c));
+        assertFalse(objectFilter.matchObject(d));
     }
 
     @Test
@@ -574,10 +574,10 @@ public class ObjectFilterByValueTest {
                 new String[] { "Monday", "Tuesday", "Wednesday" });
 
         ObjectFilter objectFilter = new ObjectFilter(new GreaterCollection("days", 2));
-        assertFalse(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertFalse(objectFilter.matchObject(a));
+        assertFalse(objectFilter.matchObject(b));
+        assertFalse(objectFilter.matchObject(c));
+        assertTrue(objectFilter.matchObject(d));
     }
 
     @Test
@@ -589,10 +589,10 @@ public class ObjectFilterByValueTest {
                 new String[] { "Monday", "Tuesday", "Wednesday" });
 
         ObjectFilter objectFilter = new ObjectFilter(new GreaterOrEqualCollection("days", 2));
-        assertFalse(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertFalse(objectFilter.matchObject(a));
+        assertFalse(objectFilter.matchObject(b));
+        assertTrue(objectFilter.matchObject(c));
+        assertTrue(objectFilter.matchObject(d));
     }
 
     @Test
@@ -603,10 +603,10 @@ public class ObjectFilterByValueTest {
         Product d = new Product("pants", "Wonder pants", 15.00, 17.45);
 
         ObjectFilter objectFilter = new ObjectFilter(new LessCollection("days", 2));
-        assertFalse(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertFalse(objectFilter.match(d));
+        assertFalse(objectFilter.matchObject(a));
+        assertTrue(objectFilter.matchObject(b));
+        assertFalse(objectFilter.matchObject(c));
+        assertFalse(objectFilter.matchObject(d));
     }
 
     @Test
@@ -617,10 +617,10 @@ public class ObjectFilterByValueTest {
         Product d = new Product("pants", "Wonder pants", 15.00, 17.45);
 
         ObjectFilter objectFilter = new ObjectFilter(new LessOrEqualCollection("days", 2));
-        assertFalse(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertFalse(objectFilter.match(d));
+        assertFalse(objectFilter.matchObject(a));
+        assertTrue(objectFilter.matchObject(b));
+        assertTrue(objectFilter.matchObject(c));
+        assertFalse(objectFilter.matchObject(d));
     }
 
     @Test
@@ -631,10 +631,10 @@ public class ObjectFilterByValueTest {
         ValueStore d = new BeanValueStore(new Product("pants", "Wonder pants", 15.00, 17.45));
 
         ObjectFilter objectFilter = new ObjectFilter(new Equals("name", "specs"));
-        assertFalse(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertFalse(objectFilter.match(d));
+        assertFalse(objectFilter.matchReader(a.getReader()));
+        assertFalse(objectFilter.matchReader(b.getReader()));
+        assertTrue(objectFilter.matchReader(c.getReader()));
+        assertFalse(objectFilter.matchReader(d.getReader()));
     }
 
     @Test
@@ -645,10 +645,10 @@ public class ObjectFilterByValueTest {
         ValueStore d = new BeanValueStore(new Product("pants", "Wonder pants", 15.00, 17.45));
 
         ObjectFilter objectFilter = new ObjectFilter(new NotEquals("name", "bandana"));
-        assertFalse(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertFalse(objectFilter.matchReader(a.getReader()));
+        assertTrue(objectFilter.matchReader(b.getReader()));
+        assertTrue(objectFilter.matchReader(c.getReader()));
+        assertTrue(objectFilter.matchReader(d.getReader()));
     }
 
     @Test
@@ -659,10 +659,10 @@ public class ObjectFilterByValueTest {
         ValueStore d = new BeanValueStore(new Product("pants", "Wonder pants", 15.00, 17.45));
 
         ObjectFilter objectFilter = new ObjectFilter(new Greater("costPrice", 10.00));
-        assertTrue(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertTrue(objectFilter.matchReader(a.getReader()));
+        assertFalse(objectFilter.matchReader(b.getReader()));
+        assertFalse(objectFilter.matchReader(c.getReader()));
+        assertTrue(objectFilter.matchReader(d.getReader()));
     }
 
     @Test
@@ -673,10 +673,10 @@ public class ObjectFilterByValueTest {
         ValueStore d = new BeanValueStore(new Product("pants", "Wonder pants", 15.00, 72.45));
 
         ObjectFilter objectFilter = new ObjectFilter(new GreaterOrEqual("salesPrice", 60.00));
-        assertFalse(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertFalse(objectFilter.matchReader(a.getReader()));
+        assertTrue(objectFilter.matchReader(b.getReader()));
+        assertFalse(objectFilter.matchReader(c.getReader()));
+        assertTrue(objectFilter.matchReader(d.getReader()));
     }
 
     @Test
@@ -687,10 +687,10 @@ public class ObjectFilterByValueTest {
         ValueStore d = new BeanValueStore(new Product("pants", "Wonder pants", 15.00, 17.45));
 
         ObjectFilter objectFilter = new ObjectFilter(new Less("costPrice", 20.00));
-        assertFalse(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertFalse(objectFilter.matchReader(a.getReader()));
+        assertFalse(objectFilter.matchReader(b.getReader()));
+        assertFalse(objectFilter.matchReader(c.getReader()));
+        assertTrue(objectFilter.matchReader(d.getReader()));
     }
 
     @Test
@@ -701,10 +701,10 @@ public class ObjectFilterByValueTest {
         ValueStore d = new BeanValueStore(new Product("pants", "Wonder pants", 15.00, 17.45));
 
         ObjectFilter objectFilter = new ObjectFilter(new LessOrEqual("costPrice", 20.00));
-        assertTrue(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertTrue(objectFilter.matchReader(a.getReader()));
+        assertFalse(objectFilter.matchReader(b.getReader()));
+        assertFalse(objectFilter.matchReader(c.getReader()));
+        assertTrue(objectFilter.matchReader(d.getReader()));
     }
 
     @Test
@@ -715,10 +715,10 @@ public class ObjectFilterByValueTest {
         ValueStore d = new BeanValueStore(new Product("pants", "Wonder pants", 15.00, 17.45));
 
         ObjectFilter objectFilter = new ObjectFilter(new Like("description", "an"));
-        assertTrue(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertTrue(objectFilter.matchReader(a.getReader()));
+        assertFalse(objectFilter.matchReader(b.getReader()));
+        assertFalse(objectFilter.matchReader(c.getReader()));
+        assertTrue(objectFilter.matchReader(d.getReader()));
     }
 
     @Test
@@ -729,10 +729,10 @@ public class ObjectFilterByValueTest {
         ValueStore d = new BeanValueStore(new Product("pants", "Wonder pants", 15.00, 17.45));
 
         ObjectFilter objectFilter = new ObjectFilter(new NotLike("description", "an"));
-        assertFalse(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertFalse(objectFilter.match(d));
+        assertFalse(objectFilter.matchReader(a.getReader()));
+        assertTrue(objectFilter.matchReader(b.getReader()));
+        assertTrue(objectFilter.matchReader(c.getReader()));
+        assertFalse(objectFilter.matchReader(d.getReader()));
     }
 
     @Test
@@ -743,10 +743,10 @@ public class ObjectFilterByValueTest {
         ValueStore d = new BeanValueStore(new Product("pants", "Wonder pants", 15.00, 17.45));
 
         ObjectFilter objectFilter = new ObjectFilter(new BeginsWith("description", "Blue"));
-        assertFalse(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertFalse(objectFilter.match(d));
+        assertFalse(objectFilter.matchReader(a.getReader()));
+        assertFalse(objectFilter.matchReader(b.getReader()));
+        assertTrue(objectFilter.matchReader(c.getReader()));
+        assertFalse(objectFilter.matchReader(d.getReader()));
     }
 
     @Test
@@ -757,10 +757,10 @@ public class ObjectFilterByValueTest {
         ValueStore d = new BeanValueStore(new Product("pants", "Wonder pants", 15.00, 17.45));
 
         ObjectFilter objectFilter = new ObjectFilter(new NotBeginWith("description", "hat"));
-        assertTrue(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertTrue(objectFilter.matchReader(a.getReader()));
+        assertFalse(objectFilter.matchReader(b.getReader()));
+        assertTrue(objectFilter.matchReader(c.getReader()));
+        assertTrue(objectFilter.matchReader(d.getReader()));
     }
 
     @Test
@@ -771,10 +771,10 @@ public class ObjectFilterByValueTest {
         ValueStore d = new BeanValueStore(new Product("pants", "Wonder pants", 15.00, 17.45));
 
         ObjectFilter objectFilter = new ObjectFilter(new EndsWith("description", "Red"));
-        assertFalse(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertFalse(objectFilter.match(d));
+        assertFalse(objectFilter.matchReader(a.getReader()));
+        assertTrue(objectFilter.matchReader(b.getReader()));
+        assertFalse(objectFilter.matchReader(c.getReader()));
+        assertFalse(objectFilter.matchReader(d.getReader()));
     }
 
     @Test
@@ -785,10 +785,10 @@ public class ObjectFilterByValueTest {
         ValueStore d = new BeanValueStore(new Product("pants", "Wonder pants", 15.00, 17.45));
 
         ObjectFilter objectFilter = new ObjectFilter(new NotEndWith("description", "ana"));
-        assertFalse(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertFalse(objectFilter.matchReader(a.getReader()));
+        assertTrue(objectFilter.matchReader(b.getReader()));
+        assertTrue(objectFilter.matchReader(c.getReader()));
+        assertTrue(objectFilter.matchReader(d.getReader()));
     }
 
     @Test
@@ -799,10 +799,10 @@ public class ObjectFilterByValueTest {
         ValueStore d = new BeanValueStore(new Product("pants", "Wonder pants", 49.50, 17.45));
 
         ObjectFilter objectFilter = new ObjectFilter(new Between("costPrice", 45.00, 50.00));
-        assertFalse(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertFalse(objectFilter.matchReader(a.getReader()));
+        assertFalse(objectFilter.matchReader(b.getReader()));
+        assertTrue(objectFilter.matchReader(c.getReader()));
+        assertTrue(objectFilter.matchReader(d.getReader()));
     }
 
     @Test
@@ -813,10 +813,10 @@ public class ObjectFilterByValueTest {
         ValueStore d = new BeanValueStore(new Product("pants", "Wonder pants", 49.50, 17.45));
 
         ObjectFilter objectFilter = new ObjectFilter(new NotBetween("costPrice", 45.00, 50.00));
-        assertTrue(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertFalse(objectFilter.match(d));
+        assertTrue(objectFilter.matchReader(a.getReader()));
+        assertTrue(objectFilter.matchReader(b.getReader()));
+        assertFalse(objectFilter.matchReader(c.getReader()));
+        assertFalse(objectFilter.matchReader(d.getReader()));
     }
 
     @Test
@@ -827,10 +827,10 @@ public class ObjectFilterByValueTest {
         ValueStore d = new BeanValueStore(new Product("pants", "Wonder pants", 49.50, null));
 
         ObjectFilter objectFilter = new ObjectFilter(new IsNull("salesPrice"));
-        assertFalse(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertFalse(objectFilter.matchReader(a.getReader()));
+        assertFalse(objectFilter.matchReader(b.getReader()));
+        assertTrue(objectFilter.matchReader(c.getReader()));
+        assertTrue(objectFilter.matchReader(d.getReader()));
     }
 
     @Test
@@ -841,10 +841,10 @@ public class ObjectFilterByValueTest {
         ValueStore d = new BeanValueStore(new Product("pants", "Wonder pants", 49.50, null));
 
         ObjectFilter objectFilter = new ObjectFilter(new IsNotNull("salesPrice"));
-        assertTrue(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertFalse(objectFilter.match(d));
+        assertTrue(objectFilter.matchReader(a.getReader()));
+        assertTrue(objectFilter.matchReader(b.getReader()));
+        assertFalse(objectFilter.matchReader(c.getReader()));
+        assertFalse(objectFilter.matchReader(d.getReader()));
     }
 
     @Test
@@ -855,10 +855,10 @@ public class ObjectFilterByValueTest {
         ValueStore d = new BeanValueStore(new Product("pants", "Wonder pants", 49.50, null));
 
         ObjectFilter objectFilter = new ObjectFilter(new Amongst("name", Arrays.asList("specs", "pants")));
-        assertFalse(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertFalse(objectFilter.matchReader(a.getReader()));
+        assertFalse(objectFilter.matchReader(b.getReader()));
+        assertTrue(objectFilter.matchReader(c.getReader()));
+        assertTrue(objectFilter.matchReader(d.getReader()));
     }
 
     @Test
@@ -869,10 +869,10 @@ public class ObjectFilterByValueTest {
         ValueStore d = new BeanValueStore(new Product("pants", "Wonder pants", 49.50, null));
 
         ObjectFilter objectFilter = new ObjectFilter(new NotAmongst("name", Arrays.asList("specs", "pants")));
-        assertTrue(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertFalse(objectFilter.match(d));
+        assertTrue(objectFilter.matchReader(a.getReader()));
+        assertTrue(objectFilter.matchReader(b.getReader()));
+        assertFalse(objectFilter.matchReader(c.getReader()));
+        assertFalse(objectFilter.matchReader(d.getReader()));
     }
 
     @Test
@@ -885,11 +885,11 @@ public class ObjectFilterByValueTest {
 
         ObjectFilter objectFilter = new ObjectFilter(new CriteriaBuilder().beginAnd()
                 .addBetween("costPrice", 45.00, 50.00).addBeginsWith("description", "B").endCompound().build());
-        assertFalse(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertFalse(objectFilter.match(d));
-        assertFalse(objectFilter.match(e));
+        assertFalse(objectFilter.matchReader(a.getReader()));
+        assertFalse(objectFilter.matchReader(b.getReader()));
+        assertTrue(objectFilter.matchReader(c.getReader()));
+        assertFalse(objectFilter.matchReader(d.getReader()));
+        assertFalse(objectFilter.matchReader(e.getReader()));
     }
 
     @Test
@@ -903,11 +903,11 @@ public class ObjectFilterByValueTest {
         ObjectFilter objectFilter = new ObjectFilter(new CriteriaBuilder().beginAnd().beginAnd()
                 .addGreaterThanEqual("costPrice", 45.00).addLessThanEqual("costPrice", 50.00).endCompound()
                 .addBeginsWith("description", "B").endCompound().build());
-        assertFalse(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertFalse(objectFilter.match(d));
-        assertFalse(objectFilter.match(e));
+        assertFalse(objectFilter.matchReader(a.getReader()));
+        assertFalse(objectFilter.matchReader(b.getReader()));
+        assertTrue(objectFilter.matchReader(c.getReader()));
+        assertFalse(objectFilter.matchReader(d.getReader()));
+        assertFalse(objectFilter.matchReader(e.getReader()));
     }
 
     @Test
@@ -920,11 +920,11 @@ public class ObjectFilterByValueTest {
 
         ObjectFilter objectFilter = new ObjectFilter(new CriteriaBuilder().beginOr()
                 .addBetween("costPrice", 45.00, 50.00).addBeginsWith("description", "B").endCompound().build());
-        assertFalse(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
-        assertTrue(objectFilter.match(e));
+        assertFalse(objectFilter.matchReader(a.getReader()));
+        assertFalse(objectFilter.matchReader(b.getReader()));
+        assertTrue(objectFilter.matchReader(c.getReader()));
+        assertTrue(objectFilter.matchReader(d.getReader()));
+        assertTrue(objectFilter.matchReader(e.getReader()));
     }
 
     @Test
@@ -938,11 +938,11 @@ public class ObjectFilterByValueTest {
         ObjectFilter objectFilter = new ObjectFilter(new CriteriaBuilder().beginOr().beginAnd()
                 .addGreaterThanEqual("costPrice", 45.00).addLessThanEqual("costPrice", 50.00).endCompound()
                 .addBeginsWith("description", "B").endCompound().build());
-        assertFalse(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
-        assertTrue(objectFilter.match(e));
+        assertFalse(objectFilter.matchReader(a.getReader()));
+        assertFalse(objectFilter.matchReader(b.getReader()));
+        assertTrue(objectFilter.matchReader(c.getReader()));
+        assertTrue(objectFilter.matchReader(d.getReader()));
+        assertTrue(objectFilter.matchReader(e.getReader()));
     }
 
     @Test
@@ -956,10 +956,10 @@ public class ObjectFilterByValueTest {
                 Arrays.asList(new Order("Abel", "24 Parklane", 2), new Order("Scott", "Oracle Avenue", 5))));
 
         ObjectFilter objectFilter = new ObjectFilter(new IsNull("orders"));
-        assertTrue(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertFalse(objectFilter.match(d));
+        assertTrue(objectFilter.matchReader(a.getReader()));
+        assertFalse(objectFilter.matchReader(b.getReader()));
+        assertFalse(objectFilter.matchReader(c.getReader()));
+        assertFalse(objectFilter.matchReader(d.getReader()));
     }
 
     @Test
@@ -973,10 +973,10 @@ public class ObjectFilterByValueTest {
                 Arrays.asList(new Order("Abel", "24 Parklane", 2), new Order("Scott", "Oracle Avenue", 5))));
 
         ObjectFilter objectFilter = new ObjectFilter(new IsNotNull("orders"));
-        assertFalse(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertFalse(objectFilter.matchReader(a.getReader()));
+        assertTrue(objectFilter.matchReader(b.getReader()));
+        assertTrue(objectFilter.matchReader(c.getReader()));
+        assertTrue(objectFilter.matchReader(d.getReader()));
     }
 
     @Test
@@ -990,10 +990,10 @@ public class ObjectFilterByValueTest {
                 Arrays.asList(new Order("Abel", "24 Parklane", 2), new Order("Scott", "Oracle Avenue", 5))));
 
         ObjectFilter objectFilter = new ObjectFilter(new EqualsCollection("orders", 2));
-        assertFalse(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertFalse(objectFilter.matchReader(a.getReader()));
+        assertFalse(objectFilter.matchReader(b.getReader()));
+        assertTrue(objectFilter.matchReader(c.getReader()));
+        assertTrue(objectFilter.matchReader(d.getReader()));
     }
 
     @Test
@@ -1007,10 +1007,10 @@ public class ObjectFilterByValueTest {
                 Arrays.asList(new Order("Abel", "24 Parklane", 2), new Order("Scott", "Oracle Avenue", 5))));
 
         ObjectFilter objectFilter = new ObjectFilter(new NotEqualsCollection("orders", 2));
-        assertTrue(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertFalse(objectFilter.match(d));
+        assertTrue(objectFilter.matchReader(a.getReader()));
+        assertTrue(objectFilter.matchReader(b.getReader()));
+        assertFalse(objectFilter.matchReader(c.getReader()));
+        assertFalse(objectFilter.matchReader(d.getReader()));
     }
 
     @Test
@@ -1025,10 +1025,10 @@ public class ObjectFilterByValueTest {
                         new Order("Scott", "Oracle Avenue", 5), new Order("Scott", "Oracle Avenue", 5))));
 
         ObjectFilter objectFilter = new ObjectFilter(new GreaterCollection("orders", 2));
-        assertFalse(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertFalse(objectFilter.matchReader(a.getReader()));
+        assertFalse(objectFilter.matchReader(b.getReader()));
+        assertFalse(objectFilter.matchReader(c.getReader()));
+        assertTrue(objectFilter.matchReader(d.getReader()));
     }
 
     @Test
@@ -1043,10 +1043,10 @@ public class ObjectFilterByValueTest {
                         new Order("Scott", "Oracle Avenue", 5), new Order("Scott", "Oracle Avenue", 5))));
 
         ObjectFilter objectFilter = new ObjectFilter(new GreaterOrEqualCollection("orders", 2));
-        assertFalse(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertFalse(objectFilter.matchReader(a.getReader()));
+        assertFalse(objectFilter.matchReader(b.getReader()));
+        assertTrue(objectFilter.matchReader(c.getReader()));
+        assertTrue(objectFilter.matchReader(d.getReader()));
     }
 
     @Test
@@ -1059,10 +1059,10 @@ public class ObjectFilterByValueTest {
         ValueStore d = new BeanValueStore(new Product("pants", "Wonder pants", 15.00, 17.45));
 
         ObjectFilter objectFilter = new ObjectFilter(new LessCollection("orders", 2));
-        assertFalse(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertFalse(objectFilter.match(d));
+        assertFalse(objectFilter.matchReader(a.getReader()));
+        assertTrue(objectFilter.matchReader(b.getReader()));
+        assertFalse(objectFilter.matchReader(c.getReader()));
+        assertFalse(objectFilter.matchReader(d.getReader()));
     }
 
     @Test
@@ -1075,10 +1075,10 @@ public class ObjectFilterByValueTest {
         ValueStore d = new BeanValueStore(new Product("pants", "Wonder pants", 15.00, 17.45));
 
         ObjectFilter objectFilter = new ObjectFilter(new LessOrEqualCollection("orders", 2));
-        assertFalse(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertFalse(objectFilter.match(d));
+        assertFalse(objectFilter.matchReader(a.getReader()));
+        assertTrue(objectFilter.matchReader(b.getReader()));
+        assertTrue(objectFilter.matchReader(c.getReader()));
+        assertFalse(objectFilter.matchReader(d.getReader()));
     }
 
     @Test
@@ -1091,10 +1091,10 @@ public class ObjectFilterByValueTest {
                 new Product("pants", "Wonder pants", 15.00, 17.45, new String[] { "Monday", "Tuesday" }));
 
         ObjectFilter objectFilter = new ObjectFilter(new IsNull("days"));
-        assertTrue(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertFalse(objectFilter.match(d));
+        assertTrue(objectFilter.matchReader(a.getReader()));
+        assertFalse(objectFilter.matchReader(b.getReader()));
+        assertFalse(objectFilter.matchReader(c.getReader()));
+        assertFalse(objectFilter.matchReader(d.getReader()));
     }
 
     @Test
@@ -1107,10 +1107,10 @@ public class ObjectFilterByValueTest {
                 new Product("pants", "Wonder pants", 15.00, 17.45, new String[] { "Monday", "Tuesday" }));
 
         ObjectFilter objectFilter = new ObjectFilter(new IsNotNull("days"));
-        assertFalse(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertFalse(objectFilter.matchReader(a.getReader()));
+        assertTrue(objectFilter.matchReader(b.getReader()));
+        assertTrue(objectFilter.matchReader(c.getReader()));
+        assertTrue(objectFilter.matchReader(d.getReader()));
     }
 
     @Test
@@ -1123,10 +1123,10 @@ public class ObjectFilterByValueTest {
                 new Product("pants", "Wonder pants", 15.00, 17.45, new String[] { "Monday", "Tuesday" }));
 
         ObjectFilter objectFilter = new ObjectFilter(new EqualsCollection("days", 2));
-        assertFalse(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertFalse(objectFilter.matchReader(a.getReader()));
+        assertFalse(objectFilter.matchReader(b.getReader()));
+        assertTrue(objectFilter.matchReader(c.getReader()));
+        assertTrue(objectFilter.matchReader(d.getReader()));
     }
 
     @Test
@@ -1139,10 +1139,10 @@ public class ObjectFilterByValueTest {
                 new Product("pants", "Wonder pants", 15.00, 17.45, new String[] { "Monday", "Tuesday" }));
 
         ObjectFilter objectFilter = new ObjectFilter(new NotEqualsCollection("days", 2));
-        assertTrue(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertFalse(objectFilter.match(d));
+        assertTrue(objectFilter.matchReader(a.getReader()));
+        assertTrue(objectFilter.matchReader(b.getReader()));
+        assertFalse(objectFilter.matchReader(c.getReader()));
+        assertFalse(objectFilter.matchReader(d.getReader()));
     }
 
     @Test
@@ -1155,10 +1155,10 @@ public class ObjectFilterByValueTest {
                 new Product("pants", "Wonder pants", 15.00, 17.45, new String[] { "Monday", "Tuesday", "Wednesday" }));
 
         ObjectFilter objectFilter = new ObjectFilter(new GreaterCollection("days", 2));
-        assertFalse(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertFalse(objectFilter.matchReader(a.getReader()));
+        assertFalse(objectFilter.matchReader(b.getReader()));
+        assertFalse(objectFilter.matchReader(c.getReader()));
+        assertTrue(objectFilter.matchReader(d.getReader()));
     }
 
     @Test
@@ -1171,10 +1171,10 @@ public class ObjectFilterByValueTest {
                 new Product("pants", "Wonder pants", 15.00, 17.45, new String[] { "Monday", "Tuesday", "Wednesday" }));
 
         ObjectFilter objectFilter = new ObjectFilter(new GreaterOrEqualCollection("days", 2));
-        assertFalse(objectFilter.match(a));
-        assertFalse(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertTrue(objectFilter.match(d));
+        assertFalse(objectFilter.matchReader(a.getReader()));
+        assertFalse(objectFilter.matchReader(b.getReader()));
+        assertTrue(objectFilter.matchReader(c.getReader()));
+        assertTrue(objectFilter.matchReader(d.getReader()));
     }
 
     @Test
@@ -1186,10 +1186,10 @@ public class ObjectFilterByValueTest {
         ValueStore d = new BeanValueStore(new Product("pants", "Wonder pants", 15.00, 17.45));
 
         ObjectFilter objectFilter = new ObjectFilter(new LessCollection("days", 2));
-        assertFalse(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertFalse(objectFilter.match(c));
-        assertFalse(objectFilter.match(d));
+        assertFalse(objectFilter.matchReader(a.getReader()));
+        assertTrue(objectFilter.matchReader(b.getReader()));
+        assertFalse(objectFilter.matchReader(c.getReader()));
+        assertFalse(objectFilter.matchReader(d.getReader()));
     }
 
     @Test
@@ -1201,9 +1201,9 @@ public class ObjectFilterByValueTest {
         ValueStore d = new BeanValueStore(new Product("pants", "Wonder pants", 15.00, 17.45));
 
         ObjectFilter objectFilter = new ObjectFilter(new LessOrEqualCollection("days", 2));
-        assertFalse(objectFilter.match(a));
-        assertTrue(objectFilter.match(b));
-        assertTrue(objectFilter.match(c));
-        assertFalse(objectFilter.match(d));
+        assertFalse(objectFilter.matchReader(a.getReader()));
+        assertTrue(objectFilter.matchReader(b.getReader()));
+        assertTrue(objectFilter.matchReader(c.getReader()));
+        assertFalse(objectFilter.matchReader(d.getReader()));
     }
 }

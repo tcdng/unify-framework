@@ -19,7 +19,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.criterion.DoubleParamRestriction;
 import com.tcdng.unify.core.criterion.Restriction;
 import com.tcdng.unify.core.criterion.RestrictionField;
-import com.tcdng.unify.core.data.ValueStore;
+import com.tcdng.unify.core.data.ValueStoreReader;
 import com.tcdng.unify.core.util.DataUtils;
 
 /**
@@ -37,20 +37,20 @@ public abstract class AbstractDoubleParamObjectFilterPolicy implements ObjectFil
     }
 
     @Override
-	public boolean match(ValueStore valueStore, Restriction restriction) throws UnifyException {
+	public boolean matchReader(ValueStoreReader reader, Restriction restriction) throws UnifyException {
         DoubleParamRestriction doubleParamRestriction = (DoubleParamRestriction) restriction;
-        Object fieldVal = valueStore.retrieve(doubleParamRestriction.getFieldName());
+        Object fieldVal = reader.read(doubleParamRestriction.getFieldName());
         if (fieldVal != null) {
             Object paramA = doubleParamRestriction.getFirstParam();
             if (paramA instanceof RestrictionField) {
-                paramA = valueStore.retrieve(((RestrictionField) paramA).getName());
+                paramA = reader.read(((RestrictionField) paramA).getName());
             } else {
                 paramA = DataUtils.convert(fieldVal.getClass(), paramA);
             }
 
             Object paramB = doubleParamRestriction.getSecondParam();
             if (paramB instanceof RestrictionField) {
-                paramB = valueStore.retrieve(((RestrictionField) paramB).getName());
+                paramB = reader.read(((RestrictionField) paramB).getName());
             } else {
                 paramB = DataUtils.convert(fieldVal.getClass(), paramB);
             }
@@ -62,7 +62,7 @@ public abstract class AbstractDoubleParamObjectFilterPolicy implements ObjectFil
 	}
 
 	@Override
-    public boolean match(Object bean, Restriction restriction) throws UnifyException {
+    public boolean matchObject(Object bean, Restriction restriction) throws UnifyException {
         DoubleParamRestriction doubleParamRestriction = (DoubleParamRestriction) restriction;
         Object fieldVal = DataUtils.getNestedBeanProperty(bean, doubleParamRestriction.getFieldName());
         if (fieldVal != null) {

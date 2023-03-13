@@ -19,7 +19,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.criterion.Restriction;
 import com.tcdng.unify.core.criterion.RestrictionField;
 import com.tcdng.unify.core.criterion.SingleParamRestriction;
-import com.tcdng.unify.core.data.ValueStore;
+import com.tcdng.unify.core.data.ValueStoreReader;
 import com.tcdng.unify.core.util.DataUtils;
 
 /**
@@ -37,13 +37,13 @@ public abstract class AbstractSingleParamObjectFilterPolicy implements ObjectFil
 	}
 
 	@Override
-	public boolean match(ValueStore valueStore, Restriction restriction) throws UnifyException {
+	public boolean matchReader(ValueStoreReader reader, Restriction restriction) throws UnifyException {
 		SingleParamRestriction singleParamRestriction = (SingleParamRestriction) restriction;
-		Object fieldVal = valueStore.retrieve(singleParamRestriction.getFieldName());
+		Object fieldVal = reader.read(singleParamRestriction.getFieldName());
 		if (fieldVal != null) {
 			Object param = singleParamRestriction.getParam();
 			if (param instanceof RestrictionField) {
-				return doMatch(fieldVal, valueStore.retrieve(((RestrictionField) param).getName()));
+				return doMatch(fieldVal, reader.read(((RestrictionField) param).getName()));
 			} else {
 				return doMatch(fieldVal, DataUtils.convert(fieldVal.getClass(), param));
 			}
@@ -53,7 +53,7 @@ public abstract class AbstractSingleParamObjectFilterPolicy implements ObjectFil
 	}
 
 	@Override
-	public boolean match(Object bean, Restriction restriction) throws UnifyException {
+	public boolean matchObject(Object bean, Restriction restriction) throws UnifyException {
 		SingleParamRestriction singleParamRestriction = (SingleParamRestriction) restriction;
 		Object fieldVal = DataUtils.getNestedBeanProperty(bean, singleParamRestriction.getFieldName());
 		if (fieldVal != null) {

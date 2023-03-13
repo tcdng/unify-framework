@@ -17,7 +17,7 @@ package com.tcdng.unify.core.filter;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.criterion.Restriction;
-import com.tcdng.unify.core.data.ValueStore;
+import com.tcdng.unify.core.data.ValueStoreReader;
 import com.tcdng.unify.core.util.FilterUtils;
 
 /**
@@ -34,13 +34,13 @@ public class ObjectFilter {
         this.restriction = restriction;
     }
 
-    public boolean match(ValueStore valueStore) throws UnifyException {
-        return FilterUtils.getBeanFilterPolicy(restriction.getConditionType()).match(valueStore,
+    public boolean matchReader(ValueStoreReader reader) throws UnifyException {
+        return FilterUtils.getBeanFilterPolicy(restriction.getConditionType()).matchReader(reader,
                 restriction);
     }
 
-    public boolean match(Object bean) throws UnifyException {
-        return FilterUtils.getBeanFilterPolicy(restriction.getConditionType()).match(bean,
+    public boolean matchObject(Object bean) throws UnifyException {
+        return FilterUtils.getBeanFilterPolicy(restriction.getConditionType()).matchObject(bean,
                 restriction);
     }
 }

@@ -21,7 +21,7 @@ import java.util.List;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.criterion.MultipleParamRestriction;
 import com.tcdng.unify.core.criterion.Restriction;
-import com.tcdng.unify.core.data.ValueStore;
+import com.tcdng.unify.core.data.ValueStoreReader;
 import com.tcdng.unify.core.util.DataUtils;
 
 /**
@@ -40,9 +40,9 @@ public abstract class AbstractMultipleParamObjectFilterPolicy implements ObjectF
 
 	@SuppressWarnings("unchecked")
     @Override
-	public boolean match(ValueStore valueStore, Restriction restriction) throws UnifyException {
+	public boolean matchReader(ValueStoreReader reader, Restriction restriction) throws UnifyException {
         MultipleParamRestriction multipleParamRestriction = (MultipleParamRestriction) restriction;
-        Object fieldVal = valueStore.retrieve(multipleParamRestriction.getFieldName());
+        Object fieldVal = reader.read(multipleParamRestriction.getFieldName());
         if (fieldVal != null) {
             return doMatch(fieldVal,
                     DataUtils.convert(List.class, fieldVal.getClass(), multipleParamRestriction.getParams()));
@@ -53,7 +53,7 @@ public abstract class AbstractMultipleParamObjectFilterPolicy implements ObjectF
 
 	@SuppressWarnings("unchecked")
     @Override
-    public boolean match(Object bean, Restriction restriction) throws UnifyException {
+    public boolean matchObject(Object bean, Restriction restriction) throws UnifyException {
         MultipleParamRestriction multipleParamRestriction = (MultipleParamRestriction) restriction;
         Object fieldVal = DataUtils.getNestedBeanProperty(bean, multipleParamRestriction.getFieldName());
         if (fieldVal != null) {

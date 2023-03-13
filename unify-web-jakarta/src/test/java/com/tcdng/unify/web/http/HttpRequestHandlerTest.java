@@ -29,7 +29,6 @@ import com.tcdng.unify.web.PathInfoRepository;
 import com.tcdng.unify.web.RequestPathParts;
 import com.tcdng.unify.web.UnifyWebPropertyConstants;
 import com.tcdng.unify.web.WebApplicationComponents;
-import com.tcdng.unify.web.http.HttpRequestHandler;
 
 /**
  * HTTP request handler test.

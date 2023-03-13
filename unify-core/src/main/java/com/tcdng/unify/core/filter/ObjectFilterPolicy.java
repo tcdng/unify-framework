@@ -17,7 +17,7 @@ package com.tcdng.unify.core.filter;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.criterion.Restriction;
-import com.tcdng.unify.core.data.ValueStore;
+import com.tcdng.unify.core.data.ValueStoreReader;
 
 /**
  * Object filter policy.
@@ -30,15 +30,15 @@ public interface ObjectFilterPolicy {
     /**
      * Perform value store field matching.
      * 
-     * @param valueStore
-     *            the value store object
+     * @param reader
+     *            the value store reader object
      * @param restriction
      *            restriction the restriction field
      * @return true restriction matches the value store field
      * @throws UnifyException
      *             if an error occurs
      */
-    boolean match(ValueStore valueStore, Restriction restriction) throws UnifyException;
+    boolean matchReader(ValueStoreReader reader, Restriction restriction) throws UnifyException;
 
     /**
      * Perform bean field matching.
@@ -51,5 +51,5 @@ public interface ObjectFilterPolicy {
      * @throws UnifyException
      *             if an error occurs
      */
-    boolean match(Object bean, Restriction restriction) throws UnifyException;
+    boolean matchObject(Object bean, Restriction restriction) throws UnifyException;
 }

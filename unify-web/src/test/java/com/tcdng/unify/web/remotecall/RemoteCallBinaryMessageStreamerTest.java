@@ -29,9 +29,6 @@ import org.junit.Test;
 
 import com.tcdng.unify.core.AbstractUnifyComponentTest;
 import com.tcdng.unify.core.data.TaggedBinaryMessage;
-import com.tcdng.unify.web.remotecall.PushBinaryMessageParams;
-import com.tcdng.unify.web.remotecall.PushBinaryMessageResult;
-import com.tcdng.unify.web.remotecall.RemoteCallBinaryMessageStreamer;
 
 /**
  * Remote call binary message streamer test.
