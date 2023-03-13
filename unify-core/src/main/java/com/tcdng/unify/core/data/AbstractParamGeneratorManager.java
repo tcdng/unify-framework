@@ -40,41 +40,41 @@ public abstract class AbstractParamGeneratorManager extends AbstractUnifyCompone
 
 	@Configurable
 	private FormatHelper formarHelper;
-	
-    private FactoryMap<ParamToken, ParamGenerator> generators;
 
-    public AbstractParamGeneratorManager() {
-        this.generators = new FactoryMap<ParamToken, ParamGenerator>() {
-                @Override
-                protected ParamGenerator create(ParamToken token, Object... params) throws Exception {
-                    if ("g".equals(token.getComponent())) {
-                        return (ParamGenerator) getComponent(token.getParam());
-                    }
+	private FactoryMap<ParamToken, ParamGenerator> generators;
 
-                    ParamGenerator generator = resolveParamGenerator(token);
-                    if (generator == null) {
-                        throwOperationErrorException(new IllegalArgumentException(
-                                "Could not resolve generator for [" + token.getToken() + "]."));
-                    }
+	public AbstractParamGeneratorManager() {
+		this.generators = new FactoryMap<ParamToken, ParamGenerator>() {
+			@Override
+			protected ParamGenerator create(ParamToken token, Object... params) throws Exception {
+				if ("g".equals(token.getComponent())) {
+					return (ParamGenerator) getComponent(token.getParam());
+				}
 
-                    return generator;
-                }
-            };
-    }
+				ParamGenerator generator = resolveParamGenerator(token);
+				if (generator == null) {
+					throwOperationErrorException(new IllegalArgumentException(
+							"Could not resolve generator for [" + token.getToken() + "]."));
+				}
 
-    public final void setFormarHelper(FormatHelper formarHelper) {
+				return generator;
+			}
+		};
+	}
+
+	public final void setFormarHelper(FormatHelper formarHelper) {
 		this.formarHelper = formarHelper;
 	}
 
 	@Override
-	public ParameterizedStringGenerator getParameterizedStringGenerator(ValueStore paramValueStore,
+	public ParameterizedStringGenerator getParameterizedStringGenerator(ValueStoreReader paramReader,
 			List<StringToken> tokenList) throws UnifyException {
-		return getParameterizedStringGenerator(paramValueStore, paramValueStore, tokenList);
+		return getParameterizedStringGenerator(paramReader, paramReader, tokenList);
 	}
 
 	@Override
-	public ParameterizedStringGenerator getParameterizedStringGenerator(ValueStore paramValueStore,
-			ValueStore generatorValueStore, List<StringToken> tokenList) throws UnifyException {
+	public ParameterizedStringGenerator getParameterizedStringGenerator(ValueStoreReader paramReader,
+			ValueStoreReader generatorReader, List<StringToken> tokenList) throws UnifyException {
 		Map<StringToken, ParamGenerator> _generators = new HashMap<StringToken, ParamGenerator>();
 		Map<StandardFormatType, Formatter<?>> _formatters = new HashMap<StandardFormatType, Formatter<?>>();
 		if (!DataUtils.isBlank(tokenList)) {
@@ -91,19 +91,18 @@ public abstract class AbstractParamGeneratorManager extends AbstractUnifyCompone
 			}
 		}
 
-		return new ParameterizedStringGenerator(paramValueStore, generatorValueStore, tokenList, _generators,
-				_formatters);
+		return new ParameterizedStringGenerator(paramReader, generatorReader, tokenList, _generators, _formatters);
 	}
 
-    @Override
-    protected void onInitialize() throws UnifyException {
+	@Override
+	protected void onInitialize() throws UnifyException {
 
-    }
+	}
 
-    @Override
-    protected void onTerminate() throws UnifyException {
+	@Override
+	protected void onTerminate() throws UnifyException {
 
-    }
+	}
 
-    protected abstract ParamGenerator resolveParamGenerator(ParamToken token) throws UnifyException;
+	protected abstract ParamGenerator resolveParamGenerator(ParamToken token) throws UnifyException;
 }

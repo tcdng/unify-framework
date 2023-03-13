@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.format.Formatter;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.GetterSetterInfo;
 import com.tcdng.unify.core.util.ReflectUtils;
@@ -40,6 +41,10 @@ public abstract class AbstractValueStore implements ValueStore {
     private ValueStorePolicy policy;
     
     private Map<String, Object> savedValues;
+
+    private ValueStoreReader reader;
+
+    private ValueStoreWriter writer;
     
     @Override
     public String getDataPrefix() {
@@ -193,6 +198,32 @@ public abstract class AbstractValueStore implements ValueStore {
         savedValues = null;
     }
 
+    @Override
+    public ValueStoreReader getReader() {
+        if (reader == null) {
+            synchronized (this) {
+                if (reader == null) {
+                    reader = new ValueStoreReaderImpl(this);
+                }
+            }
+        }
+
+        return reader;
+    }
+
+    @Override
+    public ValueStoreWriter getWriter() {
+        if (writer == null) {
+            synchronized (this) {
+                if (writer == null) {
+                    writer = new ValueStoreWriterImpl(this);
+                }
+            }
+        }
+
+        return writer;
+    }
+
     protected ValueStorePolicy getPolicy() {
         return policy;
     }
@@ -200,5 +231,138 @@ public abstract class AbstractValueStore implements ValueStore {
     protected abstract void doSetDataIndex(int dataIndex);
     
     protected abstract Class<?> getDataClass() throws UnifyException;
+    
+    private class ValueStoreWriterImpl implements ValueStoreWriter{
+        
+        private ValueStore valueStore;
+
+        public ValueStoreWriterImpl(ValueStore valueStore) {
+            this.valueStore = valueStore;
+        }
+
+        @Override
+        public void writeScratch(String fieldName, Object value) throws UnifyException {
+            valueStore.setTempValue(fieldName, value);
+        }
+
+        @Override
+        public void write(String fieldName, Object value) throws UnifyException {
+            valueStore.store(fieldName, value);
+        }
+
+        @Override
+        public void write(String fieldName, Object value, Formatter<?> formatter) throws UnifyException {
+            valueStore.store(fieldName, value, formatter);
+        }
+        
+        @Override
+        public Object getValueObject() {
+            return valueStore.getValueObject();
+        }
+
+        @Override
+        public Object getTempValue(String name) throws UnifyException {
+            return valueStore.getTempValue(name);
+        }
+
+        @Override
+        public <T> T getTempValue(Class<T> type, String name) throws UnifyException {
+            return valueStore.getTempValue(type, name);
+        }
+
+        @Override
+        public void setTempValue(String name, Object value) throws UnifyException {
+            valueStore.setTempValue(name, value);
+        }
+
+        @Override
+        public boolean isTempValue(String name) {
+            return valueStore.isTempValue(name);
+        }
+    }
+
+    private class ValueStoreReaderImpl implements ValueStoreReader {
+        
+        private ValueStore valueStore;
+        
+        public ValueStoreReaderImpl(ValueStore valueStore) {
+            this.valueStore = valueStore;
+        }
+
+        @Override
+        public boolean isNull(String name) throws UnifyException {
+        	return valueStore.isNull(name);
+        }
+
+        @Override
+        public boolean isNotNull(String name) throws UnifyException {
+        	return valueStore.isNotNull(name);
+        }
+
+        @Override
+        public Object readScratch(String fieldName) throws UnifyException {
+            return valueStore.getTempValue(fieldName);
+        }
+
+        @Override
+        public <T> T readScratch(Class<T> type, String fieldName) throws UnifyException {
+            return valueStore.getTempValue(type, fieldName);
+        }
+
+        @Override
+        public Object read(String fieldName) throws UnifyException {
+            return valueStore.retrieve(fieldName);
+        }
+
+        @Override
+        public <T> T read(Class<T> type, String fieldName) throws UnifyException {
+            return valueStore.retrieve(type, fieldName);
+        }
+        
+        @Override
+        public ValueStore getValueStore() {
+            return valueStore;
+        }
+        
+        @Override
+        public Object getValueObject() {
+            return valueStore.getValueObject();
+        }
+
+        @Override
+        public int getDataIndex() {
+        	return valueStore.getDataIndex();
+        }
+
+        @Override
+        public void setDataIndex(int dataIndex) {
+        	valueStore.setDataIndex(dataIndex);
+        }
+
+        @Override
+		public int size() {
+			return valueStore.size();
+		}
+
+		@Override
+        public Object getTempValue(String name) throws UnifyException {
+            return valueStore.getTempValue(name);
+        }
+
+        @Override
+        public <T> T getTempValue(Class<T> type, String name) throws UnifyException {
+            return valueStore.getTempValue(type, name);
+        }
+
+        @Override
+        public void setTempValue(String name, Object value) throws UnifyException {
+            valueStore.setTempValue(name, value);
+        }
+
+        @Override
+        public boolean isTempValue(String name) {
+            return valueStore.isTempValue(name);
+        }
+    }
 
 }

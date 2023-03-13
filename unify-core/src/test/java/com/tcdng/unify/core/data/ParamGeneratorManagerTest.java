@@ -41,23 +41,23 @@ import com.tcdng.unify.core.util.StringUtils;
  */
 public class ParamGeneratorManagerTest extends AbstractUnifyComponentTest {
 
-    @Test
-    public void testGenerationNoGen() throws Exception {
-        ParamGeneratorManager manager = getComponent(ParamGeneratorManager.class,
-                ApplicationComponents.APPLICATION_PARAMGENERATORMANAGER);
-        ValueStore paramValueStore = new BeanValueStore(new Candidate("John", 25));
-        ValueStore generatorValueStore = new BeanValueStore(new Address("38 Warehouse Road", "Apapa Lagos"));
-        List<StringToken> tokenList = StringUtils
-                .breakdownParameterizedString("Hello {{name}}. You are {{age}} years old.");
-        ParameterizedStringGenerator generator = manager.getParameterizedStringGenerator(paramValueStore,
-                generatorValueStore, tokenList);
-        assertNotNull(generator);
+	@Test
+	public void testGenerationNoGen() throws Exception {
+		ParamGeneratorManager manager = getComponent(ParamGeneratorManager.class,
+				ApplicationComponents.APPLICATION_PARAMGENERATORMANAGER);
+		ValueStore paramValueStore = new BeanValueStore(new Candidate("John", 25));
+		ValueStore generatorValueStore = new BeanValueStore(new Address("38 Warehouse Road", "Apapa Lagos"));
+		List<StringToken> tokenList = StringUtils
+				.breakdownParameterizedString("Hello {{name}}. You are {{age}} years old.");
+		ParameterizedStringGenerator generator = manager.getParameterizedStringGenerator(paramValueStore.getReader(),
+				generatorValueStore.getReader(), tokenList);
+		assertNotNull(generator);
 
-        String txt = generator.generate();
-        assertEquals("Hello John. You are 25 years old.", txt);
-    }
+		String txt = generator.generate();
+		assertEquals("Hello John. You are 25 years old.", txt);
+	}
 
-    @Test
+	@Test
 	public void testGenerateFormatted() throws Exception {
 		ParamGeneratorManager manager = getComponent(ParamGeneratorManager.class,
 				ApplicationComponents.APPLICATION_PARAMGENERATORMANAGER);
@@ -67,8 +67,8 @@ public class ParamGeneratorManagerTest extends AbstractUnifyComponentTest {
 		ValueStore generatorValueStore = new BeanValueStore(new Address("38 Warehouse Road", "Apapa Lagos"));
 		List<StringToken> tokenList = StringUtils.breakdownParameterizedString(
 				"Name:{{name}}, age:{{age}}, employment:{{employmentDt#DYD}}, salary:{{salary#DEG}}\n");
-		ParameterizedStringGenerator generator = manager.getParameterizedStringGenerator(paramValueStore,
-				generatorValueStore, tokenList);
+		ParameterizedStringGenerator generator = manager.getParameterizedStringGenerator(paramValueStore.getReader(),
+				generatorValueStore.getReader(), tokenList);
 		assertNotNull(generator);
 
 		String txt = generator.generate();
@@ -79,118 +79,118 @@ public class ParamGeneratorManagerTest extends AbstractUnifyComponentTest {
 		assertEquals("Name:Bashir, age:45, employment:1978-05-12, salary:4,300.25\n", txt);
 	}
 
-    @Test
-    public void testGenerationNoGenList() throws Exception {
-        ParamGeneratorManager manager = getComponent(ParamGeneratorManager.class,
-                ApplicationComponents.APPLICATION_PARAMGENERATORMANAGER);
-        ValueStore paramValueStore = new BeanValueListStore(
-                Arrays.asList(new Candidate("John", 25), new Candidate("Bashir", 45)));
-        ValueStore generatorValueStore = new BeanValueStore(new Address("38 Warehouse Road", "Apapa Lagos"));
-        List<StringToken> tokenList = StringUtils
-                .breakdownParameterizedString("Hello {{name}}. You are {{age}} years old.");
-        ParameterizedStringGenerator generator = manager.getParameterizedStringGenerator(paramValueStore,
-                generatorValueStore, tokenList);
-        assertNotNull(generator);
+	@Test
+	public void testGenerationNoGenList() throws Exception {
+		ParamGeneratorManager manager = getComponent(ParamGeneratorManager.class,
+				ApplicationComponents.APPLICATION_PARAMGENERATORMANAGER);
+		ValueStore paramValueStore = new BeanValueListStore(
+				Arrays.asList(new Candidate("John", 25), new Candidate("Bashir", 45)));
+		ValueStore generatorValueStore = new BeanValueStore(new Address("38 Warehouse Road", "Apapa Lagos"));
+		List<StringToken> tokenList = StringUtils
+				.breakdownParameterizedString("Hello {{name}}. You are {{age}} years old.");
+		ParameterizedStringGenerator generator = manager.getParameterizedStringGenerator(paramValueStore.getReader(),
+				generatorValueStore.getReader(), tokenList);
+		assertNotNull(generator);
 
-        String txt = generator.generate();
-        assertEquals("Hello John. You are 25 years old.", txt);
+		String txt = generator.generate();
+		assertEquals("Hello John. You are 25 years old.", txt);
 
-        generator.setDataIndex(1);
-        txt = generator.generate();
-        assertEquals("Hello Bashir. You are 45 years old.", txt);
-    }
+		generator.setDataIndex(1);
+		txt = generator.generate();
+		assertEquals("Hello Bashir. You are 45 years old.", txt);
+	}
 
-    @Test
-    public void testGenerationGenOnly() throws Exception {
-        ParamGeneratorManager manager = getComponent(ParamGeneratorManager.class,
-                ApplicationComponents.APPLICATION_PARAMGENERATORMANAGER);
-        ValueStore paramValueStore = new BeanValueStore(new Candidate("John", 25));
-        ValueStore generatorValueStore = new BeanValueStore(new Address("38 Warehouse Road", "Apapa Lagos"));
-        List<StringToken> tokenList = StringUtils
-                .breakdownParameterizedString("My address: {{g:test-gen-b}} {{g:test-gen-a}}.");
-        ParameterizedStringGenerator generator = manager.getParameterizedStringGenerator(paramValueStore,
-                generatorValueStore, tokenList);
-        assertNotNull(generator);
+	@Test
+	public void testGenerationGenOnly() throws Exception {
+		ParamGeneratorManager manager = getComponent(ParamGeneratorManager.class,
+				ApplicationComponents.APPLICATION_PARAMGENERATORMANAGER);
+		ValueStore paramValueStore = new BeanValueStore(new Candidate("John", 25));
+		ValueStore generatorValueStore = new BeanValueStore(new Address("38 Warehouse Road", "Apapa Lagos"));
+		List<StringToken> tokenList = StringUtils
+				.breakdownParameterizedString("My address: {{g:test-gen-b}} {{g:test-gen-a}}.");
+		ParameterizedStringGenerator generator = manager.getParameterizedStringGenerator(paramValueStore.getReader(),
+				generatorValueStore.getReader(), tokenList);
+		assertNotNull(generator);
 
-        String txt = generator.generate();
-        assertEquals("My address: Apapa Lagos - John 38 Warehouse Road - 25.", txt);
-    }
+		String txt = generator.generate();
+		assertEquals("My address: Apapa Lagos - John 38 Warehouse Road - 25.", txt);
+	}
 
-    @Test
-    public void testGenerationMixed() throws Exception {
-        ParamGeneratorManager manager = getComponent(ParamGeneratorManager.class,
-                ApplicationComponents.APPLICATION_PARAMGENERATORMANAGER);
-        ValueStore paramValueStore = new BeanValueStore(new Candidate("Sam", 25));
-        ValueStore generatorValueStore = new BeanValueStore(new Address("38 Warehouse Road", "Apapa Lagos"));
-        List<StringToken> tokenList = StringUtils
-                .breakdownParameterizedString("{{g:test-gen-b}} Hello {{name}} {{g:test-gen-a}}.");
-        ParameterizedStringGenerator generator = manager.getParameterizedStringGenerator(paramValueStore,
-                generatorValueStore, tokenList);
-        assertNotNull(generator);
+	@Test
+	public void testGenerationMixed() throws Exception {
+		ParamGeneratorManager manager = getComponent(ParamGeneratorManager.class,
+				ApplicationComponents.APPLICATION_PARAMGENERATORMANAGER);
+		ValueStore paramValueStore = new BeanValueStore(new Candidate("Sam", 25));
+		ValueStore generatorValueStore = new BeanValueStore(new Address("38 Warehouse Road", "Apapa Lagos"));
+		List<StringToken> tokenList = StringUtils
+				.breakdownParameterizedString("{{g:test-gen-b}} Hello {{name}} {{g:test-gen-a}}.");
+		ParameterizedStringGenerator generator = manager.getParameterizedStringGenerator(paramValueStore.getReader(),
+				generatorValueStore.getReader(), tokenList);
+		assertNotNull(generator);
 
-        String txt = generator.generate();
-        assertEquals("Apapa Lagos - Sam Hello Sam 38 Warehouse Road - 25.", txt);
-    }
+		String txt = generator.generate();
+		assertEquals("Apapa Lagos - Sam Hello Sam 38 Warehouse Road - 25.", txt);
+	}
 
-    @Test
-    public void testGenerationMixedList() throws Exception {
-        ParamGeneratorManager manager = getComponent(ParamGeneratorManager.class,
-                ApplicationComponents.APPLICATION_PARAMGENERATORMANAGER);
-        ValueStore paramValueStore = new BeanValueListStore(
-                Arrays.asList(new Candidate("Samuel", 25), new Candidate("James", 45)));
-        ValueStore generatorValueStore = new BeanValueStore(new Address("38 Warehouse Road", "Apapa Lagos"));
-        List<StringToken> tokenList = StringUtils
-                .breakdownParameterizedString("{{g:test-gen-b}} Hello {{name}} {{g:test-gen-a}}.");
-        ParameterizedStringGenerator generator = manager.getParameterizedStringGenerator(paramValueStore,
-                generatorValueStore, tokenList);
-        assertNotNull(generator);
+	@Test
+	public void testGenerationMixedList() throws Exception {
+		ParamGeneratorManager manager = getComponent(ParamGeneratorManager.class,
+				ApplicationComponents.APPLICATION_PARAMGENERATORMANAGER);
+		ValueStore paramValueStore = new BeanValueListStore(
+				Arrays.asList(new Candidate("Samuel", 25), new Candidate("James", 45)));
+		ValueStore generatorValueStore = new BeanValueStore(new Address("38 Warehouse Road", "Apapa Lagos"));
+		List<StringToken> tokenList = StringUtils
+				.breakdownParameterizedString("{{g:test-gen-b}} Hello {{name}} {{g:test-gen-a}}.");
+		ParameterizedStringGenerator generator = manager.getParameterizedStringGenerator(paramValueStore.getReader(),
+				generatorValueStore.getReader(), tokenList);
+		assertNotNull(generator);
 
-        String txt = generator.generate();
-        assertEquals("Apapa Lagos - Samuel Hello Samuel 38 Warehouse Road - 25.", txt);
+		String txt = generator.generate();
+		assertEquals("Apapa Lagos - Samuel Hello Samuel 38 Warehouse Road - 25.", txt);
 
-        generator.setDataIndex(1);
-        txt = generator.generate();
-        assertEquals("Apapa Lagos - James Hello James 38 Warehouse Road - 45.", txt);
-    }
+		generator.setDataIndex(1);
+		txt = generator.generate();
+		assertEquals("Apapa Lagos - James Hello James 38 Warehouse Road - 45.", txt);
+	}
 
-    @Test(expected = UnifyException.class)
-    public void testGenerationUnknownGenerator() throws Exception {
-        ParamGeneratorManager manager = getComponent(ParamGeneratorManager.class,
-                ApplicationComponents.APPLICATION_PARAMGENERATORMANAGER);
-        ValueStore paramValueStore = new BeanValueStore(new Candidate("Sam", 25));
-        ValueStore generatorValueStore = new BeanValueStore(new Address("38 Warehouse Road", "Apapa Lagos"));
-        List<StringToken> tokenList = StringUtils
-                .breakdownParameterizedString("{{g:test-gen-c}} Hello {{name}} {{g:test-gen-a}}.");
-        manager.getParameterizedStringGenerator(paramValueStore,
-                generatorValueStore, tokenList);
-    }
+	@Test(expected = UnifyException.class)
+	public void testGenerationUnknownGenerator() throws Exception {
+		ParamGeneratorManager manager = getComponent(ParamGeneratorManager.class,
+				ApplicationComponents.APPLICATION_PARAMGENERATORMANAGER);
+		ValueStore paramValueStore = new BeanValueStore(new Candidate("Sam", 25));
+		ValueStore generatorValueStore = new BeanValueStore(new Address("38 Warehouse Road", "Apapa Lagos"));
+		List<StringToken> tokenList = StringUtils
+				.breakdownParameterizedString("{{g:test-gen-c}} Hello {{name}} {{g:test-gen-a}}.");
+		manager.getParameterizedStringGenerator(paramValueStore.getReader(), generatorValueStore.getReader(),
+				tokenList);
+	}
 
-    @Override
-    protected void onSetup() throws Exception {
+	@Override
+	protected void onSetup() throws Exception {
 
-    }
+	}
 
-    @Override
-    protected void onTearDown() throws Exception {
+	@Override
+	protected void onTearDown() throws Exception {
 
-    }
+	}
 
-    public class Candidate {
+	public class Candidate {
 
-        private String name;
+		private String name;
 
-        private Date employmentDt;
+		private Date employmentDt;
 
-        private BigDecimal salary;
+		private BigDecimal salary;
 
-        private int age;
+		private int age;
 
-        public Candidate(String name, int age) {
-            this.name = name;
-            this.age = age;
-        }
+		public Candidate(String name, int age) {
+			this.name = name;
+			this.age = age;
+		}
 
-        private Candidate(String name, Date employmentDt, BigDecimal salary, int age) {
+		private Candidate(String name, Date employmentDt, BigDecimal salary, int age) {
 			this.name = name;
 			this.employmentDt = employmentDt;
 			this.salary = salary;
@@ -199,9 +199,9 @@ public class ParamGeneratorManagerTest extends AbstractUnifyComponentTest {
 
 		public Candidate() {
 
-        }
+		}
 
-        public Date getEmploymentDt() {
+		public Date getEmploymentDt() {
 			return employmentDt;
 		}
 
@@ -218,53 +218,53 @@ public class ParamGeneratorManagerTest extends AbstractUnifyComponentTest {
 		}
 
 		public String getName() {
-            return name;
-        }
+			return name;
+		}
 
-        public void setName(String name) {
-            this.name = name;
-        }
+		public void setName(String name) {
+			this.name = name;
+		}
 
-        public int getAge() {
-            return age;
-        }
+		public int getAge() {
+			return age;
+		}
 
-        public void setAge(int age) {
-            this.age = age;
-        }
+		public void setAge(int age) {
+			this.age = age;
+		}
 
-    }
+	}
 
-    public class Address {
+	public class Address {
 
-        private String address1;
+		private String address1;
 
-        private String address2;
+		private String address2;
 
-        public Address(String address1, String address2) {
-            this.address1 = address1;
-            this.address2 = address2;
-        }
+		public Address(String address1, String address2) {
+			this.address1 = address1;
+			this.address2 = address2;
+		}
 
-        public Address() {
+		public Address() {
 
-        }
+		}
 
-        public String getAddress1() {
-            return address1;
-        }
+		public String getAddress1() {
+			return address1;
+		}
 
-        public void setAddress1(String address1) {
-            this.address1 = address1;
-        }
+		public void setAddress1(String address1) {
+			this.address1 = address1;
+		}
 
-        public String getAddress2() {
-            return address2;
-        }
+		public String getAddress2() {
+			return address2;
+		}
 
-        public void setAddress2(String address2) {
-            this.address2 = address2;
-        }
+		public void setAddress2(String address2) {
+			this.address2 = address2;
+		}
 
-    }
+	}
 }
