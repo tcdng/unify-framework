@@ -84,7 +84,7 @@ public final class StringTokenUtils {
 			tokenList.addAll(StringTokenUtils.breakdownTextString((string.substring(index))));
 		}
 
-		return tokenList;
+		return Collections.unmodifiableList(tokenList);
 	}
 
 	private static List<StringToken> breakdownTextString(String text) {		
@@ -103,6 +103,6 @@ public final class StringTokenUtils {
 			resultList.add(new TextToken(parts[lim]));
 		}
 
-		return resultList;
+		return Collections.unmodifiableList(resultList);
 	}
 }

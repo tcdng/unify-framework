@@ -18,12 +18,11 @@ package com.tcdng.unify.core;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.LogManager;
-import java.util.logging.Logger;
 
 import com.tcdng.unify.core.util.IOUtils;
 import com.tcdng.unify.core.util.StringUtils;
@@ -39,13 +38,11 @@ import com.tcdng.unify.core.util.UnifyConfigUtils;
  */
 public class Unify {
 
-    private static final Logger LOGGER = Logger.getLogger(Unify.class.getName());
-
     private static UnifyContainer uc;
 
     public static void main(String[] args) {
-        if (args.length == 0) {
-            LOGGER.log(Level.SEVERE, "Operation argument is required");
+         if (args.length == 0) {
+            log("Operation argument is required");
             System.exit(1);
         }
 
@@ -90,7 +87,7 @@ public class Unify {
         } else if ("help".equalsIgnoreCase(operation)) {
             Unify.doHelp();
         } else {
-            LOGGER.log(Level.SEVERE, "Unknown operation - " + operation);
+            log("Unknown operation - [{0}]", operation);
             System.exit(1);
         }
     }
@@ -152,14 +149,13 @@ public class Unify {
         UnifyContainerEnvironment uce = null;
         UnifyContainerConfig.Builder uccb = UnifyContainerConfig.newBuilder();
         try {
-            LOGGER.log(Level.INFO, "Scanning classpath type repository...");
+            log("Scanning classpath type repository...");
             TypeRepository tr = TypeUtils.getTypeRepositoryFromClasspath(baseUrls);
             uce = new UnifyContainerEnvironment(tr, workingFolder);
             UnifyConfigUtils.readConfigFromTypeRepository(uccb, tr);
             uccb.deploymentMode(deploymentMode);
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Failed scanning classpath type repository.", e);
-            e.printStackTrace();
+            log("Failed scanning classpath type repository.", e);
             System.exit(1);
         }
 
@@ -170,18 +166,16 @@ public class Unify {
 
         final String environment = System.getProperty("unify.environment");
         if (!StringUtils.isBlank(environment)) {
-            LOGGER.log(Level.INFO, "Environment specification detected...");
-            LOGGER.log(Level.INFO, "Resolving container configuration file for environment...");
+            log("Environment specification detected...");
+            log("Resolving container configuration file for environment [{0}]...", environment);
             configFile = UnifyConfigUtils.resolveConfigFileToEnvironment(configFile, environment);
         }
         
         try {
-            LOGGER.log(Level.INFO, "Reading container configuration file [{0}]...", configFile);
+            log("Reading container configuration file [{0}]...", configFile);
             xmlInputStream = IOUtils.openFileResourceInputStream(configFile, workingFolder);
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE,
-                    "Unable to open configuration file - " + IOUtils.buildFilename(workingFolder, configFile), e);
-            e.printStackTrace();
+            log("Unable to open configuration file - " + IOUtils.buildFilename(workingFolder, configFile), e);
             System.exit(1);
         }
 
@@ -189,9 +183,7 @@ public class Unify {
             UnifyConfigUtils.readConfigFromXml(uccb, xmlInputStream, workingFolder);
         } catch (UnifyException e) {
             IOUtils.close(xmlInputStream);
-            LOGGER.log(Level.SEVERE,
-                    "Failed reading configuration file - " + IOUtils.buildFilename(workingFolder, configFile), e);
-            e.printStackTrace();
+            log("Failed reading configuration file - " + IOUtils.buildFilename(workingFolder, configFile), e);
             System.exit(1);
         } finally {
             IOUtils.close(xmlInputStream);
@@ -205,8 +197,7 @@ public class Unify {
             UnifyContainerConfig ucc = uccb.build();
             Unify.startup(uce, ucc);
         } catch (UnifyException e) {
-            LOGGER.log(Level.SEVERE, "Error initializing Unify container.", e);
-            e.printStackTrace();
+            log("Error initializing Unify container.", e);
             System.exit(1);
         }
     }
@@ -244,8 +235,7 @@ public class Unify {
                 }
             }
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Error resolving packaged JARs.", e);
-            e.printStackTrace();
+            log("Error resolving packaged JARs.", e);
        }
 
         return baseUrls.isEmpty() ? null : baseUrls.toArray(new URL[baseUrls.size()]);
@@ -282,10 +272,18 @@ public class Unify {
                 }
             }
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Error resolving packaged JARs.", e);
-            e.printStackTrace();
+            log("Error resolving packaged JARs.", e);
        }
 
         return baseUrls.isEmpty() ? null : baseUrls.toArray(new URL[baseUrls.size()]);
+    }
+    
+    private static void log(String message, Object... params) {
+    	System.out.println(MessageFormat.format(message, params));
+    }
+    
+    private static void log(String message, Exception e) {
+    	System.out.println(message);
+    	e.printStackTrace();
     }
 }

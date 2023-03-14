@@ -29,9 +29,6 @@ import org.junit.Test;
 
 import com.tcdng.unify.core.AbstractUnifyComponentTest;
 import com.tcdng.unify.core.data.TaggedXmlMessage;
-import com.tcdng.unify.web.remotecall.PushXmlMessageParams;
-import com.tcdng.unify.web.remotecall.PushXmlMessageResult;
-import com.tcdng.unify.web.remotecall.RemoteCallXmlMessageStreamer;
 
 /**
  * Remote call XML message streamer test.

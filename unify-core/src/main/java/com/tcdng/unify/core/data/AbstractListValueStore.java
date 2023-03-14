@@ -40,10 +40,6 @@ public abstract class AbstractListValueStore<T> extends AbstractValueStore {
 
     private Map<String, Object> temp;
 
-    private ValueStoreReader reader;
-
-    private ValueStoreWriter writer;
-
     public AbstractListValueStore(List<? extends T> storage, String dataMarker, int dataIndex) {
         this.storage = storage;
         this.dataMarker = dataMarker;
@@ -207,32 +203,6 @@ public abstract class AbstractListValueStore<T> extends AbstractValueStore {
     @Override
     public Object getValueObjectAtDataIndex() {
         return storage != null && dataIndex >= 0 ? storage.get(dataIndex) : null;
-    }
-
-    @Override
-    public ValueStoreReader getReader() {
-        if (reader == null) {
-            synchronized (this) {
-                if (reader == null) {
-                    reader = new ValueStoreReader(this);
-                }
-            }
-        }
-
-        return reader;
-    }
-
-    @Override
-    public ValueStoreWriter getWriter() {
-        if (writer == null) {
-            synchronized (this) {
-                if (writer == null) {
-                    writer = new ValueStoreWriter(this);
-                }
-            }
-        }
-
-        return writer;
     }
 
     @Override

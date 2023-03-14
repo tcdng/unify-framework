@@ -20,7 +20,7 @@ import java.util.List;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.criterion.CompoundRestriction;
 import com.tcdng.unify.core.criterion.Restriction;
-import com.tcdng.unify.core.data.ValueStore;
+import com.tcdng.unify.core.data.ValueStoreReader;
 
 /**
  * Convenient abstract base class for compound object filter policies.
@@ -31,16 +31,17 @@ import com.tcdng.unify.core.data.ValueStore;
 public abstract class AbstractCompoundObjectFilterPolicy implements ObjectFilterPolicy {
 
 	@Override
-	public boolean match(ValueStore valueStore, Restriction restriction) throws UnifyException {
-		return doMatch(valueStore, ((CompoundRestriction) restriction).getRestrictionList());
+	public boolean matchReader(ValueStoreReader reader, Restriction restriction) throws UnifyException {
+		return doMatchReader(reader, ((CompoundRestriction) restriction).getRestrictionList());
 	}
 
 	@Override
-	public boolean match(Object bean, Restriction restriction) throws UnifyException {
-		return doMatch(bean, ((CompoundRestriction) restriction).getRestrictionList());
+	public boolean matchObject(Object bean, Restriction restriction) throws UnifyException {
+		return doMatchObject(bean, ((CompoundRestriction) restriction).getRestrictionList());
 	}
 
-	protected abstract boolean doMatch(ValueStore valueStore, List<Restriction> restrictionList) throws UnifyException;
+	protected abstract boolean doMatchReader(ValueStoreReader reader, List<Restriction> restrictionList)
+			throws UnifyException;
 
-	protected abstract boolean doMatch(Object bean, List<Restriction> restrictionList) throws UnifyException;
+	protected abstract boolean doMatchObject(Object bean, List<Restriction> restrictionList) throws UnifyException;
 }

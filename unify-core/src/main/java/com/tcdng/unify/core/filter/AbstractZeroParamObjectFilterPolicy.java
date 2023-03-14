@@ -18,7 +18,7 @@ package com.tcdng.unify.core.filter;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.criterion.Restriction;
 import com.tcdng.unify.core.criterion.ZeroParamRestriction;
-import com.tcdng.unify.core.data.ValueStore;
+import com.tcdng.unify.core.data.ValueStoreReader;
 import com.tcdng.unify.core.util.DataUtils;
 
 /**
@@ -30,12 +30,12 @@ import com.tcdng.unify.core.util.DataUtils;
 public abstract class AbstractZeroParamObjectFilterPolicy implements ObjectFilterPolicy {
 
 	@Override
-	public boolean match(ValueStore valueStore, Restriction restriction) throws UnifyException {
-		return doMatch(valueStore.retrieve(((ZeroParamRestriction) restriction).getFieldName()));
+	public boolean matchReader(ValueStoreReader reader, Restriction restriction) throws UnifyException {
+		return doMatch(reader.read(((ZeroParamRestriction) restriction).getFieldName()));
 	}
 
 	@Override
-	public boolean match(Object bean, Restriction restriction) throws UnifyException {
+	public boolean matchObject(Object bean, Restriction restriction) throws UnifyException {
 		return doMatch(DataUtils.getNestedBeanProperty(bean, ((ZeroParamRestriction) restriction).getFieldName()));
 	}
 

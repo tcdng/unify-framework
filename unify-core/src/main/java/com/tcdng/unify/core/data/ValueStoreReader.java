@@ -24,63 +24,35 @@ import com.tcdng.unify.core.UnifyException;
  * @author The Code Department
  * @since 1.0
  */
-public class ValueStoreReader {
-    
-    private ValueStore valueStore;
-    
-    public ValueStoreReader(ValueStore valueStore) {
-        this.valueStore = valueStore;
-    }
+public interface ValueStoreReader {
 
-    public ValueStoreReader(Object valueObject) {
-        this.valueStore = new BeanValueStore(valueObject);
-    }
-    
-    public boolean isNull(String name) throws UnifyException {
-    	return valueStore.isNull(name);
-    }
+	boolean isNull(String name) throws UnifyException;
 
-    public boolean isNotNull(String name) throws UnifyException {
-    	return valueStore.isNotNull(name);
-    }
+	boolean isNotNull(String name) throws UnifyException;
 
-    public Object readScratch(String fieldName) throws UnifyException {
-        return valueStore.getTempValue(fieldName);
-    }
+	Object readScratch(String fieldName) throws UnifyException;
 
-    public <T> T readScratch(Class<T> type, String fieldName) throws UnifyException {
-        return valueStore.getTempValue(type, fieldName);
-    }
+	<T> T readScratch(Class<T> type, String fieldName) throws UnifyException;
 
-    public Object read(String fieldName) throws UnifyException {
-        return valueStore.retrieve(fieldName);
-    }
+	Object read(String fieldName) throws UnifyException;
 
-    public <T> T read(Class<T> type, String fieldName) throws UnifyException {
-        return valueStore.retrieve(type, fieldName);
-    }
-    
-    public ValueStore getValueStore() {
-        return valueStore;
-    }
-    
-    public Object getValueObject() {
-        return valueStore.getValueObject();
-    }
+	<T> T read(Class<T> type, String fieldName) throws UnifyException;
 
-    public Object getTempValue(String name) throws UnifyException {
-        return valueStore.getTempValue(name);
-    }
+	ValueStore getValueStore();
 
-    public <T> T getTempValue(Class<T> type, String name) throws UnifyException {
-        return valueStore.getTempValue(type, name);
-    }
+	Object getValueObject();
 
-    public void setTempValue(String name, Object value) throws UnifyException {
-        valueStore.setTempValue(name, value);
-    }
+	int getDataIndex();
 
-    public boolean isTempValue(String name) {
-        return valueStore.isTempValue(name);
-    }
+	void setDataIndex(int dataIndex);
+	
+    int size();
+
+	Object getTempValue(String name) throws UnifyException;
+
+	<T> T getTempValue(Class<T> type, String name) throws UnifyException;
+
+	void setTempValue(String name, Object value) throws UnifyException;
+
+	boolean isTempValue(String name);
 }

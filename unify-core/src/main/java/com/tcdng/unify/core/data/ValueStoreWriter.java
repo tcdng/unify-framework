@@ -25,47 +25,21 @@ import com.tcdng.unify.core.format.Formatter;
  * @author The Code Department
  * @since 1.0
  */
-public class ValueStoreWriter {
+public interface ValueStoreWriter {
     
-    private ValueStore valueStore;
+    void writeScratch(String fieldName, Object value) throws UnifyException;
 
-    public ValueStoreWriter(ValueStore valueStore) {
-        this.valueStore = valueStore;
-    }
-
-    public ValueStoreWriter(Object valueObject) {
-        this.valueStore = new BeanValueStore(valueObject);
-    }
-
-    public void writeScratch(String fieldName, Object value) throws UnifyException {
-        valueStore.setTempValue(fieldName, value);
-    }
-
-    public void write(String fieldName, Object value) throws UnifyException {
-        valueStore.store(fieldName, value);
-    }
-
-    public void write(String fieldName, Object value, Formatter<?> formatter) throws UnifyException {
-        valueStore.store(fieldName, value, formatter);
-    }
+    void write(String fieldName, Object value) throws UnifyException;
     
-    public Object getValueObject() {
-        return valueStore.getValueObject();
-    }
+    void write(String fieldName, Object value, Formatter<?> formatter) throws UnifyException;
+    
+    Object getValueObject();
 
-    public Object getTempValue(String name) throws UnifyException {
-        return valueStore.getTempValue(name);
-    }
+    Object getTempValue(String name) throws UnifyException;
 
-    public <T> T getTempValue(Class<T> type, String name) throws UnifyException {
-        return valueStore.getTempValue(type, name);
-    }
+    <T> T getTempValue(Class<T> type, String name) throws UnifyException;
 
-    public void setTempValue(String name, Object value) throws UnifyException {
-        valueStore.setTempValue(name, value);
-    }
+    void setTempValue(String name, Object value) throws UnifyException;
 
-    public boolean isTempValue(String name) {
-        return valueStore.isTempValue(name);
-    }
+    boolean isTempValue(String name);
 }

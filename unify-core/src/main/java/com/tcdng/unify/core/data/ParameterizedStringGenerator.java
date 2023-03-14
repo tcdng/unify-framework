@@ -34,9 +34,9 @@ import com.tcdng.unify.core.util.DataUtils;
  */
 public class ParameterizedStringGenerator {
 
-	private final ValueStore itemValueStore;
+	private final ValueStoreReader itemReader;
 
-	private final ValueStore parentValueStore;
+	private final ValueStoreReader parentReader;
 
 	private final List<StringToken> tokenList;
 
@@ -44,11 +44,11 @@ public class ParameterizedStringGenerator {
 
 	private final Map<StandardFormatType, Formatter<?>> formatters;
 
-	public ParameterizedStringGenerator(ValueStore itemValueStore, ValueStore parentValueStore,
+	public ParameterizedStringGenerator(ValueStoreReader itemReader, ValueStoreReader parentReader,
 			List<StringToken> tokenList, Map<StringToken, ParamGenerator> generators,
 			Map<StandardFormatType, Formatter<?>> formatters) {
-		this.itemValueStore = itemValueStore;
-		this.parentValueStore = parentValueStore;
+		this.itemReader = itemReader;
+		this.parentReader = parentReader;
 		this.tokenList = tokenList;
 		this.generators = generators;
 		this.formatters = formatters;
@@ -71,11 +71,11 @@ public class ParameterizedStringGenerator {
 	}
 
 	public int getDataIndex() {
-		return itemValueStore.getDataIndex();
+		return itemReader.getDataIndex();
 	}
 
 	public ParameterizedStringGenerator setDataIndex(int dataIndex) {
-		itemValueStore.setDataIndex(dataIndex);
+		itemReader.setDataIndex(dataIndex);
 		return this;
 	}
 
@@ -85,21 +85,23 @@ public class ParameterizedStringGenerator {
 		if (token.isParam()) {
 			if (token.isFormattedParam()) {
 				String param = ((ParamToken) token).getParam();
-				val = itemValueStore.getTempValue(param);
+				val = itemReader.getTempValue(param);
 				if (val == null) {
-					val = itemValueStore.retrieve(param);
+					val = itemReader.read(param);
 				}
 
 				Formatter<Object> formatter = (Formatter<Object>) formatters.get(((ParamToken) token).getFormatType());
 				val = formatter != null ? formatter.format(val) : val;
 			} else if (token.isGeneratorParam()) {
 				ParamGenerator generator = generators.get(token);
-				val = generator != null ? generator.generate(itemValueStore != null ? itemValueStore.getReader() : null,
-						parentValueStore != null ? parentValueStore.getReader() : null, (ParamToken) token) : null;
+				val = generator != null
+						? generator.generate(itemReader != null ? itemReader : null,
+								parentReader != null ? parentReader : null, (ParamToken) token)
+						: null;
 			} else {
-				val = itemValueStore.getTempValue(token.getToken());
+				val = itemReader.getTempValue(token.getToken());
 				if (val == null) {
-					val = itemValueStore.retrieve(token.getToken());
+					val = itemReader.read(token.getToken());
 				}
 			}
 		} else {

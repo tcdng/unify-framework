@@ -22,7 +22,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.criterion.Restriction;
 import com.tcdng.unify.core.criterion.RestrictionField;
 import com.tcdng.unify.core.criterion.SingleParamRestriction;
-import com.tcdng.unify.core.data.ValueStore;
+import com.tcdng.unify.core.data.ValueStoreReader;
 import com.tcdng.unify.core.util.DataUtils;
 
 /**
@@ -40,16 +40,16 @@ public abstract class AbstractCollectionSizeObjectFilterPolicy implements Object
 	}
 
 	@Override
-	public boolean match(ValueStore valueStore, Restriction restriction) throws UnifyException {
+	public boolean matchReader(ValueStoreReader reader, Restriction restriction) throws UnifyException {
 		SingleParamRestriction singleParamRestriction = (SingleParamRestriction) restriction;
-		Object fieldVal = valueStore.retrieve(singleParamRestriction.getFieldName());
+		Object fieldVal = reader.read(singleParamRestriction.getFieldName());
 		if (fieldVal != null) {
 			int collSize = fieldVal.getClass().isArray() ? Array.getLength(fieldVal)
 					: ((Collection<?>) fieldVal).size();
 			Object param = singleParamRestriction.getParam();
 			if (param instanceof RestrictionField) {
 				return doMatch(collSize,
-						DataUtils.convert(int.class, valueStore.retrieve(((RestrictionField) param).getName())));
+						DataUtils.convert(int.class, reader.read(((RestrictionField) param).getName())));
 			} else {
 				return doMatch(collSize, DataUtils.convert(int.class, param));
 			}
@@ -59,7 +59,7 @@ public abstract class AbstractCollectionSizeObjectFilterPolicy implements Object
 	}
 
 	@Override
-	public boolean match(Object bean, Restriction restriction) throws UnifyException {
+	public boolean matchObject(Object bean, Restriction restriction) throws UnifyException {
 		SingleParamRestriction singleParamRestriction = (SingleParamRestriction) restriction;
 		Object fieldVal = DataUtils.getNestedBeanProperty(bean, singleParamRestriction.getFieldName());
 		if (fieldVal != null) {

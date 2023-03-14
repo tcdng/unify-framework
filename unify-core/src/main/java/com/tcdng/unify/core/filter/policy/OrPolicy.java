@@ -19,7 +19,7 @@ import java.util.List;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.criterion.Restriction;
-import com.tcdng.unify.core.data.ValueStore;
+import com.tcdng.unify.core.data.ValueStoreReader;
 import com.tcdng.unify.core.filter.AbstractCompoundObjectFilterPolicy;
 import com.tcdng.unify.core.util.FilterUtils;
 
@@ -31,26 +31,26 @@ import com.tcdng.unify.core.util.FilterUtils;
  */
 public class OrPolicy extends AbstractCompoundObjectFilterPolicy {
 
-    @Override
-	protected boolean doMatch(ValueStore valueStore, List<Restriction> restrictionList) throws UnifyException {
-        for (Restriction restriction : restrictionList) {
-            if (FilterUtils.getBeanFilterPolicy(restriction.getConditionType()).match(valueStore, restriction)) {
-                return true;
-            }
-        }
+	@Override
+	protected boolean doMatchReader(ValueStoreReader reader, List<Restriction> restrictionList) throws UnifyException {
+		for (Restriction restriction : restrictionList) {
+			if (FilterUtils.getBeanFilterPolicy(restriction.getConditionType()).matchReader(reader, restriction)) {
+				return true;
+			}
+		}
 
-        return false;
+		return false;
 	}
 
 	@Override
-    protected boolean doMatch(Object bean, List<Restriction> restrictionList) throws UnifyException {
-        for (Restriction restriction : restrictionList) {
-            if (FilterUtils.getBeanFilterPolicy(restriction.getConditionType()).match(bean, restriction)) {
-                return true;
-            }
-        }
+	protected boolean doMatchObject(Object bean, List<Restriction> restrictionList) throws UnifyException {
+		for (Restriction restriction : restrictionList) {
+			if (FilterUtils.getBeanFilterPolicy(restriction.getConditionType()).matchObject(bean, restriction)) {
+				return true;
+			}
+		}
 
-        return false;
-    }
+		return false;
+	}
 
 }

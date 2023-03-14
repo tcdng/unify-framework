@@ -23,8 +23,6 @@ import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.system.UserSessionManager;
 import com.tcdng.unify.web.UnifyWebPropertyConstants;
 import com.tcdng.unify.web.WebApplicationComponents;
-import com.tcdng.unify.web.http.AbstractHttpWebInterface;
-import com.tcdng.unify.web.http.HttpRequestHandler;
 
 /**
  * Abstract base class for embedded HTTP web servers.
