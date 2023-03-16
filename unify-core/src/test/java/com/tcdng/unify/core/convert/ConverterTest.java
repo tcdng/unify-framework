@@ -195,10 +195,11 @@ public class ConverterTest extends AbstractUnifyComponentTest {
         assertEquals(Integer.valueOf(11002), converter.convert("11,002.254", defaultDecimalFormatter));
     }
 
-    @Test(expected = Exception.class)
+    @Test
     public void testIntegerConverterWithInvalidParameters() throws Exception {
         Converter<Integer> converter = new IntegerConverter();
-        converter.convert("3567.6789", null); // Expects a formatter
+        int val = converter.convert("3567.6789", null);
+        assertEquals(3567, val);
     }
 
     @Test

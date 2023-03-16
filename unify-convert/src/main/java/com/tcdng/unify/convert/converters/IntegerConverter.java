@@ -23,20 +23,20 @@ package com.tcdng.unify.convert.converters;
  */
 public class IntegerConverter extends AbstractConverter<Integer> {
 
-    @Override
-    protected Integer doConvert(Object value, ConverterFormatter<?> formatter) throws Exception {
-        if (value instanceof Number) {
-            return Integer.valueOf(((Number) value).intValue());
-        }
-        if (value instanceof String) {
-            String string = ((String) value).trim();
-            if (!string.isEmpty()) {
-                if (formatter == null) {
-                    return Integer.decode(string);
-                }
-                return doConvert(formatter.parse(string), null);
-            }
-        }
-        return null;
-    }
+	@Override
+	protected Integer doConvert(Object value, ConverterFormatter<?> formatter) throws Exception {
+		if (value instanceof Number) {
+			return Integer.valueOf(((Number) value).intValue());
+		}
+		if (value instanceof String) {
+			String string = ((String) value).trim();
+			if (!string.isEmpty()) {
+				if (formatter == null) {
+					return string.indexOf('.') >= 0 ? (int) Double.parseDouble(string) : Integer.decode(string);
+				}
+				return doConvert(formatter.parse(string), null);
+			}
+		}
+		return null;
+	}
 }
