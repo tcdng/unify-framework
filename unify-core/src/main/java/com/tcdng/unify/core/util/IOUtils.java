@@ -729,6 +729,31 @@ public class IOUtils {
         return true;
     }
 
+	public static void deleteDirectoryContents(String path) {
+		File folder = new File(IOUtils.conform(System.getProperty("file.separator"), path));
+		if (folder.isDirectory()) {
+			File[] files = folder.listFiles();
+			if (files != null) {
+				for (File file : files) {
+					deleteFileOrDirectory(file);
+				}
+			}
+		}
+	}
+
+	private static void deleteFileOrDirectory(File file) {
+		if (file.isDirectory()) {
+			File[] files = file.listFiles();
+			if (files != null) {
+				for (File _file : files) {
+					deleteFileOrDirectory(_file);
+				}
+			}
+		}
+		
+		file.delete();
+	}
+
     /**
      * Builds a canonical file name.
      * 

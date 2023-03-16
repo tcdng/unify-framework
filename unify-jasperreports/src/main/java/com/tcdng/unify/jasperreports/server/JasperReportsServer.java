@@ -184,6 +184,7 @@ public class JasperReportsServer extends AbstractReportServer {
 
 			logDebug("File virtualization using swap file folder [{0}]...", swapFileFolder);
 			IOUtils.ensureDirectoryExists(swapFileFolder);
+			IOUtils.deleteDirectoryContents(swapFileFolder);
 
 			logDebug("File virtualization using [{0}] swap files and [{1}] cached pages per virtualizer...",
 					actNoOfSwapFiles, actCachedPagesPerVirtualizer);
