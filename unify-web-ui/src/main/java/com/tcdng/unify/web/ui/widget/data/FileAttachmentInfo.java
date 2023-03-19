@@ -35,6 +35,8 @@ public class FileAttachmentInfo {
 
     private byte[] attachment;
 
+    private boolean present;
+    
     public FileAttachmentInfo(FileAttachmentType type, String name, String description, String filename) {
         this.name = name;
         this.description = description;
@@ -88,7 +90,15 @@ public class FileAttachmentInfo {
         this.attachment = attachment;
     }
 
-    public boolean isEmpty() {
+    public boolean isPresent() {
+		return present;
+	}
+
+	public void setPresent(boolean present) {
+		this.present = present;
+	}
+
+	public boolean isEmpty() {
         return this.filename == null;
     }
 

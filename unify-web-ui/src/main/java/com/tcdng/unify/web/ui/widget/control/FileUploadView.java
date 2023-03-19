@@ -57,6 +57,20 @@ public class FileUploadView extends AbstractMultiControl {
 
 	private FileUploadViewHandler handler;
 
+	public String getAttachmentFileName() throws UnifyException {
+		if (handler != null) {
+			Object uploadId = getUploadId();
+			if (uploadId != null) {
+				String category = getUplAttribute(String.class, "category");
+				FileAttachmentType type = getUplAttribute(FileAttachmentType.class, "type");
+				FileAttachmentInfo fileAttachmentInfo = handler.peek(uploadId, category, type);
+				return fileAttachmentInfo.getFilename();
+			}
+		}
+
+		return null;
+	}
+
 	@Override
 	public void populate(DataTransferBlock transferBlock) throws UnifyException {
 		if (transferBlock != null) {
@@ -101,7 +115,7 @@ public class FileUploadView extends AbstractMultiControl {
 			}
 		}
 	}
-
+	
 	@Action
 	public void detach() throws UnifyException {
 		if (handler == null) {
