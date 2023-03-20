@@ -19,6 +19,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.util.DataUtils;
+import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ui.widget.Control;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.Widget;
@@ -52,6 +53,16 @@ public class FileUploadViewWriter extends AbstractControlWriter {
         writer.write("<div style=\"display:table;width:100%;\">");
         writer.write("<div style=\"display:table-row;\">");
         writer.write("<div style=\"display:table-cell;\">");
+        
+        // Attachment file name
+        final String attachmentFileName = fileUploadView.getAttachmentFileName();
+        if (!StringUtils.isBlank(attachmentFileName)) {
+            writer.write("<div class=\"falabel\"><span>");
+            writer.writeWithHtmlEscape(attachmentFileName);
+            writer.write("</span></div>");
+        }
+        
+        // Action buttons
         writer.write("<div class=\"faaction\">");
         writer.writeStructureAndContent(fileCtrl);
 
@@ -73,7 +84,9 @@ public class FileUploadViewWriter extends AbstractControlWriter {
 
         writer.writeStructureAndContent(viewCtrl);
         writer.writeStructureAndContent(removeCtrl);
-        writer.write("</div></div></div></div>");
+        writer.write("</div>");
+        
+        writer.write("</div></div></div>");
         writer.write("</div></div>");
     }
 

@@ -49,6 +49,21 @@ public interface FileUploadViewHandler extends UnifyComponent {
             throws UnifyException;
 
     /**
+     * Peeks attachment information without loading data.
+     * 
+     * @param id
+     *                 the upload ID
+     * @param category
+     *                 the upload category
+     * @param type
+     *                 the attachment type
+     * @return the attachment info if found otherwise false
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    FileAttachmentInfo peek(Object id, String category, FileAttachmentType type) throws UnifyException;
+
+    /**
      * Retrieves attachment data.
      * 
      * @param id

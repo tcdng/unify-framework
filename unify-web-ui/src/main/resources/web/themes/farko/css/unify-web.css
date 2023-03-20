@@ -624,6 +624,7 @@ overflow-x:hidden;overflow-y:scroll;border-top: solid 1px #A0A0A0;border-left: s
 
 /** File Upload View */
 .ui-fileuploadview {}
+.ui-fileuploadview .falabel {font-size:8pt;font-weight:bold;color:#404040;}
 .ui-fileuploadview .faaction {text-align:right;padding:2px;}
 
 /** Full Name Field */
