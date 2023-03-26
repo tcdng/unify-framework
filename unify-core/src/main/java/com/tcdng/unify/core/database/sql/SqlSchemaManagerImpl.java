@@ -713,7 +713,6 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 
 	private List<String> getColumnUpdates(SqlDataSourceDialect sqlDataSourceDialect, SqlEntityInfo sqlEntityInfo,
 			Map<String, SqlColumnInfo> columnInfos, PrintFormat printFormat) throws UnifyException {
-		logDebug("Getting column updates for table [{0}]...", sqlEntityInfo.getTableName());
 		List<String> columnUpdateSql = new ArrayList<String>();
 		for (SqlFieldInfo sqlfieldInfo : sqlEntityInfo.getManagedFieldInfos()) {
 			SqlColumnInfo sqlColumnInfo = columnInfos.remove(sqlfieldInfo.getColumnName().toLowerCase());
@@ -750,7 +749,6 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 	private boolean detectTableChange(SqlDataSourceDialect sqlDataSourceDialect, SqlEntityInfo sqlEntityInfo,
 			Map<String, SqlColumnInfo> columnInfos, Map<String, TableConstraint> managedTableConstraints,
 			ForceConstraints forceConstraints) throws UnifyException {
-		logDebug("Detecting changes for table [{0}]...", sqlEntityInfo.getTableName());
 		for (SqlFieldInfo sqlfieldInfo : sqlEntityInfo.getManagedFieldInfos()) {
 			SqlColumnInfo sqlColumnInfo = columnInfos.remove(sqlfieldInfo.getColumnName().toLowerCase());
 			if (sqlColumnInfo == null) {
