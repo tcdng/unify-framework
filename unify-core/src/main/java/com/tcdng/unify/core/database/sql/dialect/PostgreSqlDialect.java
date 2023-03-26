@@ -40,9 +40,14 @@ import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
 import com.tcdng.unify.core.database.sql.SqlDialectNameConstants;
 import com.tcdng.unify.core.database.sql.SqlEntitySchemaInfo;
 import com.tcdng.unify.core.database.sql.SqlFieldSchemaInfo;
+import com.tcdng.unify.core.database.sql.data.policy.BigDecimalPolicy;
 import com.tcdng.unify.core.database.sql.data.policy.BlobPolicy;
+import com.tcdng.unify.core.database.sql.data.policy.BooleanPolicy;
+import com.tcdng.unify.core.database.sql.data.policy.CharacterPolicy;
 import com.tcdng.unify.core.database.sql.data.policy.ClobPolicy;
 import com.tcdng.unify.core.database.sql.data.policy.DatePolicy;
+import com.tcdng.unify.core.database.sql.data.policy.IntegerPolicy;
+import com.tcdng.unify.core.database.sql.data.policy.LongPolicy;
 import com.tcdng.unify.core.database.sql.data.policy.TimestampPolicy;
 import com.tcdng.unify.core.database.sql.data.policy.TimestampUTCPolicy;
 import com.tcdng.unify.core.util.DataUtils;
@@ -62,6 +67,11 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
 	static {
 		Map<ColumnType, SqlDataTypePolicy> tempMap1 = new EnumMap<ColumnType, SqlDataTypePolicy>(ColumnType.class);
 		populateDefaultSqlDataTypePolicies(tempMap1);
+		tempMap1.put(ColumnType.BOOLEAN, new PostgreSqlBooleanPolicy());
+		tempMap1.put(ColumnType.CHARACTER, new PostgreSqlCharacterPolicy());
+		tempMap1.put(ColumnType.INTEGER, new PostgreSqlIntegerPolicy());
+		tempMap1.put(ColumnType.LONG, new PostgreSqlLongPolicy());		
+		tempMap1.put(ColumnType.DECIMAL, new PostgreSqlBigDecimalPolicy());		
 		tempMap1.put(ColumnType.DATE, new PostgreSqlDatePolicy());
 		tempMap1.put(ColumnType.TIMESTAMP, new PostgreSqlTimestampPolicy());
 		tempMap1.put(ColumnType.TIMESTAMP_UTC, new PostgreSqlTimestampUTCPolicy());
@@ -148,8 +158,8 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
 		} else {
 			sb.append(' ');
 		}
-		sb.append("CHANGE COLUMN ").append(oldColumnName).append(' ');
-		appendColumnAndTypeSql(sb, sqlFieldSchemaInfo.getPreferredColumnName(), sqlFieldSchemaInfo, true);
+		sb.append("RENAME COLUMN ").append(oldColumnName).append(" TO ")
+				.append(sqlFieldSchemaInfo.getPreferredColumnName());
 		return sb.toString();
 	}
 
@@ -304,6 +314,46 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
 			sb.append(")");
 			return sb.toString();
 		}
+	}
+}
+
+class PostgreSqlBooleanPolicy extends BooleanPolicy {
+
+	@Override
+	public String getTypeName() {
+		return "BPCHAR";
+	}
+}
+
+class PostgreSqlCharacterPolicy extends CharacterPolicy {
+
+	@Override
+	public String getTypeName() {
+		return "BPCHAR";
+	}
+}
+
+class PostgreSqlBigDecimalPolicy extends BigDecimalPolicy {
+
+	@Override
+	public String getTypeName() {
+		return "NUMERIC";
+	}
+}
+
+class PostgreSqlIntegerPolicy extends IntegerPolicy {
+
+	@Override
+	public String getTypeName() {
+		return "INT4";
+	}
+}
+
+class PostgreSqlLongPolicy extends LongPolicy {
+
+	@Override
+	public String getTypeName() {
+		return "INT8";
 	}
 }
 
