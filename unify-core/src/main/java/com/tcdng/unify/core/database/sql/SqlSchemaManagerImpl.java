@@ -104,7 +104,7 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 			List<Class<?>> entityClasses) throws UnifyException {
 		Connection connection = (Connection) sqlDataSource.getConnection();
 		try {
-			logInfo("Scanning datasource {0} schema...", sqlDataSource.getPreferredName());
+			logDebug("Scanning datasource {0} schema...", sqlDataSource.getName());
 			logDebug("Managing schema elements for [{0}] table entities...", entityClasses.size());
 			DatabaseMetaData databaseMetaData = connection.getMetaData();
 			for (Class<?> entityClass : entityClasses) {
@@ -126,7 +126,7 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 			List<Class<? extends Entity>> entityClasses) throws UnifyException {
 		Connection connection = (Connection) sqlDataSource.getConnection();
 		try {
-			logInfo("Scanning datasource {0} schema...", sqlDataSource.getPreferredName());
+			logDebug("Scanning datasource {0} schema...", sqlDataSource.getName());
 			logDebug("Managing schema elements for [{0}] view entities...", entityClasses.size());
 			DatabaseMetaData databaseMetaData = connection.getMetaData();
 			for (Class<? extends Entity> entityClass : entityClasses) {
@@ -146,7 +146,7 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 			List<Class<?>> entityClasses) throws UnifyException {
 		Connection connection = (Connection) sqlDataSource.getConnection();
 		try {
-			logInfo("Scanning datasource {0} schema...", sqlDataSource.getPreferredName());
+			logDebug("Scanning datasource {0} schema...", sqlDataSource.getName());
 			logDebug("Dropping schema elements for [{0}] view entities...", entityClasses.size());
 			DatabaseMetaData databaseMetaData = connection.getMetaData();
 			for (Class<?> entityClass : entityClasses) {
