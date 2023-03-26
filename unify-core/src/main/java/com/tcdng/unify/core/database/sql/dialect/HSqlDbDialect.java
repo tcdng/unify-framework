@@ -40,7 +40,11 @@ import com.tcdng.unify.core.database.sql.SqlDialectNameConstants;
 import com.tcdng.unify.core.database.sql.SqlEntitySchemaInfo;
 import com.tcdng.unify.core.database.sql.SqlFieldSchemaInfo;
 import com.tcdng.unify.core.database.sql.SqlShutdownHook;
+import com.tcdng.unify.core.database.sql.data.policy.BooleanPolicy;
+import com.tcdng.unify.core.database.sql.data.policy.CharacterPolicy;
 import com.tcdng.unify.core.database.sql.data.policy.DatePolicy;
+import com.tcdng.unify.core.database.sql.data.policy.DoublePolicy;
+import com.tcdng.unify.core.database.sql.data.policy.IntegerPolicy;
 import com.tcdng.unify.core.database.sql.data.policy.TimestampPolicy;
 import com.tcdng.unify.core.database.sql.data.policy.TimestampUTCPolicy;
 import com.tcdng.unify.core.util.DataUtils;
@@ -62,6 +66,11 @@ public class HSqlDbDialect extends AbstractSqlDataSourceDialect {
     static {
         Map<ColumnType, SqlDataTypePolicy> tempMap1 = new EnumMap<ColumnType, SqlDataTypePolicy>(ColumnType.class);
         populateDefaultSqlDataTypePolicies(tempMap1);
+        tempMap1.put(ColumnType.BOOLEAN, new HSqlBooleanPolicy());
+        tempMap1.put(ColumnType.CHARACTER, new HSqlCharacterPolicy());
+        tempMap1.put(ColumnType.DOUBLE, new HSqlDoublePolicy());
+        tempMap1.put(ColumnType.INTEGER, new HSqlIntegerPolicy());
+
         tempMap1.put(ColumnType.DATE, new HSqlDbDatePolicy());
         tempMap1.put(ColumnType.TIMESTAMP, new HSqlDbTimestampPolicy());
         tempMap1.put(ColumnType.TIMESTAMP_UTC, new HSqlDbTimestampUTCPolicy());
@@ -295,6 +304,38 @@ public class HSqlDbDialect extends AbstractSqlDataSourceDialect {
     }
 }
 
+
+class HSqlBooleanPolicy extends BooleanPolicy {
+
+    @Override
+	public String getTypeName() {
+		return "CHARACTER";
+	}
+}
+
+class HSqlCharacterPolicy extends CharacterPolicy {
+
+    @Override
+	public String getTypeName() {
+		return "CHARACTER";
+	}
+}
+
+class HSqlDoublePolicy extends DoublePolicy {
+
+    @Override
+	public String getTypeName() {
+		return "DOUBLE";
+	}
+}
+
+class HSqlIntegerPolicy extends IntegerPolicy {
+
+    @Override
+	public String getTypeName() {
+		return "INTEGER";
+	}
+}
 
 class HSqlDbDatePolicy extends DatePolicy {
 
