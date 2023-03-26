@@ -44,9 +44,11 @@ import com.tcdng.unify.core.database.sql.SqlFieldSchemaInfo;
 import com.tcdng.unify.core.database.sql.data.policy.BlobPolicy;
 import com.tcdng.unify.core.database.sql.data.policy.ClobPolicy;
 import com.tcdng.unify.core.database.sql.data.policy.DatePolicy;
+import com.tcdng.unify.core.database.sql.data.policy.EnumConstPolicy;
 import com.tcdng.unify.core.database.sql.data.policy.IntegerPolicy;
 import com.tcdng.unify.core.database.sql.data.policy.LongPolicy;
 import com.tcdng.unify.core.database.sql.data.policy.ShortPolicy;
+import com.tcdng.unify.core.database.sql.data.policy.StringPolicy;
 import com.tcdng.unify.core.database.sql.data.policy.TimestampPolicy;
 import com.tcdng.unify.core.database.sql.data.policy.TimestampUTCPolicy;
 import com.tcdng.unify.core.util.DataUtils;
@@ -74,7 +76,9 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
 		tempMap1.put(ColumnType.LONG, new OracleLongPolicy());
 		tempMap1.put(ColumnType.INTEGER, new OracleIntegerPolicy());
 		tempMap1.put(ColumnType.SHORT, new OracleShortPolicy());
-
+		tempMap1.put(ColumnType.STRING, new OracleStringPolicy());
+		tempMap1.put(ColumnType.ENUMCONST, new OracleEnumConstPolicy());
+		
 		Map<RestrictionType, SqlCriteriaPolicy> tempMap2 = new EnumMap<RestrictionType, SqlCriteriaPolicy>(
 				RestrictionType.class);
 		populateDefaultSqlCriteriaPolicies(sqlDataSourceDialectPolicies, tempMap2);
@@ -288,6 +292,23 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
 	}
 }
 
+
+class OracleEnumConstPolicy extends EnumConstPolicy {
+
+	@Override
+	public String getTypeName() {
+		return "VARCHAR2";
+	}
+}
+
+class OracleStringPolicy extends StringPolicy {
+
+	@Override
+	public String getTypeName() {
+		return "VARCHAR2";
+	}
+}
+
 class OracleDatePolicy extends DatePolicy {
 
 	@Override
@@ -304,6 +325,11 @@ class OracleTimestampPolicy extends TimestampPolicy {
 		return "CURRENT_TIMESTAMP";
 	}
 
+	@Override
+	public String getTypeName() {
+		return "TIMESTAMP(6)";
+	}
+
 }
 
 class OracleTimestampUTCPolicy extends TimestampUTCPolicy {
@@ -311,6 +337,11 @@ class OracleTimestampUTCPolicy extends TimestampUTCPolicy {
 	@Override
 	public String getAltDefault(Class<?> fieldType) {
 		return "CURRENT_TIMESTAMP";
+	}
+
+	@Override
+	public String getTypeName() {
+		return "TIMESTAMP(6)";
 	}
 
 }

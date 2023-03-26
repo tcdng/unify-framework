@@ -48,6 +48,7 @@ import com.tcdng.unify.core.database.sql.data.policy.ClobPolicy;
 import com.tcdng.unify.core.database.sql.data.policy.DatePolicy;
 import com.tcdng.unify.core.database.sql.data.policy.IntegerPolicy;
 import com.tcdng.unify.core.database.sql.data.policy.LongPolicy;
+import com.tcdng.unify.core.database.sql.data.policy.ShortPolicy;
 import com.tcdng.unify.core.database.sql.data.policy.TimestampPolicy;
 import com.tcdng.unify.core.database.sql.data.policy.TimestampUTCPolicy;
 import com.tcdng.unify.core.util.DataUtils;
@@ -71,6 +72,7 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
 		tempMap1.put(ColumnType.CHARACTER, new PostgreSqlCharacterPolicy());
 		tempMap1.put(ColumnType.INTEGER, new PostgreSqlIntegerPolicy());
 		tempMap1.put(ColumnType.LONG, new PostgreSqlLongPolicy());		
+		tempMap1.put(ColumnType.SHORT, new PostgreSqlShortPolicy());		
 		tempMap1.put(ColumnType.DECIMAL, new PostgreSqlBigDecimalPolicy());		
 		tempMap1.put(ColumnType.DATE, new PostgreSqlDatePolicy());
 		tempMap1.put(ColumnType.TIMESTAMP, new PostgreSqlTimestampPolicy());
@@ -338,6 +340,14 @@ class PostgreSqlBigDecimalPolicy extends BigDecimalPolicy {
 	@Override
 	public String getTypeName() {
 		return "NUMERIC";
+	}
+}
+
+class PostgreSqlShortPolicy extends ShortPolicy {
+
+	@Override
+	public String getTypeName() {
+		return "INT2";
 	}
 }
 
