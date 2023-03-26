@@ -185,7 +185,7 @@ public class UserSessionManagerImpl extends AbstractBusinessService implements U
         // Update active session records and remove inactive ones
         Date now = db().getNow();
         int expirationInSeconds = getContainerSetting(int.class, UnifyCorePropertyConstants.APPLICATION_SESSION_TIMEOUT,
-                UnifyCoreConstants.DEFAULT_APPLICATION_SESSION_TIMEOUT_MILLISEC);
+                UnifyCoreConstants.DEFAULT_APPLICATION_SESSION_TIMEOUT_SECONDS);
         expirationInSeconds = expirationInSeconds + expirationInSeconds / 5;
         Date expiryTime = CalendarUtils.getDateWithOffset(now, -(expirationInSeconds * 1000));
         for (UserSession userSession : userSessions.values()) {

@@ -529,7 +529,7 @@ public class UnifyContainer {
 					String taskStatusLoggerName = AnnotationUtils.getAnnotationString(pa.taskStatusLogger());
 					TaskMonitor taskMonitor = taskManager.schedulePeriodicExecution(periodicType,
 							componentEntry.getKey(), periodicEntry.getKey(), taskStatusLoggerName,
-							UnifyCoreConstants.PERIODIC_EXECUTION_INITIAL_DELAY_MILLISEC);
+							UnifyCoreConstants.PERIODIC_EXECUTION_INITIAL_DELAY_SECONDS * 1000);
 					periodicTaskMonitorList.add(taskMonitor);
 				}
 			}
@@ -1531,7 +1531,7 @@ public class UnifyContainer {
 						}
 					}
 
-					ThreadUtils.sleep(UnifyCoreConstants.COMMAND_THREAD_RATE_MILLISEC);
+					ThreadUtils.sleep(UnifyCoreConstants.COMMAND_THREAD_RATE_SECONDS * 1000);
 				} catch (Exception e) {
 					logError(e);
 				}
