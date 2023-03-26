@@ -314,6 +314,11 @@ class MySqlBlobPolicy extends BlobPolicy {
     public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
         sb.append(" MEDIUMBLOB");
     }
+
+    @Override
+	public String getTypeName() {
+		return "MEDIUMBLOB";
+	}
 }
 
 class MySqlClobPolicy extends ClobPolicy {
@@ -322,4 +327,9 @@ class MySqlClobPolicy extends ClobPolicy {
     public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
         sb.append(" MEDIUMTEXT");
     }
+
+    @Override
+	public String getTypeName() {
+		return "MEDIUMTEXT";
+	}
 }

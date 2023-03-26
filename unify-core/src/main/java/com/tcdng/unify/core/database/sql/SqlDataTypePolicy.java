@@ -33,6 +33,13 @@ public interface SqlDataTypePolicy {
     String getAltDefault(Class<?> fieldType);
 
     /**
+     * Gets the type name.
+     * 
+     * @return the type name
+     */
+    String getTypeName();
+
+    /**
      * Gets the java SQL data type.
      * 
      * @return the java SQL type value

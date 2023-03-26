@@ -348,6 +348,11 @@ class PostgreSqlBlobPolicy extends BlobPolicy {
     }
 
     @Override
+	public String getTypeName() {
+		return "BYTEA";
+	}
+
+    @Override
     public int getSqlType() {
         return Types.BINARY;
     }
@@ -408,6 +413,11 @@ class PostgreSqlClobPolicy extends ClobPolicy {
     public Object executeGetOutput(Object cstmt, Class<?> type, int index, long utcOffset) throws Exception {
         return ((CallableStatement) cstmt).getString(index);
     }
+
+    @Override
+	public String getTypeName() {
+		return "TEXT";
+	}
 
     @Override
     public int getSqlType() {

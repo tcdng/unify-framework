@@ -71,6 +71,11 @@ public class BooleanPolicy extends AbstractSqlDataTypePolicy {
     }
 
     @Override
+	public String getTypeName() {
+		return "CHAR";
+	}
+
+    @Override
     public int getSqlType() {
         return Types.CHAR;
     }

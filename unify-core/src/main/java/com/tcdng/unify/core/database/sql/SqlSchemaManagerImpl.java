@@ -841,7 +841,7 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 
     private SqlColumnAlterInfo checkSqlColumnAltered(SqlDataSourceDialect sqlDataSourceDialect,
             SqlFieldInfo sqlfieldInfo, SqlColumnInfo columnInfo) throws UnifyException {
-        boolean nullableChange = columnInfo.isNullable() != sqlfieldInfo.isNullable();
+        final boolean nullableChange = columnInfo.isNullable() != sqlfieldInfo.isNullable();
         if (nullableChange) {
             logDebug("Nullable Change: columnInfo.isNullable() = {0}, sqlfieldInfo.isNullable() = {1}...",
                     columnInfo.isNullable(), sqlfieldInfo.isNullable());
@@ -865,7 +865,7 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
                     sqlfieldInfo.getDefaultVal(), sqlDataTypePolicy.getAltDefault(sqlfieldInfo.getFieldType()));
         }
 
-        boolean typeChange = !isSwappableSqlTypes(sqlDataTypePolicy.getSqlType(), columnInfo.getSqlType());
+        final boolean typeChange = !isSwappableSqlTypes(sqlDataTypePolicy.getSqlType(), columnInfo.getSqlType());
         if (typeChange) {
             logDebug("Type Change: columnInfo.getSqlType() = {0}, sqlDataTypePolicy.getSqlType() = {1}...",
                     columnInfo.getSqlType(), sqlDataTypePolicy.getSqlType());

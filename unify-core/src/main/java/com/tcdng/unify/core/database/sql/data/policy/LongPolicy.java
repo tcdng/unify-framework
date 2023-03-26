@@ -82,6 +82,11 @@ public class LongPolicy extends AbstractSqlDataTypePolicy {
     }
 
     @Override
+	public String getTypeName() {
+		return "BIGINT";
+	}
+
+    @Override
     public int getSqlType() {
         return Types.BIGINT;
     }

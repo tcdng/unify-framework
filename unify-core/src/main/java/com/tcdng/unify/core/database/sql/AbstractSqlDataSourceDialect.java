@@ -2242,7 +2242,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 			SqlFieldSchemaInfo oldSqlFieldSchemaInfo) throws UnifyException {
 		boolean nullableChange = sqlFieldSchemaInfo.isNullable() != oldSqlFieldSchemaInfo.isNullable();
 		boolean defaultChange = false;
-		boolean typeChange = sqlFieldSchemaInfo.getColumnType().equals(oldSqlFieldSchemaInfo.getColumnType());
+		boolean typeChange = !sqlFieldSchemaInfo.getColumnType().equals(oldSqlFieldSchemaInfo.getColumnType());
 		boolean lenChange = sqlFieldSchemaInfo.getLength() != oldSqlFieldSchemaInfo.getLength()
 				|| sqlFieldSchemaInfo.getPrecision() != oldSqlFieldSchemaInfo.getPrecision()
 				|| sqlFieldSchemaInfo.getScale() != oldSqlFieldSchemaInfo.getScale();

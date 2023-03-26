@@ -328,6 +328,11 @@ class OracleLongPolicy extends LongPolicy {
     }
 
     @Override
+	public String getTypeName() {
+		return "NUMBER";
+	}
+
+    @Override
     public int getSqlType() {
         return Types.DECIMAL;
     }
@@ -346,6 +351,11 @@ class OracleIntegerPolicy extends IntegerPolicy {
     }
 
     @Override
+	public String getTypeName() {
+		return "NUMBER";
+	}
+
+    @Override
     public int getSqlType() {
         return Types.DECIMAL;
     }
@@ -362,6 +372,11 @@ class OracleShortPolicy extends ShortPolicy {
     public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
         sb.append(" NUMBER(").append(precision).append(")");
     }
+
+    @Override
+	public String getTypeName() {
+		return "NUMBER";
+	}
 
     @Override
     public int getSqlType() {

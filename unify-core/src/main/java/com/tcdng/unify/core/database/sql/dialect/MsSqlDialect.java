@@ -344,6 +344,11 @@ class MsSqlTimestampUTCPolicy extends TimestampUTCPolicy {
     }
 
     @Override
+	public String getTypeName() {
+		return "DATETIME";
+	}
+
+    @Override
     public int getSqlType() {
         return Types.TIMESTAMP;
     }
@@ -356,6 +361,11 @@ class MsSqlTimestampPolicy extends TimestampPolicy {
     public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
         sb.append(" DATETIME");
     }
+
+    @Override
+	public String getTypeName() {
+		return "DATETIME";
+	}
 
     @Override
     public int getSqlType() {
@@ -372,6 +382,11 @@ class MsSqlDatePolicy extends DatePolicy {
     }
 
     @Override
+	public String getTypeName() {
+		return "DATETIME";
+	}
+
+    @Override
     public int getSqlType() {
         return Types.TIMESTAMP;
     }
@@ -386,6 +401,11 @@ class MsSqlBlobPolicy extends BlobPolicy {
     }
 
     @Override
+	public String getTypeName() {
+		return "VARBINARY";
+	}
+
+    @Override
     public int getSqlType() {
         return Types.LONGVARBINARY;
     }
@@ -398,6 +418,11 @@ class MsSqlClobPolicy extends ClobPolicy {
     public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
         sb.append(" VARCHAR(MAX)");
     }
+
+    @Override
+	public String getTypeName() {
+		return "VARCHAR";
+	}
 
     @Override
     public int getSqlType() {

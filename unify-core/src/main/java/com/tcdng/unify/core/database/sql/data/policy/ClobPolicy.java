@@ -90,6 +90,11 @@ public class ClobPolicy extends AbstractSqlDataTypePolicy {
     }
 
     @Override
+	public String getTypeName() {
+		return "CLOB";
+	}
+
+    @Override
     public int getSqlType() {
         return Types.CLOB;
     }

@@ -82,6 +82,11 @@ public class ShortPolicy extends AbstractSqlDataTypePolicy {
     }
 
     @Override
+	public String getTypeName() {
+		return "SMALLINT";
+	}
+
+    @Override
     public int getSqlType() {
         return Types.SMALLINT;
     }

@@ -114,6 +114,11 @@ public class EnumConstPolicy extends AbstractSqlDataTypePolicy {
     }
 
     @Override
+	public String getTypeName() {
+		return "VARCHAR";
+	}
+
+    @Override
     public int getSqlType() {
         return Types.VARCHAR;
     }
