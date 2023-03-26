@@ -222,6 +222,11 @@ public class HSqlDbDialect extends AbstractSqlDataSourceDialect {
     }
 
     @Override
+    public boolean isReconstructViewsOnTableSchemaUpdate() throws UnifyException {
+        return true;
+    }
+
+    @Override
     protected SqlDataSourceDialectPolicies getSqlDataSourceDialectPolicies() {
         return sqlDataSourceDialectPolicies;
     }

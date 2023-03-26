@@ -123,21 +123,30 @@ public interface SqlGenerator extends UnifyComponent {
     String generateRenameTable(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlEntitySchemaInfo oldSqlEntitySchemaInfo,
             PrintFormat format) throws UnifyException;
 
-    /**
-     * Generates add column SQL.
-     * 
-     * @param sqlEntitySchemaInfo
-     *            the old SQL record schema info
-     * @param sqlFieldSchemaInfo
-     *            the field schema information
-     * @param format
-     *            indicates if SQL should be formatted
-     * @return generated SQL
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    String generateAddColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
-            PrintFormat format) throws UnifyException;
+	/**
+	 * Generates add column SQL.
+	 * 
+	 * @param sqlEntitySchemaInfo the old SQL record schema info
+	 * @param sqlFieldSchemaInfo  the field schema information
+	 * @param format              indicates if SQL should be formatted
+	 * @return generated SQL
+	 * @throws UnifyException if an error occurs
+	 */
+	String generateAddColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
+			PrintFormat format) throws UnifyException;
+
+	/**
+	 * Generates add column SQL.
+	 * 
+	 * @param sqlEntitySchemaInfo the SQL record schema info
+	 * @param columnName          the column name
+	 * @param sqlFieldSchemaInfo  the field schema information
+	 * @param format              indicates if SQL should be formatted
+	 * @return generated SQL
+	 * @throws UnifyException if an error occurs
+	 */
+	String generateAddColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo, String columnName,
+			SqlFieldSchemaInfo sqlFieldSchemaInfo, PrintFormat format) throws UnifyException;
 
     /**
      * Generates alter column SQL.
@@ -173,23 +182,18 @@ public interface SqlGenerator extends UnifyComponent {
     String generateAlterColumnNull(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlColumnInfo sqlColumnInfo,
             PrintFormat format) throws UnifyException;
 
-    /**
-     * Generates rename column SQL.
-     * 
-     * @param sqlEntitySchemaInfo
-     *            the old SQL record schema info
-     * @param sqlFieldSchemaInfo
-     *            the new SQL field schema info
-     * @param oldSqlFieldSchemaInfo
-     *            the old SQL field schema info
-     * @param format
-     *            indicates if SQL should be formatted
-     * @return generated SQL
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    String generateRenameColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
-            SqlFieldSchemaInfo oldSqlFieldSchemaInfo, PrintFormat format) throws UnifyException;
+	/**
+	 * Generates rename column SQL.
+	 * 
+	 * @param tableName       the table name
+	 * @param oldColumnName   the old column name
+	 * @param newSqlFieldInfo the new SQL field information
+	 * @param format          indicates if SQL should be formatted
+	 * @return generated SQL
+	 * @throws UnifyException if an error occurs
+	 */
+	String generateRenameColumn(String tableName, String oldColumnName, SqlFieldSchemaInfo newSqlFieldInfo,
+			PrintFormat format) throws UnifyException;
 
     /**
      * Generates drop column SQL.

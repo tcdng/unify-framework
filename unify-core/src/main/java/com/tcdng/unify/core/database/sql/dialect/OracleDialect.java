@@ -61,355 +61,355 @@ import com.tcdng.unify.core.util.StringUtils;
 @Component(name = SqlDialectNameConstants.ORACLE, description = "$m{sqldialect.oracledb}")
 public class OracleDialect extends AbstractSqlDataSourceDialect {
 
-    private static final OracleDataSourceDialectPolicies sqlDataSourceDialectPolicies =
-            new OracleDataSourceDialectPolicies();
+	private static final OracleDataSourceDialectPolicies sqlDataSourceDialectPolicies = new OracleDataSourceDialectPolicies();
 
-    static {
-        Map<ColumnType, SqlDataTypePolicy> tempMap1 = new EnumMap<ColumnType, SqlDataTypePolicy>(ColumnType.class);
-        populateDefaultSqlDataTypePolicies(tempMap1);
-        tempMap1.put(ColumnType.DATE, new OracleDatePolicy());
-        tempMap1.put(ColumnType.TIMESTAMP, new OracleTimestampPolicy());
-        tempMap1.put(ColumnType.TIMESTAMP_UTC, new OracleTimestampUTCPolicy());
-        tempMap1.put(ColumnType.BLOB, new OracleBlobPolicy());
-        tempMap1.put(ColumnType.CLOB, new OracleClobPolicy());
-        tempMap1.put(ColumnType.LONG, new OracleLongPolicy());
-        tempMap1.put(ColumnType.INTEGER, new OracleIntegerPolicy());
-        tempMap1.put(ColumnType.SHORT, new OracleShortPolicy());
+	static {
+		Map<ColumnType, SqlDataTypePolicy> tempMap1 = new EnumMap<ColumnType, SqlDataTypePolicy>(ColumnType.class);
+		populateDefaultSqlDataTypePolicies(tempMap1);
+		tempMap1.put(ColumnType.DATE, new OracleDatePolicy());
+		tempMap1.put(ColumnType.TIMESTAMP, new OracleTimestampPolicy());
+		tempMap1.put(ColumnType.TIMESTAMP_UTC, new OracleTimestampUTCPolicy());
+		tempMap1.put(ColumnType.BLOB, new OracleBlobPolicy());
+		tempMap1.put(ColumnType.CLOB, new OracleClobPolicy());
+		tempMap1.put(ColumnType.LONG, new OracleLongPolicy());
+		tempMap1.put(ColumnType.INTEGER, new OracleIntegerPolicy());
+		tempMap1.put(ColumnType.SHORT, new OracleShortPolicy());
 
-        Map<RestrictionType, SqlCriteriaPolicy> tempMap2 = new EnumMap<RestrictionType, SqlCriteriaPolicy>(RestrictionType.class);
-        populateDefaultSqlCriteriaPolicies(sqlDataSourceDialectPolicies, tempMap2);
+		Map<RestrictionType, SqlCriteriaPolicy> tempMap2 = new EnumMap<RestrictionType, SqlCriteriaPolicy>(
+				RestrictionType.class);
+		populateDefaultSqlCriteriaPolicies(sqlDataSourceDialectPolicies, tempMap2);
 
-        sqlDataSourceDialectPolicies.setSqlDataTypePolicies(DataUtils.unmodifiableMap(tempMap1));
-        sqlDataSourceDialectPolicies.setSqlCriteriaPolicies(DataUtils.unmodifiableMap(tempMap2));
-    }
+		sqlDataSourceDialectPolicies.setSqlDataTypePolicies(DataUtils.unmodifiableMap(tempMap1));
+		sqlDataSourceDialectPolicies.setSqlCriteriaPolicies(DataUtils.unmodifiableMap(tempMap2));
+	}
 
-    public OracleDialect() {
-        super(false); // useCallableFunctionMode
-    }
+	public OracleDialect() {
+		super(false); // useCallableFunctionMode
+	}
 
-    @Override
-    public String getDefaultSchema() {
-        return null;
-    }
+	@Override
+	public String getDefaultSchema() {
+		return null;
+	}
 
-    @Override
-    public boolean matchColumnDefault(String nativeVal, String defaultVal) throws UnifyException {
-        if(super.matchColumnDefault(nativeVal, defaultVal)) {
-            return true;
-        }
-        
-        if (nativeVal != null && defaultVal != null) {
-            if (nativeVal.charAt(0) == '\'') {
-                if (defaultVal.charAt(0) == '\'') {
-                    return nativeVal.startsWith(defaultVal);
-                }
-                
-                return nativeVal.startsWith("'" + defaultVal + "'");
-            }
-        }
-        
-        return false;
-    }
+	@Override
+	public boolean matchColumnDefault(String nativeVal, String defaultVal) throws UnifyException {
+		if (super.matchColumnDefault(nativeVal, defaultVal)) {
+			return true;
+		}
 
-    @Override
-    public String generateTestSql() throws UnifyException {
-        return "SELECT 1 FROM DUAL";
-    }
+		if (nativeVal != null && defaultVal != null) {
+			if (nativeVal.charAt(0) == '\'') {
+				if (defaultVal.charAt(0) == '\'') {
+					return nativeVal.startsWith(defaultVal);
+				}
 
-    @Override
-    public String generateUTCTimestampSql() throws UnifyException {
-        return "SELECT SYS_EXTRACT_UTC(SYSTIMESTAMP) FROM DUAL";
-    }
+				return nativeVal.startsWith("'" + defaultVal + "'");
+			}
+		}
 
-    @Override
-    public String getSqlBlobType() {
-        return "oracle.jdbc.OracleBlob";
-    }
+		return false;
+	}
 
-    @Override
-    public String generateDropColumn(SqlEntitySchemaInfo sqlRecordSchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
-            PrintFormat format) throws UnifyException {
-        StringBuilder sb = new StringBuilder();
-        sb.append("ALTER TABLE ").append(sqlRecordSchemaInfo.getSchemaTableName());
-        if (format.isPretty()) {
-            sb.append(getLineSeparator());
-        } else {
-            sb.append(' ');
-        }
-        sb.append("DROP COLUMN ").append(sqlFieldSchemaInfo.getPreferredColumnName());
-        return sb.toString();
-    }
+	@Override
+	public String generateTestSql() throws UnifyException {
+		return "SELECT 1 FROM DUAL";
+	}
 
-    @Override
-    public String generateAddColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
-            PrintFormat format) throws UnifyException {
-        StringBuilder sb = new StringBuilder();
-        sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
-        if (format.isPretty()) {
-            sb.append(getLineSeparator());
-        } else {
-            sb.append(' ');
-        }
-        sb.append("ADD ");
-        appendColumnAndTypeSql(sb, sqlFieldSchemaInfo, true);
-        return sb.toString();
-    }
+	@Override
+	public String generateUTCTimestampSql() throws UnifyException {
+		return "SELECT SYS_EXTRACT_UTC(SYSTIMESTAMP) FROM DUAL";
+	}
 
-    @Override
-    protected List<String> doGenerateAlterColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo,
-            SqlFieldSchemaInfo sqlFieldSchemaInfo, SqlColumnAlterInfo sqlColumnAlterInfo, PrintFormat format)
-            throws UnifyException {
-        List<String> sqlList = new ArrayList<String>();
-        StringBuilder sb = new StringBuilder();
-        SqlDataTypePolicy sqlDataTypePolicy = getSqlTypePolicy(sqlFieldSchemaInfo.getColumnType());
+	@Override
+	public String getSqlBlobType() {
+		return "oracle.jdbc.OracleBlob";
+	}
 
-        if (sqlColumnAlterInfo.isNullableChange()) {
-            if (!sqlFieldSchemaInfo.isNullable()) {
-                sb.append("UPDATE ").append(sqlEntitySchemaInfo.getSchemaTableName()).append(" SET ")
-                        .append(sqlFieldSchemaInfo.getPreferredColumnName()).append(" = ");
-                sqlDataTypePolicy.appendDefaultVal(sb, sqlFieldSchemaInfo.getFieldType(),
-                        sqlFieldSchemaInfo.getDefaultVal());
-                sb.append(" WHERE ").append(sqlFieldSchemaInfo.getPreferredColumnName()).append(" IS NULL");
-                sqlList.add(sb.toString());
-                StringUtils.truncate(sb);
-            }
-        }
+	@Override
+	public String generateDropColumn(SqlEntitySchemaInfo sqlRecordSchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
+			PrintFormat format) throws UnifyException {
+		StringBuilder sb = new StringBuilder();
+		sb.append("ALTER TABLE ").append(sqlRecordSchemaInfo.getSchemaTableName());
+		if (format.isPretty()) {
+			sb.append(getLineSeparator());
+		} else {
+			sb.append(' ');
+		}
+		sb.append("DROP COLUMN ").append(sqlFieldSchemaInfo.getPreferredColumnName());
+		return sb.toString();
+	}
 
-        sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
-        if (format.isPretty()) {
-            sb.append(getLineSeparator());
-        } else {
-            sb.append(' ');
-        }
-        sb.append("MODIFY ");
-        appendColumnAndTypeSql(sb, sqlFieldSchemaInfo, sqlColumnAlterInfo);
-        sqlList.add(sb.toString());
-        StringUtils.truncate(sb);
-        return sqlList;
-    }
+	@Override
+	public String generateAddColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo, String columnName,
+			SqlFieldSchemaInfo sqlFieldSchemaInfo, PrintFormat format) throws UnifyException {
+		StringBuilder sb = new StringBuilder();
+		sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
+		if (format.isPretty()) {
+			sb.append(getLineSeparator());
+		} else {
+			sb.append(' ');
+		}
+		sb.append("ADD ");
+		appendColumnAndTypeSql(sb, columnName, sqlFieldSchemaInfo, true);
+		return sb.toString();
+	}
 
-    @Override
-    public String generateAlterColumnNull(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlColumnInfo sqlColumnInfo,
-            PrintFormat format) throws UnifyException {
-        StringBuilder sb = new StringBuilder();
-        sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
-        if (format.isPretty()) {
-            sb.append(getLineSeparator());
-        } else {
-            sb.append(' ');
-        }
-        sb.append("MODIFY ").append(sqlColumnInfo.getColumnName());
-        appendTypeSql(sb, sqlColumnInfo);
-        sb.append(" NULL");
-        return sb.toString();
-    }
+	@Override
+	protected List<String> doGenerateAlterColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo,
+			SqlFieldSchemaInfo sqlFieldSchemaInfo, SqlColumnAlterInfo sqlColumnAlterInfo, PrintFormat format)
+			throws UnifyException {
+		List<String> sqlList = new ArrayList<String>();
+		StringBuilder sb = new StringBuilder();
+		SqlDataTypePolicy sqlDataTypePolicy = getSqlTypePolicy(sqlFieldSchemaInfo.getColumnType());
 
-    @Override
-    public boolean isGeneratesUniqueConstraintsOnCreateTable() {
-        return false;
-    }
+		if (sqlColumnAlterInfo.isNullableChange()) {
+			if (!sqlFieldSchemaInfo.isNullable()) {
+				sb.append("UPDATE ").append(sqlEntitySchemaInfo.getSchemaTableName()).append(" SET ")
+						.append(sqlFieldSchemaInfo.getPreferredColumnName()).append(" = ");
+				sqlDataTypePolicy.appendDefaultVal(sb, sqlFieldSchemaInfo.getFieldType(),
+						sqlFieldSchemaInfo.getDefaultVal());
+				sb.append(" WHERE ").append(sqlFieldSchemaInfo.getPreferredColumnName()).append(" IS NULL");
+				sqlList.add(sb.toString());
+				StringUtils.truncate(sb);
+			}
+		}
 
-    @Override
-    public boolean isGeneratesIndexesOnCreateTable() {
-        return false;
-    }
+		sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
+		if (format.isPretty()) {
+			sb.append(getLineSeparator());
+		} else {
+			sb.append(' ');
+		}
+		sb.append("MODIFY ");
+		appendColumnAndTypeSql(sb, sqlFieldSchemaInfo, sqlColumnAlterInfo);
+		sqlList.add(sb.toString());
+		StringUtils.truncate(sb);
+		return sqlList;
+	}
 
-    @Override
-    protected boolean appendLimitOffsetInfixClause(StringBuilder sql, int offset, int limit) throws UnifyException {
-        return false;
-    }
+	@Override
+	public String generateAlterColumnNull(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlColumnInfo sqlColumnInfo,
+			PrintFormat format) throws UnifyException {
+		StringBuilder sb = new StringBuilder();
+		sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
+		if (format.isPretty()) {
+			sb.append(getLineSeparator());
+		} else {
+			sb.append(' ');
+		}
+		sb.append("MODIFY ").append(sqlColumnInfo.getColumnName());
+		appendTypeSql(sb, sqlColumnInfo);
+		sb.append(" NULL");
+		return sb.toString();
+	}
 
-    @Override
-    protected boolean appendWhereLimitOffsetSuffixClause(StringBuilder sql, int offset, int limit, boolean append)
-            throws UnifyException {
-        if (offset > 0) {
-            throw new UnifyException(UnifyCoreErrorConstants.QUERY_RESULT_OFFSET_NOT_SUPPORTED);
-        }
+	@Override
+	public boolean isGeneratesUniqueConstraintsOnCreateTable() {
+		return false;
+	}
 
-        if (limit > 0) {
-            if (append) {
-                sql.append(" AND ROWNUM <= ").append(limit);
-            } else {
-                sql.append(" WHERE ROWNUM <= ").append(limit);
-            }
-            return true;
-        }
-        return false;
-    }
+	@Override
+	public boolean isGeneratesIndexesOnCreateTable() {
+		return false;
+	}
 
-    @Override
-    protected boolean appendLimitOffsetSuffixClause(StringBuilder sql, int offset, int limit, boolean append)
-            throws UnifyException {
-        return false;
-    }
+	@Override
+	protected boolean appendLimitOffsetInfixClause(StringBuilder sql, int offset, int limit) throws UnifyException {
+		return false;
+	}
 
-    @Override
-    protected SqlDataSourceDialectPolicies getSqlDataSourceDialectPolicies() {
-        return sqlDataSourceDialectPolicies;
-    }
+	@Override
+	protected boolean appendWhereLimitOffsetSuffixClause(StringBuilder sql, int offset, int limit, boolean append)
+			throws UnifyException {
+		if (offset > 0) {
+			throw new UnifyException(UnifyCoreErrorConstants.QUERY_RESULT_OFFSET_NOT_SUPPORTED);
+		}
 
-    private static class OracleDataSourceDialectPolicies extends AbstractSqlDataSourceDialectPolicies {
+		if (limit > 0) {
+			if (append) {
+				sql.append(" AND ROWNUM <= ").append(limit);
+			} else {
+				sql.append(" WHERE ROWNUM <= ").append(limit);
+			}
+			return true;
+		}
+		return false;
+	}
 
-        public OracleDataSourceDialectPolicies() {
-            timestampFormat =
-                    new SimpleDateFormat("('TO_TIMESTAMP'(''yyyy-MM-dd HH:mm:ss'', '''yyyy-MM-dd HH24:mi:ss'''))");
-        }
+	@Override
+	protected boolean appendLimitOffsetSuffixClause(StringBuilder sql, int offset, int limit, boolean append)
+			throws UnifyException {
+		return false;
+	}
 
-        public void setSqlDataTypePolicies(Map<ColumnType, SqlDataTypePolicy> sqlDataTypePolicies) {
-            this.sqlDataTypePolicies = sqlDataTypePolicies;
-        }
+	@Override
+	protected SqlDataSourceDialectPolicies getSqlDataSourceDialectPolicies() {
+		return sqlDataSourceDialectPolicies;
+	}
 
-        public void setSqlCriteriaPolicies(Map<RestrictionType, SqlCriteriaPolicy> sqlCriteriaPolicies) {
-            this.sqlCriteriaPolicies = sqlCriteriaPolicies;
-        }
+	private static class OracleDataSourceDialectPolicies extends AbstractSqlDataSourceDialectPolicies {
 
-        @Override
-        public int getMaxClauseValues() {
-            return 1000;
-        }
+		public OracleDataSourceDialectPolicies() {
+			timestampFormat = new SimpleDateFormat(
+					"('TO_TIMESTAMP'(''yyyy-MM-dd HH:mm:ss'', '''yyyy-MM-dd HH24:mi:ss'''))");
+		}
 
-        @Override
-        protected String concat(String... expressions) {
-            StringBuilder sb = new StringBuilder();
-            sb.append("(");
-            boolean appSym = false;
-            for (String expression : expressions) {
-                if (appSym) {
-                    sb.append(" || ");
-                } else {
-                    appSym = true;
-                }
+		public void setSqlDataTypePolicies(Map<ColumnType, SqlDataTypePolicy> sqlDataTypePolicies) {
+			this.sqlDataTypePolicies = sqlDataTypePolicies;
+		}
 
-                sb.append(expression);
-            }
-            sb.append(")");
-            return sb.toString();
-        }
-    }
+		public void setSqlCriteriaPolicies(Map<RestrictionType, SqlCriteriaPolicy> sqlCriteriaPolicies) {
+			this.sqlCriteriaPolicies = sqlCriteriaPolicies;
+		}
+
+		@Override
+		public int getMaxClauseValues() {
+			return 1000;
+		}
+
+		@Override
+		protected String concat(String... expressions) {
+			StringBuilder sb = new StringBuilder();
+			sb.append("(");
+			boolean appSym = false;
+			for (String expression : expressions) {
+				if (appSym) {
+					sb.append(" || ");
+				} else {
+					appSym = true;
+				}
+
+				sb.append(expression);
+			}
+			sb.append(")");
+			return sb.toString();
+		}
+	}
 }
 
 class OracleDatePolicy extends DatePolicy {
 
-    @Override
-    public String getAltDefault(Class<?> fieldType) {
-        return "CURRENT_TIMESTAMP";
-    }
+	@Override
+	public String getAltDefault(Class<?> fieldType) {
+		return "CURRENT_TIMESTAMP";
+	}
 
 }
 
 class OracleTimestampPolicy extends TimestampPolicy {
 
-    @Override
-    public String getAltDefault(Class<?> fieldType) {
-        return "CURRENT_TIMESTAMP";
-    }
+	@Override
+	public String getAltDefault(Class<?> fieldType) {
+		return "CURRENT_TIMESTAMP";
+	}
 
 }
 
 class OracleTimestampUTCPolicy extends TimestampUTCPolicy {
 
-    @Override
-    public String getAltDefault(Class<?> fieldType) {
-        return "CURRENT_TIMESTAMP";
-    }
+	@Override
+	public String getAltDefault(Class<?> fieldType) {
+		return "CURRENT_TIMESTAMP";
+	}
 
 }
 
 class OracleLongPolicy extends LongPolicy {
 
-    @Override
-    public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
-        sb.append(" NUMBER(").append(precision).append(")");
-    }
+	@Override
+	public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
+		sb.append(" NUMBER(").append(precision).append(")");
+	}
 
-    @Override
+	@Override
 	public String getTypeName() {
 		return "NUMBER";
 	}
 
-    @Override
-    public int getSqlType() {
-        return Types.DECIMAL;
-    }
+	@Override
+	public int getSqlType() {
+		return Types.DECIMAL;
+	}
 
-    @Override
-    public boolean isFixedLength() {
-        return false;
-    }
+	@Override
+	public boolean isFixedLength() {
+		return false;
+	}
 }
 
 class OracleIntegerPolicy extends IntegerPolicy {
 
-    @Override
-    public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
-        sb.append(" NUMBER(").append(precision).append(")");
-    }
+	@Override
+	public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
+		sb.append(" NUMBER(").append(precision).append(")");
+	}
 
-    @Override
+	@Override
 	public String getTypeName() {
 		return "NUMBER";
 	}
 
-    @Override
-    public int getSqlType() {
-        return Types.DECIMAL;
-    }
+	@Override
+	public int getSqlType() {
+		return Types.DECIMAL;
+	}
 
-    @Override
-    public boolean isFixedLength() {
-        return false;
-    }
+	@Override
+	public boolean isFixedLength() {
+		return false;
+	}
 }
 
 class OracleShortPolicy extends ShortPolicy {
 
-    @Override
-    public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
-        sb.append(" NUMBER(").append(precision).append(")");
-    }
+	@Override
+	public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
+		sb.append(" NUMBER(").append(precision).append(")");
+	}
 
-    @Override
+	@Override
 	public String getTypeName() {
 		return "NUMBER";
 	}
 
-    @Override
-    public int getSqlType() {
-        return Types.DECIMAL;
-    }
+	@Override
+	public int getSqlType() {
+		return Types.DECIMAL;
+	}
 
-    @Override
-    public boolean isFixedLength() {
-        return false;
-    }
+	@Override
+	public boolean isFixedLength() {
+		return false;
+	}
 }
 
 class OracleBlobPolicy extends BlobPolicy {
 
-    @Override
-    public void executeSetPreparedStatement(Object pstmt, int index, Object data, long timeZoneRawOffset)
-            throws Exception {
-        if (data == null || ((byte[]) data).length == 0) {
-            ((PreparedStatement) pstmt).setNull(index, Types.BLOB);
-        } else {
-            ((PreparedStatement) pstmt).setBinaryStream(index, new ByteArrayInputStream((byte[]) data),
-                    ((byte[]) data).length);
-        }
-    }
+	@Override
+	public void executeSetPreparedStatement(Object pstmt, int index, Object data, long timeZoneRawOffset)
+			throws Exception {
+		if (data == null || ((byte[]) data).length == 0) {
+			((PreparedStatement) pstmt).setNull(index, Types.BLOB);
+		} else {
+			((PreparedStatement) pstmt).setBinaryStream(index, new ByteArrayInputStream((byte[]) data),
+					((byte[]) data).length);
+		}
+	}
 
 }
 
 class OracleClobPolicy extends ClobPolicy {
 
-    @Override
-    public void executeSetPreparedStatement(Object pstmt, int index, Object data, long timeZoneRawOffset)
-            throws Exception {
-        if (data == null || ((String) data).isEmpty()) {
-            ((PreparedStatement) pstmt).setNull(index, Types.CLOB);
-        } else {
-            ((PreparedStatement) pstmt).setCharacterStream(index, new StringReader((String) data),
-                    ((String) data).length());
-        }
-    }
+	@Override
+	public void executeSetPreparedStatement(Object pstmt, int index, Object data, long timeZoneRawOffset)
+			throws Exception {
+		if (data == null || ((String) data).isEmpty()) {
+			((PreparedStatement) pstmt).setNull(index, Types.CLOB);
+		} else {
+			((PreparedStatement) pstmt).setCharacterStream(index, new StringReader((String) data),
+					((String) data).length());
+		}
+	}
 
 }

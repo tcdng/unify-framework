@@ -63,4 +63,10 @@ public class SqlColumnAlterInfo {
         return nullableChange || defaultChange || typeChange || lenChange;
     }
 
+	@Override
+	public String toString() {
+		return "[nullableChange=" + nullableChange + ", defaultChange=" + defaultChange
+				+ ", typeChange=" + typeChange + ", lenChange=" + lenChange + "]";
+	}
+
 }
