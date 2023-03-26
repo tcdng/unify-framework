@@ -353,6 +353,60 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 	}
 
 	@Override
+	public final List<String> generateAlterColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo,
+			SqlFieldSchemaInfo sqlFieldSchemaInfo, SqlColumnAlterInfo sqlColumnAlterInfo, PrintFormat format)
+			throws UnifyException {
+		if (sqlColumnAlterInfo.isAltered()) {
+			if (sqlColumnAlterInfo.isTypeChange() && ColumnType.CLOB.equals(sqlFieldSchemaInfo.getColumnType())) {
+				List<String> statements = new ArrayList<String>();
+				final String tmpColumnName = sqlFieldSchemaInfo.getPreferredColumnName() + "_tmp";
+				final SqlDataTypePolicy policy = getSqlTypePolicy(ColumnType.CLOB);
+				// Create temporary
+				StringBuilder sb = new StringBuilder();
+				sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
+				if (format.isPretty()) {
+					sb.append(newLineSql);
+				} else {
+					sb.append(' ');
+				}
+				sb.append("ADD COLUMN ").append(tmpColumnName);
+				policy.appendTypeSql(sb, sqlFieldSchemaInfo.getLength(), sqlFieldSchemaInfo.getPrecision(),
+						sqlFieldSchemaInfo.getScale());
+				statements.add(sb.toString());
+
+				// Copy
+				sb = new StringBuilder();
+				sb.append("UPDATE ").append(sqlEntitySchemaInfo.getSchemaTableName()).append(" SET ")
+						.append(tmpColumnName).append(" = ").append(sqlFieldSchemaInfo.getPreferredColumnName());
+				statements.add(sb.toString());
+
+				// Drop old column
+				sb = new StringBuilder();
+				sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName()).append(" DROP COLUMN ")
+						.append(sqlFieldSchemaInfo.getPreferredColumnName());
+				statements.add(sb.toString());
+
+				// Rename new column
+				sb = new StringBuilder();
+				sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
+				if (format.isPretty()) {
+					sb.append(newLineSql);
+				} else {
+					sb.append(' ');
+				}
+				sb.append("RENAME COLUMN ").append(tmpColumnName).append(" TO ")
+						.append(sqlFieldSchemaInfo.getPreferredColumnName());
+				statements.add(sb.toString());
+				return statements;
+			}
+
+			return doGenerateAlterColumn(sqlEntitySchemaInfo, sqlFieldSchemaInfo, sqlColumnAlterInfo, format);
+		}
+
+		return Collections.emptyList();
+	}
+
+	@Override
 	public final String generateCreateTableSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, PrintFormat format)
 			throws UnifyException {
 		StringBuilder sb = new StringBuilder();
@@ -2039,6 +2093,10 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 		return 0;
 	}
 
+	protected abstract List<String> doGenerateAlterColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo,
+			SqlFieldSchemaInfo sqlFieldSchemaInfo, SqlColumnAlterInfo sqlColumnAlterInfo, PrintFormat format)
+			throws UnifyException;
+
 	private boolean appendPreferredColumn(StringBuilder sql, SqlFieldInfo sqlFieldInfo, boolean appendSym)
 			throws UnifyException {
 		if (appendSym) {
@@ -2240,13 +2298,13 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
 	private SqlColumnAlterInfo checkSqlColumnAltered(SqlFieldSchemaInfo sqlFieldSchemaInfo,
 			SqlFieldSchemaInfo oldSqlFieldSchemaInfo) throws UnifyException {
-		boolean nullableChange = sqlFieldSchemaInfo.isNullable() != oldSqlFieldSchemaInfo.isNullable();
-		boolean defaultChange = false;
-		boolean typeChange = !sqlFieldSchemaInfo.getColumnType().equals(oldSqlFieldSchemaInfo.getColumnType());
-		boolean lenChange = sqlFieldSchemaInfo.getLength() != oldSqlFieldSchemaInfo.getLength()
+		final boolean nullableChange = sqlFieldSchemaInfo.isNullable() != oldSqlFieldSchemaInfo.isNullable();
+		final boolean defaultChange = false;
+		final boolean typeChange = !getSqlTypePolicy(sqlFieldSchemaInfo.getColumnType()).getTypeName()
+				.equals(getSqlTypePolicy(oldSqlFieldSchemaInfo.getColumnType()).getTypeName());
+		final boolean lenChange = sqlFieldSchemaInfo.getLength() != oldSqlFieldSchemaInfo.getLength()
 				|| sqlFieldSchemaInfo.getPrecision() != oldSqlFieldSchemaInfo.getPrecision()
 				|| sqlFieldSchemaInfo.getScale() != oldSqlFieldSchemaInfo.getScale();
-
 		return new SqlColumnAlterInfo(nullableChange, defaultChange, typeChange, lenChange);
 	}
 

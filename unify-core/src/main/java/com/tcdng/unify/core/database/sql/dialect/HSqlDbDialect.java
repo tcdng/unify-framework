@@ -19,7 +19,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -120,77 +119,73 @@ public class HSqlDbDialect extends AbstractSqlDataSourceDialect {
     }
 
     @Override
-    public List<String> generateAlterColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo,
+    protected List<String> doGenerateAlterColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo,
             SqlFieldSchemaInfo sqlFieldSchemaInfo, SqlColumnAlterInfo sqlColumnAlterInfo, PrintFormat format)
             throws UnifyException {
-        if (sqlColumnAlterInfo.isAltered()) {
-            List<String> sqlList = new ArrayList<String>();
-            StringBuilder sb = new StringBuilder();
-            SqlDataTypePolicy sqlDataTypePolicy = getSqlTypePolicy(sqlFieldSchemaInfo.getColumnType());
-            if (sqlColumnAlterInfo.isDataChange()) {
-                sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
-                if (format.isPretty()) {
-                    sb.append(getLineSeparator());
-                } else {
-                    sb.append(' ');
-                }
-                sb.append("ALTER COLUMN ").append(sqlFieldSchemaInfo.getPreferredColumnName());
-                sqlDataTypePolicy.appendTypeSql(sb, sqlFieldSchemaInfo.getLength(), sqlFieldSchemaInfo.getPrecision(),
-                        sqlFieldSchemaInfo.getScale());
-                sqlList.add(sb.toString());
-                StringUtils.truncate(sb);
+        List<String> sqlList = new ArrayList<String>();
+        StringBuilder sb = new StringBuilder();
+        SqlDataTypePolicy sqlDataTypePolicy = getSqlTypePolicy(sqlFieldSchemaInfo.getColumnType());
+        if (sqlColumnAlterInfo.isDataChange()) {
+            sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
+            if (format.isPretty()) {
+                sb.append(getLineSeparator());
+            } else {
+                sb.append(' ');
             }
-
-            if (sqlColumnAlterInfo.isDefaultChange()) {
-                sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
-                if (format.isPretty()) {
-                    sb.append(getLineSeparator());
-                } else {
-                    sb.append(' ');
-                }
-                sb.append("ALTER COLUMN ").append(sqlFieldSchemaInfo.getPreferredColumnName()).append(" SET");
-                if (!sqlFieldSchemaInfo.isNullable() || sqlFieldSchemaInfo.isWithDefaultVal()) {
-                    sqlDataTypePolicy.appendDefaultSql(sb, sqlFieldSchemaInfo.getFieldType(),
-                            sqlFieldSchemaInfo.getDefaultVal());
-                } else {
-                    sb.append(" DEFAULT NULL");
-                }
-
-                sqlList.add(sb.toString());
-                StringUtils.truncate(sb);
-            }
-
-            if (sqlColumnAlterInfo.isNullableChange()) {
-                if (!sqlFieldSchemaInfo.isNullable()) {
-                    sb.append("UPDATE ").append(sqlEntitySchemaInfo.getSchemaTableName()).append(" SET ")
-                            .append(sqlFieldSchemaInfo.getPreferredColumnName()).append(" = ");
-                    sqlDataTypePolicy.appendDefaultVal(sb, sqlFieldSchemaInfo.getFieldType(),
-                            sqlFieldSchemaInfo.getDefaultVal());
-                    sb.append(" WHERE ").append(sqlFieldSchemaInfo.getPreferredColumnName()).append(" IS NULL");
-                    sqlList.add(sb.toString());
-                    StringUtils.truncate(sb);
-                }
-
-                sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
-                if (format.isPretty()) {
-                    sb.append(getLineSeparator());
-                } else {
-                    sb.append(' ');
-                }
-                sb.append("ALTER COLUMN ").append(sqlFieldSchemaInfo.getPreferredColumnName());
-                if (sqlFieldSchemaInfo.isNullable()) {
-                    sb.append(" SET NULL");
-                } else {
-                    sb.append(" SET NOT NULL");
-                }
-                sqlList.add(sb.toString());
-                StringUtils.truncate(sb);
-            }
-
-            return sqlList;
+            sb.append("ALTER COLUMN ").append(sqlFieldSchemaInfo.getPreferredColumnName());
+            sqlDataTypePolicy.appendTypeSql(sb, sqlFieldSchemaInfo.getLength(), sqlFieldSchemaInfo.getPrecision(),
+                    sqlFieldSchemaInfo.getScale());
+            sqlList.add(sb.toString());
+            StringUtils.truncate(sb);
         }
 
-        return Collections.emptyList();
+        if (sqlColumnAlterInfo.isDefaultChange()) {
+            sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
+            if (format.isPretty()) {
+                sb.append(getLineSeparator());
+            } else {
+                sb.append(' ');
+            }
+            sb.append("ALTER COLUMN ").append(sqlFieldSchemaInfo.getPreferredColumnName()).append(" SET");
+            if (!sqlFieldSchemaInfo.isNullable() || sqlFieldSchemaInfo.isWithDefaultVal()) {
+                sqlDataTypePolicy.appendDefaultSql(sb, sqlFieldSchemaInfo.getFieldType(),
+                        sqlFieldSchemaInfo.getDefaultVal());
+            } else {
+                sb.append(" DEFAULT NULL");
+            }
+
+            sqlList.add(sb.toString());
+            StringUtils.truncate(sb);
+        }
+
+        if (sqlColumnAlterInfo.isNullableChange()) {
+            if (!sqlFieldSchemaInfo.isNullable()) {
+                sb.append("UPDATE ").append(sqlEntitySchemaInfo.getSchemaTableName()).append(" SET ")
+                        .append(sqlFieldSchemaInfo.getPreferredColumnName()).append(" = ");
+                sqlDataTypePolicy.appendDefaultVal(sb, sqlFieldSchemaInfo.getFieldType(),
+                        sqlFieldSchemaInfo.getDefaultVal());
+                sb.append(" WHERE ").append(sqlFieldSchemaInfo.getPreferredColumnName()).append(" IS NULL");
+                sqlList.add(sb.toString());
+                StringUtils.truncate(sb);
+            }
+
+            sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
+            if (format.isPretty()) {
+                sb.append(getLineSeparator());
+            } else {
+                sb.append(' ');
+            }
+            sb.append("ALTER COLUMN ").append(sqlFieldSchemaInfo.getPreferredColumnName());
+            if (sqlFieldSchemaInfo.isNullable()) {
+                sb.append(" SET NULL");
+            } else {
+                sb.append(" SET NOT NULL");
+            }
+            sqlList.add(sb.toString());
+            StringUtils.truncate(sb);
+        }
+
+        return sqlList;
     }
 
     @Override

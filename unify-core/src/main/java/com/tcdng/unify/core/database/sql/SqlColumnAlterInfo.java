@@ -63,13 +63,4 @@ public class SqlColumnAlterInfo {
         return nullableChange || defaultChange || typeChange || lenChange;
     }
 
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("{nullableChange = ").append(nullableChange);
-        sb.append(", defaultChange = ").append(defaultChange);
-        sb.append(", typeChange = ").append(typeChange);
-        sb.append(", lenChange = ").append(lenChange);
-        sb.append("}");
-        return sb.toString();
-    }
 }

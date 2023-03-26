@@ -21,7 +21,6 @@ import java.sql.PreparedStatement;
 import java.sql.Types;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -157,40 +156,36 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
     }
 
     @Override
-    public List<String> generateAlterColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo,
+    protected List<String> doGenerateAlterColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo,
             SqlFieldSchemaInfo sqlFieldSchemaInfo, SqlColumnAlterInfo sqlColumnAlterInfo, PrintFormat format)
             throws UnifyException {
-        if (sqlColumnAlterInfo.isAltered()) {
-            List<String> sqlList = new ArrayList<String>();
-            StringBuilder sb = new StringBuilder();
-            SqlDataTypePolicy sqlDataTypePolicy = getSqlTypePolicy(sqlFieldSchemaInfo.getColumnType());
+        List<String> sqlList = new ArrayList<String>();
+        StringBuilder sb = new StringBuilder();
+        SqlDataTypePolicy sqlDataTypePolicy = getSqlTypePolicy(sqlFieldSchemaInfo.getColumnType());
 
-            if (sqlColumnAlterInfo.isNullableChange()) {
-                if (!sqlFieldSchemaInfo.isNullable()) {
-                    sb.append("UPDATE ").append(sqlEntitySchemaInfo.getSchemaTableName()).append(" SET ")
-                            .append(sqlFieldSchemaInfo.getPreferredColumnName()).append(" = ");
-                    sqlDataTypePolicy.appendDefaultVal(sb, sqlFieldSchemaInfo.getFieldType(),
-                            sqlFieldSchemaInfo.getDefaultVal());
-                    sb.append(" WHERE ").append(sqlFieldSchemaInfo.getPreferredColumnName()).append(" IS NULL");
-                    sqlList.add(sb.toString());
-                    StringUtils.truncate(sb);
-                }
+        if (sqlColumnAlterInfo.isNullableChange()) {
+            if (!sqlFieldSchemaInfo.isNullable()) {
+                sb.append("UPDATE ").append(sqlEntitySchemaInfo.getSchemaTableName()).append(" SET ")
+                        .append(sqlFieldSchemaInfo.getPreferredColumnName()).append(" = ");
+                sqlDataTypePolicy.appendDefaultVal(sb, sqlFieldSchemaInfo.getFieldType(),
+                        sqlFieldSchemaInfo.getDefaultVal());
+                sb.append(" WHERE ").append(sqlFieldSchemaInfo.getPreferredColumnName()).append(" IS NULL");
+                sqlList.add(sb.toString());
+                StringUtils.truncate(sb);
             }
-
-            sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
-            if (format.isPretty()) {
-                sb.append(getLineSeparator());
-            } else {
-                sb.append(' ');
-            }
-            sb.append("MODIFY ");
-            appendColumnAndTypeSql(sb, sqlFieldSchemaInfo, sqlColumnAlterInfo);
-            sqlList.add(sb.toString());
-            StringUtils.truncate(sb);
-            return sqlList;
         }
 
-        return Collections.emptyList();
+        sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
+        if (format.isPretty()) {
+            sb.append(getLineSeparator());
+        } else {
+            sb.append(' ');
+        }
+        sb.append("MODIFY ");
+        appendColumnAndTypeSql(sb, sqlFieldSchemaInfo, sqlColumnAlterInfo);
+        sqlList.add(sb.toString());
+        StringUtils.truncate(sb);
+        return sqlList;
     }
 
     @Override
