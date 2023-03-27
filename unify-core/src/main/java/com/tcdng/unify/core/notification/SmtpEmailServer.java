@@ -21,7 +21,6 @@ import javax.mail.Transport;
 import javax.mail.internet.MimeMessage;
 
 import com.tcdng.unify.core.ApplicationComponents;
-import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.util.StringUtils;
 
@@ -35,13 +34,13 @@ import com.tcdng.unify.core.util.StringUtils;
 public class SmtpEmailServer extends AbstractEmailServer implements EmailServer {
 
 	@Override
-	public void sendEmail(String configurationCode, Email email) throws UnifyException {
+	public void sendEmail(String configurationCode, Email email) {
 		if (!email.isWithError()) {
 			try {
 				MimeMessage mimeMessage = createMimeMessage(configurationCode, email);
 				Transport.send(mimeMessage);
 				email.setSent(true);
-			} catch (MessagingException e) {
+			} catch (Exception e) {
 				email.setError(StringUtils.getPrintableStackTrace(e));
 				logError(e);
 			}
@@ -49,10 +48,10 @@ public class SmtpEmailServer extends AbstractEmailServer implements EmailServer 
 	}
 
 	@Override
-	public void sendEmail(String configurationCode, Email... email) throws UnifyException {
-		Session session = getSession(configurationCode);
+	public void sendEmail(String configurationCode, Email... email) {
 		Transport transport = null;
 		try {
+			Session session = getSession(configurationCode);
 			transport = session.getTransport("smtp");
 			transport.connect();
 			for (Email _email : email) {
@@ -68,6 +67,10 @@ public class SmtpEmailServer extends AbstractEmailServer implements EmailServer 
 				}
 			}
 		} catch (Exception e) {
+			final String error = StringUtils.getPrintableStackTrace(e);
+			for (Email _email : email) {
+				_email.setError(error);
+			}
 			logError(e);
 		} finally {
 			if (transport != null) {

@@ -53,6 +53,10 @@ public class Email {
 
     private boolean sent;
 
+    public Email(String error) {
+    	this.error = error;
+    }
+    
     private Email(String subject, String message, String sender, List<EmailRecipient> recipients,
             List<EmailAttachment> attachments, Object id, boolean htmlMessage) {
         this.subject = subject;
