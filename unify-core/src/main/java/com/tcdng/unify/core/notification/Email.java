@@ -43,6 +43,8 @@ public class Email {
 
     private String sender;
 
+    private String error;
+
     private List<EmailRecipient> recipients;
 
     private List<EmailAttachment> attachments;
@@ -98,12 +100,19 @@ public class Email {
         this.sent = sent;
     }
 
-    @Override
-    public String toString() {
-        return "Email [subject=" + subject + ", sender=" + sender + ", recipients=" + recipients + "]";
-    }
+    public String getError() {
+		return error;
+	}
 
-    public static Builder newBuilder() {
+	public void setError(String error) {
+		this.error = error;
+	}
+
+	public boolean isWithError() {
+		return error != null;
+	}
+
+	public static Builder newBuilder() {
         return new Builder();
     }
 
