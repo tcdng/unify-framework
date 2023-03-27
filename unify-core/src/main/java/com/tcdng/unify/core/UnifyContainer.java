@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Random;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.UUID;
@@ -513,6 +514,7 @@ public class UnifyContainer {
 
 			// Schedule periodic tasks
 			logInfo("Scheduling periodic tasks...");
+			Random random = new Random();
 			TaskManager taskManager = (TaskManager) getComponent(ApplicationComponents.APPLICATION_TASKMANAGER);
 			for (Map.Entry<String, Map<String, Periodic>> componentEntry : componentPeriodMethodMap.entrySet()) {
 				logInfo("Intializing component [{0}] with periodic methods...", componentEntry.getKey());
@@ -529,7 +531,7 @@ public class UnifyContainer {
 					String taskStatusLoggerName = AnnotationUtils.getAnnotationString(pa.taskStatusLogger());
 					TaskMonitor taskMonitor = taskManager.schedulePeriodicExecution(periodicType,
 							componentEntry.getKey(), periodicEntry.getKey(), taskStatusLoggerName,
-							UnifyCoreConstants.PERIODIC_EXECUTION_INITIAL_DELAY_SECONDS * 1000);
+							UnifyCoreConstants.PERIODIC_EXECUTION_INITIAL_DELAY_SECONDS * 1000 + (random.nextInt() % 1000));
 					periodicTaskMonitorList.add(taskMonitor);
 				}
 			}
