@@ -130,7 +130,7 @@ public class JettyEmbeddedWebServer extends AbstractEmbeddedHttpWebServer {
             context.setContextPath(getContextPath());
             context.getSessionHandler().setMaxInactiveInterval(
                     getContainerSetting(int.class, UnifyCorePropertyConstants.APPLICATION_SESSION_TIMEOUT,
-                            UnifyCoreConstants.DEFAULT_APPLICATION_SESSION_TIMEOUT_MILLISEC));
+                            UnifyCoreConstants.DEFAULT_APPLICATION_SESSION_TIMEOUT_SECONDS));
             context.getSessionHandler().getSessionCookieConfig().setHttpOnly(true);
             httpServer.setHandler(context);
 

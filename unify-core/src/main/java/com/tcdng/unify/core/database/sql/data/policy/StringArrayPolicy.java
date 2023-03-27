@@ -105,6 +105,11 @@ public class StringArrayPolicy extends AbstractSqlDataTypePolicy {
     }
 
     @Override
+	public String getTypeName() {
+		return "VARCHAR";
+	}
+
+    @Override
     public int getSqlType() {
         return Types.VARCHAR;
     }

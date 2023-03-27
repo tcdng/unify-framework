@@ -207,7 +207,6 @@ public class ClusterServiceImpl extends AbstractBusinessService implements Clust
     public boolean grabDbLock(String lockName, boolean nodeOnly) throws UnifyException {
         boolean successfulLock = false;
         String lockOwnerId = getLockOwnerId(nodeOnly);
-        logDebug("Attempt by [{0}] to hold lock [{1}]...", lockOwnerId, lockName);
         ClusterLockQuery query = new ClusterLockQuery().lockName(lockName);
         ClusterLock clusterLock = db().find(query);
         if (clusterLock == null) {
@@ -237,9 +236,6 @@ public class ClusterServiceImpl extends AbstractBusinessService implements Clust
             if (!dbLockList.contains(lockName)) {
                 dbLockList.add(lockName);
             }
-            logDebug("Lock [{0}] sucessfully held by [{1}]...", lockName, lockOwnerId);
-        } else {
-            logDebug("[{0}] failed to hold lock [{1}]...", lockOwnerId, lockName);
         }
         return successfulLock;
     }
@@ -248,29 +244,21 @@ public class ClusterServiceImpl extends AbstractBusinessService implements Clust
     public boolean releaseDbLock(String lockName, boolean nodeOnly) throws UnifyException {
         boolean successfulRelease = false;
         String lockOwnerId = getLockOwnerId(nodeOnly);
-        logDebug("Attempt by [{0}] to release lock [{1}]...", lockOwnerId, lockName);
         ClusterLockQuery query = new ClusterLockQuery().lockName(lockName).currentOwner(lockOwnerId);
         ClusterLock clusterLock = db().find(query);
         if (clusterLock != null) {
             Integer lockCount = clusterLock.getLockCount() - 1;
             if (lockCount > 0) {
                 successfulRelease = db().updateAll(query, new Update().add("lockCount", lockCount)) > 0;
-                if (successfulRelease) {
-                    logDebug("Lock [{0}] partially released by [{1}]...", lockName, lockOwnerId);
-                }
-            } else {
+             } else {
                 successfulRelease = db().updateAll(query,
                         new Update().add("currentOwner", null).add("lockCount", Integer.valueOf(0))) > 0;
                 if (successfulRelease) {
                     dbLockList.remove(lockName);
-                    logDebug("Lock [{0}] fully released by [{1}]...", lockName, lockOwnerId);
                 }
             }
         }
 
-        if (!successfulRelease) {
-            logDebug("[{0}] failed to release lock [{1}]...", lockOwnerId, lockName);
-        }
         return successfulRelease;
     }
 

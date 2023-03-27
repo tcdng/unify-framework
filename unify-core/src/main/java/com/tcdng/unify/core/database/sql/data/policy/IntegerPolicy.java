@@ -82,6 +82,11 @@ public class IntegerPolicy extends AbstractSqlDataTypePolicy {
     }
 
     @Override
+	public String getTypeName() {
+		return "INT";
+	}
+
+    @Override
     public int getSqlType() {
         return Types.INTEGER;
     }

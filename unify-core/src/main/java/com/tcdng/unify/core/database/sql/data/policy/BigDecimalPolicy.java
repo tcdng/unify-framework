@@ -71,6 +71,11 @@ public class BigDecimalPolicy extends AbstractSqlDataTypePolicy {
     }
 
     @Override
+	public String getTypeName() {
+		return "DECIMAL";
+	}
+
+	@Override
     public int getSqlType() {
         return Types.DECIMAL;
     }

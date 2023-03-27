@@ -90,6 +90,11 @@ public class BlobPolicy extends AbstractSqlDataTypePolicy {
     }
 
     @Override
+	public String getTypeName() {
+		return "BLOB";
+	}
+
+    @Override
     public int getSqlType() {
         return Types.BLOB;
     }

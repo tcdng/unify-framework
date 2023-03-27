@@ -55,10 +55,8 @@ public interface EmailServer extends UnifyComponent {
      *            the name of the configuration to use
      * @param email
      *            the email to send
-     * @throws UnifyException
-     *             if configuration with name is unknown. if an error occurs
      */
-    void sendEmail(String configName, Email email) throws UnifyException;
+    void sendEmail(String configName, Email email);
 
     /**
      * Sends multiple e-mails.
@@ -67,8 +65,6 @@ public interface EmailServer extends UnifyComponent {
      *            the name of the configuration to use
      * @param emails
      *            the e-mails to send
-     * @throws UnifyException
-     *             if configuration with name is unknown. If an error occurs
-     */
-    void sendEmail(String configName, Email... emails) throws UnifyException;
+      */
+    void sendEmail(String configName, Email... emails);
 }

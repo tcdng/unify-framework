@@ -82,6 +82,11 @@ public class FloatPolicy extends AbstractSqlDataTypePolicy {
     }
 
     @Override
+	public String getTypeName() {
+		return "FLOAT";
+	}
+
+    @Override
     public int getSqlType() {
         return Types.FLOAT;
     }

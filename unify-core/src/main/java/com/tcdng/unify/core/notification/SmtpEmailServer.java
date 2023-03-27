@@ -21,8 +21,8 @@ import javax.mail.Transport;
 import javax.mail.internet.MimeMessage;
 
 import com.tcdng.unify.core.ApplicationComponents;
-import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * Default implementation of an e-mail server component using SMTP.
@@ -33,45 +33,53 @@ import com.tcdng.unify.core.annotation.Component;
 @Component(ApplicationComponents.APPLICATION_DEFAULTEMAILSERVER)
 public class SmtpEmailServer extends AbstractEmailServer implements EmailServer {
 
-    @Override
-    public void sendEmail(String configurationCode, Email email) throws UnifyException {
-        try {
-            logDebug("Sending email [{0}]..." + email);
-            MimeMessage mimeMessage = createMimeMessage(configurationCode, email);
-            Transport.send(mimeMessage);
-            email.setSent(true);
-        } catch (MessagingException e) {
-            logError(e);
-        }
-    }
+	@Override
+	public void sendEmail(String configurationCode, Email email) {
+		if (!email.isWithError()) {
+			try {
+				MimeMessage mimeMessage = createMimeMessage(configurationCode, email);
+				Transport.send(mimeMessage);
+				email.setSent(true);
+			} catch (Exception e) {
+				email.setError(StringUtils.getPrintableStackTrace(e));
+				logError(e);
+			}
+		}
+	}
 
-    @Override
-    public void sendEmail(String configurationCode, Email... email) throws UnifyException {
-        Session session = getSession(configurationCode);
-        Transport transport = null;
-        try {
-            transport = session.getTransport("smtp");
-            transport.connect();
-            for (Email _email : email) {
-                logDebug("Sending email [{0}]..." + _email);
-                try {
-                    MimeMessage mimeMessage = createMimeMessage(session, _email);
-                    transport.sendMessage(mimeMessage, mimeMessage.getAllRecipients());
-                    _email.setSent(true);
-                } catch (Exception e) {
-                    logError(e);
-                }
-            }
-        } catch (Exception e) {
-            logError(e);
-        } finally {
-            if (transport != null) {
-                try {
-                    transport.close();
-                } catch (MessagingException e) {
-                    logError(e);
-                }
-            }
-        }
-    }
+	@Override
+	public void sendEmail(String configurationCode, Email... email) {
+		Transport transport = null;
+		try {
+			Session session = getSession(configurationCode);
+			transport = session.getTransport("smtp");
+			transport.connect();
+			for (Email _email : email) {
+				if (!_email.isWithError()) {
+					try {
+						MimeMessage mimeMessage = createMimeMessage(session, _email);
+						transport.sendMessage(mimeMessage, mimeMessage.getAllRecipients());
+						_email.setSent(true);
+					} catch (Exception e) {
+						_email.setError(StringUtils.getPrintableStackTrace(e));
+						logError(e);
+					}
+				}
+			}
+		} catch (Exception e) {
+			final String error = StringUtils.getPrintableStackTrace(e);
+			for (Email _email : email) {
+				_email.setError(error);
+			}
+			logError(e);
+		} finally {
+			if (transport != null) {
+				try {
+					transport.close();
+				} catch (MessagingException e) {
+					logError(e);
+				}
+			}
+		}
+	}
 }

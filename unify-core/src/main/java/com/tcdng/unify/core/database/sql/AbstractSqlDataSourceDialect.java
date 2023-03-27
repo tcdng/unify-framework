@@ -317,8 +317,8 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
 			// Test for rename
 			if (!sqlFieldSchemaInfo.getColumnName().equals(oldSqlFieldSchemaInfo.getColumnName())) {
-				rsb.append(
-						generateRenameColumn(sqlEntitySchemaInfo, sqlFieldSchemaInfo, oldSqlFieldSchemaInfo, format));
+				rsb.append(generateRenameColumn(sqlEntitySchemaInfo.getSchemaTableName(),
+						oldSqlFieldSchemaInfo.getPreferredColumnName(), sqlFieldSchemaInfo, format));
 			}
 
 			// Test for alter
@@ -353,6 +353,38 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 	}
 
 	@Override
+	public final List<String> generateAlterColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo,
+			SqlFieldSchemaInfo sqlFieldSchemaInfo, SqlColumnAlterInfo sqlColumnAlterInfo, PrintFormat format)
+			throws UnifyException {
+		if (sqlColumnAlterInfo.isAltered()) {
+			if (sqlColumnAlterInfo.isTypeChange() && ColumnType.CLOB.equals(sqlFieldSchemaInfo.getColumnType())) {
+				List<String> statements = new ArrayList<String>();
+				// Create temporary
+				final String tmpColumnName = sqlFieldSchemaInfo.getPreferredColumnName() + "_tmp";
+				statements.add(generateAddColumn(sqlEntitySchemaInfo, tmpColumnName, sqlFieldSchemaInfo, format));
+
+				// Copy
+				StringBuilder sb = new StringBuilder();
+				sb.append("UPDATE ").append(sqlEntitySchemaInfo.getSchemaTableName()).append(" SET ")
+						.append(tmpColumnName).append(" = ").append(sqlFieldSchemaInfo.getPreferredColumnName());
+				statements.add(sb.toString());
+
+				// Drop old column
+				statements.add(generateDropColumn(sqlEntitySchemaInfo, sqlFieldSchemaInfo, format));
+
+				// Rename new column
+				statements.add(generateRenameColumn(sqlEntitySchemaInfo.getSchemaTableName(), tmpColumnName,
+						sqlFieldSchemaInfo, format));
+				return statements;
+			}
+
+			return doGenerateAlterColumn(sqlEntitySchemaInfo, sqlFieldSchemaInfo, sqlColumnAlterInfo, format);
+		}
+
+		return Collections.emptyList();
+	}
+
+	@Override
 	public final String generateCreateTableSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, PrintFormat format)
 			throws UnifyException {
 		StringBuilder sb = new StringBuilder();
@@ -375,7 +407,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 				sb.append('\t');
 			}
 
-			appendColumnAndTypeSql(sb, sqlFieldSchemaInfo, false);
+			appendColumnAndTypeSql(sb, sqlFieldSchemaInfo.getPreferredColumnName(),  sqlFieldSchemaInfo, false);
 		}
 
 		if (isGeneratesUniqueConstraintsOnCreateTable()) {
@@ -432,8 +464,15 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 	}
 
 	@Override
-	public String generateAddColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
+	public final String generateAddColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
 			PrintFormat format) throws UnifyException {
+		return this.generateAddColumn(sqlEntitySchemaInfo, sqlFieldSchemaInfo.getPreferredColumnName(),
+				sqlFieldSchemaInfo, format);
+	}
+
+	@Override
+	public String generateAddColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo, String columnName,
+			SqlFieldSchemaInfo sqlFieldSchemaInfo, PrintFormat format) throws UnifyException {
 		StringBuilder sb = new StringBuilder();
 		sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
 		if (format.isPretty()) {
@@ -442,22 +481,22 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 			sb.append(' ');
 		}
 		sb.append("ADD COLUMN ");
-		appendColumnAndTypeSql(sb, sqlFieldSchemaInfo, true);
+		appendColumnAndTypeSql(sb, columnName, sqlFieldSchemaInfo, true);
 		return sb.toString();
 	}
 
 	@Override
-	public String generateRenameColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
-			SqlFieldSchemaInfo oldSqlFieldSchemaInfo, PrintFormat format) throws UnifyException {
+	public String generateRenameColumn(String tableName, String oldColumnName, SqlFieldSchemaInfo newSqlFieldInfo,
+			PrintFormat format) throws UnifyException {
 		StringBuilder sb = new StringBuilder();
-		sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName());
+		sb.append("ALTER TABLE ").append(tableName);
 		if (format.isPretty()) {
 			sb.append(newLineSql);
 		} else {
 			sb.append(' ');
 		}
-		sb.append("RENAME COLUMN ").append(oldSqlFieldSchemaInfo.getPreferredColumnName()).append(" TO ")
-				.append(sqlFieldSchemaInfo.getPreferredColumnName());
+		sb.append("RENAME COLUMN ").append(oldColumnName).append(" TO ")
+				.append(newSqlFieldInfo.getPreferredColumnName());
 		return sb.toString();
 	}
 
@@ -1921,10 +1960,10 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 		return sb.toString().toUpperCase();
 	}
 
-	protected void appendColumnAndTypeSql(StringBuilder sb, SqlFieldSchemaInfo sqlFieldSchemaInfo, boolean alter)
-			throws UnifyException {
+	protected void appendColumnAndTypeSql(StringBuilder sb, String preferredColumnName,
+			SqlFieldSchemaInfo sqlFieldSchemaInfo, boolean alter) throws UnifyException {
 		SqlDataTypePolicy sqlDataTypePolicy = getSqlTypePolicy(sqlFieldSchemaInfo.getColumnType());
-		sb.append(sqlFieldSchemaInfo.getPreferredColumnName());
+		sb.append(preferredColumnName);
 		sqlDataTypePolicy.appendTypeSql(sb, sqlFieldSchemaInfo.getLength(), sqlFieldSchemaInfo.getPrecision(),
 				sqlFieldSchemaInfo.getScale());
 
@@ -2038,6 +2077,10 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
 		return 0;
 	}
+
+	protected abstract List<String> doGenerateAlterColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo,
+			SqlFieldSchemaInfo sqlFieldSchemaInfo, SqlColumnAlterInfo sqlColumnAlterInfo, PrintFormat format)
+			throws UnifyException;
 
 	private boolean appendPreferredColumn(StringBuilder sql, SqlFieldInfo sqlFieldInfo, boolean appendSym)
 			throws UnifyException {
@@ -2240,13 +2283,13 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
 	private SqlColumnAlterInfo checkSqlColumnAltered(SqlFieldSchemaInfo sqlFieldSchemaInfo,
 			SqlFieldSchemaInfo oldSqlFieldSchemaInfo) throws UnifyException {
-		boolean nullableChange = sqlFieldSchemaInfo.isNullable() != oldSqlFieldSchemaInfo.isNullable();
-		boolean defaultChange = false;
-		boolean typeChange = sqlFieldSchemaInfo.getColumnType().equals(oldSqlFieldSchemaInfo.getColumnType());
-		boolean lenChange = sqlFieldSchemaInfo.getLength() != oldSqlFieldSchemaInfo.getLength()
+		final boolean nullableChange = sqlFieldSchemaInfo.isNullable() != oldSqlFieldSchemaInfo.isNullable();
+		final boolean defaultChange = false;
+		final boolean typeChange = !getSqlTypePolicy(sqlFieldSchemaInfo.getColumnType()).getTypeName()
+				.equals(getSqlTypePolicy(oldSqlFieldSchemaInfo.getColumnType()).getTypeName());
+		final boolean lenChange = sqlFieldSchemaInfo.getLength() != oldSqlFieldSchemaInfo.getLength()
 				|| sqlFieldSchemaInfo.getPrecision() != oldSqlFieldSchemaInfo.getPrecision()
 				|| sqlFieldSchemaInfo.getScale() != oldSqlFieldSchemaInfo.getScale();
-
 		return new SqlColumnAlterInfo(nullableChange, defaultChange, typeChange, lenChange);
 	}
 

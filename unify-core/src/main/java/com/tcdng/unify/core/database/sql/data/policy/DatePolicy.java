@@ -73,6 +73,11 @@ public class DatePolicy extends AbstractSqlDataTypePolicy {
     }
 
     @Override
+	public String getTypeName() {
+		return "TIMESTAMP";
+	}
+
+    @Override
     public int getSqlType() {
         return Types.TIMESTAMP;
     }
