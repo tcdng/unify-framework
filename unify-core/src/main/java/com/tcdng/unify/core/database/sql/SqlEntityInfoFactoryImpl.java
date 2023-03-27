@@ -162,7 +162,6 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
 			@SuppressWarnings("unchecked")
 			private SqlEntityInfo createEnumConstEntityInfo(Class<?> entityClass) throws Exception {
-				logDebug("Creating enumeration constant entity information for [{0}]...", entityClass);
 				String tableName = null;
 				Table ta = entityClass.getAnnotation(Table.class);
 				if (ta != null) {
@@ -228,7 +227,6 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 			@SuppressWarnings("unchecked")
 			private SqlEntityInfo createTableEntityInfo(Class<?> entityClass, EntityCycleDetector entityCycleDetector)
 					throws Exception {
-				logDebug("Creating table entity information for [{0}]...", entityClass);
 				TableName tn = entityClass.getAnnotation(TableName.class);
 				Table ta = entityClass.getAnnotation(Table.class);
 				String tableName = tn != null
