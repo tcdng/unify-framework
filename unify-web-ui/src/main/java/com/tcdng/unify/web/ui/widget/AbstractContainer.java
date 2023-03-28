@@ -85,6 +85,11 @@ public abstract class AbstractContainer extends AbstractDataTransferWidget imple
 		return false;
 	}
 
+    @Override
+    public boolean isLayoutCaption() {
+        return false;
+    }
+
 	@Override
     public void setWidgetRepository(WidgetRepository widgetRepository) throws UnifyException {
         this.widgetRepository = widgetRepository;
