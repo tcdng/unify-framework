@@ -428,7 +428,6 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 			if (EnumConst.class.isAssignableFrom(entityClass)) {
 				StaticList sla = entityClass.getAnnotation(StaticList.class);
 				if (sla != null) {
-					logDebug("Updating static data for reference {0}...", sqlEntityInfo.getEnumConstClass());
 					Map<String, Listable> map = getListMap(LocaleType.APPLICATION, sla.name());
 					for (Map.Entry<String, Listable> entry : map.entrySet()) {
 						final String code = entry.getKey();
