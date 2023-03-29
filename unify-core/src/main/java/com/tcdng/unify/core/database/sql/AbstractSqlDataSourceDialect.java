@@ -202,7 +202,8 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
 	@Override
 	public boolean matchColumnDefault(String nativeVal, String defaultVal) throws UnifyException {
-		return DataUtils.equals(nativeVal, defaultVal);
+		return DataUtils.equals(nativeVal, defaultVal)
+				|| (defaultVal == null && "NULL".equalsIgnoreCase(String.valueOf(nativeVal)));
 	}
 
 	@Override

@@ -428,7 +428,6 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 			if (EnumConst.class.isAssignableFrom(entityClass)) {
 				StaticList sla = entityClass.getAnnotation(StaticList.class);
 				if (sla != null) {
-					logDebug("Updating static data for reference {0}...", sqlEntityInfo.getEnumConstClass());
 					Map<String, Listable> map = getListMap(LocaleType.APPLICATION, sla.name());
 					for (Map.Entry<String, Listable> entry : map.entrySet()) {
 						final String code = entry.getKey();
@@ -447,8 +446,6 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 						SqlUtils.close(rs);
 
 						if (count == 0) {
-							logDebug("Insert static record with code = [{0}] and description = [{1}]...", code,
-									description);
 							pstmt = connection.prepareStatement("INSERT INTO " + sqlEntityInfo.getPreferredTableName()
 									+ " (" + codeFieldInfo.getPreferredColumnName() + ", "
 									+ descFieldInfo.getPreferredColumnName() + ") VALUES (?, ?)");
@@ -457,8 +454,6 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 							pstmt.executeUpdate();
 							SqlUtils.close(pstmt);
 						} else {
-							logDebug("Updating description = [{0}] for static record with code = [{1}] ...",
-									description, code);
 							pstmt = connection.prepareStatement("UPDATE " + sqlEntityInfo.getPreferredTableName()
 									+ " SET " + descFieldInfo.getPreferredColumnName() + " = ? WHERE "
 									+ codeFieldInfo.getPreferredColumnName() + " = ?");
