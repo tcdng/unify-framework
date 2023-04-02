@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyCoreRequestAttributeConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.UnifyOperationException;
@@ -385,10 +386,11 @@ public abstract class AbstractUIController extends AbstractController implements
         }
 
         // Set exception attributes in session context.
-        Boolean loginRequired = Boolean.FALSE;
+        boolean loginRequired = false;
         if (e instanceof UnifyException) {
             String errorCode = ((UnifyException) e).getUnifyError().getErrorCode();
             loginRequired = UnifyWebErrorConstants.LOGIN_REQUIRED.equals(errorCode)
+            		|| UnifyCoreErrorConstants.UNKNOWN_PAGE_NAME.equals(errorCode)
                     || SystemUtils.isForceLogoutErrorCode(errorCode);
         }
         String message = getExceptionMessage(LocaleType.SESSION, e);
