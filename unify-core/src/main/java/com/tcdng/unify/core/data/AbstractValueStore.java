@@ -256,6 +256,11 @@ public abstract class AbstractValueStore implements ValueStore {
         }
         
         @Override
+		public ValueStore getValueStore() {
+			return valueStore;
+		}
+
+		@Override
         public Object getValueObject() {
             return valueStore.getValueObject();
         }

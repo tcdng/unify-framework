@@ -32,6 +32,8 @@ public interface ValueStoreWriter {
     void write(String fieldName, Object value) throws UnifyException;
     
     void write(String fieldName, Object value, Formatter<?> formatter) throws UnifyException;
+
+	ValueStore getValueStore();
     
     Object getValueObject();
 

@@ -204,6 +204,11 @@ public abstract class AbstractPanel extends AbstractContainer implements Panel {
 		setCommandResultMapping(ResultMappingConstants.OPEN);
 	}
 
+	protected void setCommandOpenPath(String path) throws UnifyException {
+		setRequestAttribute(UnifyWebRequestAttributeConstants.COMMAND_POSTRESPONSE_PATH, path);
+		setCommandResultMapping(ResultMappingConstants.POST_RESPONSE);
+	}
+
 	/**
 	 * Sets up a file for download in current request context and returns a file
 	 * download response.
