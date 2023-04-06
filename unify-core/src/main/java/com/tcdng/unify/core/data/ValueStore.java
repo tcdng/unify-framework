@@ -16,6 +16,7 @@
 package com.tcdng.unify.core.data;
 
 import java.util.Collection;
+import java.util.Map;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.format.Formatter;
@@ -372,6 +373,56 @@ public interface ValueStore {
      * @return the storage size
      */
     int size();
+
+    /**
+     * Compares between value store.
+     * 
+     * @param valSource
+     *                  the new source value store
+     * @return Zero is same otherwise non-zero
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    int compare(ValueStore valSource) throws UnifyException;
+
+    /**
+     * Compares between value store.
+     * 
+     * @param valSource
+     *                            the new source value store
+     * @param inclusionFieldNames
+     *                            the fields to include in difference check.
+     * @return Zero is same otherwise non-zero
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    int compare(ValueStore valSource, String... inclusionFieldNames) throws UnifyException;
+
+    /**
+     * Compares between value store.
+     * 
+     * @param valSource
+     *                            the new source value store
+     * @param inclusionFieldNames
+     *                            the fields to include in difference check.
+     * @return Zero is same otherwise non-zero
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    int compare(ValueStore valSource, Collection<String> inclusionFieldNames) throws UnifyException;
+
+    /**
+     * Compares between value store.
+     * 
+     * @param valSource
+     *                            the new source value store
+     * @param inclusionMapping
+     *                            the fields to include in difference check.
+     * @return Zero is same otherwise non-zero
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    int compare(ValueStore valSource, Map<String, String> inclusionMapping) throws UnifyException;
 
     /**
      * Finds the differences between value store.

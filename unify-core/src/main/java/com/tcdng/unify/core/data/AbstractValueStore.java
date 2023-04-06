@@ -78,6 +78,48 @@ public abstract class AbstractValueStore implements ValueStore {
     }
 
     @Override
+	public int compare(ValueStore valSource) throws UnifyException {
+		for (GetterSetterInfo getterSetterInfo : ReflectUtils.getGetterSetterList(getDataClass())) {
+			if (getterSetterInfo.isGetterSetter()) {
+				String fieldName = getterSetterInfo.getName();
+				if (!DataUtils.equals(retrieve(fieldName), valSource.retrieve(fieldName))) {
+					return 1;
+				}
+			}
+		}
+
+		return 0;
+	}
+
+	@Override
+	public int compare(ValueStore valSource, String... inclusionFieldNames) throws UnifyException {
+        Set<String> inclusion = new HashSet<String>(Arrays.asList(inclusionFieldNames));
+        return compare(valSource, inclusion);
+	}
+
+	@Override
+	public int compare(ValueStore valSource, Collection<String> inclusionFieldNames) throws UnifyException {
+        for (String fieldName: inclusionFieldNames) {
+            if (!DataUtils.equals(retrieve(fieldName), valSource.retrieve(fieldName))) {
+                return 1;
+            }
+        }
+        
+		return 0;
+	}
+
+	@Override
+	public int compare(ValueStore valSource, Map<String, String> inclusionMapping) throws UnifyException {
+		for (Map.Entry<String, String> entry : inclusionMapping.entrySet()) {
+			if (!DataUtils.equals(retrieve(entry.getKey()), valSource.retrieve(entry.getValue()))) {
+				return 1;
+			}
+		}
+
+		return 0;
+	}
+
+	@Override
     public Audit diff(ValueStore newSource) throws UnifyException {
         Audit.Builder ab = Audit.newBuilder();
         for (GetterSetterInfo getterSetterInfo : ReflectUtils.getGetterSetterList(getDataClass())) {
@@ -97,22 +139,17 @@ public abstract class AbstractValueStore implements ValueStore {
     @Override
     public Audit diff(ValueStore newSource, String... inclusionFieldNames) throws UnifyException {
         Set<String> inclusion = new HashSet<String>(Arrays.asList(inclusionFieldNames));
-        return this.diff(newSource, inclusion);
+        return diff(newSource, inclusion);
     }
 
     @Override
     public Audit diff(ValueStore newSource, Collection<String> inclusionFieldNames) throws UnifyException {
         Audit.Builder ab = Audit.newBuilder();
-        for (GetterSetterInfo getterSetterInfo : ReflectUtils.getGetterSetterList(getDataClass())) {
-            if (getterSetterInfo.isGetterSetter()) {
-                String fieldName = getterSetterInfo.getName();
-                if (inclusionFieldNames.contains(fieldName)) {
-                    Object oldVal = retrieve(fieldName);
-                    Object newVal = newSource.retrieve(fieldName);
-                    if (!DataUtils.equals(oldVal, newVal)) {
-                        ab.addItem(fieldName, oldVal, newVal);
-                    }
-                }
+        for (String fieldName: inclusionFieldNames) {
+            Object oldVal = retrieve(fieldName);
+            Object newVal = newSource.retrieve(fieldName);
+            if (!DataUtils.equals(oldVal, newVal)) {
+                ab.addItem(fieldName, oldVal, newVal);
             }
         }
 
