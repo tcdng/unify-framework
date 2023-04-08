@@ -19,6 +19,7 @@ import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.List;
 
+import com.tcdng.unify.core.RequestContext;
 import com.tcdng.unify.core.SessionContext;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
@@ -396,6 +397,18 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 	}
 
 	/**
+	 * Sets up an open path post response.
+	 * 
+	 * @param path the path to open
+	 * @return {@link ResultMappingConstants#POST_RESPONSE}
+	 * @throws UnifyException if an error occurs
+	 */
+	protected String openPath(String path) throws UnifyException {
+		setRequestAttribute(UnifyWebRequestAttributeConstants.COMMAND_POSTRESPONSE_PATH, path);
+		return ResultMappingConstants.POST_RESPONSE;
+	}
+	
+	/**
 	 * Sets up a file for download in current request context and returns a file
 	 * download response.
 	 * 
@@ -752,6 +765,22 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 
 	protected boolean isPageWidgetEditable(String shortName) throws UnifyException {
 		return getPageRequestContextUtil().getRequestPage().isWidgetEditable(shortName);
+	}
+	
+	protected final String getContextURL(String path) throws UnifyException {
+		RequestContext requestContext = getRequestContext();
+		StringBuilder sb = new StringBuilder();
+		if (getPageRequestContextUtil().isRemoteViewer()) {
+			sb.append(getSessionContext().getUriBase());
+		}
+
+		sb.append(requestContext.getContextPath());
+		if (requestContext.isWithTenantPath()) {
+			sb.append(requestContext.getTenantPath());
+		}
+
+		sb.append(path);
+		return sb.toString();
 	}
 
 	/**

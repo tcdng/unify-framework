@@ -18,6 +18,7 @@ package com.tcdng.unify.web.ui.widget;
 import java.text.MessageFormat;
 import java.util.Collection;
 
+import com.tcdng.unify.core.RequestContext;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.ViewDirective;
 import com.tcdng.unify.core.annotation.UplAttribute;
@@ -732,6 +733,22 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 
 	protected PageRequestContextUtil getRequestContextUtil() throws UnifyException {
 		return (PageRequestContextUtil) getComponent(WebUIApplicationComponents.APPLICATION_PAGEREQUESTCONTEXTUTIL);
+	}
+	
+	protected final String getContextURL(String path) throws UnifyException {
+		RequestContext requestContext = getRequestContext();
+		StringBuilder sb = new StringBuilder();
+		if (getRequestContextUtil().isRemoteViewer()) {
+			sb.append(getSessionContext().getUriBase());
+		}
+
+		sb.append(requestContext.getContextPath());
+		if (requestContext.isWithTenantPath()) {
+			sb.append(requestContext.getTenantPath());
+		}
+
+		sb.append(path);
+		return sb.toString();
 	}
 
 	/**
