@@ -98,8 +98,7 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 	private boolean isTenantPathEnabled;
 
 	public HttpRequestHandlerImpl() {
-
-		requestPathParts = new FactoryMap<String, RequestPathParts>() {
+		this.requestPathParts = new FactoryMap<String, RequestPathParts>() {
 
 			@Override
 			protected RequestPathParts create(String resolvedPath, Object... params) throws Exception {
@@ -159,7 +158,7 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 		String resolvedPath = httpRequest.getPathInfo();
 		return requestPathParts.get(resolvedPath == null ? "" : resolvedPath);
 	}
-
+	
 	@Override
 	public RequestPathParts getRequestPathParts(String requestPath) throws UnifyException {
 		return requestPathParts.get(requestPath);

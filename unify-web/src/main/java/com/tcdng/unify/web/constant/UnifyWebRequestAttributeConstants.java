@@ -32,4 +32,6 @@ public interface UnifyWebRequestAttributeConstants {
     String COMMAND_POSTRESPONSE_PATH = "WR.commandPostPath";
 
     String REPORTOPTIONS = "WR.REPORTOPTIONS";
+
+    String TIMESTAMP_VARIABLE = ":TV";
 }

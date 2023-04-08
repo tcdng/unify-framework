@@ -891,6 +891,11 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
 								.retrieve(TokenUtils.extractTokenValue(actionPath));
 					}
 
+					if (!actionPath.startsWith(pathId)) {
+						int index = actionPath.lastIndexOf('/');
+						actionPath = pathId + actionPath.substring(index);
+					}
+
 					writer.write(",\"uURL\":\"");
 					writer.writeContextURL(actionPath);
 					writer.write('"');
@@ -974,7 +979,7 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
 				}
 			}
 		}
-		
+
 		return DataUtils.removeDuplicatesUnordered(resultList);
 	}
 

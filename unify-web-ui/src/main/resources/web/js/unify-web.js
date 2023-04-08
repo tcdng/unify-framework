@@ -1158,13 +1158,16 @@ ux.contentOpenTabMenu = function(uEv) {
 	ux.doOpenPopup(openPrm);
 }
 
+const TIMESTAMP_VARIABLE = ":TV";
+const TIMESTAMP_SET = ":TS";
+
 ux.contentOpen  = function(uEv) {
 	var evp = uEv.evp;
-	var path = evp.uOpenPath;
+	var path = evp.uOpenPath.replace(TIMESTAMP_VARIABLE, TIMESTAMP_SET + new Date().getTime());
 	evp.uRef = [];
 	evp.uViewer = null;
 	if (ux.cntSaveList && ux.cntSavePath) {
-		ux.cntOpenPath = evp.uOpenPath;
+		ux.cntOpenPath = path;
 		path = ux.cntSavePath;
 		evp.uRef = ux.cntSaveList;
 		if (ux.cntSaveIsRemote && ux.cntSaveRemoteView) {
