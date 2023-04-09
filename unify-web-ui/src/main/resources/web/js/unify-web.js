@@ -59,6 +59,10 @@ const UNIFY_DEFAULT_POPUP_HEIGHT = "auto";
 const UNIFY_POST_COMMIT_QUEUE = true; // Set to false to switch off commit queuing
 const UNIFY_POST_COMMIT_QUEUE_REPEAT_DELAY = 20; // 20 milliseconds
 const UNIFY_POST_COMMIT_QUEUE_FIRE_DELAY = 100; // 100 milliseconds
+
+const TIMESTAMP_VARIABLE = ":TV";
+const TIMESTAMP_SET = ":TS";
+
 ux.postCommitQueue = [];
 ux.postCommitExecuting = false;
 
@@ -435,7 +439,7 @@ ux.respHandler = {
 
 ux.postPath = function(resp) {
 	if (resp.postPath) {
-		var path = resp.postPath;
+		var path = resp.postPath.replace(TIMESTAMP_VARIABLE, TIMESTAMP_SET + new Date().getTime());
 		if (path == "content_open") {
 			path = ux.cntOpenPath;
 		} else {
@@ -1153,13 +1157,9 @@ ux.contentOpenTabMenu = function(uEv) {
 	openPrm.relFrameId = evp.uTabPaneId;
 	openPrm.stayOpenForMillSec = UNIFY_DEFAULT_POPUP_TIMEOUT;
 	openPrm.forceReopen = true;
-	openPrm.uTrg = uEv.uTrg;
-	openPrm.uLoc = loc;
+	openPrm.uTrg = uEuLoc = loc;
 	ux.doOpenPopup(openPrm);
 }
-
-const TIMESTAMP_VARIABLE = ":TV";
-const TIMESTAMP_SET = ":TS";
 
 ux.contentOpen  = function(uEv) {
 	var evp = uEv.evp;

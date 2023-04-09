@@ -19,7 +19,6 @@ import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.List;
 
-import com.tcdng.unify.core.RequestContext;
 import com.tcdng.unify.core.SessionContext;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
@@ -765,22 +764,6 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 
 	protected boolean isPageWidgetEditable(String shortName) throws UnifyException {
 		return getPageRequestContextUtil().getRequestPage().isWidgetEditable(shortName);
-	}
-	
-	protected final String getContextURL(String path) throws UnifyException {
-		RequestContext requestContext = getRequestContext();
-		StringBuilder sb = new StringBuilder();
-		if (getPageRequestContextUtil().isRemoteViewer()) {
-			sb.append(getSessionContext().getUriBase());
-		}
-
-		sb.append(requestContext.getContextPath());
-		if (requestContext.isWithTenantPath()) {
-			sb.append(requestContext.getTenantPath());
-		}
-
-		sb.append(path);
-		return sb.toString();
 	}
 
 	/**
