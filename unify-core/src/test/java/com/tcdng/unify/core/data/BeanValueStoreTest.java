@@ -17,6 +17,7 @@ package com.tcdng.unify.core.data;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -233,6 +234,33 @@ public class BeanValueStoreTest {
         assertEquals("38 Warehouse Road", reader.read("line1"));
         assertEquals("Apapa Lagos", reader.read("line2"));
     }
+
+    @Test
+	public void testCompare() throws Exception {
+		BeanValueStore oldValueStore = new BeanValueStore(new Address("24 Parklane", "Apapa Lagos"));
+		BeanValueStore newValueStore = new BeanValueStore(new Address("24 Parklane", "Apapa Lagos"));
+		int result = oldValueStore.compare(newValueStore);
+		assertEquals(0, result);
+
+		newValueStore = new BeanValueStore(new Address("38 Wharehouse Road", "Apapa Lagos"));
+		result = oldValueStore.compare(newValueStore);
+		assertNotEquals(0, result);
+	}
+
+    @Test
+	public void testCompareWithInclusion() throws Exception {
+		BeanValueStore oldValueStore = new BeanValueStore(new Address("24 Parklane", "Apapa Lagos"));
+		BeanValueStore newValueStore = new BeanValueStore(new Address("24 Parklane", "Apapa Lagos"));
+		int result = oldValueStore.compare(newValueStore, "line1", "line2");
+		assertEquals(0, result);
+
+		newValueStore = new BeanValueStore(new Address("38 Wharehouse Road", "Apapa Lagos"));
+		result = oldValueStore.compare(newValueStore, "line1", "line2");
+		assertNotEquals(0, result);
+		
+		result = oldValueStore.compare(newValueStore, "line2");
+		assertEquals(0, result);
+	}
 
     @Test
     public void testDiff() throws Exception {

@@ -396,6 +396,18 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 	}
 
 	/**
+	 * Sets up an open path post response.
+	 * 
+	 * @param path the path to open
+	 * @return {@link ResultMappingConstants#POST_RESPONSE}
+	 * @throws UnifyException if an error occurs
+	 */
+	protected String openPath(String path) throws UnifyException {
+		setRequestAttribute(UnifyWebRequestAttributeConstants.COMMAND_POSTRESPONSE_PATH, path);
+		return ResultMappingConstants.POST_RESPONSE;
+	}
+	
+	/**
 	 * Sets up a file for download in current request context and returns a file
 	 * download response.
 	 * 

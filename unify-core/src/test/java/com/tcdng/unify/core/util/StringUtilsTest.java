@@ -41,6 +41,48 @@ import com.tcdng.unify.core.data.ListData;
  */
 public class StringUtilsTest {
 
+	@Test
+	public void testReplaceFirstNull() throws Exception {
+        assertNull(StringUtils.replaceFirst(null, null, null));
+        assertNull(StringUtils.replaceFirst(null, "abc", null));
+        assertNull(StringUtils.replaceFirst(null, "abc", "def"));
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testReplaceFirstNullReplace() throws Exception {
+        assertNull(StringUtils.replaceFirst("Check abc characters", "abc", null));
+	}
+	
+	@Test
+	public void testReplaceFirst() throws Exception {
+        assertEquals("", StringUtils.replaceFirst("", "abc", "def"));
+        assertEquals("Check characters", StringUtils.replaceFirst("Check characters", "abc", "def"));
+        assertEquals("Check def characters", StringUtils.replaceFirst("Check abc characters", "abc", "def"));
+        assertEquals("Check characters def", StringUtils.replaceFirst("Check characters abc", "abc", "def"));
+        assertEquals("Check def characters abc", StringUtils.replaceFirst("Check abc characters abc", "abc", "def"));
+	}
+
+	@Test
+	public void testReplaceLastNull() throws Exception {
+        assertNull(StringUtils.replaceLast(null, null, null));
+        assertNull(StringUtils.replaceLast(null, "abc", null));
+        assertNull(StringUtils.replaceLast(null, "abc", "def"));
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testReplaceLastNullReplace() throws Exception {
+        assertNull(StringUtils.replaceLast("Check abc characters", "abc", null));
+	}
+	
+	@Test
+	public void testReplaceLast() throws Exception {
+        assertEquals("", StringUtils.replaceLast("", "abc", "def"));
+        assertEquals("Check characters", StringUtils.replaceLast("Check characters", "abc", "def"));
+        assertEquals("Check def characters", StringUtils.replaceLast("Check abc characters", "abc", "def"));
+        assertEquals("Check characters def", StringUtils.replaceLast("Check characters abc", "abc", "def"));
+        assertEquals("Check abc characters def", StringUtils.replaceLast("Check abc characters abc", "abc", "def"));
+	}
+	
     @Test
     public void testCapitalize() throws Exception {
         assertNull(StringUtils.capitalizeFirstLetter(null));

@@ -106,7 +106,8 @@ public abstract class AbstractMultiControl extends AbstractControl implements Mu
             if (childBlock == null) {
                 super.populate(transferBlock);
             } else {
-                DataTransferWidget dtWidget = (DataTransferWidget) getChildWidgetInfo(childBlock.getId()).getWidget();
+            	ChildWidgetInfo childWidgetInfo = getChildWidgetInfo(childBlock.getId());
+                DataTransferWidget dtWidget = (DataTransferWidget) childWidgetInfo.getWidget();
                 dtWidget.populate(childBlock);
                 onInternalChildPopulated(dtWidget);
             }

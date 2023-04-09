@@ -882,6 +882,36 @@ public final class StringUtils {
 		return null;
 	}
 
+	public static String replaceFirst(String str, String toReplace, String replaceWith) {
+		if (str != null) {
+			if (toReplace == null || replaceWith == null) {
+				throw new IllegalArgumentException();
+			}
+
+			int index = str.indexOf(toReplace);
+			if (index >= 0) {
+				return str.substring(0, index) + replaceWith + str.substring(index + toReplace.length());
+			}
+		}
+
+		return str;
+	}
+
+	public static String replaceLast(String str, String toReplace, String replaceWith) {
+		if (str != null) {
+			if (toReplace == null || replaceWith == null) {
+				throw new IllegalArgumentException();
+			}
+
+			int index = str.lastIndexOf(toReplace);
+			if (index >= 0) {
+				return str.substring(0, index) + replaceWith + str.substring(index + toReplace.length());
+			}
+		}
+
+		return str;
+	}
+	
 	public static String buildParameterizedString(List<StringToken> tokens) {
 		return StringTokenUtils.buildParameterizedString(tokens);
 	}
