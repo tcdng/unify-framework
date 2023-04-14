@@ -116,6 +116,7 @@ public class ContentPanelWriter extends AbstractPanelWriter {
 			} else {
 				// Set response page controller
 				ControllerPathParts currentRespPathParts = rcUtil.getResponsePathParts();
+				Page currentContentPage = rcUtil.getContentPage();
 				ContentInfo currentContentInfo = contentPanel.getCurrentContentInfo();
 				try {
 					rcUtil.setResponsePathParts(currentContentInfo.getPathParts());
@@ -123,6 +124,7 @@ public class ContentPanelWriter extends AbstractPanelWriter {
 					writer.writeBehavior(currentContentInfo.getPage());
 				} finally {
 					// Restore response controller
+					rcUtil.setContentPage(currentContentPage);
 					rcUtil.setResponsePathParts(currentRespPathParts);
 				}
 			}
@@ -276,11 +278,13 @@ public class ContentPanelWriter extends AbstractPanelWriter {
 			// TODO
 		} else {
 			ControllerPathParts currentRespPathParts = rcUtil.getResponsePathParts();
+			Page currentContentPage = rcUtil.getContentPage();
 			try {
 				rcUtil.setResponsePathParts(currentContentInfo.getPathParts());
 				rcUtil.setContentPage(currentContentInfo.getPage());
 				writer.writeStructureAndContent(currentContentInfo.getPage());
 			} finally {
+				rcUtil.setContentPage(currentContentPage);
 				rcUtil.setResponsePathParts(currentRespPathParts);
 			}
 		}

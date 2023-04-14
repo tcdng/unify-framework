@@ -29,6 +29,7 @@ import com.tcdng.unify.core.upl.UplElementReferences;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ControllerPathParts;
 import com.tcdng.unify.web.constant.ClosePageMode;
+import com.tcdng.unify.web.ui.PageBean;
 import com.tcdng.unify.web.ui.PagePathInfoRepository;
 import com.tcdng.unify.web.ui.response.HintUserResponse;
 import com.tcdng.unify.web.ui.response.LoadContentResponse;
@@ -327,6 +328,10 @@ public class ContentPanelImpl extends AbstractContentPanel {
             return page;
         }
 
+        public PageBean getPageBean() throws UnifyException {
+            return page.getPageBean();
+        }
+
         public String getPathId() {
             return page.getPathId();
         }
@@ -342,5 +347,12 @@ public class ContentPanelImpl extends AbstractContentPanel {
         public void incPageIndex() {
             pageIndex++;
         }
+
+		@Override
+		public String toString() {
+			return StringUtils.toXmlString(this);
+		}
+        
+        
     }
 }
