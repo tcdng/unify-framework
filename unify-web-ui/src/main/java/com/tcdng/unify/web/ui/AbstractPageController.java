@@ -388,11 +388,17 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 
 	@SuppressWarnings("unchecked")
 	protected T getPageBean() throws UnifyException {
-		return (T) getPageRequestContextUtil().getRequestPage().getPageBean();
+		return (T) resolveRequestPage().getPageBean();
 	}
 
 	protected String getPathVariable() throws UnifyException {
-		return getPageRequestContextUtil().getRequestPage().getPathVariable();
+		return resolveRequestPage().getPathVariable();
+	}
+
+	private Page resolveRequestPage() throws UnifyException {
+		PageRequestContextUtil rcUtil = getPageRequestContextUtil();
+		Page contentPage = rcUtil.getContentPage();
+		return contentPage == null ? rcUtil.getRequestPage() : contentPage;
 	}
 
 	/**
