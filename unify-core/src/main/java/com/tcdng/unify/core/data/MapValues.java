@@ -74,6 +74,15 @@ public class MapValues {
 	public boolean isMapValue(String name) {
 		return this.map.containsKey(name);
 	}
+	
+	public Map<String, Object> values() {
+		Map<String, Object> _map = new HashMap<String, Object>();
+		for (Map.Entry<String, MapValue> entry: map.entrySet()) {
+			_map.put(entry.getKey(), entry.getValue().getValue());
+		}
+		
+		return _map;
+	}
 }
 
 class MapValue {
