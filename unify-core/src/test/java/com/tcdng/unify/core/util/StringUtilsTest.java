@@ -827,4 +827,12 @@ public class StringUtilsTest {
         assertEquals(" Worl", res[1]);
         assertEquals("d!", res[2]);
     }
+    
+    @Test
+    public void testCharOccurences() throws Exception {
+        assertEquals(0, StringUtils.charOccurences(null, 'l'));
+        assertEquals(0, StringUtils.charOccurences("Hello World!", 'Z'));
+        assertEquals(1, StringUtils.charOccurences("Hello World!", 'W'));
+        assertEquals(3, StringUtils.charOccurences("Hello World!", 'l'));
+    }
 }
