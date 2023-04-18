@@ -122,6 +122,11 @@ public final class CriteriaUtils {
     	}
 
         @Override
+		public void reverseFieldSwap() {
+            throw new UnsupportedOperationException();
+		}
+
+		@Override
         public void writeRestrictedFields(Set<String> restrictedFields) {
             co.writeRestrictedFields(restrictedFields);
         }
@@ -194,6 +199,11 @@ public final class CriteriaUtils {
     	public void fieldSwap(Map<String, String> map) {
             throw new UnsupportedOperationException();
     	}
+
+        @Override
+		public void reverseFieldSwap() {
+            throw new UnsupportedOperationException();
+		}
 
         @Override
         public void writeRestrictedFields(Set<String> restrictedFields) {

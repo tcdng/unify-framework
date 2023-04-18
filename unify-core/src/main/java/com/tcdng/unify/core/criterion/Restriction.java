@@ -34,6 +34,13 @@ public interface Restriction {
 	 */
 	void fieldSwap(Map<String, String> map);
 	
+	/**
+	 * Reverses swapped fields.
+	 * 
+	 * @param map the swap map
+	 */
+	void reverseFieldSwap();
+	
     /**
      * Gets the condition type.
      * 
