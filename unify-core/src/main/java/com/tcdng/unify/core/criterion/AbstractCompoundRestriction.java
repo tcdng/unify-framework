@@ -44,6 +44,13 @@ public abstract class AbstractCompoundRestriction extends AbstractRestriction im
 	}
 
 	@Override
+	public void reverseFieldSwap() {
+		for (Restriction restriction : restrictionList) {
+			restriction.reverseFieldSwap();
+		}
+	}
+
+	@Override
 	public void writeRestrictedFields(Set<String> propertyBucket) {
 		for (Restriction restriction : restrictionList) {
 			restriction.writeRestrictedFields(propertyBucket);

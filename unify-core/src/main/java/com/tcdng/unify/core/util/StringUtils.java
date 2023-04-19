@@ -912,6 +912,22 @@ public final class StringUtils {
 		return str;
 	}
 	
+	public static int charOccurences(String str, char ch) {
+		if (str != null) {
+			final int len = str.length();
+			int occurences = 0;
+			for(int i = 0; i < len; i++) {
+				if (ch == str.charAt(i)) {
+					occurences++;
+				}
+			}
+			
+			return occurences;
+		}
+		
+		return 0;
+	}
+	
 	public static String buildParameterizedString(List<StringToken> tokens) {
 		return StringTokenUtils.buildParameterizedString(tokens);
 	}

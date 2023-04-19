@@ -31,6 +31,8 @@ public abstract class AbstractSimpleRestriction extends AbstractRestriction impl
 
     private String fieldName;
 
+    private String originFieldName;
+
     public AbstractSimpleRestriction(String fieldName) {
         this.fieldName = fieldName;
     }
@@ -39,7 +41,19 @@ public abstract class AbstractSimpleRestriction extends AbstractRestriction impl
 	public void fieldSwap(Map<String, String> map) {
 		String newFieldName = map.get(fieldName);
 		if (!StringUtils.isBlank(newFieldName)) {
+			if (originFieldName == null) {
+				originFieldName = fieldName;
+			}
+			
 			fieldName = newFieldName;
+		}
+	}
+
+	@Override
+	public void reverseFieldSwap() {
+		if (originFieldName != null) {
+			fieldName = originFieldName;
+			originFieldName = null;
 		}
 	}
 

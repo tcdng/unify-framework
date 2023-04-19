@@ -77,6 +77,17 @@ public class RestrictionFieldSwapTest extends AbstractUnifyComponentTest {
 		assertEquals("$f{name0} == 'specs' AND $f{description0} == 'aries' AND $f{salary} == 2300", str2);
 	}
 
+	@Test
+	public void testReverseFieldSwap() throws Exception {
+		Restriction restriction = new And().add(new Equals("name", "specs")).add(new Equals("description", "aries"));
+		String str1 = rt.translate(restriction);
+		restriction.fieldSwap(swap);
+		restriction.reverseFieldSwap();
+		String str2 = rt.translate(restriction);
+		assertEquals("$f{name} == 'specs' AND $f{description} == 'aries'", str1);
+		assertEquals("$f{name} == 'specs' AND $f{description} == 'aries'", str2);
+	}
+
 	@Override
 	protected void onSetup() throws Exception {
 		rt = (RestrictionTranslator) getComponent(ApplicationComponents.APPLICATION_RESTRICTIONTRANSLATOR);
