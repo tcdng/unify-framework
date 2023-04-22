@@ -33,13 +33,13 @@ public abstract class AbstractImageProvider extends AbstractUnifyComponent imple
 	private String defaultSrc;
 	
 	@Override
-	public byte[] provideAsByteArray(String name) throws UnifyException {
+	public final byte[] provideAsByteArray(String name) throws UnifyException {
 		byte[] arr = doProvideAsByteArray(name);
 		return arr == null ? IOUtils.readFileResourceInputStream(defaultSrc) : arr;
 	}
 
 	@Override
-	public String provideAsBase64String(String name) throws UnifyException {
+	public final String provideAsBase64String(String name) throws UnifyException {
 		try {
 			return ConverterUtils.convert(String.class, provideAsByteArray(name));
 		} catch (UnifyException e) {
