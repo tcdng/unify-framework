@@ -29,7 +29,7 @@ import com.tcdng.unify.core.util.IOUtils;
  */
 public abstract class AbstractImageProvider extends AbstractUnifyComponent implements ImageProvider {
 
-	@Configurable("images/blank.png")
+	@Configurable("web/images/blank.png")
 	private String defaultSrc;
 	
 	public final void setDefaultSrc(String defaultSrc) {
