@@ -18,6 +18,8 @@ package com.tcdng.unify.core.convert;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import org.apache.commons.codec.binary.Base64;
+
 import com.tcdng.unify.common.constants.EnumConst;
 import com.tcdng.unify.convert.converters.AbstractConverter;
 import com.tcdng.unify.convert.converters.ConverterFormatter;
@@ -45,6 +47,10 @@ public class StringConverter extends AbstractConverter<String> {
                 }
 
                 return (String) value;
+            }
+
+            if (value instanceof byte[]) {
+            	return Base64.encodeBase64String((byte[]) value);
             }
 
             if (value instanceof EnumConst) {

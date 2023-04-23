@@ -17,6 +17,8 @@ package com.tcdng.unify.convert.converters;
 
 import java.util.Date;
 
+import org.apache.commons.codec.binary.Base64;
+
 import com.tcdng.unify.convert.util.ConverterUtils;
 
 
@@ -39,7 +41,11 @@ public class StringConverter extends AbstractConverter<String> {
 
                 return (String) value;
             }
-            
+
+            if (value instanceof byte[]) {
+            	return Base64.encodeBase64String((byte[]) value);
+            }
+
             if (formatter == null) {
                 if (value instanceof Date) {
                     formatter = ConverterUtils.getDefaultDateTimeFormatter();
