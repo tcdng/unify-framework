@@ -32,6 +32,10 @@ public abstract class AbstractImageProvider extends AbstractUnifyComponent imple
 	@Configurable("images/blank.png")
 	private String defaultSrc;
 	
+	public final void setDefaultSrc(String defaultSrc) {
+		this.defaultSrc = defaultSrc;
+	}
+
 	@Override
 	public final byte[] provideAsByteArray(String name) throws UnifyException {
 		byte[] arr = doProvideAsByteArray(name);
