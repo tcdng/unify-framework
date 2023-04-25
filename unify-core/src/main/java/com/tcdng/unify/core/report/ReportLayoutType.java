@@ -32,6 +32,7 @@ public enum ReportLayoutType implements EnumConst {
     COLUMNAR("CMN"),
     SINGLECOLUMN_EMBEDDED_HTML("SCH"),
     MULTIDOCHTML_PDF("MDH"),
+    WORKBOOK_XLS("WBX"),
     PLACEMENT_PDF("PLC");
 
     private final String code;
