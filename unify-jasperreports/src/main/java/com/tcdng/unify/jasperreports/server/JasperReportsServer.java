@@ -15,6 +15,7 @@
  */
 package com.tcdng.unify.jasperreports.server;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.sql.Connection;
@@ -27,6 +28,7 @@ import java.util.Map;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.apache.poi.ss.usermodel.Workbook;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
@@ -201,6 +203,17 @@ public class JasperReportsServer extends AbstractReportServer {
 
 	@Override
 	protected void doGenerateReport(Report report, OutputStream outputStream) throws UnifyException {
+		if (report.isWorkbookXLS()) {
+			try {
+				Workbook workbook = (Workbook) report.getCustomObject();
+				workbook.write(outputStream);
+				workbook.close();
+				return;
+			} catch (IOException e) {
+				throwOperationErrorException(e);
+			}
+		}
+		
 		DataSource dataSource = getDataSource(report);
 		Connection connection = null;
 		try {

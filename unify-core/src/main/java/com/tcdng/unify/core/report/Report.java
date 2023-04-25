@@ -70,6 +70,8 @@ public class Report {
 
 	private List<ReportHtml> embeddedHtmls;
 
+	private Object customObject;
+	
 	private ReportTable table;
 
 	private ReportFilter filter;
@@ -104,7 +106,7 @@ public class Report {
 
 	private Report(String code, String title, String template, String processor, String dataSource, String query,
 			String theme, List<?> beanCollection, ReportTable table, List<ReportTableJoin> joins,
-			List<ReportColumn> columns, List<ReportPlacement> placements, List<ReportHtml> embeddedHtmls,
+			List<ReportColumn> columns, List<ReportPlacement> placements, List<ReportHtml> embeddedHtmls, Object customObject,
 			ReportFilter filter, ReportFormat format, ReportLayoutType layout, ReportParameters reportParameters,
 			ReportPageProperties pageProperties, String summationLegend, String groupSummationLegend,
 			boolean dynamicDataSource, boolean printColumnNames, boolean printGroupColumnNames,
@@ -123,6 +125,7 @@ public class Report {
 		this.columns = columns;
 		this.placements = placements;
 		this.embeddedHtmls = embeddedHtmls;
+		this.customObject = customObject;
 		this.filter = filter;
 		this.format = format;
 		this.layout = layout;
@@ -232,6 +235,10 @@ public class Report {
 		this.dynamicDataSource = dynamicDataSource;
 	}
 
+	public Object getCustomObject() {
+		return customObject;
+	}
+
 	public boolean isPrintColumnNames() {
 		return printColumnNames;
 	}
@@ -270,6 +277,10 @@ public class Report {
 
 	public boolean isMultiDocHtmlToPDF() {
 		return ReportLayoutType.MULTIDOCHTML_PDF.equals(layout);
+	}
+
+	public boolean isWorkbookXLS() {
+		return ReportLayoutType.WORKBOOK_XLS.equals(layout);
 	}
 
 	public boolean isEmbeddedHtml() {
@@ -397,6 +408,8 @@ public class Report {
 
 		private Map<String, ReportHtml> embeddedHtmls;
 
+		private Object customObject;
+
 		private Stack<ReportFilter> filters;
 
 		private ReportLayoutType layout;
@@ -481,6 +494,11 @@ public class Report {
 
 		public Builder format(ReportFormat format) {
 			this.format = format;
+			return this;
+		}
+
+		public Builder customObject(Object customObject) {
+			this.customObject = customObject;
 			return this;
 		}
 
@@ -752,7 +770,7 @@ public class Report {
 
 			Report report = new Report(code, title, template, processor, dataSource, query, theme, beanCollection,
 					table, Collections.unmodifiableList(joins), DataUtils.unmodifiableList(columns),
-					DataUtils.unmodifiableList(placements), DataUtils.unmodifiableList(embeddedHtmls.values()),
+					DataUtils.unmodifiableList(placements), DataUtils.unmodifiableList(embeddedHtmls.values()), customObject,
 					rootFilter, format, layout, reportParameters, pageProperties, summationLegend, groupSummationLegend,
 					dynamicDataSource, printColumnNames, printGroupColumnNames, invertGroupColors, showParameterHeader,
 					showGrandFooter, underlineRows, shadeOddRows);
