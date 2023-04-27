@@ -28,9 +28,12 @@ public class JavaClassSource {
     
     private String src;
 
-    public JavaClassSource(String className, String src) {
+    private JavaClassAdditionalTypeInfo additinalTypeInfo;
+    
+    public JavaClassSource(String className, String src, JavaClassAdditionalTypeInfo additinalTypeInfo) {
         this.className = className;
         this.src = src;
+        this.additinalTypeInfo = additinalTypeInfo;
     }
 
     public String getClassName() {
@@ -40,4 +43,8 @@ public class JavaClassSource {
     public String getSrc() {
         return src;
     }
+
+	public JavaClassAdditionalTypeInfo getAdditinalTypeInfo() {
+		return additinalTypeInfo;
+	}
 }

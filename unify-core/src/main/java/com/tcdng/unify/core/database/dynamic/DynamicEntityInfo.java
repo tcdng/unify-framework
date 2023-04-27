@@ -18,6 +18,7 @@ package com.tcdng.unify.core.database.dynamic;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,6 +56,8 @@ public class DynamicEntityInfo {
 	private String className;
 
 	private Map<String, DynamicFieldInfo> fieldInfos;
+
+	private Map<String, String> listTypeArgByFieldName;
 
 	private boolean withChildField;
 
@@ -135,6 +138,27 @@ public class DynamicEntityInfo {
 		}
 
 		return dynamicFieldInfo;
+	}
+
+	public Map<String, String> getListTypeArgByFieldName() {
+		if (listTypeArgByFieldName == null) {
+			synchronized (this) {
+				if (listTypeArgByFieldName == null) {
+					listTypeArgByFieldName = new HashMap<String, String>();
+					for (DynamicFieldInfo dynamicFieldInfo : fieldInfos.values()) {
+						if (dynamicFieldInfo.getFieldType().isChildList()) {
+							listTypeArgByFieldName.put(dynamicFieldInfo.getFieldName(),
+									((DynamicChildListFieldInfo) dynamicFieldInfo).getChildDynamicEntityInfo()
+											.getClassName());
+						}
+					}
+
+					listTypeArgByFieldName = Collections.unmodifiableMap(listTypeArgByFieldName);
+				}
+			}
+		}
+
+		return listTypeArgByFieldName;
 	}
 
 	public boolean isSelfReference() {
@@ -262,8 +286,8 @@ public class DynamicEntityInfo {
 		public Builder addField(DynamicFieldType type, DataType dataType, String columnName, String fieldName,
 				String mapped, String defaultVal, int length, int precision, int scale, boolean nullable,
 				boolean descriptive) throws UnifyException {
-			return addField(type, dataType, columnName, fieldName, mapped, null, defaultVal, length, precision, scale, nullable,
-					descriptive);
+			return addField(type, dataType, columnName, fieldName, mapped, null, defaultVal, length, precision, scale,
+					nullable, descriptive);
 		}
 
 		public Builder addField(DynamicFieldType type, DataType dataType, String columnName, String fieldName,

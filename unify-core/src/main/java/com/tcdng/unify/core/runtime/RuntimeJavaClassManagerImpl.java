@@ -50,147 +50,185 @@ import com.tcdng.unify.core.util.ReflectUtils;
 @Component(ApplicationComponents.APPLICATION_RUNTIMEJAVACLASSMANAGER)
 public class RuntimeJavaClassManagerImpl extends AbstractRuntimeJavaClassManager {
 
-    private Map<String, Class<?>> classByName;
+	private Map<String, ClassInfo> classByName;
 
-    public RuntimeJavaClassManagerImpl() {
-        reset();
-    }
+	public RuntimeJavaClassManagerImpl() {
+		reset();
+	}
 
-    @Override
-    public Class<?> classForName(String className) throws UnifyException {
-        return classByName.get(className);
-    }
+	@Override
+	public Class<?> classForName(String className) throws UnifyException {
+		ClassInfo info = classByName.get(className);
+		return info != null ? info.getType() : null;
+	}
 
-    @Override
-    public Class<?> compileAndLoadJavaClass(String className, InputStream is) throws UnifyException {
-        InputStreamReader reader = new InputStreamReader(is);
-        try {
-            return innerCompileAndLoadClass(className, reader);
-        } finally {
-            IOUtils.close(reader);
-        }
-    }
+	@Override
+	public String getListTypeArgument(String className, String fieldName) throws UnifyException {
+		ClassInfo info = classByName.get(className);
+		return info != null && info.isWithAdditionalInfo() ? info.getAdditionalTypeInfo().getListTypeArgument(fieldName)
+				: null;
+	}
 
-    @Override
-    public Class<?> compileAndLoadJavaClass(String className, Reader reader) throws UnifyException {
-        return innerCompileAndLoadClass(className, reader);
-    }
+	@Override
+	public Class<?> compileAndLoadJavaClass(String className, InputStream is) throws UnifyException {
+		InputStreamReader reader = new InputStreamReader(is);
+		try {
+			return innerCompileAndLoadClass(className, reader);
+		} finally {
+			IOUtils.close(reader);
+		}
+	}
 
-    @Override
-    public Class<?> compileAndLoadJavaClass(String className, String src) throws UnifyException {
-        try {
-            return innerCompileAndLoadClass(className, new StringReader(src));
-        } catch (UnifyException e) {
-            logDebug("@Source: \n{0}", src);
-            throw e;
-        }
-    }
+	@Override
+	public Class<?> compileAndLoadJavaClass(String className, Reader reader) throws UnifyException {
+		return innerCompileAndLoadClass(className, reader);
+	}
 
-    @Override
-    public Class<?> compileAndLoadJavaClass(String className, File file) throws UnifyException {
-        FileReader reader = null;
-        try {
-            reader = new FileReader(file);
-            return innerCompileAndLoadClass(className, reader);
-        } catch (Exception e) {
-            throw new UnifyException(e, UnifyCoreErrorConstants.COMPILER_CLASSLOAD_ERROR);
-        } finally {
-            IOUtils.close(reader);
-        }
-    }
+	@Override
+	public Class<?> compileAndLoadJavaClass(String className, String src) throws UnifyException {
+		try {
+			return innerCompileAndLoadClass(className, new StringReader(src));
+		} catch (UnifyException e) {
+			logDebug("@Source: \n{0}", src);
+			throw e;
+		}
+	}
 
-    @Override
-    public Class<?> compileAndLoadJavaClass(JavaClassSource source) throws UnifyException {
-        return compileAndLoadJavaClass(source.getClassName(), source.getSrc());
-    }
+	@Override
+	public Class<?> compileAndLoadJavaClass(String className, File file) throws UnifyException {
+		FileReader reader = null;
+		try {
+			reader = new FileReader(file);
+			return innerCompileAndLoadClass(className, reader);
+		} catch (Exception e) {
+			throw new UnifyException(e, UnifyCoreErrorConstants.COMPILER_CLASSLOAD_ERROR);
+		} finally {
+			IOUtils.close(reader);
+		}
+	}
 
-    @Override
-    public <T> List<Class<? extends T>> compileAndLoadJavaClasses(Class<T> typeClass, List<JavaClassSource> sourceList)
-            throws UnifyException {
-        try {
-            return innerCompileAndLoadClasses(typeClass, sourceList);
-        } catch (UnifyException e) {
-            for (JavaClassSource source : sourceList) {
-                logDebug("@Source: \n{0}", source.getSrc());
-            }
+	@Override
+	public Class<?> compileAndLoadJavaClass(JavaClassSource source) throws UnifyException {
+		return compileAndLoadJavaClass(source.getClassName(), source.getSrc());
+	}
 
-            throw e;
-        }
-    }
+	@Override
+	public <T> List<Class<? extends T>> compileAndLoadJavaClasses(Class<T> typeClass, List<JavaClassSource> sourceList)
+			throws UnifyException {
+		try {
+			return innerCompileAndLoadClasses(typeClass, sourceList);
+		} catch (UnifyException e) {
+			for (JavaClassSource source : sourceList) {
+				logDebug("@Source: \n{0}", source.getSrc());
+			}
 
-    @Override
-    public synchronized void reset() {
-        classByName = new ConcurrentHashMap<String, Class<?>>();
-    }
+			throw e;
+		}
+	}
 
-    @Override
-    protected void onInitialize() throws UnifyException {
-        super.onInitialize();
-        ReflectUtils.registerClassForNameProvider(this);
-    }
+	@Override
+	public synchronized void reset() {
+		classByName = new ConcurrentHashMap<String, ClassInfo>();
+	}
 
-    @Override
-    protected void onTerminate() throws UnifyException {
-        ReflectUtils.unregisterClassForNameProvider(this);
-        super.onTerminate();
-    }
+	@Override
+	protected void onInitialize() throws UnifyException {
+		super.onInitialize();
+		ReflectUtils.registerClassForNameProvider(this);
+	}
 
-    private synchronized Class<?> innerCompileAndLoadClass(String className, Reader reader) throws UnifyException {
-        try {
-            SimpleCompiler compiler = new SimpleCompiler();
-            compiler.setParentClassLoader(getClass().getClassLoader());
-            compiler.cook(reader);
-            Class<?> clazz = compiler.getClassLoader().loadClass(className);
-            classByName.put(className, clazz);
-            return clazz;
-        } catch (Exception e) {
-            throw new UnifyException(e, UnifyCoreErrorConstants.COMPILER_CLASSLOAD_ERROR);
-        }
-    }
+	@Override
+	protected void onTerminate() throws UnifyException {
+		ReflectUtils.unregisterClassForNameProvider(this);
+		super.onTerminate();
+	}
 
-    @SuppressWarnings("unchecked")
-    private synchronized <T> List<Class<? extends T>> innerCompileAndLoadClasses(Class<T> typeClass, List<JavaClassSource> sourceList)
-            throws UnifyException {
-        List<Class<? extends T>> resultList = new ArrayList<Class<? extends T>>();
-        try {
-            List<String> classNameList = new ArrayList<String>();
-            StringResource[] sourceResources = new StringResource[sourceList.size()];
-            for (int i = 0; i < sourceResources.length; i++) {
-                JavaClassSource javaSource = sourceList.get(i);
-                classNameList.add(javaSource.getClassName());
-                sourceResources[i] = new StringResource(javaSource.getClassName().replace('.', '/') + ".java",
-                        javaSource.getSrc());
-            }
-            
-            MapResourceFinder resourceFinder = new MapResourceFinder(sourceResources);
-            ClassLoader loader = new JavaSourceClassLoader(getClass().getClassLoader(), resourceFinder, null);
+	private synchronized Class<?> innerCompileAndLoadClass(String className, Reader reader) throws UnifyException {
+		try {
+			SimpleCompiler compiler = new SimpleCompiler();
+			compiler.setParentClassLoader(getClass().getClassLoader());
+			compiler.cook(reader);
+			Class<?> clazz = compiler.getClassLoader().loadClass(className);
+			classByName.put(className, new ClassInfo(clazz));
+			return clazz;
+		} catch (Exception e) {
+			throw new UnifyException(e, UnifyCoreErrorConstants.COMPILER_CLASSLOAD_ERROR);
+		}
+	}
 
-            for (String className : classNameList) {
-                Class<? extends T> clazz = (Class<? extends T>) loader.loadClass(className);
-                classByName.put(className, clazz);
-                resultList.add(clazz);
-            }
-        } catch (Exception e) {
-            throw new UnifyException(e, UnifyCoreErrorConstants.COMPILER_CLASSLOAD_ERROR);
-        }
+	@SuppressWarnings("unchecked")
+	private synchronized <T> List<Class<? extends T>> innerCompileAndLoadClasses(Class<T> typeClass,
+			List<JavaClassSource> sourceList) throws UnifyException {
+		List<Class<? extends T>> resultList = new ArrayList<Class<? extends T>>();
+		try {
+			List<String> classNameList = new ArrayList<String>();
+			StringResource[] sourceResources = new StringResource[sourceList.size()];
+			for (int i = 0; i < sourceResources.length; i++) {
+				JavaClassSource javaSource = sourceList.get(i);
+				classNameList.add(javaSource.getClassName());
+				sourceResources[i] = new StringResource(javaSource.getClassName().replace('.', '/') + ".java",
+						javaSource.getSrc());
+			}
 
-        return resultList;
-    }
+			MapResourceFinder resourceFinder = new MapResourceFinder(sourceResources);
+			ClassLoader loader = new JavaSourceClassLoader(getClass().getClassLoader(), resourceFinder, null);
 
-    private class MapResourceFinder extends ResourceFinder {
-        private Map<String, StringResource> map;
+			for (int i = 0; i < sourceResources.length; i++) {
+				final String className = classNameList.get(i);
+				Class<? extends T> clazz = (Class<? extends T>) loader.loadClass(className);
+				classByName.put(className, new ClassInfo(clazz, sourceList.get(i).getAdditinalTypeInfo()));
+				resultList.add(clazz);
+			}
+		} catch (Exception e) {
+			throw new UnifyException(e, UnifyCoreErrorConstants.COMPILER_CLASSLOAD_ERROR);
+		}
 
-        public MapResourceFinder(StringResource[] sources) {
-            this.map = new HashMap<String, StringResource>();
-            for (StringResource src : sources) {
-                this.map.put(src.getFileName(), src);
-            }
-        }
+		return resultList;
+	}
 
-        @Override
-        public Resource findResource(final String resourceName) {
-            return map.get(resourceName);
-        }
-    }
+	private class MapResourceFinder extends ResourceFinder {
+		private Map<String, StringResource> map;
+
+		public MapResourceFinder(StringResource[] sources) {
+			this.map = new HashMap<String, StringResource>();
+			for (StringResource src : sources) {
+				this.map.put(src.getFileName(), src);
+			}
+		}
+
+		@Override
+		public Resource findResource(final String resourceName) {
+			return map.get(resourceName);
+		}
+	}
+
+	private class ClassInfo {
+
+		private final Class<?> type;
+
+		private final JavaClassAdditionalTypeInfo additionalTypeInfo;
+
+		public ClassInfo(Class<?> type, JavaClassAdditionalTypeInfo additionalTypeInfo) {
+			this.type = type;
+			this.additionalTypeInfo = additionalTypeInfo;
+		}
+
+		public ClassInfo(Class<?> type) {
+			this.type = type;
+			this.additionalTypeInfo = null;
+		}
+
+		public Class<?> getType() {
+			return type;
+		}
+
+		public JavaClassAdditionalTypeInfo getAdditionalTypeInfo() {
+			return additionalTypeInfo;
+		}
+
+		public boolean isWithAdditionalInfo() {
+			return additionalTypeInfo != null;
+		}
+	}
 
 }
