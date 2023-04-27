@@ -230,7 +230,7 @@ public final class ReflectUtils {
 						final String argumentTypeName = classForNameProvider.getListTypeArgument(beanClass.getName(),
 								fieldName);
 						if (argumentTypeName != null) {
-							return classForName(argumentTypeName);
+							argumentType = classForName(argumentTypeName);
 						}
 					}
 				}
