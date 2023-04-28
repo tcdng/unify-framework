@@ -36,6 +36,7 @@ import com.tcdng.unify.core.database.sql.SqlDatabase;
 import com.tcdng.unify.core.database.sql.SqlSchemaManager;
 import com.tcdng.unify.core.database.sql.SqlSchemaManagerOptions;
 import com.tcdng.unify.core.runtime.JavaClassSource;
+import com.tcdng.unify.core.runtime.JavaClassAdditionalTypeInfo;
 import com.tcdng.unify.core.runtime.RuntimeJavaClassManager;
 import com.tcdng.unify.core.util.DynamicEntityUtils;
 
@@ -62,11 +63,11 @@ public class DynamicSqlEntityLoaderImpl extends AbstractUnifyComponent implement
 		return loadDynamicSqlEntities(db, Arrays.asList(dynamicEntityInfo)).get(0);
 	}
 
-	public void setRuntimeJavaClassManager(RuntimeJavaClassManager runtimeJavaClassManager) {
+	public final void setRuntimeJavaClassManager(RuntimeJavaClassManager runtimeJavaClassManager) {
 		this.runtimeJavaClassManager = runtimeJavaClassManager;
 	}
 
-	public void setSqlSchemaManager(SqlSchemaManager sqlSchemaManager) {
+	public final void setSqlSchemaManager(SqlSchemaManager sqlSchemaManager) {
 		this.sqlSchemaManager = sqlSchemaManager;
 	}
 
@@ -83,7 +84,8 @@ public class DynamicSqlEntityLoaderImpl extends AbstractUnifyComponent implement
 			}
 
 			JavaClassSource source = new JavaClassSource(dynamicEntityInfo.getClassName(),
-					DynamicEntityUtils.generateEntityJavaClassSource(dynamicEntityInfo));
+					DynamicEntityUtils.generateEntityJavaClassSource(dynamicEntityInfo),
+					new JavaClassAdditionalTypeInfo(dynamicEntityInfo.getListTypeArgByFieldName()));
 			sourceList.add(source);
 		}
 		logDebug("Source files successfully generated for [{0}] entity classes...", dynamicEntityInfoList.size());

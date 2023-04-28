@@ -26,5 +26,22 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface ClassForNameProvider {
 
-    Class<?> classForName(String className) throws UnifyException;
+	/**
+	 * Gets class by name.
+	 * 
+	 * @param className the class name
+	 * @return type if found otherwise null
+	 * @throws UnifyException if an error occurs
+	 */
+	Class<?> classForName(String className) throws UnifyException;
+	
+	/**
+	 * Gets the type argument for a list field.
+	 * 
+	 * @param className the class name
+	 * @param fieldName the class field name
+	 * @return the list argument type if found otherwise null
+	 * @throws UnifyException if an error occurs
+	 */
+	String getListTypeArgument(String className, String fieldName) throws UnifyException;
 }

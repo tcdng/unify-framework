@@ -106,8 +106,8 @@ public class RuntimeJavaClassManagerTest extends AbstractUnifyComponentTest {
     public void testCompileAndLoadClassesCircular() throws Exception {
         rjcm.reset();
         List<JavaClassSource> sourceList = Arrays.asList(
-                new JavaClassSource("com.tcdng.unify.core.runtime.AuthorImpl", authorSrc),
-                new JavaClassSource("com.tcdng.unify.core.runtime.BookImpl", bookSrc));
+                new JavaClassSource("com.tcdng.unify.core.runtime.AuthorImpl", authorSrc, new JavaClassAdditionalTypeInfo()),
+                new JavaClassSource("com.tcdng.unify.core.runtime.BookImpl", bookSrc, new JavaClassAdditionalTypeInfo()));
         List<Class<? extends Entity>> clazzList = rjcm.compileAndLoadJavaClasses(Entity.class, sourceList);
         assertNotNull(clazzList);
         assertEquals(2, clazzList.size());
