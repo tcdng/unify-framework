@@ -52,7 +52,7 @@ public final class ImageUtils {
 	 * @param image the image
 	 * @return the detected type otherwise null
 	 */
-	public ImageType detectImageType(byte[] image) {
+	public static ImageType detectImageType(byte[] image) {
 		if (image != null) {
 			// JPEG
 			if ((image.length > 2) && (image[0] == (byte) 0xFF) && (image[1] == (byte) 0xD8)) {
