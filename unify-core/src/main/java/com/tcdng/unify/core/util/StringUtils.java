@@ -731,13 +731,13 @@ public final class StringUtils {
 			StringBuilder sb = new StringBuilder();
 			boolean appendSym = false;
 			for (Object object : objects) {
-				if (appendSym) {
-					sb.append(ch);
-				} else {
-					appendSym = true;
-				}
-
 				if (object != null) {
+					if (appendSym) {
+						sb.append(ch);
+					} else {
+						appendSym = true;
+					}
+
 					sb.append(object);
 				}
 			}
@@ -764,13 +764,13 @@ public final class StringUtils {
 			StringBuilder sb = new StringBuilder();
 			boolean appendSym = false;
 			for (Object object : objects) {
-				if (appendSym) {
-					sb.append(sp);
-				} else {
-					appendSym = true;
-				}
-
 				if (object != null) {
+					if (appendSym) {
+						sb.append(sp);
+					} else {
+						appendSym = true;
+					}
+
 					sb.append(object);
 				}
 			}
@@ -797,13 +797,13 @@ public final class StringUtils {
 			StringBuilder sb = new StringBuilder();
 			boolean appendSym = false;
 			for (Object object : objects) {
-				if (appendSym) {
-					sb.append(ch);
-				} else {
-					appendSym = true;
-				}
-
 				if (object != null) {
+					if (appendSym) {
+						sb.append(ch);
+					} else {
+						appendSym = true;
+					}
+
 					sb.append(object);
 				}
 			}
@@ -830,13 +830,13 @@ public final class StringUtils {
 			StringBuilder sb = new StringBuilder();
 			boolean appendSym = false;
 			for (Object object : objects) {
-				if (appendSym) {
-					sb.append(sp);
-				} else {
-					appendSym = true;
-				}
-
 				if (object != null) {
+					if (appendSym) {
+						sb.append(sp);
+					} else {
+						appendSym = true;
+					}
+
 					sb.append(object);
 				}
 			}
