@@ -44,6 +44,7 @@ public class DynamicColumnFieldInfo extends DynamicFieldInfo {
 			String mapped, boolean nullable, boolean descriptive, boolean tenantId) {
 		super(type, EntityFieldType.TABLE_COLUMN, DataType.STRING, columnName, fieldName, mapped, enumClassName,
 				descriptive, tenantId);
+		this.nullable = nullable;
 	}
 
 	public DynamicColumnFieldInfo(DynamicFieldType type, DataType dataType, String columnName, String fieldName,
