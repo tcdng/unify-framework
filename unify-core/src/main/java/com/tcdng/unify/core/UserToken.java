@@ -60,6 +60,8 @@ public class UserToken {
 
 	private boolean remote;
 
+	private boolean authorized;
+
 	public UserToken(Long tenantId) {
 		this.tenantId = tenantId;
 	}
@@ -81,6 +83,15 @@ public class UserToken {
 		this.reservedUser = reservedUser;
 		this.allowMultipleLogin = allowMultipleLogin;
 		this.remote = remote;
+		this.authorized = true;
+	}
+
+	public boolean isAuthorized() {
+		return authorized;
+	}
+
+	public void setAuthorized(boolean authorized) {
+		this.authorized = authorized;
 	}
 
 	public String getUserLoginId() {
