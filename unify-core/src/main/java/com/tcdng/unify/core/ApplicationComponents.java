@@ -111,7 +111,7 @@ public interface ApplicationComponents {
 
     String APPLICATION_TYPELISTFACTORY = "application-tasklistfactory";
 
-    String APPLICATION_TWOFACTORAUTHENTICATIONSERVICE = "application-twofactorautenticationservice";
+    String APPLICATION_TWOFACTORAUTHENTICATIONSERVICE = "application-twofactorauthenticationservice";
 
     String APPLICATION_UPLCOMPILER = "application-uplcompiler";
 
