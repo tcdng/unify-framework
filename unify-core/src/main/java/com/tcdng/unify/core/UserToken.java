@@ -30,6 +30,8 @@ public class UserToken {
 
 	private String userName;
 
+	private String userEmail;
+
 	private String roleCode;
 
 	private String branchCode;
@@ -60,15 +62,18 @@ public class UserToken {
 
 	private boolean remote;
 
+	private boolean authorized;
+
 	public UserToken(Long tenantId) {
 		this.tenantId = tenantId;
 	}
 
-	private UserToken(String userLoginId, String userName, String ipAddress, String branchCode, String zoneCode,
-			String tenantCode, String tenantName, String colorScheme, Long userId, Long tenantId, boolean globalAccess,
-			boolean reservedUser, boolean allowMultipleLogin, boolean remote) {
+	private UserToken(String userLoginId, String userName, String userEmail, String ipAddress, String branchCode,
+			String zoneCode, String tenantCode, String tenantName, String colorScheme, Long userId, Long tenantId,
+			boolean globalAccess, boolean reservedUser, boolean allowMultipleLogin, boolean remote) {
 		this.userLoginId = userLoginId;
 		this.userName = userName;
+		this.userEmail = userEmail;
 		this.zoneCode = zoneCode;
 		this.branchCode = branchCode;
 		this.tenantCode = tenantCode;
@@ -81,6 +86,15 @@ public class UserToken {
 		this.reservedUser = reservedUser;
 		this.allowMultipleLogin = allowMultipleLogin;
 		this.remote = remote;
+		this.authorized = true;
+	}
+
+	public boolean isAuthorized() {
+		return authorized;
+	}
+
+	public void setAuthorized(boolean authorized) {
+		this.authorized = authorized;
 	}
 
 	public String getUserLoginId() {
@@ -89,6 +103,10 @@ public class UserToken {
 
 	public String getUserName() {
 		return userName;
+	}
+
+	public String getUserEmail() {
+		return userEmail;
 	}
 
 	public Long getUserId() {
@@ -189,6 +207,8 @@ public class UserToken {
 
 		private String userName;
 
+		private String userEmail;
+
 		private String branchCode;
 
 		private String tenantCode;
@@ -224,6 +244,11 @@ public class UserToken {
 
 		public Builder userName(String userName) {
 			this.userName = userName;
+			return this;
+		}
+
+		public Builder userEmail(String userEmail) {
+			this.userEmail = userEmail;
 			return this;
 		}
 
@@ -292,8 +317,8 @@ public class UserToken {
 				throw new RuntimeException("Login ID is required!");
 			}
 
-			return new UserToken(userLoginId, userName, ipAddress, branchCode, zoneCode, tenantCode, tenantName,
-					colorScheme, userId, tenantId, globalAccess, reservedUser, allowMultipleLogin, remote);
+			return new UserToken(userLoginId, userName, userEmail, ipAddress, branchCode, zoneCode, tenantCode,
+					tenantName, colorScheme, userId, tenantId, globalAccess, reservedUser, allowMultipleLogin, remote);
 		}
 	}
 

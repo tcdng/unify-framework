@@ -149,6 +149,10 @@ public class SessionContext extends Context {
 		return userToken != null;
 	}
 
+	public boolean isAuthorized() {
+		return userToken != null && userToken.isAuthorized();
+	}
+
 	public boolean isNewLastAccessTime() {
 		return isNewLastAccessTime;
 	}

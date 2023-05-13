@@ -33,65 +33,65 @@ import com.tcdng.unify.web.constant.Secured;
  */
 public abstract class AbstractController extends AbstractUnifyComponent implements Controller {
 
-    @Configurable
-    private EventLogger eventLogger;
+	@Configurable
+	private EventLogger eventLogger;
 
-    @Configurable
-    private ControllerFinder controllerFinder;
+	@Configurable
+	private ControllerFinder controllerFinder;
 
-    private boolean secured;
+	private boolean secured;
 
-    public AbstractController(Secured secured) {
-        this.secured = secured.isTrue();
-    }
+	public AbstractController(Secured secured) {
+		this.secured = secured.isTrue();
+	}
 
-    public void setEventLogger(EventLogger eventLogger) {
-        this.eventLogger = eventLogger;
-    }
+	public void setEventLogger(EventLogger eventLogger) {
+		this.eventLogger = eventLogger;
+	}
 
-    public void setControllerFinder(ControllerFinder controllerFinder) {
-        this.controllerFinder = controllerFinder;
-    }
+	public void setControllerFinder(ControllerFinder controllerFinder) {
+		this.controllerFinder = controllerFinder;
+	}
 
-    @Override
-    public boolean isSecured() {
-        return this.secured;
-    }
+	@Override
+	public boolean isSecured() {
+		return this.secured;
+	}
 
-    @Override
-    protected void onInitialize() throws UnifyException {
+	@Override
+	protected void onInitialize() throws UnifyException {
 
-    }
+	}
 
-    @Override
-    protected void onTerminate() throws UnifyException {
+	@Override
+	protected void onTerminate() throws UnifyException {
 
-    }
+	}
 
-    protected ValueStore createValueStore(Object sourceObject) throws UnifyException {
-        return ValueStoreUtils.getValueStore(sourceObject, null, 0);
-    }
+	protected ValueStore createValueStore(Object sourceObject) throws UnifyException {
+		return ValueStoreUtils.getValueStore(sourceObject, null, 0);
+	}
 
-    protected EventLogger getEventLogger() throws UnifyException {
-        return eventLogger;
-    }
+	protected EventLogger getEventLogger() throws UnifyException {
+		return eventLogger;
+	}
 
-    protected ControllerFinder getControllerFinder() {
-        return controllerFinder;
-    }
-    
-    protected void ensureSecureAccess(ControllerPathParts reqPathParts, boolean remoteView) throws UnifyException {
-        SessionContext sessionContext = getSessionContext();
-        boolean isUserLoggedIn = sessionContext.isUserLoggedIn() || remoteView;
-        if (isSecured() && !isUserLoggedIn) {
-            String forceLogout = (String) sessionContext
-                    .removeAttribute(UnifyWebSessionAttributeConstants.FORCE_LOGOUT);
-            if (forceLogout != null) {
-                throw new UnifyException(SystemUtils.getSessionAttributeErrorCode(forceLogout),
-                        reqPathParts.getControllerPath());
-            }
+	protected ControllerFinder getControllerFinder() {
+		return controllerFinder;
+	}
 
-            throw new UnifyException(UnifyWebErrorConstants.LOGIN_REQUIRED, reqPathParts.getControllerPath());
-        }
-    }
+	protected void ensureSecureAccess(ControllerPathParts reqPathParts, boolean remoteView) throws UnifyException {
+		SessionContext sessionContext = getSessionContext();
+		final boolean isUserLoggedInAndAuthorized = sessionContext.isAuthorized() || remoteView;
+		if (isSecured() && !isUserLoggedInAndAuthorized) {
+			String forceLogout = (String) sessionContext
+					.removeAttribute(UnifyWebSessionAttributeConstants.FORCE_LOGOUT);
+			if (forceLogout != null) {
+				throw new UnifyException(SystemUtils.getSessionAttributeErrorCode(forceLogout),
+						reqPathParts.getControllerPath());
+			}
+
+			throw new UnifyException(UnifyWebErrorConstants.LOGIN_REQUIRED, reqPathParts.getControllerPath());
+		}
+	}
 }

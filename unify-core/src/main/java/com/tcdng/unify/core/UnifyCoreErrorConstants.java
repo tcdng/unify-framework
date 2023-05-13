@@ -1073,4 +1073,9 @@ public interface UnifyCoreErrorConstants {
     /** Mapped annotation should applied to field of type Long only. Type = {0}, field = {1} */
     String APPLY_MAPPED_TO_LONG_FIELD_ONLY = "UC_0114";
 
+    /**
+     * No password authentication service component configured for application.
+     */
+    String NO_PASSWORD_AUTH_SERVICE_COMP = "UC_0115";
+
 }
