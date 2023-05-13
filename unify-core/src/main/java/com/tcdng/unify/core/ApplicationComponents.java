@@ -113,6 +113,8 @@ public interface ApplicationComponents {
 
     String APPLICATION_TWOFACTORAUTHENTICATIONSERVICE = "application-twofactorauthenticationservice";
 
+    String APPLICATION_PASSWORDAUTHENTICATIONSERVICE = "application-passwordauthenticationservice";
+
     String APPLICATION_UPLCOMPILER = "application-uplcompiler";
 
     String APPLICATION_UPLCOMPONENTWRITERMANAGER = "application-uplcomponentwritermanager";
