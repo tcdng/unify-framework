@@ -45,6 +45,7 @@ import java.util.Properties;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.UnifyOperationException;
+import com.tcdng.unify.core.constant.PrintFormat;
 
 /**
  * Provides utility methods for IO.
@@ -1013,6 +1014,22 @@ public class IOUtils {
         return new CustomFilenameFilter(prefixes, extensions, signatures);
     }
 
+	/**
+	 * Posts an object to an end point using JSON.
+	 * 
+	 * @param responseClass the response class
+	 * @param endpoint      the end point
+	 * @param requestObject the object to post
+	 * @return the response
+	 * @throws UnifyException if an error occurs
+	 */
+	public static <T> T postObjectToEndpointUsingJson(Class<T> responseClass, String endpoint, Object requestObject)
+			throws UnifyException {
+		final String reqJSON = DataUtils.asJsonString(requestObject, PrintFormat.NONE);
+		final String respJSON = IOUtils.postJsonToEndpoint(endpoint, reqJSON);
+		return DataUtils.fromJsonString(responseClass, respJSON);
+	}
+    
 	/**
 	 * Posts JSON string to an end point.
 	 * 
