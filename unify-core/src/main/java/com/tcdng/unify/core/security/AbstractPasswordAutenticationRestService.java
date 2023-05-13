@@ -28,10 +28,10 @@ public abstract class AbstractPasswordAutenticationRestService extends AbstractP
 
 	@Override
 	public boolean authenticate(String userName, String userEmail, String password) throws UnifyException {
-		PasswordAuthResponse resp = IOUtils.postObjectToEndpointUsingJson(PasswordAuthResponse.class, getEndpoint(),
+		PasswordAuthResponse resp = IOUtils.postObjectToEndpointUsingJson(PasswordAuthResponse.class, getAuthEndpoint(),
 				new PasswordAuthRequest(userName, userEmail, password));
 		return resp.isSuccess();
 	}
 
-	protected abstract String getEndpoint() throws UnifyException;
+	protected abstract String getAuthEndpoint() throws UnifyException;
 }

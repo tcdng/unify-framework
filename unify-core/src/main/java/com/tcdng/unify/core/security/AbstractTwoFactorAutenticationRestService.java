@@ -27,11 +27,19 @@ import com.tcdng.unify.core.util.IOUtils;
 public abstract class AbstractTwoFactorAutenticationRestService extends AbstractTwoFactorAutenticationService {
 
 	@Override
+	public void sendOneTimePasscode(String userName, String userEmail) throws UnifyException {
+		IOUtils.postObjectToEndpointUsingJson(TwoFactorAuthResponse.class, getSendEndpoint(),
+				new TwoFactorAuthRequest(userName, userEmail, null));
+	}
+
+	@Override
 	public boolean authenticate(String userName, String userEmail, String password) throws UnifyException {
-		TwoFactorAuthResponse resp = IOUtils.postObjectToEndpointUsingJson(TwoFactorAuthResponse.class, getEndpoint(),
+		TwoFactorAuthResponse resp = IOUtils.postObjectToEndpointUsingJson(TwoFactorAuthResponse.class, getAuthEndpoint(),
 				new TwoFactorAuthRequest(userName, userEmail, password));
 		return resp.isSuccess();
 	}
 
-	protected abstract String getEndpoint() throws UnifyException;
+	protected abstract String getSendEndpoint() throws UnifyException;
+
+	protected abstract String getAuthEndpoint() throws UnifyException;
 }
