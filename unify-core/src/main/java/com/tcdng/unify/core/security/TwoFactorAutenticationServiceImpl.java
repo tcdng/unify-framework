@@ -30,7 +30,12 @@ import com.tcdng.unify.core.annotation.Component;
 public class TwoFactorAutenticationServiceImpl extends AbstractTwoFactorAutenticationService {
 
     @Override
-    public boolean authenticate(String userName, String oneTimePasscode) throws UnifyException {
+	public void sendOneTimePasscode(String userName, String userEmail) throws UnifyException {
+		
+	}
+
+	@Override
+    public boolean authenticate(String userName, String userEmail, String oneTimePasscode) throws UnifyException {
         throw new UnifyException(UnifyCoreErrorConstants.NO_TWOFACTOR_AUTH_SERVICE_COMP);
     }
 

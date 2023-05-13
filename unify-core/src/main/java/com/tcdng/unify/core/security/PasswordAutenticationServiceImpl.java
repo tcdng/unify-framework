@@ -30,7 +30,7 @@ import com.tcdng.unify.core.annotation.Component;
 public class PasswordAutenticationServiceImpl extends AbstractPasswordAutenticationService{
 
     @Override
-    public boolean authenticate(String userName, String password) throws UnifyException {
+    public boolean authenticate(String userName, String userEmail, String password) throws UnifyException {
         throw new UnifyException(UnifyCoreErrorConstants.NO_PASSWORD_AUTH_SERVICE_COMP);
     }
 

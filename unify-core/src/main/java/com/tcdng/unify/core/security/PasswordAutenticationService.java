@@ -31,6 +31,7 @@ public interface PasswordAutenticationService extends UnifyComponent {
      * 
      * @param userName
      *            the user name to authenticate
+	 * @param userEmail       the user email
      * @param password
      *            the password
      * @return a true is returned if supplied credentials are successfully
@@ -38,5 +39,5 @@ public interface PasswordAutenticationService extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    boolean authenticate(String userName, String password) throws UnifyException;
+    boolean authenticate(String userName, String userEmail, String password) throws UnifyException;
 }
