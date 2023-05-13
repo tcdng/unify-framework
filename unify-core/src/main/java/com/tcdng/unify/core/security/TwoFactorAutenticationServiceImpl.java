@@ -19,7 +19,6 @@ import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
-import com.tcdng.unify.core.business.AbstractBusinessService;
 
 /**
  * Default implementation of a two-factor authentication service.
@@ -28,22 +27,11 @@ import com.tcdng.unify.core.business.AbstractBusinessService;
  * @since 1.0
  */
 @Component(ApplicationComponents.APPLICATION_TWOFACTORAUTHENTICATIONSERVICE)
-public class TwoFactorAutenticationServiceImpl extends AbstractBusinessService
-        implements TwoFactorAutenticationService {
+public class TwoFactorAutenticationServiceImpl extends AbstractTwoFactorAutenticationService {
 
     @Override
     public boolean authenticate(String userName, String oneTimePassword) throws UnifyException {
         throw new UnifyException(UnifyCoreErrorConstants.NO_TWOFACTOR_AUTH_SERVICE_COMP);
-    }
-
-    @Override
-    protected void onInitialize() throws UnifyException {
-
-    }
-
-    @Override
-    protected void onTerminate() throws UnifyException {
-
     }
 
 }
