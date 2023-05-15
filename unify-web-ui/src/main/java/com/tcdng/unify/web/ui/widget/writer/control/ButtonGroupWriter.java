@@ -72,7 +72,7 @@ public class ButtonGroupWriter extends AbstractControlWriter {
 			Class<? extends UnifyComponent> policyType = getComponentType(policy);
 			if (policyType.isAssignableFrom(WidgetStatePolicy.class)) {
 				WidgetStatePolicy _policy = getComponent(WidgetStatePolicy.class, policy);
-				return _policy.isDisabled(parentReader);
+				return _policy.isWidgetDisabled(parentReader);
 			}
 		}
 

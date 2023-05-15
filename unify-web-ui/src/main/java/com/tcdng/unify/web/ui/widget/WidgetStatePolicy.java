@@ -34,5 +34,5 @@ public interface WidgetStatePolicy extends UnifyComponent {
 	 * @return true if disabled otherwise false
 	 * @throws UnifyException if an error occurs
 	 */
-	boolean isDisabled(ValueStoreReader parentReader) throws UnifyException;
+	boolean isWidgetDisabled(ValueStoreReader parentReader) throws UnifyException;
 }
