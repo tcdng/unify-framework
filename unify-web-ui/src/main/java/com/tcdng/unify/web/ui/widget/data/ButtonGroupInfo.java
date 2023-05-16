@@ -18,6 +18,8 @@ package com.tcdng.unify.web.ui.widget.data;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.tcdng.unify.core.data.ValueStoreReader;
+
 /**
  * Button group information.
  * 
@@ -26,10 +28,24 @@ import java.util.List;
  */
 public class ButtonGroupInfo {
 
+	private ValueStoreReader parentReader;
+	
 	private List<ButtonInfo> infoList;
 
 	private ButtonGroupInfo(List<ButtonInfo> infoList) {
 		this.infoList = infoList;
+	}
+	
+	public ValueStoreReader getParentReader() {
+		return parentReader;
+	}
+
+	public void setParentReader(ValueStoreReader parentReader) {
+		this.parentReader = parentReader;
+	}
+
+	public boolean isWithParentReader() {
+		return parentReader != null;
 	}
 	
 	public List<ButtonInfo> getInfoList() {

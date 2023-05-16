@@ -16,14 +16,17 @@
 
 package com.tcdng.unify.web.ui.widget.writer.control;
 
+import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.data.BeanValueListStore;
 import com.tcdng.unify.core.data.ValueStore;
+import com.tcdng.unify.core.data.ValueStoreReader;
 import com.tcdng.unify.web.ui.widget.Control;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.Widget;
+import com.tcdng.unify.web.ui.widget.WidgetStatePolicy;
 import com.tcdng.unify.web.ui.widget.control.ButtonGroup;
 import com.tcdng.unify.web.ui.widget.data.ButtonGroupInfo;
 import com.tcdng.unify.web.ui.widget.writer.AbstractControlWriter;
@@ -38,7 +41,7 @@ import com.tcdng.unify.web.ui.widget.writer.AbstractControlWriter;
 @Component("buttongroup-writer")
 public class ButtonGroupWriter extends AbstractControlWriter {
 
-    @Override
+	@Override
 	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
 		ButtonGroup buttonGroup = (ButtonGroup) widget;
 		writer.write("<div");
@@ -46,33 +49,32 @@ public class ButtonGroupWriter extends AbstractControlWriter {
 		writer.write(">");
 		ButtonGroupInfo buttonGroupInfo = buttonGroup.getButtonGroupInfo();
 		if (buttonGroupInfo != null) {
-			ValueStore valueStore = new BeanValueListStore(buttonGroupInfo.getInfoList());
+			final ValueStore valueStore = new BeanValueListStore(buttonGroupInfo.getInfoList());
 			final Control buttonCtrl = buttonGroup.getButtonCtrl();
-			buttonCtrl.setDisabled(buttonGroup.isDisabled());
+			final boolean groupDisabled = buttonGroup.isDisabled();
+			final boolean isParentReader = buttonGroupInfo.isWithParentReader();
 			final int len = valueStore.size();
 			for (int i = 0; i < len; i++) {
 				valueStore.setDataIndex(i);
+				buttonCtrl.setDisabled(groupDisabled
+						|| (isParentReader && resolveDisabled(valueStore, buttonGroupInfo.getParentReader())));
 				buttonCtrl.setValueStore(valueStore);
 				writer.writeStructureAndContent(buttonCtrl);
 			}
 		}
-		
+
 		writer.write("</div>");
 	}
 
-    @Override
-    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-        super.doWriteBehavior(writer, widget);
-		ButtonGroup buttonGroup = (ButtonGroup) widget;
-		ButtonGroupInfo buttonGroupInfo = buttonGroup.getButtonGroupInfo();
-		if (buttonGroupInfo != null) {
-			ValueStore valueStore = new BeanValueListStore(buttonGroupInfo.getInfoList());
-			final Control buttonCtrl = buttonGroup.getButtonCtrl();
-			final int len = valueStore.size();
-			for (int i = 0; i < len; i++) {
-				valueStore.setDataIndex(i);
-				buttonCtrl.setValueStore(valueStore);
+	private boolean resolveDisabled(ValueStore buttonValueStore, ValueStoreReader parentReader) throws UnifyException {
+		final String policy = buttonValueStore.retrieve(String.class, "value");
+		if (policy != null && isComponent(policy)) {
+			UnifyComponent _policy = getComponent( policy);
+			if (_policy instanceof WidgetStatePolicy) {
+				return ((WidgetStatePolicy) _policy).isWidgetDisabled(parentReader);
 			}
 		}
-    }
+
+		return false;
+	}
 }
