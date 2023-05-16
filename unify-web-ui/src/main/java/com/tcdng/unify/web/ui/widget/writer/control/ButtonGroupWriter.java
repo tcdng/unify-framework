@@ -69,10 +69,9 @@ public class ButtonGroupWriter extends AbstractControlWriter {
 	private boolean resolveDisabled(ValueStore buttonValueStore, ValueStoreReader parentReader) throws UnifyException {
 		final String policy = buttonValueStore.retrieve(String.class, "value");
 		if (policy != null && isComponent(policy)) {
-			Class<? extends UnifyComponent> policyType = getComponentType(policy);
-			if (policyType.isAssignableFrom(WidgetStatePolicy.class)) {
-				WidgetStatePolicy _policy = getComponent(WidgetStatePolicy.class, policy);
-				return _policy.isWidgetDisabled(parentReader);
+			UnifyComponent _policy = getComponent( policy);
+			if (_policy instanceof WidgetStatePolicy) {
+				return ((WidgetStatePolicy) _policy).isWidgetDisabled(parentReader);
 			}
 		}
 
