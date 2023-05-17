@@ -362,6 +362,11 @@ public abstract class AbstractValueStore implements ValueStore {
         }
         
         @Override
+		public <T> T read(Class<T> type, String fieldName, Formatter<?> formatter) throws UnifyException {
+            return valueStore.retrieve(type, fieldName, formatter);
+		}
+
+		@Override
         public ValueStore getValueStore() {
             return valueStore;
         }

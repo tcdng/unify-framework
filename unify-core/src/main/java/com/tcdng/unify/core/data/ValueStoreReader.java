@@ -17,6 +17,7 @@
 package com.tcdng.unify.core.data;
 
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.format.Formatter;
 
 /**
  * Value store reader.
@@ -37,6 +38,8 @@ public interface ValueStoreReader {
 	Object read(String fieldName) throws UnifyException;
 
 	<T> T read(Class<T> type, String fieldName) throws UnifyException;
+
+	<T> T read(Class<T> type, String fieldName, Formatter<?> formatter) throws UnifyException;
 
 	ValueStore getValueStore();
 
