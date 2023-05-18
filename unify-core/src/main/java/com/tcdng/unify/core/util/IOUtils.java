@@ -798,6 +798,18 @@ public class IOUtils {
         return path;
     }
 
+    /**
+     * Conforms supplied path to system format.
+     * 
+     * @param path
+     *             the path to conform
+     * @return the conformed path
+     */
+    public static String conformAbsoluteFileName(String absoluteFilename) {
+        String fileSeparator = System.getProperty("file.separator");
+        return IOUtils.conform(fileSeparator, absoluteFilename);
+    }
+
 	/**
 	 * Returns the actual file name.
 	 * 
@@ -805,7 +817,7 @@ public class IOUtils {
 	 * @return the actual file name
 	 */
 	public static String getActualFileName(String absoluteFilename) {
-		return new File(absoluteFilename).getName();
+		return new File(IOUtils.conformAbsoluteFileName(absoluteFilename)).getName();
 	}
     
     /**
