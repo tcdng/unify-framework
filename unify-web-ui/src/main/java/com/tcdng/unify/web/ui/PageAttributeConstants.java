@@ -24,4 +24,6 @@ package com.tcdng.unify.web.ui;
 public interface PageAttributeConstants {
 
     String PAGE_TITLE = "pageTitle";
+
+    String OTHER_PAGE_CLOSED_DETECTED = "page::otherClosedDetected";
 }

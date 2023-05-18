@@ -29,6 +29,7 @@ import com.tcdng.unify.core.upl.UplElementReferences;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ControllerPathParts;
 import com.tcdng.unify.web.constant.ClosePageMode;
+import com.tcdng.unify.web.ui.PageAttributeConstants;
 import com.tcdng.unify.web.ui.PageBean;
 import com.tcdng.unify.web.ui.PagePathInfoRepository;
 import com.tcdng.unify.web.ui.response.HintUserResponse;
@@ -286,6 +287,11 @@ public class ContentPanelImpl extends AbstractContentPanel {
             if (pageIndex <= contentIndex) {
                 contentIndex--;
             }
+        }
+        
+        Page currentPage = getCurrentPage();
+        if (currentPage != null) {
+        	currentPage.setAttribute(PageAttributeConstants.OTHER_PAGE_CLOSED_DETECTED, Boolean.TRUE);
         }
     }
 

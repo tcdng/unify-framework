@@ -27,11 +27,13 @@ import com.tcdng.unify.core.data.ValueStore;
 import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.database.Query;
 import com.tcdng.unify.core.upl.AbstractUplComponent;
+import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.TargetPath;
 import com.tcdng.unify.web.UnifyWebSessionAttributeConstants;
 import com.tcdng.unify.web.constant.ResultMappingConstants;
 import com.tcdng.unify.web.constant.UnifyWebRequestAttributeConstants;
+import com.tcdng.unify.web.ui.PageAttributeConstants;
 import com.tcdng.unify.web.ui.PageRequestContextUtil;
 import com.tcdng.unify.web.ui.UIControllerUtil;
 import com.tcdng.unify.web.ui.WebUIApplicationComponents;
@@ -636,17 +638,32 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 		return resolveRequestPage().getAttribute(name);
 	}
 
+	protected Object removePageAttribute(String name) throws UnifyException {
+		return resolveRequestPage().removeAttribute(name);
+	}
+
 	protected Page resolveRequestPage() throws UnifyException {
 		PageRequestContextUtil rcUtil = getRequestContextUtil();
 		Page contentPage = rcUtil.getContentPage();
 		return contentPage == null ? rcUtil.getRequestPage() : contentPage;
 	}
 
-	@SuppressWarnings("unchecked")
 	protected <T> T getPageAttribute(Class<T> clazz, String name) throws UnifyException {
-		return (T) resolveRequestPage().getAttribute(name);
+		return DataUtils.convert(clazz, resolveRequestPage().getAttribute(name));
 	}
 
+	protected <T> T removePageAttribute(Class<T> clazz, String name) throws UnifyException {
+		return DataUtils.convert(clazz, resolveRequestPage().removeAttribute(name));
+	}
+
+	protected boolean isOtherPageClosedDetected() throws UnifyException {
+		return getPageAttribute(boolean.class, PageAttributeConstants.OTHER_PAGE_CLOSED_DETECTED);
+	}
+
+	protected boolean clearOtherPageClosedDetected() throws UnifyException {
+		return removePageAttribute(boolean.class, PageAttributeConstants.OTHER_PAGE_CLOSED_DETECTED);
+	}
+	
 	protected ViewDirective getViewDirective() throws UnifyException {
 		if (isApplicationIgnoreViewDirective()) {
 			return ViewDirective.ALLOW_VIEW_DIRECTIVE;
