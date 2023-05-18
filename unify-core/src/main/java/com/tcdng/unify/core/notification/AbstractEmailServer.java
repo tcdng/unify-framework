@@ -214,6 +214,7 @@ public abstract class AbstractEmailServer extends AbstractUnifyComponent impleme
                         messageBodyPart.setDataHandler(new DataHandler(
                                 new ByteArrayDataSource(emailAttachment.getBlob(), mimeType.template())));
                         messageBodyPart.setHeader("Content-Type", mimeType.template());
+                        messageBodyPart.setFileName(emailAttachment.getName());
                         multipart.addBodyPart(messageBodyPart);
                     } else if (emailAttachment.getFile() != null) {
                         messageBodyPart = new MimeBodyPart();
