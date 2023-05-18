@@ -798,6 +798,16 @@ public class IOUtils {
         return path;
     }
 
+	/**
+	 * Returns the actual file name.
+	 * 
+	 * @param absoluteFilename the absolute file name
+	 * @return the actual file name
+	 */
+	public static String getActualFileName(String absoluteFilename) {
+		return new File(absoluteFilename).getName();
+	}
+    
     /**
      * Returns true if supplied file name is in file system.
      * 

@@ -46,4 +46,19 @@ public class IOUtilsTest {
         assertEquals(expectedFilename, IOUtils.buildFilename("c:\\home", "/accounts.txt"));
         assertEquals(expectedFilename, IOUtils.buildFilename("c:\\home/", "\\accounts.txt"));
     }
+    
+    @Test
+    public void testActualFilename() throws Exception {
+    	assertEquals("test.txt", IOUtils.getActualFileName("test.txt"));
+    	assertEquals("test.txt", IOUtils.getActualFileName("/test.txt"));
+    	assertEquals("test.txt", IOUtils.getActualFileName("c:/test.txt"));
+    	assertEquals("test.txt", IOUtils.getActualFileName("c:/case/test.txt"));
+    	assertEquals("test.txt", IOUtils.getActualFileName("/case/test.txt"));
+    	
+    	assertEquals("test.txt", IOUtils.getActualFileName("test.txt"));
+    	assertEquals("test.txt", IOUtils.getActualFileName("\\test.txt"));
+    	assertEquals("test.txt", IOUtils.getActualFileName("c:\\test.txt"));
+    	assertEquals("test.txt", IOUtils.getActualFileName("c:\\case\\test.txt"));
+    	assertEquals("test.txt", IOUtils.getActualFileName("\\case\\test.txt"));
+    }
 }
