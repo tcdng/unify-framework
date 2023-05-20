@@ -43,14 +43,19 @@ public class RadioButtonsWriter extends AbstractControlWriter {
         writeHiddenPush(writer, radioButtons, PushType.RADIO);
 
         List<? extends Listable> listableList = radioButtons.getListables();
-        boolean isNotFlow = !radioButtons.getUplAttribute(boolean.class, "flow");
+        final boolean disabled = radioButtons.isContainerDisabled();
+        final boolean isNotFlow = !radioButtons.getUplAttribute(boolean.class, "flow");
         int breaks = listableList.size();
         for (Listable listable : listableList) {
             writer.write("<input type=\"radio\"");
             writeTagName(writer, radioButtons);
             writeTagStyleClass(writer, radioButtons);
             writeTagStyle(writer, radioButtons);
-            writer.write(" value=\"").write(listable.getListKey()).write("\"/>");
+            writer.write(" value=\"").write(listable.getListKey()).write("\"");
+            if (disabled) {
+                writer.write(" disabled ");
+            }
+            writer.write("/>");
             writer.writeWithHtmlEscape(listable.getListDescription());
 
             if (isNotFlow) {
