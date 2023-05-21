@@ -413,6 +413,19 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 		return ResultMappingConstants.POST_RESPONSE;
 	}
 	
+	
+	/**
+	 * Sets up a file for download in current request context and returns a file
+	 * download response.
+	 * 
+	 * @param downloadFile the file download object
+	 * @return {@link ResultMappingConstants#DOWNLOAD_FILE}
+	 * @throws UnifyException if an error occurs
+	 */
+	protected String fileDownloadResult(DownloadFile downloadFile) throws UnifyException {
+		return fileDownloadResult(downloadFile, true);
+	}
+	
 	/**
 	 * Sets up a file for download in current request context and returns a file
 	 * download response.

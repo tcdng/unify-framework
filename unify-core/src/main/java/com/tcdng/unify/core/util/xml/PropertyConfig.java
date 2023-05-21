@@ -35,6 +35,20 @@ public class PropertyConfig {
 
     private boolean hidden;
 
+    public PropertyConfig(String name, String value) {
+    	this.name = name;
+    	this.value = value;
+    }
+
+    public PropertyConfig(String name, List<String> valueList) {
+    	this.name = name;
+    	this.valueList = valueList;
+    }
+
+    public PropertyConfig() {
+
+    }
+    
     public String getName() {
         return name;
     }
