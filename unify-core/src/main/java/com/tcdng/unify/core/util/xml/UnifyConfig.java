@@ -18,6 +18,7 @@ package com.tcdng.unify.core.util.xml;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
 /**
  * Unify configuration.
@@ -25,6 +26,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author The Code Department
  */
 @XmlRootElement(name = "unify")
+@XmlType (propOrder={"propertiesConfig", "componentsConfig"})
 public class UnifyConfig {
 
     private String version;

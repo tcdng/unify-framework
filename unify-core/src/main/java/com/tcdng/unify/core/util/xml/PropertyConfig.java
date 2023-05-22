@@ -33,8 +33,22 @@ public class PropertyConfig {
 
     private List<String> valueList;
 
-    private boolean hidden;
+    private Boolean hidden;
 
+    public PropertyConfig(String name, String value) {
+    	this.name = name;
+    	this.value = value;
+    }
+
+    public PropertyConfig(String name, List<String> valueList) {
+    	this.name = name;
+    	this.valueList = valueList;
+    }
+
+    public PropertyConfig() {
+
+    }
+    
     public String getName() {
         return name;
     }
@@ -62,12 +76,12 @@ public class PropertyConfig {
         this.valueList = valueList;
     }
 
-    public boolean isHidden() {
+    public Boolean getHidden() {
         return hidden;
     }
 
     @XmlAttribute
-    public void setHidden(boolean hidden) {
+    public void setHidden(Boolean hidden) {
         this.hidden = hidden;
     }
 
