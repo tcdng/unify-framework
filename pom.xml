@@ -41,7 +41,8 @@
 		<module>unify-nashorn</module>
 		<module>unify-convert</module>
     	<module>unify-common</module>
-  	</modules>
+    <module>unify-tomcat</module>
+  </modules>
 
 	<scm>
 		<connection>scm:git:git://github.com/tcdng/unify-framework.git</connection>
