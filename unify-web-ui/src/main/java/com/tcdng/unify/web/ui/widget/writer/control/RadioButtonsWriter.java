@@ -44,23 +44,60 @@ public class RadioButtonsWriter extends AbstractControlWriter {
 
         List<? extends Listable> listableList = radioButtons.getListables();
         final boolean disabled = radioButtons.isContainerDisabled();
-        final boolean isNotFlow = !radioButtons.getUplAttribute(boolean.class, "flow");
-        int breaks = listableList.size();
-        for (Listable listable : listableList) {
-            writer.write("<input type=\"radio\"");
-            writeTagName(writer, radioButtons);
-            writeTagStyleClass(writer, radioButtons);
-            writeTagStyle(writer, radioButtons);
-            writer.write(" value=\"").write(listable.getListKey()).write("\"");
-            if (disabled) {
-                writer.write(" disabled ");
-            }
-            writer.write("/>");
-            writer.writeWithHtmlEscape(listable.getListDescription());
+        final int columns = radioButtons.getColumns();
+        if (columns > 0) {
+            writer.write("<div style=\"display:table;\">");
 
-            if (isNotFlow) {
-                if ((--breaks) > 0) {
-                    writer.write("<br />");
+        	final int len = listableList.size();
+        	final int rows = len / columns + (len % columns > 0 ? 1: 0);
+        	int i = 0;
+        	for (int j = 0; j < rows; j++) {
+                writer.write("<div style=\"display:table-row;\">");
+        		int k = 0;
+        		for(; k < columns && i < len; k++, i++) {
+                    writer.write("<div style=\"display:table-cell;\">");
+                    writer.write("<input type=\"radio\"");
+                    writeTagName(writer, radioButtons);
+                    writeTagStyleClass(writer, radioButtons);
+                    writeTagStyle(writer, radioButtons);
+                    Listable listable = listableList.get(i);
+                    writer.write(" value=\"").write(listable.getListKey()).write("\"");
+                    if (disabled) {
+                        writer.write(" disabled ");
+                    }
+                    writer.write("/>");
+                    writer.writeWithHtmlEscape(listable.getListDescription());
+                    writer.write("</div>");        			
+        		}
+        		
+           		while(k < columns) {
+           			writer.write("<div style=\"display:table-cell;\"></div>");        			
+           			k++;
+           		}
+        		
+                writer.write("</div>");
+        	}
+        	
+            writer.write("</div>");
+        } else {
+            final boolean isNotFlow = !radioButtons.getUplAttribute(boolean.class, "flow");
+            int breaks = listableList.size();
+            for (Listable listable : listableList) {
+                writer.write("<input type=\"radio\"");
+                writeTagName(writer, radioButtons);
+                writeTagStyleClass(writer, radioButtons);
+                writeTagStyle(writer, radioButtons);
+                writer.write(" value=\"").write(listable.getListKey()).write("\"");
+                if (disabled) {
+                    writer.write(" disabled ");
+                }
+                writer.write("/>");
+                writer.writeWithHtmlEscape(listable.getListDescription());
+
+                if (isNotFlow) {
+                    if ((--breaks) > 0) {
+                        writer.write("<br />");
+                    }
                 }
             }
         }
