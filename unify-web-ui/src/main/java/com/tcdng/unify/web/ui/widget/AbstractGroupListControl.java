@@ -17,6 +17,8 @@
 package com.tcdng.unify.web.ui.widget;
 
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.annotation.UplAttribute;
+import com.tcdng.unify.core.annotation.UplAttributes;
 
 /**
  * Base class for group list controls.
@@ -24,6 +26,8 @@ import com.tcdng.unify.core.UnifyException;
  * @author The Code Department
  * @since 1.0
  */
+@UplAttributes({
+    @UplAttribute(name = "columns", type = int.class, defaultVal = "0") })
 public abstract class AbstractGroupListControl extends AbstractListControl {
 
     @Override
@@ -31,4 +35,7 @@ public abstract class AbstractGroupListControl extends AbstractListControl {
         return getId();
     }
 
+    public int getColumns() throws UnifyException {
+    	return getUplAttribute(int.class, "columns");
+    }
 }
