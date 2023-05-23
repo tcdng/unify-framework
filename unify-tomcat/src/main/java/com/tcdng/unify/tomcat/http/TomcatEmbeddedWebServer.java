@@ -72,7 +72,6 @@ public class TomcatEmbeddedWebServer extends AbstractEmbeddedHttpWebServer {
 	protected void onInitialize() throws UnifyException {
 		try {
 			tomcat = new Tomcat();
-
 			List<Integer> portList = new ArrayList<Integer>();
 			String keyStorePath = getKeyStorePath();
 			if (!StringUtils.isBlank(keyStorePath)) {
@@ -90,6 +89,7 @@ public class TomcatEmbeddedWebServer extends AbstractEmbeddedHttpWebServer {
 				protocol.setTruststoreFile(null);
 				protocol.setTruststorePass(null);
 				protocol.setKeyAlias(null);
+				tomcat.getConnector().setSecure(true);
 				tomcat.setPort(httpsPort);
 				portList.add(httpsPort);
 			}
@@ -111,15 +111,15 @@ public class TomcatEmbeddedWebServer extends AbstractEmbeddedHttpWebServer {
 					getContextPath(), getServletPath());
 			final String _docBase = new File(".").getAbsolutePath();
 			final String _servletName = TomcatApplicationComponents.TOMCAT_EMBEDDEDWEBSERVER + "-servlet";
-			Context context = tomcat.addContext(getContextPath(), _docBase);
-			context.addServletMappingDecoded(getServletPath(), _servletName);
-			context.setSessionTimeout(
-					getContainerSetting(int.class, UnifyCorePropertyConstants.APPLICATION_SESSION_TIMEOUT,
-							UnifyCoreConstants.DEFAULT_APPLICATION_SESSION_TIMEOUT_SECONDS) / 60);
+			final Context context = tomcat.addContext(getContextPath(), _docBase);
 			Wrapper servletWrapper = tomcat.addServlet(getContextPath(), _servletName,
 					new HttpApplicationServlet(createHttpServletModule()));
 			servletWrapper.setMultipartConfigElement(new MultipartConfigElement(getMultipartLocation(),
 					getMultipartMaxFileSize(), getMultipartMaxRequestSize(), getMultipartFileSizeThreshold()));
+			context.addServletMapping(getServletPath(), _servletName);
+			context.setSessionTimeout(
+					getContainerSetting(int.class, UnifyCorePropertyConstants.APPLICATION_SESSION_TIMEOUT,
+							UnifyCoreConstants.DEFAULT_APPLICATION_SESSION_TIMEOUT_SECONDS) / 60);
 			tomcat.start();
 			logInfo("HTTP server initialization completed.");
 		} catch (Exception e) {
