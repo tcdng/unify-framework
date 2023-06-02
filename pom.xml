@@ -42,6 +42,7 @@
 		<module>unify-convert</module>
     	<module>unify-common</module>
     	<module>unify-tomcat</module>
+    	<module>unify-undertow</module>
   	</modules>
 
 	<scm>
