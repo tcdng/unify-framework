@@ -11,7 +11,7 @@
 
 	<artifactId>unify-tomcat</artifactId>
 	<name>unify-tomcat</name>
-	<description>Unify Framework: Tomcat Integration</description>
+	<description>Unify Framework: Tomcat Support</description>
 	<url>http://www.tcdng.com/unify</url>
 
 	<licenses>

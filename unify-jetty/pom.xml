@@ -11,7 +11,7 @@
 
 	<artifactId>unify-jetty</artifactId>
 	<name>unify-jetty</name>
-	<description>Unify Framework: Jetty Integration</description>
+	<description>Unify Framework: Jetty Support</description>
 	<url>http://www.tcdng.com/unify</url>
 
 	<licenses>

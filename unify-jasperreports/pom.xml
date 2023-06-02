@@ -9,7 +9,7 @@
 
 	<artifactId>unify-jasperreports</artifactId>
 	<name>unify-jasperreports</name>
-	<description>Unify Framework: JasperReports Integration</description>
+	<description>Unify Framework: JasperReports Support</description>
 	<url>http://www.tcdng.com/unify</url>
 
 	<licenses>
