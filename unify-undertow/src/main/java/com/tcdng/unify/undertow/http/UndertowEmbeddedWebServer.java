@@ -27,6 +27,7 @@ import java.util.List;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.servlet.MultipartConfigElement;
+import javax.servlet.Servlet;
 
 import com.tcdng.unify.core.UnifyCoreConstants;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
@@ -46,6 +47,7 @@ import io.undertow.servlet.Servlets;
 import io.undertow.servlet.api.DeploymentInfo;
 import io.undertow.servlet.api.DeploymentManager;
 import io.undertow.servlet.api.ServletInfo;
+import io.undertow.servlet.util.ImmediateInstanceFactory;
 
 /**
  * Undertow embedded web server.
@@ -79,6 +81,7 @@ public class UndertowEmbeddedWebServer extends AbstractEmbeddedHttpWebServer {
 		try {
 			Undertow.Builder ub = Undertow.builder();
 			DeploymentInfo deploymentInfo = Servlets.deployment()
+					.setDeploymentName(getApplicationName())
 					.setClassLoader(UndertowEmbeddedWebServer.class.getClassLoader()).setContextPath(getContextPath());
 
 			List<Integer> portList = new ArrayList<Integer>();
@@ -120,7 +123,10 @@ public class UndertowEmbeddedWebServer extends AbstractEmbeddedHttpWebServer {
 			logInfo("Initializing HTTP server on ports {0}; using context path {1} and servlet path {2}...", portList,
 					getContextPath(), getServletPath());
 			final String _servletName = UndertowApplicationComponents.UNDERTOW_EMBEDDEDWEBSERVER + "-servlet";
-			ServletInfo servletInfo = Servlets.servlet(_servletName, UndertowHttpApplicationServlet.class)
+			ServletInfo servletInfo = Servlets
+					.servlet(_servletName, HttpApplicationServlet.class,
+							new ImmediateInstanceFactory<Servlet>(
+									new HttpApplicationServlet(createHttpServletModule())))
 					.addMapping(getServletPath());
 			deploymentInfo.addServlet(servletInfo);
 			deploymentInfo.setDefaultSessionTimeout(
@@ -157,16 +163,6 @@ public class UndertowEmbeddedWebServer extends AbstractEmbeddedHttpWebServer {
 
 	@Override
 	protected void onStopServicingRequests() throws UnifyException {
-
-	}
-
-	public class UndertowHttpApplicationServlet extends HttpApplicationServlet {
-
-		private static final long serialVersionUID = 273809131410215701L;
-
-		public UndertowHttpApplicationServlet() throws Exception {
-			super(createHttpServletModule());
-		}
 
 	}
 }
