@@ -24,6 +24,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.logging.LogManager;
 
+import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.IOUtils;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.core.util.TypeRepository;
@@ -126,6 +127,14 @@ public class Unify {
         uc = null;
     }
 
+	public static String getWorkingPath() {
+		return uc != null ? uc.getWorkingPath() : null;
+	}
+
+    public static <T> T getSetting(Class<T> dataType, String name) throws UnifyException {
+    	return DataUtils.convert(dataType, uc != null ? uc.getSetting(name) : null) ;
+    }
+    
     private static UnifyContainer getContainer() throws UnifyException {
         if (uc == null) {
             throw new UnifyException(UnifyCoreErrorConstants.NO_CONTAINER_IN_RUNTIME);

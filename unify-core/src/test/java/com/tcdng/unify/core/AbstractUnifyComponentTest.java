@@ -405,7 +405,7 @@ public abstract class AbstractUnifyComponentTest {
             uccb.clusterMode(clusterMode);
             uccb.deploymentVersion("1.0");
             uccb.deploymentMode(true);
-            uccb.setProperty("logger.level", "off");
+            uccb.setProperty("application.logger.level", "off");
             UnifyConfigUtils.readConfigFromTypeRepository(uccb, TypeUtils.getTypeRepositoryFromClasspath());
 
             addSettingsAndDependencies();
