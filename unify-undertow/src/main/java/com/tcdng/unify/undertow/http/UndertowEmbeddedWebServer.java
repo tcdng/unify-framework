@@ -80,10 +80,9 @@ public class UndertowEmbeddedWebServer extends AbstractEmbeddedHttpWebServer {
 	protected void onInitialize() throws UnifyException {
 		try {
 			Undertow.Builder ub = Undertow.builder();
-			DeploymentInfo deploymentInfo = Servlets.deployment()
-					.setDeploymentName(getApplicationName())
-					.setClassLoader(UndertowEmbeddedWebServer.class.getClassLoader()).setContextPath(getContextPath());
-
+			final String contextPath = StringUtils.isBlank(getContextPath()) ? "/" : getContextPath();
+			DeploymentInfo deploymentInfo = Servlets.deployment().setDeploymentName(getApplicationName())
+					.setClassLoader(UndertowEmbeddedWebServer.class.getClassLoader()).setContextPath(contextPath);
 			List<Integer> portList = new ArrayList<Integer>();
 			String keyStorePath = getKeyStorePath();
 			if (!StringUtils.isBlank(keyStorePath)) {
@@ -121,7 +120,7 @@ public class UndertowEmbeddedWebServer extends AbstractEmbeddedHttpWebServer {
 			}
 
 			logInfo("Initializing HTTP server on ports {0}; using context path {1} and servlet path {2}...", portList,
-					getContextPath(), getServletPath());
+					contextPath, getServletPath());
 			final String _servletName = UndertowApplicationComponents.UNDERTOW_EMBEDDEDWEBSERVER + "-servlet";
 			ServletInfo servletInfo = Servlets
 					.servlet(_servletName, HttpApplicationServlet.class,
@@ -136,8 +135,7 @@ public class UndertowEmbeddedWebServer extends AbstractEmbeddedHttpWebServer {
 					getMultipartMaxFileSize(), getMultipartMaxRequestSize(), getMultipartFileSizeThreshold()));
 			DeploymentManager dm = Servlets.defaultContainer().addDeployment(deploymentInfo);
 			dm.deploy();
-			PathHandler path = Handlers.path(Handlers.redirect(getContextPath())).addPrefixPath(getContextPath(),
-					dm.start());
+			PathHandler path = Handlers.path(Handlers.path().addPrefixPath(contextPath, dm.start()));
 			ub.setHandler(path);
 			undertow = ub.build();
 			undertow.start();
