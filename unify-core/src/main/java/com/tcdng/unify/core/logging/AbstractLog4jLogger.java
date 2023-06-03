@@ -133,7 +133,6 @@ public abstract class AbstractLog4jLogger extends AbstractUnifyComponent impleme
 
 						boolean logToConsole = Unify.getSetting(boolean.class,
 								UnifyCorePropertyConstants.APPLICATION_LOG_TO_CONSOLE);
-						;
 						if (logToConsole) {
 							AppenderComponentBuilder consoleAB = builder.newAppender("stdout", "Console")
 									.add(builder.newLayout("PatternLayout")
