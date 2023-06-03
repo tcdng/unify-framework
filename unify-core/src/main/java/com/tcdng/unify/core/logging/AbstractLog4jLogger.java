@@ -136,7 +136,8 @@ public abstract class AbstractLog4jLogger extends AbstractUnifyComponent impleme
 						;
 						if (logToConsole) {
 							AppenderComponentBuilder consoleAB = builder.newAppender("stdout", "Console")
-									.addAttribute("pattern", loggingPattern)
+									.add(builder.newLayout("PatternLayout")
+											.addAttribute("pattern", loggingPattern))
 									.addAttribute("target", ConsoleAppender.Target.SYSTEM_OUT);
 							builder.add(consoleAB);
 						}
@@ -165,8 +166,10 @@ public abstract class AbstractLog4jLogger extends AbstractUnifyComponent impleme
 							}
 
 							AppenderComponentBuilder rollingAB = builder.newAppender("rolling", "RollingFile")
-									.addAttribute("pattern", loggingPattern).addAttribute("fileName", filename)
+									.addAttribute("fileName", filename)
 									.addAttribute("filePattern", filename + ".%i")
+									.add(builder.newLayout("PatternLayout")
+											.addAttribute("pattern", loggingPattern))
 									.addComponent(builder.newComponent("Policies")
 											.addComponent(builder.newComponent("SizeBasedTriggeringPolicy")
 													.addAttribute("size", fileMaxSize)))
@@ -187,7 +190,7 @@ public abstract class AbstractLog4jLogger extends AbstractUnifyComponent impleme
 						if (logToFile) {
 							rootLB.add(builder.newAppenderRef("rolling"));
 						}
-						
+
 						builder.add(rootLB);
 						loggerCtx = Configurator.initialize(builder.build());
 					} catch (Exception e) {
