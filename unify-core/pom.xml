@@ -38,7 +38,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<openhtml.version>1.0.6</openhtml.version>
-		<log4j.version>2.9.1</log4j.version>
+		<log4j.version>2.17.1</log4j.version>
 		<jaxb.version>2.3.0</jaxb.version>
 	</properties>
 
