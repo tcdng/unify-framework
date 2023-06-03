@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
+import java.io.StringWriter;
 import java.io.Writer;
 
 import javax.xml.bind.JAXBContext;
@@ -87,10 +88,42 @@ public final class XmlConfigUtils {
     }
 
     public static void writeXmlConfig(Object configObject, OutputStream outputStream) throws UnifyException {
+    	XmlConfigUtils.writeXmlConfig(configObject, outputStream, false);
+    }
+
+    public static void writeXmlConfigNoEscape(Object configObject, OutputStream outputStream) throws UnifyException {
+    	XmlConfigUtils.writeXmlConfig(configObject, outputStream, true);
+    }
+
+    public static void writeXmlConfig(Object configObject, Writer writer) throws UnifyException {
+    	XmlConfigUtils.writeXmlConfig(configObject, writer, false);
+    }
+
+    public static void writeXmlConfigNoEscape(Object configObject, Writer writer) throws UnifyException {
+    	XmlConfigUtils.writeXmlConfig(configObject, writer, true);
+    }
+
+    public static String getXmlConfigAsString(Object configObject) throws UnifyException {
+    	StringWriter writer = new StringWriter();
+    	XmlConfigUtils.writeXmlConfig(configObject, writer, false);
+    	return writer.toString();
+    }
+
+    public static String getXmlConfigAsStringNoEscape(Object configObject) throws UnifyException {
+    	StringWriter writer = new StringWriter();
+    	XmlConfigUtils.writeXmlConfig(configObject, writer, true);
+    	return writer.toString();
+    }
+
+    private static void writeXmlConfig(Object configObject, OutputStream outputStream, boolean noEscape) throws UnifyException {
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(configObject.getClass());
             Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
             jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+            if (noEscape) {
+            	jaxbMarshaller.setProperty("com.sun.xml.bind.characterEscapeHandler", new NoEscapeHandler()); 
+            }
+            
             jaxbMarshaller.marshal(configObject, outputStream);
             outputStream.flush();
         } catch (Exception e) {
@@ -98,14 +131,17 @@ public final class XmlConfigUtils {
         }
     }
 
-    public static void writeXmlConfigNoEscape(Object configObject, OutputStream outputStream) throws UnifyException {
+    private static void writeXmlConfig(Object configObject, Writer writer, boolean noEscape) throws UnifyException {
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(configObject.getClass());
             Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
             jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            jaxbMarshaller.setProperty("com.sun.xml.bind.characterEscapeHandler", new NoEscapeHandler()); 
-            jaxbMarshaller.marshal(configObject, outputStream);
-            outputStream.flush();
+            if (noEscape) {
+            	jaxbMarshaller.setProperty("com.sun.xml.bind.characterEscapeHandler", new NoEscapeHandler()); 
+            }
+            
+            jaxbMarshaller.marshal(configObject, writer);
+            writer.flush();
         } catch (Exception e) {
             throw new UnifyOperationException(e, XmlConfigUtils.class.getName());
         }
