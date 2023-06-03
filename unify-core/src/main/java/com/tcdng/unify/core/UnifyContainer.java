@@ -40,11 +40,6 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.Level;
-import org.apache.log4j.PatternLayout;
-import org.apache.log4j.RollingFileAppender;
-
 import com.tcdng.unify.core.annotation.Broadcast;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
@@ -118,7 +113,7 @@ public class UnifyContainer {
 	private UserSessionManager userSessionManager;
 
 	private ResourceBundles messages;
-
+	
 	private Logger logger;
 
 	private FactoryMap<String, UnifyComponentContext> componentContextMap;
@@ -273,7 +268,7 @@ public class UnifyContainer {
 				lineSeparator != null ? lineSeparator : "\n", applicationIgnoreViewDirective);
 		long startTimeMillis = System.currentTimeMillis();
 		initializeContainerMessages();
-		initializeContainerLogger();
+		logger = new UnifyContainerLoggerImpl(getClass());
 
 		toConsole("Container initialization started...");
 		toConsole("Validating and loading configuration...");
@@ -531,12 +526,13 @@ public class UnifyContainer {
 					String taskStatusLoggerName = AnnotationUtils.getAnnotationString(pa.taskStatusLogger());
 					TaskMonitor taskMonitor = taskManager.schedulePeriodicExecution(periodicType,
 							componentEntry.getKey(), periodicEntry.getKey(), taskStatusLoggerName,
-							UnifyCoreConstants.PERIODIC_EXECUTION_INITIAL_DELAY_SECONDS * 1000 + (random.nextInt() % 1000));
+							UnifyCoreConstants.PERIODIC_EXECUTION_INITIAL_DELAY_SECONDS * 1000
+									+ (random.nextInt() % 1000));
 					periodicTaskMonitorList.add(taskMonitor);
 				}
 			}
 			logInfo("Periodic task scheduling completed.");
-			
+
 			ApplicationAttributeProvider applicationAttributeProvider = getComponent(
 					ApplicationAttributeProvider.class);
 			applicationContext.setAttributeProvider(applicationAttributeProvider);
@@ -850,10 +846,10 @@ public class UnifyContainer {
 	public String getWorkingPath() {
 		return unifyContainerEnvironment.getWorkingPath();
 	}
-	
-    public String getWorkingPathFilename(String relativeFilename) throws UnifyException {
-    	return unifyContainerEnvironment.getWorkingPathFilename(relativeFilename);
-    }
+
+	public String getWorkingPathFilename(String relativeFilename) throws UnifyException {
+		return unifyContainerEnvironment.getWorkingPathFilename(relativeFilename);
+	}
 
 	public boolean isClusterMode() {
 		return clusterMode;
@@ -898,13 +894,13 @@ public class UnifyContainer {
 		UnifyComponentConfig config = configs.get(0);
 		if (configs.size() > 1) {
 			int preferred = 0;
-			for (final UnifyComponentConfig _config: configs) {
+			for (final UnifyComponentConfig _config : configs) {
 				if (_config.getType().isAnnotationPresent(Preferred.class)) {
 					config = _config;
 					preferred++;
 				}
 			}
-			
+
 			if (preferred != 1) {
 				throw new UnifyException(UnifyCoreErrorConstants.MULTIPLE_IMPLEMENTATIONS_OF_TYPE_FOUND,
 						componentType.toString());
@@ -1327,73 +1323,6 @@ public class UnifyContainer {
 
 		messages = new ResourceBundles(messageBaseList);
 	}
-
-	private void initializeContainerLogger() throws UnifyException {
-		org.apache.log4j.Logger rootLogger = org.apache.log4j.Logger.getRootLogger();
-		if (!rootLogger.getAllAppenders().hasMoreElements()) {
-			try {
-				String loggingPattern = (String) unifySettings
-						.get(UnifyCorePropertyConstants.APPLICATION_LOGGER_PATTERN_SETTING);
-				if (loggingPattern == null) {
-					loggingPattern = "%d{ISO8601} %-5p %c{1} %m%n";
-				}
-				PatternLayout patternLayout = new PatternLayout(loggingPattern);
-
-				boolean logToConsole = false;
-				if (unifySettings.get(UnifyCorePropertyConstants.APPLICATION_LOG_TO_CONSOLE) != null) {
-					logToConsole = Boolean.valueOf(
-							String.valueOf(unifySettings.get(UnifyCorePropertyConstants.APPLICATION_LOG_TO_CONSOLE)));
-				}
-
-				if (logToConsole) {
-					rootLogger.addAppender(new ConsoleAppender(patternLayout, ConsoleAppender.SYSTEM_OUT));
-				}
-
-				boolean logToFile = true;
-				if (unifySettings.get(UnifyCorePropertyConstants.APPLICATION_LOG_TO_FILE) != null) {
-					logToFile = Boolean.valueOf(
-							String.valueOf(unifySettings.get(UnifyCorePropertyConstants.APPLICATION_LOG_TO_FILE)));
-				}
-
-				if (logToFile) {
-					String filename = (String) unifySettings.get(UnifyCorePropertyConstants.APPLICATION_LOG_FILENAME);
-					if (filename == null) {
-						filename = "application.log";
-					}
-					filename = IOUtils.buildFilename("logs", filename);
-					filename = IOUtils.buildFilename(getWorkingPath(), filename);
-
-					String fileMaxSize = (String) unifySettings
-							.get(UnifyCorePropertyConstants.APPLICATION_LOG_FILEMAXSIZE);
-					if (fileMaxSize == null) {
-						fileMaxSize = "1MB";
-					}
-
-					Integer fileMaxBackup = Integer.valueOf(3);
-					if (unifySettings.get(UnifyCorePropertyConstants.APPLICATION_LOG_FILEMAXBACKUP) != null) {
-						fileMaxBackup = Integer.valueOf(String
-								.valueOf(unifySettings.get(UnifyCorePropertyConstants.APPLICATION_LOG_FILEMAXBACKUP)));
-					}
-
-					RollingFileAppender rfAppender = new RollingFileAppender(patternLayout, filename);
-					rfAppender.setMaxFileSize(fileMaxSize);
-					rfAppender.setMaxBackupIndex(fileMaxBackup);
-					rootLogger.addAppender(rfAppender);
-				}
-			} catch (Exception e) {
-				throw new UnifyException(UnifyCoreErrorConstants.CONTAINER_LOGGER_INITIALIZATION_ERROR, e);
-			}
-		}
-
-		String level = (String) unifySettings.get(UnifyCorePropertyConstants.APPLICATION_LOG_LEVEL);
-		if (StringUtils.isNotBlank(level)) {
-			rootLogger.setLevel(Level.toLevel(level.toUpperCase()));
-		} else {
-			rootLogger.setLevel(Level.OFF);
-		}
-		logger = new UnifyContainerLoggerImpl(getClass());
-	}
-
 	public List<String> getApplicationBanner() throws UnifyException {
 		String filename = (String) unifySettings.get(UnifyCorePropertyConstants.APPLICATION_BANNER);
 		if (StringUtils.isBlank(filename)) {
@@ -1595,7 +1524,7 @@ public class UnifyContainer {
 	@Component("UnifyContainerLogger")
 	private class UnifyContainerLoggerImpl extends AbstractLog4jLogger {
 
-		public UnifyContainerLoggerImpl(Class<?> clazz) {
+		public UnifyContainerLoggerImpl(Class<?> clazz) throws UnifyException {
 			getLogger(clazz.getName());
 		}
 

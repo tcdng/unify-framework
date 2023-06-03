@@ -36,15 +36,15 @@ import com.tcdng.unify.core.upl.UplComponent;
  */
 public class UnifyComponentContext {
 
-	private ApplicationContext applicationContext;
+	final private ApplicationContext applicationContext;
+
+	final private Logger logger;
+
+	final private String name;
 
 	private RequestContextManager requestContextManager;
 
 	private ListManager listManager;
-
-	private Logger logger;
-
-	private String name;
 
 	public UnifyComponentContext(ApplicationContext applicationContext, Logger logger, String name) {
 		this.applicationContext = applicationContext;
