@@ -18,7 +18,9 @@ package com.tcdng.unify.core.notification;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.constant.FileAttachmentType;
@@ -136,22 +138,25 @@ public class Email {
 
         private boolean htmlMessage;
 
+        private Set<String> contacts;
+        
         private Builder() {
-            recipients = new ArrayList<EmailRecipient>();
+            this.recipients = new ArrayList<EmailRecipient>();
+            this.contacts = new HashSet<String>();
         }
 
         public Builder toRecipient(EmailRecipient.TYPE type, String recipientAddress) {
-            recipients.add(new EmailRecipient(type, recipientAddress));
+        	addRecipient(type, recipientAddress);
             return this;
         }
 
         public Builder toRecipients(EmailRecipient.TYPE type, Collection<String> recipientAddresses) {
             for (String recipientAddress : recipientAddresses) {
-                recipients.add(new EmailRecipient(type, recipientAddress));
+            	addRecipient(type, recipientAddress);
             }
             return this;
         }
-
+ 
         public Builder fromSender(String senderAddress) {
             this.senderAddress = senderAddress;
             return this;
@@ -209,6 +214,12 @@ public class Email {
         public Builder asHTML(boolean htmlMessage) {
             this.htmlMessage = htmlMessage;
             return this;
+        }
+        
+        private void addRecipient(EmailRecipient.TYPE type, String recipientAddress) {
+        	if (contacts.add(recipientAddress)) {
+                recipients.add(new EmailRecipient(type, recipientAddress));
+        	}
         }
 
         public Email build() throws UnifyException {
