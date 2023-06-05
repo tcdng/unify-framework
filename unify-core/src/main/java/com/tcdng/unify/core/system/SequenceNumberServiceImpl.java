@@ -75,6 +75,14 @@ public class SequenceNumberServiceImpl extends AbstractBusinessService implement
     }
 
     @Override
+	public synchronized void ensureCachedBlockSequence(String sequencedName) throws UnifyException {
+        SequenceBlock sequenceBlock = sequenceBlockMap.get(sequencedName);
+        if (sequenceBlock == null) {
+        	ensureNewCachedBlockSequence(sequencedName);
+        }		
+	}
+
+	@Override
     public synchronized Long getCachedBlockNextSequenceNumber(String sequencedName) throws UnifyException {
         SequenceBlock sequenceBlock = sequenceBlockMap.get(sequencedName);
         if (sequenceBlock == null || sequenceBlock.willExpire()) {
@@ -85,7 +93,22 @@ public class SequenceNumberServiceImpl extends AbstractBusinessService implement
     }
 
     @Transactional(TransactionAttribute.REQUIRES_NEW)
+    public void ensureNewCachedBlockSequence(String sequencedName) throws UnifyException {
+    	getSequenceBlock(sequencedName);
+    }
+
+    @Transactional(TransactionAttribute.REQUIRES_NEW)
     public Long getNewBlockCachedBlockNextSequenceNumber(String sequencedName) throws UnifyException {
+        final SequenceBlock sequenceBlock = getSequenceBlock(sequencedName);
+        Long id = sequenceBlock.getNextId();
+        if (sequenceBlock.isExpired()) {
+            nextSequenceBlock(sequencedName, sequenceBlock, maxNextSequenceBlockAttempts);
+        }
+
+        return id;
+    }
+
+    private SequenceBlock getSequenceBlock(String sequencedName) throws UnifyException {
         SequenceBlock sequenceBlock = sequenceBlockMap.get(sequencedName);
         if (sequenceBlock == null) {
             try {
@@ -103,15 +126,10 @@ public class SequenceNumberServiceImpl extends AbstractBusinessService implement
             }
             sequenceBlockMap.put(sequencedName, sequenceBlock);
         }
-
-        Long id = sequenceBlock.getNextId();
-        if (sequenceBlock.isExpired()) {
-            nextSequenceBlock(sequencedName, sequenceBlock, maxNextSequenceBlockAttempts);
-        }
-
-        return id;
+        
+        return sequenceBlock;
     }
-
+    
     @Override
     @Synchronized("nextsequencenumber-lock")
     public Long getNextSequenceNumber(String sequenceName) throws UnifyException {

@@ -30,6 +30,16 @@ import com.tcdng.unify.core.business.BusinessService;
 public interface SequenceNumberService extends BusinessService {
 
     /**
+     * Ensures that a cached block sequence is created in the system.
+     * 
+     * @param sequenceName
+     *            the sequence name
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void ensureCachedBlockSequence(String sequenceName) throws UnifyException;
+
+    /**
      * Returns the next available sequence number from cached block for sequence
      * with supplied name. Creates a new sequence if one does not exist. All
      * sequences start from 1L. Does not guarantee an uninterrupted sequence.
