@@ -52,7 +52,8 @@ public class SequenceNumberServiceClusterModeTest extends AbstractUnifyComponent
     @Test
     public void testGetCachedBlockNextSequenceNumber() throws Exception {
         SequenceNumberService snService = getSequenceNumberService();
-
+        snService.ensureCachedBlockSequence("sequenceA");
+        
         assertEquals(Long.valueOf(1L), snService.getCachedBlockNextSequenceNumber("sequenceA"));
         assertEquals(Long.valueOf(2L), snService.getCachedBlockNextSequenceNumber("sequenceA"));
         assertEquals(Long.valueOf(3L), snService.getCachedBlockNextSequenceNumber("sequenceA"));
@@ -82,6 +83,7 @@ public class SequenceNumberServiceClusterModeTest extends AbstractUnifyComponent
     @Test
     public void testMultiThreadGetCachedBlockNextSequenceNumber() throws Exception {
         SequenceNumberService snService = getSequenceNumberService();
+        snService.ensureCachedBlockSequence("sequenceA");
 
         TaskManager taskManager = (TaskManager) getComponent(ApplicationComponents.APPLICATION_TASKMANAGER);
         Map<String, Object> inputParameters1 = new HashMap<String, Object>();
