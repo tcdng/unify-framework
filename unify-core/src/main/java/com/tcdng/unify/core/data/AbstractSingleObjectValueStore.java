@@ -34,14 +34,12 @@ public abstract class AbstractSingleObjectValueStore<T> extends AbstractValueSto
 
     private String dataMarker;
 
-    private int dataIndex;
-
     private Map<String, Object> temp;
 
     public AbstractSingleObjectValueStore(T storage, String dataMarker, int dataIndex) {
+    	super(dataIndex);
         this.storage = storage;
         this.dataMarker = dataMarker;
-        this.dataIndex = dataIndex;
     }
 
     @Override
@@ -173,11 +171,6 @@ public abstract class AbstractSingleObjectValueStore<T> extends AbstractValueSto
     }
 
     @Override
-    public int getDataIndex() {
-        return dataIndex;
-    }
-
-    @Override
     public int size() {
         return 0;
     }
@@ -190,11 +183,6 @@ public abstract class AbstractSingleObjectValueStore<T> extends AbstractValueSto
     @Override
     public Object getValueObjectAtDataIndex() {
         return storage;
-    }
-
-    @Override
-    protected void doSetDataIndex(int dataIndex) {
-        this.dataIndex = dataIndex;
     }
 
     @Override

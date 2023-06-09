@@ -17,6 +17,7 @@ package com.tcdng.unify.core.resource;
 
 import com.tcdng.unify.convert.util.ConverterUtils;
 import com.tcdng.unify.core.AbstractUnifyComponent;
+import com.tcdng.unify.core.ThemeManager;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.util.IOUtils;
@@ -31,15 +32,23 @@ public abstract class AbstractImageProvider extends AbstractUnifyComponent imple
 
 	@Configurable("web/images/blank.png")
 	private String defaultSrc;
-	
+
+	@Configurable
+	private ThemeManager themeManager;
+
 	public final void setDefaultSrc(String defaultSrc) {
 		this.defaultSrc = defaultSrc;
+	}
+
+	public final void setThemeManager(ThemeManager themeManager) {
+		this.themeManager = themeManager;
 	}
 
 	@Override
 	public final byte[] provideAsByteArray(String name) throws UnifyException {
 		byte[] arr = doProvideAsByteArray(name);
-		return arr == null ? IOUtils.readFileResourceInputStream(defaultSrc) : arr;
+		return arr == null ? IOUtils.readFileResourceInputStream(themeManager.expandThemeTag(name))
+				: (arr.length == 0 ? IOUtils.readFileResourceInputStream(defaultSrc) : arr);
 	}
 
 	@Override
@@ -51,7 +60,7 @@ public abstract class AbstractImageProvider extends AbstractUnifyComponent imple
 		} catch (Exception e) {
 			throwOperationErrorException(e);
 		}
-		
+
 		return null;
 	}
 

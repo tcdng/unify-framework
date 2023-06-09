@@ -28,6 +28,7 @@ import java.util.Stack;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.RequestContext;
+import com.tcdng.unify.core.ThemeManager;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
@@ -42,7 +43,6 @@ import com.tcdng.unify.core.util.QueryUtils;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.core.util.json.JsonUtils;
 import com.tcdng.unify.core.util.json.JsonWriter;
-import com.tcdng.unify.web.ThemeManager;
 import com.tcdng.unify.web.constant.RequestParameterConstants;
 import com.tcdng.unify.web.data.WebStringWriter;
 import com.tcdng.unify.web.ui.PageRequestContextUtil;

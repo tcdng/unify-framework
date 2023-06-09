@@ -14,10 +14,7 @@
  * the License.
  */
 
-package com.tcdng.unify.web;
-
-import com.tcdng.unify.core.UnifyComponent;
-import com.tcdng.unify.core.UnifyException;
+package com.tcdng.unify.core;
 
 /**
  * Theme manager

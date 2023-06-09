@@ -45,6 +45,10 @@ public interface ValueStoreReader {
 
 	Object getValueObject();
 
+    void reset();
+    
+    boolean next();
+
 	int getDataIndex();
 
 	void setDataIndex(int dataIndex);

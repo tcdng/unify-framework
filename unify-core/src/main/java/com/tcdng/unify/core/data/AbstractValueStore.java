@@ -46,6 +46,12 @@ public abstract class AbstractValueStore implements ValueStore {
 
     private ValueStoreWriter writer;
     
+    private int dataIndex;
+    
+    public AbstractValueStore(int dataIndex) {
+    	this.dataIndex = dataIndex;
+    }
+    
     @Override
     public String getDataPrefix() {
         return dataPrefix;
@@ -59,10 +65,26 @@ public abstract class AbstractValueStore implements ValueStore {
     @Override
     public final void setDataIndex(int dataIndex) {
         savedValues = null;
-        doSetDataIndex(dataIndex);
+        this.dataIndex = dataIndex;
     }
 
     @Override
+    public final int getDataIndex() {
+        return dataIndex;
+    }
+
+    @Override
+	public void reset() {
+    	dataIndex = -1;
+	}
+
+	@Override
+	public boolean next() {
+		dataIndex++;
+		return dataIndex < size();
+	}
+
+	@Override
     public void setPolicy(ValueStorePolicy policy) {
         this.policy = policy;
     }
@@ -264,8 +286,6 @@ public abstract class AbstractValueStore implements ValueStore {
     protected ValueStorePolicy getPolicy() {
         return policy;
     }
-
-    protected abstract void doSetDataIndex(int dataIndex);
     
     protected abstract Class<?> getDataClass() throws UnifyException;
     
@@ -377,6 +397,16 @@ public abstract class AbstractValueStore implements ValueStore {
         }
 
         @Override
+		public void reset() {
+        	valueStore.reset();
+		}
+
+		@Override
+		public boolean next() {
+			return valueStore.next();
+		}
+
+		@Override
         public int getDataIndex() {
         	return valueStore.getDataIndex();
         }

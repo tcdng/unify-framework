@@ -18,6 +18,7 @@ package com.tcdng.unify.web.ui.widget.writer;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.tcdng.unify.core.ThemeManager;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.constant.MimeType;
@@ -27,7 +28,6 @@ import com.tcdng.unify.core.upl.UplElementReferences;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.core.util.TokenUtils;
-import com.tcdng.unify.web.ThemeManager;
 import com.tcdng.unify.web.ui.PageRequestContextUtil;
 import com.tcdng.unify.web.ui.WebUIApplicationComponents;
 import com.tcdng.unify.web.ui.util.WebUtils;

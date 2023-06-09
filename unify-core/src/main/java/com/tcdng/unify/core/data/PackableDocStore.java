@@ -29,7 +29,7 @@ import com.tcdng.unify.core.util.ReflectUtils;
 public class PackableDocStore extends AbstractSingleObjectValueStore<PackableDoc> {
 
     public PackableDocStore(PackableDoc packableDoc) {
-        this(packableDoc, null, -1);
+        this(packableDoc, null, 0);
     }
 
     public PackableDocStore(PackableDoc packableDoc, String dataMarker, int dataIndex) {
