@@ -54,9 +54,6 @@ public class BeanValueStoreTest {
 				new Address("24 Parklane", "Apapa Lagos"),
 				new Address("38 Warehouse Road", "Apapa Lagos"));
 		ValueStore bvs = new BeanValueListStore(addressList);
-		assertEquals("24 Parklane", bvs.retrieve("line1"));
-		assertEquals("Apapa Lagos", bvs.retrieve("line2"));
-
 		bvs.setDataIndex(0);
 		assertEquals("24 Parklane", bvs.retrieve("line1"));
 		assertEquals("Apapa Lagos", bvs.retrieve("line2"));

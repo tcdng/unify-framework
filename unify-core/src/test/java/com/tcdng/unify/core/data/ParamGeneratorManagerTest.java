@@ -71,6 +71,7 @@ public class ParamGeneratorManagerTest extends AbstractUnifyComponentTest {
 				generatorValueStore.getReader(), tokenList);
 		assertNotNull(generator);
 
+		generator.setDataIndex(0);
 		String txt = generator.generate();
 		assertEquals("Name:John, age:25, employment:1995-01-28, salary:12,500.00\n", txt);
 
@@ -92,6 +93,7 @@ public class ParamGeneratorManagerTest extends AbstractUnifyComponentTest {
 				generatorValueStore.getReader(), tokenList);
 		assertNotNull(generator);
 
+		generator.setDataIndex(0);
 		String txt = generator.generate();
 		assertEquals("Hello John. You are 25 years old.", txt);
 
@@ -145,6 +147,7 @@ public class ParamGeneratorManagerTest extends AbstractUnifyComponentTest {
 				generatorValueStore.getReader(), tokenList);
 		assertNotNull(generator);
 
+		generator.setDataIndex(0);
 		String txt = generator.generate();
 		assertEquals("Apapa Lagos - Samuel Hello Samuel 38 Warehouse Road - 25.", txt);
 
