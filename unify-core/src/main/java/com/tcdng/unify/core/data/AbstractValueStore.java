@@ -64,10 +64,6 @@ public abstract class AbstractValueStore implements ValueStore {
 
     @Override
     public final void setDataIndex(int dataIndex) {
-    	if (dataIndex < 0 || dataIndex >= size()) {
-    		throw new IllegalArgumentException("Data index out of bounds.");
-    	}
-    	
         savedValues = null;
         this.dataIndex = dataIndex;
     }
