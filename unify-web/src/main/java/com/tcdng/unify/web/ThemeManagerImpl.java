@@ -17,6 +17,7 @@
 package com.tcdng.unify.web;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
+import com.tcdng.unify.core.ThemeManager;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.util.StringUtils;
