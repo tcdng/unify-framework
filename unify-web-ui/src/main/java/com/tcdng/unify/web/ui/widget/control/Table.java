@@ -757,7 +757,7 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
     public class RowValueStore extends AbstractSingleObjectValueStore<Row> {
 
         private RowValueStore(Row row) {
-            this(row, null, -1);
+            this(row, null, 0);
         }
 
         private RowValueStore(Row row, String dataMarker, int dataIndex) {

@@ -29,7 +29,7 @@ import com.tcdng.unify.core.util.ReflectUtils;
 public class BeanValueStore extends AbstractSingleObjectValueStore<Object> {
 
     public BeanValueStore(Object valueBean) {
-        this(valueBean, null, -1);
+        this(valueBean, null, 0);
     }
 
     public BeanValueStore(Object valueBean, String dataMarker, int dataIndex) {

@@ -27,6 +27,10 @@ import com.tcdng.unify.core.format.Formatter;
  */
 public class MapValuesArrayStore extends AbstractArrayValueStore<MapValues> {
 
+	public MapValuesArrayStore(MapValues[] storage) {
+        this(storage, null, -1);
+	}
+
     public MapValuesArrayStore(MapValues[] storage, String dataMarker, int dataIndex) {
         super(storage, dataMarker, dataIndex);
     }

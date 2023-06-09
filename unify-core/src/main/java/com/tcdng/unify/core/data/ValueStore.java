@@ -342,6 +342,17 @@ public interface ValueStore {
     void setDataMarker(String dataMarker);
 
     /**
+     * Resets value store
+     */
+    void reset();
+    
+    /**
+     * Sets next data index.
+     * @return true if successful set otherwise false
+     */
+    boolean next();
+    
+    /**
      * Returns the value store data index.
      */
     int getDataIndex();
