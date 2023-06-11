@@ -31,6 +31,7 @@ public enum ReportLayoutType implements EnumConst {
     TABULAR_THUMBIMAGESONLY("TTO"),
     COLUMNAR("CMN"),
     SINGLECOLUMN_EMBEDDED_HTML("SCH"),
+    HTML_PDF("HTP"),
     MULTIDOCHTML_PDF("MDH"),
     WORKBOOK_XLS("WBX"),
     PLACEMENT_PDF("PLC");
