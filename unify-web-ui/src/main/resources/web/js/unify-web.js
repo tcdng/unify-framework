@@ -216,6 +216,7 @@ ux.newEvPrm = function(rgp) {
 		evp.uURL = rgp.pCmdURL;
 	}
 
+	evp.uId = rgp.pId;
 	return evp;
 }
 
