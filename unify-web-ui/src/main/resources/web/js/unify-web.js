@@ -5229,6 +5229,25 @@ ux.formatInput = function(val, fmt) {
 	return val;
 }
 
+ux.setTextAtCaret = function(trgObj, text) {
+	const caret = ux.getCaretPosition(trgObj);
+	ux.setTextAtPosition(trgObj, caret.start, caret.end, text);
+}
+
+ux.setTextAtPosition = function(trgObj, start, end, text) {
+	const otext = trgObj.value;
+	if (otext == null) {
+		trgObj.value = text;
+		ux.setCaretPosition(trgObj, text.length, text.length);
+	} else {
+		const left = otext.slice(0, start);
+  		const right = otext.slice(end);
+  		trgObj.value = left + text + right;	
+  		const npos = start + text.length;
+		ux.setCaretPosition(trgObj, npos, npos);
+	}
+}
+
 ux.getCaretPosition = function(trgObj) {
 	if (document.selection) {
 		trgObj.focus();
@@ -5244,21 +5263,23 @@ ux.getCaretPosition = function(trgObj) {
 }
 
 const caretSupport = ["text", "search", "URL", "tel", "password"];
-ux.setCaretPosition = function(trgObj, start, end) {	
-	if(trgObj.setSelectionRange) {
-		if (trgObj.type && caretSupport.indexOf(trgObj.type) < 0) {
-			return;
-		}
-
-		trgObj.focus();
-		trgObj.setSelectionRange(start, end);
-	} else if (trgObj.createTextRange) {
-		var txtRange = trgObj.createTextRange();
-		txtRange.collapse(true);
-		txtRange.moveStart('character', start);
-		txtRange.moveEnd('character', end);
-		txtRange.select();
-	}	
+ux.setCaretPosition = function(trgObj, start, end) {
+	if (trgObj) {
+		if(trgObj.setSelectionRange) {
+			if (trgObj.type && caretSupport.indexOf(trgObj.type) < 0) {
+				return;
+			}
+	
+			trgObj.focus();
+			trgObj.setSelectionRange(start, end);
+		} else if (trgObj.createTextRange) {
+			var txtRange = trgObj.createTextRange();
+			txtRange.collapse(true);
+			txtRange.moveStart('character', start);
+			txtRange.moveEnd('character', end);
+			txtRange.select();
+		}	
+	}
 }
 
 /** Text validation */
