@@ -18,7 +18,7 @@ package com.tcdng.unify.core.database.sql.criterion.policy;
 import com.tcdng.unify.core.database.sql.SqlDataSourceDialectPolicies;
 
 /**
- * Case insensitive not equals operator policy.
+ * Instance insensitive not equals operator policy.
  * 
  * @author The Code Department
  * @since 1.0

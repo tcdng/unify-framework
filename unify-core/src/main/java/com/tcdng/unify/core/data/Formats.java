@@ -48,27 +48,11 @@ public class Formats {
 		this.timestampFormat = timestampFormat != null ? timestampFormat : "yyyy-MM-dd HH:mm:ss";
 	}
 
-	public String getIntegerFormat() {
-		return integerFormat;
-	}
-
-	public String getDecimalFormat() {
-		return decimalFormat;
-	}
-
-	public String getDateFormat() {
-		return dateFormat;
-	}
-
-	public String getTimestampFormat() {
-		return timestampFormat;
-	}
-
-	public Case createCase() {
-		return new Case();
+	public Instance createInstance() {
+		return new Instance();
 	}
 	
-	public class Case {
+	public class Instance {
 
 		private DecimalFormat idf;
 
@@ -78,7 +62,7 @@ public class Formats {
 
 		private SimpleDateFormat tsdf;
 
-		private Case() {
+		private Instance() {
 			this.idf = new DecimalFormat(integerFormat);
 			this.df = new DecimalFormat(decimalFormat);
 			this.sdf = new SimpleDateFormat(dateFormat);

@@ -36,7 +36,7 @@ import com.tcdng.unify.core.util.ReflectUtils;
  */
 public abstract class AbstractValueStore implements ValueStore {
 
-	private Formats.Case formatsCase;
+	private Formats.Instance formatsInstance;
 	
     private String dataPrefix;
     
@@ -56,7 +56,7 @@ public abstract class AbstractValueStore implements ValueStore {
     
     @Override
 	public void setReadFormats(Formats formats) {
-		this.formatsCase = formats != null ? formats.createCase() : null;
+		this.formatsInstance = formats != null ? formats.createInstance() : null;
 	}
 
 	@Override
@@ -110,7 +110,7 @@ public abstract class AbstractValueStore implements ValueStore {
 	public String retrieveAsString(String name) throws UnifyException {
 		Object val = retrieve(name);
 		if (val != null) {
-			return formatsCase != null? formatsCase.format(val) : String.valueOf(val);
+			return formatsInstance != null? formatsInstance.format(val) : String.valueOf(val);
 		}
 		
 		return null;
