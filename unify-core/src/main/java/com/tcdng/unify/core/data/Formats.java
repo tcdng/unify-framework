@@ -51,7 +51,28 @@ public class Formats {
 	public Instance createInstance() {
 		return new Instance();
 	}
-	
+
+	public class Format {
+
+		private java.text.Format format;
+
+		private String pattern;
+
+		public Format(java.text.Format format, String pattern) {
+			this.format = format;
+			this.pattern = pattern;
+		}
+
+		public java.text.Format getFormat() {
+			return format;
+		}
+
+		public String getPattern() {
+			return pattern;
+		}
+
+	}
+
 	public class Instance {
 
 		private DecimalFormat idf;
@@ -67,6 +88,22 @@ public class Formats {
 			this.df = new DecimalFormat(decimalFormat);
 			this.sdf = new SimpleDateFormat(dateFormat);
 			this.tsdf = new SimpleDateFormat(timestampFormat);
+		}
+
+		public Format getIntegerFormat() {
+			return new Format(idf, idf.toPattern());
+		}
+
+		public Format getDecimalFormat() {
+			return new Format(df, df.toPattern());
+		}
+
+		public Format getDateFormat() {
+			return new Format(sdf, sdf.toPattern());
+		}
+
+		public Format getTimestampFormat() {
+			return new Format(tsdf, tsdf.toPattern());
 		}
 
 		public String format(Object val) {
