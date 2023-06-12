@@ -35,6 +35,8 @@ public interface ValueStoreReader {
 
 	<T> T readScratch(Class<T> type, String fieldName) throws UnifyException;
 
+    String readAsString(String fieldName) throws UnifyException;
+    
 	Object read(String fieldName) throws UnifyException;
 
 	<T> T read(Class<T> type, String fieldName) throws UnifyException;
