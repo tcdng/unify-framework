@@ -26,7 +26,7 @@ import com.tcdng.unify.core.annotation.Tooling;
  * @author The Code Department
  * @since 1.0
  */
-@Tooling(name = "upperCaseTrans", description = "Upper Case Transformer")
+@Tooling(name = "upperCaseTrans", description = "Upper Instance Transformer")
 @Component("uppercase-transformer")
 public class UpperCaseTransformer extends AbstractStringTransformer {
 

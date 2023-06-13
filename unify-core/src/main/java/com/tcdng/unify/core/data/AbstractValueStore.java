@@ -36,6 +36,8 @@ import com.tcdng.unify.core.util.ReflectUtils;
  */
 public abstract class AbstractValueStore implements ValueStore {
 
+	private Formats.Instance formatsInstance;
+	
     private String dataPrefix;
     
     private ValueStorePolicy policy;
@@ -53,6 +55,11 @@ public abstract class AbstractValueStore implements ValueStore {
     }
     
     @Override
+	public void setReadFormats(Formats formats) {
+		this.formatsInstance = formats != null ? formats.createInstance() : null;
+	}
+
+	@Override
     public String getDataPrefix() {
         return dataPrefix;
     }
@@ -100,6 +107,16 @@ public abstract class AbstractValueStore implements ValueStore {
     }
 
     @Override
+	public String retrieveAsString(String name) throws UnifyException {
+		Object val = retrieve(name);
+		if (val != null) {
+			return formatsInstance != null? formatsInstance.format(val) : String.valueOf(val);
+		}
+		
+		return null;
+	}
+
+	@Override
 	public int compare(ValueStore valSource) throws UnifyException {
 		for (GetterSetterInfo getterSetterInfo : ReflectUtils.getGetterSetterList(getDataClass())) {
 			if (getterSetterInfo.isGetterSetter()) {
@@ -352,6 +369,11 @@ public abstract class AbstractValueStore implements ValueStore {
         }
 
         @Override
+		public void setReadFormats(Formats formats) {
+        	valueStore.setReadFormats(formats);
+		}
+
+		@Override
         public boolean isNull(String name) throws UnifyException {
         	return valueStore.isNull(name);
         }
@@ -372,6 +394,11 @@ public abstract class AbstractValueStore implements ValueStore {
         }
 
         @Override
+		public String readAsString(String fieldName) throws UnifyException {
+            return valueStore.retrieveAsString(fieldName);
+		}
+
+		@Override
         public Object read(String fieldName) throws UnifyException {
             return valueStore.retrieve(fieldName);
         }
