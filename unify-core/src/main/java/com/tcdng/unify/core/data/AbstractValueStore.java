@@ -369,6 +369,11 @@ public abstract class AbstractValueStore implements ValueStore {
         }
 
         @Override
+		public void setReadFormats(Formats formats) {
+        	valueStore.setReadFormats(formats);
+		}
+
+		@Override
         public boolean isNull(String name) throws UnifyException {
         	return valueStore.isNull(name);
         }
