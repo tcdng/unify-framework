@@ -70,9 +70,4 @@ public abstract class StringToken {
     public boolean isGeneratorParam() {
         return type.isGeneratorParam();
     }
-
-	@Override
-	public String toString() {
-		return "{type=" + type + ", token=" + token + "}";
-	}
 }

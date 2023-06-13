@@ -108,35 +108,19 @@ public class Formats {
 
 		public String format(Object val) {
 			if (val != null) {
-				return String.valueOf(val);
-			}
+				if (val instanceof Number) {
+					if (val instanceof Integer || val instanceof Long || val instanceof Short) {
+						return idf.format(val);
+					}
 
-			return null;
-		}
-
-		public String format(Number val) {
-			if (val != null) {
-				if (val instanceof Integer || val instanceof Long || val instanceof Short) {
-					return idf.format(val);
+					return df.format(val);
 				}
-
-				return df.format(val);
-			}
-
-			return null;
-		}
-
-		public String format(Date val) {
-			if (val != null) {
-				return sdf.format(val);
-			}
-
-			return null;
-		}
-
-		public String formatAsDate(Date val) {
-			if (val != null) {
-				return sdf.format(val);
+				
+				if (val instanceof Date) {
+					return sdf.format(val);
+				}
+				
+				return String.valueOf(val);
 			}
 
 			return null;
