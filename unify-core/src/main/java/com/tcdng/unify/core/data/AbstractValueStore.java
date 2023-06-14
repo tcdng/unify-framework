@@ -80,17 +80,6 @@ public abstract class AbstractValueStore implements ValueStore {
         return dataIndex;
     }
 
-    @Override
-	public void reset() {
-    	dataIndex = -1;
-	}
-
-	@Override
-	public boolean next() {
-		dataIndex++;
-		return dataIndex < size();
-	}
-
 	@Override
     public void setPolicy(ValueStorePolicy policy) {
         this.policy = policy;
@@ -422,16 +411,6 @@ public abstract class AbstractValueStore implements ValueStore {
         public Object getValueObject() {
             return valueStore.getValueObject();
         }
-
-        @Override
-		public void reset() {
-        	valueStore.reset();
-		}
-
-		@Override
-		public boolean next() {
-			return valueStore.next();
-		}
 
 		@Override
         public int getDataIndex() {
