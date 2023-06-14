@@ -33,4 +33,4 @@
     eventHandler:$d{!ui-event event:onclick action:$c{resultAct}}
      
 //Actions
-!ui-post:resultAct path:$f{messageResultPath}
+!ui-post:resultAct path:$f{messageResultPath} strictPath:true

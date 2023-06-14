@@ -891,7 +891,7 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
 								.retrieve(TokenUtils.extractTokenValue(actionPath));
 					}
 
-					if (!actionPath.startsWith(pathId)) {
+					if (!pageAction.isStrictPath() && !actionPath.startsWith(pathId)) {
 						int index = actionPath.lastIndexOf('/');
 						actionPath = pathId + actionPath.substring(index);
 					}
