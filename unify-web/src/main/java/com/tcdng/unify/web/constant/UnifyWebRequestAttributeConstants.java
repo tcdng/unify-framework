@@ -31,6 +31,8 @@ public interface UnifyWebRequestAttributeConstants {
 
     String COMMAND_POSTRESPONSE_PATH = "WR.commandPostPath";
 
+    String SYSTEM_ERROR_RECOVERY_PATH = "WR.systemErrorRecoveryPath";
+
     String REPORTOPTIONS = "WR.REPORTOPTIONS";
 
     String TIMESTAMP_VARIABLE = ":TV";

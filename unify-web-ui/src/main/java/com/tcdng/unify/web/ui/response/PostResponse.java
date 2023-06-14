@@ -55,6 +55,10 @@ public class PostResponse extends AbstractJsonPageControllerResponse {
             String pathRequestAttribute = getUplAttribute(String.class, "pathRequestAttribute");
             if (StringUtils.isNotBlank(pathRequestAttribute)) {
                 path = (String) getRequestAttribute(pathRequestAttribute);
+                
+                if (StringUtils.isBlank(path)) {
+                    path = (String) removeSessionAttribute(pathRequestAttribute);
+                }
             }
         }
 

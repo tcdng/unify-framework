@@ -38,6 +38,7 @@ import com.tcdng.unify.web.ClientRequest;
 import com.tcdng.unify.web.ControllerPathParts;
 import com.tcdng.unify.web.TargetPath;
 import com.tcdng.unify.web.constant.RequestParameterConstants;
+import com.tcdng.unify.web.constant.UnifyWebRequestAttributeConstants;
 import com.tcdng.unify.web.ui.constant.PageRequestParameterConstants;
 import com.tcdng.unify.web.ui.widget.Document;
 import com.tcdng.unify.web.ui.widget.Page;
@@ -292,6 +293,11 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
     }
 
     @Override
+	public void setSystemErrorRecoveryPath(String path) throws UnifyException {
+		setSessionAttribute(UnifyWebRequestAttributeConstants.SYSTEM_ERROR_RECOVERY_PATH, path);
+	}
+
+	@Override
     public List<String> getClosedPagePaths() throws UnifyException {
         List<String> pathIdList= (List<String>) getRequestAttribute(CLOSED_PAGEPATHS);
         if (pathIdList != null) {
