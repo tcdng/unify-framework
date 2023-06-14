@@ -29,10 +29,6 @@ import com.tcdng.unify.core.format.Formatter;
  */
 public class MapValuesListStore extends AbstractListValueStore<MapValues> {
 
-    public MapValuesListStore(List<MapValues> storage) {
-        this(storage, null, 0);
-    }
-
     public MapValuesListStore(List<MapValues> storage, String dataMarker, int dataIndex) {
         super(storage, dataMarker, dataIndex);
     }

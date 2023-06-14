@@ -32,15 +32,17 @@ public abstract class AbstractArrayValueStore<T> extends AbstractValueStore {
 
     protected T[] storage;
 
+    protected int dataIndex;
+
     private String dataMarker;
 
     private Map<String, Object> temp;
 
     public AbstractArrayValueStore(T[] storage, String dataMarker, int dataIndex) {
-    	super(dataIndex);
         this.storage = storage;
         this.dataMarker = dataMarker;
-     }
+        this.dataIndex = dataIndex;
+    }
 
     @Override
     public Object retrieve(int storageIndex, String name) throws UnifyException {
@@ -49,7 +51,7 @@ public abstract class AbstractArrayValueStore<T> extends AbstractValueStore {
 
     @Override
     public Object retrieve(String name) throws UnifyException {
-        return retrieveInternal(storage[getDataIndex()], name);
+        return retrieveInternal(storage[dataIndex], name);
     }
 
     @Override
@@ -79,12 +81,12 @@ public abstract class AbstractArrayValueStore<T> extends AbstractValueStore {
 
     @Override
     public void store(String name, Object value) throws UnifyException {
-        storeInternal(storage[getDataIndex()], name, value, null);
+        storeInternal(storage[dataIndex], name, value, null);
     }
 
     @Override
     public void store(String name, Object value, Formatter<?> formatter) throws UnifyException {
-        storeInternal(storage[getDataIndex()], name, value, formatter);
+        storeInternal(storage[dataIndex], name, value, formatter);
     }
 
     @Override
@@ -104,14 +106,14 @@ public abstract class AbstractArrayValueStore<T> extends AbstractValueStore {
     @Override
     public void storeOnNull(String name, Object value) throws UnifyException {
         if (retrieve(name) == null) {
-            storeInternal(storage[getDataIndex()], name, value, null);
+            storeInternal(storage[dataIndex], name, value, null);
         }
     }
 
     @Override
     public void storeOnNull(String name, Object value, Formatter<?> formatter) throws UnifyException {
         if (retrieve(name) == null) {
-            storeInternal(storage[getDataIndex()], name, value, formatter);
+            storeInternal(storage[dataIndex], name, value, formatter);
         }
     }
     
@@ -162,12 +164,12 @@ public abstract class AbstractArrayValueStore<T> extends AbstractValueStore {
 
     @Override
     public boolean isGettable(String name) throws UnifyException {
-        return doGettable(storage[getDataIndex()], name);
+        return doGettable(storage[dataIndex], name);
     }
 
     @Override
     public boolean isSettable(String name) throws UnifyException {
-        return doSettable(storage[getDataIndex()], name);
+        return doSettable(storage[dataIndex], name);
     }
 
     @Override
@@ -178,6 +180,11 @@ public abstract class AbstractArrayValueStore<T> extends AbstractValueStore {
     @Override
     public void setDataMarker(String dataMarker) {
         this.dataMarker = dataMarker;
+    }
+
+    @Override
+    public int getDataIndex() {
+        return dataIndex;
     }
 
     @Override
@@ -192,12 +199,17 @@ public abstract class AbstractArrayValueStore<T> extends AbstractValueStore {
 
     @Override
     public Object getValueObjectAtDataIndex() {
-        return storage != null ? storage[getDataIndex()] : null;
+        return storage != null && dataIndex >= 0 ? storage[dataIndex] : null;
+    }
+
+    @Override
+    protected void doSetDataIndex(int dataIndex) {
+        this.dataIndex = dataIndex;
     }
 
     @Override
     protected Class<?> getDataClass() throws UnifyException {
-        return storage[getDataIndex()].getClass();
+        return storage[dataIndex].getClass();
     }
 
     protected abstract boolean doSettable(T storage, String property) throws UnifyException;

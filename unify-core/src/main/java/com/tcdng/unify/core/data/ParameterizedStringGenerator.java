@@ -101,7 +101,7 @@ public class ParameterizedStringGenerator {
 			} else {
 				val = itemReader.getTempValue(token.getToken());
 				if (val == null) {
-					val = itemReader.readAsString(token.getToken());
+					val = itemReader.read(token.getToken());
 				}
 			}
 		} else {

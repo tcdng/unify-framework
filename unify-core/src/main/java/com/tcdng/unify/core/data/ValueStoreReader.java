@@ -27,50 +27,14 @@ import com.tcdng.unify.core.format.Formatter;
  */
 public interface ValueStoreReader {
 
-	/**
-	 * Sets read formats.
-	 * 
-	 * @param formats the formats to set
-	 */
-	void setReadFormats(Formats formats);
-
-    /**
-     * Tests if field value is null
-     * 
-     * @param name
-     *             the field name
-     * @return true if field is null otherwise false
-     * @throws UnifyException
-     *                        if an error occurs
-     */
 	boolean isNull(String name) throws UnifyException;
 
-    /**
-     * Tests if field value is not null
-     * 
-     * @param name
-     *             the field name
-     * @return true if field is not null otherwise false
-     * @throws UnifyException
-     *                        if an error occurs
-     */
 	boolean isNotNull(String name) throws UnifyException;
 
-	/**
-     * Reads value from scratch.
-     * 
-     * @param name
-     *             the name of the value to read
-     * @return the value read
-     * @throws UnifyException
-     *                        if an error occurs
-     */
 	Object readScratch(String fieldName) throws UnifyException;
 
 	<T> T readScratch(Class<T> type, String fieldName) throws UnifyException;
 
-    String readAsString(String fieldName) throws UnifyException;
-    
 	Object read(String fieldName) throws UnifyException;
 
 	<T> T read(Class<T> type, String fieldName) throws UnifyException;
