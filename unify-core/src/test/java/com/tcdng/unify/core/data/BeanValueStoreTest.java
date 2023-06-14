@@ -64,51 +64,6 @@ public class BeanValueStoreTest {
 	}
 
     @Test
-	public void testRetrieveBeanListPropertyValueIteration() throws Exception {
-		List<Address> addressList = Arrays.asList(
-				new Address("24 Parklane", "Apapa Lagos"),
-				new Address("38 Warehouse Road", "Apapa Lagos"));
-		ValueStore bvs = new BeanValueListStore(addressList);
-		assertTrue(bvs.next());
-		assertEquals("24 Parklane", bvs.retrieve("line1"));
-		assertEquals("Apapa Lagos", bvs.retrieve("line2"));
-
-		assertTrue(bvs.next());
-		assertEquals("38 Warehouse Road", bvs.retrieve("line1"));
-		assertEquals("Apapa Lagos", bvs.retrieve("line2"));
-
-		assertFalse(bvs.next());
-	}
-
-    @Test
-	public void testRetrieveBeanListPropertyValueIterationReset() throws Exception {
-		List<Address> addressList = Arrays.asList(
-				new Address("24 Parklane", "Apapa Lagos"),
-				new Address("38 Warehouse Road", "Apapa Lagos"));
-		ValueStore bvs = new BeanValueListStore(addressList);
-		assertTrue(bvs.next());
-		assertEquals("24 Parklane", bvs.retrieve("line1"));
-		assertEquals("Apapa Lagos", bvs.retrieve("line2"));
-
-		assertTrue(bvs.next());
-		assertEquals("38 Warehouse Road", bvs.retrieve("line1"));
-		assertEquals("Apapa Lagos", bvs.retrieve("line2"));
-
-		assertFalse(bvs.next());
-		
-		bvs.reset();
-		assertTrue(bvs.next());
-		assertEquals("24 Parklane", bvs.retrieve("line1"));
-		assertEquals("Apapa Lagos", bvs.retrieve("line2"));
-
-		assertTrue(bvs.next());
-		assertEquals("38 Warehouse Road", bvs.retrieve("line1"));
-		assertEquals("Apapa Lagos", bvs.retrieve("line2"));
-
-		assertFalse(bvs.next());
-	}
-
-    @Test
     public void testRetrieveNestedBeanPropertyValue() throws Exception {
         Date birthDt = new Date();
         Customer customer = new Customer("Amos Quito", birthDt, BigDecimal.valueOf(250000.00), 20,

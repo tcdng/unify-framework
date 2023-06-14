@@ -29,13 +29,6 @@ import com.tcdng.unify.core.format.Formatter;
  */
 public interface ValueStore {
 
-	/**
-	 * Sets read formats.
-	 * 
-	 * @param formats the formats to set
-	 */
-	void setReadFormats(Formats formats);
-	
     /**
      * Sets the policy for this value store
      * 
@@ -65,16 +58,6 @@ public interface ValueStore {
      *                        if an error occurs
      */
     boolean isNotNull(String name) throws UnifyException;
-    
-    /**
-     * Retrieves value as string from store using supplied name.
-     * 
-     * @param name
-     *             the name of the value to retrieve
-     * @throws UnifyException
-     *                        if an error occurs
-     */
-    String retrieveAsString(String name) throws UnifyException;
     
     /**
      * Retrieves value from store using supplied name.
@@ -358,17 +341,6 @@ public interface ValueStore {
      */
     void setDataMarker(String dataMarker);
 
-    /**
-     * Resets value store
-     */
-    void reset();
-    
-    /**
-     * Sets next data index.
-     * @return true if successful set otherwise false
-     */
-    boolean next();
-    
     /**
      * Returns the value store data index.
      */

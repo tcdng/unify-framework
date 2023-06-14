@@ -29,10 +29,6 @@ import com.tcdng.unify.core.format.Formatter;
  */
 public class PackableDocListStore extends AbstractListValueStore<PackableDoc> {
 
-    public PackableDocListStore(List<PackableDoc> storage) {
-        this(storage, null, -1);
-    }
-
     public PackableDocListStore(List<PackableDoc> storage, String dataMarker, int dataIndex) {
         super(storage, dataMarker, dataIndex);
     }
