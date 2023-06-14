@@ -15,6 +15,8 @@
  */
 package com.tcdng.unify.web.ui.widget;
 
+import com.tcdng.unify.core.UnifyException;
+
 /**
  * Represents a page action behavior component.
  * 
@@ -41,5 +43,17 @@ public interface PageAction extends Behavior {
      */
     void setId(String id);
     
+    /**
+     * Returns true on post command
+     * @return the true flag
+     */
     boolean isPostCommand();
+    
+	/**
+	 * Returns true on strict path
+	 * 
+	 * @return the true flag
+	 * @exception if an error occurs
+	 */
+	boolean isStrictPath() throws UnifyException;
 }

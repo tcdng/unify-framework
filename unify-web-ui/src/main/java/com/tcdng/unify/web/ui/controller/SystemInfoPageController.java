@@ -22,6 +22,7 @@ import com.tcdng.unify.web.annotation.Action;
 import com.tcdng.unify.web.annotation.ResultMapping;
 import com.tcdng.unify.web.annotation.ResultMappings;
 import com.tcdng.unify.web.constant.SystemInfoConstants;
+import com.tcdng.unify.web.constant.UnifyWebRequestAttributeConstants;
 import com.tcdng.unify.web.ui.AbstractPageController;
 
 /**
@@ -41,7 +42,8 @@ import com.tcdng.unify.web.ui.AbstractPageController;
                 response = { "!hidepopupresponse systemInfo:true", "!forwardresponse path:$x{application.web.home}" }),
         @ResultMapping(
                 name = SystemInfoConstants.HIDE_SYSTEM_INFO_MAPPING,
-                response = { "!hidepopupresponse systemInfo:true" }) })
+                response = { "!hidepopupresponse systemInfo:true", "!postresponse pathRequestAttribute:$s{"
+                		+ UnifyWebRequestAttributeConstants.SYSTEM_ERROR_RECOVERY_PATH + "}" }) })
 public class SystemInfoPageController extends AbstractPageController<SystemInfoPageBean> {
 
     public SystemInfoPageController() {

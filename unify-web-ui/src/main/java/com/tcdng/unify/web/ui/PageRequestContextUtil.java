@@ -336,6 +336,14 @@ public interface PageRequestContextUtil extends UnifyComponent {
      */
     void setClosedPagePaths(List<String> pathIdList) throws UnifyException;
 
+	/**
+	 * System error recovery path
+	 * 
+	 * @param path the recovery path
+	 * @throws UnifyException the patch to set
+	 */
+	void setSystemErrorRecoveryPath(String path) throws UnifyException;
+    
     /**
      * Sets the paths of pages closed in this request.
      * 

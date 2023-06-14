@@ -15,6 +15,7 @@
  */
 package com.tcdng.unify.web.ui.widget;
 
+import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.upl.UplElementReferences;
@@ -29,7 +30,8 @@ import com.tcdng.unify.core.upl.UplElementReferences;
         @UplAttribute(name = "confirm", type = String.class),
         @UplAttribute(name = "iconIndex", type = int.class, defaultVal = "3"),
         @UplAttribute(name = "shortcut", type = String.class),
-        @UplAttribute(name = "pushSrc", type = boolean.class)})
+        @UplAttribute(name = "pushSrc", type = boolean.class),
+        @UplAttribute(name = "strictPath", type = boolean.class)})
 public abstract class AbstractPageAction extends AbstractBehavior implements PageAction {
 
     private String action;
@@ -58,5 +60,10 @@ public abstract class AbstractPageAction extends AbstractBehavior implements Pag
 	@Override
 	public boolean isPostCommand() {
 		return false;
+	}
+
+	@Override
+	public boolean isStrictPath() throws UnifyException {
+		return getUplAttribute(boolean.class, "strictPath");
 	}
 }
