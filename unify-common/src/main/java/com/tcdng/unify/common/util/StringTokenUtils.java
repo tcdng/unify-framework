@@ -53,6 +53,10 @@ public final class StringTokenUtils {
 
 	public static List<List<StringToken>> breakdownParameterizedString(final String text, final int linesPerPage) {
 		if (text != null) {
+			if (linesPerPage <= 0 ) {
+				return Arrays.asList(StringTokenUtils.breakdownParameterizedString(text));
+			}
+			
 			try {
 				List<List<StringToken>> tokenList = new ArrayList<List<StringToken>>();
 				BufferedReader bufferedReader = new BufferedReader(new StringReader(text));
