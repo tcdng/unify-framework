@@ -184,6 +184,11 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 	}
 
 	@Override
+	public EventHandler[] getEventHandlers() throws UnifyException {
+		return getUplAttribute(EventHandler[].class, "eventHandler");
+	}
+
+	@Override
 	public String getStyleClassValue() throws UnifyException {
 		String styleClassBinding = getUplAttribute(String.class, "styleClassBinding");
 		if (styleClassBinding != null) {

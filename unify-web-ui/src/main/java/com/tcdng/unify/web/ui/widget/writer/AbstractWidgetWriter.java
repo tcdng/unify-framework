@@ -117,7 +117,7 @@ public abstract class AbstractWidgetWriter extends AbstractDhtmlWriter implement
     }
 
     protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-    	doWriteBehavior(writer, widget, widget.getUplAttribute(EventHandler[].class, "eventHandler"));
+    	doWriteBehavior(writer, widget, widget.getEventHandlers());
     }
 
     protected void doWriteBehavior(ResponseWriter writer, Widget widget, EventHandler[] eventHandlers) throws UnifyException {
