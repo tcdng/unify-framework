@@ -38,7 +38,6 @@ public abstract class AbstractEventHandlerWriter extends AbstractBehaviorWriter 
 		final String event = eventHandler.getEvent();
 		if (!"none".equals(event)) {
 			if (eventHandler.getPageAction() != null) {
-				System.out.println("@trime: writer.isKeepPostCommandRefs() = " + writer.isKeepPostCommandRefs());
 				if (writer.isKeepPostCommandRefs()) {
 					for (PageAction pageAction : eventHandler.getPageAction()) {
 						keepPostCommandRefs(writer, id, pageAction);
@@ -46,8 +45,6 @@ public abstract class AbstractEventHandlerWriter extends AbstractBehaviorWriter 
 				} else {
 					final String translatedEvent = WriterUtils.getEventJS(event.toLowerCase());
 					for (PageAction pageAction : eventHandler.getPageAction()) {
-						System.out.println("@trime: id = " + id + ". event = " + translatedEvent
-								+ ". pageAction.getLongName() = " + pageAction.getLongName());
 						writer.beginFunction("ux.setOnEvent");
 						String function = WriterUtils.getActionJSFunction(pageAction.getAction().toLowerCase());
 						writeActionParamsJS(writer, translatedEvent, function, id, cmdTag, pageAction, null, null,
