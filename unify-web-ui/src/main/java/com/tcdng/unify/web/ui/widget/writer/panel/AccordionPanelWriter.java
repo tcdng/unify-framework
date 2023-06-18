@@ -19,6 +19,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.web.ui.widget.Container;
+import com.tcdng.unify.web.ui.widget.EventHandler;
 import com.tcdng.unify.web.ui.widget.Panel;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.Widget;
@@ -35,53 +36,54 @@ import com.tcdng.unify.web.ui.widget.writer.AbstractPanelWriter;
 @Component("accordionpanel-writer")
 public class AccordionPanelWriter extends AbstractPanelWriter {
 
-    @Override
-    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-        super.doWriteBehavior(writer, widget);
-        AccordionPanel accordionPanel = (AccordionPanel) widget;
-        writer.beginFunction("ux.rigAccordion");
-        writer.writeParam("pId", accordionPanel.getId());
-        writer.writeParam("pContId", accordionPanel.getContainerId());
-        writer.writeCommandURLParam("pCmdURL");
-        writer.writeParam("pHeaderIdBase", accordionPanel.getHeaderIdBase());
-        writer.writeParam("pCollapsed",accordionPanel.isCollapsed());
-        writer.writeParam("pCurrSelCtrlId", accordionPanel.getCurrentSelCtrl().getId());
-        writer.writeParam("pCurrSelIdx",accordionPanel.getCurrentSel());
-        writer.writeParam("pSectionCount", accordionPanel.getSectionCount());
-        writer.endFunction();
-    }
+	@Override
+	protected void doWriteBehavior(ResponseWriter writer, Widget widget, EventHandler[] handlers)
+			throws UnifyException {
+		super.doWriteBehavior(writer, widget, handlers);
+		AccordionPanel accordionPanel = (AccordionPanel) widget;
+		writer.beginFunction("ux.rigAccordion");
+		writer.writeParam("pId", accordionPanel.getId());
+		writer.writeParam("pContId", accordionPanel.getContainerId());
+		writer.writeCommandURLParam("pCmdURL");
+		writer.writeParam("pHeaderIdBase", accordionPanel.getHeaderIdBase());
+		writer.writeParam("pCollapsed", accordionPanel.isCollapsed());
+		writer.writeParam("pCurrSelCtrlId", accordionPanel.getCurrentSelCtrl().getId());
+		writer.writeParam("pCurrSelIdx", accordionPanel.getCurrentSel());
+		writer.writeParam("pSectionCount", accordionPanel.getSectionCount());
+		writer.endFunction();
+	}
 
-    @Override
-    protected void doWriteInnerStructureAndContent(ResponseWriter writer, Panel panel) throws UnifyException {
-        writeLayoutContent(writer, panel);
-    }
+	@Override
+	protected void doWriteInnerStructureAndContent(ResponseWriter writer, Panel panel) throws UnifyException {
+		writeLayoutContent(writer, panel);
+	}
 
-    @Override
-    protected void writeLayoutContent(ResponseWriter writer, Container container) throws UnifyException {
-        AccordionPanel accordionPanel = (AccordionPanel) container;
-        accordionPanel.clearSectionCount();
-        for (String longName : accordionPanel.getLayoutWidgetLongNames()) {
-            Widget widget = accordionPanel.getWidgetByLongName(longName);
-            if (widget.isVisible()) {
-                int sectionCount = accordionPanel.getSectionCount();
-                boolean isExpand = !accordionPanel.isCollapsed() && sectionCount == accordionPanel.getCurrentSel();
-                writer.write("<div id=\"").write(accordionPanel.getHeaderIdBase()).write(sectionCount);
-                if (isExpand) {
-                    writer.write("\" class=\"aaheader\">");
-                } else {
-                    writer.write("\" class=\"aheader\">");
-                }
-                writer.writeWithHtmlEscape(widget.getUplAttribute(String.class, "caption"));
-                writer.write("</div>");
-                if (isExpand) {
-                    writer.write("<div class=\"acontent\">");
-                    writer.writeStructureAndContent(widget);
-                    writer.write("</div>");
-                }
-                accordionPanel.incrementSectionCount();
-            }
-        }
-        writer.writeStructureAndContent(accordionPanel.getCurrentSelCtrl());
-    }
+	@Override
+	protected void writeLayoutContent(ResponseWriter writer, Container container) throws UnifyException {
+		AccordionPanel accordionPanel = (AccordionPanel) container;
+		accordionPanel.clearSectionCount();
+		for (String longName : accordionPanel.getLayoutWidgetLongNames()) {
+			Widget widget = accordionPanel.getWidgetByLongName(longName);
+			if (widget.isVisible()) {
+				int sectionCount = accordionPanel.getSectionCount();
+				boolean isExpand = !accordionPanel.isCollapsed() && sectionCount == accordionPanel.getCurrentSel();
+				writer.write("<div id=\"").write(accordionPanel.getHeaderIdBase()).write(sectionCount);
+				if (isExpand) {
+					writer.write("\" class=\"aaheader\">");
+				} else {
+					writer.write("\" class=\"aheader\">");
+				}
+				writer.writeWithHtmlEscape(widget.getUplAttribute(String.class, "caption"));
+				writer.write("</div>");
+				if (isExpand) {
+					writer.write("<div class=\"acontent\">");
+					writer.writeStructureAndContent(widget);
+					writer.write("</div>");
+				}
+				accordionPanel.incrementSectionCount();
+			}
+		}
+		writer.writeStructureAndContent(accordionPanel.getCurrentSelCtrl());
+	}
 
 }

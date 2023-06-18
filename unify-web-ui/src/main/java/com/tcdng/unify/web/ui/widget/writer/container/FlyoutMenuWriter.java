@@ -30,6 +30,7 @@ import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.core.util.json.JsonWriter;
 import com.tcdng.unify.web.ui.widget.Container;
+import com.tcdng.unify.web.ui.widget.EventHandler;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.Widget;
 import com.tcdng.unify.web.ui.widget.panel.AbstractFlyoutMenu;
@@ -56,7 +57,7 @@ public class FlyoutMenuWriter extends AbstractPanelWriter {
     private static final String ORIGINAL_MENU_PATHID = "ORIGINAL_MENU_PATHID";
 
     @Override
-    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
+    protected void doWriteBehavior(ResponseWriter writer, Widget widget, EventHandler[] handlers) throws UnifyException {
         FlyoutMenu flyoutMenu = (FlyoutMenu) widget;
         List<String> menuWinIdList = new ArrayList<String>();
         for (String id : flyoutMenu.getActiveMenuItemIds()) {

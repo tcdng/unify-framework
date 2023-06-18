@@ -21,6 +21,7 @@ import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.constant.FileAttachmentType;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
+import com.tcdng.unify.web.ui.widget.EventHandler;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.Widget;
 import com.tcdng.unify.web.ui.widget.control.FileUpload;
@@ -103,33 +104,34 @@ public class FileUploadWriter extends AbstractControlWriter {
     }
 
     @Override
-    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-        super.doWriteBehavior(writer, widget);
+	protected void doWriteBehavior(ResponseWriter writer, Widget widget, EventHandler[] handlers)
+			throws UnifyException {
+		super.doWriteBehavior(writer, widget, handlers);
 
-        FileUpload fileUpload = (FileUpload) widget;
-        if (!fileUpload.isHidden()) {
-            // Append rigging
-            writer.beginFunction("ux.rigFileUpload");
-            writer.writeParam("pId", fileUpload.getId());
-            writer.writeParam("pContId", fileUpload.getContainerId()); 
-            writer.writeParam("pBtnId", fileUpload.getButtonId());
-            writer.writeParam("pSpanId", fileUpload.getSpanId());
-            writer.writeParam("pUpBtnId", fileUpload.getUploadButtonId());
-            writer.writeParam("pDisabled", fileUpload.isContainerDisabled());
-            writer.writeParam("pSelect", fileUpload.isSelectOnly());
-            String uploadPath = fileUpload.getUploadURL();
-            if (uploadPath != null) {
-                writer.writeContextURLParam("pUploadURL", uploadPath);
-            }
+		FileUpload fileUpload = (FileUpload) widget;
+		if (!fileUpload.isHidden()) {
+			// Append rigging
+			writer.beginFunction("ux.rigFileUpload");
+			writer.writeParam("pId", fileUpload.getId());
+			writer.writeParam("pContId", fileUpload.getContainerId());
+			writer.writeParam("pBtnId", fileUpload.getButtonId());
+			writer.writeParam("pSpanId", fileUpload.getSpanId());
+			writer.writeParam("pUpBtnId", fileUpload.getUploadButtonId());
+			writer.writeParam("pDisabled", fileUpload.isContainerDisabled());
+			writer.writeParam("pSelect", fileUpload.isSelectOnly());
+			String uploadPath = fileUpload.getUploadURL();
+			if (uploadPath != null) {
+				writer.writeContextURLParam("pUploadURL", uploadPath);
+			}
 
-            int maxSize = fileUpload.getMaxSize();
-            if (maxSize > 0) {
-                writer.writeParam("pMaxSize", maxSize);
-                writer.writeParam("pMaxMsg", getSessionMessage("fileupload.maxsize", maxSize));
-            }
-            writer.writeParam("pRef", DataUtils.toArray(String.class, writer.getPostCommandRefs()));
-            writer.endFunction();
-        }
-    }
+			int maxSize = fileUpload.getMaxSize();
+			if (maxSize > 0) {
+				writer.writeParam("pMaxSize", maxSize);
+				writer.writeParam("pMaxMsg", getSessionMessage("fileupload.maxsize", maxSize));
+			}
+			writer.writeParam("pRef", DataUtils.toArray(String.class, writer.getPostCommandRefs()));
+			writer.endFunction();
+		}
+	}
 
 }

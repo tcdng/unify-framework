@@ -73,16 +73,22 @@ public abstract class AbstractWidgetWriter extends AbstractDhtmlWriter implement
     }
 
     @Override
-    public void writeBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-        doWriteBehavior(writer, widget);
+    public final void writeBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
+     	doWriteBehavior(writer, widget, widget.getEventHandlers());
     }
 
     @Override
+	public final void writeBehavior(ResponseWriter writer, Widget widget, EventHandler[] eventHandlers)
+			throws UnifyException {
+        doWriteBehavior(writer, widget, eventHandlers);
+	}
+
+	@Override
     public void writeBehavior(ResponseWriter writer, Widget widget, String id) throws UnifyException {
         String origId = widget.getId();
         try {
             widget.setId(id);
-            doWriteBehavior(writer, widget);
+        	doWriteBehavior(writer, widget, widget.getEventHandlers());
         } finally {
             widget.setId(origId);
         }
@@ -116,10 +122,6 @@ public abstract class AbstractWidgetWriter extends AbstractDhtmlWriter implement
 
     }
 
-    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-    	doWriteBehavior(writer, widget, widget.getEventHandlers());
-    }
-
     protected void doWriteBehavior(ResponseWriter writer, Widget widget, EventHandler[] eventHandlers) throws UnifyException {
         if (eventHandlers != null && !widget.isContainerDisabled()) {
             String id = widget.getId();
@@ -127,6 +129,7 @@ public abstract class AbstractWidgetWriter extends AbstractDhtmlWriter implement
                 id = widget.getFacadeId();
             }
 
+            System.out.println("@troop: id = " + id + ", name = " + widget.getLongName());
             getRequestContext().setQuickReference(widget.getValueStore());
             for (EventHandler eventHandler : eventHandlers) {
                 writer.writeBehavior(eventHandler, id, widget.getBinding());

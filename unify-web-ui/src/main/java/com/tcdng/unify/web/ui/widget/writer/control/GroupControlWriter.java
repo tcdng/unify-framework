@@ -21,6 +21,7 @@ import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.data.ValueStore;
 import com.tcdng.unify.web.ui.widget.AbstractMultiControl;
+import com.tcdng.unify.web.ui.widget.EventHandler;
 import com.tcdng.unify.web.ui.widget.PushType;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.Widget;
@@ -77,9 +78,9 @@ public class GroupControlWriter extends AbstractControlWriter {
     }
 
     @Override
-    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
+    protected void doWriteBehavior(ResponseWriter writer, Widget widget, EventHandler[] handlers) throws UnifyException {
         GroupControl groupControl = (GroupControl) widget;
-        super.doWriteBehavior(writer, groupControl);
+        super.doWriteBehavior(writer, groupControl, handlers);
         ValueStore valueStore = groupControl.getValueStore();
         for (AbstractMultiControl.ChildWidgetInfo childWidgetInfo : groupControl.getChildWidgetInfos()) {
             if (childWidgetInfo.isExternal()) {

@@ -17,6 +17,7 @@ package com.tcdng.unify.web.ui.widget.writer.control;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.web.constant.ExtensionType;
+import com.tcdng.unify.web.ui.widget.EventHandler;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.Widget;
 import com.tcdng.unify.web.ui.widget.control.AbstractPopupTextField;
@@ -30,9 +31,10 @@ import com.tcdng.unify.web.ui.widget.control.AbstractPopupTextField;
 public abstract class AbstractPopupTextFieldWriter extends TextFieldWriter {
 
 	@Override
-	protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
+	protected void doWriteBehavior(ResponseWriter writer, Widget widget, EventHandler[] handlers)
+			throws UnifyException {
 		AbstractPopupTextField popupTextField = (AbstractPopupTextField) widget;
-		super.doWriteBehavior(writer, popupTextField);
+		super.doWriteBehavior(writer, popupTextField, handlers);
 
 		ExtensionType extensionType = popupTextField.getExtensionType();
 		boolean popupEnabled = isPopupEnabled(popupTextField);

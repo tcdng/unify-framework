@@ -25,6 +25,7 @@ import com.tcdng.unify.web.ControllerPathParts;
 import com.tcdng.unify.web.data.WebStringWriter;
 import com.tcdng.unify.web.ui.PagePathInfoRepository;
 import com.tcdng.unify.web.ui.widget.DocumentLayout;
+import com.tcdng.unify.web.ui.widget.EventHandler;
 import com.tcdng.unify.web.ui.widget.Panel;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.Widget;
@@ -163,7 +164,7 @@ public class DocumentWriter extends AbstractPageWriter {
     }
 
     @Override
-	protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
+	protected void doWriteBehavior(ResponseWriter writer, Widget widget, EventHandler[] handlers) throws UnifyException {
 		BasicDocument document = (BasicDocument) widget;
 		writer.write("<script");
 		writeNonce(writer);
@@ -181,7 +182,7 @@ public class DocumentWriter extends AbstractPageWriter {
 		writer.writeBehavior(documentLayout, document);
 
 		// Write inherited behavior
-		super.doWriteBehavior(writer, document);
+		super.doWriteBehavior(writer, document, handlers);
 
 		// Write panel behaviors
 		writeBehaviour(writer, document.getHeaderPanel());

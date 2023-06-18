@@ -24,6 +24,7 @@ import com.tcdng.unify.web.ControllerPathParts;
 import com.tcdng.unify.web.ui.PageAttributeConstants;
 import com.tcdng.unify.web.ui.PageRequestContextUtil;
 import com.tcdng.unify.web.ui.widget.Container;
+import com.tcdng.unify.web.ui.widget.EventHandler;
 import com.tcdng.unify.web.ui.widget.Page;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.Widget;
@@ -44,7 +45,7 @@ public class ContentPanelWriter extends AbstractPanelWriter {
 	private static final String CPREMOTE_CATEGORYBASE = "cpcat";
 
 	@Override
-	protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
+	protected void doWriteBehavior(ResponseWriter writer, Widget widget, EventHandler[] handlers) throws UnifyException {
 		ContentPanelImpl contentPanel = (ContentPanelImpl) widget;
 
 		// Write content variables

@@ -20,6 +20,7 @@ import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.data.ValueStore;
 import com.tcdng.unify.web.ui.widget.AbstractMultiControl.ChildWidgetInfo;
+import com.tcdng.unify.web.ui.widget.EventHandler;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.Widget;
 import com.tcdng.unify.web.ui.widget.control.TitleBar;
@@ -35,49 +36,50 @@ import com.tcdng.unify.web.ui.widget.writer.AbstractControlWriter;
 @Component("titlebar-writer")
 public class TitleBarWriter extends AbstractControlWriter {
 
-    @Override
-    protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
-        TitleBar titleBar = (TitleBar) widget;
-        writer.write("<div");
-        writeTagAttributes(writer, titleBar);
-        writer.write(">");
-        writer.write("<div class=\"").write(getUserColorStyleClass("base")).write("\">");
-        writer.write("<div class=\"tblabel\">");
-        writeCaption(writer, titleBar);
-        writer.write("</div>");
-        writer.write("<div class=\"tbcontrols\">");
-        for (ChildWidgetInfo childWidgetInfo : titleBar.getChildWidgetInfos()) {
-            if (childWidgetInfo.isExternal() && childWidgetInfo.isPrivilegeVisible()) {
-                writer.writeStructureAndContent(childWidgetInfo.getWidget());
-            }
-        }
-        writer.write("</div>");
-        writer.write("<div style=\"clear:both;\"></div>");
-        writer.write("</div>");
-        writer.write("</div>");
-    }
+	@Override
+	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
+		TitleBar titleBar = (TitleBar) widget;
+		writer.write("<div");
+		writeTagAttributes(writer, titleBar);
+		writer.write(">");
+		writer.write("<div class=\"").write(getUserColorStyleClass("base")).write("\">");
+		writer.write("<div class=\"tblabel\">");
+		writeCaption(writer, titleBar);
+		writer.write("</div>");
+		writer.write("<div class=\"tbcontrols\">");
+		for (ChildWidgetInfo childWidgetInfo : titleBar.getChildWidgetInfos()) {
+			if (childWidgetInfo.isExternal() && childWidgetInfo.isPrivilegeVisible()) {
+				writer.writeStructureAndContent(childWidgetInfo.getWidget());
+			}
+		}
+		writer.write("</div>");
+		writer.write("<div style=\"clear:both;\"></div>");
+		writer.write("</div>");
+		writer.write("</div>");
+	}
 
-    @Override
-    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-        super.doWriteBehavior(writer, widget);
-        TitleBar titleBar = (TitleBar) widget;
-        if (titleBar.getUplAttribute(boolean.class, "draggable")) {
-            // Append drag and drop JS
-            writer.beginFunction("ux.rigDragAndDropPopup");
-            writer.writeParam("pId", titleBar.getId());
-            writer.endFunction();
-        }
+	@Override
+	protected void doWriteBehavior(ResponseWriter writer, Widget widget, EventHandler[] handlers)
+			throws UnifyException {
+		super.doWriteBehavior(writer, widget, handlers);
+		TitleBar titleBar = (TitleBar) widget;
+		if (titleBar.getUplAttribute(boolean.class, "draggable")) {
+			// Append drag and drop JS
+			writer.beginFunction("ux.rigDragAndDropPopup");
+			writer.writeParam("pId", titleBar.getId());
+			writer.endFunction();
+		}
 
-        // Append external controls behavior
-        ValueStore valueStore = titleBar.getValueStore();
-        for (ChildWidgetInfo childWidgetInfo : titleBar.getChildWidgetInfos()) {
-            if (childWidgetInfo.isExternal() && childWidgetInfo.isPrivilegeVisible()) {
-                Widget chWidget = childWidgetInfo.getWidget();
-                ValueStore origValueStore = chWidget.getValueStore();
-                chWidget.setValueStore(valueStore);
-                writer.writeBehavior(childWidgetInfo.getWidget());
-                chWidget.setValueStore(origValueStore);
-            }
-        }
-    }
+		// Append external controls behavior
+		ValueStore valueStore = titleBar.getValueStore();
+		for (ChildWidgetInfo childWidgetInfo : titleBar.getChildWidgetInfos()) {
+			if (childWidgetInfo.isExternal() && childWidgetInfo.isPrivilegeVisible()) {
+				Widget chWidget = childWidgetInfo.getWidget();
+				ValueStore origValueStore = chWidget.getValueStore();
+				chWidget.setValueStore(valueStore);
+				writer.writeBehavior(childWidgetInfo.getWidget());
+				chWidget.setValueStore(origValueStore);
+			}
+		}
+	}
 }

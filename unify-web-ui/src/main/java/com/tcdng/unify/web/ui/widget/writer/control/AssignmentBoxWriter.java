@@ -20,6 +20,7 @@ import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.web.ui.widget.Control;
+import com.tcdng.unify.web.ui.widget.EventHandler;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.Widget;
 import com.tcdng.unify.web.ui.widget.control.AssignmentBox;
@@ -83,50 +84,51 @@ public class AssignmentBoxWriter extends AbstractControlWriter {
     }
 
     @Override
-    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-        super.doWriteBehavior(writer, widget);
+	protected void doWriteBehavior(ResponseWriter writer, Widget widget, EventHandler[] handlers)
+			throws UnifyException {
+		super.doWriteBehavior(writer, widget, handlers);
 
-        AssignmentBox assignmentBox = (AssignmentBox) widget;
-        writer.writeBehavior(assignmentBox.getAssignSel());
-        writer.writeBehavior(assignmentBox.getUnassignSel());
+		AssignmentBox assignmentBox = (AssignmentBox) widget;
+		writer.writeBehavior(assignmentBox.getAssignSel());
+		writer.writeBehavior(assignmentBox.getUnassignSel());
 
-        Control filter1 = assignmentBox.getFilterSel1();
-        if (filter1 != null) {
-            writer.writeBehavior(filter1);
-        }
+		Control filter1 = assignmentBox.getFilterSel1();
+		if (filter1 != null) {
+			writer.writeBehavior(filter1);
+		}
 
-        Control filter2 = assignmentBox.getFilterSel2();
-        if (filter2 != null) {
-            writer.writeBehavior(filter2);
-        }
+		Control filter2 = assignmentBox.getFilterSel2();
+		if (filter2 != null) {
+			writer.writeBehavior(filter2);
+		}
 
-        // Append rigging 
-        writer.beginFunction("ux.rigAssignmentBox");
-        writer.writeParam("pId", assignmentBox.getId());
-        writer.writeCommandURLParam("pCmdURL");
-        writer.writeParam("pContId", assignmentBox.getContainerId());
-        if (assignmentBox.getFilterSel1() != null) {
-            writer.writeParam("pFilterSel1Id", assignmentBox.getFilterSel1().getId());
-        }
-        
-        if (assignmentBox.getFilterSel2() != null) {
-            writer.writeParam("pFilterSel2Id", assignmentBox.getFilterSel2().getId());
-        }
+		// Append rigging
+		writer.beginFunction("ux.rigAssignmentBox");
+		writer.writeParam("pId", assignmentBox.getId());
+		writer.writeCommandURLParam("pCmdURL");
+		writer.writeParam("pContId", assignmentBox.getContainerId());
+		if (assignmentBox.getFilterSel1() != null) {
+			writer.writeParam("pFilterSel1Id", assignmentBox.getFilterSel1().getId());
+		}
 
-        writer.writeParam("pAssnSelId", assignmentBox.getAssignSel().getId());
-        writer.writeParam("pAssnOnly", assignmentBox.isShowAssignedOnly());
-        if (!assignmentBox.isShowAssignedOnly()) {
-            writer.writeParam("pAssnAll", assignmentBox.isAllowAssignAll());
-            writer.writeParam("pUnassnSelId", assignmentBox.getUnassignSel().getId());
-            writer.writeParam("pAssnBtnId", assignmentBox.getAssignBtn().getId());
-            writer.writeParam("pAssnAllBtnId", assignmentBox.getAssignAllBtn().getId());
-            writer.writeParam("pUnassnBtnId", assignmentBox.getUnassignBtn().getId());
-            writer.writeParam("pUnassnAllBtnId", assignmentBox.getUnassignAllBtn().getId());
-        }
-        writer.writeParam("pEditable", assignmentBox.isContainerEditable());
-        writer.writeParam("pRef", DataUtils.toArray(String.class, writer.getPostCommandRefs()));
-        writer.endFunction();
-    }
+		if (assignmentBox.getFilterSel2() != null) {
+			writer.writeParam("pFilterSel2Id", assignmentBox.getFilterSel2().getId());
+		}
+
+		writer.writeParam("pAssnSelId", assignmentBox.getAssignSel().getId());
+		writer.writeParam("pAssnOnly", assignmentBox.isShowAssignedOnly());
+		if (!assignmentBox.isShowAssignedOnly()) {
+			writer.writeParam("pAssnAll", assignmentBox.isAllowAssignAll());
+			writer.writeParam("pUnassnSelId", assignmentBox.getUnassignSel().getId());
+			writer.writeParam("pAssnBtnId", assignmentBox.getAssignBtn().getId());
+			writer.writeParam("pAssnAllBtnId", assignmentBox.getAssignAllBtn().getId());
+			writer.writeParam("pUnassnBtnId", assignmentBox.getUnassignBtn().getId());
+			writer.writeParam("pUnassnAllBtnId", assignmentBox.getUnassignAllBtn().getId());
+		}
+		writer.writeParam("pEditable", assignmentBox.isContainerEditable());
+		writer.writeParam("pRef", DataUtils.toArray(String.class, writer.getPostCommandRefs()));
+		writer.endFunction();
+	}
 
     private void writeFilter(ResponseWriter writer, Control filter, String caption)
             throws UnifyException {

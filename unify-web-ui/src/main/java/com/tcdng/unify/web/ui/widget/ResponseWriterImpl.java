@@ -164,14 +164,20 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 	}
 
 	@Override
-	public ResponseWriter writeBehavior(Widget component) throws UnifyException {
-		((WidgetWriter) getWriter(component)).writeBehavior(this, component);
+	public ResponseWriter writeBehavior(Widget widget) throws UnifyException {
+		((WidgetWriter) getWriter(widget)).writeBehavior(this, widget);
 		return this;
 	}
 
 	@Override
-	public ResponseWriter writeBehavior(Widget component, String id) throws UnifyException {
-		((WidgetWriter) getWriter(component)).writeBehavior(this, component, id);
+	public ResponseWriter writeBehavior(Widget widget, EventHandler[] eventHandlers) throws UnifyException {
+		((WidgetWriter) getWriter(widget)).writeBehavior(this, widget, eventHandlers);
+		return this;
+	}
+
+	@Override
+	public ResponseWriter writeBehavior(Widget widget, String id) throws UnifyException {
+		((WidgetWriter) getWriter(widget)).writeBehavior(this, widget, id);
 		return this;
 	}
 

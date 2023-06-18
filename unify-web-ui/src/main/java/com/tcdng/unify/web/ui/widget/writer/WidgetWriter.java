@@ -17,6 +17,7 @@ package com.tcdng.unify.web.ui.widget.writer;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.upl.UplComponentWriter;
+import com.tcdng.unify.web.ui.widget.EventHandler;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.Widget;
 
@@ -79,6 +80,16 @@ public interface WidgetWriter extends UplComponentWriter {
      *             if an error occurs
      */
     void writeBehavior(ResponseWriter writer, Widget widget) throws UnifyException;
+
+	/**
+	 * Writes widget behavior to response writer with event handlers.
+	 * 
+	 * @param writer        the response writer
+	 * @param widget        the user interface widget to write
+	 * @param eventHandlers event handlers
+	 * @throws UnifyException if an error occurs
+	 */
+	void writeBehavior(ResponseWriter writer, Widget widget, EventHandler[] eventHandlers) throws UnifyException;
 
     /**
      * Writes widget behavior to response writer.

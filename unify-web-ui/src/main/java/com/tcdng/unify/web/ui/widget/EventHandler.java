@@ -15,6 +15,8 @@
  */
 package com.tcdng.unify.web.ui.widget;
 
+import com.tcdng.unify.core.UnifyException;
+
 /**
  * User interface event handler component.
  * 
@@ -23,6 +25,13 @@ package com.tcdng.unify.web.ui.widget;
  */
 public interface EventHandler extends Behavior {
 
+	/**
+	 * Gets event.
+	 * 
+	 * @throws UnifyException if an error occurs
+	 */
+	String getEvent() throws UnifyException;
+	
     /**
      * Sets page action components for this event handler.
      * 

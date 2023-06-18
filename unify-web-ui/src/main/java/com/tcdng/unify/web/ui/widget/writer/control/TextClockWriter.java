@@ -18,6 +18,7 @@ package com.tcdng.unify.web.ui.widget.writer.control;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
+import com.tcdng.unify.web.ui.widget.EventHandler;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.Widget;
 import com.tcdng.unify.web.ui.widget.control.TextClock;
@@ -66,16 +67,17 @@ public class TextClockWriter extends AbstractControlWriter {
     }
 
     @Override
-    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-        super.doWriteBehavior(writer, widget);
+	protected void doWriteBehavior(ResponseWriter writer, Widget widget, EventHandler[] handlers)
+			throws UnifyException {
+		super.doWriteBehavior(writer, widget, handlers);
 
-        // Append rigging
-        TextClock textClock = (TextClock) widget;
-        writer.beginFunction("ux.rigTextClock");
-        writer.writeParam("pId", textClock.getId());
-        writer.writeParam("pDateId", textClock.getDateId());
-        writer.writeParam("pTimeId", textClock.getTimeId());
-        writer.endFunction();
-    }
+		// Append rigging
+		TextClock textClock = (TextClock) widget;
+		writer.beginFunction("ux.rigTextClock");
+		writer.writeParam("pId", textClock.getId());
+		writer.writeParam("pDateId", textClock.getDateId());
+		writer.writeParam("pTimeId", textClock.getTimeId());
+		writer.endFunction();
+	}
 
 }

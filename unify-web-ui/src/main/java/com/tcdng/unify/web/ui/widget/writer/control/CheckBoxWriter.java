@@ -18,6 +18,7 @@ package com.tcdng.unify.web.ui.widget.writer.control;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
+import com.tcdng.unify.web.ui.widget.EventHandler;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.Widget;
 import com.tcdng.unify.web.ui.widget.control.CheckBox;
@@ -33,54 +34,55 @@ import com.tcdng.unify.web.ui.widget.writer.AbstractControlWriter;
 @Component("checkbox-writer")
 public class CheckBoxWriter extends AbstractControlWriter {
 
-    @Override
-    protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
-        CheckBox checkBox = (CheckBox) widget;
-        boolean checked = checkBox.getValue(boolean.class);
-        writer.write("<span ");
-        writeTagId(writer, checkBox.getFacadeId());
-        if (checked) {
-            if (checkBox.isContainerDisabled()) {
-                writeTagVisualAttributesWithTrailingExtraStyleClass(writer, checkBox, "g_cbc");
-            } else {
-                writeTagVisualAttributesWithTrailingExtraStyleClass(writer, checkBox, "g_cba");
-            }
-        } else {
-            if (checkBox.isContainerDisabled()) {
-                writeTagVisualAttributesWithTrailingExtraStyleClass(writer, checkBox, "g_cbd");
-            } else {
-                writeTagVisualAttributesWithTrailingExtraStyleClass(writer, checkBox, "g_cbb");
-            }
-        }
-        
-        if (checkBox.getTabIndex() >= 0) {
-            writer.write(" tabindex=\"").write(checkBox.getTabIndex()).write("\"");
-        }
-        writer.write("/>");
-        writer.write("<input type=\"checkbox\"");
-        writeTagId(writer, checkBox);
-        writeTagName(writer, checkBox);
-        if (checked) {
-            writer.write(" checked=\"checked\"");
-        }
-        writer.write("/>");
-        writer.write("</span>");
+	@Override
+	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
+		CheckBox checkBox = (CheckBox) widget;
+		boolean checked = checkBox.getValue(boolean.class);
+		writer.write("<span ");
+		writeTagId(writer, checkBox.getFacadeId());
+		if (checked) {
+			if (checkBox.isContainerDisabled()) {
+				writeTagVisualAttributesWithTrailingExtraStyleClass(writer, checkBox, "g_cbc");
+			} else {
+				writeTagVisualAttributesWithTrailingExtraStyleClass(writer, checkBox, "g_cba");
+			}
+		} else {
+			if (checkBox.isContainerDisabled()) {
+				writeTagVisualAttributesWithTrailingExtraStyleClass(writer, checkBox, "g_cbd");
+			} else {
+				writeTagVisualAttributesWithTrailingExtraStyleClass(writer, checkBox, "g_cbb");
+			}
+		}
 
-        if (!checkBox.isLayoutCaption()) {
-            writer.write("<span class=\"ui-inlabel\">");
-            writeCaption(writer, checkBox);
-            writer.write("</span>");
-        }
-    }
+		if (checkBox.getTabIndex() >= 0) {
+			writer.write(" tabindex=\"").write(checkBox.getTabIndex()).write("\"");
+		}
+		writer.write("/>");
+		writer.write("<input type=\"checkbox\"");
+		writeTagId(writer, checkBox);
+		writeTagName(writer, checkBox);
+		if (checked) {
+			writer.write(" checked=\"checked\"");
+		}
+		writer.write("/>");
+		writer.write("</span>");
 
-    @Override
-    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-        super.doWriteBehavior(writer, widget);
-        CheckBox checkBox = (CheckBox) widget;
-        writer.beginFunction("ux.rigCheckbox");
-        writer.writeParam("pId", checkBox.getId());
-        writer.writeParam("pActive", checkBox.isActive());
-        writer.endFunction();
-    }
+		if (!checkBox.isLayoutCaption()) {
+			writer.write("<span class=\"ui-inlabel\">");
+			writeCaption(writer, checkBox);
+			writer.write("</span>");
+		}
+	}
+
+	@Override
+	protected void doWriteBehavior(ResponseWriter writer, Widget widget, EventHandler[] handlers)
+			throws UnifyException {
+		super.doWriteBehavior(writer, widget, handlers);
+		CheckBox checkBox = (CheckBox) widget;
+		writer.beginFunction("ux.rigCheckbox");
+		writer.writeParam("pId", checkBox.getId());
+		writer.writeParam("pActive", checkBox.isActive());
+		writer.endFunction();
+	}
 
 }

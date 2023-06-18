@@ -21,6 +21,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.data.Listable;
+import com.tcdng.unify.web.ui.widget.EventHandler;
 import com.tcdng.unify.web.ui.widget.PushType;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.Widget;
@@ -73,14 +74,15 @@ public class CheckListWriter extends AbstractControlWriter {
     }
 
     @Override
-    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-        super.doWriteBehavior(writer, widget);
-        CheckList checkList = (CheckList) widget;
-        writer.beginFunction("ux.rigChecklist");
-        writer.writeParam("pId", checkList.getId());
-        writer.writeParam("pNm", checkList.getGroupId());
-        writer.writeParam("pVal", checkList.getValue(String[].class));
-        writer.writeParam("pActive", checkList.isActive());
-        writer.endFunction();
-    }
+	protected void doWriteBehavior(ResponseWriter writer, Widget widget, EventHandler[] handlers)
+			throws UnifyException {
+		super.doWriteBehavior(writer, widget, handlers);
+		CheckList checkList = (CheckList) widget;
+		writer.beginFunction("ux.rigChecklist");
+		writer.writeParam("pId", checkList.getId());
+		writer.writeParam("pNm", checkList.getGroupId());
+		writer.writeParam("pVal", checkList.getValue(String[].class));
+		writer.writeParam("pActive", checkList.isActive());
+		writer.endFunction();
+	}
 }

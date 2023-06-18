@@ -15,6 +15,7 @@
  */
 package com.tcdng.unify.web.ui.widget;
 
+import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.upl.UplElementReferences;
@@ -32,6 +33,11 @@ public abstract class AbstractEventHandler extends AbstractBehavior implements E
     private PageAction[] pageAction;
 
     @Override
+	public String getEvent() throws UnifyException {
+		return getUplAttribute(String.class, "event");
+	}
+
+	@Override
     public void setPageAction(PageAction[] pageAction) {
         this.pageAction = pageAction;
     }
