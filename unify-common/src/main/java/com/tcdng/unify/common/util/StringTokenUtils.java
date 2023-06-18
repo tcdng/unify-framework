@@ -15,6 +15,9 @@
  */
 package com.tcdng.unify.common.util;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -29,25 +32,51 @@ import java.util.List;
 public final class StringTokenUtils {
 
 	private StringTokenUtils() {
-		
+
 	}
 
-    public static String buildParameterizedString(List<StringToken> tokens) {
-    	if (!tokens.isEmpty()) {
-    		StringBuilder sb = new StringBuilder();
-    		for (StringToken token: tokens) {
-    			if (token.isParam()) {
-    				sb.append("{{").append(token.getToken()).append("}}");
-    			} else {
-    				sb.append(token.getToken());
-    			}
-    		}
-    		return sb.toString();
-    	}
-    	
-    	return null;
-    }
-    
+	public static String buildParameterizedString(List<StringToken> tokens) {
+		if (!tokens.isEmpty()) {
+			StringBuilder sb = new StringBuilder();
+			for (StringToken token : tokens) {
+				if (token.isParam()) {
+					sb.append("{{").append(token.getToken()).append("}}");
+				} else {
+					sb.append(token.getToken());
+				}
+			}
+			return sb.toString();
+		}
+
+		return null;
+	}
+
+	public static List<List<StringToken>> breakdownParameterizedString(final String text, final int linesPerPage) {
+		if (text != null) {
+			try {
+				List<List<StringToken>> tokenList = new ArrayList<List<StringToken>>();
+				BufferedReader bufferedReader = new BufferedReader(new StringReader(text));
+				String line = null;
+				StringBuilder sb = new StringBuilder();
+				int lineCount = 0;
+				while ((line = bufferedReader.readLine()) != null) {
+					sb.append(line).append('\n');
+					if (++lineCount >= linesPerPage) {
+						tokenList.add(StringTokenUtils.breakdownParameterizedString(sb.toString()));
+						sb.setLength(0);
+						lineCount = 0;
+					}
+				}
+
+				tokenList.add(StringTokenUtils.breakdownParameterizedString(sb.toString()));
+				return Collections.unmodifiableList(tokenList);
+			} catch (IOException e) {
+			}
+		}
+
+		return Collections.emptyList();
+	}
+
 	public static List<StringToken> breakdownParameterizedString(String string) {
 		if (string == null) {
 			return Collections.emptyList();
@@ -87,7 +116,7 @@ public final class StringTokenUtils {
 		return Collections.unmodifiableList(tokenList);
 	}
 
-	private static List<StringToken> breakdownTextString(String text) {		
+	private static List<StringToken> breakdownTextString(String text) {
 		List<StringToken> resultList = new ArrayList<StringToken>();
 		String[] parts = text.split("\n", -1);
 		int lim = parts.length - 1;
