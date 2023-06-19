@@ -21,6 +21,7 @@ import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ui.widget.Control;
+import com.tcdng.unify.web.ui.widget.EventHandler;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.Widget;
 import com.tcdng.unify.web.ui.widget.control.FileUpload;
@@ -37,80 +38,81 @@ import com.tcdng.unify.web.ui.widget.writer.AbstractControlWriter;
 @Component("fileuploadview-writer")
 public class FileUploadViewWriter extends AbstractControlWriter {
 
-    @Override
-    protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
-        FileUploadView fileUploadView = (FileUploadView) widget;
-        writer.write("<div");
-        writeTagAttributes(writer, fileUploadView);
-        writer.write("><div style=\"display:table;border-collapse:collapse;width:100%;\">");
-        boolean isContainerDisabled = fileUploadView.isContainerDisabled();
-        boolean isContainerEditable = fileUploadView.isContainerEditable();
-        FileUpload fileCtrl = fileUploadView.getFileCtrl();
-        Control attachCtrl = fileUploadView.getAttachCtrl();
-        Control viewCtrl = fileUploadView.getViewCtrl();
-        Control removeCtrl = fileUploadView.getRemoveCtrl();
-        Object uploadId = fileUploadView.getUploadId();
-        writer.write("<div style=\"display:table;width:100%;\">");
-        writer.write("<div style=\"display:table-row;\">");
-        writer.write("<div style=\"display:table-cell;\">");
-        
-        // Attachment file name
-        final String attachmentFileName = fileUploadView.getAttachmentFileName();
-        if (!StringUtils.isBlank(attachmentFileName)) {
-            writer.write("<div class=\"falabel\"><span>");
-            writer.writeWithHtmlEscape(attachmentFileName);
-            writer.write("</span></div>");
-        }
-        
-        // Action buttons
-        writer.write("<div class=\"faaction\">");
-        writer.writeStructureAndContent(fileCtrl);
+	@Override
+	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
+		FileUploadView fileUploadView = (FileUploadView) widget;
+		writer.write("<div");
+		writeTagAttributes(writer, fileUploadView);
+		writer.write("><div style=\"display:table;border-collapse:collapse;width:100%;\">");
+		boolean isContainerDisabled = fileUploadView.isContainerDisabled();
+		boolean isContainerEditable = fileUploadView.isContainerEditable();
+		FileUpload fileCtrl = fileUploadView.getFileCtrl();
+		Control attachCtrl = fileUploadView.getAttachCtrl();
+		Control viewCtrl = fileUploadView.getViewCtrl();
+		Control removeCtrl = fileUploadView.getRemoveCtrl();
+		Object uploadId = fileUploadView.getUploadId();
+		writer.write("<div style=\"display:table;width:100%;\">");
+		writer.write("<div style=\"display:table-row;\">");
+		writer.write("<div style=\"display:table-cell;\">");
 
-        attachCtrl.setDisabled(isContainerDisabled);
-        attachCtrl.setEditable(isContainerEditable);
-        writer.writeStructureAndContent(attachCtrl);
+		// Attachment file name
+		final String attachmentFileName = fileUploadView.getAttachmentFileName();
+		if (!StringUtils.isBlank(attachmentFileName)) {
+			writer.write("<div class=\"falabel\"><span>");
+			writer.writeWithHtmlEscape(attachmentFileName);
+			writer.write("</span></div>");
+		}
 
-        if (uploadId == null) {
-            viewCtrl.setDisabled(true);
-            viewCtrl.setEditable(false);
-            removeCtrl.setDisabled(true);
-            removeCtrl.setEditable(false);
-        } else {
-            viewCtrl.setDisabled(isContainerDisabled);
-            viewCtrl.setEditable(isContainerEditable);
-            removeCtrl.setDisabled(isContainerDisabled);
-            removeCtrl.setEditable(isContainerEditable);
-        }
+		// Action buttons
+		writer.write("<div class=\"faaction\">");
+		writer.writeStructureAndContent(fileCtrl);
 
-        writer.writeStructureAndContent(viewCtrl);
-        writer.writeStructureAndContent(removeCtrl);
-        writer.write("</div>");
-        
-        writer.write("</div></div></div>");
-        writer.write("</div></div>");
-    }
+		attachCtrl.setDisabled(isContainerDisabled);
+		attachCtrl.setEditable(isContainerEditable);
+		writer.writeStructureAndContent(attachCtrl);
 
-    @Override
-    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-        super.doWriteBehavior(writer, widget);
+		if (uploadId == null) {
+			viewCtrl.setDisabled(true);
+			viewCtrl.setEditable(false);
+			removeCtrl.setDisabled(true);
+			removeCtrl.setEditable(false);
+		} else {
+			viewCtrl.setDisabled(isContainerDisabled);
+			viewCtrl.setEditable(isContainerEditable);
+			removeCtrl.setDisabled(isContainerDisabled);
+			removeCtrl.setEditable(isContainerEditable);
+		}
 
-        // Append rigging
-        FileUploadView fileAttachment = (FileUploadView) widget;
-        writer.beginFunction("ux.rigFileUploadView");
-        writer.writeParam("pId", fileAttachment.getId());
-        writer.writeCommandURLParam("pCmdURL");
-        String viewPath = fileAttachment.getViewPath();
-        if (viewPath != null) {
-            writer.writeContextURLParam("pViewURL", viewPath);
-        }
+		writer.writeStructureAndContent(viewCtrl);
+		writer.writeStructureAndContent(removeCtrl);
+		writer.write("</div>");
 
-        writer.writeParam("pContId", fileAttachment.getContainerId()); 
-        writer.writeParam("pFileId", fileAttachment.getFileCtrl().getBaseId());
-        writer.writeParam("pAttchId", fileAttachment.getAttachCtrl().getBaseId());
-        writer.writeParam("pViewId", fileAttachment.getViewCtrl().getBaseId());
-        writer.writeParam("pRemId", fileAttachment.getRemoveCtrl().getBaseId());
-        writer.writeParam("pEditable", fileAttachment.isContainerEditable());
-        writer.writeParam("pRef", DataUtils.toArray(String.class, writer.getPostCommandRefs()));
-        writer.endFunction();
-    }
+		writer.write("</div></div></div>");
+		writer.write("</div></div>");
+	}
+
+	@Override
+	protected void doWriteBehavior(ResponseWriter writer, Widget widget, EventHandler[] handlers)
+			throws UnifyException {
+		super.doWriteBehavior(writer, widget, handlers);
+
+		// Append rigging
+		FileUploadView fileAttachment = (FileUploadView) widget;
+		writer.beginFunction("ux.rigFileUploadView");
+		writer.writeParam("pId", fileAttachment.getId());
+		writer.writeCommandURLParam("pCmdURL");
+		String viewPath = fileAttachment.getViewPath();
+		if (viewPath != null) {
+			writer.writeContextURLParam("pViewURL", viewPath);
+		}
+
+		writer.writeParam("pContId", fileAttachment.getContainerId());
+		writer.writeParam("pFileId", fileAttachment.getFileCtrl().getBaseId());
+		writer.writeParam("pAttchId", fileAttachment.getAttachCtrl().getBaseId());
+		writer.writeParam("pViewId", fileAttachment.getViewCtrl().getBaseId());
+		writer.writeParam("pRemId", fileAttachment.getRemoveCtrl().getBaseId());
+		writer.writeParam("pEditable", fileAttachment.isContainerEditable());
+		writer.writeParam("pRef", DataUtils.toArray(String.class, writer.getPostCommandRefs()));
+		writer.endFunction();
+	}
 }

@@ -17,6 +17,7 @@ package com.tcdng.unify.web.ui.widget.writer;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.web.ui.widget.Container;
+import com.tcdng.unify.web.ui.widget.EventHandler;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.Widget;
 import com.tcdng.unify.web.ui.widget.panel.SwitchPanel;
@@ -29,22 +30,23 @@ import com.tcdng.unify.web.ui.widget.panel.SwitchPanel;
  */
 public abstract class AbstractSwitchPanelWriter extends AbstractPanelWriter {
 
-    @Override
-    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-        SwitchPanel switchPanel = (SwitchPanel) widget;
-        Widget currentComponent = switchPanel.getCurrentWidget();
-        if (currentComponent != null && currentComponent.isVisible()) {
-            writer.writeBehavior(currentComponent);
-        }
-    }
+	@Override
+	protected void doWriteBehavior(ResponseWriter writer, Widget widget, EventHandler[] handlers)
+			throws UnifyException {
+		SwitchPanel switchPanel = (SwitchPanel) widget;
+		Widget currentComponent = switchPanel.getCurrentWidget();
+		if (currentComponent != null && currentComponent.isVisible()) {
+			writer.writeBehavior(currentComponent, handlers);
+		}
+	}
 
-    @Override
-    protected void writeLayoutContent(ResponseWriter writer, Container container) throws UnifyException {
-        SwitchPanel switchPanel = (SwitchPanel) container;
-        Widget currentComponent = switchPanel.getCurrentWidget();
-        if (currentComponent != null && currentComponent.isVisible()) {
-            writer.writeStructureAndContent(currentComponent);
-        }
-    }
+	@Override
+	protected void writeLayoutContent(ResponseWriter writer, Container container) throws UnifyException {
+		SwitchPanel switchPanel = (SwitchPanel) container;
+		Widget currentComponent = switchPanel.getCurrentWidget();
+		if (currentComponent != null && currentComponent.isVisible()) {
+			writer.writeStructureAndContent(currentComponent);
+		}
+	}
 
 }

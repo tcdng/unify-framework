@@ -20,6 +20,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.web.ui.widget.Control;
+import com.tcdng.unify.web.ui.widget.EventHandler;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.Widget;
 import com.tcdng.unify.web.ui.widget.control.DurationSelect;
@@ -64,37 +65,38 @@ public class DurationSelectWriter extends AbstractControlWriter {
     }
 
     @Override
-    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-        super.doWriteBehavior(writer, widget);
+	protected void doWriteBehavior(ResponseWriter writer, Widget widget, EventHandler[] handlers)
+			throws UnifyException {
+		super.doWriteBehavior(writer, widget, handlers);
 
-        DurationSelect durationSelect = (DurationSelect) widget;
-        if (durationSelect.isShowDays()) {
-            writer.writeBehavior(durationSelect.getDaySelCtrl());
-        }
+		DurationSelect durationSelect = (DurationSelect) widget;
+		if (durationSelect.isShowDays()) {
+			writer.writeBehavior(durationSelect.getDaySelCtrl());
+		}
 
-        if (durationSelect.isShowHours()) {
-            writer.writeBehavior(durationSelect.getHourSelCtrl());
-        }
+		if (durationSelect.isShowHours()) {
+			writer.writeBehavior(durationSelect.getHourSelCtrl());
+		}
 
-        writer.writeBehavior(durationSelect.getMinuteSelCtrl());
+		writer.writeBehavior(durationSelect.getMinuteSelCtrl());
 
-        writer.beginFunction("ux.rigDurationSelect");
-        writer.writeParam("pId", durationSelect.getId());
-        if (durationSelect.isShowDays()) {
-            writer.writeParam("pDaySelId", durationSelect.getDaySelCtrl().getId());
-        }
+		writer.beginFunction("ux.rigDurationSelect");
+		writer.writeParam("pId", durationSelect.getId());
+		if (durationSelect.isShowDays()) {
+			writer.writeParam("pDaySelId", durationSelect.getDaySelCtrl().getId());
+		}
 
-        if (durationSelect.isShowHours()) {
-            writer.writeParam("pHourSelId", durationSelect.getHourSelCtrl().getId());
-        }
+		if (durationSelect.isShowHours()) {
+			writer.writeParam("pHourSelId", durationSelect.getHourSelCtrl().getId());
+		}
 
-        int duration = durationSelect.getValue(int.class);
-        duration = duration - (duration % durationSelect.getMinuteJump());
+		int duration = durationSelect.getValue(int.class);
+		duration = duration - (duration % durationSelect.getMinuteJump());
 
-        writer.writeParam("pMinSelId", durationSelect.getMinuteSelCtrl().getId());
-        writer.writeParam("pVal", duration);
-        writer.endFunction();
-    }
+		writer.writeParam("pMinSelId", durationSelect.getMinuteSelCtrl().getId());
+		writer.writeParam("pVal", duration);
+		writer.endFunction();
+	}
 
     private void writeFilter(ResponseWriter writer, Control select, String caption) throws UnifyException {
         if (select != null) {

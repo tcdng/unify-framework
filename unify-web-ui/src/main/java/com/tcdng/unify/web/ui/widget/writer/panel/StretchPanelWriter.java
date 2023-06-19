@@ -18,6 +18,7 @@ package com.tcdng.unify.web.ui.widget.writer.panel;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
+import com.tcdng.unify.web.ui.widget.EventHandler;
 import com.tcdng.unify.web.ui.widget.Panel;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.Widget;
@@ -56,15 +57,16 @@ public class StretchPanelWriter extends AbstractPanelWriter {
     }
 
     @Override
-    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-        super.doWriteBehavior(writer, widget);
-        StretchPanel panel = (StretchPanel) widget;
+	protected void doWriteBehavior(ResponseWriter writer, Widget widget, EventHandler[] handlers)
+			throws UnifyException {
+		super.doWriteBehavior(writer, widget, handlers);
+		StretchPanel panel = (StretchPanel) widget;
 
-        // Append switch panel rigging
-        writer.beginFunction("ux.rigStretchPanel");
-        writer.writeParam("pId", panel.getId());
-        writer.writeParam("pContId", panel.getContentPageName());
-        writer.endFunction();
-    }
+		// Append switch panel rigging
+		writer.beginFunction("ux.rigStretchPanel");
+		writer.writeParam("pId", panel.getId());
+		writer.writeParam("pContId", panel.getContentPageName());
+		writer.endFunction();
+	}
 
 }

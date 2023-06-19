@@ -21,6 +21,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.data.Listable;
+import com.tcdng.unify.web.ui.widget.EventHandler;
 import com.tcdng.unify.web.ui.widget.PushType;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.Widget;
@@ -37,81 +38,82 @@ import com.tcdng.unify.web.ui.widget.writer.AbstractControlWriter;
 @Component("radiobuttons-writer")
 public class RadioButtonsWriter extends AbstractControlWriter {
 
-    @Override
-    protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
-        RadioButtons radioButtons = (RadioButtons) widget;
-        writeHiddenPush(writer, radioButtons, PushType.RADIO);
+	@Override
+	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
+		RadioButtons radioButtons = (RadioButtons) widget;
+		writeHiddenPush(writer, radioButtons, PushType.RADIO);
 
-        List<? extends Listable> listableList = radioButtons.getListables();
-        final boolean disabled = radioButtons.isContainerDisabled();
-        final int columns = radioButtons.getColumns();
-        if (columns > 0) {
-            writer.write("<div style=\"display:table;\">");
+		List<? extends Listable> listableList = radioButtons.getListables();
+		final boolean disabled = radioButtons.isContainerDisabled();
+		final int columns = radioButtons.getColumns();
+		if (columns > 0) {
+			writer.write("<div style=\"display:table;\">");
 
-        	final int len = listableList.size();
-        	final int rows = len / columns + (len % columns > 0 ? 1: 0);
-        	int i = 0;
-        	for (int j = 0; j < rows; j++) {
-                writer.write("<div style=\"display:table-row;\">");
-        		int k = 0;
-        		for(; k < columns && i < len; k++, i++) {
-                    writer.write("<div style=\"display:table-cell;\">");
-                    writer.write("<input type=\"radio\"");
-                    writeTagName(writer, radioButtons);
-                    writeTagStyleClass(writer, radioButtons);
-                    writeTagStyle(writer, radioButtons);
-                    Listable listable = listableList.get(i);
-                    writer.write(" value=\"").write(listable.getListKey()).write("\"");
-                    if (disabled) {
-                        writer.write(" disabled ");
-                    }
-                    writer.write("/>");
-                    writer.writeWithHtmlEscape(listable.getListDescription());
-                    writer.write("</div>");        			
-        		}
-        		
-           		while(k < columns) {
-           			writer.write("<div style=\"display:table-cell;\"></div>");        			
-           			k++;
-           		}
-        		
-                writer.write("</div>");
-        	}
-        	
-            writer.write("</div>");
-        } else {
-            final boolean isNotFlow = !radioButtons.getUplAttribute(boolean.class, "flow");
-            int breaks = listableList.size();
-            for (Listable listable : listableList) {
-                writer.write("<input type=\"radio\"");
-                writeTagName(writer, radioButtons);
-                writeTagStyleClass(writer, radioButtons);
-                writeTagStyle(writer, radioButtons);
-                writer.write(" value=\"").write(listable.getListKey()).write("\"");
-                if (disabled) {
-                    writer.write(" disabled ");
-                }
-                writer.write("/>");
-                writer.writeWithHtmlEscape(listable.getListDescription());
+			final int len = listableList.size();
+			final int rows = len / columns + (len % columns > 0 ? 1 : 0);
+			int i = 0;
+			for (int j = 0; j < rows; j++) {
+				writer.write("<div style=\"display:table-row;\">");
+				int k = 0;
+				for (; k < columns && i < len; k++, i++) {
+					writer.write("<div style=\"display:table-cell;\">");
+					writer.write("<input type=\"radio\"");
+					writeTagName(writer, radioButtons);
+					writeTagStyleClass(writer, radioButtons);
+					writeTagStyle(writer, radioButtons);
+					Listable listable = listableList.get(i);
+					writer.write(" value=\"").write(listable.getListKey()).write("\"");
+					if (disabled) {
+						writer.write(" disabled ");
+					}
+					writer.write("/>");
+					writer.writeWithHtmlEscape(listable.getListDescription());
+					writer.write("</div>");
+				}
 
-                if (isNotFlow) {
-                    if ((--breaks) > 0) {
-                        writer.write("<br />");
-                    }
-                }
-            }
-        }
-    }
+				while (k < columns) {
+					writer.write("<div style=\"display:table-cell;\"></div>");
+					k++;
+				}
 
-    @Override
-    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-        super.doWriteBehavior(writer, widget);
-        RadioButtons radioButtons = (RadioButtons) widget;
-        writer.beginFunction("ux.rigRadioButtons");
-        writer.writeParam("pId", radioButtons.getId());
-        writer.writeParam("pNm", radioButtons.getGroupId());
-        writer.writeParam("pVal", radioButtons.getValue(String.class));
-        writer.endFunction();
-    }
+				writer.write("</div>");
+			}
+
+			writer.write("</div>");
+		} else {
+			final boolean isNotFlow = !radioButtons.getUplAttribute(boolean.class, "flow");
+			int breaks = listableList.size();
+			for (Listable listable : listableList) {
+				writer.write("<input type=\"radio\"");
+				writeTagName(writer, radioButtons);
+				writeTagStyleClass(writer, radioButtons);
+				writeTagStyle(writer, radioButtons);
+				writer.write(" value=\"").write(listable.getListKey()).write("\"");
+				if (disabled) {
+					writer.write(" disabled ");
+				}
+				writer.write("/>");
+				writer.writeWithHtmlEscape(listable.getListDescription());
+
+				if (isNotFlow) {
+					if ((--breaks) > 0) {
+						writer.write("<br />");
+					}
+				}
+			}
+		}
+	}
+
+	@Override
+	protected void doWriteBehavior(ResponseWriter writer, Widget widget, EventHandler[] handlers)
+			throws UnifyException {
+		super.doWriteBehavior(writer, widget, handlers);
+		RadioButtons radioButtons = (RadioButtons) widget;
+		writer.beginFunction("ux.rigRadioButtons");
+		writer.writeParam("pId", radioButtons.getId());
+		writer.writeParam("pNm", radioButtons.getGroupId());
+		writer.writeParam("pVal", radioButtons.getValue(String.class));
+		writer.endFunction();
+	}
 
 }

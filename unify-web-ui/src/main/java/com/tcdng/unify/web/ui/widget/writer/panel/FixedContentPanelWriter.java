@@ -20,6 +20,7 @@ import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.web.ui.widget.Container;
+import com.tcdng.unify.web.ui.widget.EventHandler;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.Widget;
 import com.tcdng.unify.web.ui.widget.panel.FixedContentPanel;
@@ -36,15 +37,16 @@ import com.tcdng.unify.web.ui.widget.writer.AbstractPanelWriter;
 public class FixedContentPanelWriter extends AbstractPanelWriter {
 
     @Override
-    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-        FixedContentPanel fixedContentPanel = (FixedContentPanel) widget;
-        writer.beginFunction("ux.rigFixedContentPanel");
-        writer.writeParam("pHintPanelId", fixedContentPanel.getHintPanelId());
-        writer.writeParam("pBusyIndId", fixedContentPanel.getBusyIndicatorId());
-        writer.endFunction();
-        
-        super.doWriteBehavior(writer, widget);
-    }
+	protected void doWriteBehavior(ResponseWriter writer, Widget widget, EventHandler[] handlers)
+			throws UnifyException {
+		FixedContentPanel fixedContentPanel = (FixedContentPanel) widget;
+		writer.beginFunction("ux.rigFixedContentPanel");
+		writer.writeParam("pHintPanelId", fixedContentPanel.getHintPanelId());
+		writer.writeParam("pBusyIndId", fixedContentPanel.getBusyIndicatorId());
+		writer.endFunction();
+
+		super.doWriteBehavior(writer, widget, handlers);
+	}
 
     @Override
     protected void writeLayoutContent(ResponseWriter writer, Container container) throws UnifyException {

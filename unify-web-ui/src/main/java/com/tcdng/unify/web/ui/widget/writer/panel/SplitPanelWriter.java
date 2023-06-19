@@ -21,6 +21,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.web.ui.widget.Container;
+import com.tcdng.unify.web.ui.widget.EventHandler;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.Widget;
 import com.tcdng.unify.web.ui.widget.panel.SplitPanel;
@@ -37,28 +38,29 @@ import com.tcdng.unify.web.ui.widget.writer.AbstractPanelWriter;
 public class SplitPanelWriter extends AbstractPanelWriter {
 
     @Override
-    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-        SplitPanel splitPanel = (SplitPanel) widget;
-        List<String> longNames = splitPanel.getLayoutWidgetLongNames();
-        for (int i = 0; i < 2; i++) {
-            Widget innerWidget = splitPanel.getWidgetByLongName(longNames.get(i));
-            if (innerWidget.isVisible() || innerWidget.isHidden()) {
-                writer.writeBehavior(innerWidget);
-            }
-        }
-        writer.beginFunction("ux.rigSplitPanel");
-        writer.writeParam("pId", splitPanel.getId());
-        writer.writeParam("pContId", splitPanel.getId());
-        writer.writeCommandURLParam("pCmdURL");
-        writer.writeParam("pCtrlId", splitPanel.getSplitCtrlId());
-        writer.writeParam("pMinorId", splitPanel.getMinorWinId());
-        writer.writeParam("pMinorScrId", splitPanel.getMinorPaneId());
-        writer.writeParam("pMajorScrId", splitPanel.getMajorPaneId());
-        writer.writeParam("pMax", splitPanel.getMinorWinMax());
-        writer.writeParam("pMin", splitPanel.getMinorWinMin());
-        writer.writeParam("pVert", splitPanel.isVertical());
-        writer.endFunction();
-    }
+	protected void doWriteBehavior(ResponseWriter writer, Widget widget, EventHandler[] handlers)
+			throws UnifyException {
+		SplitPanel splitPanel = (SplitPanel) widget;
+		List<String> longNames = splitPanel.getLayoutWidgetLongNames();
+		for (int i = 0; i < 2; i++) {
+			Widget innerWidget = splitPanel.getWidgetByLongName(longNames.get(i));
+			if (innerWidget.isVisible() || innerWidget.isHidden()) {
+				writer.writeBehavior(innerWidget);
+			}
+		}
+		writer.beginFunction("ux.rigSplitPanel");
+		writer.writeParam("pId", splitPanel.getId());
+		writer.writeParam("pContId", splitPanel.getId());
+		writer.writeCommandURLParam("pCmdURL");
+		writer.writeParam("pCtrlId", splitPanel.getSplitCtrlId());
+		writer.writeParam("pMinorId", splitPanel.getMinorWinId());
+		writer.writeParam("pMinorScrId", splitPanel.getMinorPaneId());
+		writer.writeParam("pMajorScrId", splitPanel.getMajorPaneId());
+		writer.writeParam("pMax", splitPanel.getMinorWinMax());
+		writer.writeParam("pMin", splitPanel.getMinorWinMin());
+		writer.writeParam("pVert", splitPanel.isVertical());
+		writer.endFunction();
+	}
 
     @Override
     protected void writeLayoutContent(ResponseWriter writer, Container container) throws UnifyException {

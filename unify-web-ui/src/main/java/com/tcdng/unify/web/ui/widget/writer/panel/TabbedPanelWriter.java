@@ -23,6 +23,7 @@ import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.web.ui.widget.Container;
+import com.tcdng.unify.web.ui.widget.EventHandler;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.Widget;
 import com.tcdng.unify.web.ui.widget.panel.TabbedPanel;
@@ -39,27 +40,28 @@ import com.tcdng.unify.web.ui.widget.writer.AbstractSwitchPanelWriter;
 public class TabbedPanelWriter extends AbstractSwitchPanelWriter {
 
     @Override
-    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-        super.doWriteBehavior(writer, widget);
-        TabbedPanel tabbedPanel = (TabbedPanel) widget;
-        writer.beginFunction("ux.rigTabbedPanel");
-        writer.writeParam("pId", tabbedPanel.getId());
-        writer.writeParam("pContId", tabbedPanel.getId());
-        writer.writeCommandURLParam("pCmdURL");
-        writer.writeParam("pActTabId", tabbedPanel.getActiveTabId());
-        writer.writeParam("pActTabIdList", DataUtils.toArray(String.class, tabbedPanel.getActiveTabExpandedIdList()));
-        writer.writeParam("pSelTabId", tabbedPanel.getSelectedTabId());
-        writer.writeParam("pTabIdList" , DataUtils.toArray(String.class, tabbedPanel.getTabIds()));
-        List<String> captionIds = new ArrayList<String>();
-        for (String longName : tabbedPanel.getLayoutWidgetLongNames()) {
-            Widget tabWidget = tabbedPanel.getWidgetByLongName(longName);
-            if (!tabWidget.isHidden() && tabWidget.isVisible()) {
-                captionIds.add(tabWidget.getPrefixedId("cap_"));
-            }
-        }
-        writer.writeParam("pTabCapIdList", DataUtils.toArray(String.class, captionIds));
-        writer.endFunction();
-    }
+	protected void doWriteBehavior(ResponseWriter writer, Widget widget, EventHandler[] handlers)
+			throws UnifyException {
+		super.doWriteBehavior(writer, widget, handlers);
+		TabbedPanel tabbedPanel = (TabbedPanel) widget;
+		writer.beginFunction("ux.rigTabbedPanel");
+		writer.writeParam("pId", tabbedPanel.getId());
+		writer.writeParam("pContId", tabbedPanel.getId());
+		writer.writeCommandURLParam("pCmdURL");
+		writer.writeParam("pActTabId", tabbedPanel.getActiveTabId());
+		writer.writeParam("pActTabIdList", DataUtils.toArray(String.class, tabbedPanel.getActiveTabExpandedIdList()));
+		writer.writeParam("pSelTabId", tabbedPanel.getSelectedTabId());
+		writer.writeParam("pTabIdList", DataUtils.toArray(String.class, tabbedPanel.getTabIds()));
+		List<String> captionIds = new ArrayList<String>();
+		for (String longName : tabbedPanel.getLayoutWidgetLongNames()) {
+			Widget tabWidget = tabbedPanel.getWidgetByLongName(longName);
+			if (!tabWidget.isHidden() && tabWidget.isVisible()) {
+				captionIds.add(tabWidget.getPrefixedId("cap_"));
+			}
+		}
+		writer.writeParam("pTabCapIdList", DataUtils.toArray(String.class, captionIds));
+		writer.endFunction();
+	}
 
     @Override
     protected void writeLayoutContent(ResponseWriter writer, Container container) throws UnifyException {

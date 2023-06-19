@@ -35,7 +35,7 @@ public abstract class AbstractEventHandlerWriter extends AbstractBehaviorWriter 
 	public void writeBehavior(ResponseWriter writer, Behavior behavior, String id, String cmdTag)
 			throws UnifyException {
 		EventHandler eventHandler = (EventHandler) behavior;
-		String event = eventHandler.getUplAttribute(String.class, "event");
+		final String event = eventHandler.getEvent();
 		if (!"none".equals(event)) {
 			if (eventHandler.getPageAction() != null) {
 				if (writer.isKeepPostCommandRefs()) {
@@ -43,11 +43,12 @@ public abstract class AbstractEventHandlerWriter extends AbstractBehaviorWriter 
 						keepPostCommandRefs(writer, id, pageAction);
 					}
 				} else {
-					event = WriterUtils.getEventJS(event.toLowerCase());
+					final String translatedEvent = WriterUtils.getEventJS(event.toLowerCase());
 					for (PageAction pageAction : eventHandler.getPageAction()) {
 						writer.beginFunction("ux.setOnEvent");
 						String function = WriterUtils.getActionJSFunction(pageAction.getAction().toLowerCase());
-						writeActionParamsJS(writer, event, function, id, cmdTag, pageAction, null, null, null);
+						writeActionParamsJS(writer, translatedEvent, function, id, cmdTag, pageAction, null, null,
+								null);
 						writer.endFunction();
 					}
 				}

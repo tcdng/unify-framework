@@ -19,6 +19,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.util.DataUtils;
+import com.tcdng.unify.web.ui.widget.EventHandler;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.Widget;
 import com.tcdng.unify.web.ui.widget.control.Picture;
@@ -34,28 +35,29 @@ import com.tcdng.unify.web.ui.widget.writer.AbstractControlWriter;
 @Component("picture-writer")
 public class PictureWriter extends AbstractControlWriter {
 
-    @Override
-    protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
-        Picture picture = (Picture) widget;
-        writer.writeStructureAndContent(picture.getFileCtrl());
-        writer.writeStructureAndContent(picture.getImageCtrl());
-    }
+	@Override
+	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
+		Picture picture = (Picture) widget;
+		writer.writeStructureAndContent(picture.getFileCtrl());
+		writer.writeStructureAndContent(picture.getImageCtrl());
+	}
 
-    @Override
-    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-        super.doWriteBehavior(writer, widget);
+	@Override
+	protected void doWriteBehavior(ResponseWriter writer, Widget widget, EventHandler[] handlers)
+			throws UnifyException {
+		super.doWriteBehavior(writer, widget, handlers);
 
-        // Append rigging
-        Picture picture = (Picture) widget;
-        writer.beginFunction("ux.rigPhotoUpload");
-        writer.writeParam("pId", picture.getId());
-        writer.writeCommandURLParam("pCmdURL"); 
-        writer.writeParam("pContId", picture.getContainerId());
-        writer.writeParam("pFileId", picture.getFileCtrl().getId());
-        writer.writeParam("pImgId", picture.getImageCtrl().getId());
-        writer.writeParam("pEditable", picture.isContainerEditable());
-        writer.writeParam("pRef", DataUtils.toArray(String.class, writer.getPostCommandRefs()));
-        writer.endFunction();
-    }
+		// Append rigging
+		Picture picture = (Picture) widget;
+		writer.beginFunction("ux.rigPhotoUpload");
+		writer.writeParam("pId", picture.getId());
+		writer.writeCommandURLParam("pCmdURL");
+		writer.writeParam("pContId", picture.getContainerId());
+		writer.writeParam("pFileId", picture.getFileCtrl().getId());
+		writer.writeParam("pImgId", picture.getImageCtrl().getId());
+		writer.writeParam("pEditable", picture.isContainerEditable());
+		writer.writeParam("pRef", DataUtils.toArray(String.class, writer.getPostCommandRefs()));
+		writer.endFunction();
+	}
 
 }

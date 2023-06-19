@@ -24,6 +24,7 @@ import com.tcdng.unify.core.data.ValueStore;
 import com.tcdng.unify.core.ui.Tile;
 import com.tcdng.unify.web.ui.widget.Container;
 import com.tcdng.unify.web.ui.widget.Control;
+import com.tcdng.unify.web.ui.widget.EventHandler;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.Widget;
 import com.tcdng.unify.web.ui.widget.container.TileGroup;
@@ -40,19 +41,20 @@ import com.tcdng.unify.web.ui.widget.writer.AbstractContainerWriter;
 public class TileGroupWriter extends AbstractContainerWriter {
 
     @Override
-    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-        super.doWriteBehavior(writer, widget);
-        TileGroup tileGroup = (TileGroup) widget;
-        Control imageCtrl = tileGroup.getImageCtrl();
-        for (ValueStore valueStore : tileGroup.getValueList()) {
-            String actionPath = ((Tile) valueStore.getValueObject()).getActionPath();
-            if (actionPath != null) {
-                imageCtrl.setValueStore(valueStore);
-                writePathEventHandlerJS(writer, imageCtrl.getId(), imageCtrl.getBinding(), "onclick", "post",
-                        actionPath);
-            }
-        }
-    }
+	protected void doWriteBehavior(ResponseWriter writer, Widget widget, EventHandler[] handlers)
+			throws UnifyException {
+		super.doWriteBehavior(writer, widget, handlers);
+		TileGroup tileGroup = (TileGroup) widget;
+		Control imageCtrl = tileGroup.getImageCtrl();
+		for (ValueStore valueStore : tileGroup.getValueList()) {
+			String actionPath = ((Tile) valueStore.getValueObject()).getActionPath();
+			if (actionPath != null) {
+				imageCtrl.setValueStore(valueStore);
+				writePathEventHandlerJS(writer, imageCtrl.getId(), imageCtrl.getBinding(), "onclick", "post",
+						actionPath);
+			}
+		}
+	}
 
     @Override
     protected void writeLayoutContent(ResponseWriter writer, Container container) throws UnifyException {

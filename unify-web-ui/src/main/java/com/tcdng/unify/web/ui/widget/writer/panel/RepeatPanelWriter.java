@@ -23,6 +23,7 @@ import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.data.ValueStore;
 import com.tcdng.unify.core.util.DataUtils;
+import com.tcdng.unify.web.ui.widget.EventHandler;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.Widget;
 import com.tcdng.unify.web.ui.widget.panel.RepeatPanel;
@@ -39,18 +40,19 @@ import com.tcdng.unify.web.ui.widget.writer.AbstractPanelWriter;
 public class RepeatPanelWriter extends AbstractPanelWriter {
 
     @Override
-    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-        RepeatPanel repeatPanel = (RepeatPanel) widget;
-        Widget innerWidget = repeatPanel.getWidgetByLongName(repeatPanel.getLayoutWidgetLongNames().get(0));
-        List<ValueStore> valueStoreList = repeatPanel.getRepeatValueStores();
-        if (DataUtils.isNotBlank(valueStoreList)) {
-            for (ValueStore valueStore : valueStoreList) {
-                if (innerWidget.isVisible()) {
-                    innerWidget.setValueStore(valueStore);
-                    writer.writeBehavior(innerWidget);
-                }
-            }
-        }
-    }
+	protected void doWriteBehavior(ResponseWriter writer, Widget widget, EventHandler[] handlers)
+			throws UnifyException {
+		RepeatPanel repeatPanel = (RepeatPanel) widget;
+		Widget innerWidget = repeatPanel.getWidgetByLongName(repeatPanel.getLayoutWidgetLongNames().get(0));
+		List<ValueStore> valueStoreList = repeatPanel.getRepeatValueStores();
+		if (DataUtils.isNotBlank(valueStoreList)) {
+			for (ValueStore valueStore : valueStoreList) {
+				if (innerWidget.isVisible()) {
+					innerWidget.setValueStore(valueStore);
+					writer.writeBehavior(innerWidget);
+				}
+			}
+		}
+	}
 
 }

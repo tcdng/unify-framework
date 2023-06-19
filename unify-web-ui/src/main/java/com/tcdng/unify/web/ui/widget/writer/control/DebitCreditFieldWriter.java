@@ -23,6 +23,7 @@ import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.constant.DrCrType;
 import com.tcdng.unify.core.util.DataUtils;
+import com.tcdng.unify.web.ui.widget.EventHandler;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.Widget;
 import com.tcdng.unify.web.ui.widget.control.DebitCreditField;
@@ -77,32 +78,33 @@ public class DebitCreditFieldWriter extends NumberFieldWriter {
     }
 
     @Override
-    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-        super.doWriteBehavior(writer, widget);
-        DebitCreditField debitCreditField = (DebitCreditField) widget;
-        final String[] options = { "Dr", "Cr" }; // TODO Get from messages
-        final String[] prefixes = debitCreditField.isNegativeCredit() ? new String[] { "", "-" }
-                : new String[] { "-", "" };
-        DrCrType type = debitCreditField.getType();
-        if (DrCrType.OPTIONAL.equals(type)) {
-            type = DrCrType.DEBIT;
-            BigDecimal val = debitCreditField.getValue(BigDecimal.class);
-            if (val != null) {
-                boolean neg = val.compareTo(BigDecimal.ZERO) < 0;
-                if ((debitCreditField.isNegativeCredit() && neg) || (!debitCreditField.isNegativeCredit() && !neg)) {
-                    type = DrCrType.CREDIT;
-                }
-            }
-        }
+	protected void doWriteBehavior(ResponseWriter writer, Widget widget, EventHandler[] handlers)
+			throws UnifyException {
+		super.doWriteBehavior(writer, widget, handlers);
+		DebitCreditField debitCreditField = (DebitCreditField) widget;
+		final String[] options = { "Dr", "Cr" }; // TODO Get from messages
+		final String[] prefixes = debitCreditField.isNegativeCredit() ? new String[] { "", "-" }
+				: new String[] { "-", "" };
+		DrCrType type = debitCreditField.getType();
+		if (DrCrType.OPTIONAL.equals(type)) {
+			type = DrCrType.DEBIT;
+			BigDecimal val = debitCreditField.getValue(BigDecimal.class);
+			if (val != null) {
+				boolean neg = val.compareTo(BigDecimal.ZERO) < 0;
+				if ((debitCreditField.isNegativeCredit() && neg) || (!debitCreditField.isNegativeCredit() && !neg)) {
+					type = DrCrType.CREDIT;
+				}
+			}
+		}
 
-        writer.beginFunction("ux.rigDebitCreditField");
-        writer.writeParam("pId", debitCreditField.getId());
-        writer.writeParam("pFacId", debitCreditField.getFacadeId());
-        writer.writeParam("pBtnId", debitCreditField.getButtonId());
-        writer.writeParam("pIndex", type.index());
-        writer.writeParam("pPrefixes", prefixes);
-        writer.writeParam("pOptions", options);
-        writer.endFunction();
-    }
+		writer.beginFunction("ux.rigDebitCreditField");
+		writer.writeParam("pId", debitCreditField.getId());
+		writer.writeParam("pFacId", debitCreditField.getFacadeId());
+		writer.writeParam("pBtnId", debitCreditField.getButtonId());
+		writer.writeParam("pIndex", type.index());
+		writer.writeParam("pPrefixes", prefixes);
+		writer.writeParam("pOptions", options);
+		writer.endFunction();
+	}
 
 }

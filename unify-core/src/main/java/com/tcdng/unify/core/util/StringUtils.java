@@ -931,6 +931,10 @@ public final class StringUtils {
 	public static String buildParameterizedString(List<StringToken> tokens) {
 		return StringTokenUtils.buildParameterizedString(tokens);
 	}
+	
+	public static List<List<StringToken>> breakdownParameterizedString(final String text, final int linesPerPage) {
+		return StringTokenUtils.breakdownParameterizedString(text, linesPerPage);
+	}
 
 	public static List<StringToken> breakdownParameterizedString(String string) {
 		return StringTokenUtils.breakdownParameterizedString(string);

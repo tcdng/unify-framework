@@ -17,6 +17,7 @@ package com.tcdng.unify.web.ui.widget.writer;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.web.ui.widget.Container;
+import com.tcdng.unify.web.ui.widget.EventHandler;
 import com.tcdng.unify.web.ui.widget.Layout;
 import com.tcdng.unify.web.ui.widget.PushType;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
@@ -41,9 +42,9 @@ public abstract class AbstractContainerWriter extends AbstractWidgetWriter imple
     }
 
     @Override
-    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
+    protected void doWriteBehavior(ResponseWriter writer, Widget widget, EventHandler[] handlers) throws UnifyException {
         Container container = (Container) widget;
-        super.doWriteBehavior(writer, container);
+        super.doWriteBehavior(writer, container, handlers);
         writeContainedWidgetsBehavior(writer, container);
     }
 

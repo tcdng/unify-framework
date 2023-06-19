@@ -19,6 +19,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.web.ui.widget.Control;
+import com.tcdng.unify.web.ui.widget.EventHandler;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.Widget;
 import com.tcdng.unify.web.ui.widget.control.DynamicField;
@@ -40,12 +41,13 @@ public class DynamicFieldWriter extends AbstractControlWriter {
         writer.writeStructureAndContent(dynamicField.getControl());
     }
 
-    @Override
-    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
+	@Override
+	protected void doWriteBehavior(ResponseWriter writer, Widget widget, EventHandler[] eventHandlers)
+			throws UnifyException {
         DynamicField dynamicField = (DynamicField) widget;
         Control control = dynamicField.getControl();
         if (control != null) {
-            writer.writeBehavior(control);
+            writer.writeBehavior(control, eventHandlers);
         }
-    }
+	}
 }

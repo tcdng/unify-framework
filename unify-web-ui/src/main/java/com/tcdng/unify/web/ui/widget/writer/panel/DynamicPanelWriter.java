@@ -19,6 +19,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.web.ui.widget.Container;
+import com.tcdng.unify.web.ui.widget.EventHandler;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.Widget;
 import com.tcdng.unify.web.ui.widget.panel.DynamicPanel;
@@ -55,13 +56,14 @@ public class DynamicPanelWriter extends AbstractPanelWriter {
     }
 
     @Override
-    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-        DynamicPanel dynamicPanel = (DynamicPanel) widget;
-        getRequestContextUtil().setDynamicPanelPageName(dynamicPanel.getId(), dynamicPanel.getContainer().getId());
-        try {
-            writer.writeBehavior(dynamicPanel.getStandalonePanel());
-        } finally {
-            getRequestContextUtil().clearDynamicPanelPageName();
-        }
-    }
+	protected void doWriteBehavior(ResponseWriter writer, Widget widget, EventHandler[] handlers)
+			throws UnifyException {
+		DynamicPanel dynamicPanel = (DynamicPanel) widget;
+		getRequestContextUtil().setDynamicPanelPageName(dynamicPanel.getId(), dynamicPanel.getContainer().getId());
+		try {
+			writer.writeBehavior(dynamicPanel.getStandalonePanel(), handlers);
+		} finally {
+			getRequestContextUtil().clearDynamicPanelPageName();
+		}
+	}
 }

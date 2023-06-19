@@ -17,6 +17,7 @@ package com.tcdng.unify.web.ui.widget.writer;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.web.ui.widget.Control;
+import com.tcdng.unify.web.ui.widget.EventHandler;
 import com.tcdng.unify.web.ui.widget.PushType;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.Widget;
@@ -30,8 +31,8 @@ import com.tcdng.unify.web.ui.widget.Widget;
 public abstract class AbstractControlWriter extends AbstractWidgetWriter implements ControlWriter {
 
     @Override
-    protected void doWriteBehavior(ResponseWriter writer, Widget widget) throws UnifyException {
-        super.doWriteBehavior(writer, widget);
+    protected void doWriteBehavior(ResponseWriter writer, Widget widget, EventHandler[] handlers) throws UnifyException {
+        super.doWriteBehavior(writer, widget, handlers);
         Control control = (Control) widget;
         if (control.isFocus()) {
             if (widget.isUseFacade()) {

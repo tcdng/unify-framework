@@ -364,6 +364,14 @@ public interface Widget extends UplComponent {
      */
     Widget getRelayWidget() throws UnifyException;
 
+	/**
+	 * Gets event handlers associated with this widget.
+	 * 
+	 * @return the event handlers
+	 * @throws UnifyException if an error occurs
+	 */
+	EventHandler[] getEventHandlers() throws UnifyException;
+    
     /**
      * Indicates that commands should be relayed to internal widget.
      */

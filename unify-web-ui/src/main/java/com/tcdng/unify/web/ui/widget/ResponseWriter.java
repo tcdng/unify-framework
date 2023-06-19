@@ -130,26 +130,35 @@ public interface ResponseWriter extends UnifyComponent {
     ResponseWriter writeBehavior(DocumentLayout documentLayout, Document document) throws UnifyException;
 
     /**
-     * Writes component behavior.
+     * Writes widget behavior.
      * 
-     * @param component
-     *                  the user interface component to write
+     * @param widget
+     *                  the user interface widget to write
      * @throws UnifyException
      *                        if an error occurs
      */
-    ResponseWriter writeBehavior(Widget component) throws UnifyException;
+    ResponseWriter writeBehavior(Widget widget) throws UnifyException;
+
+	/**
+	 * Writes widget behavior with event handlers.
+	 * 
+	 * @param widget        the user interface widget to write
+	 * @param eventHandlers the event handlers
+	 * @throws UnifyException if an error occurs
+	 */
+	ResponseWriter writeBehavior(Widget widget, EventHandler[] eventHandlers) throws UnifyException;
 
     /**
-     * Writes component behavior.
+     * Writes widget behavior.
      * 
-     * @param component
-     *                  the user interface component to write
+     * @param widget
+     *                  the user interface widget to write
      * @param id
      *                  the id to use
      * @throws UnifyException
      *                        if an error occurs
      */
-    ResponseWriter writeBehavior(Widget component, String id) throws UnifyException;
+    ResponseWriter writeBehavior(Widget widget, String id) throws UnifyException;
 
     /**
      * Writes behavior for a specified behavior.
