@@ -15,8 +15,10 @@
  */
 package com.tcdng.unify.core.data;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -327,11 +329,38 @@ public abstract class AbstractValueStore implements ValueStore {
         
         private ValueStore valueStore;
         
+        private Formats.Instance formatsInstance;
+        
         public ValueStoreReaderImpl(ValueStore valueStore) {
             this.valueStore = valueStore;
         }
 
         @Override
+		public void setFormats(Formats formats) {
+        	formatsInstance = formats != null ? formats.createInstance() : null;			
+		}
+
+		@Override
+		public String readIntegerAsString(String name) throws UnifyException {
+			return getFormatsInstance().format(read(Long.class, name));
+		}
+
+		@Override
+		public String readDecimalAsString(String name) throws UnifyException {
+			return getFormatsInstance().format(read(BigDecimal.class, name));
+		}
+
+		@Override
+		public String readDateAsString(String name) throws UnifyException {
+			return getFormatsInstance().format(read(Date.class, name));
+		}
+
+		@Override
+		public String readTimestampAsString(String name) throws UnifyException {
+			return getFormatsInstance().formatAsTimestamp(read(Date.class, name));
+		}
+
+		@Override
         public boolean isNull(String name) throws UnifyException {
         	return valueStore.isNull(name);
         }
@@ -409,6 +438,14 @@ public abstract class AbstractValueStore implements ValueStore {
         @Override
         public boolean isTempValue(String name) {
             return valueStore.isTempValue(name);
+        }
+        
+        private Formats.Instance getFormatsInstance() {
+        	if (formatsInstance == null) {
+        		formatsInstance = Formats.DEFAULT.createInstance();
+        	}
+        	
+        	return formatsInstance;
         }
     }
 
