@@ -27,6 +27,18 @@ import com.tcdng.unify.core.format.Formatter;
  */
 public interface ValueStoreReader {
 
+	void setFormats(Formats formats);
+	
+	String readAsString(String name) throws UnifyException;
+	
+	String readIntegerAsString(String name) throws UnifyException;
+	
+	String readDecimalAsString(String name) throws UnifyException;
+	
+	String readDateAsString(String name) throws UnifyException;
+	
+	String readTimestampAsString(String name) throws UnifyException;
+	
 	boolean isNull(String name) throws UnifyException;
 
 	boolean isNotNull(String name) throws UnifyException;
