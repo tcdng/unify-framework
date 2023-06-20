@@ -341,6 +341,11 @@ public abstract class AbstractValueStore implements ValueStore {
 		}
 
 		@Override
+		public String readAsString(String name) throws UnifyException {
+			return getFormatsInstance().format(read(name));
+		}
+
+		@Override
 		public String readIntegerAsString(String name) throws UnifyException {
 			return getFormatsInstance().format(read(Long.class, name));
 		}

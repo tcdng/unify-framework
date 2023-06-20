@@ -29,6 +29,8 @@ public interface ValueStoreReader {
 
 	void setFormats(Formats formats);
 	
+	String readAsString(String name) throws UnifyException;
+	
 	String readIntegerAsString(String name) throws UnifyException;
 	
 	String readDecimalAsString(String name) throws UnifyException;
