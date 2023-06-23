@@ -36,6 +36,11 @@ public class PackableDocStore extends AbstractSingleObjectValueStore<PackableDoc
         super(packableDoc, dataMarker, dataIndex);
     }
 
+	@Override
+	public final boolean isPackableDoc() {
+		return true;
+	}
+
     @Override
     public boolean isGettable(String name) throws UnifyException {
         if (name.startsWith(PackableDoc.RESERVED_EXT_FIELD)) {

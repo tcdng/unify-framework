@@ -46,6 +46,11 @@ public abstract class AbstractListValueStore<T> extends AbstractValueStore {
         this.dataIndex = dataIndex;
     }
 
+	@Override
+	public final boolean isList() {
+		return true;
+	}
+
     @Override
     public Object retrieve(int storageIndex, String name) throws UnifyException {
         checkStorageIndex(storageIndex);

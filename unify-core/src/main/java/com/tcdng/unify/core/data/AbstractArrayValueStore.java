@@ -45,6 +45,11 @@ public abstract class AbstractArrayValueStore<T> extends AbstractValueStore {
     }
 
     @Override
+	public final boolean isArray() {
+		return true;
+	}
+
+    @Override
     public Object retrieve(int storageIndex, String name) throws UnifyException {
         return retrieveInternal(storage[storageIndex], name);
     }
