@@ -33,6 +33,11 @@ public class PackableDocListStore extends AbstractListValueStore<PackableDoc> {
         super(storage, dataMarker, dataIndex);
     }
 
+	@Override
+	public final boolean isPackableDoc() {
+		return true;
+	}
+
     @Override
     protected boolean doSettable(PackableDoc storage, String property) throws UnifyException {
         return storage != null && storage.isField(property);

@@ -560,4 +560,29 @@ public interface ValueStore {
      * @return the value store writer
      */
     ValueStoreWriter getWriter();
+
+	/**
+	 * Returns true if value store backing object is indexed
+	 */
+    boolean isIndexed();
+    
+	/**
+	 * Returns true if value store backs an array
+	 */
+	boolean isArray();
+
+	/**
+	 * Returns true if value store backs a list
+	 */
+	boolean isList();
+
+	/**
+	 * Returns true if value store backs a map
+	 */
+	boolean isMap();
+
+	/**
+	 * Returns true if value store backs packable documents.
+	 */
+	boolean isPackableDoc();
 }

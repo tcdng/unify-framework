@@ -33,6 +33,11 @@ public class MapValuesListStore extends AbstractListValueStore<MapValues> {
         super(storage, dataMarker, dataIndex);
     }
 
+	@Override
+	public final boolean isMap() {
+		return true;
+	}
+
     @Override
     protected boolean doSettable(MapValues storage, String property) throws UnifyException {
         return storage != null && storage.isMapValue(property);

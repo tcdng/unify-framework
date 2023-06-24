@@ -32,6 +32,11 @@ public class MapValueStore extends AbstractSingleObjectValueStore<Map<String, Ob
         this(map, null, -1);
     }
 
+	@Override
+	public final boolean isMap() {
+		return true;
+	}
+
     public MapValueStore(Map<String, Object> map, String dataMarker, int dataIndex) {
         super(map, dataMarker, dataIndex);
     }

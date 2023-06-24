@@ -80,6 +80,31 @@ public abstract class AbstractValueStore implements ValueStore {
     }
 
     @Override
+	public final boolean isIndexed() {
+		return isList() || isArray();
+	}
+
+	@Override
+	public boolean isArray() {
+		return false;
+	}
+
+	@Override
+	public boolean isList() {
+		return false;
+	}
+
+	@Override
+	public boolean isMap() {
+		return false;
+	}
+
+	@Override
+	public boolean isPackableDoc() {
+		return false;
+	}
+
+	@Override
 	public int compare(ValueStore valSource) throws UnifyException {
 		for (GetterSetterInfo getterSetterInfo : ReflectUtils.getGetterSetterList(getDataClass())) {
 			if (getterSetterInfo.isGetterSetter()) {

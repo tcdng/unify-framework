@@ -55,11 +55,6 @@ public class LinkGridInfo {
         }
 
         public Builder addCategory(String name, String caption, String path) throws UnifyException {
-            if (categories.containsKey(name)) {
-                throw new UnifyOperationException(
-                        "Category with name [" + name + "] exists.");
-            }
-
             categories.put(name, new CategoryInfo(caption, path));
             return this;
         }
