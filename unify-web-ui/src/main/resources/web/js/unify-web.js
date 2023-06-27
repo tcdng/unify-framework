@@ -1158,7 +1158,8 @@ ux.contentOpenTabMenu = function(uEv) {
 	openPrm.relFrameId = evp.uTabPaneId;
 	openPrm.stayOpenForMillSec = UNIFY_DEFAULT_POPUP_TIMEOUT;
 	openPrm.forceReopen = true;
-	openPrm.uTrg = uEuLoc = loc;
+	openPrm.uTrg = uEv.uTrg;
+	openPrm.uLoc = loc;
 	ux.doOpenPopup(openPrm);
 }
 
