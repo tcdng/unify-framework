@@ -51,6 +51,19 @@ public final class StringTokenUtils {
 		return null;
 	}
 
+	public static List<List<StringToken>> breakdownParameterizedString(final String text, final String pageBreak) {
+		if (text != null) {
+			List<List<StringToken>> tokenList = new ArrayList<List<StringToken>>();
+			for (String page : text.split(pageBreak)) {
+				tokenList.add(StringTokenUtils.breakdownParameterizedString(page));
+			}
+
+			return Collections.unmodifiableList(tokenList);
+		}
+
+		return Collections.emptyList();
+	}
+
 	public static List<List<StringToken>> breakdownParameterizedString(final String text, final int linesPerPage) {
 		if (text != null) {
 			if (linesPerPage <= 0 ) {
