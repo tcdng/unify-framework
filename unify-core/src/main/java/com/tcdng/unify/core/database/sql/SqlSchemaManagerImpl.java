@@ -36,6 +36,7 @@ import com.tcdng.unify.common.annotation.StaticList;
 import com.tcdng.unify.common.constants.EnumConst;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
+import com.tcdng.unify.core.UnifyCorePropertyConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.constant.ForceConstraints;
@@ -56,6 +57,8 @@ import com.tcdng.unify.core.util.StringUtils;
 public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 
 	private static final Map<String, Set<String>> swappableValueSet;
+
+    private boolean sqlDebugging;
 
 	static {
 		swappableValueSet = new HashMap<String, Set<String>>();
@@ -173,6 +176,12 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 		logDebug("Dependency list resolved to [{0}] entities...", resultList.size());
 		return resultList;
 	}
+
+    @Override
+    protected void onInitialize() throws UnifyException {
+        sqlDebugging = getContainerSetting(boolean.class, UnifyCorePropertyConstants.APPLICATION_SQL_DEBUGGING, false);
+    }
+
 
 	private void buildDependencyList(SqlDataSource sqlDataSource, List<Class<?>> entityTypeList, Class<?> entityClass)
 			throws UnifyException {
@@ -418,6 +427,10 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 			// Apply updates
 			tableUpdateSql.addAll(viewUpdateSQL);
 			for (String sql : tableUpdateSql) {
+				if (sqlDebugging) {
+					logDebug("Executing SQL update [{0}]...", sql);
+				}
+				
 				pstmt = connection.prepareStatement(sql);
 				pstmt.executeUpdate();
 				SqlUtils.close(pstmt);
