@@ -35,4 +35,7 @@ public interface SqlUniqueConstraintSchemaInfo {
      */
     List<String> getFieldNameList();
 
+	boolean isWithConditionList();
+
+	List<SqlQueryRestrictionInfo> getConditionList();
 }

@@ -13,25 +13,34 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.annotation;
+package com.tcdng.unify.core.database.sql;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import com.tcdng.unify.core.criterion.Restriction;
+import com.tcdng.unify.core.util.CriteriaUtils;
 
 /**
- * Annotation for declaring a table default restriction.
+ * Query restriction information.
  * 
  * @author The Code Department
  * @since 1.0
  */
-@Documented
-@Retention(RetentionPolicy.RUNTIME)
-public @interface DefaultRestriction {
+public class SqlQueryRestrictionInfo {
 
-    /** The field name */
-    String field();
+    private String field;
 
-    /** The restriction value */
-    String value();
+    private Restriction restriction;
+
+	public SqlQueryRestrictionInfo(String field, Restriction restriction) {
+		this.field = field;
+		this.restriction = CriteriaUtils.unmodifiableRestriction(restriction);
+	}
+
+	public String getField() {
+		return field;
+	}
+
+	public Restriction getRestriction() {
+		return restriction;
+	}
+
 }

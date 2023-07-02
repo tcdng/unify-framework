@@ -90,7 +90,7 @@ public @interface Table {
     /**
      * Default query restriction to apply when field is not present in query.
      */
-    DefaultRestriction[] defaultQueryRestrictions() default {};
+    QueryRestriction[] defaultQueryRestrictions() default {};
     
     /** Table unique constraints */
     UniqueConstraint[] uniqueConstraints() default {};

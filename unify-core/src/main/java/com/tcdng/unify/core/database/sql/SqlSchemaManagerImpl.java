@@ -58,7 +58,7 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 
 	private static final Map<String, Set<String>> swappableValueSet;
 
-    private boolean sqlDebugging;
+	private boolean sqlDebugging;
 
 	static {
 		swappableValueSet = new HashMap<String, Set<String>>();
@@ -177,11 +177,10 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 		return resultList;
 	}
 
-    @Override
-    protected void onInitialize() throws UnifyException {
-        sqlDebugging = getContainerSetting(boolean.class, UnifyCorePropertyConstants.APPLICATION_SQL_DEBUGGING, false);
-    }
-
+	@Override
+	protected void onInitialize() throws UnifyException {
+		sqlDebugging = getContainerSetting(boolean.class, UnifyCorePropertyConstants.APPLICATION_SQL_DEBUGGING, false);
+	}
 
 	private void buildDependencyList(SqlDataSource sqlDataSource, List<Class<?>> entityTypeList, Class<?> entityClass)
 			throws UnifyException {
@@ -258,8 +257,10 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 
 					for (SqlUniqueConstraintSchemaInfo sqlUniqueConstraintInfo : sqlEntityInfo.getUniqueConstraintList()
 							.values()) {
-						createUpdateConstraintSql.add(sqlDataSourceDialect.generateAddUniqueConstraintSql(sqlEntityInfo,
-								sqlUniqueConstraintInfo, printFormat));
+						if (!sqlUniqueConstraintInfo.isWithConditionList()) {
+							createUpdateConstraintSql.add(sqlDataSourceDialect.generateAddUniqueConstraintSql(
+									sqlEntityInfo, sqlUniqueConstraintInfo, printFormat));
+						}
 					}
 
 					for (SqlIndexSchemaInfo sqlIndexInfo : sqlEntityInfo.getIndexList().values()) {
@@ -307,8 +308,9 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 							boolean update = true;
 							if (ucConst != null) {
 								// Check if unique constant matches database constraint
-								if (ucConst.isUniqueConst() && matchIndexAllColumns(sqlEntityInfo,
-										sqlUniqueConstraintInfo.getFieldNameList(), ucConst.getColumns())) {
+								if (ucConst.isUniqueConst() && !sqlUniqueConstraintInfo.isWithConditionList()
+										&& matchIndexAllColumns(sqlEntityInfo,
+												sqlUniqueConstraintInfo.getFieldNameList(), ucConst.getColumns())) {
 									// Perfect match. Remove from pending list and no need for update
 									managedTableConstraints.remove(sqlUniqueConstraintInfo.getName());
 									update = false;
@@ -430,7 +432,7 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 				if (sqlDebugging) {
 					logDebug("Executing SQL update [{0}]...", sql);
 				}
-				
+
 				pstmt = connection.prepareStatement(sql);
 				pstmt.executeUpdate();
 				SqlUtils.close(pstmt);
@@ -812,8 +814,9 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 				boolean update = true;
 				if (ucConst != null) {
 					// Check if unique constant matches database constraint
-					if (ucConst.isUniqueConst() && matchIndexAllColumns(sqlEntityInfo,
-							sqlUniqueConstraintInfo.getFieldNameList(), ucConst.getColumns())) {
+					if (ucConst.isUniqueConst() && !sqlUniqueConstraintInfo.isWithConditionList()
+							&& matchIndexAllColumns(sqlEntityInfo, sqlUniqueConstraintInfo.getFieldNameList(),
+									ucConst.getColumns())) {
 						update = false;
 					}
 				}

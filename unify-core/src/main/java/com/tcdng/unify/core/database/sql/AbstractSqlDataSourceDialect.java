@@ -234,12 +234,14 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 				&& !isGeneratesUniqueConstraintsOnCreateTable()) {
 			for (SqlUniqueConstraintSchemaInfo sqlUniqueConstraintInfo : sqlEntitySchemaInfo.getUniqueConstraintList()
 					.values()) {
-				sb.append(generateAddUniqueConstraintSql(sqlEntitySchemaInfo, sqlUniqueConstraintInfo,
-						PrintFormat.PRETTY));
-				sb.append(terminationSql);
-				if (format.isPretty()) {
-					sb.append(newLineSql);
-					sb.append(newLineSql);
+				if (!sqlUniqueConstraintInfo.isWithConditionList()) {
+					sb.append(generateAddUniqueConstraintSql(sqlEntitySchemaInfo, sqlUniqueConstraintInfo,
+							PrintFormat.PRETTY));
+					sb.append(terminationSql);
+					if (format.isPretty()) {
+						sb.append(newLineSql);
+						sb.append(newLineSql);
+					}
 				}
 			}
 		}
@@ -408,22 +410,24 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 				sb.append('\t');
 			}
 
-			appendColumnAndTypeSql(sb, sqlFieldSchemaInfo.getPreferredColumnName(),  sqlFieldSchemaInfo, false);
+			appendColumnAndTypeSql(sb, sqlFieldSchemaInfo.getPreferredColumnName(), sqlFieldSchemaInfo, false);
 		}
 
 		if (isGeneratesUniqueConstraintsOnCreateTable()) {
 			for (SqlUniqueConstraintSchemaInfo sqlUniqueConstraintInfo : sqlEntitySchemaInfo.getUniqueConstraintList()
 					.values()) {
-				sb.append(',');
-				if (format.isPretty()) {
-					sb.append(newLineSql);
-				}
+				if (!sqlUniqueConstraintInfo.isWithConditionList()) {
+					sb.append(',');
+					if (format.isPretty()) {
+						sb.append(newLineSql);
+					}
 
-				if (format.isPretty()) {
-					sb.append('\t');
-				}
+					if (format.isPretty()) {
+						sb.append('\t');
+					}
 
-				sb.append(generateInlineUniqueConstraintSql(sqlEntitySchemaInfo, sqlUniqueConstraintInfo, format));
+					sb.append(generateInlineUniqueConstraintSql(sqlEntitySchemaInfo, sqlUniqueConstraintInfo, format));
+				}
 			}
 		}
 
@@ -465,8 +469,8 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 	}
 
 	@Override
-	public final String generateAddColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
-			PrintFormat format) throws UnifyException {
+	public final String generateAddColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo,
+			SqlFieldSchemaInfo sqlFieldSchemaInfo, PrintFormat format) throws UnifyException {
 		return this.generateAddColumn(sqlEntitySchemaInfo, sqlFieldSchemaInfo.getPreferredColumnName(),
 				sqlFieldSchemaInfo, format);
 	}
@@ -1834,13 +1838,13 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 		Restriction restriction = query.getRestrictions();
 		if (sqlEntityInfo.isWithDefaultRestrictions() && !query.isRestrictedField("id")) {
 			And defRestriction = null;
-			for (SqlDefaultRestrictionInfo sqlDefaultRestrictionInfo : sqlEntityInfo.getDefaultRestrictionList()) {
-				if (!query.isRestrictedField(sqlDefaultRestrictionInfo.getField())) {
+			for (SqlQueryRestrictionInfo sqlQueryRestrictionInfo : sqlEntityInfo.getDefaultRestrictionList()) {
+				if (!query.isRestrictedField(sqlQueryRestrictionInfo.getField())) {
 					if (defRestriction == null) {
 						defRestriction = restriction.isEmpty() ? new And() : (And) new And().add(restriction);
 					}
 
-					defRestriction.add(sqlDefaultRestrictionInfo.getRestriction());
+					defRestriction.add(sqlQueryRestrictionInfo.getRestriction());
 				}
 			}
 

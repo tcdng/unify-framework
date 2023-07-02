@@ -167,6 +167,13 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 				for (String fieldName : suci.getFieldNameList()) {
 					query.addEquals(fieldName, ReflectUtils.getBeanProperty(record, fieldName));
 				}
+				
+				if (suci.isWithConditionList()) {
+					for (SqlQueryRestrictionInfo sqlQueryRestrictionInfo: suci.getConditionList()) {
+						query.addRestriction(sqlQueryRestrictionInfo.getRestriction());
+					}
+				}
+				
 				T constrainingRecord = find(query);
 				if (constrainingRecord != null) {
 					return constrainingRecord;

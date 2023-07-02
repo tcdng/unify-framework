@@ -100,7 +100,7 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 
     private Map<String, ChildFieldInfo> childInfoByName;
     
-    private List<SqlDefaultRestrictionInfo> defaultRestrictionList;
+    private List<SqlQueryRestrictionInfo> defaultRestrictionList;
 
     private List<ChildFieldInfo> childInfoList;
 
@@ -127,7 +127,7 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
             String schemaTableName, String tableAlias, String viewName, String preferredViewName, String schemaViewName,
             SqlFieldInfo idFieldInfo, SqlFieldInfo versionFieldInfo, SqlFieldInfo tenantIdFieldInfo, SqlFieldInfo fosterParentTypeFieldInfo,
             SqlFieldInfo fosterParentIdFieldInfo, SqlFieldInfo categoryFieldInfo, Map<String, SqlFieldInfo> sQLFieldInfoMap,
-            List<SqlDefaultRestrictionInfo> defaultRestrictionList,
+            List<SqlQueryRestrictionInfo> defaultRestrictionList,
             List<ChildFieldInfo> childInfoList, List<ChildFieldInfo> childListInfoList,
             Map<String, SqlUniqueConstraintInfo> uniqueConstraintMap, Map<String, SqlIndexInfo> indexMap,
             List<Map<String, Object>> staticValueList, Map<String, Class<?>> viewBaseTables,
@@ -499,7 +499,7 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
         return !defaultRestrictionList.isEmpty();
     }
 
-    public List<SqlDefaultRestrictionInfo> getDefaultRestrictionList() {
+    public List<SqlQueryRestrictionInfo> getDefaultRestrictionList() {
 		return defaultRestrictionList;
 	}
 
