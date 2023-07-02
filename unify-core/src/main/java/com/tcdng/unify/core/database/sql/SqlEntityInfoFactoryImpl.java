@@ -1481,8 +1481,8 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 			private List<SqlDefaultRestrictionInfo> extractDefaultQueryRestrictions(Table ta, Class<?> entityClass,
 					List<Class<?>> heirachyList, Map<String, SqlFieldInfo> propertyInfoMap) throws Exception {
 				List<SqlDefaultRestrictionInfo> defaultRestrictionList = new ArrayList<SqlDefaultRestrictionInfo>();
-				List<DefaultRestriction> allDefaultRestrictions = new ArrayList<DefaultRestriction>(
-						Arrays.asList(ta.defaultQueryRestrictions()));
+				List<DefaultRestriction> allDefaultRestrictions = ta != null ? new ArrayList<DefaultRestriction>(
+						Arrays.asList(ta.defaultQueryRestrictions())) : new ArrayList<DefaultRestriction>();
 				for (Class<?> clazz : heirachyList) {
 					DefaultQueryRestrictions dqrs = clazz.getAnnotation(DefaultQueryRestrictions.class);
 					if (dqrs != null) {

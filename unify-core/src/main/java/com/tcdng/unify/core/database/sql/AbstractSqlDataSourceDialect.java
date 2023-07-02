@@ -1832,7 +1832,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 	private Restriction resolveRestriction(SqlEntityInfo sqlEntityInfo, Query<? extends Entity> query)
 			throws UnifyException {
 		Restriction restriction = query.getRestrictions();
-		if (sqlEntityInfo.isWithDefaultRestrictions()) {
+		if (sqlEntityInfo.isWithDefaultRestrictions() && !query.isRestrictedField("id")) {
 			And defRestriction = null;
 			for (SqlDefaultRestrictionInfo sqlDefaultRestrictionInfo : sqlEntityInfo.getDefaultRestrictionList()) {
 				if (!query.isRestrictedField(sqlDefaultRestrictionInfo.getField())) {
