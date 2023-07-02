@@ -1832,6 +1832,23 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 	private Restriction resolveRestriction(SqlEntityInfo sqlEntityInfo, Query<? extends Entity> query)
 			throws UnifyException {
 		Restriction restriction = query.getRestrictions();
+		if (sqlEntityInfo.isWithDefaultRestrictions()) {
+			And defRestriction = null;
+			for (SqlDefaultRestrictionInfo sqlDefaultRestrictionInfo : sqlEntityInfo.getDefaultRestrictionList()) {
+				if (!query.isRestrictedField(sqlDefaultRestrictionInfo.getField())) {
+					if (defRestriction == null) {
+						defRestriction = restriction.isEmpty() ? new And() : (And) new And().add(restriction);
+					}
+
+					defRestriction.add(sqlDefaultRestrictionInfo.getRestriction());
+				}
+			}
+
+			if (defRestriction != null) {
+				restriction = defRestriction;
+			}
+		}
+
 		if (tenancyEnabled && sqlEntityInfo.isWithTenantId() && !query.isIgnoreTenancy()) {
 			final String tenantIdFieldName = sqlEntityInfo.getTenantIdFieldInfo().getName();
 			if (!query.isRestrictedField(tenantIdFieldName)) {
