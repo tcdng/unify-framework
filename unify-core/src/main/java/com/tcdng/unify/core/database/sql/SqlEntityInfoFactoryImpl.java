@@ -45,6 +45,7 @@ import com.tcdng.unify.core.annotation.ColumnOverride;
 import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
+import com.tcdng.unify.core.annotation.DefaultQueryRestrictions;
 import com.tcdng.unify.core.annotation.DefaultRestriction;
 import com.tcdng.unify.core.annotation.ForeignKey;
 import com.tcdng.unify.core.annotation.ForeignKeyOverride;
@@ -956,28 +957,8 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 					}
 				}
 
-				List<SqlDefaultRestrictionInfo> defaultRestrictionList = null;
-				DefaultRestriction[] defaultQueryRestrictions = ta.defaultQueryRestrictions();
-				if (defaultQueryRestrictions.length > 0) {
-					defaultRestrictionList = new ArrayList<SqlDefaultRestrictionInfo>();
-					for (DefaultRestriction defaultRestriction : defaultQueryRestrictions) {
-						SqlFieldInfo sqlFieldInfo = propertyInfoMap.get(defaultRestriction.field());
-						if (sqlFieldInfo == null) {
-							throw new UnifyException(UnifyCoreErrorConstants.REFLECT_FIELD_UNKNOWN,
-									entityClass, defaultRestriction.field());
-						}
-						
-						if (sqlFieldInfo.isListOnly() || sqlFieldInfo.isPrimaryKey() || sqlFieldInfo.isForeignKey()
-								|| sqlFieldInfo.isTenantId()) {
-							throw new UnifyException(UnifyCoreErrorConstants.DEFAULT_RESTRICTION_FIELD_NOT_ALLOWED,
-									entityClass, defaultRestriction.field());
-						}
-
-						Object val = ConverterUtils.convert(sqlFieldInfo.getFieldType(), defaultRestriction.value());
-						defaultRestrictionList.add(new SqlDefaultRestrictionInfo(defaultRestriction.field(),
-								new Equals(defaultRestriction.field(), val)));
-					}
-				}
+				List<SqlDefaultRestrictionInfo> defaultRestrictionList = extractDefaultQueryRestrictions(ta,
+						entityClass, heirachyList, propertyInfoMap);
 
 				String tableAlias = "T" + (++tAliasCounter);
 				SqlEntityInfo sqlEntityInfo = new SqlEntityInfo(null, (Class<? extends Entity>) entityClass, null,
@@ -1495,6 +1476,43 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 					throw new UnifyException(UnifyCoreErrorConstants.RECORD_EXTENSION_UNSUPPORTED_ANNOTATION,
 							annotationClass.getName(), field);
 				}
+			}
+
+			private List<SqlDefaultRestrictionInfo> extractDefaultQueryRestrictions(Table ta, Class<?> entityClass,
+					List<Class<?>> heirachyList, Map<String, SqlFieldInfo> propertyInfoMap) throws Exception {
+				List<SqlDefaultRestrictionInfo> defaultRestrictionList = new ArrayList<SqlDefaultRestrictionInfo>();
+				List<DefaultRestriction> allDefaultRestrictions = new ArrayList<DefaultRestriction>(
+						Arrays.asList(ta.defaultQueryRestrictions()));
+				for (Class<?> clazz : heirachyList) {
+					DefaultQueryRestrictions dqrs = clazz.getAnnotation(DefaultQueryRestrictions.class);
+					if (dqrs != null) {
+						for (DefaultRestriction dra : dqrs.value()) {
+							allDefaultRestrictions.add(dra);
+						}
+					}
+				}
+
+				if (!allDefaultRestrictions.isEmpty()) {
+					for (DefaultRestriction defaultRestriction : allDefaultRestrictions) {
+						SqlFieldInfo sqlFieldInfo = propertyInfoMap.get(defaultRestriction.field());
+						if (sqlFieldInfo == null) {
+							throw new UnifyException(UnifyCoreErrorConstants.REFLECT_FIELD_UNKNOWN, entityClass,
+									defaultRestriction.field());
+						}
+
+						if (sqlFieldInfo.isListOnly() || sqlFieldInfo.isPrimaryKey() || sqlFieldInfo.isForeignKey()
+								|| sqlFieldInfo.isTenantId()) {
+							throw new UnifyException(UnifyCoreErrorConstants.DEFAULT_RESTRICTION_FIELD_NOT_ALLOWED,
+									entityClass, defaultRestriction.field());
+						}
+
+						Object val = ConverterUtils.convert(sqlFieldInfo.getFieldType(), defaultRestriction.value());
+						defaultRestrictionList.add(new SqlDefaultRestrictionInfo(defaultRestriction.field(),
+								new Equals(defaultRestriction.field(), val)));
+					}
+				}
+
+				return defaultRestrictionList;
 			}
 
 			private Map<String, SqlUniqueConstraintInfo> extractUniqueConstraints(String tableName,
