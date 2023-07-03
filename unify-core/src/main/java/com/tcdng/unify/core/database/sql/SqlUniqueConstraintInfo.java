@@ -26,22 +26,36 @@ import java.util.List;
  */
 public class SqlUniqueConstraintInfo implements SqlUniqueConstraintSchemaInfo {
 
-    private String name;
+	private String name;
 
-    private List<String> fieldNameList;
+	private List<String> fieldNameList;
 
-    public SqlUniqueConstraintInfo(String name, List<String> fieldNameList) {
-        this.name = name;
-        this.fieldNameList = Collections.unmodifiableList(fieldNameList);
-    }
+	private List<SqlQueryRestrictionInfo> conditionList;
 
-    @Override
-    public String getName() {
-        return this.name;
-    }
+	public SqlUniqueConstraintInfo(String name, List<String> fieldNameList,
+			List<SqlQueryRestrictionInfo> conditionList) {
+		this.name = name;
+		this.fieldNameList = Collections.unmodifiableList(fieldNameList);
+		this.conditionList = Collections.unmodifiableList(conditionList);
+	}
 
-    @Override
-    public List<String> getFieldNameList() {
-        return fieldNameList;
-    }
+	@Override
+	public String getName() {
+		return this.name;
+	}
+
+	@Override
+	public List<String> getFieldNameList() {
+		return fieldNameList;
+	}
+
+	@Override
+	public boolean isWithConditionList() {
+		return !conditionList.isEmpty();
+	}
+
+	@Override
+	public List<SqlQueryRestrictionInfo> getConditionList() {
+		return conditionList;
+	}
 }

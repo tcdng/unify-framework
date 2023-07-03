@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.tcdng.unify.common.constants.EnumConst;
+import com.tcdng.unify.convert.util.ConverterUtils;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyComponentConfig;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
@@ -44,6 +45,8 @@ import com.tcdng.unify.core.annotation.ColumnOverride;
 import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
+import com.tcdng.unify.core.annotation.DefaultQueryRestrictions;
+import com.tcdng.unify.core.annotation.QueryRestriction;
 import com.tcdng.unify.core.annotation.ForeignKey;
 import com.tcdng.unify.core.annotation.ForeignKeyOverride;
 import com.tcdng.unify.core.annotation.FosterParentId;
@@ -69,6 +72,7 @@ import com.tcdng.unify.core.annotation.Version;
 import com.tcdng.unify.core.annotation.View;
 import com.tcdng.unify.core.annotation.ViewRestriction;
 import com.tcdng.unify.core.constant.DefaultColumnPositionConstants;
+import com.tcdng.unify.core.criterion.Equals;
 import com.tcdng.unify.core.criterion.RestrictionType;
 import com.tcdng.unify.core.data.CycleDetector;
 import com.tcdng.unify.core.data.FactoryMap;
@@ -218,10 +222,12 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 				if (sqlDataSourceDialect.isAllObjectsInLowerCase()) {
 					tableName = tableName.toLowerCase();
 				}
+
 				return new SqlEntityInfo(null, StaticReference.class, (Class<? extends EnumConst>) entityClass, null,
 						schema, tableName, preferredTableName, schemaTableName, tableAlias, tableName,
 						preferredTableName, schemaTableName, idFieldInfo, null, null, null, null, null, propertyInfoMap,
-						null, null, null, null, null, null, null, sqlDataSourceDialect.isAllObjectsInLowerCase(), true);
+						null, null, null, null, null, null, null, null, sqlDataSourceDialect.isAllObjectsInLowerCase(),
+						true);
 			}
 
 			@SuppressWarnings("unchecked")
@@ -333,14 +339,13 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 							if (ia != null || va != null || loa != null || fka != null || clda != null || cla != null
 									|| fpta != null || fpia != null || cca != null) {
 								throw new UnifyException(
-										UnifyCoreErrorConstants.BAD_COMBINATION_OF_ANNOTATION_WITH_MAPPED,
-										searchClass, field);
+										UnifyCoreErrorConstants.BAD_COMBINATION_OF_ANNOTATION_WITH_MAPPED, searchClass,
+										field);
 							}
 
 							if (ca == null) {
-								throw new UnifyException(
-										UnifyCoreErrorConstants.COLUMN_ANNOTATION_REQUIRED_WITH_MAPPED, searchClass,
-										field);
+								throw new UnifyException(UnifyCoreErrorConstants.COLUMN_ANNOTATION_REQUIRED_WITH_MAPPED,
+										searchClass, field);
 							}
 
 							if (!Long.class.equals(field.getType())) {
@@ -348,7 +353,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 										searchClass, field);
 							}
 						}
-						
+
 						final boolean isTenantId = tia != null;
 						if (isTenantId) {
 							if (tenantIdFieldInfo != null) {
@@ -802,8 +807,8 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 									sqlDataSourceDialect.getPreferredName(column), constraintName, null, isPrimaryKey,
 									isForeignKey, isListOnly, isIgnoreFkConstraint, transformer, sqlFieldDimensions,
 									isNullable, isFosterParentType, isFosterParentId, isCategoryColumn, isTenantId,
-									mapped, defaultVal, field, getterSetterInfo.getGetter(), getterSetterInfo.getSetter(),
-									sqlDataSourceDialect.isAllObjectsInLowerCase());
+									mapped, defaultVal, field, getterSetterInfo.getGetter(),
+									getterSetterInfo.getSetter(), sqlDataSourceDialect.isAllObjectsInLowerCase());
 
 							if (ia != null) {
 								idFieldInfo = sqlFieldInfo;
@@ -952,13 +957,17 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 					}
 				}
 
+				List<SqlQueryRestrictionInfo> defaultRestrictionList = extractDefaultQueryRestrictions(ta, entityClass,
+						heirachyList, propertyInfoMap);
+
 				String tableAlias = "T" + (++tAliasCounter);
 				SqlEntityInfo sqlEntityInfo = new SqlEntityInfo(null, (Class<? extends Entity>) entityClass, null,
 						entityPolicy, schema, tableName, preferredTableName, schemaTableName, tableAlias, viewName,
 						preferredViewName, schemaViewName, idFieldInfo, versionFieldInfo, tenantIdFieldInfo,
 						fosterParentTypeFieldInfo, fosterParentIdFieldInfo, categoryFieldInfo, propertyInfoMap,
-						childInfoList, childListInfoList, uniqueConstraintMap, indexMap, null, null, null,
-						sqlDataSourceDialect.isAllObjectsInLowerCase(), ta != null ? ta.identityManaged() : true);
+						defaultRestrictionList, childInfoList, childListInfoList, uniqueConstraintMap, indexMap, null,
+						null, null, sqlDataSourceDialect.isAllObjectsInLowerCase(),
+						ta != null ? ta.identityManaged() : true);
 				return sqlEntityInfo;
 			}
 
@@ -1163,8 +1172,8 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 								foreignFieldInfo, null, field.getName(), column,
 								sqlDataSourceDialect.getPreferredName(column), constraintName, null, isPrimaryKey,
 								isForeignKey, isListOnly, isIgnoreFkConstraint, transformer, sqlFieldDimensions,
-								isNullable, isFosterParentType, isFosterParentId, isCategoryColumn, isTenantId,
-								mapped, defaultVal, field, getterSetterInfo.getGetter(), getterSetterInfo.getSetter(),
+								isNullable, isFosterParentType, isFosterParentId, isCategoryColumn, isTenantId, mapped,
+								defaultVal, field, getterSetterInfo.getGetter(), getterSetterInfo.getSetter(),
 								sqlDataSourceDialect.isAllObjectsInLowerCase());
 						propertyInfoMap.put(sqlFieldInfo.getName(), sqlFieldInfo);
 					}
@@ -1238,8 +1247,8 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 								sqlDataSourceDialect.getPreferredName(column), null, null, isPrimaryKey, isForeignKey,
 								isListOnly, isIgnoreFkConstraint, foreignFieldInfo.getTransformer(), sqlFieldDimensions,
 								foreignFieldInfo.isNullable(), isFosterParentType, isFosterParentId, isCategoryColumn,
-								isTenantId, mapped, null, field, getterSetterInfo.getGetter(), getterSetterInfo.getSetter(),
-								sqlDataSourceDialect.isAllObjectsInLowerCase());
+								isTenantId, mapped, null, field, getterSetterInfo.getGetter(),
+								getterSetterInfo.getSetter(), sqlDataSourceDialect.isAllObjectsInLowerCase());
 
 						propertyInfoMap.put(sqlFieldInfo.getName(), sqlFieldInfo);
 					}
@@ -1439,7 +1448,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 				SqlEntityInfo sqlEntityInfo = new SqlEntityInfo(null, (Class<? extends Entity>) entityClass, null, null,
 						schema, viewName, preferredViewName, schemaViewName, null, viewName, preferredViewName,
 						schemaViewName, idFieldInfo, null, null, null, null, null, propertyInfoMap, null, null, null,
-						null, null, tableReferences.getBaseTables(), viewRestrictionList,
+						null, null, null, tableReferences.getBaseTables(), viewRestrictionList,
 						sqlDataSourceDialect.isAllObjectsInLowerCase(), true);
 				return sqlEntityInfo;
 			}
@@ -1469,9 +1478,55 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 				}
 			}
 
+			private List<SqlQueryRestrictionInfo> extractDefaultQueryRestrictions(Table ta, Class<?> entityClass,
+					List<Class<?>> heirachyList, Map<String, SqlFieldInfo> propertyInfoMap) throws Exception {
+				List<QueryRestriction> queryRestrictions = ta != null
+						? new ArrayList<QueryRestriction>(Arrays.asList(ta.defaultQueryRestrictions()))
+						: new ArrayList<QueryRestriction>();
+				for (Class<?> clazz : heirachyList) {
+					DefaultQueryRestrictions dqrs = clazz.getAnnotation(DefaultQueryRestrictions.class);
+					if (dqrs != null) {
+						for (QueryRestriction qra : dqrs.value()) {
+							queryRestrictions.add(qra);
+						}
+					}
+				}
+
+				return extractSqlQueryRestrictions(entityClass, queryRestrictions, propertyInfoMap);
+			}
+
+			private List<SqlQueryRestrictionInfo> extractSqlQueryRestrictions(Class<?> entityClass,
+					List<QueryRestriction> queryRestrictions, Map<String, SqlFieldInfo> propertyInfoMap)
+					throws Exception {
+				if (!queryRestrictions.isEmpty()) {
+					List<SqlQueryRestrictionInfo> sqlQueryRestrictionList = new ArrayList<SqlQueryRestrictionInfo>();
+					for (QueryRestriction queryRestriction : queryRestrictions) {
+						SqlFieldInfo sqlFieldInfo = propertyInfoMap.get(queryRestriction.field());
+						if (sqlFieldInfo == null) {
+							throw new UnifyException(UnifyCoreErrorConstants.REFLECT_FIELD_UNKNOWN, entityClass,
+									queryRestriction.field());
+						}
+
+						if (sqlFieldInfo.isListOnly() || sqlFieldInfo.isPrimaryKey() || sqlFieldInfo.isForeignKey()
+								|| sqlFieldInfo.isTenantId()) {
+							throw new UnifyException(UnifyCoreErrorConstants.DEFAULT_RESTRICTION_FIELD_NOT_ALLOWED,
+									entityClass, queryRestriction.field());
+						}
+
+						Object val = ConverterUtils.convert(sqlFieldInfo.getFieldType(), queryRestriction.value());
+						sqlQueryRestrictionList.add(new SqlQueryRestrictionInfo(queryRestriction.field(),
+								new Equals(queryRestriction.field(), val)));
+					}
+
+					return sqlQueryRestrictionList;
+				}
+
+				return Collections.emptyList();
+			}
+
 			private Map<String, SqlUniqueConstraintInfo> extractUniqueConstraints(String tableName,
 					Class<?> entityClass, List<Class<?>> heirachyList, Map<String, SqlFieldInfo> propertyInfoMap,
-					SqlFieldInfo tenantIdFieldInfo, UniqueConstraint[] uniqueConstraints) throws UnifyException {
+					SqlFieldInfo tenantIdFieldInfo, UniqueConstraint[] uniqueConstraints) throws Exception {
 				// Unique constraints
 				List<UniqueConstraint> resolvedConstraints = new ArrayList<UniqueConstraint>();
 				for (Class<?> clazz : heirachyList) {
@@ -1525,7 +1580,10 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 							fieldNameList.add(0, tenantIdFieldInfo.getName());
 						}
 
-						uniqueConstraintMap.put(name, new SqlUniqueConstraintInfo(name, fieldNameList));
+						List<SqlQueryRestrictionInfo> sqlQueryRestrictionList = extractSqlQueryRestrictions(entityClass,
+								Arrays.asList(uca.condition()), propertyInfoMap);
+						uniqueConstraintMap.put(name,
+								new SqlUniqueConstraintInfo(name, fieldNameList, sqlQueryRestrictionList));
 					}
 				}
 				return uniqueConstraintMap;

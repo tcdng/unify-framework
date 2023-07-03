@@ -31,4 +31,8 @@ public @interface UniqueConstraint {
 
     /** The unique constraint properties */
     String[] value();
+    
+    /** constraint condition*/
+	QueryRestriction[] condition() default {};
+
 }

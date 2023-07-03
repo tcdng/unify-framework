@@ -87,6 +87,11 @@ public @interface Table {
      */
     String versionColumn() default AnnotationConstants.NONE;
 
+    /**
+     * Default query restriction to apply when field is not present in query.
+     */
+    QueryRestriction[] defaultQueryRestrictions() default {};
+    
     /** Table unique constraints */
     UniqueConstraint[] uniqueConstraints() default {};
 

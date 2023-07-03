@@ -77,7 +77,7 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
     private SqlFieldInfo fosterParentIdFieldInfo;
     
     private SqlFieldInfo categoryFieldInfo;
-    
+     
     private List<SqlFieldInfo> fieldInfoList;
 
     private List<SqlFieldInfo> listFieldInfoList;
@@ -99,6 +99,8 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
     private List<SqlForeignKeyInfo> managedForeignKeyList;
 
     private Map<String, ChildFieldInfo> childInfoByName;
+    
+    private List<SqlQueryRestrictionInfo> defaultRestrictionList;
 
     private List<ChildFieldInfo> childInfoList;
 
@@ -125,6 +127,7 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
             String schemaTableName, String tableAlias, String viewName, String preferredViewName, String schemaViewName,
             SqlFieldInfo idFieldInfo, SqlFieldInfo versionFieldInfo, SqlFieldInfo tenantIdFieldInfo, SqlFieldInfo fosterParentTypeFieldInfo,
             SqlFieldInfo fosterParentIdFieldInfo, SqlFieldInfo categoryFieldInfo, Map<String, SqlFieldInfo> sQLFieldInfoMap,
+            List<SqlQueryRestrictionInfo> defaultRestrictionList,
             List<ChildFieldInfo> childInfoList, List<ChildFieldInfo> childListInfoList,
             Map<String, SqlUniqueConstraintInfo> uniqueConstraintMap, Map<String, SqlIndexInfo> indexMap,
             List<Map<String, Object>> staticValueList, Map<String, Class<?>> viewBaseTables,
@@ -162,6 +165,7 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 
         initFieldInfos(sQLFieldInfoMap);
 
+        this.defaultRestrictionList = DataUtils.unmodifiableList(defaultRestrictionList);
         this.childInfoList = DataUtils.unmodifiableList(childInfoList);
         this.childListInfoList = DataUtils.unmodifiableList(childListInfoList);
         this.childInfoByName = null;
@@ -209,6 +213,7 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
         this.fosterParentTypeFieldInfo = originSqlEntityInfo.fosterParentTypeFieldInfo;
         this.fosterParentIdFieldInfo = originSqlEntityInfo.fosterParentIdFieldInfo;
         this.categoryFieldInfo = originSqlEntityInfo.categoryFieldInfo;
+        this.defaultRestrictionList = originSqlEntityInfo.defaultRestrictionList;
         this.childInfoList = originSqlEntityInfo.childInfoList;
         this.childListInfoList = originSqlEntityInfo.childListInfoList;
         this.childInfoByName = originSqlEntityInfo.childInfoByName;
@@ -490,7 +495,15 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
         return !childInfoList.isEmpty();
     }
 
-    public List<ChildFieldInfo> getManyChildInfoList() {
+    public boolean isWithDefaultRestrictions() {
+        return !defaultRestrictionList.isEmpty();
+    }
+
+    public List<SqlQueryRestrictionInfo> getDefaultRestrictionList() {
+		return defaultRestrictionList;
+	}
+
+	public List<ChildFieldInfo> getManyChildInfoList() {
         return childListInfoList;
     }
 
