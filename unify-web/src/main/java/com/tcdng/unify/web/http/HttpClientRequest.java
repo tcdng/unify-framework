@@ -37,76 +37,84 @@ import com.tcdng.unify.web.constant.RequestParameterConstants;
  */
 public class HttpClientRequest extends AbstractClientRequest {
 
-    private ClientPlatform clientPlatform;
+	private ClientPlatform clientPlatform;
 
-    private HttpRequestMethodType methodType;
+	private HttpRequestMethodType methodType;
 
-    private RequestPathParts requestPathParts;
+	private RequestPathParts requestPathParts;
 
-    private Charset charset;
+	private Charset charset;
 
-    private Map<String, Object> parameters;
+	private HttpRequestHeaders headers;
 
-    private Map<String, ClientCookie> cookies;
+	private Map<String, Object> parameters;
 
-    public HttpClientRequest(ClientPlatform clientPlatform, HttpRequestMethodType methodType,
-            RequestPathParts requestPathParts, Charset charset, Map<String, Object> parameters,
-            Map<String, ClientCookie> cookies) {
-        this.clientPlatform = clientPlatform;
-        this.methodType = methodType;
-        this.requestPathParts = requestPathParts;
-        this.charset = charset;
-        this.parameters = parameters;
-        this.cookies = cookies;
-    }
+	private Map<String, ClientCookie> cookies;
 
-    @Override
-    public ClientPlatform getClientPlatform() {
-        return clientPlatform;
-    }
+	public HttpClientRequest(ClientPlatform clientPlatform, HttpRequestMethodType methodType,
+			RequestPathParts requestPathParts, Charset charset, HttpRequestHeaders headers,
+			Map<String, Object> parameters, Map<String, ClientCookie> cookies) {
+		this.clientPlatform = clientPlatform;
+		this.methodType = methodType;
+		this.requestPathParts = requestPathParts;
+		this.headers = headers;
+		this.charset = charset;
+		this.parameters = parameters;
+		this.cookies = cookies;
+	}
 
-    @Override
-    public ClientRequestType getType() {
-        return methodType.clientRequestType();
-    }
+	@Override
+	public ClientPlatform getClientPlatform() {
+		return clientPlatform;
+	}
 
-    @Override
-    public RequestPathParts getRequestPathParts() {
-        return requestPathParts;
-    }
+	@Override
+	public ClientRequestType getType() {
+		return methodType.clientRequestType();
+	}
 
-    @Override
-    public Charset getCharset() {
-        return charset;
-    }
+	@Override
+	public RequestPathParts getRequestPathParts() {
+		return requestPathParts;
+	}
 
-    @Override
-    public Set<String> getParameterNames() {
-        return parameters.keySet();
-    }
+	@Override
+	public Charset getCharset() {
+		return charset;
+	}
 
-    @Override
-    public Object getParameter(String name) {
-        return parameters.get(name);
-    }
+	@Override
+	public Set<String> getParameterNames() {
+		return parameters.keySet();
+	}
 
-    @Override
-    public InputStream getInputStream() throws UnifyException {
-        InputStream in = (InputStream) parameters.get(RequestParameterConstants.REMOTE_CALL_INPUTSTREAM);
-        if (in == null) {
-            throw new UnifyException(UnifyWebErrorConstants.REMOTECALL_NOT_INPUTSTREAM);
-        }
+	@Override
+	public Object getParameter(String name) {
+		return parameters.get(name);
+	}
 
-        return in;
-    }
+	@Override
+	public HttpRequestHeaders getRequestHeaders() {
+		return headers;
+	}
 
-    @Override
-    public Set<String> getCookieNames() {
-        return cookies.keySet();
-    }
+	@Override
+	public InputStream getInputStream() throws UnifyException {
+		InputStream in = (InputStream) parameters.get(RequestParameterConstants.REMOTE_CALL_INPUTSTREAM);
+		if (in == null) {
+			throw new UnifyException(UnifyWebErrorConstants.REMOTECALL_NOT_INPUTSTREAM);
+		}
 
-    @Override
-    public ClientCookie getCookie(String name) {
-        return cookies.get(name);
-    }
+		return in;
+	}
+
+	@Override
+	public Set<String> getCookieNames() {
+		return cookies.keySet();
+	}
+
+	@Override
+	public ClientCookie getCookie(String name) {
+		return cookies.get(name);
+	}
 }

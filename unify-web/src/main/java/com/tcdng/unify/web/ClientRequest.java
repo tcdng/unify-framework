@@ -21,6 +21,7 @@ import java.util.Set;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.constant.ClientPlatform;
+import com.tcdng.unify.web.http.HttpRequestHeaders;
 
 /**
  * A client request.
@@ -99,4 +100,11 @@ public interface ClientRequest {
      * @return the cookie if found otherwise null
      */
     ClientCookie getCookie(String name);
+    
+	/**
+	 * Gets the request headers.
+	 * 
+	 * @return the request headers
+	 */
+	HttpRequestHeaders getRequestHeaders();
 }

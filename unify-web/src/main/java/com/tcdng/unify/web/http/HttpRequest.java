@@ -22,7 +22,6 @@ import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.TimeZone;
 
 import com.tcdng.unify.core.SessionAttributeProvider;
@@ -34,7 +33,7 @@ import com.tcdng.unify.web.ClientCookie;
  * @author The Code Department
  * @since 1.0
  */
-public interface HttpRequest {
+public interface HttpRequest extends HttpRequestHeaders, HttpRequestParameters {
 
 	String getContentType();
 
@@ -56,18 +55,12 @@ public interface HttpRequest {
 
 	int getServerPort();
 
-	String getHeader(String headerName);
-
-	String getParameter(String paramName);
-
 	HttpUserSession createHttpUserSession(SessionAttributeProvider attributeProvider, Locale locale, TimeZone timeZone,
 			String sessionId, String uriBase, String contextPath, String tenantPath, String remoteIpAddress);
 
 	BufferedReader getReader() throws IOException;
 
 	InputStream getInputStream() throws IOException;
-
-	Map<String, String[]> getParameterMap();
 
 	Collection<HttpPart> getParts() throws Exception;
 

@@ -158,7 +158,7 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 		String resolvedPath = httpRequest.getPathInfo();
 		return requestPathParts.get(resolvedPath == null ? "" : resolvedPath);
 	}
-	
+
 	@Override
 	public RequestPathParts getRequestPathParts(String requestPath) throws UnifyException {
 		return requestPathParts.get(requestPath);
@@ -174,7 +174,7 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 			}
 
 			ClientRequest clientRequest = new HttpClientRequest(detectClientPlatform(httpRequest), methodType,
-					requestPathParts, charset, extractRequestParameters(httpRequest, charset),
+					requestPathParts, charset, httpRequest, extractRequestParameters(httpRequest, charset),
 					extractCookies(httpRequest));
 			ClientResponse clientResponse = new HttpClientResponse(httpResponse);
 
