@@ -23,6 +23,10 @@ package com.tcdng.unify.web.http;
  */
 public interface HttpRequestHeaderConstants {
 	
+	String AUTHORIZATION = "Authorization";
+	
+	String HOST = "Host";
+	
 	String ORIGIN = "Origin";
 	
 	String PROXY_CLIENT_IP = "Proxy-Client-IP";
