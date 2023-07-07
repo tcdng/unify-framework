@@ -24,6 +24,9 @@ import com.tcdng.unify.core.logging.EventLogger;
 import com.tcdng.unify.core.util.SystemUtils;
 import com.tcdng.unify.core.util.ValueStoreUtils;
 import com.tcdng.unify.web.constant.Secured;
+import com.tcdng.unify.web.constant.UnifyWebRequestAttributeConstants;
+import com.tcdng.unify.web.http.HttpRequestHeaders;
+import com.tcdng.unify.web.http.HttpRequestParameters;
 
 /**
  * Abstract base controller component.
@@ -66,6 +69,14 @@ public abstract class AbstractController extends AbstractUnifyComponent implemen
 	@Override
 	protected void onTerminate() throws UnifyException {
 
+	}
+
+	protected HttpRequestHeaders getHttpRequestHeaders() throws UnifyException {
+		return (HttpRequestHeaders) getRequestAttribute(UnifyWebRequestAttributeConstants.HEADERS);
+	}
+
+	protected HttpRequestParameters getHttpRequestParameters() throws UnifyException {
+		return (HttpRequestParameters) getRequestAttribute(UnifyWebRequestAttributeConstants.PARAMETERS);
 	}
 
 	protected ValueStore createValueStore(Object sourceObject) throws UnifyException {
