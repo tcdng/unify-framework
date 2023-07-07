@@ -20,7 +20,6 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.stream.XmlObjectStreamer;
 import com.tcdng.unify.web.constant.RequestParameterConstants;
-import com.tcdng.unify.web.http.HttpRequestHeaders;
 import com.tcdng.unify.web.remotecall.RemoteCallFormat;
 
 /**
@@ -49,12 +48,12 @@ public abstract class AbstractPlainXmlController extends AbstractPlainController
 
 		response.setContentType(RemoteCallFormat.XML.mimeType().template());
 		String xmlRequest = (String) request.getParameter(RequestParameterConstants.REMOTE_CALL_BODY);
-		xmlObjectStreamer.marshal(doExecute(request.getRequestHeaders(), xmlRequest), response.getWriter());
+		xmlObjectStreamer.marshal(doExecute(xmlRequest), response.getWriter());
 	}
 
 	protected <T> T getObjectFromRequestXml(Class<T> xmlType, String xml) throws UnifyException {
 		return xmlObjectStreamer.unmarshal(xmlType, xml);
 	}
 
-	protected abstract Object doExecute(HttpRequestHeaders headers, String xmlRequest) throws UnifyException;
+	protected abstract Object doExecute(String xmlRequest) throws UnifyException;
 }

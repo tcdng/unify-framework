@@ -20,7 +20,6 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.stream.JsonObjectStreamer;
 import com.tcdng.unify.web.constant.RequestParameterConstants;
-import com.tcdng.unify.web.http.HttpRequestHeaders;
 import com.tcdng.unify.web.remotecall.RemoteCallFormat;
 
 /**
@@ -49,12 +48,12 @@ public abstract class AbstractPlainJsonController extends AbstractPlainControlle
 
 		response.setContentType(RemoteCallFormat.JSON.mimeType().template());
 		String jsonRequest = (String) request.getParameter(RequestParameterConstants.REMOTE_CALL_BODY);
-		jsonObjectStreamer.marshal(doExecute(request.getRequestHeaders(), jsonRequest), response.getWriter());
+		jsonObjectStreamer.marshal(doExecute(jsonRequest), response.getWriter());
 	}
 
 	protected <T> T getObjectFromRequestJson(Class<T> jsonType, String json) throws UnifyException {
 		return jsonObjectStreamer.unmarshal(jsonType, json);
 	}
 
-	protected abstract Object doExecute(HttpRequestHeaders headers, String jsonRequest) throws UnifyException;
+	protected abstract Object doExecute(String jsonRequest) throws UnifyException;
 }
