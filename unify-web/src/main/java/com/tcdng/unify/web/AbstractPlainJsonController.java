@@ -16,6 +16,9 @@
 
 package com.tcdng.unify.web;
 
+import java.io.IOException;
+import java.io.StringWriter;
+
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.stream.JsonObjectStreamer;
@@ -30,30 +33,50 @@ import com.tcdng.unify.web.remotecall.RemoteCallFormat;
  */
 public abstract class AbstractPlainJsonController extends AbstractPlainController {
 
-    @Configurable
-    private JsonObjectStreamer jsonObjectStreamer;
+	@Configurable
+	private JsonObjectStreamer jsonObjectStreamer;
 
-    public void setJsonObjectStreamer(JsonObjectStreamer jsonObjectStreamer) {
-        this.jsonObjectStreamer = jsonObjectStreamer;
-    }
+	public void setJsonObjectStreamer(JsonObjectStreamer jsonObjectStreamer) {
+		this.jsonObjectStreamer = jsonObjectStreamer;
+	}
 
-    @Override
-    public void doProcess(ClientRequest request, ClientResponse response) throws UnifyException {
-        RemoteCallFormat remoteCallFormat = (RemoteCallFormat) request
-                .getParameter(RequestParameterConstants.REMOTE_CALL_FORMAT);
-        if (!RemoteCallFormat.JSON.equals(remoteCallFormat)) {
-            throw new UnifyException(UnifyWebErrorConstants.CONTROLLER_MESSAGE_FORMAT_NOT_MATCH_EXPECTED,
-                    remoteCallFormat, RemoteCallFormat.JSON, getName());
-        }
+	@Override
+	public void doProcess(ClientRequest request, ClientResponse response) throws UnifyException {
+		RemoteCallFormat remoteCallFormat = (RemoteCallFormat) request
+				.getParameter(RequestParameterConstants.REMOTE_CALL_FORMAT);
+		if (!RemoteCallFormat.JSON.equals(remoteCallFormat)) {
+			throw new UnifyException(UnifyWebErrorConstants.CONTROLLER_MESSAGE_FORMAT_NOT_MATCH_EXPECTED,
+					remoteCallFormat, RemoteCallFormat.JSON, getName());
+		}
 
-        response.setContentType(RemoteCallFormat.JSON.mimeType().template());
-        String jsonRequest = (String) request.getParameter(RequestParameterConstants.REMOTE_CALL_BODY);
-        jsonObjectStreamer.marshal(doExecute(jsonRequest), response.getWriter());
-    }
+		response.setContentType(RemoteCallFormat.JSON.mimeType().template());
+		final String jsonRequest = (String) request.getParameter(RequestParameterConstants.REMOTE_CALL_BODY);
+		final String jsonResponse = doExecute(jsonRequest);
+		if (jsonResponse != null) {
+			try {
+				response.getWriter().write(jsonResponse);
+				response.getWriter().flush();
+			} catch (IOException e) {
+				throwOperationErrorException(e);
+			} catch (UnifyException e) {
+				throw e;
+			}
+		}
+	}
 
-    protected <T> T getObjectFromRequestJson(Class<T> jsonType, String json) throws UnifyException {
-        return jsonObjectStreamer.unmarshal(jsonType, json);
-    }
+	protected final <T> T getObjectFromRequestJson(Class<T> jsonType, String json) throws UnifyException {
+		return jsonObjectStreamer.unmarshal(jsonType, json);
+	}
 
-    protected abstract Object doExecute(String jsonRequest) throws UnifyException;
+	protected final String getResponseJsonFromObject(Object obj) throws UnifyException {
+		if (obj != null) {
+			StringWriter sw = new StringWriter();
+			jsonObjectStreamer.marshal(obj, sw);
+			return sw.toString();
+		}
+		
+		return null;
+	}
+
+	protected abstract String doExecute(String jsonRequest) throws UnifyException;
 }

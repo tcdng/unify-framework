@@ -16,6 +16,9 @@
 
 package com.tcdng.unify.web;
 
+import java.io.IOException;
+import java.io.StringWriter;
+
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.stream.XmlObjectStreamer;
@@ -30,30 +33,50 @@ import com.tcdng.unify.web.remotecall.RemoteCallFormat;
  */
 public abstract class AbstractPlainXmlController extends AbstractPlainController {
 
-    @Configurable
-    private XmlObjectStreamer xmlObjectStreamer;
+	@Configurable
+	private XmlObjectStreamer xmlObjectStreamer;
 
-    public void setXmlObjectStreamer(XmlObjectStreamer xmlObjectStreamer) {
-        this.xmlObjectStreamer = xmlObjectStreamer;
-    }
+	public void setXmlObjectStreamer(XmlObjectStreamer xmlObjectStreamer) {
+		this.xmlObjectStreamer = xmlObjectStreamer;
+	}
 
-    @Override
-    public void doProcess(ClientRequest request, ClientResponse response) throws UnifyException {
-        RemoteCallFormat remoteCallFormat = (RemoteCallFormat) request
-                .getParameter(RequestParameterConstants.REMOTE_CALL_FORMAT);
-        if (!RemoteCallFormat.XML.equals(remoteCallFormat)) {
-            throw new UnifyException(UnifyWebErrorConstants.CONTROLLER_MESSAGE_FORMAT_NOT_MATCH_EXPECTED,
-                    remoteCallFormat, RemoteCallFormat.XML, getName());
-        }
+	@Override
+	public void doProcess(ClientRequest request, ClientResponse response) throws UnifyException {
+		RemoteCallFormat remoteCallFormat = (RemoteCallFormat) request
+				.getParameter(RequestParameterConstants.REMOTE_CALL_FORMAT);
+		if (!RemoteCallFormat.XML.equals(remoteCallFormat)) {
+			throw new UnifyException(UnifyWebErrorConstants.CONTROLLER_MESSAGE_FORMAT_NOT_MATCH_EXPECTED,
+					remoteCallFormat, RemoteCallFormat.XML, getName());
+		}
 
-        response.setContentType(RemoteCallFormat.XML.mimeType().template());
-        String xmlRequest = (String) request.getParameter(RequestParameterConstants.REMOTE_CALL_BODY);
-        xmlObjectStreamer.marshal(doExecute(xmlRequest), response.getWriter());
-    }
+		response.setContentType(RemoteCallFormat.XML.mimeType().template());
+		String xmlRequest = (String) request.getParameter(RequestParameterConstants.REMOTE_CALL_BODY);
+		final String xmlResponse = doExecute(xmlRequest);
+		if (xmlResponse != null) {
+			try {
+				response.getWriter().write(xmlResponse);
+				response.getWriter().flush();
+			} catch (IOException e) {
+				throwOperationErrorException(e);
+			} catch (UnifyException e) {
+				throw e;
+			}
+		}
+	}
 
-    protected <T> T getObjectFromRequestXml(Class<T> xmlType, String xml) throws UnifyException {
-        return xmlObjectStreamer.unmarshal(xmlType, xml);
-    }
+	protected final <T> T getObjectFromRequestXml(Class<T> xmlType, String xml) throws UnifyException {
+		return xmlObjectStreamer.unmarshal(xmlType, xml);
+	}
 
-    protected abstract Object doExecute(String xmlRequest) throws UnifyException;
+	protected final String getResponseXmlFromObject(Object obj) throws UnifyException {
+		if (obj != null) {
+			StringWriter sw = new StringWriter();
+			xmlObjectStreamer.marshal(obj, sw);
+			return sw.toString();
+		}
+		
+		return null;
+	}
+
+	protected abstract String doExecute(String xmlRequest) throws UnifyException;
 }

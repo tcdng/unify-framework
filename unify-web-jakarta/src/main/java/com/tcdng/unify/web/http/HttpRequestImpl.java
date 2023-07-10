@@ -151,11 +151,12 @@ public class HttpRequestImpl implements HttpRequest {
     }
 
     @Override
-    public HttpUserSession createHttpUserSession(SessionAttributeProvider attributeProvider, Locale locale, TimeZone timeZone, String sessionId, String uriBase,
-            String contextPath, String tenantPath, String remoteIpAddress) {
-        return new HttpUserSessionImpl(attributeProvider, locale, timeZone, sessionId, uriBase.toString(), contextPath, tenantPath,
-                request.getRemoteHost(), remoteIpAddress, request.getRemoteUser());
-    }
+	public HttpUserSession createHttpUserSession(SessionAttributeProvider attributeProvider, Locale locale,
+			TimeZone timeZone, String sessionId, String uriBase, String contextPath, String tenantPath,
+			String remoteIpAddress) {
+		return new HttpUserSessionImpl(attributeProvider, locale, timeZone, sessionId, uriBase.toString(), contextPath,
+				tenantPath, request.getRemoteHost(), remoteIpAddress, request.getRemoteUser());
+	}
 
     @Override
     public void invalidateSession() {

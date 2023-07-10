@@ -23,6 +23,7 @@ import java.util.Set;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.constant.ClientPlatform;
+import com.tcdng.unify.web.http.HttpRequestHeaders;
 
 /**
  * Test controller request.
@@ -62,6 +63,11 @@ public class TestClientRequest extends AbstractClientRequest {
     }
 
     @Override
+	public HttpRequestHeaders getRequestHeaders() {
+		return null;
+	}
+
+	@Override
     public Set<String> getParameterNames() {
         return parameters.keySet();
     }

@@ -33,6 +33,8 @@ import com.tcdng.unify.web.TargetPath;
 import com.tcdng.unify.web.UnifyWebSessionAttributeConstants;
 import com.tcdng.unify.web.constant.ResultMappingConstants;
 import com.tcdng.unify.web.constant.UnifyWebRequestAttributeConstants;
+import com.tcdng.unify.web.http.HttpRequestHeaders;
+import com.tcdng.unify.web.http.HttpRequestParameters;
 import com.tcdng.unify.web.ui.PageAttributeConstants;
 import com.tcdng.unify.web.ui.PageRequestContextUtil;
 import com.tcdng.unify.web.ui.UIControllerUtil;
@@ -52,14 +54,12 @@ import com.tcdng.unify.web.ui.widget.panel.StandalonePanel;
 @UplAttributes({ @UplAttribute(name = "binding", type = String.class),
 		@UplAttribute(name = "styleClass", type = String.class, defaultVal = "$e{}"),
 		@UplAttribute(name = "styleClassBinding", type = String.class),
-		@UplAttribute(name = "style", type = String.class),
-		@UplAttribute(name = "caption", type = String.class),
+		@UplAttribute(name = "style", type = String.class), @UplAttribute(name = "caption", type = String.class),
 		@UplAttribute(name = "captionBinding", type = String.class),
 		@UplAttribute(name = "captionParamBinding", type = String.class),
 		@UplAttribute(name = "columnStyle", type = String.class),
 		@UplAttribute(name = "columnSelectSummary", type = boolean.class),
-		@UplAttribute(name = "hint", type = String.class),
-		@UplAttribute(name = "hintBinding", type = String.class),
+		@UplAttribute(name = "hint", type = String.class), @UplAttribute(name = "hintBinding", type = String.class),
 		@UplAttribute(name = "readOnly", type = boolean.class, defaultVal = "false"),
 		@UplAttribute(name = "disabled", type = boolean.class, defaultVal = "false"),
 		@UplAttribute(name = "ignoreParentState", type = boolean.class, defaultVal = "false"),
@@ -613,10 +613,18 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 
 	}
 
+	protected HttpRequestHeaders getHttpRequestHeaders() throws UnifyException {
+		return (HttpRequestHeaders) getRequestAttribute(UnifyWebRequestAttributeConstants.HEADERS);
+	}
+
+	protected HttpRequestParameters getHttpRequestParameters() throws UnifyException {
+		return (HttpRequestParameters) getRequestAttribute(UnifyWebRequestAttributeConstants.PARAMETERS);
+	}
+
 	protected boolean isTempValue(String name) throws UnifyException {
 		return valueStore != null ? valueStore.isTempValue(name) : false;
 	}
-	
+
 	protected void setTempValue(String name, Object value) throws UnifyException {
 		if (valueStore != null) {
 			valueStore.setTempValue(name, value);
@@ -627,7 +635,7 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 		if (valueStore != null) {
 			return valueStore.removeTempValue(name);
 		}
-		
+
 		return null;
 	}
 
@@ -668,7 +676,7 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 	protected boolean clearOtherPageClosedDetected() throws UnifyException {
 		return removePageAttribute(boolean.class, PageAttributeConstants.OTHER_PAGE_CLOSED_DETECTED);
 	}
-	
+
 	protected ViewDirective getViewDirective() throws UnifyException {
 		if (isApplicationIgnoreViewDirective()) {
 			return ViewDirective.ALLOW_VIEW_DIRECTIVE;
@@ -756,7 +764,7 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 	protected PageRequestContextUtil getRequestContextUtil() throws UnifyException {
 		return (PageRequestContextUtil) getComponent(WebUIApplicationComponents.APPLICATION_PAGEREQUESTCONTEXTUTIL);
 	}
-	
+
 	protected final String getContextURL(String path) throws UnifyException {
 		RequestContext requestContext = getRequestContext();
 		StringBuilder sb = new StringBuilder();
@@ -858,7 +866,7 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 	protected void applyOverrideTenantId(Query<? extends Entity> query, String tenantIdFieldName)
 			throws UnifyException {
 		Long overrideTenantId = getValue(Long.class, WidgetTempValueConstants.OVERRIDE_TENANT_ID);
- 		if (overrideTenantId != null) {
+		if (overrideTenantId != null) {
 			query.addEquals(tenantIdFieldName, overrideTenantId);
 		}
 	}

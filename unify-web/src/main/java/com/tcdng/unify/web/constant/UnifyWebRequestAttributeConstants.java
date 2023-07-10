@@ -35,5 +35,9 @@ public interface UnifyWebRequestAttributeConstants {
 
     String REPORTOPTIONS = "WR.REPORTOPTIONS";
 
+    String HEADERS = "WR.HEADERS";
+
+    String PARAMETERS = "WR.PARAMETERS";
+
     String TIMESTAMP_VARIABLE = ":TV";
 }

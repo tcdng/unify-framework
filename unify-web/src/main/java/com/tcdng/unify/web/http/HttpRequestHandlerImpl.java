@@ -56,9 +56,10 @@ import com.tcdng.unify.web.TenantPathManager;
 import com.tcdng.unify.web.UnifyWebErrorConstants;
 import com.tcdng.unify.web.UnifyWebPropertyConstants;
 import com.tcdng.unify.web.WebApplicationComponents;
-import com.tcdng.unify.web.constant.RequestHeaderConstants;
 import com.tcdng.unify.web.constant.RequestParameterConstants;
 import com.tcdng.unify.web.constant.ReservedPageControllerConstants;
+import com.tcdng.unify.web.constant.UnifyRequestHeaderConstants;
+import com.tcdng.unify.web.constant.UnifyWebRequestAttributeConstants;
 import com.tcdng.unify.web.remotecall.RemoteCallFormat;
 
 /**
@@ -158,7 +159,7 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 		String resolvedPath = httpRequest.getPathInfo();
 		return requestPathParts.get(resolvedPath == null ? "" : resolvedPath);
 	}
-	
+
 	@Override
 	public RequestPathParts getRequestPathParts(String requestPath) throws UnifyException {
 		return requestPathParts.get(requestPath);
@@ -173,19 +174,23 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 				charset = Charset.forName(httpRequest.getCharacterEncoding());
 			}
 
+			setRequestAttribute(UnifyWebRequestAttributeConstants.HEADERS, httpRequest);
+			setRequestAttribute(UnifyWebRequestAttributeConstants.PARAMETERS, httpRequest);
+			
 			ClientRequest clientRequest = new HttpClientRequest(detectClientPlatform(httpRequest), methodType,
-					requestPathParts, charset, extractRequestParameters(httpRequest, charset),
+					requestPathParts, charset, httpRequest, extractRequestParameters(httpRequest, charset),
 					extractCookies(httpRequest));
 			ClientResponse clientResponse = new HttpClientResponse(httpResponse);
 
 			String origin = httpRequest.getHeader("origin");
-			origin = origin != null ? origin : httpRequest.getHeader("Origin");
+			origin = origin != null ? origin : httpRequest.getHeader(HttpRequestHeaderConstants.ORIGIN);
 			if (!StringUtils.isBlank(origin)) {
 				if (remoteViewerList.isEmpty() || remoteViewerList.contains(origin)) {
-					httpResponse.setHeader("Access-Control-Allow-Origin", origin);
-					httpResponse.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS");
-					httpResponse.setHeader("Access-Control-Allow-Headers", "Content-Type");
-					httpResponse.setHeader("Access-Control-Max-Age", "600");
+					httpResponse.setHeader(HttpResponseHeaderConstants.ACCESS_CONTROL_ALLOW_ORIGIN, origin);
+					httpResponse.setHeader(HttpResponseHeaderConstants.ACCESS_CONTROL_ALLOW_METHODS,
+							"POST, GET, PUT, OPTIONS");
+					httpResponse.setHeader(HttpResponseHeaderConstants.ACCESS_CONTROL_ALLOW_HEADERS, "Content-Type");
+					httpResponse.setHeader(HttpResponseHeaderConstants.ACCESS_CONTROL_MAX_AGE, "600");
 				} else {
 					if (isRemoteViewStrict) {
 						clientResponse.setStatusForbidden();
@@ -292,15 +297,15 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 
 	private HttpUserSession createHttpUserSession(HttpServletModule httpModule, HttpRequest httpRequest,
 			RequestPathParts reqPathParts, String sessionId) throws UnifyException {
-		String remoteIpAddress = httpRequest.getHeader("X-FORWARDED-FOR");
+		String remoteIpAddress = httpRequest.getHeader(HttpRequestHeaderConstants.X_FORWARDED_FOR);
 		if (remoteIpAddress == null || remoteIpAddress.trim().isEmpty()
 				|| "unknown".equalsIgnoreCase(remoteIpAddress)) {
-			remoteIpAddress = httpRequest.getHeader("Proxy-Client-IP");
+			remoteIpAddress = httpRequest.getHeader(HttpRequestHeaderConstants.PROXY_CLIENT_IP);
 		}
 
 		if (remoteIpAddress == null || remoteIpAddress.trim().isEmpty()
 				|| "unknown".equalsIgnoreCase(remoteIpAddress)) {
-			remoteIpAddress = httpRequest.getHeader("WL-Proxy-Client-IP");
+			remoteIpAddress = httpRequest.getHeader(HttpRequestHeaderConstants.WL_PROXY_CLIENT_IP);
 		}
 
 		if (remoteIpAddress == null || remoteIpAddress.trim().isEmpty()
@@ -345,7 +350,7 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 
 	private ClientPlatform detectClientPlatform(HttpRequest httpRequest) {
 		ClientPlatform platform = ClientPlatform.DEFAULT;
-		String userAgent = httpRequest.getHeader("User-Agent");
+		String userAgent = httpRequest.getHeader(HttpRequestHeaderConstants.USER_AGENT);
 		if (userAgent != null && userAgent.indexOf("Mobile") >= 0) {
 			platform = ClientPlatform.MOBILE;
 		}
@@ -371,7 +376,7 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 		Map<String, Object> result = new HashMap<String, Object>();
 		String contentType = httpRequest.getContentType() == null ? null : httpRequest.getContentType().toLowerCase();
 		RemoteCallFormat remoteCallFormat = RemoteCallFormat
-				.fromContentType(httpRequest.getHeader(RequestHeaderConstants.REMOTE_MESSAGE_TYPE_HEADER), contentType);
+				.fromContentType(httpRequest.getHeader(UnifyRequestHeaderConstants.REMOTE_MESSAGE_TYPE_HEADER), contentType);
 		if (remoteCallFormat != null) {
 			result.put(RequestParameterConstants.REMOTE_CALL_FORMAT, remoteCallFormat);
 			try {
