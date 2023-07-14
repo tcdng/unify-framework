@@ -23,29 +23,31 @@ package com.tcdng.unify.core.util;
  */
 public final class VersionUtils {
 
-    private VersionUtils() {
+	private VersionUtils() {
 
-    }
+	}
 
-    public static boolean isNewerVersion(String newVersion, String oldVersion) {
-        if (oldVersion != null && newVersion != null) {
-            String[] oldVersionDigits = oldVersion.split("\\.");
-            String[] newVersionDigits = newVersion.split("\\.");
-            int length = oldVersionDigits.length;
-            if (length > newVersionDigits.length) {
-                length = newVersionDigits.length;
-            }
+	public static boolean isNewerVersion(String newVersion, String oldVersion) {
+		if (oldVersion != null && newVersion != null) {
+			String[] oldVersionDigits = oldVersion.split("\\.");
+			String[] newVersionDigits = newVersion.split("\\.");
+			int len = oldVersionDigits.length;
+			if (len > newVersionDigits.length) {
+				len = newVersionDigits.length;
+			}
 
-            for (int i = 0; i < length; i++) {
-                int compareResult =
-                        Integer.valueOf(oldVersionDigits[i]).compareTo(Integer.valueOf(newVersionDigits[i]));
-                if (compareResult < 0) {
-                    return true;
-                } else if (compareResult > 0) {
-                    return false;
-                }
-            }
-        }
-        return false;
-    }
+			for (int i = 0; i < len; i++) {
+				int comp = Integer.valueOf(newVersionDigits[i]).compareTo(Integer.valueOf(oldVersionDigits[i]));
+				if (comp > 0) {
+					return true;
+				} else if (comp < 0) {
+					return false;
+				}
+			}
+
+			return newVersionDigits.length > len;
+		}
+
+		return false;
+	}
 }

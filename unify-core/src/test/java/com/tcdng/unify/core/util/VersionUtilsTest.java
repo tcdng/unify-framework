@@ -30,6 +30,7 @@ public class VersionUtilsTest {
 
     @Test
     public void testIsNewerVersion() throws Exception {
+        assertTrue(VersionUtils.isNewerVersion("0.0.1", "0.0"));
         assertTrue(VersionUtils.isNewerVersion("1.1", "1.0"));
         assertTrue(VersionUtils.isNewerVersion("1.1", "1.0.5"));
         assertTrue(VersionUtils.isNewerVersion("1.0.4", "1.0.3"));
