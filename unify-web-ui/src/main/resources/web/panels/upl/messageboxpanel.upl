@@ -21,15 +21,15 @@
 //Action button panel
 !ui-panel:messageBoxActionPanel style:$s{width:100%; text-align:center;}
     components:$c{okBtn yesBtn noBtn retryBtn cancelBtn}
-!ui-button:okBtn caption:$m{button.ok} binding:okCode
+!ui-button:okBtn caption:$m{button.ok} binding:okCode captionBinding:okCaption
     eventHandler:$d{!ui-event event:onclick action:$c{resultAct}}
-!ui-button:yesBtn caption:$m{button.yes} binding:yesCode
+!ui-button:yesBtn caption:$m{button.yes} binding:yesCode captionBinding:yesCaption
     eventHandler:$d{!ui-event event:onclick action:$c{resultAct}}
-!ui-button:noBtn caption:$m{button.no} binding:noCode
+!ui-button:noBtn caption:$m{button.no} binding:noCode captionBinding:noCaption
     eventHandler:$d{!ui-event event:onclick action:$c{resultAct}}
-!ui-button:retryBtn caption:$m{button.retry} binding:retryCode
+!ui-button:retryBtn caption:$m{button.retry} binding:retryCode captionBinding:retryCaption
     eventHandler:$d{!ui-event event:onclick action:$c{resultAct}}
-!ui-button:cancelBtn caption:$m{button.cancel} binding:cancelCode
+!ui-button:cancelBtn caption:$m{button.cancel} binding:cancelCode captionBinding:cancelCaption
     eventHandler:$d{!ui-event event:onclick action:$c{resultAct}}
      
 //Actions

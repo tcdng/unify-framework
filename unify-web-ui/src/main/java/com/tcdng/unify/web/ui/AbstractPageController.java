@@ -52,6 +52,7 @@ import com.tcdng.unify.web.ui.widget.WidgetCommandManager;
 import com.tcdng.unify.web.ui.widget.WidgetContainer;
 import com.tcdng.unify.web.ui.widget.data.Hint.MODE;
 import com.tcdng.unify.web.ui.widget.data.MessageBox;
+import com.tcdng.unify.web.ui.widget.data.MessageBoxCaptions;
 import com.tcdng.unify.web.ui.widget.data.MessageIcon;
 import com.tcdng.unify.web.ui.widget.data.MessageMode;
 import com.tcdng.unify.web.ui.widget.data.MessageResult;
@@ -412,8 +413,7 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 		setRequestAttribute(UnifyWebRequestAttributeConstants.COMMAND_POSTRESPONSE_PATH, path);
 		return ResultMappingConstants.POST_RESPONSE;
 	}
-	
-	
+
 	/**
 	 * Sets up a file for download in current request context and returns a file
 	 * download response.
@@ -425,7 +425,7 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 	protected String fileDownloadResult(DownloadFile downloadFile) throws UnifyException {
 		return fileDownloadResult(downloadFile, true);
 	}
-	
+
 	/**
 	 * Sets up a file for download in current request context and returns a file
 	 * download response.
@@ -549,14 +549,32 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 	 */
 	protected String showMessageBox(MessageIcon messageIcon, MessageMode messageMode, String caption, String message,
 			String actionPath) throws UnifyException {
+		caption = resolveSessionMessage(caption);
+		return showMessageBox(messageIcon, messageMode, new MessageBoxCaptions(caption), message, actionPath);
+	}
+
+	/**
+	 * Sets up a response that shows a message box. The message box is backed by the
+	 * {@link MessageBox} value of the session attribute
+	 * {@link UnifyWebSessionAttributeConstants#MESSAGEBOX}.
+	 * 
+	 * @param messageIcon the message icon of enumeration type {@link MessageIcon}
+	 * @param messageMode the message mode of enumeration type {@link MessageMode}
+	 * @param caption     the message caption
+	 * @param message     the message to display
+	 * @param actionPath  the action path
+	 * @return response to show application message box
+	 * @throws UnifyException if an error occurs
+	 */
+	protected String showMessageBox(MessageIcon messageIcon, MessageMode messageMode, MessageBoxCaptions captions,
+			String message, String actionPath) throws UnifyException {
 		if (StringUtils.isBlank(actionPath)) {
 			actionPath = "/hidePopup";
 		}
 
-		caption = resolveSessionMessage(caption);
 		message = resolveSessionMessage(message);
 		setSessionAttribute(UnifyWebSessionAttributeConstants.MESSAGEBOX,
-				new MessageBox(messageIcon, messageMode, caption, message, getName() + actionPath));
+				new MessageBox(messageIcon, messageMode, captions, message, getName() + actionPath));
 		return "showapplicationmessage";
 	}
 
