@@ -930,7 +930,7 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 		performClosePage(ClosePageMode.CLOSE_ALL, true);
 	}
 
-	private MessageResult getMessageResult() throws UnifyException {
+	protected MessageResult getMessageResult() throws UnifyException {
 		return getRequestTarget(MessageResult.class);
 	}
 
