@@ -197,10 +197,10 @@ public abstract class AbstractUIController extends AbstractController implements
     protected abstract void doProcess(ClientRequest request, ClientResponse response,
             PageController<?> docPageController, ControllerPathParts docPathParts) throws UnifyException;
 
-    protected String getFullActionPath(String action) throws UnifyException {
-		String pathId = pageRequestContextUtil.getRequestPathParts().getControllerPathId();
-    	return pathId + action;
-    }
+	protected String getVariableActionPath(String action) throws UnifyException {
+		final String pathVariable = pageRequestContextUtil.getRequestPathParts().getPathVariable();
+		return !StringUtils.isBlank(pathVariable) ? ":" + pathVariable + action : pathVariable;
+	}
     
     protected class DataTransferParam {
 
