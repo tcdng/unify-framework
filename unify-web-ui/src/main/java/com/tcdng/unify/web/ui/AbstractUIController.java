@@ -97,23 +97,23 @@ public abstract class AbstractUIController extends AbstractController implements
         this.resetOnWrite = resetOnWrite.isTrue();
     }
 
-    public void setUiControllerUtil(UIControllerUtil uiControllerUtil) {
+    public final void setUiControllerUtil(UIControllerUtil uiControllerUtil) {
         this.uiControllerUtil = uiControllerUtil;
     }
 
-    public void setPageRequestContextUtil(PageRequestContextUtil pageRequestContextUtil) {
+    public final void setPageRequestContextUtil(PageRequestContextUtil pageRequestContextUtil) {
         this.pageRequestContextUtil = pageRequestContextUtil;
     }
 
-    public void setPageManager(PageManager pageManager) {
+    public final void setPageManager(PageManager pageManager) {
         this.pageManager = pageManager;
     }
 
-    public void setPathInfoRepository(PathInfoRepository pathInfoRepository) {
+    public final void setPathInfoRepository(PathInfoRepository pathInfoRepository) {
         this.pathInfoRepository = pathInfoRepository;
     }
 
-    public void setResponseWriterPool(ResponseWriterPool responseWriterPool) {
+    public final void setResponseWriterPool(ResponseWriterPool responseWriterPool) {
         this.responseWriterPool = responseWriterPool;
     }
 
@@ -197,6 +197,11 @@ public abstract class AbstractUIController extends AbstractController implements
     protected abstract void doProcess(ClientRequest request, ClientResponse response,
             PageController<?> docPageController, ControllerPathParts docPathParts) throws UnifyException;
 
+    protected String getFullActionPath(String action) throws UnifyException {
+		String pathId = pageRequestContextUtil.getRequestPathParts().getControllerPathId();
+    	return pathId + action;
+    }
+    
     protected class DataTransferParam {
 
         private UIControllerInfo uiControllerInfo;

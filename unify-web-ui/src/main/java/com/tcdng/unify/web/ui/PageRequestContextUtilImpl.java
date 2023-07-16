@@ -87,6 +87,8 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
     private static final String REQUEST_POPUP_PANEL = "REQUEST_POPUP_PANEL";
 
     private static final String REQUEST_NONCE = "REQUEST_NONCE";
+   
+    private static final String REQUEST_PATHPARTS = "REQUEST_PATHPARTS";
 
     private static final String RESPONSE_PATHPARTS = "RESPONSE_PATHPARTS";
 
@@ -275,6 +277,16 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
     @Override
     public boolean isRemoteViewer() throws UnifyException {
         return StringUtils.isNotBlank(getRemoteViewer());
+    }
+
+    @Override
+    public void setRequestPathParts(ControllerPathParts reqPathParts) throws UnifyException {
+        setRequestAttribute(REQUEST_PATHPARTS, reqPathParts);
+    }
+    
+    @Override
+    public ControllerPathParts getRequestPathParts() throws UnifyException {
+        return (ControllerPathParts) getRequestAttribute(REQUEST_PATHPARTS);
     }
 
     @Override

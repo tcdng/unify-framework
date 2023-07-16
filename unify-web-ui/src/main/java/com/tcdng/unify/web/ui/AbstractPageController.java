@@ -315,6 +315,7 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 		UIControllerUtil uiControllerUtil = getUIControllerUtil();
 		try {
 			final ControllerPathParts reqPathParts = request.getRequestPathParts().getControllerPathParts();
+			getPageRequestContextUtil().setRequestPathParts(reqPathParts);
 			ControllerPathParts respPathParts = reqPathParts;
 			PageControllerInfo pbbInfo = uiControllerUtil.getPageControllerInfo(getName());
 			Page page = uiControllerUtil.loadRequestPage(reqPathParts);
