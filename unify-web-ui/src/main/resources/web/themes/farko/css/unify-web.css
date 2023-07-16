@@ -308,7 +308,7 @@ z-index:400;}
 .ui-messageboxpanel {border: 1px solid #A9A9A9; background: #FFF;}
 .ui-messageboxpanel .mpimage {width: 48px; height: 48px;}
 .ui-messageboxpanel .mpmsg {display: block; width: 320px; word-wrap: break-word; padding-left:8px;}
-.ui-messageboxpanel .ui-button {margin:4px; width:72px;}
+.ui-messageboxpanel .ui-button {margin:4px; min-width:72px;}
 
 /** System exception panel */
 .ui-system-exception {background: #FFF; border: 1px solid #A9A9A9;}
