@@ -31,6 +31,7 @@ import com.tcdng.unify.web.constant.ResultMappingConstants;
 import com.tcdng.unify.web.constant.UnifyWebRequestAttributeConstants;
 import com.tcdng.unify.web.ui.PageRequestContextUtil;
 import com.tcdng.unify.web.ui.widget.data.MessageBox;
+import com.tcdng.unify.web.ui.widget.data.MessageBoxCaptions;
 import com.tcdng.unify.web.ui.widget.data.MessageIcon;
 import com.tcdng.unify.web.ui.widget.data.MessageMode;
 import com.tcdng.unify.web.ui.widget.data.MessageResult;
@@ -243,16 +244,26 @@ public abstract class AbstractPanel extends AbstractContainer implements Panel {
 		showMessageBox(MessageIcon.INFO, MessageMode.OK, caption, message, fullActionPath);
 	}
 
+	protected void showMessageBox(
+			MessageBoxCaptions captions, String message, String fullActionPath) throws UnifyException {
+		showMessageBox(MessageIcon.INFO, MessageMode.OK, captions, message, fullActionPath);
+	}
+
 	protected void showMessageBox(MessageIcon messageIcon, MessageMode messageMode, String caption, String message,
 			String fullActionPath) throws UnifyException {
+		caption = resolveSessionMessage(caption);
+		showMessageBox(messageIcon, messageMode, new MessageBoxCaptions(caption), message, fullActionPath);
+	}
+
+	protected void showMessageBox(MessageIcon messageIcon, MessageMode messageMode, MessageBoxCaptions captions,
+			String message, String fullActionPath) throws UnifyException {
 		if (StringUtils.isBlank(fullActionPath)) {
 			fullActionPath = ReservedPageControllerConstants.COMMONUTILITIES + "/hidePopup";
 		}
 
-		caption = resolveSessionMessage(caption);
 		message = resolveSessionMessage(message);
 		setSessionAttribute(UnifyWebSessionAttributeConstants.MESSAGEBOX,
-				new MessageBox(messageIcon, messageMode, caption, message, fullActionPath));
+				new MessageBox(messageIcon, messageMode, captions, message, fullActionPath));
 		setCommandResultMapping("showapplicationmessage");
 	}
 
@@ -261,7 +272,7 @@ public abstract class AbstractPanel extends AbstractContainer implements Panel {
 	}
 
 	protected String getActionFullPath(String actionName) throws UnifyException {
-		return resolveRequestPage().getPathId() +  actionName;
+		return resolveRequestPage().getPathId() + actionName;
 	}
 
 	protected String getCommandFullPath(String actionName) throws UnifyException {

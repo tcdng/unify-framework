@@ -309,6 +309,24 @@ public interface PageRequestContextUtil extends UnifyComponent {
     boolean isRemoteViewer() throws UnifyException;
 
     /**
+     * Sets the request path parts information for current request context.
+     * 
+     * @param reqPathParts
+     *            the request path parts to set
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void setRequestPathParts(ControllerPathParts reqPathParts) throws UnifyException;
+
+    /**
+     * Returns the request path parts information for current request context
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    ControllerPathParts getRequestPathParts() throws UnifyException;
+
+    /**
      * Sets the response path parts information for current request context.
      * 
      * @param respPathParts
