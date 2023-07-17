@@ -18,6 +18,7 @@ package com.tcdng.unify.core.database.sql;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import com.tcdng.unify.core.constant.ChildFetch;
 import com.tcdng.unify.core.database.Entity;
 
 /**
@@ -28,77 +29,89 @@ import com.tcdng.unify.core.database.Entity;
  */
 public class ChildFieldInfo extends OnDeleteCascadeInfo {
 
-    private Method childFkIdSetter;
+	private Method childFkIdSetter;
 
-    private Method childFkTypeSetter;
+	private Method childFkTypeSetter;
 
-    private Method childCatSetter;
+	private Method childCatSetter;
 
-    private Field field;
+	private Field field;
 
-    private Method getter;
+	private Method getter;
 
-    private Method setter;
+	private Method setter;
 
-    private String category;
+	private String category;
 
-    private boolean list;
+	private boolean editable;
 
-    private boolean idNumber;
+	private boolean list;
 
-    public ChildFieldInfo(Class<? extends Entity> childEntityClass, String category, Field childFkIdField, Method childFkIdSetter,
-            Field childFkTypeField, Method childFkTypeSetter, Field childCatField, Method childCatSetter, Field field,
-            Method getter, Method setter, boolean list, boolean idNumber) {
-        super(childEntityClass, childFkIdField, childFkTypeField, childCatField);
-        this.category = category;
-        this.childFkIdSetter = childFkIdSetter;
-        this.childFkTypeSetter = childFkTypeSetter;
-        this.childCatSetter = childCatSetter;
-        this.field = field;
-        this.getter = getter;
-        this.setter = setter;
-        this.list = list;
-        this.idNumber = idNumber;
-    }
+	private boolean idNumber;
 
-    public String getName() {
-        return field.getName();
-    }
+	public ChildFieldInfo(Class<? extends Entity> childEntityClass, String category, Field childFkIdField,
+			Method childFkIdSetter, Field childFkTypeField, Method childFkTypeSetter, Field childCatField,
+			Method childCatSetter, Field field, Method getter, Method setter, boolean editable, boolean list,
+			boolean idNumber) {
+		super(childEntityClass, childFkIdField, childFkTypeField, childCatField);
+		this.category = category;
+		this.childFkIdSetter = childFkIdSetter;
+		this.childFkTypeSetter = childFkTypeSetter;
+		this.childCatSetter = childCatSetter;
+		this.field = field;
+		this.getter = getter;
+		this.setter = setter;
+		this.editable = editable;
+		this.list = list;
+		this.idNumber = idNumber;
+	}
 
-    public Method getChildFkIdSetter() {
-        return childFkIdSetter;
-    }
+	public String getName() {
+		return field.getName();
+	}
 
-    public Method getChildFkTypeSetter() {
-        return childFkTypeSetter;
-    }
+	public Method getChildFkIdSetter() {
+		return childFkIdSetter;
+	}
 
-    public Method getChildCatSetter() {
-        return childCatSetter;
-    }
+	public Method getChildFkTypeSetter() {
+		return childFkTypeSetter;
+	}
 
-    public Field getField() {
-        return field;
-    }
+	public Method getChildCatSetter() {
+		return childCatSetter;
+	}
 
-    public Method getGetter() {
-        return getter;
-    }
+	public Field getField() {
+		return field;
+	}
 
-    public Method getSetter() {
-        return setter;
-    }
+	public Method getGetter() {
+		return getter;
+	}
 
-    @Override
-    public String getCategory() {
-        return category;
-    }
+	public Method getSetter() {
+		return setter;
+	}
 
-    public boolean isList() {
-        return list;
-    }
+	@Override
+	public String getCategory() {
+		return category;
+	}
 
-    public boolean isIdNumber() {
-        return idNumber;
-    }
+	public boolean isList() {
+		return list;
+	}
+
+	public boolean isEditable() {
+		return editable;
+	}
+
+	public boolean isIdNumber() {
+		return idNumber;
+	}
+
+	public boolean qualifies(ChildFetch fetch) {
+		return fetch.isAll() ? true : (editable ? fetch.isEditableOnly() : fetch.isReadOnly());
+	}
 }

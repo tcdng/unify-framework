@@ -260,6 +260,26 @@ public interface DatabaseSession {
     <T extends Entity> void findChildren(T record) throws UnifyException;
 
     /**
+     * Finds editable child records into supplied record.
+     * 
+     * @param record
+     *               the record to find children into
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    <T extends Entity> void findEditableChildren(T record) throws UnifyException;
+
+    /**
+     * Finds read-only child records into supplied record.
+     * 
+     * @param record
+     *               the record to find children into
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    <T extends Entity> void findReadOnlyChildren(T record) throws UnifyException;
+
+    /**
      * Retrieves a record by id from associated view. List-only properties of
      * returned object are populated. Child and child list properties are populated.
      * 
@@ -454,6 +474,28 @@ public interface DatabaseSession {
      *                        if an error occurs
      */
     <T extends Entity> void listChildren(T record) throws UnifyException;
+
+
+    /**
+     * Lists editable child records into supplied record.
+     * 
+     * @param record
+     *               the record to list children into
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    <T extends Entity> void listEditableChildren(T record) throws UnifyException;
+
+
+    /**
+     * Lists read-only child records into supplied record.
+     * 
+     * @param record
+     *               the record to list children into
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    <T extends Entity> void listReadOnlyChildren(T record) throws UnifyException;
 
     /**
      * Lists values of selected field for all record by query. Field must be

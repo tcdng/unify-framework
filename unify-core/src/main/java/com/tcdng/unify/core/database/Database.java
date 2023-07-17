@@ -322,6 +322,26 @@ public interface Database extends UnifyComponent {
     <T extends Entity> void findChildren(T record) throws UnifyException;
 
     /**
+     * Finds editable child records into supplied record.
+     * 
+     * @param record
+     *               the record to find children into
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    <T extends Entity> void findEditableChildren(T record) throws UnifyException;
+
+    /**
+     * Finds read-only child records into supplied record.
+     * 
+     * @param record
+     *               the record to find children into
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    <T extends Entity> void findReadOnlyChildren(T record) throws UnifyException;
+
+    /**
      * Lists record of specified type by id. List-only properties of returned object
      * are populated. Child and child list properties are populated.
      * 
@@ -519,6 +539,27 @@ public interface Database extends UnifyComponent {
      *                        if an error occurs
      */
     <T extends Entity> void listChildren(T record) throws UnifyException;
+
+    /**
+     * Lists editable child records into supplied record.
+     * 
+     * @param record
+     *               the record to list children into
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    <T extends Entity> void listEditableChildren(T record) throws UnifyException;
+
+
+    /**
+     * Lists read-only child records into supplied record.
+     * 
+     * @param record
+     *               the record to list children into
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    <T extends Entity> void listReadOnlyChildren(T record) throws UnifyException;
 
     /**
      * Returns a list of values of a particular field for all record that match
