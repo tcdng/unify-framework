@@ -37,4 +37,7 @@ public @interface ChildList {
     String category() default AnnotationConstants.NONE;
     
     Class<? extends Entity> listType() default Entity.class;
+    
+    /** Indicates child list is view-only*/
+    boolean viewOnly() default false;
 }
