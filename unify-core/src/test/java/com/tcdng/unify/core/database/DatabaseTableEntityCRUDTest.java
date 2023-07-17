@@ -2173,6 +2173,33 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
     }
 
     @Test
+    public void testUpdateRecordByIdWithEditableChildList() throws Exception {
+        tm.beginTransaction();
+        try {
+            Report report = new Report("weeklyReport", "Weekly Report");
+            report.addParameter(new ReportParameter("startDate")).addParameter(new ReportParameter("endDate"));
+            Long reportId = (Long) db.create(report);
+
+            report.setDescription("New Weekly Report");
+            report.setParameters(Arrays.asList(new ReportParameter("resolutionDate")));
+            db.updateByIdEditableChildren(report);
+
+            Report fetchedReport = db.find(Report.class, reportId);
+            assertNotNull(fetchedReport);
+            assertEquals("weeklyReport", fetchedReport.getName());
+            assertEquals("New Weekly Report", fetchedReport.getDescription());
+
+            List<ReportParameter> reportParamList = fetchedReport.getParameters();
+            assertNotNull(reportParamList);
+            assertEquals(2, reportParamList.size());
+            assertEquals("startDate", reportParamList.get(0).getName());
+            assertEquals("endDate", reportParamList.get(1).getName());
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
     public void testUpdateLeanRecordById() throws Exception {
         tm.beginTransaction();
         try {
@@ -2335,6 +2362,40 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             assertEquals(2, fetchedParamList.size());
             assertEquals("beginDate", fetchedParamList.get(0).getName());
             assertEquals("stopDate", fetchedParamList.get(1).getName());
+            
+            // Ensure child records where just updated
+            assertEquals(originalIds[0], fetchedParamList.get(0).getId());
+            assertEquals(originalIds[1], fetchedParamList.get(1).getId());           
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
+    public void testUpdateRecordByIdVersionWithEditableChildList() throws Exception {
+        tm.beginTransaction();
+        try {
+            Report report = new Report("weeklyReport", "Weekly Report");
+            report.addParameter(new ReportParameter("startDate")).addParameter(new ReportParameter("endDate"));
+            Long reportId = (Long) db.create(report);
+            List<ReportParameter> paramList = report.getParameters();
+            Long[] originalIds = new Long[] {paramList.get(0).getId(), paramList.get(1).getId()};
+
+            report.setDescription("New Weekly Report");
+            report.getParameters().get(0).setName("beginDate"); // Not editable
+            report.getParameters().get(1).setName("stopDate"); // Not editable
+            db.updateByIdVersionEditableChildren(report);
+
+            Report fetchedReport = db.find(Report.class, reportId);
+            assertNotNull(fetchedReport);
+            assertEquals("weeklyReport", fetchedReport.getName());
+            assertEquals("New Weekly Report", fetchedReport.getDescription());
+
+            List<ReportParameter> fetchedParamList = fetchedReport.getParameters();
+            assertNotNull(fetchedParamList);
+            assertEquals(2, fetchedParamList.size());
+            assertEquals("startDate", fetchedParamList.get(0).getName());
+            assertEquals("endDate", fetchedParamList.get(1).getName());
             
             // Ensure child records where just updated
             assertEquals(originalIds[0], fetchedParamList.get(0).getId());

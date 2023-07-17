@@ -41,7 +41,7 @@ public class Report extends AbstractTestVersionedTableEntity {
     @Child
     private ReportForm reportForm;
 
-    @ChildList
+    @ChildList(editable = false)
     private List<ReportParameter> parameters;
 
     public Report(String name, String description) {
