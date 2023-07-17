@@ -703,6 +703,28 @@ public interface DatabaseSession {
     int updateByIdVersion(Entity record) throws UnifyException;
 
     /**
+     * Updates a record by ID. Only editable children are updated.
+     * 
+     * @param record
+     *            the record to modify
+     * @return the number of record updated. Always 1.
+     * @throws UnifyException
+     *             if an error occurs during modify
+     */
+    int updateByIdEditableChildren(Entity record) throws UnifyException;
+
+    /**
+     * Updates a record by ID and version number. Only editable children are updated.
+     * 
+     * @param record
+     *            the record to modify
+     * @return the number of record updated. Always 1.
+     * @throws UnifyException
+     *             if an error occurs during modify
+     */
+    int updateByIdVersionEditableChildren(Entity record) throws UnifyException;
+
+    /**
      * Updates record in database by ID. Child records, if any, are not updated.
      * 
      * @param record

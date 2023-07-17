@@ -596,25 +596,37 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 	@Override
 	public int updateById(Entity record) throws UnifyException {
 		ensureWritable();
-		return updateById(record, UpdateChild.TRUE);
+		return updateById(record, ChildFetch.ALL, UpdateChild.TRUE);
 	}
 
 	@Override
 	public int updateByIdVersion(Entity record) throws UnifyException {
 		ensureWritable();
-		return updateByIdVersion(record, UpdateChild.TRUE);
+		return updateByIdVersion(record, ChildFetch.ALL, UpdateChild.TRUE);
+	}
+
+	@Override
+	public int updateByIdEditableChildren(Entity record) throws UnifyException {
+		ensureWritable();
+		return updateById(record, ChildFetch.EDITABLE_ONLY, UpdateChild.TRUE);
+	}
+
+	@Override
+	public int updateByIdVersionEditableChildren(Entity record) throws UnifyException {
+		ensureWritable();
+		return updateByIdVersion(record, ChildFetch.EDITABLE_ONLY, UpdateChild.TRUE);
 	}
 
 	@Override
 	public int updateLeanById(Entity record) throws UnifyException {
 		ensureWritable();
-		return updateById(record, UpdateChild.FALSE);
+		return updateById(record, null, UpdateChild.FALSE);
 	}
 
 	@Override
 	public int updateLeanByIdVersion(Entity record) throws UnifyException {
 		ensureWritable();
-		return updateByIdVersion(record, UpdateChild.FALSE);
+		return updateByIdVersion(record, null, UpdateChild.FALSE);
 	}
 
 	@Override
@@ -1188,7 +1200,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 							if (!clfi.qualifies(childFetch)) {
 								continue;
 							}
-							
+
 							if (isSelect && !select.contains(clfi.getName())) {
 								continue;
 							}
@@ -1239,7 +1251,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 							if (!clfi.qualifies(childFetch)) {
 								continue;
 							}
-							
+
 							if (isSelect && !select.contains(clfi.getName())) {
 								continue;
 							}
@@ -1287,7 +1299,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 		}
 	}
 
-	private int updateById(Entity record, UpdateChild updateChild) throws UnifyException {
+	private int updateById(Entity record, ChildFetch fetch, UpdateChild updateChild) throws UnifyException {
 		int result;
 		SqlStatement sqlStatement = null;
 		SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(record);
@@ -1315,7 +1327,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 			}
 
 			if (updateChild.isTrue() && sqlEntityInfo.isChildList()) {
-				updateChildRecords(sqlEntityInfo, record, false);
+				updateChildRecords(sqlEntityInfo, record, fetch, false);
 			}
 		} catch (UnifyException e) {
 			if (entityPolicy != null) {
@@ -1330,7 +1342,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 		return result;
 	}
 
-	private int updateByIdVersion(Entity record, UpdateChild updateChild) throws UnifyException {
+	private int updateByIdVersion(Entity record, ChildFetch fetch, UpdateChild updateChild) throws UnifyException {
 		int result;
 		SqlStatement sqlStatement = null;
 		SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(record);
@@ -1374,7 +1386,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 			}
 
 			if (updateChild.isTrue() && sqlEntityInfo.isChildList()) {
-				updateChildRecords(sqlEntityInfo, record, true);
+				updateChildRecords(sqlEntityInfo, record, fetch, true);
 			}
 		} catch (Exception e) {
 			if (entityPolicy != null) {
@@ -1479,13 +1491,17 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void updateChildRecords(SqlEntityInfo sqlEntityInfo, Entity record, boolean versionNo)
+	private void updateChildRecords(SqlEntityInfo sqlEntityInfo, Entity record, ChildFetch fetch, boolean versionNo)
 			throws UnifyException {
 		Object id = record.getId();
 		try {
 			final String tableName = sqlEntityInfo.getTableName();
 			if (sqlEntityInfo.isSingleChildList()) {
 				for (ChildFieldInfo alfi : sqlEntityInfo.getSingleChildInfoList()) {
+					if (!alfi.qualifies(fetch)) {
+						continue;
+					}
+
 					Entity childRecord = (Entity) alfi.getGetter().invoke(record);
 					if (childRecord != null) {
 						if (childRecord.getId() == null) {
@@ -1515,6 +1531,10 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
 			if (sqlEntityInfo.isManyChildList()) {
 				for (ChildFieldInfo alfi : sqlEntityInfo.getManyChildInfoList()) {
+					if (!alfi.qualifies(fetch)) {
+						continue;
+					}
+
 					List<? extends Entity> childList = (List<? extends Entity>) alfi.getGetter().invoke(record);
 					if (childList != null) {
 						boolean clear = false;

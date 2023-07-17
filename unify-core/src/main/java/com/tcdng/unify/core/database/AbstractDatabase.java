@@ -313,6 +313,16 @@ public abstract class AbstractDatabase extends AbstractUnifyComponent implements
     }
 
     @Override
+	public int updateByIdEditableChildren(Entity record) throws UnifyException {
+        return getDatabaseSession().updateByIdEditableChildren(record);
+	}
+
+	@Override
+	public int updateByIdVersionEditableChildren(Entity record) throws UnifyException {
+        return getDatabaseSession().updateByIdVersionEditableChildren(record);
+	}
+
+	@Override
     public int updateLeanById(Entity record) throws UnifyException {
         return getDatabaseSession().updateLeanById(record);
     }
