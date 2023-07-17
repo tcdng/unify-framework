@@ -41,7 +41,7 @@ public class LoanReport extends AbstractTestVersionedTableEntity {
     @Child(category = "form")
     private LoanReportParameter reportForm;
 
-    @ChildList(category = "parameter")
+    @ChildList(category = "parameter", editable = false)
     private List<LoanReportParameter> parameters;
 
     public LoanReport(String name, String description) {
