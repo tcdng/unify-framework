@@ -27,16 +27,23 @@ import com.tcdng.unify.core.constant.EntityFieldType;
  */
 public class DynamicChildListFieldInfo extends DynamicFieldInfo {
 
-    private DynamicEntityInfo childDynamicEntityInfo;
+	private DynamicEntityInfo childDynamicEntityInfo;
 
-    public DynamicChildListFieldInfo(DynamicFieldType type, DynamicEntityInfo childDynamicEntityInfo,
-            String fieldName) {
-        super(type, EntityFieldType.CHILDLIST, null, null, fieldName, null, null, false, false);
-        this.childDynamicEntityInfo = childDynamicEntityInfo;
-    }
+	private boolean editable;
 
-    public DynamicEntityInfo getChildDynamicEntityInfo() {
-        return childDynamicEntityInfo;
-    }
+	public DynamicChildListFieldInfo(DynamicFieldType type, DynamicEntityInfo childDynamicEntityInfo, String fieldName,
+			boolean editable) {
+		super(type, EntityFieldType.CHILDLIST, null, null, fieldName, null, null, false, false);
+		this.childDynamicEntityInfo = childDynamicEntityInfo;
+		this.editable = editable;
+	}
+
+	public DynamicEntityInfo getChildDynamicEntityInfo() {
+		return childDynamicEntityInfo;
+	}
+
+	public boolean isEditable() {
+		return editable;
+	}
 
 }

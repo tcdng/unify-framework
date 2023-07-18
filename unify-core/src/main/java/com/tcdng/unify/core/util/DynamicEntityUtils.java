@@ -313,13 +313,21 @@ public final class DynamicEntityUtils {
 	}
 
 	private static void generateChildAnnotation(StringBuilder fsb, DynamicChildFieldInfo childInfo) {
-		fsb.append(" @Child\n");
+		if (childInfo.isEditable()) {
+			fsb.append(" @Child\n");
+		} else {
+			fsb.append(" @Child(editable = false)\n");
+		}
 	}
 
 	private static void generateChildListAnnotation(StringBuilder fsb, DynamicChildListFieldInfo childListInfo) {
 		fsb.append(" @ChildList(listType = ");
 		fsb.append(childListInfo.getChildDynamicEntityInfo().getClassName());
-		fsb.append(".class)\n");
+		fsb.append(".class");
+		if (!childListInfo.isEditable()) {
+			fsb.append(", editable = false");
+		}
+		fsb.append(")\n");
 	}
 
 	private static void generateForeignKeyAnnotation(StringBuilder fsb,
