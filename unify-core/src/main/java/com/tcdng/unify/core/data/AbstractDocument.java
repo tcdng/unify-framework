@@ -25,6 +25,11 @@ package com.tcdng.unify.core.data;
 public abstract class AbstractDocument implements Document {
 
     @Override
+	public void setPreferredId(Object id) {
+
+	}
+
+    @Override
     public boolean isReserved() {
         return false;
     }

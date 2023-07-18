@@ -43,6 +43,11 @@ public abstract class AbstractSequencedEntity extends AbstractEntity implements 
     }
 
     @Override
+	public void setPreferredId(Object id) {
+        this.id = (Long) id;
+	}
+
+	@Override
     public boolean isReserved() {
         return id != null && id.compareTo(Long.valueOf(0L)) < 0;
     }
