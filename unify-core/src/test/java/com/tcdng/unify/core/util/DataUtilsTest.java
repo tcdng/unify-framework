@@ -418,7 +418,7 @@ public class DataUtilsTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testReadJsonObject() throws Exception {
-        String json = "{\"order\":\"DESCENDING\",\"author\":\"Bramer & Bramer\", \"price\":2.54, \"priceHistory\":[2.35, 2.03], \"copies\":20, \"censored\":true}";
+        String json = "{\"order\":\"DESC\",\"author\":\"Bramer & Bramer\", \"price\":2.54, \"priceHistory\":[2.35, 2.03], \"copies\":20, \"censored\":true}";
         Book book = DataUtils.fromJsonString(Book.class, json);
         assertNotNull(book);
         assertEquals(OrderType.DESCENDING, book.getOrder());
