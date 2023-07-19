@@ -494,7 +494,7 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
 						"parentAuthorId", defaultVal, true)
 				.addListOnlyField(DynamicFieldType.GENERATION, null, "parentAuthorName", "parentAuthorId", "name",
 						false)
-				.addChildListField(DynamicFieldType.GENERATION, bookDynamicEntityInfo, "bookList").build();
+				.addChildListField(DynamicFieldType.GENERATION, bookDynamicEntityInfo, "bookList", true).build();
 
 		bdeib.addForeignKeyField(DynamicFieldType.GENERATION, authorDynamicEntityInfo, null, "authorId", "1", false)
 				.addField(DynamicFieldType.GENERATION, DataType.STRING, "TITLE", "title", mapped, defaultVal, 32, 0, 0, false,

@@ -345,18 +345,20 @@ public class DynamicEntityInfo {
 			return this;
 		}
 
-		public Builder addChildField(DynamicFieldType type, DynamicEntityInfo childDynamicEntityInfo, String fieldName)
-				throws UnifyException {
+		public Builder addChildField(DynamicFieldType type, DynamicEntityInfo childDynamicEntityInfo, String fieldName,
+				boolean editable) throws UnifyException {
 			checkFieldNameExist(fieldName);
-			childFieldInfos.put(fieldName, new DynamicChildFieldInfo(type, childDynamicEntityInfo, fieldName));
+			childFieldInfos.put(fieldName,
+					new DynamicChildFieldInfo(type, childDynamicEntityInfo, fieldName, editable));
 			withChildField = true;
 			return this;
 		}
 
 		public Builder addChildListField(DynamicFieldType type, DynamicEntityInfo childDynamicEntityInfo,
-				String fieldName) throws UnifyException {
+				String fieldName, boolean editable) throws UnifyException {
 			checkFieldNameExist(fieldName);
-			childFieldInfos.put(fieldName, new DynamicChildListFieldInfo(type, childDynamicEntityInfo, fieldName));
+			childFieldInfos.put(fieldName,
+					new DynamicChildListFieldInfo(type, childDynamicEntityInfo, fieldName, editable));
 			withChildField = true;
 			return this;
 		}

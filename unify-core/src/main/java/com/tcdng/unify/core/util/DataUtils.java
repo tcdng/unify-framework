@@ -1044,6 +1044,11 @@ public final class DataUtils {
             return converter.read(clazz, jsonValue);
         }
         
+        if (EnumConst.class.isAssignableFrom(clazz)) {
+            Class<? extends EnumConst> enumConstClass = (Class<? extends EnumConst>) clazz;
+        	return (T) EnumUtils.fromCode(enumConstClass, jsonValue.asString());
+        }
+        
         if (clazz.isEnum()) {
             Class<? extends Enum> enumClass = (Class<? extends Enum>) clazz;
             try {
@@ -1229,6 +1234,10 @@ public final class DataUtils {
         JsonValueConverter<?> converter = jsonConverterMap.get(obj.getClass());
         if (converter != null) {
             return converter.write(obj);
+        }
+        
+        if (EnumConst.class.isAssignableFrom(obj.getClass())) {
+            return Json.value(((EnumConst) obj).code());
         }
         
         if (obj.getClass().isEnum()) {            

@@ -35,4 +35,7 @@ public @interface Child {
 
     /** Child list category */
     String category() default AnnotationConstants.NONE;
+    
+    /** Indicates child is editable. Defaults to true.*/
+    boolean editable() default true;
 }

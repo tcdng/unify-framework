@@ -30,6 +30,11 @@ import com.tcdng.unify.core.util.StringUtils;
  */
 @Tooling(name = "plainCommon", description = "Plain Common")
 public abstract class AbstractEntity implements Entity {
+
+    @Override
+	public void setPreferredId(Object id) {
+
+	}
     
     @Override
     public String getListKey() {

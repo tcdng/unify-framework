@@ -29,6 +29,8 @@ public interface Entity extends Listable, Describable {
 	static final Long PRIMARY_TENANT_ID = 0L;
 	
     Object getId();
+	
+    void setPreferredId(Object id);
     
     boolean isReserved();
 }

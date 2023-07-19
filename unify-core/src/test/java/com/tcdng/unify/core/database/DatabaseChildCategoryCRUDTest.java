@@ -800,6 +800,80 @@ public class DatabaseChildCategoryCRUDTest extends AbstractUnifyComponentTest {
     }
 
     @Test
+    public void testFindEditableChildren() throws Exception {
+        tm.beginTransaction();
+        try {
+            LoanReport report = new LoanReport("weeklyReport", "Weekly LoanReport");
+            report.setReportForm(new LoanReportParameter("beanEditor"));
+            report.addParameter(new LoanReportParameter("startDate", BooleanType.FALSE))
+                    .addParameter(new LoanReportParameter("endDate", BooleanType.TRUE));
+            Long id = (Long) db.create(report);
+
+            LoanReport foundReport = db.findLean(new LoanReportQuery().addEquals("id", id));
+            assertNotNull(foundReport);
+            assertEquals("weeklyReport", foundReport.getName());
+            assertEquals("Weekly LoanReport", foundReport.getDescription());
+
+            assertNull(foundReport.getReportForm());
+            assertNull(foundReport.getParameters());
+
+            db.findEditableChildren(foundReport);
+            assertEquals("weeklyReport", foundReport.getName());
+            assertEquals("Weekly LoanReport", foundReport.getDescription());
+            assertNotNull(foundReport.getReportForm());
+            assertEquals("form", foundReport.getReportForm().getCategory());
+            assertEquals("beanEditor", foundReport.getReportForm().getName());
+
+            assertNull(foundReport.getParameters());
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
+    public void testFindReadOnlyChildren() throws Exception {
+        tm.beginTransaction();
+        try {
+            LoanReport report = new LoanReport("weeklyReport", "Weekly LoanReport");
+            report.setReportForm(new LoanReportParameter("beanEditor"));
+            report.addParameter(new LoanReportParameter("startDate", BooleanType.FALSE))
+                    .addParameter(new LoanReportParameter("endDate", BooleanType.TRUE));
+            Long id = (Long) db.create(report);
+
+            LoanReport foundReport = db.findLean(new LoanReportQuery().addEquals("id", id));
+            assertNotNull(foundReport);
+            assertEquals("weeklyReport", foundReport.getName());
+            assertEquals("Weekly LoanReport", foundReport.getDescription());
+
+            assertNull(foundReport.getReportForm());
+            assertNull(foundReport.getParameters());
+
+            db.findReadOnlyChildren(foundReport);
+            assertEquals("weeklyReport", foundReport.getName());
+            assertEquals("Weekly LoanReport", foundReport.getDescription());
+            assertNull(foundReport.getReportForm());
+            assertNotNull(foundReport.getParameters());
+            assertEquals(2, foundReport.getParameters().size());
+
+            LoanReportParameter rParam = foundReport.getParameters().get(0);
+            assertEquals("parameter", rParam.getCategory());
+            assertEquals("startDate", rParam.getName());
+            assertEquals(BooleanType.FALSE, rParam.getScheduled());
+            assertNull(rParam.getReportDesc());
+            assertNull(rParam.getScheduledDesc());
+
+            rParam = foundReport.getParameters().get(1);
+            assertEquals("parameter", rParam.getCategory());
+            assertEquals("endDate", rParam.getName());
+            assertEquals(BooleanType.TRUE, rParam.getScheduled());
+            assertNull(rParam.getReportDesc());
+            assertNull(rParam.getScheduledDesc());
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
     public void testListLeanRecordByIdWithChild() throws Exception {
         tm.beginTransaction();
         try {
@@ -1185,6 +1259,81 @@ public class DatabaseChildCategoryCRUDTest extends AbstractUnifyComponentTest {
             tm.endTransaction();
         }
     }
+
+    @Test
+    public void testListEditableChildren() throws Exception {
+        tm.beginTransaction();
+        try {
+            LoanReport report = new LoanReport("weeklyReport", "Weekly LoanReport");
+            report.setReportForm(new LoanReportParameter("beanEditor"));
+            report.addParameter(new LoanReportParameter("startDate", BooleanType.FALSE))
+                    .addParameter(new LoanReportParameter("endDate", BooleanType.TRUE));
+            Long id = (Long) db.create(report);
+
+            LoanReport foundReport = db.findLean(new LoanReportQuery().addEquals("id", id));
+            assertNotNull(foundReport);
+            assertEquals("weeklyReport", foundReport.getName());
+            assertEquals("Weekly LoanReport", foundReport.getDescription());
+
+            assertNull(foundReport.getReportForm());
+            assertNull(foundReport.getParameters());
+
+            db.listEditableChildren(foundReport);
+            assertEquals("weeklyReport", foundReport.getName());
+            assertEquals("Weekly LoanReport", foundReport.getDescription());
+            assertNotNull(foundReport.getReportForm());
+            assertEquals("form", foundReport.getReportForm().getCategory());
+            assertEquals("beanEditor", foundReport.getReportForm().getName());
+            assertNull(foundReport.getParameters());
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
+    public void testListReadOnlyChildren() throws Exception {
+        tm.beginTransaction();
+        try {
+            LoanReport report = new LoanReport("weeklyReport", "Weekly LoanReport");
+            report.setReportForm(new LoanReportParameter("beanEditor"));
+            report.addParameter(new LoanReportParameter("startDate", BooleanType.FALSE))
+                    .addParameter(new LoanReportParameter("endDate", BooleanType.TRUE));
+            Long id = (Long) db.create(report);
+
+            LoanReport foundReport = db.findLean(new LoanReportQuery().addEquals("id", id));
+            assertNotNull(foundReport);
+            assertEquals("weeklyReport", foundReport.getName());
+            assertEquals("Weekly LoanReport", foundReport.getDescription());
+
+            assertNull(foundReport.getReportForm());
+            assertNull(foundReport.getParameters());
+
+            db.listReadOnlyChildren(foundReport);
+            assertEquals("weeklyReport", foundReport.getName());
+            assertEquals("Weekly LoanReport", foundReport.getDescription());
+            assertNull(foundReport.getReportForm());
+            assertNotNull(foundReport.getParameters());
+            assertEquals(2, foundReport.getParameters().size());
+
+            LoanReportParameter rParam = foundReport.getParameters().get(0);
+            assertEquals("parameter", rParam.getCategory());
+            assertEquals("startDate", rParam.getName());
+            assertEquals(BooleanType.FALSE, rParam.getScheduled());
+            assertEquals("Weekly LoanReport", rParam.getReportDesc());
+            assertEquals("False", rParam.getScheduledDesc());
+
+            rParam = foundReport.getParameters().get(1);
+            assertEquals("parameter", rParam.getCategory());
+            assertEquals("endDate", rParam.getName());
+            assertEquals(BooleanType.TRUE, rParam.getScheduled());
+            assertEquals("Weekly LoanReport", rParam.getReportDesc());
+            assertEquals("True", rParam.getScheduledDesc());
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+
 
     @Test
     public void testDeleteRecordByIdWithNoChildList() throws Exception {

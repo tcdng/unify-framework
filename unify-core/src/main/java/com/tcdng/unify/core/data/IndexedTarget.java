@@ -23,6 +23,8 @@ package com.tcdng.unify.core.data;
  */
 public class IndexedTarget {
 
+	public static final IndexedTarget BLANK = new IndexedTarget("", -1);
+	
     private String target;
     
     private int index;

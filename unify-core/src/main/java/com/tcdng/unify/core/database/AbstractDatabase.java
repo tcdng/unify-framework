@@ -133,6 +133,16 @@ public abstract class AbstractDatabase extends AbstractUnifyComponent implements
     }
 
     @Override
+	public <T extends Entity> void findEditableChildren(T record) throws UnifyException {
+        getDatabaseSession().findEditableChildren(record);
+	}
+
+	@Override
+	public <T extends Entity> void findReadOnlyChildren(T record) throws UnifyException {
+        getDatabaseSession().findReadOnlyChildren(record);
+	}
+
+	@Override
     public <T extends Entity> T list(Class<T> clazz, Object pk) throws UnifyException {
         return getDatabaseSession().list(clazz, pk);
     }
@@ -210,6 +220,16 @@ public abstract class AbstractDatabase extends AbstractUnifyComponent implements
     }
 
     @Override
+	public <T extends Entity> void listEditableChildren(T record) throws UnifyException {
+        getDatabaseSession().listEditableChildren(record);
+	}
+
+	@Override
+	public <T extends Entity> void listReadOnlyChildren(T record) throws UnifyException {
+        getDatabaseSession().listReadOnlyChildren(record);
+	}
+
+	@Override
     public <T, U extends Entity> List<T> valueList(Class<T> fieldClass, String fieldName, Query<U> query)
             throws UnifyException {
         return getDatabaseSession().valueList(fieldClass, fieldName, query);
@@ -293,6 +313,16 @@ public abstract class AbstractDatabase extends AbstractUnifyComponent implements
     }
 
     @Override
+	public int updateByIdEditableChildren(Entity record) throws UnifyException {
+        return getDatabaseSession().updateByIdEditableChildren(record);
+	}
+
+	@Override
+	public int updateByIdVersionEditableChildren(Entity record) throws UnifyException {
+        return getDatabaseSession().updateByIdVersionEditableChildren(record);
+	}
+
+	@Override
     public int updateLeanById(Entity record) throws UnifyException {
         return getDatabaseSession().updateLeanById(record);
     }

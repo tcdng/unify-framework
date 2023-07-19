@@ -31,6 +31,7 @@ import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.UnifyOperationException;
 import com.tcdng.unify.core.annotation.ColumnType;
+import com.tcdng.unify.core.constant.ChildFetch;
 import com.tcdng.unify.core.constant.FetchChild;
 import com.tcdng.unify.core.constant.IncludeListOnly;
 import com.tcdng.unify.core.constant.MustMatch;
@@ -120,13 +121,13 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 	@Override
 	public <T extends Entity> T findFirst(Query<T> query) throws UnifyException {
 		final Long id = min(Long.class, "id", query);
-		return id != null ? find(query.getEntityClass(), id)  : null;
+		return id != null ? find(query.getEntityClass(), id) : null;
 	}
 
 	@Override
 	public <T extends Entity> T findLast(Query<T> query) throws UnifyException {
 		final Long id = max(Long.class, "id", query);
-		return id != null ? find(query.getEntityClass(), id)  : null;
+		return id != null ? find(query.getEntityClass(), id) : null;
 	}
 
 	@Override
@@ -147,13 +148,13 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 	@Override
 	public <T extends Entity> T findLeanFirst(Query<T> query) throws UnifyException {
 		final Long id = min(Long.class, "id", query);
-		return id != null ? findLean(query.getEntityClass(), id)  : null;
+		return id != null ? findLean(query.getEntityClass(), id) : null;
 	}
 
 	@Override
 	public <T extends Entity> T findLeanLast(Query<T> query) throws UnifyException {
 		final Long id = max(Long.class, "id", query);
-		return id != null ? findLean(query.getEntityClass(), id)  : null;
+		return id != null ? findLean(query.getEntityClass(), id) : null;
 	}
 
 	@SuppressWarnings({ "unchecked" })
@@ -167,13 +168,13 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 				for (String fieldName : suci.getFieldNameList()) {
 					query.addEquals(fieldName, ReflectUtils.getBeanProperty(record, fieldName));
 				}
-				
+
 				if (suci.isWithConditionList()) {
-					for (SqlQueryRestrictionInfo sqlQueryRestrictionInfo: suci.getConditionList()) {
+					for (SqlQueryRestrictionInfo sqlQueryRestrictionInfo : suci.getConditionList()) {
 						query.addRestriction(sqlQueryRestrictionInfo.getRestriction());
 					}
 				}
-				
+
 				T constrainingRecord = find(query);
 				if (constrainingRecord != null) {
 					return constrainingRecord;
@@ -207,7 +208,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 		if (!list.isEmpty()) {
 			SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
 			for (T record : list) {
-				fetchChildRecords(sqlEntityInfo, record, query.getSelect(), IncludeListOnly.FALSE);
+				fetchChildRecords(sqlEntityInfo, record, query.getSelect(), ChildFetch.ALL, IncludeListOnly.FALSE);
 			}
 		}
 
@@ -253,7 +254,19 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 	@Override
 	public <T extends Entity> void findChildren(T record) throws UnifyException {
 		SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(record.getClass());
-		fetchChildRecords(sqlEntityInfo, record, null, IncludeListOnly.FALSE);
+		fetchChildRecords(sqlEntityInfo, record, null, ChildFetch.ALL, IncludeListOnly.FALSE);
+	}
+
+	@Override
+	public <T extends Entity> void findEditableChildren(T record) throws UnifyException {
+		SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(record.getClass());
+		fetchChildRecords(sqlEntityInfo, record, null, ChildFetch.EDITABLE_ONLY, IncludeListOnly.FALSE);
+	}
+
+	@Override
+	public <T extends Entity> void findReadOnlyChildren(T record) throws UnifyException {
+		SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(record.getClass());
+		fetchChildRecords(sqlEntityInfo, record, null, ChildFetch.READ_ONLY, IncludeListOnly.FALSE);
 	}
 
 	@Override
@@ -274,13 +287,13 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 	@Override
 	public <T extends Entity> T listFirst(Query<T> query) throws UnifyException {
 		final Long id = min(Long.class, "id", query);
-		return id != null ? list(query.getEntityClass(), id)  : null;
+		return id != null ? list(query.getEntityClass(), id) : null;
 	}
 
 	@Override
 	public <T extends Entity> T listLast(Query<T> query) throws UnifyException {
 		final Long id = max(Long.class, "id", query);
-		return id != null ? list(query.getEntityClass(), id)  : null;
+		return id != null ? list(query.getEntityClass(), id) : null;
 	}
 
 	@Override
@@ -301,13 +314,13 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 	@Override
 	public <T extends Entity> T listLeanFirst(Query<T> query) throws UnifyException {
 		final Long id = min(Long.class, "id", query);
-		return id != null ? listLean(query.getEntityClass(), id)  : null;
+		return id != null ? listLean(query.getEntityClass(), id) : null;
 	}
 
 	@Override
 	public <T extends Entity> T listLeanLast(Query<T> query) throws UnifyException {
 		final Long id = max(Long.class, "id", query);
-		return id != null ? listLean(query.getEntityClass(), id)  : null;
+		return id != null ? listLean(query.getEntityClass(), id) : null;
 	}
 
 	@Override
@@ -328,7 +341,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 		if (!list.isEmpty()) {
 			SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
 			for (T record : list) {
-				fetchChildRecords(sqlEntityInfo, record, query.getSelect(), IncludeListOnly.TRUE);
+				fetchChildRecords(sqlEntityInfo, record, query.getSelect(), ChildFetch.ALL, IncludeListOnly.TRUE);
 			}
 		}
 
@@ -364,7 +377,19 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 	@Override
 	public <T extends Entity> void listChildren(T record) throws UnifyException {
 		SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(record.getClass());
-		fetchChildRecords(sqlEntityInfo, record, null, IncludeListOnly.TRUE);
+		fetchChildRecords(sqlEntityInfo, record, null, ChildFetch.ALL, IncludeListOnly.TRUE);
+	}
+
+	@Override
+	public <T extends Entity> void listEditableChildren(T record) throws UnifyException {
+		SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(record.getClass());
+		fetchChildRecords(sqlEntityInfo, record, null, ChildFetch.EDITABLE_ONLY, IncludeListOnly.TRUE);
+	}
+
+	@Override
+	public <T extends Entity> void listReadOnlyChildren(T record) throws UnifyException {
+		SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(record.getClass());
+		fetchChildRecords(sqlEntityInfo, record, null, ChildFetch.READ_ONLY, IncludeListOnly.TRUE);
 	}
 
 	@Override
@@ -465,7 +490,8 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 	}
 
 	@Override
-	public <T extends Number, U extends Entity> T min(Class<T> fieldClass, String fieldName, Query<U> query) throws UnifyException {
+	public <T extends Number, U extends Entity> T min(Class<T> fieldClass, String fieldName, Query<U> query)
+			throws UnifyException {
 		SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
 		EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
 		if (entityPolicy != null) {
@@ -480,7 +506,8 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 	}
 
 	@Override
-	public <T extends Number, U extends Entity> T max(Class<T> fieldClass, String fieldName, Query<U> query) throws UnifyException {
+	public <T extends Number, U extends Entity> T max(Class<T> fieldClass, String fieldName, Query<U> query)
+			throws UnifyException {
 		SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
 		EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
 		if (entityPolicy != null) {
@@ -569,25 +596,37 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 	@Override
 	public int updateById(Entity record) throws UnifyException {
 		ensureWritable();
-		return updateById(record, UpdateChild.TRUE);
+		return updateById(record, ChildFetch.ALL, UpdateChild.TRUE);
 	}
 
 	@Override
 	public int updateByIdVersion(Entity record) throws UnifyException {
 		ensureWritable();
-		return updateByIdVersion(record, UpdateChild.TRUE);
+		return updateByIdVersion(record, ChildFetch.ALL, UpdateChild.TRUE);
+	}
+
+	@Override
+	public int updateByIdEditableChildren(Entity record) throws UnifyException {
+		ensureWritable();
+		return updateById(record, ChildFetch.EDITABLE_ONLY, UpdateChild.TRUE);
+	}
+
+	@Override
+	public int updateByIdVersionEditableChildren(Entity record) throws UnifyException {
+		ensureWritable();
+		return updateByIdVersion(record, ChildFetch.EDITABLE_ONLY, UpdateChild.TRUE);
 	}
 
 	@Override
 	public int updateLeanById(Entity record) throws UnifyException {
 		ensureWritable();
-		return updateById(record, UpdateChild.FALSE);
+		return updateById(record, null, UpdateChild.FALSE);
 	}
 
 	@Override
 	public int updateLeanByIdVersion(Entity record) throws UnifyException {
 		ensureWritable();
-		return updateByIdVersion(record, UpdateChild.FALSE);
+		return updateByIdVersion(record, null, UpdateChild.FALSE);
 	}
 
 	@Override
@@ -1032,7 +1071,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 			}
 
 			if (fetchChild.isTrue()) {
-				fetchChildRecords(sqlEntityInfo, record, null, IncludeListOnly.FALSE);
+				fetchChildRecords(sqlEntityInfo, record, null, ChildFetch.ALL, IncludeListOnly.FALSE);
 			}
 			return record;
 		} finally {
@@ -1053,7 +1092,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 			}
 
 			if (fetchChild.isTrue()) {
-				fetchChildRecords(sqlEntityInfo, record, null, IncludeListOnly.FALSE);
+				fetchChildRecords(sqlEntityInfo, record, null, ChildFetch.ALL, IncludeListOnly.FALSE);
 			}
 			return record;
 		} finally {
@@ -1081,7 +1120,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 			}
 
 			if (fetchChild.isTrue()) {
-				fetchChildRecords(sqlEntityInfo, record, query.getSelect(), IncludeListOnly.FALSE);
+				fetchChildRecords(sqlEntityInfo, record, query.getSelect(), ChildFetch.ALL, IncludeListOnly.FALSE);
 			}
 		} catch (UnifyException e) {
 			throw e;
@@ -1102,7 +1141,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 			}
 
 			if (fetchChild.isTrue()) {
-				fetchChildRecords(sqlEntityInfo, record, null, IncludeListOnly.TRUE);
+				fetchChildRecords(sqlEntityInfo, record, null, ChildFetch.ALL, IncludeListOnly.TRUE);
 			}
 			return record;
 		} finally {
@@ -1123,7 +1162,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 			}
 
 			if (fetchChild.isTrue()) {
-				fetchChildRecords(sqlEntityInfo, record, null, IncludeListOnly.TRUE);
+				fetchChildRecords(sqlEntityInfo, record, null, ChildFetch.ALL, IncludeListOnly.TRUE);
 			}
 			return record;
 		} finally {
@@ -1142,13 +1181,13 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 				sqlDataSourceDialect.prepareListStatement(query), MustMatch.FALSE);
 
 		if (fetchChild.isTrue()) {
-			fetchChildRecords(sqlEntityInfo, record, query.getSelect(), IncludeListOnly.TRUE);
+			fetchChildRecords(sqlEntityInfo, record, query.getSelect(), ChildFetch.ALL, IncludeListOnly.TRUE);
 		}
 		return record;
 	}
 
 	private <T extends Entity> void fetchChildRecords(SqlEntityInfo sqlEntityInfo, T record, Select select,
-			IncludeListOnly includeListOnly) throws UnifyException {
+			ChildFetch childFetch, IncludeListOnly includeListOnly) throws UnifyException {
 		if (record != null) {
 			try {
 				if (sqlEntityInfo.isChildList()) {
@@ -1158,6 +1197,10 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 					if (sqlEntityInfo.isSingleChildList()) {
 						final String tableName = sqlEntityInfo.getTableName();
 						for (ChildFieldInfo clfi : sqlEntityInfo.getSingleChildInfoList()) {
+							if (!clfi.qualifies(childFetch)) {
+								continue;
+							}
+
 							if (isSelect && !select.contains(clfi.getName())) {
 								continue;
 							}
@@ -1192,7 +1235,8 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
 								childRecord = childList.get(0);
 								if (childSqlEntityInfo.isChildList()) {
-									fetchChildRecords(childSqlEntityInfo, childRecord, null, includeListOnly);
+									fetchChildRecords(childSqlEntityInfo, childRecord, null, ChildFetch.ALL,
+											includeListOnly);
 								}
 							}
 
@@ -1204,6 +1248,10 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 					if (sqlEntityInfo.isManyChildList()) {
 						final String tableName = sqlEntityInfo.getTableName();
 						for (ChildFieldInfo clfi : sqlEntityInfo.getManyChildInfoList()) {
+							if (!clfi.qualifies(childFetch)) {
+								continue;
+							}
+
 							if (isSelect && !select.contains(clfi.getName())) {
 								continue;
 							}
@@ -1232,7 +1280,8 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 							if (!childList.isEmpty()) {
 								if (childSqlEntityInfo.isChildList()) {
 									for (Entity childRecord : childList) {
-										fetchChildRecords(childSqlEntityInfo, childRecord, null, includeListOnly);
+										fetchChildRecords(childSqlEntityInfo, childRecord, null, ChildFetch.ALL,
+												includeListOnly);
 									}
 								}
 							}
@@ -1250,7 +1299,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 		}
 	}
 
-	private int updateById(Entity record, UpdateChild updateChild) throws UnifyException {
+	private int updateById(Entity record, ChildFetch fetch, UpdateChild updateChild) throws UnifyException {
 		int result;
 		SqlStatement sqlStatement = null;
 		SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(record);
@@ -1278,7 +1327,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 			}
 
 			if (updateChild.isTrue() && sqlEntityInfo.isChildList()) {
-				updateChildRecords(sqlEntityInfo, record, false);
+				updateChildRecords(sqlEntityInfo, record, fetch, false);
 			}
 		} catch (UnifyException e) {
 			if (entityPolicy != null) {
@@ -1293,7 +1342,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 		return result;
 	}
 
-	private int updateByIdVersion(Entity record, UpdateChild updateChild) throws UnifyException {
+	private int updateByIdVersion(Entity record, ChildFetch fetch, UpdateChild updateChild) throws UnifyException {
 		int result;
 		SqlStatement sqlStatement = null;
 		SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(record);
@@ -1337,7 +1386,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 			}
 
 			if (updateChild.isTrue() && sqlEntityInfo.isChildList()) {
-				updateChildRecords(sqlEntityInfo, record, true);
+				updateChildRecords(sqlEntityInfo, record, fetch, true);
 			}
 		} catch (Exception e) {
 			if (entityPolicy != null) {
@@ -1442,13 +1491,17 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void updateChildRecords(SqlEntityInfo sqlEntityInfo, Entity record, boolean versionNo)
+	private void updateChildRecords(SqlEntityInfo sqlEntityInfo, Entity record, ChildFetch fetch, boolean versionNo)
 			throws UnifyException {
 		Object id = record.getId();
 		try {
 			final String tableName = sqlEntityInfo.getTableName();
 			if (sqlEntityInfo.isSingleChildList()) {
 				for (ChildFieldInfo alfi : sqlEntityInfo.getSingleChildInfoList()) {
+					if (!alfi.qualifies(fetch)) {
+						continue;
+					}
+
 					Entity childRecord = (Entity) alfi.getGetter().invoke(record);
 					if (childRecord != null) {
 						if (childRecord.getId() == null) {
@@ -1478,6 +1531,10 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
 			if (sqlEntityInfo.isManyChildList()) {
 				for (ChildFieldInfo alfi : sqlEntityInfo.getManyChildInfoList()) {
+					if (!alfi.qualifies(fetch)) {
+						continue;
+					}
+
 					List<? extends Entity> childList = (List<? extends Entity>) alfi.getGetter().invoke(record);
 					if (childList != null) {
 						boolean clear = false;
