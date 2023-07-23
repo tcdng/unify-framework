@@ -65,6 +65,8 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
             dataSourceManager.initDataSource(datasource, options);
         }
 
+        boolean isDeployNewVersion = false;
+        boolean isDeployNewAuxVersion = false;
         if (isDeploymentMode()) {
             Feature deploymentFeature = getFeature("deploymentVersion", "0.0");
             Feature auxiliaryFeature = getFeature("auxiliaryVersion", "0.0");
@@ -89,12 +91,12 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
                 deploymentFeature = getFeature("deploymentVersion", "0.0");
                 String lastDeploymentVersion = deploymentFeature.getValue();
                 String versionToDeploy = getDeploymentVersion();
-                boolean isDeployNewVersion = VersionUtils.isNewerVersion(versionToDeploy, lastDeploymentVersion);
+                isDeployNewVersion = VersionUtils.isNewerVersion(versionToDeploy, lastDeploymentVersion);
 
                 auxiliaryFeature = getFeature("auxiliaryVersion", "0.0");
                 String lastAuxiliaryVersion = auxiliaryFeature.getValue();
                 String auxVersionToDeploy = getAuxiliaryVersion();
-                boolean isDeployNewAuxVersion = VersionUtils.isNewerVersion(auxVersionToDeploy, lastAuxiliaryVersion);
+                isDeployNewAuxVersion = VersionUtils.isNewerVersion(auxVersionToDeploy, lastAuxiliaryVersion);
                 if (!isDataSourcesManaged) {
                     // If not already managed, manage data sources if not production mode or if
                     // deploying new version
@@ -172,7 +174,7 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
             }
         }
         
-        onStartup();
+        onStartup(isDeployNewVersion || isDeployNewAuxVersion);
         dataSourceManager.initDelayedDataSource();
     }
 
@@ -201,7 +203,7 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
 
     protected abstract BootInstallationInfo<T> prepareBootInstallation() throws UnifyException;
 
-    protected abstract void onStartup() throws UnifyException;
+    protected abstract void onStartup(boolean isInstallationPerformed) throws UnifyException;
 
     protected abstract void onShutdown() throws UnifyException;
 
