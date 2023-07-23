@@ -42,7 +42,7 @@ public class BootServiceImpl extends AbstractBootService<FeatureDefinition> {
     }
 
     @Override
-    protected void onStartup() throws UnifyException {
+    protected void onStartup(boolean isInstallationPerformed) throws UnifyException {
 
     }
 
