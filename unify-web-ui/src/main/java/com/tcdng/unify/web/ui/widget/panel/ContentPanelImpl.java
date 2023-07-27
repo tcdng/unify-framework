@@ -53,6 +53,7 @@ import com.tcdng.unify.web.ui.widget.Widget;
         @UplAttribute(name = "tabbed", type = boolean.class),
         @UplAttribute(name = "tabbedBinding", type = String.class),
         @UplAttribute(name = "titlebar", type = boolean.class),
+        @UplAttribute(name = "titleUppercase", type = boolean.class),
         @UplAttribute(name = "sidebar", type = UplElementReferences.class) })
 public class ContentPanelImpl extends AbstractContentPanel {
 
@@ -93,6 +94,10 @@ public class ContentPanelImpl extends AbstractContentPanel {
 
     public boolean isTitleBar() throws UnifyException {
         return getUplAttribute(boolean.class, "titlebar");
+    }
+
+    public boolean isTitleUppercase() throws UnifyException {
+        return getUplAttribute(boolean.class, "titleUppercase");
     }
 
     public String getHintPanelId() throws UnifyException {

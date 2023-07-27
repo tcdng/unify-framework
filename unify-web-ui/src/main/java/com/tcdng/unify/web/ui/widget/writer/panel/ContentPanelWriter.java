@@ -190,6 +190,8 @@ public class ContentPanelWriter extends AbstractPanelWriter {
 					title = page.getCaption();
 				}
 
+				title = contentPanel.isTitleUppercase() && title != null ? title.toUpperCase() : title;
+				
 				String subTitle = page.getSubCaption();
 
 				writer.write("><div><a ");

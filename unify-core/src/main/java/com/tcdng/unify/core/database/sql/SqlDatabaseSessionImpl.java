@@ -998,22 +998,26 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
 	@Override
 	public void close() throws UnifyException {
-		try {
-			while (!savepointStack.empty()) {
-				connection.releaseSavepoint(savepointStack.pop());
+		if (!closed) {
+			try {
+				while (!savepointStack.empty()) {
+					connection.releaseSavepoint(savepointStack.pop());
+				}
+			} catch (Exception e) {
+				throw new UnifyException(e, UnifyCoreErrorConstants.DATASOURCE_SESSION_ERROR, getDataSourceName());
+			} finally {
+				sqlDataSource.restoreConnection(connection);
+				connection = null;
+				closed = true;
 			}
-		} catch (SQLException e) {
 		}
-		sqlDataSource.restoreConnection(connection);
-		connection = null;
-		closed = true;
 	}
 
 	@Override
 	public void commit() throws UnifyException {
 		try {
 			connection.commit();
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			throw new UnifyException(e, UnifyCoreErrorConstants.DATASOURCE_SESSION_ERROR, getDataSourceName());
 		}
 	}
@@ -1052,6 +1056,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 	@Override
 	public boolean isClosed() throws UnifyException {
 		return closed;
+	}
+
+	@Override
+	protected void finalize() throws Throwable {
+		close();
 	}
 
 	private void ensureWritable() throws UnifyException {

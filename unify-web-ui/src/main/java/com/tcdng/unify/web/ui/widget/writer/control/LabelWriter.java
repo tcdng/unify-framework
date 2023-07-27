@@ -53,6 +53,7 @@ public class LabelWriter extends AbstractControlWriter {
         writer.write(">");
         String value = label.getStringValue();
         if (value != null) {
+        	value = label.isTextUppercase() ? value.toUpperCase() : value;
             if (label.isHtmlEscape()) {
                 writer.writeWithHtmlEscape(value);
             } else {
@@ -64,6 +65,7 @@ public class LabelWriter extends AbstractControlWriter {
             } else if (!label.isLayoutCaption()) {
                 String caption = label.getCaption();
                 if (caption != null) {
+                	caption = label.isTextUppercase() ? caption.toUpperCase() : caption;
                     if (label.isHtmlEscape()) {
                         writer.writeWithHtmlEscape(caption);
                     } else {

@@ -36,6 +36,7 @@ import com.tcdng.unify.web.ui.widget.AbstractFormattedControl;
         @UplAttribute(name = "bindingOptional", type = boolean.class, defaultVal = "false"),
         @UplAttribute(name = "inline", type = boolean.class, defaultVal = "false"),
         @UplAttribute(name = "draggable", type = boolean.class, defaultVal = "false"),
+        @UplAttribute(name = "textUppercase", type = boolean.class),
         @UplAttribute(name = "type", type = MessageType.class),
         @UplAttribute(name = "typeBinding", type = String.class)})
 public class Label extends AbstractFormattedControl {
@@ -57,6 +58,10 @@ public class Label extends AbstractFormattedControl {
 
     public boolean isBindingOptional() throws UnifyException {
         return getUplAttribute(boolean.class, "bindingOptional");
+    }
+
+    public boolean isTextUppercase() throws UnifyException {
+        return getUplAttribute(boolean.class, "textUppercase");
     }
 
     public boolean isInline() throws UnifyException {
