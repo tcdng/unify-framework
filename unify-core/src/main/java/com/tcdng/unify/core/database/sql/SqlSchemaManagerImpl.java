@@ -219,6 +219,7 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 		try {
 			connection = databaseMetaData.getConnection();
 			// Manage entity table
+			logDebug("Managing entity table [{0}]...", sqlEntityInfo.getTableName());
 			String schema = sqlEntityInfo.getSchema();
 			if (StringUtils.isBlank(schema)) {
 				schema = sqlDataSource.getAppSchema();
@@ -246,10 +247,12 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 				List<String> createUpdateConstraintSql = new ArrayList<String>();
 				if (!alterTableColumnsSql.isEmpty()) {
 					// Drop all constraints and indexes
+					logDebug("Dropping all constraints and indexes...");
 					dropConstraintSql.addAll(generateDropConstraints(sqlDataSourceDialect, sqlEntityInfo,
 							managedTableConstraints.values(), printFormat));
 
 					// Recreate all constraints and indexes
+					logDebug("Recreating all constraints and indexes...");
 					for (SqlForeignKeySchemaInfo sqlForeignKeyInfo : sqlEntityInfo.getManagedForeignKeyList()) {
 						createUpdateConstraintSql.add(sqlDataSourceDialect
 								.generateAddForeignKeyConstraintSql(sqlEntityInfo, sqlForeignKeyInfo, printFormat));
@@ -269,6 +272,7 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 					}
 				} else {
 					// Detect foreign constraint changes
+					logDebug("Detecting foreign constraint changes...");
 					if (forceConstraints.isTrue() && sqlEntityInfo.isManagedForeignKeys()) {
 						for (SqlForeignKeySchemaInfo sqlForeignKeyInfo : sqlEntityInfo.getManagedForeignKeyList()) {
 							if (!sqlEntityInfo.getManagedFieldInfo(sqlForeignKeyInfo.getFieldName())
@@ -301,6 +305,7 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 					}
 
 					// Detect unique constraint changes
+					logDebug("Detecting unique constraint changes...");
 					if (sqlEntityInfo.isUniqueConstraints()) {
 						for (SqlUniqueConstraintSchemaInfo sqlUniqueConstraintInfo : sqlEntityInfo
 								.getUniqueConstraintList().values()) {
@@ -325,6 +330,7 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 					}
 
 					// Detect index changes
+					logDebug("Detecting index changes...");
 					if (sqlEntityInfo.isIndexes()) {
 						for (SqlIndexSchemaInfo sqlIndexInfo : sqlEntityInfo.getIndexList().values()) {
 							TableConstraint idxConst = managedTableConstraints.get(sqlIndexInfo.getName());
@@ -347,6 +353,7 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 					}
 
 					// Drop unused constraints and indexes
+					logDebug("Dropping unused constraints and indexes...");
 					dropConstraintSql.addAll(generateDropConstraints(sqlDataSourceDialect, sqlEntityInfo,
 							managedTableConstraints.values(), printFormat));
 				}
@@ -394,6 +401,7 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 			// Manage entity view
 			List<String> viewUpdateSQL = new ArrayList<String>();
 			if (sqlEntityInfo.isViewable()) {
+				logDebug("Managing entity view [{0}]...", sqlEntityInfo.getViewName());
 				boolean isDropView = false;
 				rs = databaseMetaData.getTables(null, schema, sqlEntityInfo.getViewName(), null);
 				if (rs.next()) {
@@ -436,10 +444,15 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 				pstmt = connection.prepareStatement(sql);
 				pstmt.executeUpdate();
 				SqlUtils.close(pstmt);
+				
+				if (sqlDebugging) {
+					logDebug("Completed executing SQL update [{0}]...", sql);
+				}
 			}
 			connection.commit();
 
 			// Update static reference data
+			logDebug("Updating static reference data...");
 			if (EnumConst.class.isAssignableFrom(entityClass)) {
 				StaticList sla = entityClass.getAnnotation(StaticList.class);
 				if (sla != null) {
@@ -725,6 +738,7 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 			Map<String, SqlColumnInfo> columnInfos, PrintFormat printFormat) throws UnifyException {
 		List<String> columnUpdateSql = new ArrayList<String>();
 		logDebug("Getting column updates for [{0}]...", sqlEntityInfo.getTableName());
+		logDebug("Checking [{0}] fields...", sqlEntityInfo.getManagedFieldInfos().size());
 		for (SqlFieldInfo sqlfieldInfo : sqlEntityInfo.getManagedFieldInfos()) {
 			SqlColumnInfo sqlColumnInfo = columnInfos.remove(sqlfieldInfo.getColumnName().toLowerCase());
 			if (sqlColumnInfo == null) {

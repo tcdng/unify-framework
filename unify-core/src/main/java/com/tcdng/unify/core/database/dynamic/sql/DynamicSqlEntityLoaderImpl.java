@@ -78,6 +78,7 @@ public class DynamicSqlEntityLoaderImpl extends AbstractUnifyComponent implement
 		logDebug("Generating source files for [{0}] entity classes...", dynamicEntityInfoList.size());
 		List<JavaClassSource> sourceList = new ArrayList<JavaClassSource>();
 		for (DynamicEntityInfo dynamicEntityInfo : dynamicEntityInfoList) {
+			logDebug("Generating source file for [{0}]...", dynamicEntityInfo.getClassName());
 			if (!dynamicEntityInfo.isResolved()) {
 				throwOperationErrorException(new IllegalArgumentException("Dynamic entity information for ["
 						+ dynamicEntityInfo.getClassName() + "] entity is not finally resolved."));
