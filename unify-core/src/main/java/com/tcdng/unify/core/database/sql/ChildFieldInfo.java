@@ -82,6 +82,14 @@ public class ChildFieldInfo extends OnDeleteCascadeInfo {
 		return childCatSetter;
 	}
 
+	public boolean isWithChildFkTypeSetter() {
+		return childFkTypeSetter != null;
+	}
+
+	public boolean isWithChildCatSetter() {
+		return childCatSetter != null;
+	}
+
 	public Field getField() {
 		return field;
 	}

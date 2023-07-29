@@ -1514,15 +1514,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 					Entity childRecord = (Entity) alfi.getGetter().invoke(record);
 					if (childRecord != null) {
 						if (childRecord.getId() == null) {
-							alfi.getChildFkIdSetter().invoke(childRecord, id);
-							if (alfi.isWithChildFkType()) {
-								alfi.getChildFkTypeSetter().invoke(childRecord, tableName);
-							}
-
-							if (alfi.isWithChildCat()) {
-								alfi.getChildCatSetter().invoke(childRecord, alfi.getCategory());
-							}
-
+							setParentAttributes(alfi, childRecord, id, tableName);
 							deleteChildRecords(alfi, tableName, id);
 							create(childRecord);
 						} else {
@@ -1546,8 +1538,8 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
 					List<? extends Entity> childList = (List<? extends Entity>) alfi.getGetter().invoke(record);
 					if (childList != null) {
-						boolean clear = false;
-						if (alfi.isIdNumber()) {
+						boolean clear = fetch.isEditableOnly();
+						if (!clear && alfi.isIdNumber()) {
 							Number last = null;
 							for (Entity childRecord : childList) {
 								Number cid = (Number) childRecord.getId();
@@ -1563,20 +1555,8 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 						if (clear) {
 							deleteChildRecords(alfi, tableName, id);
 
-							Method childFkIdSetter = alfi.getChildFkIdSetter();
-							Method childFkTypeSetter = alfi.getChildFkTypeSetter();
-							Method childCatSetter = alfi.getChildCatSetter();
-							String category = alfi.getCategory();
 							for (Entity childRecord : childList) {
-								childFkIdSetter.invoke(childRecord, id);
-								if (childFkTypeSetter != null) {
-									childFkTypeSetter.invoke(childRecord, tableName);
-								}
-
-								if (childCatSetter != null) {
-									childCatSetter.invoke(childRecord, category);
-								}
-
+								setParentAttributes(alfi, childRecord, id, tableName);
 								create(childRecord);
 							}
 						} else {
@@ -1607,6 +1587,18 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 		}
 	}
 
+	private void setParentAttributes(ChildFieldInfo alfi, Entity childRecord, Object parentId, String tableName)
+			throws Exception {
+		alfi.getChildFkIdSetter().invoke(childRecord, parentId);
+		if (alfi.isWithChildFkTypeSetter()) {
+			alfi.getChildFkTypeSetter().invoke(childRecord, tableName);
+		}
+
+		if (alfi.isWithChildCatSetter()) {
+			alfi.getChildCatSetter().invoke(childRecord, alfi.getCategory());
+		}
+	}
+	
 	private void deleteChildRecords(SqlEntityInfo sqlEntityInfo, Object id) throws UnifyException {
 		final String tableName = sqlEntityInfo.getTableName();
 		for (OnDeleteCascadeInfo odci : sqlEntityInfo.getOnDeleteCascadeInfoList()) {
