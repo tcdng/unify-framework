@@ -1513,8 +1513,8 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
 					Entity childRecord = (Entity) alfi.getGetter().invoke(record);
 					if (childRecord != null) {
-						setParentAttributes(alfi, childRecord, id, tableName);
 						if (childRecord.getId() == null) {
+							setParentAttributes(alfi, childRecord, id, tableName);
 							deleteChildRecords(alfi, tableName, id);
 							create(childRecord);
 						} else {
@@ -1538,8 +1538,8 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
 					List<? extends Entity> childList = (List<? extends Entity>) alfi.getGetter().invoke(record);
 					if (childList != null) {
-						boolean clear = false;
-						if (alfi.isIdNumber()) {
+						boolean clear = fetch.isEditableOnly();
+						if (!clear && alfi.isIdNumber()) {
 							Number last = null;
 							for (Entity childRecord : childList) {
 								Number cid = (Number) childRecord.getId();
@@ -1563,13 +1563,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 							Set<Object> targetIds = getDeleteChildRecordIds(alfi, tableName, id);
 							if (versionNo) {
 								for (Entity childRecord : childList) {
-									setParentAttributes(alfi, childRecord, id, tableName);
 									updateByIdVersion(childRecord);
 									targetIds.remove(childRecord.getId());
 								}
 							} else {
 								for (Entity childRecord : childList) {
-									setParentAttributes(alfi, childRecord, id, tableName);
 									updateById(childRecord);
 									targetIds.remove(childRecord.getId());
 								}
