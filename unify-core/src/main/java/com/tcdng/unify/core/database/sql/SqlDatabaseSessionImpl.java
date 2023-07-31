@@ -490,6 +490,26 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 	}
 
 	@Override
+	public <T, U extends Entity> T valueOptional(Class<T> fieldClass, String fieldName, Query<U> query)
+			throws UnifyException {
+		SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
+		EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
+		if (entityPolicy != null) {
+			entityPolicy.preQuery(query);
+		}
+
+		final Select select = query.getSelect();
+		try {
+			query.setSelect(new Select(fieldName).setDistinct(true));
+			return getSqlStatementExecutor().executeSingleObjectResultQuery(connection, fieldClass,
+					sqlDataSourceDialect.getSqlTypePolicy(sqlEntityInfo.getListFieldInfo(fieldName).getColumnType()),
+					sqlDataSourceDialect.prepareListStatement(query), MustMatch.FALSE);
+		} finally {
+			query.setSelect(select);
+		}
+	}
+
+	@Override
 	public <T extends Number, U extends Entity> T min(Class<T> fieldClass, String fieldName, Query<U> query)
 			throws UnifyException {
 		SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);

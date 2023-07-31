@@ -586,6 +586,21 @@ public interface DatabaseSession {
      */
     <T, U extends Entity> T value(Class<T> fieldClass, String fieldName, Query<U> query) throws UnifyException;
 
+
+    /**
+     * Gets value of selected field for record fetched by query (optional).
+     * 
+     * @param fieldClass
+     *            the value class
+     * @param fieldName
+     *            the value field name
+     * @param query
+     *            the query
+     * @return the value if found otherwise null equivalent
+     * @throws UnifyException if an error occurs
+     */
+    <T, U extends Entity> T valueOptional(Class<T> fieldClass, String fieldName, Query<U> query) throws UnifyException;
+
 	/**
 	 * Adds supplied value to field for all records that match criteria.
 	 * 
