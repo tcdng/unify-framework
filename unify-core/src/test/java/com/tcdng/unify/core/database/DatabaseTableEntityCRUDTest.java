@@ -4846,6 +4846,60 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
     }
 
     @Test(expected = UnifyException.class)
+    public void testValueNoRecord() throws Exception {
+        tm.beginTransaction();
+        try {
+            db.create(new Fruit("apple", "red", 20.00, 25));
+            db.create(new Fruit("pineapple", "cyan", 60.00, 3));
+            db.create(new Fruit("banana", "yellow", 45.00, 45));
+            db.create(new Fruit("orange", "orange", 15.00, 11));
+
+            String color = db.value(String.class, "color", new FruitQuery().addEquals("name", "mango"));
+            assertEquals("red", color);
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
+    public void testValueOptional() throws Exception {
+        tm.beginTransaction();
+        try {
+            db.create(new Fruit("apple", "red", 20.00, 25));
+            db.create(new Fruit("pineapple", "cyan", 60.00, 3));
+            db.create(new Fruit("banana", "yellow", 45.00, 45));
+            db.create(new Fruit("orange", "orange", 15.00, 11));
+
+            String color = db.valueOptional(String.class, "color", new FruitQuery().addEquals("name", "apple"));
+            assertEquals("red", color);
+
+            Double price = db.valueOptional(Double.class, "price", new FruitQuery().addEquals("name", "banana"));
+            assertEquals(Double.valueOf(45.00), price);
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
+    public void testValueOptionalNoRecord() throws Exception {
+        tm.beginTransaction();
+        try {
+            db.create(new Fruit("apple", "red", 20.00, 25));
+            db.create(new Fruit("pineapple", "cyan", 60.00, 3));
+            db.create(new Fruit("banana", "yellow", 45.00, 45));
+            db.create(new Fruit("orange", "orange", 15.00, 11));
+
+            String color = db.valueOptional(String.class, "color", new FruitQuery().addEquals("name", "mango"));
+            assertNull(color);
+            double price = db.valueOptional(double.class, "price", new FruitQuery().addEquals("name", "mango"));
+            assertEquals(Double.valueOf(0.00),Double.valueOf( price));
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+
+    @Test(expected = UnifyException.class)
     public void testListValueMultipleResult() throws Exception {
         tm.beginTransaction();
         try {

@@ -109,7 +109,8 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
             SqlUtils.close(rs);
             SqlUtils.close(pStmt);
         }
-        return result;
+        
+        return DataUtils.convert(clazz, result);
     }
 
     @SuppressWarnings("unchecked")
@@ -140,7 +141,8 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
             SqlUtils.close(rs);
             SqlUtils.close(pStmt);
         }
-        return result;
+        
+        return DataUtils.convert(clazz, result);
     }
 
     @Override

@@ -384,19 +384,16 @@ public abstract class AbstractSqlDataSource extends AbstractDataSource implement
 
     @Override
     public Connection getConnection() throws UnifyException {
-    	logDebug("Getting connection...");
         return sqlConnectionPool.borrowObject();
     }
 
     @Override
     public boolean restoreConnection(Connection connection) throws UnifyException {
-    	logDebug("Restoring connection...");
         return sqlConnectionPool.returnObject(connection);
     }
 
     @Override
     public boolean restoreConnection(Object connection) throws UnifyException {
-    	logDebug("Restoring connection...");
         return sqlConnectionPool.returnObject((Connection) connection);
     }
 
