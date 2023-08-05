@@ -27,17 +27,18 @@ import com.tcdng.unify.core.annotation.UplAttributes;
  * @since 1.0
  */
 @Component("ui-alphanumeric")
-@UplAttributes({ @UplAttribute(name = "space", type = boolean.class, defaultVal = "false"),
-        @UplAttribute(name = "special", type = boolean.class, defaultVal = "false"),
+@UplAttributes({ 
+		@UplAttribute(name = "space", type = boolean.class, defaultVal = "false"),
         @UplAttribute(name = "spaceBinding", type = String.class),
+        @UplAttribute(name = "special", type = boolean.class, defaultVal = "false"),
         @UplAttribute(name = "specialBinding", type = String.class) })
 public class AlphanumericField extends TextField {
 
     public boolean isSpace() throws UnifyException {
-        return resolveBooleanAttribute("space", "spaceBinding");
+        return getUplAttribute(boolean.class, "space", "spaceBinding");
     }
 
     public boolean isSpecial() throws UnifyException {
-        return resolveBooleanAttribute("special", "specialBinding");
+        return getUplAttribute(boolean.class, "special", "specialBinding");
     }
 }

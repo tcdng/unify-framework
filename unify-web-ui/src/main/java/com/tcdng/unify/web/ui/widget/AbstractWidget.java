@@ -809,27 +809,13 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 		}
 	}
 
-	protected <T> T getUplAttribute(Class<T> type, String attribute, String attributeBinding) throws UnifyException {
-		T attrbVal = getUplAttribute(type, attribute);
-		if (attrbVal == null) {
-			String listBinding = getUplAttribute(String.class, attributeBinding);
-			if (StringUtils.isNotBlank(listBinding)) {
-				attrbVal = getValue(type, listBinding);
-			}
-		}
-		return attrbVal;
-	}
-
-	protected boolean resolveBooleanAttribute(String attribute, String bindingAttribute) throws UnifyException {
-		boolean result = getUplAttribute(boolean.class, attribute);
-		if (!result) {
-			String binding = getUplAttribute(String.class, bindingAttribute);
-			if (!StringUtils.isBlank(binding)) {
-				return getValue(boolean.class, binding);
-			}
-		}
-
-		return result;
+	protected <T> T getUplAttribute(Class<T> type, String attribute, String bindingAttribute) throws UnifyException {
+        String binding = getUplAttribute(String.class, bindingAttribute);
+        if (StringUtils.isNotBlank(binding)) {
+            return getValue(type, binding);
+        }
+        
+        return getUplAttribute(type, attribute);
 	}
 
 	/**

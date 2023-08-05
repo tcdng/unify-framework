@@ -48,322 +48,317 @@ import com.tcdng.unify.web.ui.widget.Widget;
 @Component("ui-contentpanel")
 @UplAttributes({
 		@UplAttribute(name = "documentPath", type = String.class, mandatory = true),
-		@UplAttribute(name = "path", type = String.class),
-        @UplAttribute(name = "pathBinding", type = String.class),
-        @UplAttribute(name = "tabbed", type = boolean.class),
-        @UplAttribute(name = "tabbedBinding", type = String.class),
-        @UplAttribute(name = "titlebar", type = boolean.class),
-        @UplAttribute(name = "titleUppercase", type = boolean.class),
-        @UplAttribute(name = "sidebar", type = UplElementReferences.class) })
+		@UplAttribute(name = "paths", type = String[].class),
+		@UplAttribute(name = "pathsBinding", type = String.class),
+		@UplAttribute(name = "tabbed", type = boolean.class),
+		@UplAttribute(name = "tabbedBinding", type = String.class),
+		@UplAttribute(name = "titlebar", type = boolean.class),
+		@UplAttribute(name = "titleUppercase", type = boolean.class),
+		@UplAttribute(name = "titleUppercaseBinding", type = String.class),
+		@UplAttribute(name = "sidebar", type = UplElementReferences.class) })
 public class ContentPanelImpl extends AbstractContentPanel {
 
-    @Configurable
-    private PagePathInfoRepository pathInfoRepository;
+	@Configurable
+	private PagePathInfoRepository pathInfoRepository;
 
-    private Map<String, ContentInfo> contentByPathIdMap;
+	private Map<String, ContentInfo> contentByPathIdMap;
 
-    private List<ContentInfo> contentList;
+	private List<ContentInfo> contentList;
 
-    private int contentIndex;
+	private int contentIndex;
 
-    public ContentPanelImpl() {
-        contentByPathIdMap = new HashMap<String, ContentInfo>();
-        contentList = new ArrayList<ContentInfo>();
-    }
+	public ContentPanelImpl() {
+		contentByPathIdMap = new HashMap<String, ContentInfo>();
+		contentList = new ArrayList<ContentInfo>();
+	}
 
-    public void setPathInfoRepository(PagePathInfoRepository pathInfoRepository) {
-        this.pathInfoRepository = pathInfoRepository;
-    }
+	public void setPathInfoRepository(PagePathInfoRepository pathInfoRepository) {
+		this.pathInfoRepository = pathInfoRepository;
+	}
 
-    public String getDocumentPath() throws UnifyException {
-        return getUplAttribute(String.class, "documentPath");
-    }
+	public String getDocumentPath() throws UnifyException {
+		return getUplAttribute(String.class, "documentPath");
+	}
 
-    public String getPath() throws UnifyException {
-        return getUplAttribute(String.class, "path", "pathBinding");
-    }
+	public String[] getPaths() throws UnifyException {
+		return getUplAttribute(String[].class, "paths", "pathsBinding");
+	}
 
-    public boolean isTabbed() throws UnifyException {
-        String tabbedBinding = getUplAttribute(String.class, "tabbedBinding");
-        if (StringUtils.isNotBlank(tabbedBinding)) {
-            return getValue(boolean.class, tabbedBinding);
-        }
-        
-        return getUplAttribute(boolean.class, "tabbed");
-    }
+	public boolean isTabbed() throws UnifyException {
+		return getUplAttribute(boolean.class, "tabbed", "tabbedBinding");
+	}
 
-    public boolean isTitleBar() throws UnifyException {
-        return getUplAttribute(boolean.class, "titlebar");
-    }
+	public boolean isTitleBar() throws UnifyException {
+		return getUplAttribute(boolean.class, "titlebar");
+	}
 
-    public boolean isTitleUppercase() throws UnifyException {
-        return getUplAttribute(boolean.class, "titleUppercase");
-    }
+	public boolean isTitleUppercase() throws UnifyException {
+		return getUplAttribute(boolean.class, "titleUppercase", "titleUppercaseBinding");
+	}
 
-    public String getHintPanelId() throws UnifyException {
-        return getPrefixedId("hint_");
-    }
-    
-    @Override
-    public String getBaseContentId() throws UnifyException {
-        return getPrefixedId("base_");
-    }
+	public String getHintPanelId() throws UnifyException {
+		return getPrefixedId("hint_");
+	}
 
-    public String getBodyPanelId() throws UnifyException {
-        return getPrefixedId("body_");
-    }
+	@Override
+	public String getBaseContentId() throws UnifyException {
+		return getPrefixedId("base_");
+	}
 
-    public String getTabItemId(int index) throws UnifyException {
-        return getPrefixedId("tabitem_") + index;
-    }
+	public String getBodyPanelId() throws UnifyException {
+		return getPrefixedId("body_");
+	}
 
-    public String getTabItemImgId(int index) throws UnifyException {
-        return getPrefixedId("tabimg_") + index;
-    }
+	public String getTabItemId(int index) throws UnifyException {
+		return getPrefixedId("tabitem_") + index;
+	}
 
-    public String getTabPaneId() throws UnifyException {
-        return getPrefixedId("tp_");
-    }
+	public String getTabItemImgId(int index) throws UnifyException {
+		return getPrefixedId("tabimg_") + index;
+	}
 
-    public String getMenuId() throws UnifyException {
-        return getPrefixedId("m_");
-    }
+	public String getTabPaneId() throws UnifyException {
+		return getPrefixedId("tp_");
+	}
 
-    public String getMenuBaseId() throws UnifyException {
-        return getPrefixedId("mb_");
-    }
+	public String getMenuId() throws UnifyException {
+		return getPrefixedId("m_");
+	}
 
-    public String getMenuCloseId() throws UnifyException {
-        return getPrefixedId("mic_");
-    }
+	public String getMenuBaseId() throws UnifyException {
+		return getPrefixedId("mb_");
+	}
 
-    public String getMenuCloseOtherId() throws UnifyException {
-        return getPrefixedId("mico_");
-    }
+	public String getMenuCloseId() throws UnifyException {
+		return getPrefixedId("mic_");
+	}
 
-    public String getMenuCloseAllId() throws UnifyException {
-        return getPrefixedId("mica_");
-    }
+	public String getMenuCloseOtherId() throws UnifyException {
+		return getPrefixedId("mico_");
+	}
 
-    public boolean isSidebar() throws UnifyException {
-        return getUplAttribute(UplElementReferences.class, "sidebar") != null;
-    }
+	public String getMenuCloseAllId() throws UnifyException {
+		return getPrefixedId("mica_");
+	}
 
-    public Widget getSidebar() throws UnifyException {
-        return getWidgetByLongName(getShallowReferencedLongNames("sidebar").get(0));
-    }
+	public boolean isSidebar() throws UnifyException {
+		return getUplAttribute(UplElementReferences.class, "sidebar") != null;
+	}
 
-    public int getPageCount() {
-        return contentList.size();
-    }
+	public Widget getSidebar() throws UnifyException {
+		return getWidgetByLongName(getShallowReferencedLongNames("sidebar").get(0));
+	}
 
-    public int getPageIndex() {
-        return contentIndex;
-    }
+	public int getPageCount() {
+		return contentList.size();
+	}
 
-    public ContentInfo getContentInfo(int pageIndex) throws UnifyException {
-        return contentList.get(pageIndex);
-    }
+	public int getPageIndex() {
+		return contentIndex;
+	}
 
-    public ContentInfo getCurrentContentInfo() {
-        return contentList.get(contentIndex);
-    }
+	public ContentInfo getContentInfo(int pageIndex) throws UnifyException {
+		return contentList.get(pageIndex);
+	}
 
-    @Override
-    public void clearPages() throws UnifyException {
-        contentByPathIdMap.clear();
-        contentList.clear();
-        contentIndex = 0;
-    }
+	public ContentInfo getCurrentContentInfo() {
+		return contentList.get(contentIndex);
+	}
 
-    @Override
-    public Page getCurrentPage() {
-        return contentList.get(contentIndex).getPage();
-    }
+	@Override
+	public void clearPages() throws UnifyException {
+		contentByPathIdMap.clear();
+		contentList.clear();
+		contentIndex = 0;
+	}
 
-    @Override
-    public void addContent(Page page) throws UnifyException {
-        ContentInfo contentInfo = contentByPathIdMap.get(page.getPathId());
-        if (contentInfo != null) {
-            contentIndex = contentInfo.getPageIndex();
-            return;
-        }
+	@Override
+	public Page getCurrentPage() {
+		return contentList.get(contentIndex).getPage();
+	}
 
-        untabbedClear();
-        contentIndex = contentList.size();
-        contentInfo = new ContentInfo(page, contentIndex);
-        contentList.add(contentInfo);
-        contentByPathIdMap.put(page.getPathId(), contentInfo);
-    }
+	@Override
+	public void addContent(Page page) throws UnifyException {
+		ContentInfo contentInfo = contentByPathIdMap.get(page.getPathId());
+		if (contentInfo != null) {
+			contentIndex = contentInfo.getPageIndex();
+			return;
+		}
 
-    @Override
-    public String insertContent(Page page) throws UnifyException {
-        ContentInfo contentInfo = contentByPathIdMap.get(page.getPathId());
-        if (contentInfo != null) {
-            contentIndex = contentInfo.getPageIndex();
-            return null;
-        }
+		untabbedClear();
+		contentIndex = contentList.size();
+		contentInfo = new ContentInfo(page, contentIndex);
+		contentList.add(contentInfo);
+		contentByPathIdMap.put(page.getPathId(), contentInfo);
+	}
 
-        untabbedClear();
-        
-        String replacedPathId = null;
-        final int len = contentList.size(); 
-        if (len <= 1) {
-            contentIndex = len;
-            contentInfo = new ContentInfo(page, contentIndex);
-            contentList.add(contentInfo);
-        } else {
-            replacedPathId = contentList.get(contentIndex).getPathId();
-            contentInfo = new ContentInfo(page, contentIndex);
-            contentList.add(contentIndex, contentInfo);
-            for(int i = contentIndex + 1; i <= len; i++) {
-                contentList.get(i).incPageIndex();
-            }
-        }
+	@Override
+	public String insertContent(Page page) throws UnifyException {
+		ContentInfo contentInfo = contentByPathIdMap.get(page.getPathId());
+		if (contentInfo != null) {
+			contentIndex = contentInfo.getPageIndex();
+			return null;
+		}
 
-        contentByPathIdMap.put(page.getPathId(), contentInfo);
-        return replacedPathId;
-    }
+		untabbedClear();
 
-    private void untabbedClear() throws UnifyException {
-        if (!isTabbed()) {
-            // Discard old pages
-            for (ContentInfo oldContentInfo: contentList) {
-                getSessionContext().removeAttribute(oldContentInfo.getPage().getPathId());
-            }
-            
-            // Clear content list
-            contentList.clear();
-            contentByPathIdMap.clear();
-        }
-    }
-    
-    @Override
-    public List<String> evaluateRemoveContent(Page page, ClosePageMode closePageMode) throws UnifyException {
-        List<String> toRemovePathIdList = new ArrayList<String>();
-        if (closePageMode == null) {
-            closePageMode = ClosePageMode.CLOSE;
-        }
+		String replacedPathId = null;
+		final int len = contentList.size();
+		if (len <= 1) {
+			contentIndex = len;
+			contentInfo = new ContentInfo(page, contentIndex);
+			contentList.add(contentInfo);
+		} else {
+			replacedPathId = contentList.get(contentIndex).getPathId();
+			contentInfo = new ContentInfo(page, contentIndex);
+			contentList.add(contentIndex, contentInfo);
+			for (int i = contentIndex + 1; i <= len; i++) {
+				contentList.get(i).incPageIndex();
+			}
+		}
 
-        boolean removeSrc = false;
-        switch (closePageMode) {
-            case CLOSE:
-                removeSrc = true;
-                break;
-            case CLOSE_ALL:
-                removeSrc = true;
-            case CLOSE_OTHERS:
-                // Close others
-                List<ContentInfo> refContentList = new ArrayList<ContentInfo>(contentList);
-                for (int i = 1; i < refContentList.size(); i++) {
-                    Page refPage = refContentList.get(i).getPage();
-                    if (refPage != page) {
-                        toRemovePathIdList.add(refPage.getPathId());
-                    }
-                }
-                break;
-            default:
-                break;
-        }
+		contentByPathIdMap.put(page.getPathId(), contentInfo);
+		return replacedPathId;
+	}
 
-        if (removeSrc) {
-            toRemovePathIdList.add(page.getPathId());
-        }
+	private void untabbedClear() throws UnifyException {
+		if (!isTabbed()) {
+			// Discard old pages
+			for (ContentInfo oldContentInfo : contentList) {
+				getSessionContext().removeAttribute(oldContentInfo.getPage().getPathId());
+			}
 
-        return toRemovePathIdList;
-    }
+			// Clear content list
+			contentList.clear();
+			contentByPathIdMap.clear();
+		}
+	}
 
-    @Override
-    public void removeContent(List<String> toRemovePathIdList) throws UnifyException {
-        for (String removePathId : toRemovePathIdList) {
-            ContentInfo contentInfo = contentByPathIdMap.remove(removePathId);
-            if (contentInfo == null) {
-                // TODO throw some exception here
-            	continue;
-            }
+	@Override
+	public List<String> evaluateRemoveContent(Page page, ClosePageMode closePageMode) throws UnifyException {
+		List<String> toRemovePathIdList = new ArrayList<String>();
+		if (closePageMode == null) {
+			closePageMode = ClosePageMode.CLOSE;
+		}
 
-            int pageIndex = contentInfo.getPageIndex();
-            contentList.remove(pageIndex);
-            int size = contentList.size();
-            for (int i = pageIndex; i < size; i++) {
-                contentList.get(i).decPageIndex();
-            }
+		boolean removeSrc = false;
+		switch (closePageMode) {
+		case CLOSE:
+			removeSrc = true;
+			break;
+		case CLOSE_ALL:
+			removeSrc = true;
+		case CLOSE_OTHERS:
+			// Close others
+			List<ContentInfo> refContentList = new ArrayList<ContentInfo>(contentList);
+			for (int i = 1; i < refContentList.size(); i++) {
+				Page refPage = refContentList.get(i).getPage();
+				if (refPage != page) {
+					toRemovePathIdList.add(refPage.getPathId());
+				}
+			}
+			break;
+		default:
+			break;
+		}
 
-            if (pageIndex <= contentIndex) {
-                contentIndex--;
-            }
-        }
-        
-        Page currentPage = getCurrentPage();
-        if (currentPage != null) {
-        	currentPage.setAttribute(PageAttributeConstants.OTHER_PAGE_CLOSED_DETECTED, Boolean.TRUE);
-        }
-    }
+		if (removeSrc) {
+			toRemovePathIdList.add(page.getPathId());
+		}
 
-    public class ContentInfo {
+		return toRemovePathIdList;
+	}
 
-        private Page page;
+	@Override
+	public void removeContent(List<String> toRemovePathIdList) throws UnifyException {
+		for (String removePathId : toRemovePathIdList) {
+			ContentInfo contentInfo = contentByPathIdMap.remove(removePathId);
+			if (contentInfo == null) {
+				// TODO throw some exception here
+				continue;
+			}
 
-        private int pageIndex;
+			int pageIndex = contentInfo.getPageIndex();
+			contentList.remove(pageIndex);
+			int size = contentList.size();
+			for (int i = pageIndex; i < size; i++) {
+				contentList.get(i).decPageIndex();
+			}
 
-        public ContentInfo(Page page, int pageIndex) throws UnifyException {
-            this.page = page;
-            this.pageIndex = pageIndex;
-        }
+			if (pageIndex <= contentIndex) {
+				contentIndex--;
+			}
+		}
 
-        public String getColorScheme() throws UnifyException {
-            return pathInfoRepository.getPagePathInfo(page).getColorScheme();
-        }
+		Page currentPage = getCurrentPage();
+		if (currentPage != null) {
+			currentPage.setAttribute(PageAttributeConstants.OTHER_PAGE_CLOSED_DETECTED, Boolean.TRUE);
+		}
+	}
 
-        public String getOpenPath() throws UnifyException {
-            return pathInfoRepository.getPagePathInfo(page).getOpenPagePath();
-        }
+	public class ContentInfo {
 
-        public String getClosePath() throws UnifyException {
-            return pathInfoRepository.getPagePathInfo(page).getClosePagePath();
-        }
+		private Page page;
 
-        public String getSavePath() throws UnifyException {
-            return pathInfoRepository.getPagePathInfo(page).getSavePagePath();
-        }
+		private int pageIndex;
 
-        public boolean isRemoteSave() throws UnifyException {
-            return pathInfoRepository.getPagePathInfo(page).isRemoteSave();
-        }
+		public ContentInfo(Page page, int pageIndex) throws UnifyException {
+			this.page = page;
+			this.pageIndex = pageIndex;
+		}
 
-        public ControllerPathParts getPathParts() throws UnifyException {
-            return pathInfoRepository.getControllerPathParts(page);
-        }
+		public String getColorScheme() throws UnifyException {
+			return pathInfoRepository.getPagePathInfo(page).getColorScheme();
+		}
 
-        public Page getPage() {
-            return page;
-        }
+		public String getOpenPath() throws UnifyException {
+			return pathInfoRepository.getPagePathInfo(page).getOpenPagePath();
+		}
 
-        public PageBean getPageBean() throws UnifyException {
-            return page.getPageBean();
-        }
+		public String getClosePath() throws UnifyException {
+			return pathInfoRepository.getPagePathInfo(page).getClosePagePath();
+		}
 
-        public String getPathId() {
-            return page.getPathId();
-        }
+		public String getSavePath() throws UnifyException {
+			return pathInfoRepository.getPagePathInfo(page).getSavePagePath();
+		}
 
-        public int getPageIndex() {
-            return pageIndex;
-        }
+		public boolean isRemoteSave() throws UnifyException {
+			return pathInfoRepository.getPagePathInfo(page).isRemoteSave();
+		}
 
-        public void decPageIndex() {
-            pageIndex--;
-        }
+		public ControllerPathParts getPathParts() throws UnifyException {
+			return pathInfoRepository.getControllerPathParts(page);
+		}
 
-        public void incPageIndex() {
-            pageIndex++;
-        }
+		public Page getPage() {
+			return page;
+		}
+
+		public PageBean getPageBean() throws UnifyException {
+			return page.getPageBean();
+		}
+
+		public String getPathId() {
+			return page.getPathId();
+		}
+
+		public int getPageIndex() {
+			return pageIndex;
+		}
+
+		public void decPageIndex() {
+			pageIndex--;
+		}
+
+		public void incPageIndex() {
+			pageIndex++;
+		}
 
 		@Override
 		public String toString() {
 			return StringUtils.toXmlString(this);
 		}
-        
-        
-    }
+
+	}
 }

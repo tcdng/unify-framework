@@ -69,7 +69,13 @@ public class ContentPanelWriter extends AbstractPanelWriter {
 		}
 
 		if (contentPanel.getPageCount() == 0) {
-			writer.writeParam("pImmURL", getContextURL(contentPanel.getPath()));
+			final String[] paths = contentPanel.getPaths();
+			final String[] _cpaths = new String[paths.length];
+			for (int i = 0; i < paths.length; i++) {
+				_cpaths[i] = getContextURL(paths[i]);
+			}
+
+			writer.writeParam("pImmURL", _cpaths);
 		} else {
 			writer.writeParam("pCurIdx", contentPanel.getPageIndex());
 			ContentInfo currentContentInfo = contentPanel.getCurrentContentInfo();
@@ -169,6 +175,9 @@ public class ContentPanelWriter extends AbstractPanelWriter {
 		// Tabs
 		final boolean tabbed = contentPanel.isTabbed();
 		if (tabbed) {
+			final String[] paths = contentPanel.getPaths();
+			final int lastBaseContentIndex = paths != null ? paths.length - 1 : -1;
+			
 			writer.write("<div style=\"display:table-row;width:100%;\">");
 			writer.write("<div style=\"display:table-cell;\">");
 			writer.write("<div id=\"").write(contentPanel.getTabPaneId()).write("\" class=\"cptabbar\">");
@@ -192,8 +201,7 @@ public class ContentPanelWriter extends AbstractPanelWriter {
 
 				title = contentPanel.isTitleUppercase() && title != null ? title.toUpperCase() : title;
 				
-				String subTitle = page.getSubCaption();
-
+				final String subTitle = page.getSubCaption();
 				writer.write("><div><a ");
 				if (page.getUplAttribute(boolean.class, "remote")) {
 					String cpcat = CPREMOTE_CATEGORYBASE;
@@ -220,7 +228,7 @@ public class ContentPanelWriter extends AbstractPanelWriter {
 
 				writer.write("</a>");
 
-				if (i > 0) {
+				if (i > lastBaseContentIndex) {
 					writer.write("<img id=\"").write(contentPanel.getTabItemImgId(i)).write("\" src=\"");
 					writer.writeFileImageContextURL("$t{images/cross_gray.png}");
 					writer.write("\"/>");
