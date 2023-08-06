@@ -175,9 +175,6 @@ public class ContentPanelWriter extends AbstractPanelWriter {
 		// Tabs
 		final boolean tabbed = contentPanel.isTabbed();
 		if (tabbed) {
-			final String[] paths = contentPanel.getPaths();
-			final int lastBaseContentIndex = paths != null ? paths.length - 1 : -1;
-			
 			writer.write("<div style=\"display:table-row;width:100%;\">");
 			writer.write("<div style=\"display:table-cell;\">");
 			writer.write("<div id=\"").write(contentPanel.getTabPaneId()).write("\" class=\"cptabbar\">");
@@ -228,7 +225,7 @@ public class ContentPanelWriter extends AbstractPanelWriter {
 
 				writer.write("</a>");
 
-				if (i > lastBaseContentIndex) {
+				if (i > 0) {
 					writer.write("<img id=\"").write(contentPanel.getTabItemImgId(i)).write("\" src=\"");
 					writer.writeFileImageContextURL("$t{images/cross_gray.png}");
 					writer.write("\"/>");
