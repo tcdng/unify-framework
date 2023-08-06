@@ -1527,11 +1527,17 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 			private Map<String, SqlUniqueConstraintInfo> extractUniqueConstraints(String tableName,
 					Class<?> entityClass, List<Class<?>> heirachyList, Map<String, SqlFieldInfo> propertyInfoMap,
 					SqlFieldInfo tenantIdFieldInfo, UniqueConstraint[] uniqueConstraints) throws Exception {
+				List<String> baseFields = new ArrayList<String>();
+
 				// Unique constraints
 				List<UniqueConstraint> resolvedConstraints = new ArrayList<UniqueConstraint>();
 				for (Class<?> clazz : heirachyList) {
 					UniqueConstraints ucs = clazz.getAnnotation(UniqueConstraints.class);
 					if (ucs != null) {
+						if (ucs.baseFields().length > 0) {
+							baseFields.addAll(Arrays.asList(ucs.baseFields()));
+						}
+
 						for (UniqueConstraint uca : ucs.value()) {
 							resolvedConstraints.add(uca);
 						}
@@ -1546,7 +1552,9 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 				if (!resolvedConstraints.isEmpty()) {
 					uniqueConstraintMap = new LinkedHashMap<String, SqlUniqueConstraintInfo>();
 					for (UniqueConstraint uca : resolvedConstraints) {
-						String[] fieldNames = uca.value();
+						List<String> _fieldNames = new ArrayList<String>(baseFields);
+						_fieldNames.addAll(Arrays.asList(uca.value()));
+						String[] fieldNames = DataUtils.toArray(String.class, _fieldNames);
 						String name = SqlUtils.generateUniqueConstraintName(tableName, fieldNames);
 						if (fieldNames.length == 0) {
 							throw new UnifyException(UnifyCoreErrorConstants.RECORD_PROPERTY_REQUIRED_UNIQUECONSTRAINT,
@@ -1901,7 +1909,8 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 	}
 
 	private ChildFieldInfo getChildFieldInfo(Class<?> parentClass, String category, Field childField,
-			Class<? extends Entity> childClass, ChildFkFields childFkFields, boolean editable, boolean list) throws UnifyException {
+			Class<? extends Entity> childClass, ChildFkFields childFkFields, boolean editable, boolean list)
+			throws UnifyException {
 		boolean idNumber = Number.class.isAssignableFrom(ReflectUtils.getGetterInfo(childClass, "id").getType());
 		GetterSetterInfo getterSetterInfo = ReflectUtils.getGetterSetterInfo(parentClass, childField.getName());
 		Method childFkIdSetter = ReflectUtils.getGetterSetterInfo(childClass, childFkFields.getFkIdField().getName())

@@ -31,5 +31,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface UniqueConstraints {
 
+	String[] baseFields() default {};
+
     UniqueConstraint[] value() default {};
 }
