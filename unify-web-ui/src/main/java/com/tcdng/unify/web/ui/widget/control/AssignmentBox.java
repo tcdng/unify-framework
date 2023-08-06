@@ -224,13 +224,15 @@ public class AssignmentBox extends AbstractMultiControl {
         String filterList1 = getUplAttribute(String.class, "filterList1");
         if (StringUtils.isNotBlank(filterList1)) {
             filterCtrl1 = (Control) addInternalChildWidget("!ui-select styleClass:$e{abfselect} blankOption:$s{} list:"
-                    + filterList1 + " binding:filterId1 popupAlways:true");
+                    + filterList1 + " binding:filterId1 ignoreParentState:true popupAlways:true");
+            filterCtrl1.setEditable(true);
         }
 
         String filterList2 = getUplAttribute(String.class, "filterList2");
         if (StringUtils.isNotBlank(filterList2)) {
             filterCtrl2 = (Control) addInternalChildWidget("!ui-select styleClass:$e{abfselect} blankOption:$s{} list:"
-                    + filterList2 + " listParams:$s{filterId1} binding:filterId2 popupAlways:true");
+                    + filterList2 + " listParams:$s{filterId1} binding:filterId2 ignoreParentState:true popupAlways:true");
+            filterCtrl2.setEditable(true);
         }
 
         String msStyle = "";

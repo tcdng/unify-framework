@@ -94,11 +94,13 @@ public class AssignmentBoxWriter extends AbstractControlWriter {
 
 		Control filter1 = assignmentBox.getFilterSel1();
 		if (filter1 != null) {
+			filter1.setEditable(true);
 			writer.writeBehavior(filter1);
 		}
 
 		Control filter2 = assignmentBox.getFilterSel2();
 		if (filter2 != null) {
+			filter2.setEditable(true);
 			writer.writeBehavior(filter2);
 		}
 
@@ -133,6 +135,7 @@ public class AssignmentBoxWriter extends AbstractControlWriter {
     private void writeFilter(ResponseWriter writer, Control filter, String caption)
             throws UnifyException {
         if (filter != null) {
+        	filter.setEditable(true);
             writer.write("<div class=\"abscell\"> <span class=\"ablabel\">");
             writer.write(caption).write(":</span>");
             writer.writeStructureAndContent(filter);
