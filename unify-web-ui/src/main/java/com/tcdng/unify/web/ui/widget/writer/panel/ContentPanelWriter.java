@@ -45,7 +45,8 @@ public class ContentPanelWriter extends AbstractPanelWriter {
 	private static final String CPREMOTE_CATEGORYBASE = "cpcat";
 
 	@Override
-	protected void doWriteBehavior(ResponseWriter writer, Widget widget, EventHandler[] handlers) throws UnifyException {
+	protected void doWriteBehavior(ResponseWriter writer, Widget widget, EventHandler[] handlers)
+			throws UnifyException {
 		ContentPanelImpl contentPanel = (ContentPanelImpl) widget;
 
 		// Write content variables
@@ -181,6 +182,9 @@ public class ContentPanelWriter extends AbstractPanelWriter {
 
 			logDebug("Writing header tabs for content panel [{0}]...", contentPanel.getLongName());
 			writer.write("<ul class=\"cptab\">");
+			final int stickyIndex = contentPanel.isStickyPaths() && contentPanel.getPaths() != null
+					? contentPanel.getPaths().length - 1
+					: 0;
 			for (int i = 0; i < contentPanel.getPageCount(); i++) {
 				ContentInfo contentInfo = contentPanel.getContentInfo(i);
 				writer.write("<li");
@@ -197,7 +201,7 @@ public class ContentPanelWriter extends AbstractPanelWriter {
 				}
 
 				title = contentPanel.isTitleUppercase() && title != null ? title.toUpperCase() : title;
-				
+
 				final String subTitle = page.getSubCaption();
 				writer.write("><div><a ");
 				if (page.getUplAttribute(boolean.class, "remote")) {
@@ -225,7 +229,7 @@ public class ContentPanelWriter extends AbstractPanelWriter {
 
 				writer.write("</a>");
 
-				if (i > 0) {
+				if (i > stickyIndex) {
 					writer.write("<img id=\"").write(contentPanel.getTabItemImgId(i)).write("\" src=\"");
 					writer.writeFileImageContextURL("$t{images/cross_gray.png}");
 					writer.write("\"/>");
@@ -281,7 +285,7 @@ public class ContentPanelWriter extends AbstractPanelWriter {
 		// Body
 		writer.write("<div style=\"display:table-row;width:100%;height:100%;\">");
 		writer.write("<div style=\"display:table-cell;\">");
-		writer.write("<div id=\"").write(contentPanel.getBodyPanelId()).write("\" class=\"cpbody\">");		
+		writer.write("<div id=\"").write(contentPanel.getBodyPanelId()).write("\" class=\"cpbody\">");
 		if (rcUtil.isLowLatencyRequest()) {
 			// TODO
 		} else {

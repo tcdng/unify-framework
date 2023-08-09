@@ -50,11 +50,13 @@ import com.tcdng.unify.web.ui.widget.Widget;
 		@UplAttribute(name = "documentPath", type = String.class, mandatory = true),
 		@UplAttribute(name = "paths", type = String[].class),
 		@UplAttribute(name = "pathsBinding", type = String.class),
+		@UplAttribute(name = "stickyPaths", type = boolean.class),
+		@UplAttribute(name = "stickyPathsBinding", type = String.class),
 		@UplAttribute(name = "tabbed", type = boolean.class),
 		@UplAttribute(name = "tabbedBinding", type = String.class),
-		@UplAttribute(name = "titlebar", type = boolean.class),
 		@UplAttribute(name = "titleUppercase", type = boolean.class),
 		@UplAttribute(name = "titleUppercaseBinding", type = String.class),
+		@UplAttribute(name = "titlebar", type = boolean.class),
 		@UplAttribute(name = "sidebar", type = UplElementReferences.class) })
 public class ContentPanelImpl extends AbstractContentPanel {
 
@@ -79,9 +81,13 @@ public class ContentPanelImpl extends AbstractContentPanel {
 	public String getDocumentPath() throws UnifyException {
 		return getUplAttribute(String.class, "documentPath");
 	}
-
+	
 	public String[] getPaths() throws UnifyException {
 		return getUplAttribute(String[].class, "paths", "pathsBinding");
+	}
+
+	public boolean isStickyPaths() throws UnifyException {
+		return getUplAttribute(boolean.class, "stickyPaths", "stickyPathsBinding");
 	}
 
 	public boolean isTabbed() throws UnifyException {
