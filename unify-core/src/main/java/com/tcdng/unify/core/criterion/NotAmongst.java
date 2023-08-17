@@ -33,4 +33,9 @@ public class NotAmongst extends AbstractMultipleParamRestriction {
     public FilterConditionType getConditionType() {
         return FilterConditionType.NOT_AMONGST;
     }
+    
+    @Override
+    protected boolean isInclusive() {
+    	return false;
+    }
 }

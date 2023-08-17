@@ -32,5 +32,10 @@ public class NotLikeParam extends AbstractSingleParamRestriction {
     public FilterConditionType getConditionType() {
         return FilterConditionType.NOT_LIKE_PARAM;
     }
+    
+    @Override
+    protected boolean isInclusive() {
+    	return false;
+    }
 
 }

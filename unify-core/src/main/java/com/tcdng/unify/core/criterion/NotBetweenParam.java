@@ -31,5 +31,10 @@ public class NotBetweenParam extends AbstractDoubleParamRestriction {
     public FilterConditionType getConditionType() {
         return FilterConditionType.NOT_BETWEEN_PARAM;
     }
+    
+    @Override
+    protected boolean isInclusive() {
+    	return false;
+    }
 
 }

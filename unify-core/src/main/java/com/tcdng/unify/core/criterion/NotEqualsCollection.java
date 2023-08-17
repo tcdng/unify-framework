@@ -31,4 +31,9 @@ public class NotEqualsCollection extends AbstractSingleParamRestriction {
     public FilterConditionType getConditionType() {
         return FilterConditionType.NOT_EQUALS_COLLECTION;
     }
+    
+    @Override
+    protected boolean isInclusive() {
+    	return false;
+    }
 }

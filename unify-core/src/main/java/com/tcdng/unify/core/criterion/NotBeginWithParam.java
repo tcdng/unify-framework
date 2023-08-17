@@ -32,5 +32,10 @@ public class NotBeginWithParam extends AbstractSingleParamRestriction {
     public FilterConditionType getConditionType() {
         return FilterConditionType.NOT_BEGIN_WITH_PARAM;
     }
+    
+    @Override
+    protected boolean isInclusive() {
+    	return false;
+    }
 
 }

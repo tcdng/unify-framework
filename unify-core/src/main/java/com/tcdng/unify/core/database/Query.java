@@ -445,9 +445,13 @@ public class Query<T extends Entity> implements Cloneable {
         restrictions.writeRestrictedFields(restrictedFields);
         return restrictedFields;
     }
-
+    
     public boolean isRestrictedField(String fieldName) {
         return restrictions.isRestrictedField(fieldName);
+    }
+
+    public boolean isInclusiveRestrictedField(String fieldName) {
+        return restrictions.isInclusiveRestrictedField(fieldName);
     }
 
     public Select getSelect() {
