@@ -66,6 +66,15 @@ public interface Restriction {
     boolean isRestrictedField(String fieldname);
 
     /**
+     * Checks if field is part of this restriction.
+     * 
+     * @param fieldname
+     *            the field name
+     * @return true is property is part of this restriction otherwise false
+     */
+    boolean isInclusiveRestrictedField(String fieldname);
+
+    /**
      * Checks if ID field restriction by equals.
      * 
      * @return true is property is part of this restriction otherwise false

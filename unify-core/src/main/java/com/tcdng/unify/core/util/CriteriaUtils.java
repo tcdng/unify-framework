@@ -137,6 +137,11 @@ public final class CriteriaUtils {
         }
 
         @Override
+		public boolean isInclusiveRestrictedField(String fieldname) {
+            return co.isInclusiveRestrictedField(fieldname);
+		}
+
+		@Override
         public boolean isSimple() {
             return co.isSimple();
         }
@@ -219,6 +224,11 @@ public final class CriteriaUtils {
         public boolean isRestrictedField(String fieldName) {
             return ao.isRestrictedField(fieldName);
         }
+
+        @Override
+		public boolean isInclusiveRestrictedField(String fieldname) {
+            return ao.isInclusiveRestrictedField(fieldname);
+		}
 
     	@Override
     	public boolean isIdEqualsRestricted() {

@@ -91,6 +91,17 @@ public abstract class AbstractCompoundRestriction extends AbstractRestriction im
 	}
 
 	@Override
+	public boolean isInclusiveRestrictedField(String fieldname) {
+		for (Restriction restriction : restrictionList) {
+			if (restriction.isInclusiveRestrictedField(fieldname)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	@Override
 	public boolean isEmpty() {
 		return restrictionList.isEmpty();
 	}

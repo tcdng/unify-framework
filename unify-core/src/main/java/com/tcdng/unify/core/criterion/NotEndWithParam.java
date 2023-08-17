@@ -32,5 +32,10 @@ public class NotEndWithParam extends AbstractSingleParamRestriction {
     public FilterConditionType getConditionType() {
         return FilterConditionType.NOT_END_WITH_PARAM;
     }
+    
+    @Override
+    protected boolean isInclusive() {
+    	return false;
+    }
 
 }
