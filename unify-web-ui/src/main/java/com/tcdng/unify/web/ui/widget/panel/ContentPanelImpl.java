@@ -46,10 +46,8 @@ import com.tcdng.unify.web.ui.widget.Widget;
  * @since 1.0
  */
 @Component("ui-contentpanel")
-@UplAttributes({
-		@UplAttribute(name = "documentPath", type = String.class, mandatory = true),
-		@UplAttribute(name = "paths", type = String[].class),
-		@UplAttribute(name = "pathsBinding", type = String.class),
+@UplAttributes({ @UplAttribute(name = "documentPath", type = String.class, mandatory = true),
+		@UplAttribute(name = "paths", type = String[].class), @UplAttribute(name = "pathsBinding", type = String.class),
 		@UplAttribute(name = "stickyPaths", type = boolean.class),
 		@UplAttribute(name = "stickyPathsBinding", type = String.class),
 		@UplAttribute(name = "tabbed", type = boolean.class),
@@ -81,7 +79,7 @@ public class ContentPanelImpl extends AbstractContentPanel {
 	public String getDocumentPath() throws UnifyException {
 		return getUplAttribute(String.class, "documentPath");
 	}
-	
+
 	public String[] getPaths() throws UnifyException {
 		return getUplAttribute(String[].class, "paths", "pathsBinding");
 	}
@@ -256,11 +254,18 @@ public class ContentPanelImpl extends AbstractContentPanel {
 			removeSrc = true;
 		case CLOSE_OTHERS:
 			// Close others
+			final int stickyCount = isStickyPaths() && getPaths() != null ? getPaths().length : 1;
 			List<ContentInfo> refContentList = new ArrayList<ContentInfo>(contentList);
-			for (int i = 1; i < refContentList.size(); i++) {
+			for (int i = 0; i < refContentList.size(); i++) {
 				Page refPage = refContentList.get(i).getPage();
-				if (refPage != page) {
-					toRemovePathIdList.add(refPage.getPathId());
+				if (i < stickyCount) {
+					if (refPage == page) {
+						removeSrc = false;
+					}
+				} else {
+					if (refPage != page) {
+						toRemovePathIdList.add(refPage.getPathId());
+					}
 				}
 			}
 			break;
