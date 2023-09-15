@@ -116,10 +116,9 @@ public final class DynamicEntityUtils {
 						if (!fkInfo.isEnum()) {
 							if (!dynamicEntityInfo.getClassName()
 									.equals(fkInfo.getParentDynamicEntityInfo().getClassName())) {
-								importSet.add(fkInfo.getParentDynamicEntityInfo().getClassName());
+//								importSet.add(fkInfo.getParentDynamicEntityInfo().getClassName());
 							}
 						}
-
 					} else if (type.isTableColumn()) {
 						DynamicEntityUtils.generateColumnAnnotation(fsb, (DynamicColumnFieldInfo) dynamicFieldInfo);
 						if (!DataUtils.isMappedColumnType(dynamicFieldInfo.getDataType().columnType())) {
@@ -139,14 +138,14 @@ public final class DynamicEntityUtils {
 						DynamicEntityUtils.generateChildAnnotation(fsb, childInfo);
 						importSet.add(Child.class.getCanonicalName());
 						childClass = childInfo.getChildDynamicEntityInfo().getClassName();
-						importSet.add(childClass);
+//						importSet.add(childClass);
 					} else if (type.isChildList()) {
 						DynamicChildListFieldInfo childListInfo = (DynamicChildListFieldInfo) dynamicFieldInfo;
 						DynamicEntityUtils.generateChildListAnnotation(fsb, childListInfo);
 						importSet.add(List.class.getCanonicalName());
 						importSet.add(ChildList.class.getCanonicalName());
 						childClass = childListInfo.getChildDynamicEntityInfo().getClassName();
-						importSet.add(childClass);
+//						importSet.add(childClass);
 					} else {
 						DynamicEntityUtils.generateLisOnlyAnnotation(fsb, (DynamicListOnlyFieldInfo) dynamicFieldInfo);
 						importSet.add(ListOnly.class.getCanonicalName());
@@ -159,7 +158,7 @@ public final class DynamicEntityUtils {
 						if (!fkInfo.isEnum()) {
 							if (!dynamicEntityInfo.getClassName()
 									.equals(fkInfo.getParentDynamicEntityInfo().getClassName())) {
-								importSet.add(fkInfo.getParentDynamicEntityInfo().getClassName());
+//								importSet.add(fkInfo.getParentDynamicEntityInfo().getClassName());
 							}
 						}
 
@@ -180,12 +179,12 @@ public final class DynamicEntityUtils {
 					} else if (type.isChild()) {
 						DynamicChildFieldInfo childInfo = (DynamicChildFieldInfo) dynamicFieldInfo;
 						childClass = childInfo.getChildDynamicEntityInfo().getClassName();
-						importSet.add(childClass);
+//						importSet.add(childClass);
 					} else if (type.isChildList()) {
 						DynamicChildListFieldInfo childListInfo = (DynamicChildListFieldInfo) dynamicFieldInfo;
 						importSet.add(List.class.getCanonicalName());
 						childClass = childListInfo.getChildDynamicEntityInfo().getClassName();
-						importSet.add(childClass);
+//						importSet.add(childClass);
 					} else if (type.isListOnly()) {
 						DynamicEntityUtils.generateLisOnlyAnnotation(fsb, (DynamicListOnlyFieldInfo) dynamicFieldInfo);
 						importSet.add(ListOnly.class.getCanonicalName());
