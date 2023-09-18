@@ -124,6 +124,15 @@ public interface Page extends StandalonePanel {
     Object getAttribute(String name);
 
     /**
+     * Returns true if page attribute.
+     * 
+     * @param name
+     *            the name of the attribute
+     * @return true if page attribute otherwise false
+     */
+    boolean isAttribute(String name);
+
+    /**
      * Removes a page attribute.
      * 
      * @param name

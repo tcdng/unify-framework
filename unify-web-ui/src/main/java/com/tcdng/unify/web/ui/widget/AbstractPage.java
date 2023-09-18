@@ -189,6 +189,15 @@ public abstract class AbstractPage extends AbstractStandalonePanel implements Pa
     }
 
     @Override
+	public boolean isAttribute(String name) {
+        if (attributes != null) {
+            return attributes.containsKey(name);
+        }
+
+		return false;
+	}
+
+	@Override
 	public Object removeAttribute(String name) {
         if (attributes != null) {
             return attributes.remove(name);

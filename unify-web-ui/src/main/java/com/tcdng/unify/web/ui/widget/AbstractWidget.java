@@ -552,6 +552,10 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 			if (isRequestAttribute(attribute)) {
 				return getRequestAttribute(attribute);
 			}
+
+			if (isPageAttribute(attribute)) {
+				return getPageAttribute(attribute);
+			}
 		}
 
 		return null;
@@ -645,6 +649,10 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 
 	protected Object clearPageAttribute(String name) throws UnifyException {
 		return resolveRequestPage().clearAttribute(name);
+	}
+
+	protected boolean isPageAttribute(String name) throws UnifyException {
+		return resolveRequestPage().isAttribute(name);
 	}
 
 	protected Object getPageAttribute(String name) throws UnifyException {
