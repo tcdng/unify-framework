@@ -24,8 +24,6 @@ import com.tcdng.unify.core.data.UploadedFile;
 import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.annotation.Action;
-import com.tcdng.unify.web.constant.ResultMappingConstants;
-import com.tcdng.unify.web.constant.UnifyWebRequestAttributeConstants;
 import com.tcdng.unify.web.ui.DataTransferBlock;
 import com.tcdng.unify.web.ui.widget.AbstractMultiControl;
 import com.tcdng.unify.web.ui.widget.Control;
@@ -100,8 +98,7 @@ public class FileUploadView extends AbstractMultiControl {
 				String filename = getFilename();
 				fileAttachmentInfo.setFilename(!StringUtils.isBlank(filename) ? filename : type.appendDefaultExtension("file"));
 				fileAttachmentInfo.setAttachment(data);
-				setRequestAttribute(UnifyWebRequestAttributeConstants.FILEATTACHMENTS_INFO, fileAttachmentInfo);
-				setCommandResultMapping(ResultMappingConstants.SHOW_ATTACHMENT);
+				showAttachment(fileAttachmentInfo);
 			}
 		} else {
 			// Setup view
@@ -110,8 +107,7 @@ public class FileUploadView extends AbstractMultiControl {
 				String category = getUplAttribute(String.class, "category");
 				FileAttachmentType type = getUplAttribute(FileAttachmentType.class, "type");
 				FileAttachmentInfo fileAttachmentInfo = handler.retrive(uploadId, category, type);
-				setRequestAttribute(UnifyWebRequestAttributeConstants.FILEATTACHMENTS_INFO, fileAttachmentInfo);
-				setCommandResultMapping(ResultMappingConstants.SHOW_ATTACHMENT);
+				showAttachment(fileAttachmentInfo);
 			}
 		}
 	}

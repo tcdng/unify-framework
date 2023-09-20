@@ -42,6 +42,7 @@ import com.tcdng.unify.web.ui.WebUIApplicationComponents;
 import com.tcdng.unify.web.ui.constant.WidgetTempValueConstants;
 import com.tcdng.unify.web.ui.util.WidgetUtils;
 import com.tcdng.unify.web.ui.widget.data.Hint.MODE;
+import com.tcdng.unify.web.ui.widget.data.FileAttachmentInfo;
 import com.tcdng.unify.web.ui.widget.data.Popup;
 import com.tcdng.unify.web.ui.widget.panel.StandalonePanel;
 
@@ -749,6 +750,11 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 		setCommandResultMapping(ResultMappingConstants.POST_RESPONSE);
 	}
 
+	protected void showAttachment(FileAttachmentInfo fileAttachmentInfo)  throws UnifyException {
+		setRequestAttribute(UnifyWebRequestAttributeConstants.FILEATTACHMENTS_INFO, fileAttachmentInfo);
+		setCommandResultMapping(ResultMappingConstants.SHOW_ATTACHMENT);
+	}
+	
 	protected void refreshApplicationMenu() throws UnifyException {
 		setSessionAttribute(UnifyWebSessionAttributeConstants.REFRESH_MENU, Boolean.TRUE);
 	}
