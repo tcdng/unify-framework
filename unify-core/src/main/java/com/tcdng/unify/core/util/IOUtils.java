@@ -276,7 +276,7 @@ public class IOUtils {
     }
 
     /**
-     * Gets a resource file instance for existing file with filename.
+     * Checks if a resource file exists in system
      * 
      * @param filename
      *                 the file name
@@ -288,6 +288,29 @@ public class IOUtils {
             return IOUtils.class.getClassLoader().getResource(filename) != null;
         }
         return true;
+    }
+
+    /**
+     * Checks if a resource file exists in real path
+     * 
+     * @param filename
+     *                 the file name
+     * @return the file instance.
+     */
+    public static boolean isRealPathResource(String optionPath, String filename) {
+        File file = IOUtils.fileInstance(filename, optionPath);
+        return file.exists();
+    }
+
+    /**
+     * Checks if a resource file exists in class loader
+     * 
+     * @param filename
+     *                 the file name
+     * @return the file instance.
+     */
+    public static boolean isClassLoaderResource(String filename) {
+        return IOUtils.class.getClassLoader().getResource(filename) != null;
     }
 
     /**

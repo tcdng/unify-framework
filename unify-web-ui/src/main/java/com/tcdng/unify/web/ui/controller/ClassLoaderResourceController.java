@@ -20,6 +20,7 @@ import java.io.InputStream;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.util.IOUtils;
+import com.tcdng.unify.web.WebApplicationComponents;
 import com.tcdng.unify.web.constant.Secured;
 
 /**
@@ -28,15 +29,15 @@ import com.tcdng.unify.web.constant.Secured;
  * @author The Code Department
  * @since 1.0
  */
-@Component("/resource/classloader")
+@Component(WebApplicationComponents.APPLICATION_CLASSLOADERRESOURCECONTROLLER)
 public class ClassLoaderResourceController extends FileResourceController {
 
-    public ClassLoaderResourceController() {
-        super(Secured.FALSE);
-    }
+	public ClassLoaderResourceController() {
+		super(Secured.FALSE);
+	}
 
-    @Override
-    protected InputStream getInputStream() throws UnifyException {
-        return IOUtils.openClassLoaderResourceInputStream(getResourceName());
-    }
+	@Override
+	protected InputStream getInputStream() throws UnifyException {
+		return IOUtils.openClassLoaderResourceInputStream(getResourceName());
+	}
 }
