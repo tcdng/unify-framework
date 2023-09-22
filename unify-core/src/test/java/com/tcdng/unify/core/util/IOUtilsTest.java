@@ -16,6 +16,8 @@
 package com.tcdng.unify.core.util;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -60,5 +62,13 @@ public class IOUtilsTest {
     	assertEquals("test.txt", IOUtils.getActualFileName("c:\\test.txt"));
     	assertEquals("test.txt", IOUtils.getActualFileName("c:\\case\\test.txt"));
     	assertEquals("test.txt", IOUtils.getActualFileName("\\case\\test.txt"));
+    }
+    
+    @Test
+    public void testIsClassLoaderResource() throws Exception {
+    	assertFalse(IOUtils.isClassLoaderResource("/banner/banner.txt"));
+    	assertFalse(IOUtils.isClassLoaderResource("/banner.txt"));
+    	assertTrue(IOUtils.isClassLoaderResource("banner/banner.txt"));
+    	assertTrue(IOUtils.isClassLoaderResource("banner.txt"));
     }
 }
