@@ -42,10 +42,11 @@ public class ControllerFinderImpl extends AbstractUnifyComponent implements Cont
 		final String path = controllerPathParts.getControllerPath();
 		if (unifyComponentConfig == null) {
 			// May be a class-loader resource or a real path request
-			if (IOUtils.isClassLoaderResource(path)) {
+			final String cpath = path.startsWith("/") ? path.substring(1) : path;
+			if (IOUtils.isClassLoaderResource(cpath)) {
 				ResourceController classLoaderController = (ResourceController) getComponent(
 						WebApplicationComponents.APPLICATION_CLASSLOADERRESOURCECONTROLLER);
-				classLoaderController.setResourceName(path);
+				classLoaderController.setResourceName(cpath);
 				return classLoaderController;
 			}
 
