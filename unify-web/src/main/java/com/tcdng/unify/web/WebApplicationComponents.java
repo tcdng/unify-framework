@@ -42,4 +42,6 @@ public interface WebApplicationComponents {
     String APPLICATION_WEBCLIENT = "application-webclient";
 
     String APPLICATION_REALPATHRESOURCECONTROLLER = "/resource/realpath";
+
+    String APPLICATION_CLASSLOADERRESOURCECONTROLLER = "/resource/classloader";
 }

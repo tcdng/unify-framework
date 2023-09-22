@@ -16,8 +16,6 @@
 
 package com.tcdng.unify.web;
 
-import java.io.File;
-
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyComponentConfig;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
@@ -34,43 +32,49 @@ import com.tcdng.unify.core.util.IOUtils;
 @Component(WebApplicationComponents.APPLICATION_CONTROLLERFINDER)
 public class ControllerFinderImpl extends AbstractUnifyComponent implements ControllerFinder {
 
-    @Override
-    public Controller findController(ControllerPathParts controllerPathParts) throws UnifyException {
-        logDebug("Finding controller for path [{0}]...", controllerPathParts.getControllerPath());
+	@Override
+	public Controller findController(ControllerPathParts controllerPathParts) throws UnifyException {
+		logDebug("Finding controller for path [{0}]...", controllerPathParts.getControllerPath());
 
-        final String controllerName = controllerPathParts.getControllerName();
-        UnifyComponentConfig unifyComponentConfig = getComponentConfig(Controller.class, controllerName);
+		final String controllerName = controllerPathParts.getControllerName();
+		UnifyComponentConfig unifyComponentConfig = getComponentConfig(Controller.class, controllerName);
 
-        final String path = controllerPathParts.getControllerPath();
-        if (unifyComponentConfig == null) {
-            // May be a real path request
-            File file = new File(IOUtils.buildFilename(getUnifyComponentContext().getWorkingPath(), path));
-            if (file.exists()) {
-                ResourceController realPathController = (ResourceController) getComponent(
-                        WebApplicationComponents.APPLICATION_REALPATHRESOURCECONTROLLER);
-                realPathController.setResourceName(path);
-                return realPathController;
-            }
-        }
+		final String path = controllerPathParts.getControllerPath();
+		if (unifyComponentConfig == null) {
+			// May be a class-loader resource or a real path request
+			if (IOUtils.isClassLoaderResource(path)) {
+				ResourceController classLoaderController = (ResourceController) getComponent(
+						WebApplicationComponents.APPLICATION_CLASSLOADERRESOURCECONTROLLER);
+				classLoaderController.setResourceName(path);
+				return classLoaderController;
+			}
 
-        if (unifyComponentConfig == null) {
-            throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_UNKNOWN_COMP, path);
-        }
+			if (IOUtils.isRealPathResource(getUnifyComponentContext().getWorkingPath(), path)) {
+				ResourceController realPathController = (ResourceController) getComponent(
+						WebApplicationComponents.APPLICATION_REALPATHRESOURCECONTROLLER);
+				realPathController.setResourceName(path);
+				return realPathController;
+			}
+		}
 
-        Controller controller = (Controller) getComponent(controllerName);
-        controller.ensureContextResources(controllerPathParts);
-        logDebug("Controller with name [{0}] found", controllerName);
-        return controller;
-    }
+		if (unifyComponentConfig == null) {
+			throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_UNKNOWN_COMP, path);
+		}
 
-    @Override
-    protected void onInitialize() throws UnifyException {
+		Controller controller = (Controller) getComponent(controllerName);
+		controller.ensureContextResources(controllerPathParts);
+		logDebug("Controller with name [{0}] found", controllerName);
+		return controller;
+	}
 
-    }
+	@Override
+	protected void onInitialize() throws UnifyException {
 
-    @Override
-    protected void onTerminate() throws UnifyException {
+	}
 
-    }
+	@Override
+	protected void onTerminate() throws UnifyException {
+
+	}
 
 }

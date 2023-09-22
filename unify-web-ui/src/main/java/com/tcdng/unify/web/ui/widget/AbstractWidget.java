@@ -645,41 +645,50 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 	}
 
 	protected void setPageAttribute(String name, Object value) throws UnifyException {
-		resolveRequestPage().setAttribute(name, value);
+		Page page = resolveRequestPage();
+		if (page != null) {
+			page.setAttribute(name, value);
+		}
 	}
 
 	protected Object clearPageAttribute(String name) throws UnifyException {
-		return resolveRequestPage().clearAttribute(name);
+		Page page = resolveRequestPage();
+		return page != null ? page.clearAttribute(name) : null;
 	}
 
 	protected boolean isPageAttribute(String name) throws UnifyException {
-		return resolveRequestPage().isAttribute(name);
+		Page page = resolveRequestPage();
+		return page != null ? page.isAttribute(name) : false;
 	}
 
 	protected Object getPageAttribute(String name) throws UnifyException {
-		return resolveRequestPage().getAttribute(name);
+		Page page = resolveRequestPage();
+		return page != null ? page.getAttribute(name) : null;
 	}
 
 	protected Object removePageAttribute(String name) throws UnifyException {
-		return resolveRequestPage().removeAttribute(name);
+		Page page = resolveRequestPage();
+		return page != null ? page.removeAttribute(name) : null;
+	}
+
+	protected <T> T getPageAttribute(Class<T> clazz, String name) throws UnifyException {
+		Page page = resolveRequestPage();
+		return DataUtils.convert(clazz, page != null ? page.getAttribute(name) : null);
+	}
+
+	protected <T> T removePageAttribute(Class<T> clazz, String name) throws UnifyException {
+		Page page = resolveRequestPage();
+		return DataUtils.convert(clazz, page != null ? page.removeAttribute(name) : null);
+	}
+
+	protected boolean isOtherPageClosedDetected() throws UnifyException {
+		return getPageAttribute(boolean.class, PageAttributeConstants.OTHER_PAGE_CLOSED_DETECTED);
 	}
 
 	protected Page resolveRequestPage() throws UnifyException {
 		PageRequestContextUtil rcUtil = getRequestContextUtil();
 		Page contentPage = rcUtil.getContentPage();
 		return contentPage == null ? rcUtil.getRequestPage() : contentPage;
-	}
-
-	protected <T> T getPageAttribute(Class<T> clazz, String name) throws UnifyException {
-		return DataUtils.convert(clazz, resolveRequestPage().getAttribute(name));
-	}
-
-	protected <T> T removePageAttribute(Class<T> clazz, String name) throws UnifyException {
-		return DataUtils.convert(clazz, resolveRequestPage().removeAttribute(name));
-	}
-
-	protected boolean isOtherPageClosedDetected() throws UnifyException {
-		return getPageAttribute(boolean.class, PageAttributeConstants.OTHER_PAGE_CLOSED_DETECTED);
 	}
 
 	protected boolean clearOtherPageClosedDetected() throws UnifyException {
