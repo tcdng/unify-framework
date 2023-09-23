@@ -47,7 +47,10 @@ public abstract class AbstractDataSource extends AbstractUnifyComponent implemen
 	@Configurable(ApplicationComponents.APPLICATION_DATASOURCE_ENTITYLIST_PROVIDER)
 	private DataSourceEntityListProvider entityListProvider;
 
-	public void setDialect(DataSourceDialect dialect) throws UnifyException {
+	@Configurable
+	private List<String> entityList;
+	
+	public final void setDialect(DataSourceDialect dialect) throws UnifyException {
 		this.dialect = dialect;
 		if (dialect != null) {
 			dialect.setDataSourceName(getEntityMatchingName());
@@ -69,6 +72,10 @@ public abstract class AbstractDataSource extends AbstractUnifyComponent implemen
 
 	public final void setEntityListProvider(DataSourceEntityListProvider entityListProvider) {
 		this.entityListProvider = entityListProvider;
+	}
+
+	public final void setEntityList(List<String> entityList) {
+		this.entityList = entityList;
 	}
 
 	@Override
