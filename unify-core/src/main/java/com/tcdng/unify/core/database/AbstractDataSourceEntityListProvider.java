@@ -15,8 +15,15 @@
  */
 package com.tcdng.unify.core.database;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.tcdng.unify.core.AbstractUnifyComponent;
+import com.tcdng.unify.core.UnifyComponentConfig;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.util.DataUtils;
 
 /**
  * Convenient abstract base class for datasource entity list provider.
@@ -26,6 +33,40 @@ import com.tcdng.unify.core.UnifyException;
  */
 public abstract class AbstractDataSourceEntityListProvider extends AbstractUnifyComponent
 		implements DataSourceEntityListProvider {
+
+	private static Map<String, String> dataSourcesByEntity;
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<String> getEntityAliasesByDataSource(String datasourceName) throws UnifyException {
+		UnifyComponentConfig unifyComponentConfig = getComponentConfig(DataSource.class, datasourceName);
+		return (List<String>) unifyComponentConfig.getSetting(List.class, DataSource.ENTITYLIST_PROPERTY,
+				Collections.emptyList());
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public String getDataSourceByEntityAlias(String entityAlias) throws UnifyException {
+		if (dataSourcesByEntity == null) {
+			synchronized (this) {
+				if (dataSourcesByEntity == null) {
+					dataSourcesByEntity = new HashMap<String, String>();
+					List<UnifyComponentConfig> unifyComponentConfigs = getComponentConfigs(DataSource.class);
+					if (!DataUtils.isBlank(unifyComponentConfigs)) {
+						for (UnifyComponentConfig unifyComponentConfig : unifyComponentConfigs) {
+							final String dataSourceName = unifyComponentConfig.getName();
+							for (String _entityAlias : (List<String>) unifyComponentConfig.getSetting(List.class,
+									DataSource.ENTITYLIST_PROPERTY, Collections.emptyList())) {
+								dataSourcesByEntity.put(_entityAlias, dataSourceName);
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return dataSourcesByEntity.get(entityAlias);
+	}
 
 	@Override
 	protected void onInitialize() throws UnifyException {

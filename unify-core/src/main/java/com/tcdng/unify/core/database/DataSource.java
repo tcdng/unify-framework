@@ -32,6 +32,8 @@ import com.tcdng.unify.core.annotation.View;
  */
 public interface DataSource extends UnifyComponent {
 
+	String ENTITYLIST_PROPERTY = "entityList";
+	
 	/**
 	 * Checks if datasource is read-only
 	 * 

@@ -52,4 +52,21 @@ public interface DataSourceEntityListProvider extends UnifyComponent {
      *             if an error occurs
      */
     List<Class<? extends Entity>> getViewEntityTypes(String datasourceName) throws UnifyException;
+
+    /**
+     * Gets entity aliases by data source.
+     * @param datasourceName the data source name
+     * @return
+     * @throws UnifyException
+     */
+    List<String> getEntityAliasesByDataSource(String datasourceName) throws UnifyException;
+    
+	/**
+	 * Gets data source by entity alias.
+	 * 
+	 * @param entityAlias the entity alias
+	 * @return the data source name if entity alias is found otherwise null
+	 * @throws UnifyException if an error occurs
+	 */
+	String getDataSourceByEntityAlias(String entityAlias) throws UnifyException;
 }
