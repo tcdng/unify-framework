@@ -78,35 +78,35 @@ public abstract class AbstractSqlDataSource extends AbstractDataSource implement
 
     private SqlConnectionPool sqlConnectionPool;
 
-    public void setGetConnectionTimeout(long getConnectionTimeout) {
+    public final void setGetConnectionTimeout(long getConnectionTimeout) {
         this.getConnectionTimeout = getConnectionTimeout;
     }
 
-    public void setDriver(String driver) {
+    public final void setDriver(String driver) {
         this.driver = driver;
     }
 
-    public void setConnectionUrl(String connectionUrl) {
+    public final void setConnectionUrl(String connectionUrl) {
         this.connectionUrl = connectionUrl;
     }
 
-    public void setUsername(String username) {
+    public final void setUsername(String username) {
         this.username = username;
     }
 
-    public void setPassword(String password) {
+    public final void setPassword(String password) {
         this.password = password;
     }
 
-    public void setMaxConnections(int maxConnections) {
+    public final void setMaxConnections(int maxConnections) {
         this.maxConnections = maxConnections;
     }
 
-    public void setMinConnections(int minConnections) {
+    public final void setMinConnections(int minConnections) {
         this.minConnections = minConnections;
     }
 
-    public void setAppSchema(String appSchema) {
+    public final void setAppSchema(String appSchema) {
         this.appSchema = appSchema;
     }
 
