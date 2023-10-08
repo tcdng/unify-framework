@@ -21,10 +21,11 @@ import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.constant.FileAttachmentType;
 import com.tcdng.unify.core.data.UploadedFile;
-import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ui.DataTransferBlock;
 import com.tcdng.unify.web.ui.widget.AbstractMultiControl;
 import com.tcdng.unify.web.ui.widget.Control;
+import com.tcdng.unify.web.ui.widget.ControlUploadHandler;
+import com.tcdng.unify.web.ui.widget.UploadControl;
 
 /**
  * File upload button.
@@ -33,14 +34,16 @@ import com.tcdng.unify.web.ui.widget.Control;
  * @since 1.0
  */
 @Component("ui-fileuploadbutton")
-@UplAttributes({ @UplAttribute(name = "type", type = FileAttachmentType.class, defaultVal = "wildcard"),
-		@UplAttribute(name = "caption", type = String.class, defaultVal = "$m{button.upload}"),
-		@UplAttribute(name = "handler", type = String.class) })
-public class FileUploadButton extends AbstractMultiControl {
+@UplAttributes({
+		@UplAttribute(name = "type", type = FileAttachmentType.class, defaultVal = "wildcard"),
+		@UplAttribute(name = "caption", type = String.class, defaultVal = "$m{button.upload}") })
+public class FileUploadButton extends AbstractMultiControl implements UploadControl {
 
 	private Control fileControl;
 
 	private Control buttonControl;
+
+	private ControlUploadHandler uploadHandler;
 
 	private UploadedFile[] uploadedFile;
 
@@ -48,16 +51,19 @@ public class FileUploadButton extends AbstractMultiControl {
 	public void populate(DataTransferBlock transferBlock) throws UnifyException {
 		uploadedFile = (UploadedFile[]) transferBlock.getValue();
 		if (uploadedFile != null && uploadedFile.length > 0) {
-			final String handler = getUplAttribute(String.class, "handler");
-			if (!StringUtils.isBlank(handler)) {
-				FileUploadButtonHandler _handler = getComponent(FileUploadButtonHandler.class, handler);
+			if (uploadHandler != null) {
 				UploadedFile _uploadedFile = uploadedFile[0];
-				_handler.save(getValueStore().getValueObjectAtDataIndex(), getType(), _uploadedFile.getFilename(),
-						_uploadedFile.getData());
+				uploadHandler.saveUpload(getValueStore().getValueObjectAtDataIndex(), getType(),
+						_uploadedFile.getFilename(), _uploadedFile.getData());
 			}
 		}
 
 		uploadedFile = null;
+	}
+
+	@Override
+	public void setUploadHandler(ControlUploadHandler handler) throws UnifyException {
+		this.uploadHandler = handler;
 	}
 
 	public Control getFileCtrl() {

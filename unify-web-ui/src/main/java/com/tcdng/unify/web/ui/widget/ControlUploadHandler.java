@@ -13,29 +13,29 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.web.ui.widget.control;
+package com.tcdng.unify.web.ui.widget;
 
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.constant.FileAttachmentType;
 
 /**
- * File upload button handler.
+ * Control upload handler.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public interface FileUploadButtonHandler extends UnifyComponent {
+public interface ControlUploadHandler extends UnifyComponent {
 
 	/**
 	 * Saves an upload.
 	 * 
-	 * @param item     the button backing item
+	 * @param item     the control backing item
 	 * @param type     the attachment type
 	 * @param filename the file name
 	 * @param fileData the file data
 	 * @throws UnifyException if an error occurs
 	 */
-	void save(Object item, FileAttachmentType type, String filename, byte[] fileData) throws UnifyException;
+	void saveUpload(Object item, FileAttachmentType type, String filename, byte[] fileData) throws UnifyException;
 
 }
