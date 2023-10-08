@@ -66,6 +66,11 @@ public class FileUploadButton extends AbstractMultiControl implements UploadCont
 		this.uploadHandler = handler;
 	}
 
+	@Override
+	public UploadControlHandler getUploadHandler() throws UnifyException {
+		return uploadHandler;
+	}
+
 	public Control getFileCtrl() {
 		return fileControl;
 	}

@@ -38,4 +38,12 @@ public interface UploadControlHandler extends UnifyComponent {
 	 */
 	void saveUpload(int dataIndex, FileAttachmentType type, String filename, byte[] fileData) throws UnifyException;
 
+	/**
+	 * Checks is data item at index has file data
+	 * 
+	 * @param dataIndex the data index
+	 * @return true if present otherwise false
+	 * @throws UnifyException if an error occurs
+	 */
+	boolean isFileDataPresent(int dataIndex) throws UnifyException;
 }

@@ -26,11 +26,18 @@ import com.tcdng.unify.core.UnifyException;
 public interface UploadControl extends Control {
 
 	/**
-	 * Sets control upload handler.
+	 * Sets upload control handler.
 	 * 
 	 * @param handler the handler to set
 	 * @throws UnifyException if an error occurs
 	 */
 	void setUploadHandler(UploadControlHandler handler) throws UnifyException;
 
+	/**
+	 * Gets control upload handler.
+	 * 
+	 * @return the upload control handler
+	 * @throws UnifyException if an error occurs
+	 */
+	UploadControlHandler getUploadHandler() throws UnifyException;
 }
