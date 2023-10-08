@@ -2723,6 +2723,20 @@ ux.pfOnShow = function(rgp) {
 	ux.setFocus({wdgid: rgp.pFrmId});
 }
 
+/** File Upload Button */
+ux.rigFileUploadButton = function(rgp) {
+	if (rgp.pEditable) {
+		const fileElem = _id(rgp.pFileId);
+		const evp = ux.newEvPrm(rgp);
+		evp.uPanels = [ rgp.pContId ];
+		evp.uRef = rgp.pRef;
+		ux.addHdl(fileElem, "change", ux.post, evp);
+		ux.addHdl(_id(rgp.pBtnId), "click", function(uEv) {
+			fileElem.click();
+		}, {});
+	}
+}
+
 /** Photo Upload */
 ux.rigPhotoUpload = function(rgp) {
 	if (rgp.pEditable) {
@@ -5607,6 +5621,7 @@ ux.init = function() {
     ux.setfn(ux.setOnEvent, "ux40"); 
     ux.setfn(ux.setDelayedPanelPost, "ux41");
     ux.setfn(ux.optionsTextAreaOnShow, "ux42");
+    ux.setfn(ux.rigFileUploadButton, "ux43");
 }
 
 ux.setfn = function(fn, id) {
