@@ -34,7 +34,8 @@ import com.tcdng.unify.web.ui.widget.UploadControl;
  * @since 1.0
  */
 @Component("ui-fileuploadbutton")
-@UplAttributes({ @UplAttribute(name = "type", type = FileAttachmentType.class, defaultVal = "wildcard"),
+@UplAttributes({
+		@UplAttribute(name = "type", type = FileAttachmentType.class, defaultVal = "wildcard"),
 		@UplAttribute(name = "caption", type = String.class, defaultVal = "$m{button.upload}") })
 public class FileUploadButton extends AbstractMultiControl implements UploadControl {
 
@@ -96,7 +97,9 @@ public class FileUploadButton extends AbstractMultiControl implements UploadCont
 		fileControl = (Control) addInternalChildWidget(
 				"!ui-fileupload accept:$s{" + type.name() + "} binding:uploadedFile selectOnly:true hidden:true", true,
 				false);
-		buttonControl = (Control) addInternalChildWidget("!ui-button symbol:$s{file} alwaysValueIndex:true caption:$s{"
-				+ getCaption() + "} styleClass:$e{" + getStyleClass() + "}", true, false);
+		buttonControl = (Control) addInternalChildWidget(
+				"!ui-button symbol:$s{file-upload} alwaysValueIndex:true caption:$s{" + getCaption()
+						+ "} styleClass:$e{" + getStyleClass() + "}",
+				true, false);
 	}
 }
