@@ -33,8 +33,7 @@ import com.tcdng.unify.web.ui.widget.Control;
  * @since 1.0
  */
 @Component("ui-fileuploadbutton")
-@UplAttributes({
-		@UplAttribute(name = "type", type = FileAttachmentType.class, defaultVal = "wildcard"),
+@UplAttributes({ @UplAttribute(name = "type", type = FileAttachmentType.class, defaultVal = "wildcard"),
 		@UplAttribute(name = "caption", type = String.class, defaultVal = "$m{button.upload}"),
 		@UplAttribute(name = "handler", type = String.class) })
 public class FileUploadButton extends AbstractMultiControl {
@@ -47,14 +46,14 @@ public class FileUploadButton extends AbstractMultiControl {
 
 	@Override
 	public void populate(DataTransferBlock transferBlock) throws UnifyException {
-		super.populate(transferBlock);
+		uploadedFile = (UploadedFile[]) transferBlock.getValue();
 		if (uploadedFile != null && uploadedFile.length > 0) {
-			Object id = null; // TODO
-			UploadedFile _uploadedFile = uploadedFile[0];
-			String handler = getUplAttribute(String.class, "handler");
+			final int target = getRequestTarget(int.class);
+			final String handler = getUplAttribute(String.class, "handler");
 			if (!StringUtils.isBlank(handler)) {
 				FileUploadButtonHandler _handler = getComponent(FileUploadButtonHandler.class, handler);
-				_handler.save(id, getType(), _uploadedFile.getFilename(), _uploadedFile.getData());
+				UploadedFile _uploadedFile = uploadedFile[0];
+				_handler.save(target, getType(), _uploadedFile.getFilename(), _uploadedFile.getData());
 			}
 		}
 
@@ -90,11 +89,8 @@ public class FileUploadButton extends AbstractMultiControl {
 	protected void doOnPageConstruct() throws UnifyException {
 		FileAttachmentType type = getType();
 		fileControl = (Control) addInternalChildWidget(
-				"!ui-fileupload accept:$s{" + type.name() + "} binding:uploadedFile selectOnly:true hidden:true");
-		StringBuilder sb = new StringBuilder();
-		sb.append("!ui-button symbol:$s{file} alwaysValueIndex:true");
-		appendUplAttribute(sb, "caption");
-		appendUplAttribute(sb, "styleClass");
-		buttonControl = (Control) addInternalChildWidget(sb.toString());
+				"!ui-fileupload accept:$s{" + type.name() + "} binding:uploadedFile selectOnly:true hidden:true", true, false);
+		buttonControl = (Control) addInternalChildWidget("!ui-button symbol:$s{file} alwaysValueIndex:true caption:$s{"
+				+ getCaption() + "} styleClass:$e{" + getStyleClass() + "}", true, false);
 	}
 }

@@ -56,6 +56,7 @@ public class FileUploadButtonWriter extends AbstractControlWriter {
 		writer.writeParam("pFileId", fileUploadButton.getFileCtrl().getId());
 		writer.writeParam("pBtnId", fileUploadButton.getButtonCtrl().getId());
 		writer.writeParam("pEditable", fileUploadButton.isContainerEditable());
+		writer.writeParam("pIndex", fileUploadButton.getValueIndex());
 		writer.writeParam("pRef", DataUtils.toArray(String.class, writer.getPostCommandRefs()));
 		writer.endFunction();
 	}

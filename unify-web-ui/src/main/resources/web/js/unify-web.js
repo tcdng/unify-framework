@@ -2730,6 +2730,7 @@ ux.rigFileUploadButton = function(rgp) {
 		const evp = ux.newEvPrm(rgp);
 		evp.uPanels = [ rgp.pContId ];
 		evp.uRef = rgp.pRef;
+		evp.uSendTrg = rgp.pIndex;
 		ux.addHdl(fileElem, "change", ux.post, evp);
 		ux.addHdl(_id(rgp.pBtnId), "click", function(uEv) {
 			fileElem.click();
