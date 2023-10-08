@@ -24,7 +24,7 @@ import com.tcdng.unify.core.data.UploadedFile;
 import com.tcdng.unify.web.ui.DataTransferBlock;
 import com.tcdng.unify.web.ui.widget.AbstractMultiControl;
 import com.tcdng.unify.web.ui.widget.Control;
-import com.tcdng.unify.web.ui.widget.ControlUploadHandler;
+import com.tcdng.unify.web.ui.widget.UploadControlHandler;
 import com.tcdng.unify.web.ui.widget.UploadControl;
 
 /**
@@ -34,8 +34,7 @@ import com.tcdng.unify.web.ui.widget.UploadControl;
  * @since 1.0
  */
 @Component("ui-fileuploadbutton")
-@UplAttributes({
-		@UplAttribute(name = "type", type = FileAttachmentType.class, defaultVal = "wildcard"),
+@UplAttributes({ @UplAttribute(name = "type", type = FileAttachmentType.class, defaultVal = "wildcard"),
 		@UplAttribute(name = "caption", type = String.class, defaultVal = "$m{button.upload}") })
 public class FileUploadButton extends AbstractMultiControl implements UploadControl {
 
@@ -43,18 +42,18 @@ public class FileUploadButton extends AbstractMultiControl implements UploadCont
 
 	private Control buttonControl;
 
-	private ControlUploadHandler uploadHandler;
+	private UploadControlHandler uploadHandler;
 
 	private UploadedFile[] uploadedFile;
 
 	@Override
 	public void populate(DataTransferBlock transferBlock) throws UnifyException {
+		final int targetIndex = getRequestTarget(int.class);
 		uploadedFile = (UploadedFile[]) transferBlock.getValue();
 		if (uploadedFile != null && uploadedFile.length > 0) {
 			if (uploadHandler != null) {
 				UploadedFile _uploadedFile = uploadedFile[0];
-				uploadHandler.saveUpload(getValueStore().getValueObjectAtDataIndex(), getType(),
-						_uploadedFile.getFilename(), _uploadedFile.getData());
+				uploadHandler.saveUpload(targetIndex, getType(), _uploadedFile.getFilename(), _uploadedFile.getData());
 			}
 		}
 
@@ -62,7 +61,7 @@ public class FileUploadButton extends AbstractMultiControl implements UploadCont
 	}
 
 	@Override
-	public void setUploadHandler(ControlUploadHandler handler) throws UnifyException {
+	public void setUploadHandler(UploadControlHandler handler) throws UnifyException {
 		this.uploadHandler = handler;
 	}
 

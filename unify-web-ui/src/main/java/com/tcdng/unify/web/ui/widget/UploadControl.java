@@ -31,6 +31,6 @@ public interface UploadControl extends Control {
 	 * @param handler the handler to set
 	 * @throws UnifyException if an error occurs
 	 */
-	void setUploadHandler(ControlUploadHandler handler) throws UnifyException;
+	void setUploadHandler(UploadControlHandler handler) throws UnifyException;
 
 }

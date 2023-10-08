@@ -13,28 +13,29 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
 package com.tcdng.unify.web.ui.widget;
 
-import com.tcdng.unify.core.AbstractUnifyComponent;
+import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.constant.FileAttachmentType;
 
 /**
- * Convenient abstract base class for control upload handler.
+ * Upload control handler.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public abstract class AbstractControlUploadHandler extends AbstractUnifyComponent implements ControlUploadHandler {
+public interface UploadControlHandler extends UnifyComponent {
 
-	@Override
-	protected void onInitialize() throws UnifyException {
-
-	}
-
-	@Override
-	protected void onTerminate() throws UnifyException {
-
-	}
+	/**
+	 * Saves an upload.
+	 * 
+	 * @param dataIndex the item data index
+	 * @param type      the attachment type
+	 * @param filename  the file name
+	 * @param fileData  the file data
+	 * @throws UnifyException if an error occurs
+	 */
+	void saveUpload(int dataIndex, FileAttachmentType type, String filename, byte[] fileData) throws UnifyException;
 
 }
