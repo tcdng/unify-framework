@@ -48,12 +48,12 @@ public class FileUploadButton extends AbstractMultiControl {
 	public void populate(DataTransferBlock transferBlock) throws UnifyException {
 		uploadedFile = (UploadedFile[]) transferBlock.getValue();
 		if (uploadedFile != null && uploadedFile.length > 0) {
-			final int target = getRequestTarget(int.class);
 			final String handler = getUplAttribute(String.class, "handler");
 			if (!StringUtils.isBlank(handler)) {
 				FileUploadButtonHandler _handler = getComponent(FileUploadButtonHandler.class, handler);
 				UploadedFile _uploadedFile = uploadedFile[0];
-				_handler.save(target, getType(), _uploadedFile.getFilename(), _uploadedFile.getData());
+				_handler.save(getValueStore().getValueObjectAtDataIndex(), getType(), _uploadedFile.getFilename(),
+						_uploadedFile.getData());
 			}
 		}
 
@@ -89,7 +89,8 @@ public class FileUploadButton extends AbstractMultiControl {
 	protected void doOnPageConstruct() throws UnifyException {
 		FileAttachmentType type = getType();
 		fileControl = (Control) addInternalChildWidget(
-				"!ui-fileupload accept:$s{" + type.name() + "} binding:uploadedFile selectOnly:true hidden:true", true, false);
+				"!ui-fileupload accept:$s{" + type.name() + "} binding:uploadedFile selectOnly:true hidden:true", true,
+				false);
 		buttonControl = (Control) addInternalChildWidget("!ui-button symbol:$s{file} alwaysValueIndex:true caption:$s{"
 				+ getCaption() + "} styleClass:$e{" + getStyleClass() + "}", true, false);
 	}

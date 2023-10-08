@@ -30,12 +30,12 @@ public interface FileUploadButtonHandler extends UnifyComponent {
 	/**
 	 * Saves an upload.
 	 * 
-	 * @param valueIndex the value index
-	 * @param type       the attachment type
-	 * @param filename   the file name
-	 * @param fileData   the file data
+	 * @param item     the button backing item
+	 * @param type     the attachment type
+	 * @param filename the file name
+	 * @param fileData the file data
 	 * @throws UnifyException if an error occurs
 	 */
-	void save(int valueIndex, FileAttachmentType type, String filename, byte[] fileData) throws UnifyException;
+	void save(Object item, FileAttachmentType type, String filename, byte[] fileData) throws UnifyException;
 
 }
