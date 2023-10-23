@@ -1415,7 +1415,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 			}
 
 			if (updateChild.isTrue() && sqlEntityInfo.isChildList()) {
-				updateChildRecords(sqlEntityInfo, record, fetch, true);
+				updateChildRecords(sqlEntityInfo, record, fetch, false);
 			}
 		} catch (Exception e) {
 			if (entityPolicy != null) {
