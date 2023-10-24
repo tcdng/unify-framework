@@ -281,6 +281,14 @@ public interface ValueStore {
      */
     void setTempValue(String name, Object value) throws UnifyException;
 
+    /**
+     * Sets a temporary values.
+     * 
+     * @param values
+     *              the value map
+     */
+    void setTempValues(Map<String, Object> values) throws UnifyException;
+
 	/**
 	 * Removes temporary value from value store.
 	 * 

@@ -16,6 +16,8 @@
 
 package com.tcdng.unify.core.data;
 
+import java.util.Map;
+
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.format.Formatter;
 
@@ -68,6 +70,8 @@ public interface ValueStoreReader {
 	<T> T getTempValue(Class<T> type, String name) throws UnifyException;
 
 	void setTempValue(String name, Object value) throws UnifyException;
+
+    void setTempValues(Map<String, Object> values) throws UnifyException;
 
 	boolean isTempValue(String name);
 }
