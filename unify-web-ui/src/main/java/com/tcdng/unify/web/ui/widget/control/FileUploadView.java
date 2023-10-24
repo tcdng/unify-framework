@@ -36,7 +36,8 @@ import com.tcdng.unify.web.ui.widget.data.FileAttachmentInfo;
  * @since 1.0
  */
 @Component("ui-fileuploadview")
-@UplAttributes({ @UplAttribute(name = "type", type = FileAttachmentType.class, defaultVal = "wildcard"),
+@UplAttributes({
+		@UplAttribute(name = "type", type = FileAttachmentType.class, defaultVal = "wildcard"),
 		@UplAttribute(name = "filenameBinding", type = String.class),
 		@UplAttribute(name = "handler", type = String.class, mandatory = false),
 		@UplAttribute(name = "category", type = String.class),

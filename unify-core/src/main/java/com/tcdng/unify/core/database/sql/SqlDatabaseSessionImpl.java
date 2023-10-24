@@ -1287,6 +1287,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
 							SqlEntityInfo childSqlEntityInfo = sqlDataSourceDialect
 									.findSqlEntityInfo(clfi.getChildEntityClass());
+							
 							Query<? extends Entity> query = Query.of(clfi.getChildEntityClass());
 							if (clfi.isWithChildFkType()) {
 								query.addEquals(clfi.getChildFkTypeField().getName(), tableName);
@@ -1299,7 +1300,9 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 							query.addEquals(clfi.getChildFkIdField().getName(), id)
 									.addOrder(childSqlEntityInfo.getIdFieldInfo().getName());
 							List<? extends Entity> childList = null;
-							if (includeListOnly.isTrue()) {
+							if (childSqlEntityInfo.isMapped()) {
+								childList = childSqlEntityInfo.getMappedEntityRepository().findAll(query);
+							} else if (includeListOnly.isTrue()) {
 								childList = listAll(query);
 							} else {
 								childList = findAll(query);

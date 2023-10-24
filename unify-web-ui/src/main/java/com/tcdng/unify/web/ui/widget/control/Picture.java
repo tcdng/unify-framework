@@ -17,6 +17,8 @@ package com.tcdng.unify.web.ui.widget.control;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.annotation.UplAttribute;
+import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.data.UploadedFile;
 import com.tcdng.unify.web.ui.DataTransferBlock;
 import com.tcdng.unify.web.ui.widget.AbstractMultiControl;
@@ -29,6 +31,11 @@ import com.tcdng.unify.web.ui.widget.Control;
  * @since 1.0
  */
 @Component("ui-picture")
+@UplAttributes({
+	@UplAttribute(name = "handler", type = String.class, mandatory = false),
+	@UplAttribute(name = "category", type = String.class),
+	@UplAttribute(name = "parentCategory", type = String.class),
+	@UplAttribute(name = "parentFieldName", type = String.class) })
 public class Picture extends AbstractMultiControl {
 
     private Control fileControl;

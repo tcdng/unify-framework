@@ -79,6 +79,7 @@ import com.tcdng.unify.core.data.FactoryMap;
 import com.tcdng.unify.core.database.CallableProc;
 import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.database.EntityPolicy;
+import com.tcdng.unify.core.database.MappedEntityRepository;
 import com.tcdng.unify.core.database.StaticReference;
 import com.tcdng.unify.core.transform.Transformer;
 import com.tcdng.unify.core.util.AnnotationUtils;
@@ -224,7 +225,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 				}
 
 				return new SqlEntityInfo(null, StaticReference.class, (Class<? extends EnumConst>) entityClass, null,
-						schema, tableName, preferredTableName, schemaTableName, tableAlias, tableName,
+						null, schema, tableName, preferredTableName, schemaTableName, tableAlias, tableName,
 						preferredTableName, schemaTableName, idFieldInfo, null, null, null, null, null, propertyInfoMap,
 						null, null, null, null, null, null, null, null, sqlDataSourceDialect.isAllObjectsInLowerCase(),
 						true);
@@ -233,6 +234,12 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 			@SuppressWarnings("unchecked")
 			private SqlEntityInfo createTableEntityInfo(Class<?> entityClass, EntityCycleDetector entityCycleDetector)
 					throws Exception {
+				Mapped mae = entityClass.getAnnotation(Mapped.class);
+				String mappedEntityRepoName = mae != null ? AnnotationUtils.getAnnotationString(mae.value()) : null;
+				final MappedEntityRepository mappedEntityRepository = !StringUtils.isBlank(mappedEntityRepoName)
+						? getComponent(MappedEntityRepository.class, mappedEntityRepoName)
+						: null;
+
 				TableName tn = entityClass.getAnnotation(TableName.class);
 				Table ta = entityClass.getAnnotation(Table.class);
 				String tableName = tn != null
@@ -962,11 +969,11 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
 				String tableAlias = "T" + (++tAliasCounter);
 				SqlEntityInfo sqlEntityInfo = new SqlEntityInfo(null, (Class<? extends Entity>) entityClass, null,
-						entityPolicy, schema, tableName, preferredTableName, schemaTableName, tableAlias, viewName,
-						preferredViewName, schemaViewName, idFieldInfo, versionFieldInfo, tenantIdFieldInfo,
-						fosterParentTypeFieldInfo, fosterParentIdFieldInfo, categoryFieldInfo, propertyInfoMap,
-						defaultRestrictionList, childInfoList, childListInfoList, uniqueConstraintMap, indexMap, null,
-						null, null, sqlDataSourceDialect.isAllObjectsInLowerCase(),
+						entityPolicy, mappedEntityRepository, schema, tableName, preferredTableName, schemaTableName,
+						tableAlias, viewName, preferredViewName, schemaViewName, idFieldInfo, versionFieldInfo,
+						tenantIdFieldInfo, fosterParentTypeFieldInfo, fosterParentIdFieldInfo, categoryFieldInfo,
+						propertyInfoMap, defaultRestrictionList, childInfoList, childListInfoList, uniqueConstraintMap,
+						indexMap, null, null, null, sqlDataSourceDialect.isAllObjectsInLowerCase(),
 						ta != null ? ta.identityManaged() : true);
 				return sqlEntityInfo;
 			}
@@ -1446,7 +1453,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 				}
 
 				SqlEntityInfo sqlEntityInfo = new SqlEntityInfo(null, (Class<? extends Entity>) entityClass, null, null,
-						schema, viewName, preferredViewName, schemaViewName, null, viewName, preferredViewName,
+						null, schema, viewName, preferredViewName, schemaViewName, null, viewName, preferredViewName,
 						schemaViewName, idFieldInfo, null, null, null, null, null, propertyInfoMap, null, null, null,
 						null, null, null, tableReferences.getBaseTables(), viewRestrictionList,
 						sqlDataSourceDialect.isAllObjectsInLowerCase(), true);
