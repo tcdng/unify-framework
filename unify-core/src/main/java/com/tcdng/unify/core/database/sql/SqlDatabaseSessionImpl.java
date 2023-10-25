@@ -1566,6 +1566,10 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 						continue;
 					}
 
+					SqlEntityInfo childSqlEntityInfo = sqlDataSourceDialect
+							.findSqlEntityInfo(alfi.getChildEntityClass());
+					MappedEntityRepository mappedEntityRepository = childSqlEntityInfo.getMappedEntityRepository();
+					
 					List<? extends Entity> childList = (List<? extends Entity>) alfi.getGetter().invoke(record);
 					if (childList != null) {
 						boolean clear = fetch.isEditableOnly();
@@ -1586,19 +1590,33 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 							deleteChildRecords(alfi, tableName, id);
 
 							for (Entity childRecord : childList) {
-								setParentAttributes(alfi, childRecord, id, tableName);
-								create(childRecord);
+								setParentAttributes(alfi, childRecord, id, tableName);							
+								if (mappedEntityRepository != null) {
+									mappedEntityRepository.create(childRecord);
+								} else {
+									create(childRecord);
+								}
 							}
 						} else {
 							Set<Object> targetIds = getDeleteChildRecordIds(alfi, tableName, id);
 							if (versionNo) {
 								for (Entity childRecord : childList) {
-									updateByIdVersion(childRecord);
+									if (mappedEntityRepository != null) {
+										mappedEntityRepository.updateByIdVersion(childRecord);
+									} else {
+										updateByIdVersion(childRecord);
+									}
+									
 									targetIds.remove(childRecord.getId());
 								}
 							} else {
 								for (Entity childRecord : childList) {
-									updateById(childRecord);
+									if (mappedEntityRepository != null) {
+										mappedEntityRepository.updateById(childRecord);
+									} else {
+										updateById(childRecord);
+									}
+									
 									targetIds.remove(childRecord.getId());
 								}
 							}
@@ -1669,6 +1687,13 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 		}
 
 		query.addEquals(odci.getChildFkIdField().getName(), id);
+		
+		SqlEntityInfo childSqlEntityInfo = sqlDataSourceDialect.findSqlEntityInfo(odci.getChildEntityClass());
+		if (childSqlEntityInfo.isMapped()) {
+			MappedEntityRepository mappedEntityRepository = childSqlEntityInfo.getMappedEntityRepository();
+			return mappedEntityRepository.valueSet(Object.class, "id", query);
+		}
+		
 		return valueSet(Object.class, "id", query);
 	}
 
