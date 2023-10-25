@@ -29,6 +29,17 @@ import com.tcdng.unify.core.UnifyException;
 public interface MappedEntityRepository extends UnifyComponent {
 
     /**
+     * Creates an record in the repository.
+     * 
+     * @param record
+     *            the record to create
+     * @return the record Id
+     * @throws UnifyException
+     *             if an error occurs during creation
+     */
+    Object create(Entity record) throws UnifyException;
+
+    /**
      * Finds record by query. Does not fetch list-only fields and children.
      * 
      * @param query

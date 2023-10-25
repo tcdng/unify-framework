@@ -52,6 +52,7 @@ import com.tcdng.unify.core.database.CallableProc;
 import com.tcdng.unify.core.database.DatabaseSession;
 import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.database.EntityPolicy;
+import com.tcdng.unify.core.database.MappedEntityRepository;
 import com.tcdng.unify.core.database.Query;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.ReflectUtils;
@@ -1287,7 +1288,6 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
 							SqlEntityInfo childSqlEntityInfo = sqlDataSourceDialect
 									.findSqlEntityInfo(clfi.getChildEntityClass());
-							
 							Query<? extends Entity> query = Query.of(clfi.getChildEntityClass());
 							if (clfi.isWithChildFkType()) {
 								query.addEquals(clfi.getChildFkTypeField().getName(), tableName);
@@ -1496,6 +1496,9 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 				for (ChildFieldInfo alfi : sqlEntityInfo.getManyChildInfoList()) {
 					List<? extends Entity> attrList = (List<? extends Entity>) alfi.getGetter().invoke(record);
 					if (attrList != null) {
+						SqlEntityInfo childSqlEntityInfo = sqlDataSourceDialect
+								.findSqlEntityInfo(alfi.getChildEntityClass());
+						MappedEntityRepository mappedEntityRepository = childSqlEntityInfo.getMappedEntityRepository();
 						Method childFkIdSetter = alfi.getChildFkIdSetter();
 						Method childFkTypeSetter = alfi.getChildFkTypeSetter();
 						Method childCatSetter = alfi.getChildCatSetter();
@@ -1510,7 +1513,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 								childCatSetter.invoke(attrRecord, category);
 							}
 
-							create(attrRecord);
+							if (mappedEntityRepository != null) {
+								mappedEntityRepository.create(attrRecord);
+							} else {
+								create(attrRecord);
+							}
 						}
 					}
 				}
@@ -1621,7 +1628,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 			alfi.getChildCatSetter().invoke(childRecord, alfi.getCategory());
 		}
 	}
-	
+
 	private void deleteChildRecords(SqlEntityInfo sqlEntityInfo, Object id) throws UnifyException {
 		final String tableName = sqlEntityInfo.getTableName();
 		for (OnDeleteCascadeInfo odci : sqlEntityInfo.getOnDeleteCascadeInfoList()) {
