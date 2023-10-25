@@ -1647,7 +1647,14 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 		}
 
 		query.addEquals(odci.getChildFkIdField().getName(), id);
-		deleteAll(query);
+
+		SqlEntityInfo childSqlEntityInfo = sqlDataSourceDialect.findSqlEntityInfo(odci.getChildEntityClass());
+		if (childSqlEntityInfo.isMapped()) {
+			MappedEntityRepository mappedEntityRepository = childSqlEntityInfo.getMappedEntityRepository();
+			mappedEntityRepository.deleteAll(query);
+		} else {
+			deleteAll(query);
+		}
 	}
 
 	private Set<Object> getDeleteChildRecordIds(OnDeleteCascadeInfo odci, String tableName, Object id)

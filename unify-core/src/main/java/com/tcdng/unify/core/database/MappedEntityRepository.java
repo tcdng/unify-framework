@@ -50,4 +50,15 @@ public interface MappedEntityRepository extends UnifyComponent {
      */
     <T extends Entity> List<T> findAll(Query<T> query) throws UnifyException;
 
+    /**
+     * Deletes record by query.
+     * 
+     * @param query
+     *            the query
+     * @return the number of record deleted.
+     * @throws UnifyException
+     *             if an error occurs during delete
+     */
+    int deleteAll(Query<? extends Entity> query) throws UnifyException;
+
 }
