@@ -52,6 +52,7 @@ import com.tcdng.unify.core.database.CallableProc;
 import com.tcdng.unify.core.database.DatabaseSession;
 import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.database.EntityPolicy;
+import com.tcdng.unify.core.database.MappedEntityRepository;
 import com.tcdng.unify.core.database.Query;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.ReflectUtils;
@@ -1299,7 +1300,9 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 							query.addEquals(clfi.getChildFkIdField().getName(), id)
 									.addOrder(childSqlEntityInfo.getIdFieldInfo().getName());
 							List<? extends Entity> childList = null;
-							if (includeListOnly.isTrue()) {
+							if (childSqlEntityInfo.isMapped()) {
+								childList = childSqlEntityInfo.getMappedEntityRepository().findAll(query);
+							} else if (includeListOnly.isTrue()) {
 								childList = listAll(query);
 							} else {
 								childList = findAll(query);
@@ -1415,7 +1418,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 			}
 
 			if (updateChild.isTrue() && sqlEntityInfo.isChildList()) {
-				updateChildRecords(sqlEntityInfo, record, fetch, true);
+				updateChildRecords(sqlEntityInfo, record, fetch, false);
 			}
 		} catch (Exception e) {
 			if (entityPolicy != null) {
@@ -1493,6 +1496,9 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 				for (ChildFieldInfo alfi : sqlEntityInfo.getManyChildInfoList()) {
 					List<? extends Entity> attrList = (List<? extends Entity>) alfi.getGetter().invoke(record);
 					if (attrList != null) {
+						SqlEntityInfo childSqlEntityInfo = sqlDataSourceDialect
+								.findSqlEntityInfo(alfi.getChildEntityClass());
+						MappedEntityRepository mappedEntityRepository = childSqlEntityInfo.getMappedEntityRepository();
 						Method childFkIdSetter = alfi.getChildFkIdSetter();
 						Method childFkTypeSetter = alfi.getChildFkTypeSetter();
 						Method childCatSetter = alfi.getChildCatSetter();
@@ -1507,7 +1513,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 								childCatSetter.invoke(attrRecord, category);
 							}
 
-							create(attrRecord);
+							if (mappedEntityRepository != null) {
+								mappedEntityRepository.create(attrRecord);
+							} else {
+								create(attrRecord);
+							}
 						}
 					}
 				}
@@ -1556,6 +1566,10 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 						continue;
 					}
 
+					SqlEntityInfo childSqlEntityInfo = sqlDataSourceDialect
+							.findSqlEntityInfo(alfi.getChildEntityClass());
+					MappedEntityRepository mappedEntityRepository = childSqlEntityInfo.getMappedEntityRepository();
+					
 					List<? extends Entity> childList = (List<? extends Entity>) alfi.getGetter().invoke(record);
 					if (childList != null) {
 						boolean clear = fetch.isEditableOnly();
@@ -1576,19 +1590,33 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 							deleteChildRecords(alfi, tableName, id);
 
 							for (Entity childRecord : childList) {
-								setParentAttributes(alfi, childRecord, id, tableName);
-								create(childRecord);
+								setParentAttributes(alfi, childRecord, id, tableName);							
+								if (mappedEntityRepository != null) {
+									mappedEntityRepository.create(childRecord);
+								} else {
+									create(childRecord);
+								}
 							}
 						} else {
 							Set<Object> targetIds = getDeleteChildRecordIds(alfi, tableName, id);
 							if (versionNo) {
 								for (Entity childRecord : childList) {
-									updateByIdVersion(childRecord);
+									if (mappedEntityRepository != null) {
+										mappedEntityRepository.updateByIdVersion(childRecord);
+									} else {
+										updateByIdVersion(childRecord);
+									}
+									
 									targetIds.remove(childRecord.getId());
 								}
 							} else {
 								for (Entity childRecord : childList) {
-									updateById(childRecord);
+									if (mappedEntityRepository != null) {
+										mappedEntityRepository.updateById(childRecord);
+									} else {
+										updateById(childRecord);
+									}
+									
 									targetIds.remove(childRecord.getId());
 								}
 							}
@@ -1618,7 +1646,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 			alfi.getChildCatSetter().invoke(childRecord, alfi.getCategory());
 		}
 	}
-	
+
 	private void deleteChildRecords(SqlEntityInfo sqlEntityInfo, Object id) throws UnifyException {
 		final String tableName = sqlEntityInfo.getTableName();
 		for (OnDeleteCascadeInfo odci : sqlEntityInfo.getOnDeleteCascadeInfoList()) {
@@ -1637,7 +1665,14 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 		}
 
 		query.addEquals(odci.getChildFkIdField().getName(), id);
-		deleteAll(query);
+
+		SqlEntityInfo childSqlEntityInfo = sqlDataSourceDialect.findSqlEntityInfo(odci.getChildEntityClass());
+		if (childSqlEntityInfo.isMapped()) {
+			MappedEntityRepository mappedEntityRepository = childSqlEntityInfo.getMappedEntityRepository();
+			mappedEntityRepository.deleteAll(query);
+		} else {
+			deleteAll(query);
+		}
 	}
 
 	private Set<Object> getDeleteChildRecordIds(OnDeleteCascadeInfo odci, String tableName, Object id)
@@ -1652,6 +1687,13 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 		}
 
 		query.addEquals(odci.getChildFkIdField().getName(), id);
+		
+		SqlEntityInfo childSqlEntityInfo = sqlDataSourceDialect.findSqlEntityInfo(odci.getChildEntityClass());
+		if (childSqlEntityInfo.isMapped()) {
+			MappedEntityRepository mappedEntityRepository = childSqlEntityInfo.getMappedEntityRepository();
+			return mappedEntityRepository.valueSet(Object.class, "id", query);
+		}
+		
 		return valueSet(Object.class, "id", query);
 	}
 

@@ -29,6 +29,7 @@ import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.database.EntityPolicy;
+import com.tcdng.unify.core.database.MappedEntityRepository;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
 
@@ -40,302 +41,306 @@ import com.tcdng.unify.core.util.StringUtils;
  */
 public class SqlEntityInfo implements SqlEntitySchemaInfo {
 
-    private Long index;
+	private Long index;
 
-    private Class<? extends Entity> entityClass;
+	private Class<? extends Entity> entityClass;
 
-    private Class<? extends EnumConst> enumConstClass;
+	private Class<? extends EnumConst> enumConstClass;
 
-    private EntityPolicy entityPolicy;
+	private EntityPolicy entityPolicy;
 
-    private String schema;
+	private MappedEntityRepository mappedEntityRepository;
+	
+	private String schema;
 
-    private String tableName;
+	private String tableName;
 
-    private String preferredTableName;
+	private String preferredTableName;
 
-    private String schemaTableName;
+	private String schemaTableName;
 
-    private String tableAlias;
+	private String tableAlias;
 
-    private String viewName;
+	private String viewName;
 
-    private String preferredViewName;
+	private String preferredViewName;
 
-    private String schemaViewName;
+	private String schemaViewName;
 
-    private SqlEntityInfo extensionSqlEntityInfo;
+	private SqlEntityInfo extensionSqlEntityInfo;
 
-    private SqlFieldInfo idFieldInfo;
+	private SqlFieldInfo idFieldInfo;
 
-    private SqlFieldInfo versionFieldInfo;
+	private SqlFieldInfo versionFieldInfo;
 
-    private SqlFieldInfo tenantIdFieldInfo;
+	private SqlFieldInfo tenantIdFieldInfo;
 
-    private SqlFieldInfo fosterParentTypeFieldInfo;
+	private SqlFieldInfo fosterParentTypeFieldInfo;
 
-    private SqlFieldInfo fosterParentIdFieldInfo;
-    
-    private SqlFieldInfo categoryFieldInfo;
-     
-    private List<SqlFieldInfo> fieldInfoList;
+	private SqlFieldInfo fosterParentIdFieldInfo;
 
-    private List<SqlFieldInfo> listFieldInfoList;
+	private SqlFieldInfo categoryFieldInfo;
 
-    private Map<String, SqlFieldInfo> fieldInfoByName;
+	private List<SqlFieldInfo> fieldInfoList;
 
-    private Map<String, SqlFieldInfo> listFieldInfoByName;
+	private List<SqlFieldInfo> listFieldInfoList;
 
-    private Map<Long, SqlFieldInfo> listInfoMapByIndex;
+	private Map<String, SqlFieldInfo> fieldInfoByName;
 
-    private List<SqlForeignKeyInfo> foreignKeyList;
+	private Map<String, SqlFieldInfo> listFieldInfoByName;
 
-    private List<SqlFieldInfo> managedFieldInfoList;
+	private Map<Long, SqlFieldInfo> listInfoMapByIndex;
 
-    private List<SqlFieldInfo> managedListFieldInfoList;
+	private List<SqlForeignKeyInfo> foreignKeyList;
 
-    private Map<String, SqlFieldInfo> managedFieldInfoByName;
+	private List<SqlFieldInfo> managedFieldInfoList;
 
-    private List<SqlForeignKeyInfo> managedForeignKeyList;
+	private List<SqlFieldInfo> managedListFieldInfoList;
 
-    private Map<String, ChildFieldInfo> childInfoByName;
-    
-    private List<SqlQueryRestrictionInfo> defaultRestrictionList;
+	private Map<String, SqlFieldInfo> managedFieldInfoByName;
 
-    private List<ChildFieldInfo> childInfoList;
+	private List<SqlForeignKeyInfo> managedForeignKeyList;
 
-    private List<ChildFieldInfo> childListInfoList;
+	private Map<String, ChildFieldInfo> childInfoByName;
 
-    private List<OnDeleteCascadeInfo> onDeleteCascadeInfoList;
+	private List<SqlQueryRestrictionInfo> defaultRestrictionList;
 
-    private Map<String, SqlUniqueConstraintInfo> uniqueConstraintMap;
+	private List<ChildFieldInfo> childInfoList;
 
-    private Map<String, SqlIndexInfo> indexMap;
+	private List<ChildFieldInfo> childListInfoList;
 
-    private List<Map<String, Object>> staticValueList;
-
-    private Map<String, Class<?>> viewBaseTables;
-
-    private List<SqlViewRestrictionInfo> viewRestrictionList;
-
-    private boolean identityManaged;
-    
-    private boolean schemaAlreadyManaged;
-    
-    public SqlEntityInfo(Long index, Class<? extends Entity> entityClass, Class<? extends EnumConst> enumConstClass,
-            EntityPolicy recordPolicy, String schema, String tableName, String preferredTableName,
-            String schemaTableName, String tableAlias, String viewName, String preferredViewName, String schemaViewName,
-            SqlFieldInfo idFieldInfo, SqlFieldInfo versionFieldInfo, SqlFieldInfo tenantIdFieldInfo, SqlFieldInfo fosterParentTypeFieldInfo,
-            SqlFieldInfo fosterParentIdFieldInfo, SqlFieldInfo categoryFieldInfo, Map<String, SqlFieldInfo> sQLFieldInfoMap,
-            List<SqlQueryRestrictionInfo> defaultRestrictionList,
-            List<ChildFieldInfo> childInfoList, List<ChildFieldInfo> childListInfoList,
-            Map<String, SqlUniqueConstraintInfo> uniqueConstraintMap, Map<String, SqlIndexInfo> indexMap,
-            List<Map<String, Object>> staticValueList, Map<String, Class<?>> viewBaseTables,
-            List<SqlViewRestrictionInfo> viewRestrictionList, boolean isAllObjectsInLowerCase, boolean identityManaged)
-            throws UnifyException {
-        this.index = index;
-        this.entityClass = entityClass;
-        this.enumConstClass = enumConstClass;
-        this.entityPolicy = recordPolicy;
-        this.schema = schema;
-        this.tableName = tableName;
-        this.preferredTableName = preferredTableName;
-        this.schemaTableName = schemaTableName;
-        this.tableAlias = tableAlias;
-        this.viewName = viewName;
-        this.preferredViewName = preferredViewName;
-        this.schemaViewName = schemaViewName;
-        this.idFieldInfo = idFieldInfo;
-        this.versionFieldInfo = versionFieldInfo;
-        this.tenantIdFieldInfo = tenantIdFieldInfo;
-        this.fosterParentTypeFieldInfo = fosterParentTypeFieldInfo;
-        this.fosterParentIdFieldInfo = fosterParentIdFieldInfo;
-        this.categoryFieldInfo = categoryFieldInfo;
-        this.schemaAlreadyManaged = false;
-
-        if (isAllObjectsInLowerCase) {
-            this.tableName = StringUtils.toLowerCase(tableName);
-            this.preferredTableName = StringUtils.toLowerCase(preferredTableName);
-            this.schemaTableName = StringUtils.toLowerCase(schemaTableName);
-            this.tableAlias = StringUtils.toLowerCase(tableAlias);
-            this.viewName = StringUtils.toLowerCase(viewName);
-            this.preferredViewName = StringUtils.toLowerCase(preferredViewName);
-            this.schemaViewName = StringUtils.toLowerCase(schemaViewName);
-        }
-
-        initFieldInfos(sQLFieldInfoMap);
-
-        this.defaultRestrictionList = DataUtils.unmodifiableList(defaultRestrictionList);
-        this.childInfoList = DataUtils.unmodifiableList(childInfoList);
-        this.childListInfoList = DataUtils.unmodifiableList(childListInfoList);
-        this.childInfoByName = null;
-
-        if (this.childInfoList.isEmpty() && this.childListInfoList.isEmpty()) {
-            this.onDeleteCascadeInfoList = Collections.emptyList();
-        } else {
-            this.onDeleteCascadeInfoList = new ArrayList<OnDeleteCascadeInfo>(this.childInfoList);
-            this.onDeleteCascadeInfoList.addAll(this.childListInfoList);
-            this.onDeleteCascadeInfoList = Collections.unmodifiableList(this.onDeleteCascadeInfoList);
-
-            this.childInfoByName = new HashMap<String, ChildFieldInfo>();
-            for (OnDeleteCascadeInfo info : this.onDeleteCascadeInfoList) {
-                ChildFieldInfo childFieldInfo = (ChildFieldInfo) info;
-                this.childInfoByName.put(childFieldInfo.getName(), childFieldInfo);
-            }
-        }
-
-        this.childInfoByName = DataUtils.unmodifiableMap(this.childInfoByName);
-        this.staticValueList = staticValueList;
-        this.viewBaseTables = DataUtils.unmodifiableMap(viewBaseTables);
-        this.viewRestrictionList = DataUtils.unmodifiableList(viewRestrictionList);
-        this.uniqueConstraintMap = DataUtils.unmodifiableMap(uniqueConstraintMap);
-        this.indexMap = DataUtils.unmodifiableMap(indexMap);
-        this.identityManaged = identityManaged;
-    }
-
-    private SqlEntityInfo(SqlEntityInfo originSqlEntityInfo, Class<? extends Entity> entityClass,
-            Map<String, SqlFieldInfo> sQLFieldInfoMap, boolean identityManaged) throws UnifyException {
-        this.index = originSqlEntityInfo.index;
-        this.entityClass = entityClass;
-        this.enumConstClass = originSqlEntityInfo.enumConstClass;
-        this.entityPolicy = originSqlEntityInfo.entityPolicy;
-        this.schema = originSqlEntityInfo.schema;
-        this.tableName = originSqlEntityInfo.tableName;
-        this.preferredTableName = originSqlEntityInfo.preferredTableName;
-        this.schemaTableName = originSqlEntityInfo.schemaTableName;
-        this.tableAlias = originSqlEntityInfo.tableAlias;
-        this.viewName = originSqlEntityInfo.viewName;
-        this.preferredViewName = originSqlEntityInfo.preferredViewName;
-        this.schemaViewName = originSqlEntityInfo.schemaViewName;
-        this.idFieldInfo = originSqlEntityInfo.idFieldInfo;
-        this.versionFieldInfo = originSqlEntityInfo.versionFieldInfo;
-        this.tenantIdFieldInfo = originSqlEntityInfo.tenantIdFieldInfo;
-        this.fosterParentTypeFieldInfo = originSqlEntityInfo.fosterParentTypeFieldInfo;
-        this.fosterParentIdFieldInfo = originSqlEntityInfo.fosterParentIdFieldInfo;
-        this.categoryFieldInfo = originSqlEntityInfo.categoryFieldInfo;
-        this.defaultRestrictionList = originSqlEntityInfo.defaultRestrictionList;
-        this.childInfoList = originSqlEntityInfo.childInfoList;
-        this.childListInfoList = originSqlEntityInfo.childListInfoList;
-        this.childInfoByName = originSqlEntityInfo.childInfoByName;
-        this.onDeleteCascadeInfoList = originSqlEntityInfo.onDeleteCascadeInfoList;
-        this.staticValueList = originSqlEntityInfo.staticValueList;
-        this.viewBaseTables = originSqlEntityInfo.viewBaseTables;
-        this.viewRestrictionList = originSqlEntityInfo.viewRestrictionList;
-        this.uniqueConstraintMap = originSqlEntityInfo.uniqueConstraintMap;
-        this.indexMap = originSqlEntityInfo.indexMap;
-        this.schemaAlreadyManaged = false;
-        this.identityManaged = identityManaged;
-
-        if (sQLFieldInfoMap != null) {
-            Map<String, SqlFieldInfo> newSQLFieldInfoMap =
-                    new LinkedHashMap<String, SqlFieldInfo>(originSqlEntityInfo.listFieldInfoByName);
-            newSQLFieldInfoMap.putAll(sQLFieldInfoMap);
-            initFieldInfos(newSQLFieldInfoMap);
-        } else {
-            initFieldInfos(originSqlEntityInfo.listFieldInfoByName);
-        }
-    }
-
-    @Override
-    public Long getIndex() {
-        return index;
-    }
-
-    @Override
-    public String getSchema() {
-        return schema;
-    }
-
-    @Override
-    public String getTableName() {
-        return tableName;
-    }
-
-    @Override
-    public String getPreferredTableName() {
-        return preferredTableName;
-    }
-
-    @Override
-    public String getSchemaTableName() {
-        return schemaTableName;
-    }
-
-    @Override
-    public String getTableAlias() {
-        return tableAlias;
-    }
-
-    @Override
-    public String getViewName() {
-        return viewName;
-    }
-
-    @Override
-    public String getPreferredViewName() {
-        return preferredViewName;
-    }
-
-    @Override
-    public String getSchemaViewName() {
-        return schemaViewName;
-    }
-
-    @Override
-    public SqlFieldInfo getIdFieldInfo() {
-        return idFieldInfo;
-    }
-
-    @Override
-    public SqlFieldInfo getVersionFieldInfo() {
-        return versionFieldInfo;
-    }
-
-    @Override
-    public SqlFieldInfo getFosterParentTypeFieldInfo() {
-        return fosterParentTypeFieldInfo;
-    }
-
-    @Override
-    public SqlFieldInfo getFosterParentIdFieldInfo() {
-        return fosterParentIdFieldInfo;
-    }
-
-    @Override
-    public SqlFieldInfo getCategoryFieldInfo() {
-        return categoryFieldInfo;
-    }
-
-    @Override
-    public Set<String> getFieldNames() {
-        return fieldInfoByName.keySet();
-    }
-
-    @Override
-    public List<SqlFieldInfo> getFieldInfos() {
-        return fieldInfoList;
-    }
-
-    @Override
-    public List<SqlFieldInfo> getManagedFieldInfos() {
-        return managedFieldInfoList;
-    }
-
-    public List<SqlForeignKeyInfo> getManagedForeignKeyList() {
-        return managedForeignKeyList;
-    }
-
-    @Override
-    public List<SqlFieldInfo> getListFieldInfos() {
-        return listFieldInfoList;
-    }
-
-    @Override
-    public List<SqlFieldInfo> getManagedListFieldInfos() {
-        return managedListFieldInfoList;
-    }
-
-    @Override
+	private List<OnDeleteCascadeInfo> onDeleteCascadeInfoList;
+
+	private Map<String, SqlUniqueConstraintInfo> uniqueConstraintMap;
+
+	private Map<String, SqlIndexInfo> indexMap;
+
+	private List<Map<String, Object>> staticValueList;
+
+	private Map<String, Class<?>> viewBaseTables;
+
+	private List<SqlViewRestrictionInfo> viewRestrictionList;
+
+	private boolean identityManaged;
+
+	private boolean schemaAlreadyManaged;
+
+	public SqlEntityInfo(Long index, Class<? extends Entity> entityClass, Class<? extends EnumConst> enumConstClass,
+			EntityPolicy recordPolicy, MappedEntityRepository mappedEntityRepository, String schema, String tableName, String preferredTableName,
+			String schemaTableName, String tableAlias, String viewName, String preferredViewName, String schemaViewName,
+			SqlFieldInfo idFieldInfo, SqlFieldInfo versionFieldInfo, SqlFieldInfo tenantIdFieldInfo,
+			SqlFieldInfo fosterParentTypeFieldInfo, SqlFieldInfo fosterParentIdFieldInfo,
+			SqlFieldInfo categoryFieldInfo, Map<String, SqlFieldInfo> sQLFieldInfoMap,
+			List<SqlQueryRestrictionInfo> defaultRestrictionList, List<ChildFieldInfo> childInfoList,
+			List<ChildFieldInfo> childListInfoList, Map<String, SqlUniqueConstraintInfo> uniqueConstraintMap,
+			Map<String, SqlIndexInfo> indexMap, List<Map<String, Object>> staticValueList,
+			Map<String, Class<?>> viewBaseTables, List<SqlViewRestrictionInfo> viewRestrictionList,
+			boolean isAllObjectsInLowerCase, boolean identityManaged) throws UnifyException {
+		this.index = index;
+		this.entityClass = entityClass;
+		this.enumConstClass = enumConstClass;
+		this.entityPolicy = recordPolicy;
+		this.mappedEntityRepository = mappedEntityRepository;
+		this.schema = schema;
+		this.tableName = tableName;
+		this.preferredTableName = preferredTableName;
+		this.schemaTableName = schemaTableName;
+		this.tableAlias = tableAlias;
+		this.viewName = viewName;
+		this.preferredViewName = preferredViewName;
+		this.schemaViewName = schemaViewName;
+		this.idFieldInfo = idFieldInfo;
+		this.versionFieldInfo = versionFieldInfo;
+		this.tenantIdFieldInfo = tenantIdFieldInfo;
+		this.fosterParentTypeFieldInfo = fosterParentTypeFieldInfo;
+		this.fosterParentIdFieldInfo = fosterParentIdFieldInfo;
+		this.categoryFieldInfo = categoryFieldInfo;
+		this.schemaAlreadyManaged = false;
+
+		if (isAllObjectsInLowerCase) {
+			this.tableName = StringUtils.toLowerCase(tableName);
+			this.preferredTableName = StringUtils.toLowerCase(preferredTableName);
+			this.schemaTableName = StringUtils.toLowerCase(schemaTableName);
+			this.tableAlias = StringUtils.toLowerCase(tableAlias);
+			this.viewName = StringUtils.toLowerCase(viewName);
+			this.preferredViewName = StringUtils.toLowerCase(preferredViewName);
+			this.schemaViewName = StringUtils.toLowerCase(schemaViewName);
+		}
+
+		initFieldInfos(sQLFieldInfoMap);
+
+		this.defaultRestrictionList = DataUtils.unmodifiableList(defaultRestrictionList);
+		this.childInfoList = DataUtils.unmodifiableList(childInfoList);
+		this.childListInfoList = DataUtils.unmodifiableList(childListInfoList);
+		this.childInfoByName = null;
+
+		if (this.childInfoList.isEmpty() && this.childListInfoList.isEmpty()) {
+			this.onDeleteCascadeInfoList = Collections.emptyList();
+		} else {
+			this.onDeleteCascadeInfoList = new ArrayList<OnDeleteCascadeInfo>(this.childInfoList);
+			this.onDeleteCascadeInfoList.addAll(this.childListInfoList);
+			this.onDeleteCascadeInfoList = Collections.unmodifiableList(this.onDeleteCascadeInfoList);
+
+			this.childInfoByName = new HashMap<String, ChildFieldInfo>();
+			for (OnDeleteCascadeInfo info : this.onDeleteCascadeInfoList) {
+				ChildFieldInfo childFieldInfo = (ChildFieldInfo) info;
+				this.childInfoByName.put(childFieldInfo.getName(), childFieldInfo);
+			}
+		}
+
+		this.childInfoByName = DataUtils.unmodifiableMap(this.childInfoByName);
+		this.staticValueList = staticValueList;
+		this.viewBaseTables = DataUtils.unmodifiableMap(viewBaseTables);
+		this.viewRestrictionList = DataUtils.unmodifiableList(viewRestrictionList);
+		this.uniqueConstraintMap = DataUtils.unmodifiableMap(uniqueConstraintMap);
+		this.indexMap = DataUtils.unmodifiableMap(indexMap);
+		this.identityManaged = identityManaged;
+	}
+
+	private SqlEntityInfo(SqlEntityInfo originSqlEntityInfo, Class<? extends Entity> entityClass,
+			Map<String, SqlFieldInfo> sQLFieldInfoMap, boolean identityManaged) throws UnifyException {
+		this.index = originSqlEntityInfo.index;
+		this.entityClass = entityClass;
+		this.enumConstClass = originSqlEntityInfo.enumConstClass;
+		this.entityPolicy = originSqlEntityInfo.entityPolicy;
+		this.schema = originSqlEntityInfo.schema;
+		this.tableName = originSqlEntityInfo.tableName;
+		this.preferredTableName = originSqlEntityInfo.preferredTableName;
+		this.schemaTableName = originSqlEntityInfo.schemaTableName;
+		this.tableAlias = originSqlEntityInfo.tableAlias;
+		this.viewName = originSqlEntityInfo.viewName;
+		this.preferredViewName = originSqlEntityInfo.preferredViewName;
+		this.schemaViewName = originSqlEntityInfo.schemaViewName;
+		this.idFieldInfo = originSqlEntityInfo.idFieldInfo;
+		this.versionFieldInfo = originSqlEntityInfo.versionFieldInfo;
+		this.tenantIdFieldInfo = originSqlEntityInfo.tenantIdFieldInfo;
+		this.fosterParentTypeFieldInfo = originSqlEntityInfo.fosterParentTypeFieldInfo;
+		this.fosterParentIdFieldInfo = originSqlEntityInfo.fosterParentIdFieldInfo;
+		this.categoryFieldInfo = originSqlEntityInfo.categoryFieldInfo;
+		this.defaultRestrictionList = originSqlEntityInfo.defaultRestrictionList;
+		this.childInfoList = originSqlEntityInfo.childInfoList;
+		this.childListInfoList = originSqlEntityInfo.childListInfoList;
+		this.childInfoByName = originSqlEntityInfo.childInfoByName;
+		this.onDeleteCascadeInfoList = originSqlEntityInfo.onDeleteCascadeInfoList;
+		this.staticValueList = originSqlEntityInfo.staticValueList;
+		this.viewBaseTables = originSqlEntityInfo.viewBaseTables;
+		this.viewRestrictionList = originSqlEntityInfo.viewRestrictionList;
+		this.uniqueConstraintMap = originSqlEntityInfo.uniqueConstraintMap;
+		this.indexMap = originSqlEntityInfo.indexMap;
+		this.mappedEntityRepository = originSqlEntityInfo.mappedEntityRepository;
+		this.schemaAlreadyManaged = false;
+		this.identityManaged = identityManaged;
+
+		if (sQLFieldInfoMap != null) {
+			Map<String, SqlFieldInfo> newSQLFieldInfoMap = new LinkedHashMap<String, SqlFieldInfo>(
+					originSqlEntityInfo.listFieldInfoByName);
+			newSQLFieldInfoMap.putAll(sQLFieldInfoMap);
+			initFieldInfos(newSQLFieldInfoMap);
+		} else {
+			initFieldInfos(originSqlEntityInfo.listFieldInfoByName);
+		}
+	}
+
+	@Override
+	public Long getIndex() {
+		return index;
+	}
+
+	@Override
+	public String getSchema() {
+		return schema;
+	}
+
+	@Override
+	public String getTableName() {
+		return tableName;
+	}
+
+	@Override
+	public String getPreferredTableName() {
+		return preferredTableName;
+	}
+
+	@Override
+	public String getSchemaTableName() {
+		return schemaTableName;
+	}
+
+	@Override
+	public String getTableAlias() {
+		return tableAlias;
+	}
+
+	@Override
+	public String getViewName() {
+		return viewName;
+	}
+
+	@Override
+	public String getPreferredViewName() {
+		return preferredViewName;
+	}
+
+	@Override
+	public String getSchemaViewName() {
+		return schemaViewName;
+	}
+
+	@Override
+	public SqlFieldInfo getIdFieldInfo() {
+		return idFieldInfo;
+	}
+
+	@Override
+	public SqlFieldInfo getVersionFieldInfo() {
+		return versionFieldInfo;
+	}
+
+	@Override
+	public SqlFieldInfo getFosterParentTypeFieldInfo() {
+		return fosterParentTypeFieldInfo;
+	}
+
+	@Override
+	public SqlFieldInfo getFosterParentIdFieldInfo() {
+		return fosterParentIdFieldInfo;
+	}
+
+	@Override
+	public SqlFieldInfo getCategoryFieldInfo() {
+		return categoryFieldInfo;
+	}
+
+	@Override
+	public Set<String> getFieldNames() {
+		return fieldInfoByName.keySet();
+	}
+
+	@Override
+	public List<SqlFieldInfo> getFieldInfos() {
+		return fieldInfoList;
+	}
+
+	@Override
+	public List<SqlFieldInfo> getManagedFieldInfos() {
+		return managedFieldInfoList;
+	}
+
+	public List<SqlForeignKeyInfo> getManagedForeignKeyList() {
+		return managedForeignKeyList;
+	}
+
+	@Override
+	public List<SqlFieldInfo> getListFieldInfos() {
+		return listFieldInfoList;
+	}
+
+	@Override
+	public List<SqlFieldInfo> getManagedListFieldInfos() {
+		return managedListFieldInfoList;
+	}
+
+	@Override
 	public SqlFieldInfo getTenantIdFieldInfo() {
 		return tenantIdFieldInfo;
 	}
@@ -346,334 +351,343 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 	}
 
 	@Override
-    public SqlFieldInfo getFieldInfo(String name) throws UnifyException {
-        SqlFieldInfo sqlFieldInfo = fieldInfoByName.get(name);
-        if (sqlFieldInfo == null) {
-            throw new UnifyException(UnifyCoreErrorConstants.RECORD_FIELDINFO_NOT_FOUND, entityClass, name);
-        }
-        return sqlFieldInfo;
-    }
+	public SqlFieldInfo getFieldInfo(String name) throws UnifyException {
+		SqlFieldInfo sqlFieldInfo = fieldInfoByName.get(name);
+		if (sqlFieldInfo == null) {
+			throw new UnifyException(UnifyCoreErrorConstants.RECORD_FIELDINFO_NOT_FOUND, entityClass, name);
+		}
+		return sqlFieldInfo;
+	}
 
-    @Override
-    public SqlFieldInfo getManagedFieldInfo(String name) throws UnifyException {
-        SqlFieldInfo sqlFieldInfo = managedFieldInfoByName.get(name);
-        if (sqlFieldInfo == null) {
-            throw new UnifyException(UnifyCoreErrorConstants.RECORD_FIELDINFO_NOT_FOUND, entityClass, name);
-        }
-        return sqlFieldInfo;
-    }
+	@Override
+	public SqlFieldInfo getManagedFieldInfo(String name) throws UnifyException {
+		SqlFieldInfo sqlFieldInfo = managedFieldInfoByName.get(name);
+		if (sqlFieldInfo == null) {
+			throw new UnifyException(UnifyCoreErrorConstants.RECORD_FIELDINFO_NOT_FOUND, entityClass, name);
+		}
+		return sqlFieldInfo;
+	}
 
-    @Override
-    public SqlFieldSchemaInfo getFieldInfo(Long index) throws UnifyException {
-        return listInfoMapByIndex.get(index);
-    }
+	@Override
+	public SqlFieldSchemaInfo getFieldInfo(Long index) throws UnifyException {
+		return listInfoMapByIndex.get(index);
+	}
 
-    @Override
-    public boolean isIdentityManaged() {
-        return identityManaged;
-    }
+	@Override
+	public boolean isIdentityManaged() {
+		return identityManaged;
+	}
 
-    @Override
-    public boolean isForeignKeys() {
-        return !foreignKeyList.isEmpty();
-    }
+	@Override
+	public boolean isMapped() {
+		return mappedEntityRepository != null;
+	}
 
-    public boolean isManagedForeignKeys() {
-        return !managedForeignKeyList.isEmpty();
-    }
+	@Override
+	public MappedEntityRepository getMappedEntityRepository() {
+		return mappedEntityRepository;
+	}
 
-    @Override
-    public boolean isUniqueConstraints() {
-        return uniqueConstraintMap != null && !uniqueConstraintMap.isEmpty();
-    }
+	@Override
+	public boolean isForeignKeys() {
+		return !foreignKeyList.isEmpty();
+	}
 
-    @Override
-    public Map<String, SqlUniqueConstraintInfo> getUniqueConstraintList() {
-        return uniqueConstraintMap;
-    }
+	public boolean isManagedForeignKeys() {
+		return !managedForeignKeyList.isEmpty();
+	}
 
-    @Override
-    public boolean isIndexes() {
-        return indexMap != null && !indexMap.isEmpty();
-    }
+	@Override
+	public boolean isUniqueConstraints() {
+		return uniqueConstraintMap != null && !uniqueConstraintMap.isEmpty();
+	}
 
-    @Override
-    public Map<String, SqlIndexInfo> getIndexList() {
-        return indexMap;
-    }
+	@Override
+	public Map<String, SqlUniqueConstraintInfo> getUniqueConstraintList() {
+		return uniqueConstraintMap;
+	}
 
-    @Override
-    public List<Map<String, Object>> getStaticValueList() {
-        return staticValueList;
-    }
+	@Override
+	public boolean isIndexes() {
+		return indexMap != null && !indexMap.isEmpty();
+	}
 
-    @Override
-    public boolean isViewOnly() {
-        return !viewBaseTables.isEmpty();
-    }
+	@Override
+	public Map<String, SqlIndexInfo> getIndexList() {
+		return indexMap;
+	}
 
-    @Override
-    public Map<String, Class<?>> getViewBaseTables() {
-        return viewBaseTables;
-    }
+	@Override
+	public List<Map<String, Object>> getStaticValueList() {
+		return staticValueList;
+	}
 
-    @Override
-    public boolean isViewRestriction() {
-        return !viewRestrictionList.isEmpty();
-    }
+	@Override
+	public boolean isViewOnly() {
+		return !viewBaseTables.isEmpty();
+	}
 
-    @Override
-    public List<SqlViewRestrictionInfo> getViewRestrictionList() {
-        return viewRestrictionList;
-    }
+	@Override
+	public Map<String, Class<?>> getViewBaseTables() {
+		return viewBaseTables;
+	}
 
-    @Override
-    public List<SqlForeignKeyInfo> getForeignKeyList() {
-        return foreignKeyList;
-    }
+	@Override
+	public boolean isViewRestriction() {
+		return !viewRestrictionList.isEmpty();
+	}
 
-    public boolean isSchemaAlreadyManaged() {
-        return schemaAlreadyManaged;
-    }
+	@Override
+	public List<SqlViewRestrictionInfo> getViewRestrictionList() {
+		return viewRestrictionList;
+	}
 
-    public void setSchemaAlreadyManaged() {
-        this.schemaAlreadyManaged = true;
-    }
+	@Override
+	public List<SqlForeignKeyInfo> getForeignKeyList() {
+		return foreignKeyList;
+	}
 
-    public Class<? extends Entity> getEntityClass() {
-        return entityClass;
-    }
+	public boolean isSchemaAlreadyManaged() {
+		return schemaAlreadyManaged;
+	}
 
-    public Class<? extends EnumConst> getEnumConstClass() {
-        return enumConstClass;
-    }
+	public void setSchemaAlreadyManaged() {
+		this.schemaAlreadyManaged = true;
+	}
 
-    public Class<?> getKeyClass() {
-        if (enumConstClass != null) {
-            return enumConstClass;
-        }
-        return entityClass;
-    }
+	public Class<? extends Entity> getEntityClass() {
+		return entityClass;
+	}
 
-    public EntityPolicy getEntityPolicy() {
-        return entityPolicy;
-    }
+	public Class<? extends EnumConst> getEnumConstClass() {
+		return enumConstClass;
+	}
 
-    public Set<String> getListFieldNames() {
-        return listFieldInfoByName.keySet();
-    }
+	public Class<?> getKeyClass() {
+		if (enumConstClass != null) {
+			return enumConstClass;
+		}
+		return entityClass;
+	}
 
-    public Map<String, String> getListColumnsByFieldNames() {
-        Map<String, String> map = new HashMap<String, String>();
-        for (Map.Entry<String, SqlFieldInfo> entry : listFieldInfoByName.entrySet()) {
-            map.put(entry.getKey(), entry.getValue().getPreferredColumnName());
-        }
-        return map;
-    }
+	public EntityPolicy getEntityPolicy() {
+		return entityPolicy;
+	}
 
-    public Map<String, SqlFieldInfo> getFieldInfoByColumnNames() {
-        Map<String, SqlFieldInfo> map = new HashMap<String, SqlFieldInfo>();
-        for (SqlFieldInfo entry : fieldInfoByName.values()) {
-            map.put(entry.getColumnName(), entry);
-        }
-        return map;
-    }
+	public Set<String> getListFieldNames() {
+		return listFieldInfoByName.keySet();
+	}
 
-    public ChildFieldInfo getChildFieldInfo(String name) {
-        return childInfoByName.get(name);
-    }
+	public Map<String, String> getListColumnsByFieldNames() {
+		Map<String, String> map = new HashMap<String, String>();
+		for (Map.Entry<String, SqlFieldInfo> entry : listFieldInfoByName.entrySet()) {
+			map.put(entry.getKey(), entry.getValue().getPreferredColumnName());
+		}
+		return map;
+	}
 
-    public boolean isChildFieldInfo(String name) {
-        return childInfoByName.containsKey(name);
-    }
+	public Map<String, SqlFieldInfo> getFieldInfoByColumnNames() {
+		Map<String, SqlFieldInfo> map = new HashMap<String, SqlFieldInfo>();
+		for (SqlFieldInfo entry : fieldInfoByName.values()) {
+			map.put(entry.getColumnName(), entry);
+		}
+		return map;
+	}
 
-    public List<ChildFieldInfo> getSingleChildInfoList() {
-        return childInfoList;
-    }
+	public ChildFieldInfo getChildFieldInfo(String name) {
+		return childInfoByName.get(name);
+	}
 
-    public boolean isSingleChildList() {
-        return !childInfoList.isEmpty();
-    }
+	public boolean isChildFieldInfo(String name) {
+		return childInfoByName.containsKey(name);
+	}
 
-    public boolean isWithDefaultRestrictions() {
-        return !defaultRestrictionList.isEmpty();
-    }
+	public List<ChildFieldInfo> getSingleChildInfoList() {
+		return childInfoList;
+	}
 
-    public List<SqlQueryRestrictionInfo> getDefaultRestrictionList() {
+	public boolean isSingleChildList() {
+		return !childInfoList.isEmpty();
+	}
+
+	public boolean isWithDefaultRestrictions() {
+		return !defaultRestrictionList.isEmpty();
+	}
+
+	public List<SqlQueryRestrictionInfo> getDefaultRestrictionList() {
 		return defaultRestrictionList;
 	}
 
 	public List<ChildFieldInfo> getManyChildInfoList() {
-        return childListInfoList;
-    }
+		return childListInfoList;
+	}
 
-    public boolean isManyChildList() {
-        return !childListInfoList.isEmpty();
-    }
+	public boolean isManyChildList() {
+		return !childListInfoList.isEmpty();
+	}
 
-    public boolean isChildList() {
-        return !childInfoList.isEmpty() || !childListInfoList.isEmpty();
-    }
+	public boolean isChildList() {
+		return !childInfoList.isEmpty() || !childListInfoList.isEmpty();
+	}
 
-    public List<OnDeleteCascadeInfo> getOnDeleteCascadeInfoList() {
-        return onDeleteCascadeInfoList;
-    }
+	public List<OnDeleteCascadeInfo> getOnDeleteCascadeInfoList() {
+		return onDeleteCascadeInfoList;
+	}
 
-    public boolean isOnDeleteCascadeList() {
-        return !onDeleteCascadeInfoList.isEmpty();
-    }
+	public boolean isOnDeleteCascadeList() {
+		return !onDeleteCascadeInfoList.isEmpty();
+	}
 
-    public SqlEntityInfo getExtensionSqlEntityInfo() {
-        return extensionSqlEntityInfo;
-    }
+	public SqlEntityInfo getExtensionSqlEntityInfo() {
+		return extensionSqlEntityInfo;
+	}
 
-    public boolean isExtended() {
-        return extensionSqlEntityInfo != null;
-    }
+	public boolean isExtended() {
+		return extensionSqlEntityInfo != null;
+	}
 
-    public boolean isWithFosterParents() {
-        return fosterParentTypeFieldInfo != null;
-    }
+	public boolean isWithFosterParents() {
+		return fosterParentTypeFieldInfo != null;
+	}
 
-    public boolean isCategoryColumn() {
-        return categoryFieldInfo != null;
-    }
-    
-    SqlEntityInfo extend(String viewName, String preferredViewName, String schemaViewName,
-            Class<? extends Entity> extensionEntityClass, Map<String, SqlFieldInfo> sQLFieldInfoMap,
-            Map<String, SqlUniqueConstraintInfo> uniqueConstraintMap, Map<String, SqlIndexInfo> indexMap,
-            boolean deprecateExtension)
-            throws UnifyException {
-        if (isExtended() && !deprecateExtension) {
-            throw new UnifyException(UnifyCoreErrorConstants.RECORD_SUPERCLASS_ALREADY_EXTENDED, extensionEntityClass,
-                    entityClass, extensionSqlEntityInfo.getEntityClass());
-        }
+	public boolean isCategoryColumn() {
+		return categoryFieldInfo != null;
+	}
 
-        this.viewName = viewName;
-        this.preferredViewName = preferredViewName;
-        this.schemaViewName = schemaViewName;
+	SqlEntityInfo extend(String viewName, String preferredViewName, String schemaViewName,
+			Class<? extends Entity> extensionEntityClass, Map<String, SqlFieldInfo> sQLFieldInfoMap,
+			Map<String, SqlUniqueConstraintInfo> uniqueConstraintMap, Map<String, SqlIndexInfo> indexMap,
+			boolean deprecateExtension) throws UnifyException {
+		if (isExtended() && !deprecateExtension) {
+			throw new UnifyException(UnifyCoreErrorConstants.RECORD_SUPERCLASS_ALREADY_EXTENDED, extensionEntityClass,
+					entityClass, extensionSqlEntityInfo.getEntityClass());
+		}
 
-        List<SqlForeignKeyInfo> newManagedForeignKeyList = new ArrayList<SqlForeignKeyInfo>(this.managedForeignKeyList);
-        Map<String, SqlFieldInfo> newManagedFieldInfoByName =
-                new LinkedHashMap<String, SqlFieldInfo>(this.managedFieldInfoByName);
-        List<SqlFieldInfo> newManagedFieldInfoList = new ArrayList<SqlFieldInfo>(this.managedFieldInfoList);
-        List<SqlFieldInfo> newManagedListFieldInfoList = new ArrayList<SqlFieldInfo>(this.managedListFieldInfoList);
+		this.viewName = viewName;
+		this.preferredViewName = preferredViewName;
+		this.schemaViewName = schemaViewName;
 
-        for (SqlFieldInfo sqlFieldInfo : sQLFieldInfoMap.values()) {
-            if (!sqlFieldInfo.isListOnly()) {
-                newManagedFieldInfoByName.put(sqlFieldInfo.getName(), sqlFieldInfo);
-                newManagedFieldInfoList.add(sqlFieldInfo);
-                if (sqlFieldInfo.isForeignKey()) {
-                    newManagedForeignKeyList.add(new SqlForeignKeyInfo(sqlFieldInfo));
-                }
-            }
+		List<SqlForeignKeyInfo> newManagedForeignKeyList = new ArrayList<SqlForeignKeyInfo>(this.managedForeignKeyList);
+		Map<String, SqlFieldInfo> newManagedFieldInfoByName = new LinkedHashMap<String, SqlFieldInfo>(
+				this.managedFieldInfoByName);
+		List<SqlFieldInfo> newManagedFieldInfoList = new ArrayList<SqlFieldInfo>(this.managedFieldInfoList);
+		List<SqlFieldInfo> newManagedListFieldInfoList = new ArrayList<SqlFieldInfo>(this.managedListFieldInfoList);
 
-            newManagedListFieldInfoList.add(sqlFieldInfo);
-        }
-        this.managedForeignKeyList = Collections.unmodifiableList(newManagedForeignKeyList);
-        this.managedFieldInfoByName = Collections.unmodifiableMap(newManagedFieldInfoByName);
-        this.managedFieldInfoList = Collections.unmodifiableList(newManagedFieldInfoList);
-        this.managedListFieldInfoList = Collections.unmodifiableList(newManagedListFieldInfoList);
+		for (SqlFieldInfo sqlFieldInfo : sQLFieldInfoMap.values()) {
+			if (!sqlFieldInfo.isListOnly()) {
+				newManagedFieldInfoByName.put(sqlFieldInfo.getName(), sqlFieldInfo);
+				newManagedFieldInfoList.add(sqlFieldInfo);
+				if (sqlFieldInfo.isForeignKey()) {
+					newManagedForeignKeyList.add(new SqlForeignKeyInfo(sqlFieldInfo));
+				}
+			}
 
-        if (uniqueConstraintMap != null) {
-            Map<String, SqlUniqueConstraintInfo> newUniqueConstraintMap =
-                    new LinkedHashMap<String, SqlUniqueConstraintInfo>(this.uniqueConstraintMap);
-            newUniqueConstraintMap.putAll(uniqueConstraintMap);
-            this.uniqueConstraintMap = DataUtils.unmodifiableMap(newUniqueConstraintMap);
-        }
+			newManagedListFieldInfoList.add(sqlFieldInfo);
+		}
+		this.managedForeignKeyList = Collections.unmodifiableList(newManagedForeignKeyList);
+		this.managedFieldInfoByName = Collections.unmodifiableMap(newManagedFieldInfoByName);
+		this.managedFieldInfoList = Collections.unmodifiableList(newManagedFieldInfoList);
+		this.managedListFieldInfoList = Collections.unmodifiableList(newManagedListFieldInfoList);
 
-        if (indexMap != null) {
-            Map<String, SqlIndexInfo> newIndexMap = new LinkedHashMap<String, SqlIndexInfo>(this.indexMap);
-            newIndexMap.putAll(indexMap);
-            this.indexMap = DataUtils.unmodifiableMap(indexMap);
-        }
+		if (uniqueConstraintMap != null) {
+			Map<String, SqlUniqueConstraintInfo> newUniqueConstraintMap = new LinkedHashMap<String, SqlUniqueConstraintInfo>(
+					this.uniqueConstraintMap);
+			newUniqueConstraintMap.putAll(uniqueConstraintMap);
+			this.uniqueConstraintMap = DataUtils.unmodifiableMap(newUniqueConstraintMap);
+		}
 
-        extensionSqlEntityInfo =
-                new SqlEntityInfo(this, (Class<? extends Entity>) extensionEntityClass, sQLFieldInfoMap, this.identityManaged);
-        return extensionSqlEntityInfo;
-    }
+		if (indexMap != null) {
+			Map<String, SqlIndexInfo> newIndexMap = new LinkedHashMap<String, SqlIndexInfo>(this.indexMap);
+			newIndexMap.putAll(indexMap);
+			this.indexMap = DataUtils.unmodifiableMap(indexMap);
+		}
 
-    void expandOnDeleteCascade(OnDeleteCascadeInfo onDeleteCascadeInfo) {
-        List<OnDeleteCascadeInfo> list = new ArrayList<OnDeleteCascadeInfo>(onDeleteCascadeInfoList);
-        list.add(onDeleteCascadeInfo);
-        onDeleteCascadeInfoList = Collections.unmodifiableList(list);
-    }
+		extensionSqlEntityInfo = new SqlEntityInfo(this, (Class<? extends Entity>) extensionEntityClass,
+				sQLFieldInfoMap, this.identityManaged);
+		return extensionSqlEntityInfo;
+	}
 
-    public boolean isField(String name) {
-        return fieldInfoByName.containsKey(name);
-    }
+	void expandOnDeleteCascade(OnDeleteCascadeInfo onDeleteCascadeInfo) {
+		List<OnDeleteCascadeInfo> list = new ArrayList<OnDeleteCascadeInfo>(onDeleteCascadeInfoList);
+		list.add(onDeleteCascadeInfo);
+		onDeleteCascadeInfoList = Collections.unmodifiableList(list);
+	}
 
-    public SqlFieldInfo getListFieldInfo(String name) throws UnifyException {
-        SqlFieldInfo sqlFieldInfo = listFieldInfoByName.get(name);
-        if (sqlFieldInfo == null) {
-            throw new UnifyException(UnifyCoreErrorConstants.RECORD_LISTFIELDINFO_NOT_FOUND, entityClass, name);
-        }
-        return sqlFieldInfo;
-    }
+	public boolean isField(String name) {
+		return fieldInfoByName.containsKey(name);
+	}
 
-    public boolean isListField(String name) {
-        return listFieldInfoByName.containsKey(name);
-    }
+	public SqlFieldInfo getListFieldInfo(String name) throws UnifyException {
+		SqlFieldInfo sqlFieldInfo = listFieldInfoByName.get(name);
+		if (sqlFieldInfo == null) {
+			throw new UnifyException(UnifyCoreErrorConstants.RECORD_LISTFIELDINFO_NOT_FOUND, entityClass, name);
+		}
+		return sqlFieldInfo;
+	}
 
-    public boolean isVersioned() {
-        return this.versionFieldInfo != null;
-    }
+	public boolean isListField(String name) {
+		return listFieldInfoByName.containsKey(name);
+	}
 
-    public boolean isViewable() {
-        return !tableName.equals(viewName);
-    }
+	public boolean isVersioned() {
+		return this.versionFieldInfo != null;
+	}
 
-    public boolean isEnumConst() {
-        return enumConstClass != null;
-    }
+	public boolean isViewable() {
+		return !tableName.equals(viewName);
+	}
 
-    public boolean testTrueFieldNamesOnly(Collection<String> fieldNames) {
-        return managedFieldInfoByName.keySet().containsAll(fieldNames);
-    }
+	public boolean isEnumConst() {
+		return enumConstClass != null;
+	}
 
-    private void initFieldInfos(Map<String, SqlFieldInfo> sQLFieldInfoMap) throws UnifyException {
-        this.fieldInfoList = new ArrayList<SqlFieldInfo>();
-        this.listFieldInfoList = new ArrayList<SqlFieldInfo>();
-        this.listFieldInfoByName = Collections.unmodifiableMap(sQLFieldInfoMap);
-        this.foreignKeyList = new ArrayList<SqlForeignKeyInfo>();
-        this.fieldInfoByName = new HashMap<String, SqlFieldInfo>();
+	public boolean testTrueFieldNamesOnly(Collection<String> fieldNames) {
+		return managedFieldInfoByName.keySet().containsAll(fieldNames);
+	}
 
-        List<SqlFieldInfo> inputlistFieldInfoList = new ArrayList<SqlFieldInfo>(listFieldInfoByName.values());
-        DataUtils.sortAscending(inputlistFieldInfoList, SqlFieldSchemaInfo.class, "foreignEntityPreferredAlias");
-        for (SqlFieldInfo sqlFieldInfo : inputlistFieldInfoList) {
-            if (sqlFieldInfo.isListOnly()) {
-                if (sqlFieldInfo.isUnresolvedListOnly()) {
-                    sqlFieldInfo.resolveListOnly(this);
-                }
-            } else {
-                fieldInfoByName.put(sqlFieldInfo.getName(), sqlFieldInfo);
-                fieldInfoList.add(sqlFieldInfo);
-                if (sqlFieldInfo.isForeignKey()) {
-                    this.foreignKeyList.add(new SqlForeignKeyInfo(sqlFieldInfo));
-                }
-                
-                if (sqlFieldInfo.isUnresolvedForeignKey()) {
-                    sqlFieldInfo.resolveForeignKey(this, idFieldInfo);
-                }
-            }
+	private void initFieldInfos(Map<String, SqlFieldInfo> sQLFieldInfoMap) throws UnifyException {
+		this.fieldInfoList = new ArrayList<SqlFieldInfo>();
+		this.listFieldInfoList = new ArrayList<SqlFieldInfo>();
+		this.listFieldInfoByName = Collections.unmodifiableMap(sQLFieldInfoMap);
+		this.foreignKeyList = new ArrayList<SqlForeignKeyInfo>();
+		this.fieldInfoByName = new HashMap<String, SqlFieldInfo>();
 
-            if (sqlFieldInfo.getMarker() != null) {
-                if (this.listInfoMapByIndex == null) {
-                    this.listInfoMapByIndex = new HashMap<Long, SqlFieldInfo>();
-                }
-                listInfoMapByIndex.put(sqlFieldInfo.getMarker(), sqlFieldInfo);
-            }
+		List<SqlFieldInfo> inputlistFieldInfoList = new ArrayList<SqlFieldInfo>(listFieldInfoByName.values());
+		DataUtils.sortAscending(inputlistFieldInfoList, SqlFieldSchemaInfo.class, "foreignEntityPreferredAlias");
+		for (SqlFieldInfo sqlFieldInfo : inputlistFieldInfoList) {
+			if (sqlFieldInfo.isListOnly()) {
+				if (sqlFieldInfo.isUnresolvedListOnly()) {
+					sqlFieldInfo.resolveListOnly(this);
+				}
+			} else {
+				fieldInfoByName.put(sqlFieldInfo.getName(), sqlFieldInfo);
+				fieldInfoList.add(sqlFieldInfo);
+				if (sqlFieldInfo.isForeignKey()) {
+					this.foreignKeyList.add(new SqlForeignKeyInfo(sqlFieldInfo));
+				}
 
-            listFieldInfoList.add(sqlFieldInfo);
-        }
+				if (sqlFieldInfo.isUnresolvedForeignKey()) {
+					sqlFieldInfo.resolveForeignKey(this, idFieldInfo);
+				}
+			}
 
-        this.foreignKeyList = DataUtils.unmodifiableList(this.foreignKeyList);
-        this.fieldInfoByName = DataUtils.unmodifiableMap(this.fieldInfoByName);
-        this.fieldInfoList = DataUtils.unmodifiableList(this.fieldInfoList);
-        this.listFieldInfoList = DataUtils.unmodifiableList(this.listFieldInfoList);
-        this.managedForeignKeyList = this.foreignKeyList;
-        this.managedFieldInfoByName = this.fieldInfoByName;
-        this.managedFieldInfoList = this.fieldInfoList;
-        this.managedListFieldInfoList = this.listFieldInfoList;
-    }
+			if (sqlFieldInfo.getMarker() != null) {
+				if (this.listInfoMapByIndex == null) {
+					this.listInfoMapByIndex = new HashMap<Long, SqlFieldInfo>();
+				}
+				listInfoMapByIndex.put(sqlFieldInfo.getMarker(), sqlFieldInfo);
+			}
+
+			listFieldInfoList.add(sqlFieldInfo);
+		}
+
+		this.foreignKeyList = DataUtils.unmodifiableList(this.foreignKeyList);
+		this.fieldInfoByName = DataUtils.unmodifiableMap(this.fieldInfoByName);
+		this.fieldInfoList = DataUtils.unmodifiableList(this.fieldInfoList);
+		this.listFieldInfoList = DataUtils.unmodifiableList(this.listFieldInfoList);
+		this.managedForeignKeyList = this.foreignKeyList;
+		this.managedFieldInfoByName = this.fieldInfoByName;
+		this.managedFieldInfoList = this.fieldInfoList;
+		this.managedListFieldInfoList = this.listFieldInfoList;
+	}
 }

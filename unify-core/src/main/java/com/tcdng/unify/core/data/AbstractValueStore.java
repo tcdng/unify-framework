@@ -345,6 +345,11 @@ public abstract class AbstractValueStore implements ValueStore {
         }
 
         @Override
+		public void setTempValues(Map<String, Object> values) throws UnifyException {
+        	valueStore.setTempValues(values);
+		}
+
+		@Override
         public boolean isTempValue(String name) {
             return valueStore.isTempValue(name);
         }
@@ -464,6 +469,11 @@ public abstract class AbstractValueStore implements ValueStore {
         public void setTempValue(String name, Object value) throws UnifyException {
             valueStore.setTempValue(name, value);
         }
+
+        @Override
+		public void setTempValues(Map<String, Object> values) throws UnifyException {
+        	valueStore.setTempValues(values);
+		}
 
         @Override
         public boolean isTempValue(String name) {

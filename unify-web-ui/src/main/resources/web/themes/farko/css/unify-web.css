@@ -443,7 +443,7 @@ z-index:400;}
 .ui-assignmentbox {}
 .ui-assignmentbox .abblock {display:inline-block;}
 .ui-assignmentbox .ablabel {padding-bottom: 4px; padding-right:6px; padding-left:5px;}
-.ui-assignmentbox .abfselect {width: 170px; margin-bottom:6px;}
+.ui-assignmentbox .abfselect {width: 320px; margin-bottom:6px;}
 .ui-assignmentbox .abtable {display:table;}
 .ui-assignmentbox .abftable {display:table; width:100%;}
 .ui-assignmentbox .abrow {display:table-row;}

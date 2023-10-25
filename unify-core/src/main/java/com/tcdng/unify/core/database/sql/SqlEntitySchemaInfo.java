@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.database.MappedEntityRepository;
 
 /**
  * SQL entity schema information.
@@ -29,79 +30,83 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface SqlEntitySchemaInfo {
 
-    String getSchema();
+	String getSchema();
 
-    String getTableName();
+	String getTableName();
 
-    String getPreferredTableName();
+	String getPreferredTableName();
 
-    String getSchemaTableName();
+	String getSchemaTableName();
 
-    String getTableAlias();
+	String getTableAlias();
 
-    String getViewName();
+	String getViewName();
 
-    String getPreferredViewName();
+	String getPreferredViewName();
 
-    String getSchemaViewName();
+	String getSchemaViewName();
 
-    Long getIndex();
+	Long getIndex();
 
-    SqlFieldSchemaInfo getIdFieldInfo();
+	SqlFieldSchemaInfo getIdFieldInfo();
 
-    SqlFieldSchemaInfo getVersionFieldInfo();
+	SqlFieldSchemaInfo getVersionFieldInfo();
 
-    SqlFieldSchemaInfo getTenantIdFieldInfo();
-    
-    SqlFieldInfo getFosterParentTypeFieldInfo();
-    
-    SqlFieldInfo getFosterParentIdFieldInfo();
-    
-    SqlFieldInfo getCategoryFieldInfo();
-    
-    List<? extends SqlFieldSchemaInfo> getFieldInfos();
+	SqlFieldSchemaInfo getTenantIdFieldInfo();
 
-    List<? extends SqlFieldSchemaInfo> getManagedFieldInfos();
-    
-    List<? extends SqlFieldSchemaInfo> getListFieldInfos();
-    
-    List<? extends SqlFieldSchemaInfo> getManagedListFieldInfos();
+	SqlFieldInfo getFosterParentTypeFieldInfo();
 
-    Set<String> getFieldNames();
+	SqlFieldInfo getFosterParentIdFieldInfo();
 
-    SqlFieldSchemaInfo getFieldInfo(String name) throws UnifyException;
-    
-    SqlFieldInfo getManagedFieldInfo(String name) throws UnifyException;
-    
-    SqlFieldSchemaInfo getFieldInfo(Long marker) throws UnifyException;
+	SqlFieldInfo getCategoryFieldInfo();
 
-    Map<String, Class<?>> getViewBaseTables();
+	List<? extends SqlFieldSchemaInfo> getFieldInfos();
 
-    List<SqlViewRestrictionInfo> getViewRestrictionList();
+	List<? extends SqlFieldSchemaInfo> getManagedFieldInfos();
 
-    List<? extends SqlForeignKeySchemaInfo> getForeignKeyList();
+	List<? extends SqlFieldSchemaInfo> getListFieldInfos();
 
-    Map<String, ? extends SqlUniqueConstraintSchemaInfo> getUniqueConstraintList();
+	List<? extends SqlFieldSchemaInfo> getManagedListFieldInfos();
 
-    Map<String, ? extends SqlIndexSchemaInfo> getIndexList();
+	Set<String> getFieldNames();
 
-    List<Map<String, Object>> getStaticValueList();
-    
-    boolean isWithTenantId();
-    
-    boolean isIdentityManaged();
+	SqlFieldSchemaInfo getFieldInfo(String name) throws UnifyException;
 
-    boolean isVersioned();
+	SqlFieldInfo getManagedFieldInfo(String name) throws UnifyException;
 
-    boolean isViewable();
-    
-    boolean isViewOnly();
+	SqlFieldSchemaInfo getFieldInfo(Long marker) throws UnifyException;
 
-    boolean isViewRestriction();
+	Map<String, Class<?>> getViewBaseTables();
 
-    boolean isForeignKeys();
+	List<SqlViewRestrictionInfo> getViewRestrictionList();
 
-    boolean isUniqueConstraints();
+	List<? extends SqlForeignKeySchemaInfo> getForeignKeyList();
 
-    boolean isIndexes();
+	Map<String, ? extends SqlUniqueConstraintSchemaInfo> getUniqueConstraintList();
+
+	Map<String, ? extends SqlIndexSchemaInfo> getIndexList();
+
+	List<Map<String, Object>> getStaticValueList();
+
+	boolean isWithTenantId();
+
+	boolean isIdentityManaged();
+
+	boolean isMapped();
+	
+	MappedEntityRepository getMappedEntityRepository();
+
+	boolean isVersioned();
+
+	boolean isViewable();
+
+	boolean isViewOnly();
+
+	boolean isViewRestriction();
+
+	boolean isForeignKeys();
+
+	boolean isUniqueConstraints();
+
+	boolean isIndexes();
 }
