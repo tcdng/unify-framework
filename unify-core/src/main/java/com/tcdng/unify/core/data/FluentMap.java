@@ -28,6 +28,8 @@ import java.util.Set;
  */
 public class FluentMap<T, U> {
 
+    private Map<T, U> originalMap;
+
     private Map<T, U> map;
 
     public FluentMap() {
@@ -82,4 +84,27 @@ public class FluentMap<T, U> {
     public boolean isEmpty() {
         return map.isEmpty();
     }
+
+	public void fieldSwap(Map<T, T> _map) {
+		if (originalMap == null) {
+			originalMap = map;
+		}
+
+		map = new LinkedHashMap<T, U>();
+		for (Map.Entry<T, U> entry: originalMap.entrySet()) {
+			T newKey = _map.get(entry.getKey());
+			if (newKey != null) {
+				map.put(newKey, entry.getValue());
+			} else {
+				map.put(entry.getKey(), entry.getValue());
+			}
+		}
+	}
+
+	public void reverseFieldSwap() {
+		if (originalMap != null) {
+			map = originalMap;
+			originalMap = null;
+		}
+	}
 }
