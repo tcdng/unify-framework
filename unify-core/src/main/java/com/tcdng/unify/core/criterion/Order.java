@@ -17,8 +17,10 @@ package com.tcdng.unify.core.criterion;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.tcdng.unify.core.constant.OrderType;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * Used to order the results of a criteria.
@@ -28,93 +30,118 @@ import com.tcdng.unify.core.constant.OrderType;
  */
 public class Order {
 
-    public enum Policy {
-        ADD_LEADING,
-        ADD_TRAILING
-    };
+	public enum Policy {
+		ADD_LEADING, ADD_TRAILING
+	};
 
-    private List<Part> parts;
+	private List<Part> originalParts;
 
-    private final Policy policy;
+	private List<Part> parts;
 
-    public Order() {
-        this(Policy.ADD_TRAILING);
-    }
+	private final Policy policy;
 
-    public Order(Policy policy) {
-        this.policy = policy;
-        parts = new ArrayList<Part>();
-    }
+	public Order() {
+		this(Policy.ADD_TRAILING);
+	}
 
-    public Order add(String field) {
-        return doAdd(field, OrderType.ASCENDING);
-    }
+	public Order(Policy policy) {
+		this.policy = policy;
+		parts = new ArrayList<Part>();
+	}
 
-    public Order add(String field, OrderType type) {
-        return doAdd(field, type);
-    }
+	public Order add(String field) {
+		return doAdd(field, OrderType.ASCENDING);
+	}
 
-    public List<Part> getParts() {
-        return parts;
-    }
+	public Order add(String field, OrderType type) {
+		return doAdd(field, type);
+	}
 
-    public void clear() {
-        parts.clear();
-    }
+	public List<Part> getParts() {
+		return parts;
+	}
 
-    public boolean isParts() {
-        return !parts.isEmpty();
-    }
+	public void clear() {
+		parts.clear();
+	}
 
-    @Override
-    public String toString() {
-        return "Order [parts=" + parts + ", policy=" + policy + "]";
-    }
+	public boolean isParts() {
+		return !parts.isEmpty();
+	}
 
-    private Order doAdd(String field, OrderType type) {
-        final int len = parts.size();
-        for (int i = 0; i < len; i++) {
-            if (parts.get(i).getField().equals(field)) {
-                parts.remove(i);
-                break;
-            }
-        }
+	public void fieldSwap(Map<String, String> map) {
+		if (originalParts == null) {
+			originalParts = parts;
+		}
 
-        if (Policy.ADD_LEADING.equals(policy)) {
-            parts.add(0, new Part(field, type));
-        } else {
-            parts.add(new Part(field, type));
-        }
+		parts = new ArrayList<Part>();
+		for (Part part : originalParts) {
+			String newFieldName = map.get(part.getField());
+			if (!StringUtils.isBlank(newFieldName)) {
+				parts.add(new Part(newFieldName, part.getType()));
+			} else {
+				parts.add(part);
+			}
+		}
+	}
 
-        return this;
-    }
+	public void reverseFieldSwap() {
+		if (originalParts != null) {
+			parts = originalParts;
+			originalParts = null;
+		}
+	}
 
-    public class Part {
+	public Order copy() {
+		Order copy = new Order(policy);
+		copy.parts.addAll(parts);
+		return copy;
+	}
+	
+	private Order doAdd(String field, OrderType type) {
+		final int len = parts.size();
+		for (int i = 0; i < len; i++) {
+			if (parts.get(i).getField().equals(field)) {
+				parts.remove(i);
+				break;
+			}
+		}
 
-        private String field;
+		if (Policy.ADD_LEADING.equals(policy)) {
+			parts.add(0, new Part(field, type));
+		} else {
+			parts.add(new Part(field, type));
+		}
 
-        private OrderType type;
+		return this;
+	}
 
-        private Part(String field, OrderType type) {
-            this.field = field;
-            this.type = type;
-        }
+	public class Part {
 
-        public String getField() {
-            return field;
-        }
+		private String field;
 
-        public OrderType getType() {
-            return type;
-        }
+		private OrderType type;
 
-        public boolean isAscending() {
-            return OrderType.ASCENDING.equals(type);
-        }
+		private Part(String field, OrderType type) {
+			this.field = field;
+			this.type = type;
+		}
 
-        @Override
-        public String toString() {
-            return "Part [field=" + field + ", type=" + type + "]";
-        }
-    }
+		public String getField() {
+			return field;
+		}
+
+		public OrderType getType() {
+			return type;
+		}
+
+		public boolean isAscending() {
+			return OrderType.ASCENDING.equals(type);
+		}
+
+		@Override
+		public String toString() {
+			return "Part [field=" + field + ", type=" + type + "]";
+		}
+	}
 }
