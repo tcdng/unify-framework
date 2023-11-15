@@ -1140,7 +1140,7 @@ ux.rigContentPanel = function(rgp) {
 
 ux.contentOpenPaths = function() {
 	ux.cntImmIndex++;
-	if (ux.cntImmIndex < ux.cntImmURL.length) {
+	if (ux.cntImmURL && ux.cntImmIndex < ux.cntImmURL.length) {
 		ux.postToPath({uPath:ux.cntImmURL[ux.cntImmIndex]});
 	}
 }
