@@ -19,6 +19,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
+import com.tcdng.unify.core.format.Formatter;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ui.constant.MessageType;
 import com.tcdng.unify.web.ui.widget.AbstractFormattedControl;
@@ -30,65 +31,80 @@ import com.tcdng.unify.web.ui.widget.AbstractFormattedControl;
  * @since 1.0
  */
 @Component("ui-label")
-@UplAttributes({
-		@UplAttribute(name = "htmlEscape", type = boolean.class, defaultVal = "true"),
-        @UplAttribute(name = "layoutCaption", type = boolean.class, defaultVal = "false"),
-        @UplAttribute(name = "bindingOptional", type = boolean.class, defaultVal = "false"),
-        @UplAttribute(name = "inline", type = boolean.class, defaultVal = "false"),
-        @UplAttribute(name = "draggable", type = boolean.class, defaultVal = "false"),
-        @UplAttribute(name = "textUppercase", type = boolean.class),
-        @UplAttribute(name = "type", type = MessageType.class),
-        @UplAttribute(name = "typeBinding", type = String.class)})
+@UplAttributes({ @UplAttribute(name = "htmlEscape", type = boolean.class, defaultVal = "true"),
+		@UplAttribute(name = "layoutCaption", type = boolean.class, defaultVal = "false"),
+		@UplAttribute(name = "bindingOptional", type = boolean.class, defaultVal = "false"),
+		@UplAttribute(name = "inline", type = boolean.class, defaultVal = "false"),
+		@UplAttribute(name = "draggable", type = boolean.class, defaultVal = "false"),
+		@UplAttribute(name = "useDateFormatOverride", type = boolean.class, defaultVal = "false"),
+		@UplAttribute(name = "textUppercase", type = boolean.class),
+		@UplAttribute(name = "type", type = MessageType.class),
+		@UplAttribute(name = "typeBinding", type = String.class) })
 public class Label extends AbstractFormattedControl {
 
-    public Label() {
-        super.setEditable(false);
-    }
+	public Label() {
+		super.setEditable(false);
+	}
 
-    @Override
-    public void setEditable(boolean editable) {
+	@Override
+	public void setEditable(boolean editable) {
 
-    }
+	}
 
-    @Override
-    public boolean isLayoutCaption() throws UnifyException {
-        super.isLayoutCaption();
-        return getUplAttribute(boolean.class, "layoutCaption");
-    }
+	@Override
+	public boolean isLayoutCaption() throws UnifyException {
+		super.isLayoutCaption();
+		return getUplAttribute(boolean.class, "layoutCaption");
+	}
 
-    public boolean isBindingOptional() throws UnifyException {
-        return getUplAttribute(boolean.class, "bindingOptional");
-    }
+	public boolean isBindingOptional() throws UnifyException {
+		return getUplAttribute(boolean.class, "bindingOptional");
+	}
 
-    public boolean isTextUppercase() throws UnifyException {
-        return getUplAttribute(boolean.class, "textUppercase");
-    }
+	public boolean isTextUppercase() throws UnifyException {
+		return getUplAttribute(boolean.class, "textUppercase");
+	}
 
-    public boolean isInline() throws UnifyException {
-        return getUplAttribute(boolean.class, "inline");
-    }
+	public boolean isUseDateFormatOverride() throws UnifyException {
+		return getUplAttribute(boolean.class, "useDateFormatOverride");
+	}
 
-    public MessageType getType() throws UnifyException {
-    	MessageType type = null;
+	public boolean isInline() throws UnifyException {
+		return getUplAttribute(boolean.class, "inline");
+	}
+
+	public MessageType getType() throws UnifyException {
+		MessageType type = null;
 		final String typeBinding = getUplAttribute(String.class, "typeBinding");
 		if (!StringUtils.isBlank(typeBinding)) {
 			type = getValue(MessageType.class, typeBinding);
 		}
 
 		return type != null ? type : getUplAttribute(MessageType.class, "type");
-    }
-    
-    @Override
-    public boolean isSupportReadOnly() {
-        return false;
-    }
+	}
 
-    @Override
-    public boolean isSupportDisabled() {
-        return false;
-    }
+	@Override
+	public Formatter<Object> getFormatter() throws UnifyException {
+		Formatter<Object> formatter = super.getFormatter();
+		if (formatter.isStrictFormat()) {
+			return formatter;
+		}
 
-    public boolean isHtmlEscape() throws UnifyException {
-        return getUplAttribute(boolean.class, "htmlEscape");
-    }
+		Formatter<Object> overrideFormatter = isUseDateFormatOverride() ? getWidgetDateFormatOverrideFormatter() : null;
+		return overrideFormatter != null ? overrideFormatter : formatter;
+	}
+
+	@Override
+	public boolean isSupportReadOnly() {
+		return false;
+	}
+
+	@Override
+	public boolean isSupportDisabled() {
+		return false;
+	}
+
+	public boolean isHtmlEscape() throws UnifyException {
+		return getUplAttribute(boolean.class, "htmlEscape");
+	}
 }
