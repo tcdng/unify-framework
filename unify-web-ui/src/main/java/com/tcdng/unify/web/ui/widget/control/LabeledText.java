@@ -20,6 +20,7 @@ import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.format.Formatter;
+import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ui.widget.AbstractFormattedControl;
 
 /**
@@ -29,13 +30,12 @@ import com.tcdng.unify.web.ui.widget.AbstractFormattedControl;
  * @since 1.0
  */
 @Component("ui-labeledtext")
-@UplAttributes({
-	@UplAttribute(name = "maxLen", type = int.class),
-	@UplAttribute(name = "useDateFormatOverride", type = boolean.class, defaultVal = "false") })
+@UplAttributes({ @UplAttribute(name = "maxLen", type = int.class),
+		@UplAttribute(name = "formatOverride", type = String.class) })
 public class LabeledText extends AbstractFormattedControl {
 
-	public boolean isUseDateFormatOverride() throws UnifyException {
-		return getUplAttribute(boolean.class, "useDateFormatOverride");
+	public String getFormatOverride() throws UnifyException {
+		return getUplAttribute(String.class, "formatOverride");
 	}
 
 	@Override
@@ -45,7 +45,9 @@ public class LabeledText extends AbstractFormattedControl {
 			return formatter;
 		}
 
-		Formatter<Object> overrideFormatter = isUseDateFormatOverride() ? getWidgetDateFormatOverrideFormatter() : null;
+		final String formatOverride = getFormatOverride();
+		Formatter<Object> overrideFormatter = !StringUtils.isBlank(formatOverride) ? getSessionFormatter(formatOverride)
+				: null;
 		return overrideFormatter != null ? overrideFormatter : formatter;
 	}
 

@@ -36,7 +36,7 @@ import com.tcdng.unify.web.ui.widget.AbstractFormattedControl;
 		@UplAttribute(name = "bindingOptional", type = boolean.class, defaultVal = "false"),
 		@UplAttribute(name = "inline", type = boolean.class, defaultVal = "false"),
 		@UplAttribute(name = "draggable", type = boolean.class, defaultVal = "false"),
-		@UplAttribute(name = "useDateFormatOverride", type = boolean.class, defaultVal = "false"),
+		@UplAttribute(name = "formatOverride", type = String.class),
 		@UplAttribute(name = "textUppercase", type = boolean.class),
 		@UplAttribute(name = "type", type = MessageType.class),
 		@UplAttribute(name = "typeBinding", type = String.class) })
@@ -65,8 +65,8 @@ public class Label extends AbstractFormattedControl {
 		return getUplAttribute(boolean.class, "textUppercase");
 	}
 
-	public boolean isUseDateFormatOverride() throws UnifyException {
-		return getUplAttribute(boolean.class, "useDateFormatOverride");
+	public String getFormatOverride() throws UnifyException {
+		return getUplAttribute(String.class, "formatOverride");
 	}
 
 	public boolean isInline() throws UnifyException {
@@ -90,7 +90,9 @@ public class Label extends AbstractFormattedControl {
 			return formatter;
 		}
 
-		Formatter<Object> overrideFormatter = isUseDateFormatOverride() ? getWidgetDateFormatOverrideFormatter() : null;
+		final String formatOverride = getFormatOverride();
+		Formatter<Object> overrideFormatter = !StringUtils.isBlank(formatOverride) ? getSessionFormatter(formatOverride)
+				: null;
 		return overrideFormatter != null ? overrideFormatter : formatter;
 	}
 

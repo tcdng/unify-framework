@@ -974,8 +974,23 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 			String formatterUpl = getSessionAttribute(String.class,
 					UnifyCoreSessionAttributeConstants.WIDGET_DATEFORMAT_OVERRIDE);
 			if (!StringUtils.isBlank(formatterUpl)) {
-				return unifyComponentContext.getWidgetDateFormatOverride(formatterUpl);
+				return unifyComponentContext.getFormatter(formatterUpl);
 			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Gets session formatter.
+	 * 
+	 * @return the override formatter otherwise null
+	 * @throws UnifyException if an error occurs
+	 */
+	protected Formatter<Object> getSessionFormatter(String name) throws UnifyException {
+		String formatterUpl = getSessionAttribute(String.class, name);
+		if (!StringUtils.isBlank(formatterUpl)) {
+			return unifyComponentContext.getFormatter(formatterUpl);
 		}
 
 		return null;
