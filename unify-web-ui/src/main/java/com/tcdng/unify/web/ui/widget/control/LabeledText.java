@@ -15,12 +15,9 @@
  */
 package com.tcdng.unify.web.ui.widget.control;
 
-import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
-import com.tcdng.unify.core.format.Formatter;
-import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ui.widget.AbstractFormattedControl;
 
 /**
@@ -30,25 +27,7 @@ import com.tcdng.unify.web.ui.widget.AbstractFormattedControl;
  * @since 1.0
  */
 @Component("ui-labeledtext")
-@UplAttributes({ @UplAttribute(name = "maxLen", type = int.class),
-		@UplAttribute(name = "formatOverride", type = String.class) })
+@UplAttributes({ @UplAttribute(name = "maxLen", type = int.class) })
 public class LabeledText extends AbstractFormattedControl {
-
-	public String getFormatOverride() throws UnifyException {
-		return getUplAttribute(String.class, "formatOverride");
-	}
-
-	@Override
-	public Formatter<Object> getFormatter() throws UnifyException {
-		Formatter<Object> formatter = super.getFormatter();
-		if (formatter.isStrictFormat()) {
-			return formatter;
-		}
-
-		final String formatOverride = getFormatOverride();
-		Formatter<Object> overrideFormatter = !StringUtils.isBlank(formatOverride) ? getSessionFormatter(formatOverride)
-				: null;
-		return overrideFormatter != null ? overrideFormatter : formatter;
-	}
 
 }

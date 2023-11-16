@@ -23,6 +23,7 @@ import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.format.Formatter;
 import com.tcdng.unify.core.format.NumberFormatter;
 import com.tcdng.unify.core.util.DataUtils;
+import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ui.DataTransferBlock;
 
 /**
@@ -31,36 +32,49 @@ import com.tcdng.unify.web.ui.DataTransferBlock;
  * @author The Code Department
  * @since 1.0
  */
-@UplAttributes({ @UplAttribute(name = "formatter", type = Formatter.class) })
+@UplAttributes({ @UplAttribute(name = "formatter", type = Formatter.class),
+		@UplAttribute(name = "formatOverride", type = String.class) })
 public abstract class AbstractFormattedControl extends AbstractControl {
 
-    @Override
-    public void populate(DataTransferBlock transferBlock) throws UnifyException {
-        String binding = getBinding();
-        if (binding != null) {
-            getValueStore().store(transferBlock.getItemIndex(), binding, transferBlock.getValue(), getFormatter());
-        }
-    }
+	@Override
+	public void populate(DataTransferBlock transferBlock) throws UnifyException {
+		String binding = getBinding();
+		if (binding != null) {
+			getValueStore().store(transferBlock.getItemIndex(), binding, transferBlock.getValue(), getFormatter());
+		}
+	}
 
-    @Override
-    public <T> T getValue(Class<T> clazz) throws UnifyException {
-        return DataUtils.convert(clazz, getValue(), getFormatter());
-    }
+	@Override
+	public <T> T getValue(Class<T> clazz) throws UnifyException {
+		return DataUtils.convert(clazz, getValue(), getFormatter());
+	}
 
-    @Override
-    public String getStringValue() throws UnifyException {
-        return DataUtils.convert(String.class, getValue(), getFormatter());
-    }
+	@Override
+	public String getStringValue() throws UnifyException {
+		return DataUtils.convert(String.class, getValue(), getFormatter());
+	}
 
-    @Override
-    public <T, U extends Collection<T>> U getValue(Class<U> clazz, Class<T> dataClass) throws UnifyException {
-        return DataUtils.convert(clazz, dataClass, getValue(), getFormatter());
-    }
+	@Override
+	public <T, U extends Collection<T>> U getValue(Class<U> clazz, Class<T> dataClass) throws UnifyException {
+		return DataUtils.convert(clazz, dataClass, getValue(), getFormatter());
+	}
 
-    @SuppressWarnings("unchecked")
-    public Formatter<Object> getFormatter() throws UnifyException {
-        return (Formatter<Object>) getUplAttribute(Formatter.class, "formatter");
-    }
+	public final String getFormatOverride() throws UnifyException {
+		return getUplAttribute(String.class, "formatOverride");
+	}
+
+	@SuppressWarnings("unchecked")
+	public Formatter<Object> getFormatter() throws UnifyException {
+		Formatter<Object> formatter = (Formatter<Object>) getUplAttribute(Formatter.class, "formatter");
+		if (formatter != null && formatter.isStrictFormat()) {
+			return formatter;
+		}
+
+		final String formatOverride = getFormatOverride();
+		Formatter<Object> overrideFormatter = !StringUtils.isBlank(formatOverride) ? getSessionFormatter(formatOverride)
+				: null;
+		return overrideFormatter != null ? overrideFormatter : formatter;
+	}
 
 	@Override
 	public void setPrecision(int precision) throws UnifyException {

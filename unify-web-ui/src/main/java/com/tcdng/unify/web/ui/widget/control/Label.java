@@ -19,7 +19,6 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
-import com.tcdng.unify.core.format.Formatter;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ui.constant.MessageType;
 import com.tcdng.unify.web.ui.widget.AbstractFormattedControl;
@@ -36,7 +35,6 @@ import com.tcdng.unify.web.ui.widget.AbstractFormattedControl;
 		@UplAttribute(name = "bindingOptional", type = boolean.class, defaultVal = "false"),
 		@UplAttribute(name = "inline", type = boolean.class, defaultVal = "false"),
 		@UplAttribute(name = "draggable", type = boolean.class, defaultVal = "false"),
-		@UplAttribute(name = "formatOverride", type = String.class),
 		@UplAttribute(name = "textUppercase", type = boolean.class),
 		@UplAttribute(name = "type", type = MessageType.class),
 		@UplAttribute(name = "typeBinding", type = String.class) })
@@ -65,10 +63,6 @@ public class Label extends AbstractFormattedControl {
 		return getUplAttribute(boolean.class, "textUppercase");
 	}
 
-	public String getFormatOverride() throws UnifyException {
-		return getUplAttribute(String.class, "formatOverride");
-	}
-
 	public boolean isInline() throws UnifyException {
 		return getUplAttribute(boolean.class, "inline");
 	}
@@ -81,19 +75,6 @@ public class Label extends AbstractFormattedControl {
 		}
 
 		return type != null ? type : getUplAttribute(MessageType.class, "type");
-	}
-
-	@Override
-	public Formatter<Object> getFormatter() throws UnifyException {
-		Formatter<Object> formatter = super.getFormatter();
-		if (formatter.isStrictFormat()) {
-			return formatter;
-		}
-
-		final String formatOverride = getFormatOverride();
-		Formatter<Object> overrideFormatter = !StringUtils.isBlank(formatOverride) ? getSessionFormatter(formatOverride)
-				: null;
-		return overrideFormatter != null ? overrideFormatter : formatter;
 	}
 
 	@Override
