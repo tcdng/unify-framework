@@ -30,65 +30,64 @@ import com.tcdng.unify.web.ui.widget.AbstractFormattedControl;
  * @since 1.0
  */
 @Component("ui-label")
-@UplAttributes({
-		@UplAttribute(name = "htmlEscape", type = boolean.class, defaultVal = "true"),
-        @UplAttribute(name = "layoutCaption", type = boolean.class, defaultVal = "false"),
-        @UplAttribute(name = "bindingOptional", type = boolean.class, defaultVal = "false"),
-        @UplAttribute(name = "inline", type = boolean.class, defaultVal = "false"),
-        @UplAttribute(name = "draggable", type = boolean.class, defaultVal = "false"),
-        @UplAttribute(name = "textUppercase", type = boolean.class),
-        @UplAttribute(name = "type", type = MessageType.class),
-        @UplAttribute(name = "typeBinding", type = String.class)})
+@UplAttributes({ @UplAttribute(name = "htmlEscape", type = boolean.class, defaultVal = "true"),
+		@UplAttribute(name = "layoutCaption", type = boolean.class, defaultVal = "false"),
+		@UplAttribute(name = "bindingOptional", type = boolean.class, defaultVal = "false"),
+		@UplAttribute(name = "inline", type = boolean.class, defaultVal = "false"),
+		@UplAttribute(name = "draggable", type = boolean.class, defaultVal = "false"),
+		@UplAttribute(name = "textUppercase", type = boolean.class),
+		@UplAttribute(name = "type", type = MessageType.class),
+		@UplAttribute(name = "typeBinding", type = String.class) })
 public class Label extends AbstractFormattedControl {
 
-    public Label() {
-        super.setEditable(false);
-    }
+	public Label() {
+		super.setEditable(false);
+	}
 
-    @Override
-    public void setEditable(boolean editable) {
+	@Override
+	public void setEditable(boolean editable) {
 
-    }
+	}
 
-    @Override
-    public boolean isLayoutCaption() throws UnifyException {
-        super.isLayoutCaption();
-        return getUplAttribute(boolean.class, "layoutCaption");
-    }
+	@Override
+	public boolean isLayoutCaption() throws UnifyException {
+		super.isLayoutCaption();
+		return getUplAttribute(boolean.class, "layoutCaption");
+	}
 
-    public boolean isBindingOptional() throws UnifyException {
-        return getUplAttribute(boolean.class, "bindingOptional");
-    }
+	public boolean isBindingOptional() throws UnifyException {
+		return getUplAttribute(boolean.class, "bindingOptional");
+	}
 
-    public boolean isTextUppercase() throws UnifyException {
-        return getUplAttribute(boolean.class, "textUppercase");
-    }
+	public boolean isTextUppercase() throws UnifyException {
+		return getUplAttribute(boolean.class, "textUppercase");
+	}
 
-    public boolean isInline() throws UnifyException {
-        return getUplAttribute(boolean.class, "inline");
-    }
+	public boolean isInline() throws UnifyException {
+		return getUplAttribute(boolean.class, "inline");
+	}
 
-    public MessageType getType() throws UnifyException {
-    	MessageType type = null;
+	public MessageType getType() throws UnifyException {
+		MessageType type = null;
 		final String typeBinding = getUplAttribute(String.class, "typeBinding");
 		if (!StringUtils.isBlank(typeBinding)) {
 			type = getValue(MessageType.class, typeBinding);
 		}
 
 		return type != null ? type : getUplAttribute(MessageType.class, "type");
-    }
-    
-    @Override
-    public boolean isSupportReadOnly() {
-        return false;
-    }
+	}
 
-    @Override
-    public boolean isSupportDisabled() {
-        return false;
-    }
+	@Override
+	public boolean isSupportReadOnly() {
+		return false;
+	}
 
-    public boolean isHtmlEscape() throws UnifyException {
-        return getUplAttribute(boolean.class, "htmlEscape");
-    }
+	@Override
+	public boolean isSupportDisabled() {
+		return false;
+	}
+
+	public boolean isHtmlEscape() throws UnifyException {
+		return getUplAttribute(boolean.class, "htmlEscape");
+	}
 }

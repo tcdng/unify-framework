@@ -105,7 +105,7 @@ public class ApplicationContext extends Context {
 	}
 
 	@SuppressWarnings("unchecked")
-	public Formatter<Object> getWidgetDateFormatOverride(String formatterUpl) throws UnifyException {
+	public Formatter<Object> getFormatter(String formatterUpl) throws UnifyException {
 		return (Formatter<Object>) container.getUplComponent(applicationLocale, formatterUpl, true);
 	}
 

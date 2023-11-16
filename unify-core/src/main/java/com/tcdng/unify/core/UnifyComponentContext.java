@@ -315,8 +315,8 @@ public class UnifyComponentContext {
 		return applicationContext.isAttribute(name);
 	}
 
-	public Formatter<Object> getWidgetDateFormatOverride(String formatterUpl) throws UnifyException {
-		return applicationContext.getWidgetDateFormatOverride(formatterUpl);
+	public Formatter<Object> getFormatter(String formatterUpl) throws UnifyException {
+		return applicationContext.getFormatter(formatterUpl);
 	}
 
 	/**
