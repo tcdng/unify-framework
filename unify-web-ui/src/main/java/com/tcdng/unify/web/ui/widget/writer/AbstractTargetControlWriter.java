@@ -34,15 +34,17 @@ public abstract class AbstractTargetControlWriter extends AbstractControlWriter 
 		TargetControl targetControl = (TargetControl) widget;
 		writer.write("<input type=\"hidden\"");
 		writeTagId(writer, targetControl.getTargetId());
-		
+
 		final String value = resolveValue(targetControl);
 		final int index = targetControl.getValueIndex();
 		if (targetControl.isAlwaysValueIndex() && index >= 0) {
 			String indexPrefix = targetControl.getValueMarker();
 			if (indexPrefix != null) {
-				writer.write(" value=\"").write(indexPrefix).write(':').write(index).write("\"");
+				writer.write(" value=\"").write(indexPrefix).write(':').write(index).write(':')
+						.write(targetControl.getBinding()).write("\"");
 			} else if (value != null) {
-				writer.write(" value=\"").write(value).write(':').write(index).write("\"");
+				writer.write(" value=\"").write(value).write(':').write(index).write(':')
+						.write(targetControl.getBinding()).write("\"");
 			} else {
 				writer.write(" value=\"").write(index).write("\"");
 			}
@@ -65,10 +67,10 @@ public abstract class AbstractTargetControlWriter extends AbstractControlWriter 
 		if (value == null) {
 			value = targetControl.getStringValue();
 		}
-		
+
 		return value;
 	}
-	
+
 	protected abstract void doWriteTargetControl(ResponseWriter writer, TargetControl targetControl)
 			throws UnifyException;
 }
