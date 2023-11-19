@@ -23,19 +23,26 @@ package com.tcdng.unify.core.data;
  */
 public class IndexedTarget {
 
-	public static final IndexedTarget BLANK = new IndexedTarget("", -1);
+	public static final IndexedTarget BLANK = new IndexedTarget("", "", -1);
 	
-    private String target;
+    private final String target;
     
-    private int index;
+    private final String binding;
+    
+    private final int index;
 
-    public IndexedTarget(String target, int index) {
+    public IndexedTarget(String target, String binding, int index) {
 		this.target = target;
+		this.binding = binding;
 		this.index = index;
 	}
 
 	public String getTarget() {
 		return target;
+	}
+
+	public String getBinding() {
+		return binding;
 	}
 
 	public int getIndex() {

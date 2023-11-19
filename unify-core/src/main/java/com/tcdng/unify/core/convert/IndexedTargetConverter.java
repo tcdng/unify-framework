@@ -36,14 +36,14 @@ public class IndexedTargetConverter extends AbstractConverter<IndexedTarget> {
 
         if (value instanceof String) {
         	String target = ((String) value).trim();
-        	int targetIndex = -1;
-        	final int cIndex = target.lastIndexOf(':');
-        	if (cIndex >= 0) {
-        		targetIndex = Integer.parseInt(target.substring(cIndex + 1));
-        		target = target.substring(0, cIndex);
+        	final String[] parts = target.split(":");
+        	if (parts.length > 1) {
+        		final int targetIndex = Integer.parseInt(parts[1]);
+        		final String binding = parts.length > 2 ?  parts[2] : null;
+            	return new IndexedTarget(parts[0], binding, targetIndex);
         	}
 
-        	return new IndexedTarget(target, targetIndex);
+        	return new IndexedTarget(target, null, -1);
         }
 
         return null;
