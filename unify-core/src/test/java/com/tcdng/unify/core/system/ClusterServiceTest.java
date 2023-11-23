@@ -103,7 +103,7 @@ public class ClusterServiceTest extends AbstractUnifyComponentTest {
 	public void testClusterSynchronizationWithSharedData() throws Exception {
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		TaskManager taskManager = (TaskManager) getComponent(ApplicationComponents.APPLICATION_TASKMANAGER);
-		TaskMonitor[] taskMonitor = new TaskMonitor[4];
+		TaskMonitor[] taskMonitor = new TaskMonitor[8];
 		for (int i = 0; i < taskMonitor.length; i++) {
 			taskMonitor[i] = taskManager.startTask("clustershareddata-test", parameters, true, null);
 		}

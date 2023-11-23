@@ -53,6 +53,7 @@ public class ClusterLockTask extends AbstractTask {
     public void execute(TaskMonitor taskMonitor, TaskInput input, TaskOutput output) throws UnifyException {
         for (int i = 0; i < sharedTestCount; i++) {
             double testValue = Math.random();
+            ThreadUtils.yield();
             clusterManager.beginSynchronization("sharedSync");
             try {
                 sharedValue = testValue;
