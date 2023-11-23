@@ -17,6 +17,7 @@ package com.tcdng.unify.core.system.entities;
 
 import com.tcdng.unify.core.annotation.Column;
 import com.tcdng.unify.core.annotation.ForeignKey;
+import com.tcdng.unify.core.annotation.ListOnly;
 import com.tcdng.unify.core.annotation.Table;
 
 /**
@@ -28,25 +29,36 @@ import com.tcdng.unify.core.annotation.Table;
 @Table("UNCLUSTERCOMMAND")
 public class ClusterCommand extends AbstractSystemSequencedEntity {
 
-    @ForeignKey(ClusterNode.class)
-    private String nodeId;
+	@ForeignKey(ClusterNode.class)
+	private String nodeId;
 
-    @Column(length = 64)
-    String commandCode;
+	@Column(length = 64)
+	String commandCode;
 
-    public String getNodeId() {
-        return nodeId;
-    }
+	@ListOnly(key = "nodeId", property = "runtimeId")
+	private String runtimeId;
 
-    public void setNodeId(String nodeId) {
-        this.nodeId = nodeId;
-    }
+	public String getNodeId() {
+		return nodeId;
+	}
 
-    public String getCommandCode() {
-        return commandCode;
-    }
+	public void setNodeId(String nodeId) {
+		this.nodeId = nodeId;
+	}
 
-    public void setCommandCode(String commandCode) {
-        this.commandCode = commandCode;
-    }
+	public String getCommandCode() {
+		return commandCode;
+	}
+
+	public void setCommandCode(String commandCode) {
+		this.commandCode = commandCode;
+	}
+
+	public String getRuntimeId() {
+		return runtimeId;
+	}
+
+	public void setRuntimeId(String runtimeId) {
+		this.runtimeId = runtimeId;
+	}
 }

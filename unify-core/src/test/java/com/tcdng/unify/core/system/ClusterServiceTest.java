@@ -16,7 +16,6 @@
 package com.tcdng.unify.core.system;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 import java.util.HashMap;
 import java.util.List;
@@ -40,88 +39,98 @@ import com.tcdng.unify.core.util.ThreadUtils;
  */
 public class ClusterServiceTest extends AbstractUnifyComponentTest {
 
-    public ClusterServiceTest() {
-        super(true); // Cluster mode
-    }
+	public ClusterServiceTest() {
+		super(true); // Cluster mode
+	}
 
-    @Test
-    public void testSingleMemberSync() throws Exception {
-        ClusterService clusterService = (ClusterService) getComponent(ApplicationComponents.APPLICATION_CLUSTERSERVICE);
-        String lockOwnerId = clusterService.getLockOwnerId(false);
-        clusterService.beginSynchronization("computeSalaryLock");
-        List<ClusterLock> clusterSyncList =
-                clusterService.findClusterLocks(new ClusterLockQuery().lockName("computeSalaryLock"));
-        assertEquals(1, clusterSyncList.size());
-        ClusterLock clusterLock = clusterSyncList.get(0);
-        assertEquals("computeSalaryLock", clusterLock.getLockName());
-        assertEquals(lockOwnerId, clusterLock.getCurrentOwner());
-        assertEquals(Integer.valueOf(1), clusterLock.getLockCount());
+	@Test
+	public void testSingleMemberSync() throws Exception {
+		ClusterService clusterService = (ClusterService) getComponent(ApplicationComponents.APPLICATION_CLUSTERSERVICE);
+		final String lockThreadId = clusterService.getLockThreadId();
+		clusterService.beginSynchronization("computeSalaryLock");
+		List<ClusterLock> clusterSyncList = clusterService
+				.findClusterLocks(new ClusterLockQuery().lockName("computeSalaryLock"));
+		assertEquals(1, clusterSyncList.size());
+		ClusterLock clusterLock = clusterSyncList.get(0);
+		assertEquals("computeSalaryLock", clusterLock.getLockName());
+		assertEquals(lockThreadId, clusterLock.getCurrentOwner());
+		assertEquals(Integer.valueOf(1), clusterLock.getLockCount());
 
-        clusterService.endSynchronization("computeSalaryLock");
-        clusterSyncList = clusterService.findClusterLocks(new ClusterLockQuery().lockName("computeSalaryLock"));
-        assertEquals(1, clusterSyncList.size());
-        clusterLock = clusterSyncList.get(0);
-        assertNull(clusterLock.getCurrentOwner());
-        assertEquals(Integer.valueOf(0), clusterLock.getLockCount());
-    }
+		clusterService.endSynchronization("computeSalaryLock");
+		clusterSyncList = clusterService.findClusterLocks(new ClusterLockQuery().lockName("computeSalaryLock"));
+		assertEquals(0, clusterSyncList.size());
+	}
 
-    @Test
-    public void testSingleMemberWithRecursiveSync() throws Exception {
-        ClusterService clusterService = (ClusterService) getComponent(ApplicationComponents.APPLICATION_CLUSTERSERVICE);
-        String lockOwnerId = clusterService.getLockOwnerId(false);
-        clusterService.beginSynchronization("generateResultLock");
-        clusterService.beginSynchronization("generateResultLock");
-        clusterService.beginSynchronization("generateResultLock");
-        List<ClusterLock> clusterSyncList =
-                clusterService.findClusterLocks(new ClusterLockQuery().lockName("generateResultLock"));
-        assertEquals(1, clusterSyncList.size());
-        ClusterLock clusterLock = clusterSyncList.get(0);
-        assertEquals("generateResultLock", clusterLock.getLockName());
-        assertEquals(lockOwnerId, clusterLock.getCurrentOwner());
-        assertEquals(Integer.valueOf(3), clusterLock.getLockCount());
+	@Test
+	public void testSingleMemberWithRecursiveSync() throws Exception {
+		ClusterService clusterService = (ClusterService) getComponent(ApplicationComponents.APPLICATION_CLUSTERSERVICE);
+		final String lockThreadId = clusterService.getLockThreadId();
+		clusterService.beginSynchronization("generateResultLock");
+		clusterService.beginSynchronization("generateResultLock");
+		clusterService.beginSynchronization("generateResultLock");
+		List<ClusterLock> clusterSyncList = clusterService
+				.findClusterLocks(new ClusterLockQuery().lockName("generateResultLock"));
+		assertEquals(1, clusterSyncList.size());
+		ClusterLock clusterLock = clusterSyncList.get(0);
+		assertEquals("generateResultLock", clusterLock.getLockName());
+		assertEquals(lockThreadId, clusterLock.getCurrentOwner());
+		assertEquals(Integer.valueOf(1), clusterLock.getLockCount());
 
-        clusterService.endSynchronization("generateResultLock");
-        clusterService.endSynchronization("generateResultLock");
-        clusterService.endSynchronization("generateResultLock");
-        clusterSyncList = clusterService.findClusterLocks(new ClusterLockQuery().lockName("generateResultLock"));
-        assertEquals(1, clusterSyncList.size());
-        clusterLock = clusterSyncList.get(0);
-        assertNull(clusterLock.getCurrentOwner());
-        assertEquals(Integer.valueOf(0), clusterLock.getLockCount());
-    }
+		clusterService.endSynchronization("generateResultLock");
+		clusterSyncList = clusterService.findClusterLocks(new ClusterLockQuery().lockName("generateResultLock"));
+		assertEquals(1, clusterSyncList.size());
+		clusterLock = clusterSyncList.get(0);
 
-    @Test
-    public void testClusterSynchronizationWithSharedData() throws Exception {
-        Map<String, Object> parameters = new HashMap<String, Object>();
-        TaskManager taskManager = (TaskManager) getComponent(ApplicationComponents.APPLICATION_TASKMANAGER);
-        TaskMonitor[] taskMonitor = new TaskMonitor[4];
-        for (int i = 0; i < taskMonitor.length; i++) {
-            taskMonitor[i] = taskManager.startTask("clustershareddata-test", parameters, true, null);
-        }
+		assertEquals("generateResultLock", clusterLock.getLockName());
+		assertEquals(lockThreadId, clusterLock.getCurrentOwner());
+		assertEquals(Integer.valueOf(1), clusterLock.getLockCount());
 
-        boolean pending = true;
-        do {
-            ThreadUtils.sleep(30);
-            pending = false;
-            for (int i = 0; i < taskMonitor.length; i++) {
-                pending |= taskMonitor[i].isPending();
-            }
-        } while (pending);
+		clusterService.endSynchronization("generateResultLock");
+		clusterSyncList = clusterService.findClusterLocks(new ClusterLockQuery().lockName("generateResultLock"));
+		assertEquals(1, clusterSyncList.size());
+		clusterLock = clusterSyncList.get(0);
 
-        for (int i = 0; i < taskMonitor.length; i++) {
-            if (taskMonitor[i].isExceptions()) {
-                throw taskMonitor[i].getExceptions()[0];
-            }
-        }
-    }
+		assertEquals("generateResultLock", clusterLock.getLockName());
+		assertEquals(lockThreadId, clusterLock.getCurrentOwner());
+		assertEquals(Integer.valueOf(1), clusterLock.getLockCount());
 
-    @Override
-    protected void onSetup() throws Exception {
+		clusterService.endSynchronization("generateResultLock");
+		clusterSyncList = clusterService.findClusterLocks(new ClusterLockQuery().lockName("generateResultLock"));
+		assertEquals(0, clusterSyncList.size());
+	}
 
-    }
+	@Test
+	public void testClusterSynchronizationWithSharedData() throws Exception {
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		TaskManager taskManager = (TaskManager) getComponent(ApplicationComponents.APPLICATION_TASKMANAGER);
+		TaskMonitor[] taskMonitor = new TaskMonitor[8];
+		for (int i = 0; i < taskMonitor.length; i++) {
+			taskMonitor[i] = taskManager.startTask("clustershareddata-test", parameters, true, null);
+		}
 
-    @Override
-    protected void onTearDown() throws Exception {
+		boolean pending = true;
+		do {
+			ThreadUtils.sleep(30);
+			pending = false;
+			for (int i = 0; i < taskMonitor.length; i++) {
+				pending |= taskMonitor[i].isPending();
+			}
+		} while (pending);
 
-    }
+		for (int i = 0; i < taskMonitor.length; i++) {
+			if (taskMonitor[i].isExceptions()) {
+				throw taskMonitor[i].getExceptions()[0];
+			}
+		}
+	}
+
+	@Override
+	protected void onSetup() throws Exception {
+
+	}
+
+	@Override
+	protected void onTearDown() throws Exception {
+
+	}
 }

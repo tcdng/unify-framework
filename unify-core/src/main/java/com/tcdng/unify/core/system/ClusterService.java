@@ -33,15 +33,12 @@ import com.tcdng.unify.core.system.entities.ClusterNodeQuery;
 public interface ClusterService extends BusinessService {
 
     /**
-     * Returns the node lock owner ID.
+     * Returns the node lock thread ID.
      * 
-     * @param nodeOnly
-     *            indicates that only node instance ID should be lock owner ID
-     *            without thread information
      * @throws UnifyException
      *             if an error occurs
      */
-    String getLockOwnerId(boolean nodeOnly) throws UnifyException;
+    String getLockThreadId() throws UnifyException;
 
     /**
      * Begins a synchronization block with specified lock. Blocks until
@@ -97,6 +94,15 @@ public interface ClusterService extends BusinessService {
      *             if an error occurs
      */
     boolean isWithSynchronizationLock(String lockName) throws UnifyException;
+
+    /**
+     * Releases to cluster master synchronization lock. Does not block.
+     * 
+     * @return a true value if cluster lock is gotten, otherwise false
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean releaseMasterSynchronizationLock() throws UnifyException;
 
     /**
      * Releases a cluster synchronization lock.

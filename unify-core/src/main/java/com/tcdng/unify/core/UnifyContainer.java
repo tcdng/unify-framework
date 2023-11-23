@@ -136,6 +136,8 @@ public class UnifyContainer {
 
 	private String nodeId;
 
+	private String runtimeId;
+
 	private String deploymentVersion;
 
 	private String auxiliaryVersion;
@@ -238,6 +240,7 @@ public class UnifyContainer {
 		staticSettings = ucc.getStaticSettings();
 		nodeId = ucc.getNodeId();
 		preferredPort = ucc.getPreferredPort();
+		runtimeId = UUID.randomUUID().toString();
 
 		if (nodeId == null) {
 			throw new UnifyException(UnifyCoreErrorConstants.CONTAINER_NODEID_REQUIRED);
@@ -813,6 +816,10 @@ public class UnifyContainer {
 
 	public String getNodeId() {
 		return nodeId;
+	}
+
+	public String getRuntimeId() {
+		return runtimeId;
 	}
 
 	public String getInstanceCode() {
