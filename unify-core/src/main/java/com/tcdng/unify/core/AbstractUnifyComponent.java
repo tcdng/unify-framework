@@ -584,6 +584,17 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	}
 
 	/**
+	 * Gets the component container runtime ID.
+	 * 
+	 * @return the runtime ID. A null value is returned if container is not in cluster
+	 *         mode.
+	 * @throws UnifyException if an error occurs
+	 */
+	protected String getRuntimeId() throws UnifyException {
+		return unifyComponentContext.getRuntimeId();
+	}
+
+	/**
 	 * Gets the component container preferred port.
 	 * 
 	 * @return the container preferred port.

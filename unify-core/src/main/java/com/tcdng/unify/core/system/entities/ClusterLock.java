@@ -34,6 +34,12 @@ public class ClusterLock extends AbstractSystemEntity {
     @Id(length = 128)
     private String lockName;
 
+    @Column(length = 64, nullable = true)
+    private String nodeId;
+
+    @Column(length = 64, nullable = true)
+    private String runtimeId;
+
     @Column(length = 128, nullable = true)
     private String currentOwner;
 
@@ -56,7 +62,23 @@ public class ClusterLock extends AbstractSystemEntity {
         this.lockName = lockName;
     }
 
-    public String getCurrentOwner() {
+    public String getNodeId() {
+		return nodeId;
+	}
+
+	public void setNodeId(String nodeId) {
+		this.nodeId = nodeId;
+	}
+
+	public String getRuntimeId() {
+		return runtimeId;
+	}
+
+	public void setRuntimeId(String runtimeId) {
+		this.runtimeId = runtimeId;
+	}
+
+	public String getCurrentOwner() {
         return currentOwner;
     }
 

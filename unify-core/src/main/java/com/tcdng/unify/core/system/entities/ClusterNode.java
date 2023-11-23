@@ -35,6 +35,9 @@ public class ClusterNode extends AbstractSystemEntity implements Listable {
     @Id(length = 40)
     private String nodeId;
 
+    @Column(length = 64, nullable = true)
+    private String runtimeId;
+
     @Column(type = ColumnType.TIMESTAMP_UTC)
     private Date lastHeartBeat;
 
@@ -67,7 +70,15 @@ public class ClusterNode extends AbstractSystemEntity implements Listable {
         this.nodeId = nodeId;
     }
 
-    public Date getLastHeartBeat() {
+    public String getRuntimeId() {
+		return runtimeId;
+	}
+
+	public void setRuntimeId(String runtimeId) {
+		this.runtimeId = runtimeId;
+	}
+
+	public Date getLastHeartBeat() {
         return lastHeartBeat;
     }
 
