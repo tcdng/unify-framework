@@ -222,7 +222,9 @@ public class ClusterServiceImpl extends AbstractBusinessService implements Clust
 				if (lockInfo == null || lockInfo.isExpired(now)) {
 					final String nodeId = getNodeId();
 					final Date expiresOn = getNextLockExpirationDate(now);
+					db().deleteAll(new ClusterLockQuery().expiryTimeBefore(now)); // Ensures table exists
 					try {
+
 						ClusterLock clusterLock = new ClusterLock();
 						clusterLock.setLockName(lockName);
 						clusterLock.setNodeId(nodeId);
