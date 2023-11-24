@@ -230,14 +230,14 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
 		} catch (UnifyException ue) {
 		} finally {
 			try {
-				commitTransactions();
+				releaseClusterLock(BOOT_FEATURE_LOCK);
 			} catch (UnifyException e) {
 			}
 			
 			try {
-				releaseClusterLock(BOOT_FEATURE_LOCK);
+				commitTransactions();
 			} catch (UnifyException e) {
-			}
+			}			
 		}
 
 		return null;

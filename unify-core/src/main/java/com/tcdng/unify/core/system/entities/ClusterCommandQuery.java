@@ -29,11 +29,11 @@ public class ClusterCommandQuery extends SequencedEntityQuery<ClusterCommand> {
         super(ClusterCommand.class);
     }
 
-    public ClusterCommandQuery runtimeId(String runtimeId) {
-        return (ClusterCommandQuery) addEquals("runtimeId", runtimeId);
+    public ClusterCommandQuery nodeId(String nodeId) {
+        return (ClusterCommandQuery) addEquals("nodeId", nodeId);
     }
 
-    public ClusterCommandQuery runtimeIdIn(Collection<String> runtimeId) {
-        return (ClusterCommandQuery) addAmongst("runtimeId", runtimeId);
+    public ClusterCommandQuery nodeIdIn(Collection<String> nodeId) {
+        return (ClusterCommandQuery) addAmongst("nodeId", nodeId);
     }
 }

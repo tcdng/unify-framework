@@ -37,11 +37,11 @@ public class ClusterCommandParamQuery extends SequencedEntityQuery<ClusterComman
         return (ClusterCommandParamQuery) addAmongst("clusterCommandId", clusterCommandId);
     }
 
-    public ClusterCommandParamQuery runtimeId(String runtimeId) {
-        return (ClusterCommandParamQuery) addEquals("runtimeId", runtimeId);
+    public ClusterCommandParamQuery nodeId(String nodeId) {
+        return (ClusterCommandParamQuery) addEquals("nodeId", nodeId);
     }
 
-    public ClusterCommandParamQuery runtimeIdIn(Collection<String> runtimeId) {
-        return (ClusterCommandParamQuery) addAmongst("runtimeId", runtimeId);
+    public ClusterCommandParamQuery nodeIdIn(Collection<String> nodeId) {
+        return (ClusterCommandParamQuery) addAmongst("nodeId", nodeId);
     }
 }
