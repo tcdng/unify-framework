@@ -21,9 +21,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyContainerInterface;
@@ -52,7 +50,7 @@ import com.tcdng.unify.core.util.ThreadUtils;
 
 /**
  * Default implementation of application cluster manager. Uses datasource
- * timestamp to coordinate synchronization of method calls across clusters.
+ * timestamp to coordidate synchronization of method calls across clusters.
  * 
  * @author The Code Department
  * @since 1.0
@@ -61,342 +59,281 @@ import com.tcdng.unify.core.util.ThreadUtils;
 @Component(ApplicationComponents.APPLICATION_CLUSTERSERVICE)
 public class ClusterServiceImpl extends AbstractBusinessService implements ClusterService {
 
-	private static final String MASTER_LOCK = "master-lock";
+    @Configurable("1") // Node expiration in minutes
+    private int nodeExpirationPeriod;
 
-	@Configurable("1") // Node expiration in minutes
-	private int nodeExpirationPeriod;
+    private ReentrantLockFactoryMap<String> lockList;
 
-	private ReentrantLockFactoryMap<String> lockList;
+    private List<String> dbLockList;
 
-	private ConcurrentHashMap<String, LockInfo> runtimeDbLocks;
+    private Set<String> pseudoLocks;
+    
+    public ClusterServiceImpl() {
+        lockList = new ReentrantLockFactoryMap<String>();
+        dbLockList = new ArrayList<String>();
+        pseudoLocks = new HashSet<String>();
+    }
 
-	private Set<String> pseudoLocks;
+    public void setNodeExpirationPeriod(int nodeExpirationPeriod) {
+        this.nodeExpirationPeriod = nodeExpirationPeriod;
+    }
 
-	public ClusterServiceImpl() {
-		lockList = new ReentrantLockFactoryMap<String>();
-		runtimeDbLocks = new ConcurrentHashMap<String, LockInfo>();
-		pseudoLocks = new HashSet<String>();
-	}
+    @Override
+    public String getLockOwnerId(boolean nodeOnly) throws UnifyException {
+        if (nodeOnly) {
+            return getNodeId();
+        }
+        return getNodeId() + ':' + ThreadUtils.currentThreadId();
+    }
 
-	public void setNodeExpirationPeriod(int nodeExpirationPeriod) {
-		this.nodeExpirationPeriod = nodeExpirationPeriod;
-	}
+    @Override
+    public void beginSynchronization(String lockName) throws UnifyException {
+        if (isClusterMode()) {
+            while (!grabDbLock(lockName, false)) {
+                ThreadUtils.sleep(50);
+            }
+        } else {
+            lockList.get(lockName).lock();
+        }
+    }
 
-	@Override
-	public String getLockThreadId() throws UnifyException {
-		return getRuntimeId() + ':' + ThreadUtils.currentThreadId();
-	}
+    @Transactional(TransactionAttribute.REQUIRES_NEW)
+    @Override
+    public void endSynchronization(String lockName) throws UnifyException {
+        if (isClusterMode()) {
+            releaseDbLock(lockName, false);
+        } else {
+            lockList.get(lockName).unlock();
+        }
+    }
 
-	@Override
-	public void beginSynchronization(String lockName) throws UnifyException {
-		if (isClusterMode()) {
-			while (!grabDbLock(lockName)) {
-				ThreadUtils.sleep(50);
-			}
-		} else {
-			lockList.get(lockName).lock();
-		}
-	}
+    @Override
+    public boolean grabMasterSynchronizationLock() throws UnifyException {
+        return grabSynchronizationLock("master-lock");
+    }
 
-	@Transactional(TransactionAttribute.REQUIRES_NEW)
-	@Override
-	public void endSynchronization(String lockName) throws UnifyException {
-		if (isClusterMode()) {
-			releaseDbLock(lockName);
-		} else {
-			lockList.get(lockName).unlock();
-		}
-	}
+    @Override
+    public boolean grabSynchronizationLock(String lockName) throws UnifyException {
+        if (isClusterMode()) {
+            return grabDbLock(lockName, true);
+        }
+        
+        pseudoLocks.add(lockName);
+        return true;
+    }
 
-	@Override
-	public boolean grabMasterSynchronizationLock() throws UnifyException {
-		return grabSynchronizationLock(MASTER_LOCK);
-	}
+    @Override
+    public boolean isWithSynchronizationLock(String lockName) throws UnifyException {
+        if (isClusterMode()) {
+            String lockOwnerId = getLockOwnerId(true);
+            return db().countAll(new ClusterLockQuery().lockName(lockName).currentOwner(lockOwnerId)) > 0;
+        }
 
-	@Override
-	public boolean grabSynchronizationLock(String lockName) throws UnifyException {
-		if (isClusterMode()) {
-			return grabDbLock(lockName);
-		}
+        return pseudoLocks.contains(lockName);
+    }
 
-		pseudoLocks.add(lockName);
-		return true;
-	}
+    @Override
+    public boolean releaseSynchronizationLock(String lockName) throws UnifyException {
+        if (isClusterMode()) {
+            return releaseDbLock(lockName, true);
+        }
+        
+        return pseudoLocks.remove(lockName);
+    }
 
-	@Override
-	public boolean isWithSynchronizationLock(String lockName) throws UnifyException {
-		if (isClusterMode()) {
-			final LockInfo lockInfo = runtimeDbLocks.get(lockName);
-			return lockInfo != null && lockInfo.isOwnedBy(getLockThreadId());
-		}
+    @Override
+    public List<ClusterLock> findClusterLocks(ClusterLockQuery query) throws UnifyException {
+        return db().findAll(query);
+    }
 
-		return pseudoLocks.contains(lockName);
-	}
+    @Override
+    public List<ClusterNode> findClusterNodes(ClusterNodeQuery query) throws UnifyException {
+        return db().findAll(query);
+    }
 
-	@Override
-	public boolean releaseMasterSynchronizationLock() throws UnifyException {
-		return releaseSynchronizationLock(MASTER_LOCK);
-	}
+    @Override
+    public void broadcastToOtherNodes(String command, String... params) throws UnifyException {
+        if (isClusterMode()
+                && !Boolean.TRUE.equals(getRequestAttribute(UnifyCoreRequestAttributeConstants.SUPPRESS_BROADCAST))) {
+            List<String> nodeIdList =
+                    db().valueList(String.class, "nodeId", new ClusterNodeQuery().nodeNotEqual(getNodeId()));
+            if (!nodeIdList.isEmpty()) {
+                ClusterCommand clusterCommandData = new ClusterCommand();
+                clusterCommandData.setCommandCode(command);
 
-	@Override
-	public boolean releaseSynchronizationLock(String lockName) throws UnifyException {
-		if (isClusterMode()) {
-			return releaseDbLock(lockName);
-		}
+                ClusterCommandParam clusterCommandParamData = null;
+                boolean isParams = params.length > 0;
+                if (isParams) {
+                    clusterCommandParamData = new ClusterCommandParam();
+                }
 
-		return pseudoLocks.remove(lockName);
-	}
+                for (String nodeId : nodeIdList) {
+                    clusterCommandData.setNodeId(nodeId);
+                    Long clusterCommandId = (Long) db().create(clusterCommandData);
+                    if (isParams) {
+                        clusterCommandParamData.setClusterCommandId(clusterCommandId);
+                        for (String param : params) {
+                            clusterCommandParamData.setParameter(param);
+                            db().create(clusterCommandParamData);
+                        }
+                    }
+                }
+            }
+        }
+    }
 
-	@Override
-	public List<ClusterLock> findClusterLocks(ClusterLockQuery query) throws UnifyException {
-		return db().findAll(query);
-	}
+    @Override
+    public List<Command> getClusterCommands() throws UnifyException {
+        List<Command> resultList = Collections.emptyList();
+        List<ClusterCommand> clusterCommandList = db().findAll(new ClusterCommandQuery().nodeId(getNodeId()));
 
-	@Override
-	public List<ClusterNode> findClusterNodes(ClusterNodeQuery query) throws UnifyException {
-		return db().findAll(query);
-	}
+        if (!clusterCommandList.isEmpty()) {
+            List<Long> clusterCommandIdList = new ArrayList<Long>();
+            resultList = new ArrayList<Command>();
+            for (ClusterCommand clusterCommand : clusterCommandList) {
+                Long clusterCommandId = clusterCommand.getId();
+                clusterCommandIdList.add(clusterCommandId);
+                resultList.add(new Command(clusterCommand.getCommandCode(), db().valueList(String.class,
+                        "parameter", new ClusterCommandParamQuery().clusterCommandId(clusterCommandId))));
+            }
 
-	@Override
-	public void broadcastToOtherNodes(String command, String... params) throws UnifyException {
-		if (isClusterMode()
-				&& !Boolean.TRUE.equals(getRequestAttribute(UnifyCoreRequestAttributeConstants.SUPPRESS_BROADCAST))) {
-			final String runtimeId = getRuntimeId();
-			Set<String> nodeIdList = db().valueSet(String.class, "nodeId",
-					new ClusterNodeQuery().runtimeNotEqual(runtimeId));
-			if (!nodeIdList.isEmpty()) {
-				ClusterCommand clusterCommandData = new ClusterCommand();
-				clusterCommandData.setCommandCode(command);
+            db().deleteAll(new ClusterCommandParamQuery().clusterCommandIdIn(clusterCommandIdList));
+            db().deleteAll(new ClusterCommandQuery().idIn(clusterCommandIdList));
+        }
+        return resultList;
+    }
 
-				ClusterCommandParam clusterCommandParamData = null;
-				boolean isParams = params.length > 0;
-				if (isParams) {
-					clusterCommandParamData = new ClusterCommandParam();
-				}
+    @Transactional(TransactionAttribute.REQUIRES_NEW)
+    public boolean grabDbLock(String lockName, boolean nodeOnly) throws UnifyException {
+        boolean successfulLock = false;
+        String lockOwnerId = getLockOwnerId(nodeOnly);
+        ClusterLockQuery query = new ClusterLockQuery().lockName(lockName);
+        ClusterLock clusterLock = db().find(query);
+        if (clusterLock == null) {
+            try {
+                clusterLock = new ClusterLock();
+                clusterLock.setLockName(lockName);
+                clusterLock.setCurrentOwner(lockOwnerId);
+                clusterLock.setExpiryTime(getNewLockExpirationDate());
+                clusterLock.setLockCount(Integer.valueOf(1));
+                db().create(clusterLock);
+                successfulLock = true;
+            } catch (Exception e) {
+            }
+        } else {
+            if (lockOwnerId.equals(clusterLock.getCurrentOwner())) {
+                successfulLock = db().updateAll(query.currentOwner(lockOwnerId),
+                        new Update().add("expiryTime", getNewLockExpirationDate()).add("lockCount",
+                                clusterLock.getLockCount() + 1)) > 0;
+            } else {
+                successfulLock = db().updateAll(query.expiredOrFree(db().getNow()),
+                        new Update().add("currentOwner", lockOwnerId).add("expiryTime", getNewLockExpirationDate())
+                                .add("lockCount", Integer.valueOf(1))) > 0;
+            }
+        }
 
-				for (String nodeId : nodeIdList) {
-					clusterCommandData.setNodeId(nodeId);
-					Long clusterCommandId = (Long) db().create(clusterCommandData);
-					if (isParams) {
-						clusterCommandParamData.setClusterCommandId(clusterCommandId);
-						for (String param : params) {
-							clusterCommandParamData.setParameter(param);
-							db().create(clusterCommandParamData);
-						}
-					}
-				}
-			}
-		}
-	}
+        if (successfulLock) {
+            if (!dbLockList.contains(lockName)) {
+                dbLockList.add(lockName);
+            }
+        }
+        return successfulLock;
+    }
 
-	@Override
-	public List<Command> getClusterCommands() throws UnifyException {
-		final String runtimeId = getRuntimeId();
-		List<Command> resultList = Collections.emptyList();
-		List<ClusterCommand> clusterCommandList = db().findAll(new ClusterCommandQuery().runtimeId(runtimeId));
-		if (!clusterCommandList.isEmpty()) {
-			List<Long> clusterCommandIdList = new ArrayList<Long>();
-			resultList = new ArrayList<Command>();
-			for (ClusterCommand clusterCommand : clusterCommandList) {
-				Long clusterCommandId = clusterCommand.getId();
-				clusterCommandIdList.add(clusterCommandId);
-				resultList.add(new Command(clusterCommand.getCommandCode(), db().valueList(String.class, "parameter",
-						new ClusterCommandParamQuery().clusterCommandId(clusterCommandId))));
-			}
+    @Transactional(TransactionAttribute.REQUIRES_NEW)
+    public boolean releaseDbLock(String lockName, boolean nodeOnly) throws UnifyException {
+        boolean successfulRelease = false;
+        String lockOwnerId = getLockOwnerId(nodeOnly);
+        ClusterLockQuery query = new ClusterLockQuery().lockName(lockName).currentOwner(lockOwnerId);
+        ClusterLock clusterLock = db().find(query);
+        if (clusterLock != null) {
+            Integer lockCount = clusterLock.getLockCount() - 1;
+            if (lockCount > 0) {
+                successfulRelease = db().updateAll(query, new Update().add("lockCount", lockCount)) > 0;
+             } else {
+                successfulRelease = db().updateAll(query,
+                        new Update().add("currentOwner", null).add("lockCount", Integer.valueOf(0))) > 0;
+                if (successfulRelease) {
+                    dbLockList.remove(lockName);
+                }
+            }
+        }
 
-			db().deleteAll(new ClusterCommandParamQuery().clusterCommandIdIn(clusterCommandIdList));
-			db().deleteAll(new ClusterCommandQuery().idIn(clusterCommandIdList));
-		}
-		return resultList;
-	}
+        return successfulRelease;
+    }
 
-	@Transactional(TransactionAttribute.REQUIRES_NEW)
-	public boolean grabDbLock(String lockName) throws UnifyException {
-		final String lockThreadId = getLockThreadId();
-		final String runtimeId = getRuntimeId();
-		final Date now = db().getNow();
-		LockInfo lockInfo = runtimeDbLocks.get(lockName);
-		if (lockInfo == null || lockInfo.isExpired(now)) {
-			synchronized (runtimeDbLocks) {
-				lockInfo = runtimeDbLocks.get(lockName);
-				if (lockInfo == null || lockInfo.isExpired(now)) {
-					final String nodeId = getNodeId();
-					final Date expiresOn = getNextLockExpirationDate(now);
-					db().deleteAll(new ClusterLockQuery().expiryTimeBefore(now)); // Ensures table exists
-					try {
+    @Periodic(value = PeriodicType.FAST, clusterMode = true)
+    @Transactional(TransactionAttribute.REQUIRES_NEW)
+    public void performHeartBeat(TaskMonitor taskMonitor) throws UnifyException {
+        String nodeId = getNodeId();
+        // Send a heart beat.
+        Date lastHeartBeat = db().getNow();
+        if (db().updateAll(new ClusterNodeQuery().nodeId(nodeId),
+                new Update().add("lastHeartBeat", lastHeartBeat)) == 0) {
+            // Register node
+            ClusterNode clusterNode = new ClusterNode();
+            clusterNode.setNodeId(nodeId);
+            clusterNode.setLastHeartBeat(lastHeartBeat);
+            clusterNode.setIpAddress(NetworkUtils.getLocalHostIpAddress());
+            UnifyContainerInterface unifyContainerInterface =
+                    (UnifyContainerInterface) this.getComponent("unify-commandinterface");
+            clusterNode.setCommandPort(Integer.valueOf(unifyContainerInterface.getPort()));
+            db().create(clusterNode);
+        }
 
-						ClusterLock clusterLock = new ClusterLock();
-						clusterLock.setLockName(lockName);
-						clusterLock.setNodeId(nodeId);
-						clusterLock.setRuntimeId(runtimeId);
-						clusterLock.setCurrentOwner(lockThreadId);
-						clusterLock.setExpiryTime(expiresOn);
-						clusterLock.setLockCount(Integer.valueOf(1));
-						db().create(clusterLock);
+        // Extend life of locks held by this node
+        if (!dbLockList.isEmpty()) {
+            db().updateAll(new ClusterLockQuery().lockNameIn(new ArrayList<String>(dbLockList)),
+                    new Update().add("expiryTime", getNewLockExpirationDate()));
+        }
+    }
 
-						lockInfo = new LockInfo(lockThreadId, expiresOn);
-						runtimeDbLocks.put(lockName, lockInfo);
-					} catch (Exception e) {
-					}
-				}
-			}
-		}
+    @Periodic(value = PeriodicType.SLOWER, clusterMode = true)
+    @Transactional(TransactionAttribute.REQUIRES_NEW)
+    public void performClusterHouseKeeping(TaskMonitor taskMonitor) throws UnifyException {
+        // Obliterate cluster nodes with stopped heart beats (Dead nodes).
+        if (grabMasterSynchronizationLock()) {
+            List<String> deadNodeIds = db().valueList(String.class, "nodeId",
+                    new ClusterNodeQuery().lastHeartBeatOlderThan(getNewNodeExpiryDate()).nodeNotEqual(getNodeId()));
+            if (!deadNodeIds.isEmpty()) {
+                // Delete node commands
+                db().deleteAll(new ClusterCommandParamQuery().nodeIdIn(deadNodeIds));
+                db().deleteAll(new ClusterCommandQuery().nodeIdIn(deadNodeIds));
 
-		if (lockInfo != null && lockInfo.isOwnedBy(lockThreadId)) {
-			lockInfo.incUsages();
-			return true;
-		}
+                // Delete nodes
+                db().deleteAll(new ClusterNodeQuery().nodeIdIn(deadNodeIds));
+            }
+        }
+    }
 
-		return false;
-	}
+    @Override
+    protected void onInitialize() throws UnifyException {
 
-	@Transactional(TransactionAttribute.REQUIRES_NEW)
-	public boolean releaseDbLock(final String lockName) throws UnifyException {
-		final String lockThreadId = getLockThreadId();
-		final LockInfo lockInfo = runtimeDbLocks.get(lockName);
-		if (lockInfo != null && lockInfo.isOwnedBy(lockThreadId)) {
-			lockInfo.decUsages();
-			if (lockInfo.isDisposable()) {
-				try {
-					db().deleteAll(new ClusterLockQuery().lockName(lockName).currentOwner(lockThreadId));
-				} finally {
-					runtimeDbLocks.remove(lockName);
-				}
-			}
+    }
 
-			return true;
-		}
+    @Override
+    protected void onTerminate() throws UnifyException {
 
-		return false;
-	}
+    }
 
-	@Periodic(value = PeriodicType.FAST, clusterMode = true)
-	@Transactional(TransactionAttribute.REQUIRES_NEW)
-	public void performHeartBeat(TaskMonitor taskMonitor) throws UnifyException {
-		final String runtimeId = getRuntimeId();
-		// Send a heart beat.
-		final Date now = db().getNow();
-		if (db().updateAll(new ClusterNodeQuery().runtimeId(runtimeId), new Update().add("lastHeartBeat", now)) == 0) {
-			// Register node
-			final String nodeId = getNodeId();
-			ClusterNode clusterNode = new ClusterNode();
-			clusterNode.setNodeId(nodeId);
-			clusterNode.setRuntimeId(runtimeId);
-			clusterNode.setLastHeartBeat(now);
-			clusterNode.setIpAddress(NetworkUtils.getLocalHostIpAddress());
-			UnifyContainerInterface unifyContainerInterface = (UnifyContainerInterface) this
-					.getComponent("unify-commandinterface");
-			clusterNode.setCommandPort(Integer.valueOf(unifyContainerInterface.getPort()));
-			db().create(clusterNode);
-		}
+    /**
+     * Calculates a new expiration date by adding twice the house keeping rate to
+     * current time.
+     * 
+     * @see {@link #performClusterHouseKeeping(TaskMonitor)}
+     * @return the calculated date
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    private Date getNewLockExpirationDate() throws UnifyException {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(db().getNow().getTime() + PeriodicType.FAST.getPeriodInMillSec() * 2);
+        return calendar.getTime();
+    }
 
-		// Extend life of locks held by this node runtime
-		if (!runtimeDbLocks.isEmpty()) {
-			final Date expiresOn = getNextLockExpirationDate(now);
-			db().updateAll(new ClusterLockQuery().runtimeId(runtimeId).expiryTimeAfter(now).expiryTimeBefore(expiresOn)
-					.lockNameIn(runtimeDbLocks.keySet()), new Update().add("expiryTime", expiresOn));
-			for (Map.Entry<String, LockInfo> entry : runtimeDbLocks.entrySet()) {
-				final LockInfo lockInfo = entry.getValue();
-				if (!lockInfo.isExpired(now)) {
-					lockInfo.setExpiresOn(expiresOn);
-				}
-			}
-		}
-	}
-
-	@Periodic(value = PeriodicType.SLOWER, clusterMode = true)
-	@Transactional(TransactionAttribute.REQUIRES_NEW)
-	public void performClusterHouseKeeping(TaskMonitor taskMonitor) throws UnifyException {
-		// Obliterate cluster nodes with stopped heart beats (Dead nodes).
-		if (grabMasterSynchronizationLock()) {
-			try {
-				final String runtimeId = getRuntimeId();
-				final Date now = db().getNow();
-				Set<String> deadRuntimeIds = db().valueSet(String.class, "runtimeId", new ClusterNodeQuery()
-						.lastHeartBeatOlderThan(getNewNodeExpiryDate(now)).runtimeNotEqual(runtimeId));
-				if (!deadRuntimeIds.isEmpty()) {
-					// Delete node commands
-					db().deleteAll(new ClusterCommandParamQuery().runtimeIdIn(deadRuntimeIds));
-					db().deleteAll(new ClusterCommandQuery().runtimeIdIn(deadRuntimeIds));
-
-					// Delete nodes
-					db().deleteAll(new ClusterNodeQuery().runtimeIdIn(deadRuntimeIds));
-
-					// Delete locks
-					db().deleteAll(new ClusterLockQuery().runtimeIdIn(deadRuntimeIds));
-				}
-			} finally {
-				releaseMasterSynchronizationLock();
-			}
-		}
-	}
-
-	@Override
-	protected void onInitialize() throws UnifyException {
-
-	}
-
-	@Override
-	protected void onTerminate() throws UnifyException {
-
-	}
-
-	private class LockInfo {
-
-		private final String ownerLockThreadId;
-
-		private Date expiresOn;
-
-		private int lockUsages;
-
-		public LockInfo(String ownerLockThreadId, Date expiresOn) {
-			this.ownerLockThreadId = ownerLockThreadId;
-			this.expiresOn = expiresOn;
-			this.lockUsages = 0;
-		}
-
-		public void incUsages() {
-			lockUsages++;
-		}
-
-		public void decUsages() {
-			if (lockUsages > 0) {
-				lockUsages--;
-			}
-		}
-
-		public void setExpiresOn(Date expiresOn) {
-			if (this.expiresOn == null || this.expiresOn.before(expiresOn)) {
-				this.expiresOn = expiresOn;
-			}
-		}
-
-		public boolean isExpired(Date now) {
-			return expiresOn.before(now);
-		}
-
-		public boolean isDisposable() {
-			return lockUsages == 0;
-		}
-
-		public boolean isOwnedBy(String id) {
-			return ownerLockThreadId.equals(id);
-		}
-	}
-
-	/**
-	 * Calculates a new expiration date by adding thrice the house keeping rate to
-	 * current time.
-	 */
-	private Date getNextLockExpirationDate(Date now) {
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTimeInMillis(now.getTime() + PeriodicType.FAST.getPeriodInMillSec() * 3);
-		return calendar.getTime();
-	}
-
-	private Date getNewNodeExpiryDate(Date now) throws UnifyException {
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTimeInMillis(now.getTime() - (nodeExpirationPeriod * 60000));
-		return calendar.getTime();
-	}
+    private Date getNewNodeExpiryDate() throws UnifyException {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(db().getNow().getTime() - (nodeExpirationPeriod * 60000));
+        return calendar.getTime();
+    }
 }

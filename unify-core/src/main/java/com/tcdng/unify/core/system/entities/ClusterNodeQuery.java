@@ -32,16 +32,16 @@ public class ClusterNodeQuery extends Query<ClusterNode> {
         super(ClusterNode.class);
     }
 
-    public ClusterNodeQuery runtimeId(String runtimeId) {
-        return (ClusterNodeQuery) addEquals("runtimeId", runtimeId);
+    public ClusterNodeQuery nodeId(String nodeId) {
+        return (ClusterNodeQuery) addEquals("nodeId", nodeId);
     }
 
-    public ClusterNodeQuery runtimeIdIn(Collection<String> runtimeId) {
-        return (ClusterNodeQuery) addAmongst("runtimeId", runtimeId);
+    public ClusterNodeQuery nodeIdIn(Collection<String> nodeId) {
+        return (ClusterNodeQuery) addAmongst("nodeId", nodeId);
     }
 
-    public ClusterNodeQuery runtimeNotEqual(String runtimeId) {
-        return (ClusterNodeQuery) addNotEquals("runtimeId", runtimeId);
+    public ClusterNodeQuery nodeNotEqual(String nodeId) {
+        return (ClusterNodeQuery) addNotEquals("nodeId", nodeId);
     }
 
     public ClusterNodeQuery lastHeartBeatOlderThan(Date expiryDt) {

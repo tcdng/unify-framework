@@ -31,48 +31,35 @@ import com.tcdng.unify.core.database.Query;
  */
 public class ClusterLockQuery extends Query<ClusterLock> {
 
-	public ClusterLockQuery() {
-		super(ClusterLock.class);
-	}
+    public ClusterLockQuery() {
+        super(ClusterLock.class);
+    }
 
-	public ClusterLockQuery lockName(String lockName) {
-		return (ClusterLockQuery) addEquals("lockName", lockName);
-	}
+    public ClusterLockQuery lockName(String lockName) {
+        return (ClusterLockQuery) addEquals("lockName", lockName);
+    }
 
-	public ClusterLockQuery lockNameIn(Collection<String> lockNameList) {
-		return (ClusterLockQuery) addAmongst("lockName", lockNameList);
-	}
+    public ClusterLockQuery lockNameIn(Collection<String> lockNameList) {
+        return (ClusterLockQuery) addAmongst("lockName", lockNameList);
+    }
 
-	public ClusterLockQuery currentOwner(String currentOwner) {
-		return (ClusterLockQuery) addEquals("currentOwner", currentOwner);
-	}
+    public ClusterLockQuery currentOwner(String currentOwner) {
+        return (ClusterLockQuery) addEquals("currentOwner", currentOwner);
+    }
 
-	public ClusterLockQuery currentOwnerIsNull() {
-		return (ClusterLockQuery) addIsNull("currentOwner");
-	}
+    public ClusterLockQuery currentOwnerIsNull() {
+        return (ClusterLockQuery) addIsNull("currentOwner");
+    }
 
-	public ClusterLockQuery runtimeId(String runtimeId) {
-		return (ClusterLockQuery) addEquals("runtimeId", runtimeId);
-	}
+    public ClusterLockQuery expiryTime(Date date) {
+        return (ClusterLockQuery) addEquals("expiryTime", date);
+    }
 
-	public ClusterLockQuery runtimeIdIn(Collection<String> runtimeId) {
-		return (ClusterLockQuery) addAmongst("runtimeId", runtimeId);
-	}
+    public ClusterLockQuery expiryTimeBefore(Date date) {
+        return (ClusterLockQuery) addLessThan("expiryTime", date);
+    }
 
-	public ClusterLockQuery expiryTime(Date date) {
-		return (ClusterLockQuery) addEquals("expiryTime", date);
-	}
-
-	public ClusterLockQuery expiryTimeBefore(Date date) {
-		return (ClusterLockQuery) addLessThan("expiryTime", date);
-	}
-
-	public ClusterLockQuery expiryTimeAfter(Date date) {
-		return (ClusterLockQuery) addGreaterThan("expiryTime", date);
-	}
-
-	public ClusterLockQuery expiredOrFree(Date date) {
-		return (ClusterLockQuery) addRestriction(
-				new Or().add(new Less("expiryTime", date)).add(new IsNull("currentOwner")));
-	}
+    public ClusterLockQuery expiredOrFree(Date date) {
+        return (ClusterLockQuery) addRestriction(new Or().add(new Less("expiryTime", date)).add(new IsNull("currentOwner")));
+    }
 }

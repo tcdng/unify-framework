@@ -38,9 +38,6 @@ public class ClusterCommandParam extends AbstractSystemSequencedEntity {
     @ListOnly(key = "clusterCommandId", property = "nodeId")
     private String nodeId;
 
-	@ListOnly(key = "clusterCommandId", property = "runtimeId")
-	private String runtimeId;
-
     public Long getClusterCommandId() {
         return clusterCommandId;
     }
@@ -64,12 +61,4 @@ public class ClusterCommandParam extends AbstractSystemSequencedEntity {
     public void setNodeId(String nodeId) {
         this.nodeId = nodeId;
     }
-
-	public String getRuntimeId() {
-		return runtimeId;
-	}
-
-	public void setRuntimeId(String runtimeId) {
-		this.runtimeId = runtimeId;
-	}
 }
