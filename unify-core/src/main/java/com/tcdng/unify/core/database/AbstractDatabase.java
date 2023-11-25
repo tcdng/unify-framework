@@ -23,11 +23,8 @@ import java.util.Set;
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
-import com.tcdng.unify.core.criterion.Aggregate;
 import com.tcdng.unify.core.criterion.AggregateFunction;
 import com.tcdng.unify.core.criterion.Update;
-import com.tcdng.unify.core.data.Aggregation;
-import com.tcdng.unify.core.data.GroupAggregation;
 
 /**
  * Abstract implementation of a database. Also implements transaction management
@@ -380,15 +377,10 @@ public abstract class AbstractDatabase extends AbstractUnifyComponent implements
     }
 
     @Override
-    public List<Aggregation> aggregateMany(Aggregate aggregate, Query<? extends Entity> query) throws UnifyException {
-        return getDatabaseSession().aggregateMany(aggregate, query);
-    }
-
-    @Override
-    public List<GroupAggregation> aggregateGroupMany(Aggregate aggregate, Query<? extends Entity> query)
-            throws UnifyException {
-        return getDatabaseSession().aggregateGroupMany(aggregate, query);
-    }
+	public List<Aggregation> aggregate(List<AggregateFunction> aggregateFunction, Query<? extends Entity> query)
+			throws UnifyException {
+        return getDatabaseSession().aggregate(aggregateFunction, query);
+	}
 
     @Override
     public Entity getExtendedInstance(Class<? extends Entity> entityClass) throws UnifyException {

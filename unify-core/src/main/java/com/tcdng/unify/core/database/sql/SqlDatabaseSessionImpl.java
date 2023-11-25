@@ -38,7 +38,6 @@ import com.tcdng.unify.core.constant.MustMatch;
 import com.tcdng.unify.core.constant.QueryAgainst;
 import com.tcdng.unify.core.constant.UpdateChild;
 import com.tcdng.unify.core.criterion.AdditionExpression;
-import com.tcdng.unify.core.criterion.Aggregate;
 import com.tcdng.unify.core.criterion.AggregateFunction;
 import com.tcdng.unify.core.criterion.Amongst;
 import com.tcdng.unify.core.criterion.DivisionExpression;
@@ -46,8 +45,7 @@ import com.tcdng.unify.core.criterion.MultiplicationExpression;
 import com.tcdng.unify.core.criterion.Select;
 import com.tcdng.unify.core.criterion.SubtractionExpression;
 import com.tcdng.unify.core.criterion.Update;
-import com.tcdng.unify.core.data.Aggregation;
-import com.tcdng.unify.core.data.GroupAggregation;
+import com.tcdng.unify.core.database.Aggregation;
 import com.tcdng.unify.core.database.CallableProc;
 import com.tcdng.unify.core.database.DatabaseSession;
 import com.tcdng.unify.core.database.Entity;
@@ -946,26 +944,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 	}
 
 	@Override
-	public List<Aggregation> aggregateMany(Aggregate aggregate, Query<? extends Entity> query) throws UnifyException {
-		try {
-			SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
-			EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
-			if (entityPolicy != null) {
-				entityPolicy.preQuery(query);
-			}
-
-			return getSqlStatementExecutor().executeMultipleAggregateResultQuery(aggregate.getFunctionList(),
-					connection, sqlDataSourceDialect.getSqlTypePolicy(int.class),
-					sqlDataSourceDialect.prepareAggregateStatement(aggregate.getFunctionList(), query));
-		} catch (UnifyException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new UnifyOperationException(e, getClass().getSimpleName());
-		}
-	}
-
-	@Override
-	public List<GroupAggregation> aggregateGroupMany(Aggregate aggregate, Query<? extends Entity> query)
+	public List<Aggregation> aggregate(List<AggregateFunction> aggregateFunction, Query<? extends Entity> query)
 			throws UnifyException {
 		try {
 			SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
@@ -974,9 +953,9 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 				entityPolicy.preQuery(query);
 			}
 
-			return getSqlStatementExecutor().executeMultipleAggregateResultQuery(aggregate.getFunctionList(),
-					query.getGroupBy(), connection, sqlDataSourceDialect.getSqlTypePolicy(int.class),
-					sqlDataSourceDialect.prepareAggregateStatement(aggregate.getFunctionList(), query));
+			return getSqlStatementExecutor().executeMultipleAggregateResultQuery(aggregateFunction,
+					connection, sqlDataSourceDialect.getSqlTypePolicy(int.class),
+					sqlDataSourceDialect.prepareAggregateStatement(aggregateFunction, query));
 		} catch (UnifyException e) {
 			throw e;
 		} catch (Exception e) {

@@ -20,6 +20,7 @@ import java.util.List;
 
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.database.Aggregation;
 import com.tcdng.unify.core.util.DataUtils;
 
 /**

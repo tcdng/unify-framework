@@ -25,8 +25,8 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.constant.MustMatch;
 import com.tcdng.unify.core.criterion.AggregateFunction;
 import com.tcdng.unify.core.criterion.GroupBy;
-import com.tcdng.unify.core.data.Aggregation;
 import com.tcdng.unify.core.data.GroupAggregation;
+import com.tcdng.unify.core.database.Aggregation;
 import com.tcdng.unify.core.database.CallableProc;
 import com.tcdng.unify.core.database.Entity;
 

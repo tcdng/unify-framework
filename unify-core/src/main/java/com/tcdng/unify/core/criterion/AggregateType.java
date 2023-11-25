@@ -36,6 +36,10 @@ public enum AggregateType {
         this.supports = supports;
     }
 
+    public AggregateFunction function(String fieldName) {
+    	return new AggregateFunction(this, fieldName);
+    }
+    
     public boolean supports(Class<?> clazz) {
         for (Class<?> spClass : supports) {
             if (spClass.isAssignableFrom(clazz)) {

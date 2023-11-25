@@ -40,9 +40,9 @@ import com.tcdng.unify.core.constant.MustMatch;
 import com.tcdng.unify.core.criterion.AggregateFunction;
 import com.tcdng.unify.core.criterion.AggregateType;
 import com.tcdng.unify.core.criterion.GroupBy;
-import com.tcdng.unify.core.data.Aggregation;
 import com.tcdng.unify.core.data.GroupAggregation;
 import com.tcdng.unify.core.data.GroupAggregation.Grouping;
+import com.tcdng.unify.core.database.Aggregation;
 import com.tcdng.unify.core.database.CallableProc;
 import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.database.StaticReference;
@@ -534,7 +534,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
                     throw new UnifyException(UnifyCoreErrorConstants.RECORD_MULTIPLE_RESULT_FOUND);
                 }
 
-                return new Aggregation(aggregateFunction, value);
+                return new Aggregation(aggregateFunction.getType(), aggregateFunction.getFieldName(), value);
             }
         } catch (UnifyException e) {
             throw e;
@@ -575,7 +575,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
                         value = DataUtils.convert(sqlResult.getType(), 0);
                     }
 
-                    resultList.add(new Aggregation(aggregateFunction, value));
+                    resultList.add(new Aggregation(aggregateFunction.getType(), aggregateFunction.getFieldName(), value));
                 }
 
                 if (rs.next()) {
@@ -631,7 +631,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
                             value = DataUtils.convert(sqlResult.getType(), 0);
                         }
                         
-                        aggregationList.add(new Aggregation(aggregateFunction, value));
+                        aggregationList.add(new Aggregation(aggregateFunction.getType(), aggregateFunction.getFieldName(), value));
                     }
                 }
                 
