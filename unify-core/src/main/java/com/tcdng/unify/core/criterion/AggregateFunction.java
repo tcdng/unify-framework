@@ -37,8 +37,8 @@ public class AggregateFunction {
         return type;
     }
 
-    public String getFieldName() {
-        return fieldName;
-    }
+	public String getFieldName() {
+		return fieldName;
+	}
     
 }

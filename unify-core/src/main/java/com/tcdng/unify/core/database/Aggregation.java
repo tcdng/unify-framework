@@ -14,10 +14,10 @@
  * the License.
  */
 
-package com.tcdng.unify.core.data;
+package com.tcdng.unify.core.database;
 
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.criterion.AggregateFunction;
+import com.tcdng.unify.core.criterion.AggregateType;
 import com.tcdng.unify.core.util.DataUtils;
 
 /**
@@ -27,25 +27,32 @@ import com.tcdng.unify.core.util.DataUtils;
  * @since 1.0
  */
 public class Aggregation {
-    
-    private AggregateFunction function;
-    
-    private Object value;
 
-    public Aggregation(AggregateFunction function, Object value) {
-        this.function = function;
-        this.value = value;
-    }
+	private AggregateType type; 
+	
+	private String fieldName;
 
-    public AggregateFunction getFunction() {
-        return function;
-    }
+	private Object value;
 
-    public Object getValue() {
-        return value;
-    }
+	public Aggregation(AggregateType type, String fieldName, Object value) {
+		this.type = type;
+		this.fieldName = fieldName;
+		this.value = value;
+	}
 
-    public <T> T getValue(Class<T> targetClazz) throws UnifyException {
-        return DataUtils.convert(targetClazz, value);
-    }
+	public AggregateType getType() {
+		return type;
+	}
+
+	public String getFieldName() {
+		return fieldName;
+	}
+
+	public Object getValue() {
+		return value;
+	}
+
+	public <T> T getValue(Class<T> targetClazz) throws UnifyException {
+		return DataUtils.convert(targetClazz, value);
+	}
 }
