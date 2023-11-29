@@ -388,26 +388,24 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 						}
 
 						// Process primary key
+						final ColumnOverride coa = colOverrideMap.get(field.getName());
 						if (ia != null) {
 							isPersistent = true;
 							isPrimaryKey = true;
 							position = ia.position();
 
-							ColumnOverride coa = colOverrideMap.get(field.getName());
-							if (coa != null) {
-								if (StringUtils.isNotBlank(AnnotationUtils.getAnnotationString(coa.name()))) {
-									column = coa.name();
-								}
+							column = ta != null ? AnnotationUtils.getAnnotationString(ta.idColumn()) : null;
+							if (column == null) {
+								column = AnnotationUtils.getAnnotationString(ia.name());
 							}
 
 							if (column == null) {
-								column = ta != null ? AnnotationUtils.getAnnotationString(ta.idColumn()) : null;
-								if (column == null) {
-									column = AnnotationUtils.getAnnotationString(ia.name());
-								}
+								column = tableName + "_ID";
+							}
 
-								if (column == null) {
-									column = tableName + "_ID";
+							if (coa != null) {
+								if (StringUtils.isNotBlank(AnnotationUtils.getAnnotationString(coa.name()))) {
+									column = coa.name();
 								}
 							}
 
@@ -430,13 +428,6 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 							isPersistent = true;
 							position = va.position();
 
-							ColumnOverride coa = colOverrideMap.get(field.getName());
-							if (coa != null) {
-								if (StringUtils.isNotBlank(AnnotationUtils.getAnnotationString(coa.name()))) {
-									column = coa.name();
-								}
-							}
-
 							if (column == null) {
 								column = ta != null ? AnnotationUtils.getAnnotationString(ta.versionColumn()) : null;
 								if (column == null) {
@@ -445,6 +436,12 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
 								if (column == null) {
 									column = "VERSION_NO";
+								}
+							}
+
+							if (coa != null) {
+								if (StringUtils.isNotBlank(AnnotationUtils.getAnnotationString(coa.name()))) {
+									column = coa.name();
 								}
 							}
 
@@ -471,15 +468,32 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 								throw new UnifyException(UnifyCoreErrorConstants.RECORD_INVALID_ANNOTATION_COMBO,
 										searchClass, field);
 							}
+							
+							if (StringUtils.isNotBlank(AnnotationUtils.getAnnotationString(ca.name()))) {
+								column = ca.name();
+							}
+							columnType = ca.type();
 
-							ColumnOverride coa = colOverrideMap.get(field.getName());
+							String transformerName = AnnotationUtils.getAnnotationString(ca.transformer());
+							if (transformerName != null) {
+								transformer = (Transformer<?, ?>) getComponent(transformerName);
+							}
+
+							isNullable = ca.nullable();
+							length = ca.length();
+							precision = ca.precision();
+							scale = ca.scale();
+
 							if (coa != null) {
 								if (StringUtils.isNotBlank(AnnotationUtils.getAnnotationString(coa.name()))) {
 									column = coa.name();
 								}
-								columnType = !coa.type().isAuto() ? coa.type() : columnType;
+								
+								if (!coa.type().isAuto()) {
+									columnType = coa.type();
+								}
 
-								String transformerName = AnnotationUtils.getAnnotationString(coa.transformer());
+								transformerName = AnnotationUtils.getAnnotationString(coa.transformer());
 								if (transformerName != null) {
 									transformer = (Transformer<?, ?>) getComponent(transformerName);
 								}
@@ -488,23 +502,6 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 								length = coa.length() > 0 ? coa.length() : length;
 								precision = coa.precision() > 0 ? coa.precision() : precision;
 								scale = coa.scale() > 0 ? coa.scale() : scale;
-							} else {
-								if (StringUtils.isNotBlank(AnnotationUtils.getAnnotationString(ca.name()))) {
-									column = ca.name();
-								}
-								columnType = ca.type(); // Overrides default
-														// AUTO
-														// type
-
-								String transformerName = AnnotationUtils.getAnnotationString(ca.transformer());
-								if (transformerName != null) {
-									transformer = (Transformer<?, ?>) getComponent(transformerName);
-								}
-
-								isNullable = ca.nullable();
-								length = ca.length();
-								precision = ca.precision();
-								scale = ca.scale();
 							}
 
 							if (isTenantId) {
