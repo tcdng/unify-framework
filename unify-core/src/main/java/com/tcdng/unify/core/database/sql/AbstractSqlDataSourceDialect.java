@@ -18,6 +18,7 @@ package com.tcdng.unify.core.database.sql;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -40,12 +41,14 @@ import com.tcdng.unify.core.constant.ForeignConstraints;
 import com.tcdng.unify.core.constant.Indexes;
 import com.tcdng.unify.core.constant.PrintFormat;
 import com.tcdng.unify.core.constant.QueryAgainst;
+import com.tcdng.unify.core.constant.TimeSeriesType;
 import com.tcdng.unify.core.constant.UniqueConstraints;
 import com.tcdng.unify.core.constant.Views;
 import com.tcdng.unify.core.criterion.AggregateFunction;
 import com.tcdng.unify.core.criterion.AggregateType;
 import com.tcdng.unify.core.criterion.And;
 import com.tcdng.unify.core.criterion.Equals;
+import com.tcdng.unify.core.criterion.GroupingFunction;
 import com.tcdng.unify.core.criterion.Order;
 import com.tcdng.unify.core.criterion.Restriction;
 import com.tcdng.unify.core.criterion.RestrictionType;
@@ -1035,83 +1038,33 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 	@Override
 	public SqlStatement prepareAggregateStatement(AggregateFunction aggregateFunction, Query<? extends Entity> query)
 			throws UnifyException {
-		SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
-		List<SqlParameter> parameterInfoList = new ArrayList<SqlParameter>();
-		List<SqlFieldInfo> returnFieldInfoList = null;
-
-		StringBuilder aggregateSql = new StringBuilder();
-		aggregateSql.append("SELECT ");
-		returnFieldInfoList = new ArrayList<SqlFieldInfo>();
-		SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(aggregateFunction.getFieldName());
-		if (!aggregateFunction.getType().supports(ConverterUtils.getWrapperClass(sqlFieldInfo.getFieldType()))) {
-			throw new UnifyException(UnifyCoreErrorConstants.RECORD_SELECT_NOT_SUITABLE_FOR_AGGREGATE,
-					aggregateFunction.getFieldName(), sqlEntityInfo.getKeyClass());
-		}
-
-		appendAggregateFunctionSql(aggregateSql, aggregateFunction.getType(), sqlFieldInfo.getPreferredColumnName(),
-				query.isDistinct());
-		returnFieldInfoList.add(sqlFieldInfo);
-
-		// Select from view because criteria can contain view-only properties
-		aggregateSql.append(" FROM ").append(sqlEntityInfo.getSchemaViewName());
-
-		appendWhereClause(aggregateSql, parameterInfoList, sqlEntityInfo, query, SqlQueryType.SELECT);
-
-		return new SqlStatement(sqlEntityInfo, SqlStatementType.FIND, aggregateSql.toString(), parameterInfoList,
-				getSqlResultList(returnFieldInfoList));
+		return internalPrepareAggregateStatement(aggregateFunction, query, null);
 	}
 
 	@Override
 	public SqlStatement prepareAggregateStatement(List<AggregateFunction> aggregateFunctionList,
 			Query<? extends Entity> query) throws UnifyException {
-		SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
-		List<SqlParameter> parameterInfoList = new ArrayList<SqlParameter>();
-		List<SqlFieldInfo> returnFieldInfoList = null;
+		return internalPrepareAggregateStatement(aggregateFunctionList, query, null);
+	}
 
-		boolean distinct = query.isDistinct();
-		returnFieldInfoList = new ArrayList<SqlFieldInfo>();
-		StringBuilder aggregateSql = new StringBuilder();
-		aggregateSql.append("SELECT ");
-		boolean appendSym = false;
-		if (query.isGroupBy()) {
-			for (String fieldName : query.getGroupBy().values()) {
-				SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(fieldName);
-				if (appendSym) {
-					aggregateSql.append(", ");
-				} else {
-					appendSym = true;
-				}
-
-				aggregateSql.append(sqlFieldInfo.getPreferredColumnName());
-				returnFieldInfoList.add(sqlFieldInfo);
-			}
+	@Override
+	public SqlStatement prepareAggregateStatement(AggregateFunction aggregateFunction, Query<? extends Entity> query,
+			GroupingFunction groupingFunction) throws UnifyException {
+		if (groupingFunction == null) {
+			throw new IllegalArgumentException("Group function is required.");
 		}
 
-		for (AggregateFunction aggregateFunction : aggregateFunctionList) {
-			SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(aggregateFunction.getFieldName());
-			if (!aggregateFunction.getType().supports(ConverterUtils.getWrapperClass(sqlFieldInfo.getFieldType()))) {
-				throw new UnifyException(UnifyCoreErrorConstants.RECORD_SELECT_NOT_SUITABLE_FOR_AGGREGATE,
-						aggregateFunction.getFieldName(), sqlEntityInfo.getKeyClass());
-			}
+		return internalPrepareAggregateStatement(aggregateFunction, query, groupingFunction);
+	}
 
-			if (appendSym) {
-				aggregateSql.append(", ");
-			} else {
-				appendSym = true;
-			}
-
-			appendAggregateFunctionSql(aggregateSql, aggregateFunction.getType(), sqlFieldInfo.getPreferredColumnName(),
-					distinct);
-			returnFieldInfoList.add(sqlFieldInfo);
+	@Override
+	public SqlStatement prepareAggregateStatement(List<AggregateFunction> aggregateFunctionList,
+			Query<? extends Entity> query, GroupingFunction groupingFunction) throws UnifyException {
+		if (groupingFunction == null) {
+			throw new IllegalArgumentException("Group function is required.");
 		}
 
-		// Select from view because criteria can contain view-only properties
-		aggregateSql.append(" FROM ").append(sqlEntityInfo.getSchemaViewName());
-
-		appendWhereClause(aggregateSql, parameterInfoList, sqlEntityInfo, query, SqlQueryType.SELECT);
-
-		return new SqlStatement(sqlEntityInfo, SqlStatementType.FIND, aggregateSql.toString(), parameterInfoList,
-				getSqlResultList(returnFieldInfoList));
+		return internalPrepareAggregateStatement(aggregateFunctionList, query, groupingFunction);
 	}
 
 	@Override
@@ -1746,7 +1699,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 			if (!orderAppended && query.isPagination()) {
 				isAppend |= appendPseudoOrderClause(sql);
 			}
-			
+
 			isAppend |= appendLimitOffsetSuffixClause(sql, query.getOffset(), getQueryLimit(query), isAppend);
 		}
 
@@ -1764,131 +1717,32 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 	 * @return true if an clause was appended otherwise false
 	 * @throws UnifyException if an error occurs
 	 */
-	protected boolean appendWhereClause(StringBuilder sql, List<SqlParameter> parameterInfoList,
+	protected final boolean appendWhereClause(StringBuilder sql, List<SqlParameter> parameterInfoList,
 			SqlEntityInfo sqlEntityInfo, Query<? extends Entity> query, SqlQueryType queryType) throws UnifyException {
-		boolean isAppend = false;
-
-		int limit = getQueryLimit(query);
-		boolean isCritLimOffset = queryType.isUpdate() && (limit > 0 || query.isOffset());
-		if (isCritLimOffset) {
-			sql.append(" WHERE ").append(sqlEntityInfo.getIdFieldInfo().getPreferredColumnName()).append(" IN (SELECT ")
-					.append(sqlEntityInfo.getIdFieldInfo().getPreferredColumnName()).append(" FROM ")
-					.append(sqlEntityInfo.getSchemaViewName());
-		}
-
-		final Restriction restriction = resolveRestriction(sqlEntityInfo, query);
-		if (!restriction.isEmpty()) {
-			SqlCriteriaPolicy sqlCriteriaPolicy = getSqlCriteriaPolicy(
-					restriction.getConditionType().restrictionType());
-			StringBuilder critSql = new StringBuilder();
-			sqlCriteriaPolicy.generatePreparedStatementCriteria(critSql, parameterInfoList, sqlEntityInfo, restriction);
-			sql.append(" WHERE ");
-			sql.append(critSql);
-			if (query.isMinMax()) {
-				sql.append(" AND ");
-				critSql = new StringBuilder();
-				sqlCriteriaPolicy.generatePreparedStatementCriteria(critSql, parameterInfoList, sqlEntityInfo,
-						restriction);
-				appendMinMax(sql, sqlEntityInfo, query, critSql);
-			}
-			isAppend = true;
-		} else {
-			if (query.isMinMax()) {
-				sql.append(" WHERE ");
-				appendMinMax(sql, sqlEntityInfo, query, null);
-			} else {
-				if (!query.isIgnoreEmptyCriteria()) {
-					throw new UnifyException(UnifyCoreErrorConstants.RECORD_CRITERIA_REQ_FOR_STATEMENT);
-				}
-			}
-		}
-
-		if (query.isGroupBy()) {
-			sql.append(" GROUP BY ");
-			boolean appendSym = false;
-			for (String grpFieldName : query.getGroupBy().values()) {
-				if (appendSym) {
-					sql.append(", ");
-				} else {
-					appendSym = true;
-				}
-
-				sql.append(sqlEntityInfo.getListFieldInfo(grpFieldName).getPreferredColumnName());
-			}
-		}
-
-		if (queryType.includeLimit()) {
-			isAppend |= appendWhereLimitOffsetSuffixClause(sql, query.getOffset(), limit, isAppend);
-		}
-
-		if (queryType.includeOrder() && query.isOrder()) {
-			if (!(queryType.isUpdate() && !(query.isLimit() || query.isOffset()))) {
-				isAppend |= appendOrderClause(sql, sqlEntityInfo, query);
-			}
-		}
-
-		if (queryType.includeLimit()) {
-			isAppend |= appendLimitOffsetSuffixClause(sql, query.getOffset(), limit, isAppend);
-		}
-
-		if (isCritLimOffset) {
-			sql.append(")");
-		}
-
-		return isAppend;
+		return internalAppendWhereClause(sql, parameterInfoList, sqlEntityInfo, query, queryType, null);
 	}
 
-	private Restriction resolveRestriction(SqlEntityInfo sqlEntityInfo, Query<? extends Entity> query)
-			throws UnifyException {
-		Restriction restriction = query.getRestrictions();
-		if (sqlEntityInfo.isWithDefaultRestrictions() && !query.isInclusiveRestrictedField("id")) {
-			And defRestriction = null;
-			for (SqlQueryRestrictionInfo sqlQueryRestrictionInfo : sqlEntityInfo.getDefaultRestrictionList()) {
-				if (!query.isRestrictedField(sqlQueryRestrictionInfo.getField())) {
-					if (defRestriction == null) {
-						defRestriction = restriction.isEmpty() ? new And() : (And) new And().add(restriction);
-					}
+	/**
+	 * Appends a timestamp column truncation function.
+	 * 
+	 * @param sql            the builder
+	 * @param sqlFieldInfo   the timestamp field
+	 * @param timeSeriesType the time series type
+	 * @throws UnifyException if an error occurs
+	 */
+	protected abstract void appendTimestampTruncation(StringBuilder sql, SqlFieldInfo sqlFieldInfo,
+			TimeSeriesType timeSeriesType) throws UnifyException;
 
-					defRestriction.add(sqlQueryRestrictionInfo.getRestriction());
-				}
-			}
-
-			if (defRestriction != null) {
-				restriction = defRestriction;
-			}
-		}
-
-		if (tenancyEnabled && sqlEntityInfo.isWithTenantId() && !query.isIgnoreTenancy()) {
-			final String tenantIdFieldName = sqlEntityInfo.getTenantIdFieldInfo().getName();
-			if (!query.isRestrictedField(tenantIdFieldName)) {
-				if (restriction.isEmpty()) {
-					restriction = new Equals(tenantIdFieldName, getUserTenantId());
-				} else if (!restriction.isIdEqualsRestricted()) {
-					restriction = new And().add(restriction).add(new Equals(tenantIdFieldName, getUserTenantId()));
-				}
-			}
-		}
-
-		return restriction;
-	}
-
-	private void appendMinMax(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Query<? extends Entity> query,
-			StringBuilder critSql) throws UnifyException {
-		sql.append('(');
-		if (query.isMin()) {
-			String minColumn = sqlEntityInfo.getListFieldInfo(query.getMinProperty()).getPreferredColumnName();
-			sql.append(minColumn).append(" = (SELECT MIN(").append(minColumn);
-		} else {
-			String maxColumn = sqlEntityInfo.getListFieldInfo(query.getMaxProperty()).getPreferredColumnName();
-			sql.append(maxColumn).append(" = (SELECT MAX(").append(maxColumn);
-		}
-
-		sql.append(") FROM ").append(sqlEntityInfo.getSchemaViewName());
-		if (critSql != null) {
-			sql.append(" WHERE ").append(critSql);
-		}
-		sql.append("))");
-	}
+	/**
+	 * Appends a timestamp column truncation froup by.
+	 * 
+	 * @param sql            the builder
+	 * @param sqlFieldInfo   the timestamp field
+	 * @param timeSeriesType the time series type
+	 * @throws UnifyException if an error occurs
+	 */
+	protected abstract void appendTimestampTruncationGroupBy(StringBuilder sql, SqlFieldInfo sqlFieldInfo,
+			TimeSeriesType timeSeriesType) throws UnifyException;
 
 	/**
 	 * Appends ORDER clause to a string buffer.
@@ -1929,8 +1783,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 	 * @return a true value if order clause was appended
 	 * @throws UnifyException
 	 */
-	protected boolean appendPseudoOrderClause(StringBuilder sql)
-			throws UnifyException {
+	protected boolean appendPseudoOrderClause(StringBuilder sql) throws UnifyException {
 		return false;
 	}
 
@@ -2122,6 +1975,269 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 	protected abstract List<String> doGenerateAlterColumn(SqlEntitySchemaInfo sqlEntitySchemaInfo,
 			SqlFieldSchemaInfo sqlFieldSchemaInfo, SqlColumnAlterInfo sqlColumnAlterInfo, PrintFormat format)
 			throws UnifyException;
+
+	private SqlStatement internalPrepareAggregateStatement(AggregateFunction aggregateFunction,
+			Query<? extends Entity> query, GroupingFunction groupingFunction) throws UnifyException {
+		SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
+		final List<SqlParameter> parameterInfoList = new ArrayList<SqlParameter>();
+		final List<SqlFieldInfo> returnFieldInfoList = new ArrayList<SqlFieldInfo>();
+
+		StringBuilder aggregateSql = new StringBuilder();
+		aggregateSql.append("SELECT ");
+		SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(aggregateFunction.getFieldName());
+		if (!aggregateFunction.getType().supports(ConverterUtils.getWrapperClass(sqlFieldInfo.getFieldType()))) {
+			throw new UnifyException(UnifyCoreErrorConstants.RECORD_SELECT_NOT_SUITABLE_FOR_AGGREGATE,
+					aggregateFunction.getFieldName(), sqlEntityInfo.getKeyClass());
+		}
+
+		appendAggregateFunctionSql(aggregateSql, aggregateFunction.getType(), sqlFieldInfo.getPreferredColumnName(),
+				query.isDistinct());
+		returnFieldInfoList.add(sqlFieldInfo);
+
+		addGroupingSelect(sqlEntityInfo, groupingFunction, aggregateSql, returnFieldInfoList);
+
+		aggregateSql.append(" FROM ").append(sqlEntityInfo.getSchemaViewName());
+
+		internalAppendWhereClause(aggregateSql, parameterInfoList, sqlEntityInfo, query, SqlQueryType.SELECT, groupingFunction);
+
+		return new SqlStatement(sqlEntityInfo, SqlStatementType.FIND, aggregateSql.toString(), parameterInfoList,
+				getSqlResultList(returnFieldInfoList));
+	}
+
+	private SqlStatement internalPrepareAggregateStatement(List<AggregateFunction> aggregateFunctionList,
+			Query<? extends Entity> query, GroupingFunction groupingFunction) throws UnifyException {
+		SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
+		List<SqlParameter> parameterInfoList = new ArrayList<SqlParameter>();
+		List<SqlFieldInfo> returnFieldInfoList = null;
+
+		final boolean distinct = query.isDistinct();
+		returnFieldInfoList = new ArrayList<SqlFieldInfo>();
+		StringBuilder aggregateSql = new StringBuilder();
+		aggregateSql.append("SELECT ");
+		boolean appendSym = false;
+		for (AggregateFunction aggregateFunction : aggregateFunctionList) {
+			SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(aggregateFunction.getFieldName());
+			if (!aggregateFunction.getType().supports(ConverterUtils.getWrapperClass(sqlFieldInfo.getFieldType()))) {
+				throw new UnifyException(UnifyCoreErrorConstants.RECORD_SELECT_NOT_SUITABLE_FOR_AGGREGATE,
+						aggregateFunction.getFieldName(), sqlEntityInfo.getKeyClass());
+			}
+
+			if (appendSym) {
+				aggregateSql.append(", ");
+			} else {
+				appendSym = true;
+			}
+
+			appendAggregateFunctionSql(aggregateSql, aggregateFunction.getType(), sqlFieldInfo.getPreferredColumnName(),
+					distinct);
+			returnFieldInfoList.add(sqlFieldInfo);
+		}
+
+		addGroupingSelect(sqlEntityInfo, groupingFunction, aggregateSql, returnFieldInfoList);
+
+		aggregateSql.append(" FROM ").append(sqlEntityInfo.getSchemaViewName());
+
+		internalAppendWhereClause(aggregateSql, parameterInfoList, sqlEntityInfo, query, SqlQueryType.SELECT, groupingFunction);
+
+		return new SqlStatement(sqlEntityInfo, SqlStatementType.FIND, aggregateSql.toString(), parameterInfoList,
+				getSqlResultList(returnFieldInfoList));
+	}
+
+	private void addGroupingSelect(SqlEntityInfo sqlEntityInfo, GroupingFunction groupingFunction,
+			StringBuilder aggregateSql, List<SqlFieldInfo> returnFieldInfoList) throws UnifyException {
+		if (groupingFunction != null) {
+			if (groupingFunction.isWithFieldGrouping()) {
+				SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(groupingFunction.getFieldName());
+				if (!String.class.equals(sqlFieldInfo.getFieldType())
+						&& !EnumConst.class.isAssignableFrom(sqlFieldInfo.getFieldType())) {
+					throw new UnifyException(UnifyCoreErrorConstants.RECORD_FIELD_NOT_SUITABLE_FOR_GROUPING,
+							groupingFunction.getFieldName(), sqlEntityInfo.getKeyClass());
+				}
+
+				aggregateSql.append(", ").append(sqlFieldInfo.getPreferredColumnName());
+				returnFieldInfoList.add(sqlFieldInfo);
+			}
+
+			if (groupingFunction.isWithDateFieldGrouping()) {
+				SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(groupingFunction.getDateFieldName());
+				if (!Date.class.equals(sqlFieldInfo.getFieldType())) {
+					throw new UnifyException(UnifyCoreErrorConstants.RECORD_FIELD_NOT_SUITABLE_FOR_DATE_GROUPING,
+							groupingFunction.getDateFieldName(), sqlEntityInfo.getKeyClass());
+				}
+
+				aggregateSql.append(", ");
+				appendTimestampTruncation(aggregateSql, sqlFieldInfo, groupingFunction.getDateSeriesType());
+				aggregateSql.append(" AS ").append(TRUNC_COLUMN_ALIAS);
+				returnFieldInfoList.add(sqlFieldInfo);
+			}
+		}
+	}
+
+	private boolean internalAppendWhereClause(StringBuilder sql, List<SqlParameter> parameterInfoList,
+			SqlEntityInfo sqlEntityInfo, Query<? extends Entity> query, SqlQueryType queryType,
+			GroupingFunction groupingFunction) throws UnifyException {
+		boolean isAppend = false;
+
+		int limit = getQueryLimit(query);
+		boolean isCritLimOffset = queryType.isUpdate() && (limit > 0 || query.isOffset());
+		if (isCritLimOffset) {
+			sql.append(" WHERE ").append(sqlEntityInfo.getIdFieldInfo().getPreferredColumnName()).append(" IN (SELECT ")
+					.append(sqlEntityInfo.getIdFieldInfo().getPreferredColumnName()).append(" FROM ")
+					.append(sqlEntityInfo.getSchemaViewName());
+		}
+
+		final Restriction restriction = resolveRestriction(sqlEntityInfo, query);
+		if (!restriction.isEmpty()) {
+			SqlCriteriaPolicy sqlCriteriaPolicy = getSqlCriteriaPolicy(
+					restriction.getConditionType().restrictionType());
+			StringBuilder critSql = new StringBuilder();
+			sqlCriteriaPolicy.generatePreparedStatementCriteria(critSql, parameterInfoList, sqlEntityInfo, restriction);
+			sql.append(" WHERE ");
+			sql.append(critSql);
+			if (query.isMinMax()) {
+				sql.append(" AND ");
+				critSql = new StringBuilder();
+				sqlCriteriaPolicy.generatePreparedStatementCriteria(critSql, parameterInfoList, sqlEntityInfo,
+						restriction);
+				appendMinMax(sql, sqlEntityInfo, query, critSql);
+			}
+			isAppend = true;
+		} else {
+			if (query.isMinMax()) {
+				sql.append(" WHERE ");
+				appendMinMax(sql, sqlEntityInfo, query, null);
+				isAppend = true;
+			} else {
+				if (!query.isIgnoreEmptyCriteria()) {
+					throw new UnifyException(UnifyCoreErrorConstants.RECORD_CRITERIA_REQ_FOR_STATEMENT);
+				}
+			}
+		}
+
+		if (groupingFunction != null) {
+			sql.append(" GROUP BY ");
+			boolean appendSym = false;
+			if (groupingFunction.isWithFieldGrouping()) {
+				sql.append(
+						sqlEntityInfo.getListFieldInfo(groupingFunction.getDateFieldName()).getPreferredColumnName());
+				appendSym = true;
+			}
+
+			if (groupingFunction.isWithDateFieldGrouping()) {
+				if (appendSym) {
+					sql.append(", ");
+				}
+
+				appendTimestampTruncationGroupBy(sql,
+						sqlEntityInfo.getListFieldInfo(groupingFunction.getDateFieldName()),
+						groupingFunction.getDateSeriesType());
+			}
+
+			appendSym = false;
+			sql.append(" ORDER BY ");
+			if (groupingFunction.isWithFieldGrouping()) {
+				sql.append(
+						sqlEntityInfo.getListFieldInfo(groupingFunction.getDateFieldName()).getPreferredColumnName());
+				appendSym = true;
+			}
+
+			if (groupingFunction.isWithDateFieldGrouping()) {
+				if (appendSym) {
+					sql.append(", ");
+				}
+
+				sql.append(TRUNC_COLUMN_ALIAS);
+			}
+
+			isAppend = true;
+		} else {
+			if (query.isGroupBy()) {
+				sql.append(" GROUP BY ");
+				boolean appendSym = false;
+				for (String grpFieldName : query.getGroupBy().values()) {
+					if (appendSym) {
+						sql.append(", ");
+					} else {
+						appendSym = true;
+					}
+
+					sql.append(sqlEntityInfo.getListFieldInfo(grpFieldName).getPreferredColumnName());
+				}
+			}
+
+			if (queryType.includeLimit()) {
+				isAppend |= appendWhereLimitOffsetSuffixClause(sql, query.getOffset(), limit, isAppend);
+			}
+
+			if (queryType.includeOrder() && query.isOrder()) {
+				if (!(queryType.isUpdate() && !(query.isLimit() || query.isOffset()))) {
+					isAppend |= appendOrderClause(sql, sqlEntityInfo, query);
+				}
+			}
+
+			if (queryType.includeLimit()) {
+				isAppend |= appendLimitOffsetSuffixClause(sql, query.getOffset(), limit, isAppend);
+			}
+
+			if (isCritLimOffset) {
+				sql.append(")");
+			}
+		}
+
+		return isAppend;
+	}
+
+	private Restriction resolveRestriction(SqlEntityInfo sqlEntityInfo, Query<? extends Entity> query)
+			throws UnifyException {
+		Restriction restriction = query.getRestrictions();
+		if (sqlEntityInfo.isWithDefaultRestrictions() && !query.isInclusiveRestrictedField("id")) {
+			And defRestriction = null;
+			for (SqlQueryRestrictionInfo sqlQueryRestrictionInfo : sqlEntityInfo.getDefaultRestrictionList()) {
+				if (!query.isRestrictedField(sqlQueryRestrictionInfo.getField())) {
+					if (defRestriction == null) {
+						defRestriction = restriction.isEmpty() ? new And() : (And) new And().add(restriction);
+					}
+
+					defRestriction.add(sqlQueryRestrictionInfo.getRestriction());
+				}
+			}
+
+			if (defRestriction != null) {
+				restriction = defRestriction;
+			}
+		}
+
+		if (tenancyEnabled && sqlEntityInfo.isWithTenantId() && !query.isIgnoreTenancy()) {
+			final String tenantIdFieldName = sqlEntityInfo.getTenantIdFieldInfo().getName();
+			if (!query.isRestrictedField(tenantIdFieldName)) {
+				if (restriction.isEmpty()) {
+					restriction = new Equals(tenantIdFieldName, getUserTenantId());
+				} else if (!restriction.isIdEqualsRestricted()) {
+					restriction = new And().add(restriction).add(new Equals(tenantIdFieldName, getUserTenantId()));
+				}
+			}
+		}
+
+		return restriction;
+	}
+
+	private void appendMinMax(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Query<? extends Entity> query,
+			StringBuilder critSql) throws UnifyException {
+		sql.append('(');
+		if (query.isMin()) {
+			String minColumn = sqlEntityInfo.getListFieldInfo(query.getMinProperty()).getPreferredColumnName();
+			sql.append(minColumn).append(" = (SELECT MIN(").append(minColumn);
+		} else {
+			String maxColumn = sqlEntityInfo.getListFieldInfo(query.getMaxProperty()).getPreferredColumnName();
+			sql.append(maxColumn).append(" = (SELECT MAX(").append(maxColumn);
+		}
+
+		sql.append(") FROM ").append(sqlEntityInfo.getSchemaViewName());
+		if (critSql != null) {
+			sql.append(" WHERE ").append(critSql);
+		}
+		sql.append("))");
+	}
 
 	private boolean appendPreferredColumn(StringBuilder sql, SqlFieldInfo sqlFieldInfo, boolean appendSym)
 			throws UnifyException {

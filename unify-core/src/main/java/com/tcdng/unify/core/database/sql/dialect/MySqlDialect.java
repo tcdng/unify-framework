@@ -24,6 +24,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.constant.PrintFormat;
+import com.tcdng.unify.core.constant.TimeSeriesType;
 import com.tcdng.unify.core.criterion.RestrictionType;
 import com.tcdng.unify.core.database.sql.AbstractSqlDataSourceDialect;
 import com.tcdng.unify.core.database.sql.AbstractSqlDataSourceDialectPolicies;
@@ -34,6 +35,7 @@ import com.tcdng.unify.core.database.sql.SqlDataSourceDialectPolicies;
 import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
 import com.tcdng.unify.core.database.sql.SqlDialectNameConstants;
 import com.tcdng.unify.core.database.sql.SqlEntitySchemaInfo;
+import com.tcdng.unify.core.database.sql.SqlFieldInfo;
 import com.tcdng.unify.core.database.sql.SqlFieldSchemaInfo;
 import com.tcdng.unify.core.database.sql.SqlIndexSchemaInfo;
 import com.tcdng.unify.core.database.sql.SqlUniqueConstraintSchemaInfo;
@@ -175,6 +177,42 @@ public class MySqlDialect extends AbstractSqlDataSourceDialect {
 		sb.append("CHANGE COLUMN ").append(oldColumnName).append(' ');
 		appendColumnAndTypeSql(sb, newSqlFieldInfo.getPreferredColumnName(), newSqlFieldInfo, true);
 		return sb.toString();
+	}
+
+	@Override
+	protected void appendTimestampTruncation(StringBuilder sql, SqlFieldInfo sqlFieldInfo,
+			TimeSeriesType timeSeriesType) throws UnifyException {
+		final String columnName = sqlFieldInfo.getPreferredColumnName();
+		switch (timeSeriesType) {
+		case DAY:
+			sql.append("CAST(STR_TO_DATE(DATE_FORMAT(").append(columnName)
+					.append(", '%Y-%m-%d'), '%Y-%m-%d') AS DATETIME)");
+			break;
+		case HOUR:
+			sql.append("CAST(STR_TO_DATE(DATE_FORMAT(").append(columnName)
+					.append(", '%Y-%m-%d %H'), '%Y-%m-%d %H') AS DATETIME)");
+			break;
+		case MONTH:
+			sql.append("CAST(STR_TO_DATE(DATE_FORMAT(").append(columnName)
+					.append(", '%Y-%m-01'), '%Y-%m-%d') AS DATETIME)");
+			break;
+		case WEEK:
+			sql.append("CAST(DATE(").append(columnName).append(" - INTERVAL (DAYOFWEEK(").append(columnName)
+					.append(") - 1) DAY) AS DATETIME)");
+			break;
+		case YEAR:
+			sql.append("CAST(STR_TO_DATE(DATE_FORMAT(").append(columnName)
+					.append(", '%Y-01-01'), '%Y-%m-%d') AS DATETIME)");
+			break;
+		default:
+			break;
+		}
+	}
+
+	@Override
+	protected void appendTimestampTruncationGroupBy(StringBuilder sql, SqlFieldInfo sqlFieldInfo,
+			TimeSeriesType timeSeriesType) throws UnifyException {
+		sql.append(TRUNC_COLUMN_ALIAS);
 	}
 
 	@Override
