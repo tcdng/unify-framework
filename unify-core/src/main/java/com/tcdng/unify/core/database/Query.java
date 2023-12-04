@@ -522,6 +522,10 @@ public class Query<T extends Entity> implements Cloneable {
         return offset > 0;
     }
 
+    public boolean isPagination() {
+        return offset >= 0 || limit > 0;
+    }
+
     public boolean isEmptyCriteria() {
         return restrictions.isEmpty();
     }

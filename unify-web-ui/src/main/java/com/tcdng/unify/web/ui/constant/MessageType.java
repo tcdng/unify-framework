@@ -58,6 +58,22 @@ public enum MessageType implements EnumConst {
         return INFO.code;
     }
 
+    public boolean isInfo() {
+    	return INFO.equals(this);
+    }
+
+    public boolean isWarning() {
+    	return WARNING.equals(this);
+    }
+
+    public boolean isError() {
+    	return ERROR.equals(this);
+    }
+
+    public boolean isPass() {
+    	return PASS.equals(this);
+    }
+    
     public String image() {
         return image;
     }

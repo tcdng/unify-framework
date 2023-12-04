@@ -1737,11 +1737,16 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 			isAppend |= appendWhereLimitOffsetSuffixClause(sql, query.getOffset(), getQueryLimit(query), isAppend);
 		}
 
+		boolean orderAppended = false;
 		if (queryType.includeOrder() && query.isOrder()) {
-			isAppend |= appendOrderClause(sql, sqlEntityInfo, query);
+			isAppend |= (orderAppended = appendOrderClause(sql, sqlEntityInfo, query));
 		}
 
 		if (queryType.includeLimit()) {
+			if (!orderAppended && query.isPagination()) {
+				isAppend |= appendPseudoOrderClause(sql);
+			}
+			
 			isAppend |= appendLimitOffsetSuffixClause(sql, query.getOffset(), getQueryLimit(query), isAppend);
 		}
 
@@ -1912,6 +1917,20 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
 			return true;
 		}
+		return false;
+	}
+
+	/**
+	 * Appends pseudo ORDER clause to a string buffer.
+	 * 
+	 * @param sql           the buffer to write to
+	 * @param sqlEntityInfo the record information
+	 * @param query         the query
+	 * @return a true value if order clause was appended
+	 * @throws UnifyException
+	 */
+	protected boolean appendPseudoOrderClause(StringBuilder sql)
+			throws UnifyException {
 		return false;
 	}
 
