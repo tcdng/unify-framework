@@ -40,6 +40,7 @@ import com.tcdng.unify.core.constant.Gender;
 import com.tcdng.unify.core.constant.OrderType;
 import com.tcdng.unify.core.criterion.AggregateFunction;
 import com.tcdng.unify.core.criterion.AggregateType;
+import com.tcdng.unify.core.criterion.GroupingFunction;
 import com.tcdng.unify.core.criterion.Restriction;
 import com.tcdng.unify.core.criterion.Update;
 import com.tcdng.unify.core.util.CalendarUtils;
@@ -251,6 +252,213 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             assertEquals("color", countAggregate.getFieldName());
             assertEquals(3, countAggregate.getValue());
 
+        } catch (Exception e) {
+            tm.setRollback();
+            throw e;
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
+    public void testAggregateGrouping() throws Exception {
+        tm.beginTransaction();
+        try {
+            db.create(new Fruit("apple", "red", 20.00, 25));
+            db.create(new Fruit("grape", "red", 25.00, 11));
+            db.create(new Fruit("pineapple", "cyan", 60.00, 3));
+            db.create(new Fruit("banana", "yellow", 45.00, 45));
+            db.create(new Fruit("orange", "orange", 15.00, 11));
+
+            // Count
+            List<GroupingAggregation> quantityAggregate = db.aggregate(new AggregateFunction(AggregateType.SUM, "quantity"),
+                    new FruitQuery().ignoreEmptyCriteria(true), new GroupingFunction("color"));
+            assertNotNull(quantityAggregate);
+            assertEquals(4, quantityAggregate.size());
+
+            // 0
+            GroupingAggregation groupingAggregation = quantityAggregate.get(0);
+            assertNotNull(groupingAggregation);
+            assertEquals("cyan", groupingAggregation.getGrouping());
+            assertNull(groupingAggregation.getGroupingDate());
+            
+            List<Aggregation> aggregationList = groupingAggregation.getAggregation();
+            assertNotNull(aggregationList);
+            assertEquals(1, aggregationList.size());
+            
+            Aggregation aggregation = aggregationList.get(0);
+            assertEquals(AggregateType.SUM, aggregation.getType());
+            assertEquals("quantity", aggregation.getFieldName());
+            assertEquals(new Integer(3), aggregation.getValue(Integer.class));
+
+            // 1
+            groupingAggregation = quantityAggregate.get(1);
+            assertNotNull(groupingAggregation);
+            assertEquals("orange", groupingAggregation.getGrouping());
+            assertNull(groupingAggregation.getGroupingDate());
+            
+            aggregationList = groupingAggregation.getAggregation();
+            assertNotNull(aggregationList);
+            assertEquals(1, aggregationList.size());
+            
+            aggregation = aggregationList.get(0);
+            assertEquals(AggregateType.SUM, aggregation.getType());
+            assertEquals("quantity", aggregation.getFieldName());
+            assertEquals(new Integer(11), aggregation.getValue(Integer.class));
+
+            // 2
+            groupingAggregation = quantityAggregate.get(2);
+            assertNotNull(groupingAggregation);
+            assertEquals("red", groupingAggregation.getGrouping());
+            assertNull(groupingAggregation.getGroupingDate());
+            
+            aggregationList = groupingAggregation.getAggregation();
+            assertNotNull(aggregationList);
+            assertEquals(1, aggregationList.size());
+            
+            aggregation = aggregationList.get(0);
+            assertEquals(AggregateType.SUM, aggregation.getType());
+            assertEquals("quantity", aggregation.getFieldName());
+            assertEquals(new Integer(25 + 11), aggregation.getValue(Integer.class));
+
+            // 3
+            groupingAggregation = quantityAggregate.get(3);
+            assertNotNull(groupingAggregation);
+            assertEquals("yellow", groupingAggregation.getGrouping());
+            assertNull(groupingAggregation.getGroupingDate());
+            
+            aggregationList = groupingAggregation.getAggregation();
+            assertNotNull(aggregationList);
+            assertEquals(1, aggregationList.size());
+            
+            aggregation = aggregationList.get(0);
+            assertEquals(AggregateType.SUM, aggregation.getType());
+            assertEquals("quantity", aggregation.getFieldName());
+            assertEquals(new Integer(45), aggregation.getValue(Integer.class));           
+        } catch (Exception e) {
+            tm.setRollback();
+            throw e;
+        } finally {
+            tm.endTransaction();
+        }
+    }
+
+    @Test
+    public void testAggregateListGrouping() throws Exception {
+        tm.beginTransaction();
+        try {
+            db.create(new Fruit("apple", "red", 20.00, 25));
+            db.create(new Fruit("grape", "red", 25.00, 11));
+            db.create(new Fruit("pineapple", "cyan", 60.00, 3));
+            db.create(new Fruit("banana", "yellow", 45.00, 45));
+            db.create(new Fruit("orange", "orange", 15.00, 11));
+
+            // Count
+            List<GroupingAggregation> quantityAggregate = db.aggregate(Arrays.asList(new AggregateFunction(AggregateType.SUM, "quantity"),
+            		new AggregateFunction(AggregateType.SUM, "price"), new AggregateFunction(AggregateType.AVERAGE, "price")),
+                    new FruitQuery().ignoreEmptyCriteria(true), new GroupingFunction("color"));
+            assertNotNull(quantityAggregate);
+            assertEquals(4, quantityAggregate.size());
+
+            // 0
+            GroupingAggregation groupingAggregation = quantityAggregate.get(0);
+            assertNotNull(groupingAggregation);
+            assertEquals("cyan", groupingAggregation.getGrouping());
+            assertNull(groupingAggregation.getGroupingDate());
+            
+            List<Aggregation> aggregationList = groupingAggregation.getAggregation();
+            assertNotNull(aggregationList);
+            assertEquals(3, aggregationList.size());
+            
+            Aggregation aggregation = aggregationList.get(0);
+            assertEquals(AggregateType.SUM, aggregation.getType());
+            assertEquals("quantity", aggregation.getFieldName());
+            assertEquals(new Integer(3), aggregation.getValue(Integer.class));
+
+            aggregation = aggregationList.get(1);
+            assertEquals(AggregateType.SUM, aggregation.getType());
+            assertEquals("price", aggregation.getFieldName());
+            assertEquals(new Double(60.00), aggregation.getValue(Double.class));
+
+            aggregation = aggregationList.get(2);
+            assertEquals(AggregateType.AVERAGE, aggregation.getType());
+            assertEquals("price", aggregation.getFieldName());
+            assertEquals(new Double(60.00), aggregation.getValue(Double.class));
+
+            // 1
+            groupingAggregation = quantityAggregate.get(1);
+            assertNotNull(groupingAggregation);
+            assertEquals("orange", groupingAggregation.getGrouping());
+            assertNull(groupingAggregation.getGroupingDate());
+            
+            aggregationList = groupingAggregation.getAggregation();
+            assertNotNull(aggregationList);
+            assertEquals(3, aggregationList.size());
+            
+            aggregation = aggregationList.get(0);
+            assertEquals(AggregateType.SUM, aggregation.getType());
+            assertEquals("quantity", aggregation.getFieldName());
+            assertEquals(new Integer(11), aggregation.getValue(Integer.class));
+
+            aggregation = aggregationList.get(1);
+            assertEquals(AggregateType.SUM, aggregation.getType());
+            assertEquals("price", aggregation.getFieldName());
+            assertEquals(new Double(15.00), aggregation.getValue(Double.class));
+
+            aggregation = aggregationList.get(2);
+            assertEquals(AggregateType.AVERAGE, aggregation.getType());
+            assertEquals("price", aggregation.getFieldName());
+            assertEquals(new Double(15.00), aggregation.getValue(Double.class));
+
+            // 2
+            groupingAggregation = quantityAggregate.get(2);
+            assertNotNull(groupingAggregation);
+            assertEquals("red", groupingAggregation.getGrouping());
+            assertNull(groupingAggregation.getGroupingDate());
+            
+            aggregationList = groupingAggregation.getAggregation();
+            assertNotNull(aggregationList);
+            assertEquals(3, aggregationList.size());
+            
+            aggregation = aggregationList.get(0);
+            assertEquals(AggregateType.SUM, aggregation.getType());
+            assertEquals("quantity", aggregation.getFieldName());
+            assertEquals(new Integer(25 + 11), aggregation.getValue(Integer.class));
+
+            aggregation = aggregationList.get(1);
+            assertEquals(AggregateType.SUM, aggregation.getType());
+            assertEquals("price", aggregation.getFieldName());
+            assertEquals(new Double(45.00), aggregation.getValue(Double.class));
+
+            aggregation = aggregationList.get(2);
+            assertEquals(AggregateType.AVERAGE, aggregation.getType());
+            assertEquals("price", aggregation.getFieldName());
+            assertEquals(new Double(22.50), aggregation.getValue(Double.class));
+
+            // 3
+            groupingAggregation = quantityAggregate.get(3);
+            assertNotNull(groupingAggregation);
+            assertEquals("yellow", groupingAggregation.getGrouping());
+            assertNull(groupingAggregation.getGroupingDate());
+            
+            aggregationList = groupingAggregation.getAggregation();
+            assertNotNull(aggregationList);
+            assertEquals(3, aggregationList.size());
+            
+            aggregation = aggregationList.get(0);
+            assertEquals(AggregateType.SUM, aggregation.getType());
+            assertEquals("quantity", aggregation.getFieldName());
+            assertEquals(new Integer(45), aggregation.getValue(Integer.class));           
+
+            aggregation = aggregationList.get(1);
+            assertEquals(AggregateType.SUM, aggregation.getType());
+            assertEquals("price", aggregation.getFieldName());
+            assertEquals(new Double(45.00), aggregation.getValue(Double.class));
+
+            aggregation = aggregationList.get(2);
+            assertEquals(AggregateType.AVERAGE, aggregation.getType());
+            assertEquals("price", aggregation.getFieldName());
+            assertEquals(new Double(45.00), aggregation.getValue(Double.class));
         } catch (Exception e) {
             tm.setRollback();
             throw e;

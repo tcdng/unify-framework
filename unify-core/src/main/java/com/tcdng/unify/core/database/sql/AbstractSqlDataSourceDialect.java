@@ -2119,7 +2119,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 			boolean appendSym = false;
 			if (groupingFunction.isWithFieldGrouping()) {
 				sql.append(
-						sqlEntityInfo.getListFieldInfo(groupingFunction.getDateFieldName()).getPreferredColumnName());
+						sqlEntityInfo.getListFieldInfo(groupingFunction.getFieldName()).getPreferredColumnName());
 				appendSym = true;
 			}
 
@@ -2137,7 +2137,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 			sql.append(" ORDER BY ");
 			if (groupingFunction.isWithFieldGrouping()) {
 				sql.append(
-						sqlEntityInfo.getListFieldInfo(groupingFunction.getDateFieldName()).getPreferredColumnName());
+						sqlEntityInfo.getListFieldInfo(groupingFunction.getFieldName()).getPreferredColumnName());
 				appendSym = true;
 			}
 
