@@ -24,6 +24,7 @@ import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.criterion.AggregateFunction;
+import com.tcdng.unify.core.criterion.GroupingFunction;
 import com.tcdng.unify.core.criterion.Update;
 
 /**
@@ -383,6 +384,18 @@ public abstract class AbstractDatabase extends AbstractUnifyComponent implements
 	}
 
     @Override
+	public List<GroupingAggregation> aggregate(AggregateFunction aggregateFunction, Query<? extends Entity> query,
+			GroupingFunction groupingFunction) throws UnifyException {
+        return getDatabaseSession().aggregate(aggregateFunction, query, groupingFunction);
+	}
+
+	@Override
+	public List<GroupingAggregation> aggregate(List<AggregateFunction> aggregateFunction, Query<? extends Entity> query,
+			GroupingFunction groupingFunction) throws UnifyException {
+        return getDatabaseSession().aggregate(aggregateFunction, query, groupingFunction);
+	}
+
+	@Override
     public Entity getExtendedInstance(Class<? extends Entity> entityClass) throws UnifyException {
         return getDatabaseSession().getExtendedInstance(entityClass);
     }
