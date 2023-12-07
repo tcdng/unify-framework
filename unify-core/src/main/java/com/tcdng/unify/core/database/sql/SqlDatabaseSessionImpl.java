@@ -41,6 +41,7 @@ import com.tcdng.unify.core.criterion.AdditionExpression;
 import com.tcdng.unify.core.criterion.AggregateFunction;
 import com.tcdng.unify.core.criterion.Amongst;
 import com.tcdng.unify.core.criterion.DivisionExpression;
+import com.tcdng.unify.core.criterion.GroupingFunction;
 import com.tcdng.unify.core.criterion.MultiplicationExpression;
 import com.tcdng.unify.core.criterion.Select;
 import com.tcdng.unify.core.criterion.SubtractionExpression;
@@ -50,6 +51,7 @@ import com.tcdng.unify.core.database.CallableProc;
 import com.tcdng.unify.core.database.DatabaseSession;
 import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.database.EntityPolicy;
+import com.tcdng.unify.core.database.GroupingAggregation;
 import com.tcdng.unify.core.database.MappedEntityRepository;
 import com.tcdng.unify.core.database.Query;
 import com.tcdng.unify.core.util.DataUtils;
@@ -953,9 +955,49 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 				entityPolicy.preQuery(query);
 			}
 
-			return getSqlStatementExecutor().executeMultipleAggregateResultQuery(aggregateFunction,
-					connection, sqlDataSourceDialect.getSqlTypePolicy(int.class),
+			return getSqlStatementExecutor().executeMultipleAggregateResultQuery(aggregateFunction, connection,
+					sqlDataSourceDialect.getSqlTypePolicy(int.class),
 					sqlDataSourceDialect.prepareAggregateStatement(aggregateFunction, query));
+		} catch (UnifyException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new UnifyOperationException(e, getClass().getSimpleName());
+		}
+	}
+
+	@Override
+	public List<GroupingAggregation> aggregate(AggregateFunction aggregateFunction, Query<? extends Entity> query,
+			GroupingFunction groupingFunction) throws UnifyException {
+		try {
+			SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
+			EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
+			if (entityPolicy != null) {
+				entityPolicy.preQuery(query);
+			}
+
+			return getSqlStatementExecutor().executeSingleAggregateResultQuery(aggregateFunction, groupingFunction,
+					connection, sqlDataSourceDialect.getSqlTypePolicy(int.class),
+					sqlDataSourceDialect.prepareAggregateStatement(aggregateFunction, query, groupingFunction));
+		} catch (UnifyException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new UnifyOperationException(e, getClass().getSimpleName());
+		}
+	}
+
+	@Override
+	public List<GroupingAggregation> aggregate(List<AggregateFunction> aggregateFunction, Query<? extends Entity> query,
+			GroupingFunction groupingFunction) throws UnifyException {
+		try {
+			SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
+			EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
+			if (entityPolicy != null) {
+				entityPolicy.preQuery(query);
+			}
+
+			return getSqlStatementExecutor().executeMultipleAggregateResultQuery(aggregateFunction, groupingFunction,
+					connection, sqlDataSourceDialect.getSqlTypePolicy(int.class),
+					sqlDataSourceDialect.prepareAggregateStatement(aggregateFunction, query, groupingFunction));
 		} catch (UnifyException e) {
 			throw e;
 		} catch (Exception e) {
@@ -1548,7 +1590,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 					SqlEntityInfo childSqlEntityInfo = sqlDataSourceDialect
 							.findSqlEntityInfo(alfi.getChildEntityClass());
 					MappedEntityRepository mappedEntityRepository = childSqlEntityInfo.getMappedEntityRepository();
-					
+
 					List<? extends Entity> childList = (List<? extends Entity>) alfi.getGetter().invoke(record);
 					if (childList != null) {
 						boolean clear = fetch.isEditableOnly();
@@ -1569,7 +1611,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 							deleteChildRecords(alfi, tableName, id);
 
 							for (Entity childRecord : childList) {
-								setParentAttributes(alfi, childRecord, id, tableName);							
+								setParentAttributes(alfi, childRecord, id, tableName);
 								if (mappedEntityRepository != null) {
 									mappedEntityRepository.create(childRecord);
 								} else {
@@ -1585,7 +1627,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 									} else {
 										updateByIdVersion(childRecord);
 									}
-									
+
 									targetIds.remove(childRecord.getId());
 								}
 							} else {
@@ -1595,7 +1637,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 									} else {
 										updateById(childRecord);
 									}
-									
+
 									targetIds.remove(childRecord.getId());
 								}
 							}
@@ -1666,13 +1708,13 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 		}
 
 		query.addEquals(odci.getChildFkIdField().getName(), id);
-		
+
 		SqlEntityInfo childSqlEntityInfo = sqlDataSourceDialect.findSqlEntityInfo(odci.getChildEntityClass());
 		if (childSqlEntityInfo.isMapped()) {
 			MappedEntityRepository mappedEntityRepository = childSqlEntityInfo.getMappedEntityRepository();
 			return mappedEntityRepository.valueSet(Object.class, "id", query);
 		}
-		
+
 		return valueSet(Object.class, "id", query);
 	}
 

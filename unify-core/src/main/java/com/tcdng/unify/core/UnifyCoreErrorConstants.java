@@ -1081,4 +1081,14 @@ public interface UnifyCoreErrorConstants {
     /** Default restriction not allowed for field type. Class - {0}, name - {1} */
     String DEFAULT_RESTRICTION_FIELD_NOT_ALLOWED = "UC_0116";
 
+    /**
+     * Field {0} is not suitable for grouping function. Type - {1}
+     */
+    String RECORD_FIELD_NOT_SUITABLE_FOR_GROUPING = "UC_0117";
+
+    /**
+     * Field {0} is not suitable for date grouping function. Type - {1}
+     */
+    String RECORD_FIELD_NOT_SUITABLE_FOR_DATE_GROUPING = "UC_0118";
+
 }

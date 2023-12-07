@@ -26,6 +26,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.constant.PrintFormat;
+import com.tcdng.unify.core.constant.TimeSeriesType;
 import com.tcdng.unify.core.criterion.RestrictionType;
 import com.tcdng.unify.core.database.sql.AbstractSqlDataSourceDialect;
 import com.tcdng.unify.core.database.sql.AbstractSqlDataSourceDialectPolicies;
@@ -36,6 +37,7 @@ import com.tcdng.unify.core.database.sql.SqlDataSourceDialectPolicies;
 import com.tcdng.unify.core.database.sql.SqlDataTypePolicy;
 import com.tcdng.unify.core.database.sql.SqlDialectNameConstants;
 import com.tcdng.unify.core.database.sql.SqlEntitySchemaInfo;
+import com.tcdng.unify.core.database.sql.SqlFieldInfo;
 import com.tcdng.unify.core.database.sql.SqlFieldSchemaInfo;
 import com.tcdng.unify.core.database.sql.data.policy.BlobPolicy;
 import com.tcdng.unify.core.database.sql.data.policy.ClobPolicy;
@@ -108,6 +110,38 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
 		}
 
 		return false;
+	}
+
+	@Override
+	protected void appendTimestampTruncation(StringBuilder sql, SqlFieldInfo sqlFieldInfo,
+			TimeSeriesType timeSeriesType) throws UnifyException {
+		sql.append("DATEPART(");
+		switch (timeSeriesType) {
+		case DAY:
+			sql.append("day");
+			break;
+		case HOUR:
+			sql.append("hour");
+			break;
+		case MONTH:
+			sql.append("month");
+			break;
+		case WEEK:
+			sql.append("week");
+			break;
+		case YEAR:
+			sql.append("year");
+			break;
+		default:
+			break;
+		}
+		sql.append(", ").append(sqlFieldInfo.getPreferredColumnName()).append(")");
+	}
+
+	@Override
+	protected void appendTimestampTruncationGroupBy(StringBuilder sql, SqlFieldInfo sqlFieldInfo,
+			TimeSeriesType timeSeriesType) throws UnifyException {
+		sql.append(TRUNC_COLUMN_ALIAS);
 	}
 
 	@Override
