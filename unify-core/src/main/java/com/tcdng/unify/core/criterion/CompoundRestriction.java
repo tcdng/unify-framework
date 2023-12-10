@@ -37,6 +37,15 @@ public interface CompoundRestriction extends Restriction {
     CompoundRestriction add(Restriction restriction);
 
     /**
+     * Adds restrictions to this compound restriction.
+     * 
+     * @param restrictions
+     *            the restrictions to add
+     * @return expected to return this restriction
+     */
+    CompoundRestriction addAll(List<Restriction> restriction);
+
+    /**
      * Gets restriction list.
      * 
      * @return the restriction list

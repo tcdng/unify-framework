@@ -15,21 +15,53 @@
  */
 package com.tcdng.unify.web;
 
+import java.util.Map;
+import java.util.Set;
+
+import com.tcdng.unify.core.UnifyException;
+
 /**
  * Controller information.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public abstract class ControllerInfo {
+public abstract class ControllerInfo<T extends Action> {
 
-    private String controllerName;
+	private final String controllerName;
 
-    public ControllerInfo(String controllerName) {
-        this.controllerName = controllerName;
-    }
+	private final Map<String, T> actionByNameMap;
 
-    public String getControllerName() {
-        return controllerName;
-    }
+	public ControllerInfo(String controllerName, Map<String, T> actionByNameMap) {
+		this.controllerName = controllerName;
+		this.actionByNameMap = actionByNameMap;
+	}
+
+	public String getControllerName() {
+		return controllerName;
+	}
+
+	/**
+	 * Retrieves all action names associated with the page controller.
+	 */
+	public Set<String> getActionNames() {
+		return actionByNameMap.keySet();
+	}
+
+	/**
+	 * Gets an action by specified name. Action names are full path names composed
+	 * of the page controller name, a forward slash and the handler method name.
+	 * 
+	 * @param actionName the full action name
+	 * @return the page action
+	 * @throws UnifyException if page action info with name is unknown
+	 */
+	public T getAction(String actionName) throws UnifyException {
+		T action = actionByNameMap.get(actionName);
+		if (action == null) {
+			throw new UnifyException(UnifyWebErrorConstants.CONTROLLER_UNKNOWN_ACTION, getControllerName(), actionName);
+		}
+
+		return action;
+	}
 }

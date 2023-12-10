@@ -18,6 +18,7 @@ package com.tcdng.unify.web.ui;
 import java.util.Map;
 import java.util.Set;
 
+import com.tcdng.unify.web.Action;
 import com.tcdng.unify.web.ControllerInfo;
 import com.tcdng.unify.web.ui.widget.PropertyInfo;
 
@@ -29,22 +30,23 @@ import com.tcdng.unify.web.ui.widget.PropertyInfo;
  */
 public class UIControllerInfo extends ControllerInfo {
 
-    private Map<String, PropertyInfo> pageNameToPropertyMap;
+	private Map<String, PropertyInfo> pageNameToPropertyMap;
 
-    public UIControllerInfo(String controllerName, Map<String, PropertyInfo> pageNameToPropertyMap) {
-        super(controllerName);
-        this.pageNameToPropertyMap = pageNameToPropertyMap;
-    }
+	public UIControllerInfo(String controllerName, Map<String, Action> actionByNameMap,
+			Map<String, PropertyInfo> pageNameToPropertyMap) {
+		super(controllerName, actionByNameMap);
+		this.pageNameToPropertyMap = pageNameToPropertyMap;
+	}
 
-    public Set<String> getPropertyIds() {
-        return pageNameToPropertyMap.keySet();
-    }
+	public Set<String> getPropertyIds() {
+		return pageNameToPropertyMap.keySet();
+	}
 
-    public PropertyInfo getPropertyInfo(String pageName) {
-        return pageNameToPropertyMap.get(pageName);
-    }
+	public PropertyInfo getPropertyInfo(String pageName) {
+		return pageNameToPropertyMap.get(pageName);
+	}
 
-    public void addPageNameToPropertyMappings(Map<String, PropertyInfo> pageNameToPropertyMap) {
-        pageNameToPropertyMap.putAll(pageNameToPropertyMap);
-    }
+	public void addPageNameToPropertyMappings(Map<String, PropertyInfo> pageNameToPropertyMap) {
+		pageNameToPropertyMap.putAll(pageNameToPropertyMap);
+	}
 }

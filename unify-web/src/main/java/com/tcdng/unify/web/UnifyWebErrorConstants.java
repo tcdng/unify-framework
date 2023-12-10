@@ -83,4 +83,7 @@ public interface UnifyWebErrorConstants {
      * Access to resource denied.
      */
     String RESOURCE_ACCESS_DENIED = "UW_0012";
+
+    /** Page controller ={0}, Action = {1} */
+    String CONTROLLER_UNKNOWN_ACTION = "UW_0013";
 }

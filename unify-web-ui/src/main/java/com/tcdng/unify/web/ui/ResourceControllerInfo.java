@@ -17,6 +17,7 @@ package com.tcdng.unify.web.ui;
 
 import java.util.Map;
 
+import com.tcdng.unify.web.Action;
 import com.tcdng.unify.web.ui.widget.PropertyInfo;
 
 /**
@@ -27,7 +28,8 @@ import com.tcdng.unify.web.ui.widget.PropertyInfo;
  */
 public class ResourceControllerInfo extends UIControllerInfo {
 
-    public ResourceControllerInfo(String controllerName, Map<String, PropertyInfo> propertyBindingMap) {
-        super(controllerName, propertyBindingMap);
-    }
+	public ResourceControllerInfo(String controllerName, Map<String, Action> actionByNameMap,
+			Map<String, PropertyInfo> propertyBindingMap) {
+		super(controllerName, actionByNameMap, propertyBindingMap);
+	}
 }

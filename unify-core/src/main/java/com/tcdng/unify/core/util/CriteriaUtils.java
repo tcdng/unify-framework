@@ -157,6 +157,11 @@ public final class CriteriaUtils {
         }
 
         @Override
+		public CompoundRestriction addAll(List<Restriction> restriction) {
+            throw new UnsupportedOperationException();
+		}
+
+		@Override
         public List<Restriction> getRestrictionList() {
             return restrictionList;
         }

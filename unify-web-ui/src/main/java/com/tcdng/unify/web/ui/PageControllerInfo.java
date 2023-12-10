@@ -31,16 +31,13 @@ import com.tcdng.unify.web.ui.widget.PropertyInfo;
  */
 public class PageControllerInfo extends UIControllerInfo {
 
-    private Map<String, Action> actionByNameMap;
-
     private Map<String, Result> resultNameMap;
 
     private Set<String> dynamicPanels;
 
     public PageControllerInfo(String pageBeanName, Map<String, Action> actionByNameMap,
             Map<String, Result> resultByNameMap, Map<String, PropertyInfo> pageNameToPropertyMap) {
-        super(pageBeanName, pageNameToPropertyMap);
-        this.actionByNameMap = actionByNameMap;
+        super(pageBeanName, actionByNameMap, pageNameToPropertyMap);
         this.resultNameMap = resultByNameMap;
         dynamicPanels = new HashSet<String>();
     }
@@ -51,32 +48,6 @@ public class PageControllerInfo extends UIControllerInfo {
             dynamicPanels.add(dynamicPanelName);
             addPageNameToPropertyMappings(pageNamePropertyBindingMap);
         }
-    }
-
-    /**
-     * Retrieves all action names associated with the page controller.
-     */
-    public Set<String> getActionNames() {
-        return actionByNameMap.keySet();
-    }
-
-    /**
-     * Gets an action by specified name. Action names are full path names composed
-     * of the page controller name, a forward slash and the handler method name.
-     * 
-     * @param actionName
-     *            the full action name
-     * @return the page action
-     * @throws UnifyException
-     *             if page action info with name is unknown
-     */
-    public Action getAction(String actionName) throws UnifyException {
-        Action action = actionByNameMap.get(actionName);
-        if (action == null) {
-            throw new UnifyException(UnifyWebUIErrorConstants.CONTROLLER_UNKNOWN_ACTION, getControllerName(), actionName);
-        }
-
-        return action;
     }
 
     /**

@@ -42,16 +42,25 @@ public abstract class AbstractPlainXmlController extends AbstractPlainController
 
 	@Override
 	public void doProcess(ClientRequest request, ClientResponse response) throws UnifyException {
-		RemoteCallFormat remoteCallFormat = (RemoteCallFormat) request
-				.getParameter(RequestParameterConstants.REMOTE_CALL_FORMAT);
-		if (!RemoteCallFormat.XML.equals(remoteCallFormat)) {
-			throw new UnifyException(UnifyWebErrorConstants.CONTROLLER_MESSAGE_FORMAT_NOT_MATCH_EXPECTED,
-					remoteCallFormat, RemoteCallFormat.XML, getName());
-		}
-
 		response.setContentType(RemoteCallFormat.XML.mimeType().template());
-		String xmlRequest = (String) request.getParameter(RequestParameterConstants.REMOTE_CALL_BODY);
-		final String xmlResponse = doExecute(xmlRequest);
+		String xmlResponse = null;
+		try {
+			final String actionName = request.getRequestPathParts().getControllerPathParts().getActionName();
+			logDebug("Processing plain XML request with action [{0}]...", actionName);
+
+			RemoteCallFormat remoteCallFormat = (RemoteCallFormat) request
+					.getParameter(RequestParameterConstants.REMOTE_CALL_FORMAT);
+			if (!RemoteCallFormat.XML.equals(remoteCallFormat)) {
+				throw new UnifyException(UnifyWebErrorConstants.CONTROLLER_MESSAGE_FORMAT_NOT_MATCH_EXPECTED,
+						remoteCallFormat, RemoteCallFormat.XML, getName());
+			}
+
+			final String xmlRequest = (String) request.getParameter(RequestParameterConstants.REMOTE_CALL_BODY);
+			xmlResponse = doExecute(actionName, xmlRequest);
+		} catch (Exception e) {
+			xmlResponse = "<serverError>" + e.getMessage() + "</serverError>";
+		}
+		
 		if (xmlResponse != null) {
 			try {
 				response.getWriter().write(xmlResponse);
@@ -74,9 +83,9 @@ public abstract class AbstractPlainXmlController extends AbstractPlainController
 			xmlObjectStreamer.marshal(obj, sw);
 			return sw.toString();
 		}
-		
+
 		return null;
 	}
 
-	protected abstract String doExecute(String xmlRequest) throws UnifyException;
+	protected abstract String doExecute(String actionName, String xmlRequest) throws UnifyException;
 }

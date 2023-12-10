@@ -22,6 +22,7 @@ import java.io.StringWriter;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.stream.JsonObjectStreamer;
+import com.tcdng.unify.core.util.json.JsonUtils;
 import com.tcdng.unify.web.constant.RequestParameterConstants;
 import com.tcdng.unify.web.remotecall.RemoteCallFormat;
 
@@ -42,16 +43,30 @@ public abstract class AbstractPlainJsonController extends AbstractPlainControlle
 
 	@Override
 	public void doProcess(ClientRequest request, ClientResponse response) throws UnifyException {
-		RemoteCallFormat remoteCallFormat = (RemoteCallFormat) request
-				.getParameter(RequestParameterConstants.REMOTE_CALL_FORMAT);
-		if (!RemoteCallFormat.JSON.equals(remoteCallFormat)) {
-			throw new UnifyException(UnifyWebErrorConstants.CONTROLLER_MESSAGE_FORMAT_NOT_MATCH_EXPECTED,
-					remoteCallFormat, RemoteCallFormat.JSON, getName());
+		response.setContentType(RemoteCallFormat.JSON.mimeType().template());
+		String jsonResponse = null;
+
+		try {
+			final String actionName = request.getRequestPathParts().getControllerPathParts().getActionName();
+			logDebug("Processing plain JSON request with action [{0}]...", actionName);
+
+			RemoteCallFormat remoteCallFormat = (RemoteCallFormat) request
+					.getParameter(RequestParameterConstants.REMOTE_CALL_FORMAT);
+			if (!RemoteCallFormat.JSON.equals(remoteCallFormat)) {
+				throw new UnifyException(UnifyWebErrorConstants.CONTROLLER_MESSAGE_FORMAT_NOT_MATCH_EXPECTED,
+						remoteCallFormat, RemoteCallFormat.JSON, getName());
+			}
+
+			final String jsonRequest = (String) request.getParameter(RequestParameterConstants.REMOTE_CALL_BODY);
+			jsonResponse = doExecute(actionName, jsonRequest);
+		} catch (Exception e) {
+			StringBuilder sb = new StringBuilder();
+			sb.append("{ \"serverError\":");
+			JsonUtils.write(sb, e.getMessage());
+			sb.append("}");
+			jsonResponse = sb.toString();
 		}
 
-		response.setContentType(RemoteCallFormat.JSON.mimeType().template());
-		final String jsonRequest = (String) request.getParameter(RequestParameterConstants.REMOTE_CALL_BODY);
-		final String jsonResponse = doExecute(jsonRequest);
 		if (jsonResponse != null) {
 			try {
 				response.getWriter().write(jsonResponse);
@@ -74,9 +89,9 @@ public abstract class AbstractPlainJsonController extends AbstractPlainControlle
 			jsonObjectStreamer.marshal(obj, sw);
 			return sw.toString();
 		}
-		
+
 		return null;
 	}
 
-	protected abstract String doExecute(String jsonRequest) throws UnifyException;
+	protected abstract String doExecute(String actionName, String jsonRequest) throws UnifyException;
 }

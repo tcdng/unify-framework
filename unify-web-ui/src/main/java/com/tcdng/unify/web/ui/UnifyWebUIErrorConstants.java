@@ -29,9 +29,6 @@ public interface UnifyWebUIErrorConstants {
     /** Page panel with ID not found. ID={0} */
     String PAGE_PANEL_WITH_ID_NOT_FOUND = "UWI_0002";
 
-    /** Page bean unknown action. Page controller ={0}, Action = {1} */
-    String CONTROLLER_UNKNOWN_ACTION = "UWI_0003";
-
     /**
      * Page bean unknown result. Page controller ={0}, ResultMapping = {1}
      */

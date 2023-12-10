@@ -74,6 +74,10 @@ public enum ColumnType implements EnumConst {
     	return DATE.equals(this);
     }
 
+    public boolean isLob() {
+    	return BLOB.equals(this) || CLOB.equals(this);
+    }
+
     public boolean isTimestamp() {
     	return TIMESTAMP.equals(this) || TIMESTAMP_UTC.equals(this);
     }

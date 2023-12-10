@@ -64,6 +64,12 @@ public abstract class AbstractCompoundRestriction extends AbstractRestriction im
 	}
 
 	@Override
+	public CompoundRestriction addAll(List<Restriction> restriction) {
+		restrictionList.addAll(restriction);
+		return this;
+	}
+
+	@Override
 	public List<Restriction> getRestrictionList() {
 		return restrictionList;
 	}

@@ -16,9 +16,6 @@
 package com.tcdng.unify.web;
 
 import java.util.Map;
-import java.util.Set;
-
-import com.tcdng.unify.core.UnifyException;
 
 /**
  * Encapsulates information about a remote-call controller.
@@ -26,52 +23,21 @@ import com.tcdng.unify.core.UnifyException;
  * @author The Code Department
  * @since 1.0
  */
-public class RemoteCallControllerInfo extends ControllerInfo {
+public class RemoteCallControllerInfo extends ControllerInfo<RemoteAction> {
 
-    private String remoteCallGateName;
+	private String remoteCallGateName;
 
-    private Map<String, RemoteCallHandler> remoteHandlerMap;
+	public RemoteCallControllerInfo(String controllerName, String remoteCallGateName, Map<String, RemoteAction> remoteHandlerMap) {
+		super(controllerName, remoteHandlerMap);
+		this.remoteCallGateName = remoteCallGateName;
+	}
 
-    public RemoteCallControllerInfo(String controllerName, String remoteCallGateName,
-            Map<String, RemoteCallHandler> remoteHandlerMap) {
-        super(controllerName);
-        this.remoteCallGateName = remoteCallGateName;
-        this.remoteHandlerMap = remoteHandlerMap;
-    }
+	public String getRemoteCallGateName() {
+		return remoteCallGateName;
+	}
 
-    public String getRemoteCallGateName() {
-        return remoteCallGateName;
-    }
-
-    public boolean isRemoteCallGate() {
-        return remoteCallGateName != null;
-    }
-
-    /**
-     * Retrieves all remote-call handler names associated with controller.
-     */
-    public Set<String> getRemoteHandlerNames() {
-        return remoteHandlerMap.keySet();
-    }
-
-    /**
-     * Gets a remote-call handler by specified name. RemoteAction call handler
-     * names are full path names composed of the remote-call controller name, a
-     * forward slash and the handler method name.
-     * 
-     * @param name
-     *            the handler name
-     * @return the page action
-     * @throws UnifyException
-     *             if remote-call handler info with name is unknown
-     */
-    public RemoteCallHandler getRemoteCallHandler(String name) throws UnifyException {
-        RemoteCallHandler handler = remoteHandlerMap.get(name);
-        if (handler == null) {
-            throw new UnifyException(UnifyWebErrorConstants.CONTROLLER_UNKNOWN_REMOTECALL_HANDLER, getControllerName(),
-                    name);
-        }
-        return handler;
-    }
+	public boolean isRemoteCallGate() {
+		return remoteCallGateName != null;
+	}
 
 }
