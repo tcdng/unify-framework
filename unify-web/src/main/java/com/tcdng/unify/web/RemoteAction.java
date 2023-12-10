@@ -17,27 +17,24 @@ package com.tcdng.unify.web;
 
 import java.lang.reflect.Method;
 
-import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.remotecall.RemoteCallParams;
 import com.tcdng.unify.web.remotecall.RemoteCallResult;
 
 /**
- * Remote call handler.
+ * Remote action.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public class RemoteCallHandler {
+public class RemoteAction extends Action {
 
     private String methodCode;
 
-    private Method method;
-
     private boolean restricted;
 
-    public RemoteCallHandler(String methodCode, Method method, boolean restricted) {
+    public RemoteAction(String methodCode, Method method, boolean restricted) {
+    	super(method);
         this.methodCode = methodCode;
-        this.method = method;
         this.restricted = restricted;
     }
 
@@ -45,29 +42,20 @@ public class RemoteCallHandler {
         return methodCode;
     }
 
-    public String getName() {
-        return method.getName();
-    }
-
-    public Method getMethod() {
-        return method;
-    }
-
     public boolean isRestricted() {
         return restricted;
     }
 
-    @SuppressWarnings("unchecked")
-    public Class<? extends RemoteCallParams> getParamType() {
-        return (Class<? extends RemoteCallParams>) method.getParameterTypes()[0];
-    }
+	@SuppressWarnings("unchecked")
+	@Override
+	public Class<? extends RemoteCallParams> getParamType() {
+		return (Class<? extends RemoteCallParams>) super.getParamType();
+	}
 
-    @SuppressWarnings("unchecked")
-    public Class<? extends RemoteCallResult> getReturnType() {
-        return (Class<? extends RemoteCallResult>) method.getReturnType();
-    }
-
-    public String toString() {
-        return StringUtils.toXmlString(this);
-    }
+	@SuppressWarnings("unchecked")
+	@Override
+	public Class<? extends RemoteCallResult> getReturnType() {
+		return (Class<? extends RemoteCallResult> ) super.getReturnType();
+	}
+    
 }

@@ -50,8 +50,9 @@ public abstract class AbstractPlainXmlController extends AbstractPlainController
 		}
 
 		response.setContentType(RemoteCallFormat.XML.mimeType().template());
-		String xmlRequest = (String) request.getParameter(RequestParameterConstants.REMOTE_CALL_BODY);
-		final String xmlResponse = doExecute(xmlRequest);
+		final String actionName = request.getRequestPathParts().getControllerPathParts().getActionName();
+		final String xmlRequest = (String) request.getParameter(RequestParameterConstants.REMOTE_CALL_BODY);
+		final String xmlResponse = doExecute(actionName, xmlRequest);
 		if (xmlResponse != null) {
 			try {
 				response.getWriter().write(xmlResponse);
@@ -74,9 +75,9 @@ public abstract class AbstractPlainXmlController extends AbstractPlainController
 			xmlObjectStreamer.marshal(obj, sw);
 			return sw.toString();
 		}
-		
+
 		return null;
 	}
 
-	protected abstract String doExecute(String xmlRequest) throws UnifyException;
+	protected abstract String doExecute(String actionName, String xmlRequest) throws UnifyException;
 }

@@ -496,7 +496,7 @@ public class UIControllerUtilImpl extends AbstractUnifyComponent implements UICo
                 controllerName);
         Map<String, PropertyInfo> propertyBindingMap = new HashMap<String, PropertyInfo>();
         setIdRequestParameterBindings(resourceControllerClass, propertyBindingMap);
-        return new ResourceControllerInfo(controllerName, propertyBindingMap);
+        return new ResourceControllerInfo(controllerName, Collections.emptyMap(), propertyBindingMap);
     }
 
     private void setIdRequestParameterBindings(Class<? extends Controller> controllerClass,

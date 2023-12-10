@@ -27,6 +27,18 @@ import com.tcdng.unify.core.UnifyException;
 public interface ControllerUtil extends UnifyComponent {
 
     /**
+     * Returns a plain controller information.
+     * 
+     * @param controllerName
+     *            the controller name
+     * @return the plain controller information
+     * @throws UnifyException
+     *             if bean with name does not exist. If controller with name is not
+     *             a page-controller. if an error occurs
+     */
+    PlainControllerInfo getPlainControllerInfo(String controllerName) throws UnifyException;
+
+    /**
      * Returns a remote call controller information.
      * 
      * @param controllerName

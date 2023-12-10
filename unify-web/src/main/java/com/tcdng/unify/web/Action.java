@@ -28,21 +28,29 @@ import com.tcdng.unify.core.util.StringUtils;
  */
 public class Action {
 
-    private Method method;
+	private Method method;
 
-    public Action(Method method) {
-        this.method = method;
-    }
+	public Action(Method method) {
+		this.method = method;
+	}
 
-    public String getMethodName() {
-        return method.getName();
-    }
+	public String getMethodName() {
+		return method.getName();
+	}
 
-    public Method getMethod() {
-        return method;
-    }
+	public Method getMethod() {
+		return method;
+	}
 
-    public String toString() {
-        return StringUtils.toXmlString(this);
-    }
+	public Class<?> getParamType() {
+		return getMethod().getParameterTypes()[0];
+	}
+
+	public Class<?> getReturnType() {
+		return getMethod().getReturnType();
+	}
+
+	public String toString() {
+		return StringUtils.toXmlString(this);
+	}
 }

@@ -136,30 +136,30 @@ public abstract class AbstractRemoteCallController extends AbstractController im
         String methodCode = null;
 
         ObjectStreamer streamer = objectStreamers.get(remoteCallFormat);
-        RemoteCallHandler handler = null;
+        RemoteAction remoteAction = null;
         try {
             RemoteCallControllerInfo rbbInfo = controllerUtil.getRemoteCallControllerInfo(getName());
-            handler = rbbInfo.getRemoteCallHandler(remoteHandler);
+            remoteAction = rbbInfo.getAction(remoteHandler);
             RemoteCallParams param = null;
             if (remoteCallFormat.isStringFormat()) {
-                param = streamer.unmarshal(handler.getParamType(), (String) remoteParam);
+                param = streamer.unmarshal(remoteAction.getParamType(), (String) remoteParam);
             } else {
-                param = streamer.unmarshal(handler.getParamType(), new ByteArrayInputStream((byte[]) remoteParam));
+                param = streamer.unmarshal(remoteAction.getParamType(), new ByteArrayInputStream((byte[]) remoteParam));
             }
 
-            methodCode = handler.getMethodCode();
-            if (handler.isRestricted() && rbbInfo.isRemoteCallGate()) {
+            methodCode = remoteAction.getMethodCode();
+            if (remoteAction.isRestricted() && rbbInfo.isRemoteCallGate()) {
                 RemoteCallGate gate = (RemoteCallGate) getComponent(rbbInfo.getRemoteCallGateName());
                 gate.grantPass(param.getClientAppCode(), methodCode);
             }
 
-            RemoteCallResult result = (RemoteCallResult) handler.getMethod().invoke(this, param);
+            RemoteCallResult result = (RemoteCallResult) remoteAction.getMethod().invoke(this, param);
             respObj = streamer.marshal(result);
         } catch (Exception e) {
             logError(e);
             RemoteCallResult error = null;
-            if (handler != null) {
-                error = ReflectUtils.newInstance(handler.getReturnType());
+            if (remoteAction != null) {
+                error = ReflectUtils.newInstance(remoteAction.getReturnType());
             } else {
                 error = new RemoteCallError();
             }

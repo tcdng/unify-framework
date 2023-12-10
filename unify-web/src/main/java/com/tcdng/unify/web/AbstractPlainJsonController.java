@@ -50,8 +50,9 @@ public abstract class AbstractPlainJsonController extends AbstractPlainControlle
 		}
 
 		response.setContentType(RemoteCallFormat.JSON.mimeType().template());
+		final String actionName = request.getRequestPathParts().getControllerPathParts().getActionName();
 		final String jsonRequest = (String) request.getParameter(RequestParameterConstants.REMOTE_CALL_BODY);
-		final String jsonResponse = doExecute(jsonRequest);
+		final String jsonResponse = doExecute(actionName, jsonRequest);
 		if (jsonResponse != null) {
 			try {
 				response.getWriter().write(jsonResponse);
@@ -74,9 +75,9 @@ public abstract class AbstractPlainJsonController extends AbstractPlainControlle
 			jsonObjectStreamer.marshal(obj, sw);
 			return sw.toString();
 		}
-		
+
 		return null;
 	}
 
-	protected abstract String doExecute(String jsonRequest) throws UnifyException;
+	protected abstract String doExecute(String actionName, String jsonRequest) throws UnifyException;
 }
