@@ -29,6 +29,7 @@ import java.util.TimeZone;
 import com.tcdng.unify.core.annotation.Parameter;
 import com.tcdng.unify.core.annotation.Singleton;
 import com.tcdng.unify.core.constant.LocaleType;
+import com.tcdng.unify.core.constant.PrintFormat;
 import com.tcdng.unify.core.data.Listable;
 import com.tcdng.unify.core.data.ParamConfig;
 import com.tcdng.unify.core.data.ValueStore;
@@ -191,7 +192,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 		}
 		return DataUtils.convert(clazz, value);
 	}
-	
+
 	/**
 	 * Gets filename based on container working path.
 	 * 
@@ -312,7 +313,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 *                        unknown. If multiple implementations of type is found.
 	 *                        If component instantiation error occurs.
 	 */
-	public <T extends UnifyComponent> T getComponent(Class<T> componentType) throws UnifyException  {
+	public <T extends UnifyComponent> T getComponent(Class<T> componentType) throws UnifyException {
 		return unifyComponentContext.getComponent(componentType);
 	}
 
@@ -586,8 +587,8 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	/**
 	 * Gets the component container runtime ID.
 	 * 
-	 * @return the runtime ID. A null value is returned if container is not in cluster
-	 *         mode.
+	 * @return the runtime ID. A null value is returned if container is not in
+	 *         cluster mode.
 	 * @throws UnifyException if an error occurs
 	 */
 	protected String getRuntimeId() throws UnifyException {
@@ -715,20 +716,19 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 * @throws UnifyException if an error occurs
 	 */
 	protected Object getApplicationAttribute(String name) throws UnifyException {
-		return unifyComponentContext != null ? unifyComponentContext.getApplicationAttribute(name)
-				: null;
+		return unifyComponentContext != null ? unifyComponentContext.getApplicationAttribute(name) : null;
 	}
 
 	/**
-	 * Gets an attribute value from application context with a conversion to the appropriate type.
+	 * Gets an attribute value from application context with a conversion to the
+	 * appropriate type.
 	 * 
 	 * @param name the attribute name
 	 * @return the attribute value
 	 * @throws UnifyException if an error occurs
 	 */
 	protected <T> T getApplicationAttribute(Class<T> typeClass, String name) throws UnifyException {
-		Object val = unifyComponentContext != null ? unifyComponentContext.getApplicationAttribute(name)
-				: null;
+		Object val = unifyComponentContext != null ? unifyComponentContext.getApplicationAttribute(name) : null;
 		return DataUtils.convert(typeClass, val);
 	}
 
@@ -850,7 +850,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 * @throws UnifyException if an error occurs
 	 */
 	protected Object removeSessionAttribute(String name) throws UnifyException {
-		return unifyComponentContext != null ? unifyComponentContext.getSessionContext().removeAttribute(name):null;
+		return unifyComponentContext != null ? unifyComponentContext.getSessionContext().removeAttribute(name) : null;
 	}
 
 	/**
@@ -959,8 +959,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 * @throws UnifyException if an error occurs
 	 */
 	protected boolean isGlobalAccounting() throws UnifyException {
-		return getSessionAttribute(boolean.class,
-				UnifyCoreSessionAttributeConstants.INPUT_GLOBAL_ACCOUNTING_FLAG);
+		return getSessionAttribute(boolean.class, UnifyCoreSessionAttributeConstants.INPUT_GLOBAL_ACCOUNTING_FLAG);
 	}
 
 	/**
@@ -970,8 +969,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 * @throws UnifyException if an error occurs
 	 */
 	protected boolean isWidgetDateFormatOverride() throws UnifyException {
-		return getSessionAttribute(boolean.class,
-				UnifyCoreSessionAttributeConstants.OVERRIDE_WIDGET_DATEFORMAT_FLAG);
+		return getSessionAttribute(boolean.class, UnifyCoreSessionAttributeConstants.OVERRIDE_WIDGET_DATEFORMAT_FLAG);
 	}
 
 	/**
@@ -1006,7 +1004,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 
 		return null;
 	}
-	
+
 	/**
 	 * Gets current session user token.
 	 * 
@@ -1020,7 +1018,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	/**
 	 * Sets the user token tenant ID for current session.
 	 * 
-	 * @param tenantId   the tenant ID
+	 * @param tenantId the tenant ID
 	 * @throws UnifyException if an error occurs
 	 */
 	protected void setUserTokenTenantId(Long tenantId) throws UnifyException {
@@ -1132,7 +1130,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 * Logs a exception at ERROR level.
 	 * 
 	 * @param taskMonitor the task monitor
-	 * @param exception the exception to log
+	 * @param exception   the exception to log
 	 */
 	protected void logError(TaskMonitor taskMonitor, Exception exception) {
 		log(taskMonitor, LoggingLevel.ERROR, exception);
@@ -1213,6 +1211,89 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 */
 	protected void logSevere(Exception exception) {
 		log(null, LoggingLevel.SEVERE, exception);
+	}
+
+	/**
+	 * Get pretty JSON string from object.
+	 * 
+	 * @param src the object to print
+	 * @return the pretty JSON
+	 * @throws UnifyException if an error occurs
+	 */
+	protected String prettyJson(Object src) throws UnifyException {
+		if (src != null) {
+			return DataUtils.asJsonString(src, PrintFormat.PRETTY);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Get pretty JSON string from object on info.
+	 * 
+	 * @param src the object to print
+	 * @return the pretty JSON
+	 * @throws UnifyException if an error occurs
+	 */
+	protected String prettyJsonOnInfo(Object src) throws UnifyException {
+		return prettyJsonOn(LoggingLevel.INFO, src);
+	}
+
+	/**
+	 * Get pretty JSON string from object on debug.
+	 * 
+	 * @param src the object to print
+	 * @return the pretty JSON
+	 * @throws UnifyException if an error occurs
+	 */
+	protected String prettyJsonOnDebug(Object src) throws UnifyException {
+		return prettyJsonOn(LoggingLevel.DEBUG, src);
+	}
+
+	/**
+	 * Get pretty JSON string from object on warn.
+	 * 
+	 * @param src the object to print
+	 * @return the pretty JSON
+	 * @throws UnifyException if an error occurs
+	 */
+	protected String prettyJsonOnWarn(Object src) throws UnifyException {
+		return prettyJsonOn(LoggingLevel.WARN, src);
+	}
+
+	/**
+	 * Get pretty JSON string from object on error.
+	 * 
+	 * @param src the object to print
+	 * @return the pretty JSON
+	 * @throws UnifyException if an error occurs
+	 */
+	protected String prettyJsonOnError(Object src) throws UnifyException {
+		return prettyJsonOn(LoggingLevel.ERROR, src);
+	}
+
+	/**
+	 * Get pretty JSON string from object on severe.
+	 * 
+	 * @param src the object to print
+	 * @return the pretty JSON
+	 * @throws UnifyException if an error occurs
+	 */
+	protected String prettyJsonOnSevere(Object src) throws UnifyException {
+		return prettyJsonOn(LoggingLevel.SEVERE, src);
+	}
+
+	private String prettyJsonOn(LoggingLevel level, Object src) throws UnifyException {
+
+		if (src != null) {
+			Logger logger = unifyComponentContext.getLogger();
+			final boolean enabled = logger.isEnabled(level);
+			if (enabled) {
+				return DataUtils.asJsonString(src, PrintFormat.PRETTY);
+			}
+		}
+
+		return null;
 	}
 
 	/**
@@ -1380,7 +1461,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	protected boolean isTenancyEnabled() throws UnifyException {
 		return getContainerSetting(boolean.class, UnifyCorePropertyConstants.APPLICATION_TENANCY_ENABLED);
 	}
-	
+
 	protected String getPrintableStackTraceWithMessageHeader(LocaleType localeType, Throwable exception)
 			throws UnifyException {
 		String header = getExceptionMessage(localeType, exception);
@@ -1659,7 +1740,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 		Exception e = new UnsupportedOperationException();
 		throw new UnifyOperationException(e, getName(), e.getMessage());
 	}
-	
+
 	protected Long getUserTenantId() throws UnifyException {
 		UserToken userToken = getUserToken();
 		Long tenantId = userToken != null ? getUserToken().getTenantId() : null;
@@ -1769,7 +1850,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 				if (enabled) {
 					logger.log(loggingLevel, msg, exception);
 				}
-				
+
 				if (taskMonitor != null) {
 					taskMonitor.addMessage(msg);
 				}

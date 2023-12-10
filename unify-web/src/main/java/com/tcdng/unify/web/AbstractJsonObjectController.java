@@ -35,6 +35,7 @@ public abstract class AbstractJsonObjectController extends AbstractPlainJsonCont
 
 	@Override
 	protected final String doExecute(String actionName, String jsonRequest) throws UnifyException {
+		logDebug("Performing execution on action [{0}]...", actionName);
 		try {
 			PlainControllerInfo pcInfo = controllerUtil.getPlainControllerInfo(getName());
 			Action action = pcInfo.getAction(actionName);			
