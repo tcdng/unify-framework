@@ -82,8 +82,6 @@ ux.busyCounter = 0;
 ux.cntId = null
 ux.cntHintId = null
 ux.cntTabCloseId = null;
-ux.cntImmIndex = -1;
-ux.cntImmURL = null;
 ux.cntOpenPath = null;
 ux.cntSaveIsRemote = false;
 ux.cntSavePath = null;
@@ -325,7 +323,6 @@ ux.respHandler = {
 			if (resp.scrollToTop) {
 				ux.scrollDocToTop();
 			}
-			ux.contentOpenPaths();
 		}
 	},
 
@@ -1077,9 +1074,7 @@ ux.rigContentPanel = function(rgp) {
 	ux.cntSaveIsRemote = rgp.pSaveIsRem;
 
 	if (rgp.pImmURL) {
-		ux.cntImmIndex = -1;
-		ux.cntImmURL = rgp.pImmURL;
-		ux.contentOpenPaths();
+		ux.postToPath({uPath:rgp.pImmURL});
 	} else {
 		const currIdx = rgp.pCurIdx;
 		const menuId = rgp.pMenuId;
@@ -1135,13 +1130,6 @@ ux.rigContentPanel = function(rgp) {
 			}
 		}
 				
-	}
-}
-
-ux.contentOpenPaths = function() {
-	ux.cntImmIndex++;
-	if (ux.cntImmURL && ux.cntImmIndex < ux.cntImmURL.length) {
-		ux.postToPath({uPath:ux.cntImmURL[ux.cntImmIndex]});
 	}
 }
 
