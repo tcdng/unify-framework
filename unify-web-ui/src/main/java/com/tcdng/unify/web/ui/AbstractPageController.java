@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.tcdng.unify.core.SessionContext;
+import com.tcdng.unify.core.UnifyCoreSessionAttributeConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.Singleton;
@@ -28,6 +29,7 @@ import com.tcdng.unify.core.task.TaskLauncher;
 import com.tcdng.unify.core.task.TaskMonitor;
 import com.tcdng.unify.core.task.TaskSetup;
 import com.tcdng.unify.core.upl.UplElementReferences;
+import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.ReflectUtils;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ClientRequest;
@@ -248,6 +250,7 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 		return hidePopup();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public String executePageCall(String actionName) throws UnifyException {
 		try {
@@ -256,6 +259,16 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 				if (!getPageRequestContextUtil().isRemoteViewer()) {
 					ContentPanel contentPanel = getPageRequestContextUtil().getRequestDocument().getContentPanel();
 					contentPanel.addContent(getPageRequestContextUtil().getRequestPage());
+
+					final List<String> stickyPaths = (List<String>) removeSessionAttribute(
+							UnifyCoreSessionAttributeConstants.STICKY_PATHS);
+					if (!DataUtils.isBlank(stickyPaths)) {
+						for (String stickyPath: stickyPaths) {
+							fireOtherControllerAction(stickyPath);
+						}
+						
+						// Revert to first?
+					}
 				}
 
 				return resultName;
@@ -615,7 +628,7 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 	 * 
 	 * @param fullActionPath the target full action path name
 	 * @return the action result mapping
-	 * @throws UnifyException if an error occurs
+	 * @throws UnifyException if an error occurs 
 	 */
 	protected String fireOtherControllerAction(String fullActionPath) throws UnifyException {
 		return getUIControllerUtil().executePageController(fullActionPath);

@@ -15,6 +15,9 @@
  */
 package com.tcdng.unify.web.ui.widget.writer.panel;
 
+import java.util.Arrays;
+
+import com.tcdng.unify.core.UnifyCoreSessionAttributeConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
@@ -71,12 +74,13 @@ public class ContentPanelWriter extends AbstractPanelWriter {
 
 		if (contentPanel.getPageCount() == 0) {
 			final String[] paths = contentPanel.getPaths();
-			final String[] _cpaths = new String[paths.length];
-			for (int i = 0; i < paths.length; i++) {
-				_cpaths[i] = getContextURL(paths[i]);
+			final String[] _cpaths = new String[paths.length - 1];
+			for (int i = 0; i < _cpaths.length; i++) {
+				_cpaths[i] = paths[i + 1];
 			}
 
-			writer.writeParam("pImmURL", _cpaths);
+			writer.writeParam("pImmURL", getContextURL(paths[0]));
+			setSessionAttribute(UnifyCoreSessionAttributeConstants.STICKY_PATHS, Arrays.asList(_cpaths));
 		} else {
 			writer.writeParam("pCurIdx", contentPanel.getPageIndex());
 			ContentInfo currentContentInfo = contentPanel.getCurrentContentInfo();
