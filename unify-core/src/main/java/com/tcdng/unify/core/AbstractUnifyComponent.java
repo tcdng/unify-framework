@@ -684,7 +684,9 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 * @throws UnifyException if an error occurs.
 	 */
 	protected SessionContext getSessionContext() throws UnifyException {
-		return unifyComponentContext.getRequestContext().getSessionContext();
+		return unifyComponentContext.getRequestContext() != null
+				? unifyComponentContext.getRequestContext().getSessionContext()
+				: null;
 	}
 
 	/**
