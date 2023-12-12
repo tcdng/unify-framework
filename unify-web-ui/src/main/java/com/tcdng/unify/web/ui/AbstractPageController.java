@@ -107,7 +107,7 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 	@Override
 	public void ensureContextResources(ControllerPathParts controllerPathParts) throws UnifyException {
 		SessionContext sessionContext = getSessionContext();
-		if (sessionContext.getAttribute(controllerPathParts.getControllerPathId()) == null) {
+		if (sessionContext != null && sessionContext.getAttribute(controllerPathParts.getControllerPathId()) == null) {
 			Page page = getPageManager().createPage(sessionContext.getLocale(),
 					controllerPathParts.getControllerName());
 			page.setPathParts(controllerPathParts);
