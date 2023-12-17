@@ -69,6 +69,8 @@ public class DynamicEntityInfo {
 
 	private boolean resolved;
 
+	private boolean skipPasswordFields;
+
 	private long version;
 
 	private DynamicEntityInfo(boolean selfReference) {
@@ -171,6 +173,14 @@ public class DynamicEntityInfo {
 
 	public boolean isResolved() {
 		return resolved;
+	}
+
+	public boolean isSkipPasswordFields() {
+		return skipPasswordFields;
+	}
+
+	public void setSkipPasswordFields(boolean skipPasswordFields) {
+		this.skipPasswordFields = skipPasswordFields;
 	}
 
 	@Override
