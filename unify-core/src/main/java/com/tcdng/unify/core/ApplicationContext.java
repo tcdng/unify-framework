@@ -109,6 +109,11 @@ public class ApplicationContext extends Context {
 		return (Formatter<Object>) container.getUplComponent(applicationLocale, formatterUpl, true);
 	}
 
+	@SuppressWarnings("unchecked")
+	public Formatter<Object> createFormatter(String formatterUpl) throws UnifyException {
+		return (Formatter<Object>) container.getUplComponent(applicationLocale, formatterUpl, false);
+	}
+
 	@Override
 	public Object getAttribute(String name) throws UnifyException {
 		Object val = super.getAttribute(name);
