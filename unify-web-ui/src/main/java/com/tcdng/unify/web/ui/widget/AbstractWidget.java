@@ -67,6 +67,7 @@ import com.tcdng.unify.web.ui.widget.panel.StandalonePanel;
 		@UplAttribute(name = "privilege", type = String.class),
 		@UplAttribute(name = "fixedConforming", type = boolean.class, defaultVal = "false"),
 		@UplAttribute(name = "hidden", type = boolean.class, defaultVal = "false"),
+		@UplAttribute(name = "valueStoreMemory", type = boolean.class, defaultVal = "false"),
 		@UplAttribute(name = "behaviorAlways", type = boolean.class, defaultVal = "false"),
 		@UplAttribute(name = "eventHandler", type = EventHandler[].class) })
 public abstract class AbstractWidget extends AbstractUplComponent implements Widget {
@@ -78,6 +79,8 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 	private Container container;
 
 	private ValueStore valueStore;
+
+	private ValueStore[] valueStoreMem;
 
 	private String extraStyle;
 
@@ -244,6 +247,12 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 	@Override
 	public void setValueStore(ValueStore valueStore) throws UnifyException {
 		this.valueStore = valueStore;
+		if (valueStoreMem != null && valueStore != null) {
+			int dataIndex = valueStore.getDataIndex();
+			if (dataIndex >= 0 && dataIndex < valueStoreMem.length) {
+				valueStoreMem[dataIndex] = valueStore;
+			}
+		}
 	}
 
 	@Override
@@ -279,10 +288,29 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 	}
 
 	@Override
-	public void setValueIndex(int index) {
-		if (valueStore != null) {
-			valueStore.setDataIndex(index);
+	public boolean supportsValueStoreMemory() throws UnifyException {
+		return getUplAttribute(boolean.class, "valueStoreMemory");
+	}
+
+	@Override
+	public boolean initValueStoreMemory(int size) throws UnifyException {
+		if (size > 0 && supportsValueStoreMemory()) {
+			valueStoreMem = new ValueStore[size];
+			return true;
 		}
+
+		valueStoreMem = null;
+		return false;
+	}
+
+	@Override
+	public boolean recallValueStore(int memoryIndex) throws UnifyException {
+		if (valueStoreMem != null && memoryIndex >= 0 && memoryIndex < valueStoreMem.length) {
+			valueStore = valueStoreMem[memoryIndex];
+			return true;
+		}
+
+		return false;
 	}
 
 	@Override

@@ -247,12 +247,6 @@ public interface Widget extends UplComponent {
     int getValueIndex();
 
     /**
-     * Sets value index
-     * @param index the valus index to set
-     */
-    void setValueIndex(int index);
-
-    /**
      * Returns the component current value.
      * 
      * @throws UnifyException
@@ -656,6 +650,36 @@ public interface Widget extends UplComponent {
      * Returns true if widget refreshes container
      */
     boolean isRefreshesContainer();
+    
+    /**
+     * Returns true if widget supports value store memory.
+     * 
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    boolean supportsValueStoreMemory() throws UnifyException;
+
+    /**
+     * Initializes value store memory.
+     * 
+     * @param size
+     *             the memory size
+     * @return true if supports value store
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    boolean initValueStoreMemory(int size) throws UnifyException;
+    
+    /**
+     * Recalls value store at memory index.
+     * 
+     * @param memoryIndex
+     *                    memory index
+     * @return true if value store was recalled.
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    boolean recallValueStore(int memoryIndex) throws UnifyException;
 
     /**
      * Sets the widget number precision.
