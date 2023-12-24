@@ -681,6 +681,14 @@ public interface Widget extends UplComponent {
      */
     boolean recallValueStore(int memoryIndex) throws UnifyException;
 
+	/**
+	 * Uses recall memory of supplied widget.
+	 * 
+	 * @param srcWidget the source widget
+	 * @throws UnifyException if an error occurs
+	 */
+	void useRecallMemory(Widget srcWidget) throws UnifyException;
+    
     /**
      * Sets the widget number precision.
      * @throws UnifyException
