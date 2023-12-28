@@ -33,69 +33,74 @@ import com.tcdng.unify.web.ui.widget.Control;
  * @since 1.0
  */
 @Component("ui-dynamic")
-@UplAttributes({ @UplAttribute(name = "descriptorBinding", type = String.class, mandatory = true) })
+@UplAttributes({ @UplAttribute(name = "descriptorBinding", type = String.class, mandatory = true),
+	@UplAttribute(name = "valueStoreMemory", type = boolean.class, defaultVal = "true")})
 public class DynamicField extends AbstractMultiControl {
 
-    private Map<String, String> descriptorToIdMap;
+	private Map<String, String> descriptorToIdMap;
 
-    public DynamicField() {
-        descriptorToIdMap = new HashMap<String, String>();
-    }
+	public DynamicField() {
+		descriptorToIdMap = new HashMap<String, String>();
+	}
 
-    @Override
-    public String getStyleClass() throws UnifyException {
-        return getControl().getStyleClass();
-    }
+	@Override
+	public String getStyleClass() throws UnifyException {
+		return getControl().getStyleClass();
+	}
 
-    @Override
-    public String getStyle() throws UnifyException {
-        return getControl().getStyle();
-    }
+	@Override
+	public String getStyle() throws UnifyException {
+		return getControl().getStyle();
+	}
 
-    @Override
-    public String getHint() throws UnifyException {
-        return getControl().getHint();
-    }
+	@Override
+	public String getHint() throws UnifyException {
+		return getControl().getHint();
+	}
 
-    @Override
-    public void setGroupId(String groupId) throws UnifyException {
-        super.setGroupId(groupId);
-        for (String id : descriptorToIdMap.values()) {
-            getChildWidgetInfo(id).getWidget().setGroupId(groupId);
-        }
-    }
+	@Override
+	public void setGroupId(String groupId) throws UnifyException {
+		super.setGroupId(groupId);
+		for (String id : descriptorToIdMap.values()) {
+			getChildWidgetInfo(id).getWidget().setGroupId(groupId);
+		}
+	}
 
-    public Control getControl() throws UnifyException {
-        Control control = null;
-        String descriptorBinding = getUplAttribute(String.class, "descriptorBinding");
-        String descriptor = (String) getValue(descriptorBinding);
-        if (StringUtils.isNotBlank(descriptor)) {
-            String id = descriptorToIdMap.get(descriptor);
-            if (id == null) {            
-                StringBuilder sb = new StringBuilder(descriptor);
-                appendUplAttribute(sb, "binding");
-                if (descriptor.indexOf("style:$s{") < 0) {
-                    String style = super.getStyle();
-                    if(!StringUtils.isBlank(style)) {
-                        sb.append(" style:$s{").append(style).append("}");
-                    }
-                }
-                
-                control = (Control) addInternalChildWidget(sb.toString(), true, false);
-                descriptorToIdMap.put(descriptor, control.getBaseId());
-            } else {
-                control = (Control) getChildWidgetInfo(id).getWidget();
-            }
+	public Control getControl() throws UnifyException {
+		Control control = null;
+		String descriptorBinding = getUplAttribute(String.class, "descriptorBinding");
+		String descriptor = (String) getValue(descriptorBinding);
+		if (StringUtils.isNotBlank(descriptor)) {
+			String id = descriptorToIdMap.get(descriptor);
+			if (id == null) {
+				StringBuilder sb = new StringBuilder(descriptor);
+				appendUplAttribute(sb, "binding");
+				if (descriptor.indexOf("style:$s{") < 0) {
+					String style = super.getStyle();
+					if (!StringUtils.isBlank(style)) {
+						sb.append(" style:$s{").append(style).append("}");
+					}
+				}
 
-            addPageAlias(control);
-        }
+				control = (Control) addInternalChildWidget(sb.toString(), true, false);
+				descriptorToIdMap.put(descriptor, control.getBaseId());
+			} else {
+				control = (Control) getChildWidgetInfo(id).getWidget();
+			}
 
-        return control;
-    }
+			addPageAlias(control);
+		}
 
-    @Override
-    protected void doOnPageConstruct() throws UnifyException {
-        
-    }
+		if (control != null) {
+			control.useRecallMemory(this);
+		}
+
+		return control;
+	}
+
+	@Override
+	protected void doOnPageConstruct() throws UnifyException {
+
+	}
 
 }

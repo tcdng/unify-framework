@@ -314,6 +314,13 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 	}
 
 	@Override
+	public void useRecallMemory(Widget srcWidget) throws UnifyException {
+		if (srcWidget instanceof AbstractWidget) {
+			valueStoreMem = ((AbstractWidget) srcWidget).valueStoreMem;		
+		}
+	}
+
+	@Override
 	public String getContainerId() throws UnifyException {
 		if (container != null) {
 			return container.getId();

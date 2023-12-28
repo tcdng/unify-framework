@@ -208,20 +208,22 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 		if (requestCommand != null) {
 			Widget widget = getPageRequestContextUtil().getRequestPage().getWidgetByLongName(Widget.class,
 					requestCommand.getParentLongName());
-			DataTransferBlock childBlock = requestCommand.getTransferBlock().getChildBlock();
-			while (childBlock != null) {
-				widget = ((WidgetContainer) widget).getChildWidget(childBlock.getId());
-				childBlock = childBlock.getChildBlock();
-			}
+			if (widget != null) {
+				DataTransferBlock childBlock = requestCommand.getTransferBlock().getChildBlock();
+				while (childBlock != null) {
+					widget = ((WidgetContainer) widget).getChildWidget(childBlock.getId());
+					childBlock = childBlock.getChildBlock();
+				}
 
-			if (widget.isRelayCommand()) {
-				widget = widget.getRelayWidget();
-			}
+				if (widget.isRelayCommand()) {
+					widget = widget.getRelayWidget();
+				}
 
-			uiCommandManager.executeCommand(widget, requestCommand.getCommand());
-			String commandResultMapping = getPageRequestContextUtil().getCommandResultMapping();
-			if (StringUtils.isNotBlank(commandResultMapping)) {
-				return commandResultMapping;
+				uiCommandManager.executeCommand(widget, requestCommand.getCommand());
+				String commandResultMapping = getPageRequestContextUtil().getCommandResultMapping();
+				if (StringUtils.isNotBlank(commandResultMapping)) {
+					return commandResultMapping;
+				}
 			}
 		}
 
@@ -263,10 +265,10 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 					final List<String> stickyPaths = (List<String>) removeSessionAttribute(
 							UnifyCoreSessionAttributeConstants.STICKY_PATHS);
 					if (!DataUtils.isBlank(stickyPaths)) {
-						for (String stickyPath: stickyPaths) {
+						for (String stickyPath : stickyPaths) {
 							fireOtherControllerAction(stickyPath);
 						}
-						
+
 						// Revert to first?
 					}
 				}
@@ -628,7 +630,7 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 	 * 
 	 * @param fullActionPath the target full action path name
 	 * @return the action result mapping
-	 * @throws UnifyException if an error occurs 
+	 * @throws UnifyException if an error occurs
 	 */
 	protected String fireOtherControllerAction(String fullActionPath) throws UnifyException {
 		return getUIControllerUtil().executePageController(fullActionPath);

@@ -15,6 +15,8 @@
  */
 package com.tcdng.unify.web.ui;
 
+import com.tcdng.unify.core.util.StringUtils;
+
 /**
  * Request command data object.
  * 
@@ -46,4 +48,9 @@ public class RequestCommand {
     public String getCommand() {
         return command;
     }
+
+	@Override
+	public String toString() {
+		return StringUtils.toXmlString(this);
+	}
 }

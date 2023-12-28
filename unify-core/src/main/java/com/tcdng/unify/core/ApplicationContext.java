@@ -104,9 +104,28 @@ public class ApplicationContext extends Context {
 		return ViewDirective.ALLOW_VIEW_DIRECTIVE;
 	}
 
+	/**
+	 * Creates a cached formatter component.
+	 * 
+	 * @param formatterUpl the formatter UPL
+	 * @return the formatter object
+	 * @throws UnifyException if an error occurs
+	 */
 	@SuppressWarnings("unchecked")
 	public Formatter<Object> getFormatter(String formatterUpl) throws UnifyException {
 		return (Formatter<Object>) container.getUplComponent(applicationLocale, formatterUpl, true);
+	}
+
+	/**
+	 * Creates an un-cached formatter component.
+	 * 
+	 * @param formatterUpl the formatter UPL
+	 * @return the formatter object
+	 * @throws UnifyException if an error occurs
+	 */
+	@SuppressWarnings("unchecked")
+	public Formatter<Object> createFormatter(String formatterUpl) throws UnifyException {
+		return (Formatter<Object>) container.getUplComponent(applicationLocale, formatterUpl, false);
 	}
 
 	@Override
