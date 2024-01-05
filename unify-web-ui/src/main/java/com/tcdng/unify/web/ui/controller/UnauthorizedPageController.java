@@ -16,7 +16,6 @@
 package com.tcdng.unify.web.ui.controller;
 
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Singleton;
 import com.tcdng.unify.core.annotation.UplBinding;
 import com.tcdng.unify.web.annotation.Action;
@@ -32,7 +31,7 @@ import com.tcdng.unify.web.ui.AbstractPageController;
  * @since 1.0
  */
 @Singleton
-@Component(SystemInfoConstants.UNAUTHORIZED_CONTROLLER_NAME)
+//@Component(SystemInfoConstants.UNAUTHORIZED_CONTROLLER_NAME)
 @UplBinding("web/reserved/upl/unauthorized.upl")
 @ResultMappings({ @ResultMapping(
         name = SystemInfoConstants.FORWARD_TO_APPLICATION_MAPPING,
