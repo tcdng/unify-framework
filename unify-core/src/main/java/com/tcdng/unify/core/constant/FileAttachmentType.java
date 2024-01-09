@@ -102,7 +102,7 @@ public enum FileAttachmentType implements EnumConst {
 			case WILDCARD:
 				break;
 			case WORD:
-				break;
+				return filename + ".doc";
 			case XML:
 				return filename + ".xml";
 			default:
