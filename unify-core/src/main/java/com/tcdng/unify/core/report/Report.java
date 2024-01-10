@@ -71,7 +71,7 @@ public class Report {
 	private List<ReportHtml> embeddedHtmls;
 
 	private Object customObject;
-	
+
 	private ReportTable table;
 
 	private ReportFilter filter;
@@ -106,12 +106,12 @@ public class Report {
 
 	private Report(String code, String title, String template, String processor, String dataSource, String query,
 			String theme, List<?> beanCollection, ReportTable table, List<ReportTableJoin> joins,
-			List<ReportColumn> columns, List<ReportPlacement> placements, List<ReportHtml> embeddedHtmls, Object customObject,
-			ReportFilter filter, ReportFormat format, ReportLayoutType layout, ReportParameters reportParameters,
-			ReportPageProperties pageProperties, String summationLegend, String groupSummationLegend,
-			boolean dynamicDataSource, boolean printColumnNames, boolean printGroupColumnNames,
-			boolean invertGroupColors, boolean showParameterHeader, boolean showGrandFooter, boolean underlineRows,
-			boolean shadeOddRows) {
+			List<ReportColumn> columns, List<ReportPlacement> placements, List<ReportHtml> embeddedHtmls,
+			Object customObject, ReportFilter filter, ReportFormat format, ReportLayoutType layout,
+			ReportParameters reportParameters, ReportPageProperties pageProperties, String summationLegend,
+			String groupSummationLegend, boolean dynamicDataSource, boolean printColumnNames,
+			boolean printGroupColumnNames, boolean invertGroupColors, boolean showParameterHeader,
+			boolean showGrandFooter, boolean underlineRows, boolean shadeOddRows) {
 		this.code = code;
 		this.title = title;
 		this.template = template;
@@ -366,6 +366,14 @@ public class Report {
 		columns.add(reportColumn);
 	}
 
+	public static Builder newBuilder(ReportLayoutType layout) {
+		return new Builder(layout, ReportPageProperties.DEFAULT);
+	}
+
+	public static Builder newBuilder() {
+		return new Builder(ReportLayoutType.TABULAR, ReportPageProperties.DEFAULT);
+	}
+
 	public static Builder newBuilder(ReportLayoutType layout, ReportPageProperties pageProperties) {
 		return new Builder(layout, pageProperties);
 	}
@@ -450,6 +458,11 @@ public class Report {
 			this.printGroupColumnNames = true;
 			this.showParameterHeader = true;
 			this.showGrandFooter = false;
+		};
+
+		public Builder pageProperties(ReportPageProperties pageProperties) {
+			this.pageProperties = pageProperties;
+			return this;
 		}
 
 		public Builder code(String code) {
@@ -770,10 +783,10 @@ public class Report {
 
 			Report report = new Report(code, title, template, processor, dataSource, query, theme, beanCollection,
 					table, Collections.unmodifiableList(joins), DataUtils.unmodifiableList(columns),
-					DataUtils.unmodifiableList(placements), DataUtils.unmodifiableList(embeddedHtmls.values()), customObject,
-					rootFilter, format, layout, reportParameters, pageProperties, summationLegend, groupSummationLegend,
-					dynamicDataSource, printColumnNames, printGroupColumnNames, invertGroupColors, showParameterHeader,
-					showGrandFooter, underlineRows, shadeOddRows);
+					DataUtils.unmodifiableList(placements), DataUtils.unmodifiableList(embeddedHtmls.values()),
+					customObject, rootFilter, format, layout, reportParameters, pageProperties, summationLegend,
+					groupSummationLegend, dynamicDataSource, printColumnNames, printGroupColumnNames, invertGroupColors,
+					showParameterHeader, showGrandFooter, underlineRows, shadeOddRows);
 			return report;
 		}
 	}
