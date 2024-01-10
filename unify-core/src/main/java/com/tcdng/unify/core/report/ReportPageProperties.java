@@ -25,6 +25,8 @@ import com.tcdng.unify.core.constant.PageSizeType;
  */
 public class ReportPageProperties {
 
+	public static final ReportPageProperties DEFAULT = ReportPageProperties.newBuilder().build();
+
 	private PageSizeType size;
 
 	private String resourceBaseUri;
@@ -90,14 +92,6 @@ public class ReportPageProperties {
 
 	public boolean isLandscape() {
 		return landscape;
-	}
-
-	@Override
-	public String toString() {
-		return "[size=" + size + ", resourceBaseUri=" + resourceBaseUri + ", pageWidth="
-				+ pageWidth + ", pageHeight=" + pageHeight + ", marginTop=" + marginTop + ", marginBottom="
-				+ marginBottom + ", marginLeft=" + marginLeft + ", marginRight=" + marginRight + ", landscape="
-				+ landscape + "]";
 	}
 
 	public static Builder newBuilder() {

@@ -366,6 +366,14 @@ public class Report {
 		columns.add(reportColumn);
 	}
 
+	public static Builder newBuilder(ReportLayoutType layout) {
+		return new Builder(layout, ReportPageProperties.DEFAULT);
+	}
+
+	public static Builder newBuilder() {
+		return new Builder(ReportLayoutType.TABULAR, ReportPageProperties.DEFAULT);
+	}
+
 	public static Builder newBuilder(ReportLayoutType layout, ReportPageProperties pageProperties) {
 		return new Builder(layout, pageProperties);
 	}
