@@ -32,7 +32,7 @@ import com.tcdng.unify.web.ui.AbstractPageController;
  * @since 1.0
  */
 @Singleton
-//@Component(SystemInfoConstants.UNAUTHORIZED_CONTROLLER_NAME)
+@Component(SystemInfoConstants.UNAUTHORIZED_CONTROLLER_NAME)
 @UplBinding("web/reserved/upl/unauthorized.upl")
 @ResultMappings({ @ResultMapping(
         name = SystemInfoConstants.FORWARD_TO_APPLICATION_MAPPING,

@@ -39,6 +39,7 @@ import com.tcdng.unify.web.ClientResponse;
 import com.tcdng.unify.web.ControllerPathParts;
 import com.tcdng.unify.web.PathInfoRepository;
 import com.tcdng.unify.web.UnifyWebErrorConstants;
+import com.tcdng.unify.web.UnifyWebPropertyConstants;
 import com.tcdng.unify.web.constant.ReadOnly;
 import com.tcdng.unify.web.constant.RequestParameterConstants;
 import com.tcdng.unify.web.constant.ResetOnWrite;
@@ -61,389 +62,394 @@ import com.tcdng.unify.web.ui.widget.ResponseWriterPool;
  */
 public abstract class AbstractUIController extends AbstractController implements UIController {
 
-    private static final Set<String> skipOnPopulateSet = Collections
-            .unmodifiableSet(new HashSet<String>(Arrays.asList(PageRequestParameterConstants.DOCUMENT,
-                    PageRequestParameterConstants.TARGET_VALUE, PageRequestParameterConstants.WINDOW_NAME,
-                    PageRequestParameterConstants.VALIDATION_ACTION, PageRequestParameterConstants.CONFIRM_MSG,
-                    PageRequestParameterConstants.CONFIRM_MSGICON, PageRequestParameterConstants.CONFIRM_PARAM,
-                    RequestParameterConstants.REMOTE_VIEWER, RequestParameterConstants.REMOTE_ROLECD,
-                    RequestParameterConstants.REMOTE_SESSION_ID, RequestParameterConstants.REMOTE_USERLOGINID,
-                    RequestParameterConstants.REMOTE_USERNAME, RequestParameterConstants.REMOTE_BRANCH_CODE,
-                    RequestParameterConstants.REMOTE_ZONE_CODE, RequestParameterConstants.REMOTE_GLOBAL_ACCESS,
-                    RequestParameterConstants.REMOTE_COLOR_SCHEME, RequestParameterConstants.REMOTE_TENANT_CODE)));
+	private static final Set<String> skipOnPopulateSet = Collections
+			.unmodifiableSet(new HashSet<String>(Arrays.asList(PageRequestParameterConstants.DOCUMENT,
+					PageRequestParameterConstants.TARGET_VALUE, PageRequestParameterConstants.WINDOW_NAME,
+					PageRequestParameterConstants.VALIDATION_ACTION, PageRequestParameterConstants.CONFIRM_MSG,
+					PageRequestParameterConstants.CONFIRM_MSGICON, PageRequestParameterConstants.CONFIRM_PARAM,
+					RequestParameterConstants.REMOTE_VIEWER, RequestParameterConstants.REMOTE_ROLECD,
+					RequestParameterConstants.REMOTE_SESSION_ID, RequestParameterConstants.REMOTE_USERLOGINID,
+					RequestParameterConstants.REMOTE_USERNAME, RequestParameterConstants.REMOTE_BRANCH_CODE,
+					RequestParameterConstants.REMOTE_ZONE_CODE, RequestParameterConstants.REMOTE_GLOBAL_ACCESS,
+					RequestParameterConstants.REMOTE_COLOR_SCHEME, RequestParameterConstants.REMOTE_TENANT_CODE)));
 
-    @Configurable
-    private UIControllerUtil uiControllerUtil;
+	@Configurable
+	private UIControllerUtil uiControllerUtil;
 
-    @Configurable
-    private PageRequestContextUtil pageRequestContextUtil;
+	@Configurable
+	private PageRequestContextUtil pageRequestContextUtil;
 
-    @Configurable
-    private PageManager pageManager;
+	@Configurable
+	private PageManager pageManager;
 
-    @Configurable
-    private PathInfoRepository pathInfoRepository;
+	@Configurable
+	private PathInfoRepository pathInfoRepository;
 
-    @Configurable
-    private ResponseWriterPool responseWriterPool;
+	@Configurable
+	private ResponseWriterPool responseWriterPool;
 
-    private boolean readOnly;
+	private boolean readOnly;
 
-    private boolean resetOnWrite;
+	private boolean resetOnWrite;
 
-    public AbstractUIController(Secured secured, ReadOnly readOnly, ResetOnWrite resetOnWrite) {
-        super(secured);
-        this.readOnly = readOnly.isTrue();
-        this.resetOnWrite = resetOnWrite.isTrue();
-    }
+	public AbstractUIController(Secured secured, ReadOnly readOnly, ResetOnWrite resetOnWrite) {
+		super(secured);
+		this.readOnly = readOnly.isTrue();
+		this.resetOnWrite = resetOnWrite.isTrue();
+	}
 
-    public final void setUiControllerUtil(UIControllerUtil uiControllerUtil) {
-        this.uiControllerUtil = uiControllerUtil;
-    }
+	public final void setUiControllerUtil(UIControllerUtil uiControllerUtil) {
+		this.uiControllerUtil = uiControllerUtil;
+	}
 
-    public final void setPageRequestContextUtil(PageRequestContextUtil pageRequestContextUtil) {
-        this.pageRequestContextUtil = pageRequestContextUtil;
-    }
+	public final void setPageRequestContextUtil(PageRequestContextUtil pageRequestContextUtil) {
+		this.pageRequestContextUtil = pageRequestContextUtil;
+	}
 
-    public final void setPageManager(PageManager pageManager) {
-        this.pageManager = pageManager;
-    }
+	public final void setPageManager(PageManager pageManager) {
+		this.pageManager = pageManager;
+	}
 
-    public final void setPathInfoRepository(PathInfoRepository pathInfoRepository) {
-        this.pathInfoRepository = pathInfoRepository;
-    }
+	public final void setPathInfoRepository(PathInfoRepository pathInfoRepository) {
+		this.pathInfoRepository = pathInfoRepository;
+	}
 
-    public final void setResponseWriterPool(ResponseWriterPool responseWriterPool) {
-        this.responseWriterPool = responseWriterPool;
-    }
+	public final void setResponseWriterPool(ResponseWriterPool responseWriterPool) {
+		this.responseWriterPool = responseWriterPool;
+	}
 
-    @Override
-    public final void process(ClientRequest request, ClientResponse response) throws UnifyException {
-        try {
-            final ControllerPathParts reqPathParts = request.getRequestPathParts().getControllerPathParts();
-            PageController<?> docPageController = null;
-            ControllerPathParts docPathParts = null;
-            String documentPath = (String) request.getParameter(PageRequestParameterConstants.DOCUMENT);
-            if (documentPath != null) {
-                docPathParts = pathInfoRepository.getControllerPathParts(documentPath);
-                docPageController = (PageController<?>) getControllerFinder().findController(docPathParts);
-                pageRequestContextUtil.setRequestDocument((Document) uiControllerUtil.loadRequestPage(docPathParts));
-            }
+	@Override
+	public final void process(ClientRequest request, ClientResponse response) throws UnifyException {
+		try {
+			final ControllerPathParts reqPathParts = request.getRequestPathParts().getControllerPathParts();
+			PageController<?> docPageController = null;
+			ControllerPathParts docPathParts = null;
+			String documentPath = (String) request.getParameter(PageRequestParameterConstants.DOCUMENT);
+			if (documentPath != null) {
+				docPathParts = pathInfoRepository.getControllerPathParts(documentPath);
+				docPageController = (PageController<?>) getControllerFinder().findController(docPathParts);
+				pageRequestContextUtil.setRequestDocument((Document) uiControllerUtil.loadRequestPage(docPathParts));
+			}
 
-            pageRequestContextUtil.extractRequestParameters(request);
+			pageRequestContextUtil.extractRequestParameters(request);
 
-            ensureSecureAccess(reqPathParts, pageRequestContextUtil.isRemoteViewer());
-            setAdditionalResponseHeaders(response);
-            doProcess(request, response, docPageController, docPathParts);
-        } catch (Exception e) {
-            e.printStackTrace();
-            writeExceptionResponse(request, response, e);
-        } finally {
-            response.close();
-        }
-    }
+			ensureSecureAccess(reqPathParts, pageRequestContextUtil.isRemoteViewer());
+			setAdditionalResponseHeaders(response);
+			doProcess(request, response, docPageController, docPathParts);
+		} catch (Exception e) {
+			e.printStackTrace();
+			writeExceptionResponse(request, response, e);
+		} finally {
+			response.close();
+		}
+	}
 
-    private void setAdditionalResponseHeaders(ClientResponse response) throws UnifyException {
-        Map<String, String> additionalResponseHeaders = uiControllerUtil.getAdditionalResponseHeaders();
-        for (Map.Entry<String, String> entry : additionalResponseHeaders.entrySet()) {
-            response.setMetaData(entry.getKey(), entry.getValue());
-        }
+	private void setAdditionalResponseHeaders(ClientResponse response) throws UnifyException {
+		Map<String, String> additionalResponseHeaders = uiControllerUtil.getAdditionalResponseHeaders();
+		for (Map.Entry<String, String> entry : additionalResponseHeaders.entrySet()) {
+			response.setMetaData(entry.getKey(), entry.getValue());
+		}
 
-        if (uiControllerUtil.isCSPNonce()) {
-            String policy = "default-src 'self'; script-src 'nonce-" + pageRequestContextUtil.getNonce()
-                    + "' 'unsafe-inline' 'strict-dynamic' 'self';";
-            response.setMetaData("Content-Security-Policy", policy);
-        }
-    }
+		if (uiControllerUtil.isCSPNonce()) {
+			String policy = "default-src 'self'; script-src 'nonce-" + pageRequestContextUtil.getNonce()
+					+ "' 'unsafe-inline' 'strict-dynamic' 'self';";
+			response.setMetaData("Content-Security-Policy", policy);
+		}
+	}
 
-    @Override
-    public boolean isReadOnly() {
-        return readOnly;
-    }
+	@Override
+	public boolean isReadOnly() {
+		return readOnly;
+	}
 
-    @Override
-    public boolean isResetOnWrite() {
-        return resetOnWrite;
-    }
+	@Override
+	public boolean isResetOnWrite() {
+		return resetOnWrite;
+	}
 
-    @Override
-    protected void onInitialize() throws UnifyException {
-        super.onInitialize();
+	@Override
+	protected void onInitialize() throws UnifyException {
+		super.onInitialize();
 
-    }
+	}
 
-    protected PageRequestContextUtil getPageRequestContextUtil() throws UnifyException {
-        return pageRequestContextUtil;
-    }
+	protected PageRequestContextUtil getPageRequestContextUtil() throws UnifyException {
+		return pageRequestContextUtil;
+	}
 
-    protected PageManager getPageManager() {
-        return pageManager;
-    }
+	protected PageManager getPageManager() {
+		return pageManager;
+	}
 
-    protected PathInfoRepository getPathInfoRepository() {
-        return pathInfoRepository;
-    }
+	protected PathInfoRepository getPathInfoRepository() {
+		return pathInfoRepository;
+	}
 
-    protected ResponseWriterPool getResponseWriterPool() {
-        return responseWriterPool;
-    }
+	protected ResponseWriterPool getResponseWriterPool() {
+		return responseWriterPool;
+	}
 
-    protected UIControllerUtil getUIControllerUtil() {
-        return uiControllerUtil;
-    }
+	protected UIControllerUtil getUIControllerUtil() {
+		return uiControllerUtil;
+	}
 
-    protected abstract DataTransferParam getDataTransferParam() throws UnifyException;
+	protected abstract DataTransferParam getDataTransferParam() throws UnifyException;
 
-    protected abstract void doProcess(ClientRequest request, ClientResponse response,
-            PageController<?> docPageController, ControllerPathParts docPathParts) throws UnifyException;
+	protected abstract void doProcess(ClientRequest request, ClientResponse response,
+			PageController<?> docPageController, ControllerPathParts docPathParts) throws UnifyException;
 
 	protected String getVariableActionPath(String action) throws UnifyException {
 		final String pathVariable = pageRequestContextUtil.getRequestPathParts().getPathVariable();
 		return !StringUtils.isBlank(pathVariable) ? ":" + pathVariable + action : pathVariable;
 	}
-    
-    protected class DataTransferParam {
 
-        private UIControllerInfo uiControllerInfo;
+	protected class DataTransferParam {
 
-        private Class<?> validationClass;
+		private UIControllerInfo uiControllerInfo;
 
-        private Class<?> validationIdClass;
+		private Class<?> validationClass;
 
-        public DataTransferParam(UIControllerInfo uiControllerInfo, Class<?> validationClass,
-                Class<?> validationIdClass) {
-            this.uiControllerInfo = uiControllerInfo;
-            this.validationClass = validationClass;
-            this.validationIdClass = validationIdClass;
-        }
+		private Class<?> validationIdClass;
 
-        public DataTransferParam(UIControllerInfo uiControllerInfo) {
-            this.uiControllerInfo = uiControllerInfo;
-        }
+		public DataTransferParam(UIControllerInfo uiControllerInfo, Class<?> validationClass,
+				Class<?> validationIdClass) {
+			this.uiControllerInfo = uiControllerInfo;
+			this.validationClass = validationClass;
+			this.validationIdClass = validationIdClass;
+		}
 
-        public UIControllerInfo getUIControllerInfo() {
-            return uiControllerInfo;
-        }
+		public DataTransferParam(UIControllerInfo uiControllerInfo) {
+			this.uiControllerInfo = uiControllerInfo;
+		}
 
-        public Class<?> getValidationClass() {
-            return validationClass;
-        }
+		public UIControllerInfo getUIControllerInfo() {
+			return uiControllerInfo;
+		}
 
-        public Class<?> getValidationIdClass() {
-            return validationIdClass;
-        }
-    }
+		public Class<?> getValidationClass() {
+			return validationClass;
+		}
 
-    protected DataTransfer prepareDataTransfer(ClientRequest request) throws UnifyException {
-        String actionId = (String) request.getParameter(PageRequestParameterConstants.VALIDATION_ACTION);
-        Map<String, DataTransferBlock> transferBlocks = null;
-        DataTransferParam dataTransferParam = getDataTransferParam();
+		public Class<?> getValidationIdClass() {
+			return validationIdClass;
+		}
+	}
 
-        for (String transferId : request.getParameterNames()) {
-            if (skipOnPopulateSet.contains(transferId)) {
-                continue;
-            }
+	protected DataTransfer prepareDataTransfer(ClientRequest request) throws UnifyException {
+		String actionId = (String) request.getParameter(PageRequestParameterConstants.VALIDATION_ACTION);
+		Map<String, DataTransferBlock> transferBlocks = null;
+		DataTransferParam dataTransferParam = getDataTransferParam();
 
-            Object values = request.getParameter(transferId);
-            if (PageRequestParameterConstants.REFRESH.equals(transferId)) {
-                String[] strings = null;
-                if (values instanceof String[]) {
-                    strings = (String[]) values;
-                } else {
-                    strings = new String[] { (String) values };
-                }
+		for (String transferId : request.getParameterNames()) {
+			if (skipOnPopulateSet.contains(transferId)) {
+				continue;
+			}
 
-                for (int i = 0; i < strings.length; i++) {
-                    String pageName = DataTransferUtils.stripTransferDataIndexPart(strings[i]);
-                    strings[i] = pageManager.getLongName(pageName);
-                }
-                pageRequestContextUtil.setResponseRefreshPanels(strings);
-                continue;
-            }
+			Object values = request.getParameter(transferId);
+			if (PageRequestParameterConstants.REFRESH.equals(transferId)) {
+				String[] strings = null;
+				if (values instanceof String[]) {
+					strings = (String[]) values;
+				} else {
+					strings = new String[] { (String) values };
+				}
 
-            if (PageRequestParameterConstants.COMMAND.equals(transferId)) {
-                if (!(values instanceof String)) {
-                    throw new UnifyException(UnifyWebUIErrorConstants.MULTIPLE_COMMAND_PARAMETERS_IN_REQUEST);
-                }
+				for (int i = 0; i < strings.length; i++) {
+					String pageName = DataTransferUtils.stripTransferDataIndexPart(strings[i]);
+					strings[i] = pageManager.getLongName(pageName);
+				}
+				pageRequestContextUtil.setResponseRefreshPanels(strings);
+				continue;
+			}
 
-                String[] commandElements = ((String) values).split("->");
-                DataTransferBlock transferBlock = DataTransferUtils.createTransferBlock(commandElements[0]);
-                String parentLongName = pageManager.getLongName(transferBlock.getId());
-                RequestCommand requestCommand = new RequestCommand(transferBlock, parentLongName, commandElements[1]);
-                pageRequestContextUtil.setRequestCommand(requestCommand);
-                continue;
-            }
+			if (PageRequestParameterConstants.COMMAND.equals(transferId)) {
+				if (!(values instanceof String)) {
+					throw new UnifyException(UnifyWebUIErrorConstants.MULTIPLE_COMMAND_PARAMETERS_IN_REQUEST);
+				}
 
-            if (PageRequestParameterConstants.COMMAND_TAG.equals(transferId)) {
-                if (!(values instanceof String)) {
-                    throw new UnifyException(UnifyWebUIErrorConstants.MULTIPLE_COMMAND_PARAMETERS_IN_REQUEST);
-                }
+				String[] commandElements = ((String) values).split("->");
+				DataTransferBlock transferBlock = DataTransferUtils.createTransferBlock(commandElements[0]);
+				String parentLongName = pageManager.getLongName(transferBlock.getId());
+				RequestCommand requestCommand = new RequestCommand(transferBlock, parentLongName, commandElements[1]);
+				pageRequestContextUtil.setRequestCommand(requestCommand);
+				continue;
+			}
 
-                pageRequestContextUtil.setRequestCommandTag((String) values);
-                continue;
-            }
+			if (PageRequestParameterConstants.COMMAND_TAG.equals(transferId)) {
+				if (!(values instanceof String)) {
+					throw new UnifyException(UnifyWebUIErrorConstants.MULTIPLE_COMMAND_PARAMETERS_IN_REQUEST);
+				}
 
-            if (PageRequestParameterConstants.TRIGGER_WIDGETID.equals(transferId)) {
-                if (!(values instanceof String)) {
-                    throw new UnifyException(UnifyWebUIErrorConstants.MULTIPLE_COMMAND_PARAMETERS_IN_REQUEST);
-                }
+				pageRequestContextUtil.setRequestCommandTag((String) values);
+				continue;
+			}
 
-                pageRequestContextUtil.setTriggerWidgetId((String) values);
-                continue;
-            }
+			if (PageRequestParameterConstants.TRIGGER_WIDGETID.equals(transferId)) {
+				if (!(values instanceof String)) {
+					throw new UnifyException(UnifyWebUIErrorConstants.MULTIPLE_COMMAND_PARAMETERS_IN_REQUEST);
+				}
 
-            if (transferBlocks == null) {
-                transferBlocks = new HashMap<String, DataTransferBlock>();
-            }
+				pageRequestContextUtil.setTriggerWidgetId((String) values);
+				continue;
+			}
 
-            DataTransferHeader header = new DataTransferHeader(values);
-            DataTransferBlock transferBlock = DataTransferUtils.createTransferBlock(transferId, header);
-            String id = transferBlock.getId();
-            header.setLongName(pageManager.getLongName(id));
-            header.setBindingInfo(dataTransferParam.getUIControllerInfo().getPropertyInfo(id));
+			if (transferBlocks == null) {
+				transferBlocks = new HashMap<String, DataTransferBlock>();
+			}
 
-            DataTransferBlock eldestBlock = transferBlocks.get(id);
-            if (eldestBlock == null) {
-                transferBlocks.put(id, transferBlock);
-            } else {
-                transferBlock.setSiblingBlock(eldestBlock.getSiblingBlock());
-                eldestBlock.setSiblingBlock(transferBlock);
-            }
-        }
+			DataTransferHeader header = new DataTransferHeader(values);
+			DataTransferBlock transferBlock = DataTransferUtils.createTransferBlock(transferId, header);
+			String id = transferBlock.getId();
+			header.setLongName(pageManager.getLongName(id));
+			header.setBindingInfo(dataTransferParam.getUIControllerInfo().getPropertyInfo(id));
 
-        return new DataTransfer(dataTransferParam.getValidationClass(), dataTransferParam.getValidationIdClass(),
-                actionId, transferBlocks);
-    }
+			DataTransferBlock eldestBlock = transferBlocks.get(id);
+			if (eldestBlock == null) {
+				transferBlocks.put(id, transferBlock);
+			} else {
+				transferBlock.setSiblingBlock(eldestBlock.getSiblingBlock());
+				eldestBlock.setSiblingBlock(transferBlock);
+			}
+		}
 
-    protected void populate(DataTransfer dataTransfer) throws UnifyException {
-        if (!isReadOnly()) {
-            logDebug("Populating controller [{0}]", getName());
+		return new DataTransfer(dataTransferParam.getValidationClass(), dataTransferParam.getValidationIdClass(),
+				actionId, transferBlocks);
+	}
 
-            // Reset first
-            if (isResetOnWrite()) {
-                reset();
-            }
+	protected void populate(DataTransfer dataTransfer) throws UnifyException {
+		if (!isReadOnly()) {
+			logDebug("Populating controller [{0}]", getName());
 
-            // Populate controller
-            for (DataTransferBlock dataTransferBlock : dataTransfer.getDataTransferBlocks()) {
-                do {
-                    logDebug("Populating widget [{0}] with value [{1}] using transfer block [{2}]...",
-                            dataTransferBlock.getLongName(), dataTransferBlock.getDebugValue(), dataTransferBlock);
-                    populate(dataTransferBlock);
-                    dataTransferBlock = dataTransferBlock.getSiblingBlock();
-                } while (dataTransferBlock != null);
-            }
+			// Reset first
+			if (isResetOnWrite()) {
+				reset();
+			}
 
-            logDebug("Controller population completed [{0}]", getName());
-        }
-    }
+			// Populate controller
+			for (DataTransferBlock dataTransferBlock : dataTransfer.getDataTransferBlocks()) {
+				do {
+					logDebug("Populating widget [{0}] with value [{1}] using transfer block [{2}]...",
+							dataTransferBlock.getLongName(), dataTransferBlock.getDebugValue(), dataTransferBlock);
+					populate(dataTransferBlock);
+					dataTransferBlock = dataTransferBlock.getSiblingBlock();
+				} while (dataTransferBlock != null);
+			}
 
-    @SuppressWarnings("unchecked")
+			logDebug("Controller population completed [{0}]", getName());
+		}
+	}
+
+	@SuppressWarnings("unchecked")
 	protected void writeResponse(ResponseWriter writer, Page page, Result result) throws UnifyException {
-        if (MimeType.APPLICATION_JSON.equals(result.getMimeType())) {
-            writer.write("{\"jsonResp\":[");
-            boolean appendSym = false;
-            for (PageControllerResponse pageControllerResponse : result.getResponses()) {
-                if (appendSym) {
-                    writer.write(',');
-                } else {
-                    appendSym = true;
-                }
-                pageControllerResponse.generate(writer, page);
-            }
-            writer.write("]");
+		if (MimeType.APPLICATION_JSON.equals(result.getMimeType())) {
+			writer.write("{\"jsonResp\":[");
+			boolean appendSym = false;
+			for (PageControllerResponse pageControllerResponse : result.getResponses()) {
+				if (appendSym) {
+					writer.write(',');
+				} else {
+					appendSym = true;
+				}
+				pageControllerResponse.generate(writer, page);
+			}
+			writer.write("]");
 
-    		List<String> alwaysPushList = (List<String>) getRequestAttribute(
-    				UnifyCoreRequestAttributeConstants.ALWAYS_PUSH_COMPOMENT_LIST);
-    		if (!DataUtils.isBlank(alwaysPushList)) {
-    			Set<String> _alwaysPush = new HashSet<String>();
-    			for (String pId : alwaysPushList) {
-    				_alwaysPush.addAll(pageManager.getExpandedReferences(pId));
-    			}
+			List<String> alwaysPushList = (List<String>) getRequestAttribute(
+					UnifyCoreRequestAttributeConstants.ALWAYS_PUSH_COMPOMENT_LIST);
+			if (!DataUtils.isBlank(alwaysPushList)) {
+				Set<String> _alwaysPush = new HashSet<String>();
+				for (String pId : alwaysPushList) {
+					_alwaysPush.addAll(pageManager.getExpandedReferences(pId));
+				}
 
-                writer.write(",\"allPush\":").writeJsonArray(_alwaysPush);
-    		}
-            
-            if (pageRequestContextUtil.isRemoteViewer()) {
-                writer.write(",\"remoteView\":{");
-                writer.write("\"view\":\"").write(pageRequestContextUtil.getRemoteViewer()).write("\"}");
-            }
+				writer.write(",\"allPush\":").writeJsonArray(_alwaysPush);
+			}
 
-            writer.write(",\"scrollReset\":").write(pageRequestContextUtil.isContentScrollReset());
-            writer.write("}");
-        } else {
-            for (PageControllerResponse pageControllerResponse : result.getResponses()) {
-                pageControllerResponse.generate(writer, page);
-            }
-        }
-    }
+			if (pageRequestContextUtil.isRemoteViewer()) {
+				writer.write(",\"remoteView\":{");
+				writer.write("\"view\":\"").write(pageRequestContextUtil.getRemoteViewer()).write("\"}");
+			}
 
-    private void writeExceptionResponse(ClientRequest request, ClientResponse response, Exception e)
-            throws UnifyException {
-        logError(e);
+			writer.write(",\"scrollReset\":").write(pageRequestContextUtil.isContentScrollReset());
+			writer.write("}");
+		} else {
+			for (PageControllerResponse pageControllerResponse : result.getResponses()) {
+				pageControllerResponse.generate(writer, page);
+			}
+		}
+	}
 
-        if (response.isOutUsed()) {
-            if (e instanceof UnifyException) {
-                throw (UnifyException) e;
-            } else {
-                throw new UnifyOperationException(e);
-            }
-        }
+	private void writeExceptionResponse(ClientRequest request, ClientResponse response, Exception e)
+			throws UnifyException {
+		logError(e);
 
-        // Set exception attributes in session context.
-        boolean loginRequired = false;
-        if (e instanceof UnifyException) {
-            String errorCode = ((UnifyException) e).getUnifyError().getErrorCode();
-            loginRequired = UnifyWebErrorConstants.LOGIN_REQUIRED.equals(errorCode)
-            		|| UnifyCoreErrorConstants.UNKNOWN_PAGE_NAME.equals(errorCode)
-                    || SystemUtils.isForceLogoutErrorCode(errorCode);
-        }
-        String message = getExceptionMessage(LocaleType.SESSION, e);
-        setSessionAttribute(SystemInfoConstants.LOGIN_REQUIRED_FLAG, loginRequired);
-        setSessionAttribute(SystemInfoConstants.EXCEPTION_MESSAGE_KEY, message);
+		if (response.isOutUsed()) {
+			if (e instanceof UnifyException) {
+				throw (UnifyException) e;
+			} else {
+				throw new UnifyOperationException(e);
+			}
+		}
 
-        String trace = StringUtils.getPrintableStackTrace(e);
-        setSessionAttribute(SystemInfoConstants.EXCEPTION_STACKTRACE_KEY, trace);
+		// Set exception attributes in session context.
+		boolean loginRequired = false;
+		if (e instanceof UnifyException) {
+			String errorCode = ((UnifyException) e).getUnifyError().getErrorCode();
+			loginRequired = UnifyWebErrorConstants.LOGIN_REQUIRED.equals(errorCode)
+					|| UnifyCoreErrorConstants.UNKNOWN_PAGE_NAME.equals(errorCode)
+					|| SystemUtils.isForceLogoutErrorCode(errorCode);
+		}
+		String message = getExceptionMessage(LocaleType.SESSION, e);
+		setSessionAttribute(SystemInfoConstants.LOGIN_REQUIRED_FLAG, loginRequired);
+		setSessionAttribute(SystemInfoConstants.EXCEPTION_MESSAGE_KEY, message);
 
-        // Generate exception response
-        ResponseWriter writer = responseWriterPool.getResponseWriter(request);
-        try {
-            PageController<?> pageController = null;
-            ControllerPathParts respPathParts = null;
-            Page page = null;
-            Result result = null;
-            if (StringUtils.isBlank((String) request.getParameter(PageRequestParameterConstants.DOCUMENT))
-                    && !pageRequestContextUtil.isRemoteViewer()) {
-                respPathParts = pathInfoRepository
-                        .getControllerPathParts(SystemInfoConstants.UNAUTHORIZED_CONTROLLER_NAME);
-                pageController = (PageController<?>) getControllerFinder().findController(respPathParts);
-                page = uiControllerUtil.loadRequestPage(respPathParts);
-                page.setWidgetVisible("stackTrace", !loginRequired && !uiControllerUtil.isHideErrorTrace());
-                result = uiControllerUtil.getPageControllerInfo(pageController.getName())
-                        .getResult(ResultMappingConstants.INDEX);
-            } else {
-                respPathParts = pathInfoRepository
-                        .getControllerPathParts(SystemInfoConstants.SYSTEMINFO_CONTROLLER_NAME);
-                pageController = (PageController<?>) getControllerFinder().findController(respPathParts);
-                page = uiControllerUtil.loadRequestPage(respPathParts);
-                page.setWidgetVisible("stackTrace", !loginRequired && !uiControllerUtil.isHideErrorTrace());
-                result = uiControllerUtil.getPageControllerInfo(pageController.getName())
-                        .getResult(SystemInfoConstants.SHOW_SYSTEM_EXCEPTION_MAPPING);
-            }
+		String trace = StringUtils.getPrintableStackTrace(e);
+		setSessionAttribute(SystemInfoConstants.EXCEPTION_STACKTRACE_KEY, trace);
 
-            pageRequestContextUtil.setResponsePathParts(respPathParts);
-            writeResponse(writer, page, result);
+		// Generate exception response
+		ResponseWriter writer = responseWriterPool.getResponseWriter(request);
+		try {
+			PageController<?> pageController = null;
+			ControllerPathParts respPathParts = null;
+			Page page = null;
+			Result result = null;
+			if (StringUtils.isBlank((String) request.getParameter(PageRequestParameterConstants.DOCUMENT))
+					&& !pageRequestContextUtil.isRemoteViewer()) {
+				if (getContainerSetting(boolean.class, UnifyWebPropertyConstants.APPLICATION_WEB_FRIENDLY_REDIRECT,
+						true)) {
+					respPathParts = pathInfoRepository
+							.getControllerPathParts(SystemInfoConstants.UNAUTHORIZED_CONTROLLER_NAME);
+					pageController = (PageController<?>) getControllerFinder().findController(respPathParts);
+					page = uiControllerUtil.loadRequestPage(respPathParts);
+					page.setWidgetVisible("stackTrace", !loginRequired && !uiControllerUtil.isHideErrorTrace());
+					result = uiControllerUtil.getPageControllerInfo(pageController.getName())
+							.getResult(ResultMappingConstants.INDEX);
+				} else {
+					throwOperationErrorException(new RuntimeException("Attempting to access an unauthorized path."));
+				}
+			} else {
+				respPathParts = pathInfoRepository
+						.getControllerPathParts(SystemInfoConstants.SYSTEMINFO_CONTROLLER_NAME);
+				pageController = (PageController<?>) getControllerFinder().findController(respPathParts);
+				page = uiControllerUtil.loadRequestPage(respPathParts);
+				page.setWidgetVisible("stackTrace", !loginRequired && !uiControllerUtil.isHideErrorTrace());
+				result = uiControllerUtil.getPageControllerInfo(pageController.getName())
+						.getResult(SystemInfoConstants.SHOW_SYSTEM_EXCEPTION_MAPPING);
+			}
 
-            response.setContentType(result.getMimeType().template());
-            writer.writeTo(response.getWriter());
-        } catch (UnifyException e1) {
-            throw e1;
-        } catch (Exception e1) {
-            e1.printStackTrace();
-            throwOperationErrorException(e1);
-        } finally {
-            responseWriterPool.restore(writer);
-        }
-    }
+			pageRequestContextUtil.setResponsePathParts(respPathParts);
+			writeResponse(writer, page, result);
+
+			response.setContentType(result.getMimeType().template());
+			writer.writeTo(response.getWriter());
+		} catch (UnifyException e1) {
+			throw e1;
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			throwOperationErrorException(e1);
+		} finally {
+			responseWriterPool.restore(writer);
+		}
+	}
 
 }

@@ -39,6 +39,8 @@ public interface UnifyWebPropertyConstants {
 
     String APPLICATION_WEB_HIDE_ERRORTRACE = "application.web.hideerrortrace";
 
+    String APPLICATION_WEB_FRIENDLY_REDIRECT = "application.web.friendlyredirect";
+
     String APPLICATION_REMOTE_VIEWING_ENABLED = "application.web.remote.viewing";
 
     String APPLICATION_REMOTE_VIEWERS = "application.web.remote.viewers";
