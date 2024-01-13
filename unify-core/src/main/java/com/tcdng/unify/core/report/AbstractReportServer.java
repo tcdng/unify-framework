@@ -48,91 +48,92 @@ import com.tcdng.unify.core.util.IOUtils;
  * @since 1.0
  */
 public abstract class AbstractReportServer extends AbstractUnifyComponent
-        implements ReportServer, ReportFormatterStore {
+		implements ReportServer, ReportFormatterStore {
 
-    @Configurable(ApplicationComponents.APPLICATION_DATASOURCE)
-    private String defaultDatasource;
+	@Configurable(ApplicationComponents.APPLICATION_DATASOURCE)
+	private String defaultDatasource;
 
-    @Configurable
-    private DynamicSqlDataSourceManager dynamicSqlDataSourceManager;
+	@Configurable
+	private DynamicSqlDataSourceManager dynamicSqlDataSourceManager;
 
-    private Map<String, ReportTheme> reportThemes;
+	private Map<String, ReportTheme> reportThemes;
 
-    private Map<ReportLayoutType, ReportLayoutManager> reportLayoutManagers;
+	private Map<ReportLayoutType, ReportLayoutManager> reportLayoutManagers;
 
-    public AbstractReportServer() {
-        reportThemes = new HashMap<String, ReportTheme>();
-        reportLayoutManagers = new HashMap<ReportLayoutType, ReportLayoutManager>();
-    }
+	public AbstractReportServer() {
+		reportThemes = new HashMap<String, ReportTheme>();
+		reportLayoutManagers = new HashMap<ReportLayoutType, ReportLayoutManager>();
+	}
 
-    public void setDefaultDatasource(String defaultDatasource) {
-        this.defaultDatasource = defaultDatasource;
-    }
+	public void setDefaultDatasource(String defaultDatasource) {
+		this.defaultDatasource = defaultDatasource;
+	}
 
-    public void setDynamicSqlDataSourceManager(DynamicSqlDataSourceManager dynamicSqlDataSourceManager) {
-        this.dynamicSqlDataSourceManager = dynamicSqlDataSourceManager;
-    }
+	public void setDynamicSqlDataSourceManager(DynamicSqlDataSourceManager dynamicSqlDataSourceManager) {
+		this.dynamicSqlDataSourceManager = dynamicSqlDataSourceManager;
+	}
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public <T> Formatter<T> getFormatter(String formatterUpl) throws UnifyException {
-        return (Formatter<T>) getSessionLocaleFormatter(formatterUpl);
-    }
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> Formatter<T> getFormatter(String formatterUpl) throws UnifyException {
+		return (Formatter<T>) getSessionLocaleFormatter(formatterUpl);
+	}
 
-    @Override
-    public void registerReportTheme(String themeName, ReportTheme reportTheme) throws UnifyException {
-        reportThemes.put(themeName, reportTheme);
-    }
+	@Override
+	public void registerReportTheme(String themeName, ReportTheme reportTheme) throws UnifyException {
+		reportThemes.put(themeName, reportTheme);
+	}
 
-    @Override
-    public void registerReportLayoutManager(ReportLayoutType layoutName, ReportLayoutManager reportLayoutManager)
-            throws UnifyException {
-        reportLayoutManagers.put(layoutName, reportLayoutManager);
-    }
+	@Override
+	public void registerReportLayoutManager(ReportLayoutType layoutName, ReportLayoutManager reportLayoutManager)
+			throws UnifyException {
+		reportLayoutManagers.put(layoutName, reportLayoutManager);
+	}
 
-    @Override
-    public void generateReport(Report report, String filename) throws UnifyException {
-        FileOutputStream fileOutputStream = null;
-        try {
-            fileOutputStream = new FileOutputStream(filename);
-            generateReport(report, fileOutputStream);
-        } catch (FileNotFoundException e) {
-            throwOperationErrorException(e);
-        } finally {
-            IOUtils.close(fileOutputStream);
-        }
-    }
+	@Override
+	public void generateReport(Report report, String filename) throws UnifyException {
+		FileOutputStream fileOutputStream = null;
+		try {
+			fileOutputStream = new FileOutputStream(filename);
+			generateReport(report, fileOutputStream);
+		} catch (FileNotFoundException e) {
+			throwOperationErrorException(e);
+		} finally {
+			IOUtils.close(fileOutputStream);
+		}
+	}
 
-    @Override
-    public void generateReport(Report report, File file) throws UnifyException {
-        FileOutputStream fileOutputStream = null;
-        try {
-            fileOutputStream = new FileOutputStream(file);
-            generateReport(report, fileOutputStream);
-        } catch (FileNotFoundException e) {
-            throwOperationErrorException(e);
-        } finally {
-            IOUtils.close(fileOutputStream);
-        }
-    }
+	@Override
+	public void generateReport(Report report, File file) throws UnifyException {
+		FileOutputStream fileOutputStream = null;
+		try {
+			fileOutputStream = new FileOutputStream(file);
+			generateReport(report, fileOutputStream);
+		} catch (FileNotFoundException e) {
+			throwOperationErrorException(e);
+		} finally {
+			IOUtils.close(fileOutputStream);
+		}
+	}
 
-    @Override
-    public void generateReport(Report report, OutputStream outputStream) throws UnifyException {
-        if (report.getDataSource() == null) {
-            report.setDataSource(defaultDatasource);
-            report.setDynamicDataSource(false);
-        }
+	@Override
+	public void generateReport(Report report, OutputStream outputStream) throws UnifyException {
+		if (report.getDataSource() == null) {
+			report.setDataSource(defaultDatasource);
+			report.setDynamicDataSource(false);
+		}
 
-        if (report.getProcessor() != null) {
-            ReportProcessor reportProcessor = ((ReportProcessor) getComponent(report.getProcessor()));
-            reportProcessor.process(report);
-        }
+		if (report.getProcessor() != null) {
+			ReportProcessor reportProcessor = ((ReportProcessor) getComponent(report.getProcessor()));
+			reportProcessor.process(report);
+		}
 
-        if (report.isMultiDocHtmlToPDF()) {
-        	logDebug("Generating multi-document HTML to PDF report [{0}]...", report.getTitle());
+		if (report.isMultiDocHtmlToPDF()) {
+			logDebug("Generating multi-document HTML to PDF report [{0}]...", report.getTitle());
 			try {
-				PDDocument doc = new PDDocument();	
+				PDDocument doc = new PDDocument();
 				List<ReportHtml> embeddedHtmls = report.getEmbeddedHtmls();
+				logDebug("Multi-document HTML count is [{0}]...", embeddedHtmls != null ? embeddedHtmls.size() : 0);
 				if (!DataUtils.isBlank(embeddedHtmls)) {
 					for (ReportHtml html : embeddedHtmls) {
 						PdfRendererBuilder builder = new PdfRendererBuilder();
@@ -149,48 +150,48 @@ public abstract class AbstractReportServer extends AbstractUnifyComponent
 			} catch (IOException e) {
 				throwOperationErrorException(e);
 			}
-        } else {
-        	logDebug("Generating report [{0}]...", report.getTitle());
-        	doGenerateReport(report, outputStream);
-        }
-    }
+		} else {
+			logDebug("Generating report [{0}]...", report.getTitle());
+			doGenerateReport(report, outputStream);
+		}
+	}
 
-    @Override
-    protected void onInitialize() throws UnifyException {
-        ReportFormatUtils.setReportFormatterStore(this);
-    }
+	@Override
+	protected void onInitialize() throws UnifyException {
+		ReportFormatUtils.setReportFormatterStore(this);
+	}
 
-    @Override
-    protected void onTerminate() throws UnifyException {
-        ReportFormatUtils.setReportFormatterStore(null);
-    }
+	@Override
+	protected void onTerminate() throws UnifyException {
+		ReportFormatUtils.setReportFormatterStore(null);
+	}
 
-    protected DataSource getDataSource(Report report) throws UnifyException {
-        if (report.isDynamicDataSource()) {
-            return dynamicSqlDataSourceManager.getDataSource(report.getDataSource());
-        }
+	protected DataSource getDataSource(Report report) throws UnifyException {
+		if (report.isDynamicDataSource()) {
+			return dynamicSqlDataSourceManager.getDataSource(report.getDataSource());
+		}
 
-        return (DataSource) getComponent(report.getDataSource());
-    }
+		return (DataSource) getComponent(report.getDataSource());
+	}
 
-    protected ReportTheme getReportTheme(String themeName) throws UnifyException {
-        ReportTheme reportTheme = reportThemes.get(themeName);
-        if (reportTheme == null) {
-            return ReportTheme.DEFAULT_THEME;
-        }
+	protected ReportTheme getReportTheme(String themeName) throws UnifyException {
+		ReportTheme reportTheme = reportThemes.get(themeName);
+		if (reportTheme == null) {
+			return ReportTheme.DEFAULT_THEME;
+		}
 
-        return reportTheme;
-    }
+		return reportTheme;
+	}
 
-    protected ReportLayoutManager getReportLayoutManager(ReportLayoutType type) throws UnifyException {
-        ReportLayoutManager reportLayoutManager = reportLayoutManagers.get(type);
-        if (reportLayoutManager == null) {
-            throw new UnifyException(UnifyCoreErrorConstants.REPORTSERVER_NO_AVAILABLE_REPORTLAYOUTMANAGER, type,
-                    getName());
-        }
+	protected ReportLayoutManager getReportLayoutManager(ReportLayoutType type) throws UnifyException {
+		ReportLayoutManager reportLayoutManager = reportLayoutManagers.get(type);
+		if (reportLayoutManager == null) {
+			throw new UnifyException(UnifyCoreErrorConstants.REPORTSERVER_NO_AVAILABLE_REPORTLAYOUTMANAGER, type,
+					getName());
+		}
 
-        return reportLayoutManager;
-    }
+		return reportLayoutManager;
+	}
 
-    protected abstract void doGenerateReport(Report report, OutputStream outputStream) throws UnifyException;
+	protected abstract void doGenerateReport(Report report, OutputStream outputStream) throws UnifyException;
 }
