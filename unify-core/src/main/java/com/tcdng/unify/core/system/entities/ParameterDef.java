@@ -44,6 +44,9 @@ public class ParameterDef extends AbstractSequencedEntity {
     @Column(length = 128)
     private String type;
 
+    @Column(name = "SORT_ORDER")
+    private int order;
+
     @Column
     private boolean mandatory;
 
@@ -87,7 +90,15 @@ public class ParameterDef extends AbstractSequencedEntity {
         this.type = type;
     }
 
-    public boolean isMandatory() {
+    public int getOrder() {
+		return order;
+	}
+
+	public void setOrder(int order) {
+		this.order = order;
+	}
+
+	public boolean isMandatory() {
         return mandatory;
     }
 

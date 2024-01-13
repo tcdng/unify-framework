@@ -1762,6 +1762,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 			list.add(createParamConfig(pa));
 		}
 
+		DataUtils.sortAscending(list, ParamConfig.class, "order");
 		return list;
 	}
 
@@ -1776,7 +1777,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 			description = resolveApplicationMessage(description);
 		}
 
-		return new ParamConfig(pa.type(), paramName, description, pa.editor(), pa.mandatory());
+		return new ParamConfig(pa.type(), paramName, description, pa.editor(), pa.order(), pa.mandatory());
 	}
 
 	/**

@@ -60,16 +60,18 @@ public class ParameterServiceImpl extends AbstractBusinessService implements Par
         for (Parameter pa : AnnotationUtils.getParameters(type)) {
             String editor = AnnotationUtils.getAnnotationString(pa.editor());
             if (editor != null) {
-                ParameterDef parameterDefData = new ParameterDef();
-                parameterDefData.setDescription(pa.description());
-                parameterDefData.setEditor(pa.editor());
-                parameterDefData.setMandatory(pa.mandatory());
-                parameterDefData.setName(pa.name());
-                parameterDefData.setType(pa.type().getName());
-                parameterList.add(parameterDefData);
+                ParameterDef parameterDef = new ParameterDef();
+                parameterDef.setDescription(pa.description());
+                parameterDef.setEditor(pa.editor());
+                parameterDef.setOrder(pa.order());
+                parameterDef.setMandatory(pa.mandatory());
+                parameterDef.setName(pa.name());
+                parameterDef.setType(pa.type().getName());
+                parameterList.add(parameterDef);
             }
         }
 
+		DataUtils.sortAscending(parameterList, ParameterDef.class, "order");
         defineParameters(name, parameterList);
     }
 
