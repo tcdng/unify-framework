@@ -86,14 +86,6 @@ public abstract class AbstractSqlDataSource extends AbstractDataSource implement
         return connectionUrl;
     }
 
-    public void setShutdownOnTerminate(boolean shutdownOnTerminate) {
-        this.shutdownOnTerminate = shutdownOnTerminate;
-    }
-
-    public void setPasswordAuthentication(Authentication passwordAuthentication) {
-        this.passwordAuthentication = passwordAuthentication;
-    }
-
     @Override
     public String getAppSchema() throws UnifyException {
         if(StringUtils.isBlank(appSchema)) {
@@ -400,6 +392,14 @@ public abstract class AbstractSqlDataSource extends AbstractDataSource implement
 
     protected void setAppSchema(String appSchema) {
         this.appSchema = appSchema;
+    }
+
+    protected void setShutdownOnTerminate(boolean shutdownOnTerminate) {
+        this.shutdownOnTerminate = shutdownOnTerminate;
+    }
+
+    protected void setPasswordAuthentication(Authentication passwordAuthentication) {
+        this.passwordAuthentication = passwordAuthentication;
     }
 
     @Override

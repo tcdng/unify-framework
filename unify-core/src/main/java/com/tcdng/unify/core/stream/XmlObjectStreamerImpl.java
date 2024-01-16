@@ -76,14 +76,6 @@ public class XmlObjectStreamerImpl extends AbstractObjectStreamer implements Xml
         };
     }
 
-    public void setMaxPoolSize(int maxPoolSize) {
-        this.maxPoolSize = maxPoolSize;
-    }
-
-    public void setGetTimeout(long getTimeout) {
-        this.getTimeout = getTimeout;
-    }
-
     @SuppressWarnings("unchecked")
     @Override
     public <T> T unmarshal(Class<T> type, InputStream inputStream, Charset charset) throws UnifyException {

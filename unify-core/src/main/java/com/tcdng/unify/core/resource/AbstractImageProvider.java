@@ -36,14 +36,6 @@ public abstract class AbstractImageProvider extends AbstractUnifyComponent imple
 	@Configurable
 	private ThemeManager themeManager;
 
-	public final void setDefaultSrc(String defaultSrc) {
-		this.defaultSrc = defaultSrc;
-	}
-
-	public final void setThemeManager(ThemeManager themeManager) {
-		this.themeManager = themeManager;
-	}
-
 	@Override
 	public final byte[] provideAsByteArray(String name) throws UnifyException {
 		byte[] arr = doProvideAsByteArray(name);

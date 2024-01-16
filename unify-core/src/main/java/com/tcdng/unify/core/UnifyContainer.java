@@ -1204,10 +1204,10 @@ public class UnifyContainer {
 
 				// Actual injection
 				if (valToInject != null) {
-					if (internalInjectInfo.isFieldAccessible()) {
-						internalInjectInfo.getField().set(unifyComponent, valToInject);
-					} else if (internalInjectInfo.isWithSetter()) {
+					if (internalInjectInfo.isWithSetter()) { // Setters have priority
 						internalInjectInfo.getSetterInfo().getSetter().invoke(unifyComponent, valToInject);
+					} else if (internalInjectInfo.isFieldAccessible()) {
+						internalInjectInfo.getField().set(unifyComponent, valToInject);
 					}
 				}
 			}

@@ -29,11 +29,6 @@ public abstract class AbstractXmlObjectController<T, U> extends AbstractPlainXml
     @Configurable
     private ControllerUtil controllerUtil;
 
-	public final void setControllerUtil(ControllerUtil controllerUtil) {
-		this.controllerUtil = controllerUtil;
-	}
-
-
 	@Override
 	protected final String doExecute(String actionName, String xmlRequest) throws UnifyException {
 		try {

@@ -72,10 +72,6 @@ public class ContentPanelImpl extends AbstractContentPanel {
 		contentList = new ArrayList<ContentInfo>();
 	}
 
-	public void setPathInfoRepository(PagePathInfoRepository pathInfoRepository) {
-		this.pathInfoRepository = pathInfoRepository;
-	}
-
 	public String getDocumentPath() throws UnifyException {
 		return getUplAttribute(String.class, "documentPath");
 	}

@@ -134,14 +134,6 @@ public class JasperReportsServer extends AbstractReportServer {
 		this.jasperReportsCache = jasperReportsCache;
 	}
 
-	public final void setReportExpirationPeriod(int reportExpirationPeriod) {
-		this.reportExpirationPeriod = reportExpirationPeriod;
-	}
-
-	public final void setLogDebug(boolean logDebug) {
-		this.logDebug = logDebug;
-	}
-
 	@Override
 	protected void onInitialize() throws UnifyException {
 		super.onInitialize();

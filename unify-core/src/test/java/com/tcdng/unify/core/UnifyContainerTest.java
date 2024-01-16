@@ -207,14 +207,6 @@ public class UnifyContainerTest extends AbstractUnifyComponentTest {
             return testComponentA1;
         }
 
-        public void setTestComponentA1(TestComponentA1 testComponentA1) {
-            this.testComponentA1 = testComponentA1;
-        }
-
-        public void setAddress(String address) {
-            this.address = address;
-        }
-
         public String getAddress() {
             return address;
         }
@@ -256,10 +248,6 @@ public class UnifyContainerTest extends AbstractUnifyComponentTest {
             return testComponentC1;
         }
 
-        public void setTestComponentC1(TestComponentC testComponentC1) {
-            this.testComponentC1 = testComponentC1;
-        }
-
         @Override
         protected void onInitialize() throws UnifyException {
 
@@ -275,10 +263,6 @@ public class UnifyContainerTest extends AbstractUnifyComponentTest {
 
         @Configurable
         private TestComponentF testComponentF;
-
-        public void setTestComponentF(TestComponentF testComponentF) {
-            this.testComponentF = testComponentF;
-        }
 
         public TestComponentF getTestComponentF() {
             return testComponentF;
@@ -299,10 +283,6 @@ public class UnifyContainerTest extends AbstractUnifyComponentTest {
 
         @Configurable
         private TestComponentE testComponentE;
-
-        public void setTestComponentE(TestComponentE testComponentE) {
-            this.testComponentE = testComponentE;
-        }
 
         public TestComponentE getTestComponentE() {
             return testComponentE;

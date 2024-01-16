@@ -35,10 +35,6 @@ public class BookingPolicy extends AbstractEntityPolicy {
     @Configurable
     private AnotherMockService anotherMockService;
 
-    public void setAnotherMockService(AnotherMockService anotherMockService) {
-        this.anotherMockService = anotherMockService;
-    }
-
     @Override
     public Object preCreate(Entity record, Date now) throws UnifyException {
         anotherMockService

@@ -49,14 +49,6 @@ public class DocumentWriter extends AbstractPageWriter {
     @Configurable
     private BasicDocumentResources resources;
 
-    public void setPathInfoRepository(PagePathInfoRepository pathInfoRepository) {
-        this.pathInfoRepository = pathInfoRepository;
-    }
-
-    public void setResources(BasicDocumentResources resources) {
-        this.resources = resources;
-    }
-
     @Override
     protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
         BasicDocument document = (BasicDocument) widget;

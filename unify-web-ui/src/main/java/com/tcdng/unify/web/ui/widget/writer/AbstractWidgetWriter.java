@@ -42,10 +42,6 @@ public abstract class AbstractWidgetWriter extends AbstractDhtmlWriter implement
     @Configurable
     private FontSymbolManager fontSymbolManager;
 
-    public final void setFontSymbolManager(FontSymbolManager fontSymbolManager) {
-        this.fontSymbolManager = fontSymbolManager;
-    }
-
     @Override
     public void writeStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
         widget.updateInternalState();

@@ -39,10 +39,6 @@ public class APIDiscoveryController extends AbstractRemoteCallController {
     @Configurable
     private APIDiscoveryManager apiDiscoveryManager;
 
-    public void setApiDiscoveryManager(APIDiscoveryManager apiDiscoveryManager) {
-        this.apiDiscoveryManager = apiDiscoveryManager;
-    }
-
     @RemoteAction(
             name = APIDiscoveryRemoteCallCodeConstants.DISCOVER_REMOTE_CALL,
             description = "Discover Remote Call",

@@ -57,14 +57,6 @@ public abstract class AbstractDBSearchProvider extends AbstractSearchProviderLis
         this.descProperty = descProperty;
     }
 
-    public void setGenericService(GenericService genericService) {
-        this.genericService = genericService;
-    }
-
-    public void setSearchLimit(int searchLimit) {
-        this.searchLimit = searchLimit;
-    }
-
     @Override
     public List<? extends Listable> search(String filter) throws UnifyException {
         return execute(getSessionLocale(), new SearchProviderParams(null, filter));

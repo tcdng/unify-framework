@@ -47,10 +47,6 @@ public class FileResourceController extends AbstractPageResourceController {
         super(secured);
     }
 
-    public final void setFileResourceProvider(FileResourceProvider fileResourceProvider) {
-        this.fileResourceProvider = fileResourceProvider;
-    }
-
     @Override
     public void prepareExecution() throws UnifyException {
         setContentDisposition(getResourceName());

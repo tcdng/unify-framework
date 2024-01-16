@@ -70,10 +70,6 @@ public class ListControlUtilsImpl extends AbstractUnifyComponent implements List
 		};
 	}
 
-	public void setPageManager(PageManager pageManager) {
-		this.pageManager = pageManager;
-	}
-
 	@Override
 	public ListControlInfo getListControlInfo(ListControl listControl, Formatter<Object> formatter)
 			throws UnifyException {

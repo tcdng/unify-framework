@@ -32,10 +32,6 @@ public abstract class AbstractReportProcessor extends AbstractUnifyComponent imp
     @Configurable
     private DynamicSqlDataSourceManager dynamicSqlDataSourceManager;
 
-    public void setDynamicSqlDataSourceManager(DynamicSqlDataSourceManager dynamicSqlDataSourceManager) {
-        this.dynamicSqlDataSourceManager = dynamicSqlDataSourceManager;
-    }
-
     @Override
     protected void onInitialize() throws UnifyException {
 

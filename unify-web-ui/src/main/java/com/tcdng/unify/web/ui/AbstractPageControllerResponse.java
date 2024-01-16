@@ -40,18 +40,6 @@ public abstract class AbstractPageControllerResponse extends AbstractUplComponen
     @Configurable
     private FormatHelper formatHelper;
 
-    public void setRequestContextUtil(PageRequestContextUtil requestContextUtil) {
-        this.requestContextUtil = requestContextUtil;
-    }
-
-    public void setPageManager(PageManager pageManager) {
-        this.pageManager = pageManager;
-    }
-
-    public void setFormatHelper(FormatHelper formatHelper) {
-        this.formatHelper = formatHelper;
-    }
-
     @Override
     protected void onInitialize() throws UnifyException {
 

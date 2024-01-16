@@ -138,22 +138,6 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 		};
 	}
 
-	public final void setControllerFinder(ControllerFinder controllerFinder) {
-		this.controllerFinder = controllerFinder;
-	}
-
-	public final void setPathInfoRepository(PathInfoRepository pathInfoRepository) {
-		this.pathInfoRepository = pathInfoRepository;
-	}
-
-	public final void setTenantPathManager(TenantPathManager tenantPathManager) {
-		this.tenantPathManager = tenantPathManager;
-	}
-
-	public final void setAttributeProvider(SessionAttributeProvider attributeProvider) {
-		this.attributeProvider = attributeProvider;
-	}
-
 	@Override
 	public RequestPathParts resolveRequestPath(HttpRequest httpRequest) throws UnifyException {
 		String resolvedPath = httpRequest.getPathInfo();

@@ -29,10 +29,6 @@ public abstract class AbstractJsonObjectController extends AbstractPlainJsonCont
     @Configurable
     private ControllerUtil controllerUtil;
 
-	public final void setControllerUtil(ControllerUtil controllerUtil) {
-		this.controllerUtil = controllerUtil;
-	}
-
 	@Override
 	protected final String doExecute(String actionName, String jsonRequest) throws UnifyException {
 		logDebug("Performing execution on action [{0}]...", actionName);

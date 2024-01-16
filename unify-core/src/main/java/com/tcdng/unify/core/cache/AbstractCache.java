@@ -47,10 +47,6 @@ public abstract class AbstractCache<T, U> extends AbstractUnifyComponent impleme
         };
     }
 
-    public void setDefaultExpiryPeriod(int defaultExpiryPeriod) {
-        this.defaultExpiryPeriod = defaultExpiryPeriod;
-    }
-
     @Override
     public U put(T key, U object) throws UnifyException {
         return put(key, object, defaultExpiryPeriod);

@@ -40,10 +40,6 @@ public class StaticListListCommand extends AbstractListCommand<ZeroParams> {
         super(ZeroParams.class);
     }
 
-    public void setListManager(ListManager listManager) {
-        this.listManager = listManager;
-    }
-
     @Override
     public List<? extends Listable> execute(Locale locale, ZeroParams params) throws UnifyException {
         return listManager.getAllStaticLists(locale);

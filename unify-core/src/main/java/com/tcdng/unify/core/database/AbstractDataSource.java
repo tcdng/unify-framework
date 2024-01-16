@@ -58,26 +58,6 @@ public abstract class AbstractDataSource extends AbstractUnifyComponent implemen
 		}
 	}
 
-	public final void setAllObjectsInLowercase(boolean allObjectsInLowercase) {
-		this.allObjectsInLowercase = allObjectsInLowercase;
-	}
-
-	public final void setReadOnly(boolean readOnly) {
-		this.readOnly = readOnly;
-	}
-
-	public final void setInitDelayed(boolean initDelayed) {
-		this.initDelayed = initDelayed;
-	}
-
-	public final void setEntityListProvider(DataSourceEntityListProvider entityListProvider) {
-		this.entityListProvider = entityListProvider;
-	}
-
-	public final void setEntityList(List<String> entityList) {
-		this.entityList = entityList;
-	}
-
 	@Override
 	public final boolean isReadOnly() {
 		return readOnly;

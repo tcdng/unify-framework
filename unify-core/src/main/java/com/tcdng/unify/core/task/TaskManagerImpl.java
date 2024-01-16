@@ -99,26 +99,6 @@ public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManag
 
             };
     }
-    
-    public void setProxyMethodRelay(ProxyBusinessServiceMethodRelay proxyMethodRelay) {
-        this.proxyMethodRelay = proxyMethodRelay;
-    }
-
-    public void setTaskStatusLogger(TaskStatusLogger taskStatusLogger) {
-        this.taskStatusLogger = taskStatusLogger;
-    }
-
-    public void setRequestContextManager(RequestContextManager requestContextManager) {
-        this.requestContextManager = requestContextManager;
-    }
-
-    public void setMaxThreads(int maxThreads) {
-        this.maxThreads = maxThreads;
-    }
-
-    public void setMaxMonitorMessages(int maxMonitorMessages) {
-        this.maxMonitorMessages = maxMonitorMessages;
-    }
 
     @Override
     public TaskableMethodConfig getTaskableMethodConfig(String taskName) throws UnifyException {
