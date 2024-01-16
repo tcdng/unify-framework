@@ -78,38 +78,6 @@ public abstract class AbstractSqlDataSource extends AbstractDataSource implement
 
     private SqlConnectionPool sqlConnectionPool;
 
-    public final void setGetConnectionTimeout(long getConnectionTimeout) {
-        this.getConnectionTimeout = getConnectionTimeout;
-    }
-
-    public final void setDriver(String driver) {
-        this.driver = driver;
-    }
-
-    public final void setConnectionUrl(String connectionUrl) {
-        this.connectionUrl = connectionUrl;
-    }
-
-    public final void setUsername(String username) {
-        this.username = username;
-    }
-
-    public final void setPassword(String password) {
-        this.password = password;
-    }
-
-    public final void setMaxConnections(int maxConnections) {
-        this.maxConnections = maxConnections;
-    }
-
-    public final void setMinConnections(int minConnections) {
-        this.minConnections = minConnections;
-    }
-
-    public final void setAppSchema(String appSchema) {
-        this.appSchema = appSchema;
-    }
-
     public String getDriver() {
         return driver;
     }
@@ -400,6 +368,38 @@ public abstract class AbstractSqlDataSource extends AbstractDataSource implement
     @Override
     public int getAvailableConnections() throws UnifyException {
         return sqlConnectionPool.available();
+    }
+
+    protected void setGetConnectionTimeout(long getConnectionTimeout) {
+        this.getConnectionTimeout = getConnectionTimeout;
+    }
+
+    protected void setDriver(String driver) {
+        this.driver = driver;
+    }
+
+    protected void setConnectionUrl(String connectionUrl) {
+        this.connectionUrl = connectionUrl;
+    }
+
+    protected void setUsername(String username) {
+        this.username = username;
+    }
+
+    protected void setPassword(String password) {
+        this.password = password;
+    }
+
+    protected void setMaxConnections(int maxConnections) {
+        this.maxConnections = maxConnections;
+    }
+
+    protected void setMinConnections(int minConnections) {
+        this.minConnections = minConnections;
+    }
+
+    protected void setAppSchema(String appSchema) {
+        this.appSchema = appSchema;
     }
 
     @Override
