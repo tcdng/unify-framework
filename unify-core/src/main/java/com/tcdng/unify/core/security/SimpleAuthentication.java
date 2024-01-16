@@ -37,18 +37,6 @@ public class SimpleAuthentication extends AbstractUnifyComponent implements Auth
     @Configurable
     private TwoWayStringCryptograph cryptograph;
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setCryptograph(TwoWayStringCryptograph cryptograph) {
-        this.cryptograph = cryptograph;
-    }
-
     @Override
     public String getUsername() throws UnifyException {
         return username;

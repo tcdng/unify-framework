@@ -98,26 +98,6 @@ public abstract class AbstractUIController extends AbstractController implements
 		this.resetOnWrite = resetOnWrite.isTrue();
 	}
 
-	public final void setUiControllerUtil(UIControllerUtil uiControllerUtil) {
-		this.uiControllerUtil = uiControllerUtil;
-	}
-
-	public final void setPageRequestContextUtil(PageRequestContextUtil pageRequestContextUtil) {
-		this.pageRequestContextUtil = pageRequestContextUtil;
-	}
-
-	public final void setPageManager(PageManager pageManager) {
-		this.pageManager = pageManager;
-	}
-
-	public final void setPathInfoRepository(PathInfoRepository pathInfoRepository) {
-		this.pathInfoRepository = pathInfoRepository;
-	}
-
-	public final void setResponseWriterPool(ResponseWriterPool responseWriterPool) {
-		this.responseWriterPool = responseWriterPool;
-	}
-
 	@Override
 	public final void process(ClientRequest request, ClientResponse response) throws UnifyException {
 		try {

@@ -44,10 +44,6 @@ public class SequencedEntityPolicy extends AbstractEntityPolicy {
 
     }
 
-    public void setSequenceNumberService(SequenceNumberService sequenceNumberService) {
-        this.sequenceNumberService = sequenceNumberService;
-    }
-
     @Override
     public Object preCreate(Entity record, Date now) throws UnifyException {
         Long id = sequenceNumberService.getCachedBlockNextSequenceNumber(record.getClass().getName());

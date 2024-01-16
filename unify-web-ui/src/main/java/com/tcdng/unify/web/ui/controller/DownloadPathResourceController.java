@@ -38,10 +38,6 @@ public class DownloadPathResourceController extends RealPathResourceController {
         super(RealPathConstants.DOWNLOAD_FOLDER);
     }
 
-    public void setDownloadPathLogger(DownloadPathLogger downloadPathLogger) {
-        this.downloadPathLogger = downloadPathLogger;
-    }
-
     @Override
     public void prepareExecution() throws UnifyException {
         super.prepareExecution();

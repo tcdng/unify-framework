@@ -100,18 +100,6 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 		this.dataIndex = -1;
 	}
 
-	public void setThemeManager(ThemeManager themeManager) {
-		this.themeManager = themeManager;
-	}
-
-	public void setPageRequestContextUtil(PageRequestContextUtil pageRequestContextUtil) {
-		this.pageRequestContextUtil = pageRequestContextUtil;
-	}
-
-	public void setInitialBufferCapacity(int initialBufferCapacity) {
-		this.initialBufferCapacity = initialBufferCapacity;
-	}
-
 	@Override
 	public ResponseWriter writeResolvedApplicationMessage(String message, Object... params) throws UnifyException {
 		String msg = super.resolveApplicationMessage(message, params);

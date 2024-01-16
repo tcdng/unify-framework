@@ -35,10 +35,6 @@ public class SequenceBlockTestTask extends AbstractTask {
     @Configurable
     private SequenceNumberService sequenceNumberService;
 
-    public void setSequenceNumberService(SequenceNumberService sequenceNumberService) {
-        this.sequenceNumberService = sequenceNumberService;
-    }
-
     @Override
     public void execute(TaskMonitor taskMonitor, TaskInput input, TaskOutput output) throws UnifyException {
         String sequenceId = input.getParam(String.class, SequenceTestTaskConstants.SEQUENCEID);

@@ -43,10 +43,6 @@ public abstract class AbstractDBBatchItemFileReadProcessor<T extends BatchItemRe
         this.batchItemClass = batchItemClass;
     }
 
-    public void setGenericService(GenericService genericService) {
-        this.genericService = genericService;
-    }
-
     @Override
     protected Object doProcess(BatchFileReadConfig batchFileConfig, BatchFileReader reader) throws UnifyException {
         List<Object> ids = new ArrayList<Object>();

@@ -29,10 +29,6 @@ public class TestDummyComponent extends AbstractUnifyComponent {
     @Configurable
     private String[] valueList;
 
-    public void setValueList(String[] valueList) {
-        this.valueList = valueList;
-    }
-
     @Override
     protected void onInitialize() throws UnifyException {
 

@@ -63,14 +63,6 @@ public class ControllerUtilImpl extends AbstractUnifyComponent implements Contro
 		};
 	}
 
-	public void setPathInfoRepository(PathInfoRepository pathInfoRepository) {
-		this.pathInfoRepository = pathInfoRepository;
-	}
-
-	public void setControllerFinder(ControllerFinder controllerFinder) {
-		this.controllerFinder = controllerFinder;
-	}
-
 	@Override
 	public PlainControllerInfo getPlainControllerInfo(String controllerName) throws UnifyException {
 		return plainControllerInfoMap.get(controllerName);

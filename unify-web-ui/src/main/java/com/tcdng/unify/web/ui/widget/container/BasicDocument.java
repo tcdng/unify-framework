@@ -31,10 +31,6 @@ public class BasicDocument extends AbstractDocument {
     @Configurable
     private String[] meta;
 
-    public void setMeta(String[] meta) {
-        this.meta = meta;
-    }
-
     public String[] getMeta() {
         return meta;
     }

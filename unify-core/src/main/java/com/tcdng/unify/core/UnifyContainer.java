@@ -113,7 +113,7 @@ public class UnifyContainer {
 	private UserSessionManager userSessionManager;
 
 	private ResourceBundles messages;
-	
+
 	private Logger logger;
 
 	private FactoryMap<String, UnifyComponentContext> componentContextMap;
@@ -1155,14 +1155,14 @@ public class UnifyContainer {
 		try {
 			UnifyComponent unifyComponent = inst.getUnifyComponent();
 			for (InternalInjectInfo internalInjectInfo : inst.getIuci().getInjectInfoList()) {
-				GetterSetterInfo setterInfo = internalInjectInfo.getSetterInfo();
+				final Field field = internalInjectInfo.getField();
 				InjectType type = internalInjectInfo.getType();
 				String[] configValues = null;
 				Object valToInject = null;
 				if (altSettings != null) {
-					configValues = getPropertyConfig(altSettings, setterInfo);
+					configValues = getPropertyConfig(altSettings, field);
 					if (InjectType.DATA_CONVERTED.equals(type)) {
-						valToInject = DataUtils.convert(setterInfo.getType(), configValues);
+						valToInject = DataUtils.convert(field.getType(), configValues);
 					}
 				}
 
@@ -1202,8 +1202,13 @@ public class UnifyContainer {
 					}
 				}
 
+				// Actual injection
 				if (valToInject != null) {
-					setterInfo.getSetter().invoke(unifyComponent, valToInject);
+					if (internalInjectInfo.isWithSetter()) { // Setters have priority
+						internalInjectInfo.getSetterInfo().getSetter().invoke(unifyComponent, valToInject);
+					} else if (internalInjectInfo.isFieldAccessible()) {
+						internalInjectInfo.getField().set(unifyComponent, valToInject);
+					}
 				}
 			}
 
@@ -1330,6 +1335,7 @@ public class UnifyContainer {
 
 		messages = new ResourceBundles(messageBaseList);
 	}
+
 	public List<String> getApplicationBanner() throws UnifyException {
 		String filename = (String) unifySettings.get(UnifyCorePropertyConstants.APPLICATION_BANNER);
 		if (StringUtils.isBlank(filename)) {
@@ -1552,11 +1558,13 @@ public class UnifyContainer {
 		List<InternalInjectInfo> injectInfoList = new ArrayList<InternalInjectInfo>();
 		UnifyComponentSettings settings = iuci.getSettings();
 		for (String property : settings.getPropertyNames()) {
-			GetterSetterInfo setterInfo = ReflectUtils.getSetterInfo(clazz, property);
-			String[] configValues = getPropertyConfig(settings, setterInfo);
+			final Field field = ReflectUtils.getField(clazz, property);
+			Class<?> argumentType0 = ReflectUtils.getArgumentType(field.getGenericType(), 0);
+			Class<?> argumentType1 = ReflectUtils.getArgumentType(field.getGenericType(), 1);
+			String[] configValues = getPropertyConfig(settings, field);
 			InjectType type = InjectType.DATA_CONVERTED;
 			Class<? extends UnifyComponent> unifyComponentType = null;
-			Class<?> fieldClass = setterInfo.getType();
+			Class<?> fieldClass = field.getType();
 			if (fieldClass.isArray()) {
 				Class<?> arrFieldClass = fieldClass.getComponentType();
 				if (UnifyComponent.class.isAssignableFrom(arrFieldClass)) {
@@ -1564,15 +1572,15 @@ public class UnifyContainer {
 					unifyComponentType = (Class<? extends UnifyComponent>) arrFieldClass;
 				}
 			} else if (Collection.class.isAssignableFrom(fieldClass)) {
-				Class<?> colFieldClass = setterInfo.getArgumentType0();
+				Class<?> colFieldClass = argumentType0;
 				if (UnifyComponent.class.isAssignableFrom(colFieldClass)) {
 					type = InjectType.COMPONENT_COLLECTION;
 					unifyComponentType = (Class<? extends UnifyComponent>) colFieldClass;
 				}
 			} else if (Map.class.isAssignableFrom(fieldClass)) {
-				Class<?> keyFieldClass = setterInfo.getArgumentType0();
+				Class<?> keyFieldClass = argumentType0;
 				if (String.class.equals(keyFieldClass)) {
-					Class<?> valFieldClass = setterInfo.getArgumentType1();
+					Class<?> valFieldClass = argumentType1;
 					if (UnifyComponent.class.isAssignableFrom(valFieldClass)) {
 						type = InjectType.COMPONENT_MAP;
 						unifyComponentType = (Class<? extends UnifyComponent>) valFieldClass;
@@ -1585,18 +1593,20 @@ public class UnifyContainer {
 				}
 			}
 
-			injectInfoList.add(new InternalInjectInfo(type, setterInfo, configValues, unifyComponentType));
+			final GetterSetterInfo setterInfo = ReflectUtils.isSettableField(clazz, property)
+					? ReflectUtils.getSetterInfo(clazz, property)
+					: null;
+			injectInfoList.add(new InternalInjectInfo(type, field, setterInfo, configValues, unifyComponentType));
 		}
 
 		iuci.setInjectInfoList(injectInfoList);
 	}
 
-	private String[] getPropertyConfig(UnifyComponentSettings settings, GetterSetterInfo setterInfo)
-			throws UnifyException {
-		Object value = settings.getSettingValue(setterInfo.getName());
-		if (value == null && settings.isAutoInject(setterInfo.getName())) {
-			if (UnifyComponent.class.isAssignableFrom(setterInfo.getType())) {
-				List<String> names = namelessConfigurableSuggestions.get(setterInfo.getType());
+	private String[] getPropertyConfig(UnifyComponentSettings settings, Field field) throws UnifyException {
+		Object value = settings.getSettingValue(field.getName());
+		if (value == null && settings.isAutoInject(field.getName())) {
+			if (UnifyComponent.class.isAssignableFrom(field.getType())) {
+				List<String> names = namelessConfigurableSuggestions.get(field.getType());
 				if (names.size() == 1) { // Check perfect suggestion
 					value = names.get(0);
 				} else if (names.size() > 1) {
@@ -1725,6 +1735,8 @@ public class UnifyContainer {
 
 		private final InjectType type;
 
+		private final Field field;
+
 		private final GetterSetterInfo setterInfo;
 
 		private final String[] configValues;
@@ -1733,12 +1745,17 @@ public class UnifyContainer {
 
 		private Object valueToInject;
 
-		public InternalInjectInfo(InjectType type, GetterSetterInfo setterInfo, String[] configValues,
+		public InternalInjectInfo(InjectType type, Field field, GetterSetterInfo setterInfo, String[] configValues,
 				Class<? extends UnifyComponent> unifyComponentType) {
 			this.type = type;
+			this.field = field;
 			this.setterInfo = setterInfo;
 			this.configValues = configValues;
 			this.unifyComponentType = unifyComponentType;
+			try {
+				this.field.setAccessible(true);
+			} catch (SecurityException e) {
+			}
 		}
 
 		public InjectType getType() {
@@ -1749,6 +1766,10 @@ public class UnifyContainer {
 			return setterInfo;
 		}
 
+		public boolean isWithSetter() {
+			return setterInfo != null && setterInfo.isSetter();
+		}
+
 		public String[] getConfigValues() {
 			return configValues;
 		}
@@ -1757,12 +1778,20 @@ public class UnifyContainer {
 			return unifyComponentType;
 		}
 
+		public Field getField() {
+			return field;
+		}
+
+		public boolean isFieldAccessible() {
+			return field.isAccessible();
+		}
+
 		public Object getValueToInject() throws UnifyException {
 			if (valueToInject == null) {
 				synchronized (this) {
 					if (valueToInject == null) {
 						if (InjectType.DATA_CONVERTED.equals(type)) {
-							valueToInject = DataUtils.convert(setterInfo.getType(), configValues);
+							valueToInject = DataUtils.convert(field.getType(), configValues);
 						}
 					}
 				}

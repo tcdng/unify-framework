@@ -51,14 +51,6 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
 	@Configurable
 	private PageManager pageManager;
 
-	public void setThemeManager(ThemeManager themeManager) {
-		this.themeManager = themeManager;
-	}
-
-	public void setPageManager(PageManager pageManager) {
-		this.pageManager = pageManager;
-	}
-
 	/**
 	 * Writes tag attributes id, name, class, style and title.
 	 * 

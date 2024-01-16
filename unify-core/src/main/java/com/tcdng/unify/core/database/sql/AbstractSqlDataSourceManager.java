@@ -47,10 +47,6 @@ public abstract class AbstractSqlDataSourceManager extends AbstractUnifyComponen
 	public AbstractSqlDataSourceManager() {
 		this.delayedDataSourceList = new ArrayList<String>();
 	}
-	
-	public void setSqlSchemaManager(SqlSchemaManager sqlSchemaManager) {
-		this.sqlSchemaManager = sqlSchemaManager;
-	}
 
 	@Override
 	public void initDataSource(String dataSourceName, DataSourceManagerOptions options) throws UnifyException {

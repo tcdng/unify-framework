@@ -36,10 +36,6 @@ public abstract class AbstractPlainXmlController extends AbstractPlainController
 	@Configurable
 	private XmlObjectStreamer xmlObjectStreamer;
 
-	public void setXmlObjectStreamer(XmlObjectStreamer xmlObjectStreamer) {
-		this.xmlObjectStreamer = xmlObjectStreamer;
-	}
-
 	@Override
 	public void doProcess(ClientRequest request, ClientResponse response) throws UnifyException {
 		response.setContentType(RemoteCallFormat.XML.mimeType().template());

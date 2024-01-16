@@ -131,10 +131,6 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
 
     private String dataGroupId;
 
-    public void setFontSymbolManager(FontSymbolManager fontSymbolManager) {
-        this.fontSymbolManager = fontSymbolManager;
-    }
-
     @Override
     public void populate(DataTransferBlock transferBlock) throws UnifyException {
         if (transferBlock != null) {

@@ -30,10 +30,6 @@ public abstract class AbstractRemoteCallGate extends AbstractUnifyComponent impl
     @Configurable("false")
     private boolean openMode;
 
-    public void setOpenMode(boolean openMode) {
-        this.openMode = openMode;
-    }
-
     @Override
     public void grantPass(String applicationCode, String functionCode) throws UnifyException {
         if (!openMode) {

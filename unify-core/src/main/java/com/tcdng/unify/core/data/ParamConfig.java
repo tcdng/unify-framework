@@ -34,13 +34,16 @@ public class ParamConfig {
 
     private Class<?> type;
 
+    private int order;
+
     private boolean mandatory;
 
-    public ParamConfig(Class<?> type, String paramName, String paramDesc, String editor, boolean mandatory) {
+    public ParamConfig(Class<?> type, String paramName, String paramDesc, String editor, int order, boolean mandatory) {
         this.paramName = paramName;
         this.paramDesc = paramDesc;
         this.editor = editor;
         this.type = type;
+        this.order = order;
         this.mandatory = mandatory;
     }
 
@@ -69,13 +72,12 @@ public class ParamConfig {
         return !StringUtils.isBlank(editor);
     }
 
-    public boolean isMandatory() {
+    public int getOrder() {
+		return order;
+	}
+
+	public boolean isMandatory() {
         return mandatory;
     }
 
-    @Override
-    public String toString() {
-        return "ParamConfig [paramName=" + paramName + ", paramDesc=" + paramDesc + ", editor=" + editor + ", type="
-                + type + ", mandatory=" + mandatory + "]";
-    }
 }

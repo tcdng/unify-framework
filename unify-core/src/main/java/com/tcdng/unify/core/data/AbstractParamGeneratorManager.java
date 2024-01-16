@@ -62,10 +62,6 @@ public abstract class AbstractParamGeneratorManager extends AbstractUnifyCompone
 		};
 	}
 
-	public final void setFormarHelper(FormatHelper formarHelper) {
-		this.formarHelper = formarHelper;
-	}
-
 	@Override
 	public ParameterizedStringGenerator getParameterizedStringGenerator(ValueStoreReader paramReader,
 			List<StringToken> tokenList) throws UnifyException {

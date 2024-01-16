@@ -37,14 +37,6 @@ public abstract class AbstractDynamicSqlDatabase extends AbstractSqlDatabase imp
     @Configurable
     private String dataSourceConfigName;
 
-    public void setDynamicSqlDataSourceManager(DynamicSqlDataSourceManager dynamicSqlDataSourceManager) {
-        this.dynamicSqlDataSourceManager = dynamicSqlDataSourceManager;
-    }
-
-    public void setDataSourceConfigName(String dataSourceConfigName) {
-        this.dataSourceConfigName = dataSourceConfigName;
-    }
-
     @Override
     public String getDataSourceName() throws UnifyException {
         return getDataSource().getName();

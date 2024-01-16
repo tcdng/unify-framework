@@ -33,10 +33,6 @@ public class NameSqlDataSourceSchemaImpl extends AbstractUnifyComponent implemen
     @Configurable
     private String appSchema;
 
-    public void setAppSchema(String appSchema) {
-        this.appSchema = appSchema;
-    }
-
     @Override
     public String getAppSchema() {
         return appSchema;

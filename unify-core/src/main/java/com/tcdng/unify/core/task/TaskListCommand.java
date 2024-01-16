@@ -64,10 +64,6 @@ public class TaskListCommand extends AbstractZeroParamsListCommand {
         };
     }
 
-    public void setTaskManager(TaskManager taskManager) {
-        this.taskManager = taskManager;
-    }
-
     @Override
     public List<? extends Listable> execute(Locale locale, ZeroParams params) throws UnifyException {
         return taskListMap.get(locale);

@@ -53,22 +53,6 @@ public abstract class AbstractBusinessService extends AbstractUnifyComponent imp
 	@Configurable
 	private TaskLauncher taskLauncher;
 
-	public void setDb(Database db) {
-		this.db = db;
-	}
-
-	public void setDatabaseTransactionManager(DatabaseTransactionManager databaseTransactionManager) {
-		this.databaseTransactionManager = databaseTransactionManager;
-	}
-
-	public void setDynamicSqlDatabaseManager(DynamicSqlDatabaseManager dynamicSqlDatabaseManager) {
-		this.dynamicSqlDatabaseManager = dynamicSqlDatabaseManager;
-	}
-
-	public void setTaskLauncher(TaskLauncher taskLauncher) {
-		this.taskLauncher = taskLauncher;
-	}
-
 	@Override
 	public DatabaseTransactionManager tm() throws UnifyException {
 		return databaseTransactionManager;

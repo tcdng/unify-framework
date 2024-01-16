@@ -32,10 +32,6 @@ public abstract class AbstractSqlDatabase extends AbstractDatabase implements Sq
     @Configurable(ApplicationComponents.APPLICATION_SQLSTATEMENTEXECUTOR)
     private SqlStatementExecutor sqlStatementExecutor;
 
-    public void setSqlStatementExecutor(SqlStatementExecutor sqlStatementExecutor) {
-        this.sqlStatementExecutor = sqlStatementExecutor;
-    }
-
     @Override
 	public boolean isReadOnly() throws UnifyException {
 		return getDataSource().isReadOnly();

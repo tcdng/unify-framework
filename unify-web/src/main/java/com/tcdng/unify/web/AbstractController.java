@@ -48,14 +48,6 @@ public abstract class AbstractController extends AbstractUnifyComponent implemen
 		this.secured = secured.isTrue();
 	}
 
-	public void setEventLogger(EventLogger eventLogger) {
-		this.eventLogger = eventLogger;
-	}
-
-	public void setControllerFinder(ControllerFinder controllerFinder) {
-		this.controllerFinder = controllerFinder;
-	}
-
 	@Override
 	public boolean isSecured() {
 		return this.secured;

@@ -47,4 +47,7 @@ public @interface Parameter {
 
     /** Indicates the parameter is mandatory */
     boolean mandatory() default false;
+
+    /** The parameter order index */
+    int order() default 0;
 }

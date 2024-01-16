@@ -39,10 +39,6 @@ public abstract class AbstractDatabase extends AbstractUnifyComponent implements
     @Configurable
     private DatabaseTransactionManager databaseTransactionManager;
 
-    public void setDatabaseTransactionManager(DatabaseTransactionManager databaseTransactionManager) {
-        this.databaseTransactionManager = databaseTransactionManager;
-    }
-
     @Override
     public void joinTransaction() throws UnifyException {
         databaseTransactionManager.joinTransaction(this);

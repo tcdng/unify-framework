@@ -46,10 +46,6 @@ public class ButtonSymbolListCommand extends AbstractListCommand<ZeroParams> {
 	@Configurable
 	private FontSymbolManager fontSymbolManager;
 
-	public final void setFontSymbolManager(FontSymbolManager fontSymbolManager) {
-		this.fontSymbolManager = fontSymbolManager;
-	}
-
 	private static List<ListData> list;
 
 	public ButtonSymbolListCommand() {

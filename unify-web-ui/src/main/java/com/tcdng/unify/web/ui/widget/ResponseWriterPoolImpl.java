@@ -51,22 +51,6 @@ public class ResponseWriterPoolImpl extends AbstractUnifyComponent implements Re
 
     private InternalPool internalPool;
 
-    public final void setUplComponentWriterManager(UplComponentWriterManager uplComponentWriterManager) {
-        this.uplComponentWriterManager = uplComponentWriterManager;
-    }
-
-    public final void setGetTimeout(long getTimeout) {
-        this.getTimeout = getTimeout;
-    }
-
-    public final void setMaxSize(int maxSize) {
-        this.maxSize = maxSize;
-    }
-
-    public final void setMinSize(int minSize) {
-        this.minSize = minSize;
-    }
-
     @Override
     public ResponseWriter getResponseWriter(ClientRequest clientRequest) throws UnifyException {
 		return clientRequest != null ? internalPool
