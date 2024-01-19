@@ -52,6 +52,7 @@ import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.Widget;
 import com.tcdng.unify.web.ui.widget.WidgetCommandManager;
 import com.tcdng.unify.web.ui.widget.WidgetContainer;
+import com.tcdng.unify.web.ui.widget.data.FileAttachmentInfo;
 import com.tcdng.unify.web.ui.widget.data.Hint.MODE;
 import com.tcdng.unify.web.ui.widget.data.MessageBox;
 import com.tcdng.unify.web.ui.widget.data.MessageBoxCaptions;
@@ -448,6 +449,18 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 		return ResultMappingConstants.DOWNLOAD_FILE;
 	}
 
+	/**
+	 * Shows a file attachment.
+	 * 
+	 * @param fileAttachmentInfo the file attachment information
+	 * @return the result mapping
+	 * @throws UnifyException if an error occurs
+	 */
+	protected String showAttachment(FileAttachmentInfo fileAttachmentInfo) throws UnifyException {
+		setRequestAttribute(UnifyWebRequestAttributeConstants.FILEATTACHMENTS_INFO, fileAttachmentInfo);
+		return ResultMappingConstants.SHOW_ATTACHMENT;
+	}
+	
 	/**
 	 * Shows popup.
 	 * 

@@ -73,7 +73,7 @@ z-index:400;}
 
 .ui-horizontal {border-collapse: collapse;}
 
-.ui-grid {border-collapse: collapse;}
+.ui-grid {border-collapse: collapse;table-layout: fixed;}
 
 .ui-unordered {}
 
