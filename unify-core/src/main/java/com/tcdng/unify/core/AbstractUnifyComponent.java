@@ -1216,6 +1216,37 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	}
 
 	/**
+	 * Get JSON string from object.
+	 * 
+	 * @param src the object to print
+	 * @return the JSON string if src is not null otherwise null
+	 * @throws UnifyException if an error occurs
+	 */
+	protected String asJson(Object src) throws UnifyException {
+		if (src != null) {
+			return DataUtils.asJsonString(src, PrintFormat.NONE);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Gets object from JSON string.
+	 * 
+	 * @param type the object type
+	 * @param json the JSON string
+	 * @return the object otherwise null
+	 * @throws UnifyException if an error occurs
+	 */
+	protected <T> T fromJson(Class<T> type, String json) throws UnifyException {
+		if (!StringUtils.isBlank(json)) {
+			return DataUtils.fromJsonString(type, json);
+		}
+
+		return null;
+	}
+	
+	/**
 	 * Get pretty JSON string from object.
 	 * 
 	 * @param src the object to print
