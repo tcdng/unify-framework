@@ -18,6 +18,7 @@ package com.tcdng.unify.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.tcdng.unify.core.data.Listable;
 import com.tcdng.unify.core.util.DataUtils;
 
 /**
@@ -26,7 +27,7 @@ import com.tcdng.unify.core.util.DataUtils;
  * @author The Code Department
  * @since 1.0
  */
-public class UnifyComponentConfig {
+public class UnifyComponentConfig implements Listable {
 
     private Class<? extends UnifyComponent> type;
 
@@ -54,7 +55,17 @@ public class UnifyComponentConfig {
         this.settings = settings;
     }
 
-    public Class<? extends UnifyComponent> getType() {
+    @Override
+	public String getListKey() {
+		return name;
+	}
+
+	@Override
+	public String getListDescription() {
+		return description;
+	}
+
+	public Class<? extends UnifyComponent> getType() {
         return type;
     }
 
