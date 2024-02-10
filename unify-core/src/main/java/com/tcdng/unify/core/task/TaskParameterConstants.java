@@ -23,5 +23,9 @@ package com.tcdng.unify.core.task;
  */
 public interface TaskParameterConstants {
 
+	String USER_LOGIN_ID = "userLoginId";
+
+	String TENANT_ID = "tenantId";
+	
     String LOCK_TO_RELEASE = "lockToRelease";
 }
