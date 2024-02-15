@@ -29,26 +29,14 @@ public class GroupingFunction {
 
 	private String fieldName;
 
-	private String dateFieldName;
-
 	private TimeSeriesType dateSeriesType;
 
-	public GroupingFunction(String fieldName, String dateFieldName, TimeSeriesType dateSeriesType) {
-		if (StringUtils.isBlank(fieldName) || StringUtils.isBlank(dateFieldName) || dateSeriesType == null) {
+	public GroupingFunction(String fieldName, TimeSeriesType dateSeriesType) {
+		if (StringUtils.isBlank(fieldName) || dateSeriesType == null) {
 			throw new IllegalArgumentException("Supplied arguments are null or blank.");
 		}
 
 		this.fieldName = fieldName;
-		this.dateFieldName = dateFieldName;
-		this.dateSeriesType = dateSeriesType;
-	}
-
-	public GroupingFunction(String dateFieldName, TimeSeriesType dateSeriesType) {
-		if (StringUtils.isBlank(dateFieldName) || dateSeriesType == null) {
-			throw new IllegalArgumentException("Supplied arguments are null or blank.");
-		}
-
-		this.dateFieldName = dateFieldName;
 		this.dateSeriesType = dateSeriesType;
 	}
 
@@ -64,16 +52,12 @@ public class GroupingFunction {
 		return fieldName;
 	}
 
-	public String getDateFieldName() {
-		return dateFieldName;
-	}
-
 	public TimeSeriesType getDateSeriesType() {
 		return dateSeriesType;
 	}
 
 	public boolean isWithFieldGrouping() {
-		return fieldName != null;
+		return dateSeriesType == null;
 	}
 
 	public boolean isWithDateFieldGrouping() {

@@ -1033,7 +1033,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
 	@Override
 	public SqlStatement prepareAggregateStatement(AggregateFunction aggregateFunction, Query<? extends Entity> query,
-			GroupingFunction groupingFunction) throws UnifyException {
+			List<GroupingFunction> groupingFunction) throws UnifyException {
 		if (groupingFunction == null) {
 			throw new IllegalArgumentException("Group function is required.");
 		}
@@ -1043,7 +1043,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
 	@Override
 	public SqlStatement prepareAggregateStatement(List<AggregateFunction> aggregateFunctionList,
-			Query<? extends Entity> query, GroupingFunction groupingFunction) throws UnifyException {
+			Query<? extends Entity> query, List<GroupingFunction> groupingFunction) throws UnifyException {
 		if (groupingFunction == null) {
 			throw new IllegalArgumentException("Group function is required.");
 		}
@@ -1961,7 +1961,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 			throws UnifyException;
 
 	private SqlStatement internalPrepareAggregateStatement(AggregateFunction aggregateFunction,
-			Query<? extends Entity> query, GroupingFunction groupingFunction) throws UnifyException {
+			Query<? extends Entity> query, List<GroupingFunction> groupingFunction) throws UnifyException {
 		SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
 		final List<SqlParameter> parameterInfoList = new ArrayList<SqlParameter>();
 		final List<SqlFieldInfo> returnFieldInfoList = new ArrayList<SqlFieldInfo>();
@@ -1982,14 +1982,15 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
 		aggregateSql.append(" FROM ").append(sqlEntityInfo.getSchemaViewName());
 
-		internalAppendWhereClause(aggregateSql, parameterInfoList, sqlEntityInfo, query, SqlQueryType.SELECT, groupingFunction);
+		internalAppendWhereClause(aggregateSql, parameterInfoList, sqlEntityInfo, query, SqlQueryType.SELECT,
+				groupingFunction);
 
 		return new SqlStatement(sqlEntityInfo, SqlStatementType.FIND, aggregateSql.toString(), parameterInfoList,
 				getSqlResultList(returnFieldInfoList));
 	}
 
 	private SqlStatement internalPrepareAggregateStatement(List<AggregateFunction> aggregateFunctionList,
-			Query<? extends Entity> query, GroupingFunction groupingFunction) throws UnifyException {
+			Query<? extends Entity> query, List<GroupingFunction> groupingFunction) throws UnifyException {
 		SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
 		List<SqlParameter> parameterInfoList = new ArrayList<SqlParameter>();
 		List<SqlFieldInfo> returnFieldInfoList = null;
@@ -2021,45 +2022,46 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
 		aggregateSql.append(" FROM ").append(sqlEntityInfo.getSchemaViewName());
 
-		internalAppendWhereClause(aggregateSql, parameterInfoList, sqlEntityInfo, query, SqlQueryType.SELECT, groupingFunction);
+		internalAppendWhereClause(aggregateSql, parameterInfoList, sqlEntityInfo, query, SqlQueryType.SELECT,
+				groupingFunction);
 
 		return new SqlStatement(sqlEntityInfo, SqlStatementType.FIND, aggregateSql.toString(), parameterInfoList,
 				getSqlResultList(returnFieldInfoList));
 	}
 
-	private void addGroupingSelect(SqlEntityInfo sqlEntityInfo, GroupingFunction groupingFunction,
+	private void addGroupingSelect(SqlEntityInfo sqlEntityInfo, List<GroupingFunction> groupingFunction,
 			StringBuilder aggregateSql, List<SqlFieldInfo> returnFieldInfoList) throws UnifyException {
-		if (groupingFunction != null) {
-			if (groupingFunction.isWithFieldGrouping()) {
-				SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(groupingFunction.getFieldName());
-				if (!String.class.equals(sqlFieldInfo.getFieldType())
-						&& !EnumConst.class.isAssignableFrom(sqlFieldInfo.getFieldType())) {
-					throw new UnifyException(UnifyCoreErrorConstants.RECORD_FIELD_NOT_SUITABLE_FOR_GROUPING,
-							groupingFunction.getFieldName(), sqlEntityInfo.getKeyClass());
+		if (!DataUtils.isBlank(groupingFunction)) {
+			for (GroupingFunction _groupingFunction : groupingFunction) {
+				if (_groupingFunction.isWithFieldGrouping()) {
+					SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(_groupingFunction.getFieldName());
+					if (!String.class.equals(sqlFieldInfo.getFieldType())
+							&& !EnumConst.class.isAssignableFrom(sqlFieldInfo.getFieldType())) {
+						throw new UnifyException(UnifyCoreErrorConstants.RECORD_FIELD_NOT_SUITABLE_FOR_GROUPING,
+								_groupingFunction.getFieldName(), sqlEntityInfo.getKeyClass());
+					}
+
+					aggregateSql.append(", ").append(sqlFieldInfo.getPreferredColumnName());
+					returnFieldInfoList.add(sqlFieldInfo);
+				} else {
+					SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(_groupingFunction.getFieldName());
+					if (!Date.class.equals(sqlFieldInfo.getFieldType())) {
+						throw new UnifyException(UnifyCoreErrorConstants.RECORD_FIELD_NOT_SUITABLE_FOR_DATE_GROUPING,
+								_groupingFunction.getFieldName(), sqlEntityInfo.getKeyClass());
+					}
+
+					aggregateSql.append(", ");
+					appendTimestampTruncation(aggregateSql, sqlFieldInfo, _groupingFunction.getDateSeriesType());
+					aggregateSql.append(" AS ").append(TRUNC_COLUMN_ALIAS);
+					returnFieldInfoList.add(sqlFieldInfo);
 				}
-
-				aggregateSql.append(", ").append(sqlFieldInfo.getPreferredColumnName());
-				returnFieldInfoList.add(sqlFieldInfo);
-			}
-
-			if (groupingFunction.isWithDateFieldGrouping()) {
-				SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(groupingFunction.getDateFieldName());
-				if (!Date.class.equals(sqlFieldInfo.getFieldType())) {
-					throw new UnifyException(UnifyCoreErrorConstants.RECORD_FIELD_NOT_SUITABLE_FOR_DATE_GROUPING,
-							groupingFunction.getDateFieldName(), sqlEntityInfo.getKeyClass());
-				}
-
-				aggregateSql.append(", ");
-				appendTimestampTruncation(aggregateSql, sqlFieldInfo, groupingFunction.getDateSeriesType());
-				aggregateSql.append(" AS ").append(TRUNC_COLUMN_ALIAS);
-				returnFieldInfoList.add(sqlFieldInfo);
 			}
 		}
 	}
 
 	private boolean internalAppendWhereClause(StringBuilder sql, List<SqlParameter> parameterInfoList,
 			SqlEntityInfo sqlEntityInfo, Query<? extends Entity> query, SqlQueryType queryType,
-			GroupingFunction groupingFunction) throws UnifyException {
+			List<GroupingFunction> groupingFunction) throws UnifyException {
 		boolean isAppend = false;
 
 		int limit = getQueryLimit(query);
@@ -2098,39 +2100,41 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 			}
 		}
 
-		if (groupingFunction != null) {
+		if (!DataUtils.isBlank(groupingFunction)) {
 			sql.append(" GROUP BY ");
 			boolean appendSym = false;
-			if (groupingFunction.isWithFieldGrouping()) {
-				sql.append(
-						sqlEntityInfo.getListFieldInfo(groupingFunction.getFieldName()).getPreferredColumnName());
-				appendSym = true;
-			}
-
-			if (groupingFunction.isWithDateFieldGrouping()) {
+			for (GroupingFunction _groupingFunction : groupingFunction) {
 				if (appendSym) {
 					sql.append(", ");
+				} else {
+					appendSym = true;
 				}
 
-				appendTimestampTruncationGroupBy(sql,
-						sqlEntityInfo.getListFieldInfo(groupingFunction.getDateFieldName()),
-						groupingFunction.getDateSeriesType());
+				if (_groupingFunction.isWithFieldGrouping()) {
+					sql.append(
+							sqlEntityInfo.getListFieldInfo(_groupingFunction.getFieldName()).getPreferredColumnName());
+				} else {
+					appendTimestampTruncationGroupBy(sql,
+							sqlEntityInfo.getListFieldInfo(_groupingFunction.getFieldName()),
+							_groupingFunction.getDateSeriesType());
+				}
 			}
 
-			appendSym = false;
 			sql.append(" ORDER BY ");
-			if (groupingFunction.isWithFieldGrouping()) {
-				sql.append(
-						sqlEntityInfo.getListFieldInfo(groupingFunction.getFieldName()).getPreferredColumnName());
-				appendSym = true;
-			}
-
-			if (groupingFunction.isWithDateFieldGrouping()) {
+			appendSym = false;
+			for (GroupingFunction _groupingFunction : groupingFunction) {
 				if (appendSym) {
 					sql.append(", ");
+				} else {
+					appendSym = true;
 				}
 
-				sql.append(TRUNC_COLUMN_ALIAS);
+				if (_groupingFunction.isWithFieldGrouping()) {
+					sql.append(
+							sqlEntityInfo.getListFieldInfo(_groupingFunction.getFieldName()).getPreferredColumnName());
+				} else {
+					sql.append(TRUNC_COLUMN_ALIAS);
+				}
 			}
 
 			isAppend = true;

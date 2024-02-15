@@ -227,7 +227,7 @@ public interface SqlStatementExecutor extends UnifyComponent {
 	 * @throws UnifyException if an error occurs
 	 */
 	List<GroupingAggregation> executeSingleAggregateResultQuery(AggregateFunction aggregateFunction,
-			GroupingFunction groupingFunction, Connection connection, SqlDataTypePolicy countSqlDataTypePolicy,
+			List<GroupingFunction> groupingFunction, Connection connection, SqlDataTypePolicy countSqlDataTypePolicy,
 			SqlStatement sqlStatement) throws UnifyException;
 
 	/**
@@ -242,7 +242,7 @@ public interface SqlStatementExecutor extends UnifyComponent {
 	 * @throws UnifyException if an error occurs
 	 */
 	List<GroupingAggregation> executeMultipleAggregateResultQuery(List<AggregateFunction> aggregateFunctionList,
-			GroupingFunction groupingFunction, Connection connection, SqlDataTypePolicy countSqlDataTypePolicy,
+			List<GroupingFunction> groupingFunction, Connection connection, SqlDataTypePolicy countSqlDataTypePolicy,
 			SqlStatement sqlStatement) throws UnifyException;
 
 	/**

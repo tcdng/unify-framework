@@ -360,7 +360,7 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
 	 * @return the aggregate statement
 	 */
 	SqlStatement prepareAggregateStatement(AggregateFunction aggregateFunction, Query<? extends Entity> query,
-			GroupingFunction groupingFunction) throws UnifyException;
+			List<GroupingFunction> groupingFunction) throws UnifyException;
 
 	/**
 	 * Prepares an aggregate field statement with grouping.
@@ -371,7 +371,7 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
 	 * @return the aggregate statement
 	 */
 	SqlStatement prepareAggregateStatement(List<AggregateFunction> aggregateFunctionList, Query<? extends Entity> query,
-			GroupingFunction groupingFunction) throws UnifyException;
+			List<GroupingFunction> groupingFunction) throws UnifyException;
 
 	/**
 	 * Prepares an SQL callable statement.

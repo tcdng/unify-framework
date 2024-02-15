@@ -279,8 +279,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             // 0
             GroupingAggregation groupingAggregation = quantityAggregate.get(0);
             assertNotNull(groupingAggregation);
-            assertEquals("cyan", groupingAggregation.getGrouping());
-            assertNull(groupingAggregation.getGroupingDate());
+            assertEquals(1, groupingAggregation.getGroupingCount());
+            assertTrue(groupingAggregation.isStringGrouping(0));
+            assertEquals("cyan", groupingAggregation.getGroupingAsString(0));
             
             List<Aggregation> aggregationList = groupingAggregation.getAggregation();
             assertNotNull(aggregationList);
@@ -294,8 +295,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             // 1
             groupingAggregation = quantityAggregate.get(1);
             assertNotNull(groupingAggregation);
-            assertEquals("orange", groupingAggregation.getGrouping());
-            assertNull(groupingAggregation.getGroupingDate());
+            assertEquals(1, groupingAggregation.getGroupingCount());
+            assertTrue(groupingAggregation.isStringGrouping(0));
+            assertEquals("orange", groupingAggregation.getGroupingAsString(0));
             
             aggregationList = groupingAggregation.getAggregation();
             assertNotNull(aggregationList);
@@ -309,8 +311,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             // 2
             groupingAggregation = quantityAggregate.get(2);
             assertNotNull(groupingAggregation);
-            assertEquals("red", groupingAggregation.getGrouping());
-            assertNull(groupingAggregation.getGroupingDate());
+            assertEquals(1, groupingAggregation.getGroupingCount());
+            assertTrue(groupingAggregation.isStringGrouping(0));
+            assertEquals("red", groupingAggregation.getGroupingAsString(0));
             
             aggregationList = groupingAggregation.getAggregation();
             assertNotNull(aggregationList);
@@ -324,8 +327,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             // 3
             groupingAggregation = quantityAggregate.get(3);
             assertNotNull(groupingAggregation);
-            assertEquals("yellow", groupingAggregation.getGrouping());
-            assertNull(groupingAggregation.getGroupingDate());
+            assertEquals(1, groupingAggregation.getGroupingCount());
+            assertTrue(groupingAggregation.isStringGrouping(0));
+            assertEquals("yellow", groupingAggregation.getGroupingAsString(0));
             
             aggregationList = groupingAggregation.getAggregation();
             assertNotNull(aggregationList);
@@ -363,8 +367,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             // 0
             GroupingAggregation groupingAggregation = quantityAggregate.get(0);
             assertNotNull(groupingAggregation);
-            assertEquals("cyan", groupingAggregation.getGrouping());
-            assertNull(groupingAggregation.getGroupingDate());
+            assertEquals(1, groupingAggregation.getGroupingCount());
+            assertTrue(groupingAggregation.isStringGrouping(0));
+            assertEquals("cyan", groupingAggregation.getGroupingAsString(0));
             
             List<Aggregation> aggregationList = groupingAggregation.getAggregation();
             assertNotNull(aggregationList);
@@ -388,8 +393,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             // 1
             groupingAggregation = quantityAggregate.get(1);
             assertNotNull(groupingAggregation);
-            assertEquals("orange", groupingAggregation.getGrouping());
-            assertNull(groupingAggregation.getGroupingDate());
+            assertEquals(1, groupingAggregation.getGroupingCount());
+            assertTrue(groupingAggregation.isStringGrouping(0));
+            assertEquals("orange", groupingAggregation.getGroupingAsString(0));
             
             aggregationList = groupingAggregation.getAggregation();
             assertNotNull(aggregationList);
@@ -413,8 +419,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             // 2
             groupingAggregation = quantityAggregate.get(2);
             assertNotNull(groupingAggregation);
-            assertEquals("red", groupingAggregation.getGrouping());
-            assertNull(groupingAggregation.getGroupingDate());
+            assertEquals(1, groupingAggregation.getGroupingCount());
+            assertTrue(groupingAggregation.isStringGrouping(0));
+            assertEquals("red", groupingAggregation.getGroupingAsString(0));
             
             aggregationList = groupingAggregation.getAggregation();
             assertNotNull(aggregationList);
@@ -438,8 +445,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
             // 3
             groupingAggregation = quantityAggregate.get(3);
             assertNotNull(groupingAggregation);
-            assertEquals("yellow", groupingAggregation.getGrouping());
-            assertNull(groupingAggregation.getGroupingDate());
+            assertEquals(1, groupingAggregation.getGroupingCount());
+            assertTrue(groupingAggregation.isStringGrouping(0));
+            assertEquals("yellow", groupingAggregation.getGroupingAsString(0));
             
             aggregationList = groupingAggregation.getAggregation();
             assertNotNull(aggregationList);
