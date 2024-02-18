@@ -885,6 +885,20 @@ public interface DatabaseSession {
 			GroupingFunction groupingFunction) throws UnifyException;
 
 	/**
+	 * Executes an group aggregate function that match specified query.
+	 * 
+	 * @param aggregateFunction the aggregate function
+	 * @param query             the query to use
+	 * @param groupingFunction  the grouping function
+	 * @return the aggregation
+	 * @throws UnifyException If aggregate function field is unknown for entity. If
+	 *                        aggregate function field is not numeric. If an error
+	 *                        occurs
+	 */
+	List<GroupingAggregation> aggregate(AggregateFunction aggregateFunction, Query<? extends Entity> query,
+			List<GroupingFunction> groupingFunction) throws UnifyException;
+
+	/**
 	 * Executes a list of group aggregate functions that match specified query.
 	 * 
 	 * @param aggregateFunction the aggregate function
@@ -897,6 +911,20 @@ public interface DatabaseSession {
 	 */
 	List<GroupingAggregation> aggregate(List<AggregateFunction> aggregateFunction, Query<? extends Entity> query,
 			GroupingFunction groupingFunction) throws UnifyException;
+
+	/**
+	 * Executes a list of group aggregate functions that match specified query.
+	 * 
+	 * @param aggregateFunction the aggregate function
+	 * @param query             the query to use
+	 * @param groupingFunction  the grouping function
+	 * @return the aggregation
+	 * @throws UnifyException If aggregate function field is unknown for entity. If
+	 *                        aggregate function field is not numeric. If an error
+	 *                        occurs
+	 */
+	List<GroupingAggregation> aggregate(List<AggregateFunction> aggregateFunction, Query<? extends Entity> query,
+			List<GroupingFunction> groupingFunction) throws UnifyException;
 
     /**
      * Gets a new instance of an entity extension type.

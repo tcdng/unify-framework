@@ -19,8 +19,6 @@ package com.tcdng.unify.core.database;
 import java.util.Date;
 import java.util.List;
 
-import com.tcdng.unify.core.util.StringUtils;
-
 /**
  * A grouping aggregation.
  * 
@@ -29,35 +27,71 @@ import com.tcdng.unify.core.util.StringUtils;
  */
 public class GroupingAggregation {
 
+	private List<Grouping> groupings;
+
 	private List<Aggregation> aggregation;
 
-	private String grouping;
-
-	private Date groupingDate;
-
-	public GroupingAggregation(List<Aggregation> aggregation, String grouping, Date groupingDate) {
+	public GroupingAggregation(List<Grouping> groupings, List<Aggregation> aggregation) {
+		this.groupings = groupings;
 		this.aggregation = aggregation;
-		this.grouping = grouping;
-		this.groupingDate = groupingDate;
+	}
+
+	public List<Grouping> getGroupings() {
+		return groupings;
 	}
 
 	public List<Aggregation> getAggregation() {
 		return aggregation;
 	}
 
-	public String getGrouping() {
-		return grouping;
+	public int getGroupingCount() {
+		return groupings.size();
+	}
+	
+	public String getGroupingAsString(int index) {
+		return groupings.get(index).getAsString();
 	}
 
-	public Date getGroupingDate() {
-		return groupingDate;
+	public Date getGroupingAsDate(int index) {
+		return groupings.get(index).getAsDate();
 	}
 
-	public boolean isWithGrouping() {
-		return !StringUtils.isBlank(grouping);
+	public boolean isStringGrouping(int index) {
+		return groupings.get(index).isString();
 	}
 
-	public boolean isWithGroupingDate() {
-		return groupingDate != null;
+	public boolean isDateGrouping(int index) {
+		return groupings.get(index).isDate();
 	}
+
+	public static class Grouping {
+
+		private Object grouping;
+
+		public Grouping(String grouping) {
+			this.grouping = grouping;
+		}
+
+		public Grouping(Date grouping) {
+			this.grouping = grouping;
+		}
+
+		public String getAsString() {
+			return String.valueOf(grouping);
+		}
+
+		public Date getAsDate() {
+			return (Date) grouping;
+		}
+
+		public boolean isString() {
+			return String.class.equals(grouping.getClass());
+		}
+
+		public boolean isDate() {
+			return Date.class.equals(grouping.getClass());
+		}
+
+	};
+
 }

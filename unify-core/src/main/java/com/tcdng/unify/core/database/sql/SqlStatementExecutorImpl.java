@@ -46,6 +46,7 @@ import com.tcdng.unify.core.database.Aggregation;
 import com.tcdng.unify.core.database.CallableProc;
 import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.database.GroupingAggregation;
+import com.tcdng.unify.core.database.GroupingAggregation.Grouping;
 import com.tcdng.unify.core.database.StaticReference;
 import com.tcdng.unify.core.transform.Transformer;
 import com.tcdng.unify.core.util.DataUtils;
@@ -598,7 +599,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
 
 	@Override
 	public List<GroupingAggregation> executeSingleAggregateResultQuery(AggregateFunction aggregateFunction,
-			GroupingFunction groupingFunction, Connection connection, SqlDataTypePolicy countSqlDataTypePolicy,
+			List<GroupingFunction> groupingFunction, Connection connection, SqlDataTypePolicy countSqlDataTypePolicy,
 			SqlStatement sqlStatement) throws UnifyException {
 		PreparedStatement pStmt = null;
 		ResultSet rs = null;
@@ -623,24 +624,23 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
 					value = DataUtils.convert(sqlResult.getType(), 0);
 				}
 
-				String grouping = null;
-				if (groupingFunction.isWithFieldGrouping()) {
-					sqlResult = sqlResultList.get(resultIndex);
-					grouping = (String) sqlResult.getSqlDataTypePolicy().executeGetResult(rs, String.class,
-							++resultIndex, timeZoneOffset);
+				List<Grouping> groupings = new ArrayList<Grouping>();
+				for (GroupingFunction _groupingFunction : groupingFunction) {
+					if (_groupingFunction.isWithFieldGrouping()) {
+						sqlResult = sqlResultList.get(resultIndex);
+						String grouping = (String) sqlResult.getSqlDataTypePolicy().executeGetResult(rs, String.class,
+								++resultIndex, timeZoneOffset);
+						groupings.add(new Grouping(grouping));
+					} else {
+						sqlResult = sqlResultList.get(resultIndex);
+						Date groupingDate = (Date) sqlResult.getSqlDataTypePolicy().executeGetResult(rs, Date.class,
+								++resultIndex, timeZoneOffset);
+						groupings.add(new Grouping(groupingDate));
+					}
 				}
 
-				Date groupingDate = null;
-				if (groupingFunction.isWithDateFieldGrouping()) {
-					sqlResult = sqlResultList.get(resultIndex);
-					groupingDate = (Date) sqlResult.getSqlDataTypePolicy().executeGetResult(rs, Date.class,
-							++resultIndex, timeZoneOffset);
-				}
-
-				resultList.add(new GroupingAggregation(
-						Arrays.asList(
-								new Aggregation(aggregateFunction.getType(), aggregateFunction.getFieldName(), value)),
-						grouping, groupingDate));
+				resultList.add(new GroupingAggregation(groupings, Arrays.asList(
+						new Aggregation(aggregateFunction.getType(), aggregateFunction.getFieldName(), value))));
 			}
 
 			return resultList;
@@ -658,7 +658,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
 
 	@Override
 	public List<GroupingAggregation> executeMultipleAggregateResultQuery(List<AggregateFunction> aggregateFunctionList,
-			GroupingFunction groupingFunction, Connection connection, SqlDataTypePolicy countSqlDataTypePolicy,
+			List<GroupingFunction> groupingFunction, Connection connection, SqlDataTypePolicy countSqlDataTypePolicy,
 			SqlStatement sqlStatement) throws UnifyException {
 		PreparedStatement pStmt = null;
 		ResultSet rs = null;
@@ -690,21 +690,22 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
 							.add(new Aggregation(aggregateFunction.getType(), aggregateFunction.getFieldName(), value));
 				}
 
-				String grouping = null;
-				if (groupingFunction.isWithFieldGrouping()) {
-					sqlResult = sqlResultList.get(resultIndex);
-					grouping = (String) sqlResult.getSqlDataTypePolicy().executeGetResult(rs, String.class,
-							++resultIndex, timeZoneOffset);
+				List<Grouping> groupings = new ArrayList<Grouping>();
+				for (GroupingFunction _groupingFunction : groupingFunction) {
+					if (_groupingFunction.isWithFieldGrouping()) {
+						sqlResult = sqlResultList.get(resultIndex);
+						String grouping = (String) sqlResult.getSqlDataTypePolicy().executeGetResult(rs, String.class,
+								++resultIndex, timeZoneOffset);
+						groupings.add(new Grouping(grouping));
+					} else {
+						sqlResult = sqlResultList.get(resultIndex);
+						Date groupingDate = (Date) sqlResult.getSqlDataTypePolicy().executeGetResult(rs, Date.class,
+								++resultIndex, timeZoneOffset);
+						groupings.add(new Grouping(groupingDate));
+					}
 				}
 
-				Date groupingDate = null;
-				if (groupingFunction.isWithDateFieldGrouping()) {
-					sqlResult = sqlResultList.get(resultIndex);
-					groupingDate = (Date) sqlResult.getSqlDataTypePolicy().executeGetResult(rs, Date.class,
-							++resultIndex, timeZoneOffset);
-				}
-
-				resultList.add(new GroupingAggregation(aggregation, grouping, groupingDate));
+				resultList.add(new GroupingAggregation(groupings, aggregation));
 			}
 
 			return resultList;

@@ -19,6 +19,7 @@ import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Savepoint;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -975,6 +976,48 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 				entityPolicy.preQuery(query);
 			}
 
+			List<GroupingFunction> _groupingFunction = Arrays.asList(groupingFunction);
+			return getSqlStatementExecutor().executeSingleAggregateResultQuery(aggregateFunction, _groupingFunction,
+					connection, sqlDataSourceDialect.getSqlTypePolicy(int.class),
+					sqlDataSourceDialect.prepareAggregateStatement(aggregateFunction, query, _groupingFunction));
+		} catch (UnifyException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new UnifyOperationException(e, getClass().getSimpleName());
+		}
+	}
+
+	@Override
+	public List<GroupingAggregation> aggregate(List<AggregateFunction> aggregateFunction, Query<? extends Entity> query,
+			GroupingFunction groupingFunction) throws UnifyException {
+		try {
+			SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
+			EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
+			if (entityPolicy != null) {
+				entityPolicy.preQuery(query);
+			}
+
+			List<GroupingFunction> _groupingFunction = Arrays.asList(groupingFunction);
+			return getSqlStatementExecutor().executeMultipleAggregateResultQuery(aggregateFunction, _groupingFunction,
+					connection, sqlDataSourceDialect.getSqlTypePolicy(int.class),
+					sqlDataSourceDialect.prepareAggregateStatement(aggregateFunction, query, _groupingFunction));
+		} catch (UnifyException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new UnifyOperationException(e, getClass().getSimpleName());
+		}
+	}
+
+	@Override
+	public List<GroupingAggregation> aggregate(AggregateFunction aggregateFunction, Query<? extends Entity> query,
+			List<GroupingFunction> groupingFunction) throws UnifyException {
+		try {
+			SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
+			EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
+			if (entityPolicy != null) {
+				entityPolicy.preQuery(query);
+			}
+
 			return getSqlStatementExecutor().executeSingleAggregateResultQuery(aggregateFunction, groupingFunction,
 					connection, sqlDataSourceDialect.getSqlTypePolicy(int.class),
 					sqlDataSourceDialect.prepareAggregateStatement(aggregateFunction, query, groupingFunction));
@@ -987,7 +1030,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
 	@Override
 	public List<GroupingAggregation> aggregate(List<AggregateFunction> aggregateFunction, Query<? extends Entity> query,
-			GroupingFunction groupingFunction) throws UnifyException {
+			List<GroupingFunction> groupingFunction) throws UnifyException {
 		try {
 			SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
 			EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
