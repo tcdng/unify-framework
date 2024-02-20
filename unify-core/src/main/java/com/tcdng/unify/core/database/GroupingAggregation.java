@@ -85,11 +85,11 @@ public class GroupingAggregation {
 		}
 
 		public boolean isString() {
-			return String.class.equals(grouping.getClass());
+			return grouping == null || String.class.equals(grouping.getClass());
 		}
 
 		public boolean isDate() {
-			return Date.class.equals(grouping.getClass());
+			return grouping != null && Date.class.equals(grouping.getClass());
 		}
 
 	};
