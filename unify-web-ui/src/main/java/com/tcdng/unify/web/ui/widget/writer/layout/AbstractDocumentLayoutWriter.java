@@ -32,38 +32,41 @@ import com.tcdng.unify.web.ui.widget.writer.DocumentLayoutWriter;
  */
 public abstract class AbstractDocumentLayoutWriter extends AbstractDhtmlWriter implements DocumentLayoutWriter {
 
-    @Override
-    public void writeStructureAndContent(ResponseWriter writer, DocumentLayout layout, Document document)
-            throws UnifyException {
-        writer.write("<div");
-        writeTagId(writer, "lay_" + document.getId());
-        writeTagStyleClass(writer, layout.getStyleClass());
-        writeTagStyle(writer, layout.getStyle());
-        writer.write(">");
-        writeInnerStructureAndContent(writer, layout, document);
-        writer.write("</div>");
-    }
+	@Override
+	public void writeStructureAndContent(ResponseWriter writer, DocumentLayout layout, Document document)
+			throws UnifyException {
+		writer.write("<div");
+		writeTagId(writer, "lay_" + document.getId());
+		writeTagStyleClass(writer, layout.getStyleClass());
+		writeTagStyle(writer, layout.getStyle());
+		writer.write(">");
+		writeInnerStructureAndContent(writer, layout, document);
+		writer.write("</div>");
+	}
 
-    protected void writeSection(ResponseWriter writer, String styleClass, Panel panel) throws UnifyException {
-        if (panel != null) {
-            writer.write("<div class=\"");
-            writer.write(styleClass);
-            writer.write("\"><div class=\"cell\">");
-            writer.writeStructureAndContent(panel);
-            writer.write("</div></div>");
-        }
-    }
+	protected void writeSection(ResponseWriter writer, String styleClass, Panel panel) throws UnifyException {
+		if (panel != null) {
+			writer.write("<div class=\"");
+			writer.write(styleClass);
+			writer.write("\"><div class=\"cell\">");
+			writer.writeStructureAndContent(panel);
+			writer.write("</div></div>");
+		}
+	}
 
-    protected void writeLatencySection(ResponseWriter writer, Document document) throws UnifyException {
+	protected void writeLatencySection(ResponseWriter writer, Document document) throws UnifyException {
 		writer.write("<div id=\"").write(document.getLatencyPanelId())
 				.write("\" class=\"dclatency\" style=\"display:none;\">");
 		writer.write("<img src=\"");
 		writer.writeContextResourceURL("/resource/file", MimeType.IMAGE.template(), "$t{images/latency.gif}");
 		writer.write("\">");
+		writer.write("<span>");
+		writer.writeWithHtmlEscape(getSessionMessage("busy.pleasewait"));
+		writer.write("</span>");
 		writer.write("</div>");
-    }
-    
-    protected abstract void writeInnerStructureAndContent(ResponseWriter writer, DocumentLayout layout,
-            Document document) throws UnifyException;
+	}
+
+	protected abstract void writeInnerStructureAndContent(ResponseWriter writer, DocumentLayout layout,
+			Document document) throws UnifyException;
 
 }
