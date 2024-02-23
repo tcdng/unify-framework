@@ -330,6 +330,11 @@ ux.respHandler = {
 		if (resp.openWindow) {
 			if (resp.attachment) {
 				window.location.assign(resp.openWindow);
+			} else if(resp.tab) {
+				var hdl = window.open(resp.openWindow, resp.tabName);
+				if (hdl) {
+					hdl.focus();
+				}
 			} else {
 				window.open(resp.openWindow, "_blank",
 						"toolbar=0,location=0,menubar=0");
