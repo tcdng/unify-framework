@@ -35,7 +35,8 @@ public class ControllerFinderImpl extends AbstractUnifyComponent implements Cont
 	@Override
 	public Controller findController(ControllerPathParts controllerPathParts) throws UnifyException {
 		logDebug("Finding controller for path [{0}]...", controllerPathParts.getControllerPath());
-
+		logDebug("Path variable [{0}]...", controllerPathParts.getPathVariable());
+		
 		final String controllerName = controllerPathParts.getControllerName();
 		UnifyComponentConfig unifyComponentConfig = getComponentConfig(Controller.class, controllerName);
 

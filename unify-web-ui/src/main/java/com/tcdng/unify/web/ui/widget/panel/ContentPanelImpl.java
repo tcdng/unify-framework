@@ -46,8 +46,11 @@ import com.tcdng.unify.web.ui.widget.Widget;
  * @since 1.0
  */
 @Component("ui-contentpanel")
-@UplAttributes({ @UplAttribute(name = "documentPath", type = String.class, mandatory = true),
-		@UplAttribute(name = "paths", type = String[].class), @UplAttribute(name = "pathsBinding", type = String.class),
+@UplAttributes({
+		@UplAttribute(name = "documentPath", type = String.class),
+		@UplAttribute(name = "documentPathBinding", type = String.class),
+		@UplAttribute(name = "paths", type = String[].class),
+		@UplAttribute(name = "pathsBinding", type = String.class),
 		@UplAttribute(name = "stickyPaths", type = boolean.class),
 		@UplAttribute(name = "stickyPathsBinding", type = String.class),
 		@UplAttribute(name = "tabbed", type = boolean.class),
@@ -73,7 +76,7 @@ public class ContentPanelImpl extends AbstractContentPanel {
 	}
 
 	public String getDocumentPath() throws UnifyException {
-		return getUplAttribute(String.class, "documentPath");
+		return getUplAttribute(String.class, "documentPath", "documentPathBinding");
 	}
 
 	public String[] getPaths() throws UnifyException {

@@ -300,9 +300,12 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 
 	@Override
 	public void populate(DataTransferBlock transferBlock) throws UnifyException {
-		DataTransferWidget dataTransferWidget = (DataTransferWidget) getPageRequestContextUtil().getRequestPage()
-				.getWidgetByLongName(transferBlock.getLongName());
-		dataTransferWidget.populate(transferBlock);
+		Page page = getPageRequestContextUtil().getRequestPage();
+		if (page.isWidget(transferBlock.getLongName())) {
+			DataTransferWidget dataTransferWidget = (DataTransferWidget) page
+					.getWidgetByLongName(transferBlock.getLongName());
+			dataTransferWidget.populate(transferBlock);
+		}
 	}
 
 	@Override
@@ -460,7 +463,7 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 		setRequestAttribute(UnifyWebRequestAttributeConstants.FILEATTACHMENTS_INFO, fileAttachmentInfo);
 		return ResultMappingConstants.SHOW_ATTACHMENT;
 	}
-	
+
 	/**
 	 * Shows popup.
 	 * 

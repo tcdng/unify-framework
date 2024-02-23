@@ -163,7 +163,7 @@ public class DocumentWriter extends AbstractPageWriter {
 		writer.write(">");
 		// Set document properties
 		ControllerPathParts controllerPathParts = pathInfoRepository.getControllerPathParts(document);
-		writer.write("ux.setupDocument(\"").write(controllerPathParts.getControllerName()).write("\", \"")
+		writer.write("ux.setupDocument(\"").write(controllerPathParts.getControllerPathId()).write("\", \"")
 				.write(document.getPopupBaseId()).write("\", \"").write(document.getPopupWinId()).write("\", \"")
 				.write(document.getPopupSysId()).write("\", \"").write(document.getLatencyPanelId()).write("\", \"")
 				.write(getSessionContext().getId()).write("\");");
