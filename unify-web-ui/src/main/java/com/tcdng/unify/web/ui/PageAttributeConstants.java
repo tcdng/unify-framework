@@ -26,4 +26,6 @@ public interface PageAttributeConstants {
     String PAGE_TITLE = "pageTitle";
 
     String OTHER_PAGE_CLOSED_DETECTED = "page::otherClosedDetected";
+
+    String IN_DETACHED_WINDOW= "page::indetachedWindow";
 }

@@ -16,12 +16,21 @@
 
 package com.tcdng.unify.web.ui.widget;
 
+import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.annotation.UplAttribute;
+import com.tcdng.unify.core.annotation.UplAttributes;
+
 /**
  * Convenient abstract base class for content panels.
  * 
  * @author The Code Department
  * @since 1.0
  */
+@UplAttributes({
+	@UplAttribute(name = "detachedWindow", type = boolean.class) })
 public abstract class AbstractContentPanel extends AbstractPanel implements ContentPanel {
 
+	public boolean isDetachedWindow() throws UnifyException {
+		return getUplAttribute(boolean.class, "detachedWindow");
+	}
 }
