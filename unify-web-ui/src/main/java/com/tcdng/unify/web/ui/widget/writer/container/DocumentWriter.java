@@ -61,7 +61,7 @@ public class DocumentWriter extends AbstractPageWriter {
         writer.write("<head>");
         // Write title
         writer.write("<title>");
-        String title = document.getUplAttribute(String.class, "caption");
+        String title = document.getCaption();
         if (StringUtils.isNotBlank(title)) {
             writer.write(title);
         } else {
