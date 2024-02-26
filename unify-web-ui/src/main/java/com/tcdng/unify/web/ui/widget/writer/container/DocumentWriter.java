@@ -61,7 +61,7 @@ public class DocumentWriter extends AbstractPageWriter {
         writer.write("<head>");
         // Write title
         writer.write("<title>");
-        String title = document.getUplAttribute(String.class, "caption");
+        String title = document.getCaption();
         if (StringUtils.isNotBlank(title)) {
             writer.write(title);
         } else {
@@ -163,7 +163,7 @@ public class DocumentWriter extends AbstractPageWriter {
 		writer.write(">");
 		// Set document properties
 		ControllerPathParts controllerPathParts = pathInfoRepository.getControllerPathParts(document);
-		writer.write("ux.setupDocument(\"").write(controllerPathParts.getControllerName()).write("\", \"")
+		writer.write("ux.setupDocument(\"").write(controllerPathParts.getControllerPathId()).write("\", \"")
 				.write(document.getPopupBaseId()).write("\", \"").write(document.getPopupWinId()).write("\", \"")
 				.write(document.getPopupSysId()).write("\", \"").write(document.getLatencyPanelId()).write("\", \"")
 				.write(getSessionContext().getId()).write("\");");

@@ -44,6 +44,10 @@ public abstract class AbstractOpenWindowPageControllerResponse extends AbstractJ
 			WebStringWriter urlLsw = writer.discardSecondary();
 			writer.writeJsonQuote(urlLsw);
 			writer.write(",\"attachment\":").write(windowResourceInfo.isDownload());
+			if (windowResourceInfo.isOpenInTab()) {
+				writer.write(",\"tab\":").write(true);
+				writer.write(",\"tabName\":\"").write(windowResourceInfo.getResourceName()).write("\"");
+			}
 		}
 	}
 
@@ -60,6 +64,8 @@ public abstract class AbstractOpenWindowPageControllerResponse extends AbstractJ
 		private String contentType;
 
 		private boolean download;
+
+		private boolean openInTab;
 
 		public WindowResourceInfo(Object resourceObject, String resourcePath, String resourceName, String contentType,
 				boolean download) {
@@ -96,6 +102,14 @@ public abstract class AbstractOpenWindowPageControllerResponse extends AbstractJ
 
 		public boolean isValid() {
 			return resourceObject != null && resourcePath != null && resourceName != null;
+		}
+
+		public boolean isOpenInTab() {
+			return openInTab;
+		}
+
+		public void setOpenInTab(boolean openInTab) {
+			this.openInTab = openInTab;
 		}
 
 	}

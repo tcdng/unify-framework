@@ -46,7 +46,8 @@ import com.tcdng.unify.web.ui.widget.Widget;
  * @since 1.0
  */
 @Component("ui-contentpanel")
-@UplAttributes({ @UplAttribute(name = "documentPath", type = String.class, mandatory = true),
+@UplAttributes({ @UplAttribute(name = "documentPath", type = String.class),
+		@UplAttribute(name = "documentPathBinding", type = String.class),
 		@UplAttribute(name = "paths", type = String[].class), @UplAttribute(name = "pathsBinding", type = String.class),
 		@UplAttribute(name = "stickyPaths", type = boolean.class),
 		@UplAttribute(name = "stickyPathsBinding", type = String.class),
@@ -73,7 +74,7 @@ public class ContentPanelImpl extends AbstractContentPanel {
 	}
 
 	public String getDocumentPath() throws UnifyException {
-		return getUplAttribute(String.class, "documentPath");
+		return getUplAttribute(String.class, "documentPath", "documentPathBinding");
 	}
 
 	public String[] getPaths() throws UnifyException {
@@ -312,6 +313,7 @@ public class ContentPanelImpl extends AbstractContentPanel {
 		public ContentInfo(Page page, int pageIndex) throws UnifyException {
 			this.page = page;
 			this.pageIndex = pageIndex;
+			page.setAttribute(PageAttributeConstants.IN_DETACHED_WINDOW, isDetachedWindow());
 		}
 
 		public String getColorScheme() throws UnifyException {
