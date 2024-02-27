@@ -301,11 +301,14 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 	@Override
 	public void populate(DataTransferBlock transferBlock) throws UnifyException {
 		Page page = getPageRequestContextUtil().getRequestPage();
-		if (page.isWidget(transferBlock.getLongName())) {
-			DataTransferWidget dataTransferWidget = (DataTransferWidget) page
-					.getWidgetByLongName(transferBlock.getLongName());
-			dataTransferWidget.populate(transferBlock);
-		}
+//		if (page.isWidget(transferBlock.getLongName())) {
+//			DataTransferWidget dataTransferWidget = (DataTransferWidget) page
+//					.getWidgetByLongName(transferBlock.getLongName());
+//			dataTransferWidget.populate(transferBlock);
+//		}
+		DataTransferWidget dataTransferWidget = (DataTransferWidget) page
+				.getWidgetByLongName(transferBlock.getLongName());
+		dataTransferWidget.populate(transferBlock);
 	}
 
 	@Override
