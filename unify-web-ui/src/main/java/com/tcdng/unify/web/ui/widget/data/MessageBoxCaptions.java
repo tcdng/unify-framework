@@ -35,6 +35,16 @@ public class MessageBoxCaptions {
 
 	private String cancelCaption;
 
+	private String okStyleClass;
+
+	private String yesStyleClass;
+
+	private String noStyleClass;
+
+	private String retryStyleClass;
+
+	private String cancelStyleClass;
+
 	public MessageBoxCaptions(String mainCaption) {
 		this.mainCaption = mainCaption;
 	}
@@ -85,6 +95,46 @@ public class MessageBoxCaptions {
 
 	public void setCancelCaption(String cancelCaption) {
 		this.cancelCaption = cancelCaption;
+	}
+
+	public String getOkStyleClass() {
+		return okStyleClass;
+	}
+
+	public void setOkStyleClass(String okStyleClass) {
+		this.okStyleClass = okStyleClass;
+	}
+
+	public String getYesStyleClass() {
+		return yesStyleClass;
+	}
+
+	public void setYesStyleClass(String yesStyleClass) {
+		this.yesStyleClass = yesStyleClass;
+	}
+
+	public String getNoStyleClass() {
+		return noStyleClass;
+	}
+
+	public void setNoStyleClass(String noStyleClass) {
+		this.noStyleClass = noStyleClass;
+	}
+
+	public String getRetryStyleClass() {
+		return retryStyleClass;
+	}
+
+	public void setRetryStyleClass(String retryStyleClass) {
+		this.retryStyleClass = retryStyleClass;
+	}
+
+	public String getCancelStyleClass() {
+		return cancelStyleClass;
+	}
+
+	public void setCancelStyleClass(String cancelStyleClass) {
+		this.cancelStyleClass = cancelStyleClass;
 	}
 	
 	

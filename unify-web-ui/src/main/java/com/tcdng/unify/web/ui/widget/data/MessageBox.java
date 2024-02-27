@@ -135,4 +135,24 @@ public class MessageBox {
 		return captions.getCancelCaption();
 	}
 
+	public String getOkStyleClass() {
+		return captions.getOkStyleClass();
+	}
+
+	public String getYesStyleClass() {
+		return captions.getYesStyleClass();
+	}
+
+	public String getNoStyleClass() {
+		return captions.getNoStyleClass();
+	}
+
+	public String getRetryStyleClass() {
+		return captions.getRetryStyleClass();
+	}
+
+	public String getCancelStyleClass() {
+		return captions.getCancelStyleClass();
+	}
+
 }
