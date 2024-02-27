@@ -141,7 +141,10 @@ public abstract class AbstractStandalonePanel extends AbstractPanel implements S
     public List<Widget> getWidgetsByLongNames(List<String> longNames) throws UnifyException {
         List<Widget> widgets = new ArrayList<Widget>(longNames.size());
         for (String longName : longNames) {
-            widgets.add(getWidgetByLongName(longName));
+        	Widget widget = getWidgetByLongName(longName);
+            if (widget != null) {
+            	widgets.add(widget);
+            }
         }
         return widgets;
     }
