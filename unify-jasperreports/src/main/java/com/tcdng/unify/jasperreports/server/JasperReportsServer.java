@@ -52,6 +52,7 @@ import com.tcdng.unify.core.util.IOUtils;
 import com.tcdng.unify.jasperreports.JasperReportsApplicationComponents;
 import com.tcdng.unify.jasperreports.JasperReportsPropertyConstants;
 
+import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -59,6 +60,7 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.data.JRMapCollectionDataSource;
 import net.sf.jasperreports.engine.design.JRDesignQuery;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.export.JRCsvExporter;
@@ -193,6 +195,7 @@ public class JasperReportsServer extends AbstractReportServer {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void doGenerateReport(Report report, OutputStream outputStream) throws UnifyException {
 		if (report.isWorkbookXLS()) {
@@ -205,7 +208,7 @@ public class JasperReportsServer extends AbstractReportServer {
 				throwOperationErrorException(e);
 			}
 		}
-		
+
 		DataSource dataSource = getDataSource(report);
 		Connection connection = null;
 		try {
@@ -217,15 +220,17 @@ public class JasperReportsServer extends AbstractReportServer {
 			}
 
 			JasperPrint jasperPrint = null;
-			Collection<?> content = report.getBeanCollection();
 			Map<String, Object> parameters = report.getParameters();
 			if (fileVirtualization) {
 				JRSwapFileVirtualizer virtualizer = virtualizers.next();
 				parameters.put(JRParameter.REPORT_VIRTUALIZER, virtualizer);
 			}
-			
+
 			if (report.isWithBeanCollection()) {
-				JRBeanCollectionDataSource jrBeanDataSource = new JRBeanCollectionDataSource(content);
+				Collection<?> content = report.getBeanCollection();
+				JRDataSource jrBeanDataSource = report.isMapCollection()
+						? new JRMapCollectionDataSource((Collection<Map<String, ?>>) content)
+						: new JRBeanCollectionDataSource(content);
 				jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, jrBeanDataSource);
 			} else if (report.isEmbeddedHtml()) {
 				JRBeanCollectionDataSource jrBeanDataSource = new JRBeanCollectionDataSource(report.getEmbeddedHtmls());
