@@ -239,7 +239,7 @@ public abstract class AbstractPage extends AbstractStandalonePanel implements Pa
             }
         }
 
-        throw new UnifyException(UnifyWebUIErrorConstants.WIDGET_WITH_LONGNAME_UNKNOWN, longName, getLongName());
+        return null;
     }
 
     @Override

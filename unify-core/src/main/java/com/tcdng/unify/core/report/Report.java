@@ -88,6 +88,8 @@ public class Report {
 
 	private String groupSummationLegend;
 
+	private boolean mapCollection;
+
 	private boolean dynamicDataSource;
 
 	private boolean printColumnNames;
@@ -109,7 +111,7 @@ public class Report {
 			List<ReportColumn> columns, List<ReportPlacement> placements, List<ReportHtml> embeddedHtmls,
 			Object customObject, ReportFilter filter, ReportFormat format, ReportLayoutType layout,
 			ReportParameters reportParameters, ReportPageProperties pageProperties, String summationLegend,
-			String groupSummationLegend, boolean dynamicDataSource, boolean printColumnNames,
+			String groupSummationLegend, boolean mapCollection, boolean dynamicDataSource, boolean printColumnNames,
 			boolean printGroupColumnNames, boolean invertGroupColors, boolean showParameterHeader,
 			boolean showGrandFooter, boolean underlineRows, boolean shadeOddRows) {
 		this.code = code;
@@ -133,6 +135,7 @@ public class Report {
 		this.pageProperties = pageProperties;
 		this.summationLegend = summationLegend;
 		this.groupSummationLegend = groupSummationLegend;
+		this.mapCollection = mapCollection;
 		this.dynamicDataSource = dynamicDataSource;
 		this.printColumnNames = printColumnNames;
 		this.printGroupColumnNames = printGroupColumnNames;
@@ -237,6 +240,10 @@ public class Report {
 
 	public Object getCustomObject() {
 		return customObject;
+	}
+
+	public boolean isMapCollection() {
+		return mapCollection;
 	}
 
 	public boolean isPrintColumnNames() {
@@ -428,6 +435,8 @@ public class Report {
 
 		private String groupSummationLegend;
 
+		private boolean mapCollection;
+
 		private boolean dynamicDataSource;
 
 		private boolean printColumnNames;
@@ -454,6 +463,7 @@ public class Report {
 			this.placements = new ArrayList<ReportPlacement>();
 			this.embeddedHtmls = new LinkedHashMap<String, ReportHtml>();
 			this.filters = new Stack<ReportFilter>();
+			this.mapCollection = false;
 			this.printColumnNames = true;
 			this.printGroupColumnNames = true;
 			this.showParameterHeader = true;
@@ -522,6 +532,11 @@ public class Report {
 
 		public Builder groupSummationLegend(String groupSummationLegend) {
 			this.groupSummationLegend = groupSummationLegend;
+			return this;
+		}
+
+		public Builder mapCollection(boolean mapCollection) {
+			this.mapCollection = mapCollection;
 			return this;
 		}
 
@@ -785,8 +800,8 @@ public class Report {
 					table, Collections.unmodifiableList(joins), DataUtils.unmodifiableList(columns),
 					DataUtils.unmodifiableList(placements), DataUtils.unmodifiableList(embeddedHtmls.values()),
 					customObject, rootFilter, format, layout, reportParameters, pageProperties, summationLegend,
-					groupSummationLegend, dynamicDataSource, printColumnNames, printGroupColumnNames, invertGroupColors,
-					showParameterHeader, showGrandFooter, underlineRows, shadeOddRows);
+					groupSummationLegend, mapCollection, dynamicDataSource, printColumnNames, printGroupColumnNames,
+					invertGroupColors, showParameterHeader, showGrandFooter, underlineRows, shadeOddRows);
 			return report;
 		}
 	}
