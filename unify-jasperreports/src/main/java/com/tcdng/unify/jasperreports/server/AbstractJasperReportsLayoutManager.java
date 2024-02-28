@@ -132,8 +132,11 @@ public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyCo
 			jasperDesign.addStyle(columnStyles.getBoldStyle());
 			jasperDesign.addStyle(columnStyles.getBoldLargeStyle());
 
+			System.out.println("@prime: HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
+			System.out.println("@prime: report = " + report);
 			boolean isQuery = !report.isWithBeanCollection();
 			for (ReportColumn reportColumn : report.getColumns()) {
+				System.out.println("@prime: reportColumn.getName() = " + reportColumn.getName());
 				jasperDesign.addField(newJRDesignField(reportColumn, isQuery));
 			}
 

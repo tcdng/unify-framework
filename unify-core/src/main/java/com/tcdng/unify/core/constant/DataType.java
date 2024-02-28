@@ -98,6 +98,22 @@ public enum DataType implements EnumConst {
 		return alignType;
 	}
 
+	public boolean isInteger() {
+		return INTEGER.equals(this) ||LONG.equals(this) ||SHORT.equals(this);
+	}
+
+	public boolean isDecimal() {
+		return DECIMAL.equals(this) ||DOUBLE.equals(this) ||FLOAT.equals(this);
+	}
+
+	public boolean isDate() {
+		return DATE.equals(this);
+	}
+
+	public boolean isTimestamp() {
+		return TIMESTAMP.equals(this) ||TIMESTAMP_UTC.equals(this);
+	}
+	
 	public Set<DataType> convertibleFromTypes() {
 		return convertibleFromTypes;
 	}
