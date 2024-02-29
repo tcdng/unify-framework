@@ -27,6 +27,8 @@ public interface ResultMappingConstants {
 
     String CLOSE = "resrv.close";
 
+    String CLOSE_WINDOW = "resrv.closewindow";
+
     String POST_RESPONSE = "resrv.postresponse";
 
     String HIDE_POPUP = "resrv.hidepopup";
