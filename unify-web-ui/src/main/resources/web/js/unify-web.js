@@ -342,6 +342,10 @@ ux.respHandler = {
 		}
 	},
 
+	closeWindowHdl: function(resp) {
+		window.close();
+	},
+	
 	postHdl : function(resp) {
 		ux.postPath(resp);
 	},

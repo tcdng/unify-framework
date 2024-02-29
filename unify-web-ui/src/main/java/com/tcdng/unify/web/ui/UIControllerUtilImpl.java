@@ -286,6 +286,10 @@ public class UIControllerUtilImpl extends AbstractUnifyComponent implements UICo
                         (PageControllerResponse) getUplComponent(defaultLocale, "!unloadcontentresponse", false),
                         hintUserResponse, refreshMenuResponse }));
 
+        defaultResultMap.put(ResultMappingConstants.CLOSE_WINDOW,
+                new Result(new PageControllerResponse[] {
+                        (PageControllerResponse) getUplComponent(defaultLocale, "!closewindowresponse", false)}));
+
         defaultResultMap.put(ResultMappingConstants.REMOTE_VIEW, new Result(new PageControllerResponse[] {
                 (PageControllerResponse) getUplComponent(defaultLocale, "!docviewresponse", false) }));
 
