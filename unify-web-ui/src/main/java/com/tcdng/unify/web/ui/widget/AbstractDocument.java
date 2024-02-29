@@ -15,6 +15,11 @@
  */
 package com.tcdng.unify.web.ui.widget;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
@@ -25,8 +30,11 @@ import com.tcdng.unify.core.annotation.UplAttributes;
  * @author The Code Department
  * @since 1.0
  */
-@UplAttributes({ @UplAttribute(name = "styleSheet", type = String[].class),
-        @UplAttribute(name = "script", type = String[].class),
+@UplAttributes({
+		@UplAttribute(name = "styleSheet", type = String[].class),
+	    @UplAttribute(name = "script", type = String[].class),
+		@UplAttribute(name = "excludeStyleSheet", type = String[].class),
+	    @UplAttribute(name = "excludeScript", type = String[].class),
         @UplAttribute(name = "layout", type = DocumentLayout.class, defaultVal = "$d{!ui-desktoptype0}"),
         @UplAttribute(name = "headerPanel", type = String.class),
         @UplAttribute(name = "footerPanel", type = String.class),
@@ -81,5 +89,31 @@ public abstract class AbstractDocument extends AbstractPage implements Document 
     @Override
     public boolean isDocument() {
         return true;
+    }
+    
+    public String[] getStyleSheet() throws UnifyException {
+    	return getUplAttribute(String[].class, "styleSheet");
+    }
+    
+    public String[] getScript() throws UnifyException {
+    	return getUplAttribute(String[].class, "script");
+    }
+    
+    public Set<String> getExcludeStyleSheet() throws UnifyException {
+    	String[] _sheets = getUplAttribute(String[].class, "excludeStyleSheet");
+    	if (_sheets != null && _sheets.length > 0) {
+    		return new HashSet<String>(Arrays.asList(_sheets));
+    	}
+    	
+    	return Collections.emptySet();
+    }
+    
+    public Set<String> getExcludeScript() throws UnifyException {
+    	String[] _scripts = getUplAttribute(String[].class, "excludeScript");
+    	if (_scripts != null && _scripts.length > 0) {
+    		return new HashSet<String>(Arrays.asList(_scripts));
+    	}
+    	
+    	return Collections.emptySet();
     }
 }
