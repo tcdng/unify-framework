@@ -1088,7 +1088,7 @@ ux.rigContentPanel = function(rgp) {
 		const currIdx = rgp.pCurIdx;
 		const menuId = rgp.pMenuId;
 		const uId = rgp.pId;
-		if (rgp.pTabbed) {	
+		if (rgp.pTabbed || rgp.pWindowed) {	
 			const evp = {};
 			evp.cPanelId = rgp.pBdyPanelId;
 			ux.cntTabScrollId = rgp.pBdyPanelId;

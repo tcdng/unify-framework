@@ -107,6 +107,9 @@ public class ContentPanelWriter extends AbstractPanelWriter {
 			writer.writeParam("pContent", jw);
 		}
 
+		final boolean windowed = contentPanel.isDetachedWindow();
+		writer.writeParam("pWindowed", windowed);
+
 		final boolean tabbed = contentPanel.isTabbed();
 		writer.writeParam("pTabbed", tabbed);
 		if (tabbed && contentPanel.getPageCount() > 0) {

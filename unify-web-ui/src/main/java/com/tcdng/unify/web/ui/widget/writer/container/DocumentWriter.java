@@ -15,6 +15,8 @@
  */
 package com.tcdng.unify.web.ui.widget.writer.container;
 
+import java.util.Set;
+
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
@@ -43,120 +45,131 @@ import com.tcdng.unify.web.ui.widget.writer.AbstractPageWriter;
 @Component("document-writer")
 public class DocumentWriter extends AbstractPageWriter {
 
-    @Configurable
-    private PagePathInfoRepository pathInfoRepository;
+	@Configurable
+	private PagePathInfoRepository pathInfoRepository;
 
-    @Configurable
-    private BasicDocumentResources resources;
+	@Configurable
+	private BasicDocumentResources resources;
 
-    @Override
-    protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
-        BasicDocument document = (BasicDocument) widget;
-        writer.write("<!DOCTYPE html>");
-        writer.write("<html ");
-        writeTagAttributes(writer, document);
-        writer.write(">");
+	@Override
+	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
+		BasicDocument document = (BasicDocument) widget;
+		writer.write("<!DOCTYPE html>");
+		writer.write("<html ");
+		writeTagAttributes(writer, document);
+		writer.write(">");
 
-        // Head
-        writer.write("<head>");
-        // Write title
-        writer.write("<title>");
-        String title = document.getCaption();
-        if (StringUtils.isNotBlank(title)) {
-            writer.write(title);
-        } else {
-            writer.write(getUnifyComponentContext().getInstanceName());
-        }
-        writer.write("</title>");
+		// Head
+		writer.write("<head>");
+		// Write title
+		writer.write("<title>");
+		String title = document.getCaption();
+		if (StringUtils.isNotBlank(title)) {
+			writer.write(title);
+		} else {
+			writer.write(getUnifyComponentContext().getInstanceName());
+		}
+		writer.write("</title>");
 
-        // Write META
-        if (document.getMeta() != null) {
-            for (String oneMeta : document.getMeta()) {
-                writer.write("<meta ");
-                writer.write(oneMeta);
-                writer.write(" >");
-            }
-        }
+		// Write META
+		if (document.getMeta() != null) {
+			for (String oneMeta : document.getMeta()) {
+				writer.write("<meta ");
+				writer.write(oneMeta);
+				writer.write(" >");
+			}
+		}
 
-        // Write favorite icon
-        writer.write("<link rel=\"shortcut icon\" href=\"");
-        writer.writeFileImageContextURL(document.getUplAttribute(String.class, "favicon"));
-        writer.write("\">");
+		// Write favorite icon
+		writer.write("<link rel=\"shortcut icon\" href=\"");
+		writer.writeFileImageContextURL(document.getUplAttribute(String.class, "favicon"));
+		writer.write("\">");
 
-        // Write style sheet links
-        writeStyleSheet(writer, "$t{css/unify-web.css}");
+		// Write style sheet links
+		writeStyleSheet(writer, "$t{css/unify-web.css}");
+		Set<String> excludeStyleSheet = document.getExcludeStyleSheet();
 
-        for (String styleSheet : getPageManager().getDocumentStyleSheets()) {
-            writeStyleSheet(writer, styleSheet);
-        }
+		for (String styleSheet : getPageManager().getDocumentStyleSheets()) {
+			if (!excludeStyleSheet.contains(styleSheet)) {
+				writeStyleSheet(writer, styleSheet);
+			}
+		}
 
-        String[] styleSheets = document.getUplAttribute(String[].class, "styleSheet");
-        if (styleSheets != null) {
-            for (String styleSheet : styleSheets) {
-                writeStyleSheet(writer, styleSheet);
-            }
-        }
+		String[] styleSheets = document.getStyleSheet();
+		if (styleSheets != null) {
+			for (String styleSheet : styleSheets) {
+				if (!excludeStyleSheet.contains(styleSheet)) {
+					writeStyleSheet(writer, styleSheet);
+				}
+			}
+		}
 
-        writeResourcesStyleSheet(writer);
+		writeResourcesStyleSheet(writer);
 
-        // Write font symbols
-        writeEmbeddedStyle(writer, document);
+		// Write font symbols
+		writeEmbeddedStyle(writer, document);
 
-        // Write javascript sources
-        writeJavascript(writer, "web/js/unify-web.js");
+		// Write javascript sources
+		writeJavascript(writer, "web/js/unify-web.js");
+		Set<String> excludeScripts = document.getExcludeScript();
 
-        for (String script : getPageManager().getDocumentsScripts()) {
-            writeJavascript(writer, script);
-        }
+		for (String script : getPageManager().getDocumentsScripts()) {
+			if (!excludeScripts.contains(script)) {
+				writeJavascript(writer, script);
+			}
+		}
 
-        String[] scripts = document.getUplAttribute(String[].class, "script");
-        if (scripts != null) {
-            for (String script : scripts) {
-                writeJavascript(writer, script);
-            }
-        }
+		String[] scripts = document.getScript();
+		if (scripts != null) {
+			for (String script : scripts) {
+				if (!excludeScripts.contains(script)) {
+					writeJavascript(writer, script);
+				}
+			}
+		}
 
-        writeResourcesScript(writer);
+		writeResourcesScript(writer);
 
-        writer.write("</head>");
+		writer.write("</head>");
 
-        // Body
-        writer.write("<body class=\"dBody\"");
-        String style = document.getStyle();
-        String backImageSrc = document.getBackImageSrc();
-        if (StringUtils.isNotBlank(backImageSrc)) {
-            writer.write(" style=\"background: url('");
-            writer.writeFileImageContextURL(backImageSrc);
-            writer.write("') no-repeat;background-size:cover;");
-            if (style != null) {
-                writer.write(style);
-            }
-            writer.write("\"");
-        } else {
-            if (style != null) {
-                writer.write(" style=\"").write(style).write("\"");
-            }
-        }
+		// Body
+		writer.write("<body class=\"dBody\"");
+		String style = document.getStyle();
+		String backImageSrc = document.getBackImageSrc();
+		if (StringUtils.isNotBlank(backImageSrc)) {
+			writer.write(" style=\"background: url('");
+			writer.writeFileImageContextURL(backImageSrc);
+			writer.write("') no-repeat;background-size:cover;");
+			if (style != null) {
+				writer.write(style);
+			}
+			writer.write("\"");
+		} else {
+			if (style != null) {
+				writer.write(" style=\"").write(style).write("\"");
+			}
+		}
 
-        writer.write(">");
+		writer.write(">");
 
-        // Popup base
-        writer.write("<div id=\"").write(document.getPopupBaseId()).write("\" class=\"dcpopbase\">");
+		// Popup base
+		writer.write("<div id=\"").write(document.getPopupBaseId()).write("\" class=\"dcpopbase\">");
 
-        writer.write("<div id=\"").write(document.getPopupWinId()).write("\" class=\"dcpop\"></div>");
-        writer.write("<div id=\"").write(document.getPopupSysId()).write("\" class=\"dcsysinfo\"></div>");
+		writer.write("<div id=\"").write(document.getPopupWinId()).write("\" class=\"dcpop\"></div>");
+		writer.write("<div id=\"").write(document.getPopupSysId()).write("\" class=\"dcsysinfo\"></div>");
 
-        writer.write("</div>");
+		writer.write("</div>");
 
-        // Write document structure an content
-        DocumentLayout documentLayout = document.getUplAttribute(DocumentLayout.class, "layout");
-        writer.writeStructureAndContent(documentLayout, document);
+		// Write document structure an content
+		DocumentLayout documentLayout = document.getUplAttribute(DocumentLayout.class, "layout");
+		writer.writeStructureAndContent(documentLayout, document);
 
-        writer.write("</body></html>");
-    }
+		writer.write("</body></html>");
+	}
 
-    @Override
-	protected void doWriteBehavior(ResponseWriter writer, Widget widget, EventHandler[] handlers) throws UnifyException {
+	@Override
+	protected void doWriteBehavior(ResponseWriter writer, Widget widget, EventHandler[] handlers)
+			throws UnifyException {
 		BasicDocument document = (BasicDocument) widget;
 		writer.write("<script");
 		writeNonce(writer);
@@ -216,92 +229,92 @@ public class DocumentWriter extends AbstractPageWriter {
 		writer.write("</script>");
 	}
 
-    @Override
-    protected void doWriteInnerStructureAndContent(ResponseWriter writer, Panel panel) throws UnifyException {
+	@Override
+	protected void doWriteInnerStructureAndContent(ResponseWriter writer, Panel panel) throws UnifyException {
 
-    }
+	}
 
-    private void writeEmbeddedStyle(ResponseWriter writer, BasicDocument document) throws UnifyException {
-        writer.write("<style>");
-        // Write custom check box images
-        writeImageBeforeCss(writer, " .g_cba", "$t{images/checked.png}");
-        writeImageBeforeCss(writer, " .g_cbb", "$t{images/unchecked.png}");
-        writeImageBeforeCss(writer, " .g_cbc", "$t{images/checked_gray.png}");
-        writeImageBeforeCss(writer, " .g_cbd", "$t{images/unchecked_gray.png}");
+	private void writeEmbeddedStyle(ResponseWriter writer, BasicDocument document) throws UnifyException {
+		writer.write("<style>");
+		// Write custom check box images
+		writeImageBeforeCss(writer, " .g_cba", "$t{images/checked.png}");
+		writeImageBeforeCss(writer, " .g_cbb", "$t{images/unchecked.png}");
+		writeImageBeforeCss(writer, " .g_cbc", "$t{images/checked_gray.png}");
+		writeImageBeforeCss(writer, " .g_cbd", "$t{images/unchecked_gray.png}");
 
-        // Write font symbols
-        if (isWithFontSymbolManager()) {
-            StringBuilder fsb = new StringBuilder();
-            int i = 0;
-            fsb.append(".g_fsm {font-family: ").append(document.getUplAttribute(String.class, "fontFamily"));
-            for (String fontResource : getFontResources()) {
-                fsb.append(", 'FontSymbolMngr").append(i).append('\'');
+		// Write font symbols
+		if (isWithFontSymbolManager()) {
+			StringBuilder fsb = new StringBuilder();
+			int i = 0;
+			fsb.append(".g_fsm {font-family: ").append(document.getUplAttribute(String.class, "fontFamily"));
+			for (String fontResource : getFontResources()) {
+				fsb.append(", 'FontSymbolMngr").append(i).append('\'');
 
-                writer.write("@font-face {font-family: 'FontSymbolMngr").write(i).write("'; src: url(");
-                writer.writeContextResourceURL("/resource/file", MimeType.APPLICATION_OCTETSTREAM.template(),
-                        fontResource);
-                writer.write(");} ");
-                i++;
-            }
-            fsb.append(";}");
+				writer.write("@font-face {font-family: 'FontSymbolMngr").write(i).write("'; src: url(");
+				writer.writeContextResourceURL("/resource/file", MimeType.APPLICATION_OCTETSTREAM.template(),
+						fontResource);
+				writer.write(");} ");
+				i++;
+			}
+			fsb.append(";}");
 
-            writer.write(fsb);
-        }
-        writer.write("</style>");
-    }
+			writer.write(fsb);
+		}
+		writer.write("</style>");
+	}
 
-    private void writeImageBeforeCss(ResponseWriter writer, String className, String imgSrc) throws UnifyException {
-        writer.write(className).write(" {vertical-align:middle;display: inline-block !important;} ").write(className).write(
-                ":before {content: \"\";vertical-align:middle;display: inline-block;width: 100%;height: 100%;background: url(");
-        writer.writeFileImageContextURL(imgSrc);
-        writer.write(")no-repeat center/100% 100%; }");
-    }
+	private void writeImageBeforeCss(ResponseWriter writer, String className, String imgSrc) throws UnifyException {
+		writer.write(className).write(" {vertical-align:middle;display: inline-block !important;} ").write(className)
+				.write(":before {content: \"\";vertical-align:middle;display: inline-block;width: 100%;height: 100%;background: url(");
+		writer.writeFileImageContextURL(imgSrc);
+		writer.write(")no-repeat center/100% 100%; }");
+	}
 
-    private void writeResourcesStyleSheet(ResponseWriter writer) throws UnifyException {
-        if (resources != null) {
-            for (String sheetLink : resources.getStyleSheetResourceLinks()) {
-                writer.write("<link href=\"");
-                writer.write(sheetLink);
-                writer.write("\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\">");
-            }
-        }
-    }
+	private void writeResourcesStyleSheet(ResponseWriter writer) throws UnifyException {
+		if (resources != null) {
+			for (String sheetLink : resources.getStyleSheetResourceLinks()) {
+				writer.write("<link href=\"");
+				writer.write(sheetLink);
+				writer.write("\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\">");
+			}
+		}
+	}
 
-    private void writeResourcesScript(ResponseWriter writer) throws UnifyException {
-        if (resources != null) {
-            for (String scriptLink : resources.getScriptResourceLinks()) {
-                writer.write("<script src=\"");
-                writer.write(scriptLink);
-                writer.write("\"></script>");
-            }
-        }
-    }
+	private void writeResourcesScript(ResponseWriter writer) throws UnifyException {
+		if (resources != null) {
+			for (String scriptLink : resources.getScriptResourceLinks()) {
+				writer.write("<script src=\"");
+				writer.write(scriptLink);
+				writer.write("\"></script>");
+			}
+		}
+	}
 
-    private void writeStyleSheet(ResponseWriter writer, String styleSheet) throws UnifyException {
-        writer.write("<link href=\"");
-        writer.writeContextResourceURL("/resource/file", MimeType.TEXT_CSS.template(), styleSheet);
-        writer.write("\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\">");
-    }
+	private void writeStyleSheet(ResponseWriter writer, String styleSheet) throws UnifyException {
+		writer.write("<link href=\"");
+		writer.writeContextResourceURL("/resource/file", MimeType.TEXT_CSS.template(), styleSheet);
+		writer.write("\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\">");
+	}
 
-    private void writeJavascript(ResponseWriter writer, String script) throws UnifyException {
-        writer.write("<script src=\"");
-        writer.writeContextResourceURL("/resource/file", MimeType.TEXT_JAVASCRIPT.template(), script);
-        writer.write("\"");
-        writeNonce(writer);
-        writer.write("></script>");
-    }
+	private void writeJavascript(ResponseWriter writer, String script) throws UnifyException {
+		writer.write("<script src=\"");
+		writer.writeContextResourceURL("/resource/file", MimeType.TEXT_JAVASCRIPT.template(), script);
+		writer.write("\"");
+		writeNonce(writer);
+		writer.write("></script>");
+	}
 
-    private void writeNonce(ResponseWriter writer)  throws UnifyException {
-        if (getRequestContextUtil().isWithNonce()) {
-            writer.write(" nonce=\"");
-            writer.write(getRequestContextUtil().getNonce());
-            writer.write("\"");
-        }
-    }
-    
-    private void writeBehaviour(ResponseWriter writer, Panel panel) throws UnifyException {
-        if (panel != null) {
-            writer.writeBehavior(panel);
-        }
-    }
+	private void writeNonce(ResponseWriter writer) throws UnifyException {
+		if (getRequestContextUtil().isWithNonce()) {
+			writer.write(" nonce=\"");
+			writer.write(getRequestContextUtil().getNonce());
+			writer.write("\"");
+		}
+	}
+
+	private void writeBehaviour(ResponseWriter writer, Panel panel) throws UnifyException {
+		if (panel != null) {
+			writer.writeBehavior(panel);
+		}
+	}
 }
