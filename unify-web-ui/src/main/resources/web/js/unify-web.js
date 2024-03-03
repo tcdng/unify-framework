@@ -4709,18 +4709,32 @@ ux.detectFormElement = function(trgObj, ids) {
 ux.setDisabledById = function(ids, disabled) {
 	if (ids) {
 		for (var i = 0; i < ids.length; i++) {
-			var id = ids[i];
-			var elem = _id(id);
+			const id = ids[i];
+			const elem = _id(id);
 			if (elem) {
 				// 27/08/19 Enable only if disabled by this function
 				if (elem.disabled != disabled) {
+					const felem = _id("fac_" + id);
+					const pelem = _id("popb_" + id);
 					if(elem.disabled) {
 						if(elem.localDisable) {
 							elem.disabled = false;
+							if (felem) {
+								felem.disabled = false;
+							}
+							if (pelem) {
+								pelem.disabled = false;
+							}
 						}
 					} else {
 						elem.localDisable = true;
 						elem.disabled = true;
+						if (felem) {
+							felem.disabled = true;
+						}
+						if (pelem) {
+							pelem.disabled = true;
+						}
 					}
 				}
 			}
