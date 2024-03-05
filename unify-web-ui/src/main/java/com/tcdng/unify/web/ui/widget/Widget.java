@@ -141,6 +141,15 @@ public interface Widget extends UplComponent {
     String getStyle() throws UnifyException;
 
     /**
+     * Gets extra style.
+     * 
+     * @return the extra style
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    String getExtraStyle() throws UnifyException;
+
+    /**
      * Sets extra style.
      * 
      * @param extraStyle
