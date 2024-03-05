@@ -29,10 +29,17 @@ import com.tcdng.unify.web.ui.widget.data.LinkGridInfo;
  * @since 1.0
  */
 @Component("ui-linkgrid")
-@UplAttributes({ @UplAttribute(name = "columns", type = int.class) })
+@UplAttributes({
+	@UplAttribute(name = "columns", type = int.class),
+	@UplAttribute(name = "columnsBinding", type = String.class)})
 public class LinkGrid extends AbstractMultiControl {
 
     public int getColumns() throws UnifyException {
+		String columnsBinding = getUplAttribute(String.class, "columnsBinding");
+		if (columnsBinding != null && !columnsBinding.isEmpty()) {
+			return getValue(int.class, columnsBinding);
+		}
+
         return getUplAttribute(int.class, "columns");
     }
 

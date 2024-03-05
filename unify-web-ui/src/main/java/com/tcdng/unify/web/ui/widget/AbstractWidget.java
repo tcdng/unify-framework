@@ -200,6 +200,11 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 	}
 
 	@Override
+	public String getExtraStyle() throws UnifyException {
+		return extraStyle;
+	}
+
+	@Override
 	public void setExtraStyle(String extraStyle) throws UnifyException {
 		this.extraStyle = extraStyle;
 	}

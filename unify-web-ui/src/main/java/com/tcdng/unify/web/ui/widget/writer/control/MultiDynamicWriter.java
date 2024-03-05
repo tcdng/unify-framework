@@ -51,6 +51,7 @@ public class MultiDynamicWriter extends AbstractControlWriter {
 			writer.write("<table style:\"width:100%;\">");
 			DynamicField valueCtrl = multiDynamic.getValueCtrl();
 			int len = valueStoreList.size();
+			valueCtrl.setExtraStyle(multiDynamic.getInputStyle());
 			for (int i = 0; i < len; i++) {
 				MultiDynamic.ValueStore itemValueStore = valueStoreList.get(i);
 				writer.write("<tr>");

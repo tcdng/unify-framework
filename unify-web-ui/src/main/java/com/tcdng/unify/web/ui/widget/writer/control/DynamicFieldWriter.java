@@ -38,7 +38,9 @@ public class DynamicFieldWriter extends AbstractControlWriter {
     @Override
     protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
         DynamicField dynamicField = (DynamicField) widget;
-        writer.writeStructureAndContent(dynamicField.getControl());
+        Control ctrl = dynamicField.getControl();
+        ctrl.setExtraStyle(dynamicField.getExtraStyle());
+        writer.writeStructureAndContent(ctrl);
     }
 
 	@Override
