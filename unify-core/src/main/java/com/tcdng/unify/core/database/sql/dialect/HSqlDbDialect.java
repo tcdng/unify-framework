@@ -133,7 +133,8 @@ public class HSqlDbDialect extends AbstractSqlDataSourceDialect {
 	protected void appendTimestampTruncation(StringBuilder sql, SqlFieldInfo sqlFieldInfo,
 			TimeSeriesType timeSeriesType, boolean merge) throws UnifyException {
 		if (merge) {
-			sql.append("CONVERT(");
+			sql.append("LPAD(");
+			int len = 1;
 			switch (timeSeriesType) {
 			case DAY_OF_WEEK:
 				sql.append("DAYOFWEEK("); // 1- 7
@@ -141,27 +142,35 @@ public class HSqlDbDialect extends AbstractSqlDataSourceDialect {
 			case DAY:
 			case DAY_OF_MONTH:
 				sql.append("DAYOFMONTH("); // 1 - 31
+				len = 2;
 				break;
 			case DAY_OF_YEAR:
 				sql.append("DAYOFYEAR("); // 1 - 366
+				len = 3;
 				break;
 			case HOUR:
 				sql.append("HOUR("); // 0 - 23
+				len = 2;
 				break;
 			case MONTH:
 				sql.append("MONTH("); // 1 - 12
+				len = 2;
 				break;
 			case WEEK:
 				sql.append("WEEK("); // 1 - 54
+				len = 2;
 				break;
 			case YEAR:
 				sql.append("YEAR("); // 1 - 9999
+				len = 4;
 				break;
 			default:
 				break;
 			}
 
-			sql.append(sqlFieldInfo.getPreferredColumnName()).append("), VARCHAR)");
+			sql.append(sqlFieldInfo.getPreferredColumnName()).append("),");
+			sql.append(len);
+			sql.append(",'0')");
 		} else {
 			sql.append("TRUNC(").append(sqlFieldInfo.getPreferredColumnName()).append(", '");
 			switch (timeSeriesType) {

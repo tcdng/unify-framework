@@ -600,7 +600,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
 	@Override
 	public List<GroupingAggregation> executeSingleAggregateResultQuery(AggregateFunction aggregateFunction,
 			List<GroupingFunction> groupingFunction, Connection connection, SqlDataTypePolicy countSqlDataTypePolicy,
-			SqlStatement sqlStatement) throws UnifyException {
+			SqlDataTypePolicy mergeSqlDataTypePolicy, SqlStatement sqlStatement) throws UnifyException {
 		PreparedStatement pStmt = null;
 		ResultSet rs = null;
 		try {
@@ -627,16 +627,22 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
 				final boolean merge = sqlStatement.isMerge();
 				List<Grouping> groupings = new ArrayList<Grouping>();
 				for (GroupingFunction _groupingFunction : groupingFunction) {
-					if (_groupingFunction.isWithFieldGrouping() || merge) {
+					if (_groupingFunction.isWithFieldGrouping()) {
 						sqlResult = sqlResultList.get(resultIndex);
 						String grouping = (String) sqlResult.getSqlDataTypePolicy().executeGetResult(rs, String.class,
 								++resultIndex, timeZoneOffset);
 						groupings.add(new Grouping(grouping));
 					} else {
-						sqlResult = sqlResultList.get(resultIndex);
-						Date groupingDate =  (Date) sqlResult.getSqlDataTypePolicy().executeGetResult(rs, Date.class,
-								++resultIndex, timeZoneOffset);
-						groupings.add(new Grouping(groupingDate));
+						if (merge) {
+							String grouping = (String) mergeSqlDataTypePolicy.executeGetResult(rs, String.class,
+									++resultIndex, timeZoneOffset);
+							groupings.add(new Grouping(grouping));
+						} else {
+							sqlResult = sqlResultList.get(resultIndex);
+							Date groupingDate = (Date) sqlResult.getSqlDataTypePolicy().executeGetResult(rs, Date.class,
+									++resultIndex, timeZoneOffset);
+							groupings.add(new Grouping(groupingDate));
+						}
 					}
 				}
 
@@ -660,7 +666,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
 	@Override
 	public List<GroupingAggregation> executeMultipleAggregateResultQuery(List<AggregateFunction> aggregateFunctionList,
 			List<GroupingFunction> groupingFunction, Connection connection, SqlDataTypePolicy countSqlDataTypePolicy,
-			SqlStatement sqlStatement) throws UnifyException {
+			SqlDataTypePolicy mergeSqlDataTypePolicy, SqlStatement sqlStatement) throws UnifyException {
 		PreparedStatement pStmt = null;
 		ResultSet rs = null;
 		try {
@@ -694,16 +700,22 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
 				final boolean merge = sqlStatement.isMerge();
 				List<Grouping> groupings = new ArrayList<Grouping>();
 				for (GroupingFunction _groupingFunction : groupingFunction) {
-					if (_groupingFunction.isWithFieldGrouping() || merge) {
+					if (_groupingFunction.isWithFieldGrouping()) {
 						sqlResult = sqlResultList.get(resultIndex);
 						String grouping = (String) sqlResult.getSqlDataTypePolicy().executeGetResult(rs, String.class,
 								++resultIndex, timeZoneOffset);
 						groupings.add(new Grouping(grouping));
 					} else {
-						sqlResult = sqlResultList.get(resultIndex);
-						Date groupingDate = (Date) sqlResult.getSqlDataTypePolicy().executeGetResult(rs, Date.class,
-								++resultIndex, timeZoneOffset);
-						groupings.add(new Grouping(groupingDate));
+						if (merge) {
+							String grouping = (String) mergeSqlDataTypePolicy.executeGetResult(rs, String.class,
+									++resultIndex, timeZoneOffset);
+							groupings.add(new Grouping(grouping));
+						} else {
+							sqlResult = sqlResultList.get(resultIndex);
+							Date groupingDate = (Date) sqlResult.getSqlDataTypePolicy().executeGetResult(rs, Date.class,
+									++resultIndex, timeZoneOffset);
+							groupings.add(new Grouping(groupingDate));
+						}
 					}
 				}
 
