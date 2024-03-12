@@ -624,16 +624,17 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
 					value = DataUtils.convert(sqlResult.getType(), 0);
 				}
 
+				final boolean merge = sqlStatement.isMerge();
 				List<Grouping> groupings = new ArrayList<Grouping>();
 				for (GroupingFunction _groupingFunction : groupingFunction) {
-					if (_groupingFunction.isWithFieldGrouping()) {
+					if (_groupingFunction.isWithFieldGrouping() || merge) {
 						sqlResult = sqlResultList.get(resultIndex);
 						String grouping = (String) sqlResult.getSqlDataTypePolicy().executeGetResult(rs, String.class,
 								++resultIndex, timeZoneOffset);
 						groupings.add(new Grouping(grouping));
 					} else {
 						sqlResult = sqlResultList.get(resultIndex);
-						Date groupingDate = (Date) sqlResult.getSqlDataTypePolicy().executeGetResult(rs, Date.class,
+						Date groupingDate =  (Date) sqlResult.getSqlDataTypePolicy().executeGetResult(rs, Date.class,
 								++resultIndex, timeZoneOffset);
 						groupings.add(new Grouping(groupingDate));
 					}
@@ -690,9 +691,10 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
 							.add(new Aggregation(aggregateFunction.getType(), aggregateFunction.getFieldName(), value));
 				}
 
+				final boolean merge = sqlStatement.isMerge();
 				List<Grouping> groupings = new ArrayList<Grouping>();
 				for (GroupingFunction _groupingFunction : groupingFunction) {
-					if (_groupingFunction.isWithFieldGrouping()) {
+					if (_groupingFunction.isWithFieldGrouping() || merge) {
 						sqlResult = sqlResultList.get(resultIndex);
 						String grouping = (String) sqlResult.getSqlDataTypePolicy().executeGetResult(rs, String.class,
 								++resultIndex, timeZoneOffset);

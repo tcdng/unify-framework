@@ -36,6 +36,8 @@ public class SqlStatement {
 
     private List<SqlResult> resultInfoList;
 
+    private boolean merge;
+    
     public SqlStatement(SqlEntityInfo sqlEntityInfo, SqlStatementType type, String sql) {
         this.sqlEntityInfo = sqlEntityInfo;
         this.type = type;
@@ -82,7 +84,15 @@ public class SqlStatement {
         return resultInfoList;
     }
 
-    public String toString() {
+    public boolean isMerge() {
+		return merge;
+	}
+
+	public void setMerge(boolean merge) {
+		this.merge = merge;
+	}
+
+	public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("[sql = ").append(sql);
         if (parameterInfoList != null && !parameterInfoList.isEmpty()) {
