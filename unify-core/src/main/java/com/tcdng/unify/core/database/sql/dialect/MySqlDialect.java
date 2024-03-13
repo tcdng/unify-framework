@@ -185,7 +185,8 @@ public class MySqlDialect extends AbstractSqlDataSourceDialect {
 		final String columnName = sqlFieldInfo.getPreferredColumnName();
 		if (merge) {
 			boolean inc = false;
-			sql.append("CONVERT(");
+			sql.append("LPAD(");
+			int len = 1;
 			switch (timeSeriesType) {
 			case DAY_OF_WEEK:
 				sql.append("DAYOFWEEK("); // 1- 7
@@ -193,22 +194,28 @@ public class MySqlDialect extends AbstractSqlDataSourceDialect {
 			case DAY:
 			case DAY_OF_MONTH:
 				sql.append("DAYOFMONTH("); // 1 - 31
+				len = 2;
 				break;
 			case DAY_OF_YEAR:
 				sql.append("DAYOFYEAR("); // 1 - 366
+				len = 3;
 				break;
 			case HOUR:
 				sql.append("HOUR("); // 0 - 23
+				len = 2;
 				break;
 			case MONTH:
 				sql.append("MONTH("); // 1 - 12
+				len = 2;
 				break;
 			case WEEK:
 				sql.append("WEEK("); // 0 - 53
 				inc = true;
+				len = 2;
 				break;
 			case YEAR:
 				sql.append("YEAR("); // 1000 - 9999
+				len = 4;
 				break;
 			default:
 				break;
@@ -219,7 +226,9 @@ public class MySqlDialect extends AbstractSqlDataSourceDialect {
 				sql.append(" + 1");
 			}
 			
-			sql.append(", VARCHAR(8))");
+			sql.append(",");
+			sql.append(len);
+			sql.append(",'0')");
 		} else {
 			switch (timeSeriesType) {
 			case DAY:

@@ -172,7 +172,8 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
 			TimeSeriesType timeSeriesType, boolean merge) throws UnifyException {
 		if (merge) {
 			boolean inc = false;
-			sql.append("CAST(EXTRACT(");
+			sql.append("LPAD(EXTRACT(");
+			int len = 1;
 			switch (timeSeriesType) {
 			case DAY_OF_WEEK:
 				sql.append("dow"); // 0- 6
@@ -181,21 +182,27 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
 			case DAY:
 			case DAY_OF_MONTH:
 				sql.append("day"); // 1 - 31
+				len = 2;
 				break;
 			case DAY_OF_YEAR:
 				sql.append("doy"); // 1 - 366
+				len = 3;
 				break;
 			case HOUR:
 				sql.append("hour"); // 0 - 23
+				len = 2;
 				break;
 			case MONTH:
 				sql.append("month"); // 1 - 12
+				len = 2;
 				break;
 			case WEEK:
 				sql.append("week"); // 1 - 54
+				len = 2;
 				break;
 			case YEAR:
 				sql.append("year"); // 1 - 9999
+				len = 4;
 				break;
 			default:
 				break;
@@ -205,7 +212,9 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
 				sql.append(" + 1");
 			}
 			
-			sql.append(" AS VARCHAR)");
+			sql.append(",");
+			sql.append(len);
+			sql.append(",'0')");
 		} else {
 			sql.append("DATE_TRUNC('");
 			switch (timeSeriesType) {
