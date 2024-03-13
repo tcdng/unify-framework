@@ -172,7 +172,7 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
 			TimeSeriesType timeSeriesType, boolean merge) throws UnifyException {
 		if (merge) {
 			boolean inc = false;
-			sql.append("LPAD(EXTRACT(");
+			sql.append("LPAD((EXTRACT(");
 			int len = 1;
 			switch (timeSeriesType) {
 			case DAY_OF_WEEK:
@@ -212,7 +212,7 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
 				sql.append(" + 1");
 			}
 			
-			sql.append(",");
+			sql.append(")::text,");
 			sql.append(len);
 			sql.append(",'0')");
 		} else {
