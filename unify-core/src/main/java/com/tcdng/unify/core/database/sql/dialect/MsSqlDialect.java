@@ -116,7 +116,8 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
 	protected void appendTimestampTruncation(StringBuilder sql, SqlFieldInfo sqlFieldInfo,
 			TimeSeriesType timeSeriesType, boolean merge) throws UnifyException {
 		if (merge) {
-			sql.append("CONVERT(VARCHAR(8), DATEPART(");
+			sql.append("FORMAT(DATEPART(");
+			String fmt = "'0'";
 			switch (timeSeriesType) {
 			case DAY_OF_WEEK:
 				sql.append("weekday"); // 1- 7
@@ -124,26 +125,34 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
 			case DAY:
 			case DAY_OF_MONTH:
 				sql.append("day"); // 1 - 31
+				fmt = "'00'";
 				break;
 			case DAY_OF_YEAR:
 				sql.append("dayofyear"); // 1 - 366
+				fmt = "'000'";
 				break;
 			case HOUR:
 				sql.append("hour"); // 0 - 23
+				fmt = "'00'";
 				break;
 			case MONTH:
 				sql.append("month"); // 1 - 12
+				fmt = "'00'";
 				break;
 			case WEEK:
 				sql.append("week"); // 1 - 54
+				fmt = "'00'";
 				break;
 			case YEAR:
 				sql.append("year"); // 1 - 9999
+				fmt = "'0000'";
 				break;
 			default:
 				break;
 			}
-			sql.append(", ").append(sqlFieldInfo.getPreferredColumnName()).append("))");
+			sql.append(", ").append(sqlFieldInfo.getPreferredColumnName()).append("),");
+			sql.append(fmt);
+			sql.append(")");
 		} else {
 			sql.append("DATEPART(");
 			switch (timeSeriesType) {
