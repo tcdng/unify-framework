@@ -30,6 +30,9 @@ public enum TimeSeriesType implements EnumConst {
 
     HOUR("HR"),
     DAY("DY"),
+    DAY_OF_WEEK("DW"),
+    DAY_OF_MONTH("DM"),
+    DAY_OF_YEAR("DR"),
     WEEK("WK"),
     MONTH("MN"),
     YEAR("YR");

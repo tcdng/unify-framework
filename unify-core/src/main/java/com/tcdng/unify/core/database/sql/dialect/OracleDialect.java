@@ -80,7 +80,7 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
 		tempMap1.put(ColumnType.SHORT, new OracleShortPolicy());
 		tempMap1.put(ColumnType.STRING, new OracleStringPolicy());
 		tempMap1.put(ColumnType.ENUMCONST, new OracleEnumConstPolicy());
-		
+
 		Map<RestrictionType, SqlCriteriaPolicy> tempMap2 = new EnumMap<RestrictionType, SqlCriteriaPolicy>(
 				RestrictionType.class);
 		populateDefaultSqlCriteriaPolicies(sqlDataSourceDialectPolicies, tempMap2);
@@ -222,34 +222,68 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
 
 	@Override
 	protected void appendTimestampTruncation(StringBuilder sql, SqlFieldInfo sqlFieldInfo,
-			TimeSeriesType timeSeriesType) throws UnifyException {
-		sql.append("TRUNC(").append(sqlFieldInfo.getPreferredColumnName()).append(", '");
-		switch (timeSeriesType) {
-		case DAY:
-			sql.append("DD");
-			break;
-		case HOUR:
-			sql.append("HH");
-			break;
-		case MONTH:
-			sql.append("MM");
-			break;
-		case WEEK:
-			sql.append("WW");
-			break;
-		case YEAR:
-			sql.append("YY");
-			break;
-		default:
-			break;
+			TimeSeriesType timeSeriesType, boolean merge) throws UnifyException {
+		if (merge) {
+			sql.append("TO_CHAR(").append(sqlFieldInfo.getPreferredColumnName()).append(", '");
+			switch (timeSeriesType) {
+			case DAY_OF_WEEK:
+				sql.append("D"); // 1- 7
+				break;
+			case DAY:
+			case DAY_OF_MONTH:
+				sql.append("DD"); // 1 - 31
+				break;
+			case DAY_OF_YEAR:
+				sql.append("DDD"); // 1 - 366
+				break;
+			case HOUR:
+				sql.append("HH24"); // 0 - 23
+				break;
+			case MONTH:
+				sql.append("MM"); // 01 - 12
+				break;
+			case WEEK:
+				sql.append("WW"); // 1 - 53
+				break;
+			case YEAR:
+				sql.append("YYYY"); // 1 - 9999
+				break;
+			default:
+				break;
+			}
+			sql.append("')");
+		} else {
+			sql.append("TRUNC(").append(sqlFieldInfo.getPreferredColumnName()).append(", '");
+			switch (timeSeriesType) {
+			case DAY:
+			case DAY_OF_WEEK:
+			case DAY_OF_MONTH:
+			case DAY_OF_YEAR:
+				sql.append("DD");
+				break;
+			case HOUR:
+				sql.append("HH");
+				break;
+			case MONTH:
+				sql.append("MM");
+				break;
+			case WEEK:
+				sql.append("WW");
+				break;
+			case YEAR:
+				sql.append("YY");
+				break;
+			default:
+				break;
+			}
+			sql.append("')");
 		}
-		sql.append("')");
 	}
 
 	@Override
 	protected void appendTimestampTruncationGroupBy(StringBuilder sql, SqlFieldInfo sqlFieldInfo,
-			TimeSeriesType timeSeriesType) throws UnifyException {
-		appendTimestampTruncation(sql, sqlFieldInfo, timeSeriesType);
+			TimeSeriesType timeSeriesType, boolean merge) throws UnifyException {
+		appendTimestampTruncation(sql, sqlFieldInfo, timeSeriesType, merge);
 	}
 
 	@Override
@@ -325,7 +359,6 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
 		}
 	}
 }
-
 
 class OracleEnumConstPolicy extends EnumConstPolicy {
 

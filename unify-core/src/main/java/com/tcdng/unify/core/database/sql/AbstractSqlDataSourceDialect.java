@@ -1712,10 +1712,11 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 	 * @param sql            the builder
 	 * @param sqlFieldInfo   the timestamp field
 	 * @param timeSeriesType the time series type
+	 * @param merge          time merge
 	 * @throws UnifyException if an error occurs
 	 */
 	protected abstract void appendTimestampTruncation(StringBuilder sql, SqlFieldInfo sqlFieldInfo,
-			TimeSeriesType timeSeriesType) throws UnifyException;
+			TimeSeriesType timeSeriesType, boolean merge) throws UnifyException;
 
 	/**
 	 * Appends a timestamp column truncation froup by.
@@ -1726,7 +1727,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 	 * @throws UnifyException if an error occurs
 	 */
 	protected abstract void appendTimestampTruncationGroupBy(StringBuilder sql, SqlFieldInfo sqlFieldInfo,
-			TimeSeriesType timeSeriesType) throws UnifyException;
+			TimeSeriesType timeSeriesType, boolean merge) throws UnifyException;
 
 	/**
 	 * Appends ORDER clause to a string buffer.
@@ -1978,15 +1979,17 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 				query.isDistinct());
 		returnFieldInfoList.add(sqlFieldInfo);
 
-		addGroupingSelect(sqlEntityInfo, groupingFunction, aggregateSql, returnFieldInfoList);
+		addGroupingSelect(sqlEntityInfo, groupingFunction, aggregateSql, returnFieldInfoList, query.isMerge());
 
 		aggregateSql.append(" FROM ").append(sqlEntityInfo.getSchemaViewName());
 
 		internalAppendWhereClause(aggregateSql, parameterInfoList, sqlEntityInfo, query, SqlQueryType.SELECT,
 				groupingFunction);
 
-		return new SqlStatement(sqlEntityInfo, SqlStatementType.FIND, aggregateSql.toString(), parameterInfoList,
-				getSqlResultList(returnFieldInfoList));
+		SqlStatement statement = new SqlStatement(sqlEntityInfo, SqlStatementType.FIND, aggregateSql.toString(),
+				parameterInfoList, getSqlResultList(returnFieldInfoList));
+		statement.setMerge(query.isMerge());
+		return statement;
 	}
 
 	private SqlStatement internalPrepareAggregateStatement(List<AggregateFunction> aggregateFunctionList,
@@ -2018,19 +2021,21 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 			returnFieldInfoList.add(sqlFieldInfo);
 		}
 
-		addGroupingSelect(sqlEntityInfo, groupingFunction, aggregateSql, returnFieldInfoList);
+		addGroupingSelect(sqlEntityInfo, groupingFunction, aggregateSql, returnFieldInfoList, query.isMerge());
 
 		aggregateSql.append(" FROM ").append(sqlEntityInfo.getSchemaViewName());
 
 		internalAppendWhereClause(aggregateSql, parameterInfoList, sqlEntityInfo, query, SqlQueryType.SELECT,
 				groupingFunction);
 
-		return new SqlStatement(sqlEntityInfo, SqlStatementType.FIND, aggregateSql.toString(), parameterInfoList,
-				getSqlResultList(returnFieldInfoList));
+		SqlStatement statement = new SqlStatement(sqlEntityInfo, SqlStatementType.FIND, aggregateSql.toString(),
+				parameterInfoList, getSqlResultList(returnFieldInfoList));
+		statement.setMerge(query.isMerge());
+		return statement;
 	}
 
 	private void addGroupingSelect(SqlEntityInfo sqlEntityInfo, List<GroupingFunction> groupingFunction,
-			StringBuilder aggregateSql, List<SqlFieldInfo> returnFieldInfoList) throws UnifyException {
+			StringBuilder aggregateSql, List<SqlFieldInfo> returnFieldInfoList, boolean merge) throws UnifyException {
 		if (!DataUtils.isBlank(groupingFunction)) {
 			for (GroupingFunction _groupingFunction : groupingFunction) {
 				if (_groupingFunction.isWithFieldGrouping()) {
@@ -2051,7 +2056,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 					}
 
 					aggregateSql.append(", ");
-					appendTimestampTruncation(aggregateSql, sqlFieldInfo, _groupingFunction.getDateSeriesType());
+					appendTimestampTruncation(aggregateSql, sqlFieldInfo, _groupingFunction.getDateSeriesType(), merge);
 					aggregateSql.append(" AS ").append(TRUNC_COLUMN_ALIAS);
 					returnFieldInfoList.add(sqlFieldInfo);
 				}
@@ -2116,7 +2121,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 				} else {
 					appendTimestampTruncationGroupBy(sql,
 							sqlEntityInfo.getListFieldInfo(_groupingFunction.getFieldName()),
-							_groupingFunction.getDateSeriesType());
+							_groupingFunction.getDateSeriesType(), query.isMerge());
 				}
 			}
 

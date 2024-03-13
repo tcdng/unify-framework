@@ -101,6 +101,8 @@ public class Query<T extends Entity> implements Cloneable {
 
     private boolean mustMatch;
 
+    private boolean merge;
+
     public Query(Class<T> entityClass) {
         this(entityClass, false);
     }
@@ -566,7 +568,16 @@ public class Query<T extends Entity> implements Cloneable {
         return this;
     }
 
-    public boolean isDistinct() {
+    public boolean isMerge() {
+		return merge;
+	}
+
+	public Query<T> setMerge(boolean merge) {
+		this.merge = merge;
+        return this;
+	}
+
+	public boolean isDistinct() {
         return innerGetSelect().isDistinct();
     }
 

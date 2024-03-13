@@ -181,37 +181,79 @@ public class MySqlDialect extends AbstractSqlDataSourceDialect {
 
 	@Override
 	protected void appendTimestampTruncation(StringBuilder sql, SqlFieldInfo sqlFieldInfo,
-			TimeSeriesType timeSeriesType) throws UnifyException {
+			TimeSeriesType timeSeriesType, boolean merge) throws UnifyException {
 		final String columnName = sqlFieldInfo.getPreferredColumnName();
-		switch (timeSeriesType) {
-		case DAY:
-			sql.append("CAST(STR_TO_DATE(DATE_FORMAT(").append(columnName)
-					.append(", '%Y-%m-%d'), '%Y-%m-%d') AS DATETIME)");
-			break;
-		case HOUR:
-			sql.append("CAST(STR_TO_DATE(DATE_FORMAT(").append(columnName)
-					.append(", '%Y-%m-%d %H'), '%Y-%m-%d %H') AS DATETIME)");
-			break;
-		case MONTH:
-			sql.append("CAST(STR_TO_DATE(DATE_FORMAT(").append(columnName)
-					.append(", '%Y-%m-01'), '%Y-%m-%d') AS DATETIME)");
-			break;
-		case WEEK:
-			sql.append("CAST(DATE(").append(columnName).append(" - INTERVAL (DAYOFWEEK(").append(columnName)
-					.append(") - 1) DAY) AS DATETIME)");
-			break;
-		case YEAR:
-			sql.append("CAST(STR_TO_DATE(DATE_FORMAT(").append(columnName)
-					.append(", '%Y-01-01'), '%Y-%m-%d') AS DATETIME)");
-			break;
-		default:
-			break;
+		if (merge) {
+			boolean inc = false;
+			sql.append("CONVERT(");
+			switch (timeSeriesType) {
+			case DAY_OF_WEEK:
+				sql.append("DAYOFWEEK("); // 1- 7
+				break;
+			case DAY:
+			case DAY_OF_MONTH:
+				sql.append("DAYOFMONTH("); // 1 - 31
+				break;
+			case DAY_OF_YEAR:
+				sql.append("DAYOFYEAR("); // 1 - 366
+				break;
+			case HOUR:
+				sql.append("HOUR("); // 0 - 23
+				break;
+			case MONTH:
+				sql.append("MONTH("); // 1 - 12
+				break;
+			case WEEK:
+				sql.append("WEEK("); // 0 - 53
+				inc = true;
+				break;
+			case YEAR:
+				sql.append("YEAR("); // 1000 - 9999
+				break;
+			default:
+				break;
+			}
+
+			sql.append(columnName).append(")");
+			if (inc) {
+				sql.append(" + 1");
+			}
+			
+			sql.append(", VARCHAR(8))");
+		} else {
+			switch (timeSeriesType) {
+			case DAY:
+			case DAY_OF_WEEK:
+			case DAY_OF_MONTH:
+			case DAY_OF_YEAR:
+				sql.append("CAST(STR_TO_DATE(DATE_FORMAT(").append(columnName)
+						.append(", '%Y-%m-%d'), '%Y-%m-%d') AS DATETIME)");
+				break;
+			case HOUR:
+				sql.append("CAST(STR_TO_DATE(DATE_FORMAT(").append(columnName)
+						.append(", '%Y-%m-%d %H'), '%Y-%m-%d %H') AS DATETIME)");
+				break;
+			case MONTH:
+				sql.append("CAST(STR_TO_DATE(DATE_FORMAT(").append(columnName)
+						.append(", '%Y-%m-01'), '%Y-%m-%d') AS DATETIME)");
+				break;
+			case WEEK:
+				sql.append("CAST(DATE(").append(columnName).append(" - INTERVAL (DAYOFWEEK(").append(columnName)
+						.append(") - 1) DAY) AS DATETIME)");
+				break;
+			case YEAR:
+				sql.append("CAST(STR_TO_DATE(DATE_FORMAT(").append(columnName)
+						.append(", '%Y-01-01'), '%Y-%m-%d') AS DATETIME)");
+				break;
+			default:
+				break;
+			}
 		}
 	}
 
 	@Override
 	protected void appendTimestampTruncationGroupBy(StringBuilder sql, SqlFieldInfo sqlFieldInfo,
-			TimeSeriesType timeSeriesType) throws UnifyException {
+			TimeSeriesType timeSeriesType, boolean merge) throws UnifyException {
 		sql.append(TRUNC_COLUMN_ALIAS);
 	}
 

@@ -979,6 +979,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 			List<GroupingFunction> _groupingFunction = Arrays.asList(groupingFunction);
 			return getSqlStatementExecutor().executeSingleAggregateResultQuery(aggregateFunction, _groupingFunction,
 					connection, sqlDataSourceDialect.getSqlTypePolicy(int.class),
+					sqlDataSourceDialect.getSqlTypePolicy(String.class),
 					sqlDataSourceDialect.prepareAggregateStatement(aggregateFunction, query, _groupingFunction));
 		} catch (UnifyException e) {
 			throw e;
@@ -1000,6 +1001,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 			List<GroupingFunction> _groupingFunction = Arrays.asList(groupingFunction);
 			return getSqlStatementExecutor().executeMultipleAggregateResultQuery(aggregateFunction, _groupingFunction,
 					connection, sqlDataSourceDialect.getSqlTypePolicy(int.class),
+					sqlDataSourceDialect.getSqlTypePolicy(String.class),
 					sqlDataSourceDialect.prepareAggregateStatement(aggregateFunction, query, _groupingFunction));
 		} catch (UnifyException e) {
 			throw e;
@@ -1020,6 +1022,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
 			return getSqlStatementExecutor().executeSingleAggregateResultQuery(aggregateFunction, groupingFunction,
 					connection, sqlDataSourceDialect.getSqlTypePolicy(int.class),
+					sqlDataSourceDialect.getSqlTypePolicy(String.class),
 					sqlDataSourceDialect.prepareAggregateStatement(aggregateFunction, query, groupingFunction));
 		} catch (UnifyException e) {
 			throw e;
@@ -1040,6 +1043,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
 			return getSqlStatementExecutor().executeMultipleAggregateResultQuery(aggregateFunction, groupingFunction,
 					connection, sqlDataSourceDialect.getSqlTypePolicy(int.class),
+					sqlDataSourceDialect.getSqlTypePolicy(String.class),
 					sqlDataSourceDialect.prepareAggregateStatement(aggregateFunction, query, groupingFunction));
 		} catch (UnifyException e) {
 			throw e;

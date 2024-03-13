@@ -222,13 +222,14 @@ public interface SqlStatementExecutor extends UnifyComponent {
 	 * @param aggregateFunction      the aggregate function.
 	 * @param connection             the database connection
 	 * @param countSqlDataTypePolicy count field SQL data type policy
+	 * @param mergeSqlDataTypePolicy merge field SQL data type policy
 	 * @param sqlStatement           the criteria statement object
 	 * @return aggregate result
 	 * @throws UnifyException if an error occurs
 	 */
 	List<GroupingAggregation> executeSingleAggregateResultQuery(AggregateFunction aggregateFunction,
 			List<GroupingFunction> groupingFunction, Connection connection, SqlDataTypePolicy countSqlDataTypePolicy,
-			SqlStatement sqlStatement) throws UnifyException;
+			SqlDataTypePolicy mergeSqlDataTypePolicy, SqlStatement sqlStatement) throws UnifyException;
 
 	/**
 	 * Executes an aggregate statement that returns an aggregate list via supplied
@@ -237,13 +238,14 @@ public interface SqlStatementExecutor extends UnifyComponent {
 	 * @param aggregateFunctionList  the aggregate function list
 	 * @param connection             the database connection
 	 * @param countSqlDataTypePolicy count field SQL data type policy
+	 * @param mergeSqlDataTypePolicy merge field SQL data type policy
 	 * @param sqlStatement           the criteria statement object
 	 * @return list of aggregate result
 	 * @throws UnifyException if an error occurs
 	 */
 	List<GroupingAggregation> executeMultipleAggregateResultQuery(List<AggregateFunction> aggregateFunctionList,
 			List<GroupingFunction> groupingFunction, Connection connection, SqlDataTypePolicy countSqlDataTypePolicy,
-			SqlStatement sqlStatement) throws UnifyException;
+			SqlDataTypePolicy mergeSqlDataTypePolicy, SqlStatement sqlStatement) throws UnifyException;
 
 	/**
 	 * Executes a callable statement.

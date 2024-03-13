@@ -169,33 +169,74 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
 
 	@Override
 	protected void appendTimestampTruncation(StringBuilder sql, SqlFieldInfo sqlFieldInfo,
-			TimeSeriesType timeSeriesType) throws UnifyException {
-		sql.append("DATE_TRUNC('");
-		switch (timeSeriesType) {
-		case DAY:
-			sql.append("day");
-			break;
-		case HOUR:
-			sql.append("hour");
-			break;
-		case MONTH:
-			sql.append("month");
-			break;
-		case WEEK:
-			sql.append("week");
-			break;
-		case YEAR:
-			sql.append("year");
-			break;
-		default:
-			break;
+			TimeSeriesType timeSeriesType, boolean merge) throws UnifyException {
+		if (merge) {
+			boolean inc = false;
+			sql.append("CAST(EXTRACT(");
+			switch (timeSeriesType) {
+			case DAY_OF_WEEK:
+				sql.append("dow"); // 0- 6
+				inc = true;
+				break;
+			case DAY:
+			case DAY_OF_MONTH:
+				sql.append("day"); // 1 - 31
+				break;
+			case DAY_OF_YEAR:
+				sql.append("doy"); // 1 - 366
+				break;
+			case HOUR:
+				sql.append("hour"); // 0 - 23
+				break;
+			case MONTH:
+				sql.append("month"); // 1 - 12
+				break;
+			case WEEK:
+				sql.append("week"); // 1 - 54
+				break;
+			case YEAR:
+				sql.append("year"); // 1 - 9999
+				break;
+			default:
+				break;
+			}
+			sql.append(" FROM ").append(sqlFieldInfo.getPreferredColumnName()).append(")");
+			if (inc) {
+				sql.append(" + 1");
+			}
+			
+			sql.append(" AS VARCHAR)");
+		} else {
+			sql.append("DATE_TRUNC('");
+			switch (timeSeriesType) {
+			case DAY:
+			case DAY_OF_WEEK:
+			case DAY_OF_MONTH:
+			case DAY_OF_YEAR:
+				sql.append("day");
+				break;
+			case HOUR:
+				sql.append("hour");
+				break;
+			case MONTH:
+				sql.append("month");
+				break;
+			case WEEK:
+				sql.append("week");
+				break;
+			case YEAR:
+				sql.append("year");
+				break;
+			default:
+				break;
+			}
+			sql.append("', ").append(sqlFieldInfo.getPreferredColumnName()).append(")");
 		}
-		sql.append("', ").append(sqlFieldInfo.getPreferredColumnName()).append(")");
 	}
 
 	@Override
 	protected void appendTimestampTruncationGroupBy(StringBuilder sql, SqlFieldInfo sqlFieldInfo,
-			TimeSeriesType timeSeriesType) throws UnifyException {
+			TimeSeriesType timeSeriesType, boolean merge) throws UnifyException {
 		sql.append(TRUNC_COLUMN_ALIAS);
 	}
 
