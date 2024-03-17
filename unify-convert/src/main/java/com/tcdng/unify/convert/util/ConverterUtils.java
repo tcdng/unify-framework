@@ -17,6 +17,9 @@ package com.tcdng.unify.convert.util;
 
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -45,6 +48,10 @@ import com.tcdng.unify.convert.converters.DateConverter;
 import com.tcdng.unify.convert.converters.DoubleConverter;
 import com.tcdng.unify.convert.converters.FloatConverter;
 import com.tcdng.unify.convert.converters.IntegerConverter;
+import com.tcdng.unify.convert.converters.JodaLocalDateConverter;
+import com.tcdng.unify.convert.converters.JodaLocalDateTimeConverter;
+import com.tcdng.unify.convert.converters.LocalDateConverter;
+import com.tcdng.unify.convert.converters.LocalDateTimeConverter;
 import com.tcdng.unify.convert.converters.LongConverter;
 import com.tcdng.unify.convert.converters.ShortConverter;
 import com.tcdng.unify.convert.converters.StringConverter;
@@ -85,6 +92,10 @@ public final class ConverterUtils {
 		map.put(Double.class, new DoubleConverter());
 		map.put(BigDecimal.class, new BigDecimalConverter());
 		map.put(Date.class, new DateConverter());
+        map.put(org.joda.time.LocalDate.class, new JodaLocalDateConverter());
+        map.put(org.joda.time.LocalDateTime.class, new JodaLocalDateTimeConverter());
+        map.put(java.time.LocalDate.class, new LocalDateConverter());
+        map.put(java.time.LocalDateTime.class, new LocalDateTimeConverter());
 		map.put(String.class, new StringConverter());
 		classToConverterMap = map;
 	}
@@ -464,6 +475,38 @@ public final class ConverterUtils {
 		}
 		return result;
 	}
+
+	public static Date getFromJodaLocalDate(org.joda.time.LocalDate date) {
+    	return date.toDate();
+    }
+    
+	public static Date getFromJodaLocalDateTime(org.joda.time.LocalDateTime date) {
+    	return date.toDate();
+    }
+   
+	public static Date getFromLocalDate(LocalDate date) {
+    	return Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant());
+    }
+    
+	public static Date getFromLocalDateTime(LocalDateTime date) {
+    	return Date.from(date.atZone(ZoneId.systemDefault()).toInstant());
+    }
+	
+	public static org.joda.time.LocalDate getJodaLocalDate(Date date) {
+    	return new org.joda.time.LocalDate(date);
+    }
+    
+	public static org.joda.time.LocalDateTime getJodaLocalDateTime(Date date) {
+    	return new org.joda.time.LocalDateTime(date);
+    }
+   
+	public static LocalDate getLocalDate(Date date) {
+    	return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    }
+    
+	public static LocalDateTime getLocalDateTime(Date date) {
+    	return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+    }
 
 	private static Object getValueObjectArray(Object value, ConverterFormatter<?> formatter) throws Exception {
 		if (value.getClass().isArray()) {

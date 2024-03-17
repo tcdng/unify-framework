@@ -17,6 +17,8 @@ package com.tcdng.unify.convert.converters;
 
 import java.util.Date;
 
+import com.tcdng.unify.convert.util.ConverterUtils;
+
 /**
  * A value to long converter.
  * 
@@ -25,25 +27,43 @@ import java.util.Date;
  */
 public class LongConverter extends AbstractConverter<Long> {
 
-    @Override
-    protected Long doConvert(Object value, ConverterFormatter<?> formatter) throws Exception {
-        if (value instanceof Number) {
-            return Long.valueOf(((Number) value).longValue());
-        }
-        
-        if (value instanceof Date) {
-            return Long.valueOf(((Date) value).getTime());
-        }
-        
-        if (value instanceof String) {
-            String string = ((String) value).trim();
-            if (!string.isEmpty()) {
-                if (formatter == null) {
-                    return Long.decode(string);
-                }
-                return doConvert(formatter.parse(string), null);
-            }
-        }
-        return null;
-    }
+	@Override
+	protected Long doConvert(Object value, ConverterFormatter<?> formatter) throws Exception {
+		if (value instanceof Number) {
+			return Long.valueOf(((Number) value).longValue());
+		}
+
+		if (value instanceof Date) {
+			return Long.valueOf(((Date) value).getTime());
+		}
+
+		if (value instanceof org.joda.time.LocalDateTime) {
+			return Long
+					.valueOf((ConverterUtils.getFromJodaLocalDateTime((org.joda.time.LocalDateTime) value)).getTime());
+		}
+
+		if (value instanceof org.joda.time.LocalDate) {
+			return Long.valueOf((ConverterUtils.getFromJodaLocalDate((org.joda.time.LocalDate) value)).getTime());
+		}
+
+		if (value instanceof java.time.LocalDateTime) {
+			return Long
+					.valueOf((ConverterUtils.getFromLocalDateTime((java.time.LocalDateTime) value)).getTime());
+		}
+
+		if (value instanceof java.time.LocalDate) {
+			return Long.valueOf((ConverterUtils.getFromLocalDate((java.time.LocalDate) value)).getTime());
+		}
+
+		if (value instanceof String) {
+			String string = ((String) value).trim();
+			if (!string.isEmpty()) {
+				if (formatter == null) {
+					return Long.decode(string);
+				}
+				return doConvert(formatter.parse(string), null);
+			}
+		}
+		return null;
+	}
 }
