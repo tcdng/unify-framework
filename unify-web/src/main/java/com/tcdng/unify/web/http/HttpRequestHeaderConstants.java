@@ -29,6 +29,8 @@ public interface HttpRequestHeaderConstants {
 	
 	String ORIGIN = "Origin";
 	
+	String REFERER = "Referer";
+	
 	String PROXY_CLIENT_IP = "Proxy-Client-IP";
 	
 	String USER_AGENT = "User-Agent";
