@@ -15,6 +15,8 @@
  */
 package com.tcdng.unify.web.ui.widget;
 
+import java.util.List;
+
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.web.ControllerPathParts;
 import com.tcdng.unify.web.ui.PageBean;
@@ -171,7 +173,7 @@ public interface Page extends StandalonePanel {
     /**
      * Returns the page path variable
      */
-    String getPathVariable();
+    List<String> getPathVariables();
 
     /**
      * Returns popup base ID

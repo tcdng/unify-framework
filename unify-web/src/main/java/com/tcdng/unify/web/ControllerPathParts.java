@@ -16,6 +16,10 @@
 
 package com.tcdng.unify.web;
 
+import java.util.List;
+
+import com.tcdng.unify.core.util.DataUtils;
+
 /**
  * Controller path parts.
  * 
@@ -24,57 +28,57 @@ package com.tcdng.unify.web;
  */
 public class ControllerPathParts {
 
-    private String controllerPath;
+	private String controllerPath;
 
-    private String controllerPathId;
+	private String controllerPathId;
 
-    private String controllerName;
+	private String controllerName;
 
-    private String pathVariable;
+	private List<String> pathVariables;
 
-    private String actionName;
+	private String actionName;
 
-    private boolean sessionless;
+	private boolean sessionless;
 
-    public ControllerPathParts(String controllerPath, String controllerPathId, String controllerName, String pathVariable,
-            String actionName, boolean sessionless) {
-        this.controllerPath = controllerPath;
-        this.controllerPathId = controllerPathId;
-        this.controllerName = controllerName;
-        this.pathVariable = pathVariable;
-        this.actionName = actionName;
-        this.sessionless = sessionless;
-    }
+	public ControllerPathParts(String controllerPath, String controllerPathId, String controllerName,
+			List<String> pathVariables, String actionName, boolean sessionless) {
+		this.controllerPath = controllerPath;
+		this.controllerPathId = controllerPathId;
+		this.controllerName = controllerName;
+		this.pathVariables = pathVariables;
+		this.actionName = actionName;
+		this.sessionless = sessionless;
+	}
 
-    public String getControllerPath() {
-        return controllerPath;
-    }
+	public String getControllerPath() {
+		return controllerPath;
+	}
 
-    public String getControllerPathId() {
-        return controllerPathId;
-    }
+	public String getControllerPathId() {
+		return controllerPathId;
+	}
 
-    public String getControllerName() {
-        return controllerName;
-    }
+	public String getControllerName() {
+		return controllerName;
+	}
 
-    public String getActionName() {
-        return actionName;
-    }
+	public String getActionName() {
+		return actionName;
+	}
 
-    public String getPathVariable() {
-        return pathVariable;
-    }
+	public List<String> getPathVariables() {
+		return pathVariables;
+	}
 
-    public boolean isSessionless() {
-        return sessionless;
-    }
+	public boolean isSessionless() {
+		return sessionless;
+	}
 
-    public boolean isVariablePath() {
-        return pathVariable != null;
-    }
+	public boolean isVariablePath() {
+		return !DataUtils.isBlank(pathVariables);
+	}
 
-    public boolean isActionPath() {
-        return actionName != null;
-    }
+	public boolean isActionPath() {
+		return actionName != null;
+	}
 }

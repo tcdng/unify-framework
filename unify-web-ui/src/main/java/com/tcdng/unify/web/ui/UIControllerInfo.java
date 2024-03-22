@@ -28,10 +28,12 @@ import com.tcdng.unify.web.ui.widget.PropertyInfo;
  * @author The Code Department
  * @since 1.0
  */
+@SuppressWarnings("rawtypes")
 public class UIControllerInfo extends ControllerInfo {
 
 	private Map<String, PropertyInfo> pageNameToPropertyMap;
 
+	@SuppressWarnings("unchecked")
 	public UIControllerInfo(String controllerName, Map<String, Action> actionByNameMap,
 			Map<String, PropertyInfo> pageNameToPropertyMap) {
 		super(controllerName, actionByNameMap);

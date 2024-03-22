@@ -16,6 +16,10 @@
 
 package com.tcdng.unify.web;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyComponentConfig;
 import com.tcdng.unify.core.UnifyException;
@@ -42,11 +46,12 @@ public class PathInfoRepositoryImpl extends AbstractUnifyComponent implements Pa
 				String pathId = controllerPath;
 				String controllerName = controllerPath;
 				String actionName = null;
-				String pathVariable = null;
-				int colIndex = controllerPath.lastIndexOf(':');
-				if (colIndex >= 0) {
+				List<String> pathVariables = Collections.emptyList();
+				int colIndex = controllerPath.indexOf(':');
+				if (colIndex > 0) {
 					controllerName = controllerPath.substring(0, colIndex);
 					int actionPartIndex = controllerPath.lastIndexOf('/');
+					String pathVariable = null;
 					if (actionPartIndex > colIndex) {
 						pathId = controllerPath.substring(0, actionPartIndex);
 						pathVariable = controllerPath.substring(colIndex + 1, actionPartIndex);
@@ -54,6 +59,8 @@ public class PathInfoRepositoryImpl extends AbstractUnifyComponent implements Pa
 					} else {
 						pathVariable = controllerPath.substring(colIndex + 1);
 					}
+
+					pathVariables = Arrays.asList(pathVariable.split(":"));
 				} else if ((ucc = getComponentConfig(Controller.class, controllerName)) == null) {
 					int actionPartIndex = controllerPath.lastIndexOf('/');
 					if (actionPartIndex > 0) {
@@ -67,8 +74,8 @@ public class PathInfoRepositoryImpl extends AbstractUnifyComponent implements Pa
 					ucc = getComponentConfig(Controller.class, controllerName);
 				}
 
-                boolean sessionless = ucc == null ? false: SessionlessController.class.isAssignableFrom(ucc.getType());
-				return new ControllerPathParts(controllerPath, pathId, controllerName, pathVariable, actionName,
+				boolean sessionless = ucc == null ? false : SessionlessController.class.isAssignableFrom(ucc.getType());
+				return new ControllerPathParts(controllerPath, pathId, controllerName, pathVariables, actionName,
 						sessionless);
 			}
 		};
