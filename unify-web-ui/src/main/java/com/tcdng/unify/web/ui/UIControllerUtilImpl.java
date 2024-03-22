@@ -367,10 +367,7 @@ public class UIControllerUtilImpl extends AbstractUnifyComponent implements UICo
             for (String header : headers) {
                 int index = header.indexOf('=');
                 if (index > 0) {
-                    String[] parts = header.split("=");
-                    if (parts.length == 2) {
-                        additionalResponseHeaders.put(header.substring(0, index), header.substring(index + 1));
-                    }
+                    additionalResponseHeaders.put(header.substring(0, index), header.substring(index + 1));
                 }
             }
         }

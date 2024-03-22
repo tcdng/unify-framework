@@ -56,4 +56,9 @@ public interface Controller extends UnifyComponent {
      *         authenticated
      */
     boolean isSecured();
+    
+    /**
+     * Returns true if controller requires a referre.
+     */
+    boolean isRefererRequired();
 }

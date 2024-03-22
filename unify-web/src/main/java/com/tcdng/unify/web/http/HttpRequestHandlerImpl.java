@@ -160,7 +160,7 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 
 			setRequestAttribute(UnifyWebRequestAttributeConstants.HEADERS, httpRequest);
 			setRequestAttribute(UnifyWebRequestAttributeConstants.PARAMETERS, httpRequest);
-			
+
 			ClientRequest clientRequest = new HttpClientRequest(detectClientPlatform(httpRequest), methodType,
 					requestPathParts, charset, httpRequest, extractRequestParameters(httpRequest, charset),
 					extractCookies(httpRequest));
@@ -187,6 +187,10 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 			try {
 				controller = controllerFinder
 						.findController(clientRequest.getRequestPathParts().getControllerPathParts());
+				if (controller.isRefererRequired()
+						&& StringUtils.isBlank(httpRequest.getHeader(HttpRequestHeaderConstants.REFERER))) {
+					throwOperationErrorException(new IllegalArgumentException("Referer required for controller type."));
+				}
 			} catch (Exception e) {
 				logError(e);
 				try {
@@ -359,8 +363,8 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 			throws UnifyException {
 		Map<String, Object> result = new HashMap<String, Object>();
 		String contentType = httpRequest.getContentType() == null ? null : httpRequest.getContentType().toLowerCase();
-		RemoteCallFormat remoteCallFormat = RemoteCallFormat
-				.fromContentType(httpRequest.getHeader(UnifyRequestHeaderConstants.REMOTE_MESSAGE_TYPE_HEADER), contentType);
+		RemoteCallFormat remoteCallFormat = RemoteCallFormat.fromContentType(
+				httpRequest.getHeader(UnifyRequestHeaderConstants.REMOTE_MESSAGE_TYPE_HEADER), contentType);
 		if (remoteCallFormat != null) {
 			result.put(RequestParameterConstants.REMOTE_CALL_FORMAT, remoteCallFormat);
 			try {

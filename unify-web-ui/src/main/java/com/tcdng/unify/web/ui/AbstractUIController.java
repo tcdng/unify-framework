@@ -179,8 +179,10 @@ public abstract class AbstractUIController extends AbstractController implements
 			PageController<?> docPageController, ControllerPathParts docPathParts) throws UnifyException;
 
 	protected String getVariableActionPath(String action) throws UnifyException {
-		final String pathVariable = pageRequestContextUtil.getRequestPathParts().getPathVariable();
-		return !StringUtils.isBlank(pathVariable) ? ":" + pathVariable + action : pathVariable;
+		final List<String> pathVariables = pageRequestContextUtil.getRequestPathParts().getPathVariables();
+		return !DataUtils.isBlank(pathVariables)
+				? ":" + StringUtils.concatenateUsingSeparator(':', pathVariables) + action
+				: action;
 	}
 
 	protected class DataTransferParam {

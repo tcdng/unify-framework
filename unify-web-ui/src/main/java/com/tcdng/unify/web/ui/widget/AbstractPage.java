@@ -16,6 +16,7 @@
 package com.tcdng.unify.web.ui.widget;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.tcdng.unify.core.UnifyException;
@@ -73,9 +74,9 @@ public abstract class AbstractPage extends AbstractStandalonePanel implements Pa
     }
 
     @Override
-    public String getPathVariable() {
+    public List<String> getPathVariables() {
         if (controllerPathParts != null) {
-            return controllerPathParts.getPathVariable();
+            return controllerPathParts.getPathVariables();
         }
 
         return null;

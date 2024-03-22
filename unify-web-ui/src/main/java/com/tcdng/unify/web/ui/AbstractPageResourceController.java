@@ -64,6 +64,11 @@ public abstract class AbstractPageResourceController extends AbstractUIControlle
     }
 
     @Override
+	public boolean isRefererRequired() {
+		return true;
+	}
+
+	@Override
     public void populate(DataTransferBlock transferBlock) throws UnifyException {
         if (!isReadOnly()) {
             DataUtils.setNestedBeanProperty(this, transferBlock.getLongProperty(), transferBlock.getValue(), null);

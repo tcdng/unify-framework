@@ -16,6 +16,8 @@
 
 package com.tcdng.unify.web;
 
+import java.util.List;
+
 /**
  * Request path parts.
  * 
@@ -57,8 +59,8 @@ public class RequestPathParts {
         return controllerPathParts.getActionName();
     }
 
-    public String getPathVariable() {
-        return controllerPathParts.getPathVariable();
+    public List<String> getPathVariables() {
+        return controllerPathParts.getPathVariables();
     }
 
     public boolean isSessionless() {
@@ -84,7 +86,7 @@ public class RequestPathParts {
     @Override
     public String toString() {
         return "RequestPathParts [getControllerPath()=" + getControllerPath() + ", getControllerName()="
-                + getControllerName() + ", getPathVariable()=" + getPathVariable() + ", getTenantPath()="
+                + getControllerName() + ", getPathVariable()=" + getPathVariables() + ", getTenantPath()="
                 + getTenantPath() + "]";
     }
 }

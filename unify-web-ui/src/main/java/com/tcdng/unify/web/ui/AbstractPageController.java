@@ -400,8 +400,8 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 		return (T) resolveRequestPage().getPageBean();
 	}
 
-	protected String getPathVariable() throws UnifyException {
-		return resolveRequestPage().getPathVariable();
+	protected List<String> getPathVariables() throws UnifyException {
+		return resolveRequestPage().getPathVariables();
 	}
 
 	private Page resolveRequestPage() throws UnifyException {

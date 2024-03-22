@@ -53,6 +53,11 @@ public abstract class AbstractController extends AbstractUnifyComponent implemen
 		return this.secured;
 	}
 
+    @Override
+	public boolean isRefererRequired() {
+		return false;
+	}
+
 	@Override
 	protected void onInitialize() throws UnifyException {
 
