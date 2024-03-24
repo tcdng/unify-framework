@@ -18,6 +18,7 @@ package com.tcdng.unify.core.database.dynamic.sql;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
@@ -49,7 +50,7 @@ import com.tcdng.unify.core.util.DynamicEntityUtils;
 @Component(ApplicationComponents.APPLICATION_DYNAMICSQLENTITYLOADER)
 public class DynamicSqlEntityLoaderImpl extends AbstractUnifyComponent implements DynamicSqlEntityLoader {
 
-	private static final String DYNAMICSQLENTITYLOADER_LOCK = "dynamicsqlentityloader-lock";
+	private static final String DYNAMICSQLENTITYLOADER_LOCK = "db::dynamicsqlentityloader-lock";
 
 	@Configurable
 	private RuntimeJavaClassManager runtimeJavaClassManager;
@@ -67,68 +68,70 @@ public class DynamicSqlEntityLoaderImpl extends AbstractUnifyComponent implement
 	@Override
 	public List<Class<? extends Entity>> loadDynamicSqlEntities(SqlDatabase db,
 			List<DynamicEntityInfo> dynamicEntityInfoList) throws UnifyException {
-		logDebug("Generating source files for [{0}] entity classes...", dynamicEntityInfoList.size());
-		List<JavaClassSource> sourceList = new ArrayList<JavaClassSource>();
-		for (DynamicEntityInfo dynamicEntityInfo : dynamicEntityInfoList) {
-			logDebug("Generating source file for [{0}]...", dynamicEntityInfo.getClassName());
-			if (!dynamicEntityInfo.isResolved()) {
-				throwOperationErrorException(new IllegalArgumentException("Dynamic entity information for ["
-						+ dynamicEntityInfo.getClassName() + "] entity is not finally resolved."));
+		List<Class<? extends Entity>> classList = Collections.emptyList();
+		if (beginClusterLock(DYNAMICSQLENTITYLOADER_LOCK)) {
+			try {
+				logDebug("Generating source files for [{0}] entity classes...", dynamicEntityInfoList.size());
+				List<JavaClassSource> sourceList = new ArrayList<JavaClassSource>();
+				for (DynamicEntityInfo dynamicEntityInfo : dynamicEntityInfoList) {
+					logDebug("Generating source file for [{0}]...", dynamicEntityInfo.getClassName());
+					if (!dynamicEntityInfo.isResolved()) {
+						throwOperationErrorException(new IllegalArgumentException("Dynamic entity information for ["
+								+ dynamicEntityInfo.getClassName() + "] entity is not finally resolved."));
+					}
+
+					JavaClassSource source = new JavaClassSource(dynamicEntityInfo.getClassName(),
+							DynamicEntityUtils.generateEntityJavaClassSource(dynamicEntityInfo),
+							new JavaClassAdditionalTypeInfo(dynamicEntityInfo.getListTypeArgByFieldName()));
+					sourceList.add(source);
+				}
+				logDebug("Source files successfully generated for [{0}] entity classes...",
+						dynamicEntityInfoList.size());
+
+				logDebug("Compiling and loading [{0}] entity classes...", sourceList.size());
+				classList = runtimeJavaClassManager.compileAndLoadJavaClasses(Entity.class, sourceList);
+
+				final int len = dynamicEntityInfoList.size();
+				List<Class<?>> managedClassList = new ArrayList<Class<?>>();
+				for (int i = 0; i < len; i++) {
+					if (dynamicEntityInfoList.get(i).isManaged()) {
+						managedClassList.add(classList.get(i));
+					}
+				}
+
+				logDebug("Creating entity class information for [{0}] managed classes ...", managedClassList.size());
+				SqlDataSource sqlDataSource = (SqlDataSource) db.getDataSource();
+				SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
+				for (Class<?> entityClass : managedClassList) {
+					sqlDataSourceDialect.createSqlEntityInfo(entityClass);
+				}
+
+				List<Class<?>> dependencyList = sqlSchemaManager.buildDependencyList(sqlDataSource, managedClassList);
+				List<Class<?>> tableList = new ArrayList<Class<?>>();
+				List<Class<? extends Entity>> viewList = new ArrayList<Class<? extends Entity>>();
+				for (Class<?> clazz : dependencyList) {
+					viewList.add((Class<? extends Entity>) clazz);
+					if (managedClassList.contains(clazz)) {
+						tableList.add(clazz);
+					}
+				}
+
+				SqlSchemaManagerOptions options = new SqlSchemaManagerOptions(PrintFormat.NONE,
+						ForceConstraints.fromBoolean(!getContainerSetting(boolean.class,
+								UnifyCorePropertyConstants.APPLICATION_FOREIGNKEY_EASE, false)));
+				// TODO Check table or view change
+				// boolean schemaChanged =
+				// sqlSchemaManager.detectTableSchemaChange(sqlDataSource, options, tableList);
+				logDebug("Managing schema for [{0}] entity classes...", tableList.size());
+				if (sqlDataSource.getDialect().isReconstructViewsOnTableSchemaUpdate()) {
+					sqlSchemaManager.dropViewSchema(sqlDataSource, options, tableList);
+				}
+
+				sqlSchemaManager.manageTableSchema(sqlDataSource, options, tableList);
+				sqlSchemaManager.manageViewSchema(sqlDataSource, options, viewList);
+			} finally {
+				endClusterLock(DYNAMICSQLENTITYLOADER_LOCK);
 			}
-
-			JavaClassSource source = new JavaClassSource(dynamicEntityInfo.getClassName(),
-					DynamicEntityUtils.generateEntityJavaClassSource(dynamicEntityInfo),
-					new JavaClassAdditionalTypeInfo(dynamicEntityInfo.getListTypeArgByFieldName()));
-			sourceList.add(source);
-		}
-		logDebug("Source files successfully generated for [{0}] entity classes...", dynamicEntityInfoList.size());
-
-		logDebug("Compiling and loading [{0}] entity classes...", sourceList.size());
-		List<Class<? extends Entity>> classList = runtimeJavaClassManager.compileAndLoadJavaClasses(Entity.class,
-				sourceList);
-
-		final int len = dynamicEntityInfoList.size();
-		List<Class<?>> managedClassList = new ArrayList<Class<?>>();
-		for (int i = 0; i < len; i++) {
-			if (dynamicEntityInfoList.get(i).isManaged()) {
-				managedClassList.add(classList.get(i));
-			}
-		}
-
-		logDebug("Creating entity class information for [{0}] managed classes ...", managedClassList.size());
-		SqlDataSource sqlDataSource = (SqlDataSource) db.getDataSource();
-		SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
-		for (Class<?> entityClass : managedClassList) {
-			sqlDataSourceDialect.createSqlEntityInfo(entityClass);
-		}
-
-		List<Class<?>> dependencyList = sqlSchemaManager.buildDependencyList(sqlDataSource, managedClassList);
-		List<Class<?>> tableList = new ArrayList<Class<?>>();
-		List<Class<? extends Entity>> viewList = new ArrayList<Class<? extends Entity>>();
-		for (Class<?> clazz : dependencyList) {
-			viewList.add((Class<? extends Entity>) clazz);
-			if (managedClassList.contains(clazz)) {
-				tableList.add(clazz);
-			}
-		}
-
-		beginClusterLock(DYNAMICSQLENTITYLOADER_LOCK);
-		try {
-			SqlSchemaManagerOptions options = new SqlSchemaManagerOptions(PrintFormat.NONE,
-					ForceConstraints.fromBoolean(!getContainerSetting(boolean.class,
-							UnifyCorePropertyConstants.APPLICATION_FOREIGNKEY_EASE, false)));
-			// TODO Check table or view change
-			// boolean schemaChanged =
-			// sqlSchemaManager.detectTableSchemaChange(sqlDataSource, options, tableList);
-			logDebug("Managing schema for [{0}] entity classes...", tableList.size());
-			if (sqlDataSource.getDialect().isReconstructViewsOnTableSchemaUpdate()) {
-				sqlSchemaManager.dropViewSchema(sqlDataSource, options, tableList);
-			}
-
-			sqlSchemaManager.manageTableSchema(sqlDataSource, options, tableList);
-			sqlSchemaManager.manageViewSchema(sqlDataSource, options, viewList);
-		} finally {
-			endClusterLock(DYNAMICSQLENTITYLOADER_LOCK);
 		}
 
 		return classList;

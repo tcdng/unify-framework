@@ -47,7 +47,7 @@ public class ClusterServiceTest extends AbstractUnifyComponentTest {
     @Test
     public void testSingleMemberSync() throws Exception {
         ClusterService clusterService = (ClusterService) getComponent(ApplicationComponents.APPLICATION_CLUSTERSERVICE);
-        String lockOwnerId = clusterService.getLockOwnerId(false);
+        String lockOwnerId = clusterService.getLockOwnerId();
         clusterService.beginSynchronization("computeSalaryLock");
         List<ClusterLock> clusterSyncList =
                 clusterService.findClusterLocks(new ClusterLockQuery().lockName("computeSalaryLock"));
@@ -68,7 +68,7 @@ public class ClusterServiceTest extends AbstractUnifyComponentTest {
     @Test
     public void testSingleMemberWithRecursiveSync() throws Exception {
         ClusterService clusterService = (ClusterService) getComponent(ApplicationComponents.APPLICATION_CLUSTERSERVICE);
-        String lockOwnerId = clusterService.getLockOwnerId(false);
+        String lockOwnerId = clusterService.getLockOwnerId();
         clusterService.beginSynchronization("generateResultLock");
         clusterService.beginSynchronization("generateResultLock");
         clusterService.beginSynchronization("generateResultLock");

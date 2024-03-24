@@ -547,9 +547,8 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 * Checks if component context is in cluster mode.
 	 * 
 	 * @return a true if component context is in cluster mode otherwise false
-	 * @throws UnifyException if an error occurs
 	 */
-	protected boolean isClusterMode() throws UnifyException {
+	protected boolean isClusterMode() {
 		return unifyComponentContext.isClusterMode();
 	}
 
@@ -578,9 +577,8 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 * 
 	 * @return the node ID. A null value is returned if container is not in cluster
 	 *         mode.
-	 * @throws UnifyException if an error occurs
 	 */
-	protected String getNodeId() throws UnifyException {
+	protected String getNodeId() {
 		return unifyComponentContext.getNodeId();
 	}
 
@@ -1678,17 +1676,16 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 * released by calling {@link #endClusterLock(String)}.
 	 * 
 	 * @param lockName the lock name
-	 * @throws UnifyException if an error occurs
+	 * @return a true value is lock is obtained otherwise false
 	 */
-	public void beginClusterLock(String lockName) throws UnifyException {
-		unifyComponentContext.beginClusterLock(lockName);
+	public boolean beginClusterLock(String lockName) throws UnifyException {
+		return unifyComponentContext.beginClusterLock(lockName);
 	}
 
 	/**
 	 * Ends a cluster synchronization block for specified lock.
 	 * 
 	 * @param lockName the lock name
-	 * @throws UnifyException if an error occurs
 	 */
 	public void endClusterLock(String lockName) throws UnifyException {
 		unifyComponentContext.endClusterLock(lockName);
@@ -1698,7 +1695,6 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 * Tries to grab the cluster master synchronization lock.
 	 * 
 	 * @return a true value is lock is obtained otherwise false
-	 * @throws UnifyException if an error occurs
 	 */
 	protected boolean grabClusterMasterLock() throws UnifyException {
 		return unifyComponentContext.grabClusterMasterLock();
@@ -1710,7 +1706,6 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 * 
 	 * @param lockName the lock name
 	 * @return a true value is lock is obtained otherwise false
-	 * @throws UnifyException if an error occurs
 	 */
 	protected boolean grabClusterLock(String lockName) throws UnifyException {
 		return unifyComponentContext.grabClusterLock(lockName);
@@ -1721,21 +1716,25 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 * 
 	 * @param lockName the lock name
 	 * @return a true value is lock is held otherwise false
-	 * @throws UnifyException if an error occurs
 	 */
 	protected boolean isWithClusterLock(String lockName) throws UnifyException {
 		return unifyComponentContext.isWithClusterLock(lockName);
 	}
 
 	/**
+	 * Releases master synchronization lock.
+	 */
+	protected void releaseClusterMasterLock() throws UnifyException {
+		unifyComponentContext.releaseClusterMasterLock();
+	}
+
+	/**
 	 * Releases a synchronization lock.
 	 * 
 	 * @param lockName the lock name
-	 * @return a true value if lock was released
-	 * @throws UnifyException if an error occurs
 	 */
-	protected boolean releaseClusterLock(String lockName) throws UnifyException {
-		return unifyComponentContext.releaseClusterLock(lockName);
+	protected void releaseClusterLock(String lockName) throws UnifyException {
+		unifyComponentContext.releaseClusterLock(lockName);
 	}
 
 	/**

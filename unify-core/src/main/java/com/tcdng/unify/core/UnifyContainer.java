@@ -979,17 +979,16 @@ public class UnifyContainer {
 	 * released by calling {@link #endClusterLock(String)}.
 	 * 
 	 * @param lockName the lock name
-	 * @throws UnifyException if an error occurs
+	 * @return a true value is lock is obtained otherwise false
 	 */
-	public void beginClusterLock(String lockName) throws UnifyException {
-		clusterService.beginSynchronization(lockName);
+	public boolean beginClusterLock(String lockName) throws UnifyException {
+		return clusterService.beginSynchronization(lockName);
 	}
 
 	/**
-	 * Ends a synchronisation block for specified lock.
+	 * Ends a synchronization block for specified lock.
 	 * 
 	 * @param lockName the lock name
-	 * @throws UnifyException if an error occurs
 	 */
 	public void endClusterLock(String lockName) throws UnifyException {
 		clusterService.endSynchronization(lockName);
@@ -999,7 +998,6 @@ public class UnifyContainer {
 	 * Tries to grab the cluster master synchronization lock.
 	 * 
 	 * @return a true value is lock is obtained otherwise false
-	 * @throws UnifyException if an error occurs
 	 */
 	public boolean grabClusterMasterLock() throws UnifyException {
 		return clusterService.grabMasterSynchronizationLock();
@@ -1011,7 +1009,6 @@ public class UnifyContainer {
 	 * 
 	 * @param lockName the lock name
 	 * @return a true value is lock is obtained otherwise false
-	 * @throws UnifyException if an error occurs
 	 */
 	public boolean grabClusterLock(String lockName) throws UnifyException {
 		return clusterService.grabSynchronizationLock(lockName);
@@ -1022,21 +1019,25 @@ public class UnifyContainer {
 	 * 
 	 * @param lockName the lock name
 	 * @return a true value is lock is held otherwise false
-	 * @throws UnifyException if an error occurs
 	 */
 	public boolean isWithClusterLock(String lockName) throws UnifyException {
 		return clusterService.isWithSynchronizationLock(lockName);
 	}
 
 	/**
+	 * Releases a cluster master synchronization lock.
+	 */
+	public void releaseClusterMasterLock() throws UnifyException {
+		clusterService.releaseMasterSynchronizationLock();
+	}
+
+	/**
 	 * Releases a cluster synchronization lock.
 	 * 
 	 * @param lockName the lock name
-	 * @return a true value if lock was released
-	 * @throws UnifyException if an error occurs
 	 */
-	public boolean releaseClusterLock(String lockName) throws UnifyException {
-		return clusterService.releaseSynchronizationLock(lockName);
+	public void releaseClusterLock(String lockName) throws UnifyException {
+		clusterService.releaseSynchronizationLock(lockName);
 	}
 
 	/**

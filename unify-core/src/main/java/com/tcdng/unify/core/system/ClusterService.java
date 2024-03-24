@@ -34,14 +34,8 @@ public interface ClusterService extends BusinessService {
 
     /**
      * Returns the node lock owner ID.
-     * 
-     * @param nodeOnly
-     *            indicates that only node instance ID should be lock owner ID
-     *            without thread information
-     * @throws UnifyException
-     *             if an error occurs
      */
-    String getLockOwnerId(boolean nodeOnly) throws UnifyException;
+    String getLockOwnerId() throws UnifyException;
 
     /**
      * Begins a synchronization block with specified lock. Blocks until
@@ -50,18 +44,14 @@ public interface ClusterService extends BusinessService {
      * 
      * @param lockName
      *            the lock name
-     * @throws UnifyException
-     *             if an error occurs
      */
-    void beginSynchronization(String lockName) throws UnifyException;
+    boolean beginSynchronization(String lockName) throws UnifyException;
 
     /**
      * Ends a synchronization block for specified lock.
      * 
      * @param lockName
      *            the lock name
-     * @throws UnifyException
-     *             if an error occurs
      */
     void endSynchronization(String lockName) throws UnifyException;
 
@@ -69,8 +59,6 @@ public interface ClusterService extends BusinessService {
      * Tries to grab cluster master synchronization lock. Does not block.
      * 
      * @return a true value if cluster lock is gotten, otherwise false
-     * @throws UnifyException
-     *             if an error occurs
      */
     boolean grabMasterSynchronizationLock() throws UnifyException;
 
@@ -82,8 +70,6 @@ public interface ClusterService extends BusinessService {
      * @param lockName
      *            the lock name
      * @return a true value if synchronization lock is gotten, otherwise false
-     * @throws UnifyException
-     *             if an error occurs
      */
     boolean grabSynchronizationLock(String lockName) throws UnifyException;
     
@@ -93,22 +79,21 @@ public interface ClusterService extends BusinessService {
      * @param lockName
      *            the lock name
      * @return a true value is lock is held otherwise false
-     * @throws UnifyException
-     *             if an error occurs
      */
     boolean isWithSynchronizationLock(String lockName) throws UnifyException;
+
+    /**
+     * Releases a cluster master synchronization lock.
+     */
+    void releaseMasterSynchronizationLock() throws UnifyException;
 
     /**
      * Releases a cluster synchronization lock.
      * 
      * @param lockName
      *            the lock name
-     * @return a true value if lock held by member was released. A false value if
-     *         lock is not held by this node or lock with name does not exist.
-     * @throws UnifyException
-     *             if an error occurs
      */
-    boolean releaseSynchronizationLock(String lockName) throws UnifyException;
+    void releaseSynchronizationLock(String lockName) throws UnifyException;
 
     /**
      * Gets a list of cluster synchronization lock data that matches supplied

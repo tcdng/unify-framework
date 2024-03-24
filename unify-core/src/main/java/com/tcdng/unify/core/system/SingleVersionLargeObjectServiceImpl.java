@@ -40,139 +40,143 @@ import com.tcdng.unify.core.util.StringUtils;
 @Transactional
 @Component(ApplicationComponents.APPLICATION_SINGLEVERSIONLOBSERVICE)
 public class SingleVersionLargeObjectServiceImpl extends AbstractBusinessService
-        implements SingleVersionLargeObjectService {
+		implements SingleVersionLargeObjectService {
 
-    @Override
-    public boolean storeBlob(String applicationName, String categoryName, String objectName, byte[] blob, long version)
-            throws UnifyException {
-        if (version <= 0) {
-            throw new UnifyException(UnifyCoreErrorConstants.INVALID_LARGEOBJECT_VERSION, applicationName, categoryName,
-                    objectName, version);
-        }
+	@Override
+	public boolean storeBlob(String applicationName, String categoryName, String objectName, byte[] blob, long version)
+			throws UnifyException {
+		if (version <= 0) {
+			throw new UnifyException(UnifyCoreErrorConstants.INVALID_LARGEOBJECT_VERSION, applicationName, categoryName,
+					objectName, version);
+		}
 
-        String lockName = getCategoryLock(applicationName, categoryName);
-        beginClusterLock(lockName);
-        try {
-            SingleVersionBlob singleVersionBlob = db().find(new SingleVersionBlobQuery()
-                    .applicationName(applicationName).categoryName(categoryName).objectName(objectName)
-                    .addSelect("id", "applicationName", "categoryName", "objectName", "version"));
-            if (singleVersionBlob == null) {
-                singleVersionBlob = new SingleVersionBlob();
-                singleVersionBlob.setApplicationName(applicationName);
-                singleVersionBlob.setCategoryName(categoryName);
-                singleVersionBlob.setObjectName(objectName);
-                singleVersionBlob.setLargeObject(blob);
-                singleVersionBlob.setVersion(version);
-                db().create(singleVersionBlob);
-                return true;
-            }
+		final String lockName = getCategoryLock(applicationName, categoryName);
+		if (beginClusterLock(lockName)) {
+			try {
+				SingleVersionBlob singleVersionBlob = db().find(new SingleVersionBlobQuery()
+						.applicationName(applicationName).categoryName(categoryName).objectName(objectName)
+						.addSelect("id", "applicationName", "categoryName", "objectName", "version"));
+				if (singleVersionBlob == null) {
+					singleVersionBlob = new SingleVersionBlob();
+					singleVersionBlob.setApplicationName(applicationName);
+					singleVersionBlob.setCategoryName(categoryName);
+					singleVersionBlob.setObjectName(objectName);
+					singleVersionBlob.setLargeObject(blob);
+					singleVersionBlob.setVersion(version);
+					db().create(singleVersionBlob);
+					return true;
+				}
 
-            if (singleVersionBlob.getVersion() < version) {
-                singleVersionBlob.setLargeObject(blob);
-                singleVersionBlob.setVersion(version);
-                db().updateById(singleVersionBlob);
-                return true;
-            }
-        } finally {
-            endClusterLock(lockName);
-        }
-        return false;
-    }
+				if (singleVersionBlob.getVersion() < version) {
+					singleVersionBlob.setLargeObject(blob);
+					singleVersionBlob.setVersion(version);
+					db().updateById(singleVersionBlob);
+					return true;
+				}
+			} finally {
+				endClusterLock(lockName);
+			}
+		}
 
-    @Override
-    public byte[] retrieveBlob(String applicationName, String categoryName, String objectName) throws UnifyException {
-        SingleVersionBlob singleVersionBlob = db().find(new SingleVersionBlobQuery().applicationName(applicationName)
-                .categoryName(categoryName).objectName(objectName).addSelect("largeObject"));
-        if (singleVersionBlob != null) {
-            return singleVersionBlob.getLargeObject();
-        }
+		return false;
+	}
 
-        return null;
-    }
+	@Override
+	public byte[] retrieveBlob(String applicationName, String categoryName, String objectName) throws UnifyException {
+		SingleVersionBlob singleVersionBlob = db().find(new SingleVersionBlobQuery().applicationName(applicationName)
+				.categoryName(categoryName).objectName(objectName).addSelect("largeObject"));
+		if (singleVersionBlob != null) {
+			return singleVersionBlob.getLargeObject();
+		}
 
-    @Override
-    public List<String> retrieveBlobObjectNames(String applicationName, String categoryName) throws UnifyException {
-        return db().valueList(String.class, "objectName", new SingleVersionBlobQuery().applicationName(applicationName)
-                .categoryName(categoryName));
-    }
+		return null;
+	}
 
-    @Override
-    public long getBlobVersion(String applicationName, String categoryName, String objectName) throws UnifyException {
-        SingleVersionBlob singleVersionBlob = db().find(new SingleVersionBlobQuery().applicationName(applicationName)
-                .categoryName(categoryName).objectName(objectName).addSelect("version"));
-        if (singleVersionBlob != null) {
-            return singleVersionBlob.getVersion();
-        }
+	@Override
+	public List<String> retrieveBlobObjectNames(String applicationName, String categoryName) throws UnifyException {
+		return db().valueList(String.class, "objectName",
+				new SingleVersionBlobQuery().applicationName(applicationName).categoryName(categoryName));
+	}
 
-        return 0;
-    }
+	@Override
+	public long getBlobVersion(String applicationName, String categoryName, String objectName) throws UnifyException {
+		SingleVersionBlob singleVersionBlob = db().find(new SingleVersionBlobQuery().applicationName(applicationName)
+				.categoryName(categoryName).objectName(objectName).addSelect("version"));
+		if (singleVersionBlob != null) {
+			return singleVersionBlob.getVersion();
+		}
 
-    @Override
-    public boolean storeClob(String applicationName, String categoryName, String objectName, String clob, long version)
-            throws UnifyException {
-        if (version <= 0) {
-            throw new UnifyException(UnifyCoreErrorConstants.INVALID_LARGEOBJECT_VERSION, applicationName, categoryName,
-                    objectName, version);
-        }
+		return 0;
+	}
 
-        String lockName = getCategoryLock(applicationName, categoryName);
-        beginClusterLock(lockName);
-        try {
-            SingleVersionClob singleVersionClob = db().find(new SingleVersionClobQuery()
-                    .applicationName(applicationName).categoryName(categoryName).objectName(objectName)
-                    .addSelect("id", "applicationName", "categoryName", "objectName", "version"));
-            if (singleVersionClob == null) {
-                singleVersionClob = new SingleVersionClob();
-                singleVersionClob.setApplicationName(applicationName);
-                singleVersionClob.setCategoryName(categoryName);
-                singleVersionClob.setObjectName(objectName);
-                singleVersionClob.setLargeObject(clob);
-                singleVersionClob.setVersion(version);
-                db().create(singleVersionClob);
-                return true;
-            }
+	@Override
+	public boolean storeClob(String applicationName, String categoryName, String objectName, String clob, long version)
+			throws UnifyException {
+		if (version <= 0) {
+			throw new UnifyException(UnifyCoreErrorConstants.INVALID_LARGEOBJECT_VERSION, applicationName, categoryName,
+					objectName, version);
+		}
 
-            if (singleVersionClob.getVersion() < version) {
-                singleVersionClob.setLargeObject(clob);
-                singleVersionClob.setVersion(version);
-                db().updateById(singleVersionClob);
-                return true;
-            }
-        } finally {
-            endClusterLock(lockName);
-        }
-        return false;
-    }
+		final String lockName = getCategoryLock(applicationName, categoryName);
+		if (beginClusterLock(lockName)) {
+			try {
+				SingleVersionClob singleVersionClob = db().find(new SingleVersionClobQuery()
+						.applicationName(applicationName).categoryName(categoryName).objectName(objectName)
+						.addSelect("id", "applicationName", "categoryName", "objectName", "version"));
+				if (singleVersionClob == null) {
+					singleVersionClob = new SingleVersionClob();
+					singleVersionClob.setApplicationName(applicationName);
+					singleVersionClob.setCategoryName(categoryName);
+					singleVersionClob.setObjectName(objectName);
+					singleVersionClob.setLargeObject(clob);
+					singleVersionClob.setVersion(version);
+					db().create(singleVersionClob);
+					return true;
+				}
 
-    @Override
-    public String retrieveClob(String applicationName, String categoryName, String objectName) throws UnifyException {
-        SingleVersionClob singleVersionClob = db().find(new SingleVersionClobQuery().applicationName(applicationName)
-                .categoryName(categoryName).objectName(objectName).addSelect("largeObject"));
-        if (singleVersionClob != null) {
-            return singleVersionClob.getLargeObject();
-        }
+				if (singleVersionClob.getVersion() < version) {
+					singleVersionClob.setLargeObject(clob);
+					singleVersionClob.setVersion(version);
+					db().updateById(singleVersionClob);
+					return true;
+				}
+			} finally {
+				endClusterLock(lockName);
+			}
+		}
 
-        return null;
-    }
+		return false;
+	}
 
-    @Override
-    public List<String> retrieveClobObjectNames(String applicationName, String categoryName) throws UnifyException {
-        return db().valueList(String.class, "objectName", new SingleVersionClobQuery().applicationName(applicationName)
-                .categoryName(categoryName));
-    }
+	@Override
+	public String retrieveClob(String applicationName, String categoryName, String objectName) throws UnifyException {
+		SingleVersionClob singleVersionClob = db().find(new SingleVersionClobQuery().applicationName(applicationName)
+				.categoryName(categoryName).objectName(objectName).addSelect("largeObject"));
+		if (singleVersionClob != null) {
+			return singleVersionClob.getLargeObject();
+		}
 
-    @Override
-    public long getClobVersion(String applicationName, String categoryName, String objectName) throws UnifyException {
-        SingleVersionClob singleVersionClob = db().find(new SingleVersionClobQuery().applicationName(applicationName)
-                .categoryName(categoryName).objectName(objectName).addSelect("version"));
-        if (singleVersionClob != null) {
-            return singleVersionClob.getVersion();
-        }
+		return null;
+	}
 
-        return 0;
-    }
+	@Override
+	public List<String> retrieveClobObjectNames(String applicationName, String categoryName) throws UnifyException {
+		return db().valueList(String.class, "objectName",
+				new SingleVersionClobQuery().applicationName(applicationName).categoryName(categoryName));
+	}
 
-    private String getCategoryLock(String applicationName, String categoryName) throws UnifyException {
-        return LockUtils.getStringLockObject(StringUtils.dotify(applicationName, categoryName));
-    }
+	@Override
+	public long getClobVersion(String applicationName, String categoryName, String objectName) throws UnifyException {
+		SingleVersionClob singleVersionClob = db().find(new SingleVersionClobQuery().applicationName(applicationName)
+				.categoryName(categoryName).objectName(objectName).addSelect("version"));
+		if (singleVersionClob != null) {
+			return singleVersionClob.getVersion();
+		}
+
+		return 0;
+	}
+
+	private String getCategoryLock(String applicationName, String categoryName) throws UnifyException {
+		return LockUtils.getStringLockObject(StringUtils.dotify(applicationName, categoryName));
+	}
 }
