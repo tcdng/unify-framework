@@ -50,7 +50,6 @@ import com.tcdng.unify.core.annotation.Taskable;
 import com.tcdng.unify.core.business.internal.ProxyBusinessServiceMethodRelay;
 import com.tcdng.unify.core.data.FactoryMap;
 import com.tcdng.unify.core.data.ParamConfig;
-import com.tcdng.unify.core.system.ClusterService;
 import com.tcdng.unify.core.util.AnnotationUtils;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.ReflectUtils;
@@ -76,7 +75,7 @@ public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManag
 
 	@Configurable
 	private UserTokenProvider userTokenProvider;
-	
+
 	@Configurable("128")
 	private int maxThreads;
 
@@ -415,32 +414,31 @@ public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManag
 
 		@Override
 		public void run() {
-			try {
-				requestContextManager.loadRequestContext(requestContext);
-				if (userTokenProvider != null && !StringUtils.isBlank(userLoginId)) {
-					UserToken userToken = userTokenProvider.getUserToken(userLoginId, tenantId);
-					requestContext.getSessionContext().setUserToken(userToken);
-				}
-				
-				requestContext = null;
-				runTasks();
-			} catch (Exception e) {
-			} finally {
-				if (StringUtils.isNotBlank(lockToRelease)) {
+			final boolean lock = !StringUtils.isBlank(lockToRelease);
+			if (!lock || beginClusterLock(lockToRelease)) {
+				try {
+					requestContextManager.loadRequestContext(requestContext);
+					if (userTokenProvider != null && !StringUtils.isBlank(userLoginId)) {
+						UserToken userToken = userTokenProvider.getUserToken(userLoginId, tenantId);
+						requestContext.getSessionContext().setUserToken(userToken);
+					}
+
+					requestContext = null;
+					runTasks();
+				} catch (Exception e) {
+					logError(e);
+				} finally {
+					if (lock) {
+						releaseClusterLock(lockToRelease);
+					}
+
 					try {
-						ClusterService clusterManager = (ClusterService) getComponent(
-								ApplicationComponents.APPLICATION_CLUSTERSERVICE);
-						clusterManager.releaseSynchronizationLock(lockToRelease);
+						requestContextManager.unloadRequestContext();
 					} catch (Exception e) {
+						logError(e);
 					}
 				}
-
-				try {
-					requestContextManager.unloadRequestContext();
-				} catch (Exception e) {
-				}
 			}
-
 		}
 
 		private void runTasks() {

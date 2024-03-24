@@ -206,10 +206,14 @@ public class UserSessionManagerImpl extends AbstractBusinessService implements U
             }
         }
 
-        if (grabClusterMasterLock()) {
-            // Delete inactive session
-            db().deleteAll(new UserSessionTrackingQuery().expired(expiryTime));
-        }
+		if (grabClusterMasterLock()) {
+			try {
+				// Delete inactive session
+				db().deleteAll(new UserSessionTrackingQuery().expired(expiryTime));
+			} finally {
+				releaseClusterMasterLock();
+			}
+		}
     }
 
     private void broadcast(UserSession userSession, String attribute, Object value) throws UnifyException {
