@@ -491,7 +491,7 @@ public class UnifyComponentContext {
 	 * @param lockName the lock name
 	 * @return a true value is lock is obtained otherwise false
 	 */
-	public boolean beginClusterLock(String lockName) throws UnifyException {
+	public boolean beginClusterLock(String lockName) {
 		return applicationContext.getContainer().beginClusterLock(lockName);
 	}
 
@@ -500,7 +500,7 @@ public class UnifyComponentContext {
 	 * 
 	 * @param lockName the lock name
 	 */
-	public void endClusterLock(String lockName) throws UnifyException {
+	public void endClusterLock(String lockName) {
 		applicationContext.getContainer().endClusterLock(lockName);
 	}
 
@@ -509,7 +509,7 @@ public class UnifyComponentContext {
 	 * 
 	 * @return a true value is lock is obtained otherwise false
 	 */
-	public boolean grabClusterMasterLock() throws UnifyException {
+	public boolean grabClusterMasterLock() {
 		return applicationContext.getContainer().grabClusterMasterLock();
 	}
 
@@ -520,7 +520,7 @@ public class UnifyComponentContext {
 	 * @param lockName the lock name
 	 * @return a true value is lock is obtained otherwise false
 	 */
-	public boolean grabClusterLock(String lockName) throws UnifyException {
+	public boolean grabClusterLock(String lockName) {
 		return applicationContext.getContainer().grabClusterLock(lockName);
 	}
 
@@ -530,14 +530,14 @@ public class UnifyComponentContext {
 	 * @param lockName the lock name
 	 * @return a true value is lock is held otherwise false
 	 */
-	public boolean isWithClusterLock(String lockName) throws UnifyException {
+	public boolean isWithClusterLock(String lockName) {
 		return applicationContext.getContainer().isWithClusterLock(lockName);
 	}
 
 	/**
 	 * Releases a cluster master synchronization lock.
 	 */
-	public void releaseClusterMasterLock() throws UnifyException {
+	public void releaseClusterMasterLock() {
 		applicationContext.getContainer().releaseClusterMasterLock();
 	}
 
@@ -546,7 +546,7 @@ public class UnifyComponentContext {
 	 * 
 	 * @param lockName the lock name
 	 */
-	public void releaseClusterLock(String lockName) throws UnifyException {
+	public void releaseClusterLock(String lockName) {
 		applicationContext.getContainer().releaseClusterLock(lockName);
 	}
 

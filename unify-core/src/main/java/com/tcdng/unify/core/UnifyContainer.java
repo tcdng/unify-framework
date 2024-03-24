@@ -981,8 +981,14 @@ public class UnifyContainer {
 	 * @param lockName the lock name
 	 * @return a true value is lock is obtained otherwise false
 	 */
-	public boolean beginClusterLock(String lockName) throws UnifyException {
-		return clusterService.beginSynchronization(lockName);
+	public boolean beginClusterLock(String lockName) {
+		try {
+			return clusterService.beginSynchronization(lockName);
+		} catch (UnifyException e) {
+			logError(e);
+		}
+
+		return false;
 	}
 
 	/**
@@ -990,8 +996,12 @@ public class UnifyContainer {
 	 * 
 	 * @param lockName the lock name
 	 */
-	public void endClusterLock(String lockName) throws UnifyException {
-		clusterService.endSynchronization(lockName);
+	public void endClusterLock(String lockName) {
+		try {
+			clusterService.endSynchronization(lockName);
+		} catch (UnifyException e) {
+			logError(e);
+		}
 	}
 
 	/**
@@ -999,8 +1009,14 @@ public class UnifyContainer {
 	 * 
 	 * @return a true value is lock is obtained otherwise false
 	 */
-	public boolean grabClusterMasterLock() throws UnifyException {
-		return clusterService.grabMasterSynchronizationLock();
+	public boolean grabClusterMasterLock() {
+		try {
+			return clusterService.grabMasterSynchronizationLock();
+		} catch (UnifyException e) {
+			logError(e);
+		}
+
+		return false;
 	}
 
 	/**
@@ -1010,8 +1026,14 @@ public class UnifyContainer {
 	 * @param lockName the lock name
 	 * @return a true value is lock is obtained otherwise false
 	 */
-	public boolean grabClusterLock(String lockName) throws UnifyException {
-		return clusterService.grabSynchronizationLock(lockName);
+	public boolean grabClusterLock(String lockName) {
+		try {
+			return clusterService.grabSynchronizationLock(lockName);
+		} catch (UnifyException e) {
+			logError(e);
+		}
+
+		return false;
 	}
 
 	/**
@@ -1020,15 +1042,25 @@ public class UnifyContainer {
 	 * @param lockName the lock name
 	 * @return a true value is lock is held otherwise false
 	 */
-	public boolean isWithClusterLock(String lockName) throws UnifyException {
-		return clusterService.isWithSynchronizationLock(lockName);
+	public boolean isWithClusterLock(String lockName) {
+		try {
+			return clusterService.isWithSynchronizationLock(lockName);
+		} catch (UnifyException e) {
+			logError(e);
+		}
+
+		return false;
 	}
 
 	/**
 	 * Releases a cluster master synchronization lock.
 	 */
-	public void releaseClusterMasterLock() throws UnifyException {
-		clusterService.releaseMasterSynchronizationLock();
+	public void releaseClusterMasterLock() {
+		try {
+			clusterService.releaseMasterSynchronizationLock();
+		} catch (UnifyException e) {
+			logError(e);
+		}
 	}
 
 	/**
@@ -1036,8 +1068,12 @@ public class UnifyContainer {
 	 * 
 	 * @param lockName the lock name
 	 */
-	public void releaseClusterLock(String lockName) throws UnifyException {
-		clusterService.releaseSynchronizationLock(lockName);
+	public void releaseClusterLock(String lockName) {
+		try {
+			clusterService.releaseSynchronizationLock(lockName);
+		} catch (UnifyException e) {
+			logError(e);
+		}
 	}
 
 	/**

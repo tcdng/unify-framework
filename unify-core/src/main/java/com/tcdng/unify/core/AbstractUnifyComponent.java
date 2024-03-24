@@ -1678,7 +1678,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 * @param lockName the lock name
 	 * @return a true value is lock is obtained otherwise false
 	 */
-	public boolean beginClusterLock(String lockName) throws UnifyException {
+	public boolean beginClusterLock(String lockName) {
 		return unifyComponentContext.beginClusterLock(lockName);
 	}
 
@@ -1687,7 +1687,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 * 
 	 * @param lockName the lock name
 	 */
-	public void endClusterLock(String lockName) throws UnifyException {
+	public void endClusterLock(String lockName) {
 		unifyComponentContext.endClusterLock(lockName);
 	}
 
@@ -1696,7 +1696,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 * 
 	 * @return a true value is lock is obtained otherwise false
 	 */
-	protected boolean grabClusterMasterLock() throws UnifyException {
+	protected boolean grabClusterMasterLock() {
 		return unifyComponentContext.grabClusterMasterLock();
 	}
 
@@ -1707,7 +1707,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 * @param lockName the lock name
 	 * @return a true value is lock is obtained otherwise false
 	 */
-	protected boolean grabClusterLock(String lockName) throws UnifyException {
+	protected boolean grabClusterLock(String lockName) {
 		return unifyComponentContext.grabClusterLock(lockName);
 	}
 
@@ -1717,14 +1717,14 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 * @param lockName the lock name
 	 * @return a true value is lock is held otherwise false
 	 */
-	protected boolean isWithClusterLock(String lockName) throws UnifyException {
+	protected boolean isWithClusterLock(String lockName) {
 		return unifyComponentContext.isWithClusterLock(lockName);
 	}
 
 	/**
 	 * Releases master synchronization lock.
 	 */
-	protected void releaseClusterMasterLock() throws UnifyException {
+	protected void releaseClusterMasterLock() {
 		unifyComponentContext.releaseClusterMasterLock();
 	}
 
@@ -1733,7 +1733,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 * 
 	 * @param lockName the lock name
 	 */
-	protected void releaseClusterLock(String lockName) throws UnifyException {
+	protected void releaseClusterLock(String lockName) {
 		unifyComponentContext.releaseClusterLock(lockName);
 	}
 
