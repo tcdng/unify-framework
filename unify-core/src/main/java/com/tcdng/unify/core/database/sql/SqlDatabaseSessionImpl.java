@@ -54,6 +54,7 @@ import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.database.EntityPolicy;
 import com.tcdng.unify.core.database.GroupingAggregation;
 import com.tcdng.unify.core.database.MappedEntityRepository;
+import com.tcdng.unify.core.database.NativeUpdate;
 import com.tcdng.unify.core.database.Query;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.ReflectUtils;
@@ -613,6 +614,12 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 		} catch (Exception e) {
 			throw new UnifyOperationException(e);
 		}
+	}
+
+	@Override
+	public int update(NativeUpdate update) throws UnifyException {
+		ensureWritable();
+		return getSqlStatementExecutor().executeUpdate(connection, sqlDataSourceDialect.prepareUpdateStatement(update));
 	}
 
 	@Override

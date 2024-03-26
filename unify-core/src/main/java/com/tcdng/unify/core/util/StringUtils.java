@@ -112,6 +112,22 @@ public final class StringUtils {
 		return DataUtils.ZEROLEN_STRING_ARRAY;
 	}
 
+	public static int getCharOccurrences(String str, char ch) {
+		if (str != null) {
+			final int len = str.length();
+			int count = 0;
+			for (int i = 0; i < len; i++) {
+				if (ch == str.charAt(i)) {
+					count++;
+				}
+			}
+			
+			return count;
+		}
+		
+		return 0;
+	}
+	
 	/**
 	 * Split a string into tokens using the comma character.
 	 * 

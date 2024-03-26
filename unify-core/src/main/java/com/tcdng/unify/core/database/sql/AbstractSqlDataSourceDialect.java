@@ -58,7 +58,9 @@ import com.tcdng.unify.core.criterion.UpdateExpression;
 import com.tcdng.unify.core.data.FactoryMap;
 import com.tcdng.unify.core.database.CallableProc;
 import com.tcdng.unify.core.database.Entity;
+import com.tcdng.unify.core.database.NativeParam;
 import com.tcdng.unify.core.database.NativeQuery;
+import com.tcdng.unify.core.database.NativeUpdate;
 import com.tcdng.unify.core.database.Query;
 import com.tcdng.unify.core.database.sql.criterion.policy.AmongstPolicy;
 import com.tcdng.unify.core.database.sql.criterion.policy.AndPolicy;
@@ -1288,6 +1290,19 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 		appendWhereClause(listSql, parameterInfoList, sqlEntityInfo, query, SqlQueryType.SELECT);
 		return new SqlStatement(sqlEntityInfo, SqlStatementType.LIST, listSql.toString(), parameterInfoList,
 				getSqlResultList(returnFieldInfoList));
+	}
+
+	@Override
+	public SqlStatement prepareUpdateStatement(NativeUpdate update) throws UnifyException {
+		List<SqlParameter> parameterInfoList = Collections.emptyList();
+		if (update.isWithParams()) {
+			parameterInfoList = new ArrayList<SqlParameter>();
+			for (NativeParam param: update.getParams()) {
+				parameterInfoList.add(new SqlParameter(getSqlTypePolicy(param.getType()), param.getParam()));
+			}
+		}
+
+		return new SqlStatement(SqlStatementType.UPDATE, update.getUpdateSql(), parameterInfoList);
 	}
 
 	@Override
