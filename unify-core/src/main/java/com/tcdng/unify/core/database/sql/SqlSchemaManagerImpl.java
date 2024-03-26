@@ -33,6 +33,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.tcdng.unify.common.annotation.StaticList;
+import com.tcdng.unify.common.constants.EnumConst;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyCorePropertyConstants;
@@ -43,7 +44,6 @@ import com.tcdng.unify.core.constant.LocaleType;
 import com.tcdng.unify.core.constant.PrintFormat;
 import com.tcdng.unify.core.data.Listable;
 import com.tcdng.unify.core.database.Entity;
-import com.tcdng.unify.core.database.dynamic.DynamicEntityInfo;
 import com.tcdng.unify.core.util.SqlUtils;
 import com.tcdng.unify.core.util.StringUtils;
 
@@ -82,7 +82,7 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 				}
 
 				Map<String, TableConstraint> managedTableConstraints = fetchManagedTableConstraints(databaseMetaData,
-						sqlDataSource, sqlEntityInfo);
+						sqlDataSource, entityClass);
 				Map<String, SqlColumnInfo> columnMap = sqlDataSource.getColumnMapLowerCase(schema,
 						sqlEntityInfo.getTableName());
 				if (detectTableChange(sqlDataSourceDialect, sqlEntityInfo, columnMap, managedTableConstraints,
@@ -105,23 +105,63 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 	@Override
 	public void manageTableSchema(SqlDataSource sqlDataSource, SqlSchemaManagerOptions options,
 			List<Class<?>> entityClasses) throws UnifyException {
-		List<SqlEntitySchemaInfo> sqlEntityInfoList = getSqlEntityInfos(sqlDataSource, entityClasses);
-		_manageTableSchema(sqlDataSource, options, sqlEntityInfoList);
+		Connection connection = (Connection) sqlDataSource.getConnection();
+		try {
+			logDebug("Scanning datasource {0} schema...", sqlDataSource.getName());
+			logDebug("Managing schema elements for [{0}] table entities...", entityClasses.size());
+			DatabaseMetaData databaseMetaData = connection.getMetaData();
+			for (Class<?> entityClass : entityClasses) {
+				Map<String, TableConstraint> managedTableConstraints = fetchManagedTableConstraints(databaseMetaData,
+						sqlDataSource, entityClass);
+				manageTableSchema(databaseMetaData, sqlDataSource, entityClass, managedTableConstraints, options);
+			}
+			logDebug("Schema elements management completed for [{0}] table entities...", entityClasses.size());
+		} catch (SQLException e) {
+			throw new UnifyException(e, UnifyCoreErrorConstants.SQLSCHEMAMANAGER_MANAGE_SCHEMA_ERROR,
+					sqlDataSource.getPreferredName());
+		} finally {
+			sqlDataSource.restoreConnection(connection);
+		}
 	}
 
 	@Override
 	public void manageViewSchema(SqlDataSource sqlDataSource, SqlSchemaManagerOptions options,
 			List<Class<? extends Entity>> entityClasses) throws UnifyException {
-		List<Class<?>> _entityClasses = new ArrayList<Class<?>>(entityClasses);
-		List<SqlEntitySchemaInfo> sqlEntityInfoList = getSqlEntityInfos(sqlDataSource, _entityClasses);
-		_manageViewSchema(sqlDataSource, options, sqlEntityInfoList);
+		Connection connection = (Connection) sqlDataSource.getConnection();
+		try {
+			logDebug("Scanning datasource {0} schema...", sqlDataSource.getName());
+			logDebug("Managing schema elements for [{0}] view entities...", entityClasses.size());
+			DatabaseMetaData databaseMetaData = connection.getMetaData();
+			for (Class<? extends Entity> entityClass : entityClasses) {
+				manageViewSchema(databaseMetaData, sqlDataSource, entityClass, options);
+			}
+			logDebug("Schema elements management completed for [{0}] view entities...", entityClasses.size());
+		} catch (SQLException e) {
+			throw new UnifyException(e, UnifyCoreErrorConstants.SQLSCHEMAMANAGER_MANAGE_SCHEMA_ERROR,
+					sqlDataSource.getPreferredName());
+		} finally {
+			sqlDataSource.restoreConnection(connection);
+		}
 	}
 
 	@Override
 	public void dropViewSchema(SqlDataSource sqlDataSource, SqlSchemaManagerOptions options,
 			List<Class<?>> entityClasses) throws UnifyException {
-		List<SqlEntitySchemaInfo> sqlEntityInfoList = getSqlEntityInfos(sqlDataSource, entityClasses);
-		_dropViewSchema(sqlDataSource, options, sqlEntityInfoList);
+		Connection connection = (Connection) sqlDataSource.getConnection();
+		try {
+			logDebug("Scanning datasource {0} schema...", sqlDataSource.getName());
+			logDebug("Dropping schema elements for [{0}] view entities...", entityClasses.size());
+			DatabaseMetaData databaseMetaData = connection.getMetaData();
+			for (Class<?> entityClass : entityClasses) {
+				dropViewSchema(databaseMetaData, sqlDataSource, entityClass, options);
+			}
+			logDebug("Schema elements deletion completed for [{0}] view entities...", entityClasses.size());
+		} catch (SQLException e) {
+			throw new UnifyException(e, UnifyCoreErrorConstants.SQLSCHEMAMANAGER_MANAGE_SCHEMA_ERROR,
+					sqlDataSource.getPreferredName());
+		} finally {
+			sqlDataSource.restoreConnection(connection);
+		}
 	}
 
 	@Override
@@ -135,33 +175,6 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 
 		logDebug("Dependency list resolved to [{0}] entities...", resultList.size());
 		return resultList;
-	}
-
-	@Override
-	public void updateDynamicEntitiesSqlSchema(SqlDatabase db, List<DynamicEntityInfo> dynamicEntityInfoList)
-			throws UnifyException {
-		logDebug("Updating SQL schema for [{0}] entities...", dynamicEntityInfoList.size());
-		List<SqlEntitySchemaInfo> managedList = new ArrayList<SqlEntitySchemaInfo>();
-		for (DynamicEntityInfo dynamicEntityInfo : dynamicEntityInfoList) {
-			if (dynamicEntityInfo.isManaged()) {
-				managedList.add(dynamicEntityInfo);
-			}
-		}
-
-		logDebug("Resolved [{0}] managed classes ...", managedList.size());
-		SqlDataSource sqlDataSource = (SqlDataSource) db.getDataSource();
-		SqlSchemaManagerOptions options = new SqlSchemaManagerOptions(PrintFormat.NONE, ForceConstraints.fromBoolean(
-				!getContainerSetting(boolean.class, UnifyCorePropertyConstants.APPLICATION_FOREIGNKEY_EASE, false)));
-		// TODO Check table or view change
-		// boolean schemaChanged =
-		// sqlSchemaManager.detectTableSchemaChange(sqlDataSource, options, tableList);
-		logDebug("Managing schema for [{0}] entities...", managedList.size());
-		if (sqlDataSource.getDialect().isReconstructViewsOnTableSchemaUpdate()) {
-			_dropViewSchema(sqlDataSource, options, managedList);
-		}
-
-		_manageTableSchema(sqlDataSource, options, managedList);
-		_manageViewSchema(sqlDataSource, options, managedList);
 	}
 
 	@Override
@@ -188,82 +201,11 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 		}
 	}
 
-	private List<SqlEntitySchemaInfo> getSqlEntityInfos(SqlDataSource sqlDataSource,
-			List<Class<?>> entityClasses) throws UnifyException {
-		List<SqlEntitySchemaInfo> list = new ArrayList<SqlEntitySchemaInfo>();
+	private void manageTableSchema(DatabaseMetaData databaseMetaData, SqlDataSource sqlDataSource, Class<?> entityClass,
+			Map<String, TableConstraint> managedTableConstraints, SqlSchemaManagerOptions options)
+			throws UnifyException {
 		SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
-		for (Class<?> entityClass : entityClasses) {
-			SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.findSqlEntityInfo(entityClass);
-			list.add(sqlEntityInfo);
-		}
-
-		return list;
-	}
-
-	private void _manageTableSchema(SqlDataSource sqlDataSource, SqlSchemaManagerOptions options,
-			List<SqlEntitySchemaInfo> sqlEntityInfoList) throws UnifyException {
-		Connection connection = (Connection) sqlDataSource.getConnection();
-		try {
-			logDebug("Scanning datasource {0} schema...", sqlDataSource.getName());
-			logDebug("Managing schema elements for [{0}] table entities...", sqlEntityInfoList.size());
-			DatabaseMetaData databaseMetaData = connection.getMetaData();
-			for (SqlEntitySchemaInfo sqlEntityInfo : sqlEntityInfoList) {
-				Map<String, TableConstraint> managedTableConstraints = fetchManagedTableConstraints(databaseMetaData,
-						sqlDataSource, sqlEntityInfo);
-				manageTableSchema(databaseMetaData, sqlDataSource, sqlEntityInfo, managedTableConstraints, options);
-			}
-			logDebug("Schema elements management completed for [{0}] table entities...", sqlEntityInfoList.size());
-		} catch (SQLException e) {
-			throw new UnifyException(e, UnifyCoreErrorConstants.SQLSCHEMAMANAGER_MANAGE_SCHEMA_ERROR,
-					sqlDataSource.getPreferredName());
-		} finally {
-			sqlDataSource.restoreConnection(connection);
-		}
-	}
-
-	private void _manageViewSchema(SqlDataSource sqlDataSource, SqlSchemaManagerOptions options,
-			List<SqlEntitySchemaInfo> sqlEntityInfoList) throws UnifyException {
-		Connection connection = (Connection) sqlDataSource.getConnection();
-		try {
-			logDebug("Scanning datasource {0} schema...", sqlDataSource.getName());
-			logDebug("Managing schema elements for [{0}] view entities...", sqlEntityInfoList.size());
-			DatabaseMetaData databaseMetaData = connection.getMetaData();
-			for (SqlEntitySchemaInfo sqlEntityInfo : sqlEntityInfoList) {
-				manageViewSchema(databaseMetaData, sqlDataSource, sqlEntityInfo, options);
-			}
-
-			logDebug("Schema elements management completed for [{0}] view entities...", sqlEntityInfoList.size());
-		} catch (SQLException e) {
-			throw new UnifyException(e, UnifyCoreErrorConstants.SQLSCHEMAMANAGER_MANAGE_SCHEMA_ERROR,
-					sqlDataSource.getPreferredName());
-		} finally {
-			sqlDataSource.restoreConnection(connection);
-		}
-	}
-
-	private void _dropViewSchema(SqlDataSource sqlDataSource, SqlSchemaManagerOptions options,
-			List<SqlEntitySchemaInfo> sqlEntityInfoList) throws UnifyException {
-		Connection connection = (Connection) sqlDataSource.getConnection();
-		try {
-			logDebug("Scanning datasource {0} schema...", sqlDataSource.getName());
-			logDebug("Dropping schema elements for [{0}] view entities...", sqlEntityInfoList.size());
-			DatabaseMetaData databaseMetaData = connection.getMetaData();
-			for (SqlEntitySchemaInfo sqlEntityInfo : sqlEntityInfoList) {
-				dropViewSchema(databaseMetaData, sqlDataSource, sqlEntityInfo, options);
-			}
-			logDebug("Schema elements deletion completed for [{0}] view entities...", sqlEntityInfoList.size());
-		} catch (SQLException e) {
-			throw new UnifyException(e, UnifyCoreErrorConstants.SQLSCHEMAMANAGER_MANAGE_SCHEMA_ERROR,
-					sqlDataSource.getPreferredName());
-		} finally {
-			sqlDataSource.restoreConnection(connection);
-		}
-	}
-
-	private void manageTableSchema(DatabaseMetaData databaseMetaData, SqlDataSource sqlDataSource,
-			SqlEntitySchemaInfo sqlEntityInfo, Map<String, TableConstraint> managedTableConstraints,
-			SqlSchemaManagerOptions options) throws UnifyException {
-		SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
+		SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.findSqlEntityInfo(entityClass);
 		if (sqlEntityInfo.isSchemaAlreadyManaged()) {
 			return;
 		}
@@ -502,7 +444,7 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 				pstmt = connection.prepareStatement(sql);
 				pstmt.executeUpdate();
 				SqlUtils.close(pstmt);
-
+				
 				if (sqlDebugging) {
 					logDebug("Completed executing SQL update [{0}]...", sql);
 				}
@@ -510,41 +452,44 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 			connection.commit();
 
 			// Update static reference data
-			StaticList sla = sqlEntityInfo.getStaticList();
-			if (sla != null) {
-				logDebug("Updating static reference data...");
-				Map<String, Listable> map = getListMap(LocaleType.APPLICATION, sla.name());
-				for (Map.Entry<String, Listable> entry : map.entrySet()) {
-					final String code = entry.getKey();
-					final String description = entry.getValue().getListDescription();
+			logDebug("Updating static reference data...");
+			if (EnumConst.class.isAssignableFrom(entityClass)) {
+				StaticList sla = entityClass.getAnnotation(StaticList.class);
+				if (sla != null) {
+					Map<String, Listable> map = getListMap(LocaleType.APPLICATION, sla.name());
+					for (Map.Entry<String, Listable> entry : map.entrySet()) {
+						final String code = entry.getKey();
+						final String description = entry.getValue().getListDescription();
 
-					final SqlFieldSchemaInfo codeFieldInfo = sqlEntityInfo.getFieldInfo("code");
-					final SqlFieldSchemaInfo descFieldInfo = sqlEntityInfo.getFieldInfo("description");
-					pstmt = connection.prepareStatement("SELECT COUNT(*) FROM " + sqlEntityInfo.getPreferredTableName()
-							+ " WHERE " + codeFieldInfo.getPreferredColumnName() + " = ?");
-					pstmt.setString(1, code);
-					rs = pstmt.executeQuery();
-					rs.next();
-					final int count = rs.getInt(1);
-					SqlUtils.close(pstmt);
-					SqlUtils.close(rs);
-
-					if (count == 0) {
-						pstmt = connection.prepareStatement("INSERT INTO " + sqlEntityInfo.getPreferredTableName()
-								+ " (" + codeFieldInfo.getPreferredColumnName() + ", "
-								+ descFieldInfo.getPreferredColumnName() + ") VALUES (?, ?)");
+						final SqlFieldInfo codeFieldInfo = sqlEntityInfo.getFieldInfo("code");
+						final SqlFieldInfo descFieldInfo = sqlEntityInfo.getFieldInfo("description");
+						pstmt = connection
+								.prepareStatement("SELECT COUNT(*) FROM " + sqlEntityInfo.getPreferredTableName()
+										+ " WHERE " + codeFieldInfo.getPreferredColumnName() + " = ?");
 						pstmt.setString(1, code);
-						pstmt.setString(2, description);
-						pstmt.executeUpdate();
+						rs = pstmt.executeQuery();
+						rs.next();
+						final int count = rs.getInt(1);
 						SqlUtils.close(pstmt);
-					} else {
-						pstmt = connection.prepareStatement("UPDATE " + sqlEntityInfo.getPreferredTableName() + " SET "
-								+ descFieldInfo.getPreferredColumnName() + " = ? WHERE "
-								+ codeFieldInfo.getPreferredColumnName() + " = ?");
-						pstmt.setString(1, description);
-						pstmt.setString(2, code);
-						pstmt.executeUpdate();
-						SqlUtils.close(pstmt);
+						SqlUtils.close(rs);
+
+						if (count == 0) {
+							pstmt = connection.prepareStatement("INSERT INTO " + sqlEntityInfo.getPreferredTableName()
+									+ " (" + codeFieldInfo.getPreferredColumnName() + ", "
+									+ descFieldInfo.getPreferredColumnName() + ") VALUES (?, ?)");
+							pstmt.setString(1, code);
+							pstmt.setString(2, description);
+							pstmt.executeUpdate();
+							SqlUtils.close(pstmt);
+						} else {
+							pstmt = connection.prepareStatement("UPDATE " + sqlEntityInfo.getPreferredTableName()
+									+ " SET " + descFieldInfo.getPreferredColumnName() + " = ? WHERE "
+									+ codeFieldInfo.getPreferredColumnName() + " = ?");
+							pstmt.setString(1, description);
+							pstmt.setString(2, code);
+							pstmt.executeUpdate();
+							SqlUtils.close(pstmt);
+						}
 					}
 				}
 			}
@@ -564,8 +509,10 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 	}
 
 	private Map<String, TableConstraint> fetchManagedTableConstraints(DatabaseMetaData databaseMetaData,
-			SqlDataSource sqlDataSource, SqlEntitySchemaInfo sqlEntityInfo) throws UnifyException {
+			SqlDataSource sqlDataSource, Class<?> entityClass) throws UnifyException {
 		SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
+		SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.findSqlEntityInfo(entityClass);
+
 		Map<String, TableConstraint> managedTableConstraints = new LinkedHashMap<String, TableConstraint>();
 		ResultSet rs = null;
 		try {
@@ -617,7 +564,7 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 			}
 		} catch (SQLException e) {
 			throw new UnifyException(e, UnifyCoreErrorConstants.SQLSCHEMAMANAGER_MANAGE_SCHEMA_ERROR,
-					sqlDataSource.getName(), sqlEntityInfo);
+					sqlDataSource.getName(), entityClass);
 		} finally {
 			SqlUtils.close(rs);
 		}
@@ -625,9 +572,8 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 		return managedTableConstraints;
 	}
 
-	private List<String> generateDropConstraints(SqlDataSourceDialect sqlDataSourceDialect,
-			SqlEntitySchemaInfo sqlEntityInfo, Collection<TableConstraint> constraints, PrintFormat printFormat)
-			throws UnifyException {
+	private List<String> generateDropConstraints(SqlDataSourceDialect sqlDataSourceDialect, SqlEntityInfo sqlEntityInfo,
+			Collection<TableConstraint> constraints, PrintFormat printFormat) throws UnifyException {
 		List<String> dropSql = new ArrayList<String>();
 		for (TableConstraint tConst : constraints) {
 			if (tConst.isForeignKey()) {
@@ -645,9 +591,11 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 	}
 
 	private void manageViewSchema(DatabaseMetaData databaseMetaData, SqlDataSource sqlDataSource,
-			SqlEntitySchemaInfo sqlEntityInfo, SqlSchemaManagerOptions options) throws UnifyException {
+			Class<? extends Entity> entityClass, SqlSchemaManagerOptions options) throws UnifyException {
 		SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
+		SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.findSqlEntityInfo(entityClass);
 		final PrintFormat printFormat = options.getPrintFormat();
+
 		Connection connection = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -708,9 +656,11 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 		}
 	}
 
-	private void dropViewSchema(DatabaseMetaData databaseMetaData, SqlDataSource sqlDataSource,
-			SqlEntitySchemaInfo sqlEntityInfo, SqlSchemaManagerOptions options) throws UnifyException {
+	private void dropViewSchema(DatabaseMetaData databaseMetaData, SqlDataSource sqlDataSource, Class<?> entityClass,
+			SqlSchemaManagerOptions options) throws UnifyException {
 		SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
+		SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.findSqlEntityInfo(entityClass);
+
 		Connection connection = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -760,8 +710,8 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 		}
 	}
 
-	private boolean matchIndexAllColumns(SqlEntitySchemaInfo sqlEntityInfo, List<String> fieldNameList,
-			Set<String> columns) throws UnifyException {
+	private boolean matchIndexAllColumns(SqlEntityInfo sqlEntityInfo, List<String> fieldNameList, Set<String> columns)
+			throws UnifyException {
 		if (fieldNameList.size() == columns.size()) {
 			for (String fieldName : fieldNameList) {
 				if (!columns.contains(sqlEntityInfo.getManagedFieldInfo(fieldName).getColumnName())) {
@@ -774,8 +724,8 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 		return false;
 	}
 
-	private boolean matchViewColumns(SqlEntitySchemaInfo sqlEntityInfo, Set<String> columnNames) {
-		for (SqlFieldSchemaInfo sqlfieldInfo : sqlEntityInfo.getManagedListFieldInfos()) {
+	private boolean matchViewColumns(SqlEntityInfo sqlEntityInfo, Set<String> columnNames) {
+		for (SqlFieldInfo sqlfieldInfo : sqlEntityInfo.getManagedListFieldInfos()) {
 			if (!columnNames.contains(sqlfieldInfo.getColumnName())) {
 				return false;
 			}
@@ -784,12 +734,12 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 		return true;
 	}
 
-	private List<String> getColumnUpdates(SqlDataSourceDialect sqlDataSourceDialect, SqlEntitySchemaInfo sqlEntityInfo,
+	private List<String> getColumnUpdates(SqlDataSourceDialect sqlDataSourceDialect, SqlEntityInfo sqlEntityInfo,
 			Map<String, SqlColumnInfo> columnInfos, PrintFormat printFormat) throws UnifyException {
 		List<String> columnUpdateSql = new ArrayList<String>();
 		logDebug("Getting column updates for [{0}]...", sqlEntityInfo.getTableName());
 		logDebug("Checking [{0}] fields...", sqlEntityInfo.getManagedFieldInfos().size());
-		for (SqlFieldSchemaInfo sqlfieldInfo : sqlEntityInfo.getManagedFieldInfos()) {
+		for (SqlFieldInfo sqlfieldInfo : sqlEntityInfo.getManagedFieldInfos()) {
 			SqlColumnInfo sqlColumnInfo = columnInfos.remove(sqlfieldInfo.getColumnName().toLowerCase());
 			if (sqlColumnInfo == null) {
 				// New column
@@ -914,7 +864,7 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 	}
 
 	private SqlColumnAlterInfo checkSqlColumnAltered(SqlDataSourceDialect sqlDataSourceDialect,
-			SqlFieldSchemaInfo sqlfieldInfo, SqlColumnInfo columnInfo) throws UnifyException {
+			SqlFieldInfo sqlfieldInfo, SqlColumnInfo columnInfo) throws UnifyException {
 		final boolean nullableChange = columnInfo.isNullable() != sqlfieldInfo.isNullable();
 		if (nullableChange) {
 			logDebug("Nullable Change: columnInfo.isNullable() = {0}, sqlfieldInfo.isNullable() = {1}...",
@@ -927,7 +877,7 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 				&& !isSwappableValues(sqlfieldInfo.getDefaultVal(), columnInfo.getDefaultVal());
 		if (defaultChange && StringUtils.isBlank(sqlfieldInfo.getDefaultVal())) {
 			if (StringUtils.isBlank(columnInfo.getDefaultVal()) || sqlDataSourceDialect.matchColumnDefault(
-					columnInfo.getDefaultVal(), sqlDataTypePolicy.getAltDefault(sqlfieldInfo.getFieldClass()))) {
+					columnInfo.getDefaultVal(), sqlDataTypePolicy.getAltDefault(sqlfieldInfo.getFieldType()))) {
 				defaultChange = false;
 			}
 		}
@@ -936,7 +886,7 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 			logDebug(
 					"Default Change: fieldName = {0}, column = {1}, columnInfo.getDefaultVal() = {2}, sqlfieldInfo.getDefaultVal() = {3}, sqlDataTypePolicy.getAltDefault() = {4}...",
 					sqlfieldInfo.getName(), sqlfieldInfo.getColumnName(), columnInfo.getDefaultVal(),
-					sqlfieldInfo.getDefaultVal(), sqlDataTypePolicy.getAltDefault(sqlfieldInfo.getFieldClass()));
+					sqlfieldInfo.getDefaultVal(), sqlDataTypePolicy.getAltDefault(sqlfieldInfo.getFieldType()));
 		}
 
 		final boolean typeChange = !sqlDataTypePolicy.getTypeName().equals(columnInfo.getTypeName().toUpperCase());

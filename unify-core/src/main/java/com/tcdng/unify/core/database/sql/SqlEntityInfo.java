@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.tcdng.unify.common.annotation.StaticList;
 import com.tcdng.unify.common.constants.EnumConst;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
@@ -448,19 +447,12 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 		return foreignKeyList;
 	}
 
-	@Override
 	public boolean isSchemaAlreadyManaged() {
 		return schemaAlreadyManaged;
 	}
 
-	@Override
 	public void setSchemaAlreadyManaged() {
 		this.schemaAlreadyManaged = true;
-	}
-
-	@Override
-	public StaticList getStaticList() {
-		return enumConstClass != null ? enumConstClass.getAnnotation(StaticList.class) : null;
 	}
 
 	public Class<? extends Entity> getEntityClass() {

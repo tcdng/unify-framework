@@ -235,7 +235,7 @@ public class HSqlDbDialect extends AbstractSqlDataSourceDialect {
 			}
 			sb.append("ALTER COLUMN ").append(sqlFieldSchemaInfo.getPreferredColumnName()).append(" SET");
 			if (!sqlFieldSchemaInfo.isNullable() || sqlFieldSchemaInfo.isWithDefaultVal()) {
-				sqlDataTypePolicy.appendDefaultSql(sb, sqlFieldSchemaInfo.getFieldClass(),
+				sqlDataTypePolicy.appendDefaultSql(sb, sqlFieldSchemaInfo.getFieldType(),
 						sqlFieldSchemaInfo.getDefaultVal());
 			} else {
 				sb.append(" DEFAULT NULL");
@@ -249,7 +249,7 @@ public class HSqlDbDialect extends AbstractSqlDataSourceDialect {
 			if (!sqlFieldSchemaInfo.isNullable()) {
 				sb.append("UPDATE ").append(sqlEntitySchemaInfo.getSchemaTableName()).append(" SET ")
 						.append(sqlFieldSchemaInfo.getPreferredColumnName()).append(" = ");
-				sqlDataTypePolicy.appendDefaultVal(sb, sqlFieldSchemaInfo.getFieldClass(),
+				sqlDataTypePolicy.appendDefaultVal(sb, sqlFieldSchemaInfo.getFieldType(),
 						sqlFieldSchemaInfo.getDefaultVal());
 				sb.append(" WHERE ").append(sqlFieldSchemaInfo.getPreferredColumnName()).append(" IS NULL");
 				sqlList.add(sb.toString());

@@ -17,14 +17,9 @@
 package com.tcdng.unify.core.database.dynamic;
 
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.annotation.DynamicFieldType;
 import com.tcdng.unify.core.constant.DataType;
 import com.tcdng.unify.core.constant.EntityFieldType;
-import com.tcdng.unify.core.database.sql.SqlEntitySchemaInfo;
-import com.tcdng.unify.core.database.sql.SqlFieldInfo;
-import com.tcdng.unify.core.database.sql.SqlFieldSchemaInfo;
-import com.tcdng.unify.core.util.DynamicEntityUtils;
 import com.tcdng.unify.core.util.StringUtils;
 
 /**
@@ -33,7 +28,7 @@ import com.tcdng.unify.core.util.StringUtils;
  * @author The Code Department
  * @since 1.0
  */
-public abstract class DynamicFieldInfo implements SqlFieldSchemaInfo {
+public abstract class DynamicFieldInfo {
 
 	private DynamicFieldType type;
 
@@ -53,8 +48,6 @@ public abstract class DynamicFieldInfo implements SqlFieldSchemaInfo {
 
 	private boolean tenantId;
 
-	private SqlFieldInfo sqlFieldInfo;
-	
 	public DynamicFieldInfo(DynamicFieldType type, EntityFieldType fieldType, DataType dataType, String columnName,
 			String fieldName, String mapped, boolean descriptive, boolean tenantId) {
 		this(type, fieldType, dataType, columnName, fieldName, mapped, null, descriptive, tenantId);
@@ -128,135 +121,8 @@ public abstract class DynamicFieldInfo implements SqlFieldSchemaInfo {
 	}
 
 	@Override
-	public String getName() {
-		return getSqlFieldnfo().getName();
-	}
-
-	@Override
-	public Long getMarker() {
-		return getSqlFieldnfo().getMarker();
-	}
-
-	@Override
-	public String getPreferredColumnName() {
-		return getSqlFieldnfo().getPreferredColumnName();
-	}
-
-	@Override
-	public String getConstraint() {
-		return getSqlFieldnfo().getConstraint();
-	}
-
-	@Override
-	public boolean isNullable() {
-		return getSqlFieldnfo().isNullable();
-	}
-
-	@Override
-	public boolean isFosterParentType() {
-		return getSqlFieldnfo().isFosterParentType();
-	}
-
-	@Override
-	public boolean isFosterParentId() {
-		return getSqlFieldnfo().isFosterParentId();
-	}
-
-	@Override
-	public boolean isCategoryColumn() {
-		return getSqlFieldnfo().isCategoryColumn();
-	}
-
-	@Override
-	public int getLength() {
-		return getSqlFieldnfo().getLength();
-	}
-
-	@Override
-	public int getPrecision() {
-		return getSqlFieldnfo().getPrecision();
-	}
-
-	@Override
-	public int getScale() {
-		return getSqlFieldnfo().getScale();
-	}
-
-	@Override
-	public ColumnType getColumnType() {
-		return getSqlFieldnfo().getColumnType();
-	}
-
-	@Override
-	public Class<?> getFieldClass() {
-		return getSqlFieldnfo().getFieldClass();
-	}
-
-	@Override
-	public String getDefaultVal() {
-		return getSqlFieldnfo().getDefaultVal();
-	}
-
-	@Override
-	public boolean isWithDefaultVal() {
-		return getSqlFieldnfo().isWithDefaultVal();
-	}
-
-	@Override
-	public boolean isPrimaryKey() {
-		return getSqlFieldnfo().isPrimaryKey();
-	}
-
-	@Override
-	public boolean isListOnly() {
-		return getSqlFieldnfo().isListOnly();
-	}
-
-	@Override
-	public boolean isSameSchema(SqlFieldSchemaInfo sqlFieldSchemaInfo) {
-		return getSqlFieldnfo().isSameSchema(sqlFieldSchemaInfo);
-	}
-
-	@Override
-	public boolean isIgnoreFkConstraint() {
-		return getSqlFieldnfo().isIgnoreFkConstraint();
-	}
-
-	@Override
-	public SqlEntitySchemaInfo getForeignEntityInfo() {
-		return getSqlFieldnfo().getForeignEntityInfo();
-	}
-
-	@Override
-	public SqlFieldSchemaInfo getForeignFieldInfo() {
-		return getSqlFieldnfo().getForeignFieldInfo();
-	}
-
-	@Override
-	public String getForeignEntityPreferredAlias() {
-		return getSqlFieldnfo().getForeignEntityPreferredAlias();
-	}
-
-	@Override
-	public SqlFieldSchemaInfo getForeignKeyFieldInfo() {
-		return getSqlFieldnfo().getForeignKeyFieldInfo();
-	}
-
-	@Override
 	public String toString() {
 		return StringUtils.toXmlString(this);
-	}
-
-	private SqlFieldInfo getSqlFieldnfo() {
-		if (sqlFieldInfo == null) {
-			synchronized(this) {
-				if (sqlFieldInfo == null) {
-					sqlFieldInfo = DynamicEntityUtils.createSqlFieldInfo(this);
-				}
-			}
-		}
-		
-		return sqlFieldInfo;
 	}
 
 	protected Resolution doFinalizeResolution() throws UnifyException {

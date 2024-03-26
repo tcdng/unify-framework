@@ -121,8 +121,8 @@ public abstract class AbstractSqlCriteriaPolicy implements SqlCriteriaPolicy {
      *             if an error occurs
      */
     protected Object convertType(SqlFieldInfo sqlFieldInfo, Object postOp) throws UnifyException {
-        if (postOp != null && !postOp.getClass().equals(sqlFieldInfo.getFieldClass())) {
-            return DataUtils.convert(sqlFieldInfo.getFieldClass(), postOp);
+        if (postOp != null && !postOp.getClass().equals(sqlFieldInfo.getFieldType())) {
+            return DataUtils.convert(sqlFieldInfo.getFieldType(), postOp);
         }
 
         return postOp;

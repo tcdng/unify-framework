@@ -21,7 +21,6 @@ import java.util.List;
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.database.Entity;
-import com.tcdng.unify.core.database.dynamic.DynamicEntityInfo;
 
 /**
  * SQL schema manager.
@@ -91,16 +90,6 @@ public interface SqlSchemaManager extends UnifyComponent {
      */
     void dropViewSchema(SqlDataSource sqlDataSource, SqlSchemaManagerOptions options, List<Class<?>> entityClasses)
             throws UnifyException;
-
-	/**
-	 * Update dynamic entities SQL schema.
-	 * 
-	 * @param db                    the SQl database to load to
-	 * @param dynamicEntityInfoList the dynamic entity information list
-	 * @throws UnifyException if an error occurs
-	 */
-	void updateDynamicEntitiesSqlSchema(SqlDatabase db, List<DynamicEntityInfo> dynamicEntityInfoList)
-			throws UnifyException;
 
     /**
      * Builds a dependency list form list of entities.

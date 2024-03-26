@@ -248,7 +248,7 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
 			if (!sqlFieldSchemaInfo.isNullable()) {
 				sb.append("UPDATE ").append(sqlEntitySchemaInfo.getSchemaTableName()).append(" SET ")
 						.append(sqlFieldSchemaInfo.getPreferredColumnName()).append(" = ");
-				sqlDataTypePolicy.appendDefaultVal(sb, sqlFieldSchemaInfo.getFieldClass(),
+				sqlDataTypePolicy.appendDefaultVal(sb, sqlFieldSchemaInfo.getFieldType(),
 						sqlFieldSchemaInfo.getDefaultVal());
 				sb.append(" WHERE ").append(sqlFieldSchemaInfo.getPreferredColumnName()).append(" IS NULL");
 				sqlList.add(sb.toString());
@@ -277,7 +277,7 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
 			}
 
 			sb.append("ADD ");
-			sqlDataTypePolicy.appendDefaultSql(sb, sqlFieldSchemaInfo.getFieldClass(),
+			sqlDataTypePolicy.appendDefaultSql(sb, sqlFieldSchemaInfo.getFieldType(),
 					sqlFieldSchemaInfo.getDefaultVal());
 			sb.append(" FOR ");
 			sb.append(sqlFieldSchemaInfo.getPreferredColumnName());
@@ -393,7 +393,7 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
 			sb.append(" PRIMARY KEY NOT NULL");
 		} else {
 			if (sqlFieldSchemaInfo.isWithDefaultVal()) {
-				sqlDataTypePolicy.appendDefaultSql(sb, sqlFieldSchemaInfo.getFieldClass(),
+				sqlDataTypePolicy.appendDefaultSql(sb, sqlFieldSchemaInfo.getFieldType(),
 						sqlFieldSchemaInfo.getDefaultVal());
 			}
 

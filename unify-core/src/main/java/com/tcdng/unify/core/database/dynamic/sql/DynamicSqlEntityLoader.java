@@ -22,6 +22,7 @@ import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.database.dynamic.DynamicEntityInfo;
+import com.tcdng.unify.core.database.sql.SqlDatabase;
 
 /**
  * Dynamic SQL entity loader.
@@ -31,22 +32,31 @@ import com.tcdng.unify.core.database.dynamic.DynamicEntityInfo;
  */
 public interface DynamicSqlEntityLoader extends UnifyComponent {
 
-	/**
-	 * Loads dynamic entity information into SQL database.
-	 * 
-	 * @param dynamicEntityInfo the dynamic entity information
-	 * @return the entity class representing the entity type
-	 * @throws UnifyException if an error occurs
-	 */
-	Class<? extends Entity> loadDynamicSqlEntity(DynamicEntityInfo dynamicEntityInfo) throws UnifyException;
+    /**
+     * Loads dynamic entity information into SQL database.
+     * 
+     * @param db
+     *                          the SQl database to load to
+     * @param dynamicEntityInfo
+     *                          the dynamic entity information
+     * @return the entity class representing the entity type
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    Class<? extends Entity> loadDynamicSqlEntity(SqlDatabase db, DynamicEntityInfo dynamicEntityInfo)
+            throws UnifyException;
 
-	/**
-	 * Loads multiple dynamic entity information into SQL database.
-	 * 
-	 * @param dynamicEntityInfoList the dynamic entity information list
-	 * @return the list of entity classes
-	 * @throws UnifyException if an error occurs
-	 */
-	List<Class<? extends Entity>> loadDynamicSqlEntities(List<DynamicEntityInfo> dynamicEntityInfoList)
-			throws UnifyException;
+    /**
+     * Loads multiple dynamic entity information into SQL database.
+     * 
+     * @param db
+     *                              the SQl database to load to
+     * @param dynamicEntityInfoList
+     *                              the dynamic entity information list
+     * @return the list of entity classes
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    List<Class<? extends Entity>> loadDynamicSqlEntities(SqlDatabase db, List<DynamicEntityInfo> dynamicEntityInfoList)
+            throws UnifyException;
 }

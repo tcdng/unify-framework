@@ -926,7 +926,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 				// Version number property must be integer type if entity
 				// has one
 				if (versionFieldInfo != null) {
-					Class<?> type = versionFieldInfo.getFieldClass();
+					Class<?> type = versionFieldInfo.getFieldType();
 					if (!SqlUtils.isVersionNumberType(type)) {
 						throw new UnifyException(UnifyCoreErrorConstants.RECORD_VERSION_NOT_INTEGER, entityClass);
 					}
@@ -1343,9 +1343,9 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 							refFieldInfo = refEntityInfo.getFieldInfo(propertyRef.getFieldName());
 						}
 
-						if (!field.getType().equals(refFieldInfo.getFieldClass())) {
+						if (!field.getType().equals(refFieldInfo.getFieldType())) {
 							throw new UnifyException(UnifyCoreErrorConstants.RECORD_VIEW_TYPE_MUST_MATCH_TYPE,
-									searchClass, field, refFieldInfo.getFieldClass());
+									searchClass, field, refFieldInfo.getFieldType());
 						}
 
 						if (StringUtils.isBlank(column)) {
@@ -1517,7 +1517,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 									entityClass, queryRestriction.field());
 						}
 
-						Object val = ConverterUtils.convert(sqlFieldInfo.getFieldClass(), queryRestriction.value());
+						Object val = ConverterUtils.convert(sqlFieldInfo.getFieldType(), queryRestriction.value());
 						sqlQueryRestrictionList.add(new SqlQueryRestrictionInfo(queryRestriction.field(),
 								new Equals(queryRestriction.field(), val)));
 					}
