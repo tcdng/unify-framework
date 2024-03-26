@@ -79,7 +79,8 @@ public abstract class AbstractSqlDataSourceManager extends AbstractUnifyComponen
 		if (!sqlDataSource.isReadOnly()) {
 			SqlSchemaManagerOptions _options = new SqlSchemaManagerOptions(options);
 			List<Class<?>> tableList = getTableEntities(dataSourceName);
-			List<Class<? extends Entity>> viewList = SqlUtils.getEntityClassList(tableList);
+			List<Class<? extends Entity>> viewList = new ArrayList<Class<? extends Entity>>(SqlUtils.getEntityClassList(tableList));
+			viewList.addAll(getViewOnlyEntities(dataSourceName));
 			if (sqlDataSource.getDialect().isReconstructViewsOnTableSchemaUpdate()) {
 				sqlSchemaManager.dropViewSchema(sqlDataSource, _options, viewList);
 			}
@@ -148,5 +149,9 @@ public abstract class AbstractSqlDataSourceManager extends AbstractUnifyComponen
 		SqlDataSource sqlDataSource = getSqlDataSource(dataSourceName);
 		return sqlSchemaManager.buildDependencyList(sqlDataSource, getTableEntityTypes(dataSourceName, sqlDataSource));
 	}
-
+	
+	private List<Class<? extends Entity>> getViewOnlyEntities(String dataSourceName) throws UnifyException {
+		SqlDataSource sqlDataSource = getSqlDataSource(dataSourceName);
+		return getViewEntityTypes(dataSourceName, sqlDataSource);
+	}
 }
