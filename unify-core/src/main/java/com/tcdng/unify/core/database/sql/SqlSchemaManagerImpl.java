@@ -66,40 +66,24 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 	}
 
 	@Override
-	public boolean detectTableSchemaChange(SqlDataSource sqlDataSource, SqlSchemaManagerOptions options,
-			List<Class<?>> entityClasses) throws UnifyException {
-		logInfo("Detecting table change in datasource [{0}] schema...", sqlDataSource.getPreferredName());
+	public void updateSchema(SqlDataSource sqlDataSource, List<Class<?>> schemaChangedClassList) throws UnifyException {
+		logDebug("Updating schema information for [{0}] managed classes in [{1}] datasource ...",
+				schemaChangedClassList.size(), sqlDataSource.getName());
 		SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
-		Connection connection = (Connection) sqlDataSource.getConnection();
-		try {
-			logInfo("Scanning table changes for [{0}] entities...", entityClasses.size());
-			DatabaseMetaData databaseMetaData = connection.getMetaData();
-			for (Class<?> entityClass : entityClasses) {
-				SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.findSqlEntityInfo(entityClass);
-				String schema = sqlEntityInfo.getSchema();
-				if (StringUtils.isBlank(schema)) {
-					schema = sqlDataSource.getAppSchema();
-				}
-
-				Map<String, TableConstraint> managedTableConstraints = fetchManagedTableConstraints(databaseMetaData,
-						sqlDataSource, entityClass);
-				Map<String, SqlColumnInfo> columnMap = sqlDataSource.getColumnMapLowerCase(schema,
-						sqlEntityInfo.getTableName());
-				if (detectTableChange(sqlDataSourceDialect, sqlEntityInfo, columnMap, managedTableConstraints,
-						options.getForceConstraints())) {
-					logDebug("Change detected in table [{0}]...", sqlEntityInfo.getTableName());
-					return true;
-				}
-			}
-		} catch (SQLException e) {
-			throw new UnifyException(e, UnifyCoreErrorConstants.SQLSCHEMAMANAGER_MANAGE_SCHEMA_ERROR,
-					sqlDataSource.getPreferredName());
-		} finally {
-			sqlDataSource.restoreConnection(connection);
+		for (Class<?> entityClass : schemaChangedClassList) {
+			sqlDataSourceDialect.createSqlEntityInfo(entityClass);
 		}
 
-		logInfo("No table changes detected in datasource [{0}] schema...", sqlDataSource.getPreferredName());
-		return false;
+		logDebug("Managing schema for [{0}] entity classes...", schemaChangedClassList.size());
+		SqlSchemaManagerOptions options = new SqlSchemaManagerOptions(PrintFormat.NONE, ForceConstraints.fromBoolean(
+				!getContainerSetting(boolean.class, UnifyCorePropertyConstants.APPLICATION_FOREIGNKEY_EASE, false)));
+		List<Class<? extends Entity>> viewList = buildDependencyViewList(sqlDataSource, schemaChangedClassList);
+		if (sqlDataSource.getDialect().isReconstructViewsOnTableSchemaUpdate()) {
+			dropViewSchema(sqlDataSource, options, viewList);
+		}
+
+		manageTableSchema(sqlDataSource, options, schemaChangedClassList);
+		manageViewSchema(sqlDataSource, options, viewList);
 	}
 
 	@Override
@@ -146,13 +130,13 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 
 	@Override
 	public void dropViewSchema(SqlDataSource sqlDataSource, SqlSchemaManagerOptions options,
-			List<Class<?>> entityClasses) throws UnifyException {
+			List<Class<? extends Entity>> entityClasses) throws UnifyException {
 		Connection connection = (Connection) sqlDataSource.getConnection();
 		try {
 			logDebug("Scanning datasource {0} schema...", sqlDataSource.getName());
 			logDebug("Dropping schema elements for [{0}] view entities...", entityClasses.size());
 			DatabaseMetaData databaseMetaData = connection.getMetaData();
-			for (Class<?> entityClass : entityClasses) {
+			for (Class<? extends Entity> entityClass : entityClasses) {
 				dropViewSchema(databaseMetaData, sqlDataSource, entityClass, options);
 			}
 			logDebug("Schema elements deletion completed for [{0}] view entities...", entityClasses.size());
@@ -180,6 +164,15 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 	@Override
 	protected void onInitialize() throws UnifyException {
 		sqlDebugging = getContainerSetting(boolean.class, UnifyCorePropertyConstants.APPLICATION_SQL_DEBUGGING, false);
+	}
+
+	private List<Class<? extends Entity>> buildDependencyViewList(SqlDataSource sqlDataSource,
+			List<Class<?>> entityClasses) throws UnifyException {
+		logDebug("Building dependency view list for [{0}] entities...", entityClasses.size());
+		List<Class<? extends Entity>> viewList = SqlUtils
+				.getEntityClassList(buildDependencyList(sqlDataSource, entityClasses));
+		logDebug("[{0}] dependency views resolved.", viewList.size());
+		return viewList;
 	}
 
 	private void buildDependencyList(SqlDataSource sqlDataSource, List<Class<?>> entityTypeList, Class<?> entityClass)
@@ -444,7 +437,7 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 				pstmt = connection.prepareStatement(sql);
 				pstmt.executeUpdate();
 				SqlUtils.close(pstmt);
-				
+
 				if (sqlDebugging) {
 					logDebug("Completed executing SQL update [{0}]...", sql);
 				}
@@ -656,8 +649,8 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 		}
 	}
 
-	private void dropViewSchema(DatabaseMetaData databaseMetaData, SqlDataSource sqlDataSource, Class<?> entityClass,
-			SqlSchemaManagerOptions options) throws UnifyException {
+	private void dropViewSchema(DatabaseMetaData databaseMetaData, SqlDataSource sqlDataSource,
+			Class<? extends Entity> entityClass, SqlSchemaManagerOptions options) throws UnifyException {
 		SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
 		SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.findSqlEntityInfo(entityClass);
 
@@ -769,98 +762,6 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 		}
 
 		return columnUpdateSql;
-	}
-
-	private boolean detectTableChange(SqlDataSourceDialect sqlDataSourceDialect, SqlEntityInfo sqlEntityInfo,
-			Map<String, SqlColumnInfo> columnInfos, Map<String, TableConstraint> managedTableConstraints,
-			ForceConstraints forceConstraints) throws UnifyException {
-		logDebug("Detecting table change for [{0}]...", sqlEntityInfo.getTableName());
-		for (SqlFieldInfo sqlfieldInfo : sqlEntityInfo.getManagedFieldInfos()) {
-			SqlColumnInfo sqlColumnInfo = columnInfos.remove(sqlfieldInfo.getColumnName().toLowerCase());
-			if (sqlColumnInfo == null) {
-				// New column
-				return true;
-			} else {
-				SqlColumnAlterInfo columnAlterInfo = checkSqlColumnAltered(sqlDataSourceDialect, sqlfieldInfo,
-						sqlColumnInfo);
-				if (columnAlterInfo.isAltered()) {
-					return true;
-				}
-			}
-		}
-
-		// Abandoned columns
-		for (SqlColumnInfo sqlColumnInfo : columnInfos.values()) {
-			if (!sqlColumnInfo.isNullable()) {
-				return true;
-			}
-		}
-
-		// Detect foreign constraint changes
-		if (forceConstraints.isTrue() && sqlEntityInfo.isManagedForeignKeys()) {
-			for (SqlForeignKeySchemaInfo sqlForeignKeyInfo : sqlEntityInfo.getManagedForeignKeyList()) {
-				if (!sqlEntityInfo.getManagedFieldInfo(sqlForeignKeyInfo.getFieldName()).isIgnoreFkConstraint()) {
-					SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getManagedFieldInfo(sqlForeignKeyInfo.getFieldName());
-					String fkConstName = sqlFieldInfo.getConstraint();
-					TableConstraint fkConst = managedTableConstraints.get(fkConstName);
-					boolean update = true;
-					if (fkConst != null) {
-						// Check if foreign key matches database constraint
-						if (fkConst.isForeignKey() /* && fkConst.getColumns().size() == 1 */
-								&& fkConst.getTableName().equals(sqlFieldInfo.getForeignEntityInfo().getTableName())
-								&& fkConst.getColumns().contains(sqlFieldInfo.getForeignFieldInfo().getColumnName())) {
-							update = false;
-						}
-					}
-
-					if (update) {
-						return true;
-					}
-				}
-			}
-		}
-
-		// Detect unique constraint changes
-		if (sqlEntityInfo.isUniqueConstraints()) {
-			for (SqlUniqueConstraintSchemaInfo sqlUniqueConstraintInfo : sqlEntityInfo.getUniqueConstraintList()
-					.values()) {
-				TableConstraint ucConst = managedTableConstraints.get(sqlUniqueConstraintInfo.getName());
-				boolean update = true;
-				if (ucConst != null) {
-					// Check if unique constant matches database constraint
-					if (ucConst.isUniqueConst() && !sqlUniqueConstraintInfo.isWithConditionList()
-							&& matchIndexAllColumns(sqlEntityInfo, sqlUniqueConstraintInfo.getFieldNameList(),
-									ucConst.getColumns())) {
-						update = false;
-					}
-				}
-
-				if (update) {
-					return true;
-				}
-			}
-		}
-
-		// Detect index changes
-		if (sqlEntityInfo.isIndexes()) {
-			for (SqlIndexSchemaInfo sqlIndexInfo : sqlEntityInfo.getIndexList().values()) {
-				TableConstraint idxConst = managedTableConstraints.get(sqlIndexInfo.getName());
-				boolean update = true;
-				if (idxConst != null) {
-					// Check if index matches database constraint
-					if (idxConst.isIndex() && matchIndexAllColumns(sqlEntityInfo, sqlIndexInfo.getFieldNameList(),
-							idxConst.getColumns())) {
-						update = false;
-					}
-				}
-
-				if (update) {
-					return true;
-				}
-			}
-		}
-
-		return false;
 	}
 
 	private SqlColumnAlterInfo checkSqlColumnAltered(SqlDataSourceDialect sqlDataSourceDialect,
