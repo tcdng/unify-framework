@@ -42,7 +42,15 @@ public class DynamicEntityInfo {
 	public static final DynamicEntityInfo SELF_REFERENCE = new DynamicEntityInfo(true);
 
 	public enum ManagedType {
-		MANAGED, NOT_MANAGED
+		MANAGED, NOT_MANAGED;
+		
+		public boolean managed() {
+			return MANAGED.equals(this);
+		}
+		
+		public boolean notManaged() {
+			return NOT_MANAGED.equals(this);
+		}
 	}
 
 	private DynamicEntityType type;
