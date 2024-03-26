@@ -37,6 +37,14 @@ public class NativeUpdate {
 		this.params = new NativeParam[StringUtils.getCharOccurrences(updateSql, '?')];
 	}
 
+	public NativeUpdate setParam(int index, boolean param) {
+		return _setParam(index, ColumnType.CHARACTER, param ? 'Y' : 'N');
+	}
+
+	public NativeUpdate setParam(int index, char param) {
+		return _setParam(index, ColumnType.CHARACTER, param);
+	}
+
 	public NativeUpdate setParam(int index, long param) {
 		return _setParam(index, ColumnType.LONG, param);
 	}
