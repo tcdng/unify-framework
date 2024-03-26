@@ -67,7 +67,7 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
     @SuppressWarnings("unchecked")
     @Test
     public void testLoadDynamicSqlEntity() throws Exception {
-        Class<? extends Entity> clazz1 = dseLoader.loadDynamicSqlEntity(db, dynamicEntityInfo);
+        Class<? extends Entity> clazz1 = dseLoader.loadDynamicSqlEntity(dynamicEntityInfo);
         assertNotNull(clazz1);
         assertEquals("com.tcdng.test.Equipment", clazz1.getName());
         Class<? extends Entity> clazz2 = (Class<? extends Entity>) ReflectUtils
@@ -77,7 +77,7 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testLoadDynamicSqlEntityCreateInst() throws Exception {
-        dseLoader.loadDynamicSqlEntity(db, dynamicEntityInfo);
+        dseLoader.loadDynamicSqlEntity(dynamicEntityInfo);
         tm.beginTransaction();
         try {
             Date createDt = new Date();
@@ -101,7 +101,7 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testLoadDynamicSqlEntityFindInstById() throws Exception {
-        dseLoader.loadDynamicSqlEntity(db, dynamicEntityInfo);
+        dseLoader.loadDynamicSqlEntity(dynamicEntityInfo);
         tm.beginTransaction();
         try {
             Date createDt = new Date();
@@ -133,7 +133,7 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testLoadDynamicSqlEntityUpdateInstById() throws Exception {
-        dseLoader.loadDynamicSqlEntity(db, dynamicEntityInfo);
+        dseLoader.loadDynamicSqlEntity(dynamicEntityInfo);
         tm.beginTransaction();
         try {
             Date createDt = new Date();
@@ -172,7 +172,7 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testLoadDynamicSqlEntityDeleteInstById() throws Exception {
-        dseLoader.loadDynamicSqlEntity(db, dynamicEntityInfo);
+        dseLoader.loadDynamicSqlEntity(dynamicEntityInfo);
         tm.beginTransaction();
         try {
             Date createDt = new Date();
@@ -200,7 +200,7 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
     @SuppressWarnings("unchecked")
     @Test
     public void testLoadDynamicSqlEntityExt() throws Exception {
-        Class<? extends Entity> clazz1 = dseLoader.loadDynamicSqlEntity(db, dynamicEntityInfoExt);
+        Class<? extends Entity> clazz1 = dseLoader.loadDynamicSqlEntity(dynamicEntityInfoExt);
         assertNotNull(clazz1);
         assertEquals("com.tcdng.test.EquipmentExt", clazz1.getName());
         Class<? extends Entity> clazz2 = (Class<? extends Entity>) ReflectUtils
@@ -210,7 +210,7 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testLoadDynamicSqlEntityExtCreateInst() throws Exception {
-        dseLoader.loadDynamicSqlEntity(db, dynamicEntityInfoExt);
+        dseLoader.loadDynamicSqlEntity(dynamicEntityInfoExt);
         tm.beginTransaction();
         try {
             Date createDt = new Date();
@@ -233,7 +233,7 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testLoadDynamicSqlEntityExtFindInstById() throws Exception {
-        dseLoader.loadDynamicSqlEntity(db, dynamicEntityInfoExt);
+        dseLoader.loadDynamicSqlEntity(dynamicEntityInfoExt);
         tm.beginTransaction();
         try {
             Date createDt = new Date();
@@ -263,7 +263,7 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testLoadDynamicSqlEntityExtUpdateInstById() throws Exception {
-        dseLoader.loadDynamicSqlEntity(db, dynamicEntityInfoExt);
+        dseLoader.loadDynamicSqlEntity(dynamicEntityInfoExt);
         tm.beginTransaction();
         try {
             Date createDt = new Date();
@@ -299,7 +299,7 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testLoadDynamicSqlEntityExtDeleteInstById() throws Exception {
-        dseLoader.loadDynamicSqlEntity(db, dynamicEntityInfoExt);
+        dseLoader.loadDynamicSqlEntity(dynamicEntityInfoExt);
         tm.beginTransaction();
         try {
             Date createDt = new Date();
@@ -325,7 +325,7 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testLoadDynamicSqlEntityCircular() throws Exception {
-        List<Class<? extends Entity>> classList = dseLoader.loadDynamicSqlEntities(db,
+        List<Class<? extends Entity>> classList = dseLoader.loadDynamicSqlEntities(
                 Arrays.asList(authorDynamicEntityInfo, bookDynamicEntityInfo));
         assertNotNull(classList);
         assertEquals(2, classList.size());
@@ -337,7 +337,7 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testLoadDynamicSqlEntityCircularCreateInst() throws Exception {
-        dseLoader.loadDynamicSqlEntities(db,
+        dseLoader.loadDynamicSqlEntities(
                 Arrays.asList(authorDynamicEntityInfo, bookDynamicEntityInfo));
 
         tm.beginTransaction();
@@ -364,7 +364,7 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
     @SuppressWarnings("unchecked")
     @Test
     public void testLoadDynamicSqlEntityCircularFindInst() throws Exception {
-        dseLoader.loadDynamicSqlEntities(db,
+        dseLoader.loadDynamicSqlEntities(
                 Arrays.asList(authorDynamicEntityInfo, bookDynamicEntityInfo));
 
         tm.beginTransaction();
@@ -408,7 +408,7 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
 
     @Test
     public void testLoadDynamicSqlEntityCircularDeleteInst() throws Exception {
-        dseLoader.loadDynamicSqlEntities(db,
+        dseLoader.loadDynamicSqlEntities(
                 Arrays.asList(authorDynamicEntityInfo, bookDynamicEntityInfo));
 
         tm.beginTransaction();

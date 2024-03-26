@@ -1609,7 +1609,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 		}
 
 		if ((onAlter && !sqlFieldSchemaInfo.isNullable()) || sqlFieldSchemaInfo.isWithDefaultVal()) {
-			sqlDataTypePolicy.appendDefaultSql(sb, sqlFieldSchemaInfo.getFieldType(),
+			sqlDataTypePolicy.appendDefaultSql(sb, sqlFieldSchemaInfo.getFieldClass(),
 					sqlFieldSchemaInfo.getDefaultVal());
 		}
 	}
@@ -1866,13 +1866,13 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 		} else {
 			if (!sqlFieldSchemaInfo.isNullable()) {
 				if (alter || sqlFieldSchemaInfo.isWithDefaultVal()) {
-					sqlDataTypePolicy.appendDefaultSql(sb, sqlFieldSchemaInfo.getFieldType(),
+					sqlDataTypePolicy.appendDefaultSql(sb, sqlFieldSchemaInfo.getFieldClass(),
 							sqlFieldSchemaInfo.getDefaultVal());
 				}
 				sb.append(" NOT NULL");
 			} else {
 				if (sqlFieldSchemaInfo.isWithDefaultVal()) {
-					sqlDataTypePolicy.appendDefaultSql(sb, sqlFieldSchemaInfo.getFieldType(),
+					sqlDataTypePolicy.appendDefaultSql(sb, sqlFieldSchemaInfo.getFieldClass(),
 							sqlFieldSchemaInfo.getDefaultVal());
 				}
 
@@ -1893,7 +1893,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 		} else {
 			if (sqlColumnAlterInfo.isDefaultChange()) {
 				if (sqlFieldSchemaInfo.isWithDefaultVal()) {
-					sqlDataTypePolicy.appendDefaultSql(sb, sqlFieldSchemaInfo.getFieldType(),
+					sqlDataTypePolicy.appendDefaultSql(sb, sqlFieldSchemaInfo.getFieldClass(),
 							sqlFieldSchemaInfo.getDefaultVal());
 				}
 			}
@@ -1985,7 +1985,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 		StringBuilder aggregateSql = new StringBuilder();
 		aggregateSql.append("SELECT ");
 		SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(aggregateFunction.getFieldName());
-		if (!aggregateFunction.getType().supports(ConverterUtils.getWrapperClass(sqlFieldInfo.getFieldType()))) {
+		if (!aggregateFunction.getType().supports(ConverterUtils.getWrapperClass(sqlFieldInfo.getFieldClass()))) {
 			throw new UnifyException(UnifyCoreErrorConstants.RECORD_SELECT_NOT_SUITABLE_FOR_AGGREGATE,
 					aggregateFunction.getFieldName(), sqlEntityInfo.getKeyClass());
 		}
@@ -2020,7 +2020,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 		boolean appendSym = false;
 		for (AggregateFunction aggregateFunction : aggregateFunctionList) {
 			SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(aggregateFunction.getFieldName());
-			if (!aggregateFunction.getType().supports(ConverterUtils.getWrapperClass(sqlFieldInfo.getFieldType()))) {
+			if (!aggregateFunction.getType().supports(ConverterUtils.getWrapperClass(sqlFieldInfo.getFieldClass()))) {
 				throw new UnifyException(UnifyCoreErrorConstants.RECORD_SELECT_NOT_SUITABLE_FOR_AGGREGATE,
 						aggregateFunction.getFieldName(), sqlEntityInfo.getKeyClass());
 			}
@@ -2055,8 +2055,8 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 			for (GroupingFunction _groupingFunction : groupingFunction) {
 				if (_groupingFunction.isWithFieldGrouping()) {
 					SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(_groupingFunction.getFieldName());
-					if (!String.class.equals(sqlFieldInfo.getFieldType())
-							&& !EnumConst.class.isAssignableFrom(sqlFieldInfo.getFieldType())) {
+					if (!String.class.equals(sqlFieldInfo.getFieldClass())
+							&& !EnumConst.class.isAssignableFrom(sqlFieldInfo.getFieldClass())) {
 						throw new UnifyException(UnifyCoreErrorConstants.RECORD_FIELD_NOT_SUITABLE_FOR_GROUPING,
 								_groupingFunction.getFieldName(), sqlEntityInfo.getKeyClass());
 					}
@@ -2065,7 +2065,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 					returnFieldInfoList.add(sqlFieldInfo);
 				} else {
 					SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(_groupingFunction.getFieldName());
-					if (!Date.class.equals(sqlFieldInfo.getFieldType())) {
+					if (!Date.class.equals(sqlFieldInfo.getFieldClass())) {
 						throw new UnifyException(UnifyCoreErrorConstants.RECORD_FIELD_NOT_SUITABLE_FOR_DATE_GROUPING,
 								_groupingFunction.getFieldName(), sqlEntityInfo.getKeyClass());
 					}
@@ -2507,9 +2507,9 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 			}
 
 			// Fix updates for enumerations that come different value type 01/07/19
-			if (EnumConst.class.isAssignableFrom(sqlFieldInfo.getFieldType()) && value != null
-					&& !value.getClass().equals(sqlFieldInfo.getFieldType())) {
-				value = DataUtils.convert(sqlFieldInfo.getFieldType(), value);
+			if (EnumConst.class.isAssignableFrom(sqlFieldInfo.getFieldClass()) && value != null
+					&& !value.getClass().equals(sqlFieldInfo.getFieldClass())) {
+				value = DataUtils.convert(sqlFieldInfo.getFieldClass(), value);
 			}
 			// End fix
 

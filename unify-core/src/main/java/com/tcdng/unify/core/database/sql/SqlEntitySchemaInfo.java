@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.tcdng.unify.common.annotation.StaticList;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.database.MappedEntityRepository;
 
@@ -68,6 +69,8 @@ public interface SqlEntitySchemaInfo {
 
 	List<? extends SqlFieldSchemaInfo> getManagedListFieldInfos();
 
+	List<SqlForeignKeyInfo> getManagedForeignKeyList();
+	
 	Set<String> getFieldNames();
 
 	SqlFieldSchemaInfo getFieldInfo(String name) throws UnifyException;
@@ -88,6 +91,12 @@ public interface SqlEntitySchemaInfo {
 
 	List<Map<String, Object>> getStaticValueList();
 
+	StaticList getStaticList();
+	
+	boolean isSchemaAlreadyManaged();
+
+	void setSchemaAlreadyManaged();
+
 	boolean isWithTenantId();
 
 	boolean isIdentityManaged();
@@ -96,6 +105,8 @@ public interface SqlEntitySchemaInfo {
 	
 	MappedEntityRepository getMappedEntityRepository();
 
+	boolean isManagedForeignKeys();
+	
 	boolean isVersioned();
 
 	boolean isViewable();

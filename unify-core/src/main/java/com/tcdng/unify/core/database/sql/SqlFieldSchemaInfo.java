@@ -94,7 +94,7 @@ public interface SqlFieldSchemaInfo {
     /**
      * Returns the field type.
      */
-    Class<?> getFieldType();
+    Class<?> getFieldClass();
 
     /**
      * Returns the field default value.

@@ -692,7 +692,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 			}
 
 			SqlFieldInfo idFieldInfo = sqlEntityInfo.getIdFieldInfo();
-			List<?> idList = valueList(idFieldInfo.getFieldType(), idFieldInfo.getName(), query);
+			List<?> idList = valueList(idFieldInfo.getFieldClass(), idFieldInfo.getName(), query);
 			if (!idList.isEmpty()) {
 				Query<? extends Entity> updateQuery = query.copyNoAll();
 				updateQuery.addRestriction(new Amongst(idFieldInfo.getName(), idList));
@@ -868,7 +868,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 			}
 
 			SqlFieldInfo idFieldInfo = sqlEntityInfo.getIdFieldInfo();
-			List<?> idList = valueList(idFieldInfo.getFieldType(), idFieldInfo.getName(), query);
+			List<?> idList = valueList(idFieldInfo.getFieldClass(), idFieldInfo.getName(), query);
 			if (!idList.isEmpty()) {
 				if (sqlEntityInfo.isOnDeleteCascadeList()) {
 					final String tableName = sqlEntityInfo.getTableName();

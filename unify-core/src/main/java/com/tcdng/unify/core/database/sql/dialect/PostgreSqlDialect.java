@@ -261,7 +261,7 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
 			if (!sqlFieldSchemaInfo.isNullable()) {
 				sb.append("UPDATE ").append(sqlEntitySchemaInfo.getSchemaTableName()).append(" SET ")
 						.append(sqlFieldSchemaInfo.getPreferredColumnName()).append(" = ");
-				sqlDataTypePolicy.appendDefaultVal(sb, sqlFieldSchemaInfo.getFieldType(),
+				sqlDataTypePolicy.appendDefaultVal(sb, sqlFieldSchemaInfo.getFieldClass(),
 						sqlFieldSchemaInfo.getDefaultVal());
 				sb.append(" WHERE ").append(sqlFieldSchemaInfo.getPreferredColumnName()).append(" IS NULL");
 				sqlList.add(sb.toString());
@@ -286,7 +286,7 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
 		} else {
 			sb.append(", ALTER COLUMN ").append(sqlFieldSchemaInfo.getColumnName());
 			sb.append(" SET ");
-			sqlDataTypePolicy.appendDefaultSql(sb, sqlFieldSchemaInfo.getFieldType(),
+			sqlDataTypePolicy.appendDefaultSql(sb, sqlFieldSchemaInfo.getFieldClass(),
 					sqlFieldSchemaInfo.getDefaultVal());
 			sb.append(", ALTER COLUMN ").append(sqlFieldSchemaInfo.getColumnName());
 			sb.append(" SET NOT NULL");

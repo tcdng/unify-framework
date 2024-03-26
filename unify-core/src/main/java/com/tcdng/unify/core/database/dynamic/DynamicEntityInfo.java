@@ -22,13 +22,26 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import com.tcdng.unify.common.annotation.StaticList;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.UnifyOperationException;
 import com.tcdng.unify.core.annotation.DynamicEntityType;
 import com.tcdng.unify.core.annotation.DynamicFieldType;
 import com.tcdng.unify.core.constant.DataType;
+import com.tcdng.unify.core.database.MappedEntityRepository;
+import com.tcdng.unify.core.database.sql.SqlEntityInfo;
+import com.tcdng.unify.core.database.sql.SqlEntitySchemaInfo;
+import com.tcdng.unify.core.database.sql.SqlFieldInfo;
+import com.tcdng.unify.core.database.sql.SqlFieldSchemaInfo;
+import com.tcdng.unify.core.database.sql.SqlForeignKeyInfo;
+import com.tcdng.unify.core.database.sql.SqlForeignKeySchemaInfo;
+import com.tcdng.unify.core.database.sql.SqlIndexSchemaInfo;
+import com.tcdng.unify.core.database.sql.SqlUniqueConstraintSchemaInfo;
+import com.tcdng.unify.core.database.sql.SqlViewRestrictionInfo;
 import com.tcdng.unify.core.system.entities.AbstractSequencedEntity;
+import com.tcdng.unify.core.util.DynamicEntityUtils;
 import com.tcdng.unify.core.util.StringUtils;
 
 /**
@@ -37,7 +50,7 @@ import com.tcdng.unify.core.util.StringUtils;
  * @author The Code Department
  * @since 1.0
  */
-public class DynamicEntityInfo {
+public class DynamicEntityInfo implements SqlEntitySchemaInfo {
 
 	public static final DynamicEntityInfo SELF_REFERENCE = new DynamicEntityInfo(true);
 
@@ -73,6 +86,8 @@ public class DynamicEntityInfo {
 
 	private long version;
 
+	private SqlEntityInfo sqlEntityInfo;
+	
 	private DynamicEntityInfo(boolean selfReference) {
 		this.selfReference = selfReference;
 	}
@@ -183,6 +198,233 @@ public class DynamicEntityInfo {
 		this.skipPasswordFields = skipPasswordFields;
 	}
 
+	@Override
+	public String getSchema() {
+		return getSqlEntityInfo().getSchema();
+	}
+
+	@Override
+	public String getPreferredTableName() {
+		return getSqlEntityInfo().getPreferredTableName();
+	}
+
+	@Override
+	public String getSchemaTableName() {
+		return getSqlEntityInfo().getSchemaTableName();
+	}
+
+	@Override
+	public String getTableAlias() {
+		return getSqlEntityInfo().getTableAlias();
+	}
+
+	@Override
+	public String getViewName() {
+		return getSqlEntityInfo().getViewName();
+	}
+
+	@Override
+	public String getPreferredViewName() {
+		return getSqlEntityInfo().getPreferredViewName();
+	}
+
+	@Override
+	public String getSchemaViewName() {
+		return getSqlEntityInfo().getSchemaViewName();
+	}
+
+	@Override
+	public Long getIndex() {
+		return getSqlEntityInfo().getIndex();
+	}
+
+	@Override
+	public SqlFieldSchemaInfo getIdFieldInfo() {
+		return getSqlEntityInfo().getIdFieldInfo();
+	}
+
+	@Override
+	public SqlFieldSchemaInfo getVersionFieldInfo() {
+		return getSqlEntityInfo().getVersionFieldInfo();
+	}
+
+	@Override
+	public SqlFieldSchemaInfo getTenantIdFieldInfo() {
+		return getSqlEntityInfo().getTenantIdFieldInfo();
+	}
+
+	@Override
+	public SqlFieldInfo getFosterParentTypeFieldInfo() {
+		return getSqlEntityInfo().getFosterParentTypeFieldInfo();
+	}
+
+	@Override
+	public SqlFieldInfo getFosterParentIdFieldInfo() {
+		return getSqlEntityInfo().getFosterParentIdFieldInfo();
+	}
+
+	@Override
+	public SqlFieldInfo getCategoryFieldInfo() {
+		return getSqlEntityInfo().getCategoryFieldInfo();
+	}
+
+	@Override
+	public List<? extends SqlFieldSchemaInfo> getManagedFieldInfos() {
+		return getSqlEntityInfo().getManagedFieldInfos();
+	}
+
+	@Override
+	public List<? extends SqlFieldSchemaInfo> getListFieldInfos() {
+		return getSqlEntityInfo().getListFieldInfos();
+	}
+
+	@Override
+	public List<? extends SqlFieldSchemaInfo> getManagedListFieldInfos() {
+		return getSqlEntityInfo().getManagedListFieldInfos();
+	}
+
+	@Override
+	public List<SqlForeignKeyInfo> getManagedForeignKeyList() {
+		return getSqlEntityInfo().getManagedForeignKeyList();
+	}
+
+	@Override
+	public Set<String> getFieldNames() {
+		return getSqlEntityInfo().getFieldNames();
+	}
+
+	@Override
+	public SqlFieldSchemaInfo getFieldInfo(String name) throws UnifyException {
+		return getSqlEntityInfo().getFieldInfo(name);
+	}
+
+	@Override
+	public SqlFieldInfo getManagedFieldInfo(String name) throws UnifyException {
+		return getSqlEntityInfo().getManagedFieldInfo(name);
+	}
+
+	@Override
+	public SqlFieldSchemaInfo getFieldInfo(Long marker) throws UnifyException {
+		return getSqlEntityInfo().getFieldInfo(marker);
+	}
+
+	@Override
+	public Map<String, Class<?>> getViewBaseTables() {
+		return getSqlEntityInfo().getViewBaseTables();
+	}
+
+	@Override
+	public List<SqlViewRestrictionInfo> getViewRestrictionList() {
+		return getSqlEntityInfo().getViewRestrictionList();
+	}
+
+	@Override
+	public List<? extends SqlForeignKeySchemaInfo> getForeignKeyList() {
+		return getSqlEntityInfo().getForeignKeyList();
+	}
+
+	@Override
+	public Map<String, ? extends SqlUniqueConstraintSchemaInfo> getUniqueConstraintList() {
+		return getSqlEntityInfo().getUniqueConstraintList();
+	}
+
+	@Override
+	public Map<String, ? extends SqlIndexSchemaInfo> getIndexList() {
+		return getSqlEntityInfo().getIndexList();
+	}
+
+	@Override
+	public List<Map<String, Object>> getStaticValueList() {
+		return getSqlEntityInfo().getStaticValueList();
+	}
+
+	@Override
+	public StaticList getStaticList() {
+		return getSqlEntityInfo().getStaticList();
+	}
+
+	@Override
+	public boolean isSchemaAlreadyManaged() {
+		return getSqlEntityInfo().isSchemaAlreadyManaged();
+	}
+
+	@Override
+	public void setSchemaAlreadyManaged() {
+		getSqlEntityInfo().setSchemaAlreadyManaged();
+	}
+
+	@Override
+	public boolean isWithTenantId() {
+		return getSqlEntityInfo().isWithTenantId();
+	}
+
+	@Override
+	public boolean isIdentityManaged() {
+		return getSqlEntityInfo().isIdentityManaged();
+	}
+
+	@Override
+	public boolean isMapped() {
+		return getSqlEntityInfo().isMapped();
+	}
+
+	@Override
+	public MappedEntityRepository getMappedEntityRepository() {
+		return getSqlEntityInfo().getMappedEntityRepository();
+	}
+
+	@Override
+	public boolean isManagedForeignKeys() {
+		return getSqlEntityInfo().isManagedForeignKeys();
+	}
+
+	@Override
+	public boolean isVersioned() {
+		return getSqlEntityInfo().isVersioned();
+	}
+
+	@Override
+	public boolean isViewable() {
+		return getSqlEntityInfo().isViewable();
+	}
+
+	@Override
+	public boolean isViewOnly() {
+		return getSqlEntityInfo().isViewOnly();
+	}
+
+	@Override
+	public boolean isViewRestriction() {
+		return getSqlEntityInfo().isViewRestriction();
+	}
+
+	@Override
+	public boolean isForeignKeys() {
+		return getSqlEntityInfo().isForeignKeys();
+	}
+
+	@Override
+	public boolean isUniqueConstraints() {
+		return getSqlEntityInfo().isUniqueConstraints();
+	}
+
+	@Override
+	public boolean isIndexes() {
+		return getSqlEntityInfo().isIndexes();
+	}
+
+	private SqlEntityInfo getSqlEntityInfo() {
+		if (sqlEntityInfo == null) {
+			synchronized(this) {
+				if (sqlEntityInfo == null) {
+					sqlEntityInfo = DynamicEntityUtils.createSqlEntityInfo(this);
+				}
+			}
+		}
+		
+		return sqlEntityInfo;
+	}
+	
 	@Override
 	public String toString() {
 		return StringUtils.toXmlString(this);

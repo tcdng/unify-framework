@@ -283,7 +283,7 @@ public class SqlFieldInfo implements SqlFieldSchemaInfo {
 	}
 
 	@Override
-	public Class<?> getFieldType() {
+	public Class<?> getFieldClass() {
 		return field.getType();
 	}
 
