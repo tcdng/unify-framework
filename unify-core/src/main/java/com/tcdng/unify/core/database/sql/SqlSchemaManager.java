@@ -29,22 +29,15 @@ import com.tcdng.unify.core.database.Entity;
  * @since 1.0
  */
 public interface SqlSchemaManager extends UnifyComponent {
-    
-    /**
-     * Detects if table backing any of the supplied entities has changed.
-     * 
-     * @param sqlDataSource
-     *                      the SQL data source
-     * @param options
-     *                      the manager options
-     * @param entityClasses
-     *                      the entity class list
-     * @return true if change detected otherwise false
-     * @throws UnifyException
-     *                        if an error occurs
-     */
-    boolean detectTableSchemaChange(SqlDataSource sqlDataSource, SqlSchemaManagerOptions options,
-            List<Class<?>> entityClasses) throws UnifyException;
+
+	/**
+	 * Update schema for datasource based on supplied classes.
+	 * 
+	 * @param sqlDataSource          the SQL datasource
+	 * @param schemaChangedClassList the schema changed list
+	 * @throws UnifyException if an error occurs
+	 */
+	void updateSchema(SqlDataSource sqlDataSource, List<Class<?>> schemaChangedClassList) throws UnifyException;
     
     /**
      * Manages table schema for list of entity classes.
@@ -88,7 +81,7 @@ public interface SqlSchemaManager extends UnifyComponent {
      * @throws UnifyException
      *                        if an error occurs
      */
-    void dropViewSchema(SqlDataSource sqlDataSource, SqlSchemaManagerOptions options, List<Class<?>> entityClasses)
+    void dropViewSchema(SqlDataSource sqlDataSource, SqlSchemaManagerOptions options, List<Class<? extends Entity>> entityClasses)
             throws UnifyException;
 
     /**

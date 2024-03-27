@@ -303,6 +303,11 @@ public abstract class AbstractDatabase extends AbstractUnifyComponent implements
     }
 
     @Override
+	public int update(NativeUpdate update) throws UnifyException {
+    	return getDatabaseSession().update(update);
+	}
+
+    @Override
     public int updateById(Entity record) throws UnifyException {
         return getDatabaseSession().updateById(record);
     }

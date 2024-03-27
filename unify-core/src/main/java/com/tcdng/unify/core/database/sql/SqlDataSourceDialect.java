@@ -27,6 +27,7 @@ import com.tcdng.unify.core.criterion.Update;
 import com.tcdng.unify.core.database.CallableProc;
 import com.tcdng.unify.core.database.DataSourceDialect;
 import com.tcdng.unify.core.database.Entity;
+import com.tcdng.unify.core.database.NativeUpdate;
 import com.tcdng.unify.core.database.Query;
 
 /**
@@ -224,6 +225,15 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
 	 * @throws UnifyException if an error occurs
 	 */
 	SqlStatement prepareCreateStatementWithUnmanagedIdentity(Entity record) throws UnifyException;
+
+	/**
+	 * Prepares a native update.
+	 * 
+	 * @param update the update information
+	 * @return the update by query statement.
+	 * @throws UnifyException if an error occurs
+	 */
+	SqlStatement prepareUpdateStatement(NativeUpdate update) throws UnifyException;
 
 	/**
 	 * Prepares update record by primary key statement.

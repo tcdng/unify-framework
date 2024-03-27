@@ -22,6 +22,7 @@ import java.util.Map;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
+import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.ValueStoreUtils;
 import com.tcdng.unify.web.ControllerPathParts;
 import com.tcdng.unify.web.ui.PageBean;
@@ -190,6 +191,11 @@ public abstract class AbstractPage extends AbstractStandalonePanel implements Pa
     }
 
     @Override
+	public <T> T getAttribute(Class<T> dataType, String name) throws UnifyException {
+		return DataUtils.convert(dataType, attributes != null ? attributes.get(name) : null);
+	}
+
+	@Override
 	public boolean isAttribute(String name) {
         if (attributes != null) {
             return attributes.containsKey(name);

@@ -246,9 +246,11 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 	public String executePageCall(String actionName) throws UnifyException {
 		try {
 			if ("/openPage".equals(actionName)) {
+				ContentPanel contentPanel = !getPageRequestContextUtil().isRemoteViewer() ? getPageRequestContextUtil().getRequestDocument().getContentPanel() : null;
+				getPage().setAttribute(PageAttributeConstants.IN_DETACHED_WINDOW, contentPanel != null ? contentPanel.isDetachedWindow() : false);
+
 				String resultName = openPage();
-				if (!getPageRequestContextUtil().isRemoteViewer()) {
-					ContentPanel contentPanel = getPageRequestContextUtil().getRequestDocument().getContentPanel();
+				if (contentPanel != null) {
 					contentPanel.addContent(getPageRequestContextUtil().getRequestPage());
 
 					final List<String> stickyPaths = (List<String>) removeSessionAttribute(

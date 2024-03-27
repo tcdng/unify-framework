@@ -790,6 +790,15 @@ public interface Database extends UnifyComponent {
      */
     Object create(Entity record) throws UnifyException;
 
+	/**
+	 * Performs a native update.
+	 * 
+	 * @param update the update to perform
+	 * @return the number of records updated
+	 * @throws UnifyException if an error occurs
+	 */
+	int update(NativeUpdate update) throws UnifyException;
+    
     /**
      * Updates record in database by ID. Child records, if any, are updated.
      * 

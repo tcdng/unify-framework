@@ -126,6 +126,16 @@ public interface Page extends StandalonePanel {
     Object getAttribute(String name);
 
     /**
+     * Returns a page attribute.
+     * 
+     * @param dataType the type to convert to
+     * @param name
+     *            the name of the attribute
+     * @return the attribute value
+     */
+    <T> T getAttribute(Class<T> dataType, String name) throws UnifyException;
+
+    /**
      * Returns true if page attribute.
      * 
      * @param name

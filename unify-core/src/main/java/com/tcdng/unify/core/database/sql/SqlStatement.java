@@ -26,65 +26,76 @@ import java.util.List;
  */
 public class SqlStatement {
 
-    private SqlEntityInfo sqlEntityInfo;
+	private SqlEntityInfo sqlEntityInfo;
 
-    private SqlStatementType type;
+	private SqlStatementType type;
 
-    private String sql;
+	private String sql;
 
-    private List<SqlParameter> parameterInfoList;
+	private List<SqlParameter> parameterInfoList;
 
-    private List<SqlResult> resultInfoList;
+	private List<SqlResult> resultInfoList;
 
-    private boolean merge;
-    
-    public SqlStatement(SqlEntityInfo sqlEntityInfo, SqlStatementType type, String sql) {
-        this.sqlEntityInfo = sqlEntityInfo;
-        this.type = type;
-        this.sql = sql;
-        this.parameterInfoList = Collections.emptyList();
-        this.resultInfoList = Collections.emptyList();
-    }
+	private boolean merge;
 
-    public SqlStatement(SqlEntityInfo sqlEntityInfo, SqlStatementType type, String sql,
-            final List<SqlParameter> parameterInfoList) {
-        this.sqlEntityInfo = sqlEntityInfo;
-        this.type = type;
-        this.sql = sql;
-        this.parameterInfoList = parameterInfoList;
-        this.resultInfoList = Collections.emptyList();
-    }
+	public SqlStatement(SqlEntityInfo sqlEntityInfo, SqlStatementType type, String sql) {
+		this.sqlEntityInfo = sqlEntityInfo;
+		this.type = type;
+		this.sql = sql;
+		this.parameterInfoList = Collections.emptyList();
+		this.resultInfoList = Collections.emptyList();
+	}
 
-    public SqlStatement(SqlEntityInfo sqlEntityInfo, SqlStatementType type, String sql,
-            final List<SqlParameter> parameterInfoList, final List<SqlResult> resultInfoList) {
-        this.sqlEntityInfo = sqlEntityInfo;
-        this.type = type;
-        this.sql = sql;
-        this.parameterInfoList = parameterInfoList;
-        this.resultInfoList = resultInfoList;
-    }
+	public SqlStatement(SqlEntityInfo sqlEntityInfo, SqlStatementType type, String sql,
+			final List<SqlParameter> parameterInfoList) {
+		this.sqlEntityInfo = sqlEntityInfo;
+		this.type = type;
+		this.sql = sql;
+		this.parameterInfoList = parameterInfoList;
+		this.resultInfoList = Collections.emptyList();
+	}
 
-    public SqlEntityInfo getSqlEntityInfo() {
-        return sqlEntityInfo;
-    }
+	public SqlStatement(SqlStatementType type, String sql, final List<SqlParameter> parameterInfoList) {
+		this.type = type;
+		this.sql = sql;
+		this.parameterInfoList = parameterInfoList;
+		this.resultInfoList = Collections.emptyList();
+	}
 
-    public SqlStatementType getType() {
-        return type;
-    }
+	public SqlStatement(SqlEntityInfo sqlEntityInfo, SqlStatementType type, String sql,
+			final List<SqlParameter> parameterInfoList, final List<SqlResult> resultInfoList) {
+		this.sqlEntityInfo = sqlEntityInfo;
+		this.type = type;
+		this.sql = sql;
+		this.parameterInfoList = parameterInfoList;
+		this.resultInfoList = resultInfoList;
+	}
 
-    public String getSql() {
-        return sql;
-    }
+	public SqlEntityInfo getSqlEntityInfo() {
+		return sqlEntityInfo;
+	}
 
-    public List<SqlParameter> getParameterInfoList() {
-        return parameterInfoList;
-    }
+	public SqlStatementType getType() {
+		return type;
+	}
 
-    public List<SqlResult> getResultInfoList() {
-        return resultInfoList;
-    }
+	public String getSql() {
+		return sql;
+	}
 
-    public boolean isMerge() {
+	public List<SqlParameter> getParameterInfoList() {
+		return parameterInfoList;
+	}
+
+	public List<SqlResult> getResultInfoList() {
+		return resultInfoList;
+	}
+
+	public boolean isWithSqlEntityInfo() {
+		return sqlEntityInfo != null;
+	}
+
+	public boolean isMerge() {
 		return merge;
 	}
 
@@ -92,7 +103,7 @@ public class SqlStatement {
 		this.merge = merge;
 	}
 
-	public String toString() {
+    public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("[sql = ").append(sql);
         if (parameterInfoList != null && !parameterInfoList.isEmpty()) {
@@ -112,4 +123,5 @@ public class SqlStatement {
         sb.append("]");
         return sb.toString();
     }
+
 }

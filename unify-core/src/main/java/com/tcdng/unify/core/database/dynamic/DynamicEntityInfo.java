@@ -42,7 +42,15 @@ public class DynamicEntityInfo {
 	public static final DynamicEntityInfo SELF_REFERENCE = new DynamicEntityInfo(true);
 
 	public enum ManagedType {
-		MANAGED, NOT_MANAGED
+		MANAGED, NOT_MANAGED;
+		
+		public boolean managed() {
+			return MANAGED.equals(this);
+		}
+		
+		public boolean notManaged() {
+			return NOT_MANAGED.equals(this);
+		}
 	}
 
 	private DynamicEntityType type;
@@ -71,6 +79,8 @@ public class DynamicEntityInfo {
 
 	private boolean skipPasswordFields;
 
+	private boolean schemaChanged;
+
 	private long version;
 
 	private DynamicEntityInfo(boolean selfReference) {
@@ -78,12 +88,13 @@ public class DynamicEntityInfo {
 	}
 
 	private DynamicEntityInfo(DynamicEntityType type, String tableName, String baseClassName, String className,
-			ManagedType managed, long version) {
+			ManagedType managed, boolean schemaChanged, long version) {
 		this.type = type;
 		this.tableName = tableName;
 		this.baseClassName = baseClassName;
 		this.className = className;
 		this.managed = managed;
+		this.schemaChanged = schemaChanged;
 		this.version = version;
 		this.fieldInfos = Collections.emptyMap();
 	}
@@ -175,6 +186,10 @@ public class DynamicEntityInfo {
 		return resolved;
 	}
 
+	public boolean isSchemaChanged() {
+		return schemaChanged;
+	}
+
 	public boolean isSkipPasswordFields() {
 		return skipPasswordFields;
 	}
@@ -202,12 +217,12 @@ public class DynamicEntityInfo {
 		}
 	}
 
-	public static Builder newBuilder(DynamicEntityType type, String className, ManagedType managed) {
-		return new Builder(type, className, managed);
+	public static Builder newBuilder(DynamicEntityType type, String className, ManagedType managed, boolean schemaChanged) {
+		return new Builder(type, className, managed, schemaChanged);
 	}
 
-	public static Builder newBuilder(String className, ManagedType managed) {
-		return new Builder(DynamicEntityType.INFO_ONLY, className, managed);
+	public static Builder newBuilder(String className, ManagedType managed, boolean schemaChanged) {
+		return new Builder(DynamicEntityType.INFO_ONLY, className, managed, schemaChanged);
 	}
 
 	public static class Builder {
@@ -232,16 +247,19 @@ public class DynamicEntityInfo {
 
 		private ManagedType managed;
 
+		private boolean schemaChanged;
+
 		private long version;
 
 		private boolean withChildField;
 
 		private boolean withTenantIdField;
 
-		private Builder(DynamicEntityType type, String className, ManagedType managed) {
+		private Builder(DynamicEntityType type, String className, ManagedType managed, boolean schemaChanged) {
 			this.type = type;
 			this.className = className;
 			this.managed = managed;
+			this.schemaChanged = schemaChanged;
 			baseClassName = AbstractSequencedEntity.class.getCanonicalName();
 			fkFields = new LinkedHashMap<String, DynamicForeignKeyFieldInfo>();
 			columnFields = new LinkedHashMap<String, DynamicColumnFieldInfo>();
@@ -384,7 +402,7 @@ public class DynamicEntityInfo {
 			if (info == null) {
 				synchronized (this) {
 					if (info == null) {
-						info = new DynamicEntityInfo(type, tableName, baseClassName, className, managed, version);
+						info = new DynamicEntityInfo(type, tableName, baseClassName, className, managed, schemaChanged, version);
 					}
 				}
 			}
