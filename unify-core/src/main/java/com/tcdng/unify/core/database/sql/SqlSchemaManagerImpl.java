@@ -77,7 +77,7 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 		logDebug("Managing schema for [{0}] entity classes...", schemaChangedClassList.size());
 		SqlSchemaManagerOptions options = new SqlSchemaManagerOptions(PrintFormat.NONE, ForceConstraints.fromBoolean(
 				!getContainerSetting(boolean.class, UnifyCorePropertyConstants.APPLICATION_FOREIGNKEY_EASE, false)));
-		List<Class<? extends Entity>> viewList = buildDependencyViewList(sqlDataSource, schemaChangedClassList);
+		List<Class<? extends Entity>> viewList = buildDependencyDynamicViewList(sqlDataSource, schemaChangedClassList);
 		if (sqlDataSource.getDialect().isReconstructViewsOnTableSchemaUpdate()) {
 			dropViewSchema(sqlDataSource, options, viewList);
 		}
@@ -166,11 +166,11 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 		sqlDebugging = getContainerSetting(boolean.class, UnifyCorePropertyConstants.APPLICATION_SQL_DEBUGGING, false);
 	}
 
-	private List<Class<? extends Entity>> buildDependencyViewList(SqlDataSource sqlDataSource,
+	private List<Class<? extends Entity>> buildDependencyDynamicViewList(SqlDataSource sqlDataSource,
 			List<Class<?>> entityClasses) throws UnifyException {
 		logDebug("Building dependency view list for [{0}] entities...", entityClasses.size());
 		List<Class<? extends Entity>> viewList = SqlUtils
-				.getEntityClassList(buildDependencyList(sqlDataSource, entityClasses));
+				.getDynamicEntityClassList(buildDependencyList(sqlDataSource, entityClasses));
 		logDebug("[{0}] dependency views resolved.", viewList.size());
 		return viewList;
 	}

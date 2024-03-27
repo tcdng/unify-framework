@@ -160,6 +160,21 @@ public final class SqlUtils {
 		
 		return entityClassList;
     }
+
+    @SuppressWarnings("unchecked")
+	public static List<Class<? extends Entity>> getDynamicEntityClassList(List<Class<?>> classList) {
+		List<Class<? extends Entity>> entityClassList = new ArrayList<Class<? extends Entity>>();
+		for (Class<?> entityClass : classList) {
+			if (Entity.class.isAssignableFrom(entityClass)) {
+				final String name = entityClass.getName();
+				if (name.charAt(name.length() -1) == 'z' && name.indexOf(".z.") > 0) {
+					entityClassList.add((Class<? extends Entity>) entityClass);
+				}
+			}
+		}
+		
+		return entityClassList;
+    }
     
     /**
      * Translate name to SQL schema equivalent. Used for automatic generation of
