@@ -225,7 +225,9 @@ public class ClusterServiceImpl extends AbstractBusinessService implements Clust
 			}
 
 			if (successfulLock) {
-				dbLocks.add(lockName);
+				synchronized (dbLocks) {
+					dbLocks.add(lockName);
+				}
 			}
 
 			return successfulLock;
@@ -248,7 +250,9 @@ public class ClusterServiceImpl extends AbstractBusinessService implements Clust
 					} else {
 						if (db().updateAll(query,
 								new Update().add("currentOwner", null).add("lockCount", Integer.valueOf(0))) > 0) {
-							dbLocks.remove(lockName);
+							synchronized (dbLocks) {
+								dbLocks.remove(lockName);
+							}
 						}
 					}
 				}
@@ -278,9 +282,11 @@ public class ClusterServiceImpl extends AbstractBusinessService implements Clust
 		}
 
 		// Extend life of locks held by this node
-		if (!dbLocks.isEmpty()) {
-			db().updateAll(new ClusterLockQuery().lockNameIn(dbLocks),
-					new Update().add("expiryTime", getNewLockExpirationDate()));
+		synchronized (dbLocks) {
+			if (!dbLocks.isEmpty()) {
+				db().updateAll(new ClusterLockQuery().lockNameIn(dbLocks),
+						new Update().add("expiryTime", getNewLockExpirationDate()));
+			}
 		}
 	}
 
