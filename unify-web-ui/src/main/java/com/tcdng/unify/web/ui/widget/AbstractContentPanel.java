@@ -30,6 +30,7 @@ import com.tcdng.unify.core.annotation.UplAttributes;
 	@UplAttribute(name = "detachedWindow", type = boolean.class) })
 public abstract class AbstractContentPanel extends AbstractPanel implements ContentPanel {
 
+	@Override
 	public boolean isDetachedWindow() throws UnifyException {
 		return getUplAttribute(boolean.class, "detachedWindow");
 	}

@@ -29,6 +29,12 @@ import com.tcdng.unify.web.constant.ClosePageMode;
  */
 public interface ContentPanel extends Panel {
 
+	/**
+	 * Return true if content panel is in detach window.
+	 * @throws UnifyException if an error occurs
+	 */
+	boolean isDetachedWindow() throws UnifyException;
+	
     /**
      * Gets the base content ID.
      * 
