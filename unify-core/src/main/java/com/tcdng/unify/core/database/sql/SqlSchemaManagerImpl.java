@@ -66,15 +66,21 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 	}
 
 	@Override
-	public void updateSchema(SqlDataSource sqlDataSource, List<Class<?>> schemaChangedClassList) throws UnifyException {
-		logDebug("Updating schema information for [{0}] managed classes in [{1}] datasource ...",
-				schemaChangedClassList.size(), sqlDataSource.getName());
+	public void registerSqlEntityClasses(SqlDataSource sqlDataSource, List<Class<? extends Entity>> entityClassList)
+			throws UnifyException {
+		logInfo("Registering [{0}] entity classes...", entityClassList.size());
 		SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
-		for (Class<?> entityClass : schemaChangedClassList) {
+		for (Class<?> entityClass : entityClassList) {
 			sqlDataSourceDialect.createSqlEntityInfo(entityClass);
 		}
 
-		logDebug("Managing schema for [{0}] entity classes...", schemaChangedClassList.size());
+		// TODO Unregister older copies
+	}
+
+	@Override
+	public void updateSchema(SqlDataSource sqlDataSource, List<Class<?>> schemaChangedClassList) throws UnifyException {
+		logInfo("Updating schema information for [{0}] managed classes in [{1}] datasource ...",
+				schemaChangedClassList.size(), sqlDataSource.getName());
 		SqlSchemaManagerOptions options = new SqlSchemaManagerOptions(PrintFormat.NONE, ForceConstraints.fromBoolean(
 				!getContainerSetting(boolean.class, UnifyCorePropertyConstants.APPLICATION_FOREIGNKEY_EASE, false)));
 		List<Class<? extends Entity>> viewList = buildDependencyDynamicViewList(sqlDataSource, schemaChangedClassList);
@@ -91,15 +97,15 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 			List<Class<?>> entityClasses) throws UnifyException {
 		Connection connection = (Connection) sqlDataSource.getConnection();
 		try {
-			logDebug("Scanning datasource {0} schema...", sqlDataSource.getName());
-			logDebug("Managing schema elements for [{0}] table entities...", entityClasses.size());
+			logInfo("Scanning datasource {0} schema...", sqlDataSource.getName());
+			logInfo("Managing schema elements for [{0}] table entities...", entityClasses.size());
 			DatabaseMetaData databaseMetaData = connection.getMetaData();
 			for (Class<?> entityClass : entityClasses) {
 				Map<String, TableConstraint> managedTableConstraints = fetchManagedTableConstraints(databaseMetaData,
 						sqlDataSource, entityClass);
 				manageTableSchema(databaseMetaData, sqlDataSource, entityClass, managedTableConstraints, options);
 			}
-			logDebug("Schema elements management completed for [{0}] table entities...", entityClasses.size());
+			logInfo("Schema elements management completed for [{0}] table entities...", entityClasses.size());
 		} catch (SQLException e) {
 			throw new UnifyException(e, UnifyCoreErrorConstants.SQLSCHEMAMANAGER_MANAGE_SCHEMA_ERROR,
 					sqlDataSource.getPreferredName());
@@ -113,13 +119,13 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 			List<Class<? extends Entity>> entityClasses) throws UnifyException {
 		Connection connection = (Connection) sqlDataSource.getConnection();
 		try {
-			logDebug("Scanning datasource {0} schema...", sqlDataSource.getName());
-			logDebug("Managing schema elements for [{0}] view entities...", entityClasses.size());
+			logInfo("Scanning datasource {0} schema...", sqlDataSource.getName());
+			logInfo("Managing schema elements for [{0}] view entities...", entityClasses.size());
 			DatabaseMetaData databaseMetaData = connection.getMetaData();
 			for (Class<? extends Entity> entityClass : entityClasses) {
 				manageViewSchema(databaseMetaData, sqlDataSource, entityClass, options);
 			}
-			logDebug("Schema elements management completed for [{0}] view entities...", entityClasses.size());
+			logInfo("Schema elements management completed for [{0}] view entities...", entityClasses.size());
 		} catch (SQLException e) {
 			throw new UnifyException(e, UnifyCoreErrorConstants.SQLSCHEMAMANAGER_MANAGE_SCHEMA_ERROR,
 					sqlDataSource.getPreferredName());
@@ -133,13 +139,13 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 			List<Class<? extends Entity>> entityClasses) throws UnifyException {
 		Connection connection = (Connection) sqlDataSource.getConnection();
 		try {
-			logDebug("Scanning datasource {0} schema...", sqlDataSource.getName());
-			logDebug("Dropping schema elements for [{0}] view entities...", entityClasses.size());
+			logInfo("Scanning datasource {0} schema...", sqlDataSource.getName());
+			logInfo("Dropping schema elements for [{0}] view entities...", entityClasses.size());
 			DatabaseMetaData databaseMetaData = connection.getMetaData();
 			for (Class<? extends Entity> entityClass : entityClasses) {
 				dropViewSchema(databaseMetaData, sqlDataSource, entityClass, options);
 			}
-			logDebug("Schema elements deletion completed for [{0}] view entities...", entityClasses.size());
+			logInfo("Schema elements deletion completed for [{0}] view entities...", entityClasses.size());
 		} catch (SQLException e) {
 			throw new UnifyException(e, UnifyCoreErrorConstants.SQLSCHEMAMANAGER_MANAGE_SCHEMA_ERROR,
 					sqlDataSource.getPreferredName());
@@ -151,13 +157,13 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 	@Override
 	public List<Class<?>> buildDependencyList(SqlDataSource sqlDataSource, List<Class<?>> entityClasses)
 			throws UnifyException {
-		logDebug("Building dependency list for [{0}] entities...", entityClasses.size());
+		logInfo("Building dependency list for [{0}] entities...", entityClasses.size());
 		List<Class<?>> resultList = new ArrayList<Class<?>>();
 		for (Class<?> entityClass : entityClasses) {
 			buildDependencyList(sqlDataSource, resultList, entityClass);
 		}
 
-		logDebug("Dependency list resolved to [{0}] entities...", resultList.size());
+		logInfo("Dependency list resolved to [{0}] entities...", resultList.size());
 		return resultList;
 	}
 
@@ -168,10 +174,10 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 
 	private List<Class<? extends Entity>> buildDependencyDynamicViewList(SqlDataSource sqlDataSource,
 			List<Class<?>> entityClasses) throws UnifyException {
-		logDebug("Building dependency view list for [{0}] entities...", entityClasses.size());
+		logInfo("Building dependency view list for [{0}] entities...", entityClasses.size());
 		List<Class<? extends Entity>> viewList = SqlUtils
 				.getDynamicEntityClassList(buildDependencyList(sqlDataSource, entityClasses));
-		logDebug("[{0}] dependency views resolved.", viewList.size());
+		logInfo("[{0}] dependency views resolved.", viewList.size());
 		return viewList;
 	}
 

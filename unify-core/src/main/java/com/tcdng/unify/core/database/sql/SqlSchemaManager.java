@@ -31,6 +31,15 @@ import com.tcdng.unify.core.database.Entity;
 public interface SqlSchemaManager extends UnifyComponent {
 
 	/**
+	 * Register SQL entity classes.
+	 * 
+	 * @param sqlDataSource   the SQL datasource
+	 * @param entityClassList the entity class list
+	 * @throws UnifyException if an error occurs
+	 */
+	void registerSqlEntityClasses(SqlDataSource sqlDataSource, List<Class<? extends Entity>> entityClassList) throws UnifyException;
+
+	/**
 	 * Update schema for datasource based on supplied classes.
 	 * 
 	 * @param sqlDataSource          the SQL datasource
@@ -38,62 +47,47 @@ public interface SqlSchemaManager extends UnifyComponent {
 	 * @throws UnifyException if an error occurs
 	 */
 	void updateSchema(SqlDataSource sqlDataSource, List<Class<?>> schemaChangedClassList) throws UnifyException;
-    
-    /**
-     * Manages table schema for list of entity classes.
-     * 
-     * @param sqlDataSource
-     *                      the SQL data source
-     * @param options
-     *                      the manager options
-     * @param entityClasses
-     *                      the entity class list
-     * @throws UnifyException
-     *                        if an error occurs
-     */
-    void manageTableSchema(SqlDataSource sqlDataSource, SqlSchemaManagerOptions options, List<Class<?>> entityClasses)
-            throws UnifyException;
 
-    /**
-     * Manages view schema for list of entity classes.
-     * 
-     * @param sqlDataSource
-     *                      the SQL data source
-     * @param options
-     *                      the manager options
-     * @param entityClasses
-     *                      the entity class list
-     * @throws UnifyException
-     *                        if an error occurs
-     */
-    void manageViewSchema(SqlDataSource sqlDataSource, SqlSchemaManagerOptions options,
-            List<Class<? extends Entity>> entityClasses) throws UnifyException;
+	/**
+	 * Manages table schema for list of entity classes.
+	 * 
+	 * @param sqlDataSource the SQL data source
+	 * @param options       the manager options
+	 * @param entityClasses the entity class list
+	 * @throws UnifyException if an error occurs
+	 */
+	void manageTableSchema(SqlDataSource sqlDataSource, SqlSchemaManagerOptions options, List<Class<?>> entityClasses)
+			throws UnifyException;
 
-    /**
-     * Drops view schema for list of entity classes.
-     * 
-     * @param sqlDataSource
-     *                      the SQL data source
-     * @param options
-     *                      the manager options
-     * @param entityClasses
-     *                      the entity class list
-     * @throws UnifyException
-     *                        if an error occurs
-     */
-    void dropViewSchema(SqlDataSource sqlDataSource, SqlSchemaManagerOptions options, List<Class<? extends Entity>> entityClasses)
-            throws UnifyException;
+	/**
+	 * Manages view schema for list of entity classes.
+	 * 
+	 * @param sqlDataSource the SQL data source
+	 * @param options       the manager options
+	 * @param entityClasses the entity class list
+	 * @throws UnifyException if an error occurs
+	 */
+	void manageViewSchema(SqlDataSource sqlDataSource, SqlSchemaManagerOptions options,
+			List<Class<? extends Entity>> entityClasses) throws UnifyException;
 
-    /**
-     * Builds a dependency list form list of entities.
-     * 
-     * @param sqlDataSource
-     *                      the data source
-     * @param entityClasses
-     *                      the entity class list
-     * @return entity classes in a dependency list
-     * @throws UnifyException
-     *                        if an error occurs
-     */
-    List<Class<?>> buildDependencyList(SqlDataSource sqlDataSource, List<Class<?>> entityClasses) throws UnifyException;
+	/**
+	 * Drops view schema for list of entity classes.
+	 * 
+	 * @param sqlDataSource the SQL data source
+	 * @param options       the manager options
+	 * @param entityClasses the entity class list
+	 * @throws UnifyException if an error occurs
+	 */
+	void dropViewSchema(SqlDataSource sqlDataSource, SqlSchemaManagerOptions options,
+			List<Class<? extends Entity>> entityClasses) throws UnifyException;
+
+	/**
+	 * Builds a dependency list form list of entities.
+	 * 
+	 * @param sqlDataSource the data source
+	 * @param entityClasses the entity class list
+	 * @return entity classes in a dependency list
+	 * @throws UnifyException if an error occurs
+	 */
+	List<Class<?>> buildDependencyList(SqlDataSource sqlDataSource, List<Class<?>> entityClasses) throws UnifyException;
 }

@@ -88,6 +88,8 @@ public class DynamicSqlEntityLoaderImpl extends AbstractUnifyComponent implement
 				logDebug("Compiling and loading [{0}] entity classes...", sourceList.size());
 				classList = runtimeJavaClassManager.compileAndLoadJavaClasses(Entity.class, sourceList);
 
+				sqlSchemaManager.registerSqlEntityClasses(sqlDataSource, classList);
+				
 				// Update application datasource schema if necessary
 				List<Class<?>> schemaChangedClassList = new ArrayList<Class<?>>();
 				final int len = dynamicEntityInfoList.size();
