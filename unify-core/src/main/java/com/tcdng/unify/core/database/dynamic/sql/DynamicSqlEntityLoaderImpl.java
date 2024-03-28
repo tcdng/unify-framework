@@ -68,7 +68,7 @@ public class DynamicSqlEntityLoaderImpl extends AbstractUnifyComponent implement
 		List<Class<? extends Entity>> classList = Collections.emptyList();
 		if (beginClusterLock(DYNAMICSQLENTITYLOADER_LOCK)) {
 			try {
-				logDebug("Generating source files for [{0}] entity classes...", dynamicEntityInfoList.size());
+				logInfo("Generating source files for [{0}] entity classes...", dynamicEntityInfoList.size());
 				List<JavaClassSource> sourceList = new ArrayList<JavaClassSource>();
 				for (DynamicEntityInfo dynamicEntityInfo : dynamicEntityInfoList) {
 					logDebug("Generating source file for [{0}]...", dynamicEntityInfo.getClassName());
@@ -82,10 +82,9 @@ public class DynamicSqlEntityLoaderImpl extends AbstractUnifyComponent implement
 							new JavaClassAdditionalTypeInfo(dynamicEntityInfo.getListTypeArgByFieldName()));
 					sourceList.add(source);
 				}
-				logDebug("Source files successfully generated for [{0}] entity classes...",
+				logInfo("Source files successfully generated for [{0}] entity classes...",
 						dynamicEntityInfoList.size());
 
-				logDebug("Compiling and loading [{0}] entity classes...", sourceList.size());
 				classList = runtimeJavaClassManager.compileAndLoadJavaClasses(Entity.class, sourceList);
 
 				sqlSchemaManager.registerSqlEntityClasses(sqlDataSource, classList);

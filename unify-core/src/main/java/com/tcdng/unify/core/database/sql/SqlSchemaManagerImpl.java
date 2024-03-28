@@ -75,6 +75,8 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 		}
 
 		// TODO Unregister older copies
+		
+		logInfo("Registration of entity classes completed successfully.");
 	}
 
 	@Override
@@ -90,6 +92,7 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 
 		manageTableSchema(sqlDataSource, options, schemaChangedClassList);
 		manageViewSchema(sqlDataSource, options, viewList);
+		logInfo("Schema information update for managed classes completed successfully.");
 	}
 
 	@Override
@@ -105,6 +108,7 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 						sqlDataSource, entityClass);
 				manageTableSchema(databaseMetaData, sqlDataSource, entityClass, managedTableConstraints, options);
 			}
+			
 			logInfo("Schema elements management completed for [{0}] table entities...", entityClasses.size());
 		} catch (SQLException e) {
 			throw new UnifyException(e, UnifyCoreErrorConstants.SQLSCHEMAMANAGER_MANAGE_SCHEMA_ERROR,
