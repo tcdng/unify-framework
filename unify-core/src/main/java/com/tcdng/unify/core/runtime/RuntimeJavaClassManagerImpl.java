@@ -23,6 +23,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -115,8 +116,10 @@ public class RuntimeJavaClassManagerImpl extends AbstractRuntimeJavaClassManager
 	@Override
 	public <T> List<Class<? extends T>> compileAndLoadJavaClasses(Class<T> typeClass, List<JavaClassSource> sourceList)
 			throws UnifyException {
+		logInfo("Compiling and loading [{0}] entity classes...", sourceList.size());
+		List<Class<? extends T>> list = Collections.emptyList();
 		try {
-			return innerCompileAndLoadClasses(typeClass, sourceList);
+			list = innerCompileAndLoadClasses(typeClass, sourceList);
 		} catch (UnifyException e) {
 			for (JavaClassSource source : sourceList) {
 				logDebug("@Source: \n{0}", source.getSrc());
@@ -124,6 +127,9 @@ public class RuntimeJavaClassManagerImpl extends AbstractRuntimeJavaClassManager
 
 			throw e;
 		}
+		
+		logInfo("Compilation and loading of entity classes successfully completed.");
+		return list;
 	}
 
 	@Override
