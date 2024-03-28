@@ -81,4 +81,11 @@ public class ControllerPathParts {
 	public boolean isActionPath() {
 		return actionName != null;
 	}
+
+	@Override
+	public String toString() {
+		return "ControllerPathParts [controllerPath=" + controllerPath + ", controllerPathId=" + controllerPathId
+				+ ", controllerName=" + controllerName + ", pathVariables=" + pathVariables + ", actionName="
+				+ actionName + ", sessionless=" + sessionless + "]";
+	}
 }

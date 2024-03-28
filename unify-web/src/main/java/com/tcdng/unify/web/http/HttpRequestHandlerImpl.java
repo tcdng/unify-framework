@@ -189,7 +189,9 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 						.findController(clientRequest.getRequestPathParts().getControllerPathParts());
 				if (controller.isRefererRequired()
 						&& StringUtils.isBlank(httpRequest.getHeader(HttpRequestHeaderConstants.REFERER))) {
-					throwOperationErrorException(new IllegalArgumentException("Referer required for controller type."));
+					throwOperationErrorException(
+							new IllegalArgumentException("Referer required for controller type [" + controller.getName()
+									+ "]. " + clientRequest.getRequestPathParts().getControllerPathParts()));
 				}
 			} catch (Exception e) {
 				logError(e);
