@@ -208,6 +208,11 @@ public class TableWriter extends AbstractControlWriter {
 			writer.writeParam("pSelDepList", DataUtils.toArray(String.class, table.getSelDependentList()));
 		}
 		writer.writeParam("pWindowed", table.isWindowed());
+		if (table.isWindowed()) {
+			writer.writeParam("pBodyYCtrlId", table.getBodyYCtrl().getId());
+			writer.writeParam("pBodyY", table.getBodyY());
+		}
+		
 		writer.writeParam("pPagination", table.isPagination());
 		writer.writeParam("pItemCount", table.getPageItemCount());
 		if (table.isPagination()) {
