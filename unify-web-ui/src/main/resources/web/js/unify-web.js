@@ -3136,7 +3136,6 @@ ux.rigTable = function(rgp) {
 		// Attach horizontal scroll
 		var tblHeader = _id("hdr_" + id);
 		var tblBody = _id("bod_" + id);
-		tblBody.scrollTop = rgp.pBodyY;
 		ux.addHdl(tblBody, "scroll", function(uEv) {
 			tblHeader.style.left = "-" + tblBody.scrollLeft + "px";
 		}, rgp);
@@ -3144,6 +3143,8 @@ ux.rigTable = function(rgp) {
 		// Show window content (Used this approach because of IE and Firefox)
 		ux.tableResizeHeight(rgp);
 		ux.registerResizeFunc(id, ux.tableResizeHeight, rgp);		
+
+		tblBody.scrollTop = rgp.pBodyY;
 	}
 
 	var selectable = rgp.pSelectable && !rgp.pMultiSel;

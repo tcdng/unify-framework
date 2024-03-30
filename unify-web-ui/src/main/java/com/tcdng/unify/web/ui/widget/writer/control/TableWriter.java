@@ -111,6 +111,8 @@ public class TableWriter extends AbstractControlWriter {
 				writer.write("</div></div>");
 			}
 			writer.write("</div>");
+
+			writer.writeStructureAndContent(table.getBodyYCtrl());
 		} else {
 			writer.write("<div>");
 			writer.write("<div><table");

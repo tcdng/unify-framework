@@ -674,7 +674,7 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
         }
 
         if (isWindowed()) {
-            bodyYCtrl = (Control) addInternalChildWidget("!ui-hidden binding:windowY", false, true);
+            bodyYCtrl = (Control) addInternalChildWidget("!ui-hidden binding:bodyY", false, true);
         }
         
         dataGroupId = getPrefixedId("data_");
