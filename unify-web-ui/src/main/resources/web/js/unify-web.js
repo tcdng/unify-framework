@@ -3142,7 +3142,9 @@ ux.rigTable = function(rgp) {
 
 		// Show window content (Used this approach because of IE and Firefox)
 		ux.tableResizeHeight(rgp);
-		ux.registerResizeFunc(id, ux.tableResizeHeight, rgp);
+		ux.registerResizeFunc(id, ux.tableResizeHeight, rgp);		
+
+		tblBody.scrollTop = rgp.pBodyY;
 	}
 
 	var selectable = rgp.pSelectable && !rgp.pMultiSel;
@@ -3355,12 +3357,20 @@ ux.rigTable = function(rgp) {
 
 ux.tableShiftClickHandler = function(uEv) {
 	var evp = uEv.evp;
-	var shiftDirCtrl = _id(evp.uShiftDirId);
+	const shiftDirCtrl = _id(evp.uShiftDirId);
 	if (shiftDirCtrl) {
 		shiftDirCtrl.value = evp.uShiftDir;
 	}
 
-	var rowElem = ux.findParent(uEv.uTrg, "tr");
+	if (evp.uBodyYCtrlId) {
+		const bodyYCtrl = _id(evp.uBodyYCtrlId);
+		if (bodyYCtrl) {
+			var tblBody = _id("bod_" + evp.uId);
+			bodyYCtrl.value = tblBody.scrollTop;
+		}
+	}
+	
+	const rowElem = ux.findParent(uEv.uTrg, "tr");
 	if (rowElem) {
 		ux.fireEvent(rowElem, "click");
 	}
@@ -3616,6 +3626,7 @@ ux.getTableShiftParams = function(rgp, direction) {
 	evp.uShiftDirId = rgp.pShiftDirId;
 	evp.uRef = [ rgp.pId ];
 	evp.uShiftDir = direction;
+	evp.uBodyYCtrlId = rgp.pBodyYCtrlId;
 	return evp;
 }
 

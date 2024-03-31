@@ -117,7 +117,6 @@ public abstract class AbstractUIController extends AbstractController implements
 			setAdditionalResponseHeaders(response);
 			doProcess(request, response, docPageController, docPathParts);
 		} catch (Exception e) {
-			e.printStackTrace();
 			writeExceptionResponse(request, response, e);
 		} finally {
 			response.close();

@@ -93,6 +93,10 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
 
     private boolean sortable;
 
+    private Control bodyYCtrl;
+
+    private int bodyY;
+
     private int actualItemsPerPage;
 
     private int totalPages;
@@ -341,7 +345,11 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
         return sortDirectionCtrl;
     }
 
-    public String getRowId() throws UnifyException {
+    public Control getBodyYCtrl() {
+		return bodyYCtrl;
+	}
+
+	public String getRowId() throws UnifyException {
         return getPrefixedId("row_");
     }
 
@@ -418,7 +426,15 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
         this.sortDirection = sortDirection;
     }
 
-    public void clearPageSelectedRowCount() {
+    public int getBodyY() {
+		return bodyY;
+	}
+
+	public void setBodyY(int bodyY) {
+		this.bodyY = bodyY;
+	}
+
+	public void clearPageSelectedRowCount() {
         pageSelectedRowCount = 0;
     }
 
@@ -590,6 +606,10 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
             addPageAlias(sortDirectionCtrl);
         }
 
+        if (isWindowed()) {
+            addPageAlias(bodyYCtrl);
+        }
+
         if (isContainerEditable()) {
             addPageAlias(getDataGroupId());
         }
@@ -653,6 +673,10 @@ public class Table extends AbstractValueListMultiControl<Table.Row, Object> {
             sortDirectionCtrl = (Control) addInternalChildWidget("!ui-hidden binding:sortDirection", false, true);
         }
 
+        if (isWindowed()) {
+            bodyYCtrl = (Control) addInternalChildWidget("!ui-hidden binding:bodyY", false, true);
+        }
+        
         dataGroupId = getPrefixedId("data_");
     }
 
