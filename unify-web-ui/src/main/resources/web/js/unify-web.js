@@ -6100,6 +6100,23 @@ ux.isPopupVisible = function(uEv) {
 	return false;
 }
 
+ux.otherPopups = [];
+
+ux.registerOtherPopup = function(id) {
+	if (ux.otherPopups.indexOf(id) < 0) {
+		ux.otherPopups.push(id);
+	}
+}
+
+ux.hideOtherPopups = function() {
+	for(var i = 0; i < ux.otherPopups.length; i++) {
+		const elem = _id(ux.otherPopups[i]);
+		if (elem) {
+			elem.style.display = 'none';
+		}
+	}
+}
+
 ux.hidePopup = function(uEv) {
 	if (ux.popCurr) {
 		var openPrm = ux.openPrm;
@@ -6157,6 +6174,8 @@ ux.documentHidePopup = function(uEv) {
 
 		ux.detachObj.hide();
 	}
+	
+	ux.hideOtherPopups();
 }
 
 ux.addHdl(document, "click", ux.documentHidePopup, {});
