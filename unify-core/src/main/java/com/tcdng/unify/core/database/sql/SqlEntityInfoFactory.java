@@ -15,6 +15,8 @@
  */
 package com.tcdng.unify.core.database.sql;
 
+import java.util.List;
+
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.database.CallableProc;
@@ -26,6 +28,16 @@ import com.tcdng.unify.core.database.CallableProc;
  * @since 1.0
  */
 public interface SqlEntityInfoFactory extends UnifyComponent {
+
+	/**
+	 * Finds all SQL child entity information for an entity.
+	 * 
+	 * @param clazz the entity type
+	 * @return the type SQL child entity information
+	 * @throws UnifyException if supplied entity type is not found. if an error
+	 *                        occurs
+	 */
+	List<SqlEntityInfo> findAllChildSqlEntityInfos(Class<?> clazz) throws UnifyException;
 
     /**
      * Finds the SQL entity information for an entity.

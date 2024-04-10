@@ -947,6 +947,11 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 	}
 
 	@Override
+	public List<SqlEntityInfo> findAllChildSqlEntityInfos(Class<?> clazz) throws UnifyException {
+		return sqlEntityInfoFactory.findAllChildSqlEntityInfos(clazz);
+	}
+
+	@Override
 	public SqlEntityInfo findSqlEntityInfo(Class<?> clazz) throws UnifyException {
 		return sqlEntityInfoFactory.findSqlEntityInfo(clazz);
 	}

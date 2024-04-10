@@ -82,12 +82,22 @@ public interface SqlSchemaManager extends UnifyComponent {
 			List<Class<? extends Entity>> entityClasses) throws UnifyException;
 
 	/**
-	 * Builds a dependency list form list of entities.
+	 * Builds a parent dependency list form list of entities.
 	 * 
 	 * @param sqlDataSource the data source
 	 * @param entityClasses the entity class list
-	 * @return entity classes in a dependency list
+	 * @return entity classes in a parent dependency list
 	 * @throws UnifyException if an error occurs
 	 */
-	List<Class<?>> buildDependencyList(SqlDataSource sqlDataSource, List<Class<?>> entityClasses) throws UnifyException;
+	List<Class<?>> buildParentDependencyList(SqlDataSource sqlDataSource, List<Class<?>> entityClasses) throws UnifyException;
+
+	/**
+	 * Builds a child dependency list form list of entities.
+	 * 
+	 * @param sqlDataSource the data source
+	 * @param entityClasses the entity class list
+	 * @return entity classes in a child dependency list
+	 * @throws UnifyException if an error occurs
+	 */
+	List<Class<?>> buildChildDependencyList(SqlDataSource sqlDataSource, List<Class<?>> entityClasses) throws UnifyException;
 }

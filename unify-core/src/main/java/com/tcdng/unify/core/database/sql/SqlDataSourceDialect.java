@@ -99,6 +99,16 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
 	SqlCriteriaPolicy getSqlCriteriaPolicy(RestrictionType restrictionType) throws UnifyException;
 
 	/**
+	 * Finds all SQL child entity information for an entity.
+	 * 
+	 * @param clazz the entity type
+	 * @return the type SQL child entity information
+	 * @throws UnifyException if supplied entity type is not found. if an error
+	 *                        occurs
+	 */
+	List<SqlEntityInfo> findAllChildSqlEntityInfos(Class<?> clazz) throws UnifyException;
+
+	/**
 	 * Finds the SQL entity information for an entity.
 	 * 
 	 * @param clazz the entity type

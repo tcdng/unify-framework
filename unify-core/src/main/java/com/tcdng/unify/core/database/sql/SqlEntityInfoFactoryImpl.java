@@ -1791,6 +1791,18 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 	}
 
 	@Override
+	public List<SqlEntityInfo> findAllChildSqlEntityInfos(Class<?> clazz) throws UnifyException {
+		List<SqlEntityInfo> list = new ArrayList<SqlEntityInfo>();
+		for (SqlEntityInfo sqlEntityInfo: sqlEntityInfoMap.values()) {
+			if (sqlEntityInfo.isChildSqlEntityInfo(clazz)) {
+				list.add(sqlEntityInfo);
+			}
+		}
+		
+		return list;
+	}
+
+	@Override
 	public SqlEntityInfo findSqlEntityInfo(Class<?> entityClass) throws UnifyException {
 		SqlEntityInfo sqlEntityInfo = sqlEntityInfoMap.find(entityClass);
 		if (sqlEntityInfo == null) {
