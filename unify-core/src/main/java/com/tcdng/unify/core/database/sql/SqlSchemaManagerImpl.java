@@ -75,7 +75,7 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 		}
 
 		// TODO Unregister older copies
-		
+
 		logInfo("Registration of entity classes completed successfully.");
 	}
 
@@ -108,7 +108,7 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 						sqlDataSource, entityClass);
 				manageTableSchema(databaseMetaData, sqlDataSource, entityClass, managedTableConstraints, options);
 			}
-			
+
 			logInfo("Schema elements management completed for [{0}] table entities...", entityClasses.size());
 		} catch (SQLException e) {
 			throw new UnifyException(e, UnifyCoreErrorConstants.SQLSCHEMAMANAGER_MANAGE_SCHEMA_ERROR,
@@ -181,6 +181,7 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 		logInfo("Building dependency view list for [{0}] entities...", entityClasses.size());
 		List<Class<? extends Entity>> viewList = SqlUtils
 				.getDynamicEntityClassList(buildDependencyList(sqlDataSource, entityClasses));
+
 		logInfo("[{0}] dependency views resolved.", viewList.size());
 		return viewList;
 	}
@@ -399,46 +400,7 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 			}
 			SqlUtils.close(rs);
 
-			boolean isTableNewOrAltered = !tableUpdateSql.isEmpty();
-
-			// Manage entity view
-			List<String> viewUpdateSQL = new ArrayList<String>();
-			if (sqlEntityInfo.isViewable()) {
-				logDebug("Managing entity view [{0}]...", sqlEntityInfo.getViewName());
-				boolean isDropView = false;
-				rs = databaseMetaData.getTables(null, schema, sqlEntityInfo.getViewName(), null);
-				if (rs.next()) {
-					isDropView = isTableNewOrAltered;
-					String tableType = rs.getString("TABLE_TYPE");
-					if (!"VIEW".equalsIgnoreCase(tableType)) {
-						throw new UnifyException(UnifyCoreErrorConstants.SQLSCHEMAMANAGER_UNABLE_TO_UPDATE_TABLE,
-								sqlDataSource.getName(), sqlEntityInfo.getViewName(), tableType);
-					}
-
-					if (!isDropView) {
-						// Check is list-only fields have changed
-						isDropView = !matchViewColumns(sqlEntityInfo,
-								sqlDataSource.getColumns(schema, sqlEntityInfo.getViewName()));
-					}
-				} else {
-					// Force creation of view
-					isTableNewOrAltered = true;
-				}
-				SqlUtils.close(rs);
-
-				if (isTableNewOrAltered || isDropView) {
-					// Check if we have to drop view first
-					if (isDropView) {
-						viewUpdateSQL.add(sqlDataSourceDialect.generateDropViewSql(sqlEntityInfo));
-					}
-
-					// Create view
-					viewUpdateSQL.add(sqlDataSourceDialect.generateCreateViewSql(sqlEntityInfo, printFormat));
-				}
-			}
-
 			// Apply updates
-			tableUpdateSql.addAll(viewUpdateSQL);
 			for (String sql : tableUpdateSql) {
 				if (sqlDebugging) {
 					logDebug("Executing SQL update [{0}]...", sql);
@@ -608,7 +570,7 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 
 			// Manage entity view
 			List<String> viewUpdateSQL = new ArrayList<String>();
-			if (sqlEntityInfo.isViewOnly()) {
+			if (sqlEntityInfo.isViewable() || sqlEntityInfo.isViewOnly()) {
 				boolean isViewNew = false;
 				boolean isDropView = false;
 				rs = databaseMetaData.getTables(null, appSchema, sqlEntityInfo.getViewName(), null);
