@@ -147,7 +147,7 @@ public abstract class AbstractSqlDataSourceManager extends AbstractUnifyComponen
 
 	private List<Class<?>> getTableEntities(String dataSourceName) throws UnifyException {
 		SqlDataSource sqlDataSource = getSqlDataSource(dataSourceName);
-		return sqlSchemaManager.buildDependencyList(sqlDataSource, getTableEntityTypes(dataSourceName, sqlDataSource));
+		return sqlSchemaManager.buildParentDependencyList(sqlDataSource, getTableEntityTypes(dataSourceName, sqlDataSource));
 	}
 	
 	private List<Class<? extends Entity>> getViewOnlyEntities(String dataSourceName) throws UnifyException {

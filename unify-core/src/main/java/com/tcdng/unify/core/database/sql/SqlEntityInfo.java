@@ -447,6 +447,16 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 		return foreignKeyList;
 	}
 
+	public boolean isChildSqlEntityInfo(Class<?> clazz) {
+		for (SqlForeignKeyInfo sqlForeignKeyInfo : foreignKeyList) {
+			if (clazz.equals(sqlForeignKeyInfo.getSqlFieldInfo().getForeignEntityInfo().getEntityClass())) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+	
 	public boolean isSchemaAlreadyManaged() {
 		return schemaAlreadyManaged;
 	}

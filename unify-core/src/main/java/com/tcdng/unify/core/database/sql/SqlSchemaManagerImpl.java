@@ -75,7 +75,7 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 		}
 
 		// TODO Unregister older copies
-		
+
 		logInfo("Registration of entity classes completed successfully.");
 	}
 
@@ -100,7 +100,7 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 			List<Class<?>> entityClasses) throws UnifyException {
 		Connection connection = (Connection) sqlDataSource.getConnection();
 		try {
-			logInfo("Scanning datasource {0} schema...", sqlDataSource.getName());
+			logInfo("Scanning datasource {0} for table schema...", sqlDataSource.getName());
 			logInfo("Managing schema elements for [{0}] table entities...", entityClasses.size());
 			DatabaseMetaData databaseMetaData = connection.getMetaData();
 			for (Class<?> entityClass : entityClasses) {
@@ -108,8 +108,8 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 						sqlDataSource, entityClass);
 				manageTableSchema(databaseMetaData, sqlDataSource, entityClass, managedTableConstraints, options);
 			}
-			
-			logInfo("Schema elements management completed for [{0}] table entities...", entityClasses.size());
+
+			logInfo("Table schema elements management completed for [{0}] table entities...", entityClasses.size());
 		} catch (SQLException e) {
 			throw new UnifyException(e, UnifyCoreErrorConstants.SQLSCHEMAMANAGER_MANAGE_SCHEMA_ERROR,
 					sqlDataSource.getPreferredName());
@@ -123,13 +123,13 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 			List<Class<? extends Entity>> entityClasses) throws UnifyException {
 		Connection connection = (Connection) sqlDataSource.getConnection();
 		try {
-			logInfo("Scanning datasource {0} schema...", sqlDataSource.getName());
+			logInfo("Scanning datasource {0} view schema...", sqlDataSource.getName());
 			logInfo("Managing schema elements for [{0}] view entities...", entityClasses.size());
 			DatabaseMetaData databaseMetaData = connection.getMetaData();
 			for (Class<? extends Entity> entityClass : entityClasses) {
 				manageViewSchema(databaseMetaData, sqlDataSource, entityClass, options);
 			}
-			logInfo("Schema elements management completed for [{0}] view entities...", entityClasses.size());
+			logInfo("View schema elements management completed for [{0}] view entities...", entityClasses.size());
 		} catch (SQLException e) {
 			throw new UnifyException(e, UnifyCoreErrorConstants.SQLSCHEMAMANAGER_MANAGE_SCHEMA_ERROR,
 					sqlDataSource.getPreferredName());
@@ -143,13 +143,13 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 			List<Class<? extends Entity>> entityClasses) throws UnifyException {
 		Connection connection = (Connection) sqlDataSource.getConnection();
 		try {
-			logInfo("Scanning datasource {0} schema...", sqlDataSource.getName());
+			logInfo("Scanning datasource {0} drop view schema...", sqlDataSource.getName());
 			logInfo("Dropping schema elements for [{0}] view entities...", entityClasses.size());
 			DatabaseMetaData databaseMetaData = connection.getMetaData();
 			for (Class<? extends Entity> entityClass : entityClasses) {
 				dropViewSchema(databaseMetaData, sqlDataSource, entityClass, options);
 			}
-			logInfo("Schema elements deletion completed for [{0}] view entities...", entityClasses.size());
+			logInfo("Drop view schema elements deletion completed for [{0}] view entities...", entityClasses.size());
 		} catch (SQLException e) {
 			throw new UnifyException(e, UnifyCoreErrorConstants.SQLSCHEMAMANAGER_MANAGE_SCHEMA_ERROR,
 					sqlDataSource.getPreferredName());
@@ -159,15 +159,28 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 	}
 
 	@Override
-	public List<Class<?>> buildDependencyList(SqlDataSource sqlDataSource, List<Class<?>> entityClasses)
+	public List<Class<?>> buildParentDependencyList(SqlDataSource sqlDataSource, List<Class<?>> entityClasses)
 			throws UnifyException {
-		logInfo("Building dependency list for [{0}] entities...", entityClasses.size());
+		logInfo("Building parent dependency list for [{0}] entities...", entityClasses.size());
 		List<Class<?>> resultList = new ArrayList<Class<?>>();
 		for (Class<?> entityClass : entityClasses) {
-			buildDependencyList(sqlDataSource, resultList, entityClass);
+			buildParentDependencyList(sqlDataSource, resultList, entityClass);
 		}
 
-		logInfo("Dependency list resolved to [{0}] entities...", resultList.size());
+		logInfo("Parent dependency list resolved to [{0}] entities...", resultList.size());
+		return resultList;
+	}
+
+	@Override
+	public List<Class<?>> buildChildDependencyList(SqlDataSource sqlDataSource, List<Class<?>> entityClasses)
+			throws UnifyException {
+		logInfo("Building child dependency list for [{0}] entities...", entityClasses.size());
+		List<Class<?>> resultList = new ArrayList<Class<?>>();
+		for (Class<?> entityClass : entityClasses) {
+			buildChildDependencyList(sqlDataSource, resultList, entityClass);
+		}
+
+		logInfo("Child dependency list resolved to [{0}] entities...", resultList.size());
 		return resultList;
 	}
 
@@ -180,12 +193,12 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 			List<Class<?>> entityClasses) throws UnifyException {
 		logInfo("Building dependency view list for [{0}] entities...", entityClasses.size());
 		List<Class<? extends Entity>> viewList = SqlUtils
-				.getDynamicEntityClassList(buildDependencyList(sqlDataSource, entityClasses));
+				.getDynamicEntityClassList(buildChildDependencyList(sqlDataSource, entityClasses));
 		logInfo("[{0}] dependency views resolved.", viewList.size());
 		return viewList;
 	}
 
-	private void buildDependencyList(SqlDataSource sqlDataSource, List<Class<?>> entityTypeList, Class<?> entityClass)
+	private void buildParentDependencyList(SqlDataSource sqlDataSource, List<Class<?>> entityTypeList, Class<?> entityClass)
 			throws UnifyException {
 		SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
 		SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.findSqlEntityInfo(entityClass);
@@ -194,8 +207,25 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 			if (sqlFieldInfo.isForeignKey()) {
 				SqlEntityInfo fkSqlEntityInfo = sqlFieldInfo.getForeignEntityInfo();
 				if (!sqlEntityInfo.getTableName().equals(fkSqlEntityInfo.getTableName())) {
-					buildDependencyList(sqlDataSource, entityTypeList, fkSqlEntityInfo.getKeyClass());
+					buildParentDependencyList(sqlDataSource, entityTypeList, fkSqlEntityInfo.getKeyClass());
 				}
+			}
+		}
+
+		if (!entityTypeList.contains(entityClass)) {
+			entityTypeList.add(entityClass);
+		}
+	}
+
+	private void buildChildDependencyList(SqlDataSource sqlDataSource, List<Class<?>> entityTypeList, Class<?> entityClass)
+			throws UnifyException {
+		SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
+		SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.findSqlEntityInfo(entityClass);
+		List<SqlEntityInfo> sqlEntityInfos = sqlDataSourceDialect.findAllChildSqlEntityInfos(entityClass);
+
+		for (SqlEntityInfo _sqlEntityInfo : sqlEntityInfos) {
+			if (!sqlEntityInfo.getTableName().equals(_sqlEntityInfo.getTableName())) {
+				buildChildDependencyList(sqlDataSource, entityTypeList, _sqlEntityInfo.getEntityClass());
 			}
 		}
 
@@ -399,46 +429,7 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 			}
 			SqlUtils.close(rs);
 
-			boolean isTableNewOrAltered = !tableUpdateSql.isEmpty();
-
-			// Manage entity view
-			List<String> viewUpdateSQL = new ArrayList<String>();
-			if (sqlEntityInfo.isViewable()) {
-				logDebug("Managing entity view [{0}]...", sqlEntityInfo.getViewName());
-				boolean isDropView = false;
-				rs = databaseMetaData.getTables(null, schema, sqlEntityInfo.getViewName(), null);
-				if (rs.next()) {
-					isDropView = isTableNewOrAltered;
-					String tableType = rs.getString("TABLE_TYPE");
-					if (!"VIEW".equalsIgnoreCase(tableType)) {
-						throw new UnifyException(UnifyCoreErrorConstants.SQLSCHEMAMANAGER_UNABLE_TO_UPDATE_TABLE,
-								sqlDataSource.getName(), sqlEntityInfo.getViewName(), tableType);
-					}
-
-					if (!isDropView) {
-						// Check is list-only fields have changed
-						isDropView = !matchViewColumns(sqlEntityInfo,
-								sqlDataSource.getColumns(schema, sqlEntityInfo.getViewName()));
-					}
-				} else {
-					// Force creation of view
-					isTableNewOrAltered = true;
-				}
-				SqlUtils.close(rs);
-
-				if (isTableNewOrAltered || isDropView) {
-					// Check if we have to drop view first
-					if (isDropView) {
-						viewUpdateSQL.add(sqlDataSourceDialect.generateDropViewSql(sqlEntityInfo));
-					}
-
-					// Create view
-					viewUpdateSQL.add(sqlDataSourceDialect.generateCreateViewSql(sqlEntityInfo, printFormat));
-				}
-			}
-
 			// Apply updates
-			tableUpdateSql.addAll(viewUpdateSQL);
 			for (String sql : tableUpdateSql) {
 				if (sqlDebugging) {
 					logDebug("Executing SQL update [{0}]...", sql);
@@ -608,7 +599,7 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 
 			// Manage entity view
 			List<String> viewUpdateSQL = new ArrayList<String>();
-			if (sqlEntityInfo.isViewOnly()) {
+			if (sqlEntityInfo.isViewable() || sqlEntityInfo.isViewOnly()) {
 				boolean isViewNew = false;
 				boolean isDropView = false;
 				rs = databaseMetaData.getTables(null, appSchema, sqlEntityInfo.getViewName(), null);
