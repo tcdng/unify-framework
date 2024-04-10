@@ -330,9 +330,9 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
         assertNotNull(classList);
         assertEquals(2, classList.size());
         Class<? extends Entity> authorClazz = (Class<? extends Entity>) classList.get(0);
-        assertEquals("com.tcdng.test.Author", authorClazz.getName());
+        assertEquals("com.tcdng.test.z.Authorz", authorClazz.getName());
         Class<? extends Entity> bookClazz = (Class<? extends Entity>) classList.get(1);
-        assertEquals("com.tcdng.test.Book", bookClazz.getName());
+        assertEquals("com.tcdng.test.z.Bookz", bookClazz.getName());
     }
 
     @Test
@@ -342,10 +342,10 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
 
         tm.beginTransaction();
         try {
-            Entity authorInst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.Author");
+            Entity authorInst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.z.Authorz");
             ReflectUtils.setBeanProperty(authorInst, "name", "John Doe");
-            Entity book1Inst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.Book");
-            Entity book2Inst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.Book");
+            Entity book1Inst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.z.Bookz");
+            Entity book2Inst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.z.Bookz");
             ReflectUtils.setBeanProperty(book1Inst, "title", "Finding Jane");
             ReflectUtils.setBeanProperty(book2Inst, "title", "Attack the Bean");
             ReflectUtils.setBeanProperty(authorInst, "bookList", Arrays.asList(book1Inst, book2Inst));
@@ -369,10 +369,10 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
 
         tm.beginTransaction();
         try {
-            Entity authorInst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.Author");
+            Entity authorInst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.z.Authorz");
             ReflectUtils.setBeanProperty(authorInst, "name", "John Doe");
-            Entity book1Inst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.Book");
-            Entity book2Inst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.Book");
+            Entity book1Inst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.z.Bookz");
+            Entity book2Inst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.z.Bookz");
             ReflectUtils.setBeanProperty(book1Inst, "title", "Finding Jane");
             ReflectUtils.setBeanProperty(book2Inst, "title", "Attack the Bean");
             ReflectUtils.setBeanProperty(authorInst, "bookList", Arrays.asList(book1Inst, book2Inst));
@@ -413,10 +413,10 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
 
         tm.beginTransaction();
         try {
-            Entity authorInst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.Author");
+            Entity authorInst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.z.Authorz");
             ReflectUtils.setBeanProperty(authorInst, "name", "John Doe");
-            Entity book1Inst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.Book");
-            Entity book2Inst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.Book");
+            Entity book1Inst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.z.Bookz");
+            Entity book2Inst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.z.Bookz");
             ReflectUtils.setBeanProperty(book1Inst, "title", "Finding Jane");
             ReflectUtils.setBeanProperty(book2Inst, "title", "Attack the Bean");
             ReflectUtils.setBeanProperty(authorInst, "bookList", Arrays.asList(book1Inst, book2Inst));
@@ -480,11 +480,11 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
 				.build();
 
 		DynamicEntityInfo.Builder adeib = DynamicEntityInfo
-				.newBuilder(DynamicEntityType.TABLE, "com.tcdng.test.Author", DynamicEntityInfo.ManagedType.MANAGED, schemaChanged)
+				.newBuilder(DynamicEntityType.TABLE, "com.tcdng.test.z.Authorz", DynamicEntityInfo.ManagedType.MANAGED, schemaChanged)
 				.tableName("TAUTHOR").version(1L);
 		authorDynamicEntityInfo = adeib.prefetch();
 		DynamicEntityInfo.Builder bdeib = DynamicEntityInfo
-				.newBuilder(DynamicEntityType.TABLE, "com.tcdng.test.Book", DynamicEntityInfo.ManagedType.MANAGED, schemaChanged)
+				.newBuilder(DynamicEntityType.TABLE, "com.tcdng.test.z.Bookz", DynamicEntityInfo.ManagedType.MANAGED, schemaChanged)
 				.tableName("TBOOK").version(1L);
 		bookDynamicEntityInfo = bdeib.prefetch();
 
