@@ -137,6 +137,10 @@ public final class FilterUtils {
 		map.put(String.class, "stringparamconditionlist");
 		mapAll.put(FilterConditionListType.IMMEDIATE_PARAM, Collections.unmodifiableMap(map));
 
+		map = new HashMap<Class<?>, String>();
+		map.put(String.class, "sessionparamconditionlist");
+		mapAll.put(FilterConditionListType.IMMEDIATE_SESSIONPARAM, Collections.unmodifiableMap(map));
+
 		classToFilterConditionSelectorMap = Collections.unmodifiableMap(mapAll);
 	}
 
@@ -258,7 +262,8 @@ public final class FilterUtils {
 					FilterConditionType.ENDS_WITH_PARAM, FilterConditionType.LIKE_PARAM,
 					FilterConditionType.BETWEEN_PARAM, FilterConditionType.NOT_EQUALS_PARAM,
 					FilterConditionType.NOT_BEGIN_WITH_PARAM, FilterConditionType.NOT_END_WITH_PARAM,
-					FilterConditionType.NOT_LIKE_PARAM, FilterConditionType.NOT_BETWEEN_PARAM)));
+					FilterConditionType.NOT_LIKE_PARAM, FilterConditionType.NOT_BETWEEN_PARAM,
+					FilterConditionType.EQUALS_SESSIONPARAM, FilterConditionType.NOT_EQUALS_SESSIONPARAM)));
 
 	private static final Set<FilterConditionType> enumConstConditionTypes = Collections
 			.unmodifiableSet(new LinkedHashSet<FilterConditionType>(Arrays.asList(FilterConditionType.EQUALS,
@@ -341,6 +346,10 @@ public final class FilterUtils {
 		map.put(String.class, stringConditionTypes_param);
 		mapAll.put(FilterConditionListType.IMMEDIATE_PARAM, Collections.unmodifiableMap(map));
 
+		map = new HashMap<Class<?>, Set<FilterConditionType>>();
+		map.put(String.class, stringConditionTypes_param);
+		mapAll.put(FilterConditionListType.IMMEDIATE_SESSIONPARAM, Collections.unmodifiableMap(map));
+
 		supportedConditionMap = Collections.unmodifiableMap(mapAll);
 	}
 
@@ -402,6 +411,9 @@ public final class FilterUtils {
 		policies.put(FilterConditionType.NOT_BEGIN_WITH_PARAM, new NotBeginWithPolicy());
 		policies.put(FilterConditionType.ENDS_WITH_PARAM, new EndsWithPolicy());
 		policies.put(FilterConditionType.NOT_END_WITH_PARAM, new NotEndWithPolicy());
+
+		policies.put(FilterConditionType.EQUALS_SESSIONPARAM, new EqualsPolicy());
+		policies.put(FilterConditionType.NOT_EQUALS_SESSIONPARAM, new NotEqualsPolicy());
 
 		policies.put(FilterConditionType.EQUALS_COLLECTION, new EqualsCollectionPolicy());
 		policies.put(FilterConditionType.NOT_EQUALS_COLLECTION, new NotEqualsCollectionPolicy());

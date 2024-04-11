@@ -27,6 +27,7 @@ public enum FilterParamType {
     IMMEDIATE,
     FIELD,
     PARAMETER,
+    SESSION_PARAMETER,
     COLLECTION;
     
     public boolean isNone() {
@@ -43,6 +44,10 @@ public enum FilterParamType {
     
     public boolean isParameter() {
         return PARAMETER.equals(this);
+    }
+    
+    public boolean isSessionParameter() {
+        return SESSION_PARAMETER.equals(this);
     }
     
     public boolean isCollection() {
