@@ -244,7 +244,8 @@ public final class FilterUtils {
 					FilterConditionType.ENDS_WITH_FIELD, FilterConditionType.LIKE_FIELD,
 					FilterConditionType.BETWEEN_FIELD, FilterConditionType.NOT_EQUALS_FIELD,
 					FilterConditionType.NOT_BEGIN_WITH_FIELD, FilterConditionType.NOT_END_WITH_FIELD,
-					FilterConditionType.NOT_LIKE_FIELD, FilterConditionType.NOT_BETWEEN_FIELD)));
+					FilterConditionType.NOT_LIKE_FIELD, FilterConditionType.NOT_BETWEEN_FIELD,
+					FilterConditionType.EQUALS_SESSIONPARAM, FilterConditionType.NOT_EQUALS_SESSIONPARAM)));
 
 	private static final Set<FilterConditionType> stringConditionTypes_param = Collections
 			.unmodifiableSet(new LinkedHashSet<FilterConditionType>(Arrays.asList(FilterConditionType.EQUALS,
@@ -402,6 +403,9 @@ public final class FilterUtils {
 		policies.put(FilterConditionType.NOT_BEGIN_WITH_PARAM, new NotBeginWithPolicy());
 		policies.put(FilterConditionType.ENDS_WITH_PARAM, new EndsWithPolicy());
 		policies.put(FilterConditionType.NOT_END_WITH_PARAM, new NotEndWithPolicy());
+
+		policies.put(FilterConditionType.EQUALS_SESSIONPARAM, new EqualsPolicy());
+		policies.put(FilterConditionType.NOT_EQUALS_SESSIONPARAM, new NotEqualsPolicy());
 
 		policies.put(FilterConditionType.EQUALS_COLLECTION, new EqualsCollectionPolicy());
 		policies.put(FilterConditionType.NOT_EQUALS_COLLECTION, new NotEqualsCollectionPolicy());

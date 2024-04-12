@@ -394,6 +394,29 @@ public enum FilterConditionType implements EnumConst {
             return new NotEqualsField(fieldName, (String) paramA);
         }
     },
+
+    EQUALS_SESSIONPARAM("EQS", RestrictionType.EQUALS, "condition.equalssessionparam.label", "condition.equalssessionparam.symbol", FilterParamType.SESSION_PARAMETER, true, false) {
+        @Override
+        public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
+            cb.addEquals(fieldName, (String) paramA);
+        }
+
+        @Override
+        public Restriction createSimpleCriteria(String fieldName, Object paramA, Object paramB) {
+            return new Equals(fieldName, (String) paramA);
+        }
+    },
+    NOT_EQUALS_SESSIONPARAM("NEQS", RestrictionType.NOT_EQUALS, "condition.notequalssessionparam.label", "condition.notequalssessionparam.symbol", FilterParamType.SESSION_PARAMETER, true, false) {
+        @Override
+        public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
+            cb.addNotEquals(fieldName, (String) paramA);
+        }
+
+        @Override
+        public Restriction createSimpleCriteria(String fieldName, Object paramA, Object paramB) {
+            return new NotEquals(fieldName, (String) paramA);
+        }
+    },
     LESS_THAN_FIELD("LTF", RestrictionType.LESS_THAN, "condition.lessthanfield.label", "condition.lessthanfield.symbol", FilterParamType.FIELD, false, false) {
         @Override
         public void addSimpleCriteria(CriteriaBuilder cb, String fieldName, Object paramA, Object paramB) {
@@ -903,6 +926,10 @@ public enum FilterConditionType implements EnumConst {
 
     public boolean isParameterVal() {
         return paramType.isParameter();
+    }
+
+    public boolean isSessionParameterVal() {
+        return paramType.isSessionParameter();
     }
 
     public boolean isCollectionVal() {
