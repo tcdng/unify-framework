@@ -305,11 +305,6 @@ public class CriteriaBuilder {
         return this;
     }
 
-    public CriteriaBuilder addEqualsSessionParam(String paramNameA, String paramNameB) {
-        addSimpleCondition(new EqualsSessionParam(paramNameA, paramNameB));
-        return this;
-    }
-
     public CriteriaBuilder addGreaterThanParam(String paramNameA, String paramNameB) {
         addSimpleCondition(new GreaterParam(paramNameA, paramNameB));
         return this;
@@ -367,11 +362,6 @@ public class CriteriaBuilder {
 
     public CriteriaBuilder addNotEqualsParam(String paramNameA, String paramNameB) {
         addSimpleCondition(new NotEqualsParam(paramNameA, paramNameB));
-        return this;
-    }
-
-    public CriteriaBuilder addNotEqualsSessionParam(String paramNameA, String paramNameB) {
-        addSimpleCondition(new NotEqualsSessionParam(paramNameA, paramNameB));
         return this;
     }
 

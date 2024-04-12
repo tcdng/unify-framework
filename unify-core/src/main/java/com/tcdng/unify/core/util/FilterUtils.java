@@ -137,10 +137,6 @@ public final class FilterUtils {
 		map.put(String.class, "stringparamconditionlist");
 		mapAll.put(FilterConditionListType.IMMEDIATE_PARAM, Collections.unmodifiableMap(map));
 
-		map = new HashMap<Class<?>, String>();
-		map.put(String.class, "sessionparamconditionlist");
-		mapAll.put(FilterConditionListType.IMMEDIATE_SESSIONPARAM, Collections.unmodifiableMap(map));
-
 		classToFilterConditionSelectorMap = Collections.unmodifiableMap(mapAll);
 	}
 
@@ -248,7 +244,8 @@ public final class FilterUtils {
 					FilterConditionType.ENDS_WITH_FIELD, FilterConditionType.LIKE_FIELD,
 					FilterConditionType.BETWEEN_FIELD, FilterConditionType.NOT_EQUALS_FIELD,
 					FilterConditionType.NOT_BEGIN_WITH_FIELD, FilterConditionType.NOT_END_WITH_FIELD,
-					FilterConditionType.NOT_LIKE_FIELD, FilterConditionType.NOT_BETWEEN_FIELD)));
+					FilterConditionType.NOT_LIKE_FIELD, FilterConditionType.NOT_BETWEEN_FIELD,
+					FilterConditionType.EQUALS_SESSIONPARAM, FilterConditionType.NOT_EQUALS_SESSIONPARAM)));
 
 	private static final Set<FilterConditionType> stringConditionTypes_param = Collections
 			.unmodifiableSet(new LinkedHashSet<FilterConditionType>(Arrays.asList(FilterConditionType.EQUALS,
@@ -262,8 +259,7 @@ public final class FilterUtils {
 					FilterConditionType.ENDS_WITH_PARAM, FilterConditionType.LIKE_PARAM,
 					FilterConditionType.BETWEEN_PARAM, FilterConditionType.NOT_EQUALS_PARAM,
 					FilterConditionType.NOT_BEGIN_WITH_PARAM, FilterConditionType.NOT_END_WITH_PARAM,
-					FilterConditionType.NOT_LIKE_PARAM, FilterConditionType.NOT_BETWEEN_PARAM,
-					FilterConditionType.EQUALS_SESSIONPARAM, FilterConditionType.NOT_EQUALS_SESSIONPARAM)));
+					FilterConditionType.NOT_LIKE_PARAM, FilterConditionType.NOT_BETWEEN_PARAM)));
 
 	private static final Set<FilterConditionType> enumConstConditionTypes = Collections
 			.unmodifiableSet(new LinkedHashSet<FilterConditionType>(Arrays.asList(FilterConditionType.EQUALS,
@@ -345,10 +341,6 @@ public final class FilterUtils {
 		map.put(Date.class, dateConditionTypes_param);
 		map.put(String.class, stringConditionTypes_param);
 		mapAll.put(FilterConditionListType.IMMEDIATE_PARAM, Collections.unmodifiableMap(map));
-
-		map = new HashMap<Class<?>, Set<FilterConditionType>>();
-		map.put(String.class, stringConditionTypes_param);
-		mapAll.put(FilterConditionListType.IMMEDIATE_SESSIONPARAM, Collections.unmodifiableMap(map));
 
 		supportedConditionMap = Collections.unmodifiableMap(mapAll);
 	}
