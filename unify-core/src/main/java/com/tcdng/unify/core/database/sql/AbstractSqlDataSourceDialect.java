@@ -166,7 +166,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 		this.appendNullOnTblCreate = appendNullOnTblCreate;
 		sqlCacheFactory = new SqlCacheFactory();
 		sqlStatementPoolsFactory = new SqlStatementPoolsFactory();
-		noPrecisionTypes = new HashSet<String>(Arrays.asList("BIGINT", "DATETIME", "TIMESTAMP"));
+		noPrecisionTypes = new HashSet<String>(Arrays.asList("BIGINT", "DATETIME", "TIMESTAMP", "INT2", "INT4", "INT8"));
 	}
 
 	@Override
