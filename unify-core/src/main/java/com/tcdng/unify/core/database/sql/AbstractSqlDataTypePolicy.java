@@ -26,7 +26,7 @@ import com.tcdng.unify.core.util.StringUtils;
  */
 public abstract class AbstractSqlDataTypePolicy implements SqlDataTypePolicy {
 
-    @Override
+	@Override
     public void appendDefaultSql(StringBuilder sb, Class<?> fieldType, String defaultVal) {
         if (StringUtils.isBlank(defaultVal)) {
             defaultVal = getAltDefault(fieldType);

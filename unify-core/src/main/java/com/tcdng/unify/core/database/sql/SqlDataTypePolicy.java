@@ -52,7 +52,7 @@ public interface SqlDataTypePolicy {
      * @return a true value if for fixed length otherwise false
      */
     boolean isFixedLength();
-
+    
     /**
      * Appends a type SQL to string buffer.
      * 

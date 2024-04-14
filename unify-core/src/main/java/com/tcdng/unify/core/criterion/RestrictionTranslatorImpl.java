@@ -95,6 +95,8 @@ public class RestrictionTranslatorImpl extends AbstractRestrictionTranslator {
         map.put(FilterConditionType.NOT_BEGIN_WITH_FIELD, new SingleParamRestrictionTranslator());
         map.put(FilterConditionType.ENDS_WITH_FIELD, new SingleParamRestrictionTranslator());
         map.put(FilterConditionType.NOT_END_WITH_FIELD, new SingleParamRestrictionTranslator());
+        map.put(FilterConditionType.EQUALS_SESSIONPARAM, new SingleParamRestrictionTranslator());
+        map.put(FilterConditionType.NOT_EQUALS_SESSIONPARAM, new SingleParamRestrictionTranslator());
         map.put(FilterConditionType.AND, new CompoundRestrictionTranslator());
         map.put(FilterConditionType.OR, new CompoundRestrictionTranslator());
         translators = Collections.unmodifiableMap(map);
