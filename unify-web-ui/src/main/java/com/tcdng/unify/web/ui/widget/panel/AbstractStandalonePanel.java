@@ -58,7 +58,7 @@ public abstract class AbstractStandalonePanel extends AbstractPanel implements S
     @Override
     @Action
     public void switchState() throws UnifyException {
-
+    	super.switchState();
     }
 
     @Override
