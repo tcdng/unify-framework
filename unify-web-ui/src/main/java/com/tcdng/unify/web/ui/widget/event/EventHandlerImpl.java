@@ -38,11 +38,12 @@ public class EventHandlerImpl extends AbstractEventHandler {
 		return new WrappedEventHandlerImpl(this);
 	}
 
-	private static class WrappedEventHandlerImpl extends AbstractEventHandler {
+	@Component("ui=wrappedevent")
+	public static class WrappedEventHandlerImpl extends AbstractEventHandler {
 
 		private final EventHandler srcHandler;
 
-	    private PageAction[] pageAction;
+		private PageAction[] pageAction;
 
 		public WrappedEventHandlerImpl(EventHandler srcHandler) {
 			this.srcHandler = srcHandler;
@@ -95,19 +96,19 @@ public class EventHandlerImpl extends AbstractEventHandler {
 		}
 
 		@Override
-	    public void setPageAction(PageAction[] pageAction) {
-	        this.pageAction = pageAction;
-	    }
+		public void setPageAction(PageAction[] pageAction) {
+			this.pageAction = pageAction;
+		}
 
 		@Override
-	    public PageAction[] getPageAction() {
-	        return pageAction;
-	    }
+		public PageAction[] getPageAction() {
+			return pageAction;
+		}
 
 		@Override
 		public EventHandler wrap() {
 			return new WrappedEventHandlerImpl(srcHandler);
 		}
-		
+
 	}
 }
