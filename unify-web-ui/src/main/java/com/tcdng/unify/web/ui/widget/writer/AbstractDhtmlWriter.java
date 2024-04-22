@@ -28,6 +28,7 @@ import com.tcdng.unify.core.upl.UplElementReferences;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.core.util.TokenUtils;
+import com.tcdng.unify.web.ControllerPathParts;
 import com.tcdng.unify.web.ui.PageRequestContextUtil;
 import com.tcdng.unify.web.ui.WebUIApplicationComponents;
 import com.tcdng.unify.web.ui.util.WebUtils;
@@ -778,7 +779,8 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
 
 	protected void writeActionParamsJS(ResponseWriter writer, String event, String function, String id, String cmdTag,
 			PageAction pageAction, String[] refPageNames, String refObject, String path) throws UnifyException {
-		String pathId = getRequestContextUtil().getResponsePathParts().getControllerPathId();
+		final ControllerPathParts parts = getRequestContextUtil().getResponsePathParts();		
+		final String pathId = parts.getControllerPathId();
 		PageManager pageManager = getPageManager();
 		if (StringUtils.isNotBlank(event)) {
 			writer.write("\"uEvnt\":\"").write(event).write("\",");

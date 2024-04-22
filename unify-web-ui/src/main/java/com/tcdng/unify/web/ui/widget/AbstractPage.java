@@ -129,11 +129,11 @@ public abstract class AbstractPage extends AbstractStandalonePanel implements Pa
     }
 
     @Override
-    public void resolvePageActions(EventHandler[] eventHandlers) throws UnifyException {
-        super.resolvePageActions(eventHandlers);
-        if (standalonePanels != null && eventHandlers != null) {
+    public void resolvePageActions(Widget widget) throws UnifyException {
+        super.resolvePageActions(widget);
+        if (standalonePanels != null) {
             for (StandalonePanel standalonePanel : standalonePanels.values()) {
-                standalonePanel.resolvePageActions(eventHandlers);
+                standalonePanel.resolvePageActions(widget);
             }
         }
     }

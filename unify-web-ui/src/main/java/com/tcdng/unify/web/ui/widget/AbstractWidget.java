@@ -41,8 +41,8 @@ import com.tcdng.unify.web.ui.UIControllerUtil;
 import com.tcdng.unify.web.ui.WebUIApplicationComponents;
 import com.tcdng.unify.web.ui.constant.WidgetTempValueConstants;
 import com.tcdng.unify.web.ui.util.WidgetUtils;
-import com.tcdng.unify.web.ui.widget.data.Hint.MODE;
 import com.tcdng.unify.web.ui.widget.data.FileAttachmentInfo;
+import com.tcdng.unify.web.ui.widget.data.Hint.MODE;
 import com.tcdng.unify.web.ui.widget.data.Popup;
 import com.tcdng.unify.web.ui.widget.panel.StandalonePanel;
 
@@ -69,9 +69,14 @@ import com.tcdng.unify.web.ui.widget.panel.StandalonePanel;
 		@UplAttribute(name = "hidden", type = boolean.class, defaultVal = "false"),
 		@UplAttribute(name = "valueStoreMemory", type = boolean.class, defaultVal = "false"),
 		@UplAttribute(name = "behaviorAlways", type = boolean.class, defaultVal = "false"),
+		@UplAttribute(name = "copyEventHandlers", type = boolean.class, defaultVal = "false"),
 		@UplAttribute(name = "eventHandler", type = EventHandler[].class) })
 public abstract class AbstractWidget extends AbstractUplComponent implements Widget {
 
+	private static final EventHandler[] ZERO_EVENT_HANDLERS = new EventHandler[0];
+	
+	private EventHandler[] handlers;
+	
 	private String id;
 
 	private String groupId;
@@ -186,7 +191,27 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 
 	@Override
 	public EventHandler[] getEventHandlers() throws UnifyException {
-		return getUplAttribute(EventHandler[].class, "eventHandler");
+		if (handlers == null) {
+			synchronized(this) {
+				if (handlers == null) {
+					handlers = getUplAttribute(EventHandler[].class, "eventHandler");
+					if (handlers == null) {
+						handlers = ZERO_EVENT_HANDLERS;
+					}
+					
+					if (handlers.length > 0 && getUplAttribute(boolean.class, "copyEventHandlers")) {
+						EventHandler[] _handlers = new EventHandler[handlers.length];
+						for (int i = 0; i < handlers.length; i++) {
+							_handlers[i] = handlers[i].wrap();
+						}
+						
+						handlers = _handlers;
+					}
+				}
+			}
+		}
+		
+		return handlers;
 	}
 
 	@Override
