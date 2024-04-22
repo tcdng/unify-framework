@@ -20,7 +20,6 @@ import java.util.Set;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.web.ui.PageWidgetValidator;
-import com.tcdng.unify.web.ui.widget.EventHandler;
 import com.tcdng.unify.web.ui.widget.PageAction;
 import com.tcdng.unify.web.ui.widget.PageManager;
 import com.tcdng.unify.web.ui.widget.PageValidation;
@@ -78,14 +77,14 @@ public interface StandalonePanel extends Panel {
     PageAction getPageAction(String longName);
 
     /**
-     * Resolve page actions for supplied event handlers.
+     * Resolve page actions for supplied widget event handlers.
      * 
-     * @param eventHandlers
-     *            the event handlers
+     * @param widget
+     *            the widget
      * @throws UnifyException
      *             if an error occurs.
      */
-    void resolvePageActions(EventHandler[] eventHandlers) throws UnifyException;
+    void resolvePageActions(Widget widget) throws UnifyException;
 
     /**
      * Gets widgets by long names.

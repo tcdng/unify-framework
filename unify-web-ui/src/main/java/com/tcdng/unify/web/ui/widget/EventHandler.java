@@ -44,4 +44,9 @@ public interface EventHandler extends Behavior {
      * Returns page actions.
      */
     PageAction[] getPageAction();
+    
+    /**
+     * Get wrapped version.
+     */
+    EventHandler wrap();
 }
