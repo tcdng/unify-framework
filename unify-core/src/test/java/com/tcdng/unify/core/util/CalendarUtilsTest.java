@@ -16,9 +16,11 @@
 package com.tcdng.unify.core.util;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -35,6 +37,30 @@ import com.tcdng.unify.core.constant.FrequencyUnit;
  * @since 1.0
  */
 public class CalendarUtilsTest {
+
+    @Test
+	public void testIsPeriodOverLeapMonth() throws Exception {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+		assertFalse(CalendarUtils.isPeriodOverLeapMonth(sdf.parse("07-02-2023"), sdf.parse("07-02-2023")));
+		assertFalse(CalendarUtils.isPeriodOverLeapMonth(sdf.parse("01-01-2024"), sdf.parse("31-01-2024")));
+		assertFalse(CalendarUtils.isPeriodOverLeapMonth(sdf.parse("01-04-2024"), sdf.parse("12-03-2025")));
+		
+		assertTrue(CalendarUtils.isPeriodOverLeapMonth(sdf.parse("01-01-2024"), sdf.parse("12-03-2024")));
+		assertTrue(CalendarUtils.isPeriodOverLeapMonth(sdf.parse("07-02-2024"), sdf.parse("07-02-2024")));
+		assertTrue(CalendarUtils.isPeriodOverLeapMonth(sdf.parse("07-02-2024"), sdf.parse("31-12-2024")));
+	}
+
+    @Test
+	public void testGetLeapMonthsWithinPeriod() throws Exception {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+		assertEquals(0, CalendarUtils.getLeapMonthsWithinPeriod(sdf.parse("07-02-2023"), sdf.parse("07-02-2023")));
+		assertEquals(0, CalendarUtils.getLeapMonthsWithinPeriod(sdf.parse("01-01-2024"), sdf.parse("31-01-2024")));
+		assertEquals(0, CalendarUtils.getLeapMonthsWithinPeriod(sdf.parse("01-04-2024"), sdf.parse("12-03-2025")));
+		
+		assertEquals(1, CalendarUtils.getLeapMonthsWithinPeriod(sdf.parse("01-01-2024"), sdf.parse("12-03-2024")));
+		assertEquals(1, CalendarUtils.getLeapMonthsWithinPeriod(sdf.parse("07-02-2024"), sdf.parse("07-02-2024")));
+		assertEquals(1, CalendarUtils.getLeapMonthsWithinPeriod(sdf.parse("07-02-2024"), sdf.parse("31-12-2024")));
+	}
 
     @Test
 	public void testGetFirstDayOfMonthDate() throws Exception {
