@@ -44,10 +44,12 @@ public class CalendarUtilsTest {
 		assertFalse(CalendarUtils.isPeriodOverLeapMonth(sdf.parse("07-02-2023"), sdf.parse("07-02-2023")));
 		assertFalse(CalendarUtils.isPeriodOverLeapMonth(sdf.parse("01-01-2024"), sdf.parse("31-01-2024")));
 		assertFalse(CalendarUtils.isPeriodOverLeapMonth(sdf.parse("01-04-2024"), sdf.parse("12-03-2025")));
+		assertFalse(CalendarUtils.isPeriodOverLeapMonth(sdf.parse("07-02-2024"), sdf.parse("20-01-2024")));
 		
 		assertTrue(CalendarUtils.isPeriodOverLeapMonth(sdf.parse("01-01-2024"), sdf.parse("12-03-2024")));
 		assertTrue(CalendarUtils.isPeriodOverLeapMonth(sdf.parse("07-02-2024"), sdf.parse("07-02-2024")));
 		assertTrue(CalendarUtils.isPeriodOverLeapMonth(sdf.parse("07-02-2024"), sdf.parse("31-12-2024")));
+		assertTrue(CalendarUtils.isPeriodOverLeapMonth(sdf.parse("07-02-2024"), sdf.parse("31-12-2028")));
 	}
 
     @Test
@@ -60,6 +62,7 @@ public class CalendarUtilsTest {
 		assertEquals(1, CalendarUtils.getLeapMonthsWithinPeriod(sdf.parse("01-01-2024"), sdf.parse("12-03-2024")));
 		assertEquals(1, CalendarUtils.getLeapMonthsWithinPeriod(sdf.parse("07-02-2024"), sdf.parse("07-02-2024")));
 		assertEquals(1, CalendarUtils.getLeapMonthsWithinPeriod(sdf.parse("07-02-2024"), sdf.parse("31-12-2024")));
+		assertEquals(2, CalendarUtils.getLeapMonthsWithinPeriod(sdf.parse("07-02-2024"), sdf.parse("31-12-2028")));
 	}
 
     @Test
