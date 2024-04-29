@@ -54,6 +54,73 @@ public final class CalendarUtils {
 
 	}
 
+	/**
+	 * Checks if leap month exists between date range
+	 * 
+	 * @param startDate the start date
+	 * @param endDate   the end date
+	 * @return true if over leap month otherwise false
+	 */
+	public static boolean isPeriodOverLeapMonth(Date startDate, Date endDate) {
+		// Init
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(startDate);
+		int diff = cal.get(Calendar.MONTH) - 1;
+		if (diff > 0) {
+			cal.add(Calendar.MONTH, 12 - diff);
+		} else {
+			cal.add(Calendar.MONTH, -diff);
+		}
+
+		cal.set(Calendar.DAY_OF_MONTH, 1);
+		Date febDate = cal.getTime();
+		while (febDate.compareTo(endDate) <= 0) {
+			if (cal.getActualMaximum(Calendar.DAY_OF_MONTH) == 29) {
+				return true;
+			}
+
+			cal.add(Calendar.YEAR, 1);
+			febDate = cal.getTime();
+		}
+
+		return false;
+	}
+
+	/**
+	 * Gets leap months within period
+	 * 
+	 * @param startDate the start date
+	 * @param endDate   the end date
+	 * @return the number of leap months
+	 */
+	public static int getLeapMonthsWithinPeriod(Date startDate, Date endDate) {
+		// Init
+		int count = 0;
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(startDate);
+		int diff = cal.get(Calendar.MONTH) - 1;
+		if (diff > 0) {
+			cal.add(Calendar.MONTH, 12 - diff);
+		} else {
+			cal.add(Calendar.MONTH, -diff);
+		}
+
+		cal.set(Calendar.DAY_OF_MONTH, 1);
+		Date febDate = cal.getTime();
+		while (febDate.compareTo(endDate) <= 0) {
+			if (cal.getActualMaximum(Calendar.DAY_OF_MONTH) == 29) {
+				count++;
+				cal.add(Calendar.YEAR, 4);
+			} else {
+				cal.add(Calendar.YEAR, 1);
+			}
+
+			febDate = cal.getTime();
+		}
+
+		return count;
+	}
+
 	public static Long getRawOffset(String timeZoneInterval) {
 		if (timeZoneInterval != null) {
 			int cIndex = timeZoneInterval.indexOf(':');
