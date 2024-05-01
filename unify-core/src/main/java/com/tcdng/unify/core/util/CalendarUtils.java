@@ -55,24 +55,24 @@ public final class CalendarUtils {
 	}
 
 	/**
-	 * Checks if leap month exists between date range
+	 * Checks if leap day exists between date range
 	 * 
 	 * @param startDate the start date
 	 * @param endDate   the end date
-	 * @return true if over leap month otherwise false
+	 * @return true if over leap day otherwise false
 	 */
-	public static boolean isPeriodOverLeapMonth(Date startDate, Date endDate) {
+	public static boolean isPeriodOverLeapDay(Date startDate, Date endDate) {
 		// Init
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(startDate);
-		int diff = cal.get(Calendar.MONTH) - 1;
+		int diff = cal.get(Calendar.MONTH) - Calendar.FEBRUARY;
 		if (diff > 0) {
 			cal.add(Calendar.MONTH, 12 - diff);
 		} else {
 			cal.add(Calendar.MONTH, -diff);
 		}
 
-		cal.set(Calendar.DAY_OF_MONTH, 1);
+		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
 		Date febDate = cal.getTime();
 		while (febDate.compareTo(endDate) <= 0) {
 			if (cal.getActualMaximum(Calendar.DAY_OF_MONTH) == 29) {
@@ -87,25 +87,25 @@ public final class CalendarUtils {
 	}
 
 	/**
-	 * Gets leap months within period
+	 * Gets leap days within period
 	 * 
 	 * @param startDate the start date
 	 * @param endDate   the end date
-	 * @return the number of leap months
+	 * @return the number of leap days
 	 */
-	public static int getLeapMonthsWithinPeriod(Date startDate, Date endDate) {
+	public static int getLeapDaysWithinPeriod(Date startDate, Date endDate) {
 		// Init
 		int count = 0;
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(startDate);
-		int diff = cal.get(Calendar.MONTH) - 1;
+		int diff = cal.get(Calendar.MONTH) - Calendar.FEBRUARY;
 		if (diff > 0) {
 			cal.add(Calendar.MONTH, 12 - diff);
 		} else {
 			cal.add(Calendar.MONTH, -diff);
 		}
 
-		cal.set(Calendar.DAY_OF_MONTH, 1);
+		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
 		Date febDate = cal.getTime();
 		while (febDate.compareTo(endDate) <= 0) {
 			if (cal.getActualMaximum(Calendar.DAY_OF_MONTH) == 29) {

@@ -39,30 +39,36 @@ import com.tcdng.unify.core.constant.FrequencyUnit;
 public class CalendarUtilsTest {
 
     @Test
-	public void testIsPeriodOverLeapMonth() throws Exception {
-		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-		assertFalse(CalendarUtils.isPeriodOverLeapMonth(sdf.parse("07-02-2023"), sdf.parse("07-02-2023")));
-		assertFalse(CalendarUtils.isPeriodOverLeapMonth(sdf.parse("01-01-2024"), sdf.parse("31-01-2024")));
-		assertFalse(CalendarUtils.isPeriodOverLeapMonth(sdf.parse("01-04-2024"), sdf.parse("12-03-2025")));
-		assertFalse(CalendarUtils.isPeriodOverLeapMonth(sdf.parse("07-02-2024"), sdf.parse("20-01-2024")));
+	public void testIsPeriodOverLeapDay() throws Exception {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");
+		assertFalse(CalendarUtils.isPeriodOverLeapDay(sdf.parse("07-FEB-2023"), sdf.parse("07-FEB-2023")));
+		assertFalse(CalendarUtils.isPeriodOverLeapDay(sdf.parse("07-FEB-2024"), sdf.parse("07-FEB-2024")));
+		assertFalse(CalendarUtils.isPeriodOverLeapDay(sdf.parse("01-JAN-2024"), sdf.parse("31-JAN-2024")));
+		assertFalse(CalendarUtils.isPeriodOverLeapDay(sdf.parse("01-APR-2024"), sdf.parse("12-MAR-2025")));
+		assertFalse(CalendarUtils.isPeriodOverLeapDay(sdf.parse("07-FEB-2024"), sdf.parse("20-JAN-2024")));
+		assertFalse(CalendarUtils.isPeriodOverLeapDay(sdf.parse("29-FEB-2024"), sdf.parse("20-JAN-2024")));
 		
-		assertTrue(CalendarUtils.isPeriodOverLeapMonth(sdf.parse("01-01-2024"), sdf.parse("12-03-2024")));
-		assertTrue(CalendarUtils.isPeriodOverLeapMonth(sdf.parse("07-02-2024"), sdf.parse("07-02-2024")));
-		assertTrue(CalendarUtils.isPeriodOverLeapMonth(sdf.parse("07-02-2024"), sdf.parse("31-12-2024")));
-		assertTrue(CalendarUtils.isPeriodOverLeapMonth(sdf.parse("07-02-2024"), sdf.parse("31-12-2028")));
+		assertTrue(CalendarUtils.isPeriodOverLeapDay(sdf.parse("01-JAN-2024"), sdf.parse("12-MAR-2024")));
+		assertTrue(CalendarUtils.isPeriodOverLeapDay(sdf.parse("07-FEB-2024"), sdf.parse("29-FEB-2024")));
+		assertTrue(CalendarUtils.isPeriodOverLeapDay(sdf.parse("29-FEB-2024"), sdf.parse("31-DEC-2024")));
+		assertTrue(CalendarUtils.isPeriodOverLeapDay(sdf.parse("07-FEB-2024"), sdf.parse("31-DEC-2024")));
+		assertTrue(CalendarUtils.isPeriodOverLeapDay(sdf.parse("07-FEB-2024"), sdf.parse("31-DEC-2028")));
+		assertTrue(CalendarUtils.isPeriodOverLeapDay(sdf.parse("01-JAN-2024"), sdf.parse("31-DEC-2028")));
 	}
 
     @Test
-	public void testGetLeapMonthsWithinPeriod() throws Exception {
-		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-		assertEquals(0, CalendarUtils.getLeapMonthsWithinPeriod(sdf.parse("07-02-2023"), sdf.parse("07-02-2023")));
-		assertEquals(0, CalendarUtils.getLeapMonthsWithinPeriod(sdf.parse("01-01-2024"), sdf.parse("31-01-2024")));
-		assertEquals(0, CalendarUtils.getLeapMonthsWithinPeriod(sdf.parse("01-04-2024"), sdf.parse("12-03-2025")));
+	public void testGetLeapDaysWithinPeriod() throws Exception {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");
+		assertEquals(0, CalendarUtils.getLeapDaysWithinPeriod(sdf.parse("07-FEB-2023"), sdf.parse("07-FEB-2023")));
+		assertEquals(0, CalendarUtils.getLeapDaysWithinPeriod(sdf.parse("01-JAN-2024"), sdf.parse("31-JAN-2024")));
+		assertEquals(0, CalendarUtils.getLeapDaysWithinPeriod(sdf.parse("01-APR-2024"), sdf.parse("12-MAR-2025")));
+		assertEquals(0, CalendarUtils.getLeapDaysWithinPeriod(sdf.parse("07-FEB-2024"), sdf.parse("07-FEB-2024")));
 		
-		assertEquals(1, CalendarUtils.getLeapMonthsWithinPeriod(sdf.parse("01-01-2024"), sdf.parse("12-03-2024")));
-		assertEquals(1, CalendarUtils.getLeapMonthsWithinPeriod(sdf.parse("07-02-2024"), sdf.parse("07-02-2024")));
-		assertEquals(1, CalendarUtils.getLeapMonthsWithinPeriod(sdf.parse("07-02-2024"), sdf.parse("31-12-2024")));
-		assertEquals(2, CalendarUtils.getLeapMonthsWithinPeriod(sdf.parse("07-02-2024"), sdf.parse("31-12-2028")));
+		assertEquals(1, CalendarUtils.getLeapDaysWithinPeriod(sdf.parse("01-JAN-2024"), sdf.parse("12-MAR-2024")));
+		assertEquals(1, CalendarUtils.getLeapDaysWithinPeriod(sdf.parse("07-FEB-2024"), sdf.parse("29-FEB-2024")));
+		assertEquals(1, CalendarUtils.getLeapDaysWithinPeriod(sdf.parse("29-FEB-2024"), sdf.parse("31-DEC-2024")));
+		assertEquals(1, CalendarUtils.getLeapDaysWithinPeriod(sdf.parse("07-FEB-2024"), sdf.parse("31-DEC-2024")));
+		assertEquals(2, CalendarUtils.getLeapDaysWithinPeriod(sdf.parse("07-FEB-2024"), sdf.parse("31-DEC-2028")));
 	}
 
     @Test
