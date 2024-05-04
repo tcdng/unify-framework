@@ -22,5 +22,10 @@ package com.tcdng.unify.core.task;
  * @since 1.0
  */
 public enum TaskExecLimit {
-    ALLOW_SINGLE, ALLOW_MULTIPLE
+    ALLOW_SINGLE,
+    ALLOW_MULTIPLE;
+	
+	public boolean isPermitMultiple() {
+		return ALLOW_MULTIPLE.equals(this);
+	}
 }

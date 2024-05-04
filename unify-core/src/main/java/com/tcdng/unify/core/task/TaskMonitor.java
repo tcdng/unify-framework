@@ -84,16 +84,16 @@ public interface TaskMonitor {
      * Gets all exceptions thrown during execution of the task.
      */
     Exception[] getExceptions();
-
+    
     /**
-     * Indicates begin.
+     * Gets the expected number of runs.
      */
-    void begin();
-
+    int expectedRuns();
+    
     /**
-     * Indicates done.
+     * Gets the actual number of runs.
      */
-    void done();
+    int actualRuns();
     
     /**
      * Cancels task.
@@ -101,9 +101,14 @@ public interface TaskMonitor {
     void cancel();
 
     /**
+     * Returns true if new task of type is not permitted.
+     */
+    boolean isNotPermitted();
+
+    /**
      * Returns true if task has been canceled.
      */
-    boolean isCanceled();
+    boolean isCancelled();
 
     /**
      * Returns true if task has any exceptions.

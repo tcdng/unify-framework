@@ -108,7 +108,7 @@ public class TestTaskMonitor implements TaskMonitor {
     }
 
     @Override
-    public boolean isCanceled() {
+    public boolean isCancelled() {
         return false;
     }
 

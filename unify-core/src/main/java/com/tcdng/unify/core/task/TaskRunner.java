@@ -74,9 +74,28 @@ public interface TaskRunner extends UnifyComponent {
 	 * @param repeatDelayInMillSec repeat delay in milliseconds
 	 * @param numberOfTimes        number of times task should run. Endless repeat
 	 *                             if <= 0
-	 * @return true if scheduled otherwise false
+	 * @return the task monitor
 	 * @throws UnifyException if an error occurs
 	 */
-	boolean schedule(String taskName, Map<String, Object> parameters, boolean permitMultiple, boolean logMessages,
+	TaskMonitor schedule(String taskName, Map<String, Object> parameters, boolean permitMultiple, boolean logMessages,
 			long inDelayInMillSec, long periodInMillSec, int numberOfTimes) throws UnifyException;
+
+	/**
+	 * Adds a task to runner schedule.
+	 * 
+	 * @param tmc                  the taskable method configuration
+	 * @param taskName             the task name
+	 * @param parameters           the task parameters
+	 * @param permitMultiple       permits task to be scheduled multiple times
+	 * @param logMessages          indicates if messages should be logged
+	 * @param inDelayInMillSec     initial delay in milliseconds
+	 * @param repeatDelayInMillSec repeat delay in milliseconds
+	 * @param numberOfTimes        number of times task should run. Endless repeat
+	 *                             if <= 0
+	 * @return the task monitor
+	 * @throws UnifyException if an error occurs
+	 */
+	TaskMonitor schedule(TaskableMethodConfig tmc, String taskName, Map<String, Object> parameters,
+			boolean permitMultiple, boolean logMessages, long inDelayInMillSec, long periodInMillSec, int numberOfTimes)
+			throws UnifyException;
 }

@@ -70,20 +70,25 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 
 	@Override
 	public boolean start(int maxRunThread) {
+		logDebug("Starting task runner [{0}] with maximum run threads [{1}]...", this, maxRunThread);
 		if (processingExecutor == null) {
 			synchronized (this) {
 				if (processingExecutor == null) {
 					processingExecutor = Executors.newFixedThreadPool(maxRunThread <= 0 ? 1 : maxRunThread);
 					tasks = new HashSet<String>();
+					logDebug("Task runner [{0}] is successfully started.", this);
+					return true;
 				}
 			}
 		}
 
+		logDebug("Task runner [{0}] is already started.", this);
 		return false;
 	}
 
 	@Override
 	public void stop() {
+		logDebug("Stopping task runner [{0}] ...", this);
 		if (processingExecutor != null) {
 			synchronized (this) {
 				if (processingExecutor != null) {
@@ -96,9 +101,14 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 						processingExecutor = null;
 						tasks = null;
 					}
+					
+					logDebug("Task runner [{0}] is successfully stopped.", this);
+					return;
 				}
 			}
 		}
+		
+		logDebug("Task runner [{0}] is already stopped.", this);
 	}
 
 	@Override
@@ -126,27 +136,45 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 	}
 
 	@Override
-	public boolean schedule(String taskName, Map<String, Object> parameters, boolean permitMultiple,
+	public TaskMonitor schedule(String taskName, Map<String, Object> parameters, boolean permitMultiple,
 			boolean logMessages, long inDelayInMillSec, long periodInMillSec, int numberOfTimes) throws UnifyException {
+		return schedule(null, taskName, parameters, permitMultiple, logMessages, inDelayInMillSec, periodInMillSec,
+				numberOfTimes);
+	}
+
+	@Override
+	public TaskMonitor schedule(TaskableMethodConfig tmc, String taskName, Map<String, Object> parameters,
+			boolean permitMultiple, boolean logMessages, long inDelayInMillSec, long periodInMillSec, int numberOfTimes)
+			throws UnifyException {
+		if (numberOfTimes > 0) {
+			logDebug(
+					"Scheduling task [{0}] for execution [{1}] time(s) with initial delay [{2}ms] and repeat period [{3}ms]...",
+					taskName, numberOfTimes, inDelayInMillSec, periodInMillSec);
+		} else {
+			logDebug(
+					"Scheduling task [{0}] for continuous execution with initial delay [{1}ms] and repeat period [{2}ms]...",
+					taskName, inDelayInMillSec, periodInMillSec);
+		}
+
+		TaskMonitorImpl tm = new TaskMonitorImpl(taskName, logMessages, numberOfTimes);
 		if (isRunning()) {
 			synchronized (this) {
 				if (isRunning()) {
-					if (!permitMultiple && isScheduled(taskName)) {
-						return false;
+					if (permitMultiple || !isScheduled(taskName)) {
+						TaskRunParams params = new TaskRunParams(tm, tmc, parameters, inDelayInMillSec, periodInMillSec,
+								numberOfTimes);
+						schedule(params);
+					} else {
+						tm.notPermitted();
 					}
-
-					TaskableMethodConfig tmc = null; // TODO Resolve
-					TaskRunParams params = new TaskRunParams(taskName, tmc, parameters, logMessages, inDelayInMillSec,
-							periodInMillSec, numberOfTimes);
-					schedule(params);
-					return true;
 				} else {
 					throwOperationErrorException(new IllegalStateException("Task runner is not started."));
 				}
 			}
 		}
 
-		return false;
+		logDebug("Scheduling of task [{0}] completed with permitted [{1}].", taskName, !tm.isNotPermitted());
+		return tm;
 	}
 
 	@Override
@@ -176,7 +204,7 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 	}
 
 	private boolean scheduleRepeatIfNecessary(TaskRunParams params) {
-		if (params.incRunCounterAndCheckRepeat()) {
+		if (params.incRunCounterAndCheckRepeat() && !params.getTm().isCancelled()) {
 			if (params.isWithPeriodInMillSec()) {
 				new WaitThread(params, params.getPeriodInMillSec()).start();
 			} else {
@@ -229,6 +257,7 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 		public void run() {
 			final boolean lock = !StringUtils.isBlank(lockToRelease);
 			if (!lock || beginClusterLock(lockToRelease)) {
+				final TaskMonitorImpl tm = params.getTm();
 				try {
 					RequestContext requestContext = getRequestContext();
 					requestContextManager.loadRequestContext(requestContext);
@@ -239,16 +268,18 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 						}
 					}
 
-					TaskMonitorImpl taskMonitor = new TaskMonitorImpl(params.getTaskName(), params.isLogMessages());
-
-					TaskInput input = params.isWithTmc()
-							? new TaskInput(params.getTaskName(), params.getTmc(), params.getParameters())
+					TaskInput input = params.isWithTaskableMethodConfig()
+							? new TaskInput(params.getTaskName(), params.getTaskableMethodConfig(),
+									params.getParameters())
 							: new TaskInput(params.getTaskName(), params.getParameters());
 					Task task = (Task) getComponent(params.getTaskName());
-					task.execute(taskMonitor, input);
+					tm.begin();
+					task.execute(tm, input);
 				} catch (Exception e) {
-					logError(e);
+					tm.addException(e);
 				} finally {
+					tm.done();
+
 					if (lock) {
 						releaseClusterLock(lockToRelease);
 					}
@@ -268,13 +299,11 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 
 	private class TaskRunParams {
 
-		private final String taskName;
+		private final TaskMonitorImpl tm;
 
 		private final TaskableMethodConfig tmc;
 
 		private final Map<String, Object> parameters;
-
-		private final boolean logMessages;
 
 		private final long inDelayInMillSec;
 
@@ -284,27 +313,30 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 
 		private long runCounter;
 
-		public TaskRunParams(String taskName, TaskableMethodConfig tmc, Map<String, Object> parameters,
-				boolean logMessages, long inDelayInMillSec, long periodInMillSec, int numberOfTimes) {
-			this.taskName = taskName;
+		public TaskRunParams(TaskMonitorImpl tm, TaskableMethodConfig tmc, Map<String, Object> parameters,
+				long inDelayInMillSec, long periodInMillSec, int numberOfTimes) {
+			this.tm = tm;
 			this.tmc = tmc;
 			this.parameters = parameters;
-			this.logMessages = logMessages;
 			this.inDelayInMillSec = inDelayInMillSec;
 			this.periodInMillSec = periodInMillSec;
 			this.numberOfTimes = numberOfTimes;
 			this.runCounter = 0L;
 		}
 
-		public String getTaskName() {
-			return taskName;
+		public TaskMonitorImpl getTm() {
+			return tm;
 		}
 
-		public TaskableMethodConfig getTmc() {
+		public String getTaskName() {
+			return tm.getTaskName();
+		}
+
+		public TaskableMethodConfig getTaskableMethodConfig() {
 			return tmc;
 		}
 
-		public boolean isWithTmc() {
+		public boolean isWithTaskableMethodConfig() {
 			return tmc != null;
 		}
 
@@ -314,10 +346,6 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 
 		public Object getParameter(String name) {
 			return parameters != null ? parameters.get(name) : null;
-		}
-
-		public boolean isLogMessages() {
-			return logMessages;
 		}
 
 		public long getInDelayInMillSec() {
@@ -353,28 +381,36 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 
 		private static final int DONE = 2;
 
+		private static final int NOT_PERMITTED = 3;
+
 		private String taskName;
 
 		private List<String> messages;
 
 		private List<Exception> exceptions;
 
-		private TaskOutput output;
+		private final TaskOutput output;
 
-		private boolean logMessages;
+		private final boolean logMessages;
+
+		private final int expectedRuns;
+
+		private int actualRuns;
 
 		private int running;
 
-		public TaskMonitorImpl(String taskName, boolean logMessages) {
+		public TaskMonitorImpl(String taskName, boolean logMessages, int expectedRuns) {
+			this.output = new TaskOutput();
 			this.taskName = taskName;
 			this.logMessages = logMessages;
+			this.expectedRuns = expectedRuns;
 			this.exceptions = new ArrayList<Exception>();
 			if (this.logMessages) {
 				messages = new ArrayList<String>();
 			}
 
-			this.output = new TaskOutput();
 			this.running = PENDING;
+			this.actualRuns = 0;
 		}
 
 		@Override
@@ -382,17 +418,24 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 			return taskName;
 		}
 
-		@Override
 		public void begin() {
 			if (running == PENDING) {
 				running = RUNNING;
 			}
 		}
 
-		@Override
 		public void done() {
 			if (running == RUNNING) {
-				running = DONE;
+				actualRuns++;
+				if (expectedRuns > 0 && actualRuns >= expectedRuns) {
+					running = DONE;
+				}
+			}
+		}
+
+		public void notPermitted() {
+			if (running == PENDING) {
+				running = NOT_PERMITTED;
 			}
 		}
 
@@ -404,23 +447,38 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 		}
 
 		@Override
+		public int expectedRuns() {
+			return expectedRuns;
+		}
+
+		@Override
+		public int actualRuns() {
+			return actualRuns;
+		}
+
+		@Override
+		public boolean isNotPermitted() {
+			return running == NOT_PERMITTED;
+		}
+
+		@Override
 		public boolean isExceptions() {
 			return !exceptions.isEmpty();
 		}
 
 		@Override
-		public boolean isCanceled() {
-			return running < 0;
+		public boolean isCancelled() {
+			return running == CANCELLED;
 		}
 
 		@Override
 		public boolean isRunning() {
-			return running == 1;
+			return running == RUNNING;
 		}
 
 		@Override
 		public boolean isDone() {
-			return running == 2;
+			return running == DONE;
 		}
 
 		@Override

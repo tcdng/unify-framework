@@ -25,13 +25,13 @@ import com.tcdng.unify.core.annotation.Component;
  * @author The Code Department
  * @since 1.0
  */
-@Component(name = "periodicexecution-task")
+@Component(PeriodicExecutionTaskConstants.PERIODIC_METHOD_TASK)
 public class PeriodicExecutionTask extends AbstractTask {
 
     @Override
     public void execute(TaskMonitor taskMonitor, TaskInput input) throws UnifyException {
         try {
-            if (!taskMonitor.isCanceled()) {
+            if (!taskMonitor.isCancelled()) {
                 PeriodicExecutionInfo periodicExecutionInfo = input.getParam(PeriodicExecutionInfo.class,
                         PeriodicExecutionTaskConstants.PERIODICEXECUTIONINFO);
                 UnifyComponent unifyComponent = getComponent(periodicExecutionInfo.getComponentName());

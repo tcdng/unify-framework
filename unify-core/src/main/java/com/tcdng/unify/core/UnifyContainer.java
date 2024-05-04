@@ -68,7 +68,6 @@ import com.tcdng.unify.core.task.TaskMonitor;
 import com.tcdng.unify.core.upl.UplCompiler;
 import com.tcdng.unify.core.upl.UplComponent;
 import com.tcdng.unify.core.upl.UplElementAttributes;
-import com.tcdng.unify.core.util.AnnotationUtils;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.GetterSetterInfo;
 import com.tcdng.unify.core.util.IOUtils;
@@ -526,9 +525,8 @@ public class UnifyContainer {
 					}
 
 					PeriodicType periodicType = pa.value();
-					String taskStatusLoggerName = AnnotationUtils.getAnnotationString(pa.taskStatusLogger());
 					TaskMonitor taskMonitor = taskManager.schedulePeriodicExecution(periodicType,
-							componentEntry.getKey(), periodicEntry.getKey(), taskStatusLoggerName,
+							componentEntry.getKey(), periodicEntry.getKey(),
 							UnifyCoreConstants.PERIODIC_EXECUTION_INITIAL_DELAY_SECONDS * 1000
 									+ (random.nextInt() % 1000));
 					periodicTaskMonitorList.add(taskMonitor);

@@ -30,19 +30,7 @@ import com.tcdng.unify.core.data.ParamConfig;
 public class TaskableMethodTask extends AbstractTask {
 
     @Override
-    public TaskInstanceInfo getTaskInstanceInfo(TaskInput input) throws UnifyException {
-        TaskableMethodConfig tmc = input.getTmc();
-        String executionId = input.getOrigTaskName();
-        if (tmc.getIdGenerator() != null) {
-            TaskIdGenerator taskIdGenerator = (TaskIdGenerator) getComponent(tmc.getIdGenerator());
-            executionId = taskIdGenerator.generateID(input);
-        }
-
-        return new TaskInstanceInfo(tmc.getTaskExecLimit(), executionId);
-    }
-
-    @Override
-    public void execute(TaskMonitor taskMonitor, TaskInput input, TaskOutput output) throws UnifyException {
+    public void execute(TaskMonitor taskMonitor, TaskInput input) throws UnifyException {
         try {
             TaskableMethodConfig tmc = input.getTmc();
             Object[] params = new Object[tmc.getParamCount() + 1];
@@ -55,7 +43,7 @@ public class TaskableMethodTask extends AbstractTask {
 
             UnifyComponent component = getComponent(tmc.getComponentName());
             Object result = tmc.getMethod().invoke(component, params);
-            output.setResult(TaskableMethodConstants.TASK_RESULT, result);
+            taskMonitor.getTaskOutput().setResult(TaskableMethodConstants.TASK_RESULT, result);
         } catch (UnifyException e) {
             throw e;
         } catch (Exception e) {
