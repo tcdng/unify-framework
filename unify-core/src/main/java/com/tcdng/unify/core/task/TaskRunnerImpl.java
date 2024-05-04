@@ -139,7 +139,8 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 	@Override
 	public TaskMonitor schedule(PeriodicType periodicType, String taskName, Map<String, Object> parameters,
 			boolean logMessages, long inDelayInMillSec) throws UnifyException {
-		return schedule(null, taskName, parameters, logMessages, inDelayInMillSec, periodicType.getPeriodInMillSec(), 0);
+		return schedule(null, taskName, parameters, logMessages, inDelayInMillSec, periodicType.getPeriodInMillSec(),
+				0);
 	}
 
 	@Override
@@ -151,25 +152,31 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 	@Override
 	public TaskMonitor schedule(TaskableMethodConfig tmc, String taskName, Map<String, Object> parameters,
 			boolean logMessages, long inDelayInMillSec, long periodInMillSec, int numberOfTimes) throws UnifyException {
-		final boolean permitMultiple = tmc != null ? tmc.isPermitMultiple() : true;
-		return internalSchedule(tmc, taskName, parameters, permitMultiple, logMessages, inDelayInMillSec,
-				periodInMillSec, numberOfTimes);
-	}
-
-	private TaskMonitor internalSchedule(TaskableMethodConfig tmc, String taskName, Map<String, Object> parameters,
-			boolean permitMultiple, boolean logMessages, long inDelayInMillSec, long periodInMillSec, int numberOfTimes)
-			throws UnifyException {
-		if (numberOfTimes > 0) {
-			logDebug(
-					"Scheduling task [{0}] for execution [{1}] time(s) with initial delay [{2}ms] and repeat period [{3}ms]...",
-					taskName, numberOfTimes, inDelayInMillSec, periodInMillSec);
-		} else {
-			logDebug(
-					"Scheduling task [{0}] for continuous execution with initial delay [{1}ms] and repeat period [{2}ms]...",
-					taskName, inDelayInMillSec, periodInMillSec);
+		boolean permitMultiple = true;
+		String actualTaskName = taskName;
+		if (tmc != null) {
+			permitMultiple = tmc.isPermitMultiple();
+			actualTaskName = TaskableMethodConstants.TASKABLE_METHOD_TASK;
 		}
 
-		TaskMonitorImpl tm = new TaskMonitorImpl(taskName, logMessages, numberOfTimes);
+		return internalSchedule(tmc, actualTaskName, taskName, parameters, permitMultiple, logMessages,
+				inDelayInMillSec, periodInMillSec, numberOfTimes);
+	}
+
+	private TaskMonitor internalSchedule(TaskableMethodConfig tmc, String actualTaskName, String taskName,
+			Map<String, Object> parameters, boolean permitMultiple, boolean logMessages, long inDelayInMillSec,
+			long periodInMillSec, int numberOfTimes) throws UnifyException {
+		if (numberOfTimes > 0) {
+			logDebug(
+					"Scheduling task [{0} - {1}] for execution [{2}] time(s) with initial delay [{3}ms] and repeat period [{4}ms]...",
+					actualTaskName, taskName, numberOfTimes, inDelayInMillSec, periodInMillSec);
+		} else {
+			logDebug(
+					"Scheduling task [{0} - {1}] for continuous execution with initial delay [{2}ms] and repeat period [{3}ms]...",
+					actualTaskName, taskName, inDelayInMillSec, periodInMillSec);
+		}
+
+		TaskMonitorImpl tm = new TaskMonitorImpl(actualTaskName, logMessages, numberOfTimes);
 		if (isRunning()) {
 			synchronized (this) {
 				if (isRunning()) {
@@ -184,9 +191,11 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 					throwOperationErrorException(new IllegalStateException("Task runner is not started."));
 				}
 			}
+		} else {
+			throwOperationErrorException(new IllegalStateException("Task runner is not started."));
 		}
 
-		logDebug("Scheduling of task [{0}] completed with permitted [{1}].", taskName, !tm.isNotPermitted());
+		logDebug("Scheduling of task [{0}] completed with permitted [{1}].", actualTaskName, !tm.isNotPermitted());
 		return tm;
 	}
 
@@ -269,40 +278,43 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 		@Override
 		public void run() {
 			final boolean lock = !StringUtils.isBlank(lockToRelease);
-			if (!lock || beginClusterLock(lockToRelease)) {
-				final TaskMonitorImpl tm = params.getTm();
-				try {
-					RequestContext requestContext = getRequestContext();
-					requestContextManager.loadRequestContext(requestContext);
-					if (requestContext.getSessionContext().getUserToken() == null) {
-						if (userTokenProvider != null && !StringUtils.isBlank(userLoginId)) {
-							UserToken userToken = userTokenProvider.getUserToken(userLoginId, tenantId);
-							requestContext.getSessionContext().setUserToken(userToken);
+			final TaskMonitorImpl tm = params.getTm();
+			tm.begin();
+			try {
+				if (!lock || beginClusterLock(lockToRelease)) {
+					try {
+						RequestContext requestContext = getRequestContext();
+						requestContextManager.loadRequestContext(requestContext);
+						if (requestContext.getSessionContext().getUserToken() == null) {
+							if (userTokenProvider != null && !StringUtils.isBlank(userLoginId)) {
+								UserToken userToken = userTokenProvider.getUserToken(userLoginId, tenantId);
+								requestContext.getSessionContext().setUserToken(userToken);
+							}
+						}
+
+						TaskInput input = params.isWithTaskableMethodConfig()
+								? new TaskInput(params.getTaskName(), params.getTaskableMethodConfig(),
+										params.getParameters())
+								: new TaskInput(params.getTaskName(), params.getParameters());
+						Task task = (Task) getComponent(params.getTaskName());
+						task.execute(tm, input);
+					} catch (Exception e) {
+						tm.addException(e);
+						logError(e);
+					} finally {
+						if (lock) {
+							releaseClusterLock(lockToRelease);
+						}
+
+						try {
+							requestContextManager.unloadRequestContext();
+						} catch (Exception e) {
+							logError(e);
 						}
 					}
-
-					TaskInput input = params.isWithTaskableMethodConfig()
-							? new TaskInput(params.getTaskName(), params.getTaskableMethodConfig(),
-									params.getParameters())
-							: new TaskInput(params.getTaskName(), params.getParameters());
-					Task task = (Task) getComponent(params.getTaskName());
-					tm.begin();
-					task.execute(tm, input);
-				} catch (Exception e) {
-					tm.addException(e);
-				} finally {
-					tm.done();
-
-					if (lock) {
-						releaseClusterLock(lockToRelease);
-					}
-
-					try {
-						requestContextManager.unloadRequestContext();
-					} catch (Exception e) {
-						logError(e);
-					}
 				}
+			} finally {
+				tm.done();
 			}
 
 			scheduleRepeatIfNecessary(params);
@@ -492,6 +504,11 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 		@Override
 		public boolean isDone() {
 			return running == DONE;
+		}
+
+		@Override
+		public boolean isExited() {
+			return isNotPermitted() || isCancelled() || isDone();
 		}
 
 		@Override

@@ -124,4 +124,9 @@ public interface TaskMonitor {
      * Returns true if task is running
      */
     boolean isRunning();
+
+    /**
+     * Returns true if task is exited.
+     */
+    boolean isExited();
 }

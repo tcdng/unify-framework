@@ -111,4 +111,9 @@ public class TestTaskMonitor implements TaskMonitor {
         return false;
     }
 
+	@Override
+	public boolean isExited() {
+		return isNotPermitted() || isCancelled() || isDone();
+	}
+
 }
