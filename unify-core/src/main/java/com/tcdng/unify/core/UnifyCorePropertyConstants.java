@@ -84,4 +84,6 @@ public interface UnifyCorePropertyConstants {
     String APPLICATION_TASKRUNNER_SHUTDOWN_MILLISECONDS = "application.taskrunner.shutdown.milliseconds";
 
     String APPLICATION_MAX_TASKMONITOR_MESSAGES = "application.max.taskmonitor.messages";
+
+    String APPLICATION_MAX_TASKRUNNER_THREADS = "application.max.taskrunner.threads";
 }

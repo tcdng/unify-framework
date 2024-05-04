@@ -28,6 +28,7 @@ import com.tcdng.unify.core.RequestContextManager;
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyComponentConfig;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
+import com.tcdng.unify.core.UnifyCorePropertyConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.UserTokenProvider;
 import com.tcdng.unify.core.annotation.Component;
@@ -50,6 +51,8 @@ import com.tcdng.unify.core.util.ReflectUtils;
  */
 @Component(ApplicationComponents.APPLICATION_TASKMANAGER)
 public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManager {
+
+	private static final int DEFAULT_TASKRUNNER_MAXTHREADS = 128;
 
 	@Configurable(ApplicationComponents.APPLICATION_PROXYBUSINESSSERVICEGENERATOR)
 	private ProxyBusinessServiceMethodRelay proxyMethodRelay;
@@ -113,9 +116,8 @@ public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManag
 	@Override
 	public TaskMonitor executeTask(String taskName, Map<String, Object> parameters, boolean logMessages)
 			throws UnifyException {
-		final boolean permitMultiple = isTaskableMethod(taskName) ? getTaskableMethodConfig(taskName).isPermitMultiple()
-				: true;
-		TaskMonitor tm = taskableRunner.schedule(taskName, parameters, permitMultiple, logMessages, 0, 0, 1);
+		TaskMonitor tm = taskableRunner.schedule(taskConfigByNameMap.get(taskName), taskName, parameters, logMessages,
+				0, 0, 1);
 		while (!tm.isDone() && !tm.isCancelled()) {
 			Thread.yield();
 		}
@@ -126,26 +128,21 @@ public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManag
 	@Override
 	public TaskMonitor startTask(String taskName, Map<String, Object> parameters, boolean logMessages)
 			throws UnifyException {
-		final boolean permitMultiple = isTaskableMethod(taskName) ? getTaskableMethodConfig(taskName).isPermitMultiple()
-				: true;
-		return taskableRunner.schedule(taskName, parameters, permitMultiple, logMessages, 0, 0, 1);
+		return taskableRunner.schedule(taskConfigByNameMap.get(taskName), taskName, parameters, logMessages, 0, 0, 1);
 	}
 
 	@Override
 	public TaskMonitor scheduleTaskToRunAfter(String taskName, Map<String, Object> parameters, boolean logMessages,
 			long delayInMillSec) throws UnifyException {
-		final boolean permitMultiple = isTaskableMethod(taskName) ? getTaskableMethodConfig(taskName).isPermitMultiple()
-				: true;
-		return taskableRunner.schedule(taskName, parameters, permitMultiple, logMessages, delayInMillSec, 0, 1);
+		return taskableRunner.schedule(taskConfigByNameMap.get(taskName), taskName, parameters, logMessages,
+				delayInMillSec, 0, 1);
 	}
 
 	@Override
 	public TaskMonitor scheduleTaskToRunPeriodically(String taskName, Map<String, Object> parameters,
 			boolean logMessages, long inDelayInMillSec, long periodInMillSec, int numberOfTimes) throws UnifyException {
-		final boolean permitMultiple = isTaskableMethod(taskName) ? getTaskableMethodConfig(taskName).isPermitMultiple()
-				: true;
-		return taskableRunner.schedule(taskName, parameters, permitMultiple, logMessages, inDelayInMillSec,
-				periodInMillSec, numberOfTimes);
+		return taskableRunner.schedule(taskConfigByNameMap.get(taskName), taskName, parameters, logMessages,
+				inDelayInMillSec, periodInMillSec, numberOfTimes);
 	}
 
 	@Override
@@ -157,8 +154,8 @@ public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManag
 			parameters.put(PeriodicExecutionTaskConstants.PERIODICEXECUTIONINFO,
 					new PeriodicExecutionInfo(businessServiceName, method));
 
-			return periodicRunner.schedule(PeriodicExecutionTaskConstants.PERIODIC_METHOD_TASK, parameters, true, true,
-					inDelayInMillSec, periodicType.getPeriodInMillSec(), 0);
+			return periodicRunner.schedule(periodicType, PeriodicExecutionTaskConstants.PERIODIC_METHOD_TASK,
+					parameters, true, inDelayInMillSec);
 		} catch (UnifyException e) {
 			throw e;
 		} catch (Exception e) {
@@ -228,6 +225,11 @@ public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManag
 				}
 			}
 		}
+
+		final int maxThreads = getContainerSetting(int.class,
+				UnifyCorePropertyConstants.APPLICATION_MAX_TASKRUNNER_THREADS, DEFAULT_TASKRUNNER_MAXTHREADS);
+		periodicRunner.start(maxThreads);
+		taskableRunner.start(maxThreads);
 	}
 
 	@Override

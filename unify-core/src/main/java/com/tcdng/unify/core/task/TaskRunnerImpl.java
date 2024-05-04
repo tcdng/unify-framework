@@ -35,6 +35,7 @@ import com.tcdng.unify.core.UserToken;
 import com.tcdng.unify.core.UserTokenProvider;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
+import com.tcdng.unify.core.annotation.PeriodicType;
 import com.tcdng.unify.core.annotation.Singleton;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
@@ -101,13 +102,13 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 						processingExecutor = null;
 						tasks = null;
 					}
-					
+
 					logDebug("Task runner [{0}] is successfully stopped.", this);
 					return;
 				}
 			}
 		}
-		
+
 		logDebug("Task runner [{0}] is already stopped.", this);
 	}
 
@@ -136,14 +137,26 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 	}
 
 	@Override
-	public TaskMonitor schedule(String taskName, Map<String, Object> parameters, boolean permitMultiple,
-			boolean logMessages, long inDelayInMillSec, long periodInMillSec, int numberOfTimes) throws UnifyException {
-		return schedule(null, taskName, parameters, permitMultiple, logMessages, inDelayInMillSec, periodInMillSec,
-				numberOfTimes);
+	public TaskMonitor schedule(PeriodicType periodicType, String taskName, Map<String, Object> parameters,
+			boolean logMessages, long inDelayInMillSec) throws UnifyException {
+		return schedule(null, taskName, parameters, logMessages, inDelayInMillSec, periodicType.getPeriodInMillSec(), 0);
+	}
+
+	@Override
+	public TaskMonitor schedule(String taskName, Map<String, Object> parameters, boolean logMessages,
+			long inDelayInMillSec, long periodInMillSec, int numberOfTimes) throws UnifyException {
+		return schedule(null, taskName, parameters, logMessages, inDelayInMillSec, periodInMillSec, numberOfTimes);
 	}
 
 	@Override
 	public TaskMonitor schedule(TaskableMethodConfig tmc, String taskName, Map<String, Object> parameters,
+			boolean logMessages, long inDelayInMillSec, long periodInMillSec, int numberOfTimes) throws UnifyException {
+		final boolean permitMultiple = tmc != null ? tmc.isPermitMultiple() : true;
+		return internalSchedule(tmc, taskName, parameters, permitMultiple, logMessages, inDelayInMillSec,
+				periodInMillSec, numberOfTimes);
+	}
+
+	private TaskMonitor internalSchedule(TaskableMethodConfig tmc, String taskName, Map<String, Object> parameters,
 			boolean permitMultiple, boolean logMessages, long inDelayInMillSec, long periodInMillSec, int numberOfTimes)
 			throws UnifyException {
 		if (numberOfTimes > 0) {

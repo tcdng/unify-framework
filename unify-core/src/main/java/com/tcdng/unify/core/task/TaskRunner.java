@@ -19,6 +19,7 @@ import java.util.Map;
 
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.annotation.PeriodicType;
 
 /**
  * Task runner.
@@ -66,9 +67,22 @@ public interface TaskRunner extends UnifyComponent {
 	/**
 	 * Adds a task to runner schedule.
 	 * 
+	 * @param periodicType     the periodic type
+	 * @param taskName         the task name
+	 * @param parameters       the task parameters
+	 * @param logMessages      indicates if messages should be logged
+	 * @param inDelayInMillSec initial delay in milliseconds
+	 * @return the task monitor
+	 * @throws UnifyException if an error occurs
+	 */
+	TaskMonitor schedule(PeriodicType periodicType, String taskName, Map<String, Object> parameters,
+			boolean logMessages, long inDelayInMillSec) throws UnifyException;
+
+	/**
+	 * Adds a task to runner schedule.
+	 * 
 	 * @param taskName             the task name
 	 * @param parameters           the task parameters
-	 * @param permitMultiple       permits task to be scheduled multiple times
 	 * @param logMessages          indicates if messages should be logged
 	 * @param inDelayInMillSec     initial delay in milliseconds
 	 * @param repeatDelayInMillSec repeat delay in milliseconds
@@ -77,8 +91,8 @@ public interface TaskRunner extends UnifyComponent {
 	 * @return the task monitor
 	 * @throws UnifyException if an error occurs
 	 */
-	TaskMonitor schedule(String taskName, Map<String, Object> parameters, boolean permitMultiple, boolean logMessages,
-			long inDelayInMillSec, long periodInMillSec, int numberOfTimes) throws UnifyException;
+	TaskMonitor schedule(String taskName, Map<String, Object> parameters, boolean logMessages, long inDelayInMillSec,
+			long periodInMillSec, int numberOfTimes) throws UnifyException;
 
 	/**
 	 * Adds a task to runner schedule.
@@ -86,7 +100,6 @@ public interface TaskRunner extends UnifyComponent {
 	 * @param tmc                  the taskable method configuration
 	 * @param taskName             the task name
 	 * @param parameters           the task parameters
-	 * @param permitMultiple       permits task to be scheduled multiple times
 	 * @param logMessages          indicates if messages should be logged
 	 * @param inDelayInMillSec     initial delay in milliseconds
 	 * @param repeatDelayInMillSec repeat delay in milliseconds
@@ -95,7 +108,6 @@ public interface TaskRunner extends UnifyComponent {
 	 * @return the task monitor
 	 * @throws UnifyException if an error occurs
 	 */
-	TaskMonitor schedule(TaskableMethodConfig tmc, String taskName, Map<String, Object> parameters,
-			boolean permitMultiple, boolean logMessages, long inDelayInMillSec, long periodInMillSec, int numberOfTimes)
-			throws UnifyException;
+	TaskMonitor schedule(TaskableMethodConfig tmc, String taskName, Map<String, Object> parameters, boolean logMessages,
+			long inDelayInMillSec, long periodInMillSec, int numberOfTimes) throws UnifyException;
 }
