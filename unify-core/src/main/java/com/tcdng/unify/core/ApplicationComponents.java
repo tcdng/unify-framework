@@ -105,8 +105,6 @@ public interface ApplicationComponents {
 
     String APPLICATION_TASKMANAGER = "application-taskmanager";
 
-    String APPLICATION_TASKSTATUSLOGGER = "application-taskstatuslogger";
-
     String APPLICATION_TASKLAUNCHER = "application-tasklauncher";
 
     String APPLICATION_TYPELISTFACTORY = "application-tasklistfactory";

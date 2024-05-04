@@ -29,34 +29,35 @@ import com.tcdng.unify.core.util.DataUtils;
  */
 public class TaskInput {
 
-    private String origTaskName;
+    private String taskName;
 
     private TaskableMethodConfig tmc;
 
     private Map<String, Object> parameters;
 
-    private TaskOutput prevTaskOutput;
-
-    public TaskInput(String origTaskName, TaskableMethodConfig tmc, Map<String, Object> parameters,
-            TaskOutput prevTaskOutput) {
-        this.origTaskName = origTaskName;
+    public TaskInput(String taskName, TaskableMethodConfig tmc, Map<String, Object> parameters) {
+        this.taskName = taskName;
         this.tmc = tmc;
         this.parameters = parameters;
-        this.prevTaskOutput = prevTaskOutput;
     }
 
-    public String getOrigTaskName() {
-        return origTaskName;
+    public TaskInput(String taskName, Map<String, Object> parameters) {
+        this.taskName = taskName;
+        this.parameters = parameters;
     }
 
-    public TaskOutput getPrevTaskOutput() {
-        return prevTaskOutput;
+    public String getTaskName() {
+        return taskName;
     }
 
     public TaskableMethodConfig getTmc() {
         return tmc;
     }
 
+    public boolean isWithTmc() {
+    	return tmc != null;
+    }
+    
     public Set<String> getParamNames() {
         return parameters.keySet();
     }

@@ -29,7 +29,7 @@ import com.tcdng.unify.core.annotation.Component;
 public class PeriodicExecutionTask extends AbstractTask {
 
     @Override
-    public void execute(TaskMonitor taskMonitor, TaskInput input, TaskOutput output) throws UnifyException {
+    public void execute(TaskMonitor taskMonitor, TaskInput input) throws UnifyException {
         try {
             if (!taskMonitor.isCanceled()) {
                 PeriodicExecutionInfo periodicExecutionInfo = input.getParam(PeriodicExecutionInfo.class,
