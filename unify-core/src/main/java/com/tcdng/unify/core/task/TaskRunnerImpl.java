@@ -500,6 +500,27 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 		}
 
 		@Override
+		public TaskStatus getTaskStatus() {
+			if (isDone()) {
+				return isExceptions() ? TaskStatus.FAILED:  TaskStatus.SUCCESSFUL;
+			}
+
+			if (isRunning()) {
+				return TaskStatus.RUNNING;
+			}	
+			
+			if (isCancelled()) {
+				return TaskStatus.CANCELED;
+			}
+			
+			if (isNotPermitted()) {
+				return TaskStatus.ABORTED;
+			}
+
+			return TaskStatus.INITIALIZED;
+		}
+
+		@Override
 		public boolean isNotPermitted() {
 			return running == NOT_PERMITTED;
 		}

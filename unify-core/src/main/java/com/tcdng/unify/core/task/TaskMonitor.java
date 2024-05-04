@@ -86,6 +86,12 @@ public interface TaskMonitor {
     Exception[] getExceptions();
     
     /**
+     * Gets task status.
+     * @return the task status
+     */
+    TaskStatus getTaskStatus();
+    
+    /**
      * Gets the expected number of runs.
      */
     int expectedRuns();

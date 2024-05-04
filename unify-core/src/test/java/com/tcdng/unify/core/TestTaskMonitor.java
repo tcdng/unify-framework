@@ -17,6 +17,7 @@ package com.tcdng.unify.core;
 
 import com.tcdng.unify.core.task.TaskMonitor;
 import com.tcdng.unify.core.task.TaskOutput;
+import com.tcdng.unify.core.task.TaskStatus;
 
 /**
  * Test task monitor.
@@ -92,6 +93,11 @@ public class TestTaskMonitor implements TaskMonitor {
     }
 
     @Override
+	public TaskStatus getTaskStatus() {
+		return TaskStatus.INITIALIZED;
+	}
+
+	@Override
     public boolean isCancelled() {
         return false;
     }
