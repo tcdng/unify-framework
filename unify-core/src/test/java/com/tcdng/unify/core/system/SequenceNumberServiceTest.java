@@ -87,22 +87,22 @@ public class SequenceNumberServiceTest extends AbstractUnifyComponentTest {
 		Map<String, Object> inputParameters1 = new HashMap<String, Object>();
 		inputParameters1.put(SequenceTestTaskConstants.SEQUENCEID, "sequenceA");
 		inputParameters1.put(SequenceTestTaskConstants.SEQUENCECOUNT, 773);
-		TaskMonitor taskMonitor1 = taskManager.startTask("clustersequenceblock-test", inputParameters1, false, null);
+		TaskMonitor taskMonitor1 = taskManager.startTask("clustersequenceblock-test", inputParameters1, false);
 
 		Map<String, Object> inputParameters3 = new HashMap<String, Object>();
 		inputParameters3.put(SequenceTestTaskConstants.SEQUENCEID, "sequenceB");
 		inputParameters3.put(SequenceTestTaskConstants.SEQUENCECOUNT, 345);
-		TaskMonitor taskMonitor3 = taskManager.startTask("clustersequenceblock-test", inputParameters3, false, null);
+		TaskMonitor taskMonitor3 = taskManager.startTask("clustersequenceblock-test", inputParameters3, false);
 
 		Map<String, Object> inputParameters2 = new HashMap<String, Object>();
 		inputParameters2.put(SequenceTestTaskConstants.SEQUENCEID, "sequenceA");
 		inputParameters2.put(SequenceTestTaskConstants.SEQUENCECOUNT, 411);
-		TaskMonitor taskMonitor2 = taskManager.startTask("clustersequenceblock-test", inputParameters2, false, null);
+		TaskMonitor taskMonitor2 = taskManager.startTask("clustersequenceblock-test", inputParameters2, false);
 
 		Map<String, Object> inputParameters4 = new HashMap<String, Object>();
 		inputParameters4.put(SequenceTestTaskConstants.SEQUENCEID, "sequenceC");
 		inputParameters4.put(SequenceTestTaskConstants.SEQUENCECOUNT, 206);
-		TaskMonitor taskMonitor4 = taskManager.startTask("clustersequenceblock-test", inputParameters4, false, null);
+		TaskMonitor taskMonitor4 = taskManager.startTask("clustersequenceblock-test", inputParameters4, false);
 
 		while (!taskMonitor1.isDone() || !taskMonitor2.isDone() || !taskMonitor3.isDone() || !taskMonitor4.isDone()) {
 			Thread.yield();
@@ -128,21 +128,21 @@ public class SequenceNumberServiceTest extends AbstractUnifyComponentTest {
 		Map<String, Object> inputParameters1 = new HashMap<String, Object>();
 		inputParameters1.put(SequenceTestTaskConstants.SEQUENCEID, "sequenceA");
 		inputParameters1.put(SequenceTestTaskConstants.SEQUENCECOUNT, 253);
-		TaskMonitor taskMonitor1 = taskManager.startTask("clustersequence-test", inputParameters1, false, null);
+		TaskMonitor taskMonitor1 = taskManager.startTask("clustersequence-test", inputParameters1, false);
 
 		Map<String, Object> inputParameters2 = new HashMap<String, Object>();
 		inputParameters2.put(SequenceTestTaskConstants.SEQUENCEID, "sequenceA");
 		inputParameters2.put(SequenceTestTaskConstants.SEQUENCECOUNT, 181);
-		TaskMonitor taskMonitor2 = taskManager.startTask("clustersequence-test", inputParameters2, false, null);
+		TaskMonitor taskMonitor2 = taskManager.startTask("clustersequence-test", inputParameters2, false);
 
 		while (!taskMonitor1.isDone() || !taskMonitor2.isDone()) {
 			Thread.yield();
 		}
 
 		List<Long> allSeqList = new ArrayList<Long>();
-		allSeqList.addAll((List<Long>) taskMonitor1.getTaskOutput(0).getResult(List.class,
+		allSeqList.addAll((List<Long>) taskMonitor1.getTaskOutput().getResult(List.class,
 				SequenceTestTaskConstants.SEQUENCELIST));
-		allSeqList.addAll((List<Long>) taskMonitor2.getTaskOutput(0).getResult(List.class,
+		allSeqList.addAll((List<Long>) taskMonitor2.getTaskOutput().getResult(List.class,
 				SequenceTestTaskConstants.SEQUENCELIST));
 		assertEquals(253 + 181, allSeqList.size());
 
@@ -271,25 +271,25 @@ public class SequenceNumberServiceTest extends AbstractUnifyComponentTest {
 		inputParameters1.put(DateSequenceNumberTaskConstants.SEQUENCENAME, "day-cheque-upload-batch-counter");
 		inputParameters1.put(DateSequenceNumberTaskConstants.DATE, testDate);
 		inputParameters1.put(DateSequenceNumberTaskConstants.ITERATIONS, 28);
-		TaskMonitor taskMonitor1 = taskManager.startTask("datesequencenumber-task", inputParameters1, true, null);
+		TaskMonitor taskMonitor1 = taskManager.startTask("datesequencenumber-task", inputParameters1, true);
 
 		Map<String, Object> inputParameters2 = new HashMap<String, Object>();
 		inputParameters2.put(DateSequenceNumberTaskConstants.SEQUENCENAME, "day-rpt-batch-counter");
 		inputParameters2.put(DateSequenceNumberTaskConstants.DATE, testDate);
 		inputParameters2.put(DateSequenceNumberTaskConstants.ITERATIONS, 28);
-		TaskMonitor taskMonitor2 = taskManager.startTask("datesequencenumber-task", inputParameters2, true, null);
+		TaskMonitor taskMonitor2 = taskManager.startTask("datesequencenumber-task", inputParameters2, true);
 
 		Map<String, Object> inputParameters3 = new HashMap<String, Object>();
 		inputParameters3.put(DateSequenceNumberTaskConstants.SEQUENCENAME, "day-outward-posting-batch-counter");
 		inputParameters3.put(DateSequenceNumberTaskConstants.DATE, testDate);
 		inputParameters3.put(DateSequenceNumberTaskConstants.ITERATIONS, 28);
-		TaskMonitor taskMonitor3 = taskManager.startTask("datesequencenumber-task", inputParameters3, true, null);
+		TaskMonitor taskMonitor3 = taskManager.startTask("datesequencenumber-task", inputParameters3, true);
 
 		Map<String, Object> inputParameters4 = new HashMap<String, Object>();
 		inputParameters4.put(DateSequenceNumberTaskConstants.SEQUENCENAME, "I've got a feeling!");
 		inputParameters4.put(DateSequenceNumberTaskConstants.DATE, testDate);
 		inputParameters4.put(DateSequenceNumberTaskConstants.ITERATIONS, 28);
-		TaskMonitor taskMonitor4 = taskManager.startTask("datesequencenumber-task", inputParameters4, true, null);
+		TaskMonitor taskMonitor4 = taskManager.startTask("datesequencenumber-task", inputParameters4, true);
 
 		while (!taskMonitor1.isDone() || !taskMonitor2.isDone() || !taskMonitor3.isDone() || !taskMonitor4.isDone()) {
 			Thread.yield();
@@ -383,22 +383,22 @@ public class SequenceNumberServiceTest extends AbstractUnifyComponentTest {
 		Map<String, Object> inputParameters1 = new HashMap<String, Object>();
 		inputParameters1.put(UniqueStringTestTaskConstants.UNIQUESTRINGLIST, uniqueString);
 		inputParameters1.put(UniqueStringTestTaskConstants.ITERATIONS, 28);
-		TaskMonitor taskMonitor1 = taskManager.startTask("uniquestringtest-task", inputParameters1, true, null);
+		TaskMonitor taskMonitor1 = taskManager.startTask("uniquestringtest-task", inputParameters1, true);
 
 		Map<String, Object> inputParameters2 = new HashMap<String, Object>();
 		inputParameters2.put(UniqueStringTestTaskConstants.UNIQUESTRINGLIST, uniqueString);
 		inputParameters2.put(UniqueStringTestTaskConstants.ITERATIONS, 28);
-		TaskMonitor taskMonitor2 = taskManager.startTask("uniquestringtest-task", inputParameters2, true, null);
+		TaskMonitor taskMonitor2 = taskManager.startTask("uniquestringtest-task", inputParameters2, true);
 
 		Map<String, Object> inputParameters3 = new HashMap<String, Object>();
 		inputParameters3.put(UniqueStringTestTaskConstants.UNIQUESTRINGLIST, uniqueString);
 		inputParameters3.put(UniqueStringTestTaskConstants.ITERATIONS, 28);
-		TaskMonitor taskMonitor3 = taskManager.startTask("uniquestringtest-task", inputParameters3, true, null);
+		TaskMonitor taskMonitor3 = taskManager.startTask("uniquestringtest-task", inputParameters3, true);
 
 		Map<String, Object> inputParameters4 = new HashMap<String, Object>();
 		inputParameters4.put(UniqueStringTestTaskConstants.UNIQUESTRINGLIST, uniqueString);
 		inputParameters4.put(UniqueStringTestTaskConstants.ITERATIONS, 28);
-		TaskMonitor taskMonitor4 = taskManager.startTask("uniquestringtest-task", inputParameters4, true, null);
+		TaskMonitor taskMonitor4 = taskManager.startTask("uniquestringtest-task", inputParameters4, true);
 
 		while (!taskMonitor1.isDone() || !taskMonitor2.isDone() || !taskMonitor3.isDone() || !taskMonitor4.isDone()) {
 			Thread.yield();

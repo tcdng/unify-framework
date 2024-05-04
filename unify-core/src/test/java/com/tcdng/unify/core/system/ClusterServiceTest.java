@@ -96,17 +96,17 @@ public class ClusterServiceTest extends AbstractUnifyComponentTest {
         TaskManager taskManager = (TaskManager) getComponent(ApplicationComponents.APPLICATION_TASKMANAGER);
         TaskMonitor[] taskMonitor = new TaskMonitor[4];
         for (int i = 0; i < taskMonitor.length; i++) {
-            taskMonitor[i] = taskManager.startTask("clustershareddata-test", parameters, true, null);
+            taskMonitor[i] = taskManager.startTask("clustershareddata-test", parameters, true);
         }
 
-        boolean pending = true;
+        boolean done = false;
         do {
             ThreadUtils.sleep(30);
-            pending = false;
+            done = true;
             for (int i = 0; i < taskMonitor.length; i++) {
-                pending |= taskMonitor[i].isPending();
+            	done &= taskMonitor[i].isDone();
             }
-        } while (pending);
+        } while (!done);
 
         for (int i = 0; i < taskMonitor.length; i++) {
             if (taskMonitor[i].isExceptions()) {

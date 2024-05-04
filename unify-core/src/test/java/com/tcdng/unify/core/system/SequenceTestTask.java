@@ -24,7 +24,6 @@ import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.task.AbstractTask;
 import com.tcdng.unify.core.task.TaskInput;
 import com.tcdng.unify.core.task.TaskMonitor;
-import com.tcdng.unify.core.task.TaskOutput;
 
 /**
  * Sequence test task.
@@ -39,7 +38,7 @@ public class SequenceTestTask extends AbstractTask {
     private SequenceNumberService sequenceNumberService;
 
     @Override
-    public void execute(TaskMonitor taskMonitor, TaskInput input, TaskOutput output) throws UnifyException {
+    public void execute(TaskMonitor taskMonitor, TaskInput input) throws UnifyException {
         List<Long> sequenceNumbers = new ArrayList<Long>();
         String sequenceId = input.getParam(String.class, SequenceTestTaskConstants.SEQUENCEID);
         int seqCount = input.getParam(int.class, SequenceTestTaskConstants.SEQUENCECOUNT);
@@ -51,7 +50,7 @@ public class SequenceTestTask extends AbstractTask {
             }
         }
 
-        output.setResult(SequenceTestTaskConstants.SEQUENCELIST, sequenceNumbers);
+        taskMonitor.getTaskOutput().setResult(SequenceTestTaskConstants.SEQUENCELIST, sequenceNumbers);
     }
 
     protected SequenceNumberService getSequenceNumberService() {

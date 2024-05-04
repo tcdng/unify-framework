@@ -28,7 +28,7 @@ import com.tcdng.unify.core.annotation.Component;
 public class TestTaskB extends AbstractTask {
 
     @Override
-    public void execute(TaskMonitor taskMonitor, TaskInput input, TaskOutput output) throws UnifyException {
-        output.setResult("message", input.getParam(String.class, "paramB"));
+    public void execute(TaskMonitor taskMonitor, TaskInput input) throws UnifyException {
+    	taskMonitor.getTaskOutput().setResult("message", input.getParam(String.class, "paramB"));
     }
 }
