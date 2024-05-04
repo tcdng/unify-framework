@@ -181,8 +181,8 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 			synchronized (this) {
 				if (isRunning()) {
 					if (permitMultiple || !isScheduled(taskName)) {
-						TaskRunParams params = new TaskRunParams(tm, tmc, parameters, inDelayInMillSec, periodInMillSec,
-								numberOfTimes);
+						TaskRunParams params = new TaskRunParams(taskName, tm, tmc, parameters, inDelayInMillSec, periodInMillSec,
+								numberOfTimes, permitMultiple);
 						schedule(params);
 					} else {
 						tm.notPermitted();
@@ -236,6 +236,10 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 			return true;
 		}
 
+		if (!params.isPermitMultiple()) {
+			tasks.remove(params.getTaskName());
+		}
+		
 		return false;
 	}
 
@@ -293,10 +297,10 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 						}
 
 						TaskInput input = params.isWithTaskableMethodConfig()
-								? new TaskInput(params.getTaskName(), params.getTaskableMethodConfig(),
+								? new TaskInput(params.getActualTaskName(), params.getTaskableMethodConfig(),
 										params.getParameters())
-								: new TaskInput(params.getTaskName(), params.getParameters());
-						Task task = (Task) getComponent(params.getTaskName());
+								: new TaskInput(params.getActualTaskName(), params.getParameters());
+						Task task = (Task) getComponent(params.getActualTaskName());
 						task.execute(tm, input);
 					} catch (Exception e) {
 						tm.addException(e);
@@ -324,6 +328,8 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 
 	private class TaskRunParams {
 
+		private final String taskName;
+		
 		private final TaskMonitorImpl tm;
 
 		private final TaskableMethodConfig tmc;
@@ -336,16 +342,20 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 
 		private final int numberOfTimes;
 
+		private final boolean permitMultiple;
+		
 		private long runCounter;
 
-		public TaskRunParams(TaskMonitorImpl tm, TaskableMethodConfig tmc, Map<String, Object> parameters,
-				long inDelayInMillSec, long periodInMillSec, int numberOfTimes) {
+		public TaskRunParams(String taskName, TaskMonitorImpl tm, TaskableMethodConfig tmc, Map<String, Object> parameters,
+				long inDelayInMillSec, long periodInMillSec, int numberOfTimes, boolean permitMultiple) {
+			this.taskName = taskName;
 			this.tm = tm;
 			this.tmc = tmc;
 			this.parameters = parameters;
 			this.inDelayInMillSec = inDelayInMillSec;
 			this.periodInMillSec = periodInMillSec;
 			this.numberOfTimes = numberOfTimes;
+			this.permitMultiple = permitMultiple;
 			this.runCounter = 0L;
 		}
 
@@ -354,6 +364,10 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 		}
 
 		public String getTaskName() {
+			return taskName;
+		}
+
+		public String getActualTaskName() {
 			return tm.getTaskName();
 		}
 
@@ -392,6 +406,10 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 		public boolean incRunCounterAndCheckRepeat() {
 			++runCounter;
 			return numberOfTimes <= 0 || runCounter < numberOfTimes;
+		}
+
+		public boolean isPermitMultiple() {
+			return permitMultiple;
 		}
 
 	}
