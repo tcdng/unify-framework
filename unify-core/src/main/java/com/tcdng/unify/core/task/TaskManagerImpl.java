@@ -67,6 +67,9 @@ public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManag
 	private TaskRunner periodicRunner;
 
 	@Configurable
+	private TaskRunner scheduledRunner;
+
+	@Configurable
 	private TaskRunner taskableRunner;
 
 	private Map<String, TaskableMethodConfig> taskConfigByNameMap;
@@ -134,14 +137,14 @@ public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManag
 	@Override
 	public TaskMonitor scheduleTaskToRunAfter(String taskName, Map<String, Object> parameters, boolean logMessages,
 			long delayInMillSec) throws UnifyException {
-		return taskableRunner.schedule(taskConfigByNameMap.get(taskName), taskName, parameters, logMessages,
+		return scheduledRunner.schedule(taskConfigByNameMap.get(taskName), taskName, parameters, logMessages,
 				delayInMillSec, 0, 1);
 	}
 
 	@Override
 	public TaskMonitor scheduleTaskToRunPeriodically(String taskName, Map<String, Object> parameters,
 			boolean logMessages, long inDelayInMillSec, long periodInMillSec, int numberOfTimes) throws UnifyException {
-		return taskableRunner.schedule(taskConfigByNameMap.get(taskName), taskName, parameters, logMessages,
+		return scheduledRunner.schedule(taskConfigByNameMap.get(taskName), taskName, parameters, logMessages,
 				inDelayInMillSec, periodInMillSec, numberOfTimes);
 	}
 
@@ -226,15 +229,22 @@ public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManag
 			}
 		}
 
+		periodicRunner.setPermitMultiple(true);
+		taskableRunner.setPermitMultiple(true);
+		scheduledRunner.setPermitMultiple(false);
+
 		final int maxThreads = getContainerSetting(int.class,
 				UnifyCorePropertyConstants.APPLICATION_MAX_TASKRUNNER_THREADS, DEFAULT_TASKRUNNER_MAXTHREADS);
 		periodicRunner.start(maxThreads);
-		taskableRunner.start(maxThreads);
+		taskableRunner.start(maxThreads);		
+		scheduledRunner.start(maxThreads);		
 	}
 
 	@Override
 	protected void onTerminate() throws UnifyException {
-
+		periodicRunner.stop();
+		scheduledRunner.stop();
+		taskableRunner.stop();
 	}
 
 }

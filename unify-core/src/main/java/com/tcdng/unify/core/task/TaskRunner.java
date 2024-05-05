@@ -57,6 +57,14 @@ public interface TaskRunner extends UnifyComponent {
 	boolean isRunning();
 
 	/**
+	 * Sets runner allowing multiple tasks of the same type running at the same
+	 * time.
+	 * 
+	 * @param permitMultiple the value to set
+	 */
+	void setPermitMultiple(boolean permitMultiple);
+
+	/**
 	 * Checks if task is scheduled on this runner.
 	 * 
 	 * @param taskName the task name

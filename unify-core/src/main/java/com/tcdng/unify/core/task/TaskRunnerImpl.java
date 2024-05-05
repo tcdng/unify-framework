@@ -69,6 +69,8 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 
 	private int maxMonitorMessages;
 
+	private boolean permitMultiple;
+	
 	@Override
 	public boolean start(int maxRunThread) {
 		logDebug("Starting task runner [{0}] with maximum run threads [{1}]...", this, maxRunThread);
@@ -124,6 +126,11 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 	}
 
 	@Override
+	public void setPermitMultiple(boolean permitMultiple) {
+		this.permitMultiple = permitMultiple;
+	}
+
+	@Override
 	public boolean isScheduled(String taskName) {
 		if (tasks != null) {
 			synchronized (this) {
@@ -152,19 +159,19 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 	@Override
 	public TaskMonitor schedule(TaskableMethodConfig tmc, String taskName, Map<String, Object> parameters,
 			boolean logMessages, long inDelayInMillSec, long periodInMillSec, int numberOfTimes) throws UnifyException {
-		boolean permitMultiple = true;
+		boolean _permitMultiple = permitMultiple;
 		String actualTaskName = taskName;
 		if (tmc != null) {
-			permitMultiple = tmc.isPermitMultiple();
+			_permitMultiple &= tmc.isPermitMultiple();
 			actualTaskName = TaskableMethodConstants.TASKABLE_METHOD_TASK;
 		}
 
-		return internalSchedule(tmc, actualTaskName, taskName, parameters, permitMultiple, logMessages,
+		return internalSchedule(tmc, actualTaskName, taskName, parameters, _permitMultiple, logMessages,
 				inDelayInMillSec, periodInMillSec, numberOfTimes);
 	}
 
 	private TaskMonitor internalSchedule(TaskableMethodConfig tmc, String actualTaskName, String taskName,
-			Map<String, Object> parameters, boolean permitMultiple, boolean logMessages, long inDelayInMillSec,
+			Map<String, Object> parameters, boolean _permitMultiple, boolean logMessages, long inDelayInMillSec,
 			long periodInMillSec, int numberOfTimes) throws UnifyException {
 		if (numberOfTimes > 0) {
 			logDebug(
@@ -180,9 +187,9 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 		if (isRunning()) {
 			synchronized (this) {
 				if (isRunning()) {
-					if (permitMultiple || !isScheduled(taskName)) {
+					if (_permitMultiple || !isScheduled(taskName)) {
 						TaskRunParams params = new TaskRunParams(taskName, tm, tmc, parameters, inDelayInMillSec, periodInMillSec,
-								numberOfTimes, permitMultiple);
+								numberOfTimes, _permitMultiple);
 						schedule(params);
 					} else {
 						tm.notPermitted();
