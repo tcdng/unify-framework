@@ -244,8 +244,11 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 		}
 	
 		try {
-			Task task = (Task) getComponent(params.getActualTaskName());
-			task.logStatus(params.getTm(), params.getParameters());
+			final String loggerName = (String) params.getParameter(TaskParameterConstants.TASK_STATUS_LOGGER);
+			if (!StringUtils.isBlank(loggerName)) {
+				TaskStatusLogger logger = getComponent(TaskStatusLogger.class, loggerName);
+				logger.logStatus(params.getTm(), params.getParameters());
+			}
 		} catch (Exception e) {
 			logSevere(e);
 		}
@@ -253,6 +256,7 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 		return false;
 	}
 
+	
 	private class WaitThread extends Thread {
 
 		private final TaskRunParams params;
@@ -310,7 +314,7 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 								? new TaskInput(params.getActualTaskName(), params.getTaskableMethodConfig(),
 										params.getParameters())
 								: new TaskInput(params.getActualTaskName(), params.getParameters());
-						Task task = (Task) getComponent(params.getActualTaskName());
+						Task task = getComponent(Task.class, params.getActualTaskName());
 						task.execute(tm, input);
 					} catch (Exception e) {
 						tm.addException(e);

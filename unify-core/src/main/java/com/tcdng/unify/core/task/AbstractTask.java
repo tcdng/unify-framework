@@ -15,8 +15,6 @@
  */
 package com.tcdng.unify.core.task;
 
-import java.util.Map;
-
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 
@@ -27,11 +25,6 @@ import com.tcdng.unify.core.UnifyException;
  * @since 1.0
  */
 public abstract class AbstractTask extends AbstractUnifyComponent implements Task {
-
-    @Override
-	public void logStatus(TaskMonitor taskMonitor, Map<String, Object> parameters) throws UnifyException {
-		
-	}
 
 	@Override
     protected void onInitialize() throws UnifyException {
