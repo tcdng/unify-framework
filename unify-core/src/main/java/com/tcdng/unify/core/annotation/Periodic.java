@@ -20,7 +20,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.tcdng.unify.core.constant.AnnotationConstants;
 import com.tcdng.unify.core.task.TaskMonitor;
 
 /**
@@ -36,8 +35,6 @@ import com.tcdng.unify.core.task.TaskMonitor;
 public @interface Periodic {
 
     PeriodicType value() default PeriodicType.NORMAL;
-
-    String taskStatusLogger() default AnnotationConstants.NONE;
     
     boolean clusterMode() default false;
 }

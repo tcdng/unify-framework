@@ -80,4 +80,10 @@ public interface UnifyCorePropertyConstants {
     String APPLICATION_VIEW_DIRECTIVE_IGNORE = "application.viewdirective.ignore";
 
     String APPLICATION_TENANCY_ENABLED = "application.tenancy.enabled";
+
+    String APPLICATION_TASKRUNNER_SHUTDOWN_MILLISECONDS = "application.taskrunner.shutdown.milliseconds";
+
+    String APPLICATION_MAX_TASKMONITOR_MESSAGES = "application.max.taskmonitor.messages";
+
+    String APPLICATION_MAX_TASKRUNNER_THREADS = "application.max.taskrunner.threads";
 }

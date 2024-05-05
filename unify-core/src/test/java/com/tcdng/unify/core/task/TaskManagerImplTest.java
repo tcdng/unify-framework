@@ -18,10 +18,8 @@ package com.tcdng.unify.core.task;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -169,105 +167,19 @@ public class TaskManagerImplTest extends AbstractUnifyComponentTest {
     @Test(timeout = 4000)
     public void testExecuteTask() throws Exception {
         parameters.put("paramA", "Hello World!");
-        TaskMonitor taskMonitor = taskManager.executeTask("test-taska", parameters, false, null);
-        assertEquals(TaskStatus.SUCCESSFUL, taskMonitor.getTaskStatus(0));
-        assertEquals("Hello World!", taskMonitor.getTaskOutput(0).getResult(String.class, "message"));
-    }
-
-    @Test(timeout = 4000)
-    public void testExecuteTasks() throws Exception {
-        parameters.put("paramA", "Lion");
-        parameters.put("paramB", "Tiger");
-        TaskMonitor taskMonitor =
-                taskManager.executeTasks(Arrays.asList("test-taska", "test-taskb"), parameters, false, true, null);
-        assertEquals(TaskStatus.SUCCESSFUL, taskMonitor.getTaskStatus(0));
-        assertEquals("Lion", taskMonitor.getTaskOutput(0).getResult(String.class, "message"));
-        assertEquals(TaskStatus.SUCCESSFUL, taskMonitor.getTaskStatus(1));
-        assertEquals("Tiger", taskMonitor.getTaskOutput(1).getResult(String.class, "message"));
-    }
-
-    @Test(timeout = 4000)
-    public void testExecuteIndependentTasksWithBadTask() throws Exception {
-        parameters.put("paramA", "Lion");
-        parameters.put("paramB", "Tiger");
-        TaskMonitor taskMonitor = taskManager.executeTasks(Arrays.asList("test-taska", "test-taskc", "test-taskb"),
-                parameters, false, false, null);
-        assertEquals(TaskStatus.SUCCESSFUL, taskMonitor.getTaskStatus(0));
-        assertEquals("Lion", taskMonitor.getTaskOutput(0).getResult(String.class, "message"));
-        assertEquals(TaskStatus.FAILED, taskMonitor.getTaskStatus(1));
-        assertEquals(TaskStatus.SUCCESSFUL, taskMonitor.getTaskStatus(2));
-        assertEquals("Tiger", taskMonitor.getTaskOutput(2).getResult(String.class, "message"));
-    }
-
-    @Test(timeout = 4000)
-    public void testExecuteDependentTasksWithBadTask() throws Exception {
-        parameters.put("paramA", "Lion");
-        parameters.put("paramB", "Tiger");
-        TaskMonitor taskMonitor = taskManager.executeTasks(Arrays.asList("test-taska", "test-taskc", "test-taskb"),
-                parameters, false, true, null);
-        assertEquals(TaskStatus.SUCCESSFUL, taskMonitor.getTaskStatus(0));
-        assertEquals("Lion", taskMonitor.getTaskOutput(0).getResult(String.class, "message"));
-        assertEquals(TaskStatus.FAILED, taskMonitor.getTaskStatus(1));
-        assertEquals(TaskStatus.ABORTED, taskMonitor.getTaskStatus(2));
-        assertNull(taskMonitor.getTaskOutput(2).getResult(String.class, "message"));
+        TaskMonitor taskMonitor = taskManager.executeTask("test-taska", parameters, false);
+        assertEquals("Hello World!", taskMonitor.getTaskOutput().getResult(String.class, "message"));
     }
 
     @Test(timeout = 4000)
     public void testStartTask() throws Exception {
         parameters.put("paramA", "Hello World!");
-        TaskMonitor taskMonitor = taskManager.startTask("test-taska", parameters, false, null);
+        TaskMonitor taskMonitor = taskManager.startTask("test-taska", parameters, false);
         while (!taskMonitor.isDone()) {
             Thread.yield();
         }
-        assertEquals(TaskStatus.SUCCESSFUL, taskMonitor.getTaskStatus(0));
-        assertEquals("Hello World!", taskMonitor.getTaskOutput(0).getResult(String.class, "message"));
-    }
 
-    @Test(timeout = 4000)
-    public void testStartTasks() throws Exception {
-        parameters.put("paramA", "Lion");
-        parameters.put("paramB", "Tiger");
-        TaskMonitor taskMonitor =
-                taskManager.startTasks(Arrays.asList("test-taska", "test-taskb"), parameters, false, true, null);
-        while (!taskMonitor.isDone()) {
-            Thread.yield();
-        }
-        assertEquals(TaskStatus.SUCCESSFUL, taskMonitor.getTaskStatus(0));
-        assertEquals("Lion", taskMonitor.getTaskOutput(0).getResult(String.class, "message"));
-        assertEquals(TaskStatus.SUCCESSFUL, taskMonitor.getTaskStatus(1));
-        assertEquals("Tiger", taskMonitor.getTaskOutput(1).getResult(String.class, "message"));
-    }
-
-    @Test(timeout = 4000)
-    public void testStartIndependentTasksWithBadTask() throws Exception {
-        parameters.put("paramA", "Lion");
-        parameters.put("paramB", "Tiger");
-        TaskMonitor taskMonitor = taskManager.startTasks(Arrays.asList("test-taska", "test-taskc", "test-taskb"),
-                parameters, false, false, null);
-        while (!taskMonitor.isDone()) {
-            Thread.yield();
-        }
-        assertEquals(TaskStatus.SUCCESSFUL, taskMonitor.getTaskStatus(0));
-        assertEquals("Lion", taskMonitor.getTaskOutput(0).getResult(String.class, "message"));
-        assertEquals(TaskStatus.FAILED, taskMonitor.getTaskStatus(1));
-        assertEquals(TaskStatus.SUCCESSFUL, taskMonitor.getTaskStatus(2));
-        assertEquals("Tiger", taskMonitor.getTaskOutput(2).getResult(String.class, "message"));
-    }
-
-    @Test(timeout = 4000)
-    public void testStartDependentTasksWithBadTask() throws Exception {
-        parameters.put("paramA", "Lion");
-        parameters.put("paramB", "Tiger");
-        TaskMonitor taskMonitor = taskManager.startTasks(Arrays.asList("test-taska", "test-taskc", "test-taskb"),
-                parameters, false, true, null);
-        while (!taskMonitor.isDone()) {
-            Thread.yield();
-        }
-        assertEquals(TaskStatus.SUCCESSFUL, taskMonitor.getTaskStatus(0));
-        assertEquals("Lion", taskMonitor.getTaskOutput(0).getResult(String.class, "message"));
-        assertEquals(TaskStatus.FAILED, taskMonitor.getTaskStatus(1));
-        assertEquals(TaskStatus.ABORTED, taskMonitor.getTaskStatus(2));
-        assertNull(taskMonitor.getTaskOutput(2).getResult(String.class, "message"));
+        assertEquals("Hello World!", taskMonitor.getTaskOutput().getResult(String.class, "message"));
     }
 
     // ScheduleTaskToRunAfter
@@ -275,59 +187,12 @@ public class TaskManagerImplTest extends AbstractUnifyComponentTest {
     @Test(timeout = 4000)
     public void testScheduleTaskToRunAfter() throws Exception {
         parameters.put("paramA", "Hello World!");
-        TaskMonitor taskMonitor = taskManager.scheduleTaskToRunAfter("test-taska", parameters, false, 100, null);
+        TaskMonitor taskMonitor = taskManager.scheduleTaskToRunAfter("test-taska", parameters, false, 100);
         while (!taskMonitor.isDone()) {
             Thread.yield();
         }
-        assertEquals(TaskStatus.SUCCESSFUL, taskMonitor.getTaskStatus(0));
-        assertEquals("Hello World!", taskMonitor.getTaskOutput(0).getResult(String.class, "message"));
-    }
 
-    @Test(timeout = 4000)
-    public void testScheduleTasksToRunAfter() throws Exception {
-        parameters.put("paramA", "Lion");
-        parameters.put("paramB", "Tiger");
-        TaskMonitor taskMonitor = taskManager.scheduleTasksToRunAfter(Arrays.asList("test-taska", "test-taskb"),
-                parameters, false, true, 100, null);
-        while (!taskMonitor.isDone()) {
-            Thread.yield();
-        }
-        assertEquals(TaskStatus.SUCCESSFUL, taskMonitor.getTaskStatus(0));
-        assertEquals("Lion", taskMonitor.getTaskOutput(0).getResult(String.class, "message"));
-        assertEquals(TaskStatus.SUCCESSFUL, taskMonitor.getTaskStatus(1));
-        assertEquals("Tiger", taskMonitor.getTaskOutput(1).getResult(String.class, "message"));
-    }
-
-    @Test(timeout = 4000)
-    public void testScheduleIndependentTasksToRunAfterWithBadTask() throws Exception {
-        parameters.put("paramA", "Lion");
-        parameters.put("paramB", "Tiger");
-        TaskMonitor taskMonitor = taskManager.scheduleTasksToRunAfter(
-                Arrays.asList("test-taska", "test-taskc", "test-taskb"), parameters, false, false, 100, null);
-        while (!taskMonitor.isDone()) {
-            Thread.yield();
-        }
-        assertEquals(TaskStatus.SUCCESSFUL, taskMonitor.getTaskStatus(0));
-        assertEquals("Lion", taskMonitor.getTaskOutput(0).getResult(String.class, "message"));
-        assertEquals(TaskStatus.FAILED, taskMonitor.getTaskStatus(1));
-        assertEquals(TaskStatus.SUCCESSFUL, taskMonitor.getTaskStatus(2));
-        assertEquals("Tiger", taskMonitor.getTaskOutput(2).getResult(String.class, "message"));
-    }
-
-    @Test(timeout = 4000)
-    public void testScheduleDependentTasksToRunAfterWithBadTask() throws Exception {
-        parameters.put("paramA", "Lion");
-        parameters.put("paramB", "Tiger");
-        TaskMonitor taskMonitor = taskManager.scheduleTasksToRunAfter(
-                Arrays.asList("test-taska", "test-taskc", "test-taskb"), parameters, false, true, 100, null);
-        while (!taskMonitor.isDone()) {
-            Thread.yield();
-        }
-        assertEquals(TaskStatus.SUCCESSFUL, taskMonitor.getTaskStatus(0));
-        assertEquals("Lion", taskMonitor.getTaskOutput(0).getResult(String.class, "message"));
-        assertEquals(TaskStatus.FAILED, taskMonitor.getTaskStatus(1));
-        assertEquals(TaskStatus.ABORTED, taskMonitor.getTaskStatus(2));
-        assertNull(taskMonitor.getTaskOutput(2).getResult(String.class, "message"));
+        assertEquals("Hello World!", taskMonitor.getTaskOutput().getResult(String.class, "message"));
     }
 
     @Override

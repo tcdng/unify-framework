@@ -28,46 +28,31 @@ import com.tcdng.unify.core.task.TaskStatus;
 public class TestTaskMonitor implements TaskMonitor {
 
     @Override
-    public String getTaskName(int taskIndex) {
-        return null;
-    }
+	public String getTaskName() {
+		return null;
+	}
 
-    @Override
-    public TaskStatus getTaskStatus(int taskIndex) {
-        return null;
-    }
+	@Override
+	public TaskOutput getTaskOutput() {
+		return new TaskOutput();
+	}
 
-    @Override
-    public TaskStatus getCurrentTaskStatus() {
-        return null;
-    }
+	@Override
+	public int expectedRuns() {
+		return 0;
+	}
 
-    @Override
-    public String getTaskId(int taskIndex) {
-        return null;
-    }
+	@Override
+	public int actualRuns() {
+		return 0;
+	}
 
-    @Override
-    public TaskOutput getTaskOutput(int taskIndex) {
-        return null;
-    }
+	@Override
+	public boolean isNotPermitted() {
+		return false;
+	}
 
-    @Override
-    public TaskOutput getCurrentTaskOutput() {
-        return null;
-    }
-
-    @Override
-    public int getTaskCount() {
-        return 0;
-    }
-
-    @Override
-    public int getCurrentTaskIndex() {
-        return 0;
-    }
-
-    @Override
+	@Override
     public void addMessage(String message) {
 
     }
@@ -108,17 +93,17 @@ public class TestTaskMonitor implements TaskMonitor {
     }
 
     @Override
-    public boolean isCanceled() {
+	public TaskStatus getTaskStatus() {
+		return TaskStatus.INITIALIZED;
+	}
+
+	@Override
+    public boolean isCancelled() {
         return false;
     }
 
     @Override
     public boolean isExceptions() {
-        return false;
-    }
-
-    @Override
-    public boolean isPending() {
         return false;
     }
 
@@ -131,5 +116,10 @@ public class TestTaskMonitor implements TaskMonitor {
     public boolean isRunning() {
         return false;
     }
+
+	@Override
+	public boolean isExited() {
+		return isNotPermitted() || isCancelled() || isDone();
+	}
 
 }

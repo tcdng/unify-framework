@@ -24,7 +24,6 @@ import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.task.AbstractTask;
 import com.tcdng.unify.core.task.TaskInput;
 import com.tcdng.unify.core.task.TaskMonitor;
-import com.tcdng.unify.core.task.TaskOutput;
 import com.tcdng.unify.core.util.ThreadUtils;
 
 /**
@@ -40,7 +39,7 @@ public class UniqueStringTestTask extends AbstractTask {
     private SequenceNumberService sequenceNumberService;
 
     @Override
-    public void execute(TaskMonitor taskMonitor, TaskInput taskInput, TaskOutput taskOutput) throws UnifyException {
+    public void execute(TaskMonitor taskMonitor, TaskInput taskInput) throws UnifyException {
         Map<String, Long> resultMap = new HashMap<String, Long>();
         int iterations = taskInput.getParam(int.class, UniqueStringTestTaskConstants.ITERATIONS);
         for (int i = 0; i < iterations; i++) {

@@ -17,7 +17,6 @@ package com.tcdng.unify.core.task;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.ApplicationComponents;
-import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
@@ -36,26 +35,21 @@ public class TaskLauncherImpl extends AbstractUnifyComponent implements TaskLaun
 
     @Override
     public TaskMonitor launchTask(TaskSetup taskSetup) throws UnifyException {
-        if (taskSetup.getTaskNames().isEmpty()) {
-            throw new UnifyException(UnifyCoreErrorConstants.TASKSETUP_NO_TASK);
-        }
-
         switch (taskSetup.getType()) {
             case RUN_AFTER:
-                return taskManager.scheduleTasksToRunAfter(taskSetup.getTaskNames(), taskSetup.getParameters(),
-                        taskSetup.isMessages(), taskSetup.isDependent(), taskSetup.getDelayInMillSec(),
-                        taskSetup.getLogger());
+                return taskManager.scheduleTaskToRunAfter(taskSetup.getTaskName(), taskSetup.getParameters(),
+                        taskSetup.isMessages(), taskSetup.getDelayInMillSec());
             case RUN_PERIODIC:
-                return taskManager.scheduleTasksToRunPeriodically(taskSetup.getTaskNames(), taskSetup.getParameters(),
-                        taskSetup.isMessages(), taskSetup.isDependent(), taskSetup.getDelayInMillSec(),
-                        taskSetup.getPeriodInMillSec(), taskSetup.getNumberOfTimes(), taskSetup.getLogger());
+                return taskManager.scheduleTaskToRunPeriodically(taskSetup.getTaskName(), taskSetup.getParameters(),
+                        taskSetup.isMessages(), taskSetup.getDelayInMillSec(),
+                        taskSetup.getPeriodInMillSec(), taskSetup.getNumberOfTimes());
             case RUN_IMMEDIATE_BLOCK:
-                return taskManager.executeTasks(taskSetup.getTaskNames(), taskSetup.getParameters(),
-                        taskSetup.isMessages(), taskSetup.isDependent(), taskSetup.getLogger());
+                return taskManager.executeTask(taskSetup.getTaskName(), taskSetup.getParameters(),
+                        taskSetup.isMessages());
             case RUN_IMMEDIATE:
             default:
-                return taskManager.startTasks(taskSetup.getTaskNames(), taskSetup.getParameters(),
-                        taskSetup.isMessages(), taskSetup.isDependent(), taskSetup.getLogger());
+                return taskManager.startTask(taskSetup.getTaskName(), taskSetup.getParameters(),
+                        taskSetup.isMessages());
         }
     }
 

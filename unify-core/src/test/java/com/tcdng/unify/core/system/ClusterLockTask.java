@@ -21,7 +21,6 @@ import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.task.AbstractTask;
 import com.tcdng.unify.core.task.TaskInput;
 import com.tcdng.unify.core.task.TaskMonitor;
-import com.tcdng.unify.core.task.TaskOutput;
 import com.tcdng.unify.core.util.ThreadUtils;
 
 /**
@@ -42,7 +41,7 @@ public class ClusterLockTask extends AbstractTask {
     private static double sharedValue;
 
     @Override
-    public void execute(TaskMonitor taskMonitor, TaskInput input, TaskOutput output) throws UnifyException {
+    public void execute(TaskMonitor taskMonitor, TaskInput input) throws UnifyException {
         for (int i = 0; i < sharedTestCount; i++) {
             double testValue = Math.random();
             clusterManager.beginSynchronization("sharedSync");

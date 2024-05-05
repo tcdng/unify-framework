@@ -23,7 +23,6 @@ import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.task.AbstractTask;
 import com.tcdng.unify.core.task.TaskInput;
 import com.tcdng.unify.core.task.TaskMonitor;
-import com.tcdng.unify.core.task.TaskOutput;
 import com.tcdng.unify.core.util.ThreadUtils;
 
 /**
@@ -39,7 +38,7 @@ public class DateSequenceNumberTask extends AbstractTask {
     private SequenceNumberService sequenceNumberService;
 
     @Override
-    public void execute(TaskMonitor taskMonitor, TaskInput input, TaskOutput output) throws UnifyException {
+    public void execute(TaskMonitor taskMonitor, TaskInput input) throws UnifyException {
         int iterations = input.getParam(int.class, DateSequenceNumberTaskConstants.ITERATIONS);
         Date testDate = input.getParam(Date.class, DateSequenceNumberTaskConstants.DATE);
         String testSequenceName = input.getParam(String.class, DateSequenceNumberTaskConstants.SEQUENCENAME);

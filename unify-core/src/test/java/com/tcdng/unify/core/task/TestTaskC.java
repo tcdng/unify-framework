@@ -33,7 +33,7 @@ import com.tcdng.unify.core.annotation.Parameters;
 public class TestTaskC extends AbstractTask {
 
     @Override
-    public void execute(TaskMonitor taskMonitor, TaskInput input, TaskOutput output) throws UnifyException {
+    public void execute(TaskMonitor taskMonitor, TaskInput input) throws UnifyException {
         throw new UnifyOperationException();
     }
 }

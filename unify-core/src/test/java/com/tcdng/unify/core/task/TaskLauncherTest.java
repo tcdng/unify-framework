@@ -24,53 +24,53 @@ import com.tcdng.unify.core.ApplicationComponents;
 
 public class TaskLauncherTest extends AbstractUnifyComponentTest {
 
-    @Test
-    public void testLaunchTaskComponent() throws Exception {
-        TaskLauncher launcher = (TaskLauncher) getComponent(ApplicationComponents.APPLICATION_TASKLAUNCHER);
-        TaskSetup setup = TaskSetup.newBuilder().addTask("test-taska").setParam("paramA", "Elmer Fudd").build();
-        TaskMonitor monitor = launcher.launchTask(setup);
-        while (!monitor.isDone()) {
-            Thread.yield();
-        }
-        assertEquals(TaskStatus.SUCCESSFUL, monitor.getTaskStatus(0));
-        assertEquals("Elmer Fudd", monitor.getTaskOutput(0).getResult(String.class, "message"));
-    }
+	@Test(timeout = 4000)
+	public void testLaunchTaskComponent() throws Exception {
+		TaskLauncher launcher = (TaskLauncher) getComponent(ApplicationComponents.APPLICATION_TASKLAUNCHER);
+		TaskSetup setup = TaskSetup.newBuilder("test-taska").setParam("paramA", "Elmer Fudd").build();
+		TaskMonitor monitor = launcher.launchTask(setup);
+		while (!monitor.isExited()) {
+			Thread.yield();
+		}
 
-    @Test
-    public void testLaunchTaskableMethod() throws Exception {
-        TaskLauncher launcher = (TaskLauncher) getComponent(ApplicationComponents.APPLICATION_TASKLAUNCHER);
-        TaskSetup setup = TaskSetup.newBuilder().addTask("computegalactic-task").setParam("name", "Earth")
-                .setParam("factor", 0.25).build();
-        TaskMonitor monitor = launcher.launchTask(setup);
-        while (!monitor.isDone()) {
-            Thread.yield();
-        }
-        assertEquals(TaskStatus.SUCCESSFUL, monitor.getTaskStatus(0));
-        assertEquals(Integer.valueOf(250000),
-                monitor.getTaskOutput(0).getResult(Integer.class, TaskableMethodConstants.TASK_RESULT));
-    }
+		assertEquals("Elmer Fudd", monitor.getTaskOutput().getResult(String.class, "message"));
+	}
 
-    @Test
-    public void testLaunchTaskableMethodNullParameter() throws Exception {
-        TaskLauncher launcher = (TaskLauncher) getComponent(ApplicationComponents.APPLICATION_TASKLAUNCHER);
-        TaskSetup setup = TaskSetup.newBuilder().addTask("computegalactic-task").setParam("factor", 0.25).build();
-        TaskMonitor monitor = launcher.launchTask(setup);
-        while (!monitor.isDone()) {
-            Thread.yield();
-        }
-        assertEquals(TaskStatus.SUCCESSFUL, monitor.getTaskStatus(0));
-        assertEquals(Integer.valueOf(0),
-                monitor.getTaskOutput(0).getResult(Integer.class, TaskableMethodConstants.TASK_RESULT));
-    }
+	@Test(timeout = 4000)
+	public void testLaunchTaskableMethod() throws Exception {
+		TaskLauncher launcher = (TaskLauncher) getComponent(ApplicationComponents.APPLICATION_TASKLAUNCHER);
+		TaskSetup setup = TaskSetup.newBuilder("computegalactic-task").setParam("name", "Earth")
+				.setParam("factor", 0.25).build();
+		TaskMonitor monitor = launcher.launchTask(setup);
+		while (!monitor.isExited()) {
+			Thread.yield();
+		}
 
-    @Override
-    protected void onSetup() throws Exception {
+		assertEquals(Integer.valueOf(250000),
+				monitor.getTaskOutput().getResult(Integer.class, TaskableMethodConstants.TASK_RESULT));
+	}
 
-    }
+	@Test(timeout = 4000)
+	public void testLaunchTaskableMethodNullParameter() throws Exception {
+		TaskLauncher launcher = (TaskLauncher) getComponent(ApplicationComponents.APPLICATION_TASKLAUNCHER);
+		TaskSetup setup = TaskSetup.newBuilder("computegalactic-task").setParam("factor", 0.25).build();
+		TaskMonitor monitor = launcher.launchTask(setup);
+		while (!monitor.isExited()) {
+			Thread.yield();
+		}
 
-    @Override
-    protected void onTearDown() throws Exception {
+		assertEquals(Integer.valueOf(0),
+				monitor.getTaskOutput().getResult(Integer.class, TaskableMethodConstants.TASK_RESULT));
+	}
 
-    }
+	@Override
+	protected void onSetup() throws Exception {
+
+	}
+
+	@Override
+	protected void onTearDown() throws Exception {
+
+	}
 
 }

@@ -18,30 +18,22 @@ package com.tcdng.unify.core.task;
 import java.util.Map;
 
 import com.tcdng.unify.core.UnifyComponent;
+import com.tcdng.unify.core.UnifyException;
 
 /**
- * Used for logging the status of task during execution.
+ * Task status logger.
  * 
  * @author The Code Department
  * @since 1.0
  */
 public interface TaskStatusLogger extends UnifyComponent {
 
-    /**
-     * Logs the status of a task using supplied task monitor.
-     * 
-     * @param taskMonitor
-     *            the task monitor
-     * @param parameters
-     *            the task parameters
-     */
-    void logTaskStatus(TaskMonitor taskMonitor, Map<String, Object> parameters);
-
-    /**
-     * Logs and exception that occurs when task is running.
-     * 
-     * @param e
-     *            the exception to log
-     */
-    void logTaskException(Exception e);
+	/**
+	 * Logs task status.
+	 * 
+	 * @param tm         the task monitor
+	 * @param parameters the task parameters
+	 * @throws UnifyException if an error occurs
+	 */
+	void logStatus(TaskMonitor tm, Map<String, Object> parameters) throws UnifyException;
 }

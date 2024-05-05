@@ -29,31 +29,8 @@ public interface TaskMonitor {
     /**
      * Returns the name of the task being monitored.
      * 
-     * @param taskIndex
-     *            the task index
      */
-    String getTaskName(int taskIndex);
-
-    /**
-     * Returns the task status.
-     * 
-     * @param taskIndex
-     *            the task index
-     */
-    TaskStatus getTaskStatus(int taskIndex);
-
-    /**
-     * Returns the current task status.
-     */
-    TaskStatus getCurrentTaskStatus();
-
-    /**
-     * Returns the task ID.
-     * 
-     * @param taskIndex
-     *            the task index
-     */
-    String getTaskId(int taskIndex);
+    String getTaskName();
 
     /**
      * Returns the task output object.
@@ -61,22 +38,7 @@ public interface TaskMonitor {
      * @param taskIndex
      *            the task index
      */
-    TaskOutput getTaskOutput(int taskIndex);
-
-    /**
-     * Returns the current task output object.
-     */
-    TaskOutput getCurrentTaskOutput();
-
-    /**
-     * Returns the number of tasks associated with this task monitor.
-     */
-    int getTaskCount();
-
-    /**
-     * Returns current task index.
-     */
-    int getCurrentTaskIndex();
+    TaskOutput getTaskOutput();
 
     /**
      * Adds a task message. Typically set by the executing task to give real-time
@@ -122,26 +84,42 @@ public interface TaskMonitor {
      * Gets all exceptions thrown during execution of the task.
      */
     Exception[] getExceptions();
-
+    
+    /**
+     * Gets task status.
+     * @return the task status
+     */
+    TaskStatus getTaskStatus();
+    
+    /**
+     * Gets the expected number of runs.
+     */
+    int expectedRuns();
+    
+    /**
+     * Gets the actual number of runs.
+     */
+    int actualRuns();
+    
     /**
      * Cancels task.
      */
     void cancel();
 
     /**
+     * Returns true if new task of type is not permitted.
+     */
+    boolean isNotPermitted();
+
+    /**
      * Returns true if task has been canceled.
      */
-    boolean isCanceled();
+    boolean isCancelled();
 
     /**
      * Returns true if task has any exceptions.
      */
     boolean isExceptions();
-
-    /**
-     * Returns true if task has not started running.
-     */
-    boolean isPending();
 
     /**
      * Returns true if task is done running.
@@ -152,4 +130,9 @@ public interface TaskMonitor {
      * Returns true if task is running
      */
     boolean isRunning();
+
+    /**
+     * Returns true if task is exited.
+     */
+    boolean isExited();
 }

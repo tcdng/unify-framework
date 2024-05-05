@@ -91,6 +91,10 @@ public class TaskableMethodConfig implements Listable {
     public TaskExecLimit getTaskExecLimit() {
         return taskExecLimit;
     }
+	
+	public boolean isPermitMultiple() {
+		return taskExecLimit.isPermitMultiple();
+	}
 
     public String getIdGenerator() {
         return idGenerator;
