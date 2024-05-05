@@ -229,22 +229,16 @@ public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManag
 			}
 		}
 
-		periodicRunner.setPermitMultiple(true);
-		taskableRunner.setPermitMultiple(true);
-		scheduledRunner.setPermitMultiple(false);
-
 		final int maxThreads = getContainerSetting(int.class,
 				UnifyCorePropertyConstants.APPLICATION_MAX_TASKRUNNER_THREADS, DEFAULT_TASKRUNNER_MAXTHREADS);
-		periodicRunner.start(maxThreads);
-		taskableRunner.start(maxThreads);		
-		scheduledRunner.start(maxThreads);		
+		periodicRunner.start(maxThreads, true);
+		taskableRunner.start(maxThreads, true);		
+		scheduledRunner.start(maxThreads, false);		
 	}
 
 	@Override
 	protected void onTerminate() throws UnifyException {
-		periodicRunner.stop();
-		scheduledRunner.stop();
-		taskableRunner.stop();
+
 	}
 
 }

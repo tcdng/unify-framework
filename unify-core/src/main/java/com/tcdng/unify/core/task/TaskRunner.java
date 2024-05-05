@@ -33,9 +33,10 @@ public interface TaskRunner extends UnifyComponent {
 	 * Start runner with supplied parameter.
 	 * 
 	 * @param maxRunThread the maximum number of thread
+	 * @param permitMultiple the value to set
 	 * @return true if started otherwise false if already started
 	 */
-	boolean start(int maxRunThread);
+	boolean start(int maxRunThread, boolean permitMultiple);
 
 	/**
 	 * Stops runner and all its scheduled tasks.
@@ -43,26 +44,11 @@ public interface TaskRunner extends UnifyComponent {
 	void stop();
 
 	/**
-	 * Restarts runner with supplied parameter.
-	 * 
-	 * @param maxRunThread the maximum number of thread
-	 */
-	void restart(int maxRunThread);
-
-	/**
 	 * Checks if this runner is running.
 	 * 
 	 * @return true if running otherwise false
 	 */
 	boolean isRunning();
-
-	/**
-	 * Sets runner allowing multiple tasks of the same type running at the same
-	 * time.
-	 * 
-	 * @param permitMultiple the value to set
-	 */
-	void setPermitMultiple(boolean permitMultiple);
 
 	/**
 	 * Checks if task is scheduled on this runner.

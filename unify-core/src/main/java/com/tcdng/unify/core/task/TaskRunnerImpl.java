@@ -63,22 +63,29 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 
 	private ExecutorService processingExecutor;
 
-	private Set<String> tasks;
+	private final Set<String> tasks;
 
 	private long shutdownWaitMilliSecs;
 
 	private int maxMonitorMessages;
 
+	private boolean started;
+
 	private boolean permitMultiple;
 	
+	public TaskRunnerImpl() {
+		this.tasks = new HashSet<String>();
+	}
+	
 	@Override
-	public boolean start(int maxRunThread) {
+	public boolean start(int maxRunThread, boolean permitMultiple) {
 		logDebug("Starting task runner [{0}] with maximum run threads [{1}]...", this, maxRunThread);
-		if (processingExecutor == null) {
+		if (!this.started) {
 			synchronized (this) {
-				if (processingExecutor == null) {
-					processingExecutor = Executors.newFixedThreadPool(maxRunThread <= 0 ? 1 : maxRunThread);
-					tasks = new HashSet<String>();
+				if (!this.started) {
+					this.processingExecutor = Executors.newFixedThreadPool(maxRunThread <= 0 ? 1 : maxRunThread);
+					this.permitMultiple = permitMultiple;
+					this.started = true;
 					logDebug("Task runner [{0}] is successfully started.", this);
 					return true;
 				}
@@ -92,17 +99,17 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 	@Override
 	public void stop() {
 		logDebug("Stopping task runner [{0}] ...", this);
-		if (processingExecutor != null) {
+		if (started) {
 			synchronized (this) {
-				if (processingExecutor != null) {
+				if (started) {
 					processingExecutor.shutdown();
+					started = false;
+					tasks.clear();
+					
 					try {
 						processingExecutor.awaitTermination(shutdownWaitMilliSecs, TimeUnit.MILLISECONDS);
 					} catch (InterruptedException e) {
 						logSevere(e);
-					} finally {
-						processingExecutor = null;
-						tasks = null;
 					}
 
 					logDebug("Task runner [{0}] is successfully stopped.", this);
@@ -115,19 +122,8 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 	}
 
 	@Override
-	public void restart(int maxRunThread) {
-		stop();
-		start(maxRunThread);
-	}
-
-	@Override
 	public boolean isRunning() {
-		return processingExecutor != null && tasks != null;
-	}
-
-	@Override
-	public void setPermitMultiple(boolean permitMultiple) {
-		this.permitMultiple = permitMultiple;
+		return started;
 	}
 
 	@Override
@@ -217,9 +213,7 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 
 	@Override
 	protected void onTerminate() throws UnifyException {
-		if (processingExecutor != null) {
-			processingExecutor.shutdown();
-		}
+		stop();
 	}
 
 	private void schedule(TaskRunParams params) {
