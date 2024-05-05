@@ -234,13 +234,22 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 				processingExecutor.execute(new TaskRunnable(params));
 			}
 
+			// Repeat
 			return true;
 		}
 
+		// Done
 		if (!params.isPermitMultiple()) {
 			tasks.remove(params.getTaskName());
 		}
-		
+	
+		try {
+			Task task = (Task) getComponent(params.getActualTaskName());
+			task.logStatus(params.getTm(), params.getParameters());
+		} catch (Exception e) {
+			logSevere(e);
+		}
+
 		return false;
 	}
 

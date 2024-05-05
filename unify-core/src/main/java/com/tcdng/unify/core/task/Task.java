@@ -15,6 +15,8 @@
  */
 package com.tcdng.unify.core.task;
 
+import java.util.Map;
+
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 
@@ -26,16 +28,22 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface Task extends UnifyComponent {
 
-    /**
-     * Executes task with supplied parameters
-     * 
-     * @param taskMonitor
-     *            the task monitor object
-     * @param input
-     *            the task input object
-     * @throws UnifyException
-     *             if an error occurs
-     *             
-     */
-    void execute(TaskMonitor taskMonitor, TaskInput input) throws UnifyException;
+	/**
+	 * Executes task with supplied parameters
+	 * 
+	 * @param taskMonitor the task monitor object
+	 * @param input       the task input object
+	 * @throws UnifyException if an error occurs
+	 * 
+	 */
+	void execute(TaskMonitor taskMonitor, TaskInput input) throws UnifyException;
+
+	/**
+	 * Logs task status.
+	 * 
+	 * @param taskMonitor the task monitors
+	 * @param parameters  the tasks parameters
+	 * @throws UnifyException if an error occurs
+	 */
+	void logStatus(TaskMonitor taskMonitor, Map<String, Object> parameters) throws UnifyException;
 }
