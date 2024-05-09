@@ -17,6 +17,7 @@
     src:$t{images/error.png}
     src:$t{images/question.png}
 !ui-label:message styleClass:$e{mpmsg} binding:message
+	htmlEscape:false
 
 //Action button panel
 !ui-panel:messageBoxActionPanel style:$s{width:100%; text-align:center;}

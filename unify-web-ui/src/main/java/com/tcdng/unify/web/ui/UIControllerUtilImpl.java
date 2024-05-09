@@ -328,25 +328,30 @@ public class UIControllerUtilImpl extends AbstractUnifyComponent implements UICo
                         hintUserResponse }));
 
         defaultResultMap.put(ResultMappingConstants.SHOW_ATTACHMENT, new Result(new PageControllerResponse[] {
-                (PageControllerResponse) getUplComponent(defaultLocale, "!fileattachmentresponse", false) }));
+                (PageControllerResponse) getUplComponent(defaultLocale, "!fileattachmentresponse", false),
+                hintUserResponse}));
 
         defaultResultMap.put(ResultMappingConstants.DOWNLOAD_FILE, new Result(new PageControllerResponse[] {
-                (PageControllerResponse) getUplComponent(defaultLocale, "!filedownloadresponse", false) }));
+                (PageControllerResponse) getUplComponent(defaultLocale, "!filedownloadresponse", false),
+                hintUserResponse}));
 
         defaultResultMap.put(ResultMappingConstants.DOWNLOAD_FILE_HIDE_POPUP,
                 new Result(new PageControllerResponse[] {
                         (PageControllerResponse) getUplComponent(defaultLocale, "!hidepopupresponse", false),
-                        (PageControllerResponse) getUplComponent(defaultLocale, "!filedownloadresponse", false) }));
+                        (PageControllerResponse) getUplComponent(defaultLocale, "!filedownloadresponse", false),
+                        hintUserResponse}));
 
         defaultResultMap.put(ResultMappingConstants.REFRESH_SHOW_POPUP,
                 new Result(new PageControllerResponse[] {
                         (PageControllerResponse) getUplComponent(defaultLocale, "!refreshpanelresponse", false),
-                        (PageControllerResponse) getUplComponent(defaultLocale, "!showpopupresponse", false) }));
+                        (PageControllerResponse) getUplComponent(defaultLocale, "!showpopupresponse", false),
+                        hintUserResponse}));
 
         defaultResultMap.put(ResultMappingConstants.REFRESH_HIDE_POPUP,
                 new Result(new PageControllerResponse[] {
                         (PageControllerResponse) getUplComponent(defaultLocale, "!refreshpanelresponse", false),
-                        (PageControllerResponse) getUplComponent(defaultLocale, "!hidepopupresponse", false) }));
+                        (PageControllerResponse) getUplComponent(defaultLocale, "!hidepopupresponse", false),
+                        hintUserResponse}));
 
         defaultResultMap.put(ResultMappingConstants.REFRESH_PANELS, new Result(new PageControllerResponse[] {
                 (PageControllerResponse) getUplComponent(defaultLocale, "!refreshpanelresponse", false) }));
