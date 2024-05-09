@@ -30,6 +30,7 @@ import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.data.Listable;
 import com.tcdng.unify.core.data.LocaleFactoryMap;
 import com.tcdng.unify.core.util.DataUtils;
@@ -45,286 +46,292 @@ import com.tcdng.unify.core.util.StringUtils;
 @Component(ApplicationComponents.APPLICATION_LISTMANAGER)
 public class ListManagerImpl extends AbstractUnifyComponent implements ListManager {
 
-    private final Object lock = new Object();
+	@Configurable
+	private DynamicListManager dynamicListManager;
 
-    private LocaleFactoryMap<Map<String, StaticListInfo>> staticListMaps;
+	private final Object lock = new Object();
 
-    private LocaleFactoryMap<List<StaticListInfo>> staticLists;
+	private LocaleFactoryMap<Map<String, StaticListInfo>> staticListMaps;
 
-    private Map<String, StaticListEnumInfo> staticListEnumInfos;
+	private LocaleFactoryMap<List<StaticListInfo>> staticLists;
 
-    public ListManagerImpl() {
-        staticListEnumInfos = new HashMap<String, StaticListEnumInfo>();
-        staticLists = new LocaleFactoryMap<List<StaticListInfo>>()
-            {
+	private Map<String, StaticListEnumInfo> staticListEnumInfos;
 
-                @Override
-                protected List<StaticListInfo> create(Locale locale, Object... params) throws Exception {
-                    List<StaticListInfo> list = new ArrayList<StaticListInfo>();
-                    for (StaticListEnumInfo staticListEnumInfo : staticListEnumInfos.values()) {
-                        list.add(new StaticListInfo(locale, staticListEnumInfo.getName(),
-                                resolveMessage(locale, staticListEnumInfo.getDescription())));
-                    }
+	public ListManagerImpl() {
+		staticListEnumInfos = new HashMap<String, StaticListEnumInfo>();
+		staticLists = new LocaleFactoryMap<List<StaticListInfo>>() {
 
-                    DataUtils.sortAscending(list, StaticListInfo.class, "description");
-                    return Collections.unmodifiableList(list);
-                }
+			@Override
+			protected List<StaticListInfo> create(Locale locale, Object... params) throws Exception {
+				List<StaticListInfo> list = new ArrayList<StaticListInfo>();
+				for (StaticListEnumInfo staticListEnumInfo : staticListEnumInfos.values()) {
+					list.add(new StaticListInfo(locale, staticListEnumInfo.getName(),
+							resolveMessage(locale, staticListEnumInfo.getDescription())));
+				}
 
-            };
+				DataUtils.sortAscending(list, StaticListInfo.class, "description");
+				return Collections.unmodifiableList(list);
+			}
 
-        staticListMaps = new LocaleFactoryMap<Map<String, StaticListInfo>>()
-            {
+		};
 
-                @Override
-                protected Map<String, StaticListInfo> create(Locale locale, Object... params) throws Exception {
-                    Map<String, StaticListInfo> map = new LinkedHashMap<String, StaticListInfo>();
-                    for (StaticListInfo staticListInfo : staticLists.get(locale)) {
-                        map.put(staticListInfo.getName(), staticListInfo);
-                    }
+		staticListMaps = new LocaleFactoryMap<Map<String, StaticListInfo>>() {
 
-                    return Collections.unmodifiableMap(map);
-                }
+			@Override
+			protected Map<String, StaticListInfo> create(Locale locale, Object... params) throws Exception {
+				Map<String, StaticListInfo> map = new LinkedHashMap<String, StaticListInfo>();
+				for (StaticListInfo staticListInfo : staticLists.get(locale)) {
+					map.put(staticListInfo.getName(), staticListInfo);
+				}
 
-            };
+				return Collections.unmodifiableMap(map);
+			}
 
-    }
+		};
 
-    @Override
-    public Class<? extends EnumConst> getStaticListEnumType(String listName) throws UnifyException {
-        StaticListEnumInfo staticListEnumInfo = staticListEnumInfos.get(listName);
-        if (staticListEnumInfo == null) {
-            throw new UnifyException(UnifyCoreErrorConstants.STATICLIST_WITH_NAME_IS_UNKNOWN, listName);
-        }
+	}
 
-        return staticListEnumInfo.getEnumClass();
-    }
+	@Override
+	public Class<? extends EnumConst> getStaticListEnumType(String listName) throws UnifyException {
+		StaticListEnumInfo staticListEnumInfo = staticListEnumInfos.get(listName);
+		if (staticListEnumInfo == null) {
+			throw new UnifyException(UnifyCoreErrorConstants.STATICLIST_WITH_NAME_IS_UNKNOWN, listName);
+		}
 
-    @Override
-    public List<? extends Listable> getAllStaticLists(Locale locale) throws UnifyException {
-        return staticLists.get(locale);
-    }
+		return staticListEnumInfo.getEnumClass();
+	}
 
-    @Override
-    public List<? extends Listable> getList(Locale locale, String listName, Object... params) throws UnifyException {
-        StaticListInfo staticListInfo = staticListMaps.get(locale).get(listName);
-        if (staticListInfo != null) {
-            return staticListInfo.getList();
-        }
+	@Override
+	public List<? extends Listable> getAllStaticLists(Locale locale) throws UnifyException {
+		return staticLists.get(locale);
+	}
 
-        return executeListCommand(listName, locale, params);
-    }
+	@Override
+	public List<? extends Listable> getList(Locale locale, String listName, Object... params) throws UnifyException {
+		StaticListInfo staticListInfo = staticListMaps.get(locale).get(listName);
+		if (staticListInfo != null) {
+			return staticListInfo.getList();
+		}
 
-    @Override
-    public List<? extends Listable> getSubList(Locale locale, String listName, String filter, int limit,
-            Object... params) throws UnifyException {
-        StaticListInfo staticListInfo = staticListMaps.get(locale).get(listName);
-        if (staticListInfo != null) {
-            return staticListInfo.getList(filter, limit);
-        }
+		return executeListCommand(listName, locale, params);
+	}
 
-        return executeListCommand(listName, locale, filter, limit, params);
-    }
+	@Override
+	public List<? extends Listable> getSubList(Locale locale, String listName, String filter, int limit,
+			Object... params) throws UnifyException {
+		StaticListInfo staticListInfo = staticListMaps.get(locale).get(listName);
+		if (staticListInfo != null) {
+			return staticListInfo.getList(filter, limit);
+		}
 
-    @Override
-    public List<? extends Listable> getCaseInsensitiveSubList(Locale locale, String listName, String filter, int limit,
-            Object... params) throws UnifyException {
-        StaticListInfo staticListInfo = staticListMaps.get(locale).get(listName);
-        if (staticListInfo != null) {
-            return staticListInfo.getCaseInsensitiveList(filter, limit);
-        }
+		return executeListCommand(listName, locale, filter, limit, params);
+	}
 
-        return executeCaseInsensitiveListCommand(listName, locale, filter, limit, params);
-    }
+	@Override
+	public List<? extends Listable> getCaseInsensitiveSubList(Locale locale, String listName, String filter, int limit,
+			Object... params) throws UnifyException {
+		StaticListInfo staticListInfo = staticListMaps.get(locale).get(listName);
+		if (staticListInfo != null) {
+			return staticListInfo.getCaseInsensitiveList(filter, limit);
+		}
 
-    @Override
-    public Map<String, Listable> getListMap(Locale locale, String listName, Object... params) throws UnifyException {
-        StaticListInfo staticListInfo = staticListMaps.get(locale).get(listName);
-        if (staticListInfo != null) {
-            return staticListInfo.getMap();
-        }
+		return executeCaseInsensitiveListCommand(listName, locale, filter, limit, params);
+	}
 
-        Map<String, Listable> listMap = new HashMap<String, Listable>();
-        for (Listable listable : executeListCommand(listName, locale, params)) {
-            listMap.put(listable.getListKey(), listable);
-        }
-        return listMap;
-    }
+	@Override
+	public Map<String, Listable> getListMap(Locale locale, String listName, Object... params) throws UnifyException {
+		StaticListInfo staticListInfo = staticListMaps.get(locale).get(listName);
+		if (staticListInfo != null) {
+			return staticListInfo.getMap();
+		}
 
-    @Override
-    public Map<String, Listable> getSubListMap(Locale locale, String listName, String filter, int limit,
-            Object... params) throws UnifyException {
-        StaticListInfo staticListInfo = staticListMaps.get(locale).get(listName);
-        if (staticListInfo != null) {
-            return staticListInfo.getMap(filter, limit);
-        }
+		Map<String, Listable> listMap = new HashMap<String, Listable>();
+		for (Listable listable : executeListCommand(listName, locale, params)) {
+			listMap.put(listable.getListKey(), listable);
+		}
+		return listMap;
+	}
 
-        Map<String, Listable> listMap = new HashMap<String, Listable>();
-        for (Listable listable : executeListCommand(listName, locale, filter, limit, params)) {
-            listMap.put(listable.getListKey(), listable);
-        }
-        return listMap;
-    }
+	@Override
+	public Map<String, Listable> getSubListMap(Locale locale, String listName, String filter, int limit,
+			Object... params) throws UnifyException {
+		StaticListInfo staticListInfo = staticListMaps.get(locale).get(listName);
+		if (staticListInfo != null) {
+			return staticListInfo.getMap(filter, limit);
+		}
 
-    @Override
-    public Listable getListItemByKey(Locale locale, String listName, String listKey, Object... params)
-            throws UnifyException {
-        return getListMap(locale, listName, params).get(listKey);
-    }
+		Map<String, Listable> listMap = new HashMap<String, Listable>();
+		for (Listable listable : executeListCommand(listName, locale, filter, limit, params)) {
+			listMap.put(listable.getListKey(), listable);
+		}
+		return listMap;
+	}
 
-    @Override
-    public Listable getListItemByDescription(Locale locale, String listName, String listDesc, Object... params)
-            throws UnifyException {
-        for (Map.Entry<String, Listable> entry : getListMap(locale, listName, params).entrySet()) {
-            if (entry.getValue().getListDescription().equals(listDesc)) {
-                return entry.getValue();
-            }
-        }
+	@Override
+	public Listable getListItemByKey(Locale locale, String listName, String listKey, Object... params)
+			throws UnifyException {
+		return getListMap(locale, listName, params).get(listKey);
+	}
 
-        return null;
-    }
+	@Override
+	public Listable getListItemByDescription(Locale locale, String listName, String listDesc, Object... params)
+			throws UnifyException {
+		for (Map.Entry<String, Listable> entry : getListMap(locale, listName, params).entrySet()) {
+			if (entry.getValue().getListDescription().equals(listDesc)) {
+				return entry.getValue();
+			}
+		}
 
-    @Override
-    protected void onInitialize() throws UnifyException {
-        for (Class<? extends EnumConst> enumClass : getAnnotatedClasses(EnumConst.class, StaticList.class)) {
-            StaticList sa = enumClass.getAnnotation(StaticList.class);
-            staticListEnumInfos.put(sa.name(), new StaticListEnumInfo(enumClass, sa.name(), sa.description()));
-        }
-    }
+		return null;
+	}
 
-    @Override
-    protected void onTerminate() throws UnifyException {
+	@Override
+	protected void onInitialize() throws UnifyException {
+		for (Class<? extends EnumConst> enumClass : getAnnotatedClasses(EnumConst.class, StaticList.class)) {
+			StaticList sa = enumClass.getAnnotation(StaticList.class);
+			staticListEnumInfos.put(sa.name(), new StaticListEnumInfo(enumClass, sa.name(), sa.description()));
+		}
+	}
 
-    }
+	@Override
+	protected void onTerminate() throws UnifyException {
 
-    @SuppressWarnings("unchecked")
-    private <T extends ListParam> List<? extends Listable> executeListCommand(String listName, Locale locale,
-            Object... params) throws UnifyException {
-        ListCommand<T> listCommand = (ListCommand<T>) getComponent(listName);
-        return listCommand.execute(locale, DataUtils.constructDataObject(listCommand.getParamType(), params));
-    }
+	}
 
-    private <T extends ListParam> List<? extends Listable> executeListCommand(String listName, Locale locale,
-            String filter, int limit, Object... params) throws UnifyException {
-        return ListUtils.getSubList(executeListCommand(listName, locale, params), filter, limit);
-    }
+	@SuppressWarnings("unchecked")
+	private <T extends ListParam> List<? extends Listable> executeListCommand(String listName, Locale locale,
+			Object... params) throws UnifyException {
+		if (isComponent(listName)) {
+			ListCommand<T> listCommand = (ListCommand<T>) getComponent(listName);
+			return listCommand.execute(locale, DataUtils.constructDataObject(listCommand.getParamType(), params));
+		}
 
-    private <T extends ListParam> List<? extends Listable> executeCaseInsensitiveListCommand(String listName,
-            Locale locale, String filter, int limit, Object... params) throws UnifyException {
-        return ListUtils.getCaseInsensitiveSubList(executeListCommand(listName, locale, params), filter, limit);
-    }
+		return dynamicListManager != null ? dynamicListManager.getList(locale, listName, params)
+				: Collections.emptyList();
+	}
 
-    public class StaticListInfo implements Listable {
+	private <T extends ListParam> List<? extends Listable> executeListCommand(String listName, Locale locale,
+			String filter, int limit, Object... params) throws UnifyException {
+		return ListUtils.getSubList(executeListCommand(listName, locale, params), filter, limit);
+	}
 
-        private Locale locale;
+	private <T extends ListParam> List<? extends Listable> executeCaseInsensitiveListCommand(String listName,
+			Locale locale, String filter, int limit, Object... params) throws UnifyException {
+		return ListUtils.getCaseInsensitiveSubList(executeListCommand(listName, locale, params), filter, limit);
+	}
 
-        private String name;
+	public class StaticListInfo implements Listable {
 
-        private String description;
+		private Locale locale;
 
-        private List<? extends Listable> list;
+		private String name;
 
-        private Map<String, Listable> map;
+		private String description;
 
-        public StaticListInfo(Locale locale, String name, String description) {
-            this.locale = locale;
-            this.name = name;
-            this.description = description;
-        }
+		private List<? extends Listable> list;
 
-        public String getName() {
-            return name;
-        }
+		private Map<String, Listable> map;
 
-        public String getDescription() {
-            return description;
-        }
+		public StaticListInfo(Locale locale, String name, String description) {
+			this.locale = locale;
+			this.name = name;
+			this.description = description;
+		}
 
-        public List<? extends Listable> getList() throws UnifyException {
-            if (list == null) {
-                synchronized (lock) {
-                    if (list == null) {
-                        String keyValueList = getMessage(locale, name);
-                        list = Collections.unmodifiableList(StringUtils.readStaticList(keyValueList));
-                    }
-                }
-            }
+		public String getName() {
+			return name;
+		}
 
-            return list;
-        }
+		public String getDescription() {
+			return description;
+		}
 
-        public List<? extends Listable> getList(String filter, int limit) throws UnifyException {
-            return ListUtils.getSubList(getList(), filter, limit);
-        }
+		public List<? extends Listable> getList() throws UnifyException {
+			if (list == null) {
+				synchronized (lock) {
+					if (list == null) {
+						String keyValueList = getMessage(locale, name);
+						list = Collections.unmodifiableList(StringUtils.readStaticList(keyValueList));
+					}
+				}
+			}
 
-        public List<? extends Listable> getCaseInsensitiveList(String filter, int limit) throws UnifyException {
-            return ListUtils.getCaseInsensitiveSubList(getList(), filter, limit);
-        }
+			return list;
+		}
 
-        public Map<String, Listable> getMap() throws UnifyException {
-            if (map == null) {
-                synchronized (lock) {
-                    if (map == null) {
-                        map = new LinkedHashMap<String, Listable>();
-                        for (Listable listable : getList()) {
-                            map.put(listable.getListKey(), listable);
-                        }
+		public List<? extends Listable> getList(String filter, int limit) throws UnifyException {
+			return ListUtils.getSubList(getList(), filter, limit);
+		}
 
-                        map = Collections.unmodifiableMap(map);
-                    }
-                }
-            }
+		public List<? extends Listable> getCaseInsensitiveList(String filter, int limit) throws UnifyException {
+			return ListUtils.getCaseInsensitiveSubList(getList(), filter, limit);
+		}
 
-            return map;
-        }
+		public Map<String, Listable> getMap() throws UnifyException {
+			if (map == null) {
+				synchronized (lock) {
+					if (map == null) {
+						map = new LinkedHashMap<String, Listable>();
+						for (Listable listable : getList()) {
+							map.put(listable.getListKey(), listable);
+						}
 
-        public Map<String, Listable> getMap(String filter, int limit) throws UnifyException {
-            List<? extends Listable> list = getList(filter, limit);
-            if (list == this.list) {
-                return getMap();
-            }
+						map = Collections.unmodifiableMap(map);
+					}
+				}
+			}
 
-            Map<String, Listable> map = new LinkedHashMap<String, Listable>();
-            for (Listable listable : list) {
-                map.put(listable.getListKey(), listable);
-            }
-            return map;
-        }
+			return map;
+		}
 
-        @Override
-        public String getListKey() {
-            return name;
-        }
+		public Map<String, Listable> getMap(String filter, int limit) throws UnifyException {
+			List<? extends Listable> list = getList(filter, limit);
+			if (list == this.list) {
+				return getMap();
+			}
 
-        @Override
-        public String getListDescription() {
-            return description;
-        }
-    }
+			Map<String, Listable> map = new LinkedHashMap<String, Listable>();
+			for (Listable listable : list) {
+				map.put(listable.getListKey(), listable);
+			}
+			return map;
+		}
 
-    private class StaticListEnumInfo {
+		@Override
+		public String getListKey() {
+			return name;
+		}
 
-        private Class<? extends EnumConst> enumClass;
+		@Override
+		public String getListDescription() {
+			return description;
+		}
+	}
 
-        private String name;
+	private class StaticListEnumInfo {
 
-        private String description;
+		private Class<? extends EnumConst> enumClass;
 
-        public StaticListEnumInfo(Class<? extends EnumConst> enumClass, String name, String description) {
-            this.enumClass = enumClass;
-            this.name = name;
-            this.description = description;
-        }
+		private String name;
 
-        public Class<? extends EnumConst> getEnumClass() {
-            return enumClass;
-        }
+		private String description;
 
-        public String getName() {
-            return name;
-        }
+		public StaticListEnumInfo(Class<? extends EnumConst> enumClass, String name, String description) {
+			this.enumClass = enumClass;
+			this.name = name;
+			this.description = description;
+		}
 
-        public String getDescription() {
-            return description;
-        }
-    }
+		public Class<? extends EnumConst> getEnumClass() {
+			return enumClass;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public String getDescription() {
+			return description;
+		}
+	}
 }
