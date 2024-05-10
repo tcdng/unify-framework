@@ -124,13 +124,13 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 	@Override
 	public <T extends Entity> T findFirst(Query<T> query) throws UnifyException {
 		final Long id = min(Long.class, "id", query);
-		return id != null ? find(query.getEntityClass(), id) : null;
+		return _find(id, query);
 	}
 
 	@Override
 	public <T extends Entity> T findLast(Query<T> query) throws UnifyException {
 		final Long id = max(Long.class, "id", query);
-		return id != null ? find(query.getEntityClass(), id) : null;
+		return _find(id, query);
 	}
 
 	@Override
@@ -151,13 +151,13 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 	@Override
 	public <T extends Entity> T findLeanFirst(Query<T> query) throws UnifyException {
 		final Long id = min(Long.class, "id", query);
-		return id != null ? findLean(query.getEntityClass(), id) : null;
+		return _findLean(id, query);
 	}
 
 	@Override
 	public <T extends Entity> T findLeanLast(Query<T> query) throws UnifyException {
 		final Long id = max(Long.class, "id", query);
-		return id != null ? findLean(query.getEntityClass(), id) : null;
+		return _findLean(id, query);
 	}
 
 	@SuppressWarnings({ "unchecked" })
@@ -1163,6 +1163,18 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 		if (isReadOnly()) {
 			throw new UnifyException(UnifyCoreErrorConstants.DATASOURCE_IN_READONLY_MODE, sqlDataSource.getName());
 		}
+	}
+
+	private <T extends Entity> T _find(Long id, Query<T> query) throws UnifyException {
+		return id != null ? (query.isSelect()
+				? find(Query.of(query.getEntityClass()).addEquals("id", id).addSelect(query.getSelect()))
+				: find(query.getEntityClass(), id)) : null;
+	}
+
+	private <T extends Entity> T _findLean(Long id, Query<T> query) throws UnifyException {
+		return id != null ? (query.isSelect()
+				? findLean(Query.of(query.getEntityClass()).addEquals("id", id).addSelect(query.getSelect()))
+				: findLean(query.getEntityClass(), id)) : null;
 	}
 
 	private <T extends Entity> T find(Class<T> clazz, Object id, FetchChild fetchChild) throws UnifyException {

@@ -372,6 +372,11 @@ public class Query<T extends Entity> implements Cloneable {
         return this;
     }
 
+    public Query<T> addSelect(Select select) {
+        innerGetSelect().addAll(select.values());
+        return this;
+    }
+    
     public Query<T> addGroupBy(String field) {
         innerGetGroupBy().add(field);
         return this;
