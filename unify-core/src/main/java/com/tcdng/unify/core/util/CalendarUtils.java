@@ -275,6 +275,19 @@ public final class CalendarUtils {
 	}
 
 	/**
+	 * Returns the midnight date for a specified date using default locale. A
+	 * midnight date is any date at 12:00:00AM.
+	 * 
+	 * @param date the supplied date
+	 */
+	public static Date addDays(Date date, int days) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.add(Calendar.DAY_OF_YEAR, days);
+		return cal.getTime();
+	}
+
+	/**
 	 * Returns the midnight date for a specified date using specified locale. A
 	 * midnight date is any date at 12:00:00AM.
 	 * 
