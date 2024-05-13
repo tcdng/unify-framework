@@ -481,6 +481,32 @@ public final class CalendarUtils {
 	}
 
 	/**
+	 * Gets first day of year for supplied date.
+	 * 
+	 * @param date the date to use
+	 * @return the first day of year
+	 */
+	public static Date getFirstDayOfYear(Date date) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.set(Calendar.DAY_OF_YEAR, 1);
+		return cal.getTime();
+	}
+
+	/**
+	 * Gets last day of month for supplied date.
+	 * 
+	 * @param date the date to use
+	 * @return the last date of month
+	 */
+	public static Date getLastDayOfMonth(Date date) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+		return cal.getTime();
+	}
+
+	/**
 	 * Get date using supplied year, month and day
 	 * 
 	 * @param year  the year
