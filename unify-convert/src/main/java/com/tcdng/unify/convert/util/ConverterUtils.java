@@ -97,7 +97,7 @@ public final class ConverterUtils {
         map.put(java.time.LocalDate.class, new LocalDateConverter());
         map.put(java.time.LocalDateTime.class, new LocalDateTimeConverter());
 		map.put(String.class, new StringConverter());
-		classToConverterMap = map;
+		classToConverterMap = map; 
 	}
 
 	private static final Map<Class<?>, Class<?>> classToWrapperMap;
