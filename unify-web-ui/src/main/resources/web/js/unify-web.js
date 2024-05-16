@@ -5853,15 +5853,15 @@ ux.addHdlMany = function(name, eventName, handler, evp) {
 }
 
 ux.addHdl = function(domObject, eventName, handler, evp) {
-	if ("enter" == eventName) {
-		eventName = "keydown";
-		handler = ux.wireSpecialKeyHandler(evp, handler, "Enter", UNIFY_KEY_ENTER);
-	} else if ("rtclick" == eventName) {
-		eventName = "mouseup";
-		handler = ux.wireRightClickHandler(evp, handler);
-	}
-
 	if (domObject) {
+		if ("enter" == eventName) {
+			eventName = "keydown";
+			handler = ux.wireSpecialKeyHandler(evp, handler, "Enter", UNIFY_KEY_ENTER);
+		} else if ("rtclick" == eventName) {
+			eventName = "mouseup";
+			handler = ux.wireRightClickHandler(evp, handler);
+		}
+
 		if (domObject.addEventListener) {
 			domObject.addEventListener(eventName, function(event) {
 				ux.handleOrConfirmRedirect(event, handler, evp);
