@@ -42,8 +42,8 @@ public class Formats {
 	}
 
 	public Formats(String integerFormat, String decimalFormat, String dateFormat, String timestampFormat) {
-		this.integerFormat = integerFormat != null ? integerFormat : "###,###";
-		this.decimalFormat = decimalFormat != null ? decimalFormat : "###,###.00";
+		this.integerFormat = integerFormat != null ? integerFormat : "###,##0";
+		this.decimalFormat = decimalFormat != null ? decimalFormat : "###,##0.00";
 		this.dateFormat = dateFormat != null ? dateFormat : "yyyy-MM-dd";
 		this.timestampFormat = timestampFormat != null ? timestampFormat : "yyyy-MM-dd HH:mm:ss";
 	}
