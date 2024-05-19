@@ -21,7 +21,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import com.tcdng.unify.core.constant.AnnotationConstants;
-import com.tcdng.unify.core.constant.LockNameConstants;
 
 /**
  * Annotation for synchronizing a business service component method. All access
@@ -50,7 +49,7 @@ import com.tcdng.unify.core.constant.LockNameConstants;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Synchronized {
 
-    String value() default LockNameConstants.MASTER_LOCK;
+    String value() default AnnotationConstants.NONE;
     
     String lock() default AnnotationConstants.NONE;
     

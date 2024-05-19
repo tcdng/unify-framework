@@ -53,6 +53,8 @@ import com.tcdng.unify.core.util.NetworkUtils;
 @Component(ApplicationComponents.APPLICATION_CLUSTERSERVICE)
 public class ClusterServiceImpl extends AbstractBusinessService implements ClusterService {
 
+	private final String CLUSTER_HOUSE_KEEPING_LOCK = "app:clusterhousekeeping-lock";
+	
 	@Configurable("1") // Node expiration in minutes
 	private int nodeExpirationPeriod;
 
@@ -134,7 +136,7 @@ public class ClusterServiceImpl extends AbstractBusinessService implements Clust
 	}
 
 	@Periodic(PeriodicType.SLOWER)
-	@Synchronized(waitForLock = false)
+	@Synchronized(lock = CLUSTER_HOUSE_KEEPING_LOCK, waitForLock = false)
 	public void performClusterHouseKeeping(TaskMonitor taskMonitor) throws UnifyException {
 		// Obliterate cluster nodes with stopped heart beats (Dead nodes).
 		List<String> deadNodeIds = db().valueList(String.class, "nodeId", new ClusterNodeQuery()

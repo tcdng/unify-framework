@@ -218,7 +218,7 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
 		return isDeployNewVersion || isDeployNewAuxVersion;
 	}
 
-	@Synchronized(BOOT_FEATURE_LOCK)
+	@Synchronized(lock = BOOT_FEATURE_LOCK, waitForLock = false)
 	private Feature getFeature(String code, String defaultVal) throws UnifyException {
 		try {
 			Feature feature = db().find(new FeatureQuery().code(code));

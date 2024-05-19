@@ -46,6 +46,7 @@ import com.tcdng.unify.core.system.LockManager;
 import com.tcdng.unify.core.util.AnnotationUtils;
 import com.tcdng.unify.core.util.NameUtils;
 import com.tcdng.unify.core.util.ReflectUtils;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * Default implementation proxy business service generator.
@@ -118,9 +119,13 @@ public class ProxyBusinessServiceGeneratorImpl extends AbstractUnifyComponent im
 			if (syna != null) {
 				String lockName = AnnotationUtils.getAnnotationString(syna.lock());
 				if (lockName == null) {
-					lockName = syna.value();
+					lockName = AnnotationUtils.getAnnotationString(syna.value());
 				}
 
+				if (StringUtils.isBlank(lockName)) {
+					throw new UnifyException(UnifyCoreErrorConstants.REFLECT_METHOD_REQUIRES_LOCKNAME, method);
+				}
+				
 				methodLockMap.put(method, new SynchronizedInfo(lockName, syna.waitForLock(), syna.timeout()));
 			}
 
@@ -181,14 +186,7 @@ public class ProxyBusinessServiceGeneratorImpl extends AbstractUnifyComponent im
 			}
 
 			// Build method
-			if (Modifier.isPublic(modifiers)) {
-				sb.append("\tpublic ");
-			} else if (Modifier.isProtected(modifiers)) {
-				sb.append("\tprotected ");
-			} else if (Modifier.isPrivate(modifiers)) {
-				sb.append("\tprivate ");
-			}
-
+			sb.append("\tpublic ");
 			sb.append(method.getReturnType().getCanonicalName()).append(" ").append(method.getName());
 
 			// Append parameters
@@ -236,7 +234,7 @@ public class ProxyBusinessServiceGeneratorImpl extends AbstractUnifyComponent im
 			String extraTab = "";
 			if (isSynchronized) {
 				if (isTransactional) {
-					extraTab = "\t\t\t";
+					extraTab = "\t";
 				}
 
 				SynchronizedInfo synchronizedInfo = methodLockMap.get(method);

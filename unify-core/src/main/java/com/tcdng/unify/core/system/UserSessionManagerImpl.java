@@ -52,7 +52,7 @@ import com.tcdng.unify.core.util.CalendarUtils;
 @Component(ApplicationComponents.APPLICATION_USERSESSIONMANAGER)
 public class UserSessionManagerImpl extends AbstractBusinessService implements UserSessionManager {
 
-	private static final String USER_SESSION_LOCK = "app::bootfeature-lock";
+	private static final String USER_SESSION_LOCK = "app::usersession-lock";
 
     private Map<String, UserSession> userSessions;
 

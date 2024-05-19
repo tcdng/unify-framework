@@ -43,25 +43,29 @@ public class LockManagerTest extends AbstractUnifyComponentTest {
 		super(true); // Cluster mode
 	}
 
-	@Test
+	@Test(timeout = 5000)
 	public void testSingleMemberSync() throws Exception {
-		LockManager lockManager = (LockManager) getComponent(ApplicationComponents.APPLICATION_CLUSTERSERVICE);
+		LockManager lockManager = (LockManager) getComponent(ApplicationComponents.APPLICATION_LOCKMANAGER);
+		String threadId = String.valueOf(ThreadUtils.currentThreadId());
 		String lockOwnerId = lockManager.getNodeId();
 		lockManager.grabLock("computeSalaryLock");
 		LockInfo lockInfo = lockManager.getLockInfo("computeSalaryLock");
 		assertNotNull(lockInfo);
 		assertEquals("computeSalaryLock", lockInfo.getLockName());
 		assertEquals(lockOwnerId, lockInfo.getCurrentOwner());
+		assertEquals(threadId, lockInfo.getThreadId());
 		assertEquals(Integer.valueOf(1), lockInfo.getLockCount());
+		assertNotNull(lockInfo.getExpiryTime());
 
 		lockManager.releaseLock("computeSalaryLock");
 		lockInfo = lockManager.getLockInfo("computeSalaryLock");
 		assertNull(lockInfo);
 	}
 
-	@Test
+	@Test(timeout = 5000)
 	public void testSingleMemberWithRecursiveSync() throws Exception {
-		LockManager lockManager = (LockManager) getComponent(ApplicationComponents.APPLICATION_CLUSTERSERVICE);
+		LockManager lockManager = (LockManager) getComponent(ApplicationComponents.APPLICATION_LOCKMANAGER);
+		String threadId = String.valueOf(ThreadUtils.currentThreadId());
 		String lockOwnerId = lockManager.getNodeId();
 		lockManager.grabLock("generateResultLock");
 		lockManager.grabLock("generateResultLock");
@@ -70,20 +74,27 @@ public class LockManagerTest extends AbstractUnifyComponentTest {
 		assertNotNull(lockInfo);
 		assertEquals("generateResultLock", lockInfo.getLockName());
 		assertEquals(lockOwnerId, lockInfo.getCurrentOwner());
+		assertEquals(threadId, lockInfo.getThreadId());
 		assertEquals(Integer.valueOf(3), lockInfo.getLockCount());
+		assertNotNull(lockInfo.getExpiryTime());
 
 		lockManager.releaseLock("generateResultLock");
 		lockInfo = lockManager.getLockInfo("generateResultLock");
 		assertNotNull(lockInfo);
 		assertEquals("generateResultLock", lockInfo.getLockName());
 		assertEquals(lockOwnerId, lockInfo.getCurrentOwner());
+		assertEquals(threadId, lockInfo.getThreadId());
 		assertEquals(Integer.valueOf(2), lockInfo.getLockCount());
+		assertNotNull(lockInfo.getExpiryTime());
 
 		lockManager.releaseLock("generateResultLock");
+		lockInfo = lockManager.getLockInfo("generateResultLock");
 		assertNotNull(lockInfo);
 		assertEquals("generateResultLock", lockInfo.getLockName());
 		assertEquals(lockOwnerId, lockInfo.getCurrentOwner());
+		assertEquals(threadId, lockInfo.getThreadId());
 		assertEquals(Integer.valueOf(1), lockInfo.getLockCount());
+		assertNotNull(lockInfo.getExpiryTime());
 
 		lockManager.releaseLock("generateResultLock");
 		lockInfo = lockManager.getLockInfo("generateResultLock");

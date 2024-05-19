@@ -1091,4 +1091,7 @@ public interface UnifyCoreErrorConstants {
      */
     String RECORD_FIELD_NOT_SUITABLE_FOR_DATE_GROUPING = "UC_0118";
 
+    /** Method {0} synchronized annotation requires a lock name */
+    String REFLECT_METHOD_REQUIRES_LOCKNAME= "UC_0119";
+
 }

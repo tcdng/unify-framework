@@ -119,6 +119,7 @@ public class LockManagerImpl extends AbstractUnifyComponent implements LockManag
 						grabbed = pstmt.executeUpdate() > 0;
 						connection.commit();
 					} catch (Exception e) {
+						e.printStackTrace();
 						logSevere(e);
 					} finally {
 						SqlUtils.close(rst);
