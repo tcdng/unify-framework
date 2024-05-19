@@ -28,6 +28,11 @@ public interface UnifyComponent {
     String getName();
 
     /**
+     * Returns the component node ID.
+     */
+    String getNodeId();
+
+    /**
      * Returns this components component context.
      * 
      * @throws UnifyException

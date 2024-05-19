@@ -30,6 +30,7 @@ import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.data.LockInfo;
 import com.tcdng.unify.core.database.sql.SqlDataSource;
 import com.tcdng.unify.core.util.SqlUtils;
 import com.tcdng.unify.core.util.ThreadUtils;
@@ -139,8 +140,13 @@ public class LockManagerImpl extends AbstractUnifyComponent implements LockManag
 		} else {
 			logDebug("Thread [{0}] failed to grab by lock [{1}].", threadId, lockName);
 		}
-		
+
 		return grabbed;
+	}
+
+	@Override
+	public boolean grabLock(String lockName) throws UnifyException {
+		return grabLock(lockName, 0L);
 	}
 
 	@Override
@@ -160,7 +166,8 @@ public class LockManagerImpl extends AbstractUnifyComponent implements LockManag
 			}
 
 			retryMillisecs += GRAB_RETRY_MILLISECONDS;
-			logDebug("Thread [{0}] set to retry grab lock [{1}] in [{2}]ms...", threadId, lockName, GRAB_RETRY_MILLISECONDS);
+			logDebug("Thread [{0}] set to retry grab lock [{1}] in [{2}]ms...", threadId, lockName,
+					GRAB_RETRY_MILLISECONDS);
 		} while (timeout <= 0 || retryMillisecs < timeout);
 
 		return grabbed;
@@ -198,10 +205,46 @@ public class LockManagerImpl extends AbstractUnifyComponent implements LockManag
 						sqlDataSource.restoreConnection(connection);
 					}
 				}
-				
+
 				logDebug("Lock [{0}] successfully released by thread [{1}].", lockName, threadId);
-			}	
+			}
 		}
+	}
+
+	@Override
+	public LockInfo getLockInfo(String lockName) throws UnifyException {
+		ThreadLockInfo threadLockInfo = threadLockInfos.get(lockName);
+		if (threadLockInfo != null) {
+			String ownerId = null;
+			String threadId = null;
+			Date expiryTime = null;
+			SqlDataSource sqlDataSource = getComponent(SqlDataSource.class,
+					ApplicationCommonConstants.APPLICATION_DATASOURCE);
+			Connection connection = (Connection) sqlDataSource.getConnection();
+			PreparedStatement pstmt = null;
+			ResultSet rst = null;
+			try {
+				pstmt = connection.prepareStatement(
+						"SELECT current_owner, thread_id,expiry_time FROM unclusterlock WHERE unclusterlock_id = ?");
+				pstmt.setString(1, lockName);
+				rst = pstmt.executeQuery();
+				if (rst.next()) {
+					ownerId = rst.getString(1);
+					threadId = rst.getString(2);
+					expiryTime = rst.getDate(3);
+				}
+			} catch (Exception e) {
+				logSevere(e);
+			} finally {
+				SqlUtils.close(pstmt);
+				sqlDataSource.restoreConnection(connection);
+			}
+
+			return new LockInfo(lockName, ownerId, threadId, expiryTime,
+					(int) threadLockInfo.getExcursion());
+		}
+
+		return null;
 	}
 
 	@Override
@@ -309,12 +352,16 @@ public class LockManagerImpl extends AbstractUnifyComponent implements LockManag
 			return lockName;
 		}
 
-		public void inc() {
-			excursion++;
+		public long getExcursion() {
+			return excursion;
 		}
 
 		public boolean isOwnerThread(String threadId) {
 			return ownerThreadId.equals(threadId);
+		}
+
+		public void inc() {
+			excursion++;
 		}
 
 		public boolean dec() {

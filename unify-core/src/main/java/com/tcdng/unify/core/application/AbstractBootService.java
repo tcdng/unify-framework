@@ -23,6 +23,7 @@ import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyCorePropertyConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
+import com.tcdng.unify.core.annotation.Synchronized;
 import com.tcdng.unify.core.annotation.Transactional;
 import com.tcdng.unify.core.business.AbstractBusinessService;
 import com.tcdng.unify.core.constant.ForceConstraints;
@@ -51,7 +52,6 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
 
 	private List<StartupShutdownHook> startupShutdownHooks;
 
-	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional
 	public void startup() throws UnifyException {
@@ -63,8 +63,7 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
 			dataSourceManager.initDataSource(datasource, options);
 		}
 
-		boolean isDeployNewVersion = false;
-		boolean isDeployNewAuxVersion = false;
+		boolean isDeploymentPerformed = false;
 		if (isDeploymentMode()) {
 			Feature deploymentFeature = getFeature("deploymentVersion", "0.0");
 			Feature auxiliaryFeature = getFeature("auxiliaryVersion", "0.0");
@@ -83,87 +82,7 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
 				isDataSourcesManaged = true;
 			}
 
-			if (beginClusterLock(BOOT_DEPLOYMENT_LOCK)) {
-				try {
-					logInfo("Checking application version information...");
-					deploymentFeature = getFeature("deploymentVersion", "0.0");
-					String lastDeploymentVersion = deploymentFeature.getValue();
-					String versionToDeploy = getDeploymentVersion();
-					isDeployNewVersion = VersionUtils.isNewerVersion(versionToDeploy, lastDeploymentVersion);
-
-					auxiliaryFeature = getFeature("auxiliaryVersion", "0.0");
-					String lastAuxiliaryVersion = auxiliaryFeature.getValue();
-					String auxVersionToDeploy = getAuxiliaryVersion();
-					isDeployNewAuxVersion = VersionUtils.isNewerVersion(auxVersionToDeploy, lastAuxiliaryVersion);
-					if (!isDataSourcesManaged) {
-						// If not already managed, manage data sources if not production mode or if
-						// deploying new version
-						if (isDeployNewVersion || isDeployNewAuxVersion) {
-							logInfo("Managing datasources...");
-							for (String datasource : datasources) {
-								dataSourceManager.manageDataSource(datasource, options);
-							}
-						}
-					}
-
-					// Do installation only if deployment version is new
-					if (isDeployNewVersion || isDeployNewAuxVersion) {
-						if (isDeployNewVersion) {
-							logInfo("Installing newer application version {0}. Current version is {1}.",
-									versionToDeploy, lastDeploymentVersion);
-						} else {
-							logInfo("Installing newer application auxiliary version {0}. Current auxiliary  version is {1}.",
-									auxVersionToDeploy, lastAuxiliaryVersion);
-						}
-
-						BootInstallationInfo<T> bootInstallationInfo = prepareBootInstallation();
-						if (bootInstallationInfo.isInstallers() && bootInstallationInfo.isFeatures()) {
-							for (String installerName : bootInstallationInfo.getFeatureInstallerNames()) {
-								FeatureInstaller<T> installer = (FeatureInstaller<T>) getComponent(installerName);
-								installer.installFeatures(bootInstallationInfo.getFeatures());
-							}
-						}
-
-						if (isDeployNewVersion) {
-							// Update last deployment feature
-							Feature lastDeploymentFeature = getFeature("lastDeploymentVersion", "0.0");
-							lastDeploymentFeature.setValue(lastDeploymentVersion);
-							db().updateByIdVersion(lastDeploymentFeature);
-
-							// Update current deployment feature
-							deploymentFeature.setValue(versionToDeploy);
-							db().updateByIdVersion(deploymentFeature);
-						}
-
-						if (isDeployNewAuxVersion) {
-							// Update last auxiliary feature
-							Feature lastAuxiliaryFeature = getFeature("lastAuxiliaryVersion", "0.0");
-							lastAuxiliaryFeature.setValue(lastAuxiliaryVersion);
-							db().updateByIdVersion(lastAuxiliaryFeature);
-
-							// Update current auxiliary feature
-							auxiliaryFeature.setValue(auxVersionToDeploy);
-							db().updateByIdVersion(auxiliaryFeature);
-						}
-					} else {
-						if (lastDeploymentVersion.equals(versionToDeploy)) {
-							logInfo("Application deployment version {0} is current.", versionToDeploy);
-						} else {
-							logInfo("Application deployment version {0} is old. Current version is {1}.",
-									versionToDeploy, lastDeploymentVersion);
-						}
-
-						if (lastAuxiliaryVersion.equals(auxVersionToDeploy)) {
-							logInfo("Application auxiliary version {0} is current.", auxVersionToDeploy);
-						} else {
-							logInfo("Application auxiliary version {0} is old. Current version is {1}.",
-									auxVersionToDeploy, lastAuxiliaryVersion);
-						}
-					}
-				} finally {
-					endClusterLock(BOOT_DEPLOYMENT_LOCK);
-				}
-			}
+			isDeploymentPerformed = performBootDeployment(deploymentFeature, auxiliaryFeature, isDataSourcesManaged);
 		}
 
 		startupShutdownHooks = getStartupShutdownHooks();
@@ -173,7 +92,7 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
 			}
 		}
 
-		onStartup(isDeployNewVersion || isDeployNewAuxVersion);
+		onStartup(isDeploymentPerformed);
 		dataSourceManager.initDelayedDataSource();
 	}
 
@@ -212,25 +131,109 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
 		return appDataSourceNames;
 	}
 
-	private Feature getFeature(String code, String defaultVal) throws UnifyException {
-		if (grabClusterLock(BOOT_FEATURE_LOCK)) {
-			try {
-				Feature feature = db().find(new FeatureQuery().code(code));
-				if (feature == null) {
-					feature = new Feature();
-					feature.setCode(code);
-					feature.setValue(defaultVal);
-					db().create(feature);
-				}
-				return feature;
-			} catch (UnifyException ue) {
-			} finally {
-				releaseClusterLock(BOOT_FEATURE_LOCK);
+	@SuppressWarnings("unchecked")
+	@Synchronized(BOOT_DEPLOYMENT_LOCK)
+	private boolean performBootDeployment(Feature deploymentFeature, Feature auxiliaryFeature,
+			boolean isDataSourcesManaged) throws UnifyException {
+		logInfo("Checking application version information...");
+		deploymentFeature = getFeature("deploymentVersion", "0.0");
+		String lastDeploymentVersion = deploymentFeature.getValue();
+		String versionToDeploy = getDeploymentVersion();
+		boolean isDeployNewVersion = VersionUtils.isNewerVersion(versionToDeploy, lastDeploymentVersion);
 
-				try {
-					commitTransactions();
-				} catch (UnifyException e) {
+		auxiliaryFeature = getFeature("auxiliaryVersion", "0.0");
+		String lastAuxiliaryVersion = auxiliaryFeature.getValue();
+		String auxVersionToDeploy = getAuxiliaryVersion();
+		boolean isDeployNewAuxVersion = VersionUtils.isNewerVersion(auxVersionToDeploy, lastAuxiliaryVersion);
+		if (!isDataSourcesManaged) {
+			// If not already managed, manage data sources if not production mode or if
+			// deploying new version
+			if (isDeployNewVersion || isDeployNewAuxVersion) {
+				logInfo("Managing datasources...");
+				DataSourceManagerOptions options = new DataSourceManagerOptions(PrintFormat.NONE,
+						ForceConstraints.fromBoolean(!getContainerSetting(boolean.class,
+								UnifyCorePropertyConstants.APPLICATION_FOREIGNKEY_EASE, false)));
+				List<String> datasources = getApplicationDataSources();
+				for (String datasource : datasources) {
+					dataSourceManager.manageDataSource(datasource, options);
 				}
+			}
+		}
+
+		// Do installation only if deployment version is new
+		if (isDeployNewVersion || isDeployNewAuxVersion) {
+			if (isDeployNewVersion) {
+				logInfo("Installing newer application version {0}. Current version is {1}.", versionToDeploy,
+						lastDeploymentVersion);
+			} else {
+				logInfo("Installing newer application auxiliary version {0}. Current auxiliary  version is {1}.",
+						auxVersionToDeploy, lastAuxiliaryVersion);
+			}
+
+			BootInstallationInfo<T> bootInstallationInfo = prepareBootInstallation();
+			if (bootInstallationInfo.isInstallers() && bootInstallationInfo.isFeatures()) {
+				for (String installerName : bootInstallationInfo.getFeatureInstallerNames()) {
+					FeatureInstaller<T> installer = (FeatureInstaller<T>) getComponent(installerName);
+					installer.installFeatures(bootInstallationInfo.getFeatures());
+				}
+			}
+
+			if (isDeployNewVersion) {
+				// Update last deployment feature
+				Feature lastDeploymentFeature = getFeature("lastDeploymentVersion", "0.0");
+				lastDeploymentFeature.setValue(lastDeploymentVersion);
+				db().updateByIdVersion(lastDeploymentFeature);
+
+				// Update current deployment feature
+				deploymentFeature.setValue(versionToDeploy);
+				db().updateByIdVersion(deploymentFeature);
+			}
+
+			if (isDeployNewAuxVersion) {
+				// Update last auxiliary feature
+				Feature lastAuxiliaryFeature = getFeature("lastAuxiliaryVersion", "0.0");
+				lastAuxiliaryFeature.setValue(lastAuxiliaryVersion);
+				db().updateByIdVersion(lastAuxiliaryFeature);
+
+				// Update current auxiliary feature
+				auxiliaryFeature.setValue(auxVersionToDeploy);
+				db().updateByIdVersion(auxiliaryFeature);
+			}
+		} else {
+			if (lastDeploymentVersion.equals(versionToDeploy)) {
+				logInfo("Application deployment version {0} is current.", versionToDeploy);
+			} else {
+				logInfo("Application deployment version {0} is old. Current version is {1}.", versionToDeploy,
+						lastDeploymentVersion);
+			}
+
+			if (lastAuxiliaryVersion.equals(auxVersionToDeploy)) {
+				logInfo("Application auxiliary version {0} is current.", auxVersionToDeploy);
+			} else {
+				logInfo("Application auxiliary version {0} is old. Current version is {1}.", auxVersionToDeploy,
+						lastAuxiliaryVersion);
+			}
+		}
+
+		return isDeployNewVersion || isDeployNewAuxVersion;
+	}
+
+	@Synchronized(BOOT_FEATURE_LOCK)
+	private Feature getFeature(String code, String defaultVal) throws UnifyException {
+		try {
+			Feature feature = db().find(new FeatureQuery().code(code));
+			if (feature == null) {
+				feature = new Feature();
+				feature.setCode(code);
+				feature.setValue(defaultVal);
+				db().create(feature);
+			}
+			return feature;
+		} catch (UnifyException ue) {
+		} finally {
+			try {
+				commitTransactions();
+			} catch (UnifyException e) {
 			}
 		}
 

@@ -44,6 +44,7 @@ import com.tcdng.unify.core.annotation.Broadcast;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.Periodic;
+import com.tcdng.unify.core.annotation.PeriodicClusterOnly;
 import com.tcdng.unify.core.annotation.PeriodicType;
 import com.tcdng.unify.core.annotation.Plugin;
 import com.tcdng.unify.core.annotation.Preferred;
@@ -326,14 +327,14 @@ public class UnifyContainer {
 
 		// Detect business components
 		logDebug("Detecting business service components...");
-		Map<String, Map<String, Periodic>> componentPeriodMethodMap = new HashMap<String, Map<String, Periodic>>();
+		Map<String, Map<String, PeriodicInfo>> componentPeriodMethodMap = new HashMap<String, Map<String, PeriodicInfo>>();
 		Map<String, Set<String>> componentPluginSocketsMap = new HashMap<String, Set<String>>();
 		List<UnifyComponentConfig> managedBusinessServiceConfigList = new ArrayList<UnifyComponentConfig>();
 		int businessServiceCount = 0;
 		for (Map.Entry<String, InternalUnifyComponentInfo> entry : internalUnifyComponentInfos.entrySet()) {
 			InternalUnifyComponentInfo iuci = entry.getValue();
 			// Fetch periodic method information
-			Map<String, Periodic> periodicMethodMap = new HashMap<String, Periodic>();
+			Map<String, PeriodicInfo> periodicMethodMap = new HashMap<String, PeriodicInfo>();
 			Set<String> pluginSockets = new HashSet<String>();
 			Method[] methods = iuci.getType().getMethods();
 			for (Method method : methods) {
@@ -343,7 +344,19 @@ public class UnifyContainer {
 					if (iuci.isSingleton() && void.class.equals(method.getReturnType())
 							&& method.getParameterTypes().length == 1
 							&& method.getParameterTypes()[0].equals(TaskMonitor.class)) {
-						periodicMethodMap.put(method.getName(), pa);
+						periodicMethodMap.put(method.getName(), new PeriodicInfo(pa.value(), false));
+					} else {
+						throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_INVALID_PERIOD_METHOD,
+								iuci.getName(), method.getName());
+					}
+				}
+
+				PeriodicClusterOnly pac = method.getAnnotation(PeriodicClusterOnly.class);
+				if (pac != null) {
+					if (iuci.isSingleton() && void.class.equals(method.getReturnType())
+							&& method.getParameterTypes().length == 1
+							&& method.getParameterTypes()[0].equals(TaskMonitor.class)) {
+						periodicMethodMap.put(method.getName(), new PeriodicInfo(pac.value(), true));
 					} else {
 						throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_INVALID_PERIOD_METHOD,
 								iuci.getName(), method.getName());
@@ -513,18 +526,18 @@ public class UnifyContainer {
 			logInfo("Scheduling periodic tasks...");
 			Random random = new Random();
 			TaskManager taskManager = (TaskManager) getComponent(ApplicationComponents.APPLICATION_TASKMANAGER);
-			for (Map.Entry<String, Map<String, Periodic>> componentEntry : componentPeriodMethodMap.entrySet()) {
+			for (Map.Entry<String, Map<String, PeriodicInfo>> componentEntry : componentPeriodMethodMap.entrySet()) {
 				logInfo("Intializing component [{0}] with periodic methods...", componentEntry.getKey());
 				getComponent(componentEntry.getKey());
-				for (Map.Entry<String, Periodic> periodicEntry : componentEntry.getValue().entrySet()) {
-					Periodic pa = periodicEntry.getValue();
+				for (Map.Entry<String, PeriodicInfo> periodicEntry : componentEntry.getValue().entrySet()) {
+					PeriodicInfo pin = periodicEntry.getValue();
 					// Skip if periodic should run in cluster mode and container is not in cluster
 					// mode
-					if (pa.clusterMode() && !clusterMode) {
+					if (pin.isClusterOnly() && !clusterMode) {
 						continue;
 					}
 
-					PeriodicType periodicType = pa.value();
+					PeriodicType periodicType = pin.getType();
 					TaskMonitor taskMonitor = taskManager.schedulePeriodicExecution(periodicType,
 							componentEntry.getKey(), periodicEntry.getKey(),
 							UnifyCoreConstants.PERIODIC_EXECUTION_INITIAL_DELAY_SECONDS * 1000
@@ -972,109 +985,6 @@ public class UnifyContainer {
 	}
 
 	/**
-	 * Begins a synchronization block with specified lock. Blocks until
-	 * synchronization handle is obtained or an error occurs. Lock should be
-	 * released by calling {@link #endClusterLock(String)}.
-	 * 
-	 * @param lockName the lock name
-	 * @return a true value is lock is obtained otherwise false
-	 */
-	public boolean beginClusterLock(String lockName) {
-		try {
-			return clusterService.beginSynchronization(lockName);
-		} catch (UnifyException e) {
-			logError(e);
-		}
-
-		return false;
-	}
-
-	/**
-	 * Ends a synchronization block for specified lock.
-	 * 
-	 * @param lockName the lock name
-	 */
-	public void endClusterLock(String lockName) {
-		try {
-			clusterService.endSynchronization(lockName);
-		} catch (UnifyException e) {
-			logError(e);
-		}
-	}
-
-	/**
-	 * Tries to grab the cluster master synchronization lock.
-	 * 
-	 * @return a true value is lock is obtained otherwise false
-	 */
-	public boolean grabClusterMasterLock() {
-		try {
-			return clusterService.grabMasterSynchronizationLock();
-		} catch (UnifyException e) {
-			logError(e);
-		}
-
-		return false;
-	}
-
-	/**
-	 * Tries to grab a cluster synchronization lock. Lock must be released after use
-	 * with {@link #releaseClusterLock(String)}
-	 * 
-	 * @param lockName the lock name
-	 * @return a true value is lock is obtained otherwise false
-	 */
-	public boolean grabClusterLock(String lockName) {
-		try {
-			return clusterService.grabSynchronizationLock(lockName);
-		} catch (UnifyException e) {
-			logError(e);
-		}
-
-		return false;
-	}
-
-	/**
-	 * Checks if current node has a hold on a cluster synchronization lock.
-	 * 
-	 * @param lockName the lock name
-	 * @return a true value is lock is held otherwise false
-	 */
-	public boolean isWithClusterLock(String lockName) {
-		try {
-			return clusterService.isWithSynchronizationLock(lockName);
-		} catch (UnifyException e) {
-			logError(e);
-		}
-
-		return false;
-	}
-
-	/**
-	 * Releases a cluster master synchronization lock.
-	 */
-	public void releaseClusterMasterLock() {
-		try {
-			clusterService.releaseMasterSynchronizationLock();
-		} catch (UnifyException e) {
-			logError(e);
-		}
-	}
-
-	/**
-	 * Releases a cluster synchronization lock.
-	 * 
-	 * @param lockName the lock name
-	 */
-	public void releaseClusterLock(String lockName) {
-		try {
-			clusterService.releaseSynchronizationLock(lockName);
-		} catch (UnifyException e) {
-			logError(e);
-		}
-	}
-
-	/**
 	 * Broadcasts a cluster command to other nodes.
 	 * 
 	 * @param command the command to broadcast
@@ -1475,6 +1385,26 @@ public class UnifyContainer {
 		}
 	}
 
+	private class PeriodicInfo {
+		
+		private PeriodicType type;
+		
+		private boolean clusterOnly;
+
+		public PeriodicInfo(PeriodicType type, boolean clusterOnly) {
+			this.type = type;
+			this.clusterOnly = clusterOnly;
+		}
+
+		public PeriodicType getType() {
+			return type;
+		}
+
+		public boolean isClusterOnly() {
+			return clusterOnly;
+		}
+	}
+	
 	private class CommandThread extends Thread {
 		public CommandThread() {
 			super("Container command thread - " + nodeId);

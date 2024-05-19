@@ -36,7 +36,7 @@ public class ClusterLockTask extends AbstractTask {
     private int sharedTestCount;
 
     @Configurable
-    private ClusterService clusterManager;
+    private LockManager lockManager;
 
     private static double sharedValue;
 
@@ -44,7 +44,7 @@ public class ClusterLockTask extends AbstractTask {
     public void execute(TaskMonitor taskMonitor, TaskInput input) throws UnifyException {
         for (int i = 0; i < sharedTestCount; i++) {
             double testValue = Math.random();
-            clusterManager.beginSynchronization("sharedSync");
+            lockManager.grabLock("sharedSync");
             try {
                 sharedValue = testValue;
                 ThreadUtils.yield();
@@ -52,7 +52,7 @@ public class ClusterLockTask extends AbstractTask {
                     throwOperationErrorException(new Exception("Shared value corrupted!"));
                 }
             } finally {
-                clusterManager.endSynchronization("sharedSync");
+                lockManager.releaseLock("sharedSync");
             }
         }
     }

@@ -18,7 +18,6 @@ package com.tcdng.unify.core.database.dynamic.sql;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
@@ -26,6 +25,7 @@ import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
+import com.tcdng.unify.core.annotation.Synchronized;
 import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.database.dynamic.DynamicEntityInfo;
 import com.tcdng.unify.core.database.sql.SqlDataSource;
@@ -63,48 +63,42 @@ public class DynamicSqlEntityLoaderImpl extends AbstractUnifyComponent implement
 	}
 
 	@Override
+	@Synchronized(DYNAMICSQLENTITYLOADER_LOCK)
 	public List<Class<? extends Entity>> loadDynamicSqlEntities(List<DynamicEntityInfo> dynamicEntityInfoList)
 			throws UnifyException {
-		List<Class<? extends Entity>> classList = Collections.emptyList();
-		if (beginClusterLock(DYNAMICSQLENTITYLOADER_LOCK)) {
-			try {
-				logInfo("Generating source files for [{0}] entity classes...", dynamicEntityInfoList.size());
-				List<JavaClassSource> sourceList = new ArrayList<JavaClassSource>();
-				for (DynamicEntityInfo dynamicEntityInfo : dynamicEntityInfoList) {
-					logDebug("Generating source file for [{0}]...", dynamicEntityInfo.getClassName());
-					if (!dynamicEntityInfo.isResolved()) {
-						throwOperationErrorException(new IllegalArgumentException("Dynamic entity information for ["
-								+ dynamicEntityInfo.getClassName() + "] entity is not finally resolved."));
-					}
-
-					JavaClassSource source = new JavaClassSource(dynamicEntityInfo.getClassName(),
-							DynamicEntityUtils.generateEntityJavaClassSource(dynamicEntityInfo),
-							new JavaClassAdditionalTypeInfo(dynamicEntityInfo.getListTypeArgByFieldName()));
-					sourceList.add(source);
-				}
-				logInfo("Source files successfully generated for [{0}] entity classes...",
-						dynamicEntityInfoList.size());
-
-				classList = runtimeJavaClassManager.compileAndLoadJavaClasses(Entity.class, sourceList);
-
-				sqlSchemaManager.registerSqlEntityClasses(sqlDataSource, classList);
-				
-				// Update application datasource schema if necessary
-				List<Class<?>> schemaChangedClassList = new ArrayList<Class<?>>();
-				final int len = dynamicEntityInfoList.size();
-				for (int i = 0; i < len; i++) {
-					DynamicEntityInfo dynamicEntityInfo = dynamicEntityInfoList.get(i);
-					if (dynamicEntityInfo.isManaged() && dynamicEntityInfo.isSchemaChanged()) {
-						schemaChangedClassList.add(classList.get(i));
-					}
-				}
-
-				if (!DataUtils.isBlank(schemaChangedClassList)) {
-					sqlSchemaManager.updateSchema(sqlDataSource, schemaChangedClassList);
-				}
-			} finally {
-				endClusterLock(DYNAMICSQLENTITYLOADER_LOCK);
+		logInfo("Generating source files for [{0}] entity classes...", dynamicEntityInfoList.size());
+		List<JavaClassSource> sourceList = new ArrayList<JavaClassSource>();
+		for (DynamicEntityInfo dynamicEntityInfo : dynamicEntityInfoList) {
+			logDebug("Generating source file for [{0}]...", dynamicEntityInfo.getClassName());
+			if (!dynamicEntityInfo.isResolved()) {
+				throwOperationErrorException(new IllegalArgumentException("Dynamic entity information for ["
+						+ dynamicEntityInfo.getClassName() + "] entity is not finally resolved."));
 			}
+
+			JavaClassSource source = new JavaClassSource(dynamicEntityInfo.getClassName(),
+					DynamicEntityUtils.generateEntityJavaClassSource(dynamicEntityInfo),
+					new JavaClassAdditionalTypeInfo(dynamicEntityInfo.getListTypeArgByFieldName()));
+			sourceList.add(source);
+		}
+		logInfo("Source files successfully generated for [{0}] entity classes...",
+				dynamicEntityInfoList.size());
+
+		List<Class<? extends Entity>> classList = runtimeJavaClassManager.compileAndLoadJavaClasses(Entity.class, sourceList);
+
+		sqlSchemaManager.registerSqlEntityClasses(sqlDataSource, classList);
+		
+		// Update application datasource schema if necessary
+		List<Class<?>> schemaChangedClassList = new ArrayList<Class<?>>();
+		final int len = dynamicEntityInfoList.size();
+		for (int i = 0; i < len; i++) {
+			DynamicEntityInfo dynamicEntityInfo = dynamicEntityInfoList.get(i);
+			if (dynamicEntityInfo.isManaged() && dynamicEntityInfo.isSchemaChanged()) {
+				schemaChangedClassList.add(classList.get(i));
+			}
+		}
+
+		if (!DataUtils.isBlank(schemaChangedClassList)) {
+			sqlSchemaManager.updateSchema(sqlDataSource, schemaChangedClassList);
 		}
 
 		return classList;

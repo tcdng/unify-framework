@@ -22,14 +22,13 @@ import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.annotation.Synchronized;
 import com.tcdng.unify.core.annotation.Transactional;
 import com.tcdng.unify.core.business.AbstractBusinessService;
 import com.tcdng.unify.core.system.entities.SingleVersionBlob;
 import com.tcdng.unify.core.system.entities.SingleVersionBlobQuery;
 import com.tcdng.unify.core.system.entities.SingleVersionClob;
 import com.tcdng.unify.core.system.entities.SingleVersionClobQuery;
-import com.tcdng.unify.core.util.LockUtils;
-import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * Default implementation of single version large object service.
@@ -42,7 +41,10 @@ import com.tcdng.unify.core.util.StringUtils;
 public class SingleVersionLargeObjectServiceImpl extends AbstractBusinessService
 		implements SingleVersionLargeObjectService {
 
+	private static final String STORE_LOB_LOCK = "app::storelob-lock";
+
 	@Override
+	@Synchronized(STORE_LOB_LOCK)
 	public boolean storeBlob(String applicationName, String categoryName, String objectName, byte[] blob, long version)
 			throws UnifyException {
 		if (version <= 0) {
@@ -50,32 +52,25 @@ public class SingleVersionLargeObjectServiceImpl extends AbstractBusinessService
 					objectName, version);
 		}
 
-		final String lockName = getCategoryLock(applicationName, categoryName);
-		if (beginClusterLock(lockName)) {
-			try {
-				SingleVersionBlob singleVersionBlob = db().find(new SingleVersionBlobQuery()
-						.applicationName(applicationName).categoryName(categoryName).objectName(objectName)
-						.addSelect("id", "applicationName", "categoryName", "objectName", "version"));
-				if (singleVersionBlob == null) {
-					singleVersionBlob = new SingleVersionBlob();
-					singleVersionBlob.setApplicationName(applicationName);
-					singleVersionBlob.setCategoryName(categoryName);
-					singleVersionBlob.setObjectName(objectName);
-					singleVersionBlob.setLargeObject(blob);
-					singleVersionBlob.setVersion(version);
-					db().create(singleVersionBlob);
-					return true;
-				}
+		SingleVersionBlob singleVersionBlob = db().find(new SingleVersionBlobQuery()
+				.applicationName(applicationName).categoryName(categoryName).objectName(objectName)
+				.addSelect("id", "applicationName", "categoryName", "objectName", "version"));
+		if (singleVersionBlob == null) {
+			singleVersionBlob = new SingleVersionBlob();
+			singleVersionBlob.setApplicationName(applicationName);
+			singleVersionBlob.setCategoryName(categoryName);
+			singleVersionBlob.setObjectName(objectName);
+			singleVersionBlob.setLargeObject(blob);
+			singleVersionBlob.setVersion(version);
+			db().create(singleVersionBlob);
+			return true;
+		}
 
-				if (singleVersionBlob.getVersion() < version) {
-					singleVersionBlob.setLargeObject(blob);
-					singleVersionBlob.setVersion(version);
-					db().updateById(singleVersionBlob);
-					return true;
-				}
-			} finally {
-				endClusterLock(lockName);
-			}
+		if (singleVersionBlob.getVersion() < version) {
+			singleVersionBlob.setLargeObject(blob);
+			singleVersionBlob.setVersion(version);
+			db().updateById(singleVersionBlob);
+			return true;
 		}
 
 		return false;
@@ -110,6 +105,7 @@ public class SingleVersionLargeObjectServiceImpl extends AbstractBusinessService
 	}
 
 	@Override
+	@Synchronized(STORE_LOB_LOCK)
 	public boolean storeClob(String applicationName, String categoryName, String objectName, String clob, long version)
 			throws UnifyException {
 		if (version <= 0) {
@@ -117,32 +113,25 @@ public class SingleVersionLargeObjectServiceImpl extends AbstractBusinessService
 					objectName, version);
 		}
 
-		final String lockName = getCategoryLock(applicationName, categoryName);
-		if (beginClusterLock(lockName)) {
-			try {
-				SingleVersionClob singleVersionClob = db().find(new SingleVersionClobQuery()
-						.applicationName(applicationName).categoryName(categoryName).objectName(objectName)
-						.addSelect("id", "applicationName", "categoryName", "objectName", "version"));
-				if (singleVersionClob == null) {
-					singleVersionClob = new SingleVersionClob();
-					singleVersionClob.setApplicationName(applicationName);
-					singleVersionClob.setCategoryName(categoryName);
-					singleVersionClob.setObjectName(objectName);
-					singleVersionClob.setLargeObject(clob);
-					singleVersionClob.setVersion(version);
-					db().create(singleVersionClob);
-					return true;
-				}
+		SingleVersionClob singleVersionClob = db().find(new SingleVersionClobQuery()
+				.applicationName(applicationName).categoryName(categoryName).objectName(objectName)
+				.addSelect("id", "applicationName", "categoryName", "objectName", "version"));
+		if (singleVersionClob == null) {
+			singleVersionClob = new SingleVersionClob();
+			singleVersionClob.setApplicationName(applicationName);
+			singleVersionClob.setCategoryName(categoryName);
+			singleVersionClob.setObjectName(objectName);
+			singleVersionClob.setLargeObject(clob);
+			singleVersionClob.setVersion(version);
+			db().create(singleVersionClob);
+			return true;
+		}
 
-				if (singleVersionClob.getVersion() < version) {
-					singleVersionClob.setLargeObject(clob);
-					singleVersionClob.setVersion(version);
-					db().updateById(singleVersionClob);
-					return true;
-				}
-			} finally {
-				endClusterLock(lockName);
-			}
+		if (singleVersionClob.getVersion() < version) {
+			singleVersionClob.setLargeObject(clob);
+			singleVersionClob.setVersion(version);
+			db().updateById(singleVersionClob);
+			return true;
 		}
 
 		return false;
@@ -174,9 +163,5 @@ public class SingleVersionLargeObjectServiceImpl extends AbstractBusinessService
 		}
 
 		return 0;
-	}
-
-	private String getCategoryLock(String applicationName, String categoryName) throws UnifyException {
-		return LockUtils.getStringLockObject(StringUtils.dotify(applicationName, categoryName));
 	}
 }

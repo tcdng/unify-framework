@@ -19,8 +19,6 @@ import java.util.List;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.business.BusinessService;
-import com.tcdng.unify.core.system.entities.ClusterLock;
-import com.tcdng.unify.core.system.entities.ClusterLockQuery;
 import com.tcdng.unify.core.system.entities.ClusterNode;
 import com.tcdng.unify.core.system.entities.ClusterNodeQuery;
 
@@ -31,81 +29,6 @@ import com.tcdng.unify.core.system.entities.ClusterNodeQuery;
  * @since 1.0
  */
 public interface ClusterService extends BusinessService {
-
-    /**
-     * Returns the node lock owner ID.
-     */
-    String getLockOwnerId() throws UnifyException;
-
-    /**
-     * Begins a synchronization block with specified lock. Blocks until
-     * synchronization handle is obtained or an error occurs. Lock should be release
-     * by calling {@link #endSynchronization(String)}.
-     * 
-     * @param lockName
-     *            the lock name
-     */
-    boolean beginSynchronization(String lockName) throws UnifyException;
-
-    /**
-     * Ends a synchronization block for specified lock.
-     * 
-     * @param lockName
-     *            the lock name
-     */
-    void endSynchronization(String lockName) throws UnifyException;
-
-    /**
-     * Tries to grab cluster master synchronization lock. Does not block.
-     * 
-     * @return a true value if cluster lock is gotten, otherwise false
-     */
-    boolean grabMasterSynchronizationLock() throws UnifyException;
-
-    /**
-     * Tries to grab a cluster synchronization lock with specified name. Does not
-     * block.Lock should be release by calling
-     * {@link #releaseSynchronizationLock(String)}.
-     * 
-     * @param lockName
-     *            the lock name
-     * @return a true value if synchronization lock is gotten, otherwise false
-     */
-    boolean grabSynchronizationLock(String lockName) throws UnifyException;
-    
-    /**
-     * Checks if current node has a hold on a cluster synchronization lock.
-     * 
-     * @param lockName
-     *            the lock name
-     * @return a true value is lock is held otherwise false
-     */
-    boolean isWithSynchronizationLock(String lockName) throws UnifyException;
-
-    /**
-     * Releases a cluster master synchronization lock.
-     */
-    void releaseMasterSynchronizationLock() throws UnifyException;
-
-    /**
-     * Releases a cluster synchronization lock.
-     * 
-     * @param lockName
-     *            the lock name
-     */
-    void releaseSynchronizationLock(String lockName) throws UnifyException;
-
-    /**
-     * Gets a list of cluster synchronization lock data that matches supplied
-     * criteria.
-     * 
-     * @param query
-     *            the query to match
-     * @return A list of cluster syncgronization data
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    List<ClusterLock> findClusterLocks(ClusterLockQuery query) throws UnifyException;
 
     /**
      * Finds a list of cluster node information based on supplied criteria.

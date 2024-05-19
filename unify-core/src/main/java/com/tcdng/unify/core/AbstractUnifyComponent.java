@@ -84,6 +84,16 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 		if (unifyComponentContext != null) {
 			return unifyComponentContext.getName();
 		}
+
+		return null;
+	}
+
+	@Override
+	public final String getNodeId() {
+		if (unifyComponentContext != null) {
+			return unifyComponentContext.getNodeId();
+		}
+
 		return null;
 	}
 
@@ -570,16 +580,6 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 */
 	protected boolean isDeploymentMode() throws UnifyException {
 		return unifyComponentContext.isDeploymentMode();
-	}
-
-	/**
-	 * Gets the component container node ID.
-	 * 
-	 * @return the node ID. A null value is returned if container is not in cluster
-	 *         mode.
-	 */
-	protected String getNodeId() {
-		return unifyComponentContext.getNodeId();
 	}
 
 	/**
@@ -1243,7 +1243,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 
 		return null;
 	}
-	
+
 	/**
 	 * Get pretty JSON string from object.
 	 * 
@@ -1668,73 +1668,6 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 */
 	protected Locale getSessionLocale() throws UnifyException {
 		return unifyComponentContext.getRequestContext().getLocale();
-	}
-
-	/**
-	 * Begins a cluster synchronization block with specified lock. Blocks until
-	 * synchronization handle is obtained or an error occurs. Lock should be
-	 * released by calling {@link #endClusterLock(String)}.
-	 * 
-	 * @param lockName the lock name
-	 * @return a true value is lock is obtained otherwise false
-	 */
-	public boolean beginClusterLock(String lockName) {
-		return unifyComponentContext.beginClusterLock(lockName);
-	}
-
-	/**
-	 * Ends a cluster synchronization block for specified lock.
-	 * 
-	 * @param lockName the lock name
-	 */
-	public void endClusterLock(String lockName) {
-		unifyComponentContext.endClusterLock(lockName);
-	}
-
-	/**
-	 * Tries to grab the cluster master synchronization lock.
-	 * 
-	 * @return a true value is lock is obtained otherwise false
-	 */
-	protected boolean grabClusterMasterLock() {
-		return unifyComponentContext.grabClusterMasterLock();
-	}
-
-	/**
-	 * Tries to grab a cluster synchronization lock. Lock must be released after use
-	 * with {@link #releaseClusterLock(String)}
-	 * 
-	 * @param lockName the lock name
-	 * @return a true value is lock is obtained otherwise false
-	 */
-	protected boolean grabClusterLock(String lockName) {
-		return unifyComponentContext.grabClusterLock(lockName);
-	}
-
-	/**
-	 * Checks if current node has a hold on a cluster synchronization lock.
-	 * 
-	 * @param lockName the lock name
-	 * @return a true value is lock is held otherwise false
-	 */
-	protected boolean isWithClusterLock(String lockName) {
-		return unifyComponentContext.isWithClusterLock(lockName);
-	}
-
-	/**
-	 * Releases master synchronization lock.
-	 */
-	protected void releaseClusterMasterLock() {
-		unifyComponentContext.releaseClusterMasterLock();
-	}
-
-	/**
-	 * Releases a synchronization lock.
-	 * 
-	 * @param lockName the lock name
-	 */
-	protected void releaseClusterLock(String lockName) {
-		unifyComponentContext.releaseClusterLock(lockName);
 	}
 
 	/**

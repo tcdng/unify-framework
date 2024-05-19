@@ -17,6 +17,7 @@ package com.tcdng.unify.core.system;
 
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.data.LockInfo;
 
 /**
  * Lock manager.
@@ -34,12 +35,20 @@ public interface LockManager extends UnifyComponent {
 	 * @throws UnifyException if an error occurs
 	 */
 	boolean tryGrabLock(String lockName) throws UnifyException;
+	
+	/**
+	 * Grabs lock with no timeout.
+	 * @param lockName the lock name
+	 * @return true if lock is grabbed otherwise false
+	 * @throws UnifyException if an error occurs
+	 */
+	boolean grabLock(String lockName) throws UnifyException;
 
 	/**
 	 * Grabs lock. Waits for lock to be available.
 	 * 
 	 * @param lockName the lock name
-	 * @param timeout  the timeout (no timeout if egetive or zero)
+	 * @param timeout  the timeout (no timeout if negetive or zero)
 	 * @return true if lock is grabbed otherwise false
 	 * @throws UnifyException if an error occurs
 	 */
@@ -52,5 +61,14 @@ public interface LockManager extends UnifyComponent {
 	 * @throws UnifyException if an error occurs
 	 */
 	void releaseLock(String lockName) throws UnifyException;
+
+	/**
+	 * Gets lock information.
+	 * 
+	 * @param lockName the lock name
+	 * @return the lock information
+	 * @throws UnifyException if an error occurs
+	 */
+	LockInfo getLockInfo(String lockName) throws UnifyException;
 
 }

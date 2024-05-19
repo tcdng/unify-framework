@@ -35,6 +35,5 @@ import com.tcdng.unify.core.task.TaskMonitor;
 public @interface Periodic {
 
     PeriodicType value() default PeriodicType.NORMAL;
-    
-    boolean clusterMode() default false;
+
 }

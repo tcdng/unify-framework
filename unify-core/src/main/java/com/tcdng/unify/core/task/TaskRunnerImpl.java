@@ -37,6 +37,7 @@ import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.PeriodicType;
 import com.tcdng.unify.core.annotation.Singleton;
+import com.tcdng.unify.core.system.LockManager;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.core.util.ThreadUtils;
@@ -61,6 +62,9 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 	@Configurable
 	private UserTokenProvider userTokenProvider;
 
+	@Configurable
+	private LockManager lockManager;
+	
 	private ExecutorService processingExecutor;
 
 	private final Set<String> tasks;
@@ -299,7 +303,7 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 			final TaskMonitorImpl tm = params.getTm();
 			tm.begin();
 			try {
-				if (!lock || beginClusterLock(lockToRelease)) {
+				if (!lock || lockManager.grabLock(lockToRelease)) {
 					try {
 						RequestContext requestContext = getRequestContext();
 						requestContextManager.loadRequestContext(requestContext);
@@ -321,7 +325,7 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 						logError(e);
 					} finally {
 						if (lock) {
-							releaseClusterLock(lockToRelease);
+							lockManager.releaseLock(lockToRelease);
 						}
 
 						try {
@@ -331,6 +335,9 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 						}
 					}
 				}
+			} catch (Exception e) {
+				tm.addException(e);
+				logError(e);
 			} finally {
 				tm.done();
 			}

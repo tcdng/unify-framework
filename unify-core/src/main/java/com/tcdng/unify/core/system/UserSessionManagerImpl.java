@@ -33,7 +33,7 @@ import com.tcdng.unify.core.annotation.Broadcast;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Periodic;
 import com.tcdng.unify.core.annotation.PeriodicType;
-import com.tcdng.unify.core.annotation.TransactionAttribute;
+import com.tcdng.unify.core.annotation.Synchronized;
 import com.tcdng.unify.core.annotation.Transactional;
 import com.tcdng.unify.core.business.AbstractBusinessService;
 import com.tcdng.unify.core.criterion.Update;
@@ -51,6 +51,8 @@ import com.tcdng.unify.core.util.CalendarUtils;
 @Transactional
 @Component(ApplicationComponents.APPLICATION_USERSESSIONMANAGER)
 public class UserSessionManagerImpl extends AbstractBusinessService implements UserSessionManager {
+
+	private static final String USER_SESSION_LOCK = "app::bootfeature-lock";
 
     private Map<String, UserSession> userSessions;
 
@@ -180,7 +182,7 @@ public class UserSessionManagerImpl extends AbstractBusinessService implements U
     }
 
     @Periodic(PeriodicType.NORMAL)
-    @Transactional(TransactionAttribute.REQUIRES_NEW)
+    @Synchronized(USER_SESSION_LOCK)
     public void performUserSessionHouseKeeping(TaskMonitor taskMonitor) throws UnifyException {
         // Update active session records and remove inactive ones
         Date now = db().getNow();
@@ -206,14 +208,8 @@ public class UserSessionManagerImpl extends AbstractBusinessService implements U
             }
         }
 
-		if (grabClusterMasterLock()) {
-			try {
-				// Delete inactive session
-				db().deleteAll(new UserSessionTrackingQuery().expired(expiryTime));
-			} finally {
-				releaseClusterMasterLock();
-			}
-		}
+		// Delete inactive session
+		db().deleteAll(new UserSessionTrackingQuery().expired(expiryTime));
     }
 
     private void broadcast(UserSession userSession, String attribute, Object value) throws UnifyException {
