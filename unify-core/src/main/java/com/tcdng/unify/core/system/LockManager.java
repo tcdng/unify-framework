@@ -19,12 +19,12 @@ import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 
 /**
- * Cluster lock manager.
+ * Lock manager.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public interface ClusterLockManager extends UnifyComponent {
+public interface LockManager extends UnifyComponent {
 
 	/**
 	 * Grabs lock if available.
