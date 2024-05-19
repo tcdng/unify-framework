@@ -29,6 +29,8 @@ public interface ApplicationComponents {
 
     String APPLICATION_CLUSTERSERVICE = "application-clusterservice";
 
+    String APPLICATION_CLUSTERLOCKMANAGER = "application-clusterlockmanager";
+
     String APPLICATION_CURRENCYSOURCE = "application-currencysource";
 
     String APPLICATION_DATABASE = "application-database";
