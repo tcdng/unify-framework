@@ -67,7 +67,8 @@ public class SequenceNumberServiceImpl extends AbstractBusinessService implement
     }
 
     @Override
-	public synchronized void ensureCachedBlockSequence(String sequencedName) throws UnifyException {
+    @Synchronized("sys:nextdatesequencenumber-lock")
+	public void ensureCachedBlockSequence(String sequencedName) throws UnifyException {
         SequenceBlock sequenceBlock = sequenceBlockMap.get(sequencedName);
         if (sequenceBlock == null) {
         	ensureNewCachedBlockSequence(sequencedName);
@@ -75,7 +76,8 @@ public class SequenceNumberServiceImpl extends AbstractBusinessService implement
 	}
 
 	@Override
-    public synchronized Long getCachedBlockNextSequenceNumber(String sequencedName) throws UnifyException {
+    @Synchronized("sys:nextdatesequencenumber-lock")
+    public Long getCachedBlockNextSequenceNumber(String sequencedName) throws UnifyException {
         SequenceBlock sequenceBlock = sequenceBlockMap.get(sequencedName);
         if (sequenceBlock == null || sequenceBlock.willExpire()) {
             return getNewBlockCachedBlockNextSequenceNumber(sequencedName);
@@ -123,7 +125,7 @@ public class SequenceNumberServiceImpl extends AbstractBusinessService implement
     }
     
     @Override
-    @Synchronized("nextsequencenumber-lock")
+    @Synchronized("sys:nextsequencenumber-lock")
     public Long getNextSequenceNumber(String sequenceName) throws UnifyException {
         Long sequenceNumber = null;
         ClusterSequenceNumber clusterSequenceNumber = db()
@@ -143,7 +145,7 @@ public class SequenceNumberServiceImpl extends AbstractBusinessService implement
     }
 
     @Override
-    @Synchronized("nextdatesequencenumber-lock")
+    @Synchronized("sys:nextdatesequencenumber-lock")
     public Long getNextSequenceNumber(String sequenceName, Date date) throws UnifyException {
         Long sequenceNumber = null;
         Date midnightDate = CalendarUtils.getMidnightDate(date);
@@ -165,8 +167,8 @@ public class SequenceNumberServiceImpl extends AbstractBusinessService implement
     }
 
     @Override
-    @Synchronized("uniquestring-lock")
-    public synchronized Long getUniqueStringId(final String uniqueString) throws UnifyException {
+    @Synchronized("sys:uniquestring-lock")
+    public Long getUniqueStringId(final String uniqueString) throws UnifyException {
         final String md5 = DigestUtils.md5Hex(uniqueString);
         ClusterUniqueString clusterUniqueString = db().find(new ClusterUniqueStringQuery().uniqueString(md5));
         if (clusterUniqueString == null) {

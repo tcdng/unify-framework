@@ -132,6 +132,60 @@ public class UnifyComponentContext {
 	}
 
 	/**
+	 * Checks if lock is locked.
+	 * 
+	 * @param lockName the lock name
+	 * @return true if locked otherwise false
+	 * @throws Exception if an error occurs
+	 */
+	public boolean isLocked(String lockName) throws Exception {
+		return applicationContext.getContainer().isLocked(lockName);
+	}
+	
+	/**
+	 * Grabs lock if available.
+	 * 
+	 * @param lockName the lock name
+	 * @return true if lock is grabbed otherwise false
+	 * @throws UnifyException if an error occurs
+	 */
+	public boolean tryGrabLock(String lockName) throws UnifyException {
+		return applicationContext.getContainer().tryGrabLock(lockName);
+	}
+	
+	/**
+	 * Grabs lock with no timeout.
+	 * @param lockName the lock name
+	 * @return true if lock is grabbed otherwise false
+	 * @throws UnifyException if an error occurs
+	 */
+	public boolean grabLock(String lockName) throws UnifyException {
+		return applicationContext.getContainer().grabLock(lockName);
+	}
+
+	/**
+	 * Grabs lock. Waits for lock to be available.
+	 * 
+	 * @param lockName the lock name
+	 * @param timeout  the timeout (no timeout if negetive or zero)
+	 * @return true if lock is grabbed otherwise false
+	 * @throws UnifyException if an error occurs
+	 */
+	public boolean grabLock(String lockName, long timeout) throws UnifyException {
+		return applicationContext.getContainer().grabLock(lockName, timeout);
+	}
+
+	/**
+	 * Releases lock.
+	 * 
+	 * @param lockName the lock name
+	 * @throws UnifyException if an error occurs
+	 */
+	public void releaseLock(String lockName) throws UnifyException {
+		applicationContext.getContainer().releaseLock(lockName);
+	}
+
+	/**
 	 * Gets a UPL component instance using supplied descriptor.
 	 * 
 	 * @param locale     the locale
@@ -481,73 +535,6 @@ public class UnifyComponentContext {
 	 */
 	public void setRoleAttributes(String roleCode, RoleAttributes roleAttributes) {
 		applicationContext.setRoleAttributes(roleCode, roleAttributes);
-	}
-
-	/**
-	 * Begins a cluster synchronization block with specified lock. Blocks until
-	 * synchronization handle is obtained or an error occurs. Lock should be
-	 * released by calling {@link #endClusterLock(String)}.
-	 * 
-	 * @param lockName the lock name
-	 * @return a true value is lock is obtained otherwise false
-	 */
-	public boolean beginClusterLock(String lockName) {
-		return applicationContext.getContainer().beginClusterLock(lockName);
-	}
-
-	/**
-	 * Ends a cluster synchronization block for specified lock.
-	 * 
-	 * @param lockName the lock name
-	 */
-	public void endClusterLock(String lockName) {
-		applicationContext.getContainer().endClusterLock(lockName);
-	}
-
-	/**
-	 * Tries to grab the cluster master synchronization lock.
-	 * 
-	 * @return a true value is lock is obtained otherwise false
-	 */
-	public boolean grabClusterMasterLock() {
-		return applicationContext.getContainer().grabClusterMasterLock();
-	}
-
-	/**
-	 * Tries to grab a cluster synchronization lock. Lock must be released after use
-	 * with {@link #releaseClusterLock(String)}
-	 * 
-	 * @param lockName the lock name
-	 * @return a true value is lock is obtained otherwise false
-	 */
-	public boolean grabClusterLock(String lockName) {
-		return applicationContext.getContainer().grabClusterLock(lockName);
-	}
-
-	/**
-	 * Checks if current node has a hold on a cluster synchronization lock.
-	 * 
-	 * @param lockName the lock name
-	 * @return a true value is lock is held otherwise false
-	 */
-	public boolean isWithClusterLock(String lockName) {
-		return applicationContext.getContainer().isWithClusterLock(lockName);
-	}
-
-	/**
-	 * Releases a cluster master synchronization lock.
-	 */
-	public void releaseClusterMasterLock() {
-		applicationContext.getContainer().releaseClusterMasterLock();
-	}
-
-	/**
-	 * Releases a cluster synchronization lock.
-	 * 
-	 * @param lockName the lock name
-	 */
-	public void releaseClusterLock(String lockName) {
-		applicationContext.getContainer().releaseClusterLock(lockName);
 	}
 
 	/**

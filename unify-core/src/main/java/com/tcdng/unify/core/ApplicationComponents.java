@@ -73,6 +73,8 @@ public interface ApplicationComponents {
 
     String APPLICATION_LISTMANAGER = "application-listmanager";
 
+    String APPLICATION_LOCKMANAGER = "application-lockmanager";
+
     String APPLICATION_MENULOADER = "application-menuloader";
 
     String APPLICATION_MESSAGES = "application-messages";

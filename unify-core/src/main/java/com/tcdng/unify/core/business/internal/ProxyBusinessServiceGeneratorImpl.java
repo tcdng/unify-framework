@@ -42,9 +42,11 @@ import com.tcdng.unify.core.business.BusinessLogicUnit;
 import com.tcdng.unify.core.business.BusinessService;
 import com.tcdng.unify.core.constant.DeploymentMode;
 import com.tcdng.unify.core.runtime.RuntimeJavaClassManager;
-import com.tcdng.unify.core.system.ClusterService;
+import com.tcdng.unify.core.system.LockManager;
+import com.tcdng.unify.core.util.AnnotationUtils;
 import com.tcdng.unify.core.util.NameUtils;
 import com.tcdng.unify.core.util.ReflectUtils;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * Default implementation proxy business service generator.
@@ -55,340 +57,382 @@ import com.tcdng.unify.core.util.ReflectUtils;
 @Component(ApplicationComponents.APPLICATION_PROXYBUSINESSSERVICEGENERATOR)
 public class ProxyBusinessServiceGeneratorImpl extends AbstractUnifyComponent implements ProxyBusinessServiceGenerator {
 
-    @Configurable
-    private RuntimeJavaClassManager runtimeJavaClassManager;
+	@Configurable
+	private RuntimeJavaClassManager runtimeJavaClassManager;
 
-    @Configurable("proxy")
-    private String proxyPackageExtension;
+	@Configurable("proxy")
+	private String proxyPackageExtension;
 
-    @Configurable("Proxy")
-    private String proxyClassExtension;
+	@Configurable("Proxy")
+	private String proxyClassExtension;
 
-    @Configurable
-    private boolean logSource;
+	@Configurable
+	private boolean logSource;
 
-    private Map<String, ProxyBusinessServiceMethodAnnotationInfo> annotationInfoBySignature;
+	private Map<String, ProxyBusinessServiceMethodAnnotationInfo> annotationInfoBySignature;
 
-    public ProxyBusinessServiceGeneratorImpl() {
-        annotationInfoBySignature = new HashMap<String, ProxyBusinessServiceMethodAnnotationInfo>();
-    }
+	public ProxyBusinessServiceGeneratorImpl() {
+		annotationInfoBySignature = new HashMap<String, ProxyBusinessServiceMethodAnnotationInfo>();
+	}
 
-    @Override
-    public String generateProxyBusinessServiceName(Class<? extends BusinessService> businessServiceClazz)
-            throws UnifyException {
-        return businessServiceClazz.getPackage().getName() + "." + proxyPackageExtension + "."
-                + businessServiceClazz.getSimpleName() + proxyClassExtension;
-    }
+	@Override
+	public String generateProxyBusinessServiceName(Class<? extends BusinessService> businessServiceClazz)
+			throws UnifyException {
+		return businessServiceClazz.getPackage().getName() + "." + proxyPackageExtension + "."
+				+ businessServiceClazz.getSimpleName() + proxyClassExtension;
+	}
 
-    @Override
-    public String generateProxyBusinessServiceSimpleName(Class<? extends BusinessService> businessServiceClazz)
-            throws UnifyException {
-        return businessServiceClazz.getSimpleName() + proxyClassExtension;
-    }
+	@Override
+	public String generateProxyBusinessServiceSimpleName(Class<? extends BusinessService> businessServiceClazz)
+			throws UnifyException {
+		return businessServiceClazz.getSimpleName() + proxyClassExtension;
+	}
 
-    @Override
-    public String generateProxyBusinessServiceSource(String name, Class<? extends BusinessService> businessServiceClazz,
-            Map<String, List<UnifyPluginInfo>> pluginsBySocketMap, DeploymentMode deploymentMode)
-            throws UnifyException {
-        String simpleName = generateProxyBusinessServiceSimpleName(businessServiceClazz);
-        String packageName = businessServiceClazz.getPackage().getName() + "." + proxyPackageExtension;
+	@Override
+	public String generateProxyBusinessServiceSource(String name, Class<? extends BusinessService> businessServiceClazz,
+			Map<String, List<UnifyPluginInfo>> pluginsBySocketMap, DeploymentMode deploymentMode)
+			throws UnifyException {
+		String simpleName = generateProxyBusinessServiceSimpleName(businessServiceClazz);
+		String packageName = businessServiceClazz.getPackage().getName() + "." + proxyPackageExtension;
 
-        ReflectUtils.assertPublicConcreteNonFinal(businessServiceClazz);
+		ReflectUtils.assertPublicConcreteNonFinal(businessServiceClazz);
 
-        ReflectUtils.assertInterface(businessServiceClazz, BusinessService.class);
-        boolean isUseCsService = !ApplicationComponents.APPLICATION_CLUSTERSERVICE.equals(name);
+		ReflectUtils.assertInterface(businessServiceClazz, BusinessService.class);
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("package ").append(packageName).append(";\n");
-        sb.append('\n');
-        sb.append("public class ").append(simpleName).append(" extends ").append(businessServiceClazz.getName())
-                .append(" {\n");
+		StringBuilder sb = new StringBuilder();
+		sb.append("package ").append(packageName).append(";\n");
+		sb.append('\n');
+		sb.append("public class ").append(simpleName).append(" extends ").append(businessServiceClazz.getName())
+				.append(" {\n");
 
-        // Initialize method should be non-final
-        Method initMethod = ReflectUtils.getMethod(businessServiceClazz, "initialize", UnifyComponentContext.class);
-        ReflectUtils.assertOverridable(initMethod);
+		// Initialize method should be non-final
+		Method initMethod = ReflectUtils.getMethod(businessServiceClazz, "initialize", UnifyComponentContext.class);
+		ReflectUtils.assertOverridable(initMethod);
 
-        Transactional clazzTa = businessServiceClazz.getAnnotation(Transactional.class);
-        Method[] methods = businessServiceClazz.getMethods();
+		Transactional clazzTa = businessServiceClazz.getAnnotation(Transactional.class);
+		Method[] methods = businessServiceClazz.getMethods();
 
-        // Identify locks and extract relayed annotation information
-        Map<Method, String> methodLockMap = new HashMap<Method, String>();
-        String syncLockBase = simpleName;
-        for (Method method : methods) {
-            Synchronized syna = method.getAnnotation(Synchronized.class);
-            if (syna != null) {
-                String lock = syncLockBase + '.' + syna.value();
-                methodLockMap.put(method, lock);
-            }
+		// Identify locks and extract relayed annotation information
+		Map<Method, SynchronizedInfo> methodLockMap = new HashMap<Method, SynchronizedInfo>();
+		for (Method method : methods) {
+			Synchronized syna = method.getAnnotation(Synchronized.class);
+			if (syna != null) {
+				String lockName = AnnotationUtils.getAnnotationString(syna.lock());
+				if (lockName == null) {
+					lockName = AnnotationUtils.getAnnotationString(syna.value());
+				}
 
-            Taskable ta = method.getAnnotation(Taskable.class);
-            Expirable ea = method.getAnnotation(Expirable.class);
-            if (ta != null || ea != null) {
-                annotationInfoBySignature.put(ReflectUtils.getMethodSignature(name, method),
-                        new ProxyBusinessServiceMethodAnnotationInfo(ta, ea));
-            }
-        }
+				if (StringUtils.isBlank(lockName)) {
+					throw new UnifyException(UnifyCoreErrorConstants.REFLECT_METHOD_REQUIRES_LOCKNAME, method);
+				}
+				
+				methodLockMap.put(method, new SynchronizedInfo(lockName, syna.waitForLock(), syna.timeout()));
+			}
 
-        if (isUseCsService) {
-            sb.append("\tprivate ").append(ClusterService.class.getCanonicalName()).append(" csService;\n");
-        }
+			Taskable ta = method.getAnnotation(Taskable.class);
+			Expirable ea = method.getAnnotation(Expirable.class);
+			if (ta != null || ea != null) {
+				annotationInfoBySignature.put(ReflectUtils.getMethodSignature(name, method),
+						new ProxyBusinessServiceMethodAnnotationInfo(ta, ea));
+			}
+		}
 
-        // Write methods
-        for (Method method : methods) {
-            Class<?>[] parameterTypes = method.getParameterTypes();
-            if ("tm".equals(method.getName()) && parameterTypes.length == 0) {
-                continue;
-            }
+		if (!methodLockMap.isEmpty()) {
+			sb.append("\tprivate ").append(LockManager.class.getCanonicalName()).append(" resv_lockManager;\n");
+		}
 
-            int modifiers = method.getModifiers();
-            boolean hasUnifyException = false;
-            Class<?>[] exceptionTypes = method.getExceptionTypes();
-            for (Class<?> exceptionType : exceptionTypes) {
-                if (UnifyException.class.equals(exceptionType)) {
-                    hasUnifyException = true;
-                    break;
-                }
-            }
+		// Write methods
+		for (Method method : methods) {
+			Class<?>[] parameterTypes = method.getParameterTypes();
+			if ("tm".equals(method.getName()) && parameterTypes.length == 0) {
+				continue;
+			}
 
-            Transactional ta = method.getAnnotation(Transactional.class);
-            if (ta == null) {
-                if (clazzTa != null) {
-                    if (!hasUnifyException || isNotValidTransactionMethod(modifiers))
-                        continue;
-                    ta = clazzTa;
-                }
-            } else {
-                if (isNotValidTransactionMethod(modifiers)) {
-                    throw new UnifyException(UnifyCoreErrorConstants.REFLECT_METHOD_WITH_UNSUPORTED_MODIFIERS, method);
-                }
-                if (!hasUnifyException) {
-                    throw new UnifyException(UnifyCoreErrorConstants.MODULE_TRANSACTIONAL_MUST_THROW_EXCEPTION, method,
-                            businessServiceClazz);
-                }
-            }
+			int modifiers = method.getModifiers();
+			boolean hasUnifyException = false;
+			Class<?>[] exceptionTypes = method.getExceptionTypes();
+			for (Class<?> exceptionType : exceptionTypes) {
+				if (UnifyException.class.equals(exceptionType)) {
+					hasUnifyException = true;
+					break;
+				}
+			}
 
-            boolean isBroadcast = method.getAnnotation(Broadcast.class) != null;
-            boolean isTransactional = ta != null;
-            boolean isSynchronized = isUseCsService && methodLockMap.containsKey(method);
-            if (!isTransactional && !isSynchronized && !isBroadcast) {
-                // No need to override method if it is not transactional or not
-                // synchronized or not broadcast
-                // Move to next method
-                continue;
-            }
+			Transactional ta = method.getAnnotation(Transactional.class);
+			if (ta == null) {
+				if (clazzTa != null) {
+					if (!hasUnifyException || isNotValidTransactionMethod(modifiers))
+						continue;
+					ta = clazzTa;
+				}
+			} else {
+				if (isNotValidTransactionMethod(modifiers)) {
+					throw new UnifyException(UnifyCoreErrorConstants.REFLECT_METHOD_WITH_UNSUPORTED_MODIFIERS, method);
+				}
+				if (!hasUnifyException) {
+					throw new UnifyException(UnifyCoreErrorConstants.MODULE_TRANSACTIONAL_MUST_THROW_EXCEPTION, method,
+							businessServiceClazz);
+				}
+			}
 
-            // Build method
-            sb.append("\tpublic ");
-            sb.append(method.getReturnType().getCanonicalName()).append(" ").append(method.getName());
+			boolean isBroadcast = method.getAnnotation(Broadcast.class) != null;
+			boolean isTransactional = ta != null;
+			boolean isSynchronized = methodLockMap.containsKey(method);
+			if (!isTransactional && !isSynchronized && !isBroadcast) {
+				// No need to override method if it is not transactional or not
+				// synchronized or not broadcast
+				// Move to next method
+				continue;
+			}
 
-            // Append parameters
-            StringBuilder callParams = new StringBuilder();
-            sb.append("(");
-            for (int i = 0; i < parameterTypes.length; i++) {
-                if (i > 0) {
-                    sb.append(", ");
-                    callParams.append(", ");
-                }
+			// Build method
+			sb.append("\tpublic ");
+			sb.append(method.getReturnType().getCanonicalName()).append(" ").append(method.getName());
 
-                sb.append(parameterTypes[i].getCanonicalName()).append(" p").append(i);
-                callParams.append(" p").append(i);
-            }
-            sb.append(") ");
+			// Append parameters
+			StringBuilder callParams = new StringBuilder();
+			sb.append("(");
+			for (int i = 0; i < parameterTypes.length; i++) {
+				if (i > 0) {
+					sb.append(", ");
+					callParams.append(", ");
+				}
 
-            // Append method exceptions
-            if (exceptionTypes.length > 0) {
-                sb.append("throws ");
-                for (int i = 0; i < exceptionTypes.length; i++) {
-                    if (i > 0) {
-                        sb.append(", ");
-                    }
-                    if (exceptionTypes[i].equals(UnifyException.class)) {
-                        hasUnifyException = true;
-                    }
-                    sb.append(exceptionTypes[i].getCanonicalName());
-                }
-            }
-            sb.append("{\n");
+				sb.append(parameterTypes[i].getCanonicalName()).append(" p").append(i);
+				callParams.append(" p").append(i);
+			}
+			sb.append(") ");
 
-            // Transaction boundary start
-            boolean nonVoidReturn = !method.getReturnType().equals(void.class);
-            if (nonVoidReturn) {
-                sb.append("\t\t").append(method.getReturnType().getCanonicalName()).append(" result;\n");
-            }
+			// Append method exceptions
+			if (exceptionTypes.length > 0) {
+				sb.append("throws ");
+				for (int i = 0; i < exceptionTypes.length; i++) {
+					if (i > 0) {
+						sb.append(", ");
+					}
+					if (exceptionTypes[i].equals(UnifyException.class)) {
+						hasUnifyException = true;
+					}
+					sb.append(exceptionTypes[i].getCanonicalName());
+				}
+			}
+			sb.append("{\n");
 
-            if (isTransactional) {
-                sb.append("\t\ttm().beginTransaction(").append(TransactionAttribute.class.getName()).append('.')
-                        .append(ta.value()).append(");\n");
-                sb.append("\t\ttry{\n");
-            }
+			// Transaction boundary start
+			boolean nonVoidReturn = !method.getReturnType().equals(void.class);
+			if (nonVoidReturn) {
+				sb.append("\t\t").append(method.getReturnType().getCanonicalName()).append(" result;\n");
+			}
 
-            // Synchronization boundary start
-            String extraTab = "";
-            if (isSynchronized) {
-                if (isTransactional) {
-                    extraTab = "\t\t\t";
-                }
-                String lock = methodLockMap.get(method);
-                sb.append(extraTab).append("\t\t\t\tcsService.beginSynchronization(\"").append(lock).append("\");\n");
-                sb.append(extraTab).append("\t\t\t\t\ttry{\n");
-            }
+			if (isTransactional) {
+				sb.append("\t\ttm().beginTransaction(").append(TransactionAttribute.class.getName()).append('.')
+						.append(ta.value()).append(");\n");
+				sb.append("\t\ttry{\n");
+			}
 
-            // Pre-logic plug-ins
-            List<UnifyPluginInfo> pluginInfoList =
-                    pluginsBySocketMap.get(ReflectUtils.getMethodSignature(name, method));
-            boolean isPlugin = pluginInfoList != null && !pluginInfoList.isEmpty();
-            if (isPlugin) {
-                sb.append("\t\t\t").append(BusinessLogicInput.class.getCanonicalName()).append(" blin = new ")
-                        .append(BusinessLogicInput.class.getCanonicalName()).append("();\n");
-                for (int i = 0; i < parameterTypes.length; i++) {
-                    sb.append("\t\t\tblin.setParameter(\"p").append(i).append("\", p").append(i).append(");\n");
-                }
-                sb.append("\t\t\t").append(BusinessLogicOutput.class.getCanonicalName()).append(" blout = new ")
-                        .append(BusinessLogicOutput.class.getCanonicalName()).append("();\n");
-                for (UnifyPluginInfo upi : pluginInfoList) {
-                    if (PluginType.PRE_LOGIC.equals(upi.getPluginType())) {
-                        sb.append("\t\t\t((").append(BusinessLogicUnit.class.getCanonicalName())
-                                .append(") this.getComponent(\"").append(upi.getPluginName())
-                                .append("\")).execute(blin, blout);\n");
-                    }
-                }
-            }
+			// Synchronization boundary start
+			String extraTab = "";
+			if (isSynchronized) {
+				if (isTransactional) {
+					extraTab = "\t";
+				}
 
-            // Invoke proxied service
-            sb.append("\t\t\t");
-            if (nonVoidReturn) {
-                sb.append("result = ");
-            }
-            sb.append("super.").append(method.getName()).append("(").append(callParams).append(");\n");
+				SynchronizedInfo synchronizedInfo = methodLockMap.get(method);
+				if (synchronizedInfo.isWaitForLock()) {
+					sb.append(extraTab).append("\t\t\t\tresv_lockManager.grabLock(\"")
+							.append(synchronizedInfo.getLockName()).append("\", ").append(synchronizedInfo.getTimeout())
+							.append("L);\n");
+				} else {
+					sb.append(extraTab).append("\t\t\t\tresv_lockManager.tryGrabLock(\"")
+							.append(synchronizedInfo.getLockName()).append("\");\n");
+				}
 
-            // Post-logic plug-ins
-            if (isPlugin) {
-                if (nonVoidReturn) {
-                    sb.append("\t\t\tblin.setParameter(\"r0\", result);\n");
-                }
-                for (UnifyPluginInfo upi : pluginInfoList) {
-                    if (PluginType.POST_LOGIC.equals(upi.getPluginType())) {
-                        sb.append("\t\t\t((").append(BusinessLogicUnit.class.getCanonicalName())
-                                .append(") this.getComponent(\"").append(upi.getPluginName())
-                                .append("\")).execute(blin, blout);\n");
-                    }
-                }
-            }
+				sb.append(extraTab).append("\t\t\t\t\ttry{\n");
+			}
 
-            // Broadcast if necessary
-            if (isBroadcast) {
-                sb.append("\t\t\tthis.getUnifyComponentContext().broadcastToOtherNodes(\"")
-                        .append(NameUtils.getComponentMethodName(name, method.getName())).append("\", p0);\n");
-            }
+			// Pre-logic plug-ins
+			List<UnifyPluginInfo> pluginInfoList = pluginsBySocketMap
+					.get(ReflectUtils.getMethodSignature(name, method));
+			boolean isPlugin = pluginInfoList != null && !pluginInfoList.isEmpty();
+			if (isPlugin) {
+				sb.append("\t\t\t").append(BusinessLogicInput.class.getCanonicalName()).append(" blin = new ")
+						.append(BusinessLogicInput.class.getCanonicalName()).append("();\n");
+				for (int i = 0; i < parameterTypes.length; i++) {
+					sb.append("\t\t\tblin.setParameter(\"p").append(i).append("\", p").append(i).append(");\n");
+				}
+				sb.append("\t\t\t").append(BusinessLogicOutput.class.getCanonicalName()).append(" blout = new ")
+						.append(BusinessLogicOutput.class.getCanonicalName()).append("();\n");
+				for (UnifyPluginInfo upi : pluginInfoList) {
+					if (PluginType.PRE_LOGIC.equals(upi.getPluginType())) {
+						sb.append("\t\t\t((").append(BusinessLogicUnit.class.getCanonicalName())
+								.append(") this.getComponent(\"").append(upi.getPluginName())
+								.append("\")).execute(blin, blout);\n");
+					}
+				}
+			}
 
-            // Synchronization boundary end
-            if (isSynchronized) {
-                String lock = methodLockMap.get(method);
-                sb.append(extraTab).append("\t\t\t\t}finally{\n");
-                sb.append(extraTab).append("\t\t\t\t\tcsService.endSynchronization(\"").append(lock).append("\");\n");
-                sb.append(extraTab).append("\t\t\t\t}\n");
-            }
+			// Invoke proxied service
+			sb.append("\t\t\t");
+			if (nonVoidReturn) {
+				sb.append("result = ");
+			}
+			sb.append("super.").append(method.getName()).append("(").append(callParams).append(");\n");
 
-            // Transaction boundary end
-            if (isTransactional) {
-                sb.append("\t\t} ");
-                for (Class<?> exceptionType : exceptionTypes) {
-                    sb.append("catch(").append(exceptionType.getCanonicalName()).append(" e) {\n");
-                    sb.append("\t\t\ttm().setRollback();\n");
-                    sb.append("\t\t\tthrow e;\n");
-                    sb.append("\t\t} ");
-                }
-                sb.append("catch(RuntimeException e) {\n");
-                sb.append("\t\t\ttm().setRollback();\n");
-                sb.append("\t\t\tthrow e;\n");
-                sb.append("\t\t} finally {\n");
-                sb.append("\t\t\ttm().endTransaction();\n");
-                sb.append("\t\t}\n");
-            }
+			// Post-logic plug-ins
+			if (isPlugin) {
+				if (nonVoidReturn) {
+					sb.append("\t\t\tblin.setParameter(\"r0\", result);\n");
+				}
+				for (UnifyPluginInfo upi : pluginInfoList) {
+					if (PluginType.POST_LOGIC.equals(upi.getPluginType())) {
+						sb.append("\t\t\t((").append(BusinessLogicUnit.class.getCanonicalName())
+								.append(") this.getComponent(\"").append(upi.getPluginName())
+								.append("\")).execute(blin, blout);\n");
+					}
+				}
+			}
 
-            if (nonVoidReturn) {
-                sb.append("\t\t return result;\n");
-            }
-            sb.append("\t}\n\n");
-        }
+			// Broadcast if necessary
+			if (isBroadcast) {
+				sb.append("\t\t\tthis.getUnifyComponentContext().broadcastToOtherNodes(\"")
+						.append(NameUtils.getComponentMethodName(name, method.getName())).append("\", p0);\n");
+			}
 
-        if (isUseCsService) {
-            sb.append("\tprotected void onInitialize() throws ").append(UnifyException.class.getCanonicalName())
-                    .append(" {\n");
-            sb.append("\t\tsuper.onInitialize();\n");
-            sb.append("\t\tthis.csService = (").append(ClusterService.class.getCanonicalName())
-                    .append(")this.getUnifyComponentContext().getComponent(\"")
-                    .append(ApplicationComponents.APPLICATION_CLUSTERSERVICE).append("\");\n");
-            sb.append("\t}\n");
-        }
+			// Synchronization boundary end
+			if (isSynchronized) {
+				SynchronizedInfo synchronizedInfo = methodLockMap.get(method);
+				sb.append(extraTab).append("\t\t\t\t}finally{\n");
+				sb.append(extraTab).append("\t\t\t\t\tresv_lockManager.releaseLock(\"").append(synchronizedInfo.getLockName()).append("\");\n");
+				sb.append(extraTab).append("\t\t\t\t}\n");
+			}
 
-        sb.append("}\n");
-        return sb.toString();
-    }
+			// Transaction boundary end
+			if (isTransactional) {
+				sb.append("\t\t} ");
+				for (Class<?> exceptionType : exceptionTypes) {
+					sb.append("catch(").append(exceptionType.getCanonicalName()).append(" e) {\n");
+					sb.append("\t\t\ttm().setRollback();\n");
+					sb.append("\t\t\tthrow e;\n");
+					sb.append("\t\t} ");
+				}
+				sb.append("catch(RuntimeException e) {\n");
+				sb.append("\t\t\ttm().setRollback();\n");
+				sb.append("\t\t\tthrow e;\n");
+				sb.append("\t\t} finally {\n");
+				sb.append("\t\t\ttm().endTransaction();\n");
+				sb.append("\t\t}\n");
+			}
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public Class<? extends BusinessService> generateCompileLoadProxyBusinessServiceClass(String name,
-            Class<? extends BusinessService> businessServiceClazz,
-            Map<String, List<UnifyPluginInfo>> pluginsBySocketMap) throws UnifyException {
-        boolean isClusterMode = isClusterMode();
-        try {
-            DeploymentMode deploymentMode = DeploymentMode.STANDALONE;
-            if (isClusterMode) {
-                deploymentMode = DeploymentMode.CLUSTER;
-            }
+			if (nonVoidReturn) {
+				sb.append("\t\t return result;\n");
+			}
+			sb.append("\t}\n\n");
+		}
 
-            String source =
-                    generateProxyBusinessServiceSource(name, businessServiceClazz, pluginsBySocketMap, deploymentMode);
-            if (logSource) {
-                logDebug("Generated source for [{0}]. Cluster mode: [{1}], Source:\n [{2}]", businessServiceClazz,
-                        isClusterMode, source);
-            }
+		if (!methodLockMap.isEmpty()) {
+			sb.append("\tprotected void onInitialize() throws ").append(UnifyException.class.getCanonicalName())
+					.append(" {\n");
+			sb.append("\t\tsuper.onInitialize();\n");
+			sb.append("\t\tthis.resv_lockManager = (").append(LockManager.class.getCanonicalName())
+					.append(")this.getUnifyComponentContext().getComponent(\"")
+					.append(ApplicationComponents.APPLICATION_LOCKMANAGER).append("\");\n");
+			sb.append("\t}\n");
+		}
 
-            return (Class<? extends BusinessService>) runtimeJavaClassManager
-                    .compileAndLoadJavaClass(generateProxyBusinessServiceName(businessServiceClazz), source);
-        } catch (UnifyException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new UnifyException(e, UnifyCoreErrorConstants.COMPILER_CLASSLOAD_ERROR);
-        }
-    }
+		sb.append("}\n");
+		return sb.toString();
+	}
 
-    @Override
-    public ProxyBusinessServiceMethodAnnotationInfo getProxyBusinessServiceMethodAnnotationInfo(String methodSignature)
-            throws UnifyException {
-        return annotationInfoBySignature.get(methodSignature);
-    }
+	@SuppressWarnings("unchecked")
+	@Override
+	public Class<? extends BusinessService> generateCompileLoadProxyBusinessServiceClass(String name,
+			Class<? extends BusinessService> businessServiceClazz,
+			Map<String, List<UnifyPluginInfo>> pluginsBySocketMap) throws UnifyException {
+		boolean isClusterMode = isClusterMode();
+		try {
+			DeploymentMode deploymentMode = DeploymentMode.STANDALONE;
+			if (isClusterMode) {
+				deploymentMode = DeploymentMode.CLUSTER;
+			}
 
-    @Override
-    public Taskable getTaskable(String signature) throws UnifyException {
-        ProxyBusinessServiceMethodAnnotationInfo mpaInfo = annotationInfoBySignature.get(signature);
-        if (mpaInfo != null) {
-            return mpaInfo.getTaskable();
-        }
-        return null;
-    }
+			String source = generateProxyBusinessServiceSource(name, businessServiceClazz, pluginsBySocketMap,
+					deploymentMode);
+			if (logSource) {
+				logDebug("Generated source for [{0}]. Cluster mode: [{1}], Source:\n [{2}]", businessServiceClazz,
+						isClusterMode, source);
+			}
 
-    @Override
-    public Expirable getExpirable(String signature) throws UnifyException {
-        ProxyBusinessServiceMethodAnnotationInfo mpaInfo = this.annotationInfoBySignature.get(signature);
-        if (mpaInfo != null) {
-            return mpaInfo.getExpirable();
-        }
-        return null;
-    }
+			return (Class<? extends BusinessService>) runtimeJavaClassManager
+					.compileAndLoadJavaClass(generateProxyBusinessServiceName(businessServiceClazz), source);
+		} catch (UnifyException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new UnifyException(e, UnifyCoreErrorConstants.COMPILER_CLASSLOAD_ERROR);
+		}
+	}
 
-    @Override
-    protected void onInitialize() throws UnifyException {
+	@Override
+	public ProxyBusinessServiceMethodAnnotationInfo getProxyBusinessServiceMethodAnnotationInfo(String methodSignature)
+			throws UnifyException {
+		return annotationInfoBySignature.get(methodSignature);
+	}
 
-    }
+	@Override
+	public Taskable getTaskable(String signature) throws UnifyException {
+		ProxyBusinessServiceMethodAnnotationInfo mpaInfo = annotationInfoBySignature.get(signature);
+		if (mpaInfo != null) {
+			return mpaInfo.getTaskable();
+		}
+		return null;
+	}
 
-    @Override
-    protected void onTerminate() throws UnifyException {
+	@Override
+	public Expirable getExpirable(String signature) throws UnifyException {
+		ProxyBusinessServiceMethodAnnotationInfo mpaInfo = this.annotationInfoBySignature.get(signature);
+		if (mpaInfo != null) {
+			return mpaInfo.getExpirable();
+		}
+		return null;
+	}
 
-    }
+	@Override
+	protected void onInitialize() throws UnifyException {
 
-    protected boolean isNotValidTransactionMethod(int modifiers) {
-        return Modifier.isAbstract(modifiers) || Modifier.isFinal(modifiers) || !Modifier.isPublic(modifiers);
-    }
+	}
+
+	@Override
+	protected void onTerminate() throws UnifyException {
+
+	}
+
+	protected boolean isNotValidTransactionMethod(int modifiers) {
+		return Modifier.isAbstract(modifiers) || Modifier.isFinal(modifiers) || !Modifier.isPublic(modifiers);
+	}
+
+	private class SynchronizedInfo {
+
+		private String lockName;
+
+		private boolean waitForLock;
+
+		private long timeout;
+
+		public SynchronizedInfo(String lockName, boolean waitForLock, long timeout) {
+			this.lockName = lockName;
+			this.waitForLock = waitForLock;
+			this.timeout = timeout;
+		}
+
+		public String getLockName() {
+			return lockName;
+		}
+
+		public boolean isWaitForLock() {
+			return waitForLock;
+		}
+
+		public long getTimeout() {
+			return timeout;
+		}
+	}
 }

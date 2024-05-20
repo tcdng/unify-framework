@@ -20,6 +20,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import com.tcdng.unify.core.constant.AnnotationConstants;
+
 /**
  * Annotation for synchronizing a business service component method. All access
  * to a method marked with this annotation is synchronized. Can also be used to
@@ -47,5 +49,11 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Synchronized {
 
-    String value();
+    String value() default AnnotationConstants.NONE;
+    
+    String lock() default AnnotationConstants.NONE;
+    
+    boolean waitForLock() default true;
+    
+    long timeout() default -1L;
 }

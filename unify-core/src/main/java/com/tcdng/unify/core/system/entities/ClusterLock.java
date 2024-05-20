@@ -37,6 +37,9 @@ public class ClusterLock extends AbstractSystemEntity {
     @Column(length = 128, nullable = true)
     private String currentOwner;
 
+    @Column(length = 64, nullable = true)
+    private String threadId;
+
     @Column(type = ColumnType.TIMESTAMP)
     private Date expiryTime;
 
@@ -64,7 +67,15 @@ public class ClusterLock extends AbstractSystemEntity {
         this.currentOwner = currentOwner;
     }
 
-    public Date getExpiryTime() {
+    public String getThreadId() {
+		return threadId;
+	}
+
+	public void setThreadId(String threadId) {
+		this.threadId = threadId;
+	}
+
+	public Date getExpiryTime() {
         return expiryTime;
     }
 

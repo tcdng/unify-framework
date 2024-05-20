@@ -60,7 +60,7 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 
 	@Configurable
 	private UserTokenProvider userTokenProvider;
-
+	
 	private ExecutorService processingExecutor;
 
 	private final Set<String> tasks;
@@ -242,16 +242,6 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 		if (!params.isPermitMultiple()) {
 			tasks.remove(params.getTaskName());
 		}
-	
-		try {
-			final String loggerName = (String) params.getParameter(TaskParameterConstants.TASK_STATUS_LOGGER);
-			if (!StringUtils.isBlank(loggerName)) {
-				TaskStatusLogger logger = getComponent(TaskStatusLogger.class, loggerName);
-				logger.logStatus(params.getTm(), params.getParameters());
-			}
-		} catch (Exception e) {
-			logSevere(e);
-		}
 
 		return false;
 	}
@@ -280,7 +270,7 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 
 		private final TaskRunParams params;
 
-		private final String lockToRelease;
+		private final String lockToTry;
 
 		private final Long tenantId;
 
@@ -290,16 +280,16 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 			this.params = params;
 			this.tenantId = (Long) params.getParameter(TaskParameterConstants.TENANT_ID);
 			this.userLoginId = (String) params.getParameter(TaskParameterConstants.USER_LOGIN_ID);
-			this.lockToRelease = (String) params.getParameter(TaskParameterConstants.LOCK_TO_RELEASE);
+			this.lockToTry = (String) params.getParameter(TaskParameterConstants.LOCK_TO_TRY);
 		}
 
 		@Override
 		public void run() {
-			final boolean lock = !StringUtils.isBlank(lockToRelease);
+			final boolean lock = !StringUtils.isBlank(lockToTry);
 			final TaskMonitorImpl tm = params.getTm();
 			tm.begin();
 			try {
-				if (!lock || beginClusterLock(lockToRelease)) {
+				if (!lock || tryGrabLock(lockToTry)) {
 					try {
 						RequestContext requestContext = getRequestContext();
 						requestContextManager.loadRequestContext(requestContext);
@@ -321,7 +311,7 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 						logError(e);
 					} finally {
 						if (lock) {
-							releaseClusterLock(lockToRelease);
+							releaseLock(lockToTry);
 						}
 
 						try {
@@ -331,6 +321,9 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 						}
 					}
 				}
+			} catch (Exception e) {
+				tm.addException(e);
+				logError(e);
 			} finally {
 				tm.done();
 			}
