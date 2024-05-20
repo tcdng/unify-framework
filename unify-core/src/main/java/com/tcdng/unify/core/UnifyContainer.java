@@ -63,6 +63,7 @@ import com.tcdng.unify.core.logging.LoggingLevel;
 import com.tcdng.unify.core.message.ResourceBundles;
 import com.tcdng.unify.core.system.ClusterService;
 import com.tcdng.unify.core.system.Command;
+import com.tcdng.unify.core.system.LockManager;
 import com.tcdng.unify.core.system.UserSessionManager;
 import com.tcdng.unify.core.task.TaskManager;
 import com.tcdng.unify.core.task.TaskMonitor;
@@ -105,6 +106,8 @@ public class UnifyContainer {
 	private ApplicationContext applicationContext;
 
 	private BootService applicationBootService;
+
+	private LockManager lockManager;
 
 	private ClusterService clusterService;
 
@@ -497,6 +500,7 @@ public class UnifyContainer {
 					managedBusinessServiceConfigList.size());
 
 			// Cluster manager
+			lockManager = (LockManager) getComponent(ApplicationComponents.APPLICATION_LOCKMANAGER);
 			clusterService = (ClusterService) getComponent(ApplicationComponents.APPLICATION_CLUSTERSERVICE);
 			userSessionManager = (UserSessionManager) getComponent(
 					ApplicationComponents.APPLICATION_USERSESSIONMANAGER);
@@ -982,6 +986,60 @@ public class UnifyContainer {
 	public boolean isComponent(String name) throws UnifyException {
 		return internalResolutionMap.containsKey(name) || internalUnifyComponentInfos.containsKey(name)
 				|| aliases.containsKey(name);
+	}
+
+	/**
+	 * Checks if lock is locked.
+	 * 
+	 * @param lockName the lock name
+	 * @return true if locked otherwise false
+	 * @throws Exception if an error occurs
+	 */
+	public boolean isLocked(String lockName) throws Exception {
+		return lockManager.isLocked(lockName);
+	}
+	
+	/**
+	 * Grabs lock if available.
+	 * 
+	 * @param lockName the lock name
+	 * @return true if lock is grabbed otherwise false
+	 * @throws UnifyException if an error occurs
+	 */
+	public boolean tryGrabLock(String lockName) throws UnifyException {
+		return lockManager.tryGrabLock(lockName);
+	}
+	
+	/**
+	 * Grabs lock with no timeout.
+	 * @param lockName the lock name
+	 * @return true if lock is grabbed otherwise false
+	 * @throws UnifyException if an error occurs
+	 */
+	public boolean grabLock(String lockName) throws UnifyException {
+		return lockManager.grabLock(lockName);
+	}
+
+	/**
+	 * Grabs lock. Waits for lock to be available.
+	 * 
+	 * @param lockName the lock name
+	 * @param timeout  the timeout (no timeout if negetive or zero)
+	 * @return true if lock is grabbed otherwise false
+	 * @throws UnifyException if an error occurs
+	 */
+	public boolean grabLock(String lockName, long timeout) throws UnifyException {
+		return lockManager.grabLock(lockName, timeout);
+	}
+
+	/**
+	 * Releases lock.
+	 * 
+	 * @param lockName the lock name
+	 * @throws UnifyException if an error occurs
+	 */
+	public void releaseLock(String lockName) throws UnifyException {
+		lockManager.releaseLock(lockName);
 	}
 
 	/**

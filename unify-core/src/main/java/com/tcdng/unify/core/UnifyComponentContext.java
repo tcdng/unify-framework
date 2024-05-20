@@ -132,6 +132,60 @@ public class UnifyComponentContext {
 	}
 
 	/**
+	 * Checks if lock is locked.
+	 * 
+	 * @param lockName the lock name
+	 * @return true if locked otherwise false
+	 * @throws Exception if an error occurs
+	 */
+	public boolean isLocked(String lockName) throws Exception {
+		return applicationContext.getContainer().isLocked(lockName);
+	}
+	
+	/**
+	 * Grabs lock if available.
+	 * 
+	 * @param lockName the lock name
+	 * @return true if lock is grabbed otherwise false
+	 * @throws UnifyException if an error occurs
+	 */
+	public boolean tryGrabLock(String lockName) throws UnifyException {
+		return applicationContext.getContainer().tryGrabLock(lockName);
+	}
+	
+	/**
+	 * Grabs lock with no timeout.
+	 * @param lockName the lock name
+	 * @return true if lock is grabbed otherwise false
+	 * @throws UnifyException if an error occurs
+	 */
+	public boolean grabLock(String lockName) throws UnifyException {
+		return applicationContext.getContainer().grabLock(lockName);
+	}
+
+	/**
+	 * Grabs lock. Waits for lock to be available.
+	 * 
+	 * @param lockName the lock name
+	 * @param timeout  the timeout (no timeout if negetive or zero)
+	 * @return true if lock is grabbed otherwise false
+	 * @throws UnifyException if an error occurs
+	 */
+	public boolean grabLock(String lockName, long timeout) throws UnifyException {
+		return applicationContext.getContainer().grabLock(lockName, timeout);
+	}
+
+	/**
+	 * Releases lock.
+	 * 
+	 * @param lockName the lock name
+	 * @throws UnifyException if an error occurs
+	 */
+	public void releaseLock(String lockName) throws UnifyException {
+		applicationContext.getContainer().releaseLock(lockName);
+	}
+
+	/**
 	 * Gets a UPL component instance using supplied descriptor.
 	 * 
 	 * @param locale     the locale

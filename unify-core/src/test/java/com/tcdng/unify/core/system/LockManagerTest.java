@@ -16,8 +16,10 @@
 package com.tcdng.unify.core.system;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,6 +43,18 @@ public class LockManagerTest extends AbstractUnifyComponentTest {
 
 	public LockManagerTest() {
 		super(true); // Cluster mode
+	}
+
+	@Test(timeout = 5000)
+	public void testIsLocked() throws Exception {
+		LockManager lockManager = (LockManager) getComponent(ApplicationComponents.APPLICATION_LOCKMANAGER);
+		assertFalse(lockManager.isLocked("freeLock"));
+
+		lockManager.grabLock("freeLock");
+		assertTrue(lockManager.isLocked("freeLock"));
+
+		lockManager.releaseLock("freeLock");
+		assertFalse(lockManager.isLocked("freeLock"));
 	}
 
 	@Test(timeout = 5000)

@@ -27,7 +27,7 @@ public interface TaskParameterConstants {
 
 	String TENANT_ID = "sys.tenantId";
 	
-    String LOCK_TO_RELEASE = "sys.lockToRelease";
+    String LOCK_TO_TRY = "sys.lockToTry";
 	
     String TASK_STATUS_LOGGER = "sys.taskStatusLogger";
 }

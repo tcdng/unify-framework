@@ -28,6 +28,15 @@ import com.tcdng.unify.core.data.LockInfo;
 public interface LockManager extends UnifyComponent {
 
 	/**
+	 * Checks if lock is locked.
+	 * 
+	 * @param lockName the lock name
+	 * @return true if locked otherwise false
+	 * @throws Exception if an error occurs
+	 */
+	boolean isLocked(String lockName) throws Exception;
+	
+	/**
 	 * Grabs lock if available.
 	 * 
 	 * @param lockName the lock name

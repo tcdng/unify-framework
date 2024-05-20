@@ -64,6 +64,39 @@ public class LockManagerImpl extends AbstractUnifyComponent implements LockManag
 	}
 
 	@Override
+	public boolean isLocked(String lockName) throws Exception {
+		boolean locked = threadLockInfos.containsKey(lockName);
+		if (!locked && clusterMode) {
+			final Date _now = getNow();
+			final Timestamp now = new Timestamp(_now.getTime());
+			SqlDataSource sqlDataSource = getComponent(SqlDataSource.class,
+					ApplicationCommonConstants.APPLICATION_DATASOURCE);
+			Connection connection = (Connection) sqlDataSource.getConnection();
+			PreparedStatement pstmt = null;
+			ResultSet rst = null;
+			try {
+				pstmt = connection
+						.prepareStatement("SELECT COUNT(*) FROM unclusterlock WHERE unclusterlock_id = ? AND expiry_time < ?");
+				pstmt.setString(1, lockName);
+				pstmt.setTimestamp(2, now);
+
+				rst = pstmt.executeQuery();
+				rst.next();
+				locked = rst.getInt(1) > 0;
+				connection.commit();
+			} catch (Exception e) {
+				logSevere(e);
+			} finally {
+				SqlUtils.close(rst);
+				SqlUtils.close(pstmt);
+				sqlDataSource.restoreConnection(connection);
+			}
+		}
+		
+		return locked;
+	}
+
+	@Override
 	public boolean tryGrabLock(String lockName) throws UnifyException {
 		final String threadId = String.valueOf(ThreadUtils.currentThreadId());
 		logDebug("Thread [{0}] attempting to grab lock [{1}]...", threadId, lockName);
@@ -119,7 +152,6 @@ public class LockManagerImpl extends AbstractUnifyComponent implements LockManag
 						grabbed = pstmt.executeUpdate() > 0;
 						connection.commit();
 					} catch (Exception e) {
-						e.printStackTrace();
 						logSevere(e);
 					} finally {
 						SqlUtils.close(rst);

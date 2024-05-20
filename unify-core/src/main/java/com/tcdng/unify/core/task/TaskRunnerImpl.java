@@ -37,7 +37,6 @@ import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.PeriodicType;
 import com.tcdng.unify.core.annotation.Singleton;
-import com.tcdng.unify.core.system.LockManager;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.core.util.ThreadUtils;
@@ -61,9 +60,6 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 
 	@Configurable
 	private UserTokenProvider userTokenProvider;
-
-	@Configurable
-	private LockManager lockManager;
 	
 	private ExecutorService processingExecutor;
 
@@ -284,7 +280,7 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 
 		private final TaskRunParams params;
 
-		private final String lockToRelease;
+		private final String lockToTry;
 
 		private final Long tenantId;
 
@@ -294,16 +290,16 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 			this.params = params;
 			this.tenantId = (Long) params.getParameter(TaskParameterConstants.TENANT_ID);
 			this.userLoginId = (String) params.getParameter(TaskParameterConstants.USER_LOGIN_ID);
-			this.lockToRelease = (String) params.getParameter(TaskParameterConstants.LOCK_TO_RELEASE);
+			this.lockToTry = (String) params.getParameter(TaskParameterConstants.LOCK_TO_TRY);
 		}
 
 		@Override
 		public void run() {
-			final boolean lock = !StringUtils.isBlank(lockToRelease);
+			final boolean lock = !StringUtils.isBlank(lockToTry);
 			final TaskMonitorImpl tm = params.getTm();
 			tm.begin();
 			try {
-				if (!lock || lockManager.grabLock(lockToRelease)) {
+				if (!lock || tryGrabLock(lockToTry)) {
 					try {
 						RequestContext requestContext = getRequestContext();
 						requestContextManager.loadRequestContext(requestContext);
@@ -325,7 +321,7 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 						logError(e);
 					} finally {
 						if (lock) {
-							lockManager.releaseLock(lockToRelease);
+							releaseLock(lockToTry);
 						}
 
 						try {
