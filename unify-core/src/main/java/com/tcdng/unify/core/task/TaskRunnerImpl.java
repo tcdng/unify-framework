@@ -242,16 +242,6 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 		if (!params.isPermitMultiple()) {
 			tasks.remove(params.getTaskName());
 		}
-	
-		try {
-			final String loggerName = (String) params.getParameter(TaskParameterConstants.TASK_STATUS_LOGGER);
-			if (!StringUtils.isBlank(loggerName)) {
-				TaskStatusLogger logger = getComponent(TaskStatusLogger.class, loggerName);
-				logger.logStatus(params.getTm(), params.getParameters());
-			}
-		} catch (Exception e) {
-			logSevere(e);
-		}
 
 		return false;
 	}
