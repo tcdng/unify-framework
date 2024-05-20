@@ -174,7 +174,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	protected boolean isLocked(String lockName) throws Exception {
 		return unifyComponentContext.isLocked(lockName);
 	}
-	
+
 	/**
 	 * Grabs lock if available.
 	 * 
@@ -185,9 +185,10 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	protected boolean tryGrabLock(String lockName) throws UnifyException {
 		return unifyComponentContext.tryGrabLock(lockName);
 	}
-	
+
 	/**
 	 * Grabs lock with no timeout.
+	 * 
 	 * @param lockName the lock name
 	 * @return true if lock is grabbed otherwise false
 	 * @throws UnifyException if an error occurs
@@ -1814,69 +1815,83 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	protected abstract void onTerminate() throws UnifyException;
 
 	private Locale getLocale(LocaleType localeType) throws UnifyException {
-		if (LocaleType.SESSION.equals(localeType)) {
-			return unifyComponentContext.getRequestContext().getLocale();
+		if (isInitialized()) {
+			if (LocaleType.SESSION.equals(localeType)) {
+				return unifyComponentContext.getRequestContext().getLocale();
+			}
+			return unifyComponentContext.getApplicationLocale();
 		}
-		return getUnifyComponentContext().getApplicationLocale();
+
+		return Locale.getDefault();
 	}
 
 	private String[] getMessages(LocaleType localeType, String... messageKeys) throws UnifyException {
-		ResourceBundles resourceBundles = unifyComponentContext.getMessages();
-		Locale locale = getLocale(localeType);
-		String[] messages = new String[messageKeys.length];
-		for (int i = 0; i < messages.length; i++) {
-			messages[i] = resourceBundles.getMessage(locale, messageKeys[i]);
+		if (isInitialized()) {
+			ResourceBundles resourceBundles = unifyComponentContext.getMessages();
+			Locale locale = getLocale(localeType);
+			String[] messages = new String[messageKeys.length];
+			for (int i = 0; i < messages.length; i++) {
+				messages[i] = resourceBundles.getMessage(locale, messageKeys[i]);
+			}
+
+			return messages;
 		}
 
-		return messages;
+		return DataUtils.ZEROLEN_STRING_ARRAY;
 	}
 
 	private void log(TaskMonitor taskMonitor, LoggingLevel loggingLevel, String message, Object... params) {
-		try {
-			Logger logger = unifyComponentContext.getLogger();
-			boolean enabled = logger.isEnabled(loggingLevel);
-			if (enabled || taskMonitor != null) {
-				String resolvedMsg = resolveApplicationMessage(message, params);
-				if (enabled) {
-					logger.log(loggingLevel, resolvedMsg);
-				}
+		if (isInitialized()) {
+			try {
+				Logger logger = unifyComponentContext.getLogger();
+				boolean enabled = logger.isEnabled(loggingLevel);
+				if (enabled || taskMonitor != null) {
+					String resolvedMsg = resolveApplicationMessage(message, params);
+					if (enabled) {
+						logger.log(loggingLevel, resolvedMsg);
+					}
 
-				if (taskMonitor != null) {
-					taskMonitor.addMessage(resolvedMsg);
+					if (taskMonitor != null) {
+						taskMonitor.addMessage(resolvedMsg);
+					}
 				}
+			} catch (UnifyException e) {
+				e.printStackTrace();
 			}
-		} catch (UnifyException e) {
-			e.printStackTrace();
 		}
 	}
 
 	private void log(LoggingLevel loggingLevel, UnifyError unifyError) {
-		try {
-			Logger logger = unifyComponentContext.getLogger();
-			if (logger.isEnabled(loggingLevel)) {
-				logger.log(loggingLevel, getErrorMessage(LocaleType.APPLICATION, unifyError));
+		if (isInitialized()) {
+			try {
+				Logger logger = unifyComponentContext.getLogger();
+				if (logger.isEnabled(loggingLevel)) {
+					logger.log(loggingLevel, getErrorMessage(LocaleType.APPLICATION, unifyError));
+				}
+			} catch (UnifyException e) {
+				e.printStackTrace();
 			}
-		} catch (UnifyException e) {
-			e.printStackTrace();
 		}
 	}
 
 	private void log(TaskMonitor taskMonitor, LoggingLevel loggingLevel, Exception exception) {
-		try {
-			Logger logger = unifyComponentContext.getLogger();
-			boolean enabled = logger.isEnabled(loggingLevel);
-			if (enabled || taskMonitor != null) {
-				String msg = getExceptionMessage(LocaleType.APPLICATION, exception);
-				if (enabled) {
-					logger.log(loggingLevel, msg, exception);
-				}
+		if (isInitialized()) {
+			try {
+				Logger logger = unifyComponentContext.getLogger();
+				boolean enabled = logger.isEnabled(loggingLevel);
+				if (enabled || taskMonitor != null) {
+					String msg = getExceptionMessage(LocaleType.APPLICATION, exception);
+					if (enabled) {
+						logger.log(loggingLevel, msg, exception);
+					}
 
-				if (taskMonitor != null) {
-					taskMonitor.addMessage(msg);
+					if (taskMonitor != null) {
+						taskMonitor.addMessage(msg);
+					}
 				}
+			} catch (UnifyException e) {
+				e.printStackTrace();
 			}
-		} catch (UnifyException e) {
-			e.printStackTrace();
 		}
 	}
 }
