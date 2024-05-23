@@ -65,6 +65,7 @@ import com.tcdng.unify.core.system.ClusterService;
 import com.tcdng.unify.core.system.Command;
 import com.tcdng.unify.core.system.LockManager;
 import com.tcdng.unify.core.system.UserSessionManager;
+import com.tcdng.unify.core.task.PeriodicExecutionTaskConstants;
 import com.tcdng.unify.core.task.TaskManager;
 import com.tcdng.unify.core.task.TaskMonitor;
 import com.tcdng.unify.core.upl.UplCompiler;
@@ -528,6 +529,7 @@ public class UnifyContainer {
 
 			// Schedule periodic tasks
 			logInfo("Scheduling periodic tasks...");
+			getComponent(PeriodicExecutionTaskConstants.PERIODIC_METHOD_TASK);
 			Random random = new Random();
 			TaskManager taskManager = (TaskManager) getComponent(ApplicationComponents.APPLICATION_TASKMANAGER);
 			for (Map.Entry<String, Map<String, PeriodicInfo>> componentEntry : componentPeriodMethodMap.entrySet()) {
