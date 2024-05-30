@@ -755,7 +755,6 @@ ux.postWinFocusCommand = function() {
 			evp.uPanels = evp.uRefreshPnls;
 		}
 		
-		ux.windowFocusCmd = null;
 		ux.postCommit(evp);
 	}
 }
@@ -5480,7 +5479,7 @@ ux.setOnEvent = function(evp) {
 		evp.uRef.push(evp.uId);
 	}
 	
-	if ("ux05" === evp.uFunc && evp.uCmdWinFocus) {
+	if (("ux05" == evp.uFunc) && evp.uCmdWinFocus) {
 		ux.windowFocusCmd = evp;
 	}
 	
