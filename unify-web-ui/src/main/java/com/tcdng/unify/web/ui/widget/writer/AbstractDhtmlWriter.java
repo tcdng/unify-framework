@@ -779,7 +779,8 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
 
 	protected void writeActionParamsJS(ResponseWriter writer, String event, String function, String id, String cmdTag,
 			PageAction pageAction, String[] refPageNames, String refObject, String path) throws UnifyException {
-		final ControllerPathParts parts = getRequestContextUtil().getResponsePathParts();		
+		final PageRequestContextUtil reqUtil = getRequestContextUtil();
+		final ControllerPathParts parts = reqUtil.getResponsePathParts();		
 		final String pathId = parts.getControllerPathId();
 		PageManager pageManager = getPageManager();
 		if (StringUtils.isNotBlank(event)) {
@@ -791,8 +792,8 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
 		}
 		writer.write("\"uId\":\"").write(id).write("\"");
 
-		if (getRequestContextUtil().isRemoteViewer()) {
-			writer.write(",\"uViewer\":\"").write(getRequestContextUtil().getRemoteViewer()).write("\"");
+		if (reqUtil.isRemoteViewer()) {
+			writer.write(",\"uViewer\":\"").write(reqUtil.getRemoteViewer()).write("\"");
 		}
 
 		if (pageAction != null) {
@@ -824,6 +825,10 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
 					if (!StringUtils.isBlank(cmdTag)) {
 						writer.write(",\"uCmdTag\":\"").write(cmdTag).write("\"");
 					}
+					
+					if (pageAction.getUplAttribute(boolean.class, "onWinFocus")) {
+						writer.write(",\"uCmdWinFocus\":").write(reqUtil.isOnFocusOneshot());
+					}
 				}
 
 				String targetCmdPgNm = null;
@@ -847,7 +852,7 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
 				if (uer != null) {
 					writer.write(",\"uRefreshPnls\":").writeJsonArray(pageManager.getPageNames(uer.getLongNames()));
 				} else {
-					String targetRefreshPgNm = getRequestContextUtil().getDynamicPanelParentPageName();
+					String targetRefreshPgNm = reqUtil.getDynamicPanelParentPageName();
 					if (targetRefreshPgNm == null) {
 						targetRefreshPgNm = pageManager.getPageName(pageAction.getParentLongName());
 					}

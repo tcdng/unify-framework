@@ -108,6 +108,7 @@ ux.lastUserActTime=0;
 
 ux.fnaliases = [];
 ux.allpush = null;
+ux.windowFocusCmd = null;
 
 /** Utilities */
 function _id(id) {
@@ -165,7 +166,7 @@ ux.processJSON = function(jsonstring) {
 		ux.allpush = null;
 		ux.cascadeStretch();
 	}
-
+	
 	if (ux.cntId) {
 		var elem = _id(ux.cntId);
 		if (elem) {
@@ -743,6 +744,20 @@ ux.postCommand = function(uEv) {
 		evp.uPanels = evp.uRefreshPnls;
 	}
 	ux.postCommit(evp);
+}
+
+ux.postWinFocusCommand = function() {
+	if (ux.windowFocusCmd) {
+		const evp = ux.windowFocusCmd;
+		evp.uURL = evp.uCmdURL;
+		evp.uCmd = evp.uTrgPnl + "->" + evp.uTrgCmd;
+		if (evp.uRefreshPnls) {
+			evp.uPanels = evp.uRefreshPnls;
+		}
+		
+		ux.windowFocusCmd = null;
+		ux.postCommit(evp);
+	}
 }
 
 ux.postCommit = function(evp) {
@@ -5465,6 +5480,10 @@ ux.setOnEvent = function(evp) {
 		evp.uRef.push(evp.uId);
 	}
 	
+	if ("ux05" === evp.uFunc && evp.uCmdWinFocus) {
+		ux.windowFocusCmd = evp;
+	}
+	
 	var elem = _id(evp.uId);
 	const _fn = ux.getfn(evp.uFunc);
 	if (elem) {
@@ -5557,6 +5576,9 @@ ux.init = function() {
 	ux.resizeTimeout = null;
 	// Set document keydown handler
 	ux.addHdl(document, "keydown", ux.documentKeydownHandler,
+					{});
+	// Window on focus handler
+	ux.addHdl(window, "focus", ux.windowOnFocus,
 					{});
 	
 	// Register self as extension
@@ -5657,6 +5679,10 @@ ux.getfn = function(id) {
 
 ux.setHintTimeout = function(millisec) {
 	ux.hintTimeout = millisec;
+}
+
+ux.windowOnFocus = function(uEv) {
+	ux.postWinFocusCommand();
 }
 
 ux.documentKeydownHandler = function(uEv) {

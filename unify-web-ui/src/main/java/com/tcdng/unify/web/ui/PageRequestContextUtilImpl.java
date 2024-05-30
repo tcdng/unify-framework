@@ -101,8 +101,10 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
     private static final String VALIDATION_INFO_LIST = "VALIDATION_INFO_LIST";
 
     private static final String ON_SAVE_LIST = "ON_SAVE_LIST";
-
+    
     private static final String FOCUS_ON_WIDGET = "FOCUS_ON_WIDGET";
+
+    private static final String FOCUS_ONESHOT = "FOCUS_ONESHOT";
 
     private static final String CONSIDER_DEFAULT_FOCUS = "CONSIDER_DEFAULT_FOCUS";
 
@@ -577,6 +579,21 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
     }
 
     @Override
+	public boolean isOnFocusOneshot() throws UnifyException {
+        return getRequestAttribute(boolean.class, FOCUS_ONESHOT);
+	}
+
+	@Override
+	public void setOnFocusOneshot() throws UnifyException {
+		setRequestAttribute(FOCUS_ONESHOT, true);
+	}
+
+	@Override
+	public void clearOnFocusOneshot() throws UnifyException {
+		setRequestAttribute(FOCUS_ONESHOT, false);
+	}
+
+	@Override
     public boolean isNoPushWidgets() throws UnifyException {
         return getRequestAttribute(NO_PUSH_WIDGET_ID_LIST) != null;
     }
