@@ -63,6 +63,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("buffer", "f837");
         registerSymbol("calendar", "f133");
         registerSymbol("calendar-alt", "f073");
+        registerSymbol("camera", "f030");
         registerSymbol("caret-down", "f0d7");
         registerSymbol("caret-left", "f0d9");
         registerSymbol("caret-right", "f0da");

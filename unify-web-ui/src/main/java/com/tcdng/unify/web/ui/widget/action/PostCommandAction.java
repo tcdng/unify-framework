@@ -28,12 +28,14 @@ import com.tcdng.unify.web.ui.widget.AbstractPageAction;
  * @since 1.0
  */
 @Component("ui-postcommand")
-@UplAttributes({ @UplAttribute(name = "command", type = String.class, defaultVal = "switchState"),
-        @UplAttribute(name = "target", type = String.class),
-        @UplAttribute(name = "pushComponents", type = String.class),
-        @UplAttribute(name = "validations", type = UplElementReferences.class),
-        @UplAttribute(name = "refresh", type = UplElementReferences.class),
-        @UplAttribute(name = "debounce", type = boolean.class, defaultVal = "true")})
+@UplAttributes({
+	@UplAttribute(name = "command", type = String.class, defaultVal = "switchState"),
+    @UplAttribute(name = "target", type = String.class),
+    @UplAttribute(name = "pushComponents", type = String.class),
+    @UplAttribute(name = "validations", type = UplElementReferences.class),
+    @UplAttribute(name = "refresh", type = UplElementReferences.class),
+    @UplAttribute(name = "onWinFocus", type = boolean.class, defaultVal = "false"),
+    @UplAttribute(name = "debounce", type = boolean.class, defaultVal = "true")})
 public class PostCommandAction extends AbstractPageAction {
 
     public PostCommandAction() {
