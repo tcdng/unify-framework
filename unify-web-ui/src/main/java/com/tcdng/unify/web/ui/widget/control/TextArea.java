@@ -19,6 +19,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
+import com.tcdng.unify.web.ui.DataTransferBlock;
 import com.tcdng.unify.web.ui.widget.AbstractControl;
 
 /**
@@ -28,13 +29,26 @@ import com.tcdng.unify.web.ui.widget.AbstractControl;
  * @since 1.0
  */
 @Component("ui-textarea")
-@UplAttributes({ @UplAttribute(name = "columns", type = int.class), @UplAttribute(name = "rows", type = int.class),
-        @UplAttribute(name = "minLen", type = int.class), @UplAttribute(name = "maxLen", type = int.class),
+@UplAttributes({
+		@UplAttribute(name = "columns", type = int.class),
+		@UplAttribute(name = "rows", type = int.class),
+        @UplAttribute(name = "minLen", type = int.class),
+        @UplAttribute(name = "maxLen", type = int.class),
         @UplAttribute(name = "wordWrap", type = boolean.class, defaultVal = "true"),
+        @UplAttribute(name = "trim", type = boolean.class, defaultVal = "false"),
         @UplAttribute(name = "spellCheck", type = boolean.class, defaultVal = "false"),
         @UplAttribute(name = "scrollToEnd", type = boolean.class),
         @UplAttribute(name = "autocomplete", type = boolean.class) })
 public class TextArea extends AbstractControl {
+
+    @Override
+	public void populate(DataTransferBlock transferBlock) throws UnifyException {
+		if (isTrim()) {
+			transferBlock.trimValue();
+		}
+
+		super.populate(transferBlock);
+	}
 
     public int getColumns() throws UnifyException {
         return getUplAttribute(int.class, "columns");
@@ -50,6 +64,10 @@ public class TextArea extends AbstractControl {
 
     public int getMaxLen() throws UnifyException {
         return getUplAttribute(int.class, "maxLen");
+    }
+    
+    public boolean isTrim() throws UnifyException {
+        return getUplAttribute(boolean.class, "trim");
     }
 
     public boolean isSpellCheck() throws UnifyException {

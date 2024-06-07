@@ -21,6 +21,7 @@ import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.constant.TextCase;
 import com.tcdng.unify.web.constant.ExtensionType;
+import com.tcdng.unify.web.ui.DataTransferBlock;
 import com.tcdng.unify.web.ui.widget.AbstractFormattedControl;
 
 /**
@@ -30,8 +31,12 @@ import com.tcdng.unify.web.ui.widget.AbstractFormattedControl;
  * @since 1.0
  */
 @Component("ui-text")
-@UplAttributes({ @UplAttribute(name = "size", type = int.class), @UplAttribute(name = "minLen", type = int.class),
-        @UplAttribute(name = "maxLen", type = int.class), @UplAttribute(name = "case", type = TextCase.class),
+@UplAttributes({
+		@UplAttribute(name = "size", type = int.class),
+		@UplAttribute(name = "minLen", type = int.class),
+        @UplAttribute(name = "maxLen", type = int.class),
+        @UplAttribute(name = "case", type = TextCase.class),
+        @UplAttribute(name = "trim", type = boolean.class, defaultVal = "false"),
         @UplAttribute(name = "spellCheck", type = boolean.class, defaultVal = "false"),
         @UplAttribute(name = "extStyleClass", type = String.class, defaultVal = "tread"),
         @UplAttribute(name = "extReadOnly", type = boolean.class, defaultVal = "true"),
@@ -39,8 +44,21 @@ import com.tcdng.unify.web.ui.widget.AbstractFormattedControl;
         @UplAttribute(name = "autocomplete", type = boolean.class)})
 public class TextField extends AbstractFormattedControl {
 
-    public TextCase getCase() throws UnifyException {
+    @Override
+	public void populate(DataTransferBlock transferBlock) throws UnifyException {
+		if (isTrim()) {
+			transferBlock.trimValue();
+		}
+		
+		super.populate(transferBlock);
+	}
+
+	public TextCase getCase() throws UnifyException {
         return getUplAttribute(TextCase.class, "case");
+    }
+    
+    public boolean isTrim() throws UnifyException {
+        return getUplAttribute(boolean.class, "trim");
     }
     
     public boolean isSpellCheck() throws UnifyException {

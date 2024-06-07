@@ -32,7 +32,8 @@ import com.tcdng.unify.web.ui.DataTransferBlock;
  * @author The Code Department
  * @since 1.0
  */
-@UplAttributes({ @UplAttribute(name = "formatter", type = Formatter.class),
+@UplAttributes({
+		@UplAttribute(name = "formatter", type = Formatter.class),
 		@UplAttribute(name = "formatOverride", type = String.class) })
 public abstract class AbstractFormattedControl extends AbstractControl {
 
