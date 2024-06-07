@@ -58,6 +58,12 @@ public class DataTransferBlock {
         return null;
     }
 
+    public void trimValue() {
+        if (header != null) {
+            header.trimValue();
+        }
+    }
+
     public Object getDebugValue() {
         if (header != null) {
             return header.getDebugValue();

@@ -50,6 +50,12 @@ public class DataTransferHeader {
         return value;
     }
 
+    public void trimValue() {
+    	if (value instanceof String) {
+    		value = ((String) value).trim();
+    	}
+    }
+    
     public String getLongName() {
         return longName;
     }

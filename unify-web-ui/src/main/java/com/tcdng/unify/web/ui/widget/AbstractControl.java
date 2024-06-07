@@ -32,7 +32,8 @@ import com.tcdng.unify.web.ui.widget.control.ControlColorMode;
  * @author The Code Department
  * @since 1.0
  */
-@UplAttributes({ @UplAttribute(name = "focus", type = boolean.class),
+@UplAttributes({
+		@UplAttribute(name = "focus", type = boolean.class),
         @UplAttribute(name = "sortable", type = boolean.class),
         @UplAttribute(name = "required", type = boolean.class, defaultVal = "false"),
         @UplAttribute(name = "layoutColorMode", type = boolean.class, defaultVal = "false") })
