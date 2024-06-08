@@ -108,7 +108,7 @@ ux.lastUserActTime=0;
 
 ux.fnaliases = [];
 ux.allpush = null;
-ux.windowFocusCmd = null;
+ux.windowFocusEvp = null;
 
 /** Utilities */
 function _id(id) {
@@ -747,14 +747,15 @@ ux.postCommand = function(uEv) {
 }
 
 ux.postWinFocusCommand = function() {
-	if (ux.windowFocusCmd) {
-		const evp = ux.windowFocusCmd;
+	if (ux.windowFocusEvp) {
+		const evp = ux.windowFocusEvp;
 		evp.uURL = evp.uCmdURL;
 		evp.uCmd = evp.uTrgPnl + "->" + evp.uTrgCmd;
 		if (evp.uRefreshPnls) {
 			evp.uPanels = evp.uRefreshPnls;
 		}
 		
+		ux.windowFocusEvp = null;
 		ux.postCommit(evp);
 	}
 }
@@ -5480,7 +5481,7 @@ ux.setOnEvent = function(evp) {
 	}
 	
 	if (("ux05" == evp.uFunc) && evp.uCmdWinFocus) {
-		ux.windowFocusCmd = evp;
+		ux.windowFocusEvp = evp;
 	}
 	
 	var elem = _id(evp.uId);
