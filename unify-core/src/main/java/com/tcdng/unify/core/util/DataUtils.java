@@ -678,13 +678,37 @@ public final class DataUtils {
 	/**
 	 * Sorts a list using comparator.
 	 * 
-	 * @param list       the list to sort
+	 * @param list        the list to sort
 	 * @param comparator the comparator
 	 */
 	public static <T> void sort(List<T> list, Comparator<T> comparator) {
 		Collections.sort(list, comparator);
 	}
-	
+
+	/**
+	 * Sorts a list using comparator.
+	 * 
+	 * @param list        the list to sort
+	 * @param comparators the comparators
+	 */
+	public static <T> void sort(List<T> list, Comparator<T>[] comparators) {
+		for (Comparator<T> _comparator : comparators) {
+			Collections.sort(list, _comparator);
+		}
+	}
+
+	/**
+	 * Sorts a list using comparator.
+	 * 
+	 * @param list        the list to sort
+	 * @param comparators the comparators
+	 */
+	public static <T> void sort(List<T> list, List<Comparator<T>> comparators) {
+		for (Comparator<T> _comparator : comparators) {
+			Collections.sort(list, _comparator);
+		}
+	}
+
 	/**
 	 * Compares two comparable value for sorting ascending.
 	 * 
