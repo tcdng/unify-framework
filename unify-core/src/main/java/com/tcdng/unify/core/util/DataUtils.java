@@ -676,6 +676,16 @@ public final class DataUtils {
 	}
 
 	/**
+	 * Sorts a list using comparator.
+	 * 
+	 * @param list       the list to sort
+	 * @param comparator the comparator
+	 */
+	public static <T> void sort(List<T> list, Comparator<T> comparator) {
+		Collections.sort(list, comparator);
+	}
+	
+	/**
 	 * Compares two comparable value for sorting ascending.
 	 * 
 	 * @param value1 the first value
