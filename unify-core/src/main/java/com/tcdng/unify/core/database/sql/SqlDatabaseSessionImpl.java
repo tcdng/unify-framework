@@ -25,6 +25,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.Stack;
 
@@ -493,7 +494,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 	}
 
 	@Override
-	public <T, U extends Entity> T valueOptional(Class<T> fieldClass, String fieldName, Query<U> query)
+	public <T, U extends Entity> Optional<T> valueOptional(Class<T> fieldClass, String fieldName, Query<U> query)
 			throws UnifyException {
 		SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
 		EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
@@ -504,9 +505,10 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 		final Select select = query.getSelect();
 		try {
 			query.setSelect(new Select(fieldName).setDistinct(true));
-			return getSqlStatementExecutor().executeSingleObjectResultQuery(connection, fieldClass,
+			T val = getSqlStatementExecutor().executeSingleObjectResultQuery(connection, fieldClass,
 					sqlDataSourceDialect.getSqlTypePolicy(sqlEntityInfo.getListFieldInfo(fieldName).getColumnType()),
 					sqlDataSourceDialect.prepareListStatement(query), MustMatch.FALSE);
+			return Optional.ofNullable(val);
 		} finally {
 			query.setSelect(select);
 		}
