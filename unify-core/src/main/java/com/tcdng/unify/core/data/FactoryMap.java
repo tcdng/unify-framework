@@ -23,6 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.UnifyOperationException;
 import com.tcdng.unify.core.util.DataUtils;
+import com.tcdng.unify.core.util.ThreadUtils;
 
 /**
  * An abstract generic factory map. A factory map is a key-to-value map with no
@@ -34,271 +35,262 @@ import com.tcdng.unify.core.util.DataUtils;
  */
 public abstract class FactoryMap<T, U> {
 
-    private final Object accessKey = new Object();
+	private static final long WAIT_ON_PAUSE_PERIOD = 500;
 
-    private Map<T, U> map;
+	private final Object accessKey = new Object();
 
-    private boolean checkStale;
+	private Map<T, U> map;
 
-    public FactoryMap() {
-        this(false);
-    }
+	private boolean checkStale;
 
-    public FactoryMap(boolean checkStale) {
-        map = new ConcurrentHashMap<T, U>();
-        this.checkStale = checkStale;
-    }
+	public FactoryMap() {
+		this(false);
+	}
 
-    /**
-     * Finds a value by supplied key.
-     * 
-     * @param key
-     *            the value key
-     * @return the value identified by the supplied key
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    public U find(T key) throws UnifyException {
-        if (key == null) {
-            throw new IllegalArgumentException("Parameter key can not be null!");
-        }
+	public FactoryMap(boolean checkStale) {
+		map = new ConcurrentHashMap<T, U>();
+		this.checkStale = checkStale;
+	}
 
-        return map.get(key);
-    }
+	/**
+	 * Finds a value by supplied key.
+	 * 
+	 * @param key the value key
+	 * @return the value identified by the supplied key
+	 * @throws UnifyException if an error occurs
+	 */
+	public U find(T key) throws UnifyException {
+		if (key == null) {
+			throw new IllegalArgumentException("Parameter key can not be null!");
+		}
 
-    /**
-     * Gets a value by supplied key. Functions like {@link #get(Object, Object...)}
-     * with no parameters.
-     * 
-     * @param key
-     *            the value key
-     * @return the value identified by the supplied key
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    public U get(T key) throws UnifyException {
-        if (key == null) {
-            throw new IllegalArgumentException("Parameter key can not be null!");
-        }
+		return map.get(key);
+	}
 
-        return get(key, DataUtils.ZEROLEN_OBJECT_ARRAY);
-    }
+	/**
+	 * Gets a value by supplied key. Functions like {@link #get(Object, Object...)}
+	 * with no parameters.
+	 * 
+	 * @param key the value key
+	 * @return the value identified by the supplied key
+	 * @throws UnifyException if an error occurs
+	 */
+	public U get(T key) throws UnifyException {
+		if (key == null) {
+			throw new IllegalArgumentException("Parameter key can not be null!");
+		}
 
-    /**
-     * Gets a value by supplied key. The methods checks for the value that maps to
-     * the supplied key and returns it. If no key-value mapping is found, the
-     * protected {@link #create(Object, Object...)} method is called to create a
-     * value for the supplied key. The new key-value mapping is stored and created
-     * value is returned.
-     * 
-     * @param key
-     *            the value key
-     * @param params
-     *            optional value creation parameters
-     * @return the value identified by the supplied key
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    public U get(T key, Object... params) throws UnifyException {
-        if (key == null) {
-            throw new IllegalArgumentException("Parameter key can not be null!");
-        }
+		return get(key, DataUtils.ZEROLEN_OBJECT_ARRAY);
+	}
 
-        try {
-            U value = map.get(key);
-            if (value != null) {
-                if (checkStale && stale(key, value)) {
-                    remove(key);
-                    value = null;
-                }
-            }
+	/**
+	 * Gets a value by supplied key. The methods checks for the value that maps to
+	 * the supplied key and returns it. If no key-value mapping is found, the
+	 * protected {@link #create(Object, Object...)} method is called to create a
+	 * value for the supplied key. The new key-value mapping is stored and created
+	 * value is returned.
+	 * 
+	 * @param key    the value key
+	 * @param params optional value creation parameters
+	 * @return the value identified by the supplied key
+	 * @throws UnifyException if an error occurs
+	 */
+	public U get(T key, Object... params) throws UnifyException {
+		if (key == null) {
+			throw new IllegalArgumentException("Parameter key can not be null!");
+		}
 
-            if (value == null) {
-                synchronized (accessKey) {
-                    value = map.get(key);
-                    if (value == null) {
-                        value = create(key, params);
-                        if (value != null && onCreate(value)) {
-                            put(key, value);
-                        }
-                    }
-                }
-            }
-            return value;
-        } catch (UnifyException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new UnifyOperationException(e, getClass().getSimpleName());
-        }
-    }
+		try {
+			U value = map.get(key);
+			if (value != null) {
+				if (checkStale && !pause() && stale(key, value)) {
+					remove(key);
+					value = null;
+				}
+			}
 
-    /**
-     * Clears all the key-value mappings.
-     */
-    public void clear() {
-        map.clear();
-    }
+			if (value == null) {
+				synchronized (accessKey) {
+					value = map.get(key);
+					if (value == null) {
+						waitOnPause();
+						value = create(key, params);
+						if (value != null && onCreate(value)) {
+							put(key, value);
+						}
+					}
+				}
+			}
+			return value;
+		} catch (UnifyException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new UnifyOperationException(e, getClass().getSimpleName());
+		}
+	}
 
-    /**
-     * Removes an element from the map by key.
-     * 
-     * @param key
-     *            the key of the value to remove
-     * @return the removed value, otherwise null
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    public U remove(T key) throws UnifyException {
-        if (key == null) {
-            throw new IllegalArgumentException("Parameter key can not be null!");
-        }
+	/**
+	 * Clears all the key-value mappings.
+	 */
+	public void clear() {
+		map.clear();
+	}
 
-        U val = map.remove(key);
-        try {
-            onRemove(val);
-        } catch (Exception e) {
-            throw new UnifyOperationException(e, getClass().getSimpleName());
-        }
-        return val;
-    }
+	/**
+	 * Removes an element from the map by key.
+	 * 
+	 * @param key the key of the value to remove
+	 * @return the removed value, otherwise null
+	 * @throws UnifyException if an error occurs
+	 */
+	public U remove(T key) throws UnifyException {
+		if (key == null) {
+			throw new IllegalArgumentException("Parameter key can not be null!");
+		}
 
-    /**
-     * Returns a set of all the keys in this map.
-     * 
-     * @return a set of keys
-     */
-    public Set<T> keySet() {
-        return map.keySet();
-    }
+		U val = map.remove(key);
+		try {
+			onRemove(val);
+		} catch (Exception e) {
+			throw new UnifyOperationException(e, getClass().getSimpleName());
+		}
+		return val;
+	}
 
-    public Set<Map.Entry<T, U>> entrySet() {
-        return map.entrySet();
-    }
+	/**
+	 * Returns a set of all the keys in this map.
+	 * 
+	 * @return a set of keys
+	 */
+	public Set<T> keySet() {
+		return map.keySet();
+	}
 
-    /**
-     * Returns a collection of all the values in this map.
-     * 
-     * @return the collection of values
-     */
-    public Collection<U> values() {
-        return map.values();
-    }
+	public Set<Map.Entry<T, U>> entrySet() {
+		return map.entrySet();
+	}
 
-    /**
-     * Returns the size of this map.
-     */
-    public int size() {
-        return map.size();
-    }
+	/**
+	 * Returns a collection of all the values in this map.
+	 * 
+	 * @return the collection of values
+	 */
+	public Collection<U> values() {
+		return map.values();
+	}
 
-    /**
-     * Returns true if map is empty.
-     */
-    public boolean isEmpty() {
-        return map.isEmpty();
-    }
+	/**
+	 * Returns the size of this map.
+	 */
+	public int size() {
+		return map.size();
+	}
 
-    /**
-     * Returns true if factory map contains entry that matches supplied key.
-     * 
-     * @param key
-     *            the key to match
-     */
-    public boolean isKey(T key) {
-        return map.containsKey(key);
-    }
+	/**
+	 * Returns true if map is empty.
+	 */
+	public boolean isEmpty() {
+		return map.isEmpty();
+	}
 
-    /**
-     * Creates a value for specified key using supplied parameters.
-     * 
-     * @param key
-     *            the value key
-     * @param params
-     *            optional parameters
-     * @return object that would be mapped to supplied key
-     * @throws Exception
-     */
-    protected abstract U create(T key, Object... params) throws Exception;
+	/**
+	 * Returns true if factory map contains entry that matches supplied key.
+	 * 
+	 * @param key the key to match
+	 */
+	public boolean isKey(T key) {
+		return map.containsKey(key);
+	}
 
-    /**
-     * Presets a key value.
-     * 
-     * @param key
-     *            the key
-     * @param value
-     *            the value to set
-     * @throws Exception
-     *             if an error occurs
-     */
-    protected void preset(T key, U value) throws Exception {
-        put(key, value);
-    }
+	/**
+	 * Creates a value for specified key using supplied parameters.
+	 * 
+	 * @param key    the value key
+	 * @param params optional parameters
+	 * @return object that would be mapped to supplied key
+	 * @throws Exception
+	 */
+	protected abstract U create(T key, Object... params) throws Exception;
 
-    /**
-     * Returns true is value is stale.
-     * 
-     * @param key
-     *            the value's key
-     * @param value
-     *            the value to check
-     * @throws Exception
-     *             if an error occurs
-     */
-    protected boolean stale(T key, U value) throws Exception {
-        return false;
-    }
+	/**
+	 * Presets a key value.
+	 * 
+	 * @param key   the key
+	 * @param value the value to set
+	 * @throws Exception if an error occurs
+	 */
+	protected void preset(T key, U value) throws Exception {
+		put(key, value);
+	}
 
-    /**
-     * Puts a factory value.
-     * 
-     * @param key
-     *            the value's key
-     * @param value
-     *            the value to put
-     * @return the replaced value otherwise null
-     * @throws Exception
-     *             if an error occurs
-     */
-    protected U put(T key, U value) throws Exception {
-        onPut(value);
-        return map.put(key, value);
-    }
+	/**
+	 * Returns true is value is stale.
+	 * 
+	 * @param key   the value's key
+	 * @param value the value to check
+	 * @throws Exception if an error occurs
+	 */
+	protected boolean stale(T key, U value) throws Exception {
+		return false;
+	}
 
-    /**
-     * Executes after creation of object.
-     * 
-     * @param value
-     *            the value to test
-     * @return a true if value is to be retained
-     * @throws Exception
-     *             if an error occurs
-     */
-    protected boolean onCreate(U value) throws Exception {
-        return true;
-    }
+	/**
+	 * Pauses create function. Use with caution.
+	 * 
+	 * @return true is creations is paused
+	 */
+	protected boolean pause() {
+		return false;
+	}
 
-    /**
-     * Executes after put of object.
-     * 
-     * @param value
-     *            the value to test
-     * @return a true if value is to be retained
-     * @throws Exception
-     *             if an error occurs
-     */
-    protected void onPut(U value) throws Exception {
+	/**
+	 * Puts a factory value.
+	 * 
+	 * @param key   the value's key
+	 * @param value the value to put
+	 * @return the replaced value otherwise null
+	 * @throws Exception if an error occurs
+	 */
+	protected U put(T key, U value) throws Exception {
+		onPut(value);
+		return map.put(key, value);
+	}
 
-    }
+	/**
+	 * Executes after creation of object.
+	 * 
+	 * @param value the value to test
+	 * @return a true if value is to be retained
+	 * @throws Exception if an error occurs
+	 */
+	protected boolean onCreate(U value) throws Exception {
+		return true;
+	}
 
-    /**
-     * Perform method on removed item.
-     * 
-     * @param value
-     *            the value removed
-     * @throws Exception
-     *             if an error occurs
-     */
-    protected void onRemove(U value) throws Exception {
+	/**
+	 * Executes after put of object.
+	 * 
+	 * @param value the value to test
+	 * @return a true if value is to be retained
+	 * @throws Exception if an error occurs
+	 */
+	protected void onPut(U value) throws Exception {
 
-    }
+	}
+
+	/**
+	 * Perform method on removed item.
+	 * 
+	 * @param value the value removed
+	 * @throws Exception if an error occurs
+	 */
+	protected void onRemove(U value) throws Exception {
+
+	}
+
+	private void waitOnPause() {
+		while (pause()) {
+			ThreadUtils.sleep(WAIT_ON_PAUSE_PERIOD);
+		}
+	}
 }
