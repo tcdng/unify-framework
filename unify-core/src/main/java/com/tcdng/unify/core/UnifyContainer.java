@@ -495,7 +495,9 @@ public class UnifyContainer {
 			logInfo("Setting broadcast proxy methods...");
 			for (BroadcastInfo broadcastInfo : broadcastInfoMap.values()) {
 				InternalUnifyComponentInfo iuc = getInternalUnifyComponentInfo(broadcastInfo.getComponentName());
-				Method method = ReflectUtils.getMethod(iuc.getType(), broadcastInfo.getMethodName(), String[].class);
+				Method method = broadcastInfo.isNoParams()
+						? ReflectUtils.getMethod(iuc.getType(), broadcastInfo.getMethodName())
+						: ReflectUtils.getMethod(iuc.getType(), broadcastInfo.getMethodName(), String[].class);
 				broadcastInfo.setMethod(method);
 			}
 

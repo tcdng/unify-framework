@@ -60,6 +60,14 @@ public final class DynamicEntityUtils {
 
 	}
 
+	public static boolean isDynamicType(String type) {
+		return type.charAt(type.length() -1) == 'z' && type.indexOf(".z.") > 0;
+	}
+
+	public static boolean isDelegateType(String type) {
+		return type.charAt(type.length() -1) == 'u' && type.indexOf(".u.") > 0;
+	}
+	
 	public static String generateEntityJavaClassSource(DynamicEntityInfo dynamicEntityInfo) throws UnifyException {
 		switch (dynamicEntityInfo.getType()) {
 		case TABLE:
