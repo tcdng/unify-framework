@@ -64,7 +64,7 @@ public class LockManagerImpl extends AbstractUnifyComponent implements LockManag
 	}
 
 	@Override
-	public boolean isLocked(String lockName) throws Exception {
+	public boolean isLocked(String lockName) throws UnifyException {
 		boolean locked = threadLockInfos.containsKey(lockName);
 		if (!locked && clusterMode) {
 			final Date _now = getNow();

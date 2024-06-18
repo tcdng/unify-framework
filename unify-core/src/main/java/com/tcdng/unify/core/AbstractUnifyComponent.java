@@ -171,7 +171,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 * @return true if locked otherwise false
 	 * @throws Exception if an error occurs
 	 */
-	protected boolean isLocked(String lockName) throws Exception {
+	protected boolean isLocked(String lockName) throws UnifyException {
 		return unifyComponentContext.isLocked(lockName);
 	}
 

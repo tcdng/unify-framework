@@ -138,7 +138,7 @@ public class UnifyComponentContext {
 	 * @return true if locked otherwise false
 	 * @throws Exception if an error occurs
 	 */
-	public boolean isLocked(String lockName) throws Exception {
+	public boolean isLocked(String lockName) throws UnifyException {
 		return applicationContext.getContainer().isLocked(lockName);
 	}
 	

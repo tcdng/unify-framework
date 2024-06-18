@@ -32,9 +32,9 @@ public interface LockManager extends UnifyComponent {
 	 * 
 	 * @param lockName the lock name
 	 * @return true if locked otherwise false
-	 * @throws Exception if an error occurs
+	 * @throws UnifyException if an error occurs
 	 */
-	boolean isLocked(String lockName) throws Exception;
+	boolean isLocked(String lockName) throws UnifyException;
 	
 	/**
 	 * Grabs lock if available.
