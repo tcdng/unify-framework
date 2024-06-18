@@ -43,6 +43,7 @@ import com.tcdng.unify.core.upl.UplComponent;
 import com.tcdng.unify.core.util.AnnotationUtils;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
+import com.tcdng.unify.core.util.ThreadUtils;
 import com.tcdng.unify.core.util.TokenUtils;
 import com.tcdng.unify.core.util.ValueStoreUtils;
 
@@ -1798,6 +1799,15 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 		return new ParamConfig(pa.type(), paramName, description, pa.editor(), pa.order(), pa.mandatory());
 	}
 
+	/**
+	 * Pauses for specified milliseconds.
+	 * 
+	 * @param milliSeconds the milliseconds to pause for
+	 */
+	protected void pause(long milliSeconds) {
+		ThreadUtils.sleep(milliSeconds);
+	}
+	
 	/**
 	 * Executes on initialization. Called after the component's context has been
 	 * properly set. Implementing classes are expected to perform initialization in
