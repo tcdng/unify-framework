@@ -64,7 +64,7 @@ public abstract class AbstractSqlDataSource extends AbstractDataSource implement
     @Configurable(hidden = true)
     private String password;
 
-    @Configurable("2000")
+    @Configurable("10000")
     private long getConnectionTimeout;
 
     @Configurable("32")
