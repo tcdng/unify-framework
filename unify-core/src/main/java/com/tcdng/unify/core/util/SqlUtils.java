@@ -166,7 +166,7 @@ public final class SqlUtils {
 		List<Class<? extends Entity>> entityClassList = new ArrayList<Class<? extends Entity>>();
 		for (Class<?> entityClass : classList) {
 			if (Entity.class.isAssignableFrom(entityClass)) {
-				if (DynamicEntityUtils.isDynamicType(entityClass.getName())) {
+				if (EntityTypeUtils.isDynamicType(entityClass.getName())) {
 					entityClassList.add((Class<? extends Entity>) entityClass);
 				}
 			}
