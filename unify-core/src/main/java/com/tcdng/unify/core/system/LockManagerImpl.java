@@ -44,9 +44,9 @@ import com.tcdng.unify.core.util.ThreadUtils;
 @Component(ApplicationComponents.APPLICATION_LOCKMANAGER)
 public class LockManagerImpl extends AbstractUnifyComponent implements LockManager {
 
-	private final long KEEPALIVE_HEARTBEAT_MILLISECONDS = 5000;
+	private final long KEEPALIVE_HEARTBEAT_MILLISECONDS = 2500;
 
-	private final long EXPIRATION_MILLISECONDS = 12000;
+	private final long EXPIRATION_MILLISECONDS = 20000;
 
 	private final long GRAB_RETRY_MILLISECONDS = 500;
 
@@ -75,8 +75,8 @@ public class LockManagerImpl extends AbstractUnifyComponent implements LockManag
 			PreparedStatement pstmt = null;
 			ResultSet rst = null;
 			try {
-				pstmt = connection
-						.prepareStatement("SELECT COUNT(*) FROM unclusterlock WHERE unclusterlock_id = ? AND expiry_time < ?");
+				pstmt = connection.prepareStatement(
+						"SELECT COUNT(*) FROM unclusterlock WHERE unclusterlock_id = ? AND current_owner IS NOT NULL AND expiry_time < ?");
 				pstmt.setString(1, lockName);
 				pstmt.setTimestamp(2, now);
 
@@ -92,7 +92,7 @@ public class LockManagerImpl extends AbstractUnifyComponent implements LockManag
 				sqlDataSource.restoreConnection(connection);
 			}
 		}
-		
+
 		return locked;
 	}
 
@@ -101,70 +101,71 @@ public class LockManagerImpl extends AbstractUnifyComponent implements LockManag
 		final String threadId = String.valueOf(ThreadUtils.currentThreadId());
 		logDebug("Thread [{0}] attempting to grab lock [{1}]...", threadId, lockName);
 		boolean grabbed = false;
-		synchronized (getSynchObject(lockName)) {
-			ThreadLockInfo threadLockInfo = threadLockInfos.get(lockName);
-			boolean exists = threadLockInfo != null;
-			if (exists) {
-				// Exists
-				if (threadLockInfo.isOwnerThread(threadId)) {
-					threadLockInfo.inc();
-					grabbed = true;
-				}
-			} else {
-				if (clusterMode) {
-					final String nodeId = getNodeId();
-					final Date _now = getNow();
-					final Timestamp now = new Timestamp(_now.getTime());
-					final Timestamp nextExpiryTime = getNextExpiryTimestamp(_now);
-					SqlDataSource sqlDataSource = getComponent(SqlDataSource.class,
-							ApplicationCommonConstants.APPLICATION_DATASOURCE);
-					Connection connection = (Connection) sqlDataSource.getConnection();
-					PreparedStatement pstmt = null;
-					ResultSet rst = null;
-					try {
-						pstmt = connection
-								.prepareStatement("SELECT COUNT(*) FROM unclusterlock WHERE unclusterlock_id = ?");
-						pstmt.setString(1, lockName);
-
-						rst = pstmt.executeQuery();
-						rst.next();
-						if (rst.getInt(1) == 0) {
-							SqlUtils.close(pstmt);
-							// Create new lock record (This will fail - throw a PK exception - if another
-							// node beat this node to it)
-							pstmt = connection.prepareStatement(
-									"INSERT INTO unclusterlock (unclusterlock_id, current_owner, thread_id, expiry_time, lock_count) VALUES (?,?,?,?,?)");
-							pstmt.setString(1, lockName);
-							pstmt.setString(2, nodeId);
-							pstmt.setString(3, threadId);
-							pstmt.setTimestamp(4, nextExpiryTime);
-							pstmt.setInt(5, 1);
-						} else {
-							SqlUtils.close(pstmt);
-							pstmt = connection.prepareStatement(
-									"UPDATE unclusterlock SET current_owner = ?, thread_id = ? WHERE unclusterlock_id = ? AND (current_owner IS NULL OR expiry_time < ?)");
-							pstmt.setString(1, nodeId);
-							pstmt.setString(2, threadId);
-							pstmt.setString(3, lockName);
-							pstmt.setTimestamp(4, now);
-						}
-
-						grabbed = pstmt.executeUpdate() > 0;
-						connection.commit();
-					} catch (Exception e) {
-						logSevere(e);
-					} finally {
-						SqlUtils.close(rst);
-						SqlUtils.close(pstmt);
-						sqlDataSource.restoreConnection(connection);
-					}
-				} else {
-					grabbed = true;
-				}
+		ThreadLockInfo threadLockInfo = threadLockInfos.get(lockName);
+		if (threadLockInfo != null) {
+			if (threadLockInfo.isOwnerThread(threadId)) {
+				threadLockInfo.inc();
+				grabbed = true;
 			}
+		} else {
+			synchronized (getSynchObject(lockName)) {
+				threadLockInfo = threadLockInfos.get(lockName);
+				if (threadLockInfo == null) {
+					if (clusterMode) {
+						final String nodeId = getNodeId();
+						final Date _now = getNow();
+						final Timestamp now = new Timestamp(_now.getTime());
+						final Timestamp nextExpiryTime = getNextExpiryTimestamp(_now);
+						SqlDataSource sqlDataSource = getComponent(SqlDataSource.class,
+								ApplicationCommonConstants.APPLICATION_DATASOURCE);
+						Connection connection = (Connection) sqlDataSource.getConnection();
+						PreparedStatement pstmt = null;
+						ResultSet rst = null;
+						try {
+							pstmt = connection
+									.prepareStatement("SELECT COUNT(*) FROM unclusterlock WHERE unclusterlock_id = ?");
+							pstmt.setString(1, lockName);
 
-			if (grabbed && !exists) {
-				threadLockInfos.put(lockName, new ThreadLockInfo(lockName, threadId));
+							rst = pstmt.executeQuery();
+							rst.next();
+							if (rst.getInt(1) == 0) {
+								SqlUtils.close(pstmt);
+								// Create new lock record (This will fail - throw a PK exception - if another
+								// node beat this node to it)
+								pstmt = connection.prepareStatement(
+										"INSERT INTO unclusterlock (unclusterlock_id, current_owner, thread_id, expiry_time, lock_count) VALUES (?,?,?,?,?)");
+								pstmt.setString(1, lockName);
+								pstmt.setString(2, nodeId);
+								pstmt.setString(3, threadId);
+								pstmt.setTimestamp(4, nextExpiryTime);
+								pstmt.setInt(5, 1);
+							} else {
+								SqlUtils.close(pstmt);
+								pstmt = connection.prepareStatement(
+										"UPDATE unclusterlock SET current_owner = ?, thread_id = ? WHERE unclusterlock_id = ? AND (current_owner IS NULL OR expiry_time < ?)");
+								pstmt.setString(1, nodeId);
+								pstmt.setString(2, threadId);
+								pstmt.setString(3, lockName);
+								pstmt.setTimestamp(4, now);
+							}
+
+							grabbed = pstmt.executeUpdate() > 0;
+							connection.commit();
+						} catch (Exception e) {
+							logSevere(e);
+						} finally {
+							SqlUtils.close(rst);
+							SqlUtils.close(pstmt);
+							sqlDataSource.restoreConnection(connection);
+						}
+					} else {
+						grabbed = true;
+					}
+				}
+
+				if (grabbed) {
+					threadLockInfos.put(lockName, new ThreadLockInfo(lockName, threadId));
+				}
 			}
 		}
 
@@ -210,37 +211,34 @@ public class LockManagerImpl extends AbstractUnifyComponent implements LockManag
 	public void releaseLock(String lockName) throws UnifyException {
 		final String threadId = String.valueOf(ThreadUtils.currentThreadId());
 		logDebug("Thread [{0}] attempting to release lock [{1}]...", threadId, lockName);
-		synchronized (getSynchObject(lockName)) {
-			ThreadLockInfo threadLockInfo = threadLockInfos.get(lockName);
-			if (threadLockInfo != null && threadLockInfo.isOwnerThread(threadId) && threadLockInfo.dec()) {
-				threadLockInfos.remove(lockName);
-
-				if (clusterMode) {
-					final String nodeId = getNodeId();
-					SqlDataSource sqlDataSource = getComponent(SqlDataSource.class,
-							ApplicationCommonConstants.APPLICATION_DATASOURCE);
-					Connection connection = (Connection) sqlDataSource.getConnection();
-					PreparedStatement pstmt = null;
-					try {
-						pstmt = connection.prepareStatement(
-								"UPDATE unclusterlock SET current_owner = ?, thread_id = ? WHERE unclusterlock_id = ? AND current_owner = ? AND thread_id = ?");
-						pstmt.setNull(1, Types.VARCHAR);
-						pstmt.setNull(2, Types.VARCHAR);
-						pstmt.setString(3, lockName);
-						pstmt.setString(4, nodeId);
-						pstmt.setString(5, threadId);
-						pstmt.executeUpdate();
-						connection.commit();
-					} catch (Exception e) {
-						logSevere(e);
-					} finally {
-						SqlUtils.close(pstmt);
-						sqlDataSource.restoreConnection(connection);
-					}
+		ThreadLockInfo threadLockInfo = threadLockInfos.get(lockName);
+		if (threadLockInfo != null && threadLockInfo.isOwnerThread(threadId) && threadLockInfo.dec()) {
+			if (clusterMode) {
+				final String nodeId = getNodeId();
+				SqlDataSource sqlDataSource = getComponent(SqlDataSource.class,
+						ApplicationCommonConstants.APPLICATION_DATASOURCE);
+				Connection connection = (Connection) sqlDataSource.getConnection();
+				PreparedStatement pstmt = null;
+				try {
+					pstmt = connection.prepareStatement(
+							"UPDATE unclusterlock SET current_owner = ?, thread_id = ? WHERE unclusterlock_id = ? AND current_owner = ? AND thread_id = ?");
+					pstmt.setNull(1, Types.VARCHAR);
+					pstmt.setNull(2, Types.VARCHAR);
+					pstmt.setString(3, lockName);
+					pstmt.setString(4, nodeId);
+					pstmt.setString(5, threadId);
+					pstmt.executeUpdate();
+					connection.commit();
+				} catch (Exception e) {
+					logSevere(e);
+				} finally {
+					SqlUtils.close(pstmt);
+					sqlDataSource.restoreConnection(connection);
 				}
-
-				logDebug("Lock [{0}] successfully released by thread [{1}].", lockName, threadId);
 			}
+
+			threadLockInfos.remove(lockName);
+			logDebug("Lock [{0}] successfully released by thread [{1}].", lockName, threadId);
 		}
 	}
 
@@ -273,8 +271,7 @@ public class LockManagerImpl extends AbstractUnifyComponent implements LockManag
 				sqlDataSource.restoreConnection(connection);
 			}
 
-			return new LockInfo(lockName, ownerId, threadId, expiryTime,
-					(int) threadLockInfo.getExcursion());
+			return new LockInfo(lockName, ownerId, threadId, expiryTime, (int) threadLockInfo.getExcursion());
 		}
 
 		return null;
