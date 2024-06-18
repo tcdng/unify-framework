@@ -125,7 +125,7 @@ public class ProxyBusinessServiceGeneratorImpl extends AbstractUnifyComponent im
 				if (StringUtils.isBlank(lockName)) {
 					throw new UnifyException(UnifyCoreErrorConstants.REFLECT_METHOD_REQUIRES_LOCKNAME, method);
 				}
-				
+
 				methodLockMap.put(method, new SynchronizedInfo(lockName, syna.waitForLock(), syna.timeout()));
 			}
 
@@ -295,14 +295,16 @@ public class ProxyBusinessServiceGeneratorImpl extends AbstractUnifyComponent im
 			// Broadcast if necessary
 			if (isBroadcast) {
 				sb.append("\t\t\tthis.getUnifyComponentContext().broadcastToOtherNodes(\"")
-						.append(NameUtils.getComponentMethodName(name, method.getName())).append("\", p0);\n");
+						.append(NameUtils.getComponentMethodName(name, method.getName())).append("\", ")
+						.append(parameterTypes.length == 0 ? "new String[]{}" : "p0").append(");\n");
 			}
 
 			// Synchronization boundary end
 			if (isSynchronized) {
 				SynchronizedInfo synchronizedInfo = methodLockMap.get(method);
 				sb.append(extraTab).append("\t\t\t\t}finally{\n");
-				sb.append(extraTab).append("\t\t\t\t\tresv_lockManager.releaseLock(\"").append(synchronizedInfo.getLockName()).append("\");\n");
+				sb.append(extraTab).append("\t\t\t\t\tresv_lockManager.releaseLock(\"")
+						.append(synchronizedInfo.getLockName()).append("\");\n");
 				sb.append(extraTab).append("\t\t\t\t}\n");
 			}
 
