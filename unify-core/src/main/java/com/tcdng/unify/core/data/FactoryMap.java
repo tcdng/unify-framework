@@ -238,8 +238,9 @@ public abstract class FactoryMap<T, U> {
 	 * Pauses create function. Use with caution.
 	 * 
 	 * @return true is creations is paused
+	 * @throws Exception if an error occurs
 	 */
-	protected boolean pause() {
+	protected boolean pause() throws Exception {
 		return false;
 	}
 
@@ -288,7 +289,7 @@ public abstract class FactoryMap<T, U> {
 
 	}
 
-	private void waitOnPause() {
+	private void waitOnPause() throws Exception {
 		while (pause()) {
 			ThreadUtils.sleep(WAIT_ON_PAUSE_PERIOD);
 		}
