@@ -427,7 +427,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
 		final Select select = query.getSelect();
 		try {
-			query.setSelect(new Select(fieldName).setDistinct(true));
+			query.setSelect(new Select(fieldName).setDistinct(query.isDistinct()));
 			return getSqlStatementExecutor().executeMultipleObjectSetResultQuery(connection, fieldClass,
 					sqlDataSourceDialect.getSqlTypePolicy(sqlEntityInfo.getListFieldInfo(fieldName).getColumnType()),
 					sqlDataSourceDialect.prepareListStatement(query));
@@ -466,7 +466,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
 		final Select select = query.getSelect();
 		try {
-			query.setSelect(new Select(keyName, valueName).setDistinct(true));
+			query.setSelect(new Select(keyName, valueName).setDistinct(query.isDistinct()));
 			return getSqlStatementExecutor().executeMultipleObjectListMapResultQuery(connection, keyClass, keyName,
 					valueClass, valueName, sqlDataSourceDialect.prepareListStatement(query));
 		} finally {
@@ -484,7 +484,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
 		final Select select = query.getSelect();
 		try {
-			query.setSelect(new Select(fieldName).setDistinct(true));
+			query.setSelect(new Select(fieldName).setDistinct(query.isDistinct()));
 			return getSqlStatementExecutor().executeSingleObjectResultQuery(connection, fieldClass,
 					sqlDataSourceDialect.getSqlTypePolicy(sqlEntityInfo.getListFieldInfo(fieldName).getColumnType()),
 					sqlDataSourceDialect.prepareListStatement(query), MustMatch.fromBoolean(query.isMustMatch()));
@@ -504,7 +504,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
 		final Select select = query.getSelect();
 		try {
-			query.setSelect(new Select(fieldName).setDistinct(true));
+			query.setSelect(new Select(fieldName).setDistinct(query.isDistinct()));
 			T val = getSqlStatementExecutor().executeSingleObjectResultQuery(connection, fieldClass,
 					sqlDataSourceDialect.getSqlTypePolicy(sqlEntityInfo.getListFieldInfo(fieldName).getColumnType()),
 					sqlDataSourceDialect.prepareListStatement(query), MustMatch.FALSE);
