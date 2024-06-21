@@ -245,6 +245,7 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 			return;
 		}
 
+		logDebug("Managing entity class [{0}]...", entityClass.getName());
 		final PrintFormat printFormat = options.getPrintFormat();
 		final ForceConstraints forceConstraints = options.getForceConstraints();
 
@@ -288,9 +289,11 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 
 					// Recreate all constraints and indexes
 					logDebug("Recreating all constraints and indexes...");
-					for (SqlForeignKeySchemaInfo sqlForeignKeyInfo : sqlEntityInfo.getManagedForeignKeyList()) {
-						ctx.addDeferredFkConstraintSql(sqlDataSourceDialect.generateAddForeignKeyConstraintSql(sqlEntityInfo,
-								sqlForeignKeyInfo, printFormat));
+					if (!sqlEntityInfo.isExtended()) {
+						for (SqlForeignKeySchemaInfo sqlForeignKeyInfo : sqlEntityInfo.getManagedForeignKeyList()) {
+							ctx.addDeferredFkConstraintSql(sqlDataSourceDialect
+									.generateAddForeignKeyConstraintSql(sqlEntityInfo, sqlForeignKeyInfo, printFormat));
+						}
 					}
 
 					for (SqlUniqueConstraintSchemaInfo sqlUniqueConstraintInfo : sqlEntityInfo.getUniqueConstraintList()
@@ -309,30 +312,33 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 					// Detect foreign constraint changes
 					logDebug("Detecting foreign constraint changes...");
 					if (forceConstraints.isTrue() && sqlEntityInfo.isManagedForeignKeys()) {
-						for (SqlForeignKeySchemaInfo sqlForeignKeyInfo : sqlEntityInfo.getManagedForeignKeyList()) {
-							if (!sqlEntityInfo.getManagedFieldInfo(sqlForeignKeyInfo.getFieldName())
-									.isIgnoreFkConstraint()) {
-								SqlFieldInfo sqlFieldInfo = sqlEntityInfo
-										.getManagedFieldInfo(sqlForeignKeyInfo.getFieldName());
-								String fkConstName = sqlFieldInfo.getConstraint();
-								TableConstraint fkConst = managedTableConstraints.get(fkConstName);
-								boolean update = true;
-								if (fkConst != null) {
-									// Check if foreign key matches database constraint
-									if (fkConst.isForeignKey() /* && fkConst.getColumns().size() == 1 */
-											&& fkConst.getTableName()
-													.equals(sqlFieldInfo.getForeignEntityInfo().getTableName())
-											&& fkConst.getColumns()
-													.contains(sqlFieldInfo.getForeignFieldInfo().getColumnName())) {
-										// Perfect match. Remove from pending list and no need for update
-										managedTableConstraints.remove(fkConstName);
-										update = false;
+						if (!sqlEntityInfo.isExtended()) {
+							for (SqlForeignKeySchemaInfo sqlForeignKeyInfo : sqlEntityInfo.getManagedForeignKeyList()) {
+								if (!sqlEntityInfo.getManagedFieldInfo(sqlForeignKeyInfo.getFieldName())
+										.isIgnoreFkConstraint()) {
+									SqlFieldInfo sqlFieldInfo = sqlEntityInfo
+											.getManagedFieldInfo(sqlForeignKeyInfo.getFieldName());
+									String fkConstName = sqlFieldInfo.getConstraint();
+									TableConstraint fkConst = managedTableConstraints.get(fkConstName);
+									boolean update = true;
+									if (fkConst != null) {
+										// Check if foreign key matches database constraint
+										if (fkConst.isForeignKey() /* && fkConst.getColumns().size() == 1 */
+												&& fkConst.getTableName()
+														.equals(sqlFieldInfo.getForeignEntityInfo().getTableName())
+												&& fkConst.getColumns()
+														.contains(sqlFieldInfo.getForeignFieldInfo().getColumnName())) {
+											// Perfect match. Remove from pending list and no need for update
+											managedTableConstraints.remove(fkConstName);
+											update = false;
+										}
 									}
-								}
 
-								if (update) {
-									ctx.addDeferredFkConstraintSql(sqlDataSourceDialect.generateAddForeignKeyConstraintSql(
-											sqlEntityInfo, sqlForeignKeyInfo, printFormat));
+									if (update) {
+										ctx.addDeferredFkConstraintSql(
+												sqlDataSourceDialect.generateAddForeignKeyConstraintSql(sqlEntityInfo,
+														sqlForeignKeyInfo, printFormat));
+									}
 								}
 							}
 						}
@@ -403,11 +409,13 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 
 				// Create constraints and indexes
 				if (forceConstraints.isTrue() && sqlEntityInfo.isManagedForeignKeys()) {
-					for (SqlForeignKeySchemaInfo sqlForeignKeyInfo : sqlEntityInfo.getManagedForeignKeyList()) {
-						if (!sqlEntityInfo.getManagedFieldInfo(sqlForeignKeyInfo.getFieldName())
-								.isIgnoreFkConstraint()) {
-							ctx.addDeferredFkConstraintSql(sqlDataSourceDialect
-									.generateAddForeignKeyConstraintSql(sqlEntityInfo, sqlForeignKeyInfo, printFormat));
+					if (!sqlEntityInfo.isExtended()) {
+						for (SqlForeignKeySchemaInfo sqlForeignKeyInfo : sqlEntityInfo.getManagedForeignKeyList()) {
+							if (!sqlEntityInfo.getManagedFieldInfo(sqlForeignKeyInfo.getFieldName())
+									.isIgnoreFkConstraint()) {
+								ctx.addDeferredFkConstraintSql(sqlDataSourceDialect.generateAddForeignKeyConstraintSql(
+										sqlEntityInfo, sqlForeignKeyInfo, printFormat));
+							}
 						}
 					}
 				}
