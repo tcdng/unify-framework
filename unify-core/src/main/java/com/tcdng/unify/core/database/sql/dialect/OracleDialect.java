@@ -32,6 +32,7 @@ import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.constant.PrintFormat;
 import com.tcdng.unify.core.constant.TimeSeriesType;
 import com.tcdng.unify.core.criterion.RestrictionType;
+import com.tcdng.unify.core.database.StaticReference;
 import com.tcdng.unify.core.database.sql.AbstractSqlDataSourceDialect;
 import com.tcdng.unify.core.database.sql.AbstractSqlDataSourceDialectPolicies;
 import com.tcdng.unify.core.database.sql.SqlColumnAlterInfo;
@@ -167,7 +168,8 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
 			throws UnifyException {
 		List<String> sqlList = new ArrayList<String>();
 		StringBuilder sb = new StringBuilder();
-		SqlDataTypePolicy sqlDataTypePolicy = getSqlTypePolicy(sqlFieldSchemaInfo.getColumnType());
+		SqlDataTypePolicy sqlDataTypePolicy = getSqlTypePolicy(sqlFieldSchemaInfo.getColumnType(),
+				sqlFieldSchemaInfo.getLength());
 
 		if (sqlColumnAlterInfo.isNullableChange()) {
 			if (!sqlFieldSchemaInfo.isNullable()) {
@@ -341,6 +343,11 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
 		}
 
 		@Override
+		protected ColumnType dialectSwapColumnType(ColumnType columnType, int length) {
+			return columnType.isString() && length > 4000 ? ColumnType.CLOB: columnType;
+		}
+
+		@Override
 		protected String concat(String... expressions) {
 			StringBuilder sb = new StringBuilder();
 			sb.append("(");
@@ -362,6 +369,14 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
 
 class OracleEnumConstPolicy extends EnumConstPolicy {
 
+    @Override
+    public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
+        if (length <= 0) {
+            length = StaticReference.CODE_LENGTH;
+        }
+        sb.append(" VARCHAR2(").append(length).append(')');
+    }
+
 	@Override
 	public String getTypeName() {
 		return "VARCHAR2";
@@ -369,6 +384,14 @@ class OracleEnumConstPolicy extends EnumConstPolicy {
 }
 
 class OracleStringPolicy extends StringPolicy {
+
+    @Override
+    public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
+        if (length <= 0) {
+            length = DEFAULT_LENGTH;
+        }
+        sb.append(" VARCHAR2(").append(length).append(')');
+    }
 
 	@Override
 	public String getTypeName() {

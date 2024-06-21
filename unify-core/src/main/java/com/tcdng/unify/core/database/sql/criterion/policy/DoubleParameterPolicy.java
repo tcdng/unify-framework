@@ -36,106 +36,110 @@ import com.tcdng.unify.core.transform.Transformer;
  */
 public abstract class DoubleParameterPolicy extends AbstractSqlCriteriaPolicy {
 
-    public DoubleParameterPolicy(String opSql, SqlDataSourceDialectPolicies rootPolicies) {
-        super(opSql, rootPolicies);
-    }
+	public DoubleParameterPolicy(String opSql, SqlDataSourceDialectPolicies rootPolicies) {
+		super(opSql, rootPolicies);
+	}
 
-    @Override
-    public void translate(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Restriction restriction)
-            throws UnifyException {
-        DoubleParamRestriction dvc = (DoubleParamRestriction) restriction;
-        String columnName = dvc.getFieldName();
-        if (sqlEntityInfo != null) {
-            columnName = sqlEntityInfo.getListFieldInfo(dvc.getFieldName()).getPreferredColumnName();
-        }
+	@Override
+	public void translate(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Restriction restriction)
+			throws UnifyException {
+		DoubleParamRestriction dvc = (DoubleParamRestriction) restriction;
+		String columnName = dvc.getFieldName();
+		if (sqlEntityInfo != null) {
+			columnName = sqlEntityInfo.getListFieldInfo(dvc.getFieldName()).getPreferredColumnName();
+		}
 
-        final String tableName = sqlEntityInfo.getTableAlias();
-        final Object val1 = dvc.getFirstParam();
-        final Object val2 = dvc.getSecondParam();
-        final boolean val1IsField = val1 instanceof RestrictionField;
-        final boolean val2IsField = val2 instanceof RestrictionField;
-        if (val1IsField || val2IsField) {
-            sql.append("(");
-            sql.append(tableName).append('.').append(columnName).append(opSql);
-            if (val1IsField) {
-                sql.append(tableName).append('.').append(
-                        sqlEntityInfo.getListFieldInfo(((RestrictionField) val1).getName()).getPreferredColumnName());
-            } else {
-                sql.append(getNativeSqlParam(resolveParam(null, val1)));
-            }
+		final String tableName = sqlEntityInfo.getTableAlias();
+		final Object val1 = dvc.getFirstParam();
+		final Object val2 = dvc.getSecondParam();
+		final boolean val1IsField = val1 instanceof RestrictionField;
+		final boolean val2IsField = val2 instanceof RestrictionField;
+		if (val1IsField || val2IsField) {
+			sql.append("(");
+			sql.append(tableName).append('.').append(columnName).append(opSql);
+			if (val1IsField) {
+				sql.append(tableName).append('.').append(
+						sqlEntityInfo.getListFieldInfo(((RestrictionField) val1).getName()).getPreferredColumnName());
+			} else {
+				sql.append(getNativeSqlParam(resolveParam(null, val1)));
+			}
 
-            sql.append(" AND ");
-            if (val2IsField) {
-                sql.append(tableName).append('.').append(
-                        sqlEntityInfo.getListFieldInfo(((RestrictionField) val2).getName()).getPreferredColumnName());
-            } else {
-                sql.append(getNativeSqlParam(resolveParam(null, val2)));
-            }
+			sql.append(" AND ");
+			if (val2IsField) {
+				sql.append(tableName).append('.').append(
+						sqlEntityInfo.getListFieldInfo(((RestrictionField) val2).getName()).getPreferredColumnName());
+			} else {
+				sql.append(getNativeSqlParam(resolveParam(null, val2)));
+			}
 
-            sql.append(")");
-            return;
-        }
+			sql.append(")");
+			return;
+		}
 
-        translate(sql, tableName, columnName, val1, val2);
-    }
+		translate(sql, tableName, columnName, val1, val2);
+	}
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public void generatePreparedStatementCriteria(StringBuilder sql, List<SqlParameter> parameterInfoList,
-            SqlEntityInfo sqlEntityInfo, Restriction restriction) throws UnifyException {
-        DoubleParamRestriction dvc = (DoubleParamRestriction) restriction;
-        final Object val1 = dvc.getFirstParam();
-        final Object val2 = dvc.getSecondParam();
-        final boolean val1IsField = val1 instanceof RestrictionField;
-        final boolean val2IsField = val2 instanceof RestrictionField;
+	@SuppressWarnings("unchecked")
+	@Override
+	public void generatePreparedStatementCriteria(StringBuilder sql, List<SqlParameter> parameterInfoList,
+			SqlEntityInfo sqlEntityInfo, Restriction restriction) throws UnifyException {
+		DoubleParamRestriction dvc = (DoubleParamRestriction) restriction;
+		final Object val1 = dvc.getFirstParam();
+		final Object val2 = dvc.getSecondParam();
+		final boolean val1IsField = val1 instanceof RestrictionField;
+		final boolean val2IsField = val2 instanceof RestrictionField;
 
-        SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(dvc.getFieldName());
-        sql.append("(");
-        sql.append(sqlFieldInfo.getPreferredColumnName()).append(opSql);
-        if (val1IsField) {
-            sql.append(sqlEntityInfo.getListFieldInfo(((RestrictionField) val1).getName()).getPreferredColumnName());
-        } else {
-            sql.append('?');
-        }
+		SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(dvc.getFieldName());
+		sql.append("(");
+		sql.append(sqlFieldInfo.getPreferredColumnName()).append(opSql);
+		if (val1IsField) {
+			sql.append(sqlEntityInfo.getListFieldInfo(((RestrictionField) val1).getName()).getPreferredColumnName());
+		} else {
+			sql.append('?');
+		}
 
-        sql.append(" AND ");
-        if (val2IsField) {
-            sql.append(sqlEntityInfo.getListFieldInfo(((RestrictionField) val2).getName()).getPreferredColumnName());
-        } else {
-            sql.append('?');
-        }
+		sql.append(" AND ");
+		if (val2IsField) {
+			sql.append(sqlEntityInfo.getListFieldInfo(((RestrictionField) val2).getName()).getPreferredColumnName());
+		} else {
+			sql.append('?');
+		}
 
-        sql.append(")");
+		sql.append(")");
 
-        if (sqlFieldInfo.isTransformed()) {
-            Transformer<Object, Object> transformer = (Transformer<Object, Object>) sqlFieldInfo.getTransformer();
-            if (!val1IsField) {
-                parameterInfoList.add(new SqlParameter(getSqlTypePolicy(sqlFieldInfo.getColumnType()),
-                        transformer.forwardTransform(convertType(sqlFieldInfo, val1))));
-            }
-            if (!val2IsField) {
-                parameterInfoList.add(new SqlParameter(getSqlTypePolicy(sqlFieldInfo.getColumnType()),
-                        transformer.forwardTransform(convertType(sqlFieldInfo, val2))));
-            }
-        } else {
-            if (!val1IsField) {
-                parameterInfoList.add(new SqlParameter(getSqlTypePolicy(sqlFieldInfo.getColumnType()),
-                        convertType(sqlFieldInfo, val1)));
-            }
+		if (sqlFieldInfo.isTransformed()) {
+			Transformer<Object, Object> transformer = (Transformer<Object, Object>) sqlFieldInfo.getTransformer();
+			if (!val1IsField) {
+				parameterInfoList
+						.add(new SqlParameter(getSqlTypePolicy(sqlFieldInfo.getColumnType(), sqlFieldInfo.getLength()),
+								transformer.forwardTransform(convertType(sqlFieldInfo, val1))));
+			}
+			if (!val2IsField) {
+				parameterInfoList
+						.add(new SqlParameter(getSqlTypePolicy(sqlFieldInfo.getColumnType(), sqlFieldInfo.getLength()),
+								transformer.forwardTransform(convertType(sqlFieldInfo, val2))));
+			}
+		} else {
+			if (!val1IsField) {
+				parameterInfoList
+						.add(new SqlParameter(getSqlTypePolicy(sqlFieldInfo.getColumnType(), sqlFieldInfo.getLength()),
+								convertType(sqlFieldInfo, val1)));
+			}
 
-            if (!val2IsField) {
-                parameterInfoList.add(new SqlParameter(getSqlTypePolicy(sqlFieldInfo.getColumnType()),
-                        convertType(sqlFieldInfo, val2)));
-            }
-        }
-    }
+			if (!val2IsField) {
+				parameterInfoList
+						.add(new SqlParameter(getSqlTypePolicy(sqlFieldInfo.getColumnType(), sqlFieldInfo.getLength()),
+								convertType(sqlFieldInfo, val2)));
+			}
+		}
+	}
 
-    @Override
-    protected void doTranslate(StringBuilder sql, String tableName, String columnName, Object param1, Object param2)
-            throws UnifyException {
-        sql.append("(");
-        sql.append(tableName).append('.').append(columnName).append(opSql).append(getNativeSqlParam(param1))
-                .append(" AND ").append(getNativeSqlParam(param2));
-        sql.append(")");
-    }
+	@Override
+	protected void doTranslate(StringBuilder sql, String tableName, String columnName, Object param1, Object param2)
+			throws UnifyException {
+		sql.append("(");
+		sql.append(tableName).append('.').append(columnName).append(opSql).append(getNativeSqlParam(param1))
+				.append(" AND ").append(getNativeSqlParam(param2));
+		sql.append(")");
+	}
 }

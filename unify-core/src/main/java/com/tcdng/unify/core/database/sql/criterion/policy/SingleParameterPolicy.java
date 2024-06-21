@@ -36,96 +36,96 @@ import com.tcdng.unify.core.transform.Transformer;
  */
 public abstract class SingleParameterPolicy extends AbstractSqlCriteriaPolicy {
 
-    final private boolean caseInsensitive;
-    
-    public SingleParameterPolicy(String opSql, SqlDataSourceDialectPolicies rootPolicies) {
-        this(opSql, rootPolicies, false);
-    }
+	final private boolean caseInsensitive;
 
-    public SingleParameterPolicy(String opSql, SqlDataSourceDialectPolicies rootPolicies,
-            boolean caseInsensitive) {
-        super(opSql, rootPolicies);
-        this.caseInsensitive = caseInsensitive;
-    }
+	public SingleParameterPolicy(String opSql, SqlDataSourceDialectPolicies rootPolicies) {
+		this(opSql, rootPolicies, false);
+	}
 
-    @Override
-    public void translate(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Restriction restriction)
-            throws UnifyException {
-        SingleParamRestriction svc = (SingleParamRestriction) restriction;
-        String columnName = svc.getFieldName();
-        if (sqlEntityInfo != null) {
-            columnName = sqlEntityInfo.getListFieldInfo(svc.getFieldName()).getPreferredColumnName();
-        }
+	public SingleParameterPolicy(String opSql, SqlDataSourceDialectPolicies rootPolicies, boolean caseInsensitive) {
+		super(opSql, rootPolicies);
+		this.caseInsensitive = caseInsensitive;
+	}
 
-        final String tableName = sqlEntityInfo.getTableAlias();
-        final Object val = svc.getParam();
-        if (val instanceof RestrictionField) {
-            if (caseInsensitive) {
-                Object param = resolveParam(tableName,
-                        sqlEntityInfo.getListFieldInfo(((RestrictionField) val).getName()));
-                param = param != null ? ((String) param).toLowerCase(): null;
-                sql.append("LOWER(").append(tableName).append('.').append(columnName).append(")").append(opSql)
-                        .append(param);
-            } else {
-                sql.append(tableName).append('.').append(columnName).append(opSql).append(
-                        resolveParam(tableName, sqlEntityInfo.getListFieldInfo(((RestrictionField) val).getName())));
-            }
+	@Override
+	public void translate(StringBuilder sql, SqlEntityInfo sqlEntityInfo, Restriction restriction)
+			throws UnifyException {
+		SingleParamRestriction svc = (SingleParamRestriction) restriction;
+		String columnName = svc.getFieldName();
+		if (sqlEntityInfo != null) {
+			columnName = sqlEntityInfo.getListFieldInfo(svc.getFieldName()).getPreferredColumnName();
+		}
 
-            return;
-        }
+		final String tableName = sqlEntityInfo.getTableAlias();
+		final Object val = svc.getParam();
+		if (val instanceof RestrictionField) {
+			if (caseInsensitive) {
+				Object param = resolveParam(tableName,
+						sqlEntityInfo.getListFieldInfo(((RestrictionField) val).getName()));
+				param = param != null ? ((String) param).toLowerCase() : null;
+				sql.append("LOWER(").append(tableName).append('.').append(columnName).append(")").append(opSql)
+						.append(param);
+			} else {
+				sql.append(tableName).append('.').append(columnName).append(opSql).append(
+						resolveParam(tableName, sqlEntityInfo.getListFieldInfo(((RestrictionField) val).getName())));
+			}
 
-        translate(sql, tableName, columnName, val, null);
-    }
+			return;
+		}
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public void generatePreparedStatementCriteria(StringBuilder sql, List<SqlParameter> parameterInfoList,
-            SqlEntityInfo sqlEntityInfo, Restriction restriction) throws UnifyException {
-        SingleParamRestriction svc = (SingleParamRestriction) restriction;
-        SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(svc.getFieldName());
-        Object val = svc.getParam();
-        if (val instanceof RestrictionField) {
-            if (caseInsensitive) {
-                Object param = resolveParam(null, sqlEntityInfo.getListFieldInfo(((RestrictionField) val).getName()));
-                param = param != null ? ((String) param).toLowerCase(): null;
-                sql.append("LOWER(").append(sqlFieldInfo.getPreferredColumnName()).append(")").append(opSql)
-                        .append(param);
-            } else {
-                sql.append(sqlFieldInfo.getPreferredColumnName()).append(opSql)
-                        .append(resolveParam(null, sqlEntityInfo.getListFieldInfo(((RestrictionField) val).getName())));
-            }
+		translate(sql, tableName, columnName, val, null);
+	}
 
-            return;
-        }
+	@SuppressWarnings("unchecked")
+	@Override
+	public void generatePreparedStatementCriteria(StringBuilder sql, List<SqlParameter> parameterInfoList,
+			SqlEntityInfo sqlEntityInfo, Restriction restriction) throws UnifyException {
+		SingleParamRestriction svc = (SingleParamRestriction) restriction;
+		SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(svc.getFieldName());
+		Object val = svc.getParam();
+		if (val instanceof RestrictionField) {
+			if (caseInsensitive) {
+				Object param = resolveParam(null, sqlEntityInfo.getListFieldInfo(((RestrictionField) val).getName()));
+				param = param != null ? ((String) param).toLowerCase() : null;
+				sql.append("LOWER(").append(sqlFieldInfo.getPreferredColumnName()).append(")").append(opSql)
+						.append(param);
+			} else {
+				sql.append(sqlFieldInfo.getPreferredColumnName()).append(opSql)
+						.append(resolveParam(null, sqlEntityInfo.getListFieldInfo(((RestrictionField) val).getName())));
+			}
 
-        if (caseInsensitive) {
-            sql.append("LOWER(").append(sqlFieldInfo.getPreferredColumnName()).append(")").append(opSql).append("?");
-        } else {
-            sql.append(sqlFieldInfo.getPreferredColumnName()).append(opSql).append("?");
-        }
+			return;
+		}
 
-        if (sqlFieldInfo.isTransformed()) {
-            val = ((Transformer<Object, Object>) sqlFieldInfo.getTransformer()).forwardTransform(val);
-        }
+		if (caseInsensitive) {
+			sql.append("LOWER(").append(sqlFieldInfo.getPreferredColumnName()).append(")").append(opSql).append("?");
+		} else {
+			sql.append(sqlFieldInfo.getPreferredColumnName()).append(opSql).append("?");
+		}
 
-        Object postOp = convertType(sqlFieldInfo, resolveParam(null, val));
-        if (caseInsensitive) {
-            postOp = postOp != null ? ((String) postOp).toLowerCase(): null;
-        }
-        
-        parameterInfoList.add(new SqlParameter(getSqlTypePolicy(sqlFieldInfo.getColumnType()), postOp));
-    }
+		if (sqlFieldInfo.isTransformed()) {
+			val = ((Transformer<Object, Object>) sqlFieldInfo.getTransformer()).forwardTransform(val);
+		}
 
-    @Override
-    protected void doTranslate(StringBuilder sql, String tableName, String columnName, Object param1, Object param2)
-            throws UnifyException {
-        if (caseInsensitive) {
-            String postOp = getNativeSqlParam(param1);
-            postOp = postOp != null ? postOp.toLowerCase(): null;
-            sql.append("LOWER(").append(tableName).append('.').append(columnName).append(")").append(opSql)
-                    .append(postOp);
-        } else {
-            sql.append(tableName).append('.').append(columnName).append(opSql).append(getNativeSqlParam(param1));
-        }
-    }
+		Object postOp = convertType(sqlFieldInfo, resolveParam(null, val));
+		if (caseInsensitive) {
+			postOp = postOp != null ? ((String) postOp).toLowerCase() : null;
+		}
+
+		parameterInfoList.add(
+				new SqlParameter(getSqlTypePolicy(sqlFieldInfo.getColumnType(), sqlFieldInfo.getLength()), postOp));
+	}
+
+	@Override
+	protected void doTranslate(StringBuilder sql, String tableName, String columnName, Object param1, Object param2)
+			throws UnifyException {
+		if (caseInsensitive) {
+			String postOp = getNativeSqlParam(param1);
+			postOp = postOp != null ? postOp.toLowerCase() : null;
+			sql.append("LOWER(").append(tableName).append('.').append(columnName).append(")").append(opSql)
+					.append(postOp);
+		} else {
+			sql.append(tableName).append('.').append(columnName).append(opSql).append(getNativeSqlParam(param1));
+		}
+	}
 }

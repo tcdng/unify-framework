@@ -34,7 +34,7 @@ public interface SqlDataSourceDialectPolicies {
 
     Map<RestrictionType, SqlCriteriaPolicy> getSqlCriteriaPolicies();
 
-    SqlDataTypePolicy getSqlTypePolicy(ColumnType columnType);
+    SqlDataTypePolicy getSqlTypePolicy(ColumnType columnType, int length);
 
     SqlCriteriaPolicy getSqlCriteriaPolicy(RestrictionType restrictionType);
 

@@ -407,9 +407,10 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
 		final Select select = query.getSelect();
 		try {
+			SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(fieldName);
 			query.setSelect(new Select(fieldName).setDistinct(query.isDistinct()));
 			return getSqlStatementExecutor().executeMultipleObjectListResultQuery(connection, fieldClass,
-					sqlDataSourceDialect.getSqlTypePolicy(sqlEntityInfo.getListFieldInfo(fieldName).getColumnType()),
+					sqlDataSourceDialect.getSqlTypePolicy(sqlFieldInfo.getColumnType(), sqlFieldInfo.getLength()),
 					sqlDataSourceDialect.prepareListStatement(query));
 		} finally {
 			query.setSelect(select);
@@ -427,9 +428,10 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
 		final Select select = query.getSelect();
 		try {
+			SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(fieldName);
 			query.setSelect(new Select(fieldName).setDistinct(query.isDistinct()));
 			return getSqlStatementExecutor().executeMultipleObjectSetResultQuery(connection, fieldClass,
-					sqlDataSourceDialect.getSqlTypePolicy(sqlEntityInfo.getListFieldInfo(fieldName).getColumnType()),
+					sqlDataSourceDialect.getSqlTypePolicy(sqlFieldInfo.getColumnType(), sqlFieldInfo.getLength()),
 					sqlDataSourceDialect.prepareListStatement(query));
 		} finally {
 			query.setSelect(select);
@@ -484,9 +486,10 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
 		final Select select = query.getSelect();
 		try {
+			SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(fieldName);
 			query.setSelect(new Select(fieldName).setDistinct(query.isDistinct()));
 			return getSqlStatementExecutor().executeSingleObjectResultQuery(connection, fieldClass,
-					sqlDataSourceDialect.getSqlTypePolicy(sqlEntityInfo.getListFieldInfo(fieldName).getColumnType()),
+					sqlDataSourceDialect.getSqlTypePolicy(sqlFieldInfo.getColumnType(), sqlFieldInfo.getLength()),
 					sqlDataSourceDialect.prepareListStatement(query), MustMatch.fromBoolean(query.isMustMatch()));
 		} finally {
 			query.setSelect(select);
@@ -504,9 +507,10 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
 		final Select select = query.getSelect();
 		try {
+			SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(fieldName);
 			query.setSelect(new Select(fieldName).setDistinct(query.isDistinct()));
 			T val = getSqlStatementExecutor().executeSingleObjectResultQuery(connection, fieldClass,
-					sqlDataSourceDialect.getSqlTypePolicy(sqlEntityInfo.getListFieldInfo(fieldName).getColumnType()),
+					sqlDataSourceDialect.getSqlTypePolicy(sqlFieldInfo.getColumnType(), sqlFieldInfo.getLength()),
 					sqlDataSourceDialect.prepareListStatement(query), MustMatch.FALSE);
 			return Optional.ofNullable(val);
 		} finally {
@@ -525,7 +529,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
 		SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(fieldName);
 		return getSqlStatementExecutor().executeSingleObjectResultQuery(connection, fieldClass,
-				sqlDataSourceDialect.getSqlTypePolicy(sqlFieldInfo.getColumnType()),
+				sqlDataSourceDialect.getSqlTypePolicy(sqlFieldInfo.getColumnType(), sqlFieldInfo.getLength()),
 				sqlDataSourceDialect.prepareMinStatement(sqlFieldInfo.getPreferredColumnName(), query),
 				MustMatch.FALSE);
 	}
@@ -541,7 +545,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
 		SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(fieldName);
 		return getSqlStatementExecutor().executeSingleObjectResultQuery(connection, fieldClass,
-				sqlDataSourceDialect.getSqlTypePolicy(sqlFieldInfo.getColumnType()),
+				sqlDataSourceDialect.getSqlTypePolicy(sqlFieldInfo.getColumnType(), sqlFieldInfo.getLength()),
 				sqlDataSourceDialect.prepareMaxStatement(sqlFieldInfo.getPreferredColumnName(), query),
 				MustMatch.FALSE);
 	}
@@ -931,7 +935,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 	@Override
 	public Date getNow() throws UnifyException {
 		return getSqlStatementExecutor().executeSingleObjectResultQuery(connection, Date.class,
-				sqlDataSourceDialect.getSqlTypePolicy(ColumnType.TIMESTAMP_UTC),
+				sqlDataSourceDialect.getSqlTypePolicy(ColumnType.TIMESTAMP_UTC, 0),
 				sqlDataSourceDialect.generateUTCTimestampSql(), MustMatch.TRUE);
 	}
 

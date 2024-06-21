@@ -822,7 +822,8 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 					columnInfo.isNullable(), sqlfieldInfo.isNullable());
 		}
 
-		SqlDataTypePolicy sqlDataTypePolicy = sqlDataSourceDialect.getSqlTypePolicy(sqlfieldInfo.getColumnType());
+		SqlDataTypePolicy sqlDataTypePolicy = sqlDataSourceDialect.getSqlTypePolicy(sqlfieldInfo.getColumnType(),
+				sqlfieldInfo.getLength());
 		boolean defaultChange = !sqlDataSourceDialect.matchColumnDefault(columnInfo.getDefaultVal(),
 				sqlfieldInfo.getDefaultVal())
 				&& !isSwappableValues(sqlfieldInfo.getDefaultVal(), columnInfo.getDefaultVal());

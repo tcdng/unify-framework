@@ -77,11 +77,12 @@ public abstract class AbstractSqlCriteriaPolicy implements SqlCriteriaPolicy {
      * 
      * @param columnType
      *            the column type
+     *  @param length the column length
      * @throws UnifyException
      *             if column type is not supported
      */
-    protected SqlDataTypePolicy getSqlTypePolicy(ColumnType columnType) throws UnifyException {
-        return rootPolicies.getSqlTypePolicy(columnType);
+    protected SqlDataTypePolicy getSqlTypePolicy(ColumnType columnType, int length) throws UnifyException {
+        return rootPolicies.getSqlTypePolicy(columnType, length);
     }
 
     /**

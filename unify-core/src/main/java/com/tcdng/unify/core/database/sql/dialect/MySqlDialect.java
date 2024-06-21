@@ -272,7 +272,8 @@ public class MySqlDialect extends AbstractSqlDataSourceDialect {
 			throws UnifyException {
 		List<String> sqlList = new ArrayList<String>();
 		StringBuilder sb = new StringBuilder();
-		SqlDataTypePolicy sqlDataTypePolicy = getSqlTypePolicy(sqlFieldSchemaInfo.getColumnType());
+		SqlDataTypePolicy sqlDataTypePolicy = getSqlTypePolicy(sqlFieldSchemaInfo.getColumnType(),
+				sqlFieldSchemaInfo.getLength());
 
 		if (sqlColumnAlterInfo.isNullableChange()) {
 			if (!sqlFieldSchemaInfo.isNullable()) {
@@ -366,6 +367,11 @@ public class MySqlDialect extends AbstractSqlDataSourceDialect {
 
 		public void setSqlCriteriaPolicies(Map<RestrictionType, SqlCriteriaPolicy> sqlCriteriaPolicies) {
 			this.sqlCriteriaPolicies = sqlCriteriaPolicies;
+		}
+
+		@Override
+		protected ColumnType dialectSwapColumnType(ColumnType columnType, int length) {
+			return columnType.isString() && length > 8000 ? ColumnType.CLOB: columnType;
 		}
 
 		@Override

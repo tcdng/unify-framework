@@ -255,7 +255,8 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
 			throws UnifyException {
 		List<String> sqlList = new ArrayList<String>();
 		StringBuilder sb = new StringBuilder();
-		SqlDataTypePolicy sqlDataTypePolicy = getSqlTypePolicy(sqlFieldSchemaInfo.getColumnType());
+		SqlDataTypePolicy sqlDataTypePolicy = getSqlTypePolicy(sqlFieldSchemaInfo.getColumnType(),
+				sqlFieldSchemaInfo.getLength());
 
 		if (sqlColumnAlterInfo.isNullableChange()) {
 			if (!sqlFieldSchemaInfo.isNullable()) {
@@ -382,6 +383,11 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
 		@Override
 		public int getMaxClauseValues() {
 			return -1;
+		}
+
+		@Override
+		protected ColumnType dialectSwapColumnType(ColumnType columnType, int length) {
+			return columnType.isString() && length > 65535 ? ColumnType.CLOB: columnType;
 		}
 
 		protected String concat(String... expressions) {
