@@ -103,12 +103,14 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 			logInfo("Scanning datasource {0} for table schema...", sqlDataSource.getName());
 			logInfo("Managing schema elements for [{0}] table entities...", entityClasses.size());
 			DatabaseMetaData databaseMetaData = connection.getMetaData();
+			SqlSchemaManagerContext ctx = new SqlSchemaManagerContext();
 			for (Class<?> entityClass : entityClasses) {
 				Map<String, TableConstraint> managedTableConstraints = fetchManagedTableConstraints(databaseMetaData,
 						sqlDataSource, entityClass);
-				manageTableSchema(databaseMetaData, sqlDataSource, entityClass, managedTableConstraints, options);
+				manageTableSchema(ctx, databaseMetaData, sqlDataSource, entityClass, managedTableConstraints, options);
 			}
 
+			applyDeferredTableSchemaSql(ctx, databaseMetaData, sqlDataSource);
 			logInfo("Table schema elements management completed for [{0}] table entities...", entityClasses.size());
 		} catch (SQLException e) {
 			throw new UnifyException(e, UnifyCoreErrorConstants.SQLSCHEMAMANAGER_MANAGE_SCHEMA_ERROR,
@@ -198,8 +200,8 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 		return viewList;
 	}
 
-	private void buildParentDependencyList(SqlDataSource sqlDataSource, List<Class<?>> entityTypeList, Class<?> entityClass)
-			throws UnifyException {
+	private void buildParentDependencyList(SqlDataSource sqlDataSource, List<Class<?>> entityTypeList,
+			Class<?> entityClass) throws UnifyException {
 		SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
 		SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.findSqlEntityInfo(entityClass);
 
@@ -217,8 +219,8 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 		}
 	}
 
-	private void buildChildDependencyList(SqlDataSource sqlDataSource, List<Class<?>> entityTypeList, Class<?> entityClass)
-			throws UnifyException {
+	private void buildChildDependencyList(SqlDataSource sqlDataSource, List<Class<?>> entityTypeList,
+			Class<?> entityClass) throws UnifyException {
 		SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
 		SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.findSqlEntityInfo(entityClass);
 		List<SqlEntityInfo> sqlEntityInfos = sqlDataSourceDialect.findAllChildSqlEntityInfos(entityClass);
@@ -234,9 +236,9 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 		}
 	}
 
-	private void manageTableSchema(DatabaseMetaData databaseMetaData, SqlDataSource sqlDataSource, Class<?> entityClass,
-			Map<String, TableConstraint> managedTableConstraints, SqlSchemaManagerOptions options)
-			throws UnifyException {
+	private void manageTableSchema(SqlSchemaManagerContext ctx, DatabaseMetaData databaseMetaData,
+			SqlDataSource sqlDataSource, Class<?> entityClass, Map<String, TableConstraint> managedTableConstraints,
+			SqlSchemaManagerOptions options) throws UnifyException {
 		SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
 		SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.findSqlEntityInfo(entityClass);
 		if (sqlEntityInfo.isSchemaAlreadyManaged()) {
@@ -287,8 +289,8 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 					// Recreate all constraints and indexes
 					logDebug("Recreating all constraints and indexes...");
 					for (SqlForeignKeySchemaInfo sqlForeignKeyInfo : sqlEntityInfo.getManagedForeignKeyList()) {
-						createUpdateConstraintSql.add(sqlDataSourceDialect
-								.generateAddForeignKeyConstraintSql(sqlEntityInfo, sqlForeignKeyInfo, printFormat));
+						ctx.addDeferredFkConstraintSql(sqlDataSourceDialect.generateAddForeignKeyConstraintSql(sqlEntityInfo,
+								sqlForeignKeyInfo, printFormat));
 					}
 
 					for (SqlUniqueConstraintSchemaInfo sqlUniqueConstraintInfo : sqlEntityInfo.getUniqueConstraintList()
@@ -329,9 +331,8 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 								}
 
 								if (update) {
-									createUpdateConstraintSql
-											.add(sqlDataSourceDialect.generateAddForeignKeyConstraintSql(sqlEntityInfo,
-													sqlForeignKeyInfo, printFormat));
+									ctx.addDeferredFkConstraintSql(sqlDataSourceDialect.generateAddForeignKeyConstraintSql(
+											sqlEntityInfo, sqlForeignKeyInfo, printFormat));
 								}
 							}
 						}
@@ -405,8 +406,8 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 					for (SqlForeignKeySchemaInfo sqlForeignKeyInfo : sqlEntityInfo.getManagedForeignKeyList()) {
 						if (!sqlEntityInfo.getManagedFieldInfo(sqlForeignKeyInfo.getFieldName())
 								.isIgnoreFkConstraint()) {
-							tableUpdateSql.add(sqlDataSourceDialect.generateAddForeignKeyConstraintSql(sqlEntityInfo,
-									sqlForeignKeyInfo, printFormat));
+							ctx.addDeferredFkConstraintSql(sqlDataSourceDialect
+									.generateAddForeignKeyConstraintSql(sqlEntityInfo, sqlForeignKeyInfo, printFormat));
 						}
 					}
 				}
@@ -499,6 +500,46 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 			SqlUtils.close(rs);
 			SqlUtils.close(pstmt);
 			sqlEntityInfo.setSchemaAlreadyManaged();
+		}
+	}
+
+	private void applyDeferredTableSchemaSql(SqlSchemaManagerContext ctx, DatabaseMetaData databaseMetaData,
+			SqlDataSource sqlDataSource) throws UnifyException {
+		Connection connection = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			connection = databaseMetaData.getConnection();
+			// Execute deferred scripts
+			logDebug("Executing deferred SQL scripts...");
+
+			// Apply FK constraints
+			logDebug("Applying foreign key SQL scripts...");
+			for (String sql : ctx.getDeferredFkConstraintSql()) {
+				if (sqlDebugging) {
+					logDebug("Executing SQL update [{0}]...", sql);
+				}
+
+				pstmt = connection.prepareStatement(sql);
+				pstmt.executeUpdate();
+				SqlUtils.close(pstmt);
+
+				if (sqlDebugging) {
+					logDebug("Completed executing SQL update [{0}]...", sql);
+				}
+			}
+			connection.commit();
+			logDebug("Application of foreign key SQL scripts successfully completed.");
+		} catch (SQLException e) {
+			try {
+				connection.rollback();
+			} catch (SQLException e1) {
+			}
+			throw new UnifyException(e, UnifyCoreErrorConstants.SQLSCHEMAMANAGER_MANAGE_SCHEMA_ERROR,
+					sqlDataSource.getName());
+		} finally {
+			SqlUtils.close(rs);
+			SqlUtils.close(pstmt);
 		}
 	}
 
