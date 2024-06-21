@@ -17,6 +17,7 @@ package com.tcdng.unify.core.database.sql;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -135,6 +136,8 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 	@Configurable("64")
 	private int maxStatementInfo;
 
+	private final Set<String> reservedWords;
+
 	private SqlCacheFactory sqlCacheFactory;
 
 	private SqlStatementPoolsFactory sqlStatementPoolsFactory;
@@ -157,11 +160,18 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
 	private boolean tenancyEnabled;
 
-	public AbstractSqlDataSourceDialect(boolean useCallableFunctionMode) {
-		this(useCallableFunctionMode, false);
+	public AbstractSqlDataSourceDialect(Collection<String> reservedWords, boolean useCallableFunctionMode) {
+		this(reservedWords, useCallableFunctionMode, false);
 	}
 
-	public AbstractSqlDataSourceDialect(boolean useCallableFunctionMode, boolean appendNullOnTblCreate) {
+	public AbstractSqlDataSourceDialect(Collection<String> reservedWords, boolean useCallableFunctionMode,
+			boolean appendNullOnTblCreate) {
+		Set<String> _reservedWords = new HashSet<String>();
+		for (String word: reservedWords) {
+			_reservedWords.add(word.toUpperCase());
+		}
+
+		this.reservedWords = Collections.unmodifiableSet(_reservedWords);
 		this.useCallableFunctionMode = useCallableFunctionMode;
 		this.appendNullOnTblCreate = appendNullOnTblCreate;
 		sqlCacheFactory = new SqlCacheFactory();
@@ -1500,6 +1510,11 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 	@Override
 	public String getPreferredName(String name) {
 		return name;
+	}
+
+	@Override
+	public String ensureUnreservedName(String name) {
+		return reservedWords.contains(name) ? "RZ_" + name : name;
 	}
 
 	@Override

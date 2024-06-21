@@ -17,6 +17,7 @@ package com.tcdng.unify.core.database.sql.dialect;
 
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -76,7 +77,7 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
 	}
 
 	public MsSqlDialect() {
-		super(false); // useCallableFunctionMode
+		super(Collections.emptyList(), false); // useCallableFunctionMode
 	}
 
 	@Override

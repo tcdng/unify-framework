@@ -411,6 +411,13 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
 	String getPreferredName(String name);
 
 	/**
+	 * Ensures unreserved name for dialect.
+	 * 
+	 * @param name the name
+	 */
+	String ensureUnreservedName(String name);
+
+	/**
 	 * Returns the dialect SQL BLOB type.
 	 */
 	String getSqlBlobType();

@@ -19,6 +19,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -87,7 +88,7 @@ public class HSqlDbDialect extends AbstractSqlDataSourceDialect {
 	private SqlShutdownHook sqlShutdownHook = new HSqlDbShutdownHook();
 
 	public HSqlDbDialect() {
-		super(true); // useCallableFunctionMode
+		super(Collections.emptyList(), true); // useCallableFunctionMode
 	}
 
 	@Override

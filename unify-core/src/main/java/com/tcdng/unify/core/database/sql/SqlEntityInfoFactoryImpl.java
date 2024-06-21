@@ -789,6 +789,8 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 								column = SqlUtils.generateSchemaElementName(field.getName(), true);
 							}
 
+							column = sqlDataSourceDialect.ensureUnreservedName(column);
+							
 							String constraintName = null;
 							if (isForeignKey) {
 								constraintName = SqlUtils.generateForeignKeyConstraintName(tableName, field.getName());
@@ -1154,6 +1156,8 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 							column = SqlUtils.generateSchemaElementName(field.getName(), true);
 						}
 
+						column = sqlDataSourceDialect.ensureUnreservedName(column);
+						
 						String constraintName = null;
 						if (isForeignKey) {
 							constraintName = SqlUtils.generateForeignKeyConstraintName(tableName, field.getName());
@@ -1352,6 +1356,8 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 							column = SqlUtils.generateSchemaElementName(field.getName(), true);
 						}
 
+						column = sqlDataSourceDialect.ensureUnreservedName(column);
+						
 						SqlFieldDimensions sqlFieldDimensions = new SqlFieldDimensions(refFieldInfo.getLength(),
 								refFieldInfo.getPrecision(), refFieldInfo.getScale());
 						GetterSetterInfo getterSetterInfo = ReflectUtils.getGetterSetterInfo(searchClass,

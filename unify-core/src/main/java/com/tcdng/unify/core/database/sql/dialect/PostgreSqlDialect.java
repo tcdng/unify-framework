@@ -21,6 +21,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -91,7 +92,7 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
 	}
 
 	public PostgreSqlDialect() {
-		super(true);
+		super(Collections.emptyList(), true);
 	}
 
 	@Override

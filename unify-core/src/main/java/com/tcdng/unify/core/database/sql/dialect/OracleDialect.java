@@ -21,6 +21,7 @@ import java.sql.PreparedStatement;
 import java.sql.Types;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -91,7 +92,7 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
 	}
 
 	public OracleDialect() {
-		super(false); // useCallableFunctionMode
+		super(Arrays.asList("DATE"), false); // useCallableFunctionMode
 	}
 
 	@Override

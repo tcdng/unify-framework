@@ -16,6 +16,7 @@
 package com.tcdng.unify.core.database.sql.dialect;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -70,7 +71,7 @@ public class MySqlDialect extends AbstractSqlDataSourceDialect {
 	}
 
 	public MySqlDialect() {
-		super(true);
+		super(Collections.emptyList(), true);
 	}
 
 	@Override
