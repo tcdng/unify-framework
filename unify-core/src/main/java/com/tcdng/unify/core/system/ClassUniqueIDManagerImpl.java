@@ -70,25 +70,23 @@ public class ClassUniqueIDManagerImpl extends AbstractUnifyComponent implements 
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		try {
-			logInfo("Detecting class unique ID table [{0}]...",
-					ClassUniqueIDTableNameConstants.CLASSUNIQUEID_TABLE_NAME);
+			final String tableName = sqlDataSource.getDialect().isAllObjectsInLowerCase()
+					? ClassUniqueIDTableNameConstants.CLASSUNIQUEID_TABLE_NAME.toLowerCase()
+					: ClassUniqueIDTableNameConstants.CLASSUNIQUEID_TABLE_NAME;
+			logInfo("Detecting class unique ID table [{0}]...", tableName);
 			DatabaseMetaData databaseMetaData = connection.getMetaData();
-			rs = databaseMetaData.getTables(null, sqlDataSource.getAppSchema(),
-					ClassUniqueIDTableNameConstants.CLASSUNIQUEID_TABLE_NAME, null);
+			rs = databaseMetaData.getTables(null, sqlDataSource.getAppSchema(), tableName, null);
 			if (rs.next()) {
-				logInfo("Class unique ID table [{0}] detected.",
-						ClassUniqueIDTableNameConstants.CLASSUNIQUEID_TABLE_NAME);
+				logInfo("Class unique ID table [{0}] detected.", tableName);
 			} else {
-				logInfo("Class unique ID table [{0}] not found. Attempting to create one...",
-						ClassUniqueIDTableNameConstants.CLASSUNIQUEID_TABLE_NAME);
+				logInfo("Class unique ID table [{0}] not found. Attempting to create one...", tableName);
 				final SqlEntityInfo _sqlEntityInfo = getClassUniqueIDEntityInfo();
 				String sql = sqlDataSource.getDialect().generateCreateTableSql(_sqlEntityInfo, PrintFormat.PRETTY);
 				logInfo("Executing script [{0}]...", sql);
 				pstmt = connection.prepareStatement(sql);
 				pstmt.executeUpdate();
 				connection.commit();
-				logInfo("Class unique ID table [{0}] successfully created.",
-						ClassUniqueIDTableNameConstants.CLASSUNIQUEID_TABLE_NAME);
+				logInfo("Class unique ID table [{0}] successfully created.", tableName);
 				return true;
 			}
 		} catch (SQLException e) {
@@ -215,9 +213,12 @@ public class ClassUniqueIDManagerImpl extends AbstractUnifyComponent implements 
 		if (sqlEntityInfo == null) {
 			synchronized (this) {
 				if (sqlEntityInfo == null) {
-					String tableName = ClassUniqueIDTableNameConstants.CLASSUNIQUEID_TABLE_NAME;
 					SqlDataSource sqlDataSource = getComponent(SqlDataSource.class,
 							ApplicationCommonConstants.APPLICATION_DATASOURCE);
+					String tableName = sqlDataSource.getDialect().isAllObjectsInLowerCase()
+							? ClassUniqueIDTableNameConstants.CLASSUNIQUEID_TABLE_NAME.toLowerCase()
+							: ClassUniqueIDTableNameConstants.CLASSUNIQUEID_TABLE_NAME;
+					;
 					final String preferredTableName = sqlDataSource.getDialect().getPreferredName(tableName);
 					final String schema = (String) getComponentConfig(NameSqlDataSourceSchema.class,
 							ApplicationComponents.APPLICATION_DATASOURCE).getSettings().getSettingValue("appSchema");
