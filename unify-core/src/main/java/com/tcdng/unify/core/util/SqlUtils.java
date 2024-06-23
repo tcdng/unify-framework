@@ -87,9 +87,8 @@ public final class SqlUtils {
 	private static final int MAX_CONSTRAINT_TOTAL_FIELD_PREFIX_LEN = 12;
 
 	private static final String CONSTRAINT_PREFIX = "CN_";
-	private static final String CONSTRAINT_FIELD_PADDING_CHAR = "N";
-	private static final String CONSTRAINT_FIELD_PADDING = "NNN";
-	private static final int CONSTRAINT_FIELD_PADDING_LEN = 3;
+	private static final int MAX_CONSTRAINT_FIELDS = 3;
+	private static final int MAX_CONSTRAINT_FIELD_PADDING_LEN = 4;
 
 	static {
 		versionNoTypes = new ArrayList<Class<? extends Number>>();
@@ -536,21 +535,12 @@ public final class SqlUtils {
 			sb.append(String.format("%03X", constraintIndex));
 			sb.append("_");
 
-			final int paddingLen = CONSTRAINT_FIELD_PADDING.length();
-			for (int i = 0; i < CONSTRAINT_FIELD_PADDING_LEN; i++) {
-				if (i < fieldNames.length) {
-					String fieldName = fieldNames[i];
-					final int rem = paddingLen - fieldName.length();
-					if (rem > 0) {
-						sb.append(fieldName);
-						for (int j = 0; j < rem; j++) {
-							sb.append(CONSTRAINT_FIELD_PADDING_CHAR);
-						}
-					} else {
-						sb.append(fieldName.substring(0, paddingLen));
-					}
+			for (int i = 0; i < fieldNames.length && i < MAX_CONSTRAINT_FIELDS; i++) {
+				String fieldName = fieldNames[i];
+				if (fieldName.length() > MAX_CONSTRAINT_FIELD_PADDING_LEN) {
+					sb.append(fieldName.substring(0, MAX_CONSTRAINT_FIELD_PADDING_LEN));
 				} else {
-					sb.append(CONSTRAINT_FIELD_PADDING);
+					sb.append(fieldName);
 				}
 			}
 

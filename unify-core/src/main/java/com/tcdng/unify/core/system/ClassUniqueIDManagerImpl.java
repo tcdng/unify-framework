@@ -82,9 +82,9 @@ public class ClassUniqueIDManagerImpl extends AbstractUnifyComponent implements 
 				logInfo("Class unique ID table [{0}] not found. Attempting to create one...",
 						ClassUniqueIDTableNameConstants.CLASSUNIQUEID_TABLE_NAME);
 				final SqlEntityInfo _sqlEntityInfo = getClassUniqueIDEntityInfo();
-				// TODO Set auto ID increment for primary key
-				pstmt = connection.prepareStatement(
-						sqlDataSource.getDialect().generateCreateTableSql(_sqlEntityInfo, PrintFormat.PRETTY));
+				String sql = sqlDataSource.getDialect().generateCreateTableSql(_sqlEntityInfo, PrintFormat.PRETTY);
+				logInfo("Executing script [{0}]...", sql);
+				pstmt = connection.prepareStatement(sql);
 				pstmt.executeUpdate();
 				connection.commit();
 				logInfo("Class unique ID table [{0}] successfully created.",
@@ -124,7 +124,9 @@ public class ClassUniqueIDManagerImpl extends AbstractUnifyComponent implements 
 								.append(" WHERE ")
 								.append(_sqlEntityInfo.getFieldInfo("className").getPreferredColumnName())
 								.append(" = ?");
-						pstmt = connection.prepareStatement(sb1.toString());
+						String sql1 = sb1.toString();
+						logInfo("Executing script [{0}]...", sql1);
+						pstmt = connection.prepareStatement(sql1);
 						pstmt.setString(1, className);
 						rs = pstmt.executeQuery();
 						if (rs.next()) {
@@ -135,13 +137,15 @@ public class ClassUniqueIDManagerImpl extends AbstractUnifyComponent implements 
 							sb2.append("INSERT INTO ").append(_sqlEntityInfo.getSchemaTableName()).append(" (")
 									.append(ClassUniqueIDTableNameConstants.CLASSUNIQUEID_CLASS_NAME)
 									.append(") VALUES (?)");
-							pstmt = connection.prepareStatement(sb2.toString());
+							String sql2 = sb2.toString();
+							logInfo("Executing script [{0}]...", sql2);
+							pstmt = connection.prepareStatement(sql2);
 							pstmt.setString(1, className);
 							int count = pstmt.executeUpdate();
 							if (count > 0) {
 								SqlUtils.close(rs);
 								SqlUtils.close(pstmt);
-								pstmt = connection.prepareStatement(sb1.toString());
+								pstmt = connection.prepareStatement(sql1);
 								pstmt.setString(1, className);
 								rs = pstmt.executeQuery();
 								if (rs.next()) {
@@ -240,7 +244,7 @@ public class ClassUniqueIDManagerImpl extends AbstractUnifyComponent implements 
 							null, ReflectUtils.getField(ClassUniqueID.class, "id"), getterSetterInfo.getGetter(),
 							getterSetterInfo.getSetter(), sqlDataSource.getDialect().isAllObjectsInLowerCase());
 					idFieldInfo.setAutoIncrement(true);
-					
+
 					sqlFieldDimensions = new SqlFieldDimensions(128, -1, -1);
 					getterSetterInfo = ReflectUtils.getGetterSetterInfo(ClassUniqueID.class, "className");
 					final SqlFieldInfo descFieldInfo = new SqlFieldInfo(DefaultColumnPositionConstants.COLUMN_POSITION,
