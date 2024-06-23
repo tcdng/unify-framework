@@ -81,6 +81,7 @@ import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.database.EntityPolicy;
 import com.tcdng.unify.core.database.MappedEntityRepository;
 import com.tcdng.unify.core.database.StaticReference;
+import com.tcdng.unify.core.system.ClassUniqueIDManager;
 import com.tcdng.unify.core.transform.Transformer;
 import com.tcdng.unify.core.util.AnnotationUtils;
 import com.tcdng.unify.core.util.DataUtils;
@@ -99,6 +100,9 @@ import com.tcdng.unify.core.util.StringUtils;
 public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
 	private static final String ENUM_TABLE_PREFIX = "RF";
+
+	@Configurable
+	private ClassUniqueIDManager classUniqueIDManager;
 
 	@Configurable("true")
 	private boolean sqlOrderColumns;
@@ -153,12 +157,14 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
 				// Tables
 				if (ta != null || tn != null) {
-					return createTableEntityInfo(entityClass, entityCycleDetector);
+					return createTableEntityInfo(classUniqueIDManager.getClassUniqueID(entityClass), entityClass,
+							entityCycleDetector);
 				}
 
 				// Table extensions
 				if (tae != null) {
-					return createTableExtensionEntityInfo(entityClass, entityCycleDetector);
+					return createTableExtensionEntityInfo(classUniqueIDManager.getClassUniqueID(entityClass),
+							entityClass, entityCycleDetector);
 				}
 
 				// Views
@@ -232,8 +238,8 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 			}
 
 			@SuppressWarnings("unchecked")
-			private SqlEntityInfo createTableEntityInfo(Class<?> entityClass, EntityCycleDetector entityCycleDetector)
-					throws Exception {
+			private SqlEntityInfo createTableEntityInfo(Long uniqueTableId, Class<?> entityClass,
+					EntityCycleDetector entityCycleDetector) throws Exception {
 				Mapped mae = entityClass.getAnnotation(Mapped.class);
 				String mappedEntityRepoName = mae != null ? AnnotationUtils.getAnnotationString(mae.value()) : null;
 				final MappedEntityRepository mappedEntityRepository = !StringUtils.isBlank(mappedEntityRepoName)
@@ -468,7 +474,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 								throw new UnifyException(UnifyCoreErrorConstants.RECORD_INVALID_ANNOTATION_COMBO,
 										searchClass, field);
 							}
-							
+
 							if (StringUtils.isNotBlank(AnnotationUtils.getAnnotationString(ca.name()))) {
 								column = ca.name();
 							}
@@ -488,7 +494,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 								if (StringUtils.isNotBlank(AnnotationUtils.getAnnotationString(coa.name()))) {
 									column = coa.name();
 								}
-								
+
 								if (!coa.type().isAuto()) {
 									columnType = coa.type();
 								}
@@ -789,11 +795,12 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 								column = SqlUtils.generateSchemaElementName(field.getName(), true);
 							}
 
-							column = sqlDataSourceDialect.ensureUnreservedName(column);
-							
+							column = sqlDataSourceDialect.ensureUnreservedIdentifier(column);
+
 							String constraintName = null;
 							if (isForeignKey) {
-								constraintName = SqlUtils.generateForeignKeyConstraintName(tableName, field.getName());
+								constraintName = SqlUtils.generateForeignKeyConstraintName(uniqueTableId, tableName,
+										field.getName());
 								if (uniqueConstraintNames.contains(constraintName)) {
 									constraintName = SqlUtils.resolveForeignKeyConstraintNameConflict(constraintName,
 											ucConflictIndex++);
@@ -946,10 +953,10 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 				}
 
 				List<Class<?>> heirachyList = ReflectUtils.getClassHierachyList(entityClass);
-				Map<String, SqlUniqueConstraintInfo> uniqueConstraintMap = extractUniqueConstraints(tableName,
-						entityClass, heirachyList, propertyInfoMap, tenantIdFieldInfo,
+				Map<String, SqlUniqueConstraintInfo> uniqueConstraintMap = extractUniqueConstraints(uniqueTableId,
+						tableName, entityClass, heirachyList, propertyInfoMap, tenantIdFieldInfo,
 						ta != null ? ta.uniqueConstraints() : new UniqueConstraint[] {});
-				Map<String, SqlIndexInfo> indexMap = extractIndexes(tableName, entityClass, heirachyList,
+				Map<String, SqlIndexInfo> indexMap = extractIndexes(uniqueTableId, tableName, entityClass, heirachyList,
 						propertyInfoMap, ta != null ? ta.indexes() : new Index[] {});
 
 				if (sqlOrderColumns) {
@@ -978,7 +985,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 			}
 
 			@SuppressWarnings("unchecked")
-			private SqlEntityInfo createTableExtensionEntityInfo(Class<?> entityClass,
+			private SqlEntityInfo createTableExtensionEntityInfo(Long uniqueTableId, Class<?> entityClass,
 					EntityCycleDetector entityCycleDetector) throws Exception {
 				logDebug("Creating table extension entity information for [{0}]...", entityClass);
 				TableExt tae = entityClass.getAnnotation(TableExt.class);
@@ -1156,11 +1163,12 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 							column = SqlUtils.generateSchemaElementName(field.getName(), true);
 						}
 
-						column = sqlDataSourceDialect.ensureUnreservedName(column);
-						
+						column = sqlDataSourceDialect.ensureUnreservedIdentifier(column);
+
 						String constraintName = null;
 						if (isForeignKey) {
-							constraintName = SqlUtils.generateForeignKeyConstraintName(tableName, field.getName());
+							constraintName = SqlUtils.generateForeignKeyConstraintName(uniqueTableId, tableName,
+									field.getName());
 							if (uniqueConstraintNames.contains(constraintName)) {
 								constraintName = SqlUtils.resolveForeignKeyConstraintNameConflict(constraintName,
 										ucConflictIndex++);
@@ -1263,9 +1271,9 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 				}
 
 				List<Class<?>> heirachyList = ReflectUtils.getClassHierachyList(entityClass);
-				Map<String, SqlUniqueConstraintInfo> uniqueConstraintMap = extractUniqueConstraints(tableName,
-						entityClass, heirachyList, propertyInfoMap, null, tae.uniqueConstraints());
-				Map<String, SqlIndexInfo> indexMap = extractIndexes(tableName, entityClass, heirachyList,
+				Map<String, SqlUniqueConstraintInfo> uniqueConstraintMap = extractUniqueConstraints(uniqueTableId,
+						tableName, entityClass, heirachyList, propertyInfoMap, null, tae.uniqueConstraints());
+				Map<String, SqlIndexInfo> indexMap = extractIndexes(uniqueTableId, tableName, entityClass, heirachyList,
 						propertyInfoMap, tae.indexes());
 
 				if (sqlOrderColumns) {
@@ -1356,8 +1364,8 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 							column = SqlUtils.generateSchemaElementName(field.getName(), true);
 						}
 
-						column = sqlDataSourceDialect.ensureUnreservedName(column);
-						
+						column = sqlDataSourceDialect.ensureUnreservedIdentifier(column);
+
 						SqlFieldDimensions sqlFieldDimensions = new SqlFieldDimensions(refFieldInfo.getLength(),
 								refFieldInfo.getPrecision(), refFieldInfo.getScale());
 						GetterSetterInfo getterSetterInfo = ReflectUtils.getGetterSetterInfo(searchClass,
@@ -1534,7 +1542,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 				return Collections.emptyList();
 			}
 
-			private Map<String, SqlUniqueConstraintInfo> extractUniqueConstraints(String tableName,
+			private Map<String, SqlUniqueConstraintInfo> extractUniqueConstraints(Long uniqueTableId, String tableName,
 					Class<?> entityClass, List<Class<?>> heirachyList, Map<String, SqlFieldInfo> propertyInfoMap,
 					SqlFieldInfo tenantIdFieldInfo, UniqueConstraint[] uniqueConstraints) throws Exception {
 				List<String> baseFields = new ArrayList<String>();
@@ -1565,7 +1573,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 						List<String> _fieldNames = new ArrayList<String>(baseFields);
 						_fieldNames.addAll(Arrays.asList(uca.value()));
 						String[] fieldNames = DataUtils.toArray(String.class, _fieldNames);
-						String name = SqlUtils.generateUniqueConstraintName(tableName, fieldNames);
+						String name = SqlUtils.generateUniqueConstraintName(uniqueTableId, tableName, fieldNames);
 						if (fieldNames.length == 0) {
 							throw new UnifyException(UnifyCoreErrorConstants.RECORD_PROPERTY_REQUIRED_UNIQUECONSTRAINT,
 									entityClass, name);
@@ -1607,7 +1615,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 				return uniqueConstraintMap;
 			}
 
-			private Map<String, SqlIndexInfo> extractIndexes(String tableName, Class<?> entityClass,
+			private Map<String, SqlIndexInfo> extractIndexes(Long uniqueTableId, String tableName, Class<?> entityClass,
 					List<Class<?>> heirachyList, Map<String, SqlFieldInfo> propertyInfoMap, Index[] indexes)
 					throws UnifyException {
 				// Indexes
@@ -1630,7 +1638,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 					indexMap = new LinkedHashMap<String, SqlIndexInfo>();
 					for (Index idxa : indexes) {
 						String[] fieldNames = idxa.value();
-						String name = SqlUtils.generateIndexName(tableName, fieldNames);
+						String name = SqlUtils.generateIndexName(uniqueTableId, tableName, fieldNames);
 						if (fieldNames.length == 0) {
 							throw new UnifyException(UnifyCoreErrorConstants.RECORD_PROPERTY_REQUIRED_INDEX,
 									entityClass, name);
@@ -1799,12 +1807,12 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 	@Override
 	public List<SqlEntityInfo> findAllChildSqlEntityInfos(Class<?> clazz) throws UnifyException {
 		List<SqlEntityInfo> list = new ArrayList<SqlEntityInfo>();
-		for (SqlEntityInfo sqlEntityInfo: sqlEntityInfoMap.values()) {
+		for (SqlEntityInfo sqlEntityInfo : sqlEntityInfoMap.values()) {
 			if (sqlEntityInfo.isChildSqlEntityInfo(clazz)) {
 				list.add(sqlEntityInfo);
 			}
 		}
-		
+
 		return list;
 	}
 
@@ -1851,7 +1859,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
 	@Override
 	protected void onInitialize() throws UnifyException {
-
+		classUniqueIDManager.ensureClassUniqueIDTable();
 	}
 
 	@Override

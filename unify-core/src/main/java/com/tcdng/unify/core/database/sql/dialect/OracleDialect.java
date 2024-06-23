@@ -69,6 +69,9 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
 
 	private static final OracleDataSourceDialectPolicies sqlDataSourceDialectPolicies = new OracleDataSourceDialectPolicies();
 
+	private static final List<String> RESERVED_IDENTIFIERS = Arrays.asList("CLUSTER", "COLUMN", "COMMENT", "COMPRESS",
+			"DATE", "DESC", "SHARE", "ONLINE", "OFFLINE", "USER");
+
 	static {
 		Map<ColumnType, SqlDataTypePolicy> tempMap1 = new EnumMap<ColumnType, SqlDataTypePolicy>(ColumnType.class);
 		populateDefaultSqlDataTypePolicies(tempMap1);
@@ -92,7 +95,7 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
 	}
 
 	public OracleDialect() {
-		super(Arrays.asList("DATE"), false); // useCallableFunctionMode
+		super(RESERVED_IDENTIFIERS, false); // useCallableFunctionMode
 	}
 
 	@Override
@@ -345,7 +348,7 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
 
 		@Override
 		protected ColumnType dialectSwapColumnType(ColumnType columnType, int length) {
-			return columnType.isString() && length > 4000 ? ColumnType.CLOB: columnType;
+			return columnType.isString() && length > 4000 ? ColumnType.CLOB : columnType;
 		}
 
 		@Override
@@ -370,13 +373,13 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
 
 class OracleEnumConstPolicy extends EnumConstPolicy {
 
-    @Override
-    public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
-        if (length <= 0) {
-            length = StaticReference.CODE_LENGTH;
-        }
-        sb.append(" VARCHAR2(").append(length).append(')');
-    }
+	@Override
+	public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
+		if (length <= 0) {
+			length = StaticReference.CODE_LENGTH;
+		}
+		sb.append(" VARCHAR2(").append(length).append(')');
+	}
 
 	@Override
 	public String getTypeName() {
@@ -386,13 +389,13 @@ class OracleEnumConstPolicy extends EnumConstPolicy {
 
 class OracleStringPolicy extends StringPolicy {
 
-    @Override
-    public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
-        if (length <= 0) {
-            length = DEFAULT_LENGTH;
-        }
-        sb.append(" VARCHAR2(").append(length).append(')');
-    }
+	@Override
+	public void appendTypeSql(StringBuilder sb, int length, int precision, int scale) {
+		if (length <= 0) {
+			length = DEFAULT_LENGTH;
+		}
+		sb.append(" VARCHAR2(").append(length).append(')');
+	}
 
 	@Override
 	public String getTypeName() {

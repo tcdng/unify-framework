@@ -931,15 +931,6 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 		public boolean isIndex() {
 			return tableName == null && !unique;
 		}
-
-		public String toString() {
-			StringBuilder sb = new StringBuilder();
-			sb.append("{name = ").append(name);
-			sb.append(", tableName = ").append(tableName);
-			sb.append(", unique = ").append(unique);
-			sb.append(", columns = ").append(columns).append("}");
-			return sb.toString();
-		}
 	}
 
 }

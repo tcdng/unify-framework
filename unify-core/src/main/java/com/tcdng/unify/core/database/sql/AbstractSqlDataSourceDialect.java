@@ -1513,7 +1513,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 	}
 
 	@Override
-	public String ensureUnreservedName(String name) {
+	public String ensureUnreservedIdentifier(String name) {
 		return reservedWords.contains(name.toUpperCase()) ? "RZ_" + name : name;
 	}
 

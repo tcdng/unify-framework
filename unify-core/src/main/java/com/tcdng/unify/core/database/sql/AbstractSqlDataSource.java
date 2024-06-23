@@ -269,8 +269,7 @@ public abstract class AbstractSqlDataSource extends AbstractDataSource implement
         try {
             pstmt = connection.prepareStatement(nativeSql);
             rs = pstmt.executeQuery();
-            while (rs.next())
-                ;
+            while (rs.next());
             return rs.getRow();
         } catch (SQLException e) {
             throwOperationErrorException(e);
@@ -285,12 +284,14 @@ public abstract class AbstractSqlDataSource extends AbstractDataSource implement
 
     @Override
     public int testNativeUpdate(String nativeSql) throws UnifyException {
-        logDebug("Testing upteda query [{0}]...", nativeSql);
+        logDebug("Testing uptate query [{0}]...", nativeSql);
         Connection connection = getConnection();
         PreparedStatement pstmt = null;
+        int c = 0;
         try {
             pstmt = connection.prepareStatement(nativeSql);
-            return pstmt.executeUpdate();
+            c = pstmt.executeUpdate();
+            connection.rollback();
         } catch (SQLException e) {
             throwOperationErrorException(e);
         } finally {
@@ -298,7 +299,7 @@ public abstract class AbstractSqlDataSource extends AbstractDataSource implement
             restoreConnection(connection);
         }
         logDebug("Native update [{0}] successfully tested.", nativeSql);
-        return 0;
+        return c;
     }
 
     @Override
