@@ -1876,7 +1876,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 		return sb.toString().toUpperCase();
 	}
 
-	protected void appendColumnAndTypeSql(StringBuilder sb, String preferredColumnName,
+	protected final void appendColumnAndTypeSql(StringBuilder sb, String preferredColumnName,
 			SqlFieldSchemaInfo sqlFieldSchemaInfo, boolean alter) throws UnifyException {
 		SqlDataTypePolicy sqlDataTypePolicy = getSqlTypePolicy(sqlFieldSchemaInfo.getColumnType(),
 				sqlFieldSchemaInfo.getLength());
@@ -1885,7 +1885,11 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 				sqlFieldSchemaInfo.getScale());
 
 		if (sqlFieldSchemaInfo.isPrimaryKey()) {
-			sb.append(" PRIMARY KEY NOT NULL");
+			if(sqlFieldSchemaInfo.isAutoIncrement()) {
+				appendAutoIncrementPrimaryKey(sb);
+			} else {
+				sb.append(" PRIMARY KEY NOT NULL");
+			}
 		} else {
 			if (!sqlFieldSchemaInfo.isNullable()) {
 				if (alter || sqlFieldSchemaInfo.isWithDefaultVal()) {
@@ -1904,7 +1908,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 		}
 	}
 
-	protected void appendColumnAndTypeSql(StringBuilder sb, SqlFieldSchemaInfo sqlFieldSchemaInfo,
+	protected final void appendColumnAndTypeSql(StringBuilder sb, SqlFieldSchemaInfo sqlFieldSchemaInfo,
 			SqlColumnAlterInfo sqlColumnAlterInfo) throws UnifyException {
 		SqlDataTypePolicy sqlDataTypePolicy = getSqlTypePolicy(sqlFieldSchemaInfo.getColumnType(),
 				sqlFieldSchemaInfo.getLength());
@@ -1913,7 +1917,11 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 				sqlFieldSchemaInfo.getScale());
 
 		if (sqlFieldSchemaInfo.isPrimaryKey()) {
-			sb.append(" PRIMARY KEY NOT NULL");
+			if(sqlFieldSchemaInfo.isAutoIncrement()) {
+				appendAutoIncrementPrimaryKey(sb);
+			} else {
+				sb.append(" PRIMARY KEY NOT NULL");
+			}
 		} else {
 			if (sqlColumnAlterInfo.isDefaultChange()) {
 				if (sqlFieldSchemaInfo.isWithDefaultVal()) {
@@ -1932,6 +1940,8 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 		}
 	}
 
+	protected abstract void appendAutoIncrementPrimaryKey(StringBuilder sb);
+	
 	protected void appendTypeSql(StringBuilder sb, SqlColumnInfo sqlColumnInfo) {
 		String typeName = sqlColumnInfo.getTypeName().toUpperCase();
 		sb.append(' ').append(typeName);

@@ -231,7 +231,7 @@ public class ClassUniqueIDManagerImpl extends AbstractUnifyComponent implements 
 					final boolean isCategoryColumn = false;
 					final boolean isTenantId = false;
 					final String mapped = null;
-					SqlFieldInfo idFieldInfo = new SqlFieldInfo(DefaultColumnPositionConstants.ID_POSITION,
+					final SqlFieldInfo idFieldInfo = new SqlFieldInfo(DefaultColumnPositionConstants.ID_POSITION,
 							ColumnType.LONG, null, null, null, "id", ClassUniqueIDTableNameConstants.CLASSUNIQUEID_ID,
 							sqlDataSource.getDialect()
 									.getPreferredName(ClassUniqueIDTableNameConstants.CLASSUNIQUEID_ID),
@@ -239,10 +239,11 @@ public class ClassUniqueIDManagerImpl extends AbstractUnifyComponent implements 
 							isNullable, isFosterParentType, isFosterParentId, isCategoryColumn, isTenantId, mapped,
 							null, ReflectUtils.getField(ClassUniqueID.class, "id"), getterSetterInfo.getGetter(),
 							getterSetterInfo.getSetter(), sqlDataSource.getDialect().isAllObjectsInLowerCase());
-
+					idFieldInfo.setAutoIncrement(true);
+					
 					sqlFieldDimensions = new SqlFieldDimensions(128, -1, -1);
 					getterSetterInfo = ReflectUtils.getGetterSetterInfo(ClassUniqueID.class, "className");
-					SqlFieldInfo descFieldInfo = new SqlFieldInfo(DefaultColumnPositionConstants.COLUMN_POSITION,
+					final SqlFieldInfo descFieldInfo = new SqlFieldInfo(DefaultColumnPositionConstants.COLUMN_POSITION,
 							ColumnType.STRING, null, null, null, "className",
 							ClassUniqueIDTableNameConstants.CLASSUNIQUEID_CLASS_NAME,
 							sqlDataSource.getDialect()

@@ -57,6 +57,8 @@ public class SqlFieldInfo implements SqlFieldSchemaInfo {
 
 	private Transformer<?, ?> transformer;
 
+	private boolean autoIncrement;
+
 	private boolean primaryKey;
 
 	private boolean foreignKey;
@@ -139,6 +141,15 @@ public class SqlFieldInfo implements SqlFieldSchemaInfo {
 			this.preferredColumnName = StringUtils.toLowerCase(preferredColumnName);
 			this.constraintName = StringUtils.toLowerCase(constraintName);
 		}
+	}
+
+	@Override
+	public boolean isAutoIncrement() {
+		return autoIncrement;
+	}
+
+	public void setAutoIncrement(boolean autoIncrement) {
+		this.autoIncrement = autoIncrement;
 	}
 
 	@Override

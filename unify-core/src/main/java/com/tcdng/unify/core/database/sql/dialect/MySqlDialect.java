@@ -181,6 +181,11 @@ public class MySqlDialect extends AbstractSqlDataSourceDialect {
 	}
 
 	@Override
+	protected void appendAutoIncrementPrimaryKey(StringBuilder sb) {
+		sb.append(" AUTO_INCREMENT PRIMARY KEY NOT NULL");
+	}
+
+	@Override
 	protected void appendTimestampTruncation(StringBuilder sql, SqlFieldInfo sqlFieldInfo,
 			TimeSeriesType timeSeriesType, boolean merge) throws UnifyException {
 		final String columnName = sqlFieldInfo.getPreferredColumnName();

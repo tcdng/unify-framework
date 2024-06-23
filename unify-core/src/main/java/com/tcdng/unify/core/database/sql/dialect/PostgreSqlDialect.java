@@ -169,6 +169,11 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
 	}
 
 	@Override
+	protected void appendAutoIncrementPrimaryKey(StringBuilder sb) {
+		sb.append(" SERIAL PRIMARY KEY NOT NULL");
+	}
+
+	@Override
 	protected void appendTimestampTruncation(StringBuilder sql, SqlFieldInfo sqlFieldInfo,
 			TimeSeriesType timeSeriesType, boolean merge) throws UnifyException {
 		if (merge) {
