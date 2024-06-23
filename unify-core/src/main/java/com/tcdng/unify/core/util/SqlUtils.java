@@ -87,8 +87,8 @@ public final class SqlUtils {
 	private static final int MAX_CONSTRAINT_TOTAL_FIELD_PREFIX_LEN = 12;
 
 	private static final String CONSTRAINT_PREFIX = "CN_";
-	private static final String CONSTRAINT_FIELD_PADDING_CHAR = "F";
-	private static final String CONSTRAINT_FIELD_PADDING = "FFF";
+	private static final String CONSTRAINT_FIELD_PADDING_CHAR = "N";
+	private static final String CONSTRAINT_FIELD_PADDING = "NNN";
 	private static final int CONSTRAINT_FIELD_PADDING_LEN = 3;
 
 	static {
@@ -267,45 +267,48 @@ public final class SqlUtils {
 	/**
 	 * Generates a foreign key constraint name.
 	 * 
-	 * @param uniqueTableId optional unique table ID
-	 * @param tableName     the table name
-	 * @param fieldName     the field name
+	 * @param constraintIndex constraint index
+	 * @param uniqueTableId   optional unique table ID
+	 * @param tableName       the table name
+	 * @param fieldName       the field name
 	 * @return the generated foreign key constraint name
 	 */
-	public static String generateForeignKeyConstraintName(Long uniqueTableId, String tableName, String fieldName) {
-		return String.format("%s%s", SqlUtils.generateConstraintName(uniqueTableId, tableName, fieldName),
+	public static String generateForeignKeyConstraintName(int constraintIndex, Long uniqueTableId, String tableName,
+			String fieldName) {
+		return String.format("%s%s",
+				SqlUtils.generateConstraintName(constraintIndex, uniqueTableId, tableName, fieldName),
 				IDENTIFIER_SUFFIX_FOREIGNKEY);
-	}
-
-	public static String resolveForeignKeyConstraintNameConflict(String constraintName, int conflictIndex) {
-		StringBuilder sb = new StringBuilder(constraintName);
-		sb.insert(constraintName.length() - IDENTIFIER_SUFFIX_FOREIGNKEY.length(), "" + conflictIndex);
-		return sb.toString();
 	}
 
 	/**
 	 * Generates a unique constraint name.
 	 * 
-	 * @param uniqueTableId optional unique table ID
-	 * @param tableName     the table name
-	 * @param fieldNames    the field names
+	 * @param constraintIndex constraint index
+	 * @param uniqueTableId   optional unique table ID
+	 * @param tableName       the table name
+	 * @param fieldNames      the field names
 	 * @return the generated constraint name string
 	 */
-	public static String generateUniqueConstraintName(Long uniqueTableId, String tableName, String... fieldNames) {
-		return String.format("%s%s", SqlUtils.generateConstraintName(uniqueTableId, tableName, fieldNames),
+	public static String generateUniqueConstraintName(int constraintIndex, Long uniqueTableId, String tableName,
+			String... fieldNames) {
+		return String.format("%s%s",
+				SqlUtils.generateConstraintName(constraintIndex, uniqueTableId, tableName, fieldNames),
 				IDENTIFIER_SUFFIX_UNIQUECONSTRAINT);
 	}
 
 	/**
 	 * Generates an index name.
 	 * 
-	 * @param uniqueTableId optional unique table ID
-	 * @param tableName     the table name
-	 * @param fieldNames    the field names
+	 * @param constraintIndex constraint index
+	 * @param uniqueTableId   optional unique table ID
+	 * @param tableName       the table name
+	 * @param fieldNames      the field names
 	 * @return the generated index string
 	 */
-	public static String generateIndexName(Long uniqueTableId, String tableName, String... fieldNames) {
-		return String.format("%s%s", SqlUtils.generateConstraintName(uniqueTableId, tableName, fieldNames),
+	public static String generateIndexName(int constraintIndex, Long uniqueTableId, String tableName,
+			String... fieldNames) {
+		return String.format("%s%s",
+				SqlUtils.generateConstraintName(constraintIndex, uniqueTableId, tableName, fieldNames),
 				IDENTIFIER_SUFFIX_INDEX);
 	}
 
@@ -525,10 +528,14 @@ public final class SqlUtils {
 		return new SqlFieldDimensions(nLength, nPrecision, nScale);
 	}
 
-	private static String generateConstraintName(Long uniqueTableId, String tableName, String... fieldNames) {
+	private static String generateConstraintName(int constraintIndex, Long uniqueTableId, String tableName,
+			String... fieldNames) {
 		StringBuilder sb = new StringBuilder();
 		if (uniqueTableId != null) {
 			sb.append(CONSTRAINT_PREFIX);
+			sb.append(String.format("%03X", constraintIndex));
+			sb.append("_");
+
 			final int paddingLen = CONSTRAINT_FIELD_PADDING.length();
 			for (int i = 0; i < CONSTRAINT_FIELD_PADDING_LEN; i++) {
 				if (i < fieldNames.length) {

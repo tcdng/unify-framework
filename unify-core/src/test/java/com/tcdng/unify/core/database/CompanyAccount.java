@@ -30,7 +30,9 @@ import com.tcdng.unify.core.annotation.UniqueConstraints;
  * @since 1.0
  */
 @Table(name = "COMPANY_ACCOUNT")
-@UniqueConstraints({@UniqueConstraint({ "accountNo" }), @UniqueConstraint({ "accountName" })})
+@UniqueConstraints({
+	@UniqueConstraint({ "accountNo" }),
+	@UniqueConstraint({ "accountName" })})
 public class CompanyAccount extends AbstractTestTableEntity {
 
 	@TenantId

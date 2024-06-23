@@ -120,6 +120,8 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
 	private int rAliasCounter;
 
+	private boolean isClassUniqueIDManagerInit;
+
 	public SqlEntityInfoFactoryImpl() {
 		sqlEntityInfoMap = new FactoryMap<Class<?>, SqlEntityInfo>() {
 
@@ -157,13 +159,13 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
 				// Tables
 				if (ta != null || tn != null) {
-					return createTableEntityInfo(classUniqueIDManager.getClassUniqueID(entityClass), entityClass,
+					return createTableEntityInfo(getClassUniqueIDManager().getClassUniqueID(entityClass), entityClass,
 							entityCycleDetector);
 				}
 
 				// Table extensions
 				if (tae != null) {
-					return createTableExtensionEntityInfo(classUniqueIDManager.getClassUniqueID(entityClass),
+					return createTableExtensionEntityInfo(getClassUniqueIDManager().getClassUniqueID(entityClass),
 							entityClass, entityCycleDetector);
 				}
 
@@ -297,7 +299,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
 				// Process all fields including super class fields
 				Set<String> uniqueConstraintNames = new HashSet<String>();
-				int ucConflictIndex = 0;
+				int fkConstraintIndex = 0;
 				Map<String, SqlFieldInfo> propertyInfoMap = new HashMap<String, SqlFieldInfo>();
 				List<ChildFieldInfo> childInfoList = new ArrayList<ChildFieldInfo>();
 				List<ChildFieldInfo> childListInfoList = new ArrayList<ChildFieldInfo>();
@@ -799,14 +801,9 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
 							String constraintName = null;
 							if (isForeignKey) {
-								constraintName = SqlUtils.generateForeignKeyConstraintName(uniqueTableId, tableName,
-										field.getName());
-								if (uniqueConstraintNames.contains(constraintName)) {
-									constraintName = SqlUtils.resolveForeignKeyConstraintNameConflict(constraintName,
-											ucConflictIndex++);
-								} else {
-									uniqueConstraintNames.add(constraintName);
-								}
+								constraintName = SqlUtils.generateForeignKeyConstraintName(fkConstraintIndex++,
+										uniqueTableId, tableName, field.getName());
+								uniqueConstraintNames.add(constraintName);
 							}
 
 							SqlFieldDimensions sqlFieldDimensions = SqlUtils.getNormalizedSqlFieldDimensions(columnType,
@@ -1010,7 +1007,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
 				// Process all fields including super class fields
 				Set<String> uniqueConstraintNames = new HashSet<String>();
-				int ucConflictIndex = 0;
+				int fkConstraintIndex = 0;
 				Map<String, SqlFieldInfo> propertyInfoMap = new HashMap<String, SqlFieldInfo>();
 				List<Field> listOnlyFieldList = new ArrayList<Field>();
 				Field[] fields = entityClass.getDeclaredFields();
@@ -1167,14 +1164,9 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
 						String constraintName = null;
 						if (isForeignKey) {
-							constraintName = SqlUtils.generateForeignKeyConstraintName(uniqueTableId, tableName,
-									field.getName());
-							if (uniqueConstraintNames.contains(constraintName)) {
-								constraintName = SqlUtils.resolveForeignKeyConstraintNameConflict(constraintName,
-										ucConflictIndex++);
-							} else {
-								uniqueConstraintNames.add(constraintName);
-							}
+							constraintName = SqlUtils.generateForeignKeyConstraintName(fkConstraintIndex++,
+									uniqueTableId, tableName, field.getName());
+							uniqueConstraintNames.add(constraintName);
 						}
 
 						SqlFieldDimensions sqlFieldDimensions = SqlUtils.getNormalizedSqlFieldDimensions(columnType,
@@ -1568,12 +1560,14 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
 				Map<String, SqlUniqueConstraintInfo> uniqueConstraintMap = null;
 				if (!resolvedConstraints.isEmpty()) {
+					int ucConstraintIndex = 0;
 					uniqueConstraintMap = new LinkedHashMap<String, SqlUniqueConstraintInfo>();
 					for (UniqueConstraint uca : resolvedConstraints) {
 						List<String> _fieldNames = new ArrayList<String>(baseFields);
 						_fieldNames.addAll(Arrays.asList(uca.value()));
 						String[] fieldNames = DataUtils.toArray(String.class, _fieldNames);
-						String name = SqlUtils.generateUniqueConstraintName(uniqueTableId, tableName, fieldNames);
+						String name = SqlUtils.generateUniqueConstraintName(ucConstraintIndex++, uniqueTableId,
+								tableName, fieldNames);
 						if (fieldNames.length == 0) {
 							throw new UnifyException(UnifyCoreErrorConstants.RECORD_PROPERTY_REQUIRED_UNIQUECONSTRAINT,
 									entityClass, name);
@@ -1635,10 +1629,12 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
 				Map<String, SqlIndexInfo> indexMap = null;
 				if (!resolvedIndexes.isEmpty()) {
+					int idxConstraintIndex = 0;
 					indexMap = new LinkedHashMap<String, SqlIndexInfo>();
 					for (Index idxa : indexes) {
 						String[] fieldNames = idxa.value();
-						String name = SqlUtils.generateIndexName(uniqueTableId, tableName, fieldNames);
+						String name = SqlUtils.generateIndexName(idxConstraintIndex++, uniqueTableId, tableName,
+								fieldNames);
 						if (fieldNames.length == 0) {
 							throw new UnifyException(UnifyCoreErrorConstants.RECORD_PROPERTY_REQUIRED_INDEX,
 									entityClass, name);
@@ -1859,12 +1855,21 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
 	@Override
 	protected void onInitialize() throws UnifyException {
-		classUniqueIDManager.ensureClassUniqueIDTable();
+
 	}
 
 	@Override
 	protected void onTerminate() throws UnifyException {
 
+	}
+
+	private ClassUniqueIDManager getClassUniqueIDManager() throws UnifyException {
+		if (!isClassUniqueIDManagerInit) {
+			classUniqueIDManager.ensureClassUniqueIDTable();
+			isClassUniqueIDManagerInit = true;
+		}
+
+		return classUniqueIDManager;
 	}
 
 	private String getWorkingSchema(String schema, String dataSource) throws UnifyException {

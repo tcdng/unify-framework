@@ -57,7 +57,7 @@ public class ClassUniqueIDManagerImpl extends AbstractUnifyComponent implements 
 
 	private SqlEntityInfo sqlEntityInfo;
 
-	public ClassUniqueIDManagerImpl(String createTableSql) {
+	public ClassUniqueIDManagerImpl() {
 		this.uniqueIdsByClass = new HashMap<String, Long>();
 	}
 
@@ -134,7 +134,7 @@ public class ClassUniqueIDManagerImpl extends AbstractUnifyComponent implements 
 							StringBuilder sb2 = new StringBuilder();
 							sb2.append("INSERT INTO ").append(_sqlEntityInfo.getSchemaTableName()).append(" (")
 									.append(ClassUniqueIDTableNameConstants.CLASSUNIQUEID_CLASS_NAME)
-									.append(") VALUES (").append(className).append(")");
+									.append(") VALUES (?)");
 							pstmt = connection.prepareStatement(sb2.toString());
 							pstmt.setString(1, className);
 							int count = pstmt.executeUpdate();
