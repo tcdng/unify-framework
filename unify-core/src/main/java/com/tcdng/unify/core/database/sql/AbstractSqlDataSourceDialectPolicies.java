@@ -57,8 +57,9 @@ public abstract class AbstractSqlDataSourceDialectPolicies implements SqlDataSou
     }
 
     @Override
-    public SqlDataTypePolicy getSqlTypePolicy(ColumnType columnType) {
-        return sqlDataTypePolicies.get(columnType);
+    public SqlDataTypePolicy getSqlTypePolicy(ColumnType columnType, int length) {
+    	ColumnType _columnType = dialectSwapColumnType(columnType, length);
+        return sqlDataTypePolicies.get(_columnType);
     }
 
     @Override
@@ -120,5 +121,7 @@ public abstract class AbstractSqlDataSourceDialectPolicies implements SqlDataSou
         return "%" + paramStr + "%";
     }
 
+    protected abstract ColumnType dialectSwapColumnType(ColumnType columnType, int length);
+    
     protected abstract String concat(String... expressions);
 }

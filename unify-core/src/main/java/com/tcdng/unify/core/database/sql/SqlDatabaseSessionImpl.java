@@ -25,6 +25,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.Stack;
 
@@ -406,9 +407,10 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
 		final Select select = query.getSelect();
 		try {
+			SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(fieldName);
 			query.setSelect(new Select(fieldName).setDistinct(query.isDistinct()));
 			return getSqlStatementExecutor().executeMultipleObjectListResultQuery(connection, fieldClass,
-					sqlDataSourceDialect.getSqlTypePolicy(sqlEntityInfo.getListFieldInfo(fieldName).getColumnType()),
+					sqlDataSourceDialect.getSqlTypePolicy(sqlFieldInfo.getColumnType(), sqlFieldInfo.getLength()),
 					sqlDataSourceDialect.prepareListStatement(query));
 		} finally {
 			query.setSelect(select);
@@ -426,9 +428,10 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
 		final Select select = query.getSelect();
 		try {
-			query.setSelect(new Select(fieldName).setDistinct(true));
+			SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(fieldName);
+			query.setSelect(new Select(fieldName).setDistinct(query.isDistinct()));
 			return getSqlStatementExecutor().executeMultipleObjectSetResultQuery(connection, fieldClass,
-					sqlDataSourceDialect.getSqlTypePolicy(sqlEntityInfo.getListFieldInfo(fieldName).getColumnType()),
+					sqlDataSourceDialect.getSqlTypePolicy(sqlFieldInfo.getColumnType(), sqlFieldInfo.getLength()),
 					sqlDataSourceDialect.prepareListStatement(query));
 		} finally {
 			query.setSelect(select);
@@ -465,7 +468,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
 		final Select select = query.getSelect();
 		try {
-			query.setSelect(new Select(keyName, valueName).setDistinct(true));
+			query.setSelect(new Select(keyName, valueName).setDistinct(query.isDistinct()));
 			return getSqlStatementExecutor().executeMultipleObjectListMapResultQuery(connection, keyClass, keyName,
 					valueClass, valueName, sqlDataSourceDialect.prepareListStatement(query));
 		} finally {
@@ -483,9 +486,10 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
 		final Select select = query.getSelect();
 		try {
-			query.setSelect(new Select(fieldName).setDistinct(true));
+			SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(fieldName);
+			query.setSelect(new Select(fieldName).setDistinct(query.isDistinct()));
 			return getSqlStatementExecutor().executeSingleObjectResultQuery(connection, fieldClass,
-					sqlDataSourceDialect.getSqlTypePolicy(sqlEntityInfo.getListFieldInfo(fieldName).getColumnType()),
+					sqlDataSourceDialect.getSqlTypePolicy(sqlFieldInfo.getColumnType(), sqlFieldInfo.getLength()),
 					sqlDataSourceDialect.prepareListStatement(query), MustMatch.fromBoolean(query.isMustMatch()));
 		} finally {
 			query.setSelect(select);
@@ -493,7 +497,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 	}
 
 	@Override
-	public <T, U extends Entity> T valueOptional(Class<T> fieldClass, String fieldName, Query<U> query)
+	public <T, U extends Entity> Optional<T> valueOptional(Class<T> fieldClass, String fieldName, Query<U> query)
 			throws UnifyException {
 		SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
 		EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
@@ -503,10 +507,12 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
 		final Select select = query.getSelect();
 		try {
-			query.setSelect(new Select(fieldName).setDistinct(true));
-			return getSqlStatementExecutor().executeSingleObjectResultQuery(connection, fieldClass,
-					sqlDataSourceDialect.getSqlTypePolicy(sqlEntityInfo.getListFieldInfo(fieldName).getColumnType()),
+			SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(fieldName);
+			query.setSelect(new Select(fieldName).setDistinct(query.isDistinct()));
+			T val = getSqlStatementExecutor().executeSingleObjectResultQuery(connection, fieldClass,
+					sqlDataSourceDialect.getSqlTypePolicy(sqlFieldInfo.getColumnType(), sqlFieldInfo.getLength()),
 					sqlDataSourceDialect.prepareListStatement(query), MustMatch.FALSE);
+			return Optional.ofNullable(val);
 		} finally {
 			query.setSelect(select);
 		}
@@ -523,7 +529,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
 		SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(fieldName);
 		return getSqlStatementExecutor().executeSingleObjectResultQuery(connection, fieldClass,
-				sqlDataSourceDialect.getSqlTypePolicy(sqlFieldInfo.getColumnType()),
+				sqlDataSourceDialect.getSqlTypePolicy(sqlFieldInfo.getColumnType(), sqlFieldInfo.getLength()),
 				sqlDataSourceDialect.prepareMinStatement(sqlFieldInfo.getPreferredColumnName(), query),
 				MustMatch.FALSE);
 	}
@@ -539,7 +545,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
 		SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo(fieldName);
 		return getSqlStatementExecutor().executeSingleObjectResultQuery(connection, fieldClass,
-				sqlDataSourceDialect.getSqlTypePolicy(sqlFieldInfo.getColumnType()),
+				sqlDataSourceDialect.getSqlTypePolicy(sqlFieldInfo.getColumnType(), sqlFieldInfo.getLength()),
 				sqlDataSourceDialect.prepareMaxStatement(sqlFieldInfo.getPreferredColumnName(), query),
 				MustMatch.FALSE);
 	}
@@ -929,7 +935,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 	@Override
 	public Date getNow() throws UnifyException {
 		return getSqlStatementExecutor().executeSingleObjectResultQuery(connection, Date.class,
-				sqlDataSourceDialect.getSqlTypePolicy(ColumnType.TIMESTAMP_UTC),
+				sqlDataSourceDialect.getSqlTypePolicy(ColumnType.TIMESTAMP_UTC, 0),
 				sqlDataSourceDialect.generateUTCTimestampSql(), MustMatch.TRUE);
 	}
 

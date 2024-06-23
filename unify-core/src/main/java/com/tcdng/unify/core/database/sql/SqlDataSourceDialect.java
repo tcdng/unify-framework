@@ -86,9 +86,10 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
 	 * Returns the SQL policy for a column type.
 	 * 
 	 * @param columnType the column type
+	 * @param length the column length
 	 * @throws UnifyException if type is not supported. If an error occurs
 	 */
-	SqlDataTypePolicy getSqlTypePolicy(ColumnType columnType) throws UnifyException;
+	SqlDataTypePolicy getSqlTypePolicy(ColumnType columnType, int length) throws UnifyException;
 
 	/**
 	 * Returns the SQL criteria policy for an operator.
@@ -408,6 +409,13 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
 	 * @param name the name
 	 */
 	String getPreferredName(String name);
+
+	/**
+	 * Ensures unreserved name for dialect.
+	 * 
+	 * @param name the name
+	 */
+	String ensureUnreservedIdentifier(String name);
 
 	/**
 	 * Returns the dialect SQL BLOB type.

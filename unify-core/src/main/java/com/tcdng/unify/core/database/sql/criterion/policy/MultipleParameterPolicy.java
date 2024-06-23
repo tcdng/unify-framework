@@ -104,7 +104,7 @@ public abstract class MultipleParameterPolicy extends AbstractSqlCriteriaPolicy 
             }
         }
         sql.append(")");
-        parameterInfoList.add(new SqlParameter(getSqlTypePolicy(sqlFieldInfo.getColumnType()), values, true));
+        parameterInfoList.add(new SqlParameter(getSqlTypePolicy(sqlFieldInfo.getColumnType(), sqlFieldInfo.getLength()), values, true));
     }
 
     @Override

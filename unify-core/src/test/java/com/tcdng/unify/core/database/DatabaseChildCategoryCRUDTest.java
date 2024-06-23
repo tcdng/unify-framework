@@ -1527,6 +1527,9 @@ public class DatabaseChildCategoryCRUDTest extends AbstractUnifyComponentTest {
     @Override
     protected void doAddSettingsAndDependencies() throws Exception {
         addContainerSetting(UnifyCorePropertyConstants.APPLICATION_QUERY_LIMIT, 8);
+//        addContainerSetting(UnifyCorePropertyConstants.APPLICATION_LOG_LEVEL, "debug");
+//        addContainerSetting(UnifyCorePropertyConstants.APPLICATION_LOG_TO_CONSOLE, true);
+//        addContainerSetting(UnifyCorePropertyConstants.APPLICATION_SQL_DEBUGGING, true);
     }
 
     @Override

@@ -17,6 +17,7 @@ package com.tcdng.unify.core.database.sql.dialect;
 
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -76,7 +77,7 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
 	}
 
 	public MsSqlDialect() {
-		super(false); // useCallableFunctionMode
+		super(Collections.emptyList(), false); // useCallableFunctionMode
 	}
 
 	@Override
@@ -110,6 +111,11 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
 		}
 
 		return false;
+	}
+
+	@Override
+	protected void appendAutoIncrementPrimaryKey(StringBuilder sb) {
+		sb.append(" IDENTITY(1,1) PRIMARY KEY NOT NULL");
 	}
 
 	@Override
@@ -242,7 +248,8 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
 			throws UnifyException {
 		List<String> sqlList = new ArrayList<String>();
 		StringBuilder sb = new StringBuilder();
-		SqlDataTypePolicy sqlDataTypePolicy = getSqlTypePolicy(sqlFieldSchemaInfo.getColumnType());
+		SqlDataTypePolicy sqlDataTypePolicy = getSqlTypePolicy(sqlFieldSchemaInfo.getColumnType(),
+				sqlFieldSchemaInfo.getLength());
 
 		if (sqlColumnAlterInfo.isNullableChange()) {
 			if (!sqlFieldSchemaInfo.isNullable()) {
@@ -365,6 +372,11 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
 		}
 
 		@Override
+		protected ColumnType dialectSwapColumnType(ColumnType columnType, int length) {
+			return columnType.isString() && length > 8000 ? ColumnType.CLOB: columnType;
+		}
+
+		@Override
 		protected String concat(String... expressions) {
 			StringBuilder sb = new StringBuilder();
 			sb.append("(");
@@ -384,7 +396,8 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
 	}
 
 	private void appendColumnAndTypeSql(StringBuilder sb, SqlFieldSchemaInfo sqlFieldSchemaInfo) throws UnifyException {
-		SqlDataTypePolicy sqlDataTypePolicy = getSqlTypePolicy(sqlFieldSchemaInfo.getColumnType());
+		SqlDataTypePolicy sqlDataTypePolicy = getSqlTypePolicy(sqlFieldSchemaInfo.getColumnType(),
+				sqlFieldSchemaInfo.getLength());
 		sb.append(sqlFieldSchemaInfo.getPreferredColumnName());
 		sqlDataTypePolicy.appendTypeSql(sb, sqlFieldSchemaInfo.getLength(), sqlFieldSchemaInfo.getPrecision(),
 				sqlFieldSchemaInfo.getScale());

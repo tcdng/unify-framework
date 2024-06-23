@@ -103,12 +103,14 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 			logInfo("Scanning datasource {0} for table schema...", sqlDataSource.getName());
 			logInfo("Managing schema elements for [{0}] table entities...", entityClasses.size());
 			DatabaseMetaData databaseMetaData = connection.getMetaData();
+			SqlSchemaManagerContext ctx = new SqlSchemaManagerContext();
 			for (Class<?> entityClass : entityClasses) {
 				Map<String, TableConstraint> managedTableConstraints = fetchManagedTableConstraints(databaseMetaData,
 						sqlDataSource, entityClass);
-				manageTableSchema(databaseMetaData, sqlDataSource, entityClass, managedTableConstraints, options);
+				manageTableSchema(ctx, databaseMetaData, sqlDataSource, entityClass, managedTableConstraints, options);
 			}
 
+			applyDeferredTableSchemaSql(ctx, databaseMetaData, sqlDataSource);
 			logInfo("Table schema elements management completed for [{0}] table entities...", entityClasses.size());
 		} catch (SQLException e) {
 			throw new UnifyException(e, UnifyCoreErrorConstants.SQLSCHEMAMANAGER_MANAGE_SCHEMA_ERROR,
@@ -198,8 +200,8 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 		return viewList;
 	}
 
-	private void buildParentDependencyList(SqlDataSource sqlDataSource, List<Class<?>> entityTypeList, Class<?> entityClass)
-			throws UnifyException {
+	private void buildParentDependencyList(SqlDataSource sqlDataSource, List<Class<?>> entityTypeList,
+			Class<?> entityClass) throws UnifyException {
 		SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
 		SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.findSqlEntityInfo(entityClass);
 
@@ -217,8 +219,8 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 		}
 	}
 
-	private void buildChildDependencyList(SqlDataSource sqlDataSource, List<Class<?>> entityTypeList, Class<?> entityClass)
-			throws UnifyException {
+	private void buildChildDependencyList(SqlDataSource sqlDataSource, List<Class<?>> entityTypeList,
+			Class<?> entityClass) throws UnifyException {
 		SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
 		SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.findSqlEntityInfo(entityClass);
 		List<SqlEntityInfo> sqlEntityInfos = sqlDataSourceDialect.findAllChildSqlEntityInfos(entityClass);
@@ -234,15 +236,16 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 		}
 	}
 
-	private void manageTableSchema(DatabaseMetaData databaseMetaData, SqlDataSource sqlDataSource, Class<?> entityClass,
-			Map<String, TableConstraint> managedTableConstraints, SqlSchemaManagerOptions options)
-			throws UnifyException {
+	private void manageTableSchema(SqlSchemaManagerContext ctx, DatabaseMetaData databaseMetaData,
+			SqlDataSource sqlDataSource, Class<?> entityClass, Map<String, TableConstraint> managedTableConstraints,
+			SqlSchemaManagerOptions options) throws UnifyException {
 		SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
 		SqlEntityInfo sqlEntityInfo = sqlDataSourceDialect.findSqlEntityInfo(entityClass);
 		if (sqlEntityInfo.isSchemaAlreadyManaged()) {
 			return;
 		}
 
+		logDebug("Managing entity class [{0}]...", entityClass.getName());
 		final PrintFormat printFormat = options.getPrintFormat();
 		final ForceConstraints forceConstraints = options.getForceConstraints();
 
@@ -286,9 +289,11 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 
 					// Recreate all constraints and indexes
 					logDebug("Recreating all constraints and indexes...");
-					for (SqlForeignKeySchemaInfo sqlForeignKeyInfo : sqlEntityInfo.getManagedForeignKeyList()) {
-						createUpdateConstraintSql.add(sqlDataSourceDialect
-								.generateAddForeignKeyConstraintSql(sqlEntityInfo, sqlForeignKeyInfo, printFormat));
+					if (!sqlEntityInfo.isExtended()) {
+						for (SqlForeignKeySchemaInfo sqlForeignKeyInfo : sqlEntityInfo.getManagedForeignKeyList()) {
+							ctx.addDeferredFkConstraintSql(sqlDataSourceDialect
+									.generateAddForeignKeyConstraintSql(sqlEntityInfo, sqlForeignKeyInfo, printFormat));
+						}
 					}
 
 					for (SqlUniqueConstraintSchemaInfo sqlUniqueConstraintInfo : sqlEntityInfo.getUniqueConstraintList()
@@ -307,31 +312,33 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 					// Detect foreign constraint changes
 					logDebug("Detecting foreign constraint changes...");
 					if (forceConstraints.isTrue() && sqlEntityInfo.isManagedForeignKeys()) {
-						for (SqlForeignKeySchemaInfo sqlForeignKeyInfo : sqlEntityInfo.getManagedForeignKeyList()) {
-							if (!sqlEntityInfo.getManagedFieldInfo(sqlForeignKeyInfo.getFieldName())
-									.isIgnoreFkConstraint()) {
-								SqlFieldInfo sqlFieldInfo = sqlEntityInfo
-										.getManagedFieldInfo(sqlForeignKeyInfo.getFieldName());
-								String fkConstName = sqlFieldInfo.getConstraint();
-								TableConstraint fkConst = managedTableConstraints.get(fkConstName);
-								boolean update = true;
-								if (fkConst != null) {
-									// Check if foreign key matches database constraint
-									if (fkConst.isForeignKey() /* && fkConst.getColumns().size() == 1 */
-											&& fkConst.getTableName()
-													.equals(sqlFieldInfo.getForeignEntityInfo().getTableName())
-											&& fkConst.getColumns()
-													.contains(sqlFieldInfo.getForeignFieldInfo().getColumnName())) {
-										// Perfect match. Remove from pending list and no need for update
-										managedTableConstraints.remove(fkConstName);
-										update = false;
+						if (!sqlEntityInfo.isExtended()) {
+							for (SqlForeignKeySchemaInfo sqlForeignKeyInfo : sqlEntityInfo.getManagedForeignKeyList()) {
+								if (!sqlEntityInfo.getManagedFieldInfo(sqlForeignKeyInfo.getFieldName())
+										.isIgnoreFkConstraint()) {
+									SqlFieldInfo sqlFieldInfo = sqlEntityInfo
+											.getManagedFieldInfo(sqlForeignKeyInfo.getFieldName());
+									String fkConstName = sqlFieldInfo.getConstraint();
+									TableConstraint fkConst = managedTableConstraints.get(fkConstName);
+									boolean update = true;
+									if (fkConst != null) {
+										// Check if foreign key matches database constraint
+										if (fkConst.isForeignKey() /* && fkConst.getColumns().size() == 1 */
+												&& fkConst.getTableName()
+														.equals(sqlFieldInfo.getForeignEntityInfo().getTableName())
+												&& fkConst.getColumns()
+														.contains(sqlFieldInfo.getForeignFieldInfo().getColumnName())) {
+											// Perfect match. Remove from pending list and no need for update
+											managedTableConstraints.remove(fkConstName);
+											update = false;
+										}
 									}
-								}
 
-								if (update) {
-									createUpdateConstraintSql
-											.add(sqlDataSourceDialect.generateAddForeignKeyConstraintSql(sqlEntityInfo,
-													sqlForeignKeyInfo, printFormat));
+									if (update) {
+										ctx.addDeferredFkConstraintSql(
+												sqlDataSourceDialect.generateAddForeignKeyConstraintSql(sqlEntityInfo,
+														sqlForeignKeyInfo, printFormat));
+									}
 								}
 							}
 						}
@@ -402,11 +409,13 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 
 				// Create constraints and indexes
 				if (forceConstraints.isTrue() && sqlEntityInfo.isManagedForeignKeys()) {
-					for (SqlForeignKeySchemaInfo sqlForeignKeyInfo : sqlEntityInfo.getManagedForeignKeyList()) {
-						if (!sqlEntityInfo.getManagedFieldInfo(sqlForeignKeyInfo.getFieldName())
-								.isIgnoreFkConstraint()) {
-							tableUpdateSql.add(sqlDataSourceDialect.generateAddForeignKeyConstraintSql(sqlEntityInfo,
-									sqlForeignKeyInfo, printFormat));
+					if (!sqlEntityInfo.isExtended()) {
+						for (SqlForeignKeySchemaInfo sqlForeignKeyInfo : sqlEntityInfo.getManagedForeignKeyList()) {
+							if (!sqlEntityInfo.getManagedFieldInfo(sqlForeignKeyInfo.getFieldName())
+									.isIgnoreFkConstraint()) {
+								ctx.addDeferredFkConstraintSql(sqlDataSourceDialect.generateAddForeignKeyConstraintSql(
+										sqlEntityInfo, sqlForeignKeyInfo, printFormat));
+							}
 						}
 					}
 				}
@@ -499,6 +508,46 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 			SqlUtils.close(rs);
 			SqlUtils.close(pstmt);
 			sqlEntityInfo.setSchemaAlreadyManaged();
+		}
+	}
+
+	private void applyDeferredTableSchemaSql(SqlSchemaManagerContext ctx, DatabaseMetaData databaseMetaData,
+			SqlDataSource sqlDataSource) throws UnifyException {
+		Connection connection = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			connection = databaseMetaData.getConnection();
+			// Execute deferred scripts
+			logDebug("Executing deferred SQL scripts...");
+
+			// Apply FK constraints
+			logDebug("Applying foreign key SQL scripts...");
+			for (String sql : ctx.getDeferredFkConstraintSql()) {
+				if (sqlDebugging) {
+					logDebug("Executing SQL update [{0}]...", sql);
+				}
+
+				pstmt = connection.prepareStatement(sql);
+				pstmt.executeUpdate();
+				SqlUtils.close(pstmt);
+
+				if (sqlDebugging) {
+					logDebug("Completed executing SQL update [{0}]...", sql);
+				}
+			}
+			connection.commit();
+			logDebug("Application of foreign key SQL scripts successfully completed.");
+		} catch (SQLException e) {
+			try {
+				connection.rollback();
+			} catch (SQLException e1) {
+			}
+			throw new UnifyException(e, UnifyCoreErrorConstants.SQLSCHEMAMANAGER_MANAGE_SCHEMA_ERROR,
+					sqlDataSource.getName());
+		} finally {
+			SqlUtils.close(rs);
+			SqlUtils.close(pstmt);
 		}
 	}
 
@@ -773,7 +822,8 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 					columnInfo.isNullable(), sqlfieldInfo.isNullable());
 		}
 
-		SqlDataTypePolicy sqlDataTypePolicy = sqlDataSourceDialect.getSqlTypePolicy(sqlfieldInfo.getColumnType());
+		SqlDataTypePolicy sqlDataTypePolicy = sqlDataSourceDialect.getSqlTypePolicy(sqlfieldInfo.getColumnType(),
+				sqlfieldInfo.getLength());
 		boolean defaultChange = !sqlDataSourceDialect.matchColumnDefault(columnInfo.getDefaultVal(),
 				sqlfieldInfo.getDefaultVal())
 				&& !isSwappableValues(sqlfieldInfo.getDefaultVal(), columnInfo.getDefaultVal());
@@ -880,15 +930,6 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 
 		public boolean isIndex() {
 			return tableName == null && !unique;
-		}
-
-		public String toString() {
-			StringBuilder sb = new StringBuilder();
-			sb.append("{name = ").append(name);
-			sb.append(", tableName = ").append(tableName);
-			sb.append(", unique = ").append(unique);
-			sb.append(", columns = ").append(columns).append("}");
-			return sb.toString();
 		}
 	}
 

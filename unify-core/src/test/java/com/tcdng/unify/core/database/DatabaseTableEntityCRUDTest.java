@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import org.junit.Test;
@@ -5085,11 +5086,15 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
 			db.create(new Fruit("banana", "yellow", 45.00, 45));
 			db.create(new Fruit("orange", "orange", 15.00, 11));
 
-			String color = db.valueOptional(String.class, "color", new FruitQuery().addEquals("name", "apple"));
-			assertEquals("red", color);
+			Optional<String> color = db.valueOptional(String.class, "color",
+					new FruitQuery().addEquals("name", "apple"));
+			assertTrue(color.isPresent());
+			assertEquals("red", color.get());
 
-			Double price = db.valueOptional(Double.class, "price", new FruitQuery().addEquals("name", "banana"));
-			assertEquals(Double.valueOf(45.00), price);
+			Optional<Double> price = db.valueOptional(Double.class, "price",
+					new FruitQuery().addEquals("name", "banana"));
+			assertTrue(price.isPresent());
+			assertEquals(Double.valueOf(45.00), price.get());
 		} finally {
 			tm.endTransaction();
 		}
@@ -5104,10 +5109,13 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
 			db.create(new Fruit("banana", "yellow", 45.00, 45));
 			db.create(new Fruit("orange", "orange", 15.00, 11));
 
-			String color = db.valueOptional(String.class, "color", new FruitQuery().addEquals("name", "mango"));
-			assertNull(color);
-			double price = db.valueOptional(double.class, "price", new FruitQuery().addEquals("name", "mango"));
-			assertEquals(Double.valueOf(0.00), Double.valueOf(price));
+			Optional<String> color = db.valueOptional(String.class, "color",
+					new FruitQuery().addEquals("name", "mango"));
+			assertFalse(color.isPresent());
+
+			Optional<Double> price = db.valueOptional(Double.class, "price",
+					new FruitQuery().addEquals("name", "mango"));
+			assertFalse(price.isPresent());
 		} finally {
 			tm.endTransaction();
 		}
@@ -5490,9 +5498,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
 
 	@Override
 	protected void doAddSettingsAndDependencies() throws Exception {
-//        addContainerSetting(UnifyCorePropertyConstants.APPLICATION_LOG_LEVEL, "debug");
-//        addContainerSetting(UnifyCorePropertyConstants.APPLICATION_LOG_TO_CONSOLE, "true");
-//        addContainerSetting(UnifyCorePropertyConstants.APPLICATION_SQL_DEBUGGING, "true");
+        addContainerSetting(UnifyCorePropertyConstants.APPLICATION_LOG_LEVEL, "debug");
+        addContainerSetting(UnifyCorePropertyConstants.APPLICATION_LOG_TO_CONSOLE, "true");
+        addContainerSetting(UnifyCorePropertyConstants.APPLICATION_SQL_DEBUGGING, "true");
 		addContainerSetting(UnifyCorePropertyConstants.APPLICATION_QUERY_LIMIT, 8);
 	}
 

@@ -16,6 +16,7 @@
 package com.tcdng.unify.core.database.sql.dialect;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -70,7 +71,7 @@ public class MySqlDialect extends AbstractSqlDataSourceDialect {
 	}
 
 	public MySqlDialect() {
-		super(true);
+		super(Collections.emptyList(), true);
 	}
 
 	@Override
@@ -180,6 +181,11 @@ public class MySqlDialect extends AbstractSqlDataSourceDialect {
 	}
 
 	@Override
+	protected void appendAutoIncrementPrimaryKey(StringBuilder sb) {
+		sb.append(" AUTO_INCREMENT PRIMARY KEY NOT NULL");
+	}
+
+	@Override
 	protected void appendTimestampTruncation(StringBuilder sql, SqlFieldInfo sqlFieldInfo,
 			TimeSeriesType timeSeriesType, boolean merge) throws UnifyException {
 		final String columnName = sqlFieldInfo.getPreferredColumnName();
@@ -272,7 +278,8 @@ public class MySqlDialect extends AbstractSqlDataSourceDialect {
 			throws UnifyException {
 		List<String> sqlList = new ArrayList<String>();
 		StringBuilder sb = new StringBuilder();
-		SqlDataTypePolicy sqlDataTypePolicy = getSqlTypePolicy(sqlFieldSchemaInfo.getColumnType());
+		SqlDataTypePolicy sqlDataTypePolicy = getSqlTypePolicy(sqlFieldSchemaInfo.getColumnType(),
+				sqlFieldSchemaInfo.getLength());
 
 		if (sqlColumnAlterInfo.isNullableChange()) {
 			if (!sqlFieldSchemaInfo.isNullable()) {
@@ -366,6 +373,11 @@ public class MySqlDialect extends AbstractSqlDataSourceDialect {
 
 		public void setSqlCriteriaPolicies(Map<RestrictionType, SqlCriteriaPolicy> sqlCriteriaPolicies) {
 			this.sqlCriteriaPolicies = sqlCriteriaPolicies;
+		}
+
+		@Override
+		protected ColumnType dialectSwapColumnType(ColumnType columnType, int length) {
+			return columnType.isString() && length > 8000 ? ColumnType.CLOB: columnType;
 		}
 
 		@Override

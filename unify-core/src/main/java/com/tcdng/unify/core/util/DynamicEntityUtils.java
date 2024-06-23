@@ -59,7 +59,7 @@ public final class DynamicEntityUtils {
 	private DynamicEntityUtils() {
 
 	}
-
+	
 	public static String generateEntityJavaClassSource(DynamicEntityInfo dynamicEntityInfo) throws UnifyException {
 		switch (dynamicEntityInfo.getType()) {
 		case TABLE:

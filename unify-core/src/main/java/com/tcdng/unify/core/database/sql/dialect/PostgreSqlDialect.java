@@ -21,6 +21,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -91,7 +92,7 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
 	}
 
 	public PostgreSqlDialect() {
-		super(true);
+		super(Collections.emptyList(), true);
 	}
 
 	@Override
@@ -165,6 +166,11 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
 		sb.append("RENAME COLUMN ").append(oldColumnName).append(" TO ")
 				.append(sqlFieldSchemaInfo.getPreferredColumnName());
 		return sb.toString();
+	}
+
+	@Override
+	protected void appendAutoIncrementPrimaryKey(StringBuilder sb) {
+		sb.append(" GENERATED ALWAYS AS IDENTITY PRIMARY KEY NOT NULL");
 	}
 
 	@Override
@@ -255,7 +261,8 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
 			throws UnifyException {
 		List<String> sqlList = new ArrayList<String>();
 		StringBuilder sb = new StringBuilder();
-		SqlDataTypePolicy sqlDataTypePolicy = getSqlTypePolicy(sqlFieldSchemaInfo.getColumnType());
+		SqlDataTypePolicy sqlDataTypePolicy = getSqlTypePolicy(sqlFieldSchemaInfo.getColumnType(),
+				sqlFieldSchemaInfo.getLength());
 
 		if (sqlColumnAlterInfo.isNullableChange()) {
 			if (!sqlFieldSchemaInfo.isNullable()) {
@@ -382,6 +389,11 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
 		@Override
 		public int getMaxClauseValues() {
 			return -1;
+		}
+
+		@Override
+		protected ColumnType dialectSwapColumnType(ColumnType columnType, int length) {
+			return columnType.isString() && length > 65535 ? ColumnType.CLOB: columnType;
 		}
 
 		protected String concat(String... expressions) {

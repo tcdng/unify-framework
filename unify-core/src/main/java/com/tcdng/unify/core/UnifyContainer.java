@@ -370,11 +370,13 @@ public class UnifyContainer {
 				// Broadcast methods
 				Broadcast ba = method.getAnnotation(Broadcast.class);
 				if (ba != null) {
+					boolean noParams = false;
 					if (iuci.isSingleton() && void.class.equals(method.getReturnType())
-							&& method.getParameterTypes().length == 1
-							&& method.getParameterTypes()[0].equals(String[].class)) {
+							&& ((noParams = method.getParameterTypes().length == 0)
+									|| (method.getParameterTypes().length == 1
+											&& method.getParameterTypes()[0].equals(String[].class)))) {
 						String name = NameUtils.getComponentMethodName(iuci.getName(), method.getName());
-						broadcastInfoMap.put(name, new BroadcastInfo(iuci.getName(), method.getName()));
+						broadcastInfoMap.put(name, new BroadcastInfo(iuci.getName(), method.getName(), noParams));
 					} else {
 						throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_INVALID_BROADCAST_METHOD,
 								iuci.getName(), method.getName());
@@ -493,7 +495,9 @@ public class UnifyContainer {
 			logInfo("Setting broadcast proxy methods...");
 			for (BroadcastInfo broadcastInfo : broadcastInfoMap.values()) {
 				InternalUnifyComponentInfo iuc = getInternalUnifyComponentInfo(broadcastInfo.getComponentName());
-				Method method = ReflectUtils.getMethod(iuc.getType(), broadcastInfo.getMethodName(), String[].class);
+				Method method = broadcastInfo.isNoParams()
+						? ReflectUtils.getMethod(iuc.getType(), broadcastInfo.getMethodName())
+						: ReflectUtils.getMethod(iuc.getType(), broadcastInfo.getMethodName(), String[].class);
 				broadcastInfo.setMethod(method);
 			}
 
@@ -995,12 +999,12 @@ public class UnifyContainer {
 	 * 
 	 * @param lockName the lock name
 	 * @return true if locked otherwise false
-	 * @throws Exception if an error occurs
+	 * @throws UnifyException if an error occurs
 	 */
-	public boolean isLocked(String lockName) throws Exception {
+	public boolean isLocked(String lockName) throws UnifyException {
 		return lockManager.isLocked(lockName);
 	}
-	
+
 	/**
 	 * Grabs lock if available.
 	 * 
@@ -1011,9 +1015,10 @@ public class UnifyContainer {
 	public boolean tryGrabLock(String lockName) throws UnifyException {
 		return lockManager.tryGrabLock(lockName);
 	}
-	
+
 	/**
 	 * Grabs lock with no timeout.
+	 * 
 	 * @param lockName the lock name
 	 * @return true if lock is grabbed otherwise false
 	 * @throws UnifyException if an error occurs
@@ -1446,9 +1451,9 @@ public class UnifyContainer {
 	}
 
 	private class PeriodicInfo {
-		
+
 		private PeriodicType type;
-		
+
 		private boolean clusterOnly;
 
 		public PeriodicInfo(PeriodicType type, boolean clusterOnly) {
@@ -1464,7 +1469,7 @@ public class UnifyContainer {
 			return clusterOnly;
 		}
 	}
-	
+
 	private class CommandThread extends Thread {
 		public CommandThread() {
 			super("Container command thread - " + nodeId);
@@ -1482,9 +1487,13 @@ public class UnifyContainer {
 						for (Command clusterCommand : clusterCommandList) {
 							BroadcastInfo broadcastInfo = broadcastInfoMap.get(clusterCommand.getCommand());
 							if (broadcastInfo != null) {
-								List<String> params = clusterCommand.getParams();
-								broadcastInfo.getMethod().invoke(getComponent(broadcastInfo.getComponentName()),
-										new Object[] { params.toArray(new String[params.size()]) });
+								if (broadcastInfo.isNoParams()) {
+									broadcastInfo.getMethod().invoke(getComponent(broadcastInfo.getComponentName()));
+								} else {
+									List<String> params = clusterCommand.getParams();
+									broadcastInfo.getMethod().invoke(getComponent(broadcastInfo.getComponentName()),
+											new Object[] { params.toArray(new String[params.size()]) });
+								}
 							}
 						}
 						requestContextManager.getRequestContext()
@@ -1531,15 +1540,18 @@ public class UnifyContainer {
 
 	private static class BroadcastInfo {
 
-		private String componentName;
+		private final String componentName;
 
-		private String methodName;
+		private final String methodName;
+
+		private final boolean noParams;
 
 		private Method method;
 
-		public BroadcastInfo(String componentName, String methodName) {
+		public BroadcastInfo(String componentName, String methodName, boolean noParams) {
 			this.componentName = componentName;
 			this.methodName = methodName;
+			this.noParams = noParams;
 		}
 
 		public String getComponentName() {
@@ -1548,6 +1560,10 @@ public class UnifyContainer {
 
 		public String getMethodName() {
 			return methodName;
+		}
+
+		public boolean isNoParams() {
+			return noParams;
 		}
 
 		public Method getMethod() {

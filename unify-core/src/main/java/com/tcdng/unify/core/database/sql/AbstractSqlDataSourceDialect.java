@@ -17,6 +17,7 @@ package com.tcdng.unify.core.database.sql;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -135,6 +136,8 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 	@Configurable("64")
 	private int maxStatementInfo;
 
+	private final Set<String> reservedWords;
+
 	private SqlCacheFactory sqlCacheFactory;
 
 	private SqlStatementPoolsFactory sqlStatementPoolsFactory;
@@ -157,16 +160,24 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
 	private boolean tenancyEnabled;
 
-	public AbstractSqlDataSourceDialect(boolean useCallableFunctionMode) {
-		this(useCallableFunctionMode, false);
+	public AbstractSqlDataSourceDialect(Collection<String> reservedWords, boolean useCallableFunctionMode) {
+		this(reservedWords, useCallableFunctionMode, false);
 	}
 
-	public AbstractSqlDataSourceDialect(boolean useCallableFunctionMode, boolean appendNullOnTblCreate) {
+	public AbstractSqlDataSourceDialect(Collection<String> reservedWords, boolean useCallableFunctionMode,
+			boolean appendNullOnTblCreate) {
+		Set<String> _reservedWords = new HashSet<String>();
+		for (String word: reservedWords) {
+			_reservedWords.add(word.toUpperCase());
+		}
+
+		this.reservedWords = Collections.unmodifiableSet(_reservedWords);
 		this.useCallableFunctionMode = useCallableFunctionMode;
 		this.appendNullOnTblCreate = appendNullOnTblCreate;
 		sqlCacheFactory = new SqlCacheFactory();
 		sqlStatementPoolsFactory = new SqlStatementPoolsFactory();
-		noPrecisionTypes = new HashSet<String>(Arrays.asList("BIGINT", "DATETIME", "TIMESTAMP", "INT2", "INT4", "INT8"));
+		noPrecisionTypes = new HashSet<String>(
+				Arrays.asList("BIGINT", "DATETIME", "TIMESTAMP", "INT2", "INT4", "INT8"));
 	}
 
 	@Override
@@ -938,12 +949,12 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
 	@Override
 	public SqlDataTypePolicy getSqlTypePolicy(Class<?> clazz) throws UnifyException {
-		return getSqlDataSourceDialectPolicies().getSqlTypePolicy(DataUtils.getColumnType(clazz));
+		return getSqlDataSourceDialectPolicies().getSqlTypePolicy(DataUtils.getColumnType(clazz), 0);
 	}
 
 	@Override
-	public SqlDataTypePolicy getSqlTypePolicy(ColumnType columnType) throws UnifyException {
-		return getSqlDataSourceDialectPolicies().getSqlTypePolicy(columnType);
+	public SqlDataTypePolicy getSqlTypePolicy(ColumnType columnType, int length) throws UnifyException {
+		return getSqlDataSourceDialectPolicies().getSqlTypePolicy(columnType, length);
 	}
 
 	@Override
@@ -1302,8 +1313,8 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 		List<SqlParameter> parameterInfoList = Collections.emptyList();
 		if (update.isWithParams()) {
 			parameterInfoList = new ArrayList<SqlParameter>();
-			for (NativeParam param: update.getParams()) {
-				parameterInfoList.add(new SqlParameter(getSqlTypePolicy(param.getType()), param.getParam()));
+			for (NativeParam param : update.getParams()) {
+				parameterInfoList.add(new SqlParameter(getSqlTypePolicy(param.getType(), 0), param.getParam()));
 			}
 		}
 
@@ -1434,7 +1445,8 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 		updateSql.append(" WHERE ");
 		SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getListFieldInfo("id");
 		updateSql.append(sqlFieldInfo.getPreferredColumnName()).append("=?");
-		parameterInfoList.add(new SqlParameter(getSqlTypePolicy(sqlFieldInfo.getColumnType()), pk));
+		parameterInfoList
+				.add(new SqlParameter(getSqlTypePolicy(sqlFieldInfo.getColumnType(), sqlFieldInfo.getLength()), pk));
 
 		return new SqlStatement(sqlEntityInfo, SqlStatementType.UPDATE, updateSql.toString(), parameterInfoList);
 	}
@@ -1498,6 +1510,11 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 	@Override
 	public String getPreferredName(String name) {
 		return name;
+	}
+
+	@Override
+	public String ensureUnreservedIdentifier(String name) {
+		return reservedWords.contains(name.toUpperCase()) ? "RZ_" + name : name;
 	}
 
 	@Override
@@ -1599,7 +1616,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 			boolean onAlter) {
 		sb.append(sqlFieldSchemaInfo.getPreferredColumnName());
 		SqlDataTypePolicy sqlDataTypePolicy = getSqlDataSourceDialectPolicies()
-				.getSqlTypePolicy(sqlFieldSchemaInfo.getColumnType());
+				.getSqlTypePolicy(sqlFieldSchemaInfo.getColumnType(), sqlFieldSchemaInfo.getLength());
 		sqlDataTypePolicy.appendTypeSql(sb, sqlFieldSchemaInfo.getLength(), sqlFieldSchemaInfo.getPrecision(),
 				sqlFieldSchemaInfo.getScale());
 
@@ -1859,15 +1876,20 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 		return sb.toString().toUpperCase();
 	}
 
-	protected void appendColumnAndTypeSql(StringBuilder sb, String preferredColumnName,
+	protected final void appendColumnAndTypeSql(StringBuilder sb, String preferredColumnName,
 			SqlFieldSchemaInfo sqlFieldSchemaInfo, boolean alter) throws UnifyException {
-		SqlDataTypePolicy sqlDataTypePolicy = getSqlTypePolicy(sqlFieldSchemaInfo.getColumnType());
+		SqlDataTypePolicy sqlDataTypePolicy = getSqlTypePolicy(sqlFieldSchemaInfo.getColumnType(),
+				sqlFieldSchemaInfo.getLength());
 		sb.append(preferredColumnName);
 		sqlDataTypePolicy.appendTypeSql(sb, sqlFieldSchemaInfo.getLength(), sqlFieldSchemaInfo.getPrecision(),
 				sqlFieldSchemaInfo.getScale());
 
 		if (sqlFieldSchemaInfo.isPrimaryKey()) {
-			sb.append(" PRIMARY KEY NOT NULL");
+			if(sqlFieldSchemaInfo.isAutoIncrement()) {
+				appendAutoIncrementPrimaryKey(sb);
+			} else {
+				sb.append(" PRIMARY KEY NOT NULL");
+			}
 		} else {
 			if (!sqlFieldSchemaInfo.isNullable()) {
 				if (alter || sqlFieldSchemaInfo.isWithDefaultVal()) {
@@ -1886,15 +1908,20 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 		}
 	}
 
-	protected void appendColumnAndTypeSql(StringBuilder sb, SqlFieldSchemaInfo sqlFieldSchemaInfo,
+	protected final void appendColumnAndTypeSql(StringBuilder sb, SqlFieldSchemaInfo sqlFieldSchemaInfo,
 			SqlColumnAlterInfo sqlColumnAlterInfo) throws UnifyException {
-		SqlDataTypePolicy sqlDataTypePolicy = getSqlTypePolicy(sqlFieldSchemaInfo.getColumnType());
+		SqlDataTypePolicy sqlDataTypePolicy = getSqlTypePolicy(sqlFieldSchemaInfo.getColumnType(),
+				sqlFieldSchemaInfo.getLength());
 		sb.append(sqlFieldSchemaInfo.getPreferredColumnName());
 		sqlDataTypePolicy.appendTypeSql(sb, sqlFieldSchemaInfo.getLength(), sqlFieldSchemaInfo.getPrecision(),
 				sqlFieldSchemaInfo.getScale());
 
 		if (sqlFieldSchemaInfo.isPrimaryKey()) {
-			sb.append(" PRIMARY KEY NOT NULL");
+			if(sqlFieldSchemaInfo.isAutoIncrement()) {
+				appendAutoIncrementPrimaryKey(sb);
+			} else {
+				sb.append(" PRIMARY KEY NOT NULL");
+			}
 		} else {
 			if (sqlColumnAlterInfo.isDefaultChange()) {
 				if (sqlFieldSchemaInfo.isWithDefaultVal()) {
@@ -1913,6 +1940,8 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 		}
 	}
 
+	protected abstract void appendAutoIncrementPrimaryKey(StringBuilder sb);
+	
 	protected void appendTypeSql(StringBuilder sb, SqlColumnInfo sqlColumnInfo) {
 		String typeName = sqlColumnInfo.getTypeName().toUpperCase();
 		sb.append(' ').append(typeName);
@@ -2455,8 +2484,10 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 			SqlFieldSchemaInfo oldSqlFieldSchemaInfo) throws UnifyException {
 		final boolean nullableChange = sqlFieldSchemaInfo.isNullable() != oldSqlFieldSchemaInfo.isNullable();
 		final boolean defaultChange = false;
-		final boolean typeChange = !getSqlTypePolicy(sqlFieldSchemaInfo.getColumnType()).getTypeName()
-				.equals(getSqlTypePolicy(oldSqlFieldSchemaInfo.getColumnType()).getTypeName());
+		final boolean typeChange = !getSqlTypePolicy(sqlFieldSchemaInfo.getColumnType(), sqlFieldSchemaInfo.getLength())
+				.getTypeName()
+				.equals(getSqlTypePolicy(oldSqlFieldSchemaInfo.getColumnType(), sqlFieldSchemaInfo.getLength())
+						.getTypeName());
 		final boolean lenChange = sqlFieldSchemaInfo.getLength() != oldSqlFieldSchemaInfo.getLength()
 				|| sqlFieldSchemaInfo.getPrecision() != oldSqlFieldSchemaInfo.getPrecision()
 				|| sqlFieldSchemaInfo.getScale() != oldSqlFieldSchemaInfo.getScale();
@@ -2518,8 +2549,8 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 			}
 			// End fix
 
-			parameterInfoList.add(new SqlParameter(
-					getSqlDataSourceDialectPolicies().getSqlTypePolicy(sqlFieldInfo.getColumnType()), value));
+			parameterInfoList.add(new SqlParameter(getSqlDataSourceDialectPolicies()
+					.getSqlTypePolicy(sqlFieldInfo.getColumnType(), sqlFieldInfo.getLength()), value));
 		}
 
 		return updateParams.toString();
@@ -2692,8 +2723,8 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 	private List<SqlResult> getSqlResultList(List<SqlFieldInfo> sqlFieldInfoList) {
 		List<SqlResult> resultInfoList = new ArrayList<SqlResult>();
 		for (SqlFieldInfo sqlFieldInfo : sqlFieldInfoList) {
-			resultInfoList.add(new SqlResult(
-					getSqlDataSourceDialectPolicies().getSqlTypePolicy(sqlFieldInfo.getColumnType()), sqlFieldInfo));
+			resultInfoList.add(new SqlResult(getSqlDataSourceDialectPolicies()
+					.getSqlTypePolicy(sqlFieldInfo.getColumnType(), sqlFieldInfo.getLength()), sqlFieldInfo));
 		}
 		return resultInfoList;
 	}

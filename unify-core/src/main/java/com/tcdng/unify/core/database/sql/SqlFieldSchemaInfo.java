@@ -107,6 +107,11 @@ public interface SqlFieldSchemaInfo {
     boolean isWithDefaultVal();
 
     /**
+     * Returns true if the field is auto-increment otherwise false;
+     */
+    boolean isAutoIncrement();
+
+    /**
      * Returns true if the field is a primary key otherwise false;
      */
     boolean isPrimaryKey();

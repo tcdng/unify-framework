@@ -34,32 +34,29 @@ import com.tcdng.unify.web.ui.AbstractPageController;
 @Component(SystemInfoConstants.SYSTEMINFO_CONTROLLER_NAME)
 @UplBinding("web/reserved/upl/systeminfo.upl")
 @ResultMappings({
-        @ResultMapping(
-                name = SystemInfoConstants.SHOW_SYSTEM_EXCEPTION_MAPPING,
-                response = { "!showpopupresponse popup:$s{systemExceptionPopup} systemInfo:true" }),
-        @ResultMapping(
-                name = SystemInfoConstants.FORWARD_TO_APPLICATION_MAPPING,
-                response = { "!hidepopupresponse systemInfo:true", "!forwardresponse path:$x{application.web.home}" }),
-        @ResultMapping(
-                name = SystemInfoConstants.HIDE_SYSTEM_INFO_MAPPING,
-                response = { "!hidepopupresponse systemInfo:true", "!postresponse pathRequestAttribute:$s{"
-                		+ UnifyWebRequestAttributeConstants.SYSTEM_ERROR_RECOVERY_PATH + "}" }) })
+		@ResultMapping(name = SystemInfoConstants.SHOW_SYSTEM_EXCEPTION_MAPPING, response = {
+				"!showpopupresponse popup:$s{systemExceptionPopup} systemInfo:true" }),
+		@ResultMapping(name = SystemInfoConstants.FORWARD_TO_APPLICATION_MAPPING, response = {
+				"!hidepopupresponse systemInfo:true", "!forwardresponse path:$x{application.web.home}" }),
+		@ResultMapping(name = SystemInfoConstants.HIDE_SYSTEM_INFO_MAPPING, response = {
+				"!hidepopupresponse systemInfo:true", "!postresponse pathRequestAttribute:$s{"
+						+ UnifyWebRequestAttributeConstants.SYSTEM_ERROR_RECOVERY_PATH + "}" }) })
 public class SystemInfoPageController extends AbstractPageController<SystemInfoPageBean> {
 
-    public SystemInfoPageController() {
-        super(SystemInfoPageBean.class);
-    }
+	public SystemInfoPageController() {
+		super(SystemInfoPageBean.class);
+	}
 
-    @Action
-    public String closeSystemInfo() throws UnifyException {
-        if ((Boolean) getSessionAttribute(SystemInfoConstants.LOGIN_REQUIRED_FLAG)) {
-            return SystemInfoConstants.FORWARD_TO_APPLICATION_MAPPING;
-        }
-        return SystemInfoConstants.HIDE_SYSTEM_INFO_MAPPING;
-    }
+	@Action
+	public String closeSystemInfo() throws UnifyException {
+		if (Boolean.TRUE.equals((Boolean) getSessionAttribute(SystemInfoConstants.LOGIN_REQUIRED_FLAG))) {
+			return SystemInfoConstants.FORWARD_TO_APPLICATION_MAPPING;
+		}
+		return SystemInfoConstants.HIDE_SYSTEM_INFO_MAPPING;
+	}
 
-    @Override
-    protected void onInitPage() throws UnifyException {
-        setPageWidgetEditable("stackTrace", false);
-    }
+	@Override
+	protected void onInitPage() throws UnifyException {
+		setPageWidgetEditable("stackTrace", false);
+	}
 }

@@ -18,6 +18,7 @@ package com.tcdng.unify.core.database;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
@@ -235,7 +236,7 @@ public abstract class AbstractDatabase extends AbstractUnifyComponent implements
     }
 
     @Override
-	public <T, U extends Entity> T valueOptional(Class<T> fieldClass, String fieldName, Query<U> query)
+	public <T, U extends Entity> Optional<T> valueOptional(Class<T> fieldClass, String fieldName, Query<U> query)
 			throws UnifyException {
         return getDatabaseSession().valueOptional(fieldClass, fieldName, query);
 	}
