@@ -175,7 +175,7 @@ public class ContentPanelImpl extends AbstractContentPanel {
 
 	@Override
 	public Page getCurrentPage() {
-		return contentList.get(contentIndex).getPage();
+		return contentIndex >= 0 && contentIndex < contentList.size() ? contentList.get(contentIndex).getPage() : null;
 	}
 
 	@Override
