@@ -663,6 +663,16 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 		return (HttpRequestParameters) getRequestAttribute(UnifyWebRequestAttributeConstants.PARAMETERS);
 	}
 
+	protected String getHttpRequestHeader(String headerName) throws UnifyException {
+		HttpRequestHeaders headers = getHttpRequestHeaders();
+		return headers != null? headers.getHeader(headerName) : null;
+	}
+
+	protected String getHttpRequestParameter(String paramName) throws UnifyException {
+		HttpRequestParameters parameters = getHttpRequestParameters();
+		return parameters != null? parameters.getParameter(paramName) : null;
+	}
+	
 	protected boolean isTempValue(String name) throws UnifyException {
 		return valueStore != null ? valueStore.isTempValue(name) : false;
 	}
