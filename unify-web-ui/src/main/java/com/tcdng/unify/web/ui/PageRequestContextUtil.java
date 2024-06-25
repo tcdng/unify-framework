@@ -211,6 +211,14 @@ public interface PageRequestContextUtil extends UnifyComponent {
      */
     String getCommandResultMapping() throws UnifyException;
 
+	/**
+	 * Checks if request with result mapping.
+	 * 
+	 * @return true if request with command result mapping
+	 * @throws UnifyException if an error occurs
+	 */
+	boolean isWithCommandResultMapping() throws UnifyException;
+    
     /**
      * Sets current request context's command response path.
      * 

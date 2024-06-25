@@ -209,6 +209,11 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
     }
 
     @Override
+	public boolean isWithCommandResultMapping() throws UnifyException {
+		return isRequestAttribute(COMMAND_RESULT_MAPPING);
+	}
+
+	@Override
     public void setCommandResponsePath(TargetPath targetPath) throws UnifyException {
         setRequestAttribute(COMMAND_POSTRESPONSE_PATH, targetPath);
     }
