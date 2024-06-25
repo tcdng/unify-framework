@@ -21,9 +21,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Random;
 
 import com.tcdng.unify.common.util.StringToken;
 import com.tcdng.unify.common.util.StringTokenUtils;
+import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.data.ListData;
 
 /**
@@ -34,12 +36,32 @@ import com.tcdng.unify.core.data.ListData;
  */
 public final class StringUtils {
 
+	private static final String ALPHANUMERIC = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
 	public static final String MASK = "********";
 
 	public static final String NULL_STRING = null;
 
 	private StringUtils() {
 
+	}
+
+	/**
+	 * Generates a random alphanumeric string.
+	 * 
+	 * @param length the length
+	 * @return the generated string
+	 * @throws UnifyException if an error occurs
+	 */
+	public static String generateRandomAlphanumeric(int length) throws UnifyException {
+		Random random = new Random();
+		StringBuilder sb = new StringBuilder();
+		final int slen = ALPHANUMERIC.length();
+		for (int i = 0; i < length; i++) {
+			sb.append(ALPHANUMERIC.charAt(random.nextInt(slen)));
+		}
+
+		return sb.toString();
 	}
 
 	/**
@@ -121,13 +143,13 @@ public final class StringUtils {
 					count++;
 				}
 			}
-			
+
 			return count;
 		}
-		
+
 		return 0;
 	}
-	
+
 	/**
 	 * Split a string into tokens using the comma character.
 	 * 
@@ -927,31 +949,31 @@ public final class StringUtils {
 
 		return str;
 	}
-	
+
 	public static int charOccurences(String str, char ch) {
 		if (str != null) {
 			final int len = str.length();
 			int occurences = 0;
-			for(int i = 0; i < len; i++) {
+			for (int i = 0; i < len; i++) {
 				if (ch == str.charAt(i)) {
 					occurences++;
 				}
 			}
-			
+
 			return occurences;
 		}
-		
+
 		return 0;
 	}
-	
+
 	public static String buildParameterizedString(List<StringToken> tokens) {
 		return StringTokenUtils.buildParameterizedString(tokens);
 	}
-	
+
 	public static List<List<StringToken>> breakdownParameterizedString(final String text, final String pageBreak) {
 		return StringTokenUtils.breakdownParameterizedString(text, pageBreak);
 	}
-	
+
 	public static List<List<StringToken>> breakdownParameterizedString(final String text, final int linesPerPage) {
 		return StringTokenUtils.breakdownParameterizedString(text, linesPerPage);
 	}
