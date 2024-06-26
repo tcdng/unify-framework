@@ -57,4 +57,44 @@ public enum MimeType {
     public String template() {
         return template;
     }
+    
+    public boolean isApplicationOctetStream() {
+    	return APPLICATION_OCTETSTREAM.equals(this);
+    }
+    
+    public boolean isApplicationJson() {
+    	return APPLICATION_JSON.equals(this);
+    }
+    
+    public boolean isApplicationXml() {
+    	return APPLICATION_XML.equals(this);
+    }
+    
+    public boolean isImage() {
+    	return IMAGE_PNG.equals(this) || IMAGE_JPG.equals(this) || IMAGE_GIF.equals(this) || IMAGE_BMP.equals(this) || IMAGE.equals(this);
+    }
+    
+    public boolean isTextHtml() {
+    	return TEXT_HTML.equals(this);
+    }
+    
+    public boolean isTextCss() {
+    	return TEXT_CSS.equals(this);
+    }
+    
+    public boolean isTextJavascript() {
+    	return TEXT_JAVASCRIPT.equals(this);
+    }
+    
+    public boolean isTextCsv() {
+    	return TEXT_CSV.equals(this);
+    }
+    
+    public boolean isTextXml() {
+    	return TEXT_XML.equals(this);
+    }
+    
+    public boolean isPlainText() {
+    	return TEXT_PLAIN.equals(this) || TEXT_PLAIN_UTF8.equals(this);
+    }
 }

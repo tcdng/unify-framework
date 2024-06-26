@@ -19,6 +19,8 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+import com.tcdng.unify.core.constant.MimeType;
+
 /**
  * Used for mapping a result name to a set of page-controller responses.
  * Responses are defined using standard UPL.
@@ -29,6 +31,10 @@ import java.lang.annotation.RetentionPolicy;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ResultMapping {
+	
+	/** The response type */	
+	MimeType type() default MimeType.APPLICATION_JSON;
+	
     /** The result mapping name */
     String name();
 
