@@ -22,8 +22,8 @@ import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.util.ReflectUtils;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ui.AbstractPageControllerResponse;
-import com.tcdng.unify.web.ui.widget.Document;
 import com.tcdng.unify.web.ui.widget.Page;
+import com.tcdng.unify.web.ui.widget.PlainHtml;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 
 /**
@@ -34,20 +34,21 @@ import com.tcdng.unify.web.ui.widget.ResponseWriter;
  */
 @Component("externalforwardresponse")
 @UplAttributes({ @UplAttribute(name = "path", type = String.class),
-        @UplAttribute(name = "pathBinding", type = String.class) })
+		@UplAttribute(name = "pathBinding", type = String.class) })
 public class ExternalForwardResponse extends AbstractPageControllerResponse {
 
-    @Override
-    public void generate(ResponseWriter writer, Page page) throws UnifyException {
-        String path = getUplAttribute(String.class, "path");
-        if (StringUtils.isBlank(path)) {
-            String pathBinding = getUplAttribute(String.class, "pathBinding");
-            path = (String) ReflectUtils.getNestedBeanProperty(page.getPageBean(), pathBinding);
-        }
+	@Override
+	public void generate(ResponseWriter writer, Page page) throws UnifyException {
+		String path = getUplAttribute(String.class, "path");
+		if (StringUtils.isBlank(path)) {
+			String pathBinding = getUplAttribute(String.class, "pathBinding");
+			path = (String) ReflectUtils.getNestedBeanProperty(page.getPageBean(), pathBinding);
+		}
 
-        logDebug("External forward response: path = [{0}]", path);
-        Document document = (Document) page;
-        writer.writeStructureAndContent(document);
-        //writer.writeBehavior(document);
-    }
+		logDebug("External forward response: path = [{0}]", path);
+		PlainHtml plainHtml = (PlainHtml) page;
+		plainHtml.setScripts("window.location.assign(" + path + ");");
+		writer.writeStructureAndContent(plainHtml);
+		writer.writeBehavior(plainHtml);
+	}
 }
