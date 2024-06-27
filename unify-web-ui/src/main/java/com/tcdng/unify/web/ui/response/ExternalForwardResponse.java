@@ -47,7 +47,7 @@ public class ExternalForwardResponse extends AbstractPageControllerResponse {
 
 		logDebug("External forward response: path = [{0}]", path);
 		PlainHtml plainHtml = (PlainHtml) page;
-		plainHtml.setScripts("window.location.assign(" + path + ");");
+		plainHtml.setScripts("window.location.assign(\"" + path + "\");");
 		writer.writeStructureAndContent(plainHtml);
 		writer.writeBehavior(plainHtml);
 	}
