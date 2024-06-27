@@ -23,16 +23,16 @@
 !ui-panel:messageBoxActionPanel style:$s{width:100%; text-align:center;}
     components:$c{okBtn yesBtn noBtn retryBtn cancelBtn}
 !ui-button:okBtn caption:$m{button.ok} binding:okCode captionBinding:okCaption
-	styleClassBinding:okStyleClass
+	styleClassBinding:okStyleClass debounce:true
     eventHandler:$d{!ui-event event:onclick action:$c{resultAct}}
 !ui-button:yesBtn caption:$m{button.yes} binding:yesCode captionBinding:yesCaption
-	styleClassBinding:yesStyleClass
+	styleClassBinding:yesStyleClass debounce:true
     eventHandler:$d{!ui-event event:onclick action:$c{resultAct}}
 !ui-button:noBtn caption:$m{button.no} binding:noCode captionBinding:noCaption
-	styleClassBinding:noStyleClass
+	styleClassBinding:noStyleClass debounce:true
     eventHandler:$d{!ui-event event:onclick action:$c{resultAct}}
 !ui-button:retryBtn caption:$m{button.retry} binding:retryCode captionBinding:retryCaption
-	styleClassBinding:retryStyleClass
+	styleClassBinding:retryStyleClass debounce:true
     eventHandler:$d{!ui-event event:onclick action:$c{resultAct}}
 !ui-button:cancelBtn caption:$m{button.cancel} binding:cancelCode captionBinding:cancelCaption
 	styleClassBinding:cancelStyleClass
