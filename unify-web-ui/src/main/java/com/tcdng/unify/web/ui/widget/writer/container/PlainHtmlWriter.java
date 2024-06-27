@@ -24,7 +24,6 @@ import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ui.PagePathInfoRepository;
-import com.tcdng.unify.web.ui.widget.EventHandler;
 import com.tcdng.unify.web.ui.widget.Panel;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.Widget;
@@ -91,8 +90,6 @@ public class PlainHtmlWriter extends AbstractPageWriter {
 			}
 		}
 
-		writeResourcesStyleSheet(writer);
-
 		Set<String> excludeScripts = plainHtml.getExcludeScript();
 		for (String script : getPageManager().getDocumentsScripts()) {
 			if (!excludeScripts.contains(script)) {
@@ -108,8 +105,6 @@ public class PlainHtmlWriter extends AbstractPageWriter {
 				}
 			}
 		}
-
-		writeResourcesScript(writer);
 
 		writer.write("</head>");
 
@@ -138,46 +133,17 @@ public class PlainHtmlWriter extends AbstractPageWriter {
 		}
 
 		writer.write("</body></html>");
-	}
-
-	@Override
-	protected void doWriteBehavior(ResponseWriter writer, Widget widget, EventHandler[] handlers)
-			throws UnifyException {
-		BasicPlainHtml plainHtml = (BasicPlainHtml) widget;
-		writer.write("<script");
-		writeNonce(writer);
-		writer.write(">");
 
 		if (!StringUtils.isBlank(plainHtml.getScripts())) {
+			writer.write("<script>");
 			writer.write(plainHtml.getScripts());
+			writer.write("</script>");
 		}
-		
-		writer.write("</script>");
 	}
 
 	@Override
 	protected void doWriteInnerStructureAndContent(ResponseWriter writer, Panel panel) throws UnifyException {
 
-	}
-
-	private void writeResourcesStyleSheet(ResponseWriter writer) throws UnifyException {
-		if (resources != null) {
-			for (String sheetLink : resources.getStyleSheetResourceLinks()) {
-				writer.write("<link href=\"");
-				writer.write(sheetLink);
-				writer.write("\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\">");
-			}
-		}
-	}
-
-	private void writeResourcesScript(ResponseWriter writer) throws UnifyException {
-		if (resources != null) {
-			for (String scriptLink : resources.getScriptResourceLinks()) {
-				writer.write("<script src=\"");
-				writer.write(scriptLink);
-				writer.write("\"></script>");
-			}
-		}
 	}
 
 	private void writeStyleSheet(ResponseWriter writer, String styleSheet) throws UnifyException {
