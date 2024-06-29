@@ -238,10 +238,6 @@ public abstract class AbstractArrayValueStore<T> extends AbstractValueStore {
             throws UnifyException;
 
     private Object retrieveInternal(T storage, String property) throws UnifyException {
-    	if (isTempValue(property)) {
-    		return getTempValue(property);
-    	}
-
         ValueStorePolicy policy = getPolicy();
         return policy != null ? policy.onRetrieve(this, property, doRetrieve(storage, property))
                 : doRetrieve(storage, property);

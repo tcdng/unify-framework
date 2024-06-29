@@ -218,10 +218,6 @@ public abstract class AbstractSingleObjectValueStore<T> extends AbstractValueSto
     protected abstract void doStore(String property, Object value, Formatter<?> formatter) throws UnifyException;
 
     private Object retrieveInternal(String property) throws UnifyException {
-    	if (isTempValue(property)) {
-    		return getTempValue(property);
-    	}
-    	
         ValueStorePolicy policy = getPolicy();
         return policy != null ? policy.onRetrieve(this, property, doRetrieve(property)) : doRetrieve(property);
     }
