@@ -305,11 +305,6 @@ public abstract class AbstractValueStore implements ValueStore {
         }
 
         @Override
-        public void writeScratch(String fieldName, Object value) throws UnifyException {
-            valueStore.setTempValue(fieldName, value);
-        }
-
-        @Override
         public void write(String fieldName, Object value) throws UnifyException {
             valueStore.store(fieldName, value);
         }

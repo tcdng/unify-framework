@@ -28,8 +28,6 @@ import com.tcdng.unify.core.format.Formatter;
  * @since 1.0
  */
 public interface ValueStoreWriter {
-    
-    void writeScratch(String fieldName, Object value) throws UnifyException;
 
     void write(String fieldName, Object value) throws UnifyException;
     
