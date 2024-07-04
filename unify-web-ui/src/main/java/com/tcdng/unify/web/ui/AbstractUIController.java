@@ -67,6 +67,7 @@ public abstract class AbstractUIController extends AbstractController implements
 					PageRequestParameterConstants.TARGET_VALUE, PageRequestParameterConstants.WINDOW_NAME,
 					PageRequestParameterConstants.VALIDATION_ACTION, PageRequestParameterConstants.CONFIRM_MSG,
 					PageRequestParameterConstants.CONFIRM_MSGICON, PageRequestParameterConstants.CONFIRM_PARAM,
+					PageRequestParameterConstants.NO_TRANSFER,
 					RequestParameterConstants.REMOTE_VIEWER, RequestParameterConstants.REMOTE_ROLECD,
 					RequestParameterConstants.REMOTE_SESSION_ID, RequestParameterConstants.REMOTE_USERLOGINID,
 					RequestParameterConstants.REMOTE_USERNAME, RequestParameterConstants.REMOTE_BRANCH_CODE,
@@ -217,7 +218,9 @@ public abstract class AbstractUIController extends AbstractController implements
 	}
 
 	protected DataTransfer prepareDataTransfer(ClientRequest request) throws UnifyException {
-		String actionId = (String) request.getParameter(PageRequestParameterConstants.VALIDATION_ACTION);
+		final String actionId = (String) request.getParameter(PageRequestParameterConstants.VALIDATION_ACTION);
+		final boolean noTransfer = DataUtils.convert(boolean.class,
+				request.getParameter(PageRequestParameterConstants.NO_TRANSFER));
 		Map<String, DataTransferBlock> transferBlocks = null;
 		DataTransferParam dataTransferParam = getDataTransferParam();
 
@@ -274,6 +277,10 @@ public abstract class AbstractUIController extends AbstractController implements
 				continue;
 			}
 
+			if (noTransfer) {
+				continue;
+			}
+			
 			if (transferBlocks == null) {
 				transferBlocks = new HashMap<String, DataTransferBlock>();
 			}

@@ -16,6 +16,7 @@
 
 package com.tcdng.unify.web.ui.util;
 
+import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ui.DataTransferBlock;
 import com.tcdng.unify.web.ui.DataTransferHeader;
 
@@ -27,48 +28,49 @@ import com.tcdng.unify.web.ui.DataTransferHeader;
  */
 public final class DataTransferUtils {
 
-    private DataTransferUtils() {
-        
-    }
+	private DataTransferUtils() {
 
-    public static DataTransferBlock createTransferBlock(String transferId) {
-        return DataTransferUtils.createTransferBlock(transferId, null);
-    }
-    
-    public static DataTransferBlock createTransferBlock(String transferId, DataTransferHeader header) {
-      DataTransferBlock transferBlock = null;
-      String id = transferId;
-      int cindex = 0;
-      do {
-          int iindex = -1;
-          int dindex = 0;
-          cindex = id.lastIndexOf('.');
-          if (cindex > 0) {
-              dindex = id.indexOf('d', cindex);
-          } else {
-              dindex = id.lastIndexOf('d');
-          }
+	}
 
-          if (dindex > 0) {
-              iindex = Integer.parseInt(id.substring(dindex + 1));
-              id = id.substring(0, dindex);
-          }
-          
-          transferBlock = new DataTransferBlock(header, id, iindex, transferBlock);
-          if (cindex > 0) {
-              id = id.substring(0, cindex);
-          }
-      } while (cindex > 0);
-      
-      return transferBlock;
-    }
-    
-    public static String stripTransferDataIndexPart(String id) {
-        int dIndex = id.lastIndexOf('d');
-        if (dIndex > 0) {
-            return id.substring(0, dIndex);
-        }
-        
-        return id;
-    }
+	public static DataTransferBlock createTransferBlock(String transferId) {
+		return DataTransferUtils.createTransferBlock(transferId, null);
+	}
+
+	public static DataTransferBlock createTransferBlock(String transferId, DataTransferHeader header) {
+		DataTransferBlock transferBlock = null;
+		String id = transferId;
+		int cindex = 0;
+		do {
+			int iindex = -1;
+			int dindex = 0;
+			cindex = id.lastIndexOf('.');
+			if (cindex > 0) {
+				dindex = id.indexOf('d', cindex);
+			} else {
+				dindex = id.lastIndexOf('d');
+			}
+
+			if (dindex > 0) {
+				String d = id.substring(dindex + 1);
+				iindex = StringUtils.isBlank(d) ? -1 : Integer.parseInt(d);
+				id = id.substring(0, dindex);
+			}
+
+			transferBlock = new DataTransferBlock(header, id, iindex, transferBlock);
+			if (cindex > 0) {
+				id = id.substring(0, cindex);
+			}
+		} while (cindex > 0);
+
+		return transferBlock;
+	}
+
+	public static String stripTransferDataIndexPart(String id) {
+		int dIndex = id.lastIndexOf('d');
+		if (dIndex > 0) {
+			return id.substring(0, dIndex);
+		}
+
+		return id;
+	}
 }

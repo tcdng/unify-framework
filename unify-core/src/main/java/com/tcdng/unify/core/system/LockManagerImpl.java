@@ -99,7 +99,6 @@ public class LockManagerImpl extends AbstractUnifyComponent implements LockManag
 	@Override
 	public boolean tryGrabLock(String lockName) throws UnifyException {
 		final String threadId = String.valueOf(ThreadUtils.currentThreadId());
-		logDebug("Thread [{0}] attempting to grab lock [{1}]...", threadId, lockName);
 		boolean grabbed = false;
 		ThreadLockInfo threadLockInfo = threadLockInfos.get(lockName);
 		if (threadLockInfo != null) {
@@ -169,12 +168,6 @@ public class LockManagerImpl extends AbstractUnifyComponent implements LockManag
 			}
 		}
 
-		if (grabbed) {
-			logDebug("Lock [{0}] successfully grabbed by thread [{1}].", lockName, threadId);
-		} else {
-			logDebug("Thread [{0}] failed to grab by lock [{1}].", threadId, lockName);
-		}
-
 		return grabbed;
 	}
 
@@ -185,8 +178,6 @@ public class LockManagerImpl extends AbstractUnifyComponent implements LockManag
 
 	@Override
 	public boolean grabLock(String lockName, final long timeout) throws UnifyException {
-		final String threadId = String.valueOf(ThreadUtils.currentThreadId());
-		logDebug("Thread [{0}] attempting to grab lock [{1}] with timeout [{2}]ms...", threadId, lockName, timeout);
 		long retryMillisecs = 0;
 		boolean grabbed = false;
 		do {
@@ -200,8 +191,6 @@ public class LockManagerImpl extends AbstractUnifyComponent implements LockManag
 			}
 
 			retryMillisecs += GRAB_RETRY_MILLISECONDS;
-			logDebug("Thread [{0}] set to retry grab lock [{1}] in [{2}]ms...", threadId, lockName,
-					GRAB_RETRY_MILLISECONDS);
 		} while (timeout <= 0 || retryMillisecs < timeout);
 
 		return grabbed;
@@ -210,7 +199,6 @@ public class LockManagerImpl extends AbstractUnifyComponent implements LockManag
 	@Override
 	public void releaseLock(String lockName) throws UnifyException {
 		final String threadId = String.valueOf(ThreadUtils.currentThreadId());
-		logDebug("Thread [{0}] attempting to release lock [{1}]...", threadId, lockName);
 		ThreadLockInfo threadLockInfo = threadLockInfos.get(lockName);
 		if (threadLockInfo != null && threadLockInfo.isOwnerThread(threadId) && threadLockInfo.dec()) {
 			if (clusterMode) {
@@ -238,7 +226,6 @@ public class LockManagerImpl extends AbstractUnifyComponent implements LockManag
 			}
 
 			threadLockInfos.remove(lockName);
-			logDebug("Lock [{0}] successfully released by thread [{1}].", lockName, threadId);
 		}
 	}
 

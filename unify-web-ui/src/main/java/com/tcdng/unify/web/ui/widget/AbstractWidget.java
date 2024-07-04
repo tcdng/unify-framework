@@ -55,7 +55,8 @@ import com.tcdng.unify.web.ui.widget.panel.StandalonePanel;
 @UplAttributes({ @UplAttribute(name = "binding", type = String.class),
 		@UplAttribute(name = "styleClass", type = String.class, defaultVal = "$e{}"),
 		@UplAttribute(name = "styleClassBinding", type = String.class),
-		@UplAttribute(name = "style", type = String.class), @UplAttribute(name = "caption", type = String.class),
+		@UplAttribute(name = "style", type = String.class),
+		@UplAttribute(name = "caption", type = String.class),
 		@UplAttribute(name = "captionBinding", type = String.class),
 		@UplAttribute(name = "captionParamBinding", type = String.class),
 		@UplAttribute(name = "columnStyle", type = String.class),
@@ -663,6 +664,16 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 		return (HttpRequestParameters) getRequestAttribute(UnifyWebRequestAttributeConstants.PARAMETERS);
 	}
 
+	protected String getHttpRequestHeader(String headerName) throws UnifyException {
+		HttpRequestHeaders headers = getHttpRequestHeaders();
+		return headers != null? headers.getHeader(headerName) : null;
+	}
+
+	protected String getHttpRequestParameter(String paramName) throws UnifyException {
+		HttpRequestParameters parameters = getHttpRequestParameters();
+		return parameters != null? parameters.getParameter(paramName) : null;
+	}
+	
 	protected boolean isTempValue(String name) throws UnifyException {
 		return valueStore != null ? valueStore.isTempValue(name) : false;
 	}

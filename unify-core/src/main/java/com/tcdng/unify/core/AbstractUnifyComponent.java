@@ -379,7 +379,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 *                        unknown. If multiple implementations of type is found.
 	 *                        If component instantiation error occurs.
 	 */
-	public <T extends UnifyComponent> T getComponent(Class<T> componentType) throws UnifyException {
+	protected <T extends UnifyComponent> T getComponent(Class<T> componentType) throws UnifyException {
 		return unifyComponentContext.getComponent(componentType);
 	}
 

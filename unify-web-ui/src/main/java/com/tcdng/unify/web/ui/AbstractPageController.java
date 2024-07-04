@@ -141,7 +141,9 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 	@Action
 	public final String indexPage() throws UnifyException {
 		onIndexPage();
-		return ResultMappingConstants.INDEX;
+		return getPageRequestContextUtil().isWithCommandResultMapping()
+				? getPageRequestContextUtil().getCommandResultMapping()
+				: ResultMappingConstants.INDEX;
 	}
 
 	@Action
@@ -153,21 +155,27 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 			return ResultMappingConstants.REMOTE_VIEW;
 		}
 
-		return ResultMappingConstants.OPEN;
+		return getPageRequestContextUtil().isWithCommandResultMapping()
+				? getPageRequestContextUtil().getCommandResultMapping()
+				: ResultMappingConstants.OPEN;
 	}
 
 	@Action
 	@Override
 	public final String savePage() throws UnifyException {
 		onSavePage();
-		return ResultMappingConstants.SAVE;
+		return getPageRequestContextUtil().isWithCommandResultMapping()
+				? getPageRequestContextUtil().getCommandResultMapping()
+				: ResultMappingConstants.SAVE;
 	}
 
 	@Action
 	@Override
 	public final String closePage() throws UnifyException {
 		onClosePage();
-		return ResultMappingConstants.CLOSE;
+		return getPageRequestContextUtil().isWithCommandResultMapping()
+				? getPageRequestContextUtil().getCommandResultMapping()
+				: ResultMappingConstants.CLOSE;
 	}
 
 	@Action
@@ -953,6 +961,10 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 
 	protected MessageResult getMessageResult() throws UnifyException {
 		return getRequestTarget(MessageResult.class);
+	}
+
+	protected void setResultMapping(String resultMappingName) throws UnifyException {
+		getPageRequestContextUtil().setCommandResultMapping(resultMappingName);
 	}
 
 	private void performClosePage(ClosePageMode closePageMode, boolean isFireClose) throws UnifyException {

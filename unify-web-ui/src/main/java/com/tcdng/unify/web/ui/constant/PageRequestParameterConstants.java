@@ -44,6 +44,8 @@ public interface PageRequestParameterConstants {
     String TRIGGER_WIDGETID = "req_wid";
 
     String VALIDATION_ACTION = "req_va";
+
+    String NO_TRANSFER = "req_nt";
     
     String UNLOAD_ORIGIN_PAGE = "unload_origin";
 }

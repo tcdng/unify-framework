@@ -427,58 +427,60 @@ public class UIControllerUtilImpl extends AbstractUnifyComponent implements UICo
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    private PageControllerInfo createPageControllerInfo(String controllerName) throws UnifyException {
-        // Process action handlers
-        Map<String, Action> actionByNameMap = new HashMap<String, Action>();
-        Class<? extends PageController> typeClass = getComponentType(PageController.class, controllerName);
-        for (Method method : pageControllerActionInfoMap.get(typeClass).getActionMethods()) {
-            actionByNameMap.put("/" + method.getName(), new Action(method));
-        }
+	private PageControllerInfo createPageControllerInfo(String controllerName) throws UnifyException {
+		// Process action handlers
+		Map<String, Action> actionByNameMap = new HashMap<String, Action>();
+		Class<? extends PageController> typeClass = getComponentType(PageController.class, controllerName);
+		for (Method method : pageControllerActionInfoMap.get(typeClass).getActionMethods()) {
+			actionByNameMap.put("/" + method.getName(), new Action(method));
+		}
 
-        // Process result mappings
-        Map<String, Result> resultByNameMap = new ConcurrentHashMap<String, Result>();
-        List<Class<?>> classList = ReflectUtils.getClassHierachyList(typeClass);
-        for (Class<?> clazz : classList) {
-            // Grab results definition by super class hierarchy with subclass
-            // definitions overriding those in superclass
-            ResultMappings rsa = clazz.getAnnotation(ResultMappings.class);
-            if (rsa != null) {
-                for (com.tcdng.unify.web.annotation.ResultMapping ra : rsa.value()) {
-                    String[] descriptors = ra.response();
+		// Process result mappings
+		Map<String, Result> resultByNameMap = new ConcurrentHashMap<String, Result>();
+		List<Class<?>> classList = ReflectUtils.getClassHierachyList(typeClass);
+		for (Class<?> clazz : classList) {
+			// Grab results definition by super class hierarchy with subclass
+			// definitions overriding those in superclass
+			ResultMappings rsa = clazz.getAnnotation(ResultMappings.class);
+			if (rsa != null) {
+				for (com.tcdng.unify.web.annotation.ResultMapping ra : rsa.value()) {
+					String[] descriptors = ra.response();
 
-                    List<PageControllerResponse> responses = new ArrayList<PageControllerResponse>();
-                    Locale locale = Locale.getDefault();
-                    for (String descriptor : descriptors) {
-                        if (!"!hintuserresponse".equals(descriptor) && !"!refreshmenuresponse".equals(descriptor)) {
-                            responses.add((PageControllerResponse) getUplComponent(locale, descriptor, false));
-                        }
-                    }
+					List<PageControllerResponse> responses = new ArrayList<PageControllerResponse>();
+					Locale locale = Locale.getDefault();
+					for (String descriptor : descriptors) {
+						if (!"!hintuserresponse".equals(descriptor) && !"!refreshmenuresponse".equals(descriptor)) {
+							responses.add((PageControllerResponse) getUplComponent(locale, descriptor, false));
+						}
+					}
 
-                    // Add implicit responses
-                    responses.add(hintUserResponse);
-                    responses.add(refreshMenuResponse);
+					if (ra.type().isApplicationJson()) {
+						// Add implicit JSON responses
+						responses.add(hintUserResponse);
+						responses.add(refreshMenuResponse);
+					}
 
-                    // Set result object
-                    resultByNameMap.put(ra.name(),
-                            new Result(DataUtils.toArray(PageControllerResponse.class, responses), ra.reload()));
-                }
-            }
-        }
+					// Set result object
+					resultByNameMap.put(ra.name(), new Result(ra.type(),
+							DataUtils.toArray(PageControllerResponse.class, responses), ra.reload()));
+				}
+			}
+		}
 
-        // Resolve category
-        List<String> categoryList = DataUtils.convert(ArrayList.class, String.class,
-                getContainerSetting(Object.class, UnifyCorePropertyConstants.APPLICATION_LAYOUT));
-        UnifyConfigUtils.resolveConfigurationOverrides(resultByNameMap, categoryList);
+		// Resolve category
+		List<String> categoryList = DataUtils.convert(ArrayList.class, String.class,
+				getContainerSetting(Object.class, UnifyCorePropertyConstants.APPLICATION_LAYOUT));
+		UnifyConfigUtils.resolveConfigurationOverrides(resultByNameMap, categoryList);
 
-        resultByNameMap.putAll(defaultResultMap); // Set result mappings that can
-        // not be overridden
+		resultByNameMap.putAll(defaultResultMap); // Set result mappings that can
+		// not be overridden
 
-        // Set page name bindings
-        Map<String, PropertyInfo> pageNamePropertyBindingMap = new HashMap<String, PropertyInfo>();
-        pageNamePropertyBindingMap.putAll(pageManager.getStandalonePanelPropertyBindings(controllerName));
-        setIdRequestParameterBindings(typeClass, pageNamePropertyBindingMap);
+		// Set page name bindings
+		Map<String, PropertyInfo> pageNamePropertyBindingMap = new HashMap<String, PropertyInfo>();
+		pageNamePropertyBindingMap.putAll(pageManager.getStandalonePanelPropertyBindings(controllerName));
+		setIdRequestParameterBindings(typeClass, pageNamePropertyBindingMap);
 
-        return new PageControllerInfo(controllerName, actionByNameMap, resultByNameMap, pageNamePropertyBindingMap);
+		return new PageControllerInfo(controllerName, actionByNameMap, resultByNameMap, pageNamePropertyBindingMap);
     }
 
     private ResourceControllerInfo createResourceControllerInfo(String controllerName) throws UnifyException {

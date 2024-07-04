@@ -82,7 +82,7 @@ public class DocumentWriter extends AbstractPageWriter {
 
 		// Write favorite icon
 		writer.write("<link rel=\"shortcut icon\" href=\"");
-		writer.writeFileImageContextURL(document.getUplAttribute(String.class, "favicon"));
+		writer.writeFileImageContextURL(document.getFavicon());
 		writer.write("\">");
 
 		// Write style sheet links
@@ -246,7 +246,7 @@ public class DocumentWriter extends AbstractPageWriter {
 		if (isWithFontSymbolManager()) {
 			StringBuilder fsb = new StringBuilder();
 			int i = 0;
-			fsb.append(".g_fsm {font-family: ").append(document.getUplAttribute(String.class, "fontFamily"));
+			fsb.append(".g_fsm {font-family: ").append(document.getFontFamily());
 			for (String fontResource : getFontResources()) {
 				fsb.append(", 'FontSymbolMngr").append(i).append('\'');
 

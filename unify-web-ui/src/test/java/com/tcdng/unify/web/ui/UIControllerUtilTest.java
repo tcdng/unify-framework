@@ -45,6 +45,7 @@ public class UIControllerUtilTest extends AbstractUnifyWebTest {
 		assertNotNull(pbbi);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testPageControllerInfoActions() throws Exception {
 	    UIControllerUtil uicu = (UIControllerUtil) getComponent(
@@ -75,6 +76,7 @@ public class UIControllerUtilTest extends AbstractUnifyWebTest {
 		assertEquals("newAuthor", action.getMethod().getName());
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testPageControllerInfoActionsInheritance() throws Exception {
 	    UIControllerUtil uicu = (UIControllerUtil) getComponent(

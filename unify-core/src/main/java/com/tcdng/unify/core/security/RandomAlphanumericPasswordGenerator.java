@@ -15,11 +15,10 @@
  */
 package com.tcdng.unify.core.security;
 
-import java.util.Random;
-
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * Random alphanumeric password generator.
@@ -30,21 +29,9 @@ import com.tcdng.unify.core.annotation.Component;
 @Component(name = "randomalphanumeric-passwordgenerator", description = "$m{passwordgenerator.randomalphanumeric}")
 public class RandomAlphanumericPasswordGenerator extends AbstractUnifyComponent implements PasswordGenerator {
 
-    private static final String ALPHANUMERIC = "0123456789abcdefghijklmnopqrstuvwxyz";
-
-    private Random random;
-
-    public RandomAlphanumericPasswordGenerator() {
-        random = new Random();
-    }
-
     @Override
     public String generatePassword(String principal, int length) throws UnifyException {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < length; i++) {
-            sb.append(ALPHANUMERIC.charAt(random.nextInt(ALPHANUMERIC.length())));
-        }
-        return sb.toString();
+        return StringUtils.generateRandomAlphanumeric(length);
     }
 
     @Override
