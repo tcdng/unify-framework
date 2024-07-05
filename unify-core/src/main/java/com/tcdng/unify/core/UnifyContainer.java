@@ -559,7 +559,15 @@ public class UnifyContainer {
 
 			ApplicationAttributeProvider applicationAttributeProvider = getComponent(
 					ApplicationAttributeProvider.class);
+			AlternativePrivilegeProvider privilegeNameProvider = isComponent(AlternativePrivilegeProvider.class)
+					? getComponent(AlternativePrivilegeProvider.class)
+					: null;
+			RolePrivilegeManager rolePrivilegeManager = isComponent(RolePrivilegeManager.class)
+					? getComponent(RolePrivilegeManager.class)
+					: null;
 			applicationContext.setAttributeProvider(applicationAttributeProvider);
+			applicationContext.setAltPrivilegeNameProvider(privilegeNameProvider);
+			applicationContext.setRolePrivilegeManager(rolePrivilegeManager);
 
 			// Open container interfaces to start servicing requests
 			openInterfaces();
@@ -992,6 +1000,18 @@ public class UnifyContainer {
 	public boolean isComponent(String name) throws UnifyException {
 		return internalResolutionMap.containsKey(name) || internalUnifyComponentInfos.containsKey(name)
 				|| aliases.containsKey(name);
+	}
+
+	/**
+	 * Checks if component with name is defined in container.
+	 * 
+	 * @param componentType the component type
+	 * @return a true value if component type exists otherwise false
+	 * @throws UnifyException If component an error occurs.
+	 */
+	public boolean isComponent(Class<? extends UnifyComponent> componentType) throws UnifyException {
+		List<UnifyComponentConfig> configs = getComponentConfigs(componentType);
+		return !configs.isEmpty();
 	}
 
 	/**

@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
 
+import com.tcdng.unify.core.data.AlternativePrivilege;
 import com.tcdng.unify.core.data.Context;
 import com.tcdng.unify.core.format.Formatter;
 
@@ -47,6 +48,10 @@ public class ApplicationContext extends Context {
 	private final Map<String, RoleAttributes> roleAttributes;
 
 	private ApplicationAttributeProvider attributeProvider;
+
+	private AlternativePrivilegeProvider altPrivilegeNameProvider;
+
+	private RolePrivilegeManager rolePrivilegeManager;
 
 	public ApplicationContext(UnifyContainer container, Locale applicationLocale, TimeZone timeZone,
 			String lineSeparator, boolean ignoreViewDirective) {
@@ -140,6 +145,22 @@ public class ApplicationContext extends Context {
 
 	public void setAttributeProvider(ApplicationAttributeProvider attributeProvider) {
 		this.attributeProvider = attributeProvider;
+	}
+
+	public void setAltPrivilegeNameProvider(AlternativePrivilegeProvider altPrivilegeNameProvider) {
+		this.altPrivilegeNameProvider = altPrivilegeNameProvider;
+	}
+
+	public void setRolePrivilegeManager(RolePrivilegeManager rolePrivilegeManager) {
+		this.rolePrivilegeManager = rolePrivilegeManager;
+	}
+
+	public AlternativePrivilege getAlternativePrivilege(String privilege) throws UnifyException {
+		return altPrivilegeNameProvider != null ? altPrivilegeNameProvider.getAlternativePrivilege(privilege) : null;
+	}
+
+	public boolean isRoleWithPrivilege(String roleCode, String privilege) throws UnifyException {
+		return rolePrivilegeManager != null ? rolePrivilegeManager.isRoleWithPrivilege(roleCode, privilege) : false;
 	}
 
 	public Set<String> getPrivilegeCodes(String roleCode, String privilegeCategoryCode) {
