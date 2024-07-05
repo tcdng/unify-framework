@@ -442,11 +442,14 @@ public class UnifyComponentContext {
 	public ViewDirective getRoleViewDirective(String privilege) throws UnifyException {
 		UserToken userToken = getSessionContext().getUserToken();
 		if (userToken != null) {
-			AlternativePrivilege altPrivilege = applicationContext.getAlternativePrivilege(privilege);
-			if (altPrivilege != null && isCurrentRolePrivilege(altPrivilege.getCategoryCode(), altPrivilege.getAltPrivilege())) {
-				return ViewDirective.ALLOW_VIEW_DIRECTIVE;
+			if (privilege != null) {
+				AlternativePrivilege altPrivilege = applicationContext.getAlternativePrivilege(privilege);
+				if (altPrivilege != null
+						&& isCurrentRolePrivilege(altPrivilege.getCategoryCode(), altPrivilege.getAltPrivilege())) {
+					return ViewDirective.ALLOW_VIEW_DIRECTIVE;
+				}
 			}
-			
+
 			return applicationContext.getRoleViewDirective(userToken.getRoleCode(), privilege);
 		}
 
