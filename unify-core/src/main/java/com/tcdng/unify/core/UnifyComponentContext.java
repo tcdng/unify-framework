@@ -492,10 +492,15 @@ public class UnifyComponentContext {
 	public boolean isCurrentRolePrivilege(String privilegeCategoryCode, String privilegeCode) throws UnifyException {
 		UserToken userToken = getSessionContext().getUserToken();
 		if (userToken != null && userToken.getRoleCode() != null) {
+			if (applicationContext.isRoleWithPrivilege(userToken.getRoleCode(), privilegeCode)) {
+				return true;
+			}
+			
 			Set<String> privileges = getRolePrivilegeCodes(userToken.getRoleCode(), privilegeCategoryCode);
 			if (privileges != null) {
 				return privileges.contains(privilegeCode);
 			}
+
 			return false;
 		}
 		return true;

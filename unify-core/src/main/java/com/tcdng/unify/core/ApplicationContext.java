@@ -50,7 +50,9 @@ public class ApplicationContext extends Context {
 	private ApplicationAttributeProvider attributeProvider;
 
 	private AlternativePrivilegeProvider altPrivilegeNameProvider;
-	
+
+	private RolePrivilegeManager rolePrivilegeManager;
+
 	public ApplicationContext(UnifyContainer container, Locale applicationLocale, TimeZone timeZone,
 			String lineSeparator, boolean ignoreViewDirective) {
 		this.container = container;
@@ -149,10 +151,18 @@ public class ApplicationContext extends Context {
 		this.altPrivilegeNameProvider = altPrivilegeNameProvider;
 	}
 
+	public void setRolePrivilegeManager(RolePrivilegeManager rolePrivilegeManager) {
+		this.rolePrivilegeManager = rolePrivilegeManager;
+	}
+
 	public AlternativePrivilege getAlternativePrivilege(String privilege) throws UnifyException {
 		return altPrivilegeNameProvider != null ? altPrivilegeNameProvider.getAlternativePrivilege(privilege) : null;
 	}
-	
+
+	public boolean isRoleWithPrivilege(String roleCode, String privilege) throws UnifyException {
+		return rolePrivilegeManager != null ? rolePrivilegeManager.isRoleWithPrivilege(roleCode, privilege) : false;
+	}
+
 	public Set<String> getPrivilegeCodes(String roleCode, String privilegeCategoryCode) {
 		if (roleCode != null && privilegeCategoryCode != null && !privilegeCategoryCode.isEmpty()) {
 			RoleAttributes roleAttributes = this.roleAttributes.get(roleCode);

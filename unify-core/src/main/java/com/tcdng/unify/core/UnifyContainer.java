@@ -562,8 +562,12 @@ public class UnifyContainer {
 			AlternativePrivilegeProvider privilegeNameProvider = isComponent(AlternativePrivilegeProvider.class)
 					? getComponent(AlternativePrivilegeProvider.class)
 					: null;
+			RolePrivilegeManager rolePrivilegeManager = isComponent(RolePrivilegeManager.class)
+					? getComponent(RolePrivilegeManager.class)
+					: null;
 			applicationContext.setAttributeProvider(applicationAttributeProvider);
 			applicationContext.setAltPrivilegeNameProvider(privilegeNameProvider);
+			applicationContext.setRolePrivilegeManager(rolePrivilegeManager);
 
 			// Open container interfaces to start servicing requests
 			openInterfaces();
