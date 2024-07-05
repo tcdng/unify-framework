@@ -19,17 +19,17 @@ import com.tcdng.unify.core.data.AlternativePrivilege;
 import com.tcdng.unify.core.data.FactoryMap;
 
 /**
- * Convenient abstract base class for alternative privilege name providers
+ * Convenient abstract base class for alternative privilege providers
  * 
  * @author The Code Department
  * @since 1.0
  */
-public abstract class AbstractAlternativePrivilegeNameProvider extends AbstractUnifyComponent
+public abstract class AbstractAlternativePrivilegeProvider extends AbstractUnifyComponent
 		implements AlternativePrivilegeProvider {
 
 	private FactoryMap<String, AlternativePrivilege> alternatives;
 	
-	public AbstractAlternativePrivilegeNameProvider() {
+	public AbstractAlternativePrivilegeProvider() {
 		this.alternatives = new FactoryMap<String, AlternativePrivilege>() {
 
 			@Override
