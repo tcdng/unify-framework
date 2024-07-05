@@ -22,6 +22,7 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
 
+import com.tcdng.unify.core.data.AlternativePrivilege;
 import com.tcdng.unify.core.format.Formatter;
 import com.tcdng.unify.core.list.ListManager;
 import com.tcdng.unify.core.logging.Logger;
@@ -441,8 +442,14 @@ public class UnifyComponentContext {
 	public ViewDirective getRoleViewDirective(String privilege) throws UnifyException {
 		UserToken userToken = getSessionContext().getUserToken();
 		if (userToken != null) {
+			AlternativePrivilege altPrivilege = applicationContext.getAlternativePrivilege(privilege);
+			if (altPrivilege != null && isCurrentRolePrivilege(altPrivilege.getCategoryCode(), altPrivilege.getAltPrivilege())) {
+				return ViewDirective.ALLOW_VIEW_DIRECTIVE;
+			}
+			
 			return applicationContext.getRoleViewDirective(userToken.getRoleCode(), privilege);
 		}
+
 		return applicationContext.getRoleViewDirective(null, privilege);
 	}
 

@@ -559,11 +559,11 @@ public class UnifyContainer {
 
 			ApplicationAttributeProvider applicationAttributeProvider = getComponent(
 					ApplicationAttributeProvider.class);
-			AlternativePrivilegeNameProvider privilegeNameProvider = isComponent(AlternativePrivilegeNameProvider.class)
-					? getComponent(AlternativePrivilegeNameProvider.class)
+			AlternativePrivilegeProvider privilegeNameProvider = isComponent(AlternativePrivilegeProvider.class)
+					? getComponent(AlternativePrivilegeProvider.class)
 					: null;
 			applicationContext.setAttributeProvider(applicationAttributeProvider);
-			applicationContext.setPrivilegeNameProvider(privilegeNameProvider);
+			applicationContext.setAltPrivilegeNameProvider(privilegeNameProvider);
 
 			// Open container interfaces to start servicing requests
 			openInterfaces();

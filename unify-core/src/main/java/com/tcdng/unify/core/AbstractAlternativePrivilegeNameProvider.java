@@ -15,6 +15,7 @@
  */
 package com.tcdng.unify.core;
 
+import com.tcdng.unify.core.data.AlternativePrivilege;
 import com.tcdng.unify.core.data.FactoryMap;
 
 /**
@@ -24,23 +25,23 @@ import com.tcdng.unify.core.data.FactoryMap;
  * @since 1.0
  */
 public abstract class AbstractAlternativePrivilegeNameProvider extends AbstractUnifyComponent
-		implements AlternativePrivilegeNameProvider {
+		implements AlternativePrivilegeProvider {
 
-	private FactoryMap<String, String> alternatives;
+	private FactoryMap<String, AlternativePrivilege> alternatives;
 	
 	public AbstractAlternativePrivilegeNameProvider() {
-		this.alternatives = new FactoryMap<String, String>() {
+		this.alternatives = new FactoryMap<String, AlternativePrivilege>() {
 
 			@Override
-			protected String create(String privilege, Object... params) throws Exception {
-				return getAlternateName(privilege);
+			protected AlternativePrivilege create(String privilege, Object... params) throws Exception {
+				return createAlternatePrivilege(privilege);
 			}
 			
 		};
 	}
 	
 	@Override
-	public String getAlternativeName(String privilege) throws UnifyException {
+	public AlternativePrivilege getAlternativePrivilege(String privilege) throws UnifyException {
 		return alternatives.get(privilege);
 	}
 
@@ -54,5 +55,5 @@ public abstract class AbstractAlternativePrivilegeNameProvider extends AbstractU
 
 	}
 
-	protected abstract String getAlternateName(String privilege) throws UnifyException;
+	protected abstract AlternativePrivilege createAlternatePrivilege(String privilege) throws UnifyException;
 }

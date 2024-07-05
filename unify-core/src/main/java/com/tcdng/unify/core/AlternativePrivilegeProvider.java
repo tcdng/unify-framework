@@ -15,21 +15,23 @@
  */
 package com.tcdng.unify.core;
 
+import com.tcdng.unify.core.data.AlternativePrivilege;
+
 /**
- * Alternative privilege name provider.
+ * Alternative privilege provider.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public interface AlternativePrivilegeNameProvider extends UnifyComponent {
-
+public interface AlternativePrivilegeProvider extends UnifyComponent {
+	
 	/**
-	 * Get alternative privilege name.
+	 * Gets alternative privilege.
 	 * 
 	 * @param privilege the privilege
-	 * @return the alternative privilege name
+	 * @return the alternative privilege
 	 * @throws UnifyException if an error occurs
 	 */
-	String getAlternativeName(String privilege) throws UnifyException;
+	AlternativePrivilege getAlternativePrivilege(String privilege) throws UnifyException;
 
 }
