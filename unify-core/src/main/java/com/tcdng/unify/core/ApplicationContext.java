@@ -48,6 +48,8 @@ public class ApplicationContext extends Context {
 
 	private ApplicationAttributeProvider attributeProvider;
 
+	private AlternativePrivilegeNameProvider privilegeNameProvider;
+	
 	public ApplicationContext(UnifyContainer container, Locale applicationLocale, TimeZone timeZone,
 			String lineSeparator, boolean ignoreViewDirective) {
 		this.container = container;
@@ -85,19 +87,27 @@ public class ApplicationContext extends Context {
 	 * @param privilege the privilege to test
 	 * @return the role's view directive for supplied privilege
 	 */
-	public ViewDirective getRoleViewDirective(String roleCode, String privilege) {
+	public ViewDirective getRoleViewDirective(String roleCode, String privilege) throws UnifyException {
 		if (roleCode != null && privilege != null && !privilege.isEmpty()) {
 			RoleAttributes roleAttributes = this.roleAttributes.get(roleCode);
 			if (roleAttributes != null) {
-				if (roleAttributes.isStaticViewDirectivePrivilege(privilege)) {
+				if (roleAttributes.isStaticViewDirectivePrivilege(privilege)
+						|| (privilegeNameProvider != null && roleAttributes
+								.isStaticViewDirectivePrivilege(privilegeNameProvider.getAlternativeName(privilege)))) {
 					return ViewDirective.ALLOW_VIEW_DIRECTIVE;
 				}
 
 				ViewDirective directive = roleAttributes.getDynamicViewDirective(privilege);
+				if (directive == null && privilegeNameProvider != null) {
+					directive = roleAttributes
+							.getDynamicViewDirective(privilegeNameProvider.getAlternativeName(privilege));
+				}
+
 				if (directive != null) {
 					return directive;
 				}
 			}
+
 			return ViewDirective.DISALLOW_VIEW_DIRECTIVE;
 		}
 
@@ -140,6 +150,10 @@ public class ApplicationContext extends Context {
 
 	public void setAttributeProvider(ApplicationAttributeProvider attributeProvider) {
 		this.attributeProvider = attributeProvider;
+	}
+
+	public void setPrivilegeNameProvider(AlternativePrivilegeNameProvider privilegeNameProvider) {
+		this.privilegeNameProvider = privilegeNameProvider;
 	}
 
 	public Set<String> getPrivilegeCodes(String roleCode, String privilegeCategoryCode) {
