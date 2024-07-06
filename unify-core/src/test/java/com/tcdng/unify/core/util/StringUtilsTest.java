@@ -32,6 +32,7 @@ import com.tcdng.unify.common.util.ParamToken;
 import com.tcdng.unify.common.util.StringToken;
 import com.tcdng.unify.common.util.TextToken;
 import com.tcdng.unify.core.data.ListData;
+import com.tcdng.unify.core.data.StringComposition;
 
 /**
  * StringUtils tests.
@@ -41,6 +42,42 @@ import com.tcdng.unify.core.data.ListData;
  */
 public class StringUtilsTest {
 
+	@Test
+	public void testStringCompositionNull() throws Exception {
+		StringComposition composition = StringUtils.getComposition(null);
+		assertNotNull(composition);
+		assertEquals(0, composition.getLength());
+		assertEquals(0, composition.getLetters());
+		assertEquals(0, composition.getDigits());
+		assertEquals(0, composition.getSpecial());
+		assertEquals(0, composition.getLowercase());
+		assertEquals(0, composition.getUppercase());
+	}
+
+	@Test
+	public void testStringCompositionEmpty() throws Exception {
+		StringComposition composition = StringUtils.getComposition("");
+		assertNotNull(composition);
+		assertEquals(0, composition.getLength());
+		assertEquals(0, composition.getLetters());
+		assertEquals(0, composition.getDigits());
+		assertEquals(0, composition.getSpecial());
+		assertEquals(0, composition.getLowercase());
+		assertEquals(0, composition.getUppercase());
+	}
+
+	@Test
+	public void testStringComposition() throws Exception {
+		StringComposition composition = StringUtils.getComposition("Abc3#4$2De");
+		assertNotNull(composition);
+		assertEquals(10, composition.getLength());
+		assertEquals(5, composition.getLetters());
+		assertEquals(3, composition.getDigits());
+		assertEquals(2, composition.getSpecial());
+		assertEquals(3, composition.getLowercase());
+		assertEquals(2, composition.getUppercase());
+	}
+	
 	@Test
 	public void testReplaceFirstNull() throws Exception {
         assertNull(StringUtils.replaceFirst(null, null, null));

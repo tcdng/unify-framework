@@ -27,6 +27,7 @@ import com.tcdng.unify.common.util.StringToken;
 import com.tcdng.unify.common.util.StringTokenUtils;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.data.ListData;
+import com.tcdng.unify.core.data.StringComposition;
 
 /**
  * Provides utility methods for string manipulation.
@@ -44,6 +45,42 @@ public final class StringUtils {
 
 	private StringUtils() {
 
+	}
+
+	/**
+	 * Gets string composition.
+	 * 
+	 * @param str the string
+	 * @return the composition
+	 */
+	public static StringComposition getComposition(String str) {
+		int passwordLen = 0;
+		int letters = 0;
+		int digits = 0;
+		int special = 0;
+		int uppercase = 0;
+		int lowercase = 0;
+
+		if (str != null) {
+			passwordLen = str.length();
+			for (int i = 0; i < passwordLen; i++) {
+				char ch = str.charAt(i);
+				if (Character.isLetter(ch)) {
+					letters++;
+					if (Character.isLowerCase(ch)) {
+						lowercase++;
+					} else {
+						uppercase++;
+					}
+				} else if (Character.isDigit(ch)) {
+					digits++;
+				} else {
+					special++;
+				}
+			}
+		}
+
+		return new StringComposition(passwordLen, letters, digits, special, uppercase, lowercase);
 	}
 
 	/**
