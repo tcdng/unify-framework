@@ -267,11 +267,11 @@ public class SqlStatementPools {
                     .add(new SqlParameter(sqlDataTypePolicies.get(sqlEntityInfo.getIdFieldInfo().getColumnType())));
             if (sqlEntityInfo.isViewOnly()) {
                 return new SqlStatement(sqlEntityInfo, SqlStatementType.FIND_BY_PK, sqlCache.getFindByPkSql(),
-                        parameterInfoList, getSqlResultList(sqlEntityInfo.getListFieldInfos()));
+                        parameterInfoList, getSqlResultList(sqlEntityInfo.getListFieldInfos()), false);
             }
 
             return new SqlStatement(sqlEntityInfo, SqlStatementType.FIND_BY_PK, sqlCache.getFindByPkSql(),
-                    parameterInfoList, getSqlResultList(sqlEntityInfo.getFieldInfos()));
+                    parameterInfoList, getSqlResultList(sqlEntityInfo.getFieldInfos()), false);
         }
 
         @Override
@@ -297,12 +297,12 @@ public class SqlStatementPools {
             if (sqlEntityInfo.isViewOnly()) {
                 return new SqlStatement(sqlEntityInfo, SqlStatementType.FIND_BY_PK_VERSION,
                         sqlCache.getFindByPkVersionSql(), parameterInfoList,
-                        getSqlResultList(sqlEntityInfo.getListFieldInfos()));
+                        getSqlResultList(sqlEntityInfo.getListFieldInfos()), false);
             }
 
             return new SqlStatement(sqlEntityInfo, SqlStatementType.FIND_BY_PK_VERSION,
                     sqlCache.getFindByPkVersionSql(), parameterInfoList,
-                    getSqlResultList(sqlEntityInfo.getFieldInfos()));
+                    getSqlResultList(sqlEntityInfo.getFieldInfos()), false);
         }
 
         @Override
@@ -325,7 +325,7 @@ public class SqlStatementPools {
                     .add(new SqlParameter(sqlDataTypePolicies.get(sqlEntityInfo.getIdFieldInfo().getColumnType())));
 
             return new SqlStatement(sqlEntityInfo, SqlStatementType.LIST_BY_PK, sqlCache.getListByPkSql(),
-                    parameterInfoList, getSqlResultList(sqlEntityInfo.getListFieldInfos()));
+                    parameterInfoList, getSqlResultList(sqlEntityInfo.getListFieldInfos()), false);
         }
 
         @Override
@@ -350,7 +350,7 @@ public class SqlStatementPools {
 
             return new SqlStatement(sqlEntityInfo, SqlStatementType.LIST_BY_PK_VERSION,
                     sqlCache.getListByPkVersionSql(), parameterInfoList,
-                    getSqlResultList(sqlEntityInfo.getListFieldInfos()));
+                    getSqlResultList(sqlEntityInfo.getListFieldInfos()), false);
         }
 
         @Override

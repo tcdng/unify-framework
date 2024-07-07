@@ -38,6 +38,8 @@ public class SqlStatement {
 
 	private boolean merge;
 
+	private boolean lenient;
+
 	public SqlStatement(SqlEntityInfo sqlEntityInfo, SqlStatementType type, String sql) {
 		this.sqlEntityInfo = sqlEntityInfo;
 		this.type = type;
@@ -63,12 +65,13 @@ public class SqlStatement {
 	}
 
 	public SqlStatement(SqlEntityInfo sqlEntityInfo, SqlStatementType type, String sql,
-			final List<SqlParameter> parameterInfoList, final List<SqlResult> resultInfoList) {
+			final List<SqlParameter> parameterInfoList, final List<SqlResult> resultInfoList, boolean lenient) {
 		this.sqlEntityInfo = sqlEntityInfo;
 		this.type = type;
 		this.sql = sql;
 		this.parameterInfoList = parameterInfoList;
 		this.resultInfoList = resultInfoList;
+		this.lenient = lenient;
 	}
 
 	public SqlEntityInfo getSqlEntityInfo() {
@@ -103,25 +106,8 @@ public class SqlStatement {
 		this.merge = merge;
 	}
 
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("[sql = ").append(sql);
-        if (parameterInfoList != null && !parameterInfoList.isEmpty()) {
-            sb.append(":");
-            boolean isAppendSymbol = false;
-            for (SqlParameter sqlParameter : parameterInfoList) {
-                if (isAppendSymbol) {
-                    sb.append(", ");
-                } else {
-                    isAppendSymbol = true;
-                }
-
-                sb.append("{").append(sqlParameter.toString()).append("}");
-            }
-        }
-
-        sb.append("]");
-        return sb.toString();
-    }
+    public boolean isLenient() {
+		return lenient;
+	}
 
 }

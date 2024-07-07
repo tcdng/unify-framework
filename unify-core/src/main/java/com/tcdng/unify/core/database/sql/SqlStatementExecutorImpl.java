@@ -417,7 +417,7 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
 				}
 
 				T keyVal = (T) keySQLFieldInfo.getGetter().invoke(record);
-				if (resultMap.containsKey(keyVal)) {
+				if (resultMap.containsKey(keyVal) && !sqlStatement.isLenient()) {
 					throw new UnifyException(UnifyCoreErrorConstants.RECORD_MULTIPLE_SAME_KEY_FOUND, keyVal,
 							sqlEntityInfo.getEntityClass());
 				}
