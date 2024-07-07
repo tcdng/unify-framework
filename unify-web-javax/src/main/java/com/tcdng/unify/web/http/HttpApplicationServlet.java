@@ -16,6 +16,7 @@
 package com.tcdng.unify.web.http;
 
 import java.io.IOException;
+import java.io.Writer;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -25,7 +26,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.constant.MimeType;
+import com.tcdng.unify.core.util.IOUtils;
 import com.tcdng.unify.web.http.util.HttpWebTypeUtils;
 
 /**
@@ -38,94 +40,113 @@ import com.tcdng.unify.web.http.util.HttpWebTypeUtils;
 @MultipartConfig
 public class HttpApplicationServlet extends HttpServlet {
 
-    /** The serial version ID */
-    private static final long serialVersionUID = 3971544226497014269L;
+	/** The serial version ID */
+	private static final long serialVersionUID = 3971544226497014269L;
 
-    private HttpServletModule httpModule;
+	private HttpServletModule httpModule;
 
-    public HttpApplicationServlet() {
-        this(false);
-    }
+	public HttpApplicationServlet() {
+		this(false);
+	}
 
-    public HttpApplicationServlet(boolean embedded) {
-        this.httpModule = new HttpServletModule(embedded);
-    }
+	public HttpApplicationServlet(boolean embedded) {
+		this.httpModule = new HttpServletModule(embedded);
+	}
 
-    public HttpApplicationServlet(HttpServletModule httpModule) {
-        this.httpModule = httpModule;
-    }
+	public HttpApplicationServlet(HttpServletModule httpModule) {
+		this.httpModule = httpModule;
+	}
 
-    @Override
-    public void init(ServletConfig config) throws ServletException {
-        super.init(config);
+	@Override
+	public void init(ServletConfig config) throws ServletException {
+		super.init(config);
 
-        if (!httpModule.isEmbedded()) {
-            final ServletContext servletContext = config.getServletContext();
-            final String workingFolder = servletContext.getRealPath("");
-            final String configFilename = config.getInitParameter("application-config-file");
-            try {
-                httpModule.init(servletContext.getContextPath(), workingFolder, configFilename,
-                        HttpWebTypeUtils.getTypeRepositoryFromServletContext(servletContext));
-            } catch (Exception e) {
-                throw new ServletException(e);
-            }
-        }
-    }
+		if (!httpModule.isEmbedded()) {
+			final ServletContext servletContext = config.getServletContext();
+			final String workingFolder = servletContext.getRealPath("");
+			final String configFilename = config.getInitParameter("application-config-file");
+			try {
+				httpModule.init(servletContext.getContextPath(), workingFolder, configFilename,
+						HttpWebTypeUtils.getTypeRepositoryFromServletContext(servletContext));
+			} catch (Exception e) {
+				throw new ServletException(e);
+			}
+		}
+	}
 
-    @Override
-    public void destroy() {
-        httpModule.destroy();
-        super.destroy();
-    }
+	@Override
+	public void destroy() {
+		httpModule.destroy();
+		super.destroy();
+	}
 
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        doRequestMethod(HttpRequestMethodType.GET, request, response);
-    }
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		doRequestMethod(HttpRequestMethodType.GET, request, response);
+	}
 
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        doRequestMethod(HttpRequestMethodType.POST, request, response);
-    }
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		doRequestMethod(HttpRequestMethodType.POST, request, response);
+	}
 
-    @Override
-    protected void doDelete(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        doRequestMethod(HttpRequestMethodType.DELETE, request, response);
-    }
+	@Override
+	protected void doDelete(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		doRequestMethod(HttpRequestMethodType.DELETE, request, response);
+	}
 
-    @Override
-    protected void doHead(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        doRequestMethod(HttpRequestMethodType.HEAD, request, response);
-    }
+	@Override
+	protected void doHead(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		doRequestMethod(HttpRequestMethodType.HEAD, request, response);
+	}
 
-    @Override
-    protected void doOptions(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        doRequestMethod(HttpRequestMethodType.OPTIONS, request, response);
-    }
+	@Override
+	protected void doOptions(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		doRequestMethod(HttpRequestMethodType.OPTIONS, request, response);
+	}
 
-    @Override
-    protected void doPut(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        doRequestMethod(HttpRequestMethodType.PUT, request, response);
-    }
+	@Override
+	protected void doPut(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		doRequestMethod(HttpRequestMethodType.PUT, request, response);
+	}
 
-    @Override
-    protected void doTrace(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        doRequestMethod(HttpRequestMethodType.TRACE, request, response);
-    }
+	@Override
+	protected void doTrace(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		doRequestMethod(HttpRequestMethodType.TRACE, request, response);
+	}
 
-    private void doRequestMethod(HttpRequestMethodType type, HttpServletRequest request, HttpServletResponse response)
-            throws ServletException {
-        try {
-            httpModule.handleRequest(type, new HttpRequestImpl(request), new HttpResponseImpl(response));
-        } catch (UnifyException e) {
-            throw new ServletException(e);
-        }
-    }
+	private void doRequestMethod(HttpRequestMethodType type, HttpServletRequest request, HttpServletResponse response)
+			throws ServletException {
+		HttpResponse resp = new HttpResponseImpl(response);
+		try {
+			httpModule.handleRequest(type, new HttpRequestImpl(request), resp);
+		} catch (Exception e) {
+			e.printStackTrace();
+			Writer pw = null;
+			try {
+				resp.setContentType(MimeType.TEXT_HTML.template());
+				pw = resp.getWriter();
+				pw.write("<html>\n<head>\n");
+				pw.write("<meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\"/>\n");
+				pw.write("<title>Error 500</title>\n");
+				pw.write("</head>\n<body>");
+				pw.write("<h2>HTTP ERROR 500 - ");
+				pw.write(e.getMessage());
+				pw.write("</h2>\n");
+				pw.write("</body>\n</html>\n");
+				resp.setStatusInternalServerError();
+			} catch (IOException e1) {
+				e.printStackTrace();
+			} finally {
+				IOUtils.close(pw);
+			}
+		}
+	}
 }
