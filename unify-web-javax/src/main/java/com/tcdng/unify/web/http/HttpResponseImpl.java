@@ -86,6 +86,11 @@ public class HttpResponseImpl implements HttpResponse {
     }
 
     @Override
+	public void setStatusInternalServerError() {
+        response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+	}
+
+    @Override
     public void setCookie(String name, String val) {
         Cookie cookie = new Cookie(name, val);
         response.addCookie(cookie);

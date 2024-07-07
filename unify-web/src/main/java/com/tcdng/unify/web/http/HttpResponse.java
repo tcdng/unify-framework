@@ -46,6 +46,8 @@ public interface HttpResponse {
 
     void setStatusNotFound();
 
+    void setStatusInternalServerError();
+
     void setCookie(String name, String val);
 
     void setCookie(String name, String val, int maxAge);
