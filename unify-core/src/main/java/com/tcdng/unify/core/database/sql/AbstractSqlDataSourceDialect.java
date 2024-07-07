@@ -1211,7 +1211,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
 		appendWhereClause(findSql, parameterInfoList, sqlEntityInfo, query, SqlQueryType.SELECT);
 		return new SqlStatement(sqlEntityInfo, SqlStatementType.FIND, findSql.toString(), parameterInfoList,
-				getSqlResultList(returnFieldInfoList));
+				getSqlResultList(returnFieldInfoList), query.isLenient());
 	}
 
 	@Override
@@ -1305,7 +1305,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
 		appendWhereClause(listSql, parameterInfoList, sqlEntityInfo, query, SqlQueryType.SELECT);
 		return new SqlStatement(sqlEntityInfo, SqlStatementType.LIST, listSql.toString(), parameterInfoList,
-				getSqlResultList(returnFieldInfoList));
+				getSqlResultList(returnFieldInfoList), query.isLenient());
 	}
 
 	@Override
@@ -2036,7 +2036,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 				groupingFunction);
 
 		SqlStatement statement = new SqlStatement(sqlEntityInfo, SqlStatementType.FIND, aggregateSql.toString(),
-				parameterInfoList, getSqlResultList(returnFieldInfoList));
+				parameterInfoList, getSqlResultList(returnFieldInfoList), query.isLenient());
 		statement.setMerge(query.isMerge());
 		return statement;
 	}
@@ -2078,7 +2078,7 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 				groupingFunction);
 
 		SqlStatement statement = new SqlStatement(sqlEntityInfo, SqlStatementType.FIND, aggregateSql.toString(),
-				parameterInfoList, getSqlResultList(returnFieldInfoList));
+				parameterInfoList, getSqlResultList(returnFieldInfoList), query.isLenient());
 		statement.setMerge(query.isMerge());
 		return statement;
 	}

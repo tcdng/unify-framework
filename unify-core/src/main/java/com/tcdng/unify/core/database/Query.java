@@ -103,6 +103,8 @@ public class Query<T extends Entity> implements Cloneable {
 
     private boolean merge;
 
+    private boolean lenient;
+
     public Query(Class<T> entityClass) {
         this(entityClass, false);
     }
@@ -582,6 +584,15 @@ public class Query<T extends Entity> implements Cloneable {
         return this;
 	}
 
+	public boolean isLenient() {
+		return lenient;
+	}
+
+	public Query<T> setLenient(boolean lenient) {
+		this.lenient = lenient;
+        return this;
+	}
+
 	public boolean isDistinct() {
         return innerGetSelect().isDistinct();
     }
@@ -654,6 +665,8 @@ public class Query<T extends Entity> implements Cloneable {
         query.groupBy = groupBy;
         query.order = order;
         query.offset = offset;
+        query.lenient = lenient;
+        query.merge = merge;
         query.limit = limit;
         query.ignoreEmptyCriteria = ignoreEmptyCriteria;
         query.ignoreTenancy = ignoreTenancy;
@@ -668,6 +681,8 @@ public class Query<T extends Entity> implements Cloneable {
         query.groupBy = groupBy;
         query.order = order;
         query.offset = offset;
+        query.lenient = lenient;
+        query.merge = merge;
         query.limit = limit;
         query.ignoreEmptyCriteria = ignoreEmptyCriteria;
         query.mustMatch = mustMatch;
