@@ -1605,6 +1605,40 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
 		}
 	}
 
+	@Test(expected = Exception.class)
+	public void testFindAllMapRecordsMultipleStrict() throws Exception {
+		tm.beginTransaction();
+		try {
+			Fruit apple = new Fruit("apple", "red", 20.00);
+			db.create(apple);
+			db.create(new Fruit("pineapple", "cyan", 60.00));
+			db.create(new Fruit("banana", "yellow", 45.00));
+			Fruit orange = new Fruit("orange", "red", 15.00);
+			db.create(orange);
+			db.findAllMap(String.class, "color",
+					new FruitQuery().ignoreEmptyCriteria(true));
+		} finally {
+			tm.endTransaction();
+		}
+	}
+
+	public void testFindAllMapRecordsMultipleLenient() throws Exception {
+		tm.beginTransaction();
+		try {
+			Fruit apple = new Fruit("apple", "red", 20.00);
+			db.create(apple);
+			db.create(new Fruit("pineapple", "cyan", 60.00));
+			db.create(new Fruit("banana", "yellow", 45.00));
+			Fruit orange = new Fruit("orange", "red", 15.00);
+			db.create(orange);
+			Map<String, Fruit> testFruitMap = db.findAllMap(String.class, "color",
+					new FruitQuery().ignoreEmptyCriteria(true).setLenient(true));
+			assertEquals(3, testFruitMap.size());
+		} finally {
+			tm.endTransaction();
+		}
+	}
+
 	@Test
 	public void testFindAllRecordsWithAmongstSingle() throws Exception {
 		tm.beginTransaction();
@@ -5498,9 +5532,9 @@ public class DatabaseTableEntityCRUDTest extends AbstractUnifyComponentTest {
 
 	@Override
 	protected void doAddSettingsAndDependencies() throws Exception {
-        addContainerSetting(UnifyCorePropertyConstants.APPLICATION_LOG_LEVEL, "debug");
-        addContainerSetting(UnifyCorePropertyConstants.APPLICATION_LOG_TO_CONSOLE, "true");
-        addContainerSetting(UnifyCorePropertyConstants.APPLICATION_SQL_DEBUGGING, "true");
+//        addContainerSetting(UnifyCorePropertyConstants.APPLICATION_LOG_LEVEL, "debug");
+//        addContainerSetting(UnifyCorePropertyConstants.APPLICATION_LOG_TO_CONSOLE, "true");
+//        addContainerSetting(UnifyCorePropertyConstants.APPLICATION_SQL_DEBUGGING, "true");
 		addContainerSetting(UnifyCorePropertyConstants.APPLICATION_QUERY_LIMIT, 8);
 	}
 
