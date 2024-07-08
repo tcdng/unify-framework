@@ -110,4 +110,25 @@ public class SqlStatement {
 		return lenient;
 	}
 
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[sql = ").append(sql);
+        if (parameterInfoList != null && !parameterInfoList.isEmpty()) {
+            sb.append(":");
+            boolean isAppendSymbol = false;
+            for (SqlParameter sqlParameter : parameterInfoList) {
+                if (isAppendSymbol) {
+                    sb.append(", ");
+                } else {
+                    isAppendSymbol = true;
+                }
+
+                sb.append("{").append(sqlParameter.toString()).append("}");
+            }
+        }
+
+        sb.append("]");
+        return sb.toString();
+    }
+
 }
