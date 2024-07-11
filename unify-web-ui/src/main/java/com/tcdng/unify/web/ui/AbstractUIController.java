@@ -110,6 +110,10 @@ public abstract class AbstractUIController extends AbstractController implements
 				docPathParts = pathInfoRepository.getControllerPathParts(documentPath);
 				docPageController = (PageController<?>) getControllerFinder().findController(docPathParts);
 				pageRequestContextUtil.setRequestDocument((Document) uiControllerUtil.loadRequestPage(docPathParts));
+			} else {
+				if (getSecured().isProtected()) {
+					throw new RuntimeException("Unauthorized direct path access.");
+				}
 			}
 
 			pageRequestContextUtil.extractRequestParameters(request);

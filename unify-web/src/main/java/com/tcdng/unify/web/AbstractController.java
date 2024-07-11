@@ -42,15 +42,15 @@ public abstract class AbstractController extends AbstractUnifyComponent implemen
 	@Configurable
 	private ControllerFinder controllerFinder;
 
-	private boolean secured;
+	private Secured secured;
 
 	public AbstractController(Secured secured) {
-		this.secured = secured.isTrue();
+		this.secured = secured;
 	}
 
 	@Override
 	public boolean isSecured() {
-		return this.secured;
+		return secured.isTrue();
 	}
 
     @Override
@@ -68,6 +68,10 @@ public abstract class AbstractController extends AbstractUnifyComponent implemen
 
 	}
 
+	protected Secured getSecured() {
+		return secured;
+	}
+	
 	protected HttpRequestHeaders getHttpRequestHeaders() throws UnifyException {
 		return (HttpRequestHeaders) getRequestAttribute(UnifyWebRequestAttributeConstants.HEADERS);
 	}
