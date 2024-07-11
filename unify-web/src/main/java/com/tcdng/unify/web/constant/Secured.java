@@ -24,13 +24,18 @@ package com.tcdng.unify.web.constant;
  */
 public enum Secured {
     TRUE,
+    PROTECTED,
     FALSE;
     
-    public boolean isTrue() {
-        return TRUE.equals(this);
-    }
-    
-    public boolean isFalse() {
-        return FALSE.equals(this);
-    }
+	public boolean isTrue() {
+		return TRUE.equals(this);
+	}
+
+	public boolean isFalse() {
+		return FALSE.equals(this) || PROTECTED.equals(this);
+	}
+
+	public boolean isProtected() {
+		return PROTECTED.equals(this);
+	}
 }
