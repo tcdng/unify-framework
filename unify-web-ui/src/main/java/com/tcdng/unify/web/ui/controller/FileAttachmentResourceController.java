@@ -45,7 +45,7 @@ public class FileAttachmentResourceController extends AbstractPageResourceContro
     }
 
     @Override
-    public void execute(OutputStream outputStream) throws UnifyException {
+    public String execute(OutputStream outputStream) throws UnifyException {
         byte[] data = null;
         Object resource = removeSessionAttribute(getResourceName());
         if (resource instanceof FileAttachmentsInfo) {
@@ -66,6 +66,8 @@ public class FileAttachmentResourceController extends AbstractPageResourceContro
         }
 
         IOUtils.writeAll(outputStream, data);
+        
+        return null;
     }
 
 }

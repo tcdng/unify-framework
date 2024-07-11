@@ -262,6 +262,16 @@ public class UnifyContainer {
 					String.valueOf(unifySettings.get(UnifyCorePropertyConstants.APPLICATION_VIEW_DIRECTIVE_IGNORE)));
 		}
 
+		boolean restrictedJARMode = false;
+		if (unifySettings.get(UnifyCorePropertyConstants.APPLICATION_RETRICTED_JAR_MODE) != null) {
+			restrictedJARMode = Boolean.valueOf(
+					String.valueOf(unifySettings.get(UnifyCorePropertyConstants.APPLICATION_RETRICTED_JAR_MODE)));
+		}
+		
+		if (restrictedJARMode) {
+			IOUtils.enterRestrictedJARMode();
+		}
+		
 		// Banner
 		List<String> banner = getApplicationBanner();
 		if (!banner.isEmpty()) {

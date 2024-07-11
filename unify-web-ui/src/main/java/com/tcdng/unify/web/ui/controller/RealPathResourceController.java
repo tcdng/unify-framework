@@ -18,7 +18,6 @@ package com.tcdng.unify.web.ui.controller;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
@@ -68,10 +67,10 @@ public class RealPathResourceController extends FileResourceController {
     }
     
     @Override
-    protected InputStream getInputStream() throws UnifyException {
+    protected ResInputStream getInputStream() throws UnifyException {
         if (file != null && file.exists()) {
             try {
-                return new FileInputStream(file);
+                return new ResInputStream(new FileInputStream(file));
             } catch (FileNotFoundException e) {
                 throwOperationErrorException(e);
             }

@@ -15,8 +15,6 @@
  */
 package com.tcdng.unify.web.ui.controller;
 
-import java.io.InputStream;
-
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.util.IOUtils;
@@ -37,7 +35,7 @@ public class ClassLoaderResourceController extends FileResourceController {
 	}
 
 	@Override
-	protected InputStream getInputStream() throws UnifyException {
-		return IOUtils.openClassLoaderResourceInputStream(getResourceName());
+	protected ResInputStream getInputStream() throws UnifyException {
+		return new ResInputStream(IOUtils.openClassLoaderResourceInputStream(getResourceName()));
 	}
 }

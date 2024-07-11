@@ -45,7 +45,7 @@ public class MockResourceController extends AbstractPageResourceController {
     private Double balance;
 
     @Override
-    public void execute(OutputStream outputStream) throws UnifyException {
+    public String execute(OutputStream outputStream) throws UnifyException {
         try {
             OutputStreamWriter osw = new OutputStreamWriter(outputStream);
             osw.write("Hello World!");
@@ -53,6 +53,8 @@ public class MockResourceController extends AbstractPageResourceController {
         } catch (IOException e) {
             throwOperationErrorException(e);
         }
+        
+        return null;
     }
 
     @Override

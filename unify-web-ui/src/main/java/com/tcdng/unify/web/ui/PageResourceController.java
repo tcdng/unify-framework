@@ -79,8 +79,9 @@ public interface PageResourceController extends UIController, ResourceController
      * 
      * @param outputStream
      *            the output stream to stream resource to
+     * @return content type override otherwise null
      * @throws UnifyException
      *             if an error occurs
      */
-    void execute(OutputStream outputStream) throws UnifyException;
+    String execute(OutputStream outputStream) throws UnifyException;
 }

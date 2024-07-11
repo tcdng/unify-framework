@@ -21,6 +21,7 @@ import java.io.OutputStream;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
+import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.file.FileResourceProvider;
 import com.tcdng.unify.core.util.IOUtils;
 import com.tcdng.unify.web.constant.Secured;
@@ -36,44 +37,88 @@ import com.tcdng.unify.web.ui.AbstractPageResourceController;
 @Component("/resource/file")
 public class FileResourceController extends AbstractPageResourceController {
 
-    @Configurable
-    private FileResourceProvider fileResourceProvider;
+	@Configurable
+	private FileResourceProvider fileResourceProvider;
 
-    public FileResourceController() {
-        super(Secured.FALSE);
-    }
+	public FileResourceController() {
+		super(Secured.FALSE);
+	}
 
-    public FileResourceController(Secured secured) {
-        super(secured);
-    }
+	public FileResourceController(Secured secured) {
+		super(secured);
+	}
 
-    @Override
-    public void prepareExecution() throws UnifyException {
-        setContentDisposition(getResourceName());
-    }
+	@Override
+	public void prepareExecution() throws UnifyException {
+		setContentDisposition(getResourceName());
+	}
 
-    @Override
-    public void execute(OutputStream out) throws UnifyException {
-        InputStream in = null;
-        try {
-            in = getInputStream();
-            IOUtils.writeAll(out, in);
-        } finally {
-            IOUtils.close(in);
-        }
-    }
+	@Override
+	public String execute(OutputStream out) throws UnifyException {
+		String contentType = null;
+		ResInputStream rin = null;
+		try {
+			rin = getInputStream();
+			IOUtils.writeAll(out, rin.getIn());
+		} finally {
+			if (rin != null) {
+				contentType = rin.getContentType();
+				IOUtils.close(rin.getIn());
+			}
+		}
 
-    protected InputStream getInputStream() throws UnifyException {
-        InputStream in = null;
-        if (fileResourceProvider != null) {
-            in = fileResourceProvider.openFileResourceInputStream("/resource/file", getResourceName());
-        }
+		return contentType;
+	}
 
-        if (in == null) {
-            return IOUtils.openFileResourceInputStream(getResourceName(), getUnifyComponentContext().getWorkingPath());
-        }
+	@Override
+	public boolean isRefererRequired() {
+		return false;
+	}
 
-        return in;
-    }
+	protected ResInputStream getInputStream() throws UnifyException {
+		InputStream in = null;
+		String contentType = null;
+		if (fileResourceProvider != null) {
+			in = fileResourceProvider.openFileResourceInputStream("/resource/file", getResourceName());
+		}
 
+		if (in == null) {
+			try {
+				in = IOUtils.openFileResourceInputStream(getResourceName(),
+						getUnifyComponentContext().getWorkingPath());
+			} catch (UnifyException e) {
+				logError(e);
+				contentType = MimeType.TEXT_HTML.template();
+				in = IOUtils.openClassLoaderResourceInputStream("/web/404.html");
+			}
+		}
+
+		return new ResInputStream(in, contentType);
+	}
+
+	protected class ResInputStream {
+
+		private final InputStream in;
+
+		private final String contentType;
+
+		public ResInputStream(InputStream in, String contentType) {
+			this.in = in;
+			this.contentType = contentType;
+		}
+
+		public ResInputStream(InputStream in) {
+			this.in = in;
+			this.contentType = null;
+		}
+
+		public InputStream getIn() {
+			return in;
+		}
+
+		public String getContentType() {
+			return contentType;
+		}
+
+	}
 }
