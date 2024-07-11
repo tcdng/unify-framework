@@ -65,7 +65,7 @@ public class ScopeResourceController extends AbstractPageResourceController {
     }
 
     @Override
-    public void execute(OutputStream outputStream) throws UnifyException {
+    public String execute(OutputStream outputStream) throws UnifyException {
         InputStream inputStream = null;
         if (resource != null) {
             if (resource instanceof byte[]) {
@@ -87,6 +87,8 @@ public class ScopeResourceController extends AbstractPageResourceController {
                 }
             }
         }
+        
+        return null;
     }
 
     public String getScope() {

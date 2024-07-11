@@ -86,4 +86,6 @@ public interface UnifyCorePropertyConstants {
     String APPLICATION_MAX_TASKMONITOR_MESSAGES = "application.max.taskmonitor.messages";
 
     String APPLICATION_MAX_TASKRUNNER_THREADS = "application.max.taskrunner.threads";
+
+    String APPLICATION_RETRICTED_JAR_MODE= "application.restricted.jar.mode";
 }

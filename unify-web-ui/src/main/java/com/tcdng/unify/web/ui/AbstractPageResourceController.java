@@ -23,6 +23,7 @@ import java.util.Set;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Singleton;
 import com.tcdng.unify.core.util.DataUtils;
+import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ClientRequest;
 import com.tcdng.unify.web.ClientResponse;
 import com.tcdng.unify.web.ControllerPathParts;
@@ -148,7 +149,10 @@ public abstract class AbstractPageResourceController extends AbstractUIControlle
             response.setContentType(getContentType());
         }
 
-        execute(response.getOutputStream());
+        String contentType = execute(response.getOutputStream());
+        if (!StringUtils.isBlank(contentType)) {
+            response.setContentType(contentType);
+        }
     }
 
     protected void setMetaData(String name, String value) {
