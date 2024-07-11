@@ -95,6 +95,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("edit", "f044");
         registerSymbol("ellipsis-h", "f141");
         registerSymbol("ellipsis-v", "f142");
+        registerSymbol("eye", "f06e");
         registerSymbol("equals", "f52c");
         registerSymbol("exchange-alt", "f362");
         registerSymbol("exclamation-circle", "f06a");
@@ -145,6 +146,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("play", "f04b");
         registerSymbol("plus", "f067");
         registerSymbol("plus-square", "f0fe");
+        registerSymbol("pop-up", "f35d");
         registerSymbol("project-diagram", "f542");
         registerSymbol("redo", "f01e");
         registerSymbol("redo-alt", "f2f9");
