@@ -54,6 +54,8 @@ import com.tcdng.unify.core.constant.PrintFormat;
  */
 public class IOUtils {
 
+    private static final String PROTOCOL_INFIX = "://";
+
     private static final int BUFFER_SIZE = 1024 * 4;
 
     private static final File[] ZEROLEN_FILES = new File[0];
@@ -142,6 +144,10 @@ public class IOUtils {
      *                        if resource is not found. If an error occurs
      */
     public static InputStream openFileResourceInputStream(String resourceName, String realPath) throws UnifyException {
+    	if (IOUtils.isWithProtocolInfix(resourceName)) {
+            throw new UnifyException(UnifyCoreErrorConstants.IOUTIL_UNABLE_TO_OPEN_RESOURCE_STREAM, resourceName);
+    	}
+    	
         try {
             if (!restrictedJARMode) {
                 File file = IOUtils.fileInstance(resourceName, realPath);
@@ -155,7 +161,17 @@ public class IOUtils {
             throw new UnifyException(e, UnifyCoreErrorConstants.IOUTIL_UNABLE_TO_OPEN_RESOURCE_STREAM, resourceName);
         }
     }
-
+    
+	/**
+	 * Detects protocol infix in supplied string.
+	 * 
+	 * @param path the string to check
+	 * @return true if with protocol otherwise false
+	 */
+	public static boolean isWithProtocolInfix(String path) {
+		return path != null ? path.indexOf(PROTOCOL_INFIX) >= 0 : false;
+	}
+    
     /**
      * Opens a resource input stream from the current class loader.
      * 
