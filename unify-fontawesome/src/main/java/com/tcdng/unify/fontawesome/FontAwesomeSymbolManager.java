@@ -79,6 +79,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("cloud", "f0c2");
         registerSymbol("cloud-download", "f381");
         registerSymbol("cloud-upload", "f382");
+        registerSymbol("collapse", "f066");
         registerSymbol("copy", "f0c5");
         registerSymbol("cog", "f013");
         registerSymbol("cogs", "f085");
@@ -99,6 +100,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("equals", "f52c");
         registerSymbol("exchange-alt", "f362");
         registerSymbol("exclamation-circle", "f06a");
+        registerSymbol("expand", "f065");
         registerSymbol("file", "f15b");
         registerSymbol("file-contract", "f56c");
         registerSymbol("file-download", "f56d");
