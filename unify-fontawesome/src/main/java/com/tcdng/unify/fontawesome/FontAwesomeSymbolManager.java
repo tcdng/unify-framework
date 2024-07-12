@@ -79,6 +79,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("cloud", "f0c2");
         registerSymbol("cloud-download", "f381");
         registerSymbol("cloud-upload", "f382");
+        registerSymbol("collapse", "f066");
         registerSymbol("copy", "f0c5");
         registerSymbol("cog", "f013");
         registerSymbol("cogs", "f085");
@@ -95,9 +96,11 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("edit", "f044");
         registerSymbol("ellipsis-h", "f141");
         registerSymbol("ellipsis-v", "f142");
+        registerSymbol("eye", "f06e");
         registerSymbol("equals", "f52c");
         registerSymbol("exchange-alt", "f362");
         registerSymbol("exclamation-circle", "f06a");
+        registerSymbol("expand", "f065");
         registerSymbol("file", "f15b");
         registerSymbol("file-contract", "f56c");
         registerSymbol("file-download", "f56d");
@@ -125,6 +128,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("id-card", "f2c2");
         registerSymbol("id-badge", "f2c1");
         registerSymbol("image", "f03e");
+        registerSymbol("info", "f129");
         registerSymbol("key", "f084");
         registerSymbol("laptop-house", "e066");
         registerSymbol("link", "f0c1");
@@ -145,6 +149,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("play", "f04b");
         registerSymbol("plus", "f067");
         registerSymbol("plus-square", "f0fe");
+        registerSymbol("pop-up", "f35d");
         registerSymbol("project-diagram", "f542");
         registerSymbol("redo", "f01e");
         registerSymbol("redo-alt", "f2f9");
