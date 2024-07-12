@@ -30,6 +30,21 @@ import org.junit.Test;
 public class IOUtilsTest {
 
     @Test
+	public void testIsWithProtocolInfix() throws Exception {
+		assertFalse(IOUtils.isWithProtocolInfix(null));
+		assertFalse(IOUtils.isWithProtocolInfix(""));
+		assertFalse(IOUtils.isWithProtocolInfix("c"));
+		assertFalse(IOUtils.isWithProtocolInfix("test.txt"));
+		assertFalse(IOUtils.isWithProtocolInfix("/samples/test.txt"));
+		assertFalse(IOUtils.isWithProtocolInfix("\\samples\\test.txt"));
+		
+		assertTrue(IOUtils.isWithProtocolInfix("file://etc/passwd"));
+		assertTrue(IOUtils.isWithProtocolInfix("http://etc/passwd"));
+		assertTrue(IOUtils.isWithProtocolInfix("https://etc/passwd"));
+		assertTrue(IOUtils.isWithProtocolInfix("ws://etc/passwd"));
+	}
+	
+    @Test
     public void testBuildFilename() throws Exception {
         String fileSeparator = System.getProperty("file.separator");
 
