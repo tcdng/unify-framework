@@ -629,14 +629,14 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
 				for (GroupingFunction _groupingFunction : groupingFunction) {
 					if (_groupingFunction.isWithFieldGrouping()) {
 						sqlResult = sqlResultList.get(resultIndex);
-						String grouping = (String) sqlResult.getSqlDataTypePolicy().executeGetResult(rs, String.class,
+						Object grouping = sqlResult.getSqlDataTypePolicy().executeGetResult(rs, sqlResult.getType(),
 								++resultIndex, timeZoneOffset);
-						groupings.add(new Grouping(grouping));
+						groupings.add(new Grouping(String.valueOf(grouping)));
 					} else {
 						if (merge) {
-							String grouping = (String) mergeSqlDataTypePolicy.executeGetResult(rs, String.class,
+							Object grouping = mergeSqlDataTypePolicy.executeGetResult(rs, sqlResult.getType(),
 									++resultIndex, timeZoneOffset);
-							groupings.add(new Grouping(grouping));
+							groupings.add(new Grouping(String.valueOf(grouping)));
 						} else {
 							sqlResult = sqlResultList.get(resultIndex);
 							Date groupingDate = (Date) sqlResult.getSqlDataTypePolicy().executeGetResult(rs, Date.class,
@@ -702,14 +702,14 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
 				for (GroupingFunction _groupingFunction : groupingFunction) {
 					if (_groupingFunction.isWithFieldGrouping()) {
 						sqlResult = sqlResultList.get(resultIndex);
-						String grouping = (String) sqlResult.getSqlDataTypePolicy().executeGetResult(rs, String.class,
+						Object grouping = sqlResult.getSqlDataTypePolicy().executeGetResult(rs, sqlResult.getType(),
 								++resultIndex, timeZoneOffset);
-						groupings.add(new Grouping(grouping));
+						groupings.add(new Grouping(String.valueOf(grouping)));
 					} else {
 						if (merge) {
-							String grouping = (String) mergeSqlDataTypePolicy.executeGetResult(rs, String.class,
+							Object grouping = mergeSqlDataTypePolicy.executeGetResult(rs, sqlResult.getType(),
 									++resultIndex, timeZoneOffset);
-							groupings.add(new Grouping(grouping));
+							groupings.add(new Grouping(String.valueOf(grouping)));
 						} else {
 							sqlResult = sqlResultList.get(resultIndex);
 							Date groupingDate = (Date) sqlResult.getSqlDataTypePolicy().executeGetResult(rs, Date.class,
