@@ -43,11 +43,11 @@ public class DynamicEntityInfo {
 
 	public enum ManagedType {
 		MANAGED, NOT_MANAGED;
-		
+
 		public boolean managed() {
 			return MANAGED.equals(this);
 		}
-		
+
 		public boolean notManaged() {
 			return NOT_MANAGED.equals(this);
 		}
@@ -66,6 +66,10 @@ public class DynamicEntityInfo {
 	private Map<String, DynamicFieldInfo> fieldInfos;
 
 	private Map<String, String> listTypeArgByFieldName;
+
+	private List<DynamicIndexInfo> indexes;
+
+	private List<DynamicUniqueConstraintInfo> uniqueConstraints;
 
 	private boolean withChildField;
 
@@ -97,6 +101,8 @@ public class DynamicEntityInfo {
 		this.schemaChanged = schemaChanged;
 		this.version = version;
 		this.fieldInfos = Collections.emptyMap();
+		this.indexes = Collections.emptyList();
+		this.uniqueConstraints = Collections.emptyList();
 	}
 
 	public DynamicEntityType getType() {
@@ -137,6 +143,22 @@ public class DynamicEntityInfo {
 
 	public void setAlias(String alias) {
 		this.alias = alias;
+	}
+
+	public List<DynamicIndexInfo> getIndexes() {
+		return indexes;
+	}
+
+	public boolean isWithIndexes() {
+		return !indexes.isEmpty();
+	}
+
+	public List<DynamicUniqueConstraintInfo> getUniqueConstraints() {
+		return uniqueConstraints;
+	}
+
+	public boolean isWithUniqueConstraints() {
+		return !uniqueConstraints.isEmpty();
 	}
 
 	public List<DynamicFieldInfo> getFieldInfos() {
@@ -217,7 +239,8 @@ public class DynamicEntityInfo {
 		}
 	}
 
-	public static Builder newBuilder(DynamicEntityType type, String className, ManagedType managed, boolean schemaChanged) {
+	public static Builder newBuilder(DynamicEntityType type, String className, ManagedType managed,
+			boolean schemaChanged) {
 		return new Builder(type, className, managed, schemaChanged);
 	}
 
@@ -236,6 +259,10 @@ public class DynamicEntityInfo {
 		private String baseClassName;
 
 		private String className;
+
+		private List<DynamicIndexInfo> indexes;
+
+		private List<DynamicUniqueConstraintInfo> uniqueConstraints;
 
 		private Map<String, DynamicForeignKeyFieldInfo> fkFields;
 
@@ -260,11 +287,13 @@ public class DynamicEntityInfo {
 			this.className = className;
 			this.managed = managed;
 			this.schemaChanged = schemaChanged;
-			baseClassName = AbstractSequencedEntity.class.getCanonicalName();
-			fkFields = new LinkedHashMap<String, DynamicForeignKeyFieldInfo>();
-			columnFields = new LinkedHashMap<String, DynamicColumnFieldInfo>();
-			listOnlyFields = new LinkedHashMap<String, DynamicListOnlyFieldInfo>();
-			childFieldInfos = new LinkedHashMap<String, DynamicFieldInfo>();
+			this.baseClassName = AbstractSequencedEntity.class.getCanonicalName();
+			this.fkFields = new LinkedHashMap<String, DynamicForeignKeyFieldInfo>();
+			this.columnFields = new LinkedHashMap<String, DynamicColumnFieldInfo>();
+			this.listOnlyFields = new LinkedHashMap<String, DynamicListOnlyFieldInfo>();
+			this.childFieldInfos = new LinkedHashMap<String, DynamicFieldInfo>();
+			this.indexes = new ArrayList<DynamicIndexInfo>();
+			this.uniqueConstraints = new ArrayList<DynamicUniqueConstraintInfo>();
 		}
 
 		public Builder tableName(String tableName) {
@@ -279,6 +308,29 @@ public class DynamicEntityInfo {
 
 		public Builder version(long version) {
 			this.version = version;
+			return this;
+		}
+
+		public Builder addIndex(List<String> fields) throws UnifyException {
+			addIndex(fields, false);
+			return this;
+		}
+
+		public Builder addIndex(List<String> fields, boolean unique) throws UnifyException {
+			for (String field : fields) {
+				ensureConstraintFieldExist(field);
+			}
+
+			indexes.add(new DynamicIndexInfo(fields, unique));
+			return this;
+		}
+
+		public Builder addUniqueConstraint(List<String> fields) throws UnifyException {
+			for (String field : fields) {
+				ensureConstraintFieldExist(field);
+			}
+
+			uniqueConstraints.add(new DynamicUniqueConstraintInfo(fields));
 			return this;
 		}
 
@@ -398,11 +450,19 @@ public class DynamicEntityInfo {
 			}
 		}
 
+		private void ensureConstraintFieldExist(String fieldName) throws UnifyException {
+			if (!fkFields.containsKey(fieldName) && !columnFields.containsKey(fieldName)) {
+				throw new UnifyOperationException(getClass(),
+						"Constraintable field with name [" + fieldName + "] does not exist.");
+			}
+		}
+
 		public DynamicEntityInfo prefetch() {
 			if (info == null) {
 				synchronized (this) {
 					if (info == null) {
-						info = new DynamicEntityInfo(type, tableName, baseClassName, className, managed, schemaChanged, version);
+						info = new DynamicEntityInfo(type, tableName, baseClassName, className, managed, schemaChanged,
+								version);
 					}
 				}
 			}
@@ -418,6 +478,8 @@ public class DynamicEntityInfo {
 			fieldInfos.putAll(childFieldInfos);
 			DynamicEntityInfo _info = prefetch();
 			_info.fieldInfos = fieldInfos;
+			_info.indexes = indexes;
+			_info.uniqueConstraints = uniqueConstraints;
 			_info.withChildField = withChildField;
 			_info.withTenantIdField = withTenantIdField;
 			for (DynamicForeignKeyFieldInfo fkField : fkFields.values()) {
