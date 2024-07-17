@@ -31,6 +31,7 @@ import org.junit.Test;
 
 import com.tcdng.unify.core.AbstractUnifyComponentTest;
 import com.tcdng.unify.core.ApplicationComponents;
+import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.DynamicEntityType;
 import com.tcdng.unify.core.annotation.DynamicFieldType;
 import com.tcdng.unify.core.constant.DataType;
@@ -50,395 +51,421 @@ import com.tcdng.unify.core.util.ReflectUtils;
  */
 public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
 
-    private DatabaseTransactionManager tm;
+	private DatabaseTransactionManager tm;
 
-    private SqlDatabase db;
+	private SqlDatabase db;
 
-    private DynamicSqlEntityLoader dseLoader;
+	private DynamicSqlEntityLoader dseLoader;
 
-    private DynamicEntityInfo dynamicEntityInfo;
+	private DynamicEntityInfo dynamicEntityInfo;
 
-    private DynamicEntityInfo dynamicEntityInfoExt;
-    
-    private DynamicEntityInfo authorDynamicEntityInfo;
-    
-    private DynamicEntityInfo bookDynamicEntityInfo;
+	private DynamicEntityInfo dynamicEntityInfoExt;
 
-    @SuppressWarnings("unchecked")
-    @Test
-    public void testLoadDynamicSqlEntity() throws Exception {
-        Class<? extends Entity> clazz1 = dseLoader.loadDynamicSqlEntity(dynamicEntityInfo);
-        assertNotNull(clazz1);
-        assertEquals("com.tcdng.test.Equipment", clazz1.getName());
-        Class<? extends Entity> clazz2 = (Class<? extends Entity>) ReflectUtils
-                .classForName("com.tcdng.test.Equipment");
-        assertSame(clazz1, clazz2);
-    }
+	private DynamicEntityInfo authorDynamicEntityInfo;
 
-    @Test
-    public void testLoadDynamicSqlEntityCreateInst() throws Exception {
-        dseLoader.loadDynamicSqlEntity(dynamicEntityInfo);
-        tm.beginTransaction();
-        try {
-            Date createDt = new Date();
-            Entity inst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.Equipment");
-            assertNotNull(inst);
-            ReflectUtils.setBeanProperty(inst, "name", "5dPrinter");
-            ReflectUtils.setBeanProperty(inst, "serialNo", "202004-0003");
-            ReflectUtils.setBeanProperty(inst, "price", BigDecimal.valueOf(10.99));
-            ReflectUtils.setBeanProperty(inst, "createDt", createDt);
-            ReflectUtils.setBeanProperty(inst, "order", OrderType.ASCENDING);
-            Long id = (Long) db.create(inst);
-            assertNotNull(id);
-            assertTrue(id > 0L);
-        } catch (Exception e) {
-            tm.setRollback();
-            throw e;
-        } finally {
-            tm.endTransaction();
-        }
-    }
+	private DynamicEntityInfo bookDynamicEntityInfo;
 
-    @Test
-    public void testLoadDynamicSqlEntityFindInstById() throws Exception {
-        dseLoader.loadDynamicSqlEntity(dynamicEntityInfo);
-        tm.beginTransaction();
-        try {
-            Date createDt = new Date();
-            Entity inst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.Equipment");
-            assertNotNull(inst);
-            ReflectUtils.setBeanProperty(inst, "name", "6dPrinter");
-            ReflectUtils.setBeanProperty(inst, "serialNo", "202004-8883");
-            ReflectUtils.setBeanProperty(inst, "price", BigDecimal.valueOf(40.25));
-            ReflectUtils.setBeanProperty(inst, "createDt", createDt);
-            ReflectUtils.setBeanProperty(inst, "order", OrderType.DESCENDING);
-            Long id = (Long) db.create(inst);
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testLoadDynamicSqlEntity() throws Exception {
+		Class<? extends Entity> clazz1 = dseLoader.loadDynamicSqlEntity(dynamicEntityInfo);
+		assertNotNull(clazz1);
+		assertEquals("com.tcdng.test.Equipment", clazz1.getName());
+		Class<? extends Entity> clazz2 = (Class<? extends Entity>) ReflectUtils
+				.classForName("com.tcdng.test.Equipment");
+		assertSame(clazz1, clazz2);
+	}
 
-            Entity fInst = db.find(inst.getClass(), id);
-            assertNotNull(fInst);
-            assertEquals("6dPrinter", ReflectUtils.getBeanProperty(fInst, "name"));
-            assertEquals("202004-8883", ReflectUtils.getBeanProperty(fInst, "serialNo"));
-            assertEquals(BigDecimal.valueOf(40.25), ReflectUtils.getBeanProperty(fInst, "price"));
-            assertEquals(createDt, ReflectUtils.getBeanProperty(fInst, "createDt"));
-            assertNull(ReflectUtils.getBeanProperty(fInst, "expiryDt"));
-            assertEquals("6dPrinter", fInst.getDescription());
-            assertEquals(OrderType.DESCENDING, ReflectUtils.getBeanProperty(fInst, "order"));
-        } catch (Exception e) {
-            tm.setRollback();
-            throw e;
-        } finally {
-            tm.endTransaction();
-        }
-    }
+	@Test
+	public void testLoadDynamicSqlEntityCreateInst() throws Exception {
+		dseLoader.loadDynamicSqlEntity(dynamicEntityInfo);
+		tm.beginTransaction();
+		try {
+			Date createDt = new Date();
+			Entity inst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.Equipment");
+			assertNotNull(inst);
+			ReflectUtils.setBeanProperty(inst, "name", "5dPrinter");
+			ReflectUtils.setBeanProperty(inst, "serialNo", "202004-0003");
+			ReflectUtils.setBeanProperty(inst, "price", BigDecimal.valueOf(10.99));
+			ReflectUtils.setBeanProperty(inst, "createDt", createDt);
+			ReflectUtils.setBeanProperty(inst, "order", OrderType.ASCENDING);
+			Long id = (Long) db.create(inst);
+			assertNotNull(id);
+			assertTrue(id > 0L);
+		} catch (Exception e) {
+			tm.setRollback();
+			throw e;
+		} finally {
+			tm.endTransaction();
+		}
+	}
 
-    @Test
-    public void testLoadDynamicSqlEntityUpdateInstById() throws Exception {
-        dseLoader.loadDynamicSqlEntity(dynamicEntityInfo);
-        tm.beginTransaction();
-        try {
-            Date createDt = new Date();
-            Entity inst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.Equipment");
-            assertNotNull(inst);
-            ReflectUtils.setBeanProperty(inst, "name", "6dPrinter");
-            ReflectUtils.setBeanProperty(inst, "serialNo", "202004-8883");
-            ReflectUtils.setBeanProperty(inst, "price", BigDecimal.valueOf(40.25));
-            ReflectUtils.setBeanProperty(inst, "createDt", createDt);
-            ReflectUtils.setBeanProperty(inst, "order", OrderType.DESCENDING);
-            Long id = (Long) db.create(inst);
+	@Test
+	public void testLoadDynamicSqlEntityFindInstById() throws Exception {
+		dseLoader.loadDynamicSqlEntity(dynamicEntityInfo);
+		tm.beginTransaction();
+		try {
+			Date createDt = new Date();
+			Entity inst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.Equipment");
+			assertNotNull(inst);
+			ReflectUtils.setBeanProperty(inst, "name", "6dPrinter");
+			ReflectUtils.setBeanProperty(inst, "serialNo", "202004-8883");
+			ReflectUtils.setBeanProperty(inst, "price", BigDecimal.valueOf(40.25));
+			ReflectUtils.setBeanProperty(inst, "createDt", createDt);
+			ReflectUtils.setBeanProperty(inst, "order", OrderType.DESCENDING);
+			Long id = (Long) db.create(inst);
 
-            Entity fInst = db.find(inst.getClass(), id);
-            assertNotNull(fInst);
-            ReflectUtils.setBeanProperty(fInst, "serialNo", "202004-7773");
-            ReflectUtils.setBeanProperty(fInst, "price", BigDecimal.valueOf(90.62));
-            ReflectUtils.setBeanProperty(fInst, "order", OrderType.ASCENDING);
-            db.updateByIdVersion(fInst);
+			Entity fInst = db.find(inst.getClass(), id);
+			assertNotNull(fInst);
+			assertEquals("6dPrinter", ReflectUtils.getBeanProperty(fInst, "name"));
+			assertEquals("202004-8883", ReflectUtils.getBeanProperty(fInst, "serialNo"));
+			assertEquals(BigDecimal.valueOf(40.25), ReflectUtils.getBeanProperty(fInst, "price"));
+			assertEquals(createDt, ReflectUtils.getBeanProperty(fInst, "createDt"));
+			assertNull(ReflectUtils.getBeanProperty(fInst, "expiryDt"));
+			assertEquals("6dPrinter", fInst.getDescription());
+			assertEquals(OrderType.DESCENDING, ReflectUtils.getBeanProperty(fInst, "order"));
+		} catch (Exception e) {
+			tm.setRollback();
+			throw e;
+		} finally {
+			tm.endTransaction();
+		}
+	}
 
-            Entity ffInst = db.find(inst.getClass(), id);
-            assertNotNull(ffInst);
-            assertEquals("6dPrinter", ReflectUtils.getBeanProperty(ffInst, "name"));
-            assertEquals("202004-7773", ReflectUtils.getBeanProperty(ffInst, "serialNo"));
-            assertEquals(BigDecimal.valueOf(90.62), ReflectUtils.getBeanProperty(ffInst, "price"));
-            assertEquals(createDt, ReflectUtils.getBeanProperty(ffInst, "createDt"));
-            assertNull(ReflectUtils.getBeanProperty(ffInst, "expiryDt"));
-            assertEquals(OrderType.ASCENDING, ReflectUtils.getBeanProperty(ffInst, "order"));
-            assertEquals("6dPrinter", fInst.getDescription());
-        } catch (Exception e) {
-            tm.setRollback();
-            throw e;
-        } finally {
-            tm.endTransaction();
-        }
-    }
+	@Test
+	public void testLoadDynamicSqlEntityUpdateInstById() throws Exception {
+		dseLoader.loadDynamicSqlEntity(dynamicEntityInfo);
+		tm.beginTransaction();
+		try {
+			Date createDt = new Date();
+			Entity inst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.Equipment");
+			assertNotNull(inst);
+			ReflectUtils.setBeanProperty(inst, "name", "6dPrinter");
+			ReflectUtils.setBeanProperty(inst, "serialNo", "202004-8883");
+			ReflectUtils.setBeanProperty(inst, "price", BigDecimal.valueOf(40.25));
+			ReflectUtils.setBeanProperty(inst, "createDt", createDt);
+			ReflectUtils.setBeanProperty(inst, "order", OrderType.DESCENDING);
+			Long id = (Long) db.create(inst);
 
-    @Test
-    public void testLoadDynamicSqlEntityDeleteInstById() throws Exception {
-        dseLoader.loadDynamicSqlEntity(dynamicEntityInfo);
-        tm.beginTransaction();
-        try {
-            Date createDt = new Date();
-            Entity inst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.Equipment");
-            assertNotNull(inst);
-            ReflectUtils.setBeanProperty(inst, "name", "20dPrinter");
-            ReflectUtils.setBeanProperty(inst, "serialNo", "202004-8883");
-            ReflectUtils.setBeanProperty(inst, "price", BigDecimal.valueOf(40.25));
-            ReflectUtils.setBeanProperty(inst, "createDt", createDt);
-            ReflectUtils.setBeanProperty(inst, "order", OrderType.ASCENDING);
-            Long id = (Long) db.create(inst);
+			Entity fInst = db.find(inst.getClass(), id);
+			assertNotNull(fInst);
+			ReflectUtils.setBeanProperty(fInst, "serialNo", "202004-7773");
+			ReflectUtils.setBeanProperty(fInst, "price", BigDecimal.valueOf(90.62));
+			ReflectUtils.setBeanProperty(fInst, "order", OrderType.ASCENDING);
+			db.updateByIdVersion(fInst);
 
-            Entity fInst = db.find(inst.getClass(), id);
-            assertNotNull(fInst);
-            db.delete(inst.getClass(), id);
-            assertEquals(0, db.countAll(Query.of(inst.getClass()).addEquals("name", "20dPrinter")));
-        } catch (Exception e) {
-            tm.setRollback();
-            throw e;
-        } finally {
-            tm.endTransaction();
-        }
-    }
+			Entity ffInst = db.find(inst.getClass(), id);
+			assertNotNull(ffInst);
+			assertEquals("6dPrinter", ReflectUtils.getBeanProperty(ffInst, "name"));
+			assertEquals("202004-7773", ReflectUtils.getBeanProperty(ffInst, "serialNo"));
+			assertEquals(BigDecimal.valueOf(90.62), ReflectUtils.getBeanProperty(ffInst, "price"));
+			assertEquals(createDt, ReflectUtils.getBeanProperty(ffInst, "createDt"));
+			assertNull(ReflectUtils.getBeanProperty(ffInst, "expiryDt"));
+			assertEquals(OrderType.ASCENDING, ReflectUtils.getBeanProperty(ffInst, "order"));
+			assertEquals("6dPrinter", fInst.getDescription());
+		} catch (Exception e) {
+			tm.setRollback();
+			throw e;
+		} finally {
+			tm.endTransaction();
+		}
+	}
 
-    @SuppressWarnings("unchecked")
-    @Test
-    public void testLoadDynamicSqlEntityExt() throws Exception {
-        Class<? extends Entity> clazz1 = dseLoader.loadDynamicSqlEntity(dynamicEntityInfoExt);
-        assertNotNull(clazz1);
-        assertEquals("com.tcdng.test.EquipmentExt", clazz1.getName());
-        Class<? extends Entity> clazz2 = (Class<? extends Entity>) ReflectUtils
-                .classForName("com.tcdng.test.EquipmentExt");
-        assertSame(clazz1, clazz2);
-    }
+	@Test
+	public void testLoadDynamicSqlEntityDeleteInstById() throws Exception {
+		dseLoader.loadDynamicSqlEntity(dynamicEntityInfo);
+		tm.beginTransaction();
+		try {
+			Date createDt = new Date();
+			Entity inst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.Equipment");
+			assertNotNull(inst);
+			ReflectUtils.setBeanProperty(inst, "name", "20dPrinter");
+			ReflectUtils.setBeanProperty(inst, "serialNo", "202004-8883");
+			ReflectUtils.setBeanProperty(inst, "price", BigDecimal.valueOf(40.25));
+			ReflectUtils.setBeanProperty(inst, "createDt", createDt);
+			ReflectUtils.setBeanProperty(inst, "order", OrderType.ASCENDING);
+			Long id = (Long) db.create(inst);
 
-    @Test
-    public void testLoadDynamicSqlEntityExtCreateInst() throws Exception {
-        dseLoader.loadDynamicSqlEntity(dynamicEntityInfoExt);
-        tm.beginTransaction();
-        try {
-            Date createDt = new Date();
-            Entity inst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.EquipmentExt");
-            assertNotNull(inst);
-            ReflectUtils.setBeanProperty(inst, "name", "5dPrinter");
-            ReflectUtils.setBeanProperty(inst, "serialNo", "202004-0003");
-            ReflectUtils.setBeanProperty(inst, "price", BigDecimal.valueOf(10.99));
-            ReflectUtils.setBeanProperty(inst, "createDt", createDt);
-            Long id = (Long) db.create(inst);
-            assertNotNull(id);
-            assertTrue(id > 0L);
-        } catch (Exception e) {
-            tm.setRollback();
-            throw e;
-        } finally {
-            tm.endTransaction();
-        }
-    }
+			Entity fInst = db.find(inst.getClass(), id);
+			assertNotNull(fInst);
+			db.delete(inst.getClass(), id);
+			assertEquals(0, db.countAll(Query.of(inst.getClass()).addEquals("name", "20dPrinter")));
+		} catch (Exception e) {
+			tm.setRollback();
+			throw e;
+		} finally {
+			tm.endTransaction();
+		}
+	}
 
-    @Test
-    public void testLoadDynamicSqlEntityExtFindInstById() throws Exception {
-        dseLoader.loadDynamicSqlEntity(dynamicEntityInfoExt);
-        tm.beginTransaction();
-        try {
-            Date createDt = new Date();
-            Entity inst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.EquipmentExt");
-            assertNotNull(inst);
-            ReflectUtils.setBeanProperty(inst, "name", "6dPrinter");
-            ReflectUtils.setBeanProperty(inst, "serialNo", "202004-8883");
-            ReflectUtils.setBeanProperty(inst, "price", BigDecimal.valueOf(40.25));
-            ReflectUtils.setBeanProperty(inst, "createDt", createDt);
-            Long id = (Long) db.create(inst);
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testLoadDynamicSqlEntityExt() throws Exception {
+		Class<? extends Entity> clazz1 = dseLoader.loadDynamicSqlEntity(dynamicEntityInfoExt);
+		assertNotNull(clazz1);
+		assertEquals("com.tcdng.test.EquipmentExt", clazz1.getName());
+		Class<? extends Entity> clazz2 = (Class<? extends Entity>) ReflectUtils
+				.classForName("com.tcdng.test.EquipmentExt");
+		assertSame(clazz1, clazz2);
+	}
 
-            Entity fInst = db.find(inst.getClass(), id);
-            assertNotNull(fInst);
-            assertEquals("6dPrinter", ReflectUtils.getBeanProperty(fInst, "name"));
-            assertEquals("202004-8883", ReflectUtils.getBeanProperty(fInst, "serialNo"));
-            assertEquals(BigDecimal.valueOf(40.25), ReflectUtils.getBeanProperty(fInst, "price"));
-            assertEquals(createDt, ReflectUtils.getBeanProperty(fInst, "createDt"));
-            assertNull(ReflectUtils.getBeanProperty(fInst, "expiryDt"));
-            assertEquals("6dPrinter 202004-8883 40.25", fInst.getDescription());
-        } catch (Exception e) {
-            tm.setRollback();
-            throw e;
-        } finally {
-            tm.endTransaction();
-        }
-    }
+	@Test
+	public void testLoadDynamicSqlEntityExtCreateInst() throws Exception {
+		dseLoader.loadDynamicSqlEntity(dynamicEntityInfoExt);
+		tm.beginTransaction();
+		try {
+			Date createDt = new Date();
+			Entity inst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.EquipmentExt");
+			assertNotNull(inst);
+			ReflectUtils.setBeanProperty(inst, "name", "5dPrinter");
+			ReflectUtils.setBeanProperty(inst, "serialNo", "202004-0003");
+			ReflectUtils.setBeanProperty(inst, "price", BigDecimal.valueOf(10.99));
+			ReflectUtils.setBeanProperty(inst, "createDt", createDt);
+			Long id = (Long) db.create(inst);
+			assertNotNull(id);
+			assertTrue(id > 0L);
+		} catch (Exception e) {
+			tm.setRollback();
+			throw e;
+		} finally {
+			tm.endTransaction();
+		}
+	}
 
-    @Test
-    public void testLoadDynamicSqlEntityExtUpdateInstById() throws Exception {
-        dseLoader.loadDynamicSqlEntity(dynamicEntityInfoExt);
-        tm.beginTransaction();
-        try {
-            Date createDt = new Date();
-            Entity inst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.EquipmentExt");
-            assertNotNull(inst);
-            ReflectUtils.setBeanProperty(inst, "name", "6dPrinter");
-            ReflectUtils.setBeanProperty(inst, "serialNo", "202004-8883");
-            ReflectUtils.setBeanProperty(inst, "price", BigDecimal.valueOf(40.25));
-            ReflectUtils.setBeanProperty(inst, "createDt", createDt);
-            Long id = (Long) db.create(inst);
+	@Test
+	public void testLoadDynamicSqlEntityExtFindInstById() throws Exception {
+		dseLoader.loadDynamicSqlEntity(dynamicEntityInfoExt);
+		tm.beginTransaction();
+		try {
+			Date createDt = new Date();
+			Entity inst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.EquipmentExt");
+			assertNotNull(inst);
+			ReflectUtils.setBeanProperty(inst, "name", "6dPrinter");
+			ReflectUtils.setBeanProperty(inst, "serialNo", "202004-8883");
+			ReflectUtils.setBeanProperty(inst, "price", BigDecimal.valueOf(40.25));
+			ReflectUtils.setBeanProperty(inst, "createDt", createDt);
+			Long id = (Long) db.create(inst);
 
-            Entity fInst = db.find(inst.getClass(), id);
-            assertNotNull(fInst);
-            ReflectUtils.setBeanProperty(fInst, "serialNo", "202004-7773");
-            ReflectUtils.setBeanProperty(fInst, "price", BigDecimal.valueOf(90.62));
-            db.updateByIdVersion(fInst);
+			Entity fInst = db.find(inst.getClass(), id);
+			assertNotNull(fInst);
+			assertEquals("6dPrinter", ReflectUtils.getBeanProperty(fInst, "name"));
+			assertEquals("202004-8883", ReflectUtils.getBeanProperty(fInst, "serialNo"));
+			assertEquals(BigDecimal.valueOf(40.25), ReflectUtils.getBeanProperty(fInst, "price"));
+			assertEquals(createDt, ReflectUtils.getBeanProperty(fInst, "createDt"));
+			assertNull(ReflectUtils.getBeanProperty(fInst, "expiryDt"));
+			assertEquals("6dPrinter 202004-8883 40.25", fInst.getDescription());
+		} catch (Exception e) {
+			tm.setRollback();
+			throw e;
+		} finally {
+			tm.endTransaction();
+		}
+	}
 
-            Entity ffInst = db.find(inst.getClass(), id);
-            assertNotNull(ffInst);
-            assertEquals("6dPrinter", ReflectUtils.getBeanProperty(ffInst, "name"));
-            assertEquals("202004-7773", ReflectUtils.getBeanProperty(ffInst, "serialNo"));
-            assertEquals(BigDecimal.valueOf(90.62), ReflectUtils.getBeanProperty(ffInst, "price"));
-            assertEquals(createDt, ReflectUtils.getBeanProperty(ffInst, "createDt"));
-            assertNull(ReflectUtils.getBeanProperty(ffInst, "expiryDt"));
-            assertEquals("6dPrinter 202004-7773 90.62", fInst.getDescription());
-        } catch (Exception e) {
-            tm.setRollback();
-            throw e;
-        } finally {
-            tm.endTransaction();
-        }
-    }
+	@Test
+	public void testLoadDynamicSqlEntityExtUpdateInstById() throws Exception {
+		dseLoader.loadDynamicSqlEntity(dynamicEntityInfoExt);
+		tm.beginTransaction();
+		try {
+			Date createDt = new Date();
+			Entity inst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.EquipmentExt");
+			assertNotNull(inst);
+			ReflectUtils.setBeanProperty(inst, "name", "6dPrinter");
+			ReflectUtils.setBeanProperty(inst, "serialNo", "202004-8883");
+			ReflectUtils.setBeanProperty(inst, "price", BigDecimal.valueOf(40.25));
+			ReflectUtils.setBeanProperty(inst, "createDt", createDt);
+			Long id = (Long) db.create(inst);
 
-    @Test
-    public void testLoadDynamicSqlEntityExtDeleteInstById() throws Exception {
-        dseLoader.loadDynamicSqlEntity(dynamicEntityInfoExt);
-        tm.beginTransaction();
-        try {
-            Date createDt = new Date();
-            Entity inst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.EquipmentExt");
-            assertNotNull(inst);
-            ReflectUtils.setBeanProperty(inst, "name", "20dPrinter");
-            ReflectUtils.setBeanProperty(inst, "serialNo", "202004-8883");
-            ReflectUtils.setBeanProperty(inst, "price", BigDecimal.valueOf(40.25));
-            ReflectUtils.setBeanProperty(inst, "createDt", createDt);
-            Long id = (Long) db.create(inst);
+			Entity fInst = db.find(inst.getClass(), id);
+			assertNotNull(fInst);
+			ReflectUtils.setBeanProperty(fInst, "serialNo", "202004-7773");
+			ReflectUtils.setBeanProperty(fInst, "price", BigDecimal.valueOf(90.62));
+			db.updateByIdVersion(fInst);
 
-            Entity fInst = db.find(inst.getClass(), id);
-            assertNotNull(fInst);
-            db.delete(inst.getClass(), id);
-            assertEquals(0, db.countAll(Query.of(inst.getClass()).addEquals("name", "20dPrinter")));
-        } catch (Exception e) {
-            tm.setRollback();
-            throw e;
-        } finally {
-            tm.endTransaction();
-        }
-    }
+			Entity ffInst = db.find(inst.getClass(), id);
+			assertNotNull(ffInst);
+			assertEquals("6dPrinter", ReflectUtils.getBeanProperty(ffInst, "name"));
+			assertEquals("202004-7773", ReflectUtils.getBeanProperty(ffInst, "serialNo"));
+			assertEquals(BigDecimal.valueOf(90.62), ReflectUtils.getBeanProperty(ffInst, "price"));
+			assertEquals(createDt, ReflectUtils.getBeanProperty(ffInst, "createDt"));
+			assertNull(ReflectUtils.getBeanProperty(ffInst, "expiryDt"));
+			assertEquals("6dPrinter 202004-7773 90.62", fInst.getDescription());
+		} catch (Exception e) {
+			tm.setRollback();
+			throw e;
+		} finally {
+			tm.endTransaction();
+		}
+	}
 
-    @Test
-    public void testLoadDynamicSqlEntityCircular() throws Exception {
-        List<Class<? extends Entity>> classList = dseLoader.loadDynamicSqlEntities(
-                Arrays.asList(authorDynamicEntityInfo, bookDynamicEntityInfo));
-        assertNotNull(classList);
-        assertEquals(2, classList.size());
-        Class<? extends Entity> authorClazz = (Class<? extends Entity>) classList.get(0);
-        assertEquals("com.tcdng.test.z.Authorz", authorClazz.getName());
-        Class<? extends Entity> bookClazz = (Class<? extends Entity>) classList.get(1);
-        assertEquals("com.tcdng.test.z.Bookz", bookClazz.getName());
-    }
+	@Test
+	public void testLoadDynamicSqlEntityExtDeleteInstById() throws Exception {
+		dseLoader.loadDynamicSqlEntity(dynamicEntityInfoExt);
+		tm.beginTransaction();
+		try {
+			Date createDt = new Date();
+			Entity inst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.EquipmentExt");
+			assertNotNull(inst);
+			ReflectUtils.setBeanProperty(inst, "name", "20dPrinter");
+			ReflectUtils.setBeanProperty(inst, "serialNo", "202004-8883");
+			ReflectUtils.setBeanProperty(inst, "price", BigDecimal.valueOf(40.25));
+			ReflectUtils.setBeanProperty(inst, "createDt", createDt);
+			Long id = (Long) db.create(inst);
 
-    @Test
-    public void testLoadDynamicSqlEntityCircularCreateInst() throws Exception {
-        dseLoader.loadDynamicSqlEntities(
-                Arrays.asList(authorDynamicEntityInfo, bookDynamicEntityInfo));
+			Entity fInst = db.find(inst.getClass(), id);
+			assertNotNull(fInst);
+			db.delete(inst.getClass(), id);
+			assertEquals(0, db.countAll(Query.of(inst.getClass()).addEquals("name", "20dPrinter")));
+		} catch (Exception e) {
+			tm.setRollback();
+			throw e;
+		} finally {
+			tm.endTransaction();
+		}
+	}
 
-        tm.beginTransaction();
-        try {
-            Entity authorInst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.z.Authorz");
-            ReflectUtils.setBeanProperty(authorInst, "name", "John Doe");
-            Entity book1Inst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.z.Bookz");
-            Entity book2Inst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.z.Bookz");
-            ReflectUtils.setBeanProperty(book1Inst, "title", "Finding Jane");
-            ReflectUtils.setBeanProperty(book2Inst, "title", "Attack the Bean");
-            ReflectUtils.setBeanProperty(authorInst, "bookList", Arrays.asList(book1Inst, book2Inst));
-            Long id = (Long) db.create(authorInst);
-            assertNotNull(id);
-            assertTrue(id > 0L);
-        } catch (Exception e) {
-            tm.setRollback();
-            throw e;
-        } finally {
-            tm.endTransaction();
-        }
-        
-    }
+	@Test
+	public void testLoadDynamicSqlEntityCircular() throws Exception {
+		List<Class<? extends Entity>> classList = dseLoader
+				.loadDynamicSqlEntities(Arrays.asList(authorDynamicEntityInfo, bookDynamicEntityInfo));
+		assertNotNull(classList);
+		assertEquals(2, classList.size());
+		Class<? extends Entity> authorClazz = (Class<? extends Entity>) classList.get(0);
+		assertEquals("com.tcdng.test.z.Authorz", authorClazz.getName());
+		Class<? extends Entity> bookClazz = (Class<? extends Entity>) classList.get(1);
+		assertEquals("com.tcdng.test.z.Bookz", bookClazz.getName());
+	}
 
-    @SuppressWarnings("unchecked")
-    @Test
-    public void testLoadDynamicSqlEntityCircularFindInst() throws Exception {
-        dseLoader.loadDynamicSqlEntities(
-                Arrays.asList(authorDynamicEntityInfo, bookDynamicEntityInfo));
+	@Test
+	public void testLoadDynamicSqlEntityCircularCreateInst() throws Exception {
+		dseLoader.loadDynamicSqlEntities(Arrays.asList(authorDynamicEntityInfo, bookDynamicEntityInfo));
 
-        tm.beginTransaction();
-        try {
-            Entity authorInst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.z.Authorz");
-            ReflectUtils.setBeanProperty(authorInst, "name", "John Doe");
-            Entity book1Inst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.z.Bookz");
-            Entity book2Inst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.z.Bookz");
-            ReflectUtils.setBeanProperty(book1Inst, "title", "Finding Jane");
-            ReflectUtils.setBeanProperty(book2Inst, "title", "Attack the Bean");
-            ReflectUtils.setBeanProperty(authorInst, "bookList", Arrays.asList(book1Inst, book2Inst));
-            Long id = (Long) db.create(authorInst);
-            
-            Entity findAuthorInst = db.list(authorInst.getClass(), id);
-            assertNotNull(findAuthorInst);
-            assertEquals("John Doe", ReflectUtils.getBeanProperty(findAuthorInst, "name"));
-            List<? extends Entity> list = (List<? extends Entity>) ReflectUtils.getBeanProperty(findAuthorInst, "bookList");
-            assertNotNull(list);
-            assertEquals(2, list.size());
-            
-            Entity findBook1Inst = list.get(0);
-            assertNotNull(findBook1Inst);
-            assertEquals(id, ReflectUtils.getBeanProperty(findBook1Inst, "authorId"));
-            assertEquals("Finding Jane", ReflectUtils.getBeanProperty(findBook1Inst, "title"));
-            assertEquals("John Doe", ReflectUtils.getBeanProperty(findBook1Inst, "authorName"));
-            
-            Entity findBook2Inst = list.get(1);
-            assertNotNull(findBook2Inst);
-            assertEquals(id, ReflectUtils.getBeanProperty(findBook2Inst, "authorId"));
-            assertEquals("Attack the Bean", ReflectUtils.getBeanProperty(findBook2Inst, "title"));
-            assertEquals("John Doe", ReflectUtils.getBeanProperty(findBook2Inst, "authorName"));
-            
-        } catch (Exception e) {
-            tm.setRollback();
-            throw e;
-        } finally {
-            tm.endTransaction();
-        }
-        
-    }
+		tm.beginTransaction();
+		try {
+			Entity authorInst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.z.Authorz");
+			ReflectUtils.setBeanProperty(authorInst, "name", "John Doe 1");
+			ReflectUtils.setBeanProperty(authorInst, "accountNo", "0123456789");
+			Entity book1Inst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.z.Bookz");
+			Entity book2Inst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.z.Bookz");
+			ReflectUtils.setBeanProperty(book1Inst, "title", "Finding Jane");
+			ReflectUtils.setBeanProperty(book2Inst, "title", "Attack the Bean");
+			ReflectUtils.setBeanProperty(authorInst, "bookList", Arrays.asList(book1Inst, book2Inst));
+			Long id = (Long) db.create(authorInst);
+			assertNotNull(id);
+			assertTrue(id > 0L);
+		} catch (Exception e) {
+			tm.setRollback();
+			throw e;
+		} finally {
+			tm.endTransaction();
+		}
 
-    @Test
-    public void testLoadDynamicSqlEntityCircularDeleteInst() throws Exception {
-        dseLoader.loadDynamicSqlEntities(
-                Arrays.asList(authorDynamicEntityInfo, bookDynamicEntityInfo));
+	}
 
-        tm.beginTransaction();
-        try {
-            Entity authorInst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.z.Authorz");
-            ReflectUtils.setBeanProperty(authorInst, "name", "John Doe");
-            Entity book1Inst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.z.Bookz");
-            Entity book2Inst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.z.Bookz");
-            ReflectUtils.setBeanProperty(book1Inst, "title", "Finding Jane");
-            ReflectUtils.setBeanProperty(book2Inst, "title", "Attack the Bean");
-            ReflectUtils.setBeanProperty(authorInst, "bookList", Arrays.asList(book1Inst, book2Inst));
-            Long id = (Long) db.create(authorInst);
-            
-            int bookCount = db.countAll(Query.of(book1Inst.getClass()).addEquals("authorId", id));
-            assertEquals(2, bookCount);
-            
-            db.delete(authorInst.getClass(), id);
-            
-            bookCount = db.countAll(Query.of(book1Inst.getClass()).addEquals("authorId", id));
-            assertEquals(0, bookCount);
-        } catch (Exception e) {
-            tm.setRollback();
-            throw e;
-        } finally {
-            tm.endTransaction();
-        }
-        
-    }
-    
-    @Override
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testLoadDynamicSqlEntityCircularFindInst() throws Exception {
+		dseLoader.loadDynamicSqlEntities(Arrays.asList(authorDynamicEntityInfo, bookDynamicEntityInfo));
+
+		tm.beginTransaction();
+		try {
+			Entity authorInst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.z.Authorz");
+			ReflectUtils.setBeanProperty(authorInst, "name", "John Doe");
+			ReflectUtils.setBeanProperty(authorInst, "accountNo", "0123456789");
+			Entity book1Inst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.z.Bookz");
+			Entity book2Inst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.z.Bookz");
+			ReflectUtils.setBeanProperty(book1Inst, "title", "Finding Jane");
+			ReflectUtils.setBeanProperty(book2Inst, "title", "Attack the Bean");
+			ReflectUtils.setBeanProperty(authorInst, "bookList", Arrays.asList(book1Inst, book2Inst));
+			Long id = (Long) db.create(authorInst);
+
+			Entity findAuthorInst = db.list(authorInst.getClass(), id);
+			assertNotNull(findAuthorInst);
+			assertEquals("John Doe", ReflectUtils.getBeanProperty(findAuthorInst, "name"));
+			assertEquals("0123456789", ReflectUtils.getBeanProperty(findAuthorInst, "accountNo"));
+			List<? extends Entity> list = (List<? extends Entity>) ReflectUtils.getBeanProperty(findAuthorInst,
+					"bookList");
+			assertNotNull(list);
+			assertEquals(2, list.size());
+
+			Entity findBook1Inst = list.get(0);
+			assertNotNull(findBook1Inst);
+			assertEquals(id, ReflectUtils.getBeanProperty(findBook1Inst, "authorId"));
+			assertEquals("Finding Jane", ReflectUtils.getBeanProperty(findBook1Inst, "title"));
+			assertEquals("John Doe", ReflectUtils.getBeanProperty(findBook1Inst, "authorName"));
+
+			Entity findBook2Inst = list.get(1);
+			assertNotNull(findBook2Inst);
+			assertEquals(id, ReflectUtils.getBeanProperty(findBook2Inst, "authorId"));
+			assertEquals("Attack the Bean", ReflectUtils.getBeanProperty(findBook2Inst, "title"));
+			assertEquals("John Doe", ReflectUtils.getBeanProperty(findBook2Inst, "authorName"));
+
+		} catch (Exception e) {
+			tm.setRollback();
+			throw e;
+		} finally {
+			tm.endTransaction();
+		}
+
+	}
+
+	@Test
+	public void testLoadDynamicSqlEntityCircularDeleteInst() throws Exception {
+		dseLoader.loadDynamicSqlEntities(Arrays.asList(authorDynamicEntityInfo, bookDynamicEntityInfo));
+
+		tm.beginTransaction();
+		try {
+			Entity authorInst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.z.Authorz");
+			ReflectUtils.setBeanProperty(authorInst, "name", "John Doe 2");
+			ReflectUtils.setBeanProperty(authorInst, "accountNo", "0123456789");
+			Entity book1Inst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.z.Bookz");
+			Entity book2Inst = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.z.Bookz");
+			ReflectUtils.setBeanProperty(book1Inst, "title", "Finding Jane");
+			ReflectUtils.setBeanProperty(book2Inst, "title", "Attack the Bean");
+			ReflectUtils.setBeanProperty(authorInst, "bookList", Arrays.asList(book1Inst, book2Inst));
+			Long id = (Long) db.create(authorInst);
+
+			int bookCount = db.countAll(Query.of(book1Inst.getClass()).addEquals("authorId", id));
+			assertEquals(2, bookCount);
+
+			db.delete(authorInst.getClass(), id);
+
+			bookCount = db.countAll(Query.of(book1Inst.getClass()).addEquals("authorId", id));
+			assertEquals(0, bookCount);
+		} catch (Exception e) {
+			tm.setRollback();
+			throw e;
+		} finally {
+			tm.endTransaction();
+		}
+
+	}
+
+	@Test(expected = UnifyException.class)
+	public void testLoadDynamicSqlEntityInstUniqueConstraint() throws Exception {
+		dseLoader.loadDynamicSqlEntities(Arrays.asList(authorDynamicEntityInfo, bookDynamicEntityInfo));
+
+		tm.beginTransaction();
+		try {
+			Entity authorInst0 = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.z.Authorz");
+			ReflectUtils.setBeanProperty(authorInst0, "name", "John Doe");
+			ReflectUtils.setBeanProperty(authorInst0, "accountNo", "0123456789");
+			db.create(authorInst0);
+			
+			Entity authorInst1 = ReflectUtils.newInstance(Entity.class, "com.tcdng.test.z.Authorz");
+			ReflectUtils.setBeanProperty(authorInst1, "name", "John Doe");
+			ReflectUtils.setBeanProperty(authorInst1, "accountNo", "0123456789");
+			db.create(authorInst1);
+		} catch (Exception e) {
+			tm.setRollback();
+			throw e;
+		} finally {
+			tm.endTransaction();
+		}
+
+	}
+
+	@Override
 	protected void onSetup() throws Exception {
 		tm = (DatabaseTransactionManager) getComponent(ApplicationComponents.APPLICATION_DATABASETRANSACTIONMANAGER);
 		db = (SqlDatabase) getComponent(ApplicationComponents.APPLICATION_DATABASE);
@@ -447,69 +474,74 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
 		final String defaultVal = null;
 		final boolean schemaChanged = true;
 		dynamicEntityInfo = DynamicEntityInfo
-				.newBuilder(DynamicEntityType.TABLE, "com.tcdng.test.Equipment", DynamicEntityInfo.ManagedType.MANAGED, schemaChanged)
+				.newBuilder(DynamicEntityType.TABLE, "com.tcdng.test.Equipment", DynamicEntityInfo.ManagedType.MANAGED,
+						schemaChanged)
 				.tableName("EQUIPMENT").version(1L)
-				.addField(DynamicFieldType.GENERATION, DataType.STRING, "EQUIPMENT_NM", "name", mapped, defaultVal, 32, 0, 0,
-						false, true)
-				.addField(DynamicFieldType.GENERATION, DataType.STRING, "SERIAL_NO", "serialNo", mapped, "00000000", 0, 0, 0,
-						false, false)
-				.addField(DynamicFieldType.GENERATION, DataType.DECIMAL, "PRICE", "price", mapped, defaultVal, 0, 18, 2, false,
-						false)
-				.addField(DynamicFieldType.GENERATION, DataType.DATE, "EXPIRY_DT", "expiryDt", mapped, defaultVal, 0, 0, 0,
-						true, false)
-				.addField(DynamicFieldType.GENERATION, DataType.TIMESTAMP_UTC, "CREATE_DT", "createDt", mapped, defaultVal, 0,
+				.addField(DynamicFieldType.GENERATION, DataType.STRING, "EQUIPMENT_NM", "name", mapped, defaultVal, 32,
+						0, 0, false, true)
+				.addField(DynamicFieldType.GENERATION, DataType.STRING, "SERIAL_NO", "serialNo", mapped, "00000000", 0,
 						0, 0, false, false)
+				.addField(DynamicFieldType.GENERATION, DataType.DECIMAL, "PRICE", "price", mapped, defaultVal, 0, 18, 2,
+						false, false)
+				.addField(DynamicFieldType.GENERATION, DataType.DATE, "EXPIRY_DT", "expiryDt", mapped, defaultVal, 0, 0,
+						0, true, false)
+				.addField(DynamicFieldType.GENERATION, DataType.TIMESTAMP_UTC, "CREATE_DT", "createDt", mapped,
+						defaultVal, 0, 0, 0, false, false)
 				.addField(DynamicFieldType.GENERATION, OrderType.class.getName(), "EQUIPMENT_ORDER", "order", mapped,
 						defaultVal, false, false)
 				.build();
-		
+
 		dynamicEntityInfoExt = DynamicEntityInfo
 				.newBuilder(DynamicEntityType.TABLE_EXT, "com.tcdng.test.EquipmentExt",
 						DynamicEntityInfo.ManagedType.MANAGED, schemaChanged)
 				.baseClassName(Equipment.class.getName()).version(1L)
-				.addField(DynamicFieldType.INFO_ONLY, DataType.STRING, "EQUIPMENT_NM", "name", mapped, defaultVal, 32, 0, 0,
+				.addField(DynamicFieldType.INFO_ONLY, DataType.STRING, "EQUIPMENT_NM", "name", mapped, defaultVal, 32,
+						0, 0, false, true)
+				.addField(DynamicFieldType.INFO_ONLY, DataType.STRING, "SERIAL_NO", "serialNo", mapped, defaultVal, 0,
+						0, 0, false, true)
+				.addField(DynamicFieldType.GENERATION, DataType.DECIMAL, "PRICE", "price", mapped, defaultVal, 0, 18, 2,
 						false, true)
-				.addField(DynamicFieldType.INFO_ONLY, DataType.STRING, "SERIAL_NO", "serialNo", mapped, defaultVal, 0, 0, 0,
-						false, true)
-				.addField(DynamicFieldType.GENERATION, DataType.DECIMAL, "PRICE", "price", mapped, defaultVal, 0, 18, 2, false,
-						true)
-				.addField(DynamicFieldType.GENERATION, DataType.DATE, "EXPIRY_DT", "expiryDt", mapped, defaultVal, 0, 0, 0,
-						true, false)
-				.addField(DynamicFieldType.GENERATION, DataType.TIMESTAMP_UTC, "CREATE_DT", "createDt", mapped, defaultVal, 0,
-						0, 0, false, false)
+				.addField(DynamicFieldType.GENERATION, DataType.DATE, "EXPIRY_DT", "expiryDt", mapped, defaultVal, 0, 0,
+						0, true, false)
+				.addField(DynamicFieldType.GENERATION, DataType.TIMESTAMP_UTC, "CREATE_DT", "createDt", mapped,
+						defaultVal, 0, 0, 0, false, false)
 				.build();
 
-		DynamicEntityInfo.Builder adeib = DynamicEntityInfo
-				.newBuilder(DynamicEntityType.TABLE, "com.tcdng.test.z.Authorz", DynamicEntityInfo.ManagedType.MANAGED, schemaChanged)
-				.tableName("TAUTHOR").version(1L);
+		DynamicEntityInfo.Builder adeib = DynamicEntityInfo.newBuilder(DynamicEntityType.TABLE,
+				"com.tcdng.test.z.Authorz", DynamicEntityInfo.ManagedType.MANAGED, schemaChanged).tableName("TAUTHOR")
+				.version(1L);
 		authorDynamicEntityInfo = adeib.prefetch();
-		DynamicEntityInfo.Builder bdeib = DynamicEntityInfo
-				.newBuilder(DynamicEntityType.TABLE, "com.tcdng.test.z.Bookz", DynamicEntityInfo.ManagedType.MANAGED, schemaChanged)
-				.tableName("TBOOK").version(1L);
+		DynamicEntityInfo.Builder bdeib = DynamicEntityInfo.newBuilder(DynamicEntityType.TABLE,
+				"com.tcdng.test.z.Bookz", DynamicEntityInfo.ManagedType.MANAGED, schemaChanged).tableName("TBOOK")
+				.version(1L);
 		bookDynamicEntityInfo = bdeib.prefetch();
 
 		adeib.addField(DynamicFieldType.INFO_ONLY, DataType.LONG, "PASCAL_ID", "id", null, null, 0, 0, 0, false, false)
-				.addField(DynamicFieldType.GENERATION, DataType.STRING, "TAUTHOR_NM", "name", mapped, defaultVal, 32, 0, 0,
-						false, true)
+				.addField(DynamicFieldType.GENERATION, DataType.STRING, "TAUTHOR_NM", "name", mapped, defaultVal, 32, 0,
+						0, false, true)
+				.addField(DynamicFieldType.GENERATION, DataType.STRING, "TACCOUNTNO", "accountNo", mapped, defaultVal,
+						32, 0, 0, false, true)
 				.addForeignKeyField(DynamicFieldType.GENERATION, DynamicEntityInfo.SELF_REFERENCE, "PARENT_AUTHOR_ID",
 						"parentAuthorId", defaultVal, true)
 				.addListOnlyField(DynamicFieldType.GENERATION, null, "parentAuthorName", "parentAuthorId", "name",
 						false)
 				.addChildListField(DynamicFieldType.GENERATION, bookDynamicEntityInfo, "bookList", true).build();
-
-		bdeib.addForeignKeyField(DynamicFieldType.GENERATION, authorDynamicEntityInfo, null, "authorId", "1", false)
-				.addField(DynamicFieldType.GENERATION, DataType.STRING, "TITLE", "title", mapped, defaultVal, 32, 0, 0, false,
-						true)
-				.addListOnlyField(DynamicFieldType.GENERATION, null, "authorName", "authorId", "name", false).build();
+		adeib.addIndex(Arrays.asList("accountNo"));
+		adeib.addUniqueConstraint(Arrays.asList("name"));
 		
+		bdeib.addForeignKeyField(DynamicFieldType.GENERATION, authorDynamicEntityInfo, null, "authorId", "1", false)
+				.addField(DynamicFieldType.GENERATION, DataType.STRING, "TITLE", "title", mapped, defaultVal, 32, 0, 0,
+						false, true)
+				.addListOnlyField(DynamicFieldType.GENERATION, null, "authorName", "authorId", "name", false).build();
+
 		dynamicEntityInfo.finalizeResolution();
 		dynamicEntityInfoExt.finalizeResolution();
 		authorDynamicEntityInfo.finalizeResolution();
 		bookDynamicEntityInfo.finalizeResolution();
 	}
 
-    @Override
-    protected void onTearDown() throws Exception {
+	@Override
+	protected void onTearDown() throws Exception {
 
-    }
+	}
 }

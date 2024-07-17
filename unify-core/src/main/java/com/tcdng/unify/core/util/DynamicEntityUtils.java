@@ -33,12 +33,14 @@ import com.tcdng.unify.core.annotation.ColumnOverride;
 import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.annotation.DynamicEntityType;
 import com.tcdng.unify.core.annotation.ForeignKey;
+import com.tcdng.unify.core.annotation.Index;
 import com.tcdng.unify.core.annotation.ListOnly;
 import com.tcdng.unify.core.annotation.Mapped;
 import com.tcdng.unify.core.annotation.Table;
 import com.tcdng.unify.core.annotation.TableExt;
 import com.tcdng.unify.core.annotation.TableName;
 import com.tcdng.unify.core.annotation.TenantId;
+import com.tcdng.unify.core.annotation.UniqueConstraint;
 import com.tcdng.unify.core.constant.EntityFieldType;
 import com.tcdng.unify.core.database.dynamic.DynamicChildFieldInfo;
 import com.tcdng.unify.core.database.dynamic.DynamicChildListFieldInfo;
@@ -46,7 +48,9 @@ import com.tcdng.unify.core.database.dynamic.DynamicColumnFieldInfo;
 import com.tcdng.unify.core.database.dynamic.DynamicEntityInfo;
 import com.tcdng.unify.core.database.dynamic.DynamicFieldInfo;
 import com.tcdng.unify.core.database.dynamic.DynamicForeignKeyFieldInfo;
+import com.tcdng.unify.core.database.dynamic.DynamicIndexInfo;
 import com.tcdng.unify.core.database.dynamic.DynamicListOnlyFieldInfo;
+import com.tcdng.unify.core.database.dynamic.DynamicUniqueConstraintInfo;
 
 /**
  * Dynamic entity utilities.
@@ -59,7 +63,7 @@ public final class DynamicEntityUtils {
 	private DynamicEntityUtils() {
 
 	}
-	
+
 	public static String generateEntityJavaClassSource(DynamicEntityInfo dynamicEntityInfo) throws UnifyException {
 		switch (dynamicEntityInfo.getType()) {
 		case TABLE:
@@ -116,7 +120,6 @@ public final class DynamicEntityUtils {
 						if (!fkInfo.isEnum()) {
 							if (!dynamicEntityInfo.getClassName()
 									.equals(fkInfo.getParentDynamicEntityInfo().getClassName())) {
-//								importSet.add(fkInfo.getParentDynamicEntityInfo().getClassName());
 							}
 						}
 					} else if (type.isTableColumn()) {
@@ -129,7 +132,7 @@ public final class DynamicEntityUtils {
 						if (dynamicFieldInfo.isTenantId()) {
 							importSet.add(TenantId.class.getCanonicalName());
 						}
-						
+
 						if (dynamicFieldInfo.isWithMapping()) {
 							importSet.add(Mapped.class.getCanonicalName());
 						}
@@ -138,14 +141,12 @@ public final class DynamicEntityUtils {
 						DynamicEntityUtils.generateChildAnnotation(fsb, childInfo);
 						importSet.add(Child.class.getCanonicalName());
 						childClass = childInfo.getChildDynamicEntityInfo().getClassName();
-//						importSet.add(childClass);
 					} else if (type.isChildList()) {
 						DynamicChildListFieldInfo childListInfo = (DynamicChildListFieldInfo) dynamicFieldInfo;
 						DynamicEntityUtils.generateChildListAnnotation(fsb, childListInfo);
 						importSet.add(List.class.getCanonicalName());
 						importSet.add(ChildList.class.getCanonicalName());
 						childClass = childListInfo.getChildDynamicEntityInfo().getClassName();
-//						importSet.add(childClass);
 					} else {
 						DynamicEntityUtils.generateLisOnlyAnnotation(fsb, (DynamicListOnlyFieldInfo) dynamicFieldInfo);
 						importSet.add(ListOnly.class.getCanonicalName());
@@ -158,7 +159,6 @@ public final class DynamicEntityUtils {
 						if (!fkInfo.isEnum()) {
 							if (!dynamicEntityInfo.getClassName()
 									.equals(fkInfo.getParentDynamicEntityInfo().getClassName())) {
-//								importSet.add(fkInfo.getParentDynamicEntityInfo().getClassName());
 							}
 						}
 
@@ -172,19 +172,17 @@ public final class DynamicEntityUtils {
 						if (dynamicFieldInfo.isTenantId()) {
 							importSet.add(TenantId.class.getCanonicalName());
 						}
-						
+
 						if (dynamicFieldInfo.isWithMapping()) {
 							importSet.add(Mapped.class.getCanonicalName());
 						}
 					} else if (type.isChild()) {
 						DynamicChildFieldInfo childInfo = (DynamicChildFieldInfo) dynamicFieldInfo;
 						childClass = childInfo.getChildDynamicEntityInfo().getClassName();
-//						importSet.add(childClass);
 					} else if (type.isChildList()) {
 						DynamicChildListFieldInfo childListInfo = (DynamicChildListFieldInfo) dynamicFieldInfo;
 						importSet.add(List.class.getCanonicalName());
 						childClass = childListInfo.getChildDynamicEntityInfo().getClassName();
-//						importSet.add(childClass);
 					} else if (type.isListOnly()) {
 						DynamicEntityUtils.generateLisOnlyAnnotation(fsb, (DynamicListOnlyFieldInfo) dynamicFieldInfo);
 						importSet.add(ListOnly.class.getCanonicalName());
@@ -232,17 +230,32 @@ public final class DynamicEntityUtils {
 		}
 
 		esb.append("import ").append(baseEntityInfo.getCanonicalName()).append(";\n");
+		final boolean additional = !overrides.isEmpty() || dynamicEntityInfo.isWithUniqueConstraints()
+				|| dynamicEntityInfo.isWithIndexes();
+		if (!overrides.isEmpty()) {
+			esb.append("import ").append(ColumnOverride.class.getCanonicalName()).append(";\n");
+		}
+
+		if (dynamicEntityInfo.isWithIndexes()) {
+			esb.append("import ").append(Index.class.getCanonicalName()).append(";\n");
+		}
+
+		if (dynamicEntityInfo.isWithUniqueConstraints()) {
+			esb.append("import ").append(UniqueConstraint.class.getCanonicalName()).append(";\n");
+		}
 
 		if (managed) {
 			if (DynamicEntityType.TABLE.equals(dynamicEntityInfo.getType())) {
 				esb.append("import ").append(Table.class.getCanonicalName()).append(";\n");
-				if (overrides.isEmpty()) {
-					esb.append("@Table(\"").append(dynamicEntityInfo.getTableName()).append("\")\n");
-				} else {
-					esb.append("import ").append(ColumnOverride.class.getCanonicalName()).append(";\n");
+				if (additional) {
 					esb.append("@Table(name = \"").append(dynamicEntityInfo.getTableName()).append("\",\n");
-					DynamicEntityUtils.generateOverrides(esb, overrides);
+					boolean appendSym = DynamicEntityUtils.generateOverrides(esb, overrides);
+					DynamicEntityUtils.generateIndexes(esb, dynamicEntityInfo.getIndexes(), appendSym);
+					DynamicEntityUtils.generateUniqueConstraints(esb, dynamicEntityInfo.getUniqueConstraints(),
+							appendSym);
 					esb.append(")\n");
+				} else {
+					esb.append("@Table(\"").append(dynamicEntityInfo.getTableName()).append("\")\n");
 				}
 			} else {
 				esb.append("import ").append(TableExt.class.getCanonicalName()).append(";\n");
@@ -251,13 +264,16 @@ public final class DynamicEntityUtils {
 		} else {
 			if (DynamicEntityType.TABLE.equals(dynamicEntityInfo.getType())) {
 				esb.append("import ").append(TableName.class.getCanonicalName()).append(";\n");
-				if (overrides.isEmpty()) {
-					esb.append("@TableName(\"").append(dynamicEntityInfo.getTableName()).append("\")\n");
-				} else {
+				if (additional) {
 					esb.append("import ").append(ColumnOverride.class.getCanonicalName()).append(";\n");
 					esb.append("@TableName(name = \"").append(dynamicEntityInfo.getTableName()).append("\",\n");
-					DynamicEntityUtils.generateOverrides(esb, overrides);
+					boolean appendSym = DynamicEntityUtils.generateOverrides(esb, overrides);
+					DynamicEntityUtils.generateIndexes(esb, dynamicEntityInfo.getIndexes(), appendSym);
+					DynamicEntityUtils.generateUniqueConstraints(esb, dynamicEntityInfo.getUniqueConstraints(),
+							appendSym);
 					esb.append(")\n");
+				} else {
+					esb.append("@TableName(\"").append(dynamicEntityInfo.getTableName()).append("\")\n");
 				}
 			}
 		}
@@ -293,22 +309,101 @@ public final class DynamicEntityUtils {
 		return esb.toString();
 	}
 
-	private static void generateOverrides(StringBuilder esb, List<DynamicFieldInfo> overrides) {
-		esb.append("\tcolumnOverrides = {\n");
-		boolean appendSym = false;
-		for (DynamicFieldInfo dynamicFieldInfo : overrides) {
+	private static boolean generateOverrides(StringBuilder esb, List<DynamicFieldInfo> overrides) {
+		if (!overrides.isEmpty()) {
+			esb.append("\tcolumnOverrides = {\n");
+			boolean appendSym = false;
+			for (DynamicFieldInfo dynamicFieldInfo : overrides) {
+				if (appendSym) {
+					esb.append("),\n");
+				} else {
+					appendSym = true;
+				}
+
+				esb.append("\t\t@ColumnOverride(");
+				esb.append("field = \"").append(dynamicFieldInfo.getFieldName()).append("\",");
+				esb.append("name = \"").append(dynamicFieldInfo.getColumnName()).append("\"");
+			}
+			esb.append(")\n");
+			esb.append("\t}\n");
+
+			return true;
+		}
+
+		return false;
+	}
+
+	private static boolean generateIndexes(StringBuilder esb, List<DynamicIndexInfo> indexes, boolean appendSym) {
+		if (!indexes.isEmpty()) {
 			if (appendSym) {
-				esb.append("),\n");
-			} else {
-				appendSym = true;
+				esb.append(",");
 			}
 
-			esb.append("\t\t@ColumnOverride(");
-			esb.append("field = \"").append(dynamicFieldInfo.getFieldName()).append("\",");
-			esb.append("name = \"").append(dynamicFieldInfo.getColumnName()).append("\"");
+			esb.append("\tindexes = {\n");
+			boolean appendSym0 = false;
+			for (DynamicIndexInfo dynamicIndexInfo : indexes) {
+				if (appendSym0) {
+					esb.append("),\n");
+				} else {
+					appendSym0 = true;
+				}
+
+				esb.append("\t\t@Index(value = {");
+				boolean appendSym1 = false;
+				for (String field : dynamicIndexInfo.getFields()) {
+					if (appendSym1) {
+						esb.append(",");
+					} else {
+						appendSym1 = true;
+					}
+					esb.append("\"").append(field).append("\"");
+				}
+				esb.append("}, unique = ").append(dynamicIndexInfo.isUnique());
+			}
+			esb.append(")\n");
+			esb.append("\t}\n");
+
+			return true;
 		}
-		esb.append(")\n");
-		esb.append("\t}\n");
+
+		return false;
+	}
+
+	private static boolean generateUniqueConstraints(StringBuilder esb,
+			List<DynamicUniqueConstraintInfo> uniqueConstraints, boolean appendSym) {
+		if (!uniqueConstraints.isEmpty()) {
+			if (appendSym) {
+				esb.append(",");
+			}
+
+			esb.append("\tuniqueConstraints = {\n");
+			boolean appendSym0 = false;
+			for (DynamicUniqueConstraintInfo dynamicUniqueConstraintInfo : uniqueConstraints) {
+				if (appendSym0) {
+					esb.append("),\n");
+				} else {
+					appendSym0 = true;
+				}
+
+				esb.append("\t\t@UniqueConstraint({");
+				boolean appendSym1 = false;
+				for (String field : dynamicUniqueConstraintInfo.getFields()) {
+					if (appendSym1) {
+						esb.append(",");
+					} else {
+						appendSym1 = true;
+					}
+					esb.append("\"").append(field).append("\"");
+				}
+				esb.append("}");
+			}
+			esb.append(")\n");
+			esb.append("\t}\n");
+
+			return true;
+		}
+
+		return false;
 	}
 
 	private static void generateChildAnnotation(StringBuilder fsb, DynamicChildFieldInfo childInfo) {
@@ -386,12 +481,11 @@ public final class DynamicEntityUtils {
 		if (dynamicColumnFieldInfo.isTenantId()) {
 			fsb.append(" @TenantId\n");
 		}
-		
 
 		if (dynamicColumnFieldInfo.isWithMapping()) {
 			fsb.append(" @Mapped(\"" + dynamicColumnFieldInfo.getMapping() + "\")\n");
 		}
-		
+
 		fsb.append(" @Column");
 		boolean appendSym = false;
 		if (!DataUtils.isMappedColumnType(dynamicColumnFieldInfo.getDataType().columnType())) {
