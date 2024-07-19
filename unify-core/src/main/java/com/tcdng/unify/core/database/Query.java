@@ -16,7 +16,10 @@
 package com.tcdng.unify.core.database;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import com.tcdng.unify.core.constant.OrderType;
@@ -66,6 +69,7 @@ import com.tcdng.unify.core.criterion.Or;
 import com.tcdng.unify.core.criterion.Order;
 import com.tcdng.unify.core.criterion.Restriction;
 import com.tcdng.unify.core.criterion.Select;
+import com.tcdng.unify.core.util.DataUtils;
 
 /**
  * Query object.
@@ -105,6 +109,8 @@ public class Query<T extends Entity> implements Cloneable {
 
     private boolean lenient;
 
+    private Map<String, String> params;
+    
     public Query(Class<T> entityClass) {
         this(entityClass, false);
     }
@@ -602,7 +608,23 @@ public class Query<T extends Entity> implements Cloneable {
         return this;
     }
 
-    public boolean replaceAll(String propertyName, Object val) {
+	public void addParam(String name, String val) {
+		if (params == null) {
+			params = new HashMap<String, String>();
+		}
+		
+		params.put(name, val);
+	}
+    
+    public Map<String, String> getParams() {
+		return params == null? Collections.emptyMap() : params;
+	}
+
+    public boolean isWithParams() {
+    	return !DataUtils.isBlank(params);
+    }
+    
+	public boolean replaceAll(String propertyName, Object val) {
         return restrictions.replaceAll(propertyName, val);
     }
 
@@ -671,6 +693,7 @@ public class Query<T extends Entity> implements Cloneable {
         query.ignoreEmptyCriteria = ignoreEmptyCriteria;
         query.ignoreTenancy = ignoreTenancy;
         query.mustMatch = mustMatch;
+        query.params = params;
         return query;
     }
 
@@ -686,6 +709,7 @@ public class Query<T extends Entity> implements Cloneable {
         query.limit = limit;
         query.ignoreEmptyCriteria = ignoreEmptyCriteria;
         query.mustMatch = mustMatch;
+        query.params = params;
         return query;
     }
 

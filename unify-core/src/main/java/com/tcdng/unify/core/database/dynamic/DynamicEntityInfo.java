@@ -29,6 +29,7 @@ import com.tcdng.unify.core.annotation.DynamicEntityType;
 import com.tcdng.unify.core.annotation.DynamicFieldType;
 import com.tcdng.unify.core.constant.DataType;
 import com.tcdng.unify.core.system.entities.AbstractSequencedEntity;
+import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
 
 /**
@@ -317,20 +318,32 @@ public class DynamicEntityInfo {
 		}
 
 		public Builder addIndex(List<String> fields, boolean unique) throws UnifyException {
+			List<String> _fields = new ArrayList<String>();
 			for (String field : fields) {
-				ensureConstraintFieldExist(field);
+				if (isConstraintFieldExist(field)) {
+					_fields.add(field);
+				}
 			}
 
-			indexes.add(new DynamicIndexInfo(fields, unique));
+			if (!DataUtils.isBlank(_fields)) {
+				indexes.add(new DynamicIndexInfo(_fields, unique));
+			}
+
 			return this;
 		}
 
 		public Builder addUniqueConstraint(List<String> fields) throws UnifyException {
+			List<String> _fields = new ArrayList<String>();
 			for (String field : fields) {
-				ensureConstraintFieldExist(field);
+				if (isConstraintFieldExist(field)) {
+					_fields.add(field);
+				}
 			}
 
-			uniqueConstraints.add(new DynamicUniqueConstraintInfo(fields));
+			if (!DataUtils.isBlank(_fields)) {
+				uniqueConstraints.add(new DynamicUniqueConstraintInfo(_fields));
+			}
+
 			return this;
 		}
 
@@ -450,11 +463,8 @@ public class DynamicEntityInfo {
 			}
 		}
 
-		private void ensureConstraintFieldExist(String fieldName) throws UnifyException {
-			if (!fkFields.containsKey(fieldName) && !columnFields.containsKey(fieldName)) {
-				throw new UnifyOperationException(getClass(),
-						"Constraintable field with name [" + fieldName + "] does not exist.");
-			}
+		private boolean isConstraintFieldExist(String fieldName) throws UnifyException {
+			return fkFields.containsKey(fieldName) || columnFields.containsKey(fieldName);
 		}
 
 		public DynamicEntityInfo prefetch() {
