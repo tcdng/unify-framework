@@ -267,10 +267,7 @@ public final class DynamicEntityUtils {
 				if (additional) {
 					esb.append("import ").append(ColumnOverride.class.getCanonicalName()).append(";\n");
 					esb.append("@TableName(name = \"").append(dynamicEntityInfo.getTableName()).append("\",\n");
-					boolean appendSym = DynamicEntityUtils.generateOverrides(esb, overrides);
-					DynamicEntityUtils.generateIndexes(esb, dynamicEntityInfo.getIndexes(), appendSym);
-					DynamicEntityUtils.generateUniqueConstraints(esb, dynamicEntityInfo.getUniqueConstraints(),
-							appendSym);
+					DynamicEntityUtils.generateOverrides(esb, overrides);
 					esb.append(")\n");
 				} else {
 					esb.append("@TableName(\"").append(dynamicEntityInfo.getTableName()).append("\")\n");
