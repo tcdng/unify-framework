@@ -264,7 +264,7 @@ public final class DynamicEntityUtils {
 		} else {
 			if (DynamicEntityType.TABLE.equals(dynamicEntityInfo.getType())) {
 				esb.append("import ").append(TableName.class.getCanonicalName()).append(";\n");
-				if (additional) {
+				if (!overrides.isEmpty()) {
 					esb.append("import ").append(ColumnOverride.class.getCanonicalName()).append(";\n");
 					esb.append("@TableName(name = \"").append(dynamicEntityInfo.getTableName()).append("\",\n");
 					DynamicEntityUtils.generateOverrides(esb, overrides);
