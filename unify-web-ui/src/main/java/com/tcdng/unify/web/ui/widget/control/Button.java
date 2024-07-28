@@ -28,10 +28,12 @@ import com.tcdng.unify.web.ui.widget.AbstractTargetControl;
  * @since 1.0
  */
 @Component("ui-button")
-@UplAttributes({ @UplAttribute(name = "imageSrc", type = String.class),
-        @UplAttribute(name = "symbol", type = String.class),
-        @UplAttribute(name = "symbolBinding", type = String.class),
-        @UplAttribute(name = "debounce", type = boolean.class, defaultVal = "true") })
+@UplAttributes({
+	@UplAttribute(name = "htmlEscape", type = boolean.class, defaultVal = "true"),
+	@UplAttribute(name = "imageSrc", type = String.class),
+    @UplAttribute(name = "symbol", type = String.class),
+    @UplAttribute(name = "symbolBinding", type = String.class),
+    @UplAttribute(name = "debounce", type = boolean.class, defaultVal = "true") })
 public class Button extends AbstractTargetControl {
 
     public String getSymbol() throws UnifyException {
@@ -53,4 +55,8 @@ public class Button extends AbstractTargetControl {
     public boolean isLayoutCaption() {
         return false;
     }
+
+	public boolean isHtmlEscape() throws UnifyException {
+		return getUplAttribute(boolean.class, "htmlEscape");
+	}
 }

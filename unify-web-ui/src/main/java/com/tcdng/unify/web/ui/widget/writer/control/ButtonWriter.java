@@ -48,7 +48,12 @@ public class ButtonWriter extends AbstractTargetControlWriter {
             writer.write("\">");
             if (caption != null) {
                 writer.write("<span>");
-                writer.writeWithHtmlEscape(caption);
+                if (button.isHtmlEscape()) {
+                	writer.writeWithHtmlEscape(caption);
+                } else {
+                	writer.write(caption);
+                }
+                
                 writer.write("</span>");
             }
         } else {
@@ -66,7 +71,11 @@ public class ButtonWriter extends AbstractTargetControlWriter {
                     writer.write("&nbsp;&nbsp;");
                 }
                 
-                writer.writeWithHtmlEscape(caption);
+                if (button.isHtmlEscape()) {
+                	writer.writeWithHtmlEscape(caption);
+                } else {
+                	writer.write(caption);
+                }
             }
         }
 
