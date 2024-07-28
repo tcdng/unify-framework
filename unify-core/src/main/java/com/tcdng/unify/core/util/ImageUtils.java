@@ -60,7 +60,7 @@ public final class ImageUtils {
 			}
 
 			// PNG
-			if ((image.length > 4) && (image[1] == (byte) 0x50) && (image[2] == (byte) 0x4E)
+			if ((image.length > 4) && (image[0] == (byte) 0x89) && (image[1] == (byte) 0x50) && (image[2] == (byte) 0x4E)
 					&& (image[3] == (byte) 0x47)) {
 				return ImageType.PNG;
 			}

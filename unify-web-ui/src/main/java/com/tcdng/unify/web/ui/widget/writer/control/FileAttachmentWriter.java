@@ -20,6 +20,8 @@ import java.util.List;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
+import com.tcdng.unify.core.data.FileAttachmentInfo;
+import com.tcdng.unify.core.data.FileAttachmentsInfo;
 import com.tcdng.unify.core.data.ValueStore;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.web.ui.widget.Control;
@@ -29,8 +31,6 @@ import com.tcdng.unify.web.ui.widget.Widget;
 import com.tcdng.unify.web.ui.widget.control.FileAttachment;
 import com.tcdng.unify.web.ui.widget.control.FileAttachmentHandler;
 import com.tcdng.unify.web.ui.widget.control.FileUpload;
-import com.tcdng.unify.web.ui.widget.data.FileAttachmentInfo;
-import com.tcdng.unify.web.ui.widget.data.FileAttachmentsInfo;
 import com.tcdng.unify.web.ui.widget.writer.AbstractControlWriter;
 
 /**

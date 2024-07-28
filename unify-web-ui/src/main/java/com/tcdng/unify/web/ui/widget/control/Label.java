@@ -30,7 +30,8 @@ import com.tcdng.unify.web.ui.widget.AbstractFormattedControl;
  * @since 1.0
  */
 @Component("ui-label")
-@UplAttributes({ @UplAttribute(name = "htmlEscape", type = boolean.class, defaultVal = "true"),
+@UplAttributes({
+		@UplAttribute(name = "htmlEscape", type = boolean.class, defaultVal = "true"),
 		@UplAttribute(name = "layoutCaption", type = boolean.class, defaultVal = "false"),
 		@UplAttribute(name = "bindingOptional", type = boolean.class, defaultVal = "false"),
 		@UplAttribute(name = "inline", type = boolean.class, defaultVal = "false"),

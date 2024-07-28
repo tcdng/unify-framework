@@ -19,12 +19,12 @@ import java.io.OutputStream;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.data.FileAttachmentInfo;
+import com.tcdng.unify.core.data.FileAttachmentsInfo;
 import com.tcdng.unify.core.util.IOUtils;
 import com.tcdng.unify.web.constant.Secured;
 import com.tcdng.unify.web.ui.AbstractPageResourceController;
 import com.tcdng.unify.web.ui.widget.control.FileAttachmentHandler;
-import com.tcdng.unify.web.ui.widget.data.FileAttachmentInfo;
-import com.tcdng.unify.web.ui.widget.data.FileAttachmentsInfo;
 
 /**
  * Resource controller for file attachment.

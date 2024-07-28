@@ -18,7 +18,7 @@ package com.tcdng.unify.web.ui.widget.control;
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.constant.FileAttachmentType;
-import com.tcdng.unify.web.ui.widget.data.FileAttachmentInfo;
+import com.tcdng.unify.core.data.FileAttachmentInfo;
 
 /**
  * File upload view handler.

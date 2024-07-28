@@ -15,6 +15,10 @@
  */
 package com.tcdng.unify.core.constant;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.tcdng.unify.common.annotation.StaticList;
 import com.tcdng.unify.common.constants.EnumConst;
 import com.tcdng.unify.core.util.EnumUtils;
@@ -44,6 +48,27 @@ public enum FileAttachmentType implements EnumConst {
     WILDCARD("WILD", "", MimeType.APPLICATION_OCTETSTREAM),
     WORD("DOC", ".doc,.docx", MimeType.APPLICATION_WORD);
 
+	private static final Map<String, FileAttachmentType> byExtension;
+	
+	static {
+		Map<String, FileAttachmentType> map = new HashMap<String, FileAttachmentType>();
+		map.put(".mp3", AUDIO);
+		map.put(".csv", CSV);
+		map.put(".xls", EXCEL);
+		map.put(".xlsx", EXCEL);
+		map.put(".png", IMAGE_PNG);
+		map.put(".jpg", IMAGE_JPG);
+		map.put(".gif", IMAGE_GIF);
+		map.put(".bmp", IMAGE_BMP);
+		map.put(".pdf", PDF);
+		map.put(".xml", XML);
+		map.put(".txt", TEXT);
+		map.put(".mp4", VIDEO);
+		map.put(".doc", WORD);
+		map.put(".docx", WORD);
+		byExtension = Collections.unmodifiableMap(map);
+	}
+	
     private final String code;
 
     private final String extensions;
@@ -74,6 +99,10 @@ public enum FileAttachmentType implements EnumConst {
         return mimeType;
     }
 
+    public boolean isWildCard() {
+    	return WILDCARD.equals(this);
+    }
+    
     public String appendDefaultExtension(String filename) {
     	if (filename != null && filename.indexOf('.') < 0) {
     		switch(this) {
@@ -114,19 +143,16 @@ public enum FileAttachmentType implements EnumConst {
     }
     
     public static FileAttachmentType detectFromFileName(String fileName) {
+    	FileAttachmentType type = WILDCARD;
         if (!StringUtils.isBlank(fileName)) {
-            int index = fileName.indexOf('.');
+            int index = fileName.lastIndexOf('.');
             if (index > 0) {
                 String ext = fileName.substring(index).toLowerCase();
-                for (FileAttachmentType type : FileAttachmentType.values()) {
-                    if (type.extensions.indexOf(ext) >= 0) {
-                        return type;
-                    }
-                }
+                type = byExtension.get(ext);
             }
         }
 
-        return WILDCARD;
+        return type;
     }
 
     public static FileAttachmentType fromCode(String code) {
