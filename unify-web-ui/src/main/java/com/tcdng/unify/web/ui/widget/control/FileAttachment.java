@@ -167,11 +167,11 @@ public class FileAttachment extends AbstractValueListMultiControl<ValueStore, Fi
 		fileCtrl = (FileUpload) addInternalChildWidget(
 				"!ui-fileupload acceptBinding:typeName selectOnly:true hidden:true");
 		attachCtrl = (Control) addInternalChildWidget(
-				"!ui-button styleClass:$e{fabutton} caption:$m{button.attach} hint:$m{button.attach} debounce:false");
+				"!ui-button styleClass:$e{fabutton} caption:$m{button.attach} hint:$m{button.attach} alwaysValueIndex:true debounce:false");
 		viewCtrl = (Control) addInternalChildWidget(
-				"!ui-button styleClass:$e{fabutton} caption:$m{button.view} hint:$m{button.view} debounce:false");
+				"!ui-button styleClass:$e{fabutton} caption:$m{button.view} hint:$m{button.view} alwaysValueIndex:true debounce:false");
 		removeCtrl = (Control) addInternalChildWidget(
-				"!ui-button styleClass:$e{fabutton-alert} caption:$m{button.remove} hint:$m{button.remove} debounce:false");
+				"!ui-button styleClass:$e{fabutton-alert} caption:$m{button.remove} hint:$m{button.remove} alwaysValueIndex:true debounce:false");
 		String _handler = getUplAttribute(String.class, "handler");
 		if (!StringUtils.isBlank(_handler)) {
 			handler = (FileAttachmentHandler) getComponent(_handler);

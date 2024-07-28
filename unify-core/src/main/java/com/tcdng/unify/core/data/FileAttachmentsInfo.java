@@ -63,8 +63,10 @@ public class FileAttachmentsInfo {
 	}
 
 	public void attach(String adhocName) {
-		if (adhoc) {
-			attachmentInfoList.add(new FileAttachmentInfo(FileAttachmentType.WILDCARD, adhocName));
+		if (!disabled) {
+			if (adhoc) {
+				attachmentInfoList.add(new FileAttachmentInfo(FileAttachmentType.WILDCARD, adhocName));
+			}
 		}
 	}
 
