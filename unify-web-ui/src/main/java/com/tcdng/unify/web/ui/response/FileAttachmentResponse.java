@@ -18,10 +18,10 @@ package com.tcdng.unify.web.ui.response;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.constant.FileAttachmentType;
+import com.tcdng.unify.core.data.FileAttachmentInfo;
+import com.tcdng.unify.core.data.FileAttachmentsInfo;
 import com.tcdng.unify.web.constant.UnifyWebRequestAttributeConstants;
 import com.tcdng.unify.web.ui.AbstractOpenWindowPageControllerResponse;
-import com.tcdng.unify.web.ui.widget.data.FileAttachmentInfo;
-import com.tcdng.unify.web.ui.widget.data.FileAttachmentsInfo;
 
 /**
  * File attachment response

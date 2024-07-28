@@ -13,9 +13,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.web.ui.widget.data;
+package com.tcdng.unify.core.data;
 
 import com.tcdng.unify.core.constant.FileAttachmentType;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * File attachment information.
@@ -38,16 +39,21 @@ public class FileAttachmentInfo {
     private boolean present;
     
     public FileAttachmentInfo(FileAttachmentType type, String name, String description, String filename) {
+        this.type = type;
         this.name = name;
         this.description = description;
         this.filename = filename;
-        this.type = type;
     }
 
     public FileAttachmentInfo(FileAttachmentType type, String name, String description) {
+        this.type = type;
         this.name = name;
         this.description = description;
+    }
+
+    public FileAttachmentInfo(FileAttachmentType type, String name) {
         this.type = type;
+        this.name = name;
     }
 
     public FileAttachmentInfo(FileAttachmentType type) {
@@ -62,11 +68,19 @@ public class FileAttachmentInfo {
         return description;
     }
 
-    public FileAttachmentType getType() {
+    public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public FileAttachmentType getType() {
         return type;
     }
 
-    public String getTypeName() {
+    public void setType(FileAttachmentType type) {
+		this.type = type;
+	}
+
+	public String getTypeName() {
         return type.code();
     }
 
@@ -100,6 +114,10 @@ public class FileAttachmentInfo {
 
 	public boolean isEmpty() {
         return this.filename == null;
+    }
+
+	public boolean isUndefined() {
+        return StringUtils.isBlank(this.description);
     }
 
     public int size() {
