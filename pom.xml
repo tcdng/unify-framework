@@ -38,7 +38,6 @@
 		<module>unify-web-ui</module>
 		<module>unify-web-javax</module>
 		<module>unify-web-jakarta</module>
-		<module>unify-nashorn</module>
 		<module>unify-convert</module>
     	<module>unify-common</module>
     	<module>unify-tomcat</module>
