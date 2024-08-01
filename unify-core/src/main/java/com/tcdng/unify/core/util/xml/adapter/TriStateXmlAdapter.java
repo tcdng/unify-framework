@@ -16,6 +16,8 @@
 package com.tcdng.unify.core.util.xml.adapter;
 
 import com.tcdng.unify.core.constant.TriState;
+import com.tcdng.unify.core.util.xml.AbstractEnumConstDeserializer;
+import com.tcdng.unify.core.util.xml.AbstractEnumConstSerializer;
 import com.tcdng.unify.core.util.xml.AbstractEnumConstXmlAdapter;
 
 /**
@@ -24,10 +26,20 @@ import com.tcdng.unify.core.util.xml.AbstractEnumConstXmlAdapter;
  * @author The Code Department
  * @since 1.0
  */
-public class TriStateXmlAdapter extends AbstractEnumConstXmlAdapter<TriState> {
+public class TriStateXmlAdapter extends AbstractEnumConstXmlAdapter {
+    
+    public static class Serializer extends AbstractEnumConstSerializer<TriState> {
+    	public Serializer() {
+    		
+    	}
 
-    public TriStateXmlAdapter() {
-        super(TriState.class);
     }
+    
+    public static class Deserializer extends AbstractEnumConstDeserializer<TriState> {
 
+		public Deserializer() {
+			super(TriState.class);
+		}
+
+    }
 }

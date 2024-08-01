@@ -19,6 +19,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 /**
@@ -29,9 +31,11 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
  */
 public class PropertiesConfig {
 
+	@JacksonXmlElementWrapper(useWrapping = false)
 	@JacksonXmlProperty(localName = "property")
     private List<PropertyConfig> propertyConfigList;
 
+	@JsonIgnore
     private Map<String, PropertyConfig> propertyConfigMap;
 
     public List<PropertyConfig> getPropertyConfigList() {

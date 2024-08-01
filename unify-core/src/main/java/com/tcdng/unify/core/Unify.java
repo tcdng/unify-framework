@@ -145,10 +145,6 @@ public class Unify {
 
     private static void doStartup(String workingFolder, String configFile, URL[] baseUrls, short preferredPort,
             boolean deploymentMode) {
-        // Java 9 an 10 temp fix for jaxb binding and warnings
-        // This is a temporary fix and should be removed and resolved with jaxb-api
-        // 2.3.1 when moving to minimum Java 9
-        System.setProperty("com.sun.xml.bind.v2.bytecode.ClassTailor.noOptimize", "true");
         LogManager.getLogManager().reset();
 
         if (workingFolder == null || workingFolder.isEmpty()) {

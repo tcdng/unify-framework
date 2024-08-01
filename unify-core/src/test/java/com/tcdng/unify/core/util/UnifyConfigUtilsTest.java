@@ -80,14 +80,21 @@ public class UnifyConfigUtilsTest {
 
     @Test
     public void testReadXMLConfiguration() throws Exception {
-        String configXml = "<unify deploymentVersion='1' nodeId='node-001' production='false' cluster='false'>"
-                + "<properties>" + "		<property name='application.name' value = 'TestApplication'/>"
-                + "</properties>" + "<components>"
-                + " <component name='test-sqldatasource' class='com.tcdng.unify.core.database.TestSqlDataSource'>"
-                + "     <properties>" + "         <property name='dialect' value='hsqldb-dialect'/>"
-                + "         <property name='maxConnections' value='20'/>"
-                + "         <property name='minConnections' value='4'/>" + "     </properties>" + " </component>"
-                + "</components>" + "</unify>";
+        String configXml =
+        		"<unify version=\"1\" nodeId=\"node-001\" production=\"false\" cluster=\"false\">"
+                + "<properties>"
+        		+ "		<property name=\"application.name\" value = \"TestApplication\"/>"
+                + "</properties>"
+        		+ "<components>"
+                + " <component name=\"test-sqldatasource\" class=\"com.tcdng.unify.core.database.TestSqlDataSource\">"
+                + "     <properties>"
+                + "         <property name=\"dialect\" value=\"hsqldb-dialect\"/>"
+                + "         <property name=\"maxConnections\" value=\"20\"/>"
+                + "         <property name=\"minConnections\" value=\"4\"/>"
+                + "     </properties>"
+                + " </component>"
+                + "</components>"
+                + "</unify>";
         UnifyContainerConfig.Builder uccb = UnifyContainerConfig.newBuilder();
         UnifyConfigUtils.readConfigFromXml(uccb, configXml, null);
 
@@ -120,14 +127,14 @@ public class UnifyConfigUtilsTest {
 
     @Test
     public void testReadXMLConfigurationWithMultiValues() throws Exception {
-        String configXml = "<unify deploymentVersion='1' nodeId='node-001' production='false' cluster='false'>"
-                + "<properties>" + "		<property name='application.name' value = 'TestApplication 2'/>"
+        String configXml = "<unify version=\"1\" nodeId=\"node-001\" production=\"false\" cluster=\"false\">"
+                + "<properties>" + "		<property name=\"application.name\" value = \"TestApplication 2\"/>"
                 + "</properties>" + "<components>"
-                + " <component name='test-dummy' class='com.tcdng.unify.core.TestDummyComponent'>" + "     <properties>"
-                + "         <property name='valueList'>"
-                + "             <value>com.tcdng.unify.core.resources.webtestmessages</value>"
-                + "             <value>com.tcdng.unify.core.resources.messages</value>"
-                + "             <value>com.tcdng.unify.core.resources.messages</value>" + "         </property>"
+                + " <component name=\"test-dummy\" class=\"com.tcdng.unify.core.TestDummyComponent\">" + "     <properties>"
+                + "         <property name=\"valueList\">"
+                + "             <value-item>com.tcdng.unify.core.resources.webtestmessages</value-item>"
+                + "             <value-item>com.tcdng.unify.core.resources.messages</value-item>"
+                + "             <value-item>com.tcdng.unify.core.resources.messages</value-item>" + "         </property>"
                 + "     </properties>" + " </component>" + "</components>" + "</unify>";
         UnifyContainerConfig.Builder uccb = UnifyContainerConfig.newBuilder();
         UnifyConfigUtils.readConfigFromXml(uccb, configXml, null);

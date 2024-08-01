@@ -16,6 +16,8 @@
 package com.tcdng.unify.core.util.xml.adapter;
 
 import com.tcdng.unify.core.constant.FileAttachmentType;
+import com.tcdng.unify.core.util.xml.AbstractEnumConstDeserializer;
+import com.tcdng.unify.core.util.xml.AbstractEnumConstSerializer;
 import com.tcdng.unify.core.util.xml.AbstractEnumConstXmlAdapter;
 
 /**
@@ -24,10 +26,20 @@ import com.tcdng.unify.core.util.xml.AbstractEnumConstXmlAdapter;
  * @author The Code Department
  * @since 1.0
  */
-public class FileAttachmentTypeXmlAdapter extends AbstractEnumConstXmlAdapter<FileAttachmentType> {
+public class FileAttachmentTypeXmlAdapter extends AbstractEnumConstXmlAdapter {
+    
+    public static class Serializer extends AbstractEnumConstSerializer<FileAttachmentType> {
+    	public Serializer() {
+    		
+    	}
 
-    public FileAttachmentTypeXmlAdapter() {
-        super(FileAttachmentType.class);
     }
+    
+    public static class Deserializer extends AbstractEnumConstDeserializer<FileAttachmentType> {
 
+		public Deserializer() {
+			super(FileAttachmentType.class);
+		}
+
+    }
 }

@@ -42,7 +42,7 @@ import com.tcdng.unify.core.data.FactoryMap;
  */
 @Component(name = ApplicationComponents.APPLICATION_XMLOBJECTSTREAMER, description = "XML Object Streamer")
 public class XmlObjectStreamerImpl extends AbstractObjectStreamer implements XmlObjectStreamer {
-
+	
 	private FactoryMap<Class<?>, XmlMapper> mappers;
 
 	public XmlObjectStreamerImpl() {
@@ -118,12 +118,16 @@ public class XmlObjectStreamerImpl extends AbstractObjectStreamer implements Xml
 			Writer writer = charset == null ? new OutputStreamWriter(outputStream, StandardCharsets.UTF_8.name())
 					: new OutputStreamWriter(outputStream, charset.name());
 
+			writer.write("<?xml version=\"1.0\" encoding=\"");
+			writer.write(charset == null ? StandardCharsets.UTF_8.name() : charset.name());
+			writer.write("\" standalone=\"yes\"?>");
+
 			if (PrintFormat.PRETTY.equals(printFormat)) {
+				writer.write("\n");
 				marshaller.enable(SerializationFeature.INDENT_OUTPUT);
 			}
-
+			
 			marshaller.writeValue(writer, object);
-			writer.flush();
 		} catch (Exception e) {
 			throwOperationErrorException(e);
 		}
@@ -133,12 +137,16 @@ public class XmlObjectStreamerImpl extends AbstractObjectStreamer implements Xml
 	public void marshal(Object object, Writer writer, PrintFormat printFormat) throws UnifyException {
 		XmlMapper marshaller = mappers.get(object.getClass());
 		try {
+			writer.write("<?xml version=\"1.0\" encoding=\"");
+			writer.write(StandardCharsets.UTF_8.name());
+			writer.write("\" standalone=\"yes\"?>");
+
 			if (PrintFormat.PRETTY.equals(printFormat)) {
+				writer.write("\n");
 				marshaller.enable(SerializationFeature.INDENT_OUTPUT);
 			}
-
+			
 			marshaller.writeValue(writer, object);
-			writer.flush();
 		} catch (Exception e) {
 			throwOperationErrorException(e);
 		}

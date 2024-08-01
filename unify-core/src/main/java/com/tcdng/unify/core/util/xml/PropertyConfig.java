@@ -17,6 +17,7 @@ package com.tcdng.unify.core.util.xml;
 
 import java.util.List;
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 /**
@@ -32,7 +33,8 @@ public class PropertyConfig {
 	@JacksonXmlProperty(isAttribute = true)
     private String value;
 
-	@JacksonXmlProperty(localName = "value")
+	@JacksonXmlElementWrapper(useWrapping = false)
+	@JacksonXmlProperty(localName = "value-item")
     private List<String> valueList;
 
 	@JacksonXmlProperty(isAttribute = true)

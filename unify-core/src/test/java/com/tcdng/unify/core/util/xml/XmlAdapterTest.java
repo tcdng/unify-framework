@@ -21,12 +21,9 @@ import static org.junit.Assert.assertEquals;
 import java.io.StringReader;
 import java.io.StringWriter;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-
 import org.junit.Test;
 
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.tcdng.unify.core.constant.DataType;
 
 /**
@@ -37,25 +34,20 @@ import com.tcdng.unify.core.constant.DataType;
  */
 public class XmlAdapterTest {
 
-    @Test
-    public void testEnumConstXmlAdapterMarshall() throws Exception {
-        JAXBContext jaxbContext = JAXBContext.newInstance(TestField.class);
-        Marshaller marshaller = jaxbContext.createMarshaller();
-        StringWriter sw = new StringWriter();
-        marshaller.marshal(new TestField("age", DataType.INTEGER), sw);
-        assertEquals(
-                "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><test-field><name>age</name><type>INTEGER</type></test-field>",
-                sw.toString());
-    }
+	@Test
+	public void testEnumConstXmlAdapterMarshall() throws Exception {
+		XmlMapper marshaller = new XmlMapper();
+		StringWriter sw = new StringWriter();
+		marshaller.writeValue(sw, new TestField("age", DataType.INTEGER));
+		assertEquals("<test-field><name>age</name><type>INTEGER</type></test-field>", sw.toString());
+	}
 
-    @Test
-    public void testEnumConstXmlAdapterUnmarshall() throws Exception {
-        JAXBContext jaxbContext = JAXBContext.newInstance(TestField.class);
-        Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-        StringReader sr = new StringReader(
-                "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><test-field><name>firstName</name><type>string</type></test-field>");
-        TestField testField = (TestField) unmarshaller.unmarshal(sr);
-        assertEquals("firstName", testField.getName());
-        assertEquals(DataType.STRING, testField.getType());
-    }
+	@Test
+	public void testEnumConstXmlAdapterUnmarshall() throws Exception {
+		XmlMapper unmarshaller = new XmlMapper();
+		StringReader sr = new StringReader("<test-field><name>firstName</name><type>string</type></test-field>");
+		TestField testField = unmarshaller.readValue(sr, TestField.class);
+		assertEquals("firstName", testField.getName());
+		assertEquals(DataType.STRING, testField.getType());
+	}
 }

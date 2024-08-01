@@ -27,7 +27,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
  * @author The Code Department
  * @since 1.0
  */
-@JacksonXmlRootElement
+@JacksonXmlRootElement(localName = "book")
 @JsonPropertyOrder({ "title", "price", "quantity" })
 public class Book {
 

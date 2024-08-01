@@ -17,6 +17,7 @@ package com.tcdng.unify.core.util.xml;
 
 import java.util.List;
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 /**
@@ -30,6 +31,7 @@ public class ComponentsConfig {
 	@JacksonXmlProperty(localName = "aliases")
     private AliasesConfig aliasesConfig;
 
+	@JacksonXmlElementWrapper(useWrapping = false)
 	@JacksonXmlProperty(localName = "component")
     private List<ComponentConfig> componentConfigList;
 
