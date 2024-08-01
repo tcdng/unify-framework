@@ -36,6 +36,10 @@ public class SequenceBlockTestTask extends AbstractTask {
 
     @Override
     public void execute(TaskMonitor taskMonitor, TaskInput input) throws UnifyException {
+        while (sequenceNumberService == null) {
+            Thread.yield();
+        }
+
         String sequenceId = input.getParam(String.class, SequenceTestTaskConstants.SEQUENCEID);
         int seqCount = input.getParam(int.class, SequenceTestTaskConstants.SEQUENCECOUNT);
         for (int i = 0; i < seqCount; i++) {
@@ -46,7 +50,4 @@ public class SequenceBlockTestTask extends AbstractTask {
         }
     }
 
-    protected SequenceNumberService getSequenceNumberService() {
-        return sequenceNumberService;
-    }
 }

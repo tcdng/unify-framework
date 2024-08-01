@@ -128,15 +128,7 @@ public class TaskRunnerImpl extends AbstractUnifyComponent implements TaskRunner
 
 	@Override
 	public boolean isScheduled(String taskName) {
-		if (tasks != null) {
-			synchronized (this) {
-				if (tasks != null) {
-					return tasks.contains(taskName);
-				}
-			}
-		}
-
-		return false;
+		return tasks.contains(taskName);
 	}
 
 	@Override
