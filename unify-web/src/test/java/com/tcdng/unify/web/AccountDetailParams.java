@@ -15,9 +15,8 @@
  */
 package com.tcdng.unify.web;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.tcdng.unify.web.remotecall.RemoteCallParams;
 
 /**
@@ -26,9 +25,10 @@ import com.tcdng.unify.web.remotecall.RemoteCallParams;
  * @author The Code Department
  * @since 1.0
  */
-@XmlRootElement
+@JacksonXmlRootElement
 public class AccountDetailParams extends RemoteCallParams {
 
+	@JacksonXmlProperty
     private String accountNo;
 
     public AccountDetailParams(String accountNo) {
@@ -44,7 +44,6 @@ public class AccountDetailParams extends RemoteCallParams {
         return accountNo;
     }
 
-    @XmlElement
     public void setAccountNo(String accountNo) {
         this.accountNo = accountNo;
     }

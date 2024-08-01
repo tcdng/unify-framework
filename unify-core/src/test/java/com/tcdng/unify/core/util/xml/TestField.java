@@ -16,11 +16,11 @@
 
 package com.tcdng.unify.core.util.xml;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.tcdng.unify.core.constant.DataType;
 import com.tcdng.unify.core.util.xml.adapter.DataTypeXmlAdapter;
 
@@ -30,12 +30,16 @@ import com.tcdng.unify.core.util.xml.adapter.DataTypeXmlAdapter;
  * @author The Code Department
  * @since 1.0
  */
-@XmlRootElement(name = "test-field")
-@XmlType(propOrder = { "name", "type" })
+@JacksonXmlRootElement(localName = "test-field")
+@JsonPropertyOrder({ "name", "type" })
 public class TestField {
 
+	@JacksonXmlProperty
     private String name;
 
+    @JsonSerialize(using = DataTypeXmlAdapter.Serializer.class)
+    @JsonDeserialize(using = DataTypeXmlAdapter.Deserializer.class)
+	@JacksonXmlProperty
     private DataType type;
 
     public TestField(String name, DataType type) {
@@ -51,7 +55,6 @@ public class TestField {
         return name;
     }
 
-    @XmlElement
     public void setName(String name) {
         this.name = name;
     }
@@ -60,8 +63,6 @@ public class TestField {
         return type;
     }
 
-    @XmlJavaTypeAdapter(DataTypeXmlAdapter.class)
-    @XmlElement(name = "type")
     public void setType(DataType type) {
         this.type = type;
     }

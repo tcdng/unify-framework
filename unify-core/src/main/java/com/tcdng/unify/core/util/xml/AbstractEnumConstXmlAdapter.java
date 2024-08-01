@@ -15,8 +15,15 @@
  */
 package com.tcdng.unify.core.util.xml;
 
-import javax.xml.bind.annotation.adapters.XmlAdapter;
+import java.io.IOException;
 
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
 import com.tcdng.unify.common.constants.EnumConst;
 import com.tcdng.unify.core.util.EnumUtils;
 
@@ -26,21 +33,29 @@ import com.tcdng.unify.core.util.EnumUtils;
  * @author The Code Department
  * @since 1.0
  */
-public abstract class AbstractEnumConstXmlAdapter<T extends EnumConst> extends XmlAdapter<String, T> {
+public abstract class AbstractEnumConstXmlAdapter<T extends EnumConst> {
 
     private Class<T> clazz;
 
     public AbstractEnumConstXmlAdapter(Class<T> clazz) {
         this.clazz = clazz;
     }
+    
+    public class Serializer extends JsonSerializer<T> {
 
-    @Override
-    public String marshal(T type) throws Exception {
-        return type != null ? type.name() : null;
+		@Override
+		public void serialize(T value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+			gen.writeString(value != null ? value.name() : null);
+		}
+    	
     }
+    
+    public class Deserializer extends JsonDeserializer<T> {
 
-    @Override
-    public T unmarshal(String typeStr) throws Exception {
-        return EnumUtils.fromName(clazz, typeStr);
+		@Override
+		public T deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+	        return EnumUtils.fromName(clazz, p.getText());
+		}
+    	
     }
 }

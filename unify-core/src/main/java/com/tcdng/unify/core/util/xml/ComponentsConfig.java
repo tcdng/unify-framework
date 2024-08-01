@@ -17,7 +17,7 @@ package com.tcdng.unify.core.util.xml;
 
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlElement;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 /**
  * Unify components configuration.
@@ -27,15 +27,16 @@ import javax.xml.bind.annotation.XmlElement;
  */
 public class ComponentsConfig {
 
+	@JacksonXmlProperty(localName = "aliases")
     private AliasesConfig aliasesConfig;
 
+	@JacksonXmlProperty(localName = "component")
     private List<ComponentConfig> componentConfigList;
 
     public AliasesConfig getAliasesConfig() {
         return aliasesConfig;
     }
 
-    @XmlElement(name = "aliases")
     public void setAliasesConfig(AliasesConfig aliasesConfig) {
         this.aliasesConfig = aliasesConfig;
     }
@@ -44,7 +45,6 @@ public class ComponentsConfig {
         return componentConfigList;
     }
 
-    @XmlElement(name = "component")
     public void setComponentConfigList(List<ComponentConfig> componentConfigList) {
         this.componentConfigList = componentConfigList;
     }

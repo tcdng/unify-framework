@@ -17,9 +17,9 @@ package com.tcdng.unify.core.stream;
 
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
 /**
  * Data object for tests.
@@ -27,16 +27,20 @@ import javax.xml.bind.annotation.XmlType;
  * @author The Code Department
  * @since 1.0
  */
-@XmlRootElement
-@XmlType(propOrder = { "fullName", "books", "picture", "account" })
+@JacksonXmlRootElement
+@JsonPropertyOrder({ "fullName", "books", "picture", "account" })
 public class Author {
 
-    private String fullName;
+	@JacksonXmlProperty
+   private String fullName;
 
+	@JacksonXmlProperty
     private List<Book> books;
 
+	@JacksonXmlProperty
     private byte[] picture;
 
+	@JacksonXmlProperty
     private List<String> account;
 
     public Author(String fullName, List<Book> books, byte[] picture) {
@@ -53,7 +57,6 @@ public class Author {
         return fullName;
     }
 
-    @XmlElement
     public void setFullName(String fullName) {
         this.fullName = fullName;
     }
@@ -62,7 +65,6 @@ public class Author {
         return books;
     }
 
-    @XmlElement
     public void setBooks(List<Book> books) {
         this.books = books;
     }
@@ -71,7 +73,6 @@ public class Author {
         return picture;
     }
 
-    @XmlElement
     public void setPicture(byte[] picture) {
         this.picture = picture;
     }
@@ -80,7 +81,6 @@ public class Author {
         return account;
     }
 
-    @XmlElement
     public void setAccount(List<String> account) {
         this.account = account;
     }

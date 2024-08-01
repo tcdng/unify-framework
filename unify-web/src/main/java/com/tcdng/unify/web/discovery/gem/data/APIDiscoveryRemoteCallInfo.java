@@ -15,7 +15,7 @@
  */
 package com.tcdng.unify.web.discovery.gem.data;
 
-import javax.xml.bind.annotation.XmlElement;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 /**
  * API discovery remote call information.
@@ -25,12 +25,16 @@ import javax.xml.bind.annotation.XmlElement;
  */
 public class APIDiscoveryRemoteCallInfo {
 
+	@JacksonXmlProperty
     private String code;
 
+	@JacksonXmlProperty
     private String description;
 
+	@JacksonXmlProperty
     private String url;
 
+	@JacksonXmlProperty
     private boolean restricted;
 
     // TODO Add parameter definition
@@ -52,7 +56,6 @@ public class APIDiscoveryRemoteCallInfo {
         return code;
     }
 
-    @XmlElement(required = true)
     public void setCode(String code) {
         this.code = code;
     }
@@ -61,7 +64,6 @@ public class APIDiscoveryRemoteCallInfo {
         return description;
     }
 
-    @XmlElement(required = true)
     public void setDescription(String description) {
         this.description = description;
     }
@@ -70,7 +72,6 @@ public class APIDiscoveryRemoteCallInfo {
         return url;
     }
 
-    @XmlElement(required = true)
     public void setUrl(String url) {
         this.url = url;
     }
@@ -79,7 +80,6 @@ public class APIDiscoveryRemoteCallInfo {
         return restricted;
     }
 
-    @XmlElement(required = true)
     public void setRestricted(boolean restricted) {
         this.restricted = restricted;
     }

@@ -17,17 +17,17 @@ package com.tcdng.unify.core.util.xml;
 
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlElement;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 public class AliasesConfig {
 
+	@JacksonXmlProperty(localName = "alias")
     private List<AliasConfig> aliasConfigList;
 
     public List<AliasConfig> getAliasConfigList() {
         return aliasConfigList;
     }
 
-    @XmlElement(name = "alias")
     public void setAliasConfigList(List<AliasConfig> aliasConfigList) {
         this.aliasConfigList = aliasConfigList;
     }

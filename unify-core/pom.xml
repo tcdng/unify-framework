@@ -39,7 +39,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<openhtml.version>1.0.6</openhtml.version>
 		<log4j.version>2.17.1</log4j.version>
-		<jaxb.version>2.3.0</jaxb.version>
+		<jackson.version>2.11.1</jackson.version>
 	</properties>
 
 	<build>
@@ -148,21 +148,11 @@
 			<artifactId>openhtmltopdf-pdfbox</artifactId>
 			<version>${openhtml.version}</version>
 		</dependency>
-		<!-- Java 9 and above -->
+		<!--XML-->
 		<dependency>
-			<groupId>javax.xml.bind</groupId>
-			<artifactId>jaxb-api</artifactId>
-			<version>${jaxb.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.sun.xml.bind</groupId>
-			<artifactId>jaxb-core</artifactId>
-			<version>${jaxb.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.sun.xml.bind</groupId>
-			<artifactId>jaxb-impl</artifactId>
-			<version>${jaxb.version}</version>
+		    <groupId>com.fasterxml.jackson.dataformat</groupId>
+		    <artifactId>jackson-dataformat-xml</artifactId>
+		    <version>${jackson.version}</version>
 		</dependency>
 	</dependencies>
 </project>

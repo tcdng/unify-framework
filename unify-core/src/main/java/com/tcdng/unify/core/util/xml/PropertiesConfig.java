@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.bind.annotation.XmlElement;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 /**
  * Properties configuration.
@@ -29,6 +29,7 @@ import javax.xml.bind.annotation.XmlElement;
  */
 public class PropertiesConfig {
 
+	@JacksonXmlProperty(localName = "property")
     private List<PropertyConfig> propertyConfigList;
 
     private Map<String, PropertyConfig> propertyConfigMap;
@@ -37,7 +38,6 @@ public class PropertiesConfig {
         return propertyConfigList;
     }
 
-    @XmlElement(name = "property")
     public void setPropertyConfigList(List<PropertyConfig> propertyConfigList) {
         this.propertyConfigList = propertyConfigList;
         if (this.propertyConfigList != null) {

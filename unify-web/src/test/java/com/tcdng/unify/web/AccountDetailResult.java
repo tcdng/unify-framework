@@ -17,10 +17,9 @@ package com.tcdng.unify.web;
 
 import java.math.BigDecimal;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
-
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.tcdng.unify.web.remotecall.RemoteCallResult;
 
 /**
@@ -29,14 +28,17 @@ import com.tcdng.unify.web.remotecall.RemoteCallResult;
  * @author The Code Department
  * @since 1.0
  */
-@XmlRootElement
-@XmlType(propOrder = { "accountNo", "accountName", "balance" })
+@JacksonXmlRootElement
+@JsonPropertyOrder({ "accountNo", "accountName", "balance" })
 public class AccountDetailResult extends RemoteCallResult {
 
+	@JacksonXmlProperty
     private String accountNo;
 
+	@JacksonXmlProperty
     private String accountName;
 
+	@JacksonXmlProperty
     private BigDecimal balance;
 
     public AccountDetailResult(String accountNo, String accountName, BigDecimal balance) {
@@ -53,7 +55,6 @@ public class AccountDetailResult extends RemoteCallResult {
         return accountNo;
     }
 
-    @XmlElement
     public void setAccountNo(String accountNo) {
         this.accountNo = accountNo;
     }
@@ -62,7 +63,6 @@ public class AccountDetailResult extends RemoteCallResult {
         return accountName;
     }
 
-    @XmlElement
     public void setAccountName(String accountName) {
         this.accountName = accountName;
     }
@@ -71,7 +71,6 @@ public class AccountDetailResult extends RemoteCallResult {
         return balance;
     }
 
-    @XmlElement
     public void setBalance(BigDecimal balance) {
         this.balance = balance;
     }

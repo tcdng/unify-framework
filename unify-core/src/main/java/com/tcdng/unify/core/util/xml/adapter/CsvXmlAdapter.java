@@ -15,8 +15,15 @@
  */
 package com.tcdng.unify.core.util.xml.adapter;
 
-import javax.xml.bind.annotation.adapters.XmlAdapter;
+import java.io.IOException;
 
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
 import com.tcdng.unify.core.util.StringUtils;
 
 /**
@@ -25,23 +32,32 @@ import com.tcdng.unify.core.util.StringUtils;
  * @author The Code Department
  * @since 1.0
  */
-public class CsvXmlAdapter extends XmlAdapter<String, String[]> {
+public class CsvXmlAdapter {
+    
+    public class Serializer extends JsonSerializer<String[]> {
 
-	@Override
-	public String marshal(String[] val) throws Exception {
-	    return StringUtils.buildCommaSeparatedString(val);
-	}
+		@Override
+		public void serialize(String[] value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+			gen.writeString(StringUtils.buildCommaSeparatedString(value));
+		}
+    	
+    }
+    
+    public class Deserializer extends JsonDeserializer<String[]> {
 
-	@Override
-	public String[] unmarshal(String val) throws Exception {
-	    String[] items = StringUtils.commaSplit(val);
-	    if (items != null) {
-	        for(int i = 0; i < items.length; i++) {
-	            items[i] = items[i].trim();
-	        }
-	    }
-	    
-	    return items;
-	}
+		@Override
+		public String[] deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+			String val = p.getText();
+		    String[] items = StringUtils.commaSplit(val);
+		    if (items != null) {
+		        for(int i = 0; i < items.length; i++) {
+		            items[i] = items[i].trim();
+		        }
+		    }
+		    
+		    return items;
+		}
+    	
+    }
 
 }
