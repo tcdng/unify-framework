@@ -28,7 +28,7 @@ import com.tcdng.unify.web.remotecall.RemoteCallResult;
  * @author The Code Department
  * @since 1.0
  */
-@JacksonXmlRootElement
+@JacksonXmlRootElement(localName = "accountDetailResult")
 @JsonPropertyOrder({ "accountNo", "accountName", "balance" })
 public class AccountDetailResult extends RemoteCallResult {
 
