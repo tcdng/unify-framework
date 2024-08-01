@@ -15,7 +15,7 @@
  */
 package com.tcdng.unify.core.security;
 
-import javax.xml.bind.DatatypeConverter;
+import java.util.Base64;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
@@ -46,7 +46,7 @@ public class TwoWayStringCryptographImpl extends AbstractTwoWayCryptograph imple
         try {
             if (string != null) {
                 byte encrypted[] = doEncrypt(string.getBytes("UTF-8"));
-                return DatatypeConverter.printBase64Binary(encrypted);
+                return Base64.getEncoder().encodeToString(encrypted);
             }
         } catch (UnifyException e) {
             throw e;
@@ -60,7 +60,7 @@ public class TwoWayStringCryptographImpl extends AbstractTwoWayCryptograph imple
     public String decrypt(String string) throws UnifyException {
         try {
             if (string != null) {
-                byte input[] = DatatypeConverter.parseBase64Binary(string);
+                byte input[] = Base64.getDecoder().decode(string);
                 byte decrypted[] = doDecrypt(input);
                 return new String(decrypted, "UTF-8");
             }
