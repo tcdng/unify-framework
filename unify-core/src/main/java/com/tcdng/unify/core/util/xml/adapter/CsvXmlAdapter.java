@@ -34,7 +34,7 @@ import com.tcdng.unify.core.util.StringUtils;
  */
 public class CsvXmlAdapter {
     
-    public class Serializer extends JsonSerializer<String[]> {
+    public static class Serializer extends JsonSerializer<String[]> {
 
 		@Override
 		public void serialize(String[] value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
@@ -43,7 +43,7 @@ public class CsvXmlAdapter {
     	
     }
     
-    public class Deserializer extends JsonDeserializer<String[]> {
+    public static class Deserializer extends JsonDeserializer<String[]> {
 
 		@Override
 		public String[] deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {

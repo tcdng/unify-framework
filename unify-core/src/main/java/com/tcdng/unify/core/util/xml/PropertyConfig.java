@@ -34,7 +34,7 @@ public class PropertyConfig {
     private String value;
 
 	@JacksonXmlElementWrapper(useWrapping = false)
-	@JacksonXmlProperty(localName = "value-item")
+	@JacksonXmlProperty(localName = "valueItem")
     private List<String> valueList;
 
 	@JacksonXmlProperty(isAttribute = true)

@@ -39,7 +39,7 @@ public class CDataXmlAdapter {
 
 	private static final String CDATA_BLANK = CDATA_START + CDATA_END;
     
-    public class Serializer extends JsonSerializer<String> {
+    public static class Serializer extends JsonSerializer<String> {
 
 		@Override
 		public void serialize(String value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
@@ -53,7 +53,7 @@ public class CDataXmlAdapter {
     	
     }
     
-    public class Deserializer extends JsonDeserializer<String> {
+    public static class Deserializer extends JsonDeserializer<String> {
 
 		@Override
 		public String deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {

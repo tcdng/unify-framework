@@ -132,9 +132,9 @@ public class UnifyConfigUtilsTest {
                 + "</properties>" + "<components>"
                 + " <component name=\"test-dummy\" class=\"com.tcdng.unify.core.TestDummyComponent\">" + "     <properties>"
                 + "         <property name=\"valueList\">"
-                + "             <value-item>com.tcdng.unify.core.resources.webtestmessages</value-item>"
-                + "             <value-item>com.tcdng.unify.core.resources.messages</value-item>"
-                + "             <value-item>com.tcdng.unify.core.resources.messages</value-item>" + "         </property>"
+                + "             <valueItem>com.tcdng.unify.core.resources.webtestmessages</valueItem>"
+                + "             <valueItem>com.tcdng.unify.core.resources.messages</valueItem>"
+                + "             <valueItem>com.tcdng.unify.core.resources.messages</valueItem>" + "         </property>"
                 + "     </properties>" + " </component>" + "</components>" + "</unify>";
         UnifyContainerConfig.Builder uccb = UnifyContainerConfig.newBuilder();
         UnifyConfigUtils.readConfigFromXml(uccb, configXml, null);
