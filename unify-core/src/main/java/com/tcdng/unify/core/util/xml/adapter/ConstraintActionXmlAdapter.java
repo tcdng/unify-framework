@@ -16,6 +16,8 @@
 package com.tcdng.unify.core.util.xml.adapter;
 
 import com.tcdng.unify.core.batch.ConstraintAction;
+import com.tcdng.unify.core.util.xml.AbstractEnumConstDeserializer;
+import com.tcdng.unify.core.util.xml.AbstractEnumConstSerializer;
 import com.tcdng.unify.core.util.xml.AbstractEnumConstXmlAdapter;
 
 /**
@@ -24,10 +26,21 @@ import com.tcdng.unify.core.util.xml.AbstractEnumConstXmlAdapter;
  * @author The Code Department
  * @since 1.0
  */
-public class ConstraintActionXmlAdapter extends AbstractEnumConstXmlAdapter<ConstraintAction> {
+public class ConstraintActionXmlAdapter extends AbstractEnumConstXmlAdapter {
+    
+    public static class Serializer extends AbstractEnumConstSerializer<ConstraintAction> {
+    	public Serializer() {
+    		
+    	}
 
-    public ConstraintActionXmlAdapter() {
-        super(ConstraintAction.class);
+    }
+    
+    public static class Deserializer extends AbstractEnumConstDeserializer<ConstraintAction> {
+
+		public Deserializer() {
+			super(ConstraintAction.class);
+		}
+
     }
 
 }

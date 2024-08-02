@@ -16,6 +16,8 @@
 package com.tcdng.unify.core.util.xml.adapter;
 
 import com.tcdng.unify.core.criterion.FilterConditionType;
+import com.tcdng.unify.core.util.xml.AbstractEnumConstDeserializer;
+import com.tcdng.unify.core.util.xml.AbstractEnumConstSerializer;
 import com.tcdng.unify.core.util.xml.AbstractEnumConstXmlAdapter;
 
 /**
@@ -24,10 +26,20 @@ import com.tcdng.unify.core.util.xml.AbstractEnumConstXmlAdapter;
  * @author The Code Department
  * @since 1.0
  */
-public class FilterConditionTypeXmlAdapter extends AbstractEnumConstXmlAdapter<FilterConditionType> {
+public class FilterConditionTypeXmlAdapter extends AbstractEnumConstXmlAdapter {
+    
+    public static class Serializer extends AbstractEnumConstSerializer<FilterConditionType> {
+    	public Serializer() {
+    		
+    	}
 
-    public FilterConditionTypeXmlAdapter() {
-        super(FilterConditionType.class);
     }
+    
+    public static class Deserializer extends AbstractEnumConstDeserializer<FilterConditionType> {
 
+		public Deserializer() {
+			super(FilterConditionType.class);
+		}
+
+    }
 }

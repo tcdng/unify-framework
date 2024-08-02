@@ -17,8 +17,8 @@ package com.tcdng.unify.core.util.xml;
 
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 /**
  * Property configuration.
@@ -27,12 +27,17 @@ import javax.xml.bind.annotation.XmlElement;
  */
 public class PropertyConfig {
 
+	@JacksonXmlProperty(isAttribute = true)
     private String name;
 
+	@JacksonXmlProperty(isAttribute = true)
     private String value;
 
+	@JacksonXmlElementWrapper(useWrapping = false)
+	@JacksonXmlProperty(localName = "valueItem")
     private List<String> valueList;
 
+	@JacksonXmlProperty(isAttribute = true)
     private Boolean hidden;
 
     public PropertyConfig(String name, String value) {
@@ -53,7 +58,6 @@ public class PropertyConfig {
         return name;
     }
 
-    @XmlAttribute(required = true)
     public void setName(String name) {
         this.name = name;
     }
@@ -62,7 +66,6 @@ public class PropertyConfig {
         return value;
     }
 
-    @XmlAttribute
     public void setValue(String value) {
         this.value = value;
     }
@@ -71,7 +74,6 @@ public class PropertyConfig {
         return valueList;
     }
 
-    @XmlElement(name = "value")
     public void setValueList(List<String> valueList) {
         this.valueList = valueList;
     }
@@ -80,7 +82,6 @@ public class PropertyConfig {
         return hidden;
     }
 
-    @XmlAttribute
     public void setHidden(Boolean hidden) {
         this.hidden = hidden;
     }

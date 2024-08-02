@@ -15,20 +15,26 @@
  */
 package com.tcdng.unify.web.remotecall;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 /**
  * Remote call result.
  * 
  * @author Lateef
  */
+@JsonInclude(Include.NON_NULL)
 public abstract class RemoteCallResult {
 
+	@JacksonXmlProperty(isAttribute = true)
     private String methodCode;
 
+	@JacksonXmlProperty(isAttribute = true)
     private String errorCode;
 
+	@JacksonXmlProperty
     private String errorMsg;
 
     public RemoteCallResult(String methodCode, String errorCode, String errorMsg) {
@@ -45,7 +51,6 @@ public abstract class RemoteCallResult {
         return methodCode;
     }
 
-    @XmlAttribute
     public void setMethodCode(String methodCode) {
         this.methodCode = methodCode;
     }
@@ -54,7 +59,6 @@ public abstract class RemoteCallResult {
         return errorCode;
     }
 
-    @XmlAttribute
     public void setErrorCode(String errorCode) {
         this.errorCode = errorCode;
     }
@@ -63,11 +67,11 @@ public abstract class RemoteCallResult {
         return errorMsg;
     }
 
-    @XmlElement
     public void setErrorMsg(String errorMsg) {
         this.errorMsg = errorMsg;
     }
 
+    @JsonIgnore
     public boolean isError() {
         return errorCode != null || errorMsg != null;
     }

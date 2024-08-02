@@ -15,7 +15,7 @@
  */
 package com.tcdng.unify.web.remotecall;
 
-import javax.xml.bind.annotation.XmlAttribute;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 /**
  * Remote call parameter.
@@ -25,8 +25,10 @@ import javax.xml.bind.annotation.XmlAttribute;
  */
 public abstract class RemoteCallParams {
 
+	@JacksonXmlProperty(isAttribute = true)
     private String methodCode;
 
+	@JacksonXmlProperty(isAttribute = true)
     private String clientAppCode;
 
     public RemoteCallParams(String methodCode, String clientAppCode) {
@@ -46,7 +48,6 @@ public abstract class RemoteCallParams {
         return methodCode;
     }
 
-    @XmlAttribute(required = true)
     public void setMethodCode(String methodCode) {
         this.methodCode = methodCode;
     }
@@ -55,7 +56,6 @@ public abstract class RemoteCallParams {
         return clientAppCode;
     }
 
-    @XmlAttribute(required = true)
     public void setClientAppCode(String clientAppCode) {
         this.clientAppCode = clientAppCode;
     }

@@ -15,32 +15,11 @@
  */
 package com.tcdng.unify.core.util.xml;
 
-import javax.xml.bind.annotation.adapters.XmlAdapter;
-
-import com.tcdng.unify.common.constants.EnumConst;
-import com.tcdng.unify.core.util.EnumUtils;
-
 /**
  * Convenient abstract enumeration constants XML adapter class.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public abstract class AbstractEnumConstXmlAdapter<T extends EnumConst> extends XmlAdapter<String, T> {
-
-    private Class<T> clazz;
-
-    public AbstractEnumConstXmlAdapter(Class<T> clazz) {
-        this.clazz = clazz;
-    }
-
-    @Override
-    public String marshal(T type) throws Exception {
-        return type != null ? type.name() : null;
-    }
-
-    @Override
-    public T unmarshal(String typeStr) throws Exception {
-        return EnumUtils.fromName(clazz, typeStr);
-    }
+public abstract class AbstractEnumConstXmlAdapter {
 }

@@ -17,6 +17,8 @@
 package com.tcdng.unify.core.util.xml.adapter;
 
 import com.tcdng.unify.core.constant.TextCase;
+import com.tcdng.unify.core.util.xml.AbstractEnumConstDeserializer;
+import com.tcdng.unify.core.util.xml.AbstractEnumConstSerializer;
 import com.tcdng.unify.core.util.xml.AbstractEnumConstXmlAdapter;
 
 /**
@@ -25,9 +27,20 @@ import com.tcdng.unify.core.util.xml.AbstractEnumConstXmlAdapter;
  * @author The Code Department
  * @since 1.0
  */
-public class TextCaseXmlAdapter extends AbstractEnumConstXmlAdapter<TextCase> {
+public class TextCaseXmlAdapter extends AbstractEnumConstXmlAdapter {
+    
+    public static class Serializer extends AbstractEnumConstSerializer<TextCase> {
+    	public Serializer() {
+    		
+    	}
 
-    public TextCaseXmlAdapter() {
-        super(TextCase.class);
+    }
+    
+    public static class Deserializer extends AbstractEnumConstDeserializer<TextCase> {
+
+		public Deserializer() {
+			super(TextCase.class);
+		}
+
     }
 }

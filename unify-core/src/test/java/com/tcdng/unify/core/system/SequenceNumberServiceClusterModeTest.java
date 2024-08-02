@@ -80,7 +80,7 @@ public class SequenceNumberServiceClusterModeTest extends AbstractUnifyComponent
         assertEquals(Long.valueOf(16L), snService.getCachedBlockNextSequenceNumber("sequenceA"));
     }
 
-    @Test
+    @Test(timeout = 20000)
     public void testMultiThreadGetCachedBlockNextSequenceNumber() throws Exception {
         SequenceNumberService snService = getSequenceNumberService();
         snService.ensureCachedBlockSequence("sequenceA");
@@ -234,7 +234,7 @@ public class SequenceNumberServiceClusterModeTest extends AbstractUnifyComponent
         assertEquals(Long.valueOf(1), sequenceNo3);
     }
 
-    @Test
+    @Test(timeout = 20000)
     public void testMultiThreadGetNextDateSequenceNumber() throws Exception {
         getSequenceNumberService();
 
@@ -347,7 +347,7 @@ public class SequenceNumberServiceClusterModeTest extends AbstractUnifyComponent
         assertEquals(id4, id8);
     }
 
-    @Test
+    @Test(timeout = 20000)
     public void testMultiThreadGetUniqueStringId() throws Exception {
         getSequenceNumberService();
 

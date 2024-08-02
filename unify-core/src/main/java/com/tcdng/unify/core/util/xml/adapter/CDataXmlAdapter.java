@@ -15,7 +15,15 @@
  */
 package com.tcdng.unify.core.util.xml.adapter;
 
-import javax.xml.bind.annotation.adapters.XmlAdapter;
+import java.io.IOException;
+
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
 
 /**
  * CData XML adapter.
@@ -23,31 +31,40 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
  * @author The Code Department
  * @since 1.0
  */
-public class CDataXmlAdapter extends XmlAdapter<String, String> {
+public class CDataXmlAdapter {
 
 	private static final String CDATA_START = "<![CDATA[";
 
 	private static final String CDATA_END = "]]>";
 
 	private static final String CDATA_BLANK = CDATA_START + CDATA_END;
+    
+    public static class Serializer extends JsonSerializer<String> {
 
-	@Override
-	public String marshal(String val) throws Exception {
-		if (val != null) {
-			return CDATA_START + val + CDATA_END;
+		@Override
+		public void serialize(String value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+			if (value != null) {
+				gen.writeString(CDATA_START + value + CDATA_END);
+				return;
+			}
+
+			gen.writeString(CDATA_BLANK);
 		}
+    	
+    }
+    
+    public static class Deserializer extends JsonDeserializer<String> {
 
-		return CDATA_BLANK;
-	}
+		@Override
+		public String deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+			String val = p.getText();
+			if (val != null && val.startsWith(CDATA_START) && val.endsWith(CDATA_END)) {
+				return val.substring(CDATA_START.length(), val.length() - CDATA_END.length());
 
-	@Override
-	public String unmarshal(String val) throws Exception {
-		if (val != null && val.startsWith(CDATA_START) && val.endsWith(CDATA_END)) {
-			return val.substring(CDATA_START.length(), val.length() - CDATA_END.length());
+			}
 
+			return val;
 		}
-
-		return val;
-	}
-
+    	
+    }
 }

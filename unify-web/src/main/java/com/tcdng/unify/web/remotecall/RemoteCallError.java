@@ -15,7 +15,7 @@
  */
 package com.tcdng.unify.web.remotecall;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
 /**
  * Remote call error.
@@ -23,7 +23,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Lateef
  * @since 1.0
  */
-@XmlRootElement
+@JacksonXmlRootElement
 public class RemoteCallError extends RemoteCallResult {
 
     public RemoteCallError(String methodCode, String errorCode, String errorMsg) {

@@ -15,7 +15,7 @@
  */
 package com.tcdng.unify.core.util.xml;
 
-import javax.xml.bind.annotation.XmlAttribute;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 /**
  * Unify alias configuration.
@@ -24,15 +24,16 @@ import javax.xml.bind.annotation.XmlAttribute;
  */
 public class AliasConfig {
 
+	@JacksonXmlProperty(isAttribute = true)
     private String name;
 
+	@JacksonXmlProperty(isAttribute = true)
     private String actualName;
 
     public String getName() {
         return name;
     }
 
-    @XmlAttribute(required = true)
     public void setName(String name) {
         this.name = name;
     }
@@ -41,7 +42,6 @@ public class AliasConfig {
         return actualName;
     }
 
-    @XmlAttribute(required = true)
     public void setActualName(String actualName) {
         this.actualName = actualName;
     }

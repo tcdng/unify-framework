@@ -39,6 +39,10 @@ public class DateSequenceNumberTask extends AbstractTask {
 
     @Override
     public void execute(TaskMonitor taskMonitor, TaskInput input) throws UnifyException {
+        while (sequenceNumberService == null) {
+            Thread.yield();
+        }
+
         int iterations = input.getParam(int.class, DateSequenceNumberTaskConstants.ITERATIONS);
         Date testDate = input.getParam(Date.class, DateSequenceNumberTaskConstants.DATE);
         String testSequenceName = input.getParam(String.class, DateSequenceNumberTaskConstants.SEQUENCENAME);

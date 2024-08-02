@@ -17,10 +17,9 @@ package com.tcdng.unify.core.stream;
 
 import java.math.BigDecimal;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
 /**
  * Data object for tests.
@@ -28,16 +27,20 @@ import javax.xml.bind.annotation.XmlType;
  * @author The Code Department
  * @since 1.0
  */
-@XmlRootElement
-@XmlType(propOrder = { "title", "price", "quantity" })
+@JacksonXmlRootElement(localName = "book")
+@JsonPropertyOrder({ "title", "price", "quantity" })
 public class Book {
 
+	@JacksonXmlProperty
     private String title;
 
+	@JacksonXmlProperty(isAttribute = true)
     private String genre;
 
+	@JacksonXmlProperty
     private BigDecimal price;
 
+	@JacksonXmlProperty
     private int quantity;
 
     public Book(String title, String genre, BigDecimal price, int quantity) {
@@ -55,7 +58,6 @@ public class Book {
         return title;
     }
 
-    @XmlElement
     public void setTitle(String title) {
         this.title = title;
     }
@@ -64,7 +66,6 @@ public class Book {
         return genre;
     }
 
-    @XmlAttribute
     public void setGenre(String genre) {
         this.genre = genre;
     }
@@ -73,7 +74,6 @@ public class Book {
         return price;
     }
 
-    @XmlElement
     public void setPrice(BigDecimal price) {
         this.price = price;
     }
@@ -82,7 +82,6 @@ public class Book {
         return quantity;
     }
 
-    @XmlElement
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }

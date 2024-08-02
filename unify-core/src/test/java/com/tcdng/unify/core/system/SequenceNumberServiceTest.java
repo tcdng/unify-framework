@@ -78,7 +78,7 @@ public class SequenceNumberServiceTest extends AbstractUnifyComponentTest {
 		assertEquals(Long.valueOf(16L), snService.getCachedBlockNextSequenceNumber("sequenceA"));
 	}
 
-	@Test
+	@Test(timeout = 20000)
 	public void testMultiThreadGetCachedBlockNextSequenceNumber() throws Exception {
 		SequenceNumberService snService = getSequenceNumberService();
 		snService.ensureCachedBlockSequence("sequenceA");
@@ -104,10 +104,11 @@ public class SequenceNumberServiceTest extends AbstractUnifyComponentTest {
 		inputParameters4.put(SequenceTestTaskConstants.SEQUENCECOUNT, 206);
 		TaskMonitor taskMonitor4 = taskManager.startTask("clustersequenceblock-test", inputParameters4, false);
 
-		while (!taskMonitor1.isDone() || !taskMonitor2.isDone() || !taskMonitor3.isDone() || !taskMonitor4.isDone()) {
+		while (!taskMonitor1.isExited() || !taskMonitor2.isExited() || !taskMonitor3.isExited()
+				|| !taskMonitor4.isExited()) {
 			Thread.yield();
 		}
-
+		
 		Long sequenceNo = snService.getCachedBlockNextSequenceNumber("sequenceA");
 		assertEquals(Long.valueOf(773L + 411L + 1L), sequenceNo);
 
@@ -119,7 +120,7 @@ public class SequenceNumberServiceTest extends AbstractUnifyComponentTest {
 	}
 
 	@SuppressWarnings("unchecked")
-	@Test
+	@Test(timeout = 20000)
 	public void testMultiThreadGetNextSequenceNumber() throws Exception {
 		SequenceNumberService snService = getSequenceNumberService();
 		snService.ensureCachedBlockSequence("sequenceA");
@@ -135,7 +136,7 @@ public class SequenceNumberServiceTest extends AbstractUnifyComponentTest {
 		inputParameters2.put(SequenceTestTaskConstants.SEQUENCECOUNT, 181);
 		TaskMonitor taskMonitor2 = taskManager.startTask("clustersequence-test", inputParameters2, false);
 
-		while (!taskMonitor1.isDone() || !taskMonitor2.isDone()) {
+		while (!taskMonitor1.isExited() || !taskMonitor2.isExited()) {
 			Thread.yield();
 		}
 
@@ -263,7 +264,7 @@ public class SequenceNumberServiceTest extends AbstractUnifyComponentTest {
 		assertEquals(Long.valueOf(1), sequenceNo3);
 	}
 
-	@Test
+	@Test(timeout = 20000)
 	public void testMultiThreadGetNextDateSequenceNumber() throws Exception {
 		TaskManager taskManager = (TaskManager) getComponent(ApplicationComponents.APPLICATION_TASKMANAGER);
 		Date testDate = new Date();
@@ -291,13 +292,26 @@ public class SequenceNumberServiceTest extends AbstractUnifyComponentTest {
 		inputParameters4.put(DateSequenceNumberTaskConstants.ITERATIONS, 28);
 		TaskMonitor taskMonitor4 = taskManager.startTask("datesequencenumber-task", inputParameters4, true);
 
-		while (!taskMonitor1.isDone() || !taskMonitor2.isDone() || !taskMonitor3.isDone() || !taskMonitor4.isDone()) {
+		while (!taskMonitor1.isExited() || !taskMonitor2.isExited() || !taskMonitor3.isExited()
+				|| !taskMonitor4.isExited()) {
 			Thread.yield();
 		}
 
+		if (taskMonitor1.getExceptions().length > 0) {
+			taskMonitor1.getExceptions()[0].printStackTrace();
+		}
 		assertEquals("Test task 1 failed", 0, taskMonitor1.getExceptions().length);
+		if (taskMonitor2.getExceptions().length > 0) {
+			taskMonitor2.getExceptions()[0].printStackTrace();
+		}
 		assertEquals("Test task 2 failed", 0, taskMonitor2.getExceptions().length);
+		if (taskMonitor3.getExceptions().length > 0) {
+			taskMonitor3.getExceptions()[0].printStackTrace();
+		}
 		assertEquals("Test task 3 failed", 0, taskMonitor3.getExceptions().length);
+		if (taskMonitor4.getExceptions().length > 0) {
+			taskMonitor4.getExceptions()[0].printStackTrace();
+		}
 		assertEquals("Test task 4 failed", 0, taskMonitor4.getExceptions().length);
 	}
 
@@ -374,7 +388,7 @@ public class SequenceNumberServiceTest extends AbstractUnifyComponentTest {
 		assertEquals(id4, id8);
 	}
 
-	@Test
+	@Test(timeout = 20000)
 	public void testMultiThreadGetUniqueStringId() throws Exception {
 		String[] uniqueString = { "this.is.a.unique.string", "this.is.another.unique.string",
 				"this.is.some.other.unique.string" };
@@ -400,7 +414,8 @@ public class SequenceNumberServiceTest extends AbstractUnifyComponentTest {
 		inputParameters4.put(UniqueStringTestTaskConstants.ITERATIONS, 28);
 		TaskMonitor taskMonitor4 = taskManager.startTask("uniquestringtest-task", inputParameters4, true);
 
-		while (!taskMonitor1.isDone() || !taskMonitor2.isDone() || !taskMonitor3.isDone() || !taskMonitor4.isDone()) {
+		while (!taskMonitor1.isExited() || !taskMonitor2.isExited() || !taskMonitor3.isExited()
+				|| !taskMonitor4.isExited()) {
 			Thread.yield();
 		}
 

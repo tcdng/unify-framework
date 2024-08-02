@@ -40,6 +40,10 @@ public class UniqueStringTestTask extends AbstractTask {
 
     @Override
     public void execute(TaskMonitor taskMonitor, TaskInput taskInput) throws UnifyException {
+        while (sequenceNumberService == null) {
+            Thread.yield();
+        }
+
         Map<String, Long> resultMap = new HashMap<String, Long>();
         int iterations = taskInput.getParam(int.class, UniqueStringTestTaskConstants.ITERATIONS);
         for (int i = 0; i < iterations; i++) {

@@ -15,8 +15,7 @@
  */
 package com.tcdng.unify.core.util.xml;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 /**
  * Unify component configuration.
@@ -25,21 +24,25 @@ import javax.xml.bind.annotation.XmlElement;
  */
 public class ComponentConfig {
 
+	@JacksonXmlProperty(isAttribute = true)
     private String name;
 
+	@JacksonXmlProperty(isAttribute = true)
     private String description;
 
+	@JacksonXmlProperty(localName = "class", isAttribute = true)
     private String className;
 
+	@JacksonXmlProperty(isAttribute = true)
     private Boolean singleton;
 
+	@JacksonXmlProperty(localName = "properties")
     private PropertiesConfig propertiesConfig;
 
     public String getName() {
         return name;
     }
 
-    @XmlAttribute
     public void setName(String name) {
         this.name = name;
     }
@@ -48,7 +51,6 @@ public class ComponentConfig {
         return description;
     }
 
-    @XmlAttribute
     public void setDescription(String description) {
         this.description = description;
     }
@@ -57,7 +59,6 @@ public class ComponentConfig {
         return className;
     }
 
-    @XmlAttribute(name = "class", required = true)
     public void setClassName(String className) {
         this.className = className;
     }
@@ -66,7 +67,6 @@ public class ComponentConfig {
         return singleton;
     }
 
-    @XmlAttribute
     public void setSingleton(Boolean singleton) {
         this.singleton = singleton;
     }
@@ -75,7 +75,6 @@ public class ComponentConfig {
         return propertiesConfig;
     }
 
-    @XmlElement(name = "properties")
     public void setPropertiesConfig(PropertiesConfig propertiesConfig) {
         this.propertiesConfig = propertiesConfig;
     }

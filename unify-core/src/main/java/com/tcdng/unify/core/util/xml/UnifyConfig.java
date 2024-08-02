@@ -15,37 +15,41 @@
  */
 package com.tcdng.unify.core.util.xml;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
 /**
  * Unify configuration.
  * 
  * @author The Code Department
  */
-@XmlRootElement(name = "unify")
-@XmlType (propOrder={"propertiesConfig", "componentsConfig"})
+@JacksonXmlRootElement(localName = "unify")
+@JsonPropertyOrder({"propertiesConfig", "componentsConfig" })
 public class UnifyConfig {
 
+	@JacksonXmlProperty(isAttribute = true)
     private String version;
 
+	@JacksonXmlProperty(isAttribute = true)
     private String nodeId;
 
+	@JacksonXmlProperty(isAttribute = true)
     private boolean cluster;
 
+	@JacksonXmlProperty(isAttribute = true)
     private boolean production;
 
+	@JacksonXmlProperty(localName = "properties")
     private PropertiesConfig propertiesConfig;
 
+	@JacksonXmlProperty(localName = "components")
     private ComponentsConfig componentsConfig;
 
     public String getVersion() {
         return version;
     }
 
-    @XmlAttribute(required = true)
     public void setVersion(String version) {
         this.version = version;
     }
@@ -54,7 +58,6 @@ public class UnifyConfig {
         return nodeId;
     }
 
-    @XmlAttribute(required = true)
     public void setNodeId(String nodeId) {
         this.nodeId = nodeId;
     }
@@ -63,7 +66,6 @@ public class UnifyConfig {
         return production;
     }
 
-    @XmlAttribute(required = true)
     public void setProduction(boolean production) {
         this.production = production;
     }
@@ -72,7 +74,6 @@ public class UnifyConfig {
         return cluster;
     }
 
-    @XmlAttribute(required = true)
     public void setCluster(boolean cluster) {
         this.cluster = cluster;
     }
@@ -81,7 +82,6 @@ public class UnifyConfig {
         return propertiesConfig;
     }
 
-    @XmlElement(name = "properties")
     public void setPropertiesConfig(PropertiesConfig propertiesConfig) {
         this.propertiesConfig = propertiesConfig;
     }
@@ -90,7 +90,6 @@ public class UnifyConfig {
         return componentsConfig;
     }
 
-    @XmlElement(name = "components")
     public void setComponentsConfig(ComponentsConfig componentsConfig) {
         this.componentsConfig = componentsConfig;
     }

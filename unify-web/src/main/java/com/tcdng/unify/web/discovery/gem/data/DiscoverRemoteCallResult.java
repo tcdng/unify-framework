@@ -15,9 +15,8 @@
  */
 package com.tcdng.unify.web.discovery.gem.data;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.tcdng.unify.web.remotecall.RemoteCallResult;
 
 /**
@@ -26,16 +25,16 @@ import com.tcdng.unify.web.remotecall.RemoteCallResult;
  * @author The Code Department
  * @since 1.0
  */
-@XmlRootElement
+@JacksonXmlRootElement
 public class DiscoverRemoteCallResult extends RemoteCallResult {
 
+	@JacksonXmlProperty
     private APIDiscoveryRemoteCallInfo remoteCallInfo;
 
     public APIDiscoveryRemoteCallInfo getRemoteCallInfo() {
         return remoteCallInfo;
     }
 
-    @XmlElement(required = true)
     public void setRemoteCallInfo(APIDiscoveryRemoteCallInfo remoteCallInfo) {
         this.remoteCallInfo = remoteCallInfo;
     }

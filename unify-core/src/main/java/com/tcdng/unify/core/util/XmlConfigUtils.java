@@ -17,25 +17,15 @@ package com.tcdng.unify.core.util;
 
 import java.io.CharArrayReader;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.ValidationEvent;
-import javax.xml.bind.ValidationEventHandler;
-import javax.xml.parsers.SAXParserFactory;
-import javax.xml.transform.sax.SAXSource;
-
-import org.xml.sax.InputSource;
-import org.xml.sax.XMLReader;
-
-import com.sun.xml.bind.marshaller.CharacterEscapeHandler;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.UnifyOperationException;
 
@@ -51,36 +41,19 @@ public final class XmlConfigUtils {
 
     }
 
-    @SuppressWarnings("unchecked")
     public static <T> T readXmlConfig(Class<T> xmlDataClazz, Object xmlSrcObject) throws UnifyException {
         try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(xmlDataClazz);
-            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-            jaxbUnmarshaller.setEventHandler(new ValidationEventHandler() {
-                @Override
-                public boolean handleEvent(ValidationEvent event) {
-                    return false;
-                }
-            });
-
-            XMLReader xmlReader = SAXParserFactory.newInstance().newSAXParser().getXMLReader();
-            // Disable JAXB DTD validation
-            xmlReader.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
-            xmlReader.setFeature("http://xml.org/sax/features/validation", false);
-
+            XmlMapper unmarshaller = new XmlMapper();
             if (xmlSrcObject instanceof String) {
                 Reader reader = new CharArrayReader(((String) xmlSrcObject).toCharArray());
-                return (T) jaxbUnmarshaller.unmarshal(new SAXSource(xmlReader, new InputSource(reader)));
+                return unmarshaller.readValue(reader, xmlDataClazz);
             } else if (xmlSrcObject instanceof Reader) {
-                return (T) jaxbUnmarshaller.unmarshal(new SAXSource(xmlReader, new InputSource((Reader) xmlSrcObject)));
+                return unmarshaller.readValue((Reader) xmlSrcObject, xmlDataClazz);
             } else if (xmlSrcObject instanceof InputStream) {
-                return (T) jaxbUnmarshaller
-                        .unmarshal(new SAXSource(xmlReader, new InputSource((InputStream) xmlSrcObject)));
-            } else if (xmlSrcObject instanceof InputSource) {
-                return (T) jaxbUnmarshaller.unmarshal((InputSource) xmlSrcObject);
+                return unmarshaller.readValue((InputStream) xmlSrcObject, xmlDataClazz);
             }
 
-            return (T) jaxbUnmarshaller.unmarshal((File) xmlSrcObject);
+            return unmarshaller.readValue((File) xmlSrcObject, xmlDataClazz);
         } catch (Exception e) {
             throw new UnifyOperationException(e,
                     XmlConfigUtils.class.getName());
@@ -117,14 +90,10 @@ public final class XmlConfigUtils {
 
     private static void writeXmlConfig(Object configObject, OutputStream outputStream, boolean noEscape) throws UnifyException {
         try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(configObject.getClass());
-            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            if (noEscape) {
-            	jaxbMarshaller.setProperty("com.sun.xml.bind.characterEscapeHandler", new NoEscapeHandler()); 
-            }
-            
-            jaxbMarshaller.marshal(configObject, outputStream);
+            XmlMapper marshaller = new XmlMapper();
+			marshaller.enable(SerializationFeature.INDENT_OUTPUT);
+			marshaller.disable(JsonGenerator.Feature.AUTO_CLOSE_TARGET);
+			marshaller.writeValue(outputStream, configObject);
             outputStream.flush();
         } catch (Exception e) {
             throw new UnifyOperationException(e, XmlConfigUtils.class.getName());
@@ -133,25 +102,14 @@ public final class XmlConfigUtils {
 
     private static void writeXmlConfig(Object configObject, Writer writer, boolean noEscape) throws UnifyException {
         try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(configObject.getClass());
-            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            if (noEscape) {
-            	jaxbMarshaller.setProperty("com.sun.xml.bind.characterEscapeHandler", new NoEscapeHandler()); 
-            }
-            
-            jaxbMarshaller.marshal(configObject, writer);
+            XmlMapper marshaller = new XmlMapper();
+			marshaller.enable(SerializationFeature.INDENT_OUTPUT);
+			marshaller.disable(JsonGenerator.Feature.AUTO_CLOSE_TARGET);
+			marshaller.writeValue(writer, configObject);
             writer.flush();
         } catch (Exception e) {
             throw new UnifyOperationException(e, XmlConfigUtils.class.getName());
         }
     }
-    
-    private static class NoEscapeHandler implements CharacterEscapeHandler {
 
-        @Override
-        public void escape(char[] ch, int start, int length, boolean isAttVal, Writer out) throws IOException {
-            out.write(ch, start, length);
-        }  
-    }
 }

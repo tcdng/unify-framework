@@ -16,6 +16,8 @@
 package com.tcdng.unify.core.util.xml.adapter;
 
 import com.tcdng.unify.core.constant.RequirementType;
+import com.tcdng.unify.core.util.xml.AbstractEnumConstDeserializer;
+import com.tcdng.unify.core.util.xml.AbstractEnumConstSerializer;
 import com.tcdng.unify.core.util.xml.AbstractEnumConstXmlAdapter;
 
 /**
@@ -24,10 +26,20 @@ import com.tcdng.unify.core.util.xml.AbstractEnumConstXmlAdapter;
  * @author The Code Department
  * @since 1.0
  */
-public class RequirementTypeXmlAdapter extends AbstractEnumConstXmlAdapter<RequirementType> {
+public class RequirementTypeXmlAdapter extends AbstractEnumConstXmlAdapter {
+    
+    public static class Serializer extends AbstractEnumConstSerializer<RequirementType> {
+    	public Serializer() {
+    		
+    	}
 
-    public RequirementTypeXmlAdapter() {
-        super(RequirementType.class);
     }
+    
+    public static class Deserializer extends AbstractEnumConstDeserializer<RequirementType> {
 
+		public Deserializer() {
+			super(RequirementType.class);
+		}
+
+    }
 }
