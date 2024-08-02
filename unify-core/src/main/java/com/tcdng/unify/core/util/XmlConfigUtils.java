@@ -23,6 +23,7 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
 
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.tcdng.unify.core.UnifyException;
@@ -91,6 +92,7 @@ public final class XmlConfigUtils {
         try {
             XmlMapper marshaller = new XmlMapper();
 			marshaller.enable(SerializationFeature.INDENT_OUTPUT);
+			marshaller.disable(JsonGenerator.Feature.AUTO_CLOSE_TARGET);
 			marshaller.writeValue(outputStream, configObject);
             outputStream.flush();
         } catch (Exception e) {
@@ -102,6 +104,7 @@ public final class XmlConfigUtils {
         try {
             XmlMapper marshaller = new XmlMapper();
 			marshaller.enable(SerializationFeature.INDENT_OUTPUT);
+			marshaller.disable(JsonGenerator.Feature.AUTO_CLOSE_TARGET);
 			marshaller.writeValue(writer, configObject);
             writer.flush();
         } catch (Exception e) {
