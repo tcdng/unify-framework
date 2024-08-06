@@ -15,6 +15,8 @@
  */
 package com.tcdng.unify.core.util.xml;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 /**
@@ -22,6 +24,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
  * 
  * @author The Code Department
  */
+@JsonInclude(Include.NON_NULL)
 public class ComponentConfig {
 
 	@JacksonXmlProperty(isAttribute = true)

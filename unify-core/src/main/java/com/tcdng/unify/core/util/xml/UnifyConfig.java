@@ -15,6 +15,8 @@
  */
 package com.tcdng.unify.core.util.xml;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
@@ -24,6 +26,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
  * 
  * @author The Code Department
  */
+@JsonInclude(Include.NON_NULL)
 @JacksonXmlRootElement(localName = "unify")
 @JsonPropertyOrder({"propertiesConfig", "componentsConfig" })
 public class UnifyConfig {
