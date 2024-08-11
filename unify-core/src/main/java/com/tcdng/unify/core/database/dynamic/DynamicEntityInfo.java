@@ -348,18 +348,19 @@ public class DynamicEntityInfo {
 		}
 
 		public Builder addForeignKeyField(DynamicFieldType type, DynamicEntityInfo parentDynamicEntityInfo,
-				String columnName, String fieldName, String defaultVal, boolean nullable) throws UnifyException {
+				String columnName, String fieldName, String defaultVal, boolean unlinked, boolean nullable)
+				throws UnifyException {
 			checkFieldNameExist(fieldName);
 			fkFields.put(fieldName, new DynamicForeignKeyFieldInfo(type, parentDynamicEntityInfo, columnName, fieldName,
-					defaultVal, nullable));
+					defaultVal, unlinked, nullable));
 			return this;
 		}
 
 		public Builder addForeignKeyField(DynamicFieldType type, String enumClassName, String columnName,
-				String fieldName, String defaultVal, boolean nullable) throws UnifyException {
+				String fieldName, String defaultVal, boolean unlinked, boolean nullable) throws UnifyException {
 			checkFieldNameExist(fieldName);
-			fkFields.put(fieldName,
-					new DynamicForeignKeyFieldInfo(type, enumClassName, columnName, fieldName, defaultVal, nullable));
+			fkFields.put(fieldName, new DynamicForeignKeyFieldInfo(type, enumClassName, columnName, fieldName,
+					defaultVal, unlinked, nullable));
 			return this;
 		}
 

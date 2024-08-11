@@ -441,6 +441,11 @@ public final class DynamicEntityUtils {
 			fsb.append("defaultVal = \"").append(dynamicForeignKeyFieldInfo.getDefaultVal()).append("\"");
 		}
 
+		if (dynamicForeignKeyFieldInfo.isUnlinked()) {
+			appendSym = appendSymbol(fsb, appendSym);
+			fsb.append("childKey = false");
+		}
+
 		if (dynamicForeignKeyFieldInfo.isNullable()) {
 			appendSym = appendSymbol(fsb, appendSym);
 			fsb.append("nullable = true");
