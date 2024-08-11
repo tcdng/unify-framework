@@ -90,6 +90,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("cut", "f0c4");
         registerSymbol("database", "f1c0");
         registerSymbol("desktop", "f108");
+        registerSymbol("diff", "f53e");
         registerSymbol("directions", "f5eb");
         registerSymbol("door-open", "f52b");
         registerSymbol("download", "f019");
