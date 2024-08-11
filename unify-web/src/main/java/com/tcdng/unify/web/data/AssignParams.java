@@ -31,72 +31,80 @@ import com.tcdng.unify.core.util.StringUtils;
  */
 public class AssignParams extends AbstractListParam {
 
-    private final List<String> assignedIdList;
+	private final List<Object> assignedIdList;
 
-    private final Long assignBaseId;
-    
-    private final String rule;
-    
-    private final String filterId1;
+	private final Long assignBaseId;
 
-    private final String filterId2;
+	private final String rule;
 
-    public AssignParams(Long assignBaseId, List<String> assignedIdList, String rule, String filterId1,
-            String filterId2) {
-        this.assignBaseId = assignBaseId;
-        this.assignedIdList = assignedIdList;
-        this.rule = rule;
-        this.filterId1 = filterId1;
-        this.filterId2 = filterId2;
-    }
+	private final String filterId1;
 
-    public Long getAssignBaseId() {
-        return assignBaseId;
-    }
+	private final String filterId2;
 
-    public List<String> getAssignedIdList() {
-        return assignedIdList;
-    }
+	public AssignParams(Long assignBaseId, List<Object> assignedIdList, String rule, String filterId1,
+			String filterId2) {
+		this.assignBaseId = assignBaseId;
+		this.assignedIdList = assignedIdList;
+		this.rule = rule;
+		this.filterId1 = filterId1;
+		this.filterId2 = filterId2;
+	}
 
-    @SuppressWarnings("unchecked")
-    public <T> List<T> getAssignedIdList(Class<T> dataType) throws UnifyException {
-        return (List<T>) DataUtils.convert(List.class, dataType, assignedIdList);
-    }
+	public AssignParams(List<Object> assignedIdList) {
+		this.assignedIdList = assignedIdList;
+		this.assignBaseId = null;
+		this.rule = null;
+		this.filterId1 = null;
+		this.filterId2 = null;
+	}
 
-    public String getRule() {
-        return rule;
-    }
+	public Long getAssignBaseId() {
+		return assignBaseId;
+	}
 
-    public String getFilterId1() {
-        return filterId1;
-    }
+	public List<String> getAssignedIdList() throws UnifyException {
+		return getAssignedIdList(String.class);
+	}
 
-    public <T> T getFilterId1(Class<T> dataType) throws UnifyException {
-        return DataUtils.convert(dataType, filterId1);
-    }
+	@SuppressWarnings("unchecked")
+	public <T> List<T> getAssignedIdList(Class<T> dataType) throws UnifyException {
+		return (List<T>) DataUtils.convert(List.class, dataType, assignedIdList);
+	}
 
-    public String getFilterId2() {
-        return filterId2;
-    }
+	public String getRule() {
+		return rule;
+	}
 
-    public <T> T getFilterId2(Class<T> dataType) throws UnifyException {
-        return DataUtils.convert(dataType, filterId2);
-    }
+	public String getFilterId1() {
+		return filterId1;
+	}
 
-    public boolean isAssignedIdList() {
-        return assignedIdList != null && !assignedIdList.isEmpty();
-    }
+	public <T> T getFilterId1(Class<T> dataType) throws UnifyException {
+		return DataUtils.convert(dataType, filterId1);
+	}
 
-    public boolean isEmpty() {
-        return assignedIdList == null && filterId1 == null && filterId2 == null;
-    }
+	public String getFilterId2() {
+		return filterId2;
+	}
 
-    public boolean isWithRule() {
-        return !StringUtils.isBlank(rule);
-    }
-    
-    @Override
-    public boolean isPresent() {
-        return true;
-    }
+	public <T> T getFilterId2(Class<T> dataType) throws UnifyException {
+		return DataUtils.convert(dataType, filterId2);
+	}
+
+	public boolean isAssignedIdList() {
+		return assignedIdList != null && !assignedIdList.isEmpty();
+	}
+
+	public boolean isEmpty() {
+		return assignedIdList == null && filterId1 == null && filterId2 == null;
+	}
+
+	public boolean isWithRule() {
+		return !StringUtils.isBlank(rule);
+	}
+
+	@Override
+	public boolean isPresent() {
+		return true;
+	}
 }
