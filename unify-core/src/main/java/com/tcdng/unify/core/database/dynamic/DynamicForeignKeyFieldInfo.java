@@ -32,20 +32,24 @@ public class DynamicForeignKeyFieldInfo extends DynamicFieldInfo {
 
     private String defaultVal;
 
+    private boolean unlinked;
+
     private boolean nullable;
 
     public DynamicForeignKeyFieldInfo(DynamicFieldType type, DynamicEntityInfo parentDynamicEntityInfo,
-            String columnName, String fieldName, String defaultVal, boolean nullable) {
+            String columnName, String fieldName, String defaultVal, boolean unlinked, boolean nullable) {
         super(type, EntityFieldType.FOREIGN_KEY, DataType.LONG, columnName, fieldName, null, null, false, false);
         this.parentDynamicEntityInfo = parentDynamicEntityInfo;
         this.defaultVal = defaultVal;
+        this.unlinked = unlinked;
         this.nullable = nullable;
     }
 
     public DynamicForeignKeyFieldInfo(DynamicFieldType type, String enumClassName, String columnName, String fieldName,
-            String defaultVal, boolean nullable) {
+            String defaultVal, boolean unlinked, boolean nullable) {
         super(type, EntityFieldType.FOREIGN_KEY, DataType.STRING, columnName, fieldName, null, enumClassName, false, false);
         this.defaultVal = defaultVal;
+        this.unlinked = unlinked;
         this.nullable = nullable;
     }
 
@@ -63,7 +67,11 @@ public class DynamicForeignKeyFieldInfo extends DynamicFieldInfo {
         return defaultVal;
     }
 
-    public boolean isNullable() {
+    public boolean isUnlinked() {
+		return unlinked;
+	}
+
+	public boolean isNullable() {
         return nullable;
     }
 

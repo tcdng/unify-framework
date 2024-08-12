@@ -63,7 +63,7 @@ public class ClassUniqueIDManagerImpl extends AbstractUnifyComponent implements 
 
 	@Override
 	public boolean ensureClassUniqueIDTable() throws UnifyException {
-		logInfo("Ensuring class unique ID table...");
+		logDebug("Ensuring class unique ID table...");
 		SqlDataSource sqlDataSource = getComponent(SqlDataSource.class,
 				ApplicationCommonConstants.APPLICATION_DATASOURCE);
 		Connection connection = (Connection) sqlDataSource.getConnection();
@@ -73,20 +73,20 @@ public class ClassUniqueIDManagerImpl extends AbstractUnifyComponent implements 
 			final String tableName = sqlDataSource.getDialect().isAllObjectsInLowerCase()
 					? ClassUniqueIDTableNameConstants.CLASSUNIQUEID_TABLE_NAME.toLowerCase()
 					: ClassUniqueIDTableNameConstants.CLASSUNIQUEID_TABLE_NAME;
-			logInfo("Detecting class unique ID table [{0}]...", tableName);
+			logDebug("Detecting class unique ID table [{0}]...", tableName);
 			DatabaseMetaData databaseMetaData = connection.getMetaData();
 			rs = databaseMetaData.getTables(null, sqlDataSource.getAppSchema(), tableName, null);
 			if (rs.next()) {
-				logInfo("Class unique ID table [{0}] detected.", tableName);
+				logDebug("Class unique ID table [{0}] detected.", tableName);
 			} else {
-				logInfo("Class unique ID table [{0}] not found. Attempting to create one...", tableName);
+				logDebug("Class unique ID table [{0}] not found. Attempting to create one...", tableName);
 				final SqlEntityInfo _sqlEntityInfo = getClassUniqueIDEntityInfo();
 				String sql = sqlDataSource.getDialect().generateCreateTableSql(_sqlEntityInfo, PrintFormat.PRETTY);
-				logInfo("Executing script [{0}]...", sql);
+				logDebug("Executing script [{0}]...", sql);
 				pstmt = connection.prepareStatement(sql);
 				pstmt.executeUpdate();
 				connection.commit();
-				logInfo("Class unique ID table [{0}] successfully created.", tableName);
+				logDebug("Class unique ID table [{0}] successfully created.", tableName);
 				return true;
 			}
 		} catch (SQLException e) {
@@ -104,7 +104,7 @@ public class ClassUniqueIDManagerImpl extends AbstractUnifyComponent implements 
 	@Override
 	public Long getClassUniqueID(Class<?> clazz) throws UnifyException {
 		final String className = clazz.getName();
-		logInfo("Fetching class [{0}] unique ID ...", className);
+		logDebug("Fetching class [{0}] unique ID ...", className);
 		Long uniqueId = uniqueIdsByClass.get(className);
 		if (uniqueId == null) {
 			synchronized (this) {
@@ -123,7 +123,7 @@ public class ClassUniqueIDManagerImpl extends AbstractUnifyComponent implements 
 								.append(_sqlEntityInfo.getFieldInfo("className").getPreferredColumnName())
 								.append(" = ?");
 						String sql1 = sb1.toString();
-						logInfo("Executing script [{0}]...", sql1);
+						logDebug("Executing script [{0}]...", sql1);
 						pstmt = connection.prepareStatement(sql1);
 						pstmt.setString(1, className);
 						rs = pstmt.executeQuery();
@@ -136,7 +136,7 @@ public class ClassUniqueIDManagerImpl extends AbstractUnifyComponent implements 
 									.append(ClassUniqueIDTableNameConstants.CLASSUNIQUEID_CLASS_NAME)
 									.append(") VALUES (?)");
 							String sql2 = sb2.toString();
-							logInfo("Executing script [{0}]...", sql2);
+							logDebug("Executing script [{0}]...", sql2);
 							pstmt = connection.prepareStatement(sql2);
 							pstmt.setString(1, className);
 							int count = pstmt.executeUpdate();
@@ -165,7 +165,7 @@ public class ClassUniqueIDManagerImpl extends AbstractUnifyComponent implements 
 			}
 		}
 
-		logInfo("Unique ID [{0}] fetched for class [{1}].", uniqueId, className);
+		logDebug("Unique ID [{0}] fetched for class [{1}].", uniqueId, className);
 		return uniqueId;
 	}
 
