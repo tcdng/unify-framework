@@ -44,6 +44,12 @@ public class PkConditionListCommand extends AbstractZeroParamsListCommand {
                 List<Listable> list = new ArrayList<Listable>();
                 list.add(getListable(locale, FilterConditionType.IS_NULL));
                 list.add(getListable(locale, FilterConditionType.IS_NOT_NULL));
+                list.add(getListable(locale, FilterConditionType.EQUALS));
+                list.add(getListable(locale, FilterConditionType.NOT_EQUALS));
+                list.add(getListable(locale, FilterConditionType.LESS_THAN));
+                list.add(getListable(locale, FilterConditionType.LESS_OR_EQUAL));
+                list.add(getListable(locale, FilterConditionType.GREATER_THAN));
+                list.add(getListable(locale, FilterConditionType.GREATER_OR_EQUAL));
                 return list;
             }
 
