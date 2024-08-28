@@ -222,6 +222,16 @@ public abstract class AbstractListValueStore<T> extends AbstractValueStore {
     }
 
     @Override
+	public <U> U getValueObject(Class<U> type) {
+		return type.cast(storage);
+	}
+
+	@Override
+	public <U> U getValueObjectAtDataIndex(Class<U> type) {
+		return type.cast(storage != null && dataIndex >= 0 ? storage.get(dataIndex) : null);
+	}
+
+	@Override
     public int size() {
         return storage.size();
     }

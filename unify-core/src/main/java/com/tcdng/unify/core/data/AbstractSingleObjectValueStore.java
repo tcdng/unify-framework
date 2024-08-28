@@ -203,7 +203,17 @@ public abstract class AbstractSingleObjectValueStore<T> extends AbstractValueSto
         return storage;
     }
 
-    @Override
+ 	@Override
+	public <U> U getValueObject(Class<U> type) {
+		return type.cast(storage);
+	}
+
+	@Override
+	public <U> U getValueObjectAtDataIndex(Class<U> type) {
+		return type.cast(storage);
+	}
+
+	@Override
     protected void doSetDataIndex(int dataIndex) {
         this.dataIndex = dataIndex;
     }

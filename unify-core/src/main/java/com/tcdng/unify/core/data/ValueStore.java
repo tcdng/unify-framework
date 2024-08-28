@@ -337,6 +337,16 @@ public interface ValueStore {
     Object getValueObjectAtDataIndex();
 
     /**
+     * Returns the value store value object.
+     */
+    <T> T getValueObject(Class<T> type);
+
+    /**
+     * Returns the value store value object at data index.
+     */
+    <T> T getValueObjectAtDataIndex(Class<T> type);
+
+    /**
      * Returns the value store data marker.
      */
     String getDataMarker();
