@@ -219,6 +219,16 @@ public abstract class AbstractArrayValueStore<T> extends AbstractValueStore {
     }
 
     @Override
+	public <U> U getValueObject(Class<U> type) {
+		return type.cast(storage);
+	}
+
+	@Override
+	public <U> U getValueObjectAtDataIndex(Class<U> type) {
+		return type.cast(storage != null && dataIndex >= 0 ? storage[dataIndex] : null);
+	}
+
+    @Override
     protected void doSetDataIndex(int dataIndex) {
         this.dataIndex = dataIndex;
     }
