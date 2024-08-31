@@ -49,7 +49,7 @@ public class RichTextEditorWriter extends AbstractControlWriter {
 		writer.write("<div ");
 		writeTagId(writer, editor.getToolBarId());
 		writeTagStyleClass(writer, "toolbar");
-		writer.write(" style=\"display:table;width:100%;\">");
+		writer.write(" style=\"display:table;\">");
 		writer.write("<div style=\"display:table-row;\">");
 		for (Control ctrl : editor.getControls()) {
 			writer.write("<div class=\"ctrl\" style=\"display:table-cell;\">");
