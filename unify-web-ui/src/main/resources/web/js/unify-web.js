@@ -5667,6 +5667,7 @@ ux.init = function() {
     ux.setfn(ux.setDelayedPanelPost, "ux41");
     ux.setfn(ux.optionsTextAreaOnShow, "ux42");
     ux.setfn(ux.rigFileUploadButton, "ux43");
+	ux.setfn(ux.rigRichTextEditor, "ux44");  
 }
 
 ux.setfn = function(fn, id) {
