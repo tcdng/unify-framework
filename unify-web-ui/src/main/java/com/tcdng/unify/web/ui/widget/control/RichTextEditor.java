@@ -17,6 +17,8 @@ package com.tcdng.unify.web.ui.widget.control;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.annotation.UplAttribute;
+import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.web.ui.widget.AbstractMultiControl;
 import com.tcdng.unify.web.ui.widget.Control;
 
@@ -27,8 +29,16 @@ import com.tcdng.unify.web.ui.widget.Control;
  * @since 1.0
  */
 @Component("ui-richtexteditor")
+@UplAttributes({
+	@UplAttribute(name = "rows", type = int.class) })
 public class RichTextEditor extends AbstractMultiControl {
 
+	private static final String DEFAULT_FONT_SIZE = "16px";
+
+	private static final String DEFAULT_FONT_COLOR = "#000000";
+
+	private static final int MIN_ROWS = 4;
+	
 	private Control boldCtrl;
 
 	private Control italicCtrl;
@@ -47,21 +57,25 @@ public class RichTextEditor extends AbstractMultiControl {
 
 	private Control[] controls;
 
-	@Override
-	protected void doOnPageConstruct() throws UnifyException {
-		boldCtrl = (Control) addInternalChildWidget("!ui-button symbol:$s{bold} styleClass:$e{btn}");
-		italicCtrl = (Control) addInternalChildWidget("!ui-button symbol:$s{italic} styleClass:$e{btn}");
-		underlineCtrl = (Control) addInternalChildWidget("!ui-button symbol:$s{underline} styleClass:$e{btn}");
-		fontSizeCtrl = (Control) addInternalChildWidget("!ui-select list:$s{richtextfontsizelist} styleClass:$e{sel}");
-		fontColorCtrl = (Control) addInternalChildWidget(
-				"!ui-select list:$s{richtextfontcolorlist} styleClass:$e{sel}");
-		leftAlignCtrl = (Control) addInternalChildWidget("!ui-button symbol:$s{align-left} styleClass:$e{btn}");
-		centerAlignCtrl = (Control) addInternalChildWidget("!ui-button symbol:$s{align-center} styleClass:$e{btn}");
-		rightAlignCtrl = (Control) addInternalChildWidget("!ui-button symbol:$s{align-right} styleClass:$e{btn}");
+	private String fontSize;
 
-		controls = new Control[] { boldCtrl, italicCtrl, underlineCtrl, fontSizeCtrl, fontColorCtrl,
-				leftAlignCtrl, centerAlignCtrl, rightAlignCtrl };
+	private String fontColor;
+	
+	public RichTextEditor() {
+		this.fontSize = DEFAULT_FONT_SIZE;
+		this.fontColor = DEFAULT_FONT_COLOR;
 	}
+
+	@Override
+	public void addPageAliases() throws UnifyException {
+		addPageAlias(fontSizeCtrl);
+		addPageAlias(fontColorCtrl);
+	}
+	
+    public int getRows() throws UnifyException {
+        int rows = getUplAttribute(int.class, "rows");
+        return rows < MIN_ROWS ? MIN_ROWS : rows;
+    }
 
 	public String getToolBarId() throws UnifyException {
 		return getPrefixedId("tbr_");
@@ -105,6 +119,38 @@ public class RichTextEditor extends AbstractMultiControl {
 
 	public Control[] getControls() {
 		return controls;
+	}
+
+	public String getFontSize() {
+		return fontSize;
+	}
+
+	public void setFontSize(String fontSize) {
+		this.fontSize = fontSize;
+	}
+
+	public String getFontColor() {
+		return fontColor;
+	}
+
+	public void setFontColor(String fontColor) {
+		this.fontColor = fontColor;
+	}
+
+	@Override
+	protected void doOnPageConstruct() throws UnifyException {
+		boldCtrl = (Control) addInternalChildWidget("!ui-button symbol:$s{bold} styleClass:$e{btn}");
+		italicCtrl = (Control) addInternalChildWidget("!ui-button symbol:$s{italic} styleClass:$e{btn}");
+		underlineCtrl = (Control) addInternalChildWidget("!ui-button symbol:$s{underline} styleClass:$e{btn}");
+		fontSizeCtrl = (Control) addInternalChildWidget("!ui-select list:$s{richtextfontsizelist} styleClass:$e{sel} binding:fontSize");
+		fontColorCtrl = (Control) addInternalChildWidget(
+				"!ui-select list:$s{richtextfontcolorlist} styleClass:$e{sel} binding:fontColor");
+		leftAlignCtrl = (Control) addInternalChildWidget("!ui-button symbol:$s{align-left} styleClass:$e{btn}");
+		centerAlignCtrl = (Control) addInternalChildWidget("!ui-button symbol:$s{align-center} styleClass:$e{btn}");
+		rightAlignCtrl = (Control) addInternalChildWidget("!ui-button symbol:$s{align-right} styleClass:$e{btn}");
+
+		controls = new Control[] { boldCtrl, italicCtrl, underlineCtrl, fontSizeCtrl, fontColorCtrl,
+				leftAlignCtrl, centerAlignCtrl, rightAlignCtrl };
 	}
 
 }

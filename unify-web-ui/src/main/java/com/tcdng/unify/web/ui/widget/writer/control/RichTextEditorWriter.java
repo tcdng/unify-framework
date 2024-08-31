@@ -35,6 +35,8 @@ import com.tcdng.unify.web.ui.widget.writer.AbstractControlWriter;
 @Component("richtexteditor-writer")
 public class RichTextEditorWriter extends AbstractControlWriter {
 
+	private static final int ROW_HEIGHT_PIXELS = 16;
+
 	@Override
 	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
 		RichTextEditor editor = (RichTextEditor) widget;
@@ -57,18 +59,17 @@ public class RichTextEditorWriter extends AbstractControlWriter {
 		writer.write("</div>");
 		writer.write("</div>");
 
-		
 		writer.write("<div ");
 		writeTagId(writer, editor.getEditorId());
 		writeTagStyleClass(writer, "editor");
-		writer.write(" style=\"width:100%;\"");
+		writer.write(" style=\"width:100%;height:").write(editor.getRows() * ROW_HEIGHT_PIXELS).write("px;\"");
 		if (editor.isContainerEditable()) {
 			writer.write(" contenteditable=\"true\"");
-		}		
+		}
 		writer.write(">");
-		
+
 		writer.write("</div>");
-		
+
 		writer.write("<input type=\"hidden\"");
 		writeTagId(writer, editor);
 		writeTagName(writer, editor);
