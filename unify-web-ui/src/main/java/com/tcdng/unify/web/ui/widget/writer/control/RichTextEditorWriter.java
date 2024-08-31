@@ -50,7 +50,7 @@ public class RichTextEditorWriter extends AbstractControlWriter {
 		writer.write(" style=\"display:table;width:100%;\">");
 		writer.write("<div style=\"display:table-row;\">");
 		for (Control ctrl : editor.getControls()) {
-			writer.write("<div style=\"display:table-cell;\">");
+			writer.write("<div class=\"ctrl\" style=\"display:table-cell;\">");
 			writer.writeStructureAndContent(ctrl);
 			writer.write("</div>");
 		}
@@ -88,6 +88,9 @@ public class RichTextEditorWriter extends AbstractControlWriter {
 		super.doWriteBehavior(writer, widget, handlers);
 
 		RichTextEditor editor = (RichTextEditor) widget;
+		for (Control ctrl : editor.getControls()) {
+			writer.writeBehavior(ctrl);
+		}
 
 		// Append rigging
 		writer.beginFunction("ux.rigRichTextEditor");

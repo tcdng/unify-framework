@@ -39,8 +39,6 @@ public class RichTextEditor extends AbstractMultiControl {
 
 	private Control fontColorCtrl;
 
-	private Control backColorCtrl;
-
 	private Control leftAlignCtrl;
 
 	private Control centerAlignCtrl;
@@ -51,19 +49,17 @@ public class RichTextEditor extends AbstractMultiControl {
 
 	@Override
 	protected void doOnPageConstruct() throws UnifyException {
-		boldCtrl = (Control) addInternalChildWidget("!ui-symbol symbol:$s{bold} styleClass:$e{btn}");
-		italicCtrl = (Control) addInternalChildWidget("!ui-symbol symbol:$s{italic} styleClass:$e{btn}");
-		underlineCtrl = (Control) addInternalChildWidget("!ui-symbol symbol:$s{underline} styleClass:$e{btn}");
+		boldCtrl = (Control) addInternalChildWidget("!ui-button symbol:$s{bold} styleClass:$e{btn}");
+		italicCtrl = (Control) addInternalChildWidget("!ui-button symbol:$s{italic} styleClass:$e{btn}");
+		underlineCtrl = (Control) addInternalChildWidget("!ui-button symbol:$s{underline} styleClass:$e{btn}");
 		fontSizeCtrl = (Control) addInternalChildWidget("!ui-select list:$s{richtextfontsizelist} styleClass:$e{sel}");
 		fontColorCtrl = (Control) addInternalChildWidget(
 				"!ui-select list:$s{richtextfontcolorlist} styleClass:$e{sel}");
-		backColorCtrl = (Control) addInternalChildWidget(
-				"!ui-select list:$s{richtextbackcolorlist} styleClass:$e{sel}");
-		leftAlignCtrl = (Control) addInternalChildWidget("!ui-symbol symbol:$s{align-left} styleClass:$e{btn}");
-		centerAlignCtrl = (Control) addInternalChildWidget("!ui-symbol symbol:$s{align-center} styleClass:$e{btn}");
-		rightAlignCtrl = (Control) addInternalChildWidget("!ui-symbol symbol:$s{align-right} styleClass:$e{btn}");
+		leftAlignCtrl = (Control) addInternalChildWidget("!ui-button symbol:$s{align-left} styleClass:$e{btn}");
+		centerAlignCtrl = (Control) addInternalChildWidget("!ui-button symbol:$s{align-center} styleClass:$e{btn}");
+		rightAlignCtrl = (Control) addInternalChildWidget("!ui-button symbol:$s{align-right} styleClass:$e{btn}");
 
-		controls = new Control[] { boldCtrl, italicCtrl, underlineCtrl, fontSizeCtrl, fontColorCtrl, backColorCtrl,
+		controls = new Control[] { boldCtrl, italicCtrl, underlineCtrl, fontSizeCtrl, fontColorCtrl,
 				leftAlignCtrl, centerAlignCtrl, rightAlignCtrl };
 	}
 
@@ -93,10 +89,6 @@ public class RichTextEditor extends AbstractMultiControl {
 
 	public Control getFontColorCtrl() {
 		return fontColorCtrl;
-	}
-
-	public Control getBackColorCtrl() {
-		return backColorCtrl;
 	}
 
 	public Control getLeftAlignCtrl() {

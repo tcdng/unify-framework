@@ -3018,6 +3018,10 @@ ux.optionsTextAreaOnShow = function(frmId) {
 	ux.setFocus({wdgid: frmId});
 }
 
+/** Rich Text Editor */
+ux.rigRichTextEditor = function(rgp) {
+}
+	
 /** Single Select */
 ux.rigSingleSelect = function(rgp) {
 	const id = rgp.pId;

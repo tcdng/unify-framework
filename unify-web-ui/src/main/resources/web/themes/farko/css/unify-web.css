@@ -796,8 +796,10 @@ overflow-x:hidden;overflow-y:scroll;border-top: solid 1px #A0A0A0;border-left: s
 /** Rich Text Editor */
 .ui-richtexteditor {}
 .ui-richtexteditor .toolbar {width:100%;}
-.ui-richtexteditor .btn {width:16px;height:16px;cursor:pointer;}
-.ui-richtexteditor .sel {font-size:7pt;}
+.ui-richtexteditor .ctrl {padding:2px;}
+.ui-richtexteditor .btn {padding: 0px 10px;height:16px;cursor:pointer;}
+.ui-richtexteditor .tread {font-size:7pt;}
+.ui-richtexteditor .sel {width: 140px;font-size:7pt;}
 
 /** Radio buttons*/
 .ui-radiobuttons {}
