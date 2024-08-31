@@ -41,7 +41,7 @@ public class RichTextEditorWriter extends AbstractControlWriter {
 	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
 		RichTextEditor editor = (RichTextEditor) widget;
 		writer.write("<div ");
-		writeTagId(writer, editor.getFacadeId());
+		writeTagId(writer, editor.getId());
 		writeTagStyleClass(writer, editor);
 		writeTagStyle(writer, editor);
 		writer.write(">");
@@ -63,22 +63,16 @@ public class RichTextEditorWriter extends AbstractControlWriter {
 		writeTagId(writer, editor.getEditorId());
 		writeTagStyleClass(writer, "editor");
 		writer.write(" style=\"width:100%;height:").write(editor.getRows() * ROW_HEIGHT_PIXELS).write("px;\"");
+		writer.write(" spellcheck=\"").write(editor.isSpellCheck()).write("\"");
 		if (editor.isContainerEditable()) {
 			writer.write(" contenteditable=\"true\"");
 		}
+
 		writer.write(">");
 
 		writer.write("</div>");
 
-		writer.write("<input type=\"hidden\"");
-		writeTagId(writer, editor);
-		writeTagName(writer, editor);
-
-		String value = editor.getStringValue();
-		if (value != null) {
-			writer.write(" value=\"").writeWithHtmlEscape(value).write("\"");
-		}
-		writer.write("/>");
+		writer.writeStructureAndContent(editor.getValueCtrl());
 
 		writer.write("</div>");
 	}
@@ -98,6 +92,18 @@ public class RichTextEditorWriter extends AbstractControlWriter {
 		writer.writeParam("pId", editor.getId());
 		writer.writeCommandURLParam("pCmdURL");
 		writer.writeParam("pContId", editor.getContainerId());
+		writer.writeParam("pBldId", editor.getBoldCtrl().getId());
+		writer.writeParam("pItlId", editor.getItalicCtrl().getId());
+		writer.writeParam("pUndId", editor.getUnderlineCtrl().getId());
+		writer.writeParam("pSFnsId", editor.getSetFontSizeCtrl().getId());
+		writer.writeParam("pSFncId", editor.getSetFontColorCtrl().getId());
+		writer.writeParam("pFnsId", editor.getFontSizeCtrl().getId());
+		writer.writeParam("pFncId", editor.getFontColorCtrl().getId());
+		writer.writeParam("pLfaId", editor.getLeftAlignCtrl().getId());
+		writer.writeParam("pCnaId", editor.getCenterAlignCtrl().getId());
+		writer.writeParam("pRtaId", editor.getRightAlignCtrl().getId());
+		writer.writeParam("pEdtId", editor.getEditorId());
+		writer.writeParam("pValId", editor.getValueCtrl().getId());
 		writer.writeParam("pEditable", editor.isContainerEditable());
 		writer.endFunction();
 	}

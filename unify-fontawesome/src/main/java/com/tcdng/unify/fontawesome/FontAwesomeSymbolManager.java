@@ -151,6 +151,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("network-wired", "f6ff");
         registerSymbol("newspaper", "f1ea");
         registerSymbol("outdent", "f03b");
+        registerSymbol("paint-brush", "f1fc");
         registerSymbol("paper-clip", "f0c6");
         registerSymbol("play", "f04b");
         registerSymbol("plus", "f067");
@@ -175,6 +176,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("tasks", "f0ae");
         registerSymbol("text", "f039");
         registerSymbol("text-a", "f031");
+        registerSymbol("text-size", "f034");
         registerSymbol("thumbtack", "f08d");
         registerSymbol("times-circle", "f057");
         registerSymbol("trash", "f2ed");

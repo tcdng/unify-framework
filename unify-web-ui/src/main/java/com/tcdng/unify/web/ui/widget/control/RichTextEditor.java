@@ -29,8 +29,8 @@ import com.tcdng.unify.web.ui.widget.Control;
  * @since 1.0
  */
 @Component("ui-richtexteditor")
-@UplAttributes({
-	@UplAttribute(name = "rows", type = int.class) })
+@UplAttributes({ @UplAttribute(name = "rows", type = int.class),
+		@UplAttribute(name = "spellCheck", type = boolean.class) })
 public class RichTextEditor extends AbstractMultiControl {
 
 	private static final String DEFAULT_FONT_SIZE = "16px";
@@ -38,12 +38,16 @@ public class RichTextEditor extends AbstractMultiControl {
 	private static final String DEFAULT_FONT_COLOR = "#000000";
 
 	private static final int MIN_ROWS = 4;
-	
+
 	private Control boldCtrl;
 
 	private Control italicCtrl;
 
 	private Control underlineCtrl;
+
+	private Control setFontSizeCtrl;
+
+	private Control setFontColorCtrl;
 
 	private Control fontSizeCtrl;
 
@@ -55,12 +59,14 @@ public class RichTextEditor extends AbstractMultiControl {
 
 	private Control rightAlignCtrl;
 
+	private Control valueCtrl;
+
 	private Control[] controls;
 
 	private String fontSize;
 
 	private String fontColor;
-	
+
 	public RichTextEditor() {
 		this.fontSize = DEFAULT_FONT_SIZE;
 		this.fontColor = DEFAULT_FONT_COLOR;
@@ -70,12 +76,17 @@ public class RichTextEditor extends AbstractMultiControl {
 	public void addPageAliases() throws UnifyException {
 		addPageAlias(fontSizeCtrl);
 		addPageAlias(fontColorCtrl);
+		addPageAlias(valueCtrl);
 	}
-	
-    public int getRows() throws UnifyException {
-        int rows = getUplAttribute(int.class, "rows");
-        return rows < MIN_ROWS ? MIN_ROWS : rows;
-    }
+
+	public int getRows() throws UnifyException {
+		int rows = getUplAttribute(int.class, "rows");
+		return rows < MIN_ROWS ? MIN_ROWS : rows;
+	}
+
+	public boolean isSpellCheck() throws UnifyException {
+		return getUplAttribute(boolean.class, "spellCheck");
+	}
 
 	public String getToolBarId() throws UnifyException {
 		return getPrefixedId("tbr_");
@@ -83,6 +94,14 @@ public class RichTextEditor extends AbstractMultiControl {
 
 	public String getEditorId() throws UnifyException {
 		return getPrefixedId("etr_");
+	}
+
+	public String getContent() throws UnifyException {
+		return getStringValue();
+	}
+
+	public void setContent(String content) throws UnifyException {
+		setValue(content);
 	}
 
 	public Control getBoldCtrl() {
@@ -95,6 +114,14 @@ public class RichTextEditor extends AbstractMultiControl {
 
 	public Control getUnderlineCtrl() {
 		return underlineCtrl;
+	}
+
+	public Control getSetFontSizeCtrl() {
+		return setFontSizeCtrl;
+	}
+
+	public Control getSetFontColorCtrl() {
+		return setFontColorCtrl;
 	}
 
 	public Control getFontSizeCtrl() {
@@ -115,6 +142,10 @@ public class RichTextEditor extends AbstractMultiControl {
 
 	public Control getRightAlignCtrl() {
 		return rightAlignCtrl;
+	}
+
+	public Control getValueCtrl() {
+		return valueCtrl;
 	}
 
 	public Control[] getControls() {
@@ -142,15 +173,21 @@ public class RichTextEditor extends AbstractMultiControl {
 		boldCtrl = (Control) addInternalChildWidget("!ui-button symbol:$s{bold} styleClass:$e{btn}");
 		italicCtrl = (Control) addInternalChildWidget("!ui-button symbol:$s{italic} styleClass:$e{btn}");
 		underlineCtrl = (Control) addInternalChildWidget("!ui-button symbol:$s{underline} styleClass:$e{btn}");
-		fontSizeCtrl = (Control) addInternalChildWidget("!ui-select list:$s{richtextfontsizelist} styleClass:$e{sel} binding:fontSize");
+		fontSizeCtrl = (Control) addInternalChildWidget(
+				"!ui-select list:$s{richtextfontsizelist} styleClass:$e{sel} binding:fontSize");
 		fontColorCtrl = (Control) addInternalChildWidget(
 				"!ui-select list:$s{richtextfontcolorlist} styleClass:$e{sel} binding:fontColor");
 		leftAlignCtrl = (Control) addInternalChildWidget("!ui-button symbol:$s{align-left} styleClass:$e{btn}");
 		centerAlignCtrl = (Control) addInternalChildWidget("!ui-button symbol:$s{align-center} styleClass:$e{btn}");
 		rightAlignCtrl = (Control) addInternalChildWidget("!ui-button symbol:$s{align-right} styleClass:$e{btn}");
 
-		controls = new Control[] { boldCtrl, italicCtrl, underlineCtrl, fontSizeCtrl, fontColorCtrl,
-				leftAlignCtrl, centerAlignCtrl, rightAlignCtrl };
+		setFontSizeCtrl = (Control) addInternalChildWidget("!ui-button symbol:$s{text-size} styleClass:$e{btn}");
+		setFontColorCtrl = (Control) addInternalChildWidget("!ui-button symbol:$s{paint-brush} styleClass:$e{btn}");
+
+		valueCtrl = (Control) addInternalChildWidget("!ui-hidden binding:content");
+
+		controls = new Control[] { boldCtrl, italicCtrl, underlineCtrl, fontSizeCtrl, setFontSizeCtrl, fontColorCtrl,
+				setFontColorCtrl, leftAlignCtrl, centerAlignCtrl, rightAlignCtrl };
 	}
 
 }
