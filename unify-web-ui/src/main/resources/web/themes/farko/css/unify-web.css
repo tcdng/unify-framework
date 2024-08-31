@@ -793,6 +793,15 @@ overflow-x:hidden;overflow-y:scroll;border-top: solid 1px #A0A0A0;border-left: s
 /** Rack */
 .ui-rack {}
 
+/** Rich Text Editor */
+.ui-richtexteditor {}
+.ui-richtexteditor .toolbar {border: solid 1px #A0A0A0;}
+.ui-richtexteditor .editor {width:100%;border: solid 1px #A0A0A0;margin-top:4px;overflow-y:scroll;}
+.ui-richtexteditor .ctrl {padding:2px;}
+.ui-richtexteditor .btn {padding: 0px 7px;min-height: 24px;font-size: 8pt;cursor: pointer;}
+.ui-richtexteditor .tread {height: 24px;font-size:7pt;}
+.ui-richtexteditor .tpbutton {height: 24px;}
+.ui-richtexteditor .sel {width: 96px;font-size:7pt;}
 
 /** Radio buttons*/
 .ui-radiobuttons {}

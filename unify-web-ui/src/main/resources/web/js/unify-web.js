@@ -120,6 +120,9 @@ function _name(name) {
 function _name_0(name) {
 	return document.getElementsByName(name)[0];
 }
+function _execCmd(name, arg) {
+	document.execCommand(name, false, arg);
+}
 function _enc(val) {
 	return encodeURIComponent(val);
 }
@@ -3018,6 +3021,51 @@ ux.optionsTextAreaOnShow = function(frmId) {
 	ux.setFocus({wdgid: frmId});
 }
 
+/** Rich Text Editor */
+ux.rigRichTextEditor = function(rgp) {
+	ux.richCmdHdl(rgp.pBldId, 'bold');
+	ux.richCmdHdl(rgp.pItlId, 'italic');
+	ux.richCmdHdl(rgp.pUndId, 'underline');
+	ux.richCmdHdl(rgp.pLfaId, 'justifyLeft');
+	ux.richCmdHdl(rgp.pCnaId, 'justifyCenter');
+	ux.richCmdHdl(rgp.pRtaId, 'justifyRight');
+
+	ux.addHdl(_id(rgp.pSFnsId), "click", ux.richTxtFontSize, {srcId:rgp.pFnsId,uId:rgp.pId});
+	ux.addHdl(_id(rgp.pSFncId), "click", ux.richTxtFontColor, {srcId:rgp.pFncId});
+			
+	if (_id(rgp.pValId).value) {
+		_id(rgp.pEdtId).innerHTML = _id(rgp.pValId).value;
+	}
+
+	_id(rgp.pEdtId).uValId = rgp.pValId;
+	_id(rgp.pEdtId).addEventListener('input', function() {
+	    _id(this.uValId).value = this.innerHTML;
+	});
+}
+
+
+ux.richTxtFontSize = function(uEv) {
+	const size = _id(uEv.evp.srcId).value;
+	_execCmd('fontSize', 7);	
+	let elems = _id(uEv.evp.uId).querySelectorAll(".editor font[size='7']");
+	elems.forEach(function(m) {
+	    m.removeAttribute("size");
+	    m.style.fontSize = size;
+	});
+}
+
+ux.richTxtFontColor = function(uEv) {
+	_execCmd('foreColor', _id(uEv.evp.srcId).value);
+}
+
+ux.richCmdHdl = function(id, name) {
+	ux.addHdl(_id(id), "click", ux.execCmdHdl, {cmd:name});
+}
+
+ux.execCmdHdl = function(uEv) {
+	_execCmd(uEv.evp.cmd, uEv.evp.prm);
+}
+
 /** Single Select */
 ux.rigSingleSelect = function(rgp) {
 	const id = rgp.pId;
@@ -5667,6 +5715,7 @@ ux.init = function() {
     ux.setfn(ux.setDelayedPanelPost, "ux41");
     ux.setfn(ux.optionsTextAreaOnShow, "ux42");
     ux.setfn(ux.rigFileUploadButton, "ux43");
+	ux.setfn(ux.rigRichTextEditor, "ux44");  
 }
 
 ux.setfn = function(fn, id) {
@@ -5699,6 +5748,11 @@ ux.documentKeydownHandler = function(uEv) {
 				|| elem.type == "textarea") {
 			stopBackspace = elem.readOnly || elem.disabled;
 		}
+		
+		if (elem.type == "div") {
+			stopBackspace = false;
+		}
+		
 		if (stopBackspace) {
 			uEv.uStop();
 		}

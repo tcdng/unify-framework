@@ -43,6 +43,9 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         super.onInitialize();
         
         // Register symbols by name
+        registerSymbol("align-center", "f037");
+        registerSymbol("align-left", "f036");
+        registerSymbol("align-right", "f038");
         registerSymbol("angle-double-down", "f103");
         registerSymbol("angle-double-left", "f100");
         registerSymbol("angle-double-right", "f101");
@@ -60,6 +63,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("ban", "f05e");
         registerSymbol("bell", "f0f3");
         registerSymbol("bell-slash", "f1f6");
+        registerSymbol("bold", "f032");
         registerSymbol("buffer", "f837");
         registerSymbol("calendar", "f133");
         registerSymbol("calendar-alt", "f073");
@@ -130,6 +134,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("id-badge", "f2c1");
         registerSymbol("image", "f03e");
         registerSymbol("info", "f129");
+        registerSymbol("italic", "f033");
         registerSymbol("key", "f084");
         registerSymbol("laptop-house", "e066");
         registerSymbol("link", "f0c1");
@@ -146,6 +151,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("network-wired", "f6ff");
         registerSymbol("newspaper", "f1ea");
         registerSymbol("outdent", "f03b");
+        registerSymbol("paint-brush", "f1fc");
         registerSymbol("paper-clip", "f0c6");
         registerSymbol("play", "f04b");
         registerSymbol("plus", "f067");
@@ -170,9 +176,11 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("tasks", "f0ae");
         registerSymbol("text", "f039");
         registerSymbol("text-a", "f031");
+        registerSymbol("text-size", "f034");
         registerSymbol("thumbtack", "f08d");
         registerSymbol("times-circle", "f057");
         registerSymbol("trash", "f2ed");
+        registerSymbol("underline", "f0cd");
         registerSymbol("undo", "f2ea");
         registerSymbol("unlock", "f09c");
         registerSymbol("user", "f007");
