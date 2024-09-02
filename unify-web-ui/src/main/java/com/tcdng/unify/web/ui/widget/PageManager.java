@@ -87,6 +87,18 @@ public interface PageManager extends UnifyComponent {
      */
     StandalonePanel createStandalonePanel(Locale locale, String name) throws UnifyException;
 
+	/**
+	 * Creates a new stand-alone panel instance from document associated with a
+	 * panel component type with binding.
+	 * 
+	 * @param locale  the locale
+	 * @param name    the panel name
+	 * @param binding the binding name
+	 * @return the panel instance
+	 * @throws UnifyException If an error occurs
+	 */
+	StandalonePanel createStandalonePanel(Locale locale, String name, String binding) throws UnifyException;
+
     /**
      * Gets the property bindings by page name for specified standalone panel.
      * 

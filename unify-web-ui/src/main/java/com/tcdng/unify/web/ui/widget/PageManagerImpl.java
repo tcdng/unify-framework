@@ -305,7 +305,16 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
 
 	@Override
 	public StandalonePanel createStandalonePanel(Locale locale, String name) throws UnifyException {
+		return createStandalonePanel(locale, name, null);
+	}
+	
+	@Override
+	public StandalonePanel createStandalonePanel(Locale locale, String name, String binding) throws UnifyException {
 		UplDocumentAttributes uplDocumentAttributes = uplCompiler.compileComponentDocuments(locale, name);
+		if (!StringUtils.isBlank(binding)) {
+			uplDocumentAttributes.overrideAttribute("binding", binding);
+		}
+		
 		String spLongName = uplDocumentAttributes.getLongName();
 		String id = getPageName(spLongName);
 

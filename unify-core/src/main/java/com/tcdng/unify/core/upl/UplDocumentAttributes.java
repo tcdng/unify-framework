@@ -36,7 +36,7 @@ public interface UplDocumentAttributes extends UplElementAttributes {
      * Returns the document child short element names
      */
     Set<String> getShortNames();
-
+    
     /**
      * Gets an element by long name.
      * 
