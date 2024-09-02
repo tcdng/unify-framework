@@ -70,15 +70,15 @@ public class UplElement implements UplElementAttributes {
         uplAttributes = new HashMap<String, Object>();
     }
 
-    public UplElement(int uplType, String source, int lineNumber, String qualifiedName, String elementType, String id) {
-        this.uplType = uplType;
-        this.source = source;
-        this.lineNumber = lineNumber;
-        this.qualifiedName = qualifiedName;
-        this.elementType = elementType;
-        this.id = id;
-        uplAttributes = new HashMap<String, Object>();
-    }
+	public UplElement(int uplType, String source, int lineNumber, String qualifiedName, String elementType, String id) {
+		this.uplType = uplType;
+		this.source = source;
+		this.lineNumber = lineNumber;
+		this.qualifiedName = qualifiedName;
+		this.elementType = elementType;
+		this.id = id;
+		uplAttributes = new HashMap<String, Object>();
+	}
 
     public UplElement getParentElement() {
         return parentElement;
@@ -154,7 +154,12 @@ public class UplElement implements UplElementAttributes {
         return elementType;
     }
 
-    public boolean isAttribute(String name) {
+    @Override
+	public void overrideAttribute(String name, Object val) throws UnifyException {
+    	uplAttributes.put(name, val);
+	}
+
+	public boolean isAttribute(String name) {
         return uplAttributes.containsKey(name);
     }
 
@@ -397,17 +402,4 @@ public class UplElement implements UplElementAttributes {
         return longName;
     }
 
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("(elementType = ").append(elementType).append(';');
-        sb.append("qualifiedName = ").append(qualifiedName).append(';');
-        sb.append("id = ").append(id).append(';');
-        sb.append("source = ").append(source).append(';');
-        sb.append("lineNumber = ").append(lineNumber).append(';');
-        sb.append("\nlongName = ").append(longName).append(';');
-        sb.append("\nuplAttributes = ").append(uplAttributes).append(';');
-        sb.append("\nattributeExtension = ").append(attributeExtension).append(';');
-        sb.append("\nchildElements = ").append(childElements).append(";)\n");
-        return sb.toString();
-    }
 }

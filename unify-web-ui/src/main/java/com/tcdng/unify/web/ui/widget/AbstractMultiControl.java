@@ -192,7 +192,7 @@ public abstract class AbstractMultiControl extends AbstractControl implements Mu
         doAddChildWidget(widget, true, false, false, true);
         return widget;
     }
-    
+
     /**
      * Creates and adds a non-conforming external child standalone panel that
      * doesn't ignore parent state.
@@ -205,26 +205,45 @@ public abstract class AbstractMultiControl extends AbstractControl implements Mu
      * @throws UnifyException
      *             if an error occurs
      */
-    protected Widget addExternalChildStandalonePanel(String panelName, String cloneId) throws UnifyException {
-        final String uniqueName = UplUtils.generateUplComponentCloneName(panelName, cloneId);
-        Page page = resolveRequestPage();
-        StandalonePanel standalonePanel = page.getStandalonePanel(uniqueName);
-        if (standalonePanel == null) {
-            standalonePanel = getPageManager().createStandalonePanel(getSessionLocale(), uniqueName);
-            page.addStandalonePanel(uniqueName, standalonePanel);
-            getUIControllerUtil().updatePageControllerInfo(
-                    getRequestContextUtil().getResponsePathParts().getControllerName(), uniqueName);
-            if (standalonePanelNames == null) {
-                standalonePanelNames = new ArrayList<String>();
-            }
+	protected Widget addExternalChildStandalonePanel(String panelName, String cloneId) throws UnifyException {
+		return addExternalChildStandalonePanel(panelName, cloneId, null);
+	}
+    
+    /**
+     * Creates and adds a non-conforming external child standalone panel that
+     * doesn't ignore parent state using binding.
+     * 
+     * @param panelName
+     *            the panelName
+     * @param cloneId
+     *            the clone ID
+     * @param binding
+     *            the binding
+     * @return the added child widget
+     * @throws UnifyException
+     *             if an error occurs
+     */
+	protected Widget addExternalChildStandalonePanel(String panelName, String cloneId, String binding)
+			throws UnifyException {
+		final String uniqueName = UplUtils.generateUplComponentCloneName(panelName, cloneId);
+		Page page = resolveRequestPage();
+		StandalonePanel standalonePanel = page.getStandalonePanel(uniqueName);
+		if (standalonePanel == null) {
+			standalonePanel = getPageManager().createStandalonePanel(getSessionLocale(), uniqueName, binding);
+			page.addStandalonePanel(uniqueName, standalonePanel);
+			getUIControllerUtil().updatePageControllerInfo(
+					getRequestContextUtil().getResponsePathParts().getControllerName(), uniqueName);
+			if (standalonePanelNames == null) {
+				standalonePanelNames = new ArrayList<String>();
+			}
 
-            standalonePanelNames.add(uniqueName);
-        }
+			standalonePanelNames.add(uniqueName);
+		}
 
-        standalonePanel.setContainer(getContainer());
-        doAddChildWidget(standalonePanel, true, false, false, true);
-        return standalonePanel;
-    }
+		standalonePanel.setContainer(getContainer());
+		doAddChildWidget(standalonePanel, true, false, false, true);
+		return standalonePanel;
+	}
 
     @Override
     public void addPageAliases() throws UnifyException {

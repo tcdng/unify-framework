@@ -68,6 +68,15 @@ public interface UplElementAttributes {
      */
     int getUplType();
 
+	/**
+	 * Overrides attribute values.
+	 * 
+	 * @param name the attribute name
+	 * @param val  the value to set
+	 * @throws UnifyException if an error occurs
+	 */
+	void overrideAttribute(String name, Object val) throws UnifyException;
+
     /**
      * Returns a true value if supplied string is an attribute
      * 

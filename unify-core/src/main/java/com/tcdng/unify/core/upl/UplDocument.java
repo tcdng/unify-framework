@@ -83,13 +83,4 @@ public class UplDocument extends UplElement implements UplDocumentAttributes {
         }
     }
 
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append('(').append(super.toString());
-        sb.append("longNames: ").append("\n");
-        for (String longName : uplElementByLongNameMap.keySet()) {
-            sb.append(longName).append("\n");
-        }
-        return sb.toString();
-    }
 }
