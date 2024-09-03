@@ -648,6 +648,9 @@ overflow-x:hidden;overflow-y:scroll;border-top: solid 1px #A0A0A0;border-left: s
 /** Full Name Field */
 .ui-fullname {}
 
+/** HTML */
+.ui-html {display:block;width:100%;}
+
 /** Identifier field */
 .ui-identifier {}
 
