@@ -158,6 +158,8 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("plus-square", "f0fe");
         registerSymbol("pop-up", "f35d");
         registerSymbol("project-diagram", "f542");
+        registerSymbol("question", "f128");
+        registerSymbol("question-circle", "f059");
         registerSymbol("redo", "f01e");
         registerSymbol("redo-alt", "f2f9");
         registerSymbol("rocket", "f135");
