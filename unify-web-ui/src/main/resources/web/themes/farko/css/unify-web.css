@@ -591,7 +591,9 @@ overflow-x:hidden;overflow-y:scroll;border-top: solid 1px #A0A0A0;border-left: s
 .ui-downloadlinkgrid {}
 .ui-downloadlinkgrid .dlgcatcap{display:block; background-color:#F0F0F0; font-size:18px;
     padding:4px 4px; vertical-align:middle; margin-bottom:8px;}
-.ui-downloadlinkgrid .dlglink{font-size:14px; text-decoration:underline;cursor: pointer;}
+.ui-downloadlinkgrid .dlglink{font-size:14px; text-decoration:underline;cursor: pointer;
+	text-wrap: wrap;word-break: break-all;}
+.ui-downloadlinkgrid td {padding:8px 4px;}
 
 /** Drop-down with check list */
 .ui-dropdownchecklist {width:180px;}
