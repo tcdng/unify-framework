@@ -26,6 +26,7 @@ import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.file.FileFilter;
 import com.tcdng.unify.core.util.IOUtils;
+import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.constant.RealPathConstants;
 import com.tcdng.unify.web.ui.widget.AbstractMultiControl;
 
@@ -37,38 +38,48 @@ import com.tcdng.unify.web.ui.widget.AbstractMultiControl;
  * @since 1.0
  */
 @Component("ui-downloadlinkgrid")
-@UplAttributes({ @UplAttribute(name = "columns", type = int.class) })
+@UplAttributes({ @UplAttribute(name = "columns", type = int.class),
+		@UplAttribute(name = "downloadPath", type = String.class),
+		@UplAttribute(name = "downloadPathBinding", type = String.class) })
 public class DownloadLinkGrid extends AbstractMultiControl {
 
-    public int getColumns() throws UnifyException {
-        return getUplAttribute(int.class, "columns");
-    }
+	public int getColumns() throws UnifyException {
+		return getUplAttribute(int.class, "columns");
+	}
 
-    @Override
-    public boolean isLayoutCaption() throws UnifyException {
-        return false;
-    }
+	@Override
+	public boolean isLayoutCaption() throws UnifyException {
+		return false;
+	}
 
-    public List<String> getResourceList() throws UnifyException {
-        File file = new File(
-                IOUtils.buildFilename(getUnifyComponentContext().getWorkingPath(), RealPathConstants.DOWNLOAD_FOLDER));
-        if (file.isDirectory()) {
-            File[] files = file.listFiles(new FileFilter(true));
-            if (files != null && files.length > 0) {
-                List<String> resourceList = new ArrayList<String>();
-                for (File resourceFile : files) {
-                    resourceList.add(resourceFile.getName());
-                }
+	public List<String> getResourceList() throws UnifyException {
+		final String downloadPath = getDownloadPath();
+		File file = !StringUtils.isBlank(downloadPath) ? new File(downloadPath)
+				: new File(IOUtils.buildFilename(getUnifyComponentContext().getWorkingPath(),
+						RealPathConstants.DOWNLOAD_FOLDER));
+		if (file.isDirectory()) {
+			File[] files = file.listFiles(new FileFilter(true));
+			if (files != null && files.length > 0) {
+				List<String> resourceList = new ArrayList<String>();
+				for (File resourceFile : files) {
+					resourceList.add(resourceFile.getName());
+				}
 
-                return resourceList;
-            }
-        }
+				return resourceList;
+			}
+		}
 
-        return Collections.emptyList();
-    }
+		return Collections.emptyList();
+	}
 
-    @Override
-    protected void doOnPageConstruct() throws UnifyException {
-        
-    }
+	public String getDownloadPath() throws UnifyException {
+		String binding = getUplAttribute(String.class, "downloadPathBinding");
+		return !StringUtils.isBlank(binding) ? getValue(String.class, binding) : getValue(String.class, "downloadPath");
+	}
+
+	@Override
+	protected void doOnPageConstruct() throws UnifyException {
+
+	}
+
 }
