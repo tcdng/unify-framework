@@ -52,17 +52,20 @@ public class RealPathResourceController extends FileResourceController {
 	@Override
 	public void prepareExecution() throws UnifyException {
 		String resourceName = getResourceName();
+		logDebug("Using subfolder [{0}] to read resource [{1}]...", subfolder, resourceName);
 		if (!StringUtils.isBlank(subfolder)) {
-			resourceName = subfolder + resourceName;
+			resourceName = IOUtils.buildFilename(subfolder, resourceName);
 		} else {
 			// Apply restrictions only on direct real path access
 			RealPathUtils.checkAccessibleRealPath(resourceName);
 		}
 
 		super.prepareExecution();
+		
 		file = new File(resourceName);
 		file = file.exists() ? file
 				: new File(IOUtils.buildFilename(getUnifyComponentContext().getWorkingPath(), resourceName));
+		logDebug("Reading resolved file [{0}]...", file.getAbsolutePath());
 		if (file.exists()) {
 			setContentLength(file.length());
 		}
