@@ -19,6 +19,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.web.DownloadPathLogger;
+import com.tcdng.unify.web.DownloadPathProvider;
 import com.tcdng.unify.web.constant.RealPathConstants;
 
 /**
@@ -34,12 +35,19 @@ public class DownloadPathResourceController extends RealPathResourceController {
     @Configurable
     private DownloadPathLogger downloadPathLogger;
     
+    @Configurable
+    private DownloadPathProvider downloadPathProvider;
+    
     public DownloadPathResourceController() {
         super(RealPathConstants.DOWNLOAD_FOLDER);
     }
 
     @Override
     public void prepareExecution() throws UnifyException {
+    	if (downloadPathProvider != null) {
+    		setSubfolder(downloadPathProvider.getDownloadPath());
+    	}
+    	
         super.prepareExecution();
         if (downloadPathLogger != null) {
             downloadPathLogger.logDownloadAttempt(getResourceName());

@@ -36,45 +36,51 @@ import com.tcdng.unify.web.util.RealPathUtils;
 @Component(WebApplicationComponents.APPLICATION_REALPATHRESOURCECONTROLLER)
 public class RealPathResourceController extends FileResourceController {
 
-    protected File file;
+	protected File file;
 
-    private String subfolder;
-    
-    public RealPathResourceController() {
-        this(null);
-    }
+	private String subfolder;
 
-    public RealPathResourceController(String subfolder) {
-        super(Secured.FALSE);
-        this.subfolder = subfolder;
-    }
+	public RealPathResourceController() {
+		this(null);
+	}
 
-    @Override
-    public void prepareExecution() throws UnifyException {
-        String resourceName = getResourceName();
-        if (!StringUtils.isBlank(subfolder)) {
-            resourceName = subfolder + resourceName;
-        } else {
-            // Apply restrictions only on direct real path access
-            RealPathUtils.checkAccessibleRealPath(resourceName);
-        }
-        
-        super.prepareExecution();
-        file = new File(IOUtils.buildFilename(getUnifyComponentContext().getWorkingPath(), resourceName));
-        if (file.exists()) {
-            setContentLength(file.length());
-        }
-    }
-    
-    @Override
-    protected ResInputStream getInputStream() throws UnifyException {
-        if (file != null && file.exists()) {
-            try {
-                return new ResInputStream(new FileInputStream(file));
-            } catch (FileNotFoundException e) {
-                throwOperationErrorException(e);
-            }
-        }
-        return null;
-    }
+	public RealPathResourceController(String subfolder) {
+		super(Secured.FALSE);
+		this.subfolder = subfolder;
+	}
+
+	@Override
+	public void prepareExecution() throws UnifyException {
+		String resourceName = getResourceName();
+		if (!StringUtils.isBlank(subfolder)) {
+			resourceName = subfolder + resourceName;
+		} else {
+			// Apply restrictions only on direct real path access
+			RealPathUtils.checkAccessibleRealPath(resourceName);
+		}
+
+		super.prepareExecution();
+		file = new File(resourceName);
+		file = file.exists() ? file
+				: new File(IOUtils.buildFilename(getUnifyComponentContext().getWorkingPath(), resourceName));
+		if (file.exists()) {
+			setContentLength(file.length());
+		}
+	}
+
+	@Override
+	protected ResInputStream getInputStream() throws UnifyException {
+		if (file != null && file.exists()) {
+			try {
+				return new ResInputStream(new FileInputStream(file));
+			} catch (FileNotFoundException e) {
+				throwOperationErrorException(e);
+			}
+		}
+		return null;
+	}
+
+	protected void setSubfolder(String subfolder) {
+		this.subfolder = subfolder;
+	}
 }
