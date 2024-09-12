@@ -84,6 +84,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("cloud", "f0c2");
         registerSymbol("cloud-download", "f381");
         registerSymbol("cloud-upload", "f382");
+        registerSymbol("code-branch", "f126");
         registerSymbol("collapse", "f066");
         registerSymbol("copy", "f0c5");
         registerSymbol("cog", "f013");
