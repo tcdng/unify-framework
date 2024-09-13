@@ -134,7 +134,7 @@ public final class ZipUtils {
         File targetFile = new File(targetFilePath);
 		IOUtils.ensureDirectoryExists(targetFile.getParent());
         try (FileOutputStream fos = new FileOutputStream(targetFile)) {
-        	IOUtils.writeAll(fos, zin);
+        	IOUtils.writeAllLeaveOpen(fos, zin);
         } catch (IOException e) {
 			throw new UnifyException(e, UnifyCoreErrorConstants.IOUTIL_STREAM_RW_ERROR);
 		}

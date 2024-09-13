@@ -29,6 +29,16 @@ import org.junit.Test;
  */
 public class IOUtilsTest {
 
+	@Test
+	public void testGetParentDirectory() throws Exception {
+		final String separator = System.getProperty("file.separator");
+		assertEquals("", IOUtils.getParentDirectory("actualize"));
+		assertEquals("", IOUtils.getParentDirectory("actualize/"));
+		assertEquals("actualize" + separator, IOUtils.getParentDirectory("actualize/src"));
+		assertEquals("actualize" + separator, IOUtils.getParentDirectory("actualize/src/"));
+		assertEquals("actualize" + separator + "src" + separator, IOUtils.getParentDirectory("actualize/src/java"));
+	}
+	
     @Test
 	public void testIsWithProtocolInfix() throws Exception {
 		assertFalse(IOUtils.isWithProtocolInfix(null));
