@@ -36,6 +36,7 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -534,6 +535,33 @@ public class IOUtils {
     }
 
     /**
+     * Writes all data from input stream to output stream. Closes input stream at
+     * end of write.
+     * 
+     * @param outputStream
+     *                     the output stream to write to
+     * @param inputStream
+     *                     the input stream to read from
+     * @return the number of bytes written
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    public static long writeAllLeaveOpen(OutputStream outputStream, InputStream inputStream) throws UnifyException {
+        try {
+            long totalRead = 0;
+            byte[] buffer = new byte[BUFFER_SIZE];
+            int read = 0;
+            while ((read = inputStream.read(buffer)) >= 0) {
+                outputStream.write(buffer, 0, read);
+                totalRead += read;
+            }
+            return totalRead;
+        } catch (IOException e) {
+            throw new UnifyException(e, UnifyCoreErrorConstants.IOUTIL_STREAM_RW_ERROR);
+        }
+    }
+
+    /**
      * Writes all supplied data to specified output stream.
      * 
      * @param outputStream
@@ -768,6 +796,28 @@ public class IOUtils {
         }
         return true;
     }
+
+	public static String getParentDirectory(String path) {
+		path = IOUtils.conformFilePath(path);
+		int index = path.lastIndexOf(System.getProperty("file.separator"), path.length() - 2);
+		return index > 0 ? path.substring(0, index + 1) : "";
+	}
+
+	public static boolean deleteDirectory(String path) {
+		File folder = new File(IOUtils.conform(System.getProperty("file.separator"), path));
+		if (folder.isDirectory()) {
+			File[] files = folder.listFiles();
+			if (files != null) {
+				for (File file : files) {
+					deleteFileOrDirectory(file);
+				}
+			}
+			
+			return folder.delete();
+		}
+		
+		return false;
+	}
 
 	public static void deleteDirectoryContents(String path) {
 		File folder = new File(IOUtils.conform(System.getProperty("file.separator"), path));
@@ -1102,7 +1152,7 @@ public class IOUtils {
 	public static String postJsonToEndpoint(String endpoint, String json) throws UnifyException {
 		StringBuilder response = new StringBuilder();
 		try {
-			URL url = new URL(endpoint);
+			URL url = new URI(endpoint).toURL();
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 			conn.setRequestMethod("POST");
 			conn.setRequestProperty("Content-Type", "application/json; utf-8");
