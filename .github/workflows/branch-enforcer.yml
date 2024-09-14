@@ -1,0 +1,14 @@
+name: 'Enforce Branch Rules'
+
+on:
+  pull_request:
+
+jobs:
+  enforce_rule:
+    runs-on:  ubuntu-latest
+    steps:
+      - name: Enforce Rule
+        if: github.base_ref == 'master' && github.head_ref != 'development'
+        run: |
+          echo "Error: You can only merge to master from development."
+          exit 1
