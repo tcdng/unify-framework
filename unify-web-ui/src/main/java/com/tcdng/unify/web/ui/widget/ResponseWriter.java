@@ -908,6 +908,32 @@ public interface ResponseWriter extends UnifyComponent {
      */
     WebStringWriter discardMergeSecondary();
 
+	/**
+	 * Sets dynamic confirmation message.
+	 * 
+	 * @param confirm the message to set
+	 */
+	void setConfirm(String confirm);
+
+	/**
+	 * Gets dynamic confirmation.
+	 * 
+	 * @return the confirmation.
+	 */
+	String getConfirm();
+
+	/**
+	 * Clears dynamic confirmation message.
+	 */
+	void clearConfirm();
+
+	/**
+	 * Checks if writer is with dynamic confirmation message
+	 * 
+	 * @return true if exists otherwise false
+	 */
+	boolean isWithConfirm();
+    
     /**
      * Resets this response writer for reuse.
      * 

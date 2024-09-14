@@ -83,6 +83,8 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 
 	private Set<String> postCommandRefs;
 
+	private String confirm;
+
 	private int dataIndex;
 
 	private boolean tableMode;
@@ -797,6 +799,26 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 		} catch (IOException e) {
 			throwOperationErrorException(e);
 		}
+	}
+
+	@Override
+	public void setConfirm(String confirm) {
+		this.confirm = confirm;
+	}
+
+	@Override
+	public String getConfirm() {
+		return confirm;
+	}
+
+	@Override
+	public void clearConfirm() {
+		confirm = null;
+	}
+
+	@Override
+	public boolean isWithConfirm() {
+		return !StringUtils.isBlank(confirm);
 	}
 
 	@Override
