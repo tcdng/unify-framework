@@ -47,6 +47,7 @@ import io.undertow.servlet.Servlets;
 import io.undertow.servlet.api.DeploymentInfo;
 import io.undertow.servlet.api.DeploymentManager;
 import io.undertow.servlet.api.ServletInfo;
+import io.undertow.servlet.api.ServletSessionConfig;
 import io.undertow.servlet.util.ImmediateInstanceFactory;
 
 /**
@@ -128,6 +129,8 @@ public class UndertowEmbeddedWebServer extends AbstractEmbeddedHttpWebServer {
 									new HttpApplicationServlet(createHttpServletModule())))
 					.addMapping(getServletPath());
 			deploymentInfo.addServlet(servletInfo);
+	        final String sessionCookieName = generateSessionCookieName();
+	        deploymentInfo.setServletSessionConfig(new ServletSessionConfig().setName(sessionCookieName));
 			deploymentInfo.setDefaultSessionTimeout(
 					getContainerSetting(int.class, UnifyCorePropertyConstants.APPLICATION_SESSION_TIMEOUT,
 							UnifyCoreConstants.DEFAULT_APPLICATION_SESSION_TIMEOUT_SECONDS));

@@ -117,6 +117,8 @@ public class TomcatEmbeddedWebServer extends AbstractEmbeddedHttpWebServer {
 			servletWrapper.setMultipartConfigElement(new MultipartConfigElement(getMultipartLocation(),
 					getMultipartMaxFileSize(), getMultipartMaxRequestSize(), getMultipartFileSizeThreshold()));
 			context.addServletMapping(getServletPath(), _servletName);
+	        final String sessionCookieName = generateSessionCookieName();
+			context.getServletContext().getSessionCookieConfig().setName(sessionCookieName);
 			context.setSessionTimeout(
 					getContainerSetting(int.class, UnifyCorePropertyConstants.APPLICATION_SESSION_TIMEOUT,
 							UnifyCoreConstants.DEFAULT_APPLICATION_SESSION_TIMEOUT_SECONDS) / 60);

@@ -18,9 +18,11 @@ package com.tcdng.unify.web.http;
 
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.RequestContextManager;
+import com.tcdng.unify.core.UnifyCorePropertyConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.system.UserSessionManager;
+import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.UnifyWebPropertyConstants;
 import com.tcdng.unify.web.WebApplicationComponents;
 
@@ -84,6 +86,14 @@ public abstract class AbstractEmbeddedHttpWebServer extends AbstractHttpWebInter
 		return getPreferredPort() > 0 ? getPreferredPort(): httpPort;
 	}
 
+	protected String generateSessionCookieName() throws UnifyException {
+		final int port = isHttpsOnly() ? getHttpsPort() : getHttpPort();
+		final String infix = StringUtils
+				.flatten(getContainerSetting(String.class, UnifyCorePropertyConstants.APPLICATION_NAME, "unify"))
+				.replaceAll("[^a-zA-Z0-9_]", "");
+		return ("JSESSION_" + infix + "_" + port + "_ID").toUpperCase();
+	}
+	
 	protected int getHttpsPort() {
         return httpsPort;
     }
