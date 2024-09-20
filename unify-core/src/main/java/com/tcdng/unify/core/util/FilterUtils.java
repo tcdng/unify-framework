@@ -464,31 +464,12 @@ public final class FilterUtils {
 	private FilterUtils() {
 
 	}
-
-	public static FilterConditionListType getEnumFilterConditionListType(FilterConditionListType listType) {
-		if (listType != null) {
-			switch(listType) {
-			case IMMEDIATE_ENUM_FIELD:
-				break;
-			case IMMEDIATE_ENUM_ONLY:
-				break;
-			case IMMEDIATE_ENUM_PARAM:
-				break;
-			case IMMEDIATE_FIELD:
-				return FilterConditionListType.IMMEDIATE_ENUM_FIELD;
-			case IMMEDIATE_ONLY:
-				return FilterConditionListType.IMMEDIATE_ENUM_ONLY;
-			case IMMEDIATE_PARAM:
-				return FilterConditionListType.IMMEDIATE_ENUM_PARAM;
-			default:
-				break;		
-			}
+	
+	public static String getFilterConditionTypeListCommand(Class<?> fieldType, FilterConditionListType listType, boolean enumMode) {
+		if (enumMode) {
+			listType = FilterUtils.getEnumFilterConditionListType(listType);
 		}
 		
-		return listType;
-	}
-	
-	public static String getFilterConditionTypeListCommand(Class<?> fieldType, FilterConditionListType listType) {
 		String descriptor = classToFilterConditionSelectorMap.get(listType).get(fieldType);
 		if (descriptor != null) {
 			return descriptor;
@@ -531,5 +512,28 @@ public final class FilterUtils {
 
 	public static ObjectFilterPolicy getBeanFilterPolicy(FilterConditionType type) {
 		return filterPolicies.get(type);
+	}
+
+	private static FilterConditionListType getEnumFilterConditionListType(FilterConditionListType listType) {
+		if (listType != null) {
+			switch(listType) {
+			case IMMEDIATE_ENUM_FIELD:
+				break;
+			case IMMEDIATE_ENUM_ONLY:
+				break;
+			case IMMEDIATE_ENUM_PARAM:
+				break;
+			case IMMEDIATE_FIELD:
+				return FilterConditionListType.IMMEDIATE_ENUM_FIELD;
+			case IMMEDIATE_ONLY:
+				return FilterConditionListType.IMMEDIATE_ENUM_ONLY;
+			case IMMEDIATE_PARAM:
+				return FilterConditionListType.IMMEDIATE_ENUM_PARAM;
+			default:
+				break;		
+			}
+		}
+		
+		return listType;
 	}
 }
