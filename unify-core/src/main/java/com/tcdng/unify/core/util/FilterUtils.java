@@ -137,6 +137,18 @@ public final class FilterUtils {
 		map.put(String.class, "stringparamconditionlist");
 		mapAll.put(FilterConditionListType.IMMEDIATE_PARAM, Collections.unmodifiableMap(map));
 
+		map = new HashMap<Class<?>, String>();
+		map.put(String.class, "enumconditionlist");
+		mapAll.put(FilterConditionListType.IMMEDIATE_ENUM_ONLY, Collections.unmodifiableMap(map));
+
+		map = new HashMap<Class<?>, String>();
+		map.put(String.class, "enumfieldconditionlist");
+		mapAll.put(FilterConditionListType.IMMEDIATE_ENUM_FIELD, Collections.unmodifiableMap(map));
+
+		map = new HashMap<Class<?>, String>();
+		map.put(String.class, "enumparamconditionlist");
+		mapAll.put(FilterConditionListType.IMMEDIATE_ENUM_PARAM, Collections.unmodifiableMap(map));
+
 		classToFilterConditionSelectorMap = Collections.unmodifiableMap(mapAll);
 	}
 
@@ -231,6 +243,11 @@ public final class FilterUtils {
 					FilterConditionType.NOT_END_WITH, FilterConditionType.NOT_LIKE, FilterConditionType.NOT_BETWEEN,
 					FilterConditionType.NOT_AMONGST, FilterConditionType.IS_NULL, FilterConditionType.IS_NOT_NULL)));
 
+	private static final Set<FilterConditionType> enumConditionTypes_imm = Collections
+			.unmodifiableSet(new LinkedHashSet<FilterConditionType>(Arrays.asList(FilterConditionType.EQUALS,
+					FilterConditionType.AMONGST, FilterConditionType.NOT_EQUALS,
+					FilterConditionType.NOT_AMONGST, FilterConditionType.IS_NULL, FilterConditionType.IS_NOT_NULL)));
+
 	private static final Set<FilterConditionType> stringConditionTypes_field = Collections
 			.unmodifiableSet(new LinkedHashSet<FilterConditionType>(Arrays.asList(FilterConditionType.EQUALS_LINGUAL,
 					FilterConditionType.NOT_EQUALS_LINGUAL, FilterConditionType.EQUALS, FilterConditionType.IEQUALS,
@@ -247,6 +264,13 @@ public final class FilterUtils {
 					FilterConditionType.NOT_LIKE_FIELD, FilterConditionType.NOT_BETWEEN_FIELD,
 					FilterConditionType.EQUALS_SESSIONPARAM, FilterConditionType.NOT_EQUALS_SESSIONPARAM)));
 
+	private static final Set<FilterConditionType> enumConditionTypes_field = Collections
+			.unmodifiableSet(new LinkedHashSet<FilterConditionType>(Arrays.asList(
+					FilterConditionType.EQUALS, FilterConditionType.AMONGST, FilterConditionType.NOT_EQUALS,
+					FilterConditionType.NOT_AMONGST, FilterConditionType.IS_NULL, FilterConditionType.IS_NOT_NULL,
+					FilterConditionType.EQUALS_FIELD, FilterConditionType.NOT_EQUALS_FIELD,
+					FilterConditionType.EQUALS_SESSIONPARAM, FilterConditionType.NOT_EQUALS_SESSIONPARAM)));
+
 	private static final Set<FilterConditionType> stringConditionTypes_param = Collections
 			.unmodifiableSet(new LinkedHashSet<FilterConditionType>(Arrays.asList(FilterConditionType.EQUALS,
 					FilterConditionType.IEQUALS, FilterConditionType.BEGINS_WITH, FilterConditionType.IBEGINS_WITH,
@@ -260,6 +284,13 @@ public final class FilterUtils {
 					FilterConditionType.BETWEEN_PARAM, FilterConditionType.NOT_EQUALS_PARAM,
 					FilterConditionType.NOT_BEGIN_WITH_PARAM, FilterConditionType.NOT_END_WITH_PARAM,
 					FilterConditionType.NOT_LIKE_PARAM, FilterConditionType.NOT_BETWEEN_PARAM)));
+
+	private static final Set<FilterConditionType> enumConditionTypes_param = Collections
+			.unmodifiableSet(new LinkedHashSet<FilterConditionType>(Arrays.asList(FilterConditionType.EQUALS,
+					FilterConditionType.AMONGST,
+					FilterConditionType.NOT_EQUALS,
+					FilterConditionType.NOT_AMONGST, FilterConditionType.IS_NULL, FilterConditionType.IS_NOT_NULL,
+					FilterConditionType.EQUALS_PARAM, FilterConditionType.NOT_EQUALS_PARAM)));
 
 	private static final Set<FilterConditionType> enumConstConditionTypes = Collections
 			.unmodifiableSet(new LinkedHashSet<FilterConditionType>(Arrays.asList(FilterConditionType.EQUALS,
@@ -342,6 +373,18 @@ public final class FilterUtils {
 		map.put(String.class, stringConditionTypes_param);
 		mapAll.put(FilterConditionListType.IMMEDIATE_PARAM, Collections.unmodifiableMap(map));
 
+		map = new HashMap<Class<?>, Set<FilterConditionType>>();
+		map.put(String.class, enumConditionTypes_imm);
+		mapAll.put(FilterConditionListType.IMMEDIATE_ENUM_ONLY, Collections.unmodifiableMap(map));
+
+		map = new HashMap<Class<?>, Set<FilterConditionType>>();
+		map.put(String.class, enumConditionTypes_field);
+		mapAll.put(FilterConditionListType.IMMEDIATE_ENUM_FIELD, Collections.unmodifiableMap(map));
+
+		map = new HashMap<Class<?>, Set<FilterConditionType>>();
+		map.put(String.class, enumConditionTypes_param);
+		mapAll.put(FilterConditionListType.IMMEDIATE_ENUM_PARAM, Collections.unmodifiableMap(map));
+
 		supportedConditionMap = Collections.unmodifiableMap(mapAll);
 	}
 
@@ -421,8 +464,12 @@ public final class FilterUtils {
 	private FilterUtils() {
 
 	}
-
-	public static String getFilterConditionTypeListCommand(Class<?> fieldType, FilterConditionListType listType) {
+	
+	public static String getFilterConditionTypeListCommand(Class<?> fieldType, FilterConditionListType listType, boolean enumMode) {
+		if (enumMode) {
+			listType = FilterUtils.getEnumFilterConditionListType(listType);
+		}
+		
 		String descriptor = classToFilterConditionSelectorMap.get(listType).get(fieldType);
 		if (descriptor != null) {
 			return descriptor;
@@ -465,5 +512,28 @@ public final class FilterUtils {
 
 	public static ObjectFilterPolicy getBeanFilterPolicy(FilterConditionType type) {
 		return filterPolicies.get(type);
+	}
+
+	private static FilterConditionListType getEnumFilterConditionListType(FilterConditionListType listType) {
+		if (listType != null) {
+			switch(listType) {
+			case IMMEDIATE_ENUM_FIELD:
+				break;
+			case IMMEDIATE_ENUM_ONLY:
+				break;
+			case IMMEDIATE_ENUM_PARAM:
+				break;
+			case IMMEDIATE_FIELD:
+				return FilterConditionListType.IMMEDIATE_ENUM_FIELD;
+			case IMMEDIATE_ONLY:
+				return FilterConditionListType.IMMEDIATE_ENUM_ONLY;
+			case IMMEDIATE_PARAM:
+				return FilterConditionListType.IMMEDIATE_ENUM_PARAM;
+			default:
+				break;		
+			}
+		}
+		
+		return listType;
 	}
 }
