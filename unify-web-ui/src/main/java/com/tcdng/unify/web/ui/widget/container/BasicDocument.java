@@ -15,6 +15,8 @@
  */
 package com.tcdng.unify.web.ui.widget.container;
 
+import java.util.UUID;
+
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.web.ui.widget.AbstractDocument;
@@ -31,7 +33,18 @@ public class BasicDocument extends AbstractDocument {
     @Configurable
     private String[] meta;
 
+    private String documentClientId;
+    
     public String[] getMeta() {
         return meta;
     }
+
+	public String generateDocumentClientId() {
+		documentClientId = UUID.randomUUID().toString();
+		return documentClientId;
+	}
+
+	public String getDocumentClientId() {
+		return documentClientId;
+	}
 }

@@ -153,6 +153,40 @@ ux.setupDocument = function(docPath, docPopupBaseId, docPopupId, docSysInfoId, d
 	ux.docSessionId = docSessionId;
 }
 
+ux.wsPushUpdate = function(docClientId, wsSyncPath) {
+	ux.wsDocClientId = docClientId;
+	ux.wsUrl = (location.protocol == "https:" ? "wss://" : "ws://")
+		+ location.hostname
+		+ (location.port ? ':' + location.port: '')
+		+ wsSyncPath;
+
+	console.log("@prime: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+	console.log("@prime: ux.wsDocClientId = " + ux.wsDocClientId);
+	console.log("@prime: ux.wsUrl = " + ux.wsUrl);
+	console.log("@prime: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+
+	ux.wsSocket = new WebSocket(ux.wsUrl);
+	ux.wsSocket.addEventListener('open', function (event) {
+	    ux.wsSend("open", docClientId);
+	});
+	ux.wsSocket.addEventListener('message', function (event) {
+	    ux.wsReceive(event.data);
+	});
+}
+
+ux.wsSend = function(cmd, param) {
+	if (ux.wsSocket) {
+		const msg = JSON.stringify({cmd:cmd, param:param});
+		ux.wsSocket.send(msg);
+	}
+}
+
+ux.wsReceive = function(txt) {
+	console.log("@prime: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+	console.log("@prime: ux.wsReceive() txt = " + txt);
+	console.log("@prime: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+}
+
 ux.processJSON = function(jsonstring) {
 	const fullResp = JSON.parse(jsonstring);
 	ux.remoteView = fullResp.remoteView;

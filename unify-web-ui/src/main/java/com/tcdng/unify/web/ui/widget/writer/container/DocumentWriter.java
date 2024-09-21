@@ -24,6 +24,7 @@ import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ControllerPathParts;
+import com.tcdng.unify.web.constant.ClientSyncNameConstants;
 import com.tcdng.unify.web.data.WebStringWriter;
 import com.tcdng.unify.web.ui.PagePathInfoRepository;
 import com.tcdng.unify.web.ui.widget.DocumentLayout;
@@ -181,6 +182,11 @@ public class DocumentWriter extends AbstractPageWriter {
 				.write(document.getPopupSysId()).write("\", \"").write(document.getLatencyPanelId()).write("\", \"")
 				.write(getSessionContext().getId()).write("\");");
 
+		if (document.isPushUpdate()) {
+			writer.write("ux.wsPushUpdate(\"").write(document.generateDocumentClientId()).write("\", \"")
+			.write(ClientSyncNameConstants.ENDPOINT_NAME).write("\");");
+		}
+		
 		writer.useSecondary();
 		// Write layout behavior
 		DocumentLayout documentLayout = document.getUplAttribute(DocumentLayout.class, "layout");
