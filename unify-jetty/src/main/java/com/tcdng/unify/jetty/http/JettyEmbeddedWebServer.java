@@ -137,9 +137,11 @@ public class JettyEmbeddedWebServer extends AbstractEmbeddedHttpWebServer {
 //            context.getSessionHandler().getSessionCookieConfig().setHttpOnly(true);            
             httpServer.setHandler(context);
 
+            // Websocket
             ServletHolder jettyHolder = new ServletHolder(JettyClientSyncWebSocketServlet.class);
-            context.addServlet(jettyHolder, ClientSyncNameConstants.ENDPOINT_NAME);
+            context.addServlet(jettyHolder, ClientSyncNameConstants.SYNC_CONTEXT);
             
+            // HTTP/HTTPS
             ServletHolder mainHolder = new ServletHolder(new HttpApplicationServlet(createHttpServletModule()));
             mainHolder.getRegistration().setMultipartConfig(new MultipartConfigElement(getMultipartLocation(),
                     getMultipartMaxFileSize(), getMultipartMaxRequestSize(), getMultipartFileSizeThreshold()));

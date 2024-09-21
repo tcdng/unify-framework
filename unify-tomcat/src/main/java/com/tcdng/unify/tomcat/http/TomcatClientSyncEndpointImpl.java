@@ -13,47 +13,40 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.jetty.http;
+package com.tcdng.unify.tomcat.http;
 
-import java.util.UUID;
-
-import org.eclipse.jetty.websocket.api.Session;
-import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
-import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
-import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
-import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import javax.websocket.OnClose;
+import javax.websocket.OnMessage;
+import javax.websocket.OnOpen;
+import javax.websocket.Session;
+import javax.websocket.server.ServerEndpoint;
 
 import com.tcdng.unify.web.AbstractClientSyncEndpoint;
 import com.tcdng.unify.web.AbstractClientSyncSession;
+import com.tcdng.unify.web.constant.ClientSyncNameConstants;
 
 /**
- * Jetty client synchronization end-point implementation.
+ * Tomcat client synchronization end-point implementation.
  * 
  * @author The Code Department
  * @since 1.0
  */
-@WebSocket
-public class JettyClientSyncEndpointImpl extends AbstractClientSyncEndpoint {
-
-	private final String sessionId;
+@ServerEndpoint(ClientSyncNameConstants.SYNC_CONTEXT)
+public class TomcatClientSyncEndpointImpl extends AbstractClientSyncEndpoint {
 	
-	public JettyClientSyncEndpointImpl() {
-		this.sessionId = UUID.randomUUID().toString();
-	}
-	
-	@OnWebSocketConnect
+	@OnOpen
 	public void onOpen(Session session) {
 		handleOpenSession(new ClientSyncSessionImpl(session));
 	}
 
-	@OnWebSocketMessage
-	public void onMessage(Session session, String txt) {
-		handleTextMessage(sessionId, txt);
+	@OnMessage
+	public void onMessage(String txt, Session session) {
+		handleTextMessage(session.getId(), txt);
 	}
 
-	@OnWebSocketClose
-	public void onClose(Session session, int statusCode, String reason) {
-		handleCloseSession(sessionId, reason);
+	@OnClose
+	public void onClose(Session session) {
+		handleCloseSession(session.getId(), "");
 	}
 
 	private class ClientSyncSessionImpl extends AbstractClientSyncSession {
@@ -66,7 +59,7 @@ public class JettyClientSyncEndpointImpl extends AbstractClientSyncEndpoint {
 
 		@Override
 		public String getId() {
-			return sessionId;
+			return session.getId();
 		}
 
 	}

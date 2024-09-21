@@ -39,6 +39,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<jetty.version>9.4.41.v20210516</jetty.version>
 	</properties>
 
     <build>
@@ -82,7 +83,7 @@
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-server</artifactId>
-			<version>9.4.41.v20210516</version>
+			<version>${jetty.version}</version>
             <exclusions>
                 <exclusion>
                       <groupId>org.eclipse.jetty.orbit</groupId>
@@ -93,12 +94,12 @@
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-servlet</artifactId>
-			<version>9.4.41.v20210516</version>
+			<version>${jetty.version}</version>
 		</dependency>
 		<dependency>
 		    <groupId>org.eclipse.jetty.websocket</groupId>
 		    <artifactId>websocket-server</artifactId>
-		    <version>9.4.41.v20210516</version>
+		    <version>${jetty.version}</version>
 		</dependency>
 		<!-- Test dependencies -->
 		<dependency>

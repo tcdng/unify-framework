@@ -184,7 +184,7 @@ public class DocumentWriter extends AbstractPageWriter {
 
 		if (document.isPushUpdate()) {
 			writer.write("ux.wsPushUpdate(\"").write(document.generateDocumentClientId()).write("\", \"")
-			.write(ClientSyncNameConstants.ENDPOINT_NAME).write("\");");
+			.write(ClientSyncNameConstants.SYNC_CONTEXT).write("\");");
 		}
 		
 		writer.useSecondary();

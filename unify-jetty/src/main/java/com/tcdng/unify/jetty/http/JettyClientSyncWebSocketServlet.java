@@ -29,7 +29,7 @@ import com.tcdng.unify.web.constant.ClientSyncNameConstants;
  * @since 1.0
  */
 @SuppressWarnings("serial")
-@WebServlet(name = "MyWebSocketServlet", urlPatterns = {ClientSyncNameConstants.ENDPOINT_NAME})
+@WebServlet(name = "MyWebSocketServlet", urlPatterns = {ClientSyncNameConstants.SYNC_CONTEXT})
 public class JettyClientSyncWebSocketServlet extends WebSocketServlet {
 
 	@Override

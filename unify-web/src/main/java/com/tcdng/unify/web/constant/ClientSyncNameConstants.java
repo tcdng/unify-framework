@@ -24,5 +24,5 @@ package com.tcdng.unify.web.constant;
  */
 public interface ClientSyncNameConstants {
 
-	String ENDPOINT_NAME = "/wssync";
+	String SYNC_CONTEXT = "/ws/sync";
 }
