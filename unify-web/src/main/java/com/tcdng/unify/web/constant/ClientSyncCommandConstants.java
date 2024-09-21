@@ -14,14 +14,19 @@
  * the License.
  */
 
-package com.tcdng.unify.web;
+package com.tcdng.unify.web.constant;
 
 /**
- * Client synchronization end-point.
+ * Client synchronization command constants.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public interface ClientSyncEndpoint {
+public interface ClientSyncCommandConstants {
 
+	String OPEN = "open";
+
+	String CLOSE = "close";
+
+	String EXPIRE = "expire";
 }

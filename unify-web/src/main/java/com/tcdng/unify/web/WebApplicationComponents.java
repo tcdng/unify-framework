@@ -44,4 +44,6 @@ public interface WebApplicationComponents {
     String APPLICATION_REALPATHRESOURCECONTROLLER = "/resource/realpath";
 
     String APPLICATION_CLASSLOADERRESOURCECONTROLLER = "/resource/classloader";
+    
+    String APPLICATION_CLIENTSYNCMANAGER = "application-clientsyncmanager";
 }

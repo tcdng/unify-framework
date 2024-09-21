@@ -16,12 +16,51 @@
 
 package com.tcdng.unify.web;
 
+import java.util.Date;
+
 /**
- * Client synchronization end-point.
+ * Client synchronization session.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public interface ClientSyncEndpoint {
+public interface ClientSyncSession {
 
+	/**
+	 * Gets session unique ID.
+	 * 
+	 * @return the unique ID
+	 */
+	String getId();
+
+	/**
+	 * Sets the session client ID.
+	 * 
+	 * @param clientId the client ID to set.
+	 */
+	void setClientId(String clientId);
+	
+	/**
+	 * Gets session client ID.
+	 * 
+	 * @return the client ID
+	 */
+	String getClientId();
+
+	/**
+	 * Invalidates session.
+	 */
+	void invalidate();
+	
+	/**
+	 * Triggers heart beat on client call.
+	 */
+	void heartBeat();
+	
+	/**
+	 * Returns the last time client called server.
+	 * 
+	 * @return the timestamp
+	 */
+	Date lastClientCallOn();
 }

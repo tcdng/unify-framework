@@ -16,12 +16,23 @@
 
 package com.tcdng.unify.web;
 
+import com.tcdng.unify.core.UnifyComponent;
+import com.tcdng.unify.core.UnifyException;
+
 /**
- * Client synchronization end-point.
+ * Client synchronization processor.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public interface ClientSyncEndpoint {
+public interface ClientSyncProcessor extends UnifyComponent {
+
+	/**
+	 * Processes a client synchronization message.
+	 * 
+	 * @param msg the message to process
+	 * @throws UnifyException if an error occurs
+	 */
+	void process(ClientSyncMsg msg) throws UnifyException;
 
 }

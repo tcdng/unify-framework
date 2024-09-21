@@ -13,38 +13,40 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+package com.tcdng.unify.web.util;
 
-package com.tcdng.unify.web;
-
-import com.tcdng.unify.core.business.BusinessService;
+import com.tcdng.unify.web.ClientSyncManager;
 
 /**
- * Client synchronization manager.
+ * Client synchronization utilities.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public interface ClientSyncManager extends BusinessService {
+public final class ClientSyncUtils {
+
+	private static ClientSyncManager clientSyncManager;
+	
+    private ClientSyncUtils() {
+
+    }
 
 	/**
-	 * Opens a client synchronization session.
+	 * Registers a client synchronizer manager.
 	 * 
-	 * @param session the session to open
+	 * @param clientSyncManager the manage to register
 	 */
-	void openClientSession(ClientSyncSession session);
+	public static void registerClientSyncManager(ClientSyncManager clientSyncManager) {
+		ClientSyncUtils.clientSyncManager = clientSyncManager;
+	}
 
 	/**
-	 * Processes a client message.
-	 * @param clientSessionId the client session ID
-	 * @param msg the client message
-	 */
-	void processClientMessage(String clientSessionId, String msg);
-
-	/**
-	 * Closes a client session.
+	 * Gets client synchronization manager.
 	 * 
-	 * @param clientSessionId the client session ID
-	 * @param reason the reason
+	 * @return the client synchronization manager
 	 */
-	void closeClientSession(String clientSessionId, String reason);
+	public static ClientSyncManager getClientSyncManager() {
+		return clientSyncManager;
+	}
+
 }

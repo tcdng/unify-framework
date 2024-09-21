@@ -16,12 +16,47 @@
 
 package com.tcdng.unify.web;
 
+import java.util.Date;
+
 /**
- * Client synchronization end-point.
+ * Convenient abstract base class for client synchronization sessions.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public interface ClientSyncEndpoint {
+public abstract class AbstractClientSyncSession implements ClientSyncSession {
+
+	private String clientId;
+	
+	private Date lastHeartBeat;
+	
+	public AbstractClientSyncSession() {
+		heartBeat();
+	}
+	
+	@Override
+	public String getClientId() {
+		return clientId;
+	}
+
+	@Override
+	public void setClientId(String clientId) {
+		this.clientId = clientId;
+	}
+
+	@Override
+	public void invalidate() {
+		
+	}
+
+	@Override
+	public final void heartBeat() {
+		lastHeartBeat = new Date();
+	}
+
+	@Override
+	public final Date lastClientCallOn() {
+		return lastHeartBeat;
+	}
 
 }

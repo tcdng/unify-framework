@@ -13,15 +13,27 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
 package com.tcdng.unify.web;
 
+import com.tcdng.unify.core.AbstractUnifyComponent;
+import com.tcdng.unify.core.UnifyException;
+
 /**
- * Client synchronization end-point.
+ * Convenient abstract base class for client synchronization processors.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public interface ClientSyncEndpoint {
+public abstract class AbstractClientSyncProcessor extends AbstractUnifyComponent implements ClientSyncProcessor {
+
+	@Override
+	protected void onInitialize() throws UnifyException {
+
+	}
+
+	@Override
+	protected void onTerminate() throws UnifyException {
+
+	}
 
 }
