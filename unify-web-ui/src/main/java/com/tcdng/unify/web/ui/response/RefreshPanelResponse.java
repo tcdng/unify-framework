@@ -78,10 +78,10 @@ public class RefreshPanelResponse extends AbstractJsonPageControllerResponse {
         PageRequestContextUtil util = getRequestContextUtil();
         if (util.isNoPushWidgets()) {
             writer.write(",\"noPushWidgets\":").writeJsonArray(util.getNoPushWidgetIds());
-        }
+        }      
         
         if (util.isWithClientTopic()) {
-            writer.write(",\"topic\":").write(util.getClientTopic());
+            writer.write(",\"topic\":\"").write(util.getClientTopic()).write("\"");
         }
     }
 

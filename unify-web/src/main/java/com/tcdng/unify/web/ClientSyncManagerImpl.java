@@ -62,7 +62,6 @@ public class ClientSyncManagerImpl extends AbstractBusinessService implements Cl
 	@Override
 	public void openClientSession(ClientSyncSession session) {
 		sessions.put(session.getId(), session);
-		pageEventBroadcaster.registerClient(session);
 	}
 
 	@Override
@@ -73,10 +72,11 @@ public class ClientSyncManagerImpl extends AbstractBusinessService implements Cl
 			ClientEventMsg eventMsg = DataUtils.fromJsonString(ClientEventMsg.class, msg);
 			if (ClientSyncCommandConstants.OPEN.equals(eventMsg.getCmd())) {
 				final String clientId = eventMsg.getParam();
-				eventMsg.setClientId(clientId);
 				session.setClientId(clientId);
+				pageEventBroadcaster.registerClient(session);
 			}
 
+			eventMsg.setClientId(session.getClientId());
 			pageEventBroadcaster.processClientEvent(eventMsg);
 		} catch (Exception ex) {
 			logError(ex);

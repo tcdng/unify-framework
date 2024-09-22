@@ -43,6 +43,7 @@ public class PageEventBroadcasterImpl extends AbstractBusinessService implements
 	
 	public PageEventBroadcasterImpl() {
 		this.sessions = new ConcurrentHashMap<String, ClientSyncSession>();
+		this.listenersByTopic = new ConcurrentHashMap<String, Set<String>>(); 
 	}
 	
 	@Override

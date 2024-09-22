@@ -58,7 +58,7 @@ public class LoadContentResponse extends AbstractJsonPageControllerResponse {
         }
         
         if (util.isWithClientTopic()) {
-            writer.write(",\"topic\":").write(util.getClientTopic());
+            writer.write(",\"topic\":\"").write(util.getClientTopic()).write("\"");
         }
     }
 }
