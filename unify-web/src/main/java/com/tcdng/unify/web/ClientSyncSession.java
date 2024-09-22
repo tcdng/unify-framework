@@ -53,6 +53,13 @@ public interface ClientSyncSession {
 	void invalidate();
 	
 	/**
+	 * Checks if session is invalidated.
+	 * 
+	 * @return true if invalidated otherwise false
+	 */
+	boolean isInvalidated();
+	
+	/**
 	 * Triggers heart beat on client call.
 	 */
 	void heartBeat();

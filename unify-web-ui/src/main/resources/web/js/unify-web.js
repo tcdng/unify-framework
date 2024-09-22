@@ -159,11 +159,10 @@ ux.wsPushUpdate = function(docClientId, wsSyncPath) {
 		+ location.hostname
 		+ (location.port ? ':' + location.port: '')
 		+ wsSyncPath;
-
-	console.log("@prime: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-	console.log("@prime: ux.wsDocClientId = " + ux.wsDocClientId);
+	console.log("@prime: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 	console.log("@prime: ux.wsUrl = " + ux.wsUrl);
-	console.log("@prime: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+	console.log("@prime: ux.wsDocClientId = " + ux.wsDocClientId);
+	console.log("@prime: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 
 	ux.wsSocket = new WebSocket(ux.wsUrl);
 	ux.wsSocket.addEventListener('open', function (event) {
@@ -176,15 +175,12 @@ ux.wsPushUpdate = function(docClientId, wsSyncPath) {
 
 ux.wsSend = function(cmd, param) {
 	if (ux.wsSocket) {
-		const msg = JSON.stringify({cmd:cmd, param:param});
-		ux.wsSocket.send(msg);
+		ux.wsSocket.send(JSON.stringify({cmd:cmd, param:param}));
 	}
 }
 
 ux.wsReceive = function(txt) {
-	console.log("@prime: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-	console.log("@prime: ux.wsReceive() txt = " + txt);
-	console.log("@prime: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+	// TODO
 }
 
 ux.processJSON = function(jsonstring) {
@@ -523,6 +519,10 @@ ux.refreshPanels = function(resp) {
 		}
 		
 		ux.markNoPushWidgets(resp.noPushWidgets);
+	}
+	
+	if (resp.topic) {
+		ux.wsSend("listen", resp.topic);
 	}
 }
 

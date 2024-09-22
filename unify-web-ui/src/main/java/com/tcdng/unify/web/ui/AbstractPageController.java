@@ -887,6 +887,27 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 	}
 
 	/**
+	 * Sets current client (browser) to listen to topic.
+	 * 
+	 * @param topic the topic to set
+	 * @throws UnifyException if an error occurs
+	 */
+	protected void setClientListenToTopic(String topic) throws UnifyException {
+		getPageRequestContextUtil().setClientTopic(topic);
+	}
+
+	/**
+	 * Sets current client (browser) to listen to topic with associated title.
+	 * 
+	 * @param topic the topic to set
+	 * @param title the associated title
+	 * @throws UnifyException if an error occurs
+	 */
+	protected void setClientListenToTopic(String topic, String title) throws UnifyException {
+		getPageRequestContextUtil().setClientTopic(topic + ":" + title);
+	}
+	
+	/**
 	 * Executes on {@link #initPage()}
 	 * 
 	 * @throws UnifyException if an error occurs

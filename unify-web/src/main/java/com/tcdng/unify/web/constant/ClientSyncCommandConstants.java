@@ -29,4 +29,6 @@ public interface ClientSyncCommandConstants {
 	String CLOSE = "close";
 
 	String EXPIRE = "expire";
+
+	String LISTEN = "listen";
 }

@@ -13,11 +13,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.web.ui.response;
+package com.tcdng.unify.web.ui.response; 
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.web.ui.AbstractJsonPageControllerResponse;
+import com.tcdng.unify.web.ui.PageRequestContextUtil;
 import com.tcdng.unify.web.ui.constant.PageRequestParameterConstants;
 import com.tcdng.unify.web.ui.widget.ContentPanel;
 import com.tcdng.unify.web.ui.widget.Page;
@@ -58,8 +59,10 @@ public class UnloadContentResponse extends AbstractJsonPageControllerResponse {
             writer.write(",\"refreshPanels\":[");
             writer.writeJsonPanel(contentPanel, true);
             writer.write("]");
-            if (getRequestContextUtil().isNoPushWidgets()) {
-                writer.write(",\"noPushWidgets\":").writeJsonArray(getRequestContextUtil().getNoPushWidgetIds());
+
+            PageRequestContextUtil util = getRequestContextUtil();
+            if (util.isNoPushWidgets()) {
+                writer.write(",\"noPushWidgets\":").writeJsonArray(util.getNoPushWidgetIds());
             }
         } finally{
             removeSessionAttribute(PageRequestParameterConstants.UNLOAD_ORIGIN_PAGE);

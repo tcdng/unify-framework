@@ -13,53 +13,37 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package com.tcdng.unify.web;
 
+import com.tcdng.unify.core.UnifyComponent;
+
 /**
- * Client synchronization message.
+ * Page event broadcaster.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public class ClientSyncMsg {
+public interface PageEventBroadcaster extends UnifyComponent {
 
-	private String clientId;
+	/**
+	 * Registers a client synchronization session.
+	 * 
+	 * @param session the session to register
+	 */
+	void registerClient(ClientSyncSession session);
 
-	private String cmd;
-	
-	private String param;
+	/**
+	 * Unregisters a client synchronization session.
+	 * 
+	 * @param clientId the client ID
+	 */
+	void unregisterClient(String clientId);
 
-	public ClientSyncMsg(String clientId, String cmd, String param) {
-		this.clientId = clientId;
-		this.cmd = cmd;
-		this.param = param;
-	}
-
-	public ClientSyncMsg() {
-
-	}
-
-	public String getClientId() {
-		return clientId;
-	}
-
-	public void setClientId(String clientId) {
-		this.clientId = clientId;
-	}
-
-	public String getCmd() {
-		return cmd;
-	}
-
-	public void setCmd(String cmd) {
-		this.cmd = cmd;
-	}
-
-	public String getParam() {
-		return param;
-	}
-
-	public void setParam(String param) {
-		this.param = param;
-	}
+	/**
+	 * Processes a client event.
+	 * 
+	 * @param eventMsg
+	 */
+	void processClientEvent(ClientEventMsg eventMsg);
 }

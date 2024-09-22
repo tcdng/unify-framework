@@ -21,6 +21,7 @@ import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.web.ui.AbstractJsonPageControllerResponse;
+import com.tcdng.unify.web.ui.PageRequestContextUtil;
 import com.tcdng.unify.web.ui.widget.Page;
 import com.tcdng.unify.web.ui.widget.Panel;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
@@ -28,7 +29,7 @@ import com.tcdng.unify.web.ui.widget.ResponseWriter;
 /**
  * Used for generating a refresh panel response.
  * 
- * @author The Code Department
+ * @author The Code Department 
  * @since 1.0
  */
 @Component("refreshpanelresponse")
@@ -73,8 +74,14 @@ public class RefreshPanelResponse extends AbstractJsonPageControllerResponse {
             }
         }
         writer.write("]");
-        if (getRequestContextUtil().isNoPushWidgets()) {
-            writer.write(",\"noPushWidgets\":").writeJsonArray(getRequestContextUtil().getNoPushWidgetIds());
+
+        PageRequestContextUtil util = getRequestContextUtil();
+        if (util.isNoPushWidgets()) {
+            writer.write(",\"noPushWidgets\":").writeJsonArray(util.getNoPushWidgetIds());
+        }
+        
+        if (util.isWithClientTopic()) {
+            writer.write(",\"topic\":").write(util.getClientTopic());
         }
     }
 

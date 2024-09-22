@@ -46,4 +46,6 @@ public interface WebApplicationComponents {
     String APPLICATION_CLASSLOADERRESOURCECONTROLLER = "/resource/classloader";
     
     String APPLICATION_CLIENTSYNCMANAGER = "application-clientsyncmanager";
+    
+    String APPLICATION_PAGEEVENTBROADCASTER= "application-pageeventbroadcaster";
 }

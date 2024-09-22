@@ -166,6 +166,27 @@ public abstract class AbstractPanel extends AbstractContainer implements Panel {
 	}
 
 	/**
+	 * Sets current client (browser) to listen to topic.
+	 * 
+	 * @param topic the topic to set
+	 * @throws UnifyException if an error occurs
+	 */
+	protected void setClientListenToTopic(String topic) throws UnifyException {
+		getRequestContextUtil().setClientTopic(topic);
+	}
+
+	/**
+	 * Sets current client (browser) to listen to topic with associated title.
+	 * 
+	 * @param topic the topic to set
+	 * @param title the associated title
+	 * @throws UnifyException if an error occurs
+	 */
+	protected void setClientListenToTopic(String topic, String title) throws UnifyException {
+		getRequestContextUtil().setClientTopic(topic + ":" + title);
+	}
+
+	/**
 	 * Clears hint user in current request.
 	 * 
 	 * @throws UnifyException if an error occurs

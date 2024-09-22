@@ -678,10 +678,25 @@ public interface PageRequestContextUtil extends UnifyComponent {
      */
     void clearFocusOnWidget() throws UnifyException;
 
-    boolean isOnFocusOneshot() throws UnifyException;
+	/**
+	 * Gets focus one shot.
+	 * 
+	 * @return true if focus oneshot
+	 * @throws UnifyException if an error occurs
+	 */
+	boolean isOnFocusOneshot() throws UnifyException;
 
-    void setOnFocusOneshot() throws UnifyException;
+	/**
+	 * Sets on focus one-shot.
+	 * 
+	 * @throws UnifyException if an error occurs
+	 */
+	void setOnFocusOneshot() throws UnifyException;
 
+    /**
+     * Clears focus one-shot.
+     * @throws UnifyException if an error occurs
+     */
     void clearOnFocusOneshot() throws UnifyException;
 
     /**
@@ -693,6 +708,30 @@ public interface PageRequestContextUtil extends UnifyComponent {
      */
     boolean isNoPushWidgets() throws UnifyException;
 
+	/**
+	 * Checks if request is with client topic.
+	 * 
+	 * @return true if present otherwise false
+	 * @throws UnifyException if an error occurs
+	 */
+	boolean isWithClientTopic() throws UnifyException;
+
+	/**
+	 * Gets the request client topic.
+	 * 
+	 * @return the client topic otherwise null
+	 * @throws UnifyException if an error occurs
+	 */
+	String getClientTopic() throws UnifyException;
+
+	/**
+	 * Sets client topic within request context.
+	 * 
+	 * @param topic the topic to set
+	 * @throws UnifyException if an error occurs
+	 */
+	void setClientTopic(String topic) throws UnifyException;
+    
     /**
      * Adds the ID of widget to skip when pushing data to the server to current
      * request

@@ -30,8 +30,11 @@ public abstract class AbstractClientSyncSession implements ClientSyncSession {
 	
 	private Date lastHeartBeat;
 	
+	private boolean valid;
+	
 	public AbstractClientSyncSession() {
 		heartBeat();
+		this.valid = true;
 	}
 	
 	@Override
@@ -46,7 +49,12 @@ public abstract class AbstractClientSyncSession implements ClientSyncSession {
 
 	@Override
 	public void invalidate() {
-		
+		valid = false;
+	}
+
+	@Override
+	public boolean isInvalidated() {
+		return !valid;
 	}
 
 	@Override

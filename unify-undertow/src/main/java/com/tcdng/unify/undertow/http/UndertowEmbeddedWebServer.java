@@ -128,9 +128,9 @@ public class UndertowEmbeddedWebServer extends AbstractEmbeddedHttpWebServer {
 			final String _servletName = UndertowApplicationComponents.UNDERTOW_EMBEDDEDWEBSERVER + "-servlet";
 			
 			// WebSockets
-			final WebSocketDeploymentInfo webSockets = new WebSocketDeploymentInfo()
+			final WebSocketDeploymentInfo wsdi = new WebSocketDeploymentInfo()
 			        .addEndpoint(UndertowClientSyncEndpointImpl.class);	
-			deploymentInfo.addServletContextAttribute(ATTRIBUTE_NAME, webSockets);
+			deploymentInfo.addServletContextAttribute(ATTRIBUTE_NAME, wsdi);
 			
 			// HTTP/HTTPS
 			ServletInfo servletInfo = Servlets

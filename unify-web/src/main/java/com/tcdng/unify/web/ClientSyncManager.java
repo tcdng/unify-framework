@@ -35,16 +35,18 @@ public interface ClientSyncManager extends BusinessService {
 
 	/**
 	 * Processes a client message.
-	 * @param clientSessionId the client session ID
-	 * @param msg the client message
+	 * 
+	 * @param sessionId the client session ID
+	 * @param msg       the client message
 	 */
-	void processClientMessage(String clientSessionId, String msg);
+	void processClientMessage(String sessionId, String msg);
 
 	/**
 	 * Closes a client session.
 	 * 
-	 * @param clientSessionId the client session ID
-	 * @param reason the reason
+	 * @param sessionId the client session ID
+	 * @param reason    the reason
 	 */
-	void closeClientSession(String clientSessionId, String reason);
+	void closeClientSession(String sessionId, String reason);
+	
 }

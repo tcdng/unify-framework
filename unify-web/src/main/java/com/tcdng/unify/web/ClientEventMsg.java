@@ -15,25 +15,51 @@
  */
 package com.tcdng.unify.web;
 
-import com.tcdng.unify.core.AbstractUnifyComponent;
-import com.tcdng.unify.core.UnifyException;
-
 /**
- * Convenient abstract base class for client synchronization processors.
+ * Client event message.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public abstract class AbstractClientSyncProcessor extends AbstractUnifyComponent implements ClientSyncProcessor {
+public class ClientEventMsg {
 
-	@Override
-	protected void onInitialize() throws UnifyException {
+	private String clientId;
+
+	private String cmd;
+	
+	private String param;
+
+	public ClientEventMsg(String clientId, String cmd, String param) {
+		this.clientId = clientId;
+		this.cmd = cmd;
+		this.param = param;
+	}
+
+	public ClientEventMsg() {
 
 	}
 
-	@Override
-	protected void onTerminate() throws UnifyException {
-
+	public String getClientId() {
+		return clientId;
 	}
 
+	public void setClientId(String clientId) {
+		this.clientId = clientId;
+	}
+
+	public String getCmd() {
+		return cmd;
+	}
+
+	public void setCmd(String cmd) {
+		this.cmd = cmd;
+	}
+
+	public String getParam() {
+		return param;
+	}
+
+	public void setParam(String param) {
+		this.param = param;
+	}
 }

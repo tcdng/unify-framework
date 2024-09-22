@@ -117,6 +117,8 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
     private static final String DEBOUNCE_WIDGET = "DEBOUNCE_WIDGET";
 
     private static final String NO_PUSH_WIDGET_ID_LIST = "NO_PUSH_WIDGET_ID_LIST";
+
+    private static final String CLIENT_TOPIC = "CLIENT_TOPIC";
     
     @Override
     public void setRequestPage(Page page) throws UnifyException {
@@ -596,6 +598,21 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
 	@Override
 	public void clearOnFocusOneshot() throws UnifyException {
 		setRequestAttribute(FOCUS_ONESHOT, false);
+	}
+
+	@Override
+	public boolean isWithClientTopic() throws UnifyException {
+		return isRequestAttribute(CLIENT_TOPIC);
+	}
+
+	@Override
+	public String getClientTopic() throws UnifyException {
+        return getRequestAttribute(String.class, CLIENT_TOPIC);
+	}
+
+	@Override
+	public void setClientTopic(String topic) throws UnifyException {
+		setRequestAttribute(CLIENT_TOPIC, topic);
 	}
 
 	@Override

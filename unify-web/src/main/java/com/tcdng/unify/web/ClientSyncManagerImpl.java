@@ -51,7 +51,7 @@ public class ClientSyncManagerImpl extends AbstractBusinessService implements Cl
 	private static final String EXPIRATION_HOUSEKEEP_LOCK = "csm::expirationhousekeep-lock";
 
 	@Configurable
-	private ClientSyncProcessor clientSyncProcessor;
+	private PageEventBroadcaster pageEventBroadcaster;
 
 	private final Map<String, ClientSyncSession> sessions;
 
@@ -62,37 +62,35 @@ public class ClientSyncManagerImpl extends AbstractBusinessService implements Cl
 	@Override
 	public void openClientSession(ClientSyncSession session) {
 		sessions.put(session.getId(), session);
+		pageEventBroadcaster.registerClient(session);
 	}
 
 	@Override
-	public void processClientMessage(String clientSessionId, String msg) {
-		logDebug("Processing client session [{0}] message [{1}]...", clientSessionId, msg);
+	public void processClientMessage(String sessionId, String msg) {
+		logDebug("Processing client session [{0}] message [{1}]...", sessionId, msg);
 		try {
-			ClientSyncSession session = getSession(clientSessionId);
-			ClientSyncMsg syncMsg = DataUtils.fromJsonString(ClientSyncMsg.class, msg);
-			if (ClientSyncCommandConstants.OPEN.equals(syncMsg.getCmd())) {
-				final String clientId = syncMsg.getParam();
-				syncMsg.setClientId(clientId);
+			ClientSyncSession session = getSession(sessionId);
+			ClientEventMsg eventMsg = DataUtils.fromJsonString(ClientEventMsg.class, msg);
+			if (ClientSyncCommandConstants.OPEN.equals(eventMsg.getCmd())) {
+				final String clientId = eventMsg.getParam();
+				eventMsg.setClientId(clientId);
 				session.setClientId(clientId);
 			}
 
-			if (clientSyncProcessor != null) {
-				clientSyncProcessor.process(syncMsg);
-			}
+			pageEventBroadcaster.processClientEvent(eventMsg);
 		} catch (Exception ex) {
 			logError(ex);
 		}
 	}
 
 	@Override
-	public void closeClientSession(String clientSessionId, String reason) {
-		logDebug("Closing client session [{0}] with reason [{1}]...", clientSessionId, reason);
+	public void closeClientSession(String sessionId, String reason) {
+		logDebug("Closing client session [{0}] with reason [{1}]...", sessionId, reason);
 		try {
-			ClientSyncSession session = getSession(clientSessionId);
-			ClientSyncMsg syncMsg = new ClientSyncMsg(session.getClientId(), ClientSyncCommandConstants.CLOSE, reason);
-			if (clientSyncProcessor != null) {
-				clientSyncProcessor.process(syncMsg);
-			}
+			ClientSyncSession session = getSession(sessionId);
+			ClientEventMsg eventMsg = new ClientEventMsg(session.getClientId(), ClientSyncCommandConstants.CLOSE,
+					reason);
+			pageEventBroadcaster.processClientEvent(eventMsg);
 		} catch (Exception ex) {
 			logError(ex);
 		}
@@ -101,20 +99,25 @@ public class ClientSyncManagerImpl extends AbstractBusinessService implements Cl
 	@Periodic(PeriodicType.NORMAL)
 	@Synchronized(EXPIRATION_HOUSEKEEP_LOCK)
 	public void performExpirationHouseKeeping(TaskMonitor taskMonitor) throws UnifyException {
+		logDebug("Performing expiration housekeeping...");
 		Date now = db().getNow();
 		int expirationInSeconds = getContainerSetting(int.class, UnifyCorePropertyConstants.APPLICATION_SESSION_TIMEOUT,
 				UnifyCoreConstants.DEFAULT_APPLICATION_SESSION_TIMEOUT_SECONDS);
 		Date expiryTime = CalendarUtils.getDateWithOffset(now, -(expirationInSeconds * 1000));
-		for (String clientSessionId : new ArrayList<String>(sessions.keySet())) {
-			ClientSyncSession session = sessions.get(clientSessionId);
-			if (expiryTime.after(session.lastClientCallOn())) {
-				sessions.remove(clientSessionId);
-				if (clientSyncProcessor != null) {
-					clientSyncProcessor
-							.process(new ClientSyncMsg(session.getClientId(), ClientSyncCommandConstants.EXPIRE, null));
-				}
+		int count = 0;
+		for (String sessionId : new ArrayList<String>(sessions.keySet())) {
+			ClientSyncSession session = sessions.get(sessionId);
+			if (session.isInvalidated() || expiryTime.after(session.lastClientCallOn())) {
+				sessions.remove(sessionId);
+				pageEventBroadcaster.processClientEvent(
+						new ClientEventMsg(session.getClientId(), ClientSyncCommandConstants.EXPIRE, null));
+				pageEventBroadcaster.unregisterClient(session.getClientId());
+
+				count++;
 			}
 		}
+
+		logDebug("[{0}] client synchronization session(s) expired.", count);
 	}
 
 	@Override
