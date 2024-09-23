@@ -104,7 +104,7 @@ public class ClientSyncManagerImpl extends AbstractBusinessService implements Cl
 	public void performExpirationHouseKeeping(TaskMonitor taskMonitor) throws UnifyException {
 		logDebug("Performing expiration housekeeping...");
 		Date now = db().getNow();
-		Date expiryTime = CalendarUtils.getDateWithOffset(now, -expirationInMilliSeconds * 1000);
+		Date expiryTime = CalendarUtils.getDateWithOffset(now, -expirationInMilliSeconds);
 		int count = 0;
 		for (String sessionId : new ArrayList<String>(sessions.keySet())) {
 			ClientSyncSession session = sessions.get(sessionId);

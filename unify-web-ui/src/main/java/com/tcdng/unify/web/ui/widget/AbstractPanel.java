@@ -28,6 +28,7 @@ import com.tcdng.unify.web.UnifyWebSessionAttributeConstants;
 import com.tcdng.unify.web.annotation.Action;
 import com.tcdng.unify.web.constant.ReservedPageControllerConstants;
 import com.tcdng.unify.web.constant.ResultMappingConstants;
+import com.tcdng.unify.web.constant.TopicEventType;
 import com.tcdng.unify.web.constant.UnifyWebRequestAttributeConstants;
 import com.tcdng.unify.web.ui.PageRequestContextUtil;
 import com.tcdng.unify.web.ui.widget.data.MessageBox;
@@ -184,6 +185,29 @@ public abstract class AbstractPanel extends AbstractContainer implements Panel {
 	 */
 	protected void setClientListenToTopic(String topic, String title) throws UnifyException {
 		getRequestContextUtil().setClientTopic(topic + ":" + title);
+	}
+
+	/**
+	 * Adds client topic to current request attribute.
+	 * 
+	 * @param eventType the event type
+	 * @param topic     the topic to set
+	 * @throws UnifyException if an error occurs
+	 */
+	protected void addClientTopicEvent(TopicEventType eventType, String topic) throws UnifyException {
+		getRequestContextUtil().addClientTopicEvent(eventType, topic);
+	}
+
+	/**
+	 * Adds client topic to current request attribute.
+	 * 
+	 * @param eventType the event type
+	 * @param topic     the topic to set
+	 * @param title the associated title
+	 * @throws UnifyException if an error occurs
+	 */
+	protected void addClientTopicEvent(TopicEventType eventType, String topic, String title) throws UnifyException {
+		getRequestContextUtil().addClientTopicEvent(eventType, topic + ":" + title);
 	}
 
 	/**

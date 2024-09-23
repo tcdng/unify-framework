@@ -14,27 +14,33 @@
  * the License.
  */
 
-package com.tcdng.unify.web.constant;
+package com.tcdng.unify.web.data;
+
+import com.tcdng.unify.web.constant.TopicEventType;
 
 /**
- * Client synchronization command constants.
+ * Topic event.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public interface ClientSyncCommandConstants {
+public class TopicEvent {
 
-	String OPEN = "open";
+	private TopicEventType eventType;
 
-	String CLOSE = "close";
+	private String topic;
 
-	String EXPIRE = "expire";
+	public TopicEvent(TopicEventType eventType, String topic) {
+		this.eventType = eventType;
+		this.topic = topic;
+	}
 
-	String LISTEN = "listen";
+	public TopicEventType getEventType() {
+		return eventType;
+	}
 
-	String CREATE = "create";
+	public String getTopic() {
+		return topic;
+	}
 
-	String UPDATE = "update";
-
-	String DELETE = "delete";
 }
