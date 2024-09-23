@@ -87,9 +87,10 @@ public class PageEventBroadcasterImpl extends AbstractBusinessService implements
 	}
 
 	@Broadcast
-	public void broadcastTopicEvent(String clientId, String cmd, String param) throws UnifyException {
-		// TODO Auto-generated method stub
-
+	public void broadcastTopicEvent(String originClientId, String type, String topic) throws UnifyException {
+		logDebug("Broadcasting client event [{0}] for topic [{1}] and originating from client [{2}]...",
+				type, topic, originClientId);
+		// TODO
 	}
 
 	private void listenToTopic(String clientId, String topic) {
