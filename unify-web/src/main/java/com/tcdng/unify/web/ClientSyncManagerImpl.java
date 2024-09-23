@@ -55,12 +55,15 @@ public class ClientSyncManagerImpl extends AbstractBusinessService implements Cl
 
 	private final Map<String, ClientSyncSession> sessions;
 
+	private long expirationInMilliSeconds;
+	
 	public ClientSyncManagerImpl() {
 		this.sessions = new ConcurrentHashMap<String, ClientSyncSession>();
 	}
 
 	@Override
 	public void openClientSession(ClientSyncSession session) {
+		session.setIdleTimeoutInMilliSec(expirationInMilliSeconds);
 		sessions.put(session.getId(), session);
 	}
 
@@ -101,9 +104,7 @@ public class ClientSyncManagerImpl extends AbstractBusinessService implements Cl
 	public void performExpirationHouseKeeping(TaskMonitor taskMonitor) throws UnifyException {
 		logDebug("Performing expiration housekeeping...");
 		Date now = db().getNow();
-		int expirationInSeconds = getContainerSetting(int.class, UnifyCorePropertyConstants.APPLICATION_SESSION_TIMEOUT,
-				UnifyCoreConstants.DEFAULT_APPLICATION_SESSION_TIMEOUT_SECONDS);
-		Date expiryTime = CalendarUtils.getDateWithOffset(now, -(expirationInSeconds * 1000));
+		Date expiryTime = CalendarUtils.getDateWithOffset(now, -expirationInMilliSeconds * 1000);
 		int count = 0;
 		for (String sessionId : new ArrayList<String>(sessions.keySet())) {
 			ClientSyncSession session = sessions.get(sessionId);
@@ -123,6 +124,8 @@ public class ClientSyncManagerImpl extends AbstractBusinessService implements Cl
 	@Override
 	protected void onInitialize() throws UnifyException {
 		ClientSyncUtils.registerClientSyncManager(this);
+		expirationInMilliSeconds = getContainerSetting(int.class, UnifyCorePropertyConstants.APPLICATION_SESSION_TIMEOUT,
+				UnifyCoreConstants.DEFAULT_APPLICATION_SESSION_TIMEOUT_SECONDS) * 1000;
 		super.onInitialize();
 	}
 

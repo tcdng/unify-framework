@@ -27,6 +27,13 @@ import java.util.Date;
 public interface ClientSyncSession {
 
 	/**
+	 * Sets the session idle timeout.
+	 * 
+	 * @param expirationInMilliSeconds expiration in milliseconds
+	 */
+	void setIdleTimeoutInMilliSec(long expirationInMilliSeconds);
+	
+	/**
 	 * Gets session unique ID.
 	 * 
 	 * @return the unique ID

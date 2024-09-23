@@ -70,5 +70,10 @@ public class TomcatClientSyncEndpointImpl extends AbstractClientSyncEndpoint {
 			return sessionId;
 		}
 
+		@Override
+		public void setIdleTimeoutInMilliSec(long expirationInMilliSeconds) {
+			session.setMaxIdleTimeout(expirationInMilliSeconds);
+		}
+
 	}
 }

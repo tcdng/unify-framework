@@ -69,5 +69,10 @@ public class JettyClientSyncEndpointImpl extends AbstractClientSyncEndpoint {
 			return sessionId;
 		}
 
+		@Override
+		public void setIdleTimeoutInMilliSec(long expirationInMilliSeconds) {
+			session.setIdleTimeout(expirationInMilliSeconds);
+		}
+
 	}
 }
