@@ -520,9 +520,16 @@ ux.refreshPanels = function(resp) {
 		
 		ux.markNoPushWidgets(resp.noPushWidgets);
 	}
-	
+
 	if (resp.topic) {
 		ux.wsSend("listen", resp.topic);
+	}
+
+	if (resp.topicEvent) {
+		for (var i = 0; i < resp.topicEvent.length; i++) {
+			const event = resp.topicEvent[i];
+			ux.wsSend(event.type, event.topic);
+		}
 	}
 }
 

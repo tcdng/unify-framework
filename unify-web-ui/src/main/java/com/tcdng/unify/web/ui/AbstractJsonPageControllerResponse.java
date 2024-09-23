@@ -22,6 +22,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.format.FormatHelper;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
+import com.tcdng.unify.web.data.TopicEvent;
 import com.tcdng.unify.web.ui.widget.Page;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 
@@ -83,5 +84,39 @@ public abstract class AbstractJsonPageControllerResponse extends AbstractPageCon
         return StringUtils.underscore(resourceName) + "_" + getFormatHelper().formatNow(FormatHelper.yyyyMMdd_HHmmss);
     }
 
+    protected void writeNoPushWidgets(ResponseWriter writer) throws UnifyException {
+        PageRequestContextUtil util = getRequestContextUtil();
+        if (util.isNoPushWidgets()) {
+            writer.write(",\"noPushWidgets\":").writeJsonArray(util.getNoPushWidgetIds());
+        }
+         
+    }
+    
+    protected void writeClientTopic(ResponseWriter writer) throws UnifyException {
+        PageRequestContextUtil util = getRequestContextUtil();
+        if (util.isWithClientTopic()) {
+            writer.write(",\"topic\":\"").write(util.getClientTopic()).write("\"");
+        }
+        
+        if (util.isWithClientTopicEvent()) {
+            writer.write(",\"topicEvent\":[");
+            boolean appendSym = false;
+            for (TopicEvent event: util.getClientTopicEvents()) {
+            	if (appendSym) {
+            		writer.write(",");
+            	} else {
+            		appendSym = true;
+            	}
+            	
+        		writer.write("{\"type\":\"");
+        		writer.write(event.getEventType().toString().toLowerCase());
+        		writer.write("\",\"topic\":\""); 
+        		writer.write(event.getTopic());
+        		writer.write("\"}");            	
+            }
+            writer.write("]");
+        }
+    }
+    
     protected abstract void doGenerate(ResponseWriter writer, Page page) throws UnifyException;
 }

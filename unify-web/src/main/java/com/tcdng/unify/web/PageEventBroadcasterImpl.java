@@ -21,6 +21,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.annotation.Broadcast;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Transactional;
 import com.tcdng.unify.core.business.AbstractBusinessService;
@@ -71,8 +73,23 @@ public class PageEventBroadcasterImpl extends AbstractBusinessService implements
 		case ClientSyncCommandConstants.LISTEN:
 			listenToTopic(eventMsg.getClientId(), eventMsg.getParam());
 			break;
+		case ClientSyncCommandConstants.CREATE:
+		case ClientSyncCommandConstants.UPDATE:
+		case ClientSyncCommandConstants.DELETE:
+			try {
+				broadcastTopicEvent(eventMsg.getClientId(), eventMsg.getCmd(), eventMsg.getParam());
+			} catch (Exception e) {
+				logError(e);
+			}
+			break;
 		default:
 		}
+	}
+
+	@Broadcast
+	public void broadcastTopicEvent(String clientId, String cmd, String param) throws UnifyException {
+		// TODO Auto-generated method stub
+
 	}
 
 	private void listenToTopic(String clientId, String topic) {
