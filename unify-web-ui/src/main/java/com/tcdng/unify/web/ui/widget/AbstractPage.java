@@ -49,6 +49,8 @@ public abstract class AbstractPage extends AbstractStandalonePanel implements Pa
 
     private ControllerPathParts controllerPathParts;
 
+    private String pageId;
+
     @Override
     public String getSubCaption() throws UnifyException {
         String subCaption = null;
@@ -61,8 +63,9 @@ public abstract class AbstractPage extends AbstractStandalonePanel implements Pa
     }
 
     @Override
-    public void setPathParts(ControllerPathParts controllerPathParts) {
+    public void setPathParts(ControllerPathParts controllerPathParts, String pageId) {
         this.controllerPathParts = controllerPathParts;
+        this.pageId = pageId;
     }
 
     @Override
@@ -75,6 +78,11 @@ public abstract class AbstractPage extends AbstractStandalonePanel implements Pa
     }
 
     @Override
+	public String getPageId() {
+		return pageId;
+	}
+
+	@Override
     public List<String> getPathVariables() {
         if (controllerPathParts != null) {
             return controllerPathParts.getPathVariables();

@@ -21,11 +21,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
@@ -46,11 +44,11 @@ import com.tcdng.unify.web.PathInfoRepository;
 import com.tcdng.unify.web.UnifyWebPropertyConstants;
 import com.tcdng.unify.web.annotation.RequestParameter;
 import com.tcdng.unify.web.annotation.ResultMappings;
-import com.tcdng.unify.web.constant.RequestParameterConstants;
 import com.tcdng.unify.web.constant.ReservedPageControllerConstants;
 import com.tcdng.unify.web.constant.ResultMappingConstants;
 import com.tcdng.unify.web.constant.UnifyWebRequestAttributeConstants;
 import com.tcdng.unify.web.ui.constant.PageRequestParameterConstants;
+import com.tcdng.unify.web.ui.util.WebUtils;
 import com.tcdng.unify.web.ui.widget.Page;
 import com.tcdng.unify.web.ui.widget.PageManager;
 import com.tcdng.unify.web.ui.widget.PropertyInfo;
@@ -89,8 +87,6 @@ public class UIControllerUtilImpl extends AbstractUnifyComponent implements UICo
 
     private PageControllerResponse refreshMenuResponse;
 
-    private Set<String> skipOnPopulateSet;
-
     private Map<String, String> additionalResponseHeaders;
 
     private String commonUtilitiesControllerName;
@@ -101,8 +97,6 @@ public class UIControllerUtilImpl extends AbstractUnifyComponent implements UICo
 
     @SuppressWarnings("rawtypes")
     public UIControllerUtilImpl() {
-        skipOnPopulateSet = new HashSet<String>();
-
         pageControllerActionInfoMap = new FactoryMap<Class<? extends PageController>, PageControllerActionInfo>()
             {
 
@@ -155,25 +149,6 @@ public class UIControllerUtilImpl extends AbstractUnifyComponent implements UICo
                     return createResourceControllerInfo(controllerName);
                 }
             };
-
-        skipOnPopulateSet.add(PageRequestParameterConstants.DOCUMENT);
-        skipOnPopulateSet.add(PageRequestParameterConstants.TARGET_VALUE);
-        skipOnPopulateSet.add(PageRequestParameterConstants.WINDOW_NAME);
-        skipOnPopulateSet.add(PageRequestParameterConstants.VALIDATION_ACTION);
-        skipOnPopulateSet.add(PageRequestParameterConstants.CONFIRM_MSG);
-        skipOnPopulateSet.add(PageRequestParameterConstants.CONFIRM_MSGICON);
-        skipOnPopulateSet.add(PageRequestParameterConstants.CONFIRM_PARAM);
-
-        skipOnPopulateSet.add(RequestParameterConstants.REMOTE_VIEWER);
-        skipOnPopulateSet.add(RequestParameterConstants.REMOTE_ROLECD);
-        skipOnPopulateSet.add(RequestParameterConstants.REMOTE_SESSION_ID);
-        skipOnPopulateSet.add(RequestParameterConstants.REMOTE_USERLOGINID);
-        skipOnPopulateSet.add(RequestParameterConstants.REMOTE_USERNAME);
-        skipOnPopulateSet.add(RequestParameterConstants.REMOTE_BRANCH_CODE);
-        skipOnPopulateSet.add(RequestParameterConstants.REMOTE_ZONE_CODE);
-        skipOnPopulateSet.add(RequestParameterConstants.REMOTE_GLOBAL_ACCESS);
-        skipOnPopulateSet.add(RequestParameterConstants.REMOTE_COLOR_SCHEME);
-        skipOnPopulateSet.add(RequestParameterConstants.REMOTE_TENANT_CODE);
     }
 
     @Override
@@ -242,7 +217,9 @@ public class UIControllerUtilImpl extends AbstractUnifyComponent implements UICo
 
     @Override
     public Page loadRequestPage(ControllerPathParts controllerPathParts) throws UnifyException {
-        Page page = (Page) getSessionContext().getAttribute(controllerPathParts.getControllerPathId());
+		final String clientId = getRequestAttribute(String.class, PageRequestParameterConstants.CLIENT_ID);
+		final String pageId = WebUtils.getPageId(controllerPathParts.getControllerPathId(), clientId);
+        Page page = (Page) getSessionContext().getAttribute(pageId);
         pageRequestContextUtil.setRequestPage(page);
         return page;
     }

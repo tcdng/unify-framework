@@ -749,6 +749,8 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
 
     @Override
     public void extractRequestParameters(ClientRequest request) throws UnifyException {
+        setRequestAttribute(PageRequestParameterConstants.CLIENT_ID,
+                request.getParameter(PageRequestParameterConstants.CLIENT_ID));
         setRequestAttribute(PageRequestParameterConstants.TARGET_VALUE,
                 request.getParameter(PageRequestParameterConstants.TARGET_VALUE));
         setRequestAttribute(PageRequestParameterConstants.WINDOW_NAME,

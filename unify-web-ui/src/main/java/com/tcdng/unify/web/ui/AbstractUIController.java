@@ -15,8 +15,6 @@
  */
 package com.tcdng.unify.web.ui;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -41,13 +39,13 @@ import com.tcdng.unify.web.PathInfoRepository;
 import com.tcdng.unify.web.UnifyWebErrorConstants;
 import com.tcdng.unify.web.UnifyWebPropertyConstants;
 import com.tcdng.unify.web.constant.ReadOnly;
-import com.tcdng.unify.web.constant.RequestParameterConstants;
 import com.tcdng.unify.web.constant.ResetOnWrite;
 import com.tcdng.unify.web.constant.ResultMappingConstants;
 import com.tcdng.unify.web.constant.Secured;
 import com.tcdng.unify.web.constant.SystemInfoConstants;
 import com.tcdng.unify.web.ui.constant.PageRequestParameterConstants;
 import com.tcdng.unify.web.ui.util.DataTransferUtils;
+import com.tcdng.unify.web.ui.util.WebUtils;
 import com.tcdng.unify.web.ui.widget.Document;
 import com.tcdng.unify.web.ui.widget.Page;
 import com.tcdng.unify.web.ui.widget.PageManager;
@@ -61,18 +59,6 @@ import com.tcdng.unify.web.ui.widget.ResponseWriterPool;
  * @since 1.0
  */
 public abstract class AbstractUIController extends AbstractController implements UIController {
-
-	private static final Set<String> skipOnPopulateSet = Collections
-			.unmodifiableSet(new HashSet<String>(Arrays.asList(PageRequestParameterConstants.DOCUMENT,
-					PageRequestParameterConstants.TARGET_VALUE, PageRequestParameterConstants.WINDOW_NAME,
-					PageRequestParameterConstants.VALIDATION_ACTION, PageRequestParameterConstants.CONFIRM_MSG,
-					PageRequestParameterConstants.CONFIRM_MSGICON, PageRequestParameterConstants.CONFIRM_PARAM,
-					PageRequestParameterConstants.NO_TRANSFER,
-					RequestParameterConstants.REMOTE_VIEWER, RequestParameterConstants.REMOTE_ROLECD,
-					RequestParameterConstants.REMOTE_SESSION_ID, RequestParameterConstants.REMOTE_USERLOGINID,
-					RequestParameterConstants.REMOTE_USERNAME, RequestParameterConstants.REMOTE_BRANCH_CODE,
-					RequestParameterConstants.REMOTE_ZONE_CODE, RequestParameterConstants.REMOTE_GLOBAL_ACCESS,
-					RequestParameterConstants.REMOTE_COLOR_SCHEME, RequestParameterConstants.REMOTE_TENANT_CODE)));
 
 	@Configurable
 	private UIControllerUtil uiControllerUtil;
@@ -228,8 +214,9 @@ public abstract class AbstractUIController extends AbstractController implements
 		Map<String, DataTransferBlock> transferBlocks = null;
 		DataTransferParam dataTransferParam = getDataTransferParam();
 
+		final Set<String> reservedSet = WebUtils.getReservedRequestAttributes();
 		for (String transferId : request.getParameterNames()) {
-			if (skipOnPopulateSet.contains(transferId)) {
+			if (reservedSet.contains(transferId)) {
 				continue;
 			}
 

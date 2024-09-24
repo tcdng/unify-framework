@@ -144,7 +144,8 @@ ux.registerExtension = function(extLiteral, extObj) {
 }
 
 /** Basic * */
-ux.setupDocument = function(docPath, docPopupBaseId, docPopupId, docSysInfoId, docLatencyId, docSessionId) {
+ux.setupDocument = function(docClientId, docPath, docPopupBaseId, docPopupId, docSysInfoId, docLatencyId, docSessionId) {
+	ux.docClientId = docClientId;
 	ux.docPath = docPath;
 	ux.docPopupBaseId = docPopupBaseId;
 	ux.docPopupId = docPopupId;
@@ -153,20 +154,15 @@ ux.setupDocument = function(docPath, docPopupBaseId, docPopupId, docSysInfoId, d
 	ux.docSessionId = docSessionId;
 }
 
-ux.wsPushUpdate = function(docClientId, wsSyncPath) {
-	ux.wsDocClientId = docClientId;
+ux.wsPushUpdate = function(wsSyncPath) {
 	ux.wsUrl = (location.protocol == "https:" ? "wss://" : "ws://")
 		+ location.hostname
 		+ (location.port ? ':' + location.port: '')
 		+ wsSyncPath;
-	console.log("@prime: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-	console.log("@prime: ux.wsUrl = " + ux.wsUrl);
-	console.log("@prime: ux.wsDocClientId = " + ux.wsDocClientId);
-	console.log("@prime: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 
 	ux.wsSocket = new WebSocket(ux.wsUrl);
 	ux.wsSocket.addEventListener('open', function (event) {
-	    ux.wsSend("open", docClientId);
+	    ux.wsSend("open", ux.docClientId);
 	});
 	ux.wsSocket.addEventListener('message', function (event) {
 	    ux.wsReceive(event.data);
@@ -180,11 +176,7 @@ ux.wsSend = function(cmd, param) {
 }
 
 ux.wsReceive = function(txt) {
-	console.log("@prime: NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN");
-	console.log("@prime: ux.wsUrl = " + ux.wsUrl);
-	console.log("@prime: ux.wsDocClientId = " + ux.wsDocClientId);
-	console.log("@prime: txt = " + txt);
-	console.log("@prime: NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN");
+	//TODO
 }
 
 ux.processJSON = function(jsonstring) {
@@ -497,7 +489,7 @@ ux.postPath = function(resp) {
 			}
 		}
 		
-		var prm = "req_doc=" + _enc(ux.docPath);
+		var prm = "req_doc=" + _enc(ux.docPath) + "&req_cid=" + _enc(ux.docClientId);
 		if(resp.target) {
 			prm += "&req_trg=" + _enc(resp.target);
 		}
@@ -779,7 +771,8 @@ ux.post = function(uEv) {
 
 ux.postToPath = function(evp) {
 	var ajaxPrms = ux.ajaxConstructCallParam(evp.uPath,
-			"req_doc=" + _enc(ux.docPath), false, true, false, ux.processJSON);
+			"req_doc=" + _enc(ux.docPath) + "&req_cid=" + _enc(ux.docClientId),
+			false, true, false, ux.processJSON);
 	ux.ajaxCall(ajaxPrms);
 }
 
@@ -4655,6 +4648,7 @@ ux.buildObjParams = function(trgObj, evp, param, refs) {
 			pb.append("req_rsi", ux.docSessionId);
 		} else {
 			pb.append("req_doc", ux.docPath);
+			pb.append("req_cid", ux.docClientId);
 			pb.append("req_win", window.name);
 		}
 		if (evp.uValidateAct) {
@@ -4680,6 +4674,7 @@ ux.buildObjParams = function(trgObj, evp, param, refs) {
 			pb += ("&req_rsi=" + _enc(ux.docSessionId));
 		} else {
 			pb += ("&req_doc=" + _enc(ux.docPath));
+			pb += ("&req_cid=" + _enc(ux.docClientId));
 			pb += ("&req_win=" + _enc(window.name));
 		}
 		if (evp.uValidateAct) {

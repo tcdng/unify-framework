@@ -85,11 +85,5 @@ public class ControllerPathParts {
 	public boolean isComponent(String componentLongName) {
 		return componentLongName != null && componentLongName.startsWith(controllerName);
 	}
-	
-	@Override
-	public String toString() {
-		return "ControllerPathParts [controllerPath=" + controllerPath + ", controllerPathId=" + controllerPathId
-				+ ", controllerName=" + controllerName + ", pathVariables=" + pathVariables + ", actionName="
-				+ actionName + ", sessionless=" + sessionless + "]";
-	}
+
 }

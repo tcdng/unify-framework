@@ -45,6 +45,8 @@ import com.tcdng.unify.web.constant.ResultMappingConstants;
 import com.tcdng.unify.web.constant.Secured;
 import com.tcdng.unify.web.constant.TopicEventType;
 import com.tcdng.unify.web.constant.UnifyWebRequestAttributeConstants;
+import com.tcdng.unify.web.ui.constant.PageRequestParameterConstants;
+import com.tcdng.unify.web.ui.util.WebUtils;
 import com.tcdng.unify.web.ui.widget.ContentPanel;
 import com.tcdng.unify.web.ui.widget.DataTransferWidget;
 import com.tcdng.unify.web.ui.widget.Document;
@@ -97,10 +99,12 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 	@Override
 	public void ensureContextResources(ControllerPathParts controllerPathParts) throws UnifyException {
 		SessionContext sessionContext = getSessionContext();
-		if (sessionContext != null && sessionContext.getAttribute(controllerPathParts.getControllerPathId()) == null) {
+		final String clientId = getRequestAttribute(String.class, PageRequestParameterConstants.CLIENT_ID);
+		final String pageId = WebUtils.getPageId(controllerPathParts.getControllerPathId(), clientId);
+		if (sessionContext != null && sessionContext.getAttribute(pageId) == null) {
 			Page page = getPageManager().createPage(sessionContext.getLocale(),
 					controllerPathParts.getControllerName());
-			page.setPathParts(controllerPathParts);
+			page.setPathParts(controllerPathParts, pageId);
 			Class<? extends PageBean> pageBeanClass = getPageBeanClass();
 			if (VoidPageBean.class.equals(pageBeanClass)) {
 				page.setPageBean(VoidPageBean.INSTANCE);
@@ -110,7 +114,7 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 
 			getPageRequestContextUtil().setRequestPage(page);
 			initPage();
-			sessionContext.setAttribute(controllerPathParts.getControllerPathId(), page);
+			sessionContext.setAttribute(pageId, page);
 		}
 	}
 

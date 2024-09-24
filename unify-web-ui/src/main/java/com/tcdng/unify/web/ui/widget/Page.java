@@ -167,13 +167,19 @@ public interface Page extends StandalonePanel {
      */
     boolean isDocument();
 
+	/**
+	 * Sets this page path parts
+	 * 
+	 * @param controllerPathParts the path parts to set
+	 * @param pageId              the page ID to set.
+	 * 
+	 */
+	void setPathParts(ControllerPathParts controllerPathParts, String pageId);
+
     /**
-     * Sets this page path parts
-     * 
-     * @param controllerPathParts
-     *            the path parts to set
+     * Returns the page ID
      */
-    void setPathParts(ControllerPathParts controllerPathParts);
+    String getPageId();
 
     /**
      * Returns the page path ID

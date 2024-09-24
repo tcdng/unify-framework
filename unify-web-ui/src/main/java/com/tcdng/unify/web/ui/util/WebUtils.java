@@ -15,10 +15,17 @@
  */
 package com.tcdng.unify.web.ui.util;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.util.StringUtils;
+import com.tcdng.unify.web.constant.RequestParameterConstants;
 import com.tcdng.unify.web.constant.ShortcutFlagConstants;
 import com.tcdng.unify.web.ui.UnifyWebUIErrorConstants;
+import com.tcdng.unify.web.ui.constant.PageRequestParameterConstants;
 
 /**
  * Web utilities.
@@ -28,10 +35,30 @@ import com.tcdng.unify.web.ui.UnifyWebUIErrorConstants;
  */
 public final class WebUtils {
 
+	private static final Set<String> skipOnPopulateSet = Collections
+			.unmodifiableSet(new HashSet<String>(Arrays.asList(PageRequestParameterConstants.DOCUMENT,
+					PageRequestParameterConstants.TARGET_VALUE, PageRequestParameterConstants.WINDOW_NAME,
+					PageRequestParameterConstants.VALIDATION_ACTION, PageRequestParameterConstants.CONFIRM_MSG,
+					PageRequestParameterConstants.CONFIRM_MSGICON, PageRequestParameterConstants.CONFIRM_PARAM,
+					PageRequestParameterConstants.NO_TRANSFER, PageRequestParameterConstants.CLIENT_ID,
+					RequestParameterConstants.REMOTE_VIEWER, RequestParameterConstants.REMOTE_ROLECD,
+					RequestParameterConstants.REMOTE_SESSION_ID, RequestParameterConstants.REMOTE_USERLOGINID,
+					RequestParameterConstants.REMOTE_USERNAME, RequestParameterConstants.REMOTE_BRANCH_CODE,
+					RequestParameterConstants.REMOTE_ZONE_CODE, RequestParameterConstants.REMOTE_GLOBAL_ACCESS,
+					RequestParameterConstants.REMOTE_COLOR_SCHEME, RequestParameterConstants.REMOTE_TENANT_CODE)));
+
     private WebUtils() {
 
     }
 
+    public static Set<String> getReservedRequestAttributes() {
+    	return skipOnPopulateSet;
+    }
+    
+    public static String getPageId(String controllerPathId, String clientId) {
+    	return controllerPathId + ":cid:" + clientId;
+    }
+    
     /**
      * Encodes a shortcut string.
      * 

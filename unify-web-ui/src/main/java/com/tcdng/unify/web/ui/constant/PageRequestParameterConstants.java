@@ -27,6 +27,8 @@ public interface PageRequestParameterConstants {
 
     String DOCUMENT = "req_doc";
 
+    String CLIENT_ID = "req_cid";
+
     String WINDOW_NAME = "req_win";
     
     String COMMAND = "req_cmd";

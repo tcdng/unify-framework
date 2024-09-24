@@ -16,6 +16,7 @@
 package com.tcdng.unify.web.ui.widget.writer.container;
 
 import java.util.Set;
+import java.util.UUID;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
@@ -55,6 +56,9 @@ public class DocumentWriter extends AbstractPageWriter {
 	@Override
 	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
 		BasicDocument document = (BasicDocument) widget;
+		String documentClientId = UUID.randomUUID().toString(); // TODO Use reload client ID alternative if present
+		document.setClientId(documentClientId);
+		
 		writer.write("<!DOCTYPE html>");
 		writer.write("<html ");
 		writeTagAttributes(writer, document);
@@ -177,16 +181,16 @@ public class DocumentWriter extends AbstractPageWriter {
 		writer.write(">");
 		// Set document properties
 		ControllerPathParts controllerPathParts = pathInfoRepository.getControllerPathParts(document);
-		writer.write("ux.setupDocument(\"").write(controllerPathParts.getControllerPathId()).write("\", \"")
-				.write(document.getPopupBaseId()).write("\", \"").write(document.getPopupWinId()).write("\", \"")
-				.write(document.getPopupSysId()).write("\", \"").write(document.getLatencyPanelId()).write("\", \"")
-				.write(getSessionContext().getId()).write("\");");
+		writer.write("ux.setupDocument(\"").write(document.getClientId()).write("\", \"")
+				.write(controllerPathParts.getControllerPathId()).write("\", \"").write(document.getPopupBaseId())
+				.write("\", \"").write(document.getPopupWinId()).write("\", \"").write(document.getPopupSysId())
+				.write("\", \"").write(document.getLatencyPanelId()).write("\", \"").write(getSessionContext().getId())
+				.write("\");");
 
 		if (document.isPushUpdate()) {
-			writer.write("ux.wsPushUpdate(\"").write(document.generateDocumentClientId()).write("\", \"")
-			.write(ClientSyncNameConstants.SYNC_CONTEXT).write("\");");
+			writer.write("ux.wsPushUpdate(\"").write(ClientSyncNameConstants.SYNC_CONTEXT).write("\");");
 		}
-		
+
 		writer.useSecondary();
 		// Write layout behavior
 		DocumentLayout documentLayout = document.getUplAttribute(DocumentLayout.class, "layout");
