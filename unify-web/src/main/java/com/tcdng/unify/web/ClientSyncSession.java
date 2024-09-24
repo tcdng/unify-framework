@@ -27,6 +27,13 @@ import java.util.Date;
 public interface ClientSyncSession {
 
 	/**
+	 * Sends event to this session's remote client.
+	 * 
+	 * @param event the event message
+	 */
+	void sendEventToRemote(ServerEventMsg event);
+
+	/**
 	 * Sets the session idle timeout.
 	 * 
 	 * @param expirationInMilliSeconds expiration in milliseconds

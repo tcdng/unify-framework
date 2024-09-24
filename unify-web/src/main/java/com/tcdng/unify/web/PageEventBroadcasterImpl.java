@@ -16,6 +16,7 @@
 
 package com.tcdng.unify.web;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
@@ -27,6 +28,7 @@ import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Transactional;
 import com.tcdng.unify.core.business.AbstractBusinessService;
 import com.tcdng.unify.web.constant.ClientSyncCommandConstants;
+import com.tcdng.unify.web.constant.ServerSyncCommandConstants;
 
 /**
  * Page event broadcaster implementation. Sticky session will return
@@ -87,12 +89,34 @@ public class PageEventBroadcasterImpl extends AbstractBusinessService implements
 	}
 
 	@Broadcast
-	public void broadcastTopicEvent(String originClientId, String type, String topic) throws UnifyException {
-		logDebug("Broadcasting client event [{0}] for topic [{1}] and originating from client [{2}]...",
-				type, topic, originClientId);
-		// TODO
+	public void broadcastTopicEvent(String... params) throws UnifyException {
+		final String srcClientId = params[0];
+		final String type = params[1];
+		final String topic = params[2];
+		logDebug("Broadcasting client event [{0}] for topic [{1}] and originating from client [{2}]...", type, topic,
+				srcClientId);
+		
+		broadcast(srcClientId, topic, type);
+		int index = topic.indexOf(':');
+		if (index > 0) {
+			final String mainTopic = topic.substring(0, index);
+			broadcast(srcClientId, mainTopic, type);
+		}		
 	}
 
+	private void broadcast(String srcClientId, String topic, String type) {
+		Set<String> listeners = listenersByTopic.get(topic);
+		for (String listeningClientId : new ArrayList<String>(listeners)) {
+			if (!srcClientId.equals(listeningClientId)) {
+				ClientSyncSession session = sessions.get(listeningClientId);
+				if (session != null) {
+					session.sendEventToRemote(
+							new ServerEventMsg(srcClientId, ServerSyncCommandConstants.REFRESH, type));
+				}
+			}
+		}
+	}
+	
 	private void listenToTopic(String clientId, String topic) {
 		removeClientFromAllTopics(clientId);
 		Set<String> listeners = listenersByTopic.get(topic);

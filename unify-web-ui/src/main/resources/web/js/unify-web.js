@@ -180,7 +180,11 @@ ux.wsSend = function(cmd, param) {
 }
 
 ux.wsReceive = function(txt) {
-	// TODO
+	console.log("@prime: NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN");
+	console.log("@prime: ux.wsUrl = " + ux.wsUrl);
+	console.log("@prime: ux.wsDocClientId = " + ux.wsDocClientId);
+	console.log("@prime: txt = " + txt);
+	console.log("@prime: NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN");
 }
 
 ux.processJSON = function(jsonstring) {

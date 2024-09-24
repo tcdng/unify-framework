@@ -23,8 +23,11 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
+import com.tcdng.unify.core.constant.PrintFormat;
+import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.web.AbstractClientSyncEndpoint;
 import com.tcdng.unify.web.AbstractClientSyncSession;
+import com.tcdng.unify.web.ServerEventMsg;
 import com.tcdng.unify.web.constant.ClientSyncNameConstants;
 
 /**
@@ -73,6 +76,16 @@ public class UndertowClientSyncEndpointImpl extends AbstractClientSyncEndpoint {
 		@Override
 		public void setIdleTimeoutInMilliSec(long expirationInMilliSeconds) {
 			session.setMaxIdleTimeout(expirationInMilliSeconds);
+		}
+
+		@Override
+		public void sendEventToRemote(ServerEventMsg event) {
+			try {
+				String msg = DataUtils.asJsonString(event, PrintFormat.NONE);
+				session.getBasicRemote().sendText(msg);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
 	}

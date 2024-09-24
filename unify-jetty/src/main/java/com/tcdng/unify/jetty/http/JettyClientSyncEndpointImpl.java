@@ -23,8 +23,11 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
+import com.tcdng.unify.core.constant.PrintFormat;
+import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.web.AbstractClientSyncEndpoint;
 import com.tcdng.unify.web.AbstractClientSyncSession;
+import com.tcdng.unify.web.ServerEventMsg;
 
 /**
  * Jetty client synchronization end-point implementation.
@@ -72,6 +75,16 @@ public class JettyClientSyncEndpointImpl extends AbstractClientSyncEndpoint {
 		@Override
 		public void setIdleTimeoutInMilliSec(long expirationInMilliSeconds) {
 			session.setIdleTimeout(expirationInMilliSeconds);
+		}
+
+		@Override
+		public void sendEventToRemote(ServerEventMsg event) {
+			try {
+				String msg = DataUtils.asJsonString(event, PrintFormat.NONE);
+				session.getRemote().sendString(msg);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
 	}
