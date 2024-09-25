@@ -26,6 +26,7 @@ import com.tcdng.unify.core.util.ColorUtils;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.font.FontSymbolManager;
 import com.tcdng.unify.web.ui.WebUIApplicationComponents;
+import com.tcdng.unify.web.ui.util.WebUtils;
 import com.tcdng.unify.web.ui.widget.EventHandler;
 import com.tcdng.unify.web.ui.widget.PageManager;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
@@ -146,25 +147,10 @@ public abstract class AbstractWidgetWriter extends AbstractDhtmlWriter implement
         return getContextURL(getRequestContextUtil().getResponsePathParts().getControllerPathId(), "/command");
     }
 
-    protected String getContextURL(String path, String... pathElement) throws UnifyException {
-        StringBuilder sb = new StringBuilder();
-        RequestContext requestContext = getRequestContext();
-        if (getRequestContextUtil().isRemoteViewer()) {
-            sb.append(getSessionContext().getUriBase());
-        }
-
-        sb.append(requestContext.getContextPath());
-        if (requestContext.isWithTenantPath()) {
-            sb.append(requestContext.getTenantPath());
-        }
-
-        sb.append(requestContext.getRequestPath());
-        sb.append(path);
-        for (String element : pathElement) {
-            sb.append(element);
-        }
-        return sb.toString();
-    }
+	protected String getContextURL(String path, String... pathElement) throws UnifyException {
+		RequestContext requestContext = getRequestContext();
+		return WebUtils.getContextURL(requestContext, getRequestContextUtil().isRemoteViewer(), path, pathElement);
+	}
 
     protected String getUserColorStyleClass(String classBase) throws UnifyException {
         UserToken userToken = getUserToken();

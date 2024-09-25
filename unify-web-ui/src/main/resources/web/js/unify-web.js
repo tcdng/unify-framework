@@ -177,7 +177,10 @@ ux.wsSend = function(cmd, param) {
 }
 
 ux.wsReceive = function(txt) {
-	//TODO
+	const msg = JSON.parse(txt);
+	if ("refresh" == msg.cmd) {
+		ux.postToPath({uPath:ux.docReloadURL});
+	}
 }
 
 ux.processJSON = function(jsonstring) {
@@ -351,6 +354,7 @@ ux.respHandler = {
 			ux.refreshPageGlobals(resp);
 			ux.refreshPanels(resp);
 			ux.registerRespDebounce(resp);
+			ux.docReloadURL = resp.reloadURL;
 			if (resp.scrollToTop) {
 				ux.scrollDocToTop();
 			}

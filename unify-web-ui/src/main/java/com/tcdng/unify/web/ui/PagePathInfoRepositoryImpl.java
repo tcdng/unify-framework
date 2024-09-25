@@ -34,9 +34,9 @@ import com.tcdng.unify.web.ui.widget.Page;
 @Component(WebUIApplicationComponents.APPLICATION_PAGEPATHINFOREPOSITORY)
 public class PagePathInfoRepositoryImpl extends AbstractUnifyComponent implements PagePathInfoRepository {
 
-    @Configurable
-    private PathInfoRepository pathInfoRepository;
-    
+	@Configurable
+	private PathInfoRepository pathInfoRepository;
+
 	private FactoryMap<String, PagePathInfo> pagePathInfos;
 
 	public PagePathInfoRepositoryImpl() {
@@ -45,12 +45,13 @@ public class PagePathInfoRepositoryImpl extends AbstractUnifyComponent implement
 			@Override
 			protected PagePathInfo create(String controllerPathId, Object... params) throws Exception {
 				return new PagePathInfo(controllerPathId, null, controllerPathId + "/openPage",
-						controllerPathId + "/savePage", controllerPathId + "/closePage", false);
+						controllerPathId + "/reloadPage", controllerPathId + "/savePage",
+						controllerPathId + "/closePage", false);
 			}
 		};
 	}
 
-    @Override
+	@Override
 	public PagePathInfo getPagePathInfo(Page page) throws UnifyException {
 		return pagePathInfos.get(page.getPathId());
 	}
@@ -66,11 +67,11 @@ public class PagePathInfoRepositoryImpl extends AbstractUnifyComponent implement
 	}
 
 	@Override
-    public ControllerPathParts getControllerPathParts(String controllerPath) throws UnifyException {
-        return pathInfoRepository.getControllerPathParts(controllerPath);
-    }
+	public ControllerPathParts getControllerPathParts(String controllerPath) throws UnifyException {
+		return pathInfoRepository.getControllerPathParts(controllerPath);
+	}
 
-    @Override
+	@Override
 	protected void onInitialize() throws UnifyException {
 
 	}

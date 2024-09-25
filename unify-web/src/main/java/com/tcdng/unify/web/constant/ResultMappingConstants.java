@@ -43,6 +43,8 @@ public interface ResultMappingConstants {
 
     String OPEN = "resrv.open";
 
+    String RELOAD = "resrv.reload";
+
     String SAVE = "resrv.save";
 
     String REMOTE_VIEW = "resrv.remoteview";

@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.tcdng.unify.core.RequestContext;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.constant.RequestParameterConstants;
@@ -58,6 +59,26 @@ public final class WebUtils {
     public static String getPageId(String controllerPathId, String clientId) {
     	return controllerPathId + ":cid:" + clientId;
     }
+
+	public static String getContextURL(RequestContext requestContext, boolean remoteViewer, String path,
+			String... pathElement) throws UnifyException {
+		StringBuilder sb = new StringBuilder();
+		if (remoteViewer) {
+			sb.append(requestContext.getSessionContext().getUriBase());
+		}
+
+		sb.append(requestContext.getContextPath());
+		if (requestContext.isWithTenantPath()) {
+			sb.append(requestContext.getTenantPath());
+		}
+
+		sb.append(requestContext.getRequestPath());
+		sb.append(path);
+		for (String element : pathElement) {
+			sb.append(element);
+		}
+		return sb.toString();
+	}
     
     /**
      * Encodes a shortcut string.
