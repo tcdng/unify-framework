@@ -13,42 +13,17 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.web;
+
+package com.tcdng.unify.web.constant;
 
 /**
- * Client synchronization message.
+ * Server synchronization command constants.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public class ClientSyncMsg {
+public interface ServerSyncCommandConstants {
 
-	private String command;
-	
-	private String param;
+	String REFRESH = "refresh";
 
-	private String srcClient;
-
-	public ClientSyncMsg(String command, String param) {
-		this.command = command;
-		this.param = param;
-	}
-
-	public ClientSyncMsg(String command, String param, String srcClient) {
-		this.command = command;
-		this.param = param;
-		this.srcClient = srcClient;
-	}
-
-	public String getCommand() {
-		return command;
-	}
-
-	public String getParam() {
-		return param;
-	}
-
-	public String getSrcClient() {
-		return srcClient;
-	}
 }

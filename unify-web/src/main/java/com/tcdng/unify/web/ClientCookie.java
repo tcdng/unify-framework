@@ -16,6 +16,8 @@
 
 package com.tcdng.unify.web;
 
+import com.tcdng.unify.core.util.StringUtils;
+
 /**
  * Client cookie.
  * 
@@ -62,4 +64,7 @@ public class ClientCookie {
         return maxAge;
     }
     
+    public boolean isValuePresent() {
+    	return !StringUtils.isBlank(val);
+    }
 }

@@ -13,15 +13,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
-package com.tcdng.unify.web;
+package com.tcdng.unify.web.constant;
 
 /**
- * Client synchronization end-point.
+ * Topic event type constants.
  * 
  * @author The Code Department
- * @since 1.0
+ * @version 1.0
  */
-public interface ClientSyncEndpoint {
-
+public enum TopicEventType {
+    CREATE,
+    UPDATE,
+    DELETE;
 }

@@ -14,14 +14,15 @@
  * the License.
  */
 
-package com.tcdng.unify.web;
+package com.tcdng.unify.web.constant;
 
 /**
- * Client synchronization end-point.
+ * Client synchronization name constants.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public interface ClientSyncEndpoint {
+public interface ClientSyncNameConstants {
 
+	String SYNC_CONTEXT = "/ws/sync";
 }

@@ -25,6 +25,8 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.web.ClientRequest;
 import com.tcdng.unify.web.ControllerPathParts;
 import com.tcdng.unify.web.TargetPath;
+import com.tcdng.unify.web.constant.TopicEventType;
+import com.tcdng.unify.web.data.TopicEvent;
 import com.tcdng.unify.web.ui.widget.Document;
 import com.tcdng.unify.web.ui.widget.Page;
 import com.tcdng.unify.web.ui.widget.Panel;
@@ -678,10 +680,25 @@ public interface PageRequestContextUtil extends UnifyComponent {
      */
     void clearFocusOnWidget() throws UnifyException;
 
-    boolean isOnFocusOneshot() throws UnifyException;
+	/**
+	 * Gets focus one shot.
+	 * 
+	 * @return true if focus oneshot
+	 * @throws UnifyException if an error occurs
+	 */
+	boolean isOnFocusOneshot() throws UnifyException;
 
-    void setOnFocusOneshot() throws UnifyException;
+	/**
+	 * Sets on focus one-shot.
+	 * 
+	 * @throws UnifyException if an error occurs
+	 */
+	void setOnFocusOneshot() throws UnifyException;
 
+    /**
+     * Clears focus one-shot.
+     * @throws UnifyException if an error occurs
+     */
     void clearOnFocusOneshot() throws UnifyException;
 
     /**
@@ -693,6 +710,55 @@ public interface PageRequestContextUtil extends UnifyComponent {
      */
     boolean isNoPushWidgets() throws UnifyException;
 
+	/**
+	 * Checks if request is with client topic.
+	 * 
+	 * @return true if present otherwise false
+	 * @throws UnifyException if an error occurs
+	 */
+	boolean isWithClientTopic() throws UnifyException;
+
+	/**
+	 * Gets the request client topic.
+	 * 
+	 * @return the client topic otherwise null
+	 * @throws UnifyException if an error occurs
+	 */
+	String getClientTopic() throws UnifyException;
+
+	/**
+	 * Sets client topic within request context.
+	 * 
+	 * @param topic the topic to set
+	 * @throws UnifyException if an error occurs
+	 */
+	void setClientTopic(String topic) throws UnifyException;
+    
+	/**
+	 * Adds client topic event within request context.
+	 * 
+	 * @param eventType the event type
+	 * @param topic     the topic
+	 * @throws UnifyException if an error occurs
+	 */
+	void addClientTopicEvent(TopicEventType eventType, String topic) throws UnifyException;
+
+	/**
+	 * Gets topic events associated with current request.
+	 * 
+	 * @return the list of events
+	 * @throws UnifyException if an error occurs
+	 */
+	List<TopicEvent> getClientTopicEvents() throws UnifyException;
+	
+	/**
+	 * Checks if request is with client topic events.
+	 * 
+	 * @return true if present otherwise false
+	 * @throws UnifyException if an error occurs
+	 */
+	boolean isWithClientTopicEvent() throws UnifyException;
+	
     /**
      * Adds the ID of widget to skip when pushing data to the server to current
      * request

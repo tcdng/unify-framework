@@ -42,9 +42,12 @@ import com.tcdng.unify.core.upl.UplElementAttributes;
 import com.tcdng.unify.core.upl.UplElementReferences;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
+import com.tcdng.unify.web.ControllerPathParts;
 import com.tcdng.unify.web.UnifyWebPropertyConstants;
+import com.tcdng.unify.web.constant.RequestParameterConstants;
 import com.tcdng.unify.web.ui.UnifyWebUIErrorConstants;
 import com.tcdng.unify.web.ui.WebUIApplicationComponents;
+import com.tcdng.unify.web.ui.util.WebUtils;
 import com.tcdng.unify.web.ui.widget.panel.StandalonePanel;
 
 /**
@@ -272,6 +275,17 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
 			}
 		};
 
+	}
+
+	@Override
+	public String getCurrentRequestClientId() throws UnifyException {
+		return getRequestAttribute(String.class, RequestParameterConstants.CLIENT_ID);
+	}
+
+	@Override
+	public String getCurrentRequestPageId(ControllerPathParts controllerPathParts) throws UnifyException {
+		final String clientId = getRequestAttribute(String.class, RequestParameterConstants.CLIENT_ID);
+		return WebUtils.getPageId(controllerPathParts.getControllerPathId(), clientId);
 	}
 
 	@Override

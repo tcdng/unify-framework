@@ -49,6 +49,9 @@ import io.undertow.servlet.api.DeploymentManager;
 import io.undertow.servlet.api.ServletInfo;
 import io.undertow.servlet.api.ServletSessionConfig;
 import io.undertow.servlet.util.ImmediateInstanceFactory;
+import io.undertow.websockets.jsr.WebSocketDeploymentInfo;
+
+import static io.undertow.websockets.jsr.WebSocketDeploymentInfo.ATTRIBUTE_NAME;
 
 /**
  * Undertow embedded web server.
@@ -123,12 +126,20 @@ public class UndertowEmbeddedWebServer extends AbstractEmbeddedHttpWebServer {
 			logInfo("Initializing HTTP server on ports {0}; using context path {1} and servlet path {2}...", portList,
 					contextPath, getServletPath());
 			final String _servletName = UndertowApplicationComponents.UNDERTOW_EMBEDDEDWEBSERVER + "-servlet";
+			
+			// WebSockets
+			final WebSocketDeploymentInfo wsdi = new WebSocketDeploymentInfo()
+			        .addEndpoint(UndertowClientSyncEndpointImpl.class);	
+			deploymentInfo.addServletContextAttribute(ATTRIBUTE_NAME, wsdi);
+			
+			// HTTP/HTTPS
 			ServletInfo servletInfo = Servlets
 					.servlet(_servletName, HttpApplicationServlet.class,
 							new ImmediateInstanceFactory<Servlet>(
 									new HttpApplicationServlet(createHttpServletModule())))
 					.addMapping(getServletPath());
 			deploymentInfo.addServlet(servletInfo);
+			
 	        final String sessionCookieName = generateSessionCookieName();
 	        deploymentInfo.setServletSessionConfig(new ServletSessionConfig().setName(sessionCookieName));
 			deploymentInfo.setDefaultSessionTimeout(
@@ -138,6 +149,7 @@ public class UndertowEmbeddedWebServer extends AbstractEmbeddedHttpWebServer {
 					getMultipartMaxFileSize(), getMultipartMaxRequestSize(), getMultipartFileSizeThreshold()));
 			DeploymentManager dm = Servlets.defaultContainer().addDeployment(deploymentInfo);
 			dm.deploy();
+            
 			PathHandler path = Handlers.path(Handlers.path().addPrefixPath(contextPath, dm.start()));
 			ub.setHandler(path);
 			undertow = ub.build();

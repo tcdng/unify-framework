@@ -13,15 +13,53 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
 package com.tcdng.unify.web;
 
 /**
- * Client synchronization end-point.
+ * Server event message.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public interface ClientSyncEndpoint {
+public class ServerEventMsg {
 
+	private String srcClientId;
+
+	private String cmd;
+	
+	private String param;
+
+	public ServerEventMsg(String srcClientId, String cmd, String param) {
+		this.srcClientId = srcClientId;
+		this.cmd = cmd;
+		this.param = param;
+	}
+
+	public ServerEventMsg() {
+
+	}
+
+	public String getSrcClientId() {
+		return srcClientId;
+	}
+
+	public void setSrcClientId(String srcClientId) {
+		this.srcClientId = srcClientId;
+	}
+
+	public String getCmd() {
+		return cmd;
+	}
+
+	public void setCmd(String cmd) {
+		this.cmd = cmd;
+	}
+
+	public String getParam() {
+		return param;
+	}
+
+	public void setParam(String param) {
+		this.param = param;
+	}
 }

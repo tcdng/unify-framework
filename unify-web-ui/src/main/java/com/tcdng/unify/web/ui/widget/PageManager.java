@@ -22,6 +22,7 @@ import java.util.Map;
 
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.web.ControllerPathParts;
 import com.tcdng.unify.web.ui.widget.panel.StandalonePanel;
 
 /**
@@ -32,6 +33,23 @@ import com.tcdng.unify.web.ui.widget.panel.StandalonePanel;
  */
 public interface PageManager extends UnifyComponent {
 
+	/**
+	 * Gets current request client ID.
+	 * 
+	 * @return the client ID
+	 * @throws UnifyException if an error occurs
+	 */
+	String getCurrentRequestClientId() throws UnifyException;
+
+	/**
+	 * Gets current request page ID.
+	 * 
+	 * @param parts the path parts
+	 * @return the page ID
+	 * @throws UnifyException if an error occurs
+	 */
+	String getCurrentRequestPageId(ControllerPathParts parts) throws UnifyException;
+	
     /**
      * Returns configured common document style sheets for this container.
      * 

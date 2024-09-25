@@ -16,12 +16,34 @@
 
 package com.tcdng.unify.web;
 
+import com.tcdng.unify.core.UnifyComponent;
+
 /**
- * Client synchronization end-point.
+ * Page event broadcaster.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public interface ClientSyncEndpoint {
+public interface PageEventBroadcaster extends UnifyComponent {
 
+	/**
+	 * Registers a client synchronization session.
+	 * 
+	 * @param session the session to register
+	 */
+	void registerClient(ClientSyncSession session);
+
+	/**
+	 * Unregisters a client synchronization session.
+	 * 
+	 * @param clientId the client ID
+	 */
+	void unregisterClient(String clientId);
+
+	/**
+	 * Processes a client event.
+	 * 
+	 * @param eventMsg
+	 */
+	void processClientEvent(ClientEventMsg eventMsg);
 }

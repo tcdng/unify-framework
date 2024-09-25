@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.web.ui.response;
+package com.tcdng.unify.web.ui.response; 
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
@@ -51,8 +51,7 @@ public class LoadContentResponse extends AbstractJsonPageControllerResponse {
         writer.write(",\"refreshPanels\":[");
         writer.writeJsonPanel(contentPanel, true);
         writer.write("]");
-        if (getRequestContextUtil().isNoPushWidgets()) {
-            writer.write(",\"noPushWidgets\":").writeJsonArray(getRequestContextUtil().getNoPushWidgetIds());
-        }
+        writeNoPushWidgets(writer);
+        writeClientTopic(writer);
     }
 }

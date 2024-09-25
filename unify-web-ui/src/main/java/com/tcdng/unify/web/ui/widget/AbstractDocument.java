@@ -30,7 +30,8 @@ import com.tcdng.unify.core.annotation.UplAttributes;
         @UplAttribute(name = "headerPanel", type = String.class),
         @UplAttribute(name = "footerPanel", type = String.class),
         @UplAttribute(name = "menuPanel", type = String.class),
-        @UplAttribute(name = "contentPanel", type = String.class)})
+        @UplAttribute(name = "contentPanel", type = String.class),
+        @UplAttribute(name = "pushUpdate", type = boolean.class)})
 public abstract class AbstractDocument extends AbstractHtmlPage implements Document {
 
     @Override
@@ -38,6 +39,10 @@ public abstract class AbstractDocument extends AbstractHtmlPage implements Docum
         return getPrefixedId("latency_");
     }
 
+    public boolean isPushUpdate() throws UnifyException{
+    	return getUplAttribute(boolean.class, "pushUpdate");
+    }
+    
     @Override
     public Panel getHeaderPanel() throws UnifyException {
         String headerPanelId = getUplAttribute(String.class, "headerPanel");

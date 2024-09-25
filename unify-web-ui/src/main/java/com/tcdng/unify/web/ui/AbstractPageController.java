@@ -43,6 +43,7 @@ import com.tcdng.unify.web.constant.ReadOnly;
 import com.tcdng.unify.web.constant.ResetOnWrite;
 import com.tcdng.unify.web.constant.ResultMappingConstants;
 import com.tcdng.unify.web.constant.Secured;
+import com.tcdng.unify.web.constant.TopicEventType;
 import com.tcdng.unify.web.constant.UnifyWebRequestAttributeConstants;
 import com.tcdng.unify.web.ui.widget.ContentPanel;
 import com.tcdng.unify.web.ui.widget.DataTransferWidget;
@@ -96,10 +97,11 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 	@Override
 	public void ensureContextResources(ControllerPathParts controllerPathParts) throws UnifyException {
 		SessionContext sessionContext = getSessionContext();
-		if (sessionContext != null && sessionContext.getAttribute(controllerPathParts.getControllerPathId()) == null) {
+		final String pageId = getPageManager().getCurrentRequestPageId(controllerPathParts);
+		if (sessionContext != null && sessionContext.getAttribute(pageId) == null) {
 			Page page = getPageManager().createPage(sessionContext.getLocale(),
 					controllerPathParts.getControllerName());
-			page.setPathParts(controllerPathParts);
+			page.setPathParts(controllerPathParts, pageId);
 			Class<? extends PageBean> pageBeanClass = getPageBeanClass();
 			if (VoidPageBean.class.equals(pageBeanClass)) {
 				page.setPageBean(VoidPageBean.INSTANCE);
@@ -109,7 +111,7 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 
 			getPageRequestContextUtil().setRequestPage(page);
 			initPage();
-			sessionContext.setAttribute(controllerPathParts.getControllerPathId(), page);
+			sessionContext.setAttribute(pageId, page);
 		}
 	}
 
@@ -886,6 +888,50 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 		return getPageRequestContextUtil().getRequestTargetValue(clazz);
 	}
 
+	/**
+	 * Sets current client (browser) to listen to topic.
+	 * 
+	 * @param topic the topic to set
+	 * @throws UnifyException if an error occurs
+	 */
+	protected void setClientListenToTopic(String topic) throws UnifyException {
+		getPageRequestContextUtil().setClientTopic(topic);
+	}
+
+	/**
+	 * Sets current client (browser) to listen to topic with associated title.
+	 * 
+	 * @param topic the topic to set
+	 * @param title the associated title
+	 * @throws UnifyException if an error occurs
+	 */
+	protected void setClientListenToTopic(String topic, String title) throws UnifyException {
+		getPageRequestContextUtil().setClientTopic(topic + ":" + title);
+	}
+
+	/**
+	 * Adds client topic to current request attribute.
+	 * 
+	 * @param eventType the event type
+	 * @param topic     the topic to set
+	 * @throws UnifyException if an error occurs
+	 */
+	protected void addClientTopicEvent(TopicEventType eventType, String topic) throws UnifyException {
+		getPageRequestContextUtil().addClientTopicEvent(eventType, topic);
+	}
+
+	/**
+	 * Adds client topic to current request attribute.
+	 * 
+	 * @param eventType the event type
+	 * @param topic     the topic to set
+	 * @param title the associated title
+	 * @throws UnifyException if an error occurs
+	 */
+	protected void addClientTopicEvent(TopicEventType eventType, String topic, String title) throws UnifyException {
+		getPageRequestContextUtil().addClientTopicEvent(eventType, topic + ":" + title);
+	}
+	
 	/**
 	 * Executes on {@link #initPage()}
 	 * 

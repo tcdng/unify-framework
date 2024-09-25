@@ -88,10 +88,10 @@ public abstract class AbstractEmbeddedHttpWebServer extends AbstractHttpWebInter
 
 	protected String generateSessionCookieName() throws UnifyException {
 		final int port = isHttpsOnly() ? getHttpsPort() : getHttpPort();
-		final String infix = StringUtils
+		final String prefix = StringUtils
 				.flatten(getContainerSetting(String.class, UnifyCorePropertyConstants.APPLICATION_NAME, "unify"))
 				.replaceAll("[^a-zA-Z0-9_]", "");
-		return ("JSESSION_" + infix + "_" + port + "_ID").toUpperCase();
+		return (prefix + "_" + port + "_ID").toUpperCase();
 	}
 	
 	protected int getHttpsPort() {

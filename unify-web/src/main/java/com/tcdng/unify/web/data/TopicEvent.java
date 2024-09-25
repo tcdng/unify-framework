@@ -14,14 +14,33 @@
  * the License.
  */
 
-package com.tcdng.unify.web;
+package com.tcdng.unify.web.data;
+
+import com.tcdng.unify.web.constant.TopicEventType;
 
 /**
- * Client synchronization end-point.
+ * Topic event.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public interface ClientSyncEndpoint {
+public class TopicEvent {
+
+	private TopicEventType eventType;
+
+	private String topic;
+
+	public TopicEvent(TopicEventType eventType, String topic) {
+		this.eventType = eventType;
+		this.topic = topic;
+	}
+
+	public TopicEventType getEventType() {
+		return eventType;
+	}
+
+	public String getTopic() {
+		return topic;
+	}
 
 }

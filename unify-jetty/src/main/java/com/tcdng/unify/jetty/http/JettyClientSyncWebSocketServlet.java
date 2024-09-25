@@ -13,15 +13,28 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+package com.tcdng.unify.jetty.http;
 
-package com.tcdng.unify.web;
+import javax.servlet.annotation.WebServlet;
+
+import org.eclipse.jetty.websocket.servlet.WebSocketServlet;
+import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
+
+import com.tcdng.unify.web.constant.ClientSyncNameConstants;
 
 /**
- * Client synchronization end-point.
+ * Jetty client synchronization websocket implementation.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public interface ClientSyncEndpoint {
+@SuppressWarnings("serial")
+@WebServlet(name = "MyWebSocketServlet", urlPatterns = {ClientSyncNameConstants.SYNC_CONTEXT})
+public class JettyClientSyncWebSocketServlet extends WebSocketServlet {
+
+	@Override
+	public void configure(WebSocketServletFactory factory) {
+		factory.register(JettyClientSyncEndpointImpl.class);
+	}
 
 }
