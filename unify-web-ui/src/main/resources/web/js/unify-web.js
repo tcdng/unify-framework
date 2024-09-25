@@ -152,6 +152,7 @@ ux.setupDocument = function(docClientId, docPath, docPopupBaseId, docPopupId, do
 	ux.docSysInfoId = docSysInfoId;
 	ux.busyIndicator = docLatencyId;
 	ux.docSessionId = docSessionId;
+	document.cookie = "req_cid=; Max-Age=0";
 }
 
 ux.wsPushUpdate = function(wsSyncPath) {
@@ -5669,6 +5670,10 @@ ux.init = function() {
 	ux.addHdl(window, "focus", ux.windowOnFocus,
 					{});
 	
+	// Window handler
+	ux.addHdl(window, "beforeunload", ux.windowUnload,
+					{});
+	
 	// Register self as extension
 	ux.registerExtension("ux", ux);
 	
@@ -5683,6 +5688,7 @@ ux.init = function() {
 	    return true; // Do default
 	}
 
+	// Commit Queue
 	if (UNIFY_POST_COMMIT_QUEUE) {
 		ux.postCommitProcessor();
 	}
@@ -5772,6 +5778,10 @@ ux.setHintTimeout = function(millisec) {
 
 ux.windowOnFocus = function(uEv) {
 	ux.postWinFocusCommand();
+}
+
+ux.windowUnload = function(uEv) {
+	document.cookie = "req_cid=" + ux.docClientId;
 }
 
 ux.documentKeydownHandler = function(uEv) {

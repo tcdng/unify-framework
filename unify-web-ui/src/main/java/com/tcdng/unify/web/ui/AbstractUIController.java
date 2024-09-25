@@ -90,8 +90,8 @@ public abstract class AbstractUIController extends AbstractController implements
 		try {
 			final ControllerPathParts reqPathParts = request.getRequestPathParts().getControllerPathParts();
 			PageController<?> docPageController = null;
-			ControllerPathParts docPathParts = null;
-			String documentPath = (String) request.getParameter(PageRequestParameterConstants.DOCUMENT);
+			ControllerPathParts docPathParts = null; 			
+			final String documentPath = (String) request.getParameter(PageRequestParameterConstants.DOCUMENT);
 			if (documentPath != null) {
 				docPathParts = pathInfoRepository.getControllerPathParts(documentPath);
 				docPageController = (PageController<?>) getControllerFinder().findController(docPathParts);
@@ -113,7 +113,7 @@ public abstract class AbstractUIController extends AbstractController implements
 			response.close();
 		}
 	}
-
+	
 	private void setAdditionalResponseHeaders(ClientResponse response) throws UnifyException {
 		Map<String, String> additionalResponseHeaders = uiControllerUtil.getAdditionalResponseHeaders();
 		for (Map.Entry<String, String> entry : additionalResponseHeaders.entrySet()) {

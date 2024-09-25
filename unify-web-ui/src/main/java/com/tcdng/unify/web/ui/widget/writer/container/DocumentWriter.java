@@ -16,7 +16,6 @@
 package com.tcdng.unify.web.ui.widget.writer.container;
 
 import java.util.Set;
-import java.util.UUID;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
@@ -56,8 +55,7 @@ public class DocumentWriter extends AbstractPageWriter {
 	@Override
 	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
 		BasicDocument document = (BasicDocument) widget;
-		String documentClientId = UUID.randomUUID().toString(); // TODO Use reload client ID alternative if present
-		document.setClientId(documentClientId);
+		document.setClientId(getPageManager().getCurrentRequestClientId());
 		
 		writer.write("<!DOCTYPE html>");
 		writer.write("<html ");

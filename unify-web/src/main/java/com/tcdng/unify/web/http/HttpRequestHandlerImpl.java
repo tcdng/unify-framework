@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.SessionAttributeProvider;
@@ -183,6 +184,7 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 				}
 			}
 
+			ensureClientId(clientRequest);
 			Controller controller;
 			try {
 				controller = controllerFinder
@@ -336,6 +338,24 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 	@Override
 	protected void onTerminate() throws UnifyException {
 
+	}
+
+	/**
+	 * Ensures client ID exists as a request attribute. Note: As simple as this
+	 * implementation looks, this function is critical for maintaining a unique
+	 * client ID per browser tab irrespective of session. Tread carefully.
+	 * 
+	 * @param request the request object
+	 * @throws UnifyException if an error occurs
+	 */
+	private void ensureClientId(ClientRequest request) throws UnifyException {
+		String clientId = (String) request.getParameter(RequestParameterConstants.CLIENT_ID);
+		if (StringUtils.isBlank(clientId)) {
+			ClientCookie cookie = request.getCookie(RequestParameterConstants.CLIENT_ID);
+			clientId = cookie != null && cookie.isValuePresent() ? cookie.getVal() : UUID.randomUUID().toString();
+		}
+
+		setRequestAttribute(RequestParameterConstants.CLIENT_ID, clientId);
 	}
 
 	private ClientPlatform detectClientPlatform(HttpRequest httpRequest) {

@@ -79,7 +79,7 @@ public class ContentPanelWriter extends AbstractPanelWriter {
 				_cpaths[i] = paths[i + 1];
 			}
 
-			writer.writeParam("pImmURL", getContextURL(paths[0]));
+			writer.writeParam("pImmURL", getContextURL(paths[0])); 
 			setSessionAttribute(UnifyCoreSessionAttributeConstants.STICKY_PATHS, Arrays.asList(_cpaths));
 		} else {
 			writer.writeParam("pCurIdx", contentPanel.getPageIndex());

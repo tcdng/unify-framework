@@ -47,8 +47,6 @@ import com.tcdng.unify.web.annotation.ResultMappings;
 import com.tcdng.unify.web.constant.ReservedPageControllerConstants;
 import com.tcdng.unify.web.constant.ResultMappingConstants;
 import com.tcdng.unify.web.constant.UnifyWebRequestAttributeConstants;
-import com.tcdng.unify.web.ui.constant.PageRequestParameterConstants;
-import com.tcdng.unify.web.ui.util.WebUtils;
 import com.tcdng.unify.web.ui.widget.Page;
 import com.tcdng.unify.web.ui.widget.PageManager;
 import com.tcdng.unify.web.ui.widget.PropertyInfo;
@@ -217,8 +215,7 @@ public class UIControllerUtilImpl extends AbstractUnifyComponent implements UICo
 
     @Override
     public Page loadRequestPage(ControllerPathParts controllerPathParts) throws UnifyException {
-		final String clientId = getRequestAttribute(String.class, PageRequestParameterConstants.CLIENT_ID);
-		final String pageId = WebUtils.getPageId(controllerPathParts.getControllerPathId(), clientId);
+		final String pageId = pageManager.getCurrentRequestPageId(controllerPathParts);
         Page page = (Page) getSessionContext().getAttribute(pageId);
         pageRequestContextUtil.setRequestPage(page);
         return page;
