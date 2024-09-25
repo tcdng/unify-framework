@@ -69,7 +69,7 @@ public abstract class AbstractEmbeddedHttpWebServer extends AbstractHttpWebInter
 
     @Override
 	public String getContextPath() {
-		return contextPath;
+		return contextPath.endsWith("/") ? contextPath.substring(0, contextPath.length() - 1) : contextPath;
 	}
 
 	protected HttpServletModule createHttpServletModule() throws UnifyException {

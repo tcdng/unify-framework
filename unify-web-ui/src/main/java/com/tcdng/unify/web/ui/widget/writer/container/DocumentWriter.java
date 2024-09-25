@@ -186,7 +186,8 @@ public class DocumentWriter extends AbstractPageWriter {
 				.write("\");");
 
 		if (document.isPushUpdate()) {
-			writer.write("ux.wsPushUpdate(\"").write(ClientSyncNameConstants.SYNC_CONTEXT).write("\");");
+			final String wsContextPath = getSessionContext().getContextPath() + ClientSyncNameConstants.SYNC_CONTEXT;
+			writer.write("ux.wsPushUpdate(\"").write(wsContextPath).write("\");");
 		}
 
 		writer.useSecondary();
