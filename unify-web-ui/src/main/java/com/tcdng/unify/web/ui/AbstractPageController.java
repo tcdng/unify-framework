@@ -135,9 +135,11 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 		onInitPage();
 	}
 
+	@Action
 	@Override
-	public final void loadPage() throws UnifyException {
-		onLoadPage();
+	public final String reloadPage() throws UnifyException {
+		onReloadPage();
+		return ResultMappingConstants.RELOAD;
 	}
 
 	@Action
@@ -152,7 +154,7 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 	@Override
 	public final String openPage() throws UnifyException {
 		onOpenPage();
-		onLoadPage();
+		onReloadPage();
 		if (getPageRequestContextUtil().isRemoteViewer()) {
 			return ResultMappingConstants.REMOTE_VIEW;
 		}
@@ -387,7 +389,7 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 			getPageRequestContextUtil().setResponsePathParts(respPathParts);
 			Result result = pbbInfo.getResult(resultName);
 			if (respPageController != null && result.isReload()) {
-				respPageController.loadPage();
+				respPageController.reloadPage();
 			}
 
 			writeResponse(writer, page, result);
@@ -942,11 +944,11 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 	}
 
 	/**
-	 * Executes on {@link #loadPage()}
+	 * Executes on {@link #reloadPage()}
 	 * 
 	 * @throws UnifyException if an error occurs
 	 */
-	protected void onLoadPage() throws UnifyException {
+	protected void onReloadPage() throws UnifyException {
 
 	}
 
