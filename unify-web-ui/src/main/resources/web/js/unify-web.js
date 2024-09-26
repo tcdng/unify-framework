@@ -792,20 +792,6 @@ ux.postCommand = function(uEv) {
 	ux.postCommit(evp);
 }
 
-ux.postWinFocusCommand = function() {
-	if (ux.windowFocusEvp) {
-		const evp = ux.windowFocusEvp;
-		evp.uURL = evp.uCmdURL;
-		evp.uCmd = evp.uTrgPnl + "->" + evp.uTrgCmd;
-		if (evp.uRefreshPnls) {
-			evp.uPanels = evp.uRefreshPnls;
-		}
-		
-		ux.windowFocusEvp = null;
-		ux.postCommit(evp);
-	}
-}
-
 ux.postCommit = function(evp) {
 	evp.uBusy = true;
 	if (UNIFY_POST_COMMIT_QUEUE) {
@@ -5573,10 +5559,6 @@ ux.setOnEvent = function(evp) {
 		evp.uRef.push(evp.uId);
 	}
 	
-	if (("ux05" == evp.uFunc) && evp.uCmdWinFocus) {
-		ux.windowFocusEvp = evp;
-	}
-	
 	var elem = _id(evp.uId);
 	const _fn = ux.getfn(evp.uFunc);
 	if (elem) {
@@ -5669,9 +5651,6 @@ ux.init = function() {
 	ux.resizeTimeout = null;
 	// Set document keydown handler
 	ux.addHdl(document, "keydown", ux.documentKeydownHandler,
-					{});
-	// Window on focus handler
-	ux.addHdl(window, "focus", ux.windowOnFocus,
 					{});
 	
 	// Window handler
@@ -5778,10 +5757,6 @@ ux.getfn = function(id) {
 
 ux.setHintTimeout = function(millisec) {
 	ux.hintTimeout = millisec;
-}
-
-ux.windowOnFocus = function(uEv) {
-	ux.postWinFocusCommand();
 }
 
 ux.windowUnload = function(uEv) {

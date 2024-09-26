@@ -825,10 +825,6 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
 					if (!StringUtils.isBlank(cmdTag)) {
 						writer.write(",\"uCmdTag\":\"").write(cmdTag).write("\"");
 					}
-
-					if (pageAction.getUplAttribute(boolean.class, "onWinFocus")) {
-						writer.write(",\"uCmdWinFocus\":").write(reqUtil.isOnFocusOneshot());
-					}
 				}
 
 				String targetCmdPgNm = null;

@@ -680,27 +680,6 @@ public interface PageRequestContextUtil extends UnifyComponent {
      */
     void clearFocusOnWidget() throws UnifyException;
 
-	/**
-	 * Gets focus one shot.
-	 * 
-	 * @return true if focus oneshot
-	 * @throws UnifyException if an error occurs
-	 */
-	boolean isOnFocusOneshot() throws UnifyException;
-
-	/**
-	 * Sets on focus one-shot.
-	 * 
-	 * @throws UnifyException if an error occurs
-	 */
-	void setOnFocusOneshot() throws UnifyException;
-
-    /**
-     * Clears focus one-shot.
-     * @throws UnifyException if an error occurs
-     */
-    void clearOnFocusOneshot() throws UnifyException;
-
     /**
      * Checks if no-push widgets are set in this request.
      * 
