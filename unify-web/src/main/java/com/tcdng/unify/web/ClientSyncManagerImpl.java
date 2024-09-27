@@ -30,10 +30,10 @@ import com.tcdng.unify.core.annotation.PeriodicType;
 import com.tcdng.unify.core.annotation.Synchronized;
 import com.tcdng.unify.core.annotation.Transactional;
 import com.tcdng.unify.core.business.AbstractBusinessService;
+import com.tcdng.unify.core.constant.ClientSyncCommandConstants;
 import com.tcdng.unify.core.task.TaskMonitor;
 import com.tcdng.unify.core.util.CalendarUtils;
 import com.tcdng.unify.core.util.DataUtils;
-import com.tcdng.unify.web.constant.ClientSyncCommandConstants;
 import com.tcdng.unify.web.util.ClientSyncUtils;
 
 /**

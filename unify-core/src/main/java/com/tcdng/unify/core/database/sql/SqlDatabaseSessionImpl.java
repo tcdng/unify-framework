@@ -19,6 +19,7 @@ import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Savepoint;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -38,6 +39,7 @@ import com.tcdng.unify.core.constant.FetchChild;
 import com.tcdng.unify.core.constant.IncludeListOnly;
 import com.tcdng.unify.core.constant.MustMatch;
 import com.tcdng.unify.core.constant.QueryAgainst;
+import com.tcdng.unify.core.constant.TopicEventType;
 import com.tcdng.unify.core.constant.UpdateChild;
 import com.tcdng.unify.core.criterion.AdditionExpression;
 import com.tcdng.unify.core.criterion.AggregateFunction;
@@ -52,6 +54,7 @@ import com.tcdng.unify.core.database.Aggregation;
 import com.tcdng.unify.core.database.CallableProc;
 import com.tcdng.unify.core.database.DatabaseSession;
 import com.tcdng.unify.core.database.Entity;
+import com.tcdng.unify.core.database.EntityChangeEventBroadcaster;
 import com.tcdng.unify.core.database.EntityPolicy;
 import com.tcdng.unify.core.database.GroupingAggregation;
 import com.tcdng.unify.core.database.MappedEntityRepository;
@@ -69,20 +72,32 @@ import com.tcdng.unify.core.util.SqlUtils;
  */
 public class SqlDatabaseSessionImpl implements DatabaseSession {
 
-	private SqlDataSource sqlDataSource;
-	private SqlDataSourceDialect sqlDataSourceDialect;
-	private SqlStatementExecutor sqlStatementExecutor;
+	private final SqlDataSource sqlDataSource;
+	
+	private final SqlDataSourceDialect sqlDataSourceDialect;
+	
+	private final SqlStatementExecutor sqlStatementExecutor;
+	
+	private final EntityChangeEventBroadcaster entityChangeBroadcaster;
+	
 	private Connection connection;
+	
 	private Stack<Savepoint> savepointStack;
+	
 	private boolean closed;
 
-	public SqlDatabaseSessionImpl(SqlDataSource sqlDataSource, SqlStatementExecutor sqlStatementExecutor)
+	private List<EntityEvent> events;
+	
+	public SqlDatabaseSessionImpl(SqlDataSource sqlDataSource, SqlStatementExecutor sqlStatementExecutor,
+			EntityChangeEventBroadcaster entityChangeBroadcaster)
 			throws UnifyException {
 		this.sqlDataSource = sqlDataSource;
 		this.sqlStatementExecutor = sqlStatementExecutor;
+		this.entityChangeBroadcaster = entityChangeBroadcaster;
 		sqlDataSourceDialect = (SqlDataSourceDialect) sqlDataSource.getDialect();
 		connection = (Connection) sqlDataSource.getConnection();
 		savepointStack = new Stack<Savepoint>();
+		events = new ArrayList<EntityEvent>();
 	}
 
 	@Override
@@ -756,6 +771,8 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 		} finally {
 			sqlDataSourceDialect.restoreStatement(sqlStatement);
 		}
+		
+		events.add(new EntityEvent(TopicEventType.DELETE, sqlEntityInfo.getEntityClass(), record.getId()));		
 		return result;
 	}
 
@@ -819,6 +836,8 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 		} finally {
 			sqlDataSourceDialect.restoreStatement(sqlStatement);
 		}
+		
+		events.add(new EntityEvent(TopicEventType.DELETE, sqlEntityInfo.getEntityClass(), record.getId()));		
 		return result;
 	}
 
@@ -849,14 +868,16 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 		} finally {
 			sqlDataSourceDialect.restoreStatement(sqlStatement);
 		}
+		
+		events.add(new EntityEvent(TopicEventType.DELETE, sqlEntityInfo.getEntityClass(), id));	
 		return result;
 	}
 
 	@Override
 	public int deleteAll(Query<? extends Entity> query) throws UnifyException {
 		ensureWritable();
+		SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
 		try {
-			SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
 			if (sqlEntityInfo.isViewOnly()) {
 				throw new UnifyException(UnifyCoreErrorConstants.RECORD_VIEW_OPERATION_UNSUPPORTED,
 						sqlEntityInfo.getEntityClass(), "DELETE_ALL");
@@ -903,6 +924,8 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 		} catch (Exception e) {
 			throw new UnifyOperationException(e, getClass().getSimpleName());
 		}
+		
+		events.add(new EntityEvent(TopicEventType.DELETE, sqlEntityInfo.getEntityClass(), null));
 		return 0;
 	}
 
@@ -1119,8 +1142,15 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 	public void commit() throws UnifyException {
 		try {
 			connection.commit();
+
+			for (EntityEvent event : events) {
+				entityChangeBroadcaster.broadcastEntityChange(event.getEventType(), event.getEntityClass(),
+						event.getId());
+			}
 		} catch (Exception e) {
 			throw new UnifyException(e, UnifyCoreErrorConstants.DATASOURCE_SESSION_ERROR, getDataSourceName());
+		} finally {
+			events = new ArrayList<EntityEvent>();
 		}
 	}
 
@@ -1130,6 +1160,8 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 			connection.rollback();
 		} catch (SQLException e) {
 			throw new UnifyException(e, UnifyCoreErrorConstants.DATASOURCE_SESSION_ERROR, getDataSourceName());
+		} finally {
+			events = new ArrayList<EntityEvent>();
 		}
 	}
 
@@ -1165,6 +1197,34 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 		close();
 	}
 
+	private class EntityEvent {
+		
+		private TopicEventType eventType;
+		
+		private Class<? extends Entity> entityClass;
+		
+		private Object id;
+
+		public EntityEvent(TopicEventType eventType, Class<? extends Entity> entityClass, Object id) {
+			this.eventType = eventType;
+			this.entityClass = entityClass;
+			this.id = id;
+		}
+
+		public TopicEventType getEventType() {
+			return eventType;
+		}
+
+		public Class<? extends Entity> getEntityClass() {
+			return entityClass;
+		}
+
+		public Object getId() {
+			return id;
+		}
+		
+	}
+	
 	private void ensureWritable() throws UnifyException {
 		if (isReadOnly()) {
 			throw new UnifyException(UnifyCoreErrorConstants.DATASOURCE_IN_READONLY_MODE, sqlDataSource.getName());
@@ -1464,6 +1524,8 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 				sqlDataSourceDialect.restoreStatement(sqlStatement);
 			}
 		}
+		
+		events.add(new EntityEvent(TopicEventType.UPDATE, sqlEntityInfo.getEntityClass(), record.getId()));
 		return result;
 	}
 
@@ -1527,6 +1589,8 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 				sqlDataSourceDialect.restoreStatement(sqlStatement);
 			}
 		}
+		
+		events.add(new EntityEvent(TopicEventType.UPDATE, sqlEntityInfo.getEntityClass(), record.getId()));
 		return result;
 	}
 
@@ -1560,6 +1624,8 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 		} finally {
 			sqlDataSourceDialect.restoreStatement(sqlStatement);
 		}
+		
+		events.add(new EntityEvent(TopicEventType.CREATE, sqlEntityInfo.getEntityClass(), null));		
 		return id;
 	}
 

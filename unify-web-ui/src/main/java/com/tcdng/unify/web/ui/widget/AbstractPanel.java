@@ -22,13 +22,14 @@ import com.tcdng.unify.core.UnifyCoreRequestAttributeConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
+import com.tcdng.unify.core.constant.TopicEventType;
 import com.tcdng.unify.core.data.DownloadFile;
+import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.UnifyWebSessionAttributeConstants;
 import com.tcdng.unify.web.annotation.Action;
 import com.tcdng.unify.web.constant.ReservedPageControllerConstants;
 import com.tcdng.unify.web.constant.ResultMappingConstants;
-import com.tcdng.unify.web.constant.TopicEventType;
 import com.tcdng.unify.web.constant.UnifyWebRequestAttributeConstants;
 import com.tcdng.unify.web.ui.PageRequestContextUtil;
 import com.tcdng.unify.web.ui.widget.data.MessageBox;
@@ -188,6 +189,27 @@ public abstract class AbstractPanel extends AbstractContainer implements Panel {
 	}
 
 	/**
+	 * Sets current client (browser) to listen to entity.
+	 * 
+	 * @param entityClass the entity class
+	 * @throws UnifyException if an error occurs
+	 */
+	protected void setClientListenToEntity(Class<? extends Entity> entityClass) throws UnifyException {
+		setClientListenToEntity(entityClass, null);
+	}
+
+	/**
+	 * Sets current client (browser) to listen to entity with associated entity Id.
+	 * 
+	 * @param entityClass the entity class
+	 * @param id          the entity ID
+	 * @throws UnifyException if an error occurs
+	 */
+	protected void setClientListenToEntity(Class<? extends Entity> entityClass, Object id) throws UnifyException {
+		getRequestContextUtil().setClientTopic(id != null ? entityClass.getName() + ":" + id : entityClass.getName());
+	}
+
+	/**
 	 * Adds client topic to current request attribute.
 	 * 
 	 * @param eventType the event type
@@ -207,7 +229,7 @@ public abstract class AbstractPanel extends AbstractContainer implements Panel {
 	 * @throws UnifyException if an error occurs
 	 */
 	protected void addClientTopicEvent(TopicEventType eventType, String topic, String title) throws UnifyException {
-		getRequestContextUtil().addClientTopicEvent(eventType, topic + ":" + title);
+		getRequestContextUtil().addClientTopicEvent(eventType, topic, title);
 	}
 
 	/**

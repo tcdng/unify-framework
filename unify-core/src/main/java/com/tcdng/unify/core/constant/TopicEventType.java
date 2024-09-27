@@ -13,28 +13,27 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
-package com.tcdng.unify.web.constant;
+package com.tcdng.unify.core.constant;
 
 /**
- * Client synchronization command constants.
+ * Topic event type constants.
  * 
  * @author The Code Department
- * @since 1.0
+ * @version 1.0
  */
-public interface ClientSyncCommandConstants {
+public enum TopicEventType {
 
-	String OPEN = "open";
+    CREATE(ClientSyncCommandConstants.CREATE),
+    UPDATE(ClientSyncCommandConstants.UPDATE),
+    DELETE(ClientSyncCommandConstants.DELETE);
 
-	String CLOSE = "close";
-
-	String EXPIRE = "expire";
-
-	String LISTEN = "listen";
-
-	String CREATE = "create";
-
-	String UPDATE = "update";
-
-	String DELETE = "delete";
+	final private String syncCmd;
+	
+	private TopicEventType(String syncCmd) {
+		this.syncCmd = syncCmd;
+	}
+	
+	public String syncCmd() {
+		return syncCmd;
+	}
 }

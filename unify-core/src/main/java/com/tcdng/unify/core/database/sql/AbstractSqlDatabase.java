@@ -20,6 +20,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.database.AbstractDatabase;
 import com.tcdng.unify.core.database.DatabaseSession;
+import com.tcdng.unify.core.database.EntityChangeEventBroadcaster;
 
 /**
  * Default SQL database implementation.
@@ -32,13 +33,17 @@ public abstract class AbstractSqlDatabase extends AbstractDatabase implements Sq
     @Configurable(ApplicationComponents.APPLICATION_SQLSTATEMENTEXECUTOR)
     private SqlStatementExecutor sqlStatementExecutor;
 
+    @Configurable
+    private EntityChangeEventBroadcaster entityChangeBroadcaster;
+    
     @Override
 	public boolean isReadOnly() throws UnifyException {
 		return getDataSource().isReadOnly();
 	}
 
 	@Override
-    public DatabaseSession createDatabaseSession() throws UnifyException {
-        return new SqlDatabaseSessionImpl((SqlDataSource) getDataSource(), sqlStatementExecutor);
-    }
+	public DatabaseSession createDatabaseSession() throws UnifyException {
+		return new SqlDatabaseSessionImpl((SqlDataSource) getDataSource(), sqlStatementExecutor,
+				entityChangeBroadcaster);
+	}
 }

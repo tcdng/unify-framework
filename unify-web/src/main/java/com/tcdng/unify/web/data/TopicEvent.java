@@ -16,7 +16,7 @@
 
 package com.tcdng.unify.web.data;
 
-import com.tcdng.unify.web.constant.TopicEventType;
+import com.tcdng.unify.core.constant.TopicEventType;
 
 /**
  * Topic event.
