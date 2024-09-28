@@ -18,6 +18,7 @@ package com.tcdng.unify.core.database;
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.TransactionAttribute;
+import com.tcdng.unify.core.constant.TopicEventType;
 
 /**
  * A database transaction manager.
@@ -26,6 +27,7 @@ import com.tcdng.unify.core.annotation.TransactionAttribute;
  * @since 1.0
  */
 public interface DatabaseTransactionManager extends UnifyComponent {
+	
     /**
      * Begins a transaction. The transaction started is of
      * {@link TransactionAttribute#REQUIRED} type.
@@ -129,4 +131,15 @@ public interface DatabaseTransactionManager extends UnifyComponent {
      *                        if an error occurs
      */
     void commit() throws UnifyException;
+	
+	/**
+	 * Logs an entity event with current transaction.
+	 * 
+	 * @param eventType   the event type
+	 * @param entityClass the entity class
+	 * @param id          optional entity ID
+	 * @throws UnifyException if an error occurs
+	 */
+	void logEntityEvent(TopicEventType eventType, Class<? extends Entity> entityClass, Object id)
+			throws UnifyException;
 }

@@ -23,6 +23,7 @@ import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.Transactional;
+import com.tcdng.unify.core.constant.TopicEventType;
 import com.tcdng.unify.core.database.Database;
 import com.tcdng.unify.core.database.DatabaseTransactionManager;
 import com.tcdng.unify.core.database.Entity;
@@ -191,5 +192,18 @@ public abstract class AbstractBusinessService extends AbstractUnifyComponent imp
 	 */
 	protected void rollbackToSavePoint() throws UnifyException {
 		databaseTransactionManager.rollbackToSavePoint();
+	}
+	
+	/**
+	 * Logs an entity event with current transaction.
+	 * 
+	 * @param eventType   the event type
+	 * @param entityClass the entity class
+	 * @param id          optional entity ID
+	 * @throws UnifyException if an error occurs
+	 */
+	protected void logEntityEvent(TopicEventType eventType, Class<? extends Entity> entityClass, Object id)
+			throws UnifyException {
+		databaseTransactionManager.logEntityEvent(eventType, entityClass, id);
 	}
 }

@@ -16,7 +16,9 @@
 
 package com.tcdng.unify.core.database;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
@@ -27,6 +29,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.TransactionAttribute;
+import com.tcdng.unify.core.constant.TopicEventType;
 
 /**
  * Default application database transaction manager implementation.
@@ -38,6 +41,9 @@ import com.tcdng.unify.core.annotation.TransactionAttribute;
 public class DatabaseTransactionManagerImpl extends AbstractUnifyComponent implements DatabaseTransactionManager {
 
     private static final ThreadLocal<Stack<TransactionalCall>> transactionsThreadLocal;
+    
+    @Configurable
+	private EntityChangeEventBroadcaster entityChangeBroadcaster;
 
     static {
         transactionsThreadLocal = new ThreadLocal<Stack<TransactionalCall>>() {
@@ -65,17 +71,17 @@ public class DatabaseTransactionManagerImpl extends AbstractUnifyComponent imple
                 if (!transactions.isEmpty() && transactions.peek().isTransaction()) {
                     transaction = transactions.peek();
                 } else {
-                    transaction = new TransactionalCall(autoJoin, true);
+                    transaction = new TransactionalCall(entityChangeBroadcaster, autoJoin, true);
                 }
                 break;
             case REQUIRES_NEW:
-                transaction = new TransactionalCall(autoJoin, true);
+                transaction = new TransactionalCall(entityChangeBroadcaster, autoJoin, true);
                 break;
             case SUPPORTS:
                 if (!transactions.isEmpty()) {
                     transaction = transactions.peek();
                 } else {
-                    transaction = new TransactionalCall(autoJoin, false);
+                    transaction = new TransactionalCall(entityChangeBroadcaster, autoJoin, false);
                 }
                 break;
             case MANDATORY:
@@ -95,11 +101,11 @@ public class DatabaseTransactionManagerImpl extends AbstractUnifyComponent imple
                         throw new UnifyException(UnifyCoreErrorConstants.TRANSACTION_IS_NEVER_REQUIRED);
                     }
                 } else {
-                    transaction = new TransactionalCall(autoJoin, false);
+                    transaction = new TransactionalCall(entityChangeBroadcaster, autoJoin, false);
                 }
                 break;
             case NOT_SUPPORTED:
-                transaction = new TransactionalCall(autoJoin, false);
+                transaction = new TransactionalCall(entityChangeBroadcaster, autoJoin, false);
                 break;
         }
 
@@ -174,6 +180,12 @@ public class DatabaseTransactionManagerImpl extends AbstractUnifyComponent imple
     }
 
     @Override
+	public void logEntityEvent(TopicEventType eventType, Class<? extends Entity> entityClass, Object id)
+			throws UnifyException {
+    	getCurrentTransaction().addEntityEvent(eventType, entityClass, id);
+	}
+
+	@Override
     protected void onInitialize() throws UnifyException {
 
     }
@@ -182,6 +194,34 @@ public class DatabaseTransactionManagerImpl extends AbstractUnifyComponent imple
     protected void onTerminate() throws UnifyException {
 
     }
+
+	private static class EntityEvent {
+		
+		private TopicEventType eventType;
+		
+		private Class<? extends Entity> entityClass;
+		
+		private Object id;
+
+		public EntityEvent(TopicEventType eventType, Class<? extends Entity> entityClass, Object id) {
+			this.eventType = eventType;
+			this.entityClass = entityClass;
+			this.id = id;
+		}
+
+		public TopicEventType getEventType() {
+			return eventType;
+		}
+
+		public Class<? extends Entity> getEntityClass() {
+			return entityClass;
+		}
+
+		public Object getId() {
+			return id;
+		}
+		
+	}
 
     private TransactionalCall getCurrentTransaction() throws UnifyException {
         try {
@@ -192,15 +232,19 @@ public class DatabaseTransactionManagerImpl extends AbstractUnifyComponent imple
     }
 
     private static class TransactionalCall {
+    	private EntityChangeEventBroadcaster entityChangeBroadcaster;
         private Map<Database, DatabaseSession> databaseSessions;
         private boolean autoJoin;
         private boolean transaction;
         private boolean rollback;
         private int depth;
+    	private List<EntityEvent> events;
         
-        public TransactionalCall(boolean autoJoin, boolean transaction) {
+        public TransactionalCall(EntityChangeEventBroadcaster entityChangeBroadcaster, boolean autoJoin, boolean transaction) {
+        	this.entityChangeBroadcaster = entityChangeBroadcaster;
             this.autoJoin = autoJoin;
             this.transaction = transaction;
+            this.events = new ArrayList<EntityEvent>();
             rollback = !transaction;
             databaseSessions = new HashMap<Database, DatabaseSession>();
         }
@@ -227,6 +271,11 @@ public class DatabaseTransactionManagerImpl extends AbstractUnifyComponent imple
 
             return databaseSession;
         }
+        
+		public void addEntityEvent(TopicEventType eventType, Class<? extends Entity> entityClass, Object id)
+				throws UnifyException {
+			events.add(new EntityEvent(eventType, entityClass, id));
+		}
 
         public void start() throws UnifyException {
             depth++;
@@ -292,6 +341,12 @@ public class DatabaseTransactionManagerImpl extends AbstractUnifyComponent imple
                 }
             }
             
+			for (EntityEvent event : events) {
+				entityChangeBroadcaster.broadcastEntityChange(event.getEventType(), event.getEntityClass(),
+						event.getId());
+			}
+			events = new ArrayList<EntityEvent>();
+           
             rollback = false;
         }
     }
