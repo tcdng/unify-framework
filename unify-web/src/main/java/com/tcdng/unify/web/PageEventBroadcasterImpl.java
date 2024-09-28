@@ -33,6 +33,7 @@ import com.tcdng.unify.core.constant.ClientSyncCommandConstants;
 import com.tcdng.unify.core.constant.TopicEventType;
 import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.database.EntityChangeEventBroadcaster;
+import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.constant.ServerSyncCommandConstants;
 
 /**
@@ -109,7 +110,7 @@ public class PageEventBroadcasterImpl extends AbstractBusinessService
 	public void broadcastEntityChange(TopicEventType eventType, Class<? extends Entity> entityClass, Object id)
 			throws UnifyException {
 		final String topic = id != null ? entityClass.getName() + ":" + id : entityClass.getName();
-		broadcastExecutor.execute(new BroadcastThread(new BroadcastReq(eventType.syncCmd(), topic)));
+		broadcastTopicEvent(null, eventType.syncCmd(), topic);
 	}
 
 	@Broadcast
@@ -120,23 +121,30 @@ public class PageEventBroadcasterImpl extends AbstractBusinessService
 		logDebug("Broadcasting client event [{0}] for topic [{1}] and originating from client [{2}]...", type, topic,
 				srcClientId);
 
-		broadcast(srcClientId, topic, type);
+		broadcastExecutor.execute(new BroadcastThread(new BroadcastReq(srcClientId, type, topic)));
 		int index = topic.indexOf(':');
 		if (index > 0) {
 			final String mainTopic = topic.substring(0, index);
-			broadcast(srcClientId, mainTopic, type);
+			broadcastExecutor.execute(new BroadcastThread(new BroadcastReq(srcClientId, type, mainTopic)));
 		}
 	}
 
 	private class BroadcastReq {
-		
+
+		private String srcClientId;
+
 		private String cmd;
-		
+
 		private String topic;
 
-		public BroadcastReq(String cmd, String topic) {
+		public BroadcastReq(String srcClientId, String cmd, String topic) {
+			this.srcClientId = srcClientId;
 			this.cmd = cmd;
 			this.topic = topic;
+		}
+
+		public String getSrcClientId() {
+			return srcClientId;
 		}
 
 		public String getCmd() {
@@ -145,7 +153,11 @@ public class PageEventBroadcasterImpl extends AbstractBusinessService
 
 		public String getTopic() {
 			return topic;
-		}		
+		}
+
+		public boolean isWithSrcClient() {
+			return !StringUtils.isBlank(srcClientId);
+		}
 	}
 
 	public class BroadcastThread implements Runnable {
@@ -158,14 +170,17 @@ public class PageEventBroadcasterImpl extends AbstractBusinessService
 
 		@Override
 		public void run() {
-			try {
-				broadcastTopicEvent(null, req.getCmd(), req.getTopic());
-			} catch (UnifyException e) {
-				logError(e);
+			if (req.isWithSrcClient()) {
+				logDebug("Broadcasting client event [{0}] for topic [{1}] and originating from client [{2}]...",
+						req.getCmd(), req.getTopic(), req.getSrcClientId());
+				broadcast(req.getSrcClientId(), req.getTopic(), req.getCmd());
+			} else {
+				logDebug("Broadcasting client event [{0}] for topic [{1}]...", req.getCmd(), req.getTopic());
+				broadcast(null, req.getTopic(), req.getCmd());
 			}
 		}
 	}
-	
+
 	private void broadcast(String srcClientId, String topic, String type) {
 		Set<String> listeners = listenersByTopic.get(topic);
 		for (String listeningClientId : new ArrayList<String>(listeners)) {
