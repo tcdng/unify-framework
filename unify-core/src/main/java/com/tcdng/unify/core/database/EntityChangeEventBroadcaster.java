@@ -32,20 +32,23 @@ public interface EntityChangeEventBroadcaster extends UnifyComponent {
 	 * Broadcasts an entity change.
 	 * 
 	 * @param eventType   the event type
+	 * @param srcClientId the source client ID
 	 * @param entityClass the entity class
 	 * @throws UnifyException if an error occurs
 	 */
-	void broadcastEntityChange(TopicEventType eventType, Class<? extends Entity> entityClass) throws UnifyException;
+	void broadcastEntityChange(TopicEventType eventType, String srcClientId, Class<? extends Entity> entityClass)
+			throws UnifyException;
 
 	/**
 	 * Broadcasts an entity change.
 	 * 
 	 * @param eventType   the event type
+	 * @param srcClientId the source client ID
 	 * @param entityClass the entity class
 	 * @param id          the specific entity ID
 	 * @throws UnifyException if an error occurs
 	 */
-	void broadcastEntityChange(TopicEventType eventType, Class<? extends Entity> entityClass, Object id)
-			throws UnifyException;
+	void broadcastEntityChange(TopicEventType eventType, String srcClientId, Class<? extends Entity> entityClass,
+			Object id) throws UnifyException;
 
 }

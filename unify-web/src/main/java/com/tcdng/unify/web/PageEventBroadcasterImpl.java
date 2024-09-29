@@ -101,16 +101,16 @@ public class PageEventBroadcasterImpl extends AbstractBusinessService
 	}
 
 	@Override
-	public void broadcastEntityChange(TopicEventType eventType, Class<? extends Entity> entityClass)
+	public void broadcastEntityChange(TopicEventType eventType, String srcClientId, Class<? extends Entity> entityClass)
 			throws UnifyException {
-		broadcastEntityChange(eventType, entityClass, null);
+		broadcastEntityChange(eventType, srcClientId, entityClass, null);
 	}
 
 	@Override
-	public void broadcastEntityChange(TopicEventType eventType, Class<? extends Entity> entityClass, Object id)
-			throws UnifyException {
+	public void broadcastEntityChange(TopicEventType eventType, String srcClientId, Class<? extends Entity> entityClass,
+			Object id) throws UnifyException {
 		final String topic = id != null ? entityClass.getName() + ":" + id : entityClass.getName();
-		broadcastTopicEvent(null, eventType.syncCmd(), topic);
+		broadcastTopicEvent(srcClientId, eventType.syncCmd(), topic);
 	}
 
 	@Broadcast
@@ -183,12 +183,14 @@ public class PageEventBroadcasterImpl extends AbstractBusinessService
 
 	private void broadcast(String srcClientId, String topic, String type) {
 		Set<String> listeners = listenersByTopic.get(topic);
-		for (String listeningClientId : new ArrayList<String>(listeners)) {
-			if (!srcClientId.equals(listeningClientId)) {
-				ClientSyncSession session = sessions.get(listeningClientId);
-				if (session != null) {
-					session.sendEventToRemote(
-							new ServerEventMsg(srcClientId, ServerSyncCommandConstants.REFRESH, type));
+		if (listeners != null) {
+			for (String listeningClientId : new ArrayList<String>(listeners)) {
+				if (srcClientId == null || !srcClientId.equals(listeningClientId)) {
+					ClientSyncSession session = sessions.get(listeningClientId);
+					if (session != null) {
+						session.sendEventToRemote(
+								new ServerEventMsg(srcClientId, ServerSyncCommandConstants.REFRESH, type));
+					}
 				}
 			}
 		}

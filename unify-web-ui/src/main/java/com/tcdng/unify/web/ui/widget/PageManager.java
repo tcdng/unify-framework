@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import com.tcdng.unify.core.UnifyComponent;
+import com.tcdng.unify.core.EntityEventSource;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.web.ControllerPathParts;
 import com.tcdng.unify.web.ui.widget.panel.StandalonePanel;
@@ -31,15 +31,7 @@ import com.tcdng.unify.web.ui.widget.panel.StandalonePanel;
  * @author The Code Department
  * @since 1.0
  */
-public interface PageManager extends UnifyComponent {
-
-	/**
-	 * Gets current request client ID.
-	 * 
-	 * @return the client ID
-	 * @throws UnifyException if an error occurs
-	 */
-	String getCurrentRequestClientId() throws UnifyException;
+public interface PageManager extends EntityEventSource {
 
 	/**
 	 * Gets current request page ID.

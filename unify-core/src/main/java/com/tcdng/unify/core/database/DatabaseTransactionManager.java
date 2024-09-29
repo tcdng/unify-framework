@@ -133,13 +133,14 @@ public interface DatabaseTransactionManager extends UnifyComponent {
     void commit() throws UnifyException;
 	
 	/**
-	 * Logs an entity event with current transaction.
+	 * Sets of an entity event with current transaction.
 	 * 
 	 * @param eventType   the event type
+	 * @param srcClientId the source client ID
 	 * @param entityClass the entity class
 	 * @param id          optional entity ID
 	 * @throws UnifyException if an error occurs
 	 */
-	void logEntityEvent(TopicEventType eventType, Class<? extends Entity> entityClass, Object id)
+	void setOffEntityEvent(TopicEventType eventType, String srcClientId, Class<? extends Entity> entityClass, Object id)
 			throws UnifyException;
 }
