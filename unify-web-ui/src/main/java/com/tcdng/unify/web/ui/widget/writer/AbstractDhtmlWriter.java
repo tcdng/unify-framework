@@ -780,7 +780,7 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
 	protected void writeActionParamsJS(ResponseWriter writer, String event, String function, String id, String cmdTag,
 			PageAction pageAction, String[] refPageNames, String refObject, String path) throws UnifyException {
 		final PageRequestContextUtil reqUtil = getRequestContextUtil();
-		final ControllerPathParts parts = reqUtil.getResponsePathParts();		
+		final ControllerPathParts parts = reqUtil.getResponsePathParts();
 		final String pathId = parts.getControllerPathId();
 		PageManager pageManager = getPageManager();
 		if (StringUtils.isNotBlank(event)) {
@@ -824,10 +824,6 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
 					writer.write(",\"uTrgCmd\":\"").write(cmd).write("\"");
 					if (!StringUtils.isBlank(cmdTag)) {
 						writer.write(",\"uCmdTag\":\"").write(cmdTag).write("\"");
-					}
-					
-					if (pageAction.getUplAttribute(boolean.class, "onWinFocus")) {
-						writer.write(",\"uCmdWinFocus\":").write(reqUtil.isOnFocusOneshot());
 					}
 				}
 
@@ -914,8 +910,9 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
 				}
 			}
 
-			if (pageAction.isUplAttribute("confirm")) {
-				String confirm = pageAction.getUplAttribute(String.class, "confirm");
+			if (writer.isWithConfirm() || pageAction.isUplAttribute("confirm")) {
+				String confirm = writer.isWithConfirm() ? writer.getConfirm()
+						: pageAction.getUplAttribute(String.class, "confirm");
 				if (StringUtils.isNotBlank(confirm)) {
 					writer.write(",\"uConf\":");
 					writeStringParameter(writer, confirm);

@@ -25,5 +25,8 @@ package com.tcdng.unify.core.criterion;
 public enum FilterConditionListType {
     IMMEDIATE_ONLY,
     IMMEDIATE_FIELD,
-    IMMEDIATE_PARAM
+    IMMEDIATE_PARAM,
+    IMMEDIATE_ENUM_ONLY,
+    IMMEDIATE_ENUM_FIELD,
+    IMMEDIATE_ENUM_PARAM;
 }

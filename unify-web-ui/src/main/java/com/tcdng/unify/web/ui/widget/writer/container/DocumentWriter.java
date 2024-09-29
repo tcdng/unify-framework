@@ -24,6 +24,7 @@ import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ControllerPathParts;
+import com.tcdng.unify.web.constant.ClientSyncNameConstants;
 import com.tcdng.unify.web.data.WebStringWriter;
 import com.tcdng.unify.web.ui.PagePathInfoRepository;
 import com.tcdng.unify.web.ui.widget.DocumentLayout;
@@ -54,6 +55,8 @@ public class DocumentWriter extends AbstractPageWriter {
 	@Override
 	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
 		BasicDocument document = (BasicDocument) widget;
+		document.setClientId(getPageManager().getCurrentRequestClientId());
+		
 		writer.write("<!DOCTYPE html>");
 		writer.write("<html ");
 		writeTagAttributes(writer, document);
@@ -176,10 +179,16 @@ public class DocumentWriter extends AbstractPageWriter {
 		writer.write(">");
 		// Set document properties
 		ControllerPathParts controllerPathParts = pathInfoRepository.getControllerPathParts(document);
-		writer.write("ux.setupDocument(\"").write(controllerPathParts.getControllerPathId()).write("\", \"")
-				.write(document.getPopupBaseId()).write("\", \"").write(document.getPopupWinId()).write("\", \"")
-				.write(document.getPopupSysId()).write("\", \"").write(document.getLatencyPanelId()).write("\", \"")
-				.write(getSessionContext().getId()).write("\");");
+		writer.write("ux.setupDocument(\"").write(document.getClientId()).write("\", \"")
+				.write(controllerPathParts.getControllerPathId()).write("\", \"").write(document.getPopupBaseId())
+				.write("\", \"").write(document.getPopupWinId()).write("\", \"").write(document.getPopupSysId())
+				.write("\", \"").write(document.getLatencyPanelId()).write("\", \"").write(getSessionContext().getId())
+				.write("\");");
+
+		if (document.isPushUpdate()) {
+			final String wsContextPath = getSessionContext().getContextPath() + ClientSyncNameConstants.SYNC_CONTEXT;
+			writer.write("ux.wsPushUpdate(\"").write(wsContextPath).write("\");");
+		}
 
 		writer.useSecondary();
 		// Write layout behavior

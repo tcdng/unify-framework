@@ -34,7 +34,6 @@ import com.tcdng.unify.web.ui.widget.AbstractPageAction;
     @UplAttribute(name = "pushComponents", type = String.class),
     @UplAttribute(name = "validations", type = UplElementReferences.class),
     @UplAttribute(name = "refresh", type = UplElementReferences.class),
-    @UplAttribute(name = "onWinFocus", type = boolean.class, defaultVal = "false"),
     @UplAttribute(name = "debounce", type = boolean.class, defaultVal = "true")})
 public class PostCommandAction extends AbstractPageAction {
 

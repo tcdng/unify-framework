@@ -28,7 +28,7 @@ import com.tcdng.unify.web.ui.widget.ResponseWriter;
 /**
  * Used for generating a refresh panel response.
  * 
- * @author The Code Department
+ * @author The Code Department 
  * @since 1.0
  */
 @Component("refreshpanelresponse")
@@ -73,9 +73,9 @@ public class RefreshPanelResponse extends AbstractJsonPageControllerResponse {
             }
         }
         writer.write("]");
-        if (getRequestContextUtil().isNoPushWidgets()) {
-            writer.write(",\"noPushWidgets\":").writeJsonArray(getRequestContextUtil().getNoPushWidgetIds());
-        }
+
+        writeNoPushWidgets(writer);
+        writeClientTopic(writer);
     }
 
 	private Panel[] resolveRefreshPanels(Page page) throws UnifyException {

@@ -32,6 +32,7 @@ import org.apache.commons.codec.binary.Base64;
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.constant.TopicEventType;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ClientRequest;
@@ -39,6 +40,7 @@ import com.tcdng.unify.web.ControllerPathParts;
 import com.tcdng.unify.web.TargetPath;
 import com.tcdng.unify.web.constant.RequestParameterConstants;
 import com.tcdng.unify.web.constant.UnifyWebRequestAttributeConstants;
+import com.tcdng.unify.web.data.TopicEvent;
 import com.tcdng.unify.web.ui.constant.PageRequestParameterConstants;
 import com.tcdng.unify.web.ui.widget.Document;
 import com.tcdng.unify.web.ui.widget.Page;
@@ -104,8 +106,6 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
     
     private static final String FOCUS_ON_WIDGET = "FOCUS_ON_WIDGET";
 
-    private static final String FOCUS_ONESHOT = "FOCUS_ONESHOT";
-
     private static final String CONSIDER_DEFAULT_FOCUS = "CONSIDER_DEFAULT_FOCUS";
 
     private static final String DEFAULT_FOCUS_ON_WIDGET = "PAGEREQUEST.DEFAULT_FOCUS_ON_WIDGET";
@@ -117,6 +117,10 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
     private static final String DEBOUNCE_WIDGET = "DEBOUNCE_WIDGET";
 
     private static final String NO_PUSH_WIDGET_ID_LIST = "NO_PUSH_WIDGET_ID_LIST";
+
+    private static final String CLIENT_TOPIC = "CLIENT_TOPIC";
+
+    private static final String CLIENT_TOPIC_EVENTS = "CLIENT_TOPIC_EVENTS";
     
     @Override
     public void setRequestPage(Page page) throws UnifyException {
@@ -583,19 +587,50 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
         removeRequestAttribute(FOCUS_ON_WIDGET);       
     }
 
-    @Override
-	public boolean isOnFocusOneshot() throws UnifyException {
-        return getRequestAttribute(boolean.class, FOCUS_ONESHOT);
+	@Override
+	public boolean isWithClientTopic() throws UnifyException {
+		return isRequestAttribute(CLIENT_TOPIC);
 	}
 
 	@Override
-	public void setOnFocusOneshot() throws UnifyException {
-		setRequestAttribute(FOCUS_ONESHOT, true);
+	public String getClientTopic() throws UnifyException {
+        return getRequestAttribute(String.class, CLIENT_TOPIC);
 	}
 
 	@Override
-	public void clearOnFocusOneshot() throws UnifyException {
-		setRequestAttribute(FOCUS_ONESHOT, false);
+	public void setClientTopic(String topic) throws UnifyException {
+		setRequestAttribute(CLIENT_TOPIC, topic);
+	}
+
+	@Override
+	public void addClientTopicEvent(TopicEventType eventType, String topic, String title) throws UnifyException {
+		addClientTopicEvent(eventType, topic + ":" + title);
+	}
+
+	@Override
+	public void addClientTopicEvent(TopicEventType eventType, String topic) throws UnifyException {
+		List<TopicEvent> events = getRequestAttribute(List.class, CLIENT_TOPIC_EVENTS);
+		if (events == null) {
+			synchronized(this) {
+				events = getRequestAttribute(List.class, CLIENT_TOPIC_EVENTS);
+				if (events == null) {
+					events = new ArrayList<TopicEvent>();
+					setRequestAttribute(CLIENT_TOPIC_EVENTS, events);
+				}
+			}
+		}
+		
+		events.add(new TopicEvent(eventType, topic));
+	}
+
+	@Override
+	public List<TopicEvent> getClientTopicEvents() throws UnifyException {
+		return getRequestAttribute(List.class, CLIENT_TOPIC_EVENTS);
+	}
+
+	@Override
+	public boolean isWithClientTopicEvent() throws UnifyException {
+		return isRequestAttribute(CLIENT_TOPIC_EVENTS);
 	}
 
 	@Override

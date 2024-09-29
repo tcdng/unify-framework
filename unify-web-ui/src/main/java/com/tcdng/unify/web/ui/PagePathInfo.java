@@ -24,62 +24,69 @@ package com.tcdng.unify.web.ui;
  */
 public class PagePathInfo {
 
-    private String pathId;
+	private String pathId;
 
-    private String colorScheme;
+	private String colorScheme;
 
-    private String openPagePath;
+	private String openPagePath;
 
-    private String savePagePath;
+	private String reloadPagePath;
 
-    private String closePagePath;
+	private String savePagePath;
 
-    private boolean remoteSave;
+	private String closePagePath;
 
-    public PagePathInfo(String pathId, String colorScheme, String openPagePath, String savePagePath,
-            String closePagePath, boolean remoteSave) {
-        this.pathId = pathId;
-        this.colorScheme = colorScheme;
-        this.openPagePath = openPagePath;
-        this.savePagePath = savePagePath;
-        this.closePagePath = closePagePath;
-        this.remoteSave = remoteSave;
-    }
+	private boolean remoteSave;
 
-    public String getPathId() {
-        return pathId;
-    }
+	public PagePathInfo(String pathId, String colorScheme, String openPagePath, String reloadPagePath,
+			String savePagePath, String closePagePath, boolean remoteSave) {
+		this.pathId = pathId;
+		this.colorScheme = colorScheme;
+		this.openPagePath = openPagePath;
+		this.reloadPagePath = reloadPagePath;
+		this.savePagePath = savePagePath;
+		this.closePagePath = closePagePath;
+		this.remoteSave = remoteSave;
+	}
 
-    public String getColorScheme() {
-        return colorScheme;
-    }
+	public String getPathId() {
+		return pathId;
+	}
 
-    public String getOpenPagePath() {
-        return openPagePath;
-    }
+	public String getColorScheme() {
+		return colorScheme;
+	}
 
-    public String getSavePagePath() {
-        return savePagePath;
-    }
+	public String getOpenPagePath() {
+		return openPagePath;
+	}
 
-    public String getClosePagePath() {
-        return closePagePath;
-    }
+	public String getSavePagePath() {
+		return savePagePath;
+	}
 
-    public boolean isRemoteSave() {
-        return remoteSave;
-    }
+	public String getReloadPagePath() {
+		return reloadPagePath;
+	}
 
-    public void setColorScheme(String colorScheme) {
-        this.colorScheme = colorScheme;
-    }
+	public String getClosePagePath() {
+		return closePagePath;
+	}
 
-    public void setSavePagePath(String savePagePath) {
-        this.savePagePath = savePagePath;
-    }
+	public boolean isRemoteSave() {
+		return remoteSave;
+	}
 
-    public void setRemoteSave(boolean remoteSave) {
-        this.remoteSave = remoteSave;
-    }
+	public void setColorScheme(String colorScheme) {
+		this.colorScheme = colorScheme;
+	}
+
+	public void setSavePagePath(String savePagePath) {
+		this.savePagePath = savePagePath;
+	}
+
+	public void setRemoteSave(boolean remoteSave) {
+		this.remoteSave = remoteSave;
+	}
 
 }

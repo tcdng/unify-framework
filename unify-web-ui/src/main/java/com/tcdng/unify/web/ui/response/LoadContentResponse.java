@@ -17,7 +17,10 @@ package com.tcdng.unify.web.ui.response;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.web.ui.AbstractJsonPageControllerResponse;
+import com.tcdng.unify.web.ui.PagePathInfoRepository;
+import com.tcdng.unify.web.ui.util.WebUtils;
 import com.tcdng.unify.web.ui.widget.ContentPanel;
 import com.tcdng.unify.web.ui.widget.Page;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
@@ -31,28 +34,37 @@ import com.tcdng.unify.web.ui.widget.ResponseWriter;
 @Component("loadcontentresponse")
 public class LoadContentResponse extends AbstractJsonPageControllerResponse {
 
-    public LoadContentResponse() {
-        super("loadContentHdl", true);
-    }
+	@Configurable
+	private PagePathInfoRepository pathInfoRepository;
 
-    @Override
-    protected void doGenerate(ResponseWriter writer, Page page) throws UnifyException {
-        logDebug("Preparing load content response: path ID = [{0}]", page.getPathId());
-        ContentPanel contentPanel = getRequestContextUtil().getRequestDocument().getContentPanel();
-        appendRefreshPageJSON(writer, contentPanel, page);
-        writer.write(",");
-        appendRefreshAttributesJson(writer, true);
-        appendRegisteredDebounceWidgets(writer, true);
-        writer.write(",\"scrollToTop\":true");
-    }
+	public LoadContentResponse() {
+		super("loadContentHdl", true);
+	}
 
-    private void appendRefreshPageJSON(ResponseWriter writer, ContentPanel contentPanel, Page page)
-            throws UnifyException {
-        writer.write(",\"refreshPanels\":[");
-        writer.writeJsonPanel(contentPanel, true);
-        writer.write("]");
-        if (getRequestContextUtil().isNoPushWidgets()) {
-            writer.write(",\"noPushWidgets\":").writeJsonArray(getRequestContextUtil().getNoPushWidgetIds());
-        }
-    }
+	@Override
+	protected void doGenerate(ResponseWriter writer, Page page) throws UnifyException {
+		logDebug("Preparing load content response: path ID = [{0}]", page.getPathId());
+		ContentPanel contentPanel = getRequestContextUtil().getRequestDocument().getContentPanel();
+		appendRefreshPageJSON(writer, contentPanel, page);
+		writer.write(",");
+		appendRefreshAttributesJson(writer, true);
+		appendRegisteredDebounceWidgets(writer, true);
+		final String reloadURL = WebUtils.getContextURL(getRequestContext(), getRequestContextUtil().isRemoteViewer(),
+				pathInfoRepository.getPagePathInfo(page).getReloadPagePath());
+		writer.write(",\"reloadURL\":").writeJsonQuote(reloadURL);
+		writer.write(",\"scrollToTop\":").write(scrollToTop());
+	}
+
+	protected boolean scrollToTop() {
+		return true;
+	}
+
+	private void appendRefreshPageJSON(ResponseWriter writer, ContentPanel contentPanel, Page page)
+			throws UnifyException {
+		writer.write(",\"refreshPanels\":[");
+		writer.writeJsonPanel(contentPanel, true);
+		writer.write("]");
+		writeNoPushWidgets(writer);
+		writeClientTopic(writer);
+	}
 }

@@ -31,7 +31,17 @@ public class BasicDocument extends AbstractDocument {
     @Configurable
     private String[] meta;
 
+    private String clientId;
+    
     public String[] getMeta() {
         return meta;
     }
+
+	public void setClientId(String clientId) {
+		this.clientId = clientId;
+	}
+
+	public String getClientId() {
+		return clientId;
+	}
 }

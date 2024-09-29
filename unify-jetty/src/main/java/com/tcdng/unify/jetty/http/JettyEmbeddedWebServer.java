@@ -48,6 +48,7 @@ import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.constant.NetworkSchemeType;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.jetty.JettyApplicationComponents;
+import com.tcdng.unify.web.constant.ClientSyncNameConstants;
 import com.tcdng.unify.web.http.AbstractEmbeddedHttpWebServer;
 import com.tcdng.unify.web.http.HttpApplicationServlet;
 
@@ -131,15 +132,24 @@ public class JettyEmbeddedWebServer extends AbstractEmbeddedHttpWebServer {
             context.getSessionHandler().setMaxInactiveInterval(
                     getContainerSetting(int.class, UnifyCorePropertyConstants.APPLICATION_SESSION_TIMEOUT,
                             UnifyCoreConstants.DEFAULT_APPLICATION_SESSION_TIMEOUT_SECONDS));
-            context.getSessionHandler().getSessionCookieConfig().setHttpOnly(true);
+            final String sessionCookieName = generateSessionCookieName();
+            context.getSessionHandler().getSessionCookieConfig().setName(sessionCookieName);
+//            context.getSessionHandler().getSessionCookieConfig().setHttpOnly(true);            
             httpServer.setHandler(context);
 
+            // Websocket
+            ServletHolder jettyHolder = new ServletHolder(JettyClientSyncWebSocketServlet.class);
+            context.addServlet(jettyHolder, ClientSyncNameConstants.SYNC_CONTEXT);
+            
+            // HTTP/HTTPS
             ServletHolder mainHolder = new ServletHolder(new HttpApplicationServlet(createHttpServletModule()));
             mainHolder.getRegistration().setMultipartConfig(new MultipartConfigElement(getMultipartLocation(),
                     getMultipartMaxFileSize(), getMultipartMaxRequestSize(), getMultipartFileSizeThreshold()));
             context.addServlet(mainHolder, getServletPath());
             context.setErrorHandler(new CustomErrorHandler());
             httpServer.addBean(new CustomErrorHandler());
+            
+            
             httpServer.start();
             HttpGenerator.setJettyVersion("");
             logInfo("HTTP server initialization completed.");

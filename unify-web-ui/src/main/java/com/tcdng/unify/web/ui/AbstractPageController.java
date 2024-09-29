@@ -24,8 +24,10 @@ import com.tcdng.unify.core.UnifyCoreSessionAttributeConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.Singleton;
+import com.tcdng.unify.core.constant.TopicEventType;
 import com.tcdng.unify.core.data.DownloadFile;
 import com.tcdng.unify.core.data.FileAttachmentInfo;
+import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.task.TaskLauncher;
 import com.tcdng.unify.core.task.TaskMonitor;
 import com.tcdng.unify.core.task.TaskSetup;
@@ -96,10 +98,11 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 	@Override
 	public void ensureContextResources(ControllerPathParts controllerPathParts) throws UnifyException {
 		SessionContext sessionContext = getSessionContext();
-		if (sessionContext != null && sessionContext.getAttribute(controllerPathParts.getControllerPathId()) == null) {
+		final String pageId = getPageManager().getCurrentRequestPageId(controllerPathParts);
+		if (sessionContext != null && sessionContext.getAttribute(pageId) == null) {
 			Page page = getPageManager().createPage(sessionContext.getLocale(),
 					controllerPathParts.getControllerName());
-			page.setPathParts(controllerPathParts);
+			page.setPathParts(controllerPathParts, pageId);
 			Class<? extends PageBean> pageBeanClass = getPageBeanClass();
 			if (VoidPageBean.class.equals(pageBeanClass)) {
 				page.setPageBean(VoidPageBean.INSTANCE);
@@ -109,7 +112,7 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 
 			getPageRequestContextUtil().setRequestPage(page);
 			initPage();
-			sessionContext.setAttribute(controllerPathParts.getControllerPathId(), page);
+			sessionContext.setAttribute(pageId, page);
 		}
 	}
 
@@ -133,9 +136,11 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 		onInitPage();
 	}
 
+	@Action
 	@Override
-	public final void loadPage() throws UnifyException {
-		onLoadPage();
+	public final String reloadPage() throws UnifyException {
+		onReloadPage();
+		return ResultMappingConstants.RELOAD;
 	}
 
 	@Action
@@ -150,7 +155,7 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 	@Override
 	public final String openPage() throws UnifyException {
 		onOpenPage();
-		onLoadPage();
+		onReloadPage();
 		if (getPageRequestContextUtil().isRemoteViewer()) {
 			return ResultMappingConstants.REMOTE_VIEW;
 		}
@@ -385,7 +390,7 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 			getPageRequestContextUtil().setResponsePathParts(respPathParts);
 			Result result = pbbInfo.getResult(resultName);
 			if (respPageController != null && result.isReload()) {
-				respPageController.loadPage();
+				respPageController.reloadPage();
 			}
 
 			writeResponse(writer, page, result);
@@ -887,6 +892,72 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 	}
 
 	/**
+	 * Sets current client (browser) to listen to topic.
+	 * 
+	 * @param topic the topic to set
+	 * @throws UnifyException if an error occurs
+	 */
+	protected void setClientListenToTopic(String topic) throws UnifyException {
+		getPageRequestContextUtil().setClientTopic(topic);
+	}
+
+	/**
+	 * Sets current client (browser) to listen to topic with associated title.
+	 * 
+	 * @param topic the topic to set
+	 * @param title the associated title
+	 * @throws UnifyException if an error occurs
+	 */
+	protected void setClientListenToTopic(String topic, String title) throws UnifyException {
+		getPageRequestContextUtil().setClientTopic(topic + ":" + title);
+	}
+
+	/**
+	 * Sets current client (browser) to listen to entity.
+	 * 
+	 * @param entityClass the entity class
+	 * @throws UnifyException if an error occurs
+	 */
+	protected void setClientListenToEntity(Class<? extends Entity> entityClass) throws UnifyException {
+		setClientListenToEntity(entityClass, null);
+	}
+
+	/**
+	 * Sets current client (browser) to listen to entity with associated entity Id.
+	 * 
+	 * @param entityClass the entity class
+	 * @param id          the entity ID
+	 * @throws UnifyException if an error occurs
+	 */
+	protected void setClientListenToEntity(Class<? extends Entity> entityClass, Object id) throws UnifyException {
+		getPageRequestContextUtil()
+				.setClientTopic(id != null ? entityClass.getName() + ":" + id : entityClass.getName());
+	}
+
+	/**
+	 * Adds client topic to current request attribute.
+	 * 
+	 * @param eventType the event type
+	 * @param topic     the topic to set
+	 * @throws UnifyException if an error occurs
+	 */
+	protected void addClientTopicEvent(TopicEventType eventType, String topic) throws UnifyException {
+		getPageRequestContextUtil().addClientTopicEvent(eventType, topic);
+	}
+
+	/**
+	 * Adds client topic to current request attribute.
+	 * 
+	 * @param eventType the event type
+	 * @param topic     the topic to set
+	 * @param title the associated title
+	 * @throws UnifyException if an error occurs
+	 */
+	protected void addClientTopicEvent(TopicEventType eventType, String topic, String title) throws UnifyException {
+		getPageRequestContextUtil().addClientTopicEvent(eventType, topic + ":" + title);
+	}
+	
+	/**
 	 * Executes on {@link #initPage()}
 	 * 
 	 * @throws UnifyException if an error occurs
@@ -896,11 +967,11 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 	}
 
 	/**
-	 * Executes on {@link #loadPage()}
+	 * Executes on {@link #reloadPage()}
 	 * 
 	 * @throws UnifyException if an error occurs
 	 */
-	protected void onLoadPage() throws UnifyException {
+	protected void onReloadPage() throws UnifyException {
 
 	}
 

@@ -112,11 +112,20 @@ public class TomcatEmbeddedWebServer extends AbstractEmbeddedHttpWebServer {
 			final String _docBase = new File(".").getAbsolutePath();
 			final String _servletName = TomcatApplicationComponents.TOMCAT_EMBEDDEDWEBSERVER + "-servlet";
 			final Context context = tomcat.addContext(getContextPath(), _docBase);
+	        final String sessionCookieName = generateSessionCookieName();
+			context.setSessionCookieName(sessionCookieName);
+			
+			// WebSocket
+			context.addApplicationListener(TomcatClientSyncWsContextListener.class.getName());
+			//context.addApplicationListener(WsContextListener.class.getName());
+			
+			// HTTP/HTTPS
 			Wrapper servletWrapper = tomcat.addServlet(getContextPath(), _servletName,
 					new HttpApplicationServlet(createHttpServletModule()));
 			servletWrapper.setMultipartConfigElement(new MultipartConfigElement(getMultipartLocation(),
 					getMultipartMaxFileSize(), getMultipartMaxRequestSize(), getMultipartFileSizeThreshold()));
 			context.addServletMapping(getServletPath(), _servletName);
+			
 			context.setSessionTimeout(
 					getContainerSetting(int.class, UnifyCorePropertyConstants.APPLICATION_SESSION_TIMEOUT,
 							UnifyCoreConstants.DEFAULT_APPLICATION_SESSION_TIMEOUT_SECONDS) / 60);

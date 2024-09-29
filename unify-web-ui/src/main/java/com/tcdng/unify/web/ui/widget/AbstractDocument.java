@@ -18,6 +18,7 @@ package com.tcdng.unify.web.ui.widget;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * Abstract user interface document.
@@ -30,7 +31,9 @@ import com.tcdng.unify.core.annotation.UplAttributes;
         @UplAttribute(name = "headerPanel", type = String.class),
         @UplAttribute(name = "footerPanel", type = String.class),
         @UplAttribute(name = "menuPanel", type = String.class),
-        @UplAttribute(name = "contentPanel", type = String.class)})
+        @UplAttribute(name = "contentPanel", type = String.class),
+        @UplAttribute(name = "pushUpdate", type = boolean.class),
+        @UplAttribute(name = "pushUpdateBinding", type = String.class)})
 public abstract class AbstractDocument extends AbstractHtmlPage implements Document {
 
     @Override
@@ -38,6 +41,15 @@ public abstract class AbstractDocument extends AbstractHtmlPage implements Docum
         return getPrefixedId("latency_");
     }
 
+    public boolean isPushUpdate() throws UnifyException{
+    	final String pushUpdateBinding  = getUplAttribute(String.class, "pushUpdateBinding");
+    	if (!StringUtils.isBlank(pushUpdateBinding)) {
+    		return getValue(boolean.class, pushUpdateBinding);
+    	}
+
+    	return getUplAttribute(boolean.class, "pushUpdate");
+    }
+    
     @Override
     public Panel getHeaderPanel() throws UnifyException {
         String headerPanelId = getUplAttribute(String.class, "headerPanel");

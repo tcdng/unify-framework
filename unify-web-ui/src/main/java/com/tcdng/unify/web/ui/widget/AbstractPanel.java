@@ -22,7 +22,9 @@ import com.tcdng.unify.core.UnifyCoreRequestAttributeConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
+import com.tcdng.unify.core.constant.TopicEventType;
 import com.tcdng.unify.core.data.DownloadFile;
+import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.UnifyWebSessionAttributeConstants;
 import com.tcdng.unify.web.annotation.Action;
@@ -163,6 +165,71 @@ public abstract class AbstractPanel extends AbstractContainer implements Panel {
 	@Override
 	public boolean isPanel() {
 		return true;
+	}
+
+	/**
+	 * Sets current client (browser) to listen to topic.
+	 * 
+	 * @param topic the topic to set
+	 * @throws UnifyException if an error occurs
+	 */
+	protected void setClientListenToTopic(String topic) throws UnifyException {
+		getRequestContextUtil().setClientTopic(topic);
+	}
+
+	/**
+	 * Sets current client (browser) to listen to topic with associated title.
+	 * 
+	 * @param topic the topic to set
+	 * @param title the associated title
+	 * @throws UnifyException if an error occurs
+	 */
+	protected void setClientListenToTopic(String topic, String title) throws UnifyException {
+		getRequestContextUtil().setClientTopic(topic + ":" + title);
+	}
+
+	/**
+	 * Sets current client (browser) to listen to entity.
+	 * 
+	 * @param entityClass the entity class
+	 * @throws UnifyException if an error occurs
+	 */
+	protected void setClientListenToEntity(Class<? extends Entity> entityClass) throws UnifyException {
+		setClientListenToEntity(entityClass, null);
+	}
+
+	/**
+	 * Sets current client (browser) to listen to entity with associated entity Id.
+	 * 
+	 * @param entityClass the entity class
+	 * @param id          the entity ID
+	 * @throws UnifyException if an error occurs
+	 */
+	protected void setClientListenToEntity(Class<? extends Entity> entityClass, Object id) throws UnifyException {
+		getRequestContextUtil().setClientTopic(id != null ? entityClass.getName() + ":" + id : entityClass.getName());
+	}
+
+	/**
+	 * Adds client topic to current request attribute.
+	 * 
+	 * @param eventType the event type
+	 * @param topic     the topic to set
+	 * @throws UnifyException if an error occurs
+	 */
+	protected void addClientTopicEvent(TopicEventType eventType, String topic) throws UnifyException {
+		getRequestContextUtil().addClientTopicEvent(eventType, topic);
+	}
+
+	/**
+	 * Adds client topic to current request attribute.
+	 * 
+	 * @param eventType the event type
+	 * @param topic     the topic to set
+	 * @param title the associated title
+	 * @throws UnifyException if an error occurs
+	 */
+	protected void addClientTopicEvent(TopicEventType eventType, String topic, String title) throws UnifyException {
+		getRequestContextUtil().addClientTopicEvent(eventType, topic, title);
 	}
 
 	/**

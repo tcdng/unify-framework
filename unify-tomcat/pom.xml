@@ -95,6 +95,11 @@
             <artifactId>tomcat-jasper</artifactId>
             <version>${tomcat.version}</version>
         </dependency>
+	    <dependency>
+	        <groupId>org.apache.tomcat.embed</groupId>
+	        <artifactId>tomcat-embed-websocket</artifactId>
+	        <version>${tomcat.version}</version>
+	    </dependency>
 		<!-- Test dependencies -->
 		<dependency>
 			<groupId>com.tcdng.unify</groupId>

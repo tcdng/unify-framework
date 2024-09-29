@@ -31,14 +31,14 @@ public abstract class AbstractSqlDatabase extends AbstractDatabase implements Sq
 
     @Configurable(ApplicationComponents.APPLICATION_SQLSTATEMENTEXECUTOR)
     private SqlStatementExecutor sqlStatementExecutor;
-
+    
     @Override
 	public boolean isReadOnly() throws UnifyException {
 		return getDataSource().isReadOnly();
 	}
 
 	@Override
-    public DatabaseSession createDatabaseSession() throws UnifyException {
-        return new SqlDatabaseSessionImpl((SqlDataSource) getDataSource(), sqlStatementExecutor);
-    }
+	public DatabaseSession createDatabaseSession() throws UnifyException {
+		return new SqlDatabaseSessionImpl((SqlDataSource) getDataSource(), sqlStatementExecutor);
+	}
 }

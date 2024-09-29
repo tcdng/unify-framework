@@ -66,11 +66,12 @@ public interface PageController<T extends PageBean> extends UIController {
     String openPage() throws UnifyException;
     
     /**
-     * Loads current page with data.
+     * Reloads current page.
      * 
+     * @return the result mapping name
      * @throws UnifyException if an error occurs
      */
-    void loadPage() throws UnifyException;
+    String reloadPage() throws UnifyException;
 
     /**
      * Executes a page save action.
