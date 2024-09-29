@@ -24,8 +24,10 @@ import com.tcdng.unify.core.UnifyCoreSessionAttributeConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.Singleton;
+import com.tcdng.unify.core.constant.TopicEventType;
 import com.tcdng.unify.core.data.DownloadFile;
 import com.tcdng.unify.core.data.FileAttachmentInfo;
+import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.task.TaskLauncher;
 import com.tcdng.unify.core.task.TaskMonitor;
 import com.tcdng.unify.core.task.TaskSetup;
@@ -43,7 +45,6 @@ import com.tcdng.unify.web.constant.ReadOnly;
 import com.tcdng.unify.web.constant.ResetOnWrite;
 import com.tcdng.unify.web.constant.ResultMappingConstants;
 import com.tcdng.unify.web.constant.Secured;
-import com.tcdng.unify.web.constant.TopicEventType;
 import com.tcdng.unify.web.constant.UnifyWebRequestAttributeConstants;
 import com.tcdng.unify.web.ui.widget.ContentPanel;
 import com.tcdng.unify.web.ui.widget.DataTransferWidget;
@@ -909,6 +910,28 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 	 */
 	protected void setClientListenToTopic(String topic, String title) throws UnifyException {
 		getPageRequestContextUtil().setClientTopic(topic + ":" + title);
+	}
+
+	/**
+	 * Sets current client (browser) to listen to entity.
+	 * 
+	 * @param entityClass the entity class
+	 * @throws UnifyException if an error occurs
+	 */
+	protected void setClientListenToEntity(Class<? extends Entity> entityClass) throws UnifyException {
+		setClientListenToEntity(entityClass, null);
+	}
+
+	/**
+	 * Sets current client (browser) to listen to entity with associated entity Id.
+	 * 
+	 * @param entityClass the entity class
+	 * @param id          the entity ID
+	 * @throws UnifyException if an error occurs
+	 */
+	protected void setClientListenToEntity(Class<? extends Entity> entityClass, Object id) throws UnifyException {
+		getPageRequestContextUtil()
+				.setClientTopic(id != null ? entityClass.getName() + ":" + id : entityClass.getName());
 	}
 
 	/**

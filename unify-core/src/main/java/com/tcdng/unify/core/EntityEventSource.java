@@ -13,16 +13,22 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.web.constant;
+package com.tcdng.unify.core;
 
 /**
- * Topic event type constants.
+ * Entity event source.
  * 
  * @author The Code Department
- * @version 1.0
+ * @since 1.0
  */
-public enum TopicEventType {
-    CREATE,
-    UPDATE,
-    DELETE;
+public interface EntityEventSource extends UnifyComponent {
+
+	/**
+	 * Gets current request client ID.
+	 * 
+	 * @return the client ID
+	 * @throws UnifyException if an error occurs
+	 */
+	String getCurrentRequestClientId() throws UnifyException;
+
 }

@@ -13,34 +13,27 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
-package com.tcdng.unify.web.data;
-
-import com.tcdng.unify.core.constant.TopicEventType;
+package com.tcdng.unify.core.constant;
 
 /**
- * Topic event.
+ * Topic event type constants.
  * 
  * @author The Code Department
- * @since 1.0
+ * @version 1.0
  */
-public class TopicEvent {
+public enum TopicEventType {
 
-	private TopicEventType eventType;
+    CREATE(ClientSyncCommandConstants.CREATE),
+    UPDATE(ClientSyncCommandConstants.UPDATE),
+    DELETE(ClientSyncCommandConstants.DELETE);
 
-	private String topic;
-
-	public TopicEvent(TopicEventType eventType, String topic) {
-		this.eventType = eventType;
-		this.topic = topic;
+	final private String syncCmd;
+	
+	private TopicEventType(String syncCmd) {
+		this.syncCmd = syncCmd;
 	}
-
-	public TopicEventType getEventType() {
-		return eventType;
+	
+	public String syncCmd() {
+		return syncCmd;
 	}
-
-	public String getTopic() {
-		return topic;
-	}
-
 }

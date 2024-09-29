@@ -22,10 +22,10 @@ import java.util.Set;
 
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.constant.TopicEventType;
 import com.tcdng.unify.web.ClientRequest;
 import com.tcdng.unify.web.ControllerPathParts;
 import com.tcdng.unify.web.TargetPath;
-import com.tcdng.unify.web.constant.TopicEventType;
 import com.tcdng.unify.web.data.TopicEvent;
 import com.tcdng.unify.web.ui.widget.Document;
 import com.tcdng.unify.web.ui.widget.Page;
@@ -721,6 +721,16 @@ public interface PageRequestContextUtil extends UnifyComponent {
 	 * @throws UnifyException if an error occurs
 	 */
 	void addClientTopicEvent(TopicEventType eventType, String topic) throws UnifyException;
+    
+	/**
+	 * Adds client topic event within request context.
+	 * 
+	 * @param eventType the event type
+	 * @param topic     the topic
+	 * @param title     the title
+	 * @throws UnifyException if an error occurs
+	 */
+	void addClientTopicEvent(TopicEventType eventType, String topic, String title) throws UnifyException;
 
 	/**
 	 * Gets topic events associated with current request.

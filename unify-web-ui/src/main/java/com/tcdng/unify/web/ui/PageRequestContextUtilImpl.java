@@ -32,13 +32,13 @@ import org.apache.commons.codec.binary.Base64;
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.constant.TopicEventType;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ClientRequest;
 import com.tcdng.unify.web.ControllerPathParts;
 import com.tcdng.unify.web.TargetPath;
 import com.tcdng.unify.web.constant.RequestParameterConstants;
-import com.tcdng.unify.web.constant.TopicEventType;
 import com.tcdng.unify.web.constant.UnifyWebRequestAttributeConstants;
 import com.tcdng.unify.web.data.TopicEvent;
 import com.tcdng.unify.web.ui.constant.PageRequestParameterConstants;
@@ -600,6 +600,11 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
 	@Override
 	public void setClientTopic(String topic) throws UnifyException {
 		setRequestAttribute(CLIENT_TOPIC, topic);
+	}
+
+	@Override
+	public void addClientTopicEvent(TopicEventType eventType, String topic, String title) throws UnifyException {
+		addClientTopicEvent(eventType, topic + ":" + title);
 	}
 
 	@Override

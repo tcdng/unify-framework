@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.tcdng.unify.web.constant;
+package com.tcdng.unify.core.constant;
 
 /**
  * Client synchronization command constants.

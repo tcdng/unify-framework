@@ -69,13 +69,18 @@ import com.tcdng.unify.core.util.SqlUtils;
  */
 public class SqlDatabaseSessionImpl implements DatabaseSession {
 
-	private SqlDataSource sqlDataSource;
-	private SqlDataSourceDialect sqlDataSourceDialect;
-	private SqlStatementExecutor sqlStatementExecutor;
+	private final SqlDataSource sqlDataSource;
+	
+	private final SqlDataSourceDialect sqlDataSourceDialect;
+	
+	private final SqlStatementExecutor sqlStatementExecutor;
+	
 	private Connection connection;
+	
 	private Stack<Savepoint> savepointStack;
+	
 	private boolean closed;
-
+	
 	public SqlDatabaseSessionImpl(SqlDataSource sqlDataSource, SqlStatementExecutor sqlStatementExecutor)
 			throws UnifyException {
 		this.sqlDataSource = sqlDataSource;
@@ -756,6 +761,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 		} finally {
 			sqlDataSourceDialect.restoreStatement(sqlStatement);
 		}
+		
 		return result;
 	}
 
@@ -819,6 +825,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 		} finally {
 			sqlDataSourceDialect.restoreStatement(sqlStatement);
 		}
+		
 		return result;
 	}
 
@@ -849,14 +856,15 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 		} finally {
 			sqlDataSourceDialect.restoreStatement(sqlStatement);
 		}
+		
 		return result;
 	}
 
 	@Override
 	public int deleteAll(Query<? extends Entity> query) throws UnifyException {
 		ensureWritable();
+		SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
 		try {
-			SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
 			if (sqlEntityInfo.isViewOnly()) {
 				throw new UnifyException(UnifyCoreErrorConstants.RECORD_VIEW_OPERATION_UNSUPPORTED,
 						sqlEntityInfo.getEntityClass(), "DELETE_ALL");
@@ -903,6 +911,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 		} catch (Exception e) {
 			throw new UnifyOperationException(e, getClass().getSimpleName());
 		}
+		
 		return 0;
 	}
 
@@ -1164,7 +1173,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 	protected void finalize() throws Throwable {
 		close();
 	}
-
+	
 	private void ensureWritable() throws UnifyException {
 		if (isReadOnly()) {
 			throw new UnifyException(UnifyCoreErrorConstants.DATASOURCE_IN_READONLY_MODE, sqlDataSource.getName());
@@ -1464,6 +1473,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 				sqlDataSourceDialect.restoreStatement(sqlStatement);
 			}
 		}
+
 		return result;
 	}
 
@@ -1527,6 +1537,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 				sqlDataSourceDialect.restoreStatement(sqlStatement);
 			}
 		}
+
 		return result;
 	}
 
@@ -1560,6 +1571,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 		} finally {
 			sqlDataSourceDialect.restoreStatement(sqlStatement);
 		}
+
 		return id;
 	}
 

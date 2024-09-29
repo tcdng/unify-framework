@@ -32,7 +32,7 @@ public class ClusterCommandParam extends AbstractSystemSequencedEntity {
     @ForeignKey(ClusterCommand.class)
     private Long clusterCommandId;
 
-    @Column(length = 64)
+    @Column(length = 256, nullable = true)
     private String parameter;
 
     @ListOnly(key = "clusterCommandId", property = "nodeId")
