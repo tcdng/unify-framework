@@ -27,8 +27,10 @@ import javax.servlet.MultipartConfigElement;
 
 import org.apache.catalina.Context;
 import org.apache.catalina.Wrapper;
+import org.apache.catalina.connector.Connector;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.coyote.http11.Http11NioProtocol;
+import org.apache.tomcat.util.net.SSLHostConfig;
 
 import com.tcdng.unify.core.UnifyCoreConstants;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
@@ -82,15 +84,19 @@ public class TomcatEmbeddedWebServer extends AbstractEmbeddedHttpWebServer {
 					throwOperationErrorException(new FileNotFoundException(_keyStorePath.toString()));
 				}
 				final String keystoreFile = _keyStorePath.toString();
-				Http11NioProtocol protocol = (Http11NioProtocol) tomcat.getConnector().getProtocolHandler();
-				protocol.setSSLEnabled(true);
-				protocol.setKeystoreFile(keystoreFile);
-				protocol.setKeystorePass(getKeyStorePass());
-				protocol.setTruststoreFile(null);
-				protocol.setTruststorePass(null);
-				protocol.setKeyAlias(null);
-				tomcat.getConnector().setSecure(true);
-				tomcat.setPort(httpsPort);
+				Connector connector = new Connector();
+				connector.setPort(httpsPort);
+				connector.setSecure(true);
+				connector.setScheme("https");
+				connector.setAttribute("keyAlias", null);
+				connector.setAttribute("keystorePass", getKeyStorePass());
+				connector.setAttribute("keystoreType", "JKS");
+				connector.setAttribute("keystoreFile", keystoreFile);
+				connector.setAttribute("protocol", "HTTP/1.1");
+				connector.setAttribute("sslProtocol", "TLS");
+				connector.setAttribute("protocol", "org.apache.coyote.http11.Http11AprProtocol");
+				connector.setAttribute("SSLEnabled", true);
+				tomcat.setConnector(connector);
 				portList.add(httpsPort);
 			}
 
@@ -103,7 +109,9 @@ public class TomcatEmbeddedWebServer extends AbstractEmbeddedHttpWebServer {
 				// Setup HTTP
 				final int httpPort = getHttpPort();
 				logInfo("Configuring HTTP on port [{0}]...", Integer.toString(httpPort));
-				tomcat.setPort(httpPort);
+				Connector connector = new Connector();
+				connector.setPort(httpPort);
+				tomcat.setConnector(connector);
 				portList.add(httpPort);
 			}
 
@@ -112,20 +120,20 @@ public class TomcatEmbeddedWebServer extends AbstractEmbeddedHttpWebServer {
 			final String _docBase = new File(".").getAbsolutePath();
 			final String _servletName = TomcatApplicationComponents.TOMCAT_EMBEDDEDWEBSERVER + "-servlet";
 			final Context context = tomcat.addContext(getContextPath(), _docBase);
-	        final String sessionCookieName = generateSessionCookieName();
+			final String sessionCookieName = generateSessionCookieName();
 			context.setSessionCookieName(sessionCookieName);
-			
+
 			// WebSocket
 			context.addApplicationListener(TomcatClientSyncWsContextListener.class.getName());
-			//context.addApplicationListener(WsContextListener.class.getName());
-			
+			// context.addApplicationListener(WsContextListener.class.getName());
+
 			// HTTP/HTTPS
 			Wrapper servletWrapper = tomcat.addServlet(getContextPath(), _servletName,
 					new HttpApplicationServlet(createHttpServletModule()));
 			servletWrapper.setMultipartConfigElement(new MultipartConfigElement(getMultipartLocation(),
 					getMultipartMaxFileSize(), getMultipartMaxRequestSize(), getMultipartFileSizeThreshold()));
-			context.addServletMapping(getServletPath(), _servletName);
-			
+			context.addServletMappingDecoded(getServletPath(), _servletName);
+
 			context.setSessionTimeout(
 					getContainerSetting(int.class, UnifyCorePropertyConstants.APPLICATION_SESSION_TIMEOUT,
 							UnifyCoreConstants.DEFAULT_APPLICATION_SESSION_TIMEOUT_SECONDS) / 60);
