@@ -1152,7 +1152,8 @@ public class IOUtils {
 	 */
 	public static <T> T postObjectToEndpointUsingJson(Class<T> responseClass, String endpoint, Object requestObject,
 			Map<String, String> headers) throws UnifyException {
-		final String reqJSON = DataUtils.asJsonString(requestObject, PrintFormat.NONE);
+		final String reqJSON = requestObject instanceof String ? (String) requestObject
+				: DataUtils.asJsonString(requestObject, PrintFormat.NONE);
 		final String respJSON = IOUtils.postJsonToEndpoint(endpoint, reqJSON, headers);
 		return DataUtils.fromJsonString(responseClass, respJSON);
 	}
