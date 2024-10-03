@@ -21,14 +21,14 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Broadcast;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Transactional;
 import com.tcdng.unify.core.business.AbstractBusinessService;
+import com.tcdng.unify.core.business.AbstractQueuedExec;
+import com.tcdng.unify.core.business.QueuedExec;
 import com.tcdng.unify.core.constant.ClientSyncCommandConstants;
 import com.tcdng.unify.core.constant.TopicEventType;
 import com.tcdng.unify.core.database.Entity;
@@ -50,7 +50,7 @@ public class PageEventBroadcasterImpl extends AbstractBusinessService
 
 	private static final int MAX_PROCESSING_THREADS = 64;
 
-	private final ExecutorService broadcastExecutor;
+	private final QueuedExec<BroadcastReq> queuedExec;
 
 	private Map<String, ClientSyncSession> sessions;
 
@@ -59,7 +59,20 @@ public class PageEventBroadcasterImpl extends AbstractBusinessService
 	public PageEventBroadcasterImpl() {
 		this.sessions = new ConcurrentHashMap<String, ClientSyncSession>();
 		this.listenersByTopic = new ConcurrentHashMap<String, Set<String>>();
-		this.broadcastExecutor = Executors.newFixedThreadPool(MAX_PROCESSING_THREADS);
+		this.queuedExec = new AbstractQueuedExec<BroadcastReq>(MAX_PROCESSING_THREADS) {
+
+			@Override
+			protected void doExecute(BroadcastReq req) {
+				if (req.isWithSrcClient()) {
+					logDebug("Broadcasting client event [{0}] for topic [{1}] and originating from client [{2}]...",
+							req.getCmd(), req.getTopic(), req.getSrcClientId());
+					broadcast(req.getSrcClientId(), req.getTopic(), req.getCmd());
+				} else {
+					logDebug("Broadcasting client event [{0}] for topic [{1}]...", req.getCmd(), req.getTopic());
+					broadcast(null, req.getTopic(), req.getCmd());
+				}
+			}
+		};
 	}
 
 	@Override
@@ -121,11 +134,11 @@ public class PageEventBroadcasterImpl extends AbstractBusinessService
 		logDebug("Broadcasting client event [{0}] for topic [{1}] and originating from client [{2}]...", type, topic,
 				srcClientId);
 
-		broadcastExecutor.execute(new BroadcastThread(new BroadcastReq(srcClientId, type, topic)));
+		queuedExec.execute(new BroadcastReq(srcClientId, type, topic));
 		int index = topic.indexOf(':');
 		if (index > 0) {
 			final String mainTopic = topic.substring(0, index);
-			broadcastExecutor.execute(new BroadcastThread(new BroadcastReq(srcClientId, type, mainTopic)));
+			queuedExec.execute(new BroadcastReq(srcClientId, type, mainTopic));
 		}
 	}
 
@@ -157,27 +170,6 @@ public class PageEventBroadcasterImpl extends AbstractBusinessService
 
 		public boolean isWithSrcClient() {
 			return !StringUtils.isBlank(srcClientId);
-		}
-	}
-
-	public class BroadcastThread implements Runnable {
-
-		private final BroadcastReq req;
-
-		public BroadcastThread(BroadcastReq req) {
-			this.req = req;
-		}
-
-		@Override
-		public void run() {
-			if (req.isWithSrcClient()) {
-				logDebug("Broadcasting client event [{0}] for topic [{1}] and originating from client [{2}]...",
-						req.getCmd(), req.getTopic(), req.getSrcClientId());
-				broadcast(req.getSrcClientId(), req.getTopic(), req.getCmd());
-			} else {
-				logDebug("Broadcasting client event [{0}] for topic [{1}]...", req.getCmd(), req.getTopic());
-				broadcast(null, req.getTopic(), req.getCmd());
-			}
 		}
 	}
 
