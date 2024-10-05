@@ -122,8 +122,10 @@ public class PageEventBroadcasterImpl extends AbstractBusinessService
 	@Override
 	public void broadcastEntityChange(TopicEventType eventType, String srcClientId, Class<? extends Entity> entityClass,
 			Object id) throws UnifyException {
-		final String topic = id != null ? entityClass.getName() + ":" + id : entityClass.getName();
-		broadcastTopicEvent(srcClientId, eventType.syncCmd(), topic);
+		if (isInterfacesOpen()) {
+			final String topic = id != null ? entityClass.getName() + ":" + id : entityClass.getName();
+			broadcastTopicEvent(srcClientId, eventType.syncCmd(), topic);
+		}
 	}
 
 	@Broadcast
