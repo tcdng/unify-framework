@@ -17,6 +17,7 @@
 package com.tcdng.unify.core.database;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,9 +43,6 @@ public class DatabaseTransactionManagerImpl extends AbstractUnifyComponent imple
 
 	private static final ThreadLocal<Stack<TransactionalCall>> transactionsThreadLocal;
 
-	@Configurable
-	private EntityChangeEventBroadcaster entityChangeBroadcaster;
-
 	static {
 		transactionsThreadLocal = new ThreadLocal<Stack<TransactionalCall>>() {
 			@Override
@@ -56,7 +54,13 @@ public class DatabaseTransactionManagerImpl extends AbstractUnifyComponent imple
 
 	@Configurable("true")
 	private boolean autoJoin;
+	
+	private List<EntityEvent> events;
 
+	public DatabaseTransactionManagerImpl() {
+		this.events = new ArrayList<EntityEvent>();
+	}
+	
 	@Override
 	public void beginTransaction() throws UnifyException {
 		beginTransaction(TransactionAttribute.REQUIRES_NEW);
@@ -71,17 +75,17 @@ public class DatabaseTransactionManagerImpl extends AbstractUnifyComponent imple
 			if (!transactions.isEmpty() && transactions.peek().isTransaction()) {
 				transaction = transactions.peek();
 			} else {
-				transaction = new TransactionalCall(entityChangeBroadcaster, autoJoin, true);
+				transaction = new TransactionalCall(autoJoin, true);
 			}
 			break;
 		case REQUIRES_NEW:
-			transaction = new TransactionalCall(entityChangeBroadcaster, autoJoin, true);
+			transaction = new TransactionalCall(autoJoin, true);
 			break;
 		case SUPPORTS:
 			if (!transactions.isEmpty()) {
 				transaction = transactions.peek();
 			} else {
-				transaction = new TransactionalCall(entityChangeBroadcaster, autoJoin, false);
+				transaction = new TransactionalCall(autoJoin, false);
 			}
 			break;
 		case MANDATORY:
@@ -101,11 +105,11 @@ public class DatabaseTransactionManagerImpl extends AbstractUnifyComponent imple
 					throw new UnifyException(UnifyCoreErrorConstants.TRANSACTION_IS_NEVER_REQUIRED);
 				}
 			} else {
-				transaction = new TransactionalCall(entityChangeBroadcaster, autoJoin, false);
+				transaction = new TransactionalCall(autoJoin, false);
 			}
 			break;
 		case NOT_SUPPORTED:
-			transaction = new TransactionalCall(entityChangeBroadcaster, autoJoin, false);
+			transaction = new TransactionalCall(autoJoin, false);
 			break;
 		}
 
@@ -115,13 +119,18 @@ public class DatabaseTransactionManagerImpl extends AbstractUnifyComponent imple
 
 	@Override
 	public void endTransaction() throws UnifyException {
+		List<EntityEvent> _events = Collections.emptyList();
 		try {
-			transactionsThreadLocal.get().pop().end();
+			_events = transactionsThreadLocal.get().pop().end();
 			if (transactionsThreadLocal.get().isEmpty()) {
 				transactionsThreadLocal.remove();
 			}
 		} catch (RuntimeException e) {
 			throw new UnifyException(e, UnifyCoreErrorConstants.TRANSACTION_IS_ALREADY_COMPLETED);
+		} finally {
+			synchronized (this) {
+				events.addAll(_events);
+			}
 		}
 	}
 
@@ -176,7 +185,20 @@ public class DatabaseTransactionManagerImpl extends AbstractUnifyComponent imple
 
 	@Override
 	public void commit() throws UnifyException {
-		getCurrentTransaction().commit();
+		List<EntityEvent> _events = getCurrentTransaction().commit();
+		synchronized (this) {
+			events.addAll(_events);
+		}
+	}
+
+	@Override
+	public List<EntityEvent> collectEntityEvents() {
+		List<EntityEvent> _events = null;
+		synchronized (this) {
+			_events = events;
+			events = new ArrayList<EntityEvent>();
+		}
+		return _events;
 	}
 
 	@Override
@@ -195,42 +217,6 @@ public class DatabaseTransactionManagerImpl extends AbstractUnifyComponent imple
 
 	}
 
-	private static class EntityEvent {
-
-		private TopicEventType eventType;
-
-		private String srcClientId;
-
-		private Class<? extends Entity> entityClass;
-
-		private Object id;
-
-		public EntityEvent(TopicEventType eventType, String srcClientId, Class<? extends Entity> entityClass,
-				Object id) {
-			this.eventType = eventType;
-			this.srcClientId = srcClientId;
-			this.entityClass = entityClass;
-			this.id = id;
-		}
-
-		public TopicEventType getEventType() {
-			return eventType;
-		}
-
-		public String getSrcClientId() {
-			return srcClientId;
-		}
-
-		public Class<? extends Entity> getEntityClass() {
-			return entityClass;
-		}
-
-		public Object getId() {
-			return id;
-		}
-
-	}
-
 	private TransactionalCall getCurrentTransaction() throws UnifyException {
 		try {
 			return transactionsThreadLocal.get().peek();
@@ -240,17 +226,14 @@ public class DatabaseTransactionManagerImpl extends AbstractUnifyComponent imple
 	}
 
 	private static class TransactionalCall {
-		private EntityChangeEventBroadcaster entityChangeBroadcaster;
 		private Map<Database, DatabaseSession> databaseSessions;
 		private boolean autoJoin;
 		private boolean transaction;
 		private boolean rollback;
 		private int depth;
 		private List<EntityEvent> events;
-
-		public TransactionalCall(EntityChangeEventBroadcaster entityChangeBroadcaster, boolean autoJoin,
-				boolean transaction) {
-			this.entityChangeBroadcaster = entityChangeBroadcaster;
+		
+		public TransactionalCall(boolean autoJoin, boolean transaction) {
 			this.autoJoin = autoJoin;
 			this.transaction = transaction;
 			this.events = new ArrayList<EntityEvent>();
@@ -290,11 +273,14 @@ public class DatabaseTransactionManagerImpl extends AbstractUnifyComponent imple
 			depth++;
 		}
 
-		public void end() throws UnifyException {
+		public List<EntityEvent> end() throws UnifyException {
 			if (--depth == 0) {
-				commit(true);
+				List<EntityEvent> _events = commit(true);
 				databaseSessions.clear();
+				return _events;
 			}
+
+			return Collections.emptyList();
 		}
 
 		public void setSavePoint() throws UnifyException {
@@ -323,15 +309,15 @@ public class DatabaseTransactionManagerImpl extends AbstractUnifyComponent imple
 			rollback = false;
 		}
 
-		public void commit() throws UnifyException {
-			commit(false);
+		public List<EntityEvent> commit() throws UnifyException {
+			return commit(false);
 		}
 
 		public boolean isTransaction() {
 			return transaction;
 		}
 
-		private void commit(boolean isClose) throws UnifyException {
+		private List<EntityEvent> commit(boolean isClose) throws UnifyException {
 			for (DatabaseSession dataSourceSession : databaseSessions.values()) {
 				try {
 					if (rollback) {
@@ -350,13 +336,10 @@ public class DatabaseTransactionManagerImpl extends AbstractUnifyComponent imple
 				}
 			}
 
-			for (EntityEvent event : events) {
-				entityChangeBroadcaster.broadcastEntityChange(event.getEventType(), event.getSrcClientId(),
-						event.getEntityClass(), event.getId());
-			}
+			List<EntityEvent> _events = events;
 			events = new ArrayList<EntityEvent>();
-
 			rollback = false;
+			return _events;
 		}
 	}
 

@@ -25,14 +25,15 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Broadcast;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.annotation.Periodic;
+import com.tcdng.unify.core.annotation.PeriodicType;
 import com.tcdng.unify.core.annotation.Transactional;
 import com.tcdng.unify.core.business.AbstractBusinessService;
 import com.tcdng.unify.core.business.AbstractQueuedExec;
 import com.tcdng.unify.core.business.QueuedExec;
 import com.tcdng.unify.core.constant.ClientSyncCommandConstants;
-import com.tcdng.unify.core.constant.TopicEventType;
-import com.tcdng.unify.core.database.Entity;
-import com.tcdng.unify.core.database.EntityChangeEventBroadcaster;
+import com.tcdng.unify.core.database.EntityEvent;
+import com.tcdng.unify.core.task.TaskMonitor;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.constant.ServerSyncCommandConstants;
 
@@ -45,8 +46,7 @@ import com.tcdng.unify.web.constant.ServerSyncCommandConstants;
  */
 @Transactional
 @Component(WebApplicationComponents.APPLICATION_PAGEEVENTBROADCASTER)
-public class PageEventBroadcasterImpl extends AbstractBusinessService
-		implements PageEventBroadcaster, EntityChangeEventBroadcaster {
+public class PageEventBroadcasterImpl extends AbstractBusinessService implements PageEventBroadcaster {
 
 	private static final int MAX_PROCESSING_THREADS = 64;
 
@@ -113,18 +113,15 @@ public class PageEventBroadcasterImpl extends AbstractBusinessService
 		}
 	}
 
-	@Override
-	public void broadcastEntityChange(TopicEventType eventType, String srcClientId, Class<? extends Entity> entityClass)
-			throws UnifyException {
-		broadcastEntityChange(eventType, srcClientId, entityClass, null);
-	}
-
-	@Override
-	public void broadcastEntityChange(TopicEventType eventType, String srcClientId, Class<? extends Entity> entityClass,
-			Object id) throws UnifyException {
+	@Periodic(PeriodicType.FASTER)
+	public void broadcastEntityChange(TaskMonitor taskMonitor) throws UnifyException {
 		if (isInterfacesOpen()) {
-			final String topic = id != null ? entityClass.getName() + ":" + id : entityClass.getName();
-			broadcastTopicEvent(srcClientId, eventType.syncCmd(), topic);
+			for (EntityEvent entityEvent : tm().collectEntityEvents()) {
+				final String topic = entityEvent.getId() != null
+						? entityEvent.getEntityClass().getName() + ":" + entityEvent.getId()
+						: entityEvent.getEntityClass().getName();
+				broadcastTopicEvent(entityEvent.getSrcClientId(), entityEvent.getEventType().syncCmd(), topic);
+			}
 		}
 	}
 
