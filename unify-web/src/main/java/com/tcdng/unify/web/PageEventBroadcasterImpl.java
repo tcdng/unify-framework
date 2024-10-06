@@ -130,8 +130,6 @@ public class PageEventBroadcasterImpl extends AbstractBusinessService implements
 		final String srcClientId = params[0];
 		final String type = params[1];
 		final String topic = params[2];
-		logDebug("Broadcasting client event [{0}] for topic [{1}] and originating from client [{2}]...", type, topic,
-				srcClientId);
 
 		queuedExec.execute(new BroadcastReq(srcClientId, type, topic));
 		int index = topic.indexOf(':');
