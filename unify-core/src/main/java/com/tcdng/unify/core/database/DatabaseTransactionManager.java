@@ -15,6 +15,8 @@
  */
 package com.tcdng.unify.core.database;
 
+import java.util.List;
+
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.TransactionAttribute;
@@ -143,4 +145,11 @@ public interface DatabaseTransactionManager extends UnifyComponent {
 	 */
 	void setOffEntityEvent(TopicEventType eventType, String srcClientId, Class<? extends Entity> entityClass, Object id)
 			throws UnifyException;
+	
+	/**
+	 * Collects entity events and clears cache.
+	 * 
+	 * @return the entity events
+	 */
+	List<EntityEvent> collectEntityEvents();
 }

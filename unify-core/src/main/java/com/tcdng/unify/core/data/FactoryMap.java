@@ -103,7 +103,7 @@ public abstract class FactoryMap<T, U> {
 		try {
 			U value = map.get(key);
 			if (value != null) {
-				if (checkStale && !pause() && stale(key, value)) {
+				if (checkStale && !pause(key) && stale(key, value)) {
 					remove(key);
 					value = null;
 				}
@@ -113,7 +113,7 @@ public abstract class FactoryMap<T, U> {
 				synchronized (accessKey) {
 					value = map.get(key);
 					if (value == null) {
-						waitOnPause();
+						waitOnPause(key);
 						value = create(key, params);
 						if (value != null && onCreate(value)) {
 							put(key, value);
@@ -237,10 +237,11 @@ public abstract class FactoryMap<T, U> {
 	/**
 	 * Pauses create function. Use with caution.
 	 * 
+	 * @param key   the value's key
 	 * @return true is creations is paused
 	 * @throws Exception if an error occurs
 	 */
-	protected boolean pause() throws Exception {
+	protected boolean pause(T key) throws Exception {
 		return false;
 	}
 
@@ -289,8 +290,8 @@ public abstract class FactoryMap<T, U> {
 
 	}
 
-	private void waitOnPause() throws Exception {
-		while (pause()) {
+	private void waitOnPause(T key) throws Exception {
+		while (pause(key)) {
 			ThreadUtils.sleep(WAIT_ON_PAUSE_PERIOD);
 		}
 	}

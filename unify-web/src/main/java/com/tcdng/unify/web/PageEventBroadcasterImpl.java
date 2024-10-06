@@ -21,18 +21,19 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Broadcast;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.annotation.Periodic;
+import com.tcdng.unify.core.annotation.PeriodicType;
 import com.tcdng.unify.core.annotation.Transactional;
 import com.tcdng.unify.core.business.AbstractBusinessService;
+import com.tcdng.unify.core.business.AbstractQueuedExec;
+import com.tcdng.unify.core.business.QueuedExec;
 import com.tcdng.unify.core.constant.ClientSyncCommandConstants;
-import com.tcdng.unify.core.constant.TopicEventType;
-import com.tcdng.unify.core.database.Entity;
-import com.tcdng.unify.core.database.EntityChangeEventBroadcaster;
+import com.tcdng.unify.core.database.EntityEvent;
+import com.tcdng.unify.core.task.TaskMonitor;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.constant.ServerSyncCommandConstants;
 
@@ -45,12 +46,11 @@ import com.tcdng.unify.web.constant.ServerSyncCommandConstants;
  */
 @Transactional
 @Component(WebApplicationComponents.APPLICATION_PAGEEVENTBROADCASTER)
-public class PageEventBroadcasterImpl extends AbstractBusinessService
-		implements PageEventBroadcaster, EntityChangeEventBroadcaster {
+public class PageEventBroadcasterImpl extends AbstractBusinessService implements PageEventBroadcaster {
 
 	private static final int MAX_PROCESSING_THREADS = 64;
 
-	private final ExecutorService broadcastExecutor;
+	private final QueuedExec<BroadcastReq> queuedExec;
 
 	private Map<String, ClientSyncSession> sessions;
 
@@ -59,7 +59,20 @@ public class PageEventBroadcasterImpl extends AbstractBusinessService
 	public PageEventBroadcasterImpl() {
 		this.sessions = new ConcurrentHashMap<String, ClientSyncSession>();
 		this.listenersByTopic = new ConcurrentHashMap<String, Set<String>>();
-		this.broadcastExecutor = Executors.newFixedThreadPool(MAX_PROCESSING_THREADS);
+		this.queuedExec = new AbstractQueuedExec<BroadcastReq>(MAX_PROCESSING_THREADS) {
+
+			@Override
+			protected void doExecute(BroadcastReq req) {
+				if (req.isWithSrcClient()) {
+					logDebug("Broadcasting client event [{0}] for topic [{1}] and originating from client [{2}]...",
+							req.getCmd(), req.getTopic(), req.getSrcClientId());
+					broadcast(req.getSrcClientId(), req.getTopic(), req.getCmd());
+				} else {
+					logDebug("Broadcasting client event [{0}] for topic [{1}]...", req.getCmd(), req.getTopic());
+					broadcast(null, req.getTopic(), req.getCmd());
+				}
+			}
+		};
 	}
 
 	@Override
@@ -100,17 +113,16 @@ public class PageEventBroadcasterImpl extends AbstractBusinessService
 		}
 	}
 
-	@Override
-	public void broadcastEntityChange(TopicEventType eventType, String srcClientId, Class<? extends Entity> entityClass)
-			throws UnifyException {
-		broadcastEntityChange(eventType, srcClientId, entityClass, null);
-	}
-
-	@Override
-	public void broadcastEntityChange(TopicEventType eventType, String srcClientId, Class<? extends Entity> entityClass,
-			Object id) throws UnifyException {
-		final String topic = id != null ? entityClass.getName() + ":" + id : entityClass.getName();
-		broadcastTopicEvent(srcClientId, eventType.syncCmd(), topic);
+	@Periodic(PeriodicType.FASTER)
+	public void broadcastEntityChange(TaskMonitor taskMonitor) throws UnifyException {
+		if (isInterfacesOpen()) {
+			for (EntityEvent entityEvent : tm().collectEntityEvents()) {
+				final String topic = entityEvent.getId() != null
+						? entityEvent.getEntityClass().getName() + ":" + entityEvent.getId()
+						: entityEvent.getEntityClass().getName();
+				broadcastTopicEvent(entityEvent.getSrcClientId(), entityEvent.getEventType().syncCmd(), topic);
+			}
+		}
 	}
 
 	@Broadcast
@@ -118,14 +130,12 @@ public class PageEventBroadcasterImpl extends AbstractBusinessService
 		final String srcClientId = params[0];
 		final String type = params[1];
 		final String topic = params[2];
-		logDebug("Broadcasting client event [{0}] for topic [{1}] and originating from client [{2}]...", type, topic,
-				srcClientId);
 
-		broadcastExecutor.execute(new BroadcastThread(new BroadcastReq(srcClientId, type, topic)));
+		queuedExec.execute(new BroadcastReq(srcClientId, type, topic));
 		int index = topic.indexOf(':');
 		if (index > 0) {
 			final String mainTopic = topic.substring(0, index);
-			broadcastExecutor.execute(new BroadcastThread(new BroadcastReq(srcClientId, type, mainTopic)));
+			queuedExec.execute(new BroadcastReq(srcClientId, type, mainTopic));
 		}
 	}
 
@@ -157,27 +167,6 @@ public class PageEventBroadcasterImpl extends AbstractBusinessService
 
 		public boolean isWithSrcClient() {
 			return !StringUtils.isBlank(srcClientId);
-		}
-	}
-
-	public class BroadcastThread implements Runnable {
-
-		private final BroadcastReq req;
-
-		public BroadcastThread(BroadcastReq req) {
-			this.req = req;
-		}
-
-		@Override
-		public void run() {
-			if (req.isWithSrcClient()) {
-				logDebug("Broadcasting client event [{0}] for topic [{1}] and originating from client [{2}]...",
-						req.getCmd(), req.getTopic(), req.getSrcClientId());
-				broadcast(req.getSrcClientId(), req.getTopic(), req.getCmd());
-			} else {
-				logDebug("Broadcasting client event [{0}] for topic [{1}]...", req.getCmd(), req.getTopic());
-				broadcast(null, req.getTopic(), req.getCmd());
-			}
 		}
 	}
 

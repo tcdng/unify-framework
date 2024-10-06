@@ -105,6 +105,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("ellipsis-v", "f142");
         registerSymbol("eye", "f06e");
         registerSymbol("equals", "f52c");
+        registerSymbol("ethernet", "f796");
         registerSymbol("exchange-alt", "f362");
         registerSymbol("exclamation-circle", "f06a");
         registerSymbol("expand", "f065");

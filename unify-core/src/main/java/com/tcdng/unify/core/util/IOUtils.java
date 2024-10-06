@@ -41,6 +41,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
@@ -1136,8 +1137,24 @@ public class IOUtils {
 	 */
 	public static <T> T postObjectToEndpointUsingJson(Class<T> responseClass, String endpoint, Object requestObject)
 			throws UnifyException {
-		final String reqJSON = DataUtils.asJsonString(requestObject, PrintFormat.NONE);
-		final String respJSON = IOUtils.postJsonToEndpoint(endpoint, reqJSON);
+		return IOUtils.postObjectToEndpointUsingJson(responseClass, endpoint, requestObject, Collections.emptyMap());
+	}
+
+	/**
+	 * Posts an object to an end point using JSON.
+	 * 
+	 * @param responseClass the response class
+	 * @param endpoint      the end point
+	 * @param requestObject the object to post
+	 * @param headers       the headers
+	 * @return the response
+	 * @throws UnifyException if an error occurs
+	 */
+	public static <T> T postObjectToEndpointUsingJson(Class<T> responseClass, String endpoint, Object requestObject,
+			Map<String, String> headers) throws UnifyException {
+		final String reqJSON = requestObject instanceof String ? (String) requestObject
+				: DataUtils.asJsonString(requestObject, PrintFormat.NONE);
+		final String respJSON = IOUtils.postJsonToEndpoint(endpoint, reqJSON, headers);
 		return DataUtils.fromJsonString(responseClass, respJSON);
 	}
     
@@ -1150,11 +1167,31 @@ public class IOUtils {
 	 * @throws UnifyException if an error occurs
 	 */
 	public static String postJsonToEndpoint(String endpoint, String json) throws UnifyException {
+		return IOUtils.postJsonToEndpoint(endpoint, json, Collections.emptyMap());
+	}
+
+	/**
+	 * Posts JSON string to an end point with headers.
+	 * 
+	 * @param endpoint the end point
+	 * @param json     the json to post
+	 * @param headers  the headers
+	 * @return the response
+	 * @throws UnifyException if an error occurs
+	 */
+	public static String postJsonToEndpoint(String endpoint, String json, Map<String, String> headers)
+			throws UnifyException {
 		StringBuilder response = new StringBuilder();
 		try {
 			URL url = new URI(endpoint).toURL();
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 			conn.setRequestMethod("POST");
+			if (headers != null && !headers.isEmpty()) {
+				for (Map.Entry<String, String> entry : headers.entrySet()) {
+					conn.setRequestProperty(entry.getKey(), entry.getValue());
+				}
+			}
+
 			conn.setRequestProperty("Content-Type", "application/json; utf-8");
 			conn.setRequestProperty("Accept", "application/json");
 			conn.setDoOutput(true);

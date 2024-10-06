@@ -149,7 +149,7 @@ public abstract class AbstractBusinessService extends AbstractUnifyComponent imp
 	 * 
 	 * @throws UnifyException if an error occurs
 	 */
-	protected void commitTransactions() throws UnifyException {
+	protected void commitTransactions() throws UnifyException { 
 		databaseTransactionManager.commit();
 	}
 
