@@ -85,15 +85,15 @@ public class HeartbeatManagerImpl extends AbstractBusinessService implements Hea
 		configs.remove(heartbeatId);
 	}
 
-//	@Periodic(PeriodicType.SLOWEST)
-//	public void sustainHeartbeats(TaskMonitor taskMonitor) throws UnifyException {
-//		for (HeartbeatConfig heartbeatConfig : configs.values()) {
-//			if (!heartbeatConfig.isProcessing()) {
-//				heartbeatConfig.setProcessing(true);
-//				queuedExec.execute(heartbeatConfig);
-//			}
-//		}
-//	}
+	@Periodic(PeriodicType.SLOWEST)
+	public void sustainHeartbeats(TaskMonitor taskMonitor) throws UnifyException {
+		for (HeartbeatConfig heartbeatConfig : configs.values()) {
+			if (!heartbeatConfig.isProcessing()) {
+				heartbeatConfig.setProcessing(true);
+				queuedExec.execute(heartbeatConfig);
+			}
+		}
+	}
 
 	private void performHeartbeat(HeartbeatConfig heartbeatConfig) throws UnifyException {
 		final Date newExpiryDate = CalendarUtils.getDateWithFrequencyOffset(getNow(), FrequencyUnit.MINUTE,

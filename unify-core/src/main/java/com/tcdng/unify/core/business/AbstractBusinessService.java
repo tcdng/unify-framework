@@ -20,9 +20,11 @@ import java.util.Map;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.ApplicationComponents;
+import com.tcdng.unify.core.EntityEventSource;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.Transactional;
+import com.tcdng.unify.core.constant.TopicEventType;
 import com.tcdng.unify.core.database.Database;
 import com.tcdng.unify.core.database.DatabaseTransactionManager;
 import com.tcdng.unify.core.database.Entity;
@@ -53,6 +55,9 @@ public abstract class AbstractBusinessService extends AbstractUnifyComponent imp
 	@Configurable
 	private TaskLauncher taskLauncher;
 
+	@Configurable
+	private EntityEventSource entityEventSource;
+	
 	@Override
 	public DatabaseTransactionManager tm() throws UnifyException {
 		return databaseTransactionManager;
@@ -144,7 +149,7 @@ public abstract class AbstractBusinessService extends AbstractUnifyComponent imp
 	 * 
 	 * @throws UnifyException if an error occurs
 	 */
-	protected void commitTransactions() throws UnifyException {
+	protected void commitTransactions() throws UnifyException { 
 		databaseTransactionManager.commit();
 	}
 
@@ -191,5 +196,19 @@ public abstract class AbstractBusinessService extends AbstractUnifyComponent imp
 	 */
 	protected void rollbackToSavePoint() throws UnifyException {
 		databaseTransactionManager.rollbackToSavePoint();
+	}
+	
+	/**
+	 * Sets of an entity event with current transaction.
+	 * 
+	 * @param eventType   the event type
+	 * @param entityClass the entity class
+	 * @param id          optional entity ID
+	 * @throws UnifyException if an error occurs
+	 */
+	protected void setOffEntityEvent(TopicEventType eventType, Class<? extends Entity> entityClass, Object id)
+			throws UnifyException {
+		final String srcClientId = entityEventSource != null ? entityEventSource.getCurrentRequestClientId() : null;
+		databaseTransactionManager.setOffEntityEvent(eventType, srcClientId, entityClass, id);
 	}
 }
