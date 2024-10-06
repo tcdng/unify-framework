@@ -631,21 +631,11 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	/**
 	 * Checks if component context is in deployment mode.
 	 * 
-	 * @return a true if component context is in deployment mode otherwise false
+	 * @return a true if component context is in deploymeny mode otherwise false
 	 * @throws UnifyException if an error occurs
 	 */
 	protected boolean isDeploymentMode() throws UnifyException {
 		return unifyComponentContext.isDeploymentMode();
-	}
-
-	/**
-	 * Checks if container interfaces are opened.
-	 * 
-	 * @return a true if container interfaces are open otherwise false
-	 * @throws UnifyException if an error occurs
-	 */
-	protected boolean isInterfacesOpen() {
-		return unifyComponentContext.isInterfacesOpen();
 	}
 
 	/**

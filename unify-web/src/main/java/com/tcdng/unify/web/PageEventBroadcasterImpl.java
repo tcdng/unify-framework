@@ -25,15 +25,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Broadcast;
 import com.tcdng.unify.core.annotation.Component;
-import com.tcdng.unify.core.annotation.Periodic;
-import com.tcdng.unify.core.annotation.PeriodicType;
 import com.tcdng.unify.core.annotation.Transactional;
 import com.tcdng.unify.core.business.AbstractBusinessService;
 import com.tcdng.unify.core.business.AbstractQueuedExec;
 import com.tcdng.unify.core.business.QueuedExec;
 import com.tcdng.unify.core.constant.ClientSyncCommandConstants;
-import com.tcdng.unify.core.database.EntityEvent;
-import com.tcdng.unify.core.task.TaskMonitor;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.constant.ServerSyncCommandConstants;
 
@@ -112,18 +108,18 @@ public class PageEventBroadcasterImpl extends AbstractBusinessService implements
 		default:
 		}
 	}
-
-	@Periodic(PeriodicType.FASTER)
-	public void broadcastEntityChange(TaskMonitor taskMonitor) throws UnifyException {
-		if (isInterfacesOpen()) {
-			for (EntityEvent entityEvent : tm().collectEntityEvents()) {
-				final String topic = entityEvent.getId() != null
-						? entityEvent.getEntityClass().getName() + ":" + entityEvent.getId()
-						: entityEvent.getEntityClass().getName();
-				broadcastTopicEvent(entityEvent.getSrcClientId(), entityEvent.getEventType().syncCmd(), topic);
-			}
-		}
-	}
+//
+//	@Periodic(PeriodicType.FASTER)
+//	public void broadcastEntityChange(TaskMonitor taskMonitor) throws UnifyException {
+//		if (isInterfacesOpen()) {
+//			for (EntityEvent entityEvent : tm().collectEntityEvents()) {
+//				final String topic = entityEvent.getId() != null
+//						? entityEvent.getEntityClass().getName() + ":" + entityEvent.getId()
+//						: entityEvent.getEntityClass().getName();
+//				broadcastTopicEvent(entityEvent.getSrcClientId(), entityEvent.getEventType().syncCmd(), topic);
+//			}
+//		}
+//	}
 
 	@Broadcast
 	public void broadcastTopicEvent(String... params) throws UnifyException {
@@ -133,12 +129,12 @@ public class PageEventBroadcasterImpl extends AbstractBusinessService implements
 		logDebug("Broadcasting client event [{0}] for topic [{1}] and originating from client [{2}]...", type, topic,
 				srcClientId);
 
-		queuedExec.execute(new BroadcastReq(srcClientId, type, topic));
-		int index = topic.indexOf(':');
-		if (index > 0) {
-			final String mainTopic = topic.substring(0, index);
-			queuedExec.execute(new BroadcastReq(srcClientId, type, mainTopic));
-		}
+//		queuedExec.execute(new BroadcastReq(srcClientId, type, topic));
+//		int index = topic.indexOf(':');
+//		if (index > 0) {
+//			final String mainTopic = topic.substring(0, index);
+//			queuedExec.execute(new BroadcastReq(srcClientId, type, mainTopic));
+//		}
 	}
 
 	private class BroadcastReq {

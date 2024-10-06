@@ -15,12 +15,9 @@
  */
 package com.tcdng.unify.core.database;
 
-import java.util.List;
-
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.TransactionAttribute;
-import com.tcdng.unify.core.constant.TopicEventType;
 
 /**
  * A database transaction manager.
@@ -29,7 +26,6 @@ import com.tcdng.unify.core.constant.TopicEventType;
  * @since 1.0
  */
 public interface DatabaseTransactionManager extends UnifyComponent {
-	
     /**
      * Begins a transaction. The transaction started is of
      * {@link TransactionAttribute#REQUIRED} type.
@@ -133,23 +129,4 @@ public interface DatabaseTransactionManager extends UnifyComponent {
      *                        if an error occurs
      */
     void commit() throws UnifyException;
-	
-	/**
-	 * Sets of an entity event with current transaction.
-	 * 
-	 * @param eventType   the event type
-	 * @param srcClientId the source client ID
-	 * @param entityClass the entity class
-	 * @param id          optional entity ID
-	 * @throws UnifyException if an error occurs
-	 */
-	void setOffEntityEvent(TopicEventType eventType, String srcClientId, Class<? extends Entity> entityClass, Object id)
-			throws UnifyException;
-	
-	/**
-	 * Collects entity events and clears cache.
-	 * 
-	 * @return the entity events
-	 */
-	List<EntityEvent> collectEntityEvents();
 }

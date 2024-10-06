@@ -87,9 +87,12 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
 
 		startupShutdownHooks = getStartupShutdownHooks();
 		if (DataUtils.isNotBlank(startupShutdownHooks)) {
+			System.out.println("@plum: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 			for (StartupShutdownHook startupShutdownHook : startupShutdownHooks) {
+				System.out.println("@plum: startupShutdownHook.getName() = " + startupShutdownHook.getName());
 				startupShutdownHook.onApplicationStartup();
 			}
+			System.out.println("@plum: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 		}
 
 		onStartup(isDeploymentPerformed);
@@ -172,8 +175,12 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
 
 			BootInstallationInfo<T> bootInstallationInfo = prepareBootInstallation();
 			if (bootInstallationInfo.isInstallers() && bootInstallationInfo.isFeatures()) {
+				System.out.println("@prime: SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
+				System.out.println("@prime: bootInstallationInfo.getFeatureInstallerNames() = " + bootInstallationInfo.getFeatureInstallerNames());
+				System.out.println("@prime: SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
 				for (String installerName : bootInstallationInfo.getFeatureInstallerNames()) {
 					FeatureInstaller<T> installer = (FeatureInstaller<T>) getComponent(installerName);
+					logInfo("Executing installer {0}...", installer.getName());
 					installer.installFeatures(bootInstallationInfo.getFeatures());
 				}
 			}
@@ -199,6 +206,7 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
 				auxiliaryFeature.setValue(auxVersionToDeploy);
 				db().updateByIdVersion(auxiliaryFeature);
 			}
+			logInfo("Newer application with version {0} successfully installed.", versionToDeploy);
 		} else {
 			if (lastDeploymentVersion.equals(versionToDeploy)) {
 				logInfo("Application deployment version {0} is current.", versionToDeploy);

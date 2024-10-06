@@ -662,10 +662,6 @@ public class UnifyComponentContext {
 		return applicationContext.getContainer().isClusterMode();
 	}
 
-	public boolean isInterfacesOpen() {
-		return applicationContext.getContainer().isInterfacesOpen();
-	}
-
 	private RequestContextManager getRequestContextManager() throws UnifyException {
 		if (requestContextManager == null) {
 			requestContextManager = (RequestContextManager) applicationContext.getContainer()

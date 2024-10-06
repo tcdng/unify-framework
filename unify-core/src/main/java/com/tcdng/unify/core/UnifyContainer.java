@@ -174,8 +174,6 @@ public class UnifyContainer {
 
 	private boolean shutdown;
 
-	private boolean interfacesOpen;
-
 	public UnifyContainer() {
 		this.accessKey = UUID.randomUUID().toString();
 
@@ -911,10 +909,6 @@ public class UnifyContainer {
 		return deploymentMode;
 	}
 
-	public boolean isInterfacesOpen() {
-		return interfacesOpen;
-	}
-
 	public RequestContextManager getRequestContextManager() {
 		return requestContextManager;
 	}
@@ -1349,7 +1343,6 @@ public class UnifyContainer {
 			unifyContainerInterface.startServicingRequests();
 		}
 
-		interfacesOpen = true;
 		toConsole("Container interfaces opened.");
 	}
 
@@ -1361,7 +1354,6 @@ public class UnifyContainer {
 			unifyContainerInterface.stopServicingRequests();
 		}
 
-		interfacesOpen = false;
 		toConsole("Container interfaces closed..");
 	}
 
