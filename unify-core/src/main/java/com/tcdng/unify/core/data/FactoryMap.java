@@ -23,7 +23,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.UnifyOperationException;
 import com.tcdng.unify.core.util.DataUtils;
-import com.tcdng.unify.core.util.ThreadUtils;
 
 /**
  * An abstract generic factory map. A factory map is a key-to-value map with no
@@ -34,8 +33,6 @@ import com.tcdng.unify.core.util.ThreadUtils;
  * @since 1.0
  */
 public abstract class FactoryMap<T, U> {
-
-	private static final long WAIT_ON_PAUSE_PERIOD = 500;
 
 	private final Object accessKey = new Object();
 
@@ -103,7 +100,7 @@ public abstract class FactoryMap<T, U> {
 		try {
 			U value = map.get(key);
 			if (value != null) {
-				if (checkStale && !pause(key) && stale(key, value)) {
+				if (checkStale && stale(key, value)) {
 					remove(key);
 					value = null;
 				}
@@ -113,7 +110,6 @@ public abstract class FactoryMap<T, U> {
 				synchronized (accessKey) {
 					value = map.get(key);
 					if (value == null) {
-						waitOnPause(key);
 						value = create(key, params);
 						if (value != null && onCreate(value)) {
 							put(key, value);
@@ -235,17 +231,6 @@ public abstract class FactoryMap<T, U> {
 	}
 
 	/**
-	 * Pauses create function. Use with caution.
-	 * 
-	 * @param key   the value's key
-	 * @return true is creations is paused
-	 * @throws Exception if an error occurs
-	 */
-	protected boolean pause(T key) throws Exception {
-		return false;
-	}
-
-	/**
 	 * Puts a factory value.
 	 * 
 	 * @param key   the value's key
@@ -290,9 +275,4 @@ public abstract class FactoryMap<T, U> {
 
 	}
 
-	private void waitOnPause(T key) throws Exception {
-		while (pause(key)) {
-			ThreadUtils.sleep(WAIT_ON_PAUSE_PERIOD);
-		}
-	}
 }
