@@ -113,7 +113,7 @@ public class PageEventBroadcasterImpl extends AbstractBusinessService implements
 		}
 	}
 
-	@Periodic(PeriodicType.FASTER)
+	@Periodic(PeriodicType.FASTEST)
 	public void broadcastEntityChange(TaskMonitor taskMonitor) throws UnifyException {
 		if (isInterfacesOpen()) {
 			for (EntityEvent entityEvent : tm().collectEntityEvents()) {
