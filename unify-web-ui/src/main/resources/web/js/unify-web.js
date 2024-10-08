@@ -354,7 +354,10 @@ ux.respHandler = {
 			ux.refreshPageGlobals(resp);
 			ux.refreshPanels(resp);
 			ux.registerRespDebounce(resp);
-			ux.docReloadURL = resp.reloadURL;
+			if (resp.reloadURL) {
+				ux.docReloadURL = resp.reloadURL;
+			}
+
 			if (resp.scrollToTop) {
 				ux.scrollDocToTop();
 			}
