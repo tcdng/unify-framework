@@ -179,7 +179,7 @@ ux.wsSend = function(cmd, param) {
 ux.wsReceive = function(txt) {
 	const msg = JSON.parse(txt);
 	if ("refresh" == msg.cmd) {
-		ux.postToPath({uPath:ux.docReloadURL});
+		ux.postToPath({uPath:ux.docReloadURL,uTarget:"refresh"});
 	}
 }
 
@@ -779,7 +779,8 @@ ux.post = function(uEv) {
 
 ux.postToPath = function(evp) {
 	var ajaxPrms = ux.ajaxConstructCallParam(evp.uPath,
-			"req_doc=" + _enc(ux.docPath) + "&req_cid=" + _enc(ux.docClientId),
+			"req_doc=" + _enc(ux.docPath) + "&req_cid=" + _enc(ux.docClientId)
+			+ (evp.uTarget ? "&req_trg=" + _enc(evp.uTarget) :"") ,
 			false, true, false, ux.processJSON);
 	ux.ajaxCall(ajaxPrms);
 }
