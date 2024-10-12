@@ -152,7 +152,7 @@ public abstract class AbstractUnifyComponentTest {
 	 * @param componentType the component type
 	 * @throws Exception if an error occurs
 	 */
-	protected UnifyComponent getComponent(Class<? extends UnifyComponent> componentType) throws Exception {
+	protected <T extends UnifyComponent> T getComponent(Class<T> componentType) throws Exception {
 		return container.getComponent(componentType);
 	}
 
