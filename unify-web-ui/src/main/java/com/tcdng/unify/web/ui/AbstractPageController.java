@@ -1047,7 +1047,7 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 					.getControllerPathParts(currentPage.getPathId());
 			getUIControllerUtil().loadRequestPage(controllerPathParts);
 			((PageController<?>) getComponent(controllerPathParts.getControllerName())).closePage();
-			pageRequestContextUtil.setClosedPagePaths(Arrays.asList(currentPage.getPathId()));
+			pageRequestContextUtil.setClosedPagePaths(Arrays.asList(currentPage.getPageId()));
 			return;
 		}
 
@@ -1091,7 +1091,7 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 			logDebug("Page validation is enabled. actionId = [{0}]", actionId);
 
 			if (StringUtils.isNotBlank(actionId)) {
-				logDebug("Performing request parameter validation. path ID [{0}]", page.getPathId());
+				logDebug("Performing request parameter validation. page ID [{0}]", page.getPageId());
 
 				// Do validations
 				PageAction pageAction = page.getPageAction(getPageManager().getLongName(actionId));
@@ -1102,7 +1102,7 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 							.validate(dataTransfer);
 				}
 
-				logDebug("Request parameter validation completed. path ID [{0}]", page.getPathId());
+				logDebug("Request parameter validation completed. page ID [{0}]", page.getPageId());
 			}
 		}
 

@@ -55,10 +55,6 @@ public final class WebUtils {
     public static Set<String> getReservedRequestAttributes() {
     	return skipOnPopulateSet;
     }
-    
-    public static String getPageId(String controllerPathId, String clientId) {
-    	return controllerPathId + ":cid:" + clientId;
-    }
 
 	public static String getContextURL(RequestContext requestContext, boolean remoteViewer, String path,
 			String... pathElement) throws UnifyException {
