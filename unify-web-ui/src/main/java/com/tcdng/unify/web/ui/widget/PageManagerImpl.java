@@ -49,6 +49,7 @@ import com.tcdng.unify.web.ui.UnifyWebUIErrorConstants;
 import com.tcdng.unify.web.ui.WebUIApplicationComponents;
 import com.tcdng.unify.web.ui.util.WebUtils;
 import com.tcdng.unify.web.ui.widget.panel.StandalonePanel;
+import com.tcdng.unify.web.util.WebPathUtils;
 
 /**
  * Default implementation of page manager.
@@ -285,7 +286,7 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
 	@Override
 	public String getCurrentRequestPageId(ControllerPathParts controllerPathParts) throws UnifyException {
 		final String clientId = getRequestAttribute(String.class, RequestParameterConstants.CLIENT_ID);
-		return WebUtils.getPageId(controllerPathParts.getControllerPathId(), clientId);
+		return WebPathUtils.getPageId(controllerPathParts.getControllerPathId(), clientId);
 	}
 
 	@Override

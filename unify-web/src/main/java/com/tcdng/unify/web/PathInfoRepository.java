@@ -30,11 +30,11 @@ public interface PathInfoRepository extends UnifyComponent {
 	/**
 	 * Gets controller path parts
 	 * 
-	 * @param controllerPath
-	 *            the path
+	 * @param pageId
+	 *            the page ID
 	 * @return the controller path parts
 	 * @throws UnifyException
 	 *             if an error occurs
 	 */
-	ControllerPathParts getControllerPathParts(String controllerPath) throws UnifyException;
+	ControllerPathParts getControllerPathParts(String pageId) throws UnifyException;
 }

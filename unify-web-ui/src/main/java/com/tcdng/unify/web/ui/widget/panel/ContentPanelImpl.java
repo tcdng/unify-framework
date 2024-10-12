@@ -180,7 +180,7 @@ public class ContentPanelImpl extends AbstractContentPanel {
 
 	@Override
 	public void addContent(Page page) throws UnifyException {
-		ContentInfo contentInfo = contentByPathIdMap.get(page.getPathId());
+		ContentInfo contentInfo = contentByPathIdMap.get(page.getPageId());
 		if (contentInfo != null) {
 			contentIndex = contentInfo.getPageIndex();
 			return;
@@ -190,12 +190,12 @@ public class ContentPanelImpl extends AbstractContentPanel {
 		contentIndex = contentList.size();
 		contentInfo = new ContentInfo(page, contentIndex);
 		contentList.add(contentInfo);
-		contentByPathIdMap.put(page.getPathId(), contentInfo);
+		contentByPathIdMap.put(page.getPageId(), contentInfo);
 	}
 
 	@Override
 	public String insertContent(Page page) throws UnifyException {
-		ContentInfo contentInfo = contentByPathIdMap.get(page.getPathId());
+		ContentInfo contentInfo = contentByPathIdMap.get(page.getPageId());
 		if (contentInfo != null) {
 			contentIndex = contentInfo.getPageIndex();
 			return null;
@@ -210,7 +210,7 @@ public class ContentPanelImpl extends AbstractContentPanel {
 			contentInfo = new ContentInfo(page, contentIndex);
 			contentList.add(contentInfo);
 		} else {
-			replacedPathId = contentList.get(contentIndex).getPathId();
+			replacedPathId = contentList.get(contentIndex).getPageId();
 			contentInfo = new ContentInfo(page, contentIndex);
 			contentList.add(contentIndex, contentInfo);
 			for (int i = contentIndex + 1; i <= len; i++) {
@@ -218,7 +218,7 @@ public class ContentPanelImpl extends AbstractContentPanel {
 			}
 		}
 
-		contentByPathIdMap.put(page.getPathId(), contentInfo);
+		contentByPathIdMap.put(page.getPageId(), contentInfo);
 		return replacedPathId;
 	}
 
@@ -226,7 +226,7 @@ public class ContentPanelImpl extends AbstractContentPanel {
 		if (!isTabbed()) {
 			// Discard old pages
 			for (ContentInfo oldContentInfo : contentList) {
-				getSessionContext().removeAttribute(oldContentInfo.getPage().getPathId());
+				getSessionContext().removeAttribute(oldContentInfo.getPage().getPageId());
 			}
 
 			// Clear content list
@@ -261,7 +261,7 @@ public class ContentPanelImpl extends AbstractContentPanel {
 					}
 				} else {
 					if (refPage != page) {
-						toRemovePathIdList.add(refPage.getPathId());
+						toRemovePathIdList.add(refPage.getPageId());
 					}
 				}
 			}
@@ -271,7 +271,7 @@ public class ContentPanelImpl extends AbstractContentPanel {
 		}
 
 		if (removeSrc) {
-			toRemovePathIdList.add(page.getPathId());
+			toRemovePathIdList.add(page.getPageId());
 		}
 
 		return toRemovePathIdList;
@@ -348,8 +348,8 @@ public class ContentPanelImpl extends AbstractContentPanel {
 			return page.getPageBean();
 		}
 
-		public String getPathId() {
-			return page.getPathId();
+		public String getPageId() {
+			return page.getPageId();
 		}
 
 		public int getPageIndex() {
