@@ -47,7 +47,6 @@ import com.tcdng.unify.web.UnifyWebPropertyConstants;
 import com.tcdng.unify.web.constant.RequestParameterConstants;
 import com.tcdng.unify.web.ui.UnifyWebUIErrorConstants;
 import com.tcdng.unify.web.ui.WebUIApplicationComponents;
-import com.tcdng.unify.web.ui.util.WebUtils;
 import com.tcdng.unify.web.ui.widget.panel.StandalonePanel;
 import com.tcdng.unify.web.util.WebPathUtils;
 

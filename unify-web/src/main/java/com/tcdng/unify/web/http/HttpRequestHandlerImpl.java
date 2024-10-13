@@ -351,8 +351,7 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 	private void ensureClientId(ClientRequest request) throws UnifyException {
 		String clientId = (String) request.getParameter(RequestParameterConstants.CLIENT_ID);
 		if (StringUtils.isBlank(clientId)) {
-			ClientCookie cookie = request.getCookie(RequestParameterConstants.CLIENT_ID);
-			clientId = cookie != null && cookie.isValuePresent() ? cookie.getVal() : UUID.randomUUID().toString();
+			clientId = UUID.randomUUID().toString();
 		}
 
 		setRequestAttribute(RequestParameterConstants.CLIENT_ID, clientId);

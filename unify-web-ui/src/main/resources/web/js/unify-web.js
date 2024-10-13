@@ -145,14 +145,23 @@ ux.registerExtension = function(extLiteral, extObj) {
 
 /** Basic * */
 ux.setupDocument = function(docClientId, docPath, docPopupBaseId, docPopupId, docSysInfoId, docLatencyId, docSessionId) {
-	ux.docClientId = docClientId;
+	ux.setClientId(docClientId);
 	ux.docPath = docPath;
 	ux.docPopupBaseId = docPopupBaseId;
 	ux.docPopupId = docPopupId;
 	ux.docSysInfoId = docSysInfoId;
 	ux.busyIndicator = docLatencyId;
 	ux.docSessionId = docSessionId;
-	document.cookie = "req_cid=; Max-Age=0";
+}
+
+ux.setClientId = function(clientId) {
+	if (sessionStorage.getItem("req_cid") == null) {
+		sessionStorage.setItem("req_cid", clientId)
+	}
+}
+
+ux.getClientId = function() {
+	return sessionStorage.getItem("req_cid")
 }
 
 ux.wsPushUpdate = function(wsSyncPath) {
@@ -163,7 +172,7 @@ ux.wsPushUpdate = function(wsSyncPath) {
 
 	ux.wsSocket = new WebSocket(ux.wsUrl);
 	ux.wsSocket.addEventListener('open', function (event) {
-	    ux.wsSend("open", ux.docClientId);
+	    ux.wsSend("open", ux.getClientId());
 	});
 	ux.wsSocket.addEventListener('message', function (event) {
 	    ux.wsReceive(event.data);
@@ -497,7 +506,7 @@ ux.postPath = function(resp) {
 			}
 		}
 		
-		var prm = "req_doc=" + _enc(ux.docPath) + "&req_cid=" + _enc(ux.docClientId);
+		var prm = "req_doc=" + _enc(ux.docPath) + "&req_cid=" + _enc(ux.getClientId());
 		if(resp.target) {
 			prm += "&req_trg=" + _enc(resp.target);
 		}
@@ -779,7 +788,7 @@ ux.post = function(uEv) {
 
 ux.postToPath = function(evp) {
 	var ajaxPrms = ux.ajaxConstructCallParam(evp.uPath,
-			"req_doc=" + _enc(ux.docPath) + "&req_cid=" + _enc(ux.docClientId)
+			"req_doc=" + _enc(ux.docPath) + "&req_cid=" + _enc(ux.getClientId())
 			+ (evp.uTarget ? "&req_trg=" + _enc(evp.uTarget) :"") ,
 			false, true, false, ux.processJSON);
 	ux.ajaxCall(ajaxPrms);
@@ -4643,7 +4652,7 @@ ux.buildObjParams = function(trgObj, evp, param, refs) {
 			pb.append("req_rsi", ux.docSessionId);
 		} else {
 			pb.append("req_doc", ux.docPath);
-			pb.append("req_cid", ux.docClientId);
+			pb.append("req_cid", ux.getClientId());
 			pb.append("req_win", window.name);
 		}
 		if (evp.uValidateAct) {
@@ -4669,7 +4678,7 @@ ux.buildObjParams = function(trgObj, evp, param, refs) {
 			pb += ("&req_rsi=" + _enc(ux.docSessionId));
 		} else {
 			pb += ("&req_doc=" + _enc(ux.docPath));
-			pb += ("&req_cid=" + _enc(ux.docClientId));
+			pb += ("&req_cid=" + _enc(ux.getClientId()));
 			pb += ("&req_win=" + _enc(window.name));
 		}
 		if (evp.uValidateAct) {
@@ -5764,7 +5773,7 @@ ux.setHintTimeout = function(millisec) {
 }
 
 ux.windowUnload = function(uEv) {
-	document.cookie = "req_cid=" + ux.docClientId;
+
 }
 
 ux.documentKeydownHandler = function(uEv) {
