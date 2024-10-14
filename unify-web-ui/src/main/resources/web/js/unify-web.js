@@ -4772,7 +4772,7 @@ ux.extractObjParams = function(elem, param) {
 				}
 			}
 		} else {
-			if (elem.value != undefined) {
+			if (elem.value != undefined && trnId.startsWith('p')) {
 				ux.appendParam(trnId, elem.value, param);
 			}
 		}
