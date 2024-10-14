@@ -91,7 +91,7 @@ public abstract class AbstractEmbeddedHttpWebServer extends AbstractHttpWebInter
 		final String infix = StringUtils
 				.flatten(getContainerSetting(String.class, UnifyCorePropertyConstants.APPLICATION_CODE, "unify"))
 				.replaceAll("[^a-zA-Z0-9_]", "");
-		return ("JK_" + infix + "_" + port).toUpperCase();
+		return ("JS_" + infix + "_" + port).toUpperCase();
 	}
 	
 	protected int getHttpsPort() {
