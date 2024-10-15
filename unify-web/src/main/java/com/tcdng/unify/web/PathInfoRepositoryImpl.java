@@ -25,6 +25,7 @@ import com.tcdng.unify.core.UnifyComponentConfig;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.data.FactoryMap;
+import com.tcdng.unify.web.util.WebPathUtils;
 
 /**
  * Default path information repository implementation.
@@ -82,8 +83,9 @@ public class PathInfoRepositoryImpl extends AbstractUnifyComponent implements Pa
 	}
 
 	@Override
-	public ControllerPathParts getControllerPathParts(String controllerPath) throws UnifyException {
-		return controllerPathParts.get(controllerPath);
+	public ControllerPathParts getControllerPathParts(final String controllerPath) throws UnifyException {
+		final String conformingPath = WebPathUtils.stripOffClientId(controllerPath);
+		return controllerPathParts.get(conformingPath);
 	}
 
 	@Override

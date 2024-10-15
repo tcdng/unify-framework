@@ -23,17 +23,19 @@ package com.tcdng.unify.web.util;
  */
 public final class WebPathUtils {
 
+	private static final String CLIENTID_INFIX = ":cid:";
+	
     private WebPathUtils() {
 
     }
     
     public static String getPageId(String controllerPathId, String clientId) {
-    	return controllerPathId + ":cid:" + clientId;
+    	return controllerPathId + CLIENTID_INFIX + clientId;
     }
     
-    public static String getControllerPathId(String pageId) {
-    	int index = pageId.indexOf(":cid:");
-    	return index >= 0 ? pageId.substring(index) : pageId;
+    public static String stripOffClientId(String pageId) {
+    	int index = pageId.indexOf(CLIENTID_INFIX);
+    	return index >= 0 ? pageId.substring(0, index) : pageId;
     }
 
 }
