@@ -28,6 +28,7 @@ import com.tcdng.unify.core.upl.UplElementReferences;
  */
 @UplAttributes({
 	@UplAttribute(name = "event", type = String.class, mandatory = true),
+	@UplAttribute(name = "eventBinding", type = String.class),
     @UplAttribute(name = "action", type = UplElementReferences.class) })
 public abstract class AbstractEventHandler extends AbstractBehavior implements EventHandler {
 
@@ -36,6 +37,11 @@ public abstract class AbstractEventHandler extends AbstractBehavior implements E
     @Override
 	public String getEvent() throws UnifyException {
 		return getUplAttribute(String.class, "event");
+	}
+
+	@Override
+	public String getEventBinding() throws UnifyException {
+		return getUplAttribute(String.class, "eventBinding");
 	}
 
 	@Override

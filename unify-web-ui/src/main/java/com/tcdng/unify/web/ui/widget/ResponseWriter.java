@@ -169,10 +169,13 @@ public interface ResponseWriter extends UnifyComponent {
      *                 the component id
      * @param cmdTag
      *                 optional command tag
+     * @param preferredEvent
+     *                 preferred event
      * @throws UnifyException
      *                        if an error occurs
      */
-    ResponseWriter writeBehavior(Behavior behavior, String id, String cmdTag) throws UnifyException;
+	ResponseWriter writeBehavior(Behavior behavior, String id, String cmdTag, String preferredEvent)
+			throws UnifyException;
 
     /**
      * Writes object and returns this writer.

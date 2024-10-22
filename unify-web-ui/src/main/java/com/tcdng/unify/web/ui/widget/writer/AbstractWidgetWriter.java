@@ -129,7 +129,11 @@ public abstract class AbstractWidgetWriter extends AbstractDhtmlWriter implement
 
 			getRequestContext().setQuickReference(widget.getValueStore());
 			for (EventHandler eventHandler : eventHandlers) {
-				writer.writeBehavior(eventHandler, id, widget.getBinding());
+				final String eventBinding = eventHandler.getEventBinding();
+				final String preferredEvent = !StringUtils.isBlank(eventBinding)
+						? widget.getValue(String.class, eventBinding)
+						: null;
+				writer.writeBehavior(eventHandler, id, widget.getBinding(), preferredEvent);
 			}
 		}
 	}
