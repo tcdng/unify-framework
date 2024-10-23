@@ -192,7 +192,7 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 
 	@Override
 	public EventHandler[] getEventHandlers() throws UnifyException {
-		if (handlers == null) {
+		if (handlers == null) { 
 			synchronized(this) {
 				if (handlers == null) {
 					handlers = getUplAttribute(EventHandler[].class, "eventHandler");

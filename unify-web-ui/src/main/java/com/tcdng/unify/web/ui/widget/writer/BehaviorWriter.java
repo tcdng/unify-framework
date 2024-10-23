@@ -28,19 +28,16 @@ import com.tcdng.unify.web.ui.widget.ResponseWriter;
  */
 public interface BehaviorWriter extends UplComponentWriter {
 
-    /**
-     * Writes behavior for a specified component.
-     * 
-     * @param writer
-     *            the response writer
-     * @param behavior
-     *            the behavior to write
-     * @param id
-     *            the component id
-     * @param cmdTag
-     *            optional command tag
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    void writeBehavior(ResponseWriter writer, Behavior behavior, String id, String cmdTag) throws UnifyException;
+	/**
+	 * Writes behavior for a specified component.
+	 * 
+	 * @param writer         the response writer
+	 * @param behavior       the behavior to write
+	 * @param id             the component id
+	 * @param cmdTag         optional command tag
+	 * @param preferredEvent optional preferred event
+	 * @throws UnifyException if an error occurs
+	 */
+	void writeBehavior(ResponseWriter writer, Behavior behavior, String id, String cmdTag, String preferredEvent)
+			throws UnifyException;
 }
