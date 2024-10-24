@@ -51,7 +51,7 @@ public class DynamicPanelWriter extends AbstractPanelWriter {
         getRequestContextUtil().setDynamicPanelPageName(dynamicPanel.getId(), dynamicPanel.getContainer().getId());
         try {
         	StandalonePanel standalonePanel = dynamicPanel.getStandalonePanel();
-            writer.write("<div style=\"width:100%;");
+            writer.write("<div style=\"width:100%;\"");
             writeTagStyleClass(writer, standalonePanel.getName());
             writer.write("/>");
             writer.writeInnerStructureAndContent(standalonePanel);
