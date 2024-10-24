@@ -425,7 +425,7 @@ ux.respHandler = {
 					var sysInfoPanel = _id(ux.docSysInfoId);
 					sysInfoPanel.style.visibility = "hidden";
 					sysInfoPanel.innerHTML = resp.showSysInfoPopup.html;
-					ux.centralize(basePanel, sysInfoPanel);
+					ux.centralize(sysInfoPanel);
 					sysInfoPanel.style.visibility = "visible";
 					basePanel.style.display = "block";
 					ux.perform(resp.showSysInfoPopup.script);
@@ -457,7 +457,7 @@ ux.respHandler = {
 					}
 					
 					targetPanel.innerHTML = resp.showPopup.html;
-					ux.centralize(basePanel, targetPanel);
+					ux.centralize(targetPanel);
 					targetPanel.style.visibility = "visible";
 					ux.popupVisible = true;
 					ux.perform(resp.showPopup.script);
@@ -5113,14 +5113,17 @@ ux.clearDebounce = function(debounced) {
 }
 
 /** Translation */
-ux.centralize = function(baseElem, elem) {
-	var x = Math.floor((baseElem.offsetWidth - elem.offsetWidth) / 2);
+ux.centralize = function(elem) {
+	var baserect = ux.boundingRect(document.body);
+	var elemrect = ux.boundingRect(elem);
+
+	var x = Math.floor((baserect.width - elemrect.width) / 2);
 	if (x < 0)
 		elem.style.left = "0px";
 	else
 		elem.style.left = x + "px";
 
-	var y = Math.floor((baseElem.offsetHeight - elem.offsetHeight) / UNIFY_DEFAULT_POPUP_Y_SCALE);
+	var y = Math.floor((baserect.height - elemrect.height) / UNIFY_DEFAULT_POPUP_Y_SCALE);
 	if (y < 0)
 		elem.style.top = "0px";
 	else

@@ -19,6 +19,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
+import com.tcdng.unify.web.UnifyWebRequestAttributeConstants;
 import com.tcdng.unify.web.UnifyWebSessionAttributeConstants;
 import com.tcdng.unify.web.ui.AbstractJsonPageControllerResponse;
 import com.tcdng.unify.web.ui.widget.Page;
@@ -33,8 +34,10 @@ import com.tcdng.unify.web.ui.widget.data.Popup;
  * @since 1.0
  */
 @Component("showpopupresponse")
-@UplAttributes({ @UplAttribute(name = "popup", type = String.class),
-        @UplAttribute(name = "systemInfo", type = boolean.class, defaultVal = "false") })
+@UplAttributes({
+	@UplAttribute(name = "popup", type = String.class),
+	@UplAttribute(name = "width", type = int.class),
+    @UplAttribute(name = "systemInfo", type = boolean.class, defaultVal = "false") })
 public class ShowPopupResponse extends AbstractJsonPageControllerResponse {
 
     public ShowPopupResponse() {
@@ -49,43 +52,52 @@ public class ShowPopupResponse extends AbstractJsonPageControllerResponse {
         appendRefreshAttributesJson(writer, false);
     }
 
-    private void appendPopupPanelsJSON(ResponseWriter writer, Page page) throws UnifyException {
-        Panel panel = null;
-        String popupShortName = getUplAttribute(String.class, "popup");
-        if (popupShortName != null) {
-            panel = page.getPanelByShortName(popupShortName);
-        } else {
-            String reqPopupName = getRequestContextUtil().getRequestPopupName();
-            if (reqPopupName != null) {
-                if (page.isWidget(reqPopupName)) {
-                    panel = page.getPanelByLongName(reqPopupName);
-                } else {
-                    panel = page.getPanelByShortName(reqPopupName);
-                }
-            } else {
-                panel = getRequestContextUtil().getRequestPopupPanel();
-            }
-        }
+	private void appendPopupPanelsJSON(ResponseWriter writer, Page page) throws UnifyException {
+		Panel panel = null;
+		String popupShortName = getUplAttribute(String.class, "popup");
+		if (popupShortName != null) {
+			panel = page.getPanelByShortName(popupShortName);
+		} else {
+			String reqPopupName = getRequestContextUtil().getRequestPopupName();
+			if (reqPopupName != null) {
+				if (page.isWidget(reqPopupName)) {
+					panel = page.getPanelByLongName(reqPopupName);
+				} else {
+					panel = page.getPanelByShortName(reqPopupName);
+				}
+			} else {
+				panel = getRequestContextUtil().getRequestPopupPanel();
+			}
+		}
 
-        if (panel != null) {           
-            Popup popup = getSessionAttribute(Popup.class, UnifyWebSessionAttributeConstants.POPUP);
-            if (popup != null) {
-                if (popup.getWidth() > 0) {
-                	writer.write(",\"popupWidth\":").write(popup.getWidth());
-                }
-                
-                if (popup.getHeight() > 0) {
-                	writer.write(",\"popupHeight\":").write(popup.getHeight());
-                }
-            }
-            
-            if (getUplAttribute(boolean.class, "systemInfo")) {
-                writer.write(",\"showSysInfoPopup\":");
-            } else {
-                writer.write(",\"showPopup\":");
-            }
+		if (panel != null) {
+			final int widthInPixels = getUplAttribute(int.class, "width");
+			if (widthInPixels > 0) {
+				writer.write(",\"popupWidth\":").write(widthInPixels);
+			} else {
+				Popup popup = getRequestAttribute(Popup.class, UnifyWebRequestAttributeConstants.POPUP);
+				if (popup == null) {
+					popup = getSessionAttribute(Popup.class, UnifyWebSessionAttributeConstants.POPUP);
+				}
 
-            writer.writeJsonPanel(panel, false);
-        }
-    }
+				if (popup != null) {
+					if (popup.getWidth() > 0) {
+						writer.write(",\"popupWidth\":").write(popup.getWidth());
+					}
+
+					if (popup.getHeight() > 0) {
+						writer.write(",\"popupHeight\":").write(popup.getHeight());
+					}
+				}
+			}
+
+			if (getUplAttribute(boolean.class, "systemInfo")) {
+				writer.write(",\"showSysInfoPopup\":");
+			} else {
+				writer.write(",\"showPopup\":");
+			}
+
+			writer.writeJsonPanel(panel, false);
+		}
+	}
 }
