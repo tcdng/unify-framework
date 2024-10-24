@@ -259,11 +259,16 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 	public String executePageCall(String actionName) throws UnifyException {
 		try {
 			if ("/openPage".equals(actionName)) {
-				ContentPanel contentPanel = !getPageRequestContextUtil().isRemoteViewer() ? getPageRequestContextUtil().getRequestDocument().getContentPanel() : null;
-				getPage().setAttribute(PageAttributeConstants.IN_DETACHED_WINDOW, contentPanel != null ? contentPanel.isDetachedWindow() : false);
+				ContentPanel contentPanel = !getPageRequestContextUtil().isRemoteViewer()
+						? (getPageRequestContextUtil().getRequestDocument() != null
+								? getPageRequestContextUtil().getRequestDocument().getContentPanel()
+								: null)
+						: null;
+				getPage().setAttribute(PageAttributeConstants.IN_DETACHED_WINDOW,
+						contentPanel != null ? contentPanel.isDetachedWindow() : false);
 
 				String resultName = openPage();
-				if (contentPanel != null) {
+				if (contentPanel != null && isContentSupport()) {
 					contentPanel.addContent(getPageRequestContextUtil().getRequestPage());
 
 					final List<String> stickyPaths = (List<String>) removeSessionAttribute(
@@ -323,6 +328,16 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 		}
 	}
 
+	/**
+	 * Indicates if page controller supports addition to content panel
+	 * 
+	 * @return true if content panel is supported otherwise false
+	 * @throws UnifyException if an error occurs
+	 */
+	protected boolean isContentSupport() throws UnifyException {
+		return true;
+	}
+	
 	@Override
 	protected DataTransferParam getDataTransferParam() throws UnifyException {
 		Page page = getPageRequestContextUtil().getRequestPage();

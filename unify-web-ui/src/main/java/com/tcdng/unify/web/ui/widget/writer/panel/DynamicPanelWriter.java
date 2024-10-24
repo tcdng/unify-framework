@@ -23,6 +23,7 @@ import com.tcdng.unify.web.ui.widget.EventHandler;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.Widget;
 import com.tcdng.unify.web.ui.widget.panel.DynamicPanel;
+import com.tcdng.unify.web.ui.widget.panel.StandalonePanel;
 import com.tcdng.unify.web.ui.widget.writer.AbstractPanelWriter;
 
 /**
@@ -49,7 +50,12 @@ public class DynamicPanelWriter extends AbstractPanelWriter {
         DynamicPanel dynamicPanel = (DynamicPanel) container;
         getRequestContextUtil().setDynamicPanelPageName(dynamicPanel.getId(), dynamicPanel.getContainer().getId());
         try {
-            writer.writeInnerStructureAndContent(dynamicPanel.getStandalonePanel());
+        	StandalonePanel standalonePanel = dynamicPanel.getStandalonePanel();
+            writer.write("<div style=\"width:100%;\"");
+            writeTagStyleClass(writer, standalonePanel.getName());
+            writer.write("/>");
+            writer.writeInnerStructureAndContent(standalonePanel);
+            writer.write("</div>");
         } finally {
             getRequestContextUtil().clearDynamicPanelPageName();
         }

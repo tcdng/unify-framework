@@ -1,0 +1,24 @@
+// Popup page UPL
+// Copyright 2018-2024 The Code Department.
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+
+!ui-page
+
+!ui-panel:pagePopup styleClass:$e{ui-pagepopup} layout:$d{!ui-vertical}
+    components:$c{titleBar popupBody actionPanel}
+
+!ui-titlebar:titleBar captionBinding:$s{title} draggable:true components:$c{captionCancelBtn}
+!ui-image:captionCancelBtn src:$t{images/cross_white.png} styleClass:$e{tbbutton}
+     eventHandler:$d{!ui-event event:onclick action:$c{closeAct}}
+     
+!ui-dynamicpanel:popupBody styleClass:$e{ui-pagepopup-body}
+    panelNameBinding:$s{panelName}
+    panelValueBinding:$s{panelBean}
+
+!ui-panel:actionPanel layout:$d{!ui-horizontal} components:$c{closeBtn}
+!ui-button:closeBtn caption:$m{button.close} eventHandler:$d{!ui-event event:onclick action:$c{closeAct}}
+     
+//Actions
+!ui-post:closeAct path:$n{/hidePopup}   
+

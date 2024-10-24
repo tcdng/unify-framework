@@ -43,6 +43,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         super.onInitialize();
         
         // Register symbols by name
+        registerSymbol("about", "f059");
         registerSymbol("align-center", "f037");
         registerSymbol("align-left", "f036");
         registerSymbol("align-right", "f038");
