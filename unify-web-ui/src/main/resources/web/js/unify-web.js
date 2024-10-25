@@ -32,7 +32,7 @@ const UNIFY_DEFAULT_POPUP_Y_SCALE = 3; // Pop-up Y offset scale
 
 const UNIFY_DEFAULT_POPUP_TIMEOUT = 400; // .4 seconds.
 const UNIFY_DELAYEDPOSTING_MIN_DELAY = 250; // .25 seconds.
-const UNIFY_BUSY_INDICATOR_DISPLAY_DELAY = 50; // .05 seconds.
+const UNIFY_BUSY_INDICATOR_DISPLAY_DELAY = 100; // .1 seconds.
 const UNIFY_HIDE_USER_HINT_DISPLAY_PERIOD = 3000; // 3 seconds.
 const UNIFY_WINDOW_RESIZE_DEBOUNCE_DELAY = 400; // .4 seconds.
 const UNIFY_KEY_SEARCH_MAX_GAP = 1000; // 1 second.
@@ -56,7 +56,7 @@ const UNIFY_KEY_DELETE = '46';
 const UNIFY_DEFAULT_POPUP_WIDTH = "auto";
 const UNIFY_DEFAULT_POPUP_HEIGHT = "auto";
 
-const UNIFY_POST_COMMIT_QUEUE = true; // Set to false to switch off commit queuing
+const UNIFY_POST_COMMIT_QUEUE = false; // Set to false to switch off commit queuing
 const UNIFY_POST_COMMIT_QUEUE_REPEAT_DELAY = 5; // 5 milliseconds
 const UNIFY_POST_COMMIT_QUEUE_FIRE_DELAY = 25; // 25 milliseconds
 
@@ -682,12 +682,12 @@ ux.ajaxCall = function(ajaxPrms) {
 		ux.ajaxCallExit(ajaxPrms);
 		alert("Unable to connect to \'" + ajaxPrms.uURL + "\', exception = "
 				+ ex);
-	} finally {
-		ux.hideBusyIndicator();
 	}
 }
 
 ux.ajaxCallExit = function(ajaxPrms) {
+	ux.hideBusyIndicator();
+
 	if (ajaxPrms.uIsDebounce) {
 		 ux.clearDebounce(ajaxPrms.uDebounced);
 	}				
@@ -739,9 +739,9 @@ ux.triggerBusyIndicator = function() {
 
 ux.showBusyIndicator = function() {
 	if (ux.busyIndicator) {
-		var busyElem = _id(ux.busyIndicator);
-		if (busyElem) {
-			busyElem.style.display = "block";
+		var elem = _id(ux.busyIndicator);
+		if (elem) {
+			elem.style.display = "block";
 		}
 	}
 }
@@ -756,9 +756,9 @@ ux.hideBusyIndicator = function() {
 		}
 		
 		if (ux.busyIndicator) {
-			var busyElem = _id(ux.busyIndicator);
-			if (busyElem) {
-				busyElem.style.display = "none";
+			var elem = _id(ux.busyIndicator);
+			if (elem) {
+				elem.style.display = "none";
 			}
 		}
 	}
