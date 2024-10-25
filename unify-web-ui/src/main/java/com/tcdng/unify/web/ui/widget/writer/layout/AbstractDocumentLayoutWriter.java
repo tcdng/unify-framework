@@ -57,12 +57,11 @@ public abstract class AbstractDocumentLayoutWriter extends AbstractDhtmlWriter i
 	protected void writeLatencySection(ResponseWriter writer, Document document) throws UnifyException {
 		writer.write("<div id=\"").write(document.getLatencyPanelId())
 				.write("\" class=\"dclatency\" style=\"display:none;\">");
+		writer.write("<div class=\"base\">");
 		writer.write("<img src=\"");
 		writer.writeContextResourceURL("/resource/file", MimeType.IMAGE.template(), "$t{images/latency.gif}");
 		writer.write("\">");
-		writer.write("<span>");
-		writer.writeWithHtmlEscape(getSessionMessage("busy.pleasewait"));
-		writer.write("</span>");
+		writer.write("</div>");
 		writer.write("</div>");
 	}
 
