@@ -32,7 +32,7 @@ const UNIFY_DEFAULT_POPUP_Y_SCALE = 3; // Pop-up Y offset scale
 
 const UNIFY_DEFAULT_POPUP_TIMEOUT = 400; // .4 seconds.
 const UNIFY_DELAYEDPOSTING_MIN_DELAY = 250; // .25 seconds.
-const UNIFY_BUSY_INDICATOR_DISPLAY_DELAY = 200; // .2 seconds.
+const UNIFY_BUSY_INDICATOR_DISPLAY_DELAY = 50; // .05 seconds.
 const UNIFY_HIDE_USER_HINT_DISPLAY_PERIOD = 3000; // 3 seconds.
 const UNIFY_WINDOW_RESIZE_DEBOUNCE_DELAY = 400; // .4 seconds.
 const UNIFY_KEY_SEARCH_MAX_GAP = 1000; // 1 second.
@@ -57,8 +57,8 @@ const UNIFY_DEFAULT_POPUP_WIDTH = "auto";
 const UNIFY_DEFAULT_POPUP_HEIGHT = "auto";
 
 const UNIFY_POST_COMMIT_QUEUE = true; // Set to false to switch off commit queuing
-const UNIFY_POST_COMMIT_QUEUE_REPEAT_DELAY = 20; // 20 milliseconds
-const UNIFY_POST_COMMIT_QUEUE_FIRE_DELAY = 100; // 100 milliseconds
+const UNIFY_POST_COMMIT_QUEUE_REPEAT_DELAY = 5; // 5 milliseconds
+const UNIFY_POST_COMMIT_QUEUE_FIRE_DELAY = 25; // 25 milliseconds
 
 const TIMESTAMP_VARIABLE = ":TV";
 const TIMESTAMP_SET = ":TS";
@@ -278,8 +278,8 @@ ux.respHandler = {
 	},
 
 	downloadHdl : function(resp) {
+		ux.triggerBusyIndicator();
 		try {
-			ux.triggerBusyIndicator();
 			window.location.assign(resp.downloadPath);
 		} finally {
 		 	ux.hideBusyIndicator();
@@ -287,8 +287,8 @@ ux.respHandler = {
 	},
 
 	forwardHdl : function(resp) {
+		ux.triggerBusyIndicator();
 		try {
-			ux.triggerBusyIndicator();
 			window.location.assign(resp.loadDocument);
 		} finally {
 		 	ux.hideBusyIndicator();
@@ -640,9 +640,9 @@ ux.ajaxCall = function(ajaxPrms) {
 
 	if (ajaxPrms.uIsDebounce) {
 		ajaxPrms.uDebounced = ux.effectDebounce();
-		ux.triggerBusyIndicator();
 	}
 	
+	ux.triggerBusyIndicator();
 	try {
 		ux.saveContentScroll();
 		uAjaxReq.open("POST", ajaxPrms.uURL, true);
@@ -682,12 +682,13 @@ ux.ajaxCall = function(ajaxPrms) {
 		ux.ajaxCallExit(ajaxPrms);
 		alert("Unable to connect to \'" + ajaxPrms.uURL + "\', exception = "
 				+ ex);
+	} finally {
+		ux.hideBusyIndicator();
 	}
 }
 
 ux.ajaxCallExit = function(ajaxPrms) {
 	if (ajaxPrms.uIsDebounce) {
-		 ux.hideBusyIndicator();
 		 ux.clearDebounce(ajaxPrms.uDebounced);
 	}				
 	ux.postCommitExecuting = false;
@@ -1171,7 +1172,7 @@ ux.rigContentPanel = function(rgp) {
 				evp.uIsDebounce = true;
 				ux.postCommit(evp);
 		} else {
-			ux.hideBusyIndicator();
+//			ux.hideBusyIndicator();
 			if (rgp.pTabbed) {
 				for (var i = 0; i < rgp.pContent.length; i++) {
 					const cnt = rgp.pContent[i];
