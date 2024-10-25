@@ -20,6 +20,8 @@ import java.util.Map;
 import java.util.Set;
 
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.annotation.UplAttribute;
+import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.ui.MenuItem;
 import com.tcdng.unify.web.ui.widget.Control;
 
@@ -29,6 +31,8 @@ import com.tcdng.unify.web.ui.widget.Control;
  * @author The Code Department
  * @since 1.0
  */
+@UplAttributes({
+	@UplAttribute(name = "backImageCover", type = boolean.class, defaultVal = "true") })
 public abstract class AbstractFlyoutMenu extends AbstractMenuPanel implements FlyoutMenu {
 
     private Map<String, MenuItem> activeMenuItemMap;
@@ -40,6 +44,11 @@ public abstract class AbstractFlyoutMenu extends AbstractMenuPanel implements Fl
     public AbstractFlyoutMenu() {
         activeMenuItemMap = new HashMap<String, MenuItem>();
     }
+
+	@Override
+	public boolean isBackImageCover() throws UnifyException {
+		return getUplAttribute(boolean.class, "backImageCover");
+	}
 
     @Override
     public void onPageConstruct() throws UnifyException {

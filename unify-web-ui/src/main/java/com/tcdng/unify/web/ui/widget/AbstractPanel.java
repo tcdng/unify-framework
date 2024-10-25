@@ -44,7 +44,9 @@ import com.tcdng.unify.web.ui.widget.data.MessageResult;
  * @author The Code Department
  * @since 1.0
  */
-@UplAttributes({ @UplAttribute(name = "backImageSrc", type = String.class),
+@UplAttributes({
+		@UplAttribute(name = "backImageSrc", type = String.class),
+		@UplAttribute(name = "backImageCover", type = boolean.class, defaultVal = "true"),
 		@UplAttribute(name = "refreshPath", type = String.class),
 		@UplAttribute(name = "refreshEvery", type = int.class),
 		@UplAttribute(name = "refreshOnUserAct", type = boolean.class, defaultVal = "true"),
@@ -135,6 +137,11 @@ public abstract class AbstractPanel extends AbstractContainer implements Panel {
 	@Override
 	public String getBackImageSrc() throws UnifyException {
 		return getUplAttribute(String.class, "backImageSrc");
+	}
+
+	@Override
+	public boolean isBackImageCover() throws UnifyException {
+		return getUplAttribute(boolean.class, "backImageCover");
 	}
 
 	@Override

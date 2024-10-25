@@ -65,6 +65,14 @@ public interface Panel extends Container {
     String getBackImageSrc() throws UnifyException;
 
     /**
+     * Returns true if background image should be cover.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean isBackImageCover() throws UnifyException;
+
+    /**
      * Returns the panel refresh path.
      * 
      * @throws UnifyException
