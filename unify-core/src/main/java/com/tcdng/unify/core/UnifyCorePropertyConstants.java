@@ -49,6 +49,8 @@ public interface UnifyCorePropertyConstants {
 
     String APPLICATION_LAYOUT = "application.layout";
 
+    String APPLICATION_THEME = "application.theme";
+
     String APPLICATION_CUSTOMIZATION = "application.customization";
 
     String APPLICATION_COLORSCHEME = "application.colorscheme";
