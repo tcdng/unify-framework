@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.tcdng.unify.core.ThemeManager;
+import com.tcdng.unify.core.UnifyCorePropertyConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.constant.MimeType;
@@ -26,6 +27,8 @@ import com.tcdng.unify.core.data.ValueStore;
 import com.tcdng.unify.core.upl.AbstractUplComponentWriter;
 import com.tcdng.unify.core.upl.UplElementReferences;
 import com.tcdng.unify.core.util.DataUtils;
+import com.tcdng.unify.core.util.FileUtils;
+import com.tcdng.unify.core.util.IOUtils;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.core.util.TokenUtils;
 import com.tcdng.unify.web.ControllerPathParts;
@@ -945,6 +948,13 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
 			List<String> componentList = getActionRefComponentList(writer, id, pageAction);
 			writer.keepPostCommandRefs(componentList);
 		}
+	}
+    
+	protected String getThemeExtendedFileName(String fileName) throws UnifyException {
+		final String theme = getContainerSetting(String.class, UnifyCorePropertyConstants.APPLICATION_THEME);
+		final String _fileName = !StringUtils.isBlank(theme) ? FileUtils.extendFileName(fileName, "-" + theme)
+				: fileName;
+		return IOUtils.isResourceFileInstance(_fileName, null) ? _fileName : fileName;
 	}
 
 	@SuppressWarnings("unchecked")

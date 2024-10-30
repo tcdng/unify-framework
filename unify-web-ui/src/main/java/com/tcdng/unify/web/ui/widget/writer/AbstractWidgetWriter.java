@@ -23,8 +23,6 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.UserToken;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.util.ColorUtils;
-import com.tcdng.unify.core.util.FileUtils;
-import com.tcdng.unify.core.util.IOUtils;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.font.FontSymbolManager;
 import com.tcdng.unify.web.ui.WebUIApplicationComponents;
@@ -172,11 +170,5 @@ public abstract class AbstractWidgetWriter extends AbstractDhtmlWriter implement
 
         return classBase;
     }
-    
-	protected String getThemeExtendedFileName(String fileName) throws UnifyException {
-		final String theme = getContainerSetting(String.class, UnifyCorePropertyConstants.APPLICATION_THEME);
-		final String _fileName = !StringUtils.isBlank(theme) ? FileUtils.extendFileName(fileName, "-" + theme)
-				: fileName;
-		return IOUtils.isResourceFileInstance(_fileName, null) ? _fileName : fileName;
-	}
+
 }
