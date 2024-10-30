@@ -86,4 +86,15 @@ public final class FileUtils {
 
 		return null;
 	}
+	
+	public static String extendFileName(String fileName, String extension) {
+		if (fileName != null && extension != null) {
+			int lastIndex = fileName.lastIndexOf('.');
+			if (lastIndex >= 0) {
+				return fileName.substring(0, lastIndex) + extension + fileName.substring(lastIndex);
+			}
+		}
+		
+		return fileName;
+	}
 }
