@@ -16,7 +16,6 @@
 package com.tcdng.unify.web.ui.widget.writer.layout;
 
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.web.ui.widget.Document;
 import com.tcdng.unify.web.ui.widget.DocumentLayout;
 import com.tcdng.unify.web.ui.widget.Panel;
@@ -52,18 +51,6 @@ public abstract class AbstractDocumentLayoutWriter extends AbstractDhtmlWriter i
 			writer.writeStructureAndContent(panel);
 			writer.write("</div></div>");
 		}
-	}
-
-	protected void writeLatencySection(ResponseWriter writer, Document document) throws UnifyException {
-		writer.write("<div id=\"").write(document.getLatencyPanelId())
-				.write("\" class=\"dclatency\" style=\"display:none;\">");
-		writer.write("<div class=\"base\">");
-		writer.write("<img src=\"");
-		final String latency = getThemeExtendedFileName("$t{images/latency.gif}");
-		writer.writeContextResourceURL("/resource/file", MimeType.IMAGE.template(), latency);
-		writer.write("\">");
-		writer.write("</div>");
-		writer.write("</div>");
 	}
 
 	protected abstract void writeInnerStructureAndContent(ResponseWriter writer, DocumentLayout layout,
