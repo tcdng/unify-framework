@@ -86,7 +86,7 @@ public abstract class AbstractPanelWriter extends AbstractContainerWriter implem
 			writeTagId(writer, panel);
 			writeTagStyleClassWithLeadingExtraStyleClasses(writer, panel, "ui-panel");
 			writer.write(" style=\"background: url('");
-			backImageSrc = getThemeExtendedFileName(backImageSrc);
+			backImageSrc = ensureThemeExtendedFileName(backImageSrc);
 			writer.writeFileImageContextURL(backImageSrc);
 			writer.write("') no-repeat;");
 			if (panel.isBackImageCover()) {

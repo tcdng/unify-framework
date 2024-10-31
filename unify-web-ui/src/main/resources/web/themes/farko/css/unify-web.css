@@ -132,9 +132,9 @@ z-index:400;}
 .ui-document .dcpop {position:absolute;width:auto; z-index:101;}
 .ui-document .dcsysinfo {position:absolute;width:auto; z-index:102;}
 
-.ui-document .dclatency {position:absolute;width:100%;height:100%;z-index:104;background-color: rgba(192, 192, 192, 0.20);}
-.ui-document .dclatency .base {display:block;width:400px;margin:232px auto;}
-.ui-document .dclatency img {width:100%;height:16px;}
+.dclatency {position:absolute;width:100%;height:100%;z-index:104;background-color: rgba(192, 192, 192, 0.20);}
+.dclatency .base {display:block;width:400px;margin:14px auto;}
+.dclatency img {width:100%;height:12px;}
 
 /** Deck */
 .ui-tilegroup {}

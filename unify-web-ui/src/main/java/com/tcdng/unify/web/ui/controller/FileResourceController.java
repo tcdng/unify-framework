@@ -84,7 +84,8 @@ public class FileResourceController extends AbstractPageResourceController {
 
 		if (in == null) {
 			try {
-				in = IOUtils.openFileResourceInputStream(getResourceName(),
+				final String resourceName = getThemeExtendedFileName(getResourceName());
+				in = IOUtils.openFileResourceInputStream(resourceName,
 						getUnifyComponentContext().getWorkingPath());
 			} catch (UnifyException e) {
 				logError(e);

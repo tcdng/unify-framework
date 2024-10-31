@@ -59,7 +59,8 @@ public abstract class AbstractDocumentLayoutWriter extends AbstractDhtmlWriter i
 				.write("\" class=\"dclatency\" style=\"display:none;\">");
 		writer.write("<div class=\"base\">");
 		writer.write("<img src=\"");
-		writer.writeContextResourceURL("/resource/file", MimeType.IMAGE.template(), "$t{images/latency.gif}");
+		final String latency = getThemeExtendedFileName("$t{images/latency.gif}");
+		writer.writeContextResourceURL("/resource/file", MimeType.IMAGE.template(), latency);
 		writer.write("\">");
 		writer.write("</div>");
 		writer.write("</div>");
