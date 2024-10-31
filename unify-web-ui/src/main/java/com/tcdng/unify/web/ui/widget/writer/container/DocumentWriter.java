@@ -85,7 +85,7 @@ public class DocumentWriter extends AbstractPageWriter {
 
 		// Write favorite icon
 		writer.write("<link rel=\"shortcut icon\" href=\"");
-		final String icon = getThemeExtendedFileName(document.getFavicon());
+		final String icon = ensureThemeExtendedFileName(document.getFavicon());
 		writer.writeFileImageContextURL(icon);
 		writer.write("\">");
 
@@ -276,7 +276,7 @@ public class DocumentWriter extends AbstractPageWriter {
 	private void writeImageBeforeCss(ResponseWriter writer, String className, String imgSrc) throws UnifyException {
 		writer.write(className).write(" {vertical-align:middle;display: inline-block !important;} ").write(className)
 				.write(":before {content: \"\";vertical-align:middle;display: inline-block;width: 100%;height: 100%;background: url(");
-		imgSrc = getThemeExtendedFileName(imgSrc);
+		imgSrc = ensureThemeExtendedFileName(imgSrc);
 		writer.writeFileImageContextURL(imgSrc);
 		writer.write(")no-repeat center/100% 100%; }");
 	}

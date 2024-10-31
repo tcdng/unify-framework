@@ -66,7 +66,7 @@ public class PlainHtmlWriter extends AbstractPageWriter {
 
 		// Write favorite icon
 		writer.write("<link rel=\"shortcut icon\" href=\"");
-		String imgSrc = getThemeExtendedFileName(plainHtml.getFavicon());
+		String imgSrc = ensureThemeExtendedFileName(plainHtml.getFavicon());
 		writer.writeFileImageContextURL(imgSrc);
 		writer.write("\">");
 
@@ -78,7 +78,7 @@ public class PlainHtmlWriter extends AbstractPageWriter {
 		String backImageSrc = plainHtml.getBackImageSrc();
 		if (StringUtils.isNotBlank(backImageSrc)) {
 			writer.write(" style=\"background: url('");
-			backImageSrc = getThemeExtendedFileName(backImageSrc);
+			backImageSrc = ensureThemeExtendedFileName(backImageSrc);
 			writer.writeFileImageContextURL(backImageSrc);
 			writer.write("') no-repeat;background-size:cover;");
 			if (style != null) {
