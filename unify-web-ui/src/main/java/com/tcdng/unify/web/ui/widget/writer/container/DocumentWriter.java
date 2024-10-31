@@ -263,7 +263,8 @@ public class DocumentWriter extends AbstractPageWriter {
 	private void writeEmbeddedStyle(ResponseWriter writer, BasicDocument document) throws UnifyException {
 		writer.write("<style>");
 		// Write custom check box images
-		writeImageBeforeCss(writer, " .g_cba", "$t{images/checked.png}");
+		final String checked = getThemeExtendedFileName("$t{images/checked.png}");
+		writeImageBeforeCss(writer, " .g_cba", checked);
 		writeImageBeforeCss(writer, " .g_cbb", "$t{images/unchecked.png}");
 		writeImageBeforeCss(writer, " .g_cbc", "$t{images/checked_gray.png}");
 		writeImageBeforeCss(writer, " .g_cbd", "$t{images/unchecked_gray.png}");
