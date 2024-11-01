@@ -958,9 +958,21 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
     
 	protected String ensureThemeExtendedFileName(String fileName) throws UnifyException {
 		final String theme = getContainerSetting(String.class, UnifyCorePropertyConstants.APPLICATION_THEME);
-		final String _fileName = !StringUtils.isBlank(theme) ? FileUtils.extendFileName(fileName, "-" + theme)
-				: fileName;
-		return IOUtils.isResourceFileInstance(_fileName, null) ? _fileName : fileName;
+		final boolean useTheme = !StringUtils.isBlank(theme);
+		if (useTheme) {
+			final String _fileName = FileUtils.extendFileName(fileName, "-" + theme);
+			if(IOUtils.isResourceFileInstance(_fileName, null)) {
+				return _fileName;
+			}
+
+			final String _fallFileName = FileUtils.extendFileName(fileName, "-fallback");
+			if(IOUtils.isResourceFileInstance(_fallFileName, null)) {
+				return _fallFileName;
+			}
+		}
+		
+		
+		return fileName;
 	}
 
 	@SuppressWarnings("unchecked")
