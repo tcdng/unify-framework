@@ -86,8 +86,7 @@ public class DocumentWriter extends AbstractPageWriter {
 
 		// Write favorite icon
 		writer.write("<link rel=\"shortcut icon\" href=\"");
-		final String icon = ensureThemeExtendedFileName(document.getFavicon());
-		writer.writeFileImageContextURL(icon);
+		writer.writeFileImageContextURL(document.getFavicon());
 		writer.write("\">");
 
 		// Write style sheet links
@@ -180,8 +179,7 @@ public class DocumentWriter extends AbstractPageWriter {
 				.write("\" class=\"dclatency\" style=\"display:none;\">");
 		writer.write("<div class=\"base\">");
 		writer.write("<img src=\"");
-		final String latency = getThemeExtendedFileName("$t{images/latency.gif}");
-		writer.writeContextResourceURL("/resource/file", MimeType.IMAGE.template(), latency);
+		writer.writeContextResourceURL("/resource/file", MimeType.IMAGE.template(), "$t{images/latency.gif}");
 		writer.write("\">");
 		writer.write("</div>");
 		writer.write("</div>");
@@ -263,8 +261,7 @@ public class DocumentWriter extends AbstractPageWriter {
 	private void writeEmbeddedStyle(ResponseWriter writer, BasicDocument document) throws UnifyException {
 		writer.write("<style>");
 		// Write custom check box images
-		final String checked = getThemeExtendedFileName("$t{images/checked.png}");
-		writeImageBeforeCss(writer, " .g_cba", checked);
+		writeImageBeforeCss(writer, " .g_cba", "$t{images/checked.png}");
 		writeImageBeforeCss(writer, " .g_cbb", "$t{images/unchecked.png}");
 		writeImageBeforeCss(writer, " .g_cbc", "$t{images/checked_gray.png}");
 		writeImageBeforeCss(writer, " .g_cbd", "$t{images/unchecked_gray.png}");
@@ -293,7 +290,6 @@ public class DocumentWriter extends AbstractPageWriter {
 	private void writeImageBeforeCss(ResponseWriter writer, String className, String imgSrc) throws UnifyException {
 		writer.write(className).write(" {vertical-align:middle;display: inline-block !important;} ").write(className)
 				.write(":before {content: \"\";vertical-align:middle;display: inline-block;width: 100%;height: 100%;background: url(");
-		imgSrc = ensureThemeExtendedFileName(imgSrc);
 		writer.writeFileImageContextURL(imgSrc);
 		writer.write(")no-repeat center/100% 100%; }");
 	}

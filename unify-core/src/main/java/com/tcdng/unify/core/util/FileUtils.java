@@ -15,6 +15,11 @@
  */
 package com.tcdng.unify.core.util;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 import com.tcdng.unify.core.constant.FileAttachmentType;
 import com.tcdng.unify.core.data.FileAttachmentInfo;
 import com.tcdng.unify.core.util.ImageUtils.ImageType;
@@ -87,14 +92,30 @@ public final class FileUtils {
 		return null;
 	}
 	
-	public static String extendFileName(String fileName, String extension) {
-		if (fileName != null && extension != null) {
+	private static final Set<String> THEMABLES = Collections
+			.unmodifiableSet(new HashSet<String>(Arrays.asList(".css",".jpg", ".jpeg", ".png", ".gif", ".bmp")));
+	
+	public static String detectPresentAndGetThemeFileName(final String fileName, final String theme,
+			final String workingPath) {
+		if (fileName != null && theme != null) {
 			int lastIndex = fileName.lastIndexOf('.');
 			if (lastIndex >= 0) {
-				return fileName.substring(0, lastIndex) + extension + fileName.substring(lastIndex);
+				final String ext = fileName.substring(lastIndex);
+				if (THEMABLES.contains(ext.toLowerCase())) {
+					final String _fileName = fileName.substring(0, lastIndex) + "-" + theme + ext;
+					if (IOUtils.isResourceFileInstance(_fileName, workingPath)) {
+						return _fileName;
+					}
+
+					final String _fallFileName = fileName.substring(0, lastIndex) + "-fallback" + ext;
+					if (IOUtils.isResourceFileInstance(_fallFileName, workingPath)) {
+						return _fallFileName;
+					}
+				}
 			}
 		}
-		
-		return fileName;
+
+		return null;
 	}
+
 }

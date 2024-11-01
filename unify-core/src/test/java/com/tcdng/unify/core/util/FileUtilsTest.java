@@ -15,7 +15,6 @@
  */
 package com.tcdng.unify.core.util;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
@@ -30,17 +29,11 @@ public class FileUtilsTest {
 
     @Test
     public void testExtendFileNameNull() throws Exception {
-        assertNull(FileUtils.extendFileName(null, null));
-        assertNull(FileUtils.extendFileName(null, "-blue"));
+        assertNull(FileUtils.detectPresentAndGetThemeFileName(null, null, null));
+        assertNull(FileUtils.detectPresentAndGetThemeFileName(null, "-blue", null));
         
-        assertEquals("theme.png", FileUtils.extendFileName("theme.png", null));
-        assertEquals("/src/resources/theme.png", FileUtils.extendFileName("/src/resources/theme.png", null));
-    }
-
-    @Test
-    public void testExtendFileName() throws Exception {
-        assertEquals("theme-blue.png", FileUtils.extendFileName("theme.png", "-blue"));
-        assertEquals("/src/resources/theme-blue.png", FileUtils.extendFileName("/src/resources/theme.png", "-blue"));
+        assertNull(FileUtils.detectPresentAndGetThemeFileName("theme.png", null, null));
+        assertNull(FileUtils.detectPresentAndGetThemeFileName("/src/resources/theme.png", null, null));
     }
 
 }

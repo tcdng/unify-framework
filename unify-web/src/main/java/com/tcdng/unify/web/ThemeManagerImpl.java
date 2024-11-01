@@ -32,7 +32,7 @@ import com.tcdng.unify.core.util.TokenUtils;
 @Component(WebApplicationComponents.APPLICATION_THEMEMANAGER)
 public class ThemeManagerImpl extends AbstractUnifyComponent implements ThemeManager {
 
-    private static final String DEFAULT_THEME_PATH = "/web/themes/farko";
+    private static final String DEFAULT_THEME_PATH = "web/themes/farko";
 
     @Override
     public String expandThemeTag(String resouceName) throws UnifyException {
