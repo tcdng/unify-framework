@@ -5,7 +5,7 @@
 
 !ui-page
 
-!ui-panel:pagePopup styleClass:$e{ui-pagepopup} layout:$d{!ui-vertical}
+!ui-panel:pagePopup styleClass:$e{ui-pagepopup} layout:$d{!ui-vertical style:$s{width:100%;}}
     components:$c{titleBar popupBody actionPanel}
 
 !ui-titlebar:titleBar captionBinding:$s{title} draggable:true components:$c{captionCancelBtn}
