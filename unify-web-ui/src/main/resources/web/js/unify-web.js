@@ -32,7 +32,7 @@ const UNIFY_DEFAULT_POPUP_Y_SCALE = 3; // Pop-up Y offset scale
 
 const UNIFY_DEFAULT_POPUP_TIMEOUT = 400; // .4 seconds.
 const UNIFY_DELAYEDPOSTING_MIN_DELAY = 250; // .25 seconds.
-const UNIFY_BUSY_INDICATOR_DISPLAY_DELAY = 200; // .2 seconds.
+const UNIFY_BUSY_INDICATOR_DISPLAY_DELAY = 100; // .1 seconds.
 const UNIFY_HIDE_USER_HINT_DISPLAY_PERIOD = 3000; // 3 seconds.
 const UNIFY_WINDOW_RESIZE_DEBOUNCE_DELAY = 400; // .4 seconds.
 const UNIFY_KEY_SEARCH_MAX_GAP = 1000; // 1 second.
@@ -56,9 +56,9 @@ const UNIFY_KEY_DELETE = '46';
 const UNIFY_DEFAULT_POPUP_WIDTH = "auto";
 const UNIFY_DEFAULT_POPUP_HEIGHT = "auto";
 
-const UNIFY_POST_COMMIT_QUEUE = true; // Set to false to switch off commit queuing
-const UNIFY_POST_COMMIT_QUEUE_REPEAT_DELAY = 20; // 20 milliseconds
-const UNIFY_POST_COMMIT_QUEUE_FIRE_DELAY = 100; // 100 milliseconds
+const UNIFY_POST_COMMIT_QUEUE = false; // Set to false to switch off commit queuing
+const UNIFY_POST_COMMIT_QUEUE_REPEAT_DELAY = 5; // 5 milliseconds
+const UNIFY_POST_COMMIT_QUEUE_FIRE_DELAY = 25; // 25 milliseconds
 
 const TIMESTAMP_VARIABLE = ":TV";
 const TIMESTAMP_SET = ":TS";
@@ -278,8 +278,8 @@ ux.respHandler = {
 	},
 
 	downloadHdl : function(resp) {
+		ux.triggerBusyIndicator();
 		try {
-			ux.triggerBusyIndicator();
 			window.location.assign(resp.downloadPath);
 		} finally {
 		 	ux.hideBusyIndicator();
@@ -287,8 +287,8 @@ ux.respHandler = {
 	},
 
 	forwardHdl : function(resp) {
+		ux.triggerBusyIndicator();
 		try {
-			ux.triggerBusyIndicator();
 			window.location.assign(resp.loadDocument);
 		} finally {
 		 	ux.hideBusyIndicator();
@@ -425,7 +425,7 @@ ux.respHandler = {
 					var sysInfoPanel = _id(ux.docSysInfoId);
 					sysInfoPanel.style.visibility = "hidden";
 					sysInfoPanel.innerHTML = resp.showSysInfoPopup.html;
-					ux.centralize(basePanel, sysInfoPanel);
+					ux.centralize(sysInfoPanel);
 					sysInfoPanel.style.visibility = "visible";
 					basePanel.style.display = "block";
 					ux.perform(resp.showSysInfoPopup.script);
@@ -457,7 +457,7 @@ ux.respHandler = {
 					}
 					
 					targetPanel.innerHTML = resp.showPopup.html;
-					ux.centralize(basePanel, targetPanel);
+					ux.centralize(targetPanel);
 					targetPanel.style.visibility = "visible";
 					ux.popupVisible = true;
 					ux.perform(resp.showPopup.script);
@@ -640,9 +640,9 @@ ux.ajaxCall = function(ajaxPrms) {
 
 	if (ajaxPrms.uIsDebounce) {
 		ajaxPrms.uDebounced = ux.effectDebounce();
-		ux.triggerBusyIndicator();
 	}
 	
+	ux.triggerBusyIndicator();
 	try {
 		ux.saveContentScroll();
 		uAjaxReq.open("POST", ajaxPrms.uURL, true);
@@ -686,8 +686,9 @@ ux.ajaxCall = function(ajaxPrms) {
 }
 
 ux.ajaxCallExit = function(ajaxPrms) {
+	ux.hideBusyIndicator();
+
 	if (ajaxPrms.uIsDebounce) {
-		 ux.hideBusyIndicator();
 		 ux.clearDebounce(ajaxPrms.uDebounced);
 	}				
 	ux.postCommitExecuting = false;
@@ -738,9 +739,9 @@ ux.triggerBusyIndicator = function() {
 
 ux.showBusyIndicator = function() {
 	if (ux.busyIndicator) {
-		var busyElem = _id(ux.busyIndicator);
-		if (busyElem) {
-			busyElem.style.display = "block";
+		var elem = _id(ux.busyIndicator);
+		if (elem) {
+			elem.style.display = "block";
 		}
 	}
 }
@@ -755,9 +756,9 @@ ux.hideBusyIndicator = function() {
 		}
 		
 		if (ux.busyIndicator) {
-			var busyElem = _id(ux.busyIndicator);
-			if (busyElem) {
-				busyElem.style.display = "none";
+			var elem = _id(ux.busyIndicator);
+			if (elem) {
+				elem.style.display = "none";
 			}
 		}
 	}
@@ -1171,7 +1172,7 @@ ux.rigContentPanel = function(rgp) {
 				evp.uIsDebounce = true;
 				ux.postCommit(evp);
 		} else {
-			ux.hideBusyIndicator();
+//			ux.hideBusyIndicator();
 			if (rgp.pTabbed) {
 				for (var i = 0; i < rgp.pContent.length; i++) {
 					const cnt = rgp.pContent[i];
@@ -5113,14 +5114,17 @@ ux.clearDebounce = function(debounced) {
 }
 
 /** Translation */
-ux.centralize = function(baseElem, elem) {
-	var x = Math.floor((baseElem.offsetWidth - elem.offsetWidth) / 2);
+ux.centralize = function(elem) {
+	var baserect = ux.boundingRect(document.body);
+	var elemrect = ux.boundingRect(elem);
+
+	var x = Math.floor((baserect.width - elemrect.width) / 2);
 	if (x < 0)
 		elem.style.left = "0px";
 	else
 		elem.style.left = x + "px";
 
-	var y = Math.floor((baseElem.offsetHeight - elem.offsetHeight) / UNIFY_DEFAULT_POPUP_Y_SCALE);
+	var y = Math.floor((baserect.height - elemrect.height) / UNIFY_DEFAULT_POPUP_Y_SCALE);
 	if (y < 0)
 		elem.style.top = "0px";
 	else

@@ -27,6 +27,7 @@ import com.tcdng.unify.web.ControllerPathParts;
 import com.tcdng.unify.web.constant.ClientSyncNameConstants;
 import com.tcdng.unify.web.data.WebStringWriter;
 import com.tcdng.unify.web.ui.PagePathInfoRepository;
+import com.tcdng.unify.web.ui.widget.Document;
 import com.tcdng.unify.web.ui.widget.DocumentLayout;
 import com.tcdng.unify.web.ui.widget.EventHandler;
 import com.tcdng.unify.web.ui.widget.Panel;
@@ -163,11 +164,25 @@ public class DocumentWriter extends AbstractPageWriter {
 
 		writer.write("</div>");
 
+		//Latency base
+		writeLatencySection(writer, document);
+		
 		// Write document structure an content
 		DocumentLayout documentLayout = document.getUplAttribute(DocumentLayout.class, "layout");
 		writer.writeStructureAndContent(documentLayout, document);
 
 		writer.write("</body></html>");
+	}
+
+	protected void writeLatencySection(ResponseWriter writer, Document document) throws UnifyException {
+		writer.write("<div id=\"").write(document.getLatencyPanelId())
+				.write("\" class=\"dclatency\" style=\"display:none;\">");
+		writer.write("<div class=\"base\">");
+		writer.write("<img src=\"");
+		writer.writeContextResourceURL("/resource/file", MimeType.IMAGE.template(), "$t{images/latency.gif}");
+		writer.write("\">");
+		writer.write("</div>");
+		writer.write("</div>");
 	}
 
 	@Override

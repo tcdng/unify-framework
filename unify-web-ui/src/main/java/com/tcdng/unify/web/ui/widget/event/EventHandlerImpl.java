@@ -38,7 +38,7 @@ public class EventHandlerImpl extends AbstractEventHandler {
 		return new WrappedEventHandlerImpl(this);
 	}
 
-	@Component("ui=wrappedevent")
+	@Component("ui-wrappedevent")
 	public static class WrappedEventHandlerImpl extends AbstractEventHandler {
 
 		private final EventHandler srcHandler;

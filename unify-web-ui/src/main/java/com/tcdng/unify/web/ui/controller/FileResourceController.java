@@ -18,12 +18,15 @@ package com.tcdng.unify.web.ui.controller;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import com.tcdng.unify.core.UnifyCorePropertyConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.file.FileResourceProvider;
+import com.tcdng.unify.core.util.FileUtils;
 import com.tcdng.unify.core.util.IOUtils;
+import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.constant.Secured;
 import com.tcdng.unify.web.ui.AbstractPageResourceController;
 
@@ -77,15 +80,17 @@ public class FileResourceController extends AbstractPageResourceController {
 
 	protected ResInputStream getInputStream() throws UnifyException {
 		InputStream in = null;
+		final String resourceName = getResourceName();
 		String contentType = null;
 		if (fileResourceProvider != null) {
-			in = fileResourceProvider.openFileResourceInputStream("/resource/file", getResourceName());
+			in = fileResourceProvider.openFileResourceInputStream("/resource/file", resourceName);
 		}
 
 		if (in == null) {
 			try {
-				in = IOUtils.openFileResourceInputStream(getResourceName(),
-						getUnifyComponentContext().getWorkingPath());
+				final String workingPath = getUnifyComponentContext().getWorkingPath();
+				final String _resourceName = getThemeExtendedFileName(resourceName, workingPath);
+				in = IOUtils.openFileResourceInputStream(_resourceName, workingPath);
 			} catch (UnifyException e) {
 				logError(e);
 				contentType = MimeType.TEXT_HTML.template();
@@ -94,6 +99,18 @@ public class FileResourceController extends AbstractPageResourceController {
 		}
 
 		return new ResInputStream(in, contentType);
+	}
+
+	private String getThemeExtendedFileName(final String fileName, final String workingPath) throws UnifyException {
+		final String theme = getContainerSetting(String.class, UnifyCorePropertyConstants.APPLICATION_THEME);
+		if (!StringUtils.isBlank(theme)) {
+			final String _fileName = FileUtils.detectPresentAndGetThemeFileName(fileName, theme, workingPath);
+			if (_fileName != null) {
+				return _fileName;
+			}
+		}
+
+		return fileName;
 	}
 
 	protected class ResInputStream {

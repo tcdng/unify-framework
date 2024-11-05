@@ -16,6 +16,7 @@
 package com.tcdng.unify.web.ui.widget.writer;
 
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ui.util.WriterUtils;
 import com.tcdng.unify.web.ui.widget.AbstractBehaviorWriter;
 import com.tcdng.unify.web.ui.widget.Behavior;
@@ -32,10 +33,10 @@ import com.tcdng.unify.web.ui.widget.ResponseWriter;
 public abstract class AbstractEventHandlerWriter extends AbstractBehaviorWriter implements EventHandlerWriter {
 
 	@Override
-	public void writeBehavior(ResponseWriter writer, Behavior behavior, String id, String cmdTag)
+	public void writeBehavior(ResponseWriter writer, Behavior behavior, String id, String cmdTag, String preferredEvent)
 			throws UnifyException {
 		EventHandler eventHandler = (EventHandler) behavior;
-		final String event = eventHandler.getEvent();
+		final String event = !StringUtils.isBlank(preferredEvent) ? preferredEvent : eventHandler.getEvent();
 		if (!"none".equals(event)) {
 			if (eventHandler.getPageAction() != null) {
 				if (writer.isKeepPostCommandRefs()) {

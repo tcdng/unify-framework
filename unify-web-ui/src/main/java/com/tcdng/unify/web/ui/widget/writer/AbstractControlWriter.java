@@ -106,4 +106,5 @@ public abstract class AbstractControlWriter extends AbstractWidgetWriter impleme
     protected void addPageAlias(String parentPageName, Widget widget) throws UnifyException {
         getRequestContextUtil().addPageAlias(parentPageName, widget.getId());
     }
+    
 }

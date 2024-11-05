@@ -75,7 +75,7 @@ public class ImageWriter extends AbstractTargetControlWriter {
                     if (alwaysFetch) {
                         writer.writeURLParameter("morsic", String.valueOf(System.currentTimeMillis()));
                     }
-                } else {
+                } else { 
                     writer.writeFileImageContextURL(src);
                     if (alwaysFetch) {
                         writer.writeURLParameter("morsic", String.valueOf(System.currentTimeMillis()));

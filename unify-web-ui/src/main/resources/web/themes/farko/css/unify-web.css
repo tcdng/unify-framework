@@ -131,10 +131,10 @@ z-index:400;}
     overflow:hidden; background-color: rgba(80, 80, 80, 0.25); z-index:100; display:none;}
 .ui-document .dcpop {position:absolute;width:auto; z-index:101;}
 .ui-document .dcsysinfo {position:absolute;width:auto; z-index:102;}
-.ui-document .dclatency {position:absolute;width:100%;text-align:center;z-index:101;}
-.ui-document .dclatency img {width:512px;height:8px;margin-top:2px;}
-.ui-document .dclatency span {display:block; width:512px;padding:4px; font-weight:bold;margin: 0 auto;
-  font-style: italic;font-size: 8pt;color: #4b5767;}
+
+.dclatency {position:absolute;width:100%;height:100%;z-index:104;background-color: rgba(192, 192, 192, 0.20);}
+.dclatency .base {display:block;width:400px;margin:14px auto;}
+.dclatency img {width:100%;height:12px;}
 
 /** Deck */
 .ui-tilegroup {}
@@ -327,6 +327,11 @@ z-index:400;}
 .ui-messageboxpanel .mpimage {width: 48px; height: 48px;}
 .ui-messageboxpanel .mpmsg {display: block; width: 320px; word-wrap: break-word; padding-left:8px;font-weight: bold;}
 .ui-messageboxpanel .ui-button {margin:4px; min-width:72px;}
+
+/** Page popup*/
+.ui-pagepopup {background: #FFF; border: 1px solid #A9A9A9;width:100%}
+.ui-pagepopup-body {padding-left:4px;width: 400px; word-wrap: break-word; font-weight:bold; display:block;}
+
 
 /** System exception panel */
 .ui-system-exception {background: #FFF; border: 1px solid #A9A9A9;}

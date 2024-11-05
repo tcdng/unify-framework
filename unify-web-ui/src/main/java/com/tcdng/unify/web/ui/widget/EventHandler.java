@@ -31,6 +31,13 @@ public interface EventHandler extends Behavior {
 	 * @throws UnifyException if an error occurs
 	 */
 	String getEvent() throws UnifyException;
+
+	/**
+	 * Gets event binding.
+	 * 
+	 * @throws UnifyException if an error occurs
+	 */
+	String getEventBinding() throws UnifyException;
 	
     /**
      * Sets page action components for this event handler.
