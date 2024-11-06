@@ -2679,6 +2679,30 @@ ux.msUnSelectAllOpt = function(ms) {
 	}
 }
 
+/** Palette */
+ux.rigPalette = function(rgp) {
+	const id = rgp.pId;
+	if (rgp.pColors) {
+		for (var i = 0; i < rgp.pColors.length; i++) {
+			const evp = {uId:id, uIndex:i, uCol:rgp.pColors};
+			ux.addHdl(_id(id + i), "click", ux.plInkClick, evp);			
+		}
+	}
+}
+
+ux.plInkClick = function(uEv) {
+	const evp = uEv.evp;
+	const id = evp.uId;
+	for (var i = 0; i < evp.uCol.length; i++) {
+		if (i == evp.uIndex) {
+			_id(id + i).className = "palsel";
+			_id(id).value = evp.uCol[i];
+		} else {
+			_id(id + i).className = "pal";
+		}
+	}
+}
+	
 /** Period field */
 ux.rigPeriodField = function(rgp) {
 	const id = rgp.pId;
@@ -5762,6 +5786,7 @@ ux.init = function() {
     ux.setfn(ux.optionsTextAreaOnShow, "ux42");
     ux.setfn(ux.rigFileUploadButton, "ux43");
 	ux.setfn(ux.rigRichTextEditor, "ux44");  
+	ux.setfn(ux.rigPalette, "ux45");  
 }
 
 ux.setfn = function(fn, id) {
