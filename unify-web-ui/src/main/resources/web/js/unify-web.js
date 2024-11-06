@@ -2697,6 +2697,11 @@ ux.plInkClick = function(uEv) {
 		if (i == evp.uIndex) {
 			_id(id + i).className = "palsel";
 			_id(id).value = evp.uCol[i];
+			
+			const lbl = _id(id + "_sel");
+			if (lbl) {
+				lbl.innerHTML = evp.uCol[i];
+			}
 		} else {
 			_id(id + i).className = "pal";
 		}
