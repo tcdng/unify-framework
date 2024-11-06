@@ -32,6 +32,7 @@ import com.tcdng.unify.web.ui.widget.data.PaletteInfo;
 @Component("ui-palette")
 @UplAttributes({
 	@UplAttribute(name = "paletteBinding", type = String.class, mandatory = true) ,
+	@UplAttribute(name = "showSelected", type = boolean.class, defaultVal = "true") ,
 	@UplAttribute(name = "columns", type = int.class) })
 public class Palette extends AbstractControl {
 
@@ -40,6 +41,10 @@ public class Palette extends AbstractControl {
 		return columns <= 0 ? 1 : columns;
 	}
 
+	public boolean isShowSelected() throws UnifyException {
+		return getUplAttribute(boolean.class, "showSelected");
+	}
+	
 	public PaletteInfo getPaletteInfo() throws UnifyException {
 		final String paletteBinding = getUplAttribute(String.class, "paletteBinding");
 		return getValue(PaletteInfo.class, paletteBinding);

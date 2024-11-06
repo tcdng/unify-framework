@@ -773,6 +773,7 @@ overflow-x:hidden;overflow-y:scroll;border-top: solid 1px #A0A0A0;border-left: s
 
 /** Palette */
 .ui-palette {}
+.ui-palette .txtsel {padding:2px;color:#404040;}
 .ui-palette .pal{display:block;margin:2px;width:32px;height:32px;}
 .ui-palette .palsel{display:block;margin:2px;width:32px;height:32px;border:2px solid #000000;box-sizing: border-box;}
 

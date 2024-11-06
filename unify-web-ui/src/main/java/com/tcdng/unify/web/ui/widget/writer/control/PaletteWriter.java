@@ -47,6 +47,16 @@ public class PaletteWriter extends AbstractControlWriter {
 
 		final String id = palette.getId();
 		final String currSel = palette.getStringValue();
+		if (palette.isShowSelected()) {
+			writer.write("<div><span class=\"txtsel\" id=\"");
+			writer.write(id).write("_sel\">");
+			if (currSel != null) {
+				writer.writeWithHtmlEscape(currSel);
+			}
+
+			writer.write("</span></div>");
+		}
+		
 		writer.write("<div style=\"display:table;\">");
 		final PaletteInfo paletteInfo = palette.getPaletteInfo();
 		if (paletteInfo != null) {
