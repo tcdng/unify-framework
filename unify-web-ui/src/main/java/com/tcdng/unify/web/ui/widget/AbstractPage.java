@@ -36,239 +36,236 @@ import com.tcdng.unify.web.ui.widget.panel.StandalonePanel;
  * @author The Code Department
  * @since 1.0
  */
-@UplAttributes({
-        @UplAttribute(name = "subCaption", type = String.class),
-        @UplAttribute(name = "subCaptionBinding", type = String.class),
-        @UplAttribute(name = "type", type = String.class, defaultVal = "ui-page"),
-        @UplAttribute(name = "remote", type = boolean.class, defaultVal = "false") })
+@UplAttributes({ @UplAttribute(name = "subCaption", type = String.class),
+		@UplAttribute(name = "subCaptionBinding", type = String.class),
+		@UplAttribute(name = "type", type = String.class, defaultVal = "ui-page"),
+		@UplAttribute(name = "remote", type = boolean.class, defaultVal = "false") })
 public abstract class AbstractPage extends AbstractStandalonePanel implements Page {
 
-    private Map<String, StandalonePanel> standalonePanels;
+	private Map<String, StandalonePanel> standalonePanels;
 
-    private Map<String, Object> attributes;
+	private Map<String, Object> attributes;
 
-    private ControllerPathParts controllerPathParts;
+	private ControllerPathParts controllerPathParts;
 
-    private String pageId;
+	private String pageId;
 
-    @Override
-    public String getSubCaption() throws UnifyException {
-        String subCaption = null;
-        String subCaptionBinding = getUplAttribute(String.class, "subCaptionBinding");
-        if (subCaptionBinding != null) {
-            subCaption = getStringValue(subCaptionBinding);
-        }
+	@Override
+	public String getSubCaption() throws UnifyException {
+		String subCaption = null;
+		String subCaptionBinding = getUplAttribute(String.class, "subCaptionBinding");
+		if (subCaptionBinding != null) {
+			subCaption = getStringValue(subCaptionBinding);
+		}
 
-        return subCaption != null ? subCaption : getUplAttribute(String.class, "subCaption");
-    }
+		return subCaption != null ? subCaption : getUplAttribute(String.class, "subCaption");
+	}
 
-    @Override
-    public void setPathParts(ControllerPathParts controllerPathParts, String pageId) {
-        this.controllerPathParts = controllerPathParts;
-        this.pageId = pageId;
-    }
+	@Override
+	public void setPathParts(ControllerPathParts controllerPathParts, String pageId) {
+		this.controllerPathParts = controllerPathParts;
+		this.pageId = pageId;
+	}
 
-    @Override
-    public String getPathId() {
-        if (controllerPathParts != null) {
-            return controllerPathParts.getControllerPathId();
-        }
+	@Override
+	public String getPathId() {
+		if (controllerPathParts != null) {
+			return controllerPathParts.getControllerPathId();
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    @Override
+	@Override
 	public String getPageId() {
 		return pageId;
 	}
 
 	@Override
-    public List<String> getPathVariables() {
-        if (controllerPathParts != null) {
-            return controllerPathParts.getPathVariables();
-        }
+	public List<String> getPathVariables() {
+		if (controllerPathParts != null) {
+			return controllerPathParts.getPathVariables();
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    @Override
-    public void setPageBean(PageBean pageBean) throws UnifyException {
-        setValueStore(ValueStoreUtils.getValueStore(pageBean, null, -1));
-        getRequestContextUtil().setContentScrollReset();;
-    }
+	@Override
+	public void setPageBean(PageBean pageBean) throws UnifyException {
+		setValueStore(ValueStoreUtils.getValueStore(pageBean, null, -1));
+		getRequestContextUtil().setContentScrollReset();
+		;
+	}
 
-    @Override
-    public PageBean getPageBean() throws UnifyException {
-        return (PageBean) getValueStore().getValueObject();
-    }
+	@Override
+	public PageBean getPageBean() throws UnifyException {
+		return (PageBean) getValueStore().getValueObject();
+	}
 
-    @Override
-    public StandalonePanel getStandalonePanel(String name) throws UnifyException {
-        if (standalonePanels != null) {
-            StandalonePanel standalonePanel = standalonePanels.get(name);
-            if (standalonePanel != null) {
-                if (!standalonePanel.isSourceInvalidated()) {
-                    return standalonePanel;
-                }
+	@Override
+	public StandalonePanel getStandalonePanel(String name) throws UnifyException {
+		if (standalonePanels != null) {
+			StandalonePanel standalonePanel = standalonePanels.get(name);
+			if (standalonePanel != null) {
+				if (!standalonePanel.isSourceInvalidated()) {
+					return standalonePanel;
+				}
 
-                standalonePanels.remove(name);
-            }
-        }
+				standalonePanels.remove(name);
+			}
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    @Override
-    public void addStandalonePanel(String name, StandalonePanel standalonePanel) throws UnifyException {
-        if (standalonePanels == null) {
-            standalonePanels = new HashMap<String, StandalonePanel>();
-        }
+	@Override
+	public void addStandalonePanel(String name, StandalonePanel standalonePanel) throws UnifyException {
+		if (standalonePanels == null) {
+			standalonePanels = new HashMap<String, StandalonePanel>();
+		}
 
-        standalonePanels.put(name, standalonePanel);
-    }
+		standalonePanels.put(name, standalonePanel);
+	}
 
-    @Override
-    public StandalonePanel removeStandalonePanel(String name) throws UnifyException {
-        if (standalonePanels != null) {
-            return standalonePanels.remove(name);
-        }
+	@Override
+	public StandalonePanel removeStandalonePanel(String name) throws UnifyException {
+		if (standalonePanels != null) {
+			return standalonePanels.remove(name);
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    @Override
-    public void resolvePageActions(Widget widget) throws UnifyException {
-        super.resolvePageActions(widget);
-        if (standalonePanels != null) {
-            for (StandalonePanel standalonePanel : standalonePanels.values()) {
-                standalonePanel.resolvePageActions(widget);
-            }
-        }
-    }
+	@Override
+	public void resolvePageActions(Widget widget) throws UnifyException {
+		super.resolvePageActions(widget);
+		if (standalonePanels != null) {
+			for (StandalonePanel standalonePanel : standalonePanels.values()) {
+				standalonePanel.resolvePageActions(widget);
+			}
+		}
+	}
 
-    @Override
-    public Panel getPanelByLongName(String longName) throws UnifyException {
-        if (isWidget(longName)) {
-            return (Panel) getWidgetByLongName(longName);
-        }
+	@Override
+	public Panel getPanelByLongName(String longName) throws UnifyException {
+		if (isWidget(longName)) {
+			return (Panel) getWidgetByLongName(longName);
+		}
 
-        // Fix refresh panels bug #0001
-        // Check stand-alone panels
-        if (standalonePanels != null) {
-            StandalonePanel panel = standalonePanels.get(longName);
-            if (panel != null) {
-                return panel;
-            }
+		// Fix refresh panels bug #0001
+		// Check stand-alone panels
+		if (standalonePanels != null) {
+			StandalonePanel panel = standalonePanels.get(longName);
+			if (panel != null) {
+				return panel;
+			}
 
-            // Check stand-alone panel widgets
-            for (StandalonePanel standalonePanel : standalonePanels.values()) {
-                if (standalonePanel.isWidget(longName)) {
-                    return (Panel) standalonePanel.getWidgetByLongName(longName);
-                }
-            }
-        }
+			// Check stand-alone panel widgets
+			for (StandalonePanel standalonePanel : standalonePanels.values()) {
+				if (standalonePanel.isWidget(longName)) {
+					return (Panel) standalonePanel.getWidgetByLongName(longName);
+				}
+			}
+		}
 
-        throw new UnifyException(UnifyWebUIErrorConstants.PAGE_PANEL_WITH_ID_NOT_FOUND, longName);
-    }
+		throw new UnifyException(UnifyWebUIErrorConstants.PAGE_PANEL_WITH_ID_NOT_FOUND, longName);
+	}
 
-    @Override
-    public Panel getPanelByShortName(String shortName) throws UnifyException {
-        try {
-            return (Panel) getWidgetByShortName(shortName);
-        } catch (Exception e) {
-            throw new UnifyException(UnifyWebUIErrorConstants.PAGE_PANEL_WITH_ID_NOT_FOUND, shortName);
-        }
-    }
+	@Override
+	public Panel getPanelByShortName(String shortName) throws UnifyException {
+		try {
+			return (Panel) getWidgetByShortName(shortName);
+		} catch (Exception e) {
+			throw new UnifyException(UnifyWebUIErrorConstants.PAGE_PANEL_WITH_ID_NOT_FOUND, shortName);
+		}
+	}
 
-    @Override
-    public void setAttribute(String name, Object value) {
-        if (attributes == null) {
-            attributes = new HashMap<String, Object>();
-        }
+	@Override
+	public void setAttribute(String name, Object value) {
+		if (attributes == null) {
+			attributes = new HashMap<String, Object>();
+		}
 
-        attributes.put(name, value);
-    }
+		attributes.put(name, value);
+	}
 
-    @Override
-    public Object getAttribute(String name) {
-        if (attributes != null) {
-            return attributes.get(name);
-        }
+	@Override
+	public Object getAttribute(String name) {
+		return attributes != null ? attributes.get(name) : null;
+	}
 
-        return null;
-    }
-
-    @Override
+	@Override
 	public <T> T getAttribute(Class<T> dataType, String name) throws UnifyException {
 		return DataUtils.convert(dataType, attributes != null ? attributes.get(name) : null);
 	}
 
 	@Override
 	public boolean isAttribute(String name) {
-        if (attributes != null) {
-            return attributes.containsKey(name);
-        }
-
-		return false;
+		return attributes != null ? attributes.containsKey(name) : false;
 	}
 
 	@Override
 	public Object removeAttribute(String name) {
-        if (attributes != null) {
-            return attributes.remove(name);
-        }
+		if (attributes != null) {
+			return attributes.remove(name);
+		}
 
-        return null;
+		return null;
 	}
 
 	@Override
-    public Object clearAttribute(String name) {
-        if (attributes != null) {
-            return attributes.remove(name);
-        }
+	public <T> T removeAttribute(Class<T> dataType, String name) throws UnifyException {
+		return DataUtils.convert(dataType, attributes != null ? attributes.remove(name) : null);
+	}
 
-        return null;
-    }
+	@Override
+	public Object clearAttribute(String name) {
+		if (attributes != null) {
+			return attributes.remove(name);
+		}
 
-    @Override
-    public boolean isDocument() {
-        return false;
-    }
+		return null;
+	}
 
-    @Override
-    public Widget getWidgetByLongName(String longName) throws UnifyException {
-        if (isWidget(longName)) {
-            return super.getWidgetByLongName(longName);
-        }
+	@Override
+	public boolean isDocument() {
+		return false;
+	}
 
-        if (standalonePanels != null) {
-            StandalonePanel panel = standalonePanels.get(longName);
-            if (panel != null) {
-                return panel;
-            }
+	@Override
+	public Widget getWidgetByLongName(String longName) throws UnifyException {
+		if (isWidget(longName)) {
+			return super.getWidgetByLongName(longName);
+		}
 
-            for (StandalonePanel standalonePanel : standalonePanels.values()) {
-                if (standalonePanel.isWidget(longName)) {
-                   return standalonePanel.getWidgetByLongName(longName);
-                }
-            }
-        }
+		if (standalonePanels != null) {
+			StandalonePanel panel = standalonePanels.get(longName);
+			if (panel != null) {
+				return panel;
+			}
 
-        return null;
-    }
+			for (StandalonePanel standalonePanel : standalonePanels.values()) {
+				if (standalonePanel.isWidget(longName)) {
+					return standalonePanel.getWidgetByLongName(longName);
+				}
+			}
+		}
 
-    @Override
-    public String getPopupBaseId() throws UnifyException {
-        return getPrefixedId("popb_");
-    }
+		return null;
+	}
 
-    @Override
-    public String getPopupWinId() throws UnifyException {
-        return getPrefixedId("popw_");
-    }
+	@Override
+	public String getPopupBaseId() throws UnifyException {
+		return getPrefixedId("popb_");
+	}
 
-    @Override
-    public String getPopupSysId() throws UnifyException {
-        return getPrefixedId("pops_");
-    }
+	@Override
+	public String getPopupWinId() throws UnifyException {
+		return getPrefixedId("popw_");
+	}
+
+	@Override
+	public String getPopupSysId() throws UnifyException {
+		return getPrefixedId("pops_");
+	}
 }
