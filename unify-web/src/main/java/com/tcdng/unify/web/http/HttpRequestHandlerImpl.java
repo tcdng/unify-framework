@@ -425,6 +425,10 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 					String[] values = entry.getValue();
 					if (values.length == 1) {
 						if (!values[0].isEmpty()) {
+							if (RequestParameterConstants.EXTERNAL_FORWARD.equals(key)) {
+								getSessionContext().setExternalForward(values[0]);
+							}
+							
 							result.put(key, values[0]);
 						} else {
 							result.put(key, null);

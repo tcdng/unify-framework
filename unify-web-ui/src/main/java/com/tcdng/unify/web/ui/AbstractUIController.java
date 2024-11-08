@@ -39,6 +39,7 @@ import com.tcdng.unify.web.PathInfoRepository;
 import com.tcdng.unify.web.UnifyWebErrorConstants;
 import com.tcdng.unify.web.UnifyWebPropertyConstants;
 import com.tcdng.unify.web.constant.ReadOnly;
+import com.tcdng.unify.web.constant.RequestParameterConstants;
 import com.tcdng.unify.web.constant.ResetOnWrite;
 import com.tcdng.unify.web.constant.ResultMappingConstants;
 import com.tcdng.unify.web.constant.Secured;
@@ -161,6 +162,14 @@ public abstract class AbstractUIController extends AbstractController implements
 
 	protected UIControllerUtil getUIControllerUtil() {
 		return uiControllerUtil;
+	}
+	
+	protected final <T> T getRequestParameter(Class<T> dataType, String paramName) throws UnifyException {
+		return DataUtils.convert(dataType, getHttpRequestParameter(paramName));
+	}
+	
+	protected final <T> T getExternalForward(Class<T> dataType) throws UnifyException {
+		return DataUtils.convert(dataType, getHttpRequestParameter(RequestParameterConstants.EXTERNAL_FORWARD));
 	}
 
 	protected abstract DataTransferParam getDataTransferParam() throws UnifyException;

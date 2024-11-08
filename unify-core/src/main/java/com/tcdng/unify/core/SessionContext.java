@@ -40,6 +40,8 @@ public class SessionContext extends Context {
 	private Locale locale;
 
 	private TimeZone timeZone;
+	
+	private String externalForward;
 
 	private String id;
 
@@ -89,6 +91,14 @@ public class SessionContext extends Context {
 		return val;
 	}
 
+	public void setExternalForward(String forward) {
+		externalForward = forward;
+	}
+	
+	public String removeExternalForward() {
+		return externalForward;
+	}
+	
 	public void setUserTokenTenantId(Long tenantId) {
 		if (userToken == null) {
 			userToken = new UserToken(tenantId);
