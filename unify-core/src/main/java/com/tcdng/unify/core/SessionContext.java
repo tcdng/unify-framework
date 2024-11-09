@@ -95,8 +95,14 @@ public class SessionContext extends Context {
 		externalForward = forward;
 	}
 	
-	public String removeExternalForward() {
+	public String getExternalForward() {
 		return externalForward;
+	}
+	
+	public String removeExternalForward() {
+		final String oldExternalForward = externalForward;
+		externalForward = null;
+		return oldExternalForward;
 	}
 	
 	public void setUserTokenTenantId(Long tenantId) {
