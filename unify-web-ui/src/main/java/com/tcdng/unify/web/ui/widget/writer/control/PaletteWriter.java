@@ -56,7 +56,7 @@ public class PaletteWriter extends AbstractControlWriter {
 
 			writer.write("</span></div>");
 		}
-		
+
 		writer.write("<div style=\"display:table;\">");
 		final PaletteInfo paletteInfo = palette.getPaletteInfo();
 		if (paletteInfo != null) {
@@ -68,21 +68,27 @@ public class PaletteWriter extends AbstractControlWriter {
 				for (j = 0; j < columns && i < size; j++, i++) {
 					writer.write("<div style=\"display:table-cell;\">");
 					InkInfo inkInfo = paletteInfo.getInkAt(i);
-					final String spClass = inkInfo.getName().equals(currSel) ? "palsel": "pal";
+					String spClass = inkInfo.getName().equals(currSel) ? "palsel" : "pal";
+					spClass = i == 0 ? spClass + " dflt" : spClass;
+					
 					writer.write("<span id=\"");
 					writer.write(id).write(i);
 					writer.write("\" class=\"");
-					writer.write(spClass).write("\" style=\"background-color:");
-					writer.write(inkInfo.getColor()).write(";\"></span>");
+					writer.write(spClass).write("\"");
+					if (i > 0) {
+						writer.write(" style=\"background-color:");
+						writer.write(inkInfo.getColor()).write(";\"");
+					}
+					writer.write("></span>");
 					writer.write("</div>");
 				}
-				
-				while(j < columns) {
+
+				while (j < columns) {
 					writer.write("<div style=\"display:table-cell;\">");
 					writer.write("</div>");
 					j++;
 				}
-				
+
 				writer.write("</div>");
 			}
 		}
