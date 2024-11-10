@@ -132,6 +132,8 @@ public interface Page extends StandalonePanel {
      * @param name
      *            the name of the attribute
      * @return the attribute value
+     * @throws UnifyException
+     *             if an error occurs
      */
     <T> T getAttribute(Class<T> dataType, String name) throws UnifyException;
 
@@ -152,6 +154,17 @@ public interface Page extends StandalonePanel {
      * @return the attribute value if found otherwise null
      */
     Object removeAttribute(String name);
+
+    /**
+     * Removes a page attribute.
+     * 
+     * @param name
+     *            the name of the attribute
+     * @return the attribute value if found otherwise null
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    <T> T removeAttribute(Class<T> dataType, String name) throws UnifyException;
 
     /**
      * Clears a page attribute.

@@ -2695,7 +2695,7 @@ ux.plInkClick = function(uEv) {
 	const id = evp.uId;
 	for (var i = 0; i < evp.uCol.length; i++) {
 		if (i == evp.uIndex) {
-			_id(id + i).className = "palsel";
+			_id(id + i).className = i == 0 ? "palsel dflt":"palsel";
 			_id(id).value = evp.uCol[i];
 			
 			const lbl = _id(id + "_sel");
@@ -2703,7 +2703,7 @@ ux.plInkClick = function(uEv) {
 				lbl.innerHTML = evp.uCol[i];
 			}
 		} else {
-			_id(id + i).className = "pal";
+			_id(id + i).className = i == 0 ? "pal dflt":"pal";
 		}
 	}
 }

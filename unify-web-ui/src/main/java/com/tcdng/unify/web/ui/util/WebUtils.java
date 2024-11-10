@@ -46,7 +46,8 @@ public final class WebUtils {
 					RequestParameterConstants.REMOTE_SESSION_ID, RequestParameterConstants.REMOTE_USERLOGINID,
 					RequestParameterConstants.REMOTE_USERNAME, RequestParameterConstants.REMOTE_BRANCH_CODE,
 					RequestParameterConstants.REMOTE_ZONE_CODE, RequestParameterConstants.REMOTE_GLOBAL_ACCESS,
-					RequestParameterConstants.REMOTE_COLOR_SCHEME, RequestParameterConstants.REMOTE_TENANT_CODE)));
+					RequestParameterConstants.REMOTE_COLOR_SCHEME, RequestParameterConstants.REMOTE_TENANT_CODE,
+					RequestParameterConstants.EXTERNAL_FORWARD)));
 
     private WebUtils() {
 
@@ -76,6 +77,14 @@ public final class WebUtils {
 		return sb.toString();
 	}
     
+	public static String addParameterToPath(String path, String paramName, String paramVal) {
+		if (path != null && !StringUtils.isBlank(paramName)) {
+			return path + (path.indexOf('?') >= 0 ? "&" : "?") + paramName + "=" + (paramVal != null ? paramVal : "");
+		}
+
+		return path;
+	}
+	
     /**
      * Encodes a shortcut string.
      * 

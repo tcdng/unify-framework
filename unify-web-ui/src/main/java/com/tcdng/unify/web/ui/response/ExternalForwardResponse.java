@@ -21,7 +21,9 @@ import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.util.ReflectUtils;
 import com.tcdng.unify.core.util.StringUtils;
+import com.tcdng.unify.web.constant.RequestParameterConstants;
 import com.tcdng.unify.web.ui.AbstractPageControllerResponse;
+import com.tcdng.unify.web.ui.util.WebUtils;
 import com.tcdng.unify.web.ui.widget.Page;
 import com.tcdng.unify.web.ui.widget.PlainHtml;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
@@ -33,17 +35,30 @@ import com.tcdng.unify.web.ui.widget.ResponseWriter;
  * @since 1.0
  */
 @Component("externalforwardresponse")
-@UplAttributes({ @UplAttribute(name = "path", type = String.class),
-		@UplAttribute(name = "pathBinding", type = String.class) })
+@UplAttributes({
+		@UplAttribute(name = "path", type = String.class),
+		@UplAttribute(name = "pathBinding", type = String.class),
+		@UplAttribute(name = "paramBinding", type = String.class) })
 public class ExternalForwardResponse extends AbstractPageControllerResponse {
 
 	@Override
 	public void generate(ResponseWriter writer, Page page) throws UnifyException {
-		String path = getUplAttribute(String.class, "path");
+		final String pathBinding = getUplAttribute(String.class, "pathBinding");
+		String path = !StringUtils.isBlank(pathBinding)
+				? (String) ReflectUtils.getNestedBeanProperty(page.getPageBean(), pathBinding)
+				: null;
 		if (StringUtils.isBlank(path)) {
-			String pathBinding = getUplAttribute(String.class, "pathBinding");
-			path = (String) ReflectUtils.getNestedBeanProperty(page.getPageBean(), pathBinding);
+			path = getUplAttribute(String.class, "path");
 		}
+
+		final String paramBinding = getUplAttribute(String.class, "paramBinding");
+		final String param = !StringUtils.isBlank(paramBinding)
+				? (String) ReflectUtils.getNestedBeanProperty(page.getPageBean(), paramBinding)
+				: null;
+
+		path = !StringUtils.isBlank(param)
+				? WebUtils.addParameterToPath(path, RequestParameterConstants.EXTERNAL_FORWARD, param)
+				: path;
 
 		logDebug("External forward response: path = [{0}]", path);
 		PlainHtml plainHtml = (PlainHtml) page;
