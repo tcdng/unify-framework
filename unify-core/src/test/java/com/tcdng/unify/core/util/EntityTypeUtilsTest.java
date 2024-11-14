@@ -25,11 +25,8 @@ import java.util.List;
 import org.junit.Test;
 
 import com.tcdng.unify.core.AbstractUnifyComponentTest;
-import com.tcdng.unify.core.annotation.DynamicEntityType;
 import com.tcdng.unify.core.constant.DataType;
 import com.tcdng.unify.core.constant.EntityFieldType;
-import com.tcdng.unify.core.database.dynamic.DynamicEntityInfo;
-import com.tcdng.unify.core.database.dynamic.DynamicFieldInfo;
 
 /**
  * Entity type utilities tests.
@@ -40,148 +37,290 @@ import com.tcdng.unify.core.database.dynamic.DynamicFieldInfo;
 public class EntityTypeUtilsTest extends AbstractUnifyComponentTest {
 
     @Test
-    public void testGetDynamicEntityInfoFromJsonNull() throws Exception {
-    	List<DynamicEntityInfo> list = EntityTypeUtils.getDynamicEntityInfoFromJson(null);
+    public void testGetEntityTypeInfoFromJsonNull() throws Exception {
+    	List<EntityTypeInfo> list = EntityTypeUtils.getEntityTypeInfoFromJson(null);
         assertNotNull(list);
         assertTrue(list.isEmpty());
     }
 
     @Test
-	public void testGetDynamicEntityInfoFromJsonEmpty() throws Exception {
-		List<DynamicEntityInfo> list = EntityTypeUtils.getDynamicEntityInfoFromJson("{}");
+	public void testGetEntityTypeInfoFromJsonEmpty() throws Exception {
+		List<EntityTypeInfo> list = EntityTypeUtils.getEntityTypeInfoFromJson("{}");
 		assertNotNull(list);
 		assertEquals(1, list.size());
 
-		DynamicEntityInfo dynamicEntityInfo = list.get(0);
-		assertNotNull(dynamicEntityInfo);
-		assertEquals("root", dynamicEntityInfo.getClassName());
-		assertEquals(DynamicEntityType.INFO_ONLY, dynamicEntityInfo.getType());
-		assertNotNull(dynamicEntityInfo.getFieldInfos());
-		assertEquals(0, dynamicEntityInfo.getFieldInfos().size());
+		EntityTypeInfo entityTypeInfo = list.get(0);
+		assertNotNull(entityTypeInfo);
+		assertEquals("root", entityTypeInfo.getName());
+		assertNotNull(entityTypeInfo.getFields());
+		assertEquals(0, entityTypeInfo.getFields().size());
 	}
 
     @Test
-	public void testGetDynamicEntityInfoFromJsonSimple() throws Exception {
-		List<DynamicEntityInfo> list = EntityTypeUtils.getDynamicEntityInfoFromJson(
+	public void testGetEntityTypeInfoFromJsonSimple() throws Exception {
+		List<EntityTypeInfo> list = EntityTypeUtils.getEntityTypeInfoFromJson(
 				"{\"title\":\"C++ for Engineers\", \"quantity\":250, \"price\":22500.25, \"onSale\":true}");
 		assertNotNull(list);
 		assertEquals(1, list.size());
 
-		DynamicEntityInfo dynamicEntityInfo = list.get(0);
-		assertNotNull(dynamicEntityInfo);
-		assertEquals("root", dynamicEntityInfo.getClassName());
-		assertEquals(DynamicEntityType.INFO_ONLY, dynamicEntityInfo.getType());
-		List<DynamicFieldInfo> fields = dynamicEntityInfo.getFieldInfos();
+		EntityTypeInfo entityTypeInfo = list.get(0);
+		assertNotNull(entityTypeInfo);
+		assertEquals("root", entityTypeInfo.getName());
+		List<EntityTypeFieldInfo> fields = entityTypeInfo.getFields();
 		assertNotNull(fields);
 		assertEquals(4, fields.size());
 		
-		DynamicFieldInfo dynamicFieldInfo = fields.get(0);
-		assertNotNull(dynamicFieldInfo);
-		assertEquals("title", dynamicFieldInfo.getFieldName());
-		assertEquals("TITLE", dynamicFieldInfo.getColumnName());
-		assertEquals(DataType.STRING, dynamicFieldInfo.getDataType());
-		assertEquals(EntityFieldType.TABLE_COLUMN, dynamicFieldInfo.getFieldType());
+		EntityTypeFieldInfo fieldInfo = fields.get(0);
+		assertNotNull(fieldInfo);
+		assertEquals("title", fieldInfo.getName());
+		assertEquals("TITLE", fieldInfo.getColumn());
+		assertEquals(DataType.STRING, fieldInfo.getDataType());
+		assertEquals(EntityFieldType.TABLE_COLUMN, fieldInfo.getType());
+		assertEquals("C++ for Engineers", fieldInfo.getSample());
 		
-		dynamicFieldInfo = fields.get(1);
-		assertNotNull(dynamicFieldInfo);
-		assertEquals("quantity", dynamicFieldInfo.getFieldName());
-		assertEquals("QUANTITY", dynamicFieldInfo.getColumnName());
-		assertEquals(DataType.INTEGER, dynamicFieldInfo.getDataType());
-		assertEquals(EntityFieldType.TABLE_COLUMN, dynamicFieldInfo.getFieldType());
+		fieldInfo = fields.get(1);
+		assertNotNull(fieldInfo);
+		assertEquals("quantity", fieldInfo.getName());
+		assertEquals("QUANTITY", fieldInfo.getColumn());
+		assertEquals(DataType.INTEGER, fieldInfo.getDataType());
+		assertEquals(EntityFieldType.TABLE_COLUMN, fieldInfo.getType());
+		assertEquals("250", fieldInfo.getSample());
 		
-		dynamicFieldInfo = fields.get(2);
-		assertNotNull(dynamicFieldInfo);
-		assertEquals("price", dynamicFieldInfo.getFieldName());
-		assertEquals("PRICE", dynamicFieldInfo.getColumnName());
-		assertEquals(DataType.DECIMAL, dynamicFieldInfo.getDataType());
-		assertEquals(EntityFieldType.TABLE_COLUMN, dynamicFieldInfo.getFieldType());
+		fieldInfo = fields.get(2);
+		assertNotNull(fieldInfo);
+		assertEquals("price", fieldInfo.getName());
+		assertEquals("PRICE", fieldInfo.getColumn());
+		assertEquals(DataType.DECIMAL, fieldInfo.getDataType());
+		assertEquals(EntityFieldType.TABLE_COLUMN, fieldInfo.getType());
+		assertEquals("22500.25", fieldInfo.getSample());
 		
-		dynamicFieldInfo = fields.get(3);
-		assertNotNull(dynamicFieldInfo);
-		assertEquals("onSale", dynamicFieldInfo.getFieldName());
-		assertEquals("ON_SALE", dynamicFieldInfo.getColumnName());
-		assertEquals(DataType.BOOLEAN, dynamicFieldInfo.getDataType());
-		assertEquals(EntityFieldType.TABLE_COLUMN, dynamicFieldInfo.getFieldType());		
+		fieldInfo = fields.get(3);
+		assertNotNull(fieldInfo);
+		assertEquals("onSale", fieldInfo.getName());
+		assertEquals("ON_SALE", fieldInfo.getColumn());
+		assertEquals(DataType.BOOLEAN, fieldInfo.getDataType());
+		assertEquals(EntityFieldType.TABLE_COLUMN, fieldInfo.getType());		
+		assertEquals("true", fieldInfo.getSample());
 	}
 
     @Test
-	public void testGetDynamicEntityInfoFromJsonCompound() throws Exception {
-		List<DynamicEntityInfo> list = EntityTypeUtils.getDynamicEntityInfoFromJson(
+	public void testGetEntityTypeInfoFromJsonCompound() throws Exception {
+		List<EntityTypeInfo> list = EntityTypeUtils.getEntityTypeInfoFromJson(
 				"{\"title\":\"C++ for Engineers\", \"quantity\":250, \"price\":22500.25, \"onSale\":true, \"author\":{\"name\":\"Susan Bramer\", \"dateOfBirth\":\"27-01-1964\"}}");
 		assertNotNull(list);
 		assertEquals(2, list.size());
 
-		DynamicEntityInfo dynamicEntityInfo = list.get(0);
-		assertNotNull(dynamicEntityInfo);
-		assertEquals("root", dynamicEntityInfo.getClassName());
-		assertEquals(DynamicEntityType.INFO_ONLY, dynamicEntityInfo.getType());
-		List<DynamicFieldInfo> fields = dynamicEntityInfo.getFieldInfos();
+		EntityTypeInfo entityTypeInfo = list.get(0);
+		assertNotNull(entityTypeInfo);
+		assertEquals("root", entityTypeInfo.getName());
+		List<EntityTypeFieldInfo> fields = entityTypeInfo.getFields();
 		assertNotNull(fields);
 		assertEquals(5, fields.size());
 
-		DynamicFieldInfo dynamicFieldInfo = fields.get(0);
-		assertNotNull(dynamicFieldInfo);
-		assertEquals("title", dynamicFieldInfo.getFieldName());
-		assertEquals("TITLE", dynamicFieldInfo.getColumnName());
-		assertEquals(DataType.STRING, dynamicFieldInfo.getDataType());
-		assertEquals(EntityFieldType.TABLE_COLUMN, dynamicFieldInfo.getFieldType());
+		EntityTypeFieldInfo fieldInfo = fields.get(0);
+		assertNotNull(fieldInfo);
+		assertEquals("title", fieldInfo.getName());
+		assertEquals("TITLE", fieldInfo.getColumn());
+		assertEquals(DataType.STRING, fieldInfo.getDataType());
+		assertEquals(EntityFieldType.TABLE_COLUMN, fieldInfo.getType());
+		assertEquals("C++ for Engineers", fieldInfo.getSample());
 
-		dynamicFieldInfo = fields.get(1);
-		assertNotNull(dynamicFieldInfo);
-		assertEquals("quantity", dynamicFieldInfo.getFieldName());
-		assertEquals("QUANTITY", dynamicFieldInfo.getColumnName());
-		assertEquals(DataType.INTEGER, dynamicFieldInfo.getDataType());
-		assertEquals(EntityFieldType.TABLE_COLUMN, dynamicFieldInfo.getFieldType());
+		fieldInfo = fields.get(1);
+		assertNotNull(fieldInfo);
+		assertEquals("quantity", fieldInfo.getName());
+		assertEquals("QUANTITY", fieldInfo.getColumn());
+		assertEquals(DataType.INTEGER, fieldInfo.getDataType());
+		assertEquals(EntityFieldType.TABLE_COLUMN, fieldInfo.getType());
+		assertEquals("250", fieldInfo.getSample());
 
-		dynamicFieldInfo = fields.get(2);
-		assertNotNull(dynamicFieldInfo);
-		assertEquals("price", dynamicFieldInfo.getFieldName());
-		assertEquals("PRICE", dynamicFieldInfo.getColumnName());
-		assertEquals(DataType.DECIMAL, dynamicFieldInfo.getDataType());
-		assertEquals(EntityFieldType.TABLE_COLUMN, dynamicFieldInfo.getFieldType());
+		fieldInfo = fields.get(2);
+		assertNotNull(fieldInfo);
+		assertEquals("price", fieldInfo.getName());
+		assertEquals("PRICE", fieldInfo.getColumn());
+		assertEquals(DataType.DECIMAL, fieldInfo.getDataType());
+		assertEquals(EntityFieldType.TABLE_COLUMN, fieldInfo.getType());
+		assertEquals("22500.25", fieldInfo.getSample());
 
-		dynamicFieldInfo = fields.get(3);
-		assertNotNull(dynamicFieldInfo);
-		assertEquals("onSale", dynamicFieldInfo.getFieldName());
-		assertEquals("ON_SALE", dynamicFieldInfo.getColumnName());
-		assertEquals(DataType.BOOLEAN, dynamicFieldInfo.getDataType());
-		assertEquals(EntityFieldType.TABLE_COLUMN, dynamicFieldInfo.getFieldType());
+		fieldInfo = fields.get(3);
+		assertNotNull(fieldInfo);
+		assertEquals("onSale", fieldInfo.getName());
+		assertEquals("ON_SALE", fieldInfo.getColumn());
+		assertEquals(DataType.BOOLEAN, fieldInfo.getDataType());
+		assertEquals(EntityFieldType.TABLE_COLUMN, fieldInfo.getType());
+		assertEquals("true", fieldInfo.getSample());
 
-		dynamicFieldInfo = fields.get(4);
-		assertNotNull(dynamicFieldInfo);
-		assertEquals("rootAuthor", dynamicFieldInfo.getFieldName());
-		assertNull(dynamicFieldInfo.getColumnName());
-		assertNull(dynamicFieldInfo.getDataType());
-		assertEquals(EntityFieldType.CHILD, dynamicFieldInfo.getFieldType());
+		fieldInfo = fields.get(4);
+		assertNotNull(fieldInfo);
+		assertEquals("author", fieldInfo.getName());
+		assertNull(fieldInfo.getColumn());
+		assertNull(fieldInfo.getDataType());
+		assertEquals(EntityFieldType.CHILD, fieldInfo.getType());
+		assertEquals("rootAuthor", fieldInfo.getChildEntityName());
+		assertNull(fieldInfo.getSample());
 
-		dynamicEntityInfo = list.get(1);
-		assertNotNull(dynamicEntityInfo);
-		assertEquals("rootAuthor", dynamicEntityInfo.getClassName());
-		assertEquals(DynamicEntityType.INFO_ONLY, dynamicEntityInfo.getType());
-		fields = dynamicEntityInfo.getFieldInfos();
+		entityTypeInfo = list.get(1);
+		assertNotNull(entityTypeInfo);
+		assertEquals("rootAuthor", entityTypeInfo.getName());
+		fields = entityTypeInfo.getFields();
 		assertNotNull(fields);
 		assertEquals(3, fields.size());
 
-		dynamicFieldInfo = fields.get(0);
-		assertNotNull(dynamicFieldInfo);
-		assertEquals("rootId", dynamicFieldInfo.getFieldName());
-		assertEquals("ROOT_ID", dynamicFieldInfo.getColumnName());
-		assertEquals(DataType.LONG, dynamicFieldInfo.getDataType());
-		assertEquals(EntityFieldType.FOREIGN_KEY, dynamicFieldInfo.getFieldType());
+		fieldInfo = fields.get(0);
+		assertNotNull(fieldInfo);
+		assertEquals("rootId", fieldInfo.getName());
+		assertEquals("ROOT_ID", fieldInfo.getColumn());
+		assertEquals(DataType.LONG, fieldInfo.getDataType());
+		assertEquals(EntityFieldType.FOREIGN_KEY, fieldInfo.getType());
+		assertEquals("root", fieldInfo.getParentEntityName());
+		assertNull(fieldInfo.getSample());
 
-		dynamicFieldInfo = fields.get(1);
-		assertNotNull(dynamicFieldInfo);
-		assertEquals("name", dynamicFieldInfo.getFieldName());
-		assertEquals("NAME", dynamicFieldInfo.getColumnName());
-		assertEquals(DataType.STRING, dynamicFieldInfo.getDataType());
-		assertEquals(EntityFieldType.TABLE_COLUMN, dynamicFieldInfo.getFieldType());
+		fieldInfo = fields.get(1);
+		assertNotNull(fieldInfo);
+		assertEquals("name", fieldInfo.getName());
+		assertEquals("NAME", fieldInfo.getColumn());
+		assertEquals(DataType.STRING, fieldInfo.getDataType());
+		assertEquals(EntityFieldType.TABLE_COLUMN, fieldInfo.getType());
+		assertEquals("Susan Bramer", fieldInfo.getSample());
 
-		dynamicFieldInfo = fields.get(2);
-		assertNotNull(dynamicFieldInfo);
-		assertEquals("dateOfBirth", dynamicFieldInfo.getFieldName());
-		assertEquals("DATE_OF_BIRTH", dynamicFieldInfo.getColumnName());
-		assertEquals(DataType.STRING, dynamicFieldInfo.getDataType());
-		assertEquals(EntityFieldType.TABLE_COLUMN, dynamicFieldInfo.getFieldType());
+		fieldInfo = fields.get(2);
+		assertNotNull(fieldInfo);
+		assertEquals("dateOfBirth", fieldInfo.getName());
+		assertEquals("DATE_OF_BIRTH", fieldInfo.getColumn());
+		assertEquals(DataType.STRING, fieldInfo.getDataType());
+		assertEquals(EntityFieldType.TABLE_COLUMN, fieldInfo.getType());
+		assertEquals("27-01-1964", fieldInfo.getSample());
+	}
+
+    @Test
+	public void testGetEntityTypeInfoFromJsonCompoundDeep() throws Exception {
+		List<EntityTypeInfo> list = EntityTypeUtils.getEntityTypeInfoFromJson(
+				"{\"title\":\"C++ for Engineers\", \"quantity\":250, \"price\":22500.25, \"onSale\":false, \"author\":{\"name\":\"Susan Bramer\", \"dateOfBirth\":\"27-01-1964\", \"addresses\":[{\"line1\":\"24 Parklane\", \"line2\":\"Apapa\"}]}}");
+		assertNotNull(list);
+		assertEquals(3, list.size());
+
+		// Type 1
+		EntityTypeInfo entityTypeInfo = list.get(0);
+		assertNotNull(entityTypeInfo);
+		assertEquals("root", entityTypeInfo.getName());
+		List<EntityTypeFieldInfo> fields = entityTypeInfo.getFields();
+		assertNotNull(fields);
+		assertEquals(5, fields.size());
+
+		EntityTypeFieldInfo fieldInfo = fields.get(0);
+		assertNotNull(fieldInfo);
+		assertEquals("title", fieldInfo.getName());
+		assertEquals("TITLE", fieldInfo.getColumn());
+		assertEquals(DataType.STRING, fieldInfo.getDataType());
+		assertEquals(EntityFieldType.TABLE_COLUMN, fieldInfo.getType());
+		assertEquals("C++ for Engineers", fieldInfo.getSample());
+
+		fieldInfo = fields.get(1);
+		assertNotNull(fieldInfo);
+		assertEquals("quantity", fieldInfo.getName());
+		assertEquals("QUANTITY", fieldInfo.getColumn());
+		assertEquals(DataType.INTEGER, fieldInfo.getDataType());
+		assertEquals(EntityFieldType.TABLE_COLUMN, fieldInfo.getType());
+		assertEquals("250", fieldInfo.getSample());
+
+		fieldInfo = fields.get(2);
+		assertNotNull(fieldInfo);
+		assertEquals("price", fieldInfo.getName());
+		assertEquals("PRICE", fieldInfo.getColumn());
+		assertEquals(DataType.DECIMAL, fieldInfo.getDataType());
+		assertEquals(EntityFieldType.TABLE_COLUMN, fieldInfo.getType());
+		assertEquals("22500.25", fieldInfo.getSample());
+
+		fieldInfo = fields.get(3);
+		assertNotNull(fieldInfo);
+		assertEquals("onSale", fieldInfo.getName());
+		assertEquals("ON_SALE", fieldInfo.getColumn());
+		assertEquals(DataType.BOOLEAN, fieldInfo.getDataType());
+		assertEquals(EntityFieldType.TABLE_COLUMN, fieldInfo.getType());
+		assertEquals("false", fieldInfo.getSample());
+
+		fieldInfo = fields.get(4);
+		assertNotNull(fieldInfo);
+		assertEquals("author", fieldInfo.getName());
+		assertNull(fieldInfo.getColumn());
+		assertNull(fieldInfo.getDataType());
+		assertEquals(EntityFieldType.CHILD, fieldInfo.getType());
+		assertEquals("rootAuthor", fieldInfo.getChildEntityName());
+		assertNull(fieldInfo.getSample());
+
+		// Type 2
+		entityTypeInfo = list.get(1);
+		assertNotNull(entityTypeInfo);
+		assertEquals("rootAuthor", entityTypeInfo.getName());
+		fields = entityTypeInfo.getFields();
+		assertNotNull(fields);
+		assertEquals(4, fields.size());
+
+		fieldInfo = fields.get(0);
+		assertNotNull(fieldInfo);
+		assertEquals("rootId", fieldInfo.getName());
+		assertEquals("ROOT_ID", fieldInfo.getColumn());
+		assertEquals(DataType.LONG, fieldInfo.getDataType());
+		assertEquals(EntityFieldType.FOREIGN_KEY, fieldInfo.getType());
+		assertEquals("root", fieldInfo.getParentEntityName());
+		assertNull(fieldInfo.getSample());
+
+		fieldInfo = fields.get(1);
+		assertNotNull(fieldInfo);
+		assertEquals("name", fieldInfo.getName());
+		assertEquals("NAME", fieldInfo.getColumn());
+		assertEquals(DataType.STRING, fieldInfo.getDataType());
+		assertEquals(EntityFieldType.TABLE_COLUMN, fieldInfo.getType());
+		assertEquals("Susan Bramer", fieldInfo.getSample());
+
+		fieldInfo = fields.get(2);
+		assertNotNull(fieldInfo);
+		assertEquals("dateOfBirth", fieldInfo.getName());
+		assertEquals("DATE_OF_BIRTH", fieldInfo.getColumn());
+		assertEquals(DataType.STRING, fieldInfo.getDataType());
+		assertEquals(EntityFieldType.TABLE_COLUMN, fieldInfo.getType());
+		assertEquals("27-01-1964", fieldInfo.getSample());
+
+		fieldInfo = fields.get(3);
+		assertNotNull(fieldInfo);
+		assertEquals("addresses", fieldInfo.getName());
+		assertNull(fieldInfo.getColumn());
+		assertNull(fieldInfo.getDataType());
+		assertEquals(EntityFieldType.CHILDLIST, fieldInfo.getType());
+		assertEquals("rootAuthorAddresses", fieldInfo.getChildEntityName());
+		assertNull(fieldInfo.getSample());
+
+		// Type 3
+		entityTypeInfo = list.get(2);
+		assertNotNull(entityTypeInfo);
+		assertEquals("rootAuthorAddresses", entityTypeInfo.getName());
+		fields = entityTypeInfo.getFields();
+		assertNotNull(fields);
+		assertEquals(3, fields.size());
+
+		fieldInfo = fields.get(0);
+		assertNotNull(fieldInfo);
+		assertEquals("rootAuthorId", fieldInfo.getName());
+		assertEquals("ROOT_AUTHOR_ID", fieldInfo.getColumn());
+		assertEquals(DataType.LONG, fieldInfo.getDataType());
+		assertEquals(EntityFieldType.FOREIGN_KEY, fieldInfo.getType());
+		assertEquals("rootAuthor", fieldInfo.getParentEntityName());
+		assertNull(fieldInfo.getSample());
+
+		fieldInfo = fields.get(1);
+		assertNotNull(fieldInfo);
+		assertEquals("line1", fieldInfo.getName());
+		assertEquals("LINE_1", fieldInfo.getColumn());
+		assertEquals(DataType.STRING, fieldInfo.getDataType());
+		assertEquals(EntityFieldType.TABLE_COLUMN, fieldInfo.getType());
+		assertEquals("24 Parklane", fieldInfo.getSample());
+
+		fieldInfo = fields.get(2);
+		assertNotNull(fieldInfo);
+		assertEquals("line2", fieldInfo.getName());
+		assertEquals("LINE_2", fieldInfo.getColumn());
+		assertEquals(DataType.STRING, fieldInfo.getDataType());
+		assertEquals(EntityFieldType.TABLE_COLUMN, fieldInfo.getType());
+		assertEquals("Apapa", fieldInfo.getSample());
 	}
 
     @Override

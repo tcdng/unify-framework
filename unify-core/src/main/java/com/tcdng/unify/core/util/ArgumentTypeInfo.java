@@ -53,9 +53,4 @@ public class ArgumentTypeInfo {
         return argumentTypeName1;
     }
 
-    @Override
-    public String toString() {
-        return "ArgumentTypeInfo [fieldName=" + fieldName + ", argumentTypeName0=" + argumentTypeName0
-                + ", argumentTypeName1=" + argumentTypeName1 + "]";
-    }
 }

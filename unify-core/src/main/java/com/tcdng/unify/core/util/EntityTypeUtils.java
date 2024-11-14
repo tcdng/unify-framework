@@ -26,10 +26,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.annotation.DynamicFieldType;
 import com.tcdng.unify.core.constant.DataType;
-import com.tcdng.unify.core.database.dynamic.DynamicEntityInfo;
-import com.tcdng.unify.core.database.dynamic.DynamicEntityInfo.ManagedType;
 
 /**
  * Entity type utilities.
@@ -55,9 +52,9 @@ public final class EntityTypeUtils {
 		return type.charAt(type.length() -1) == 'u' && type.indexOf(".u.") > 0;
 	}
 	
-	public static List<DynamicEntityInfo> getDynamicEntityInfoFromJson(final String json) throws UnifyException {
+	public static List<EntityTypeInfo> getEntityTypeInfoFromJson(final String json) throws UnifyException {
 		if (json != null) {
-			List<DynamicEntityInfo> list = new ArrayList<DynamicEntityInfo>();
+			List<EntityTypeInfo> list = new ArrayList<EntityTypeInfo>();
 			try {
 				JsonValue root = Json.parse(json);
 				if (root.isArray()) {
@@ -65,11 +62,11 @@ public final class EntityTypeUtils {
 					if (array.size() > 0) {
 						JsonValue _root = array.get(0);
 						if (_root.isObject()) {
-							getDynamicEntityInfo(list, (JsonObject) _root, "root", null);
+							getEntityInfo(list, (JsonObject) _root, "root", null);
 						}
 					}
 				} else if (root.isObject()) {
-					getDynamicEntityInfo(list, (JsonObject) root, "root", null);
+					getEntityInfo(list, (JsonObject) root, "root", null);
 				}
 			} catch (Exception e) {
 				throw new UnifyException(UnifyCoreErrorConstants.DATAUTIL_ERROR, e);
@@ -81,17 +78,16 @@ public final class EntityTypeUtils {
 		return Collections.emptyList();
 	}
 	
-	private static DynamicEntityInfo getDynamicEntityInfo(final List<DynamicEntityInfo> list, final JsonObject object,
-			final String name, final DynamicEntityInfo _parentDynamicEntityInfo) throws Exception {
-		DynamicEntityInfo.Builder deib = DynamicEntityInfo.newBuilder(name, ManagedType.MANAGED, false);
-		DynamicEntityInfo _dynamicEntityInfo = deib.prefetch();
-		list.add(_dynamicEntityInfo);
-		
-		if (_parentDynamicEntityInfo != null) {
-			final String _fieldName = _parentDynamicEntityInfo.getClassName() + "Id";
+	private static EntityTypeInfo getEntityInfo(final List<EntityTypeInfo> list, final JsonObject object,
+			final String name, final EntityTypeInfo _parentEntityTypeInfo) throws Exception {
+		EntityTypeInfo.Builder deib = EntityTypeInfo.newBuilder(name);
+		EntityTypeInfo _entityInfo = deib.prefetch();
+		list.add(_entityInfo);
+
+		if (_parentEntityTypeInfo != null) {
+			final String _fieldName = _parentEntityTypeInfo.getName() + "Id";
 			final String _columnName = SqlUtils.generateSchemaElementName(_fieldName);
-			deib.addForeignKeyField(DynamicFieldType.INFO_ONLY, _parentDynamicEntityInfo, _columnName, _fieldName, null,
-					false, false);
+			deib.addForeignKeyInfo(_parentEntityTypeInfo.getName(), _fieldName, _columnName);
 		}
 
 		for (String fieldName : object.names()) {
@@ -99,39 +95,34 @@ public final class EntityTypeUtils {
 			final String longName = name + StringUtils.capitalizeFirstLetter(fieldName);
 			final JsonValue field = object.get(fieldName);
 			if (field.isString()) {
-				deib.addField(DynamicFieldType.INFO_ONLY, DataType.STRING, columnName, fieldName, null, null, 64, 0, 0,
-						false, false);
+				deib.addFieldInfo(DataType.STRING, fieldName, columnName, field.asString());
 			} else if (field.isNumber()) {
 				if (field.toString().indexOf('.') >= 0) {
-					deib.addField(DynamicFieldType.INFO_ONLY, DataType.DECIMAL, columnName, fieldName, null, null, 0, 0,
-							2, false, false);
+					deib.addFieldInfo(DataType.DECIMAL, fieldName, columnName, field.isNull() ?  null: String.valueOf(field.asDouble()));
 				} else {
-					deib.addField(DynamicFieldType.INFO_ONLY, DataType.INTEGER, columnName, fieldName, null, null, 0, 0,
-							0, false, false);
+					deib.addFieldInfo(DataType.INTEGER, fieldName, columnName, field.isNull() ?  null: String.valueOf(field.asInt()));
 				}
 			} else if (field.isBoolean()) {
-				deib.addField(DynamicFieldType.INFO_ONLY, DataType.BOOLEAN, columnName, fieldName, null, null, 0, 0, 0,
-						false, false);
+				deib.addFieldInfo(DataType.BOOLEAN, fieldName, columnName, field.isNull() ?  null: String.valueOf(field.asBoolean()));
 			} else if (field.isObject()) {
-				final DynamicEntityInfo _childDynamicEntityInfo = getDynamicEntityInfo(list, (JsonObject) field,
-						longName, _dynamicEntityInfo);
-				deib.addChildField(DynamicFieldType.INFO_ONLY, _childDynamicEntityInfo, longName, true);
+				final EntityTypeInfo _childEntityInfo = getEntityInfo(list, (JsonObject) field, longName, _entityInfo);
+				deib.addChildInfo(_childEntityInfo.getName(), fieldName);
 			} else if (field.isArray()) {
 				JsonArray array = (JsonArray) field;
 				if (array.size() > 0) {
 					JsonValue _field = array.get(0);
 					if (_field.isObject()) {
-						final DynamicEntityInfo _childDynamicEntityInfo = getDynamicEntityInfo(list,
-								(JsonObject) _field, longName, _dynamicEntityInfo);
-						deib.addChildListField(DynamicFieldType.INFO_ONLY, _childDynamicEntityInfo, longName, true);
+						final EntityTypeInfo _childEntityInfo = getEntityInfo(list, (JsonObject) _field, longName,
+								_entityInfo);
+						deib.addChildListInfo(_childEntityInfo.getName(), fieldName);
 					} else {
 						// TODO
 					}
 				}
-
 			}
 		}
 
 		return deib.build();
 	}
+	
 }
