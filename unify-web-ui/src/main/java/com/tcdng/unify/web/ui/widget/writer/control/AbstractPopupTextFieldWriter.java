@@ -43,7 +43,7 @@ public abstract class AbstractPopupTextFieldWriter extends TextFieldWriter {
 			if (popupTextField.isPopupAlways()
 					|| (popupTextField.isContainerEditable() && !popupTextField.isContainerDisabled())) {
 				String facId = popupTextField.getId();
-				if (extensionType.isExtended()) {
+				if (extensionType.isFacade()) {
 					facId = popupTextField.getFacadeId();
 				}
 
