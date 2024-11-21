@@ -102,11 +102,16 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
 		}
 
 		if (nativeVal != null && defaultVal != null) {
-			if (nativeVal.charAt(0) == '(') {
-				int last = nativeVal.length() - 1;
-				if (nativeVal.charAt(last) == ')') {
-					return nativeVal.substring(1, last).equals(defaultVal);
-				}
+			if (defaultVal.charAt(0) == '\'') {
+				return nativeVal.equals("(" + defaultVal + ")");
+			}
+			
+			if (nativeVal.startsWith("('")) {
+				return nativeVal.equals("('" + defaultVal + "')");
+			}
+			
+			if (nativeVal.startsWith("((")) {
+				return nativeVal.equals("((" + defaultVal + "))");
 			}
 		}
 
