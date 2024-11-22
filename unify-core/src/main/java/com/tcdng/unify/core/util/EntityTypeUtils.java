@@ -62,11 +62,11 @@ public final class EntityTypeUtils {
 					if (array.size() > 0) {
 						JsonValue _root = array.get(0);
 						if (_root.isObject()) {
-							getEntityInfo(list, (JsonObject) _root, "root", null);
+							getEntityInfo(list, (JsonObject) _root, "root", null, 0);
 						}
 					}
 				} else if (root.isObject()) {
-					getEntityInfo(list, (JsonObject) root, "root", null);
+					getEntityInfo(list, (JsonObject) root, "root", null, 0);
 				}
 			} catch (Exception e) {
 				throw new UnifyException(UnifyCoreErrorConstants.DATAUTIL_ERROR, e);
@@ -79,8 +79,8 @@ public final class EntityTypeUtils {
 	}
 	
 	private static EntityTypeInfo getEntityInfo(final List<EntityTypeInfo> list, final JsonObject object,
-			final String name, final EntityTypeInfo _parentEntityTypeInfo) throws Exception {
-		EntityTypeInfo.Builder deib = EntityTypeInfo.newBuilder(name);
+			final String name, final EntityTypeInfo _parentEntityTypeInfo, final int depth) throws Exception {
+		EntityTypeInfo.Builder deib = EntityTypeInfo.newBuilder(name, depth);
 		EntityTypeInfo _entityInfo = deib.prefetch();
 		list.add(_entityInfo);
 
@@ -105,7 +105,7 @@ public final class EntityTypeUtils {
 			} else if (field.isBoolean()) {
 				deib.addFieldInfo(DataType.BOOLEAN, fieldName, columnName, field.isNull() ?  null: String.valueOf(field.asBoolean()));
 			} else if (field.isObject()) {
-				final EntityTypeInfo _childEntityInfo = getEntityInfo(list, (JsonObject) field, longName, _entityInfo);
+				final EntityTypeInfo _childEntityInfo = getEntityInfo(list, (JsonObject) field, longName, _entityInfo, depth + 1);
 				deib.addChildInfo(_childEntityInfo.getName(), fieldName);
 			} else if (field.isArray()) {
 				JsonArray array = (JsonArray) field;
@@ -113,7 +113,7 @@ public final class EntityTypeUtils {
 					JsonValue _field = array.get(0);
 					if (_field.isObject()) {
 						final EntityTypeInfo _childEntityInfo = getEntityInfo(list, (JsonObject) _field, longName,
-								_entityInfo);
+								_entityInfo, depth + 1);
 						deib.addChildListInfo(_childEntityInfo.getName(), fieldName);
 					} else {
 						// TODO
