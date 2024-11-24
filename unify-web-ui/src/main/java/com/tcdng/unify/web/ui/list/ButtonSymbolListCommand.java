@@ -16,7 +16,6 @@
 package com.tcdng.unify.web.ui.list;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -39,10 +38,6 @@ import com.tcdng.unify.web.font.FontSymbolManager;
 @Component("buttonsymbollist")
 public class ButtonSymbolListCommand extends AbstractListCommand<ZeroParams> {
 
-	private static final List<String> SYMBOLS = Arrays.asList("bell", "calendar", "clock", "cloud", "cloud-download",
-			"cloud-upload", "copy", "cog", "cut", "edit", "file", "flag", "key", "lock", "mail", "paper-clip", "play",
-			"plus", "plus-square", "save", "search", "trash", "unlock");
-
 	@Configurable
 	private FontSymbolManager fontSymbolManager;
 
@@ -58,7 +53,7 @@ public class ButtonSymbolListCommand extends AbstractListCommand<ZeroParams> {
 			synchronized (ButtonSymbolListCommand.class) {
 				if (list == null) {
 					List<ListData> listables = new ArrayList<ListData>();
-					for (String symbol : SYMBOLS) {
+					for (String symbol : fontSymbolManager.getSymbolNames()) {
 						listables.add(new ListData(symbol,
 								fontSymbolManager.resolveSymbolHtmlHexCode(symbol) + "&nbsp;&nbsp;" + symbol));
 					}

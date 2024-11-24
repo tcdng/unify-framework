@@ -33,11 +33,14 @@ import com.tcdng.unify.core.constant.EntityFieldType;
 public class EntityTypeInfo {
 
 	private String name;
+
+	private int depth;
 	
 	private List<EntityTypeFieldInfo> fields;
 
-	private EntityTypeInfo(String name) {
+	private EntityTypeInfo(String name, int depth) {
 		this.name = name;
+		this.depth = depth;
 		this.fields = Collections.emptyList();
 	}
 
@@ -49,6 +52,10 @@ public class EntityTypeInfo {
 		this.name = name;
 	}
 
+	public int getDepth() {
+		return depth;
+	}
+
 	private void setFields(List<EntityTypeFieldInfo> fields) {
 		this.fields = fields;
 	}
@@ -57,8 +64,8 @@ public class EntityTypeInfo {
 		return fields;
 	}
 	
-	public static Builder newBuilder(String name) {
-		return new Builder(name);
+	public static Builder newBuilder(String name, int depth) {
+		return new Builder(name, depth);
 	}
 	
 	public static class Builder {
@@ -67,8 +74,8 @@ public class EntityTypeInfo {
 		
 		private EntityTypeInfo prefetch;
 		
-		public Builder(String name) {
-			this.prefetch = new EntityTypeInfo(name);
+		public Builder(String name, int depth) {
+			this.prefetch = new EntityTypeInfo(name, depth);
 			this.fields = new LinkedHashMap<String, EntityTypeFieldInfo>();
 		}
 

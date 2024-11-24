@@ -175,6 +175,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("sign-out", "f2f5");
         registerSymbol("site-map", "f0e8");
         registerSymbol("sort", "f0dc");
+        registerSymbol("step", "f54b");
         registerSymbol("stream", "f550");
         registerSymbol("swap", "f362");
         registerSymbol("sync", "f2f1");
