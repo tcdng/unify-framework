@@ -24,6 +24,7 @@ import java.util.Map;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.annotation.Configurable;
 
 /**
  * Abstract HTTP client implementation.
@@ -33,6 +34,12 @@ import com.tcdng.unify.core.UnifyException;
  */
 public abstract class AbstractHttpClient extends AbstractUnifyComponent implements HttpClient {
 
+	@Configurable("10000")
+	private int connectTimeout;
+
+	@Configurable("30000")
+	private int readTimeout;
+
     @Override
     public HttpClientTextResponse getRemoteTextResource(String url, Map<String, String> parameters)
             throws UnifyException {
@@ -41,6 +48,8 @@ public abstract class AbstractHttpClient extends AbstractUnifyComponent implemen
             connection.setRequestMethod("POST");
             connection.setDoOutput(true);
             connection.setDoInput(true);
+            connection.setConnectTimeout(connectTimeout);
+            connection.setReadTimeout(readTimeout);
 
             DataOutputStream out = new DataOutputStream(connection.getOutputStream());
             out.writeBytes(getParameters(parameters));

@@ -23,6 +23,7 @@ import java.net.URL;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.stream.ObjectStreamer;
 import com.tcdng.unify.core.util.IOUtils;
 
@@ -34,6 +35,12 @@ import com.tcdng.unify.core.util.IOUtils;
  */
 public abstract class AbstractWebServiceCaller extends AbstractUnifyComponent implements WebServiceCaller {
 
+	@Configurable("10000")
+	private int connectTimeout;
+
+	@Configurable("30000")
+	private int readTimeout;
+	
     @Override
     public <T> T getToRemote(Class<T> resultType, String targetUrl) throws UnifyException {
         return callRemote(resultType, "GET", targetUrl, null);
@@ -61,6 +68,8 @@ public abstract class AbstractWebServiceCaller extends AbstractUnifyComponent im
             conn.setDoInput(true);
             conn.setRequestMethod(command);
             conn.setUseCaches(false);
+            conn.setConnectTimeout(connectTimeout);
+            conn.setReadTimeout(readTimeout);
             setHeaders(conn);
 
             conn.connect();
