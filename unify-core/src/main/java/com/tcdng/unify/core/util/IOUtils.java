@@ -64,6 +64,10 @@ public class IOUtils {
 
     private static boolean restrictedJARMode;
     
+    private static final int CONNECTION_TIMEOUT = 10000;
+    
+    private static final int READ_TIMEOUT = 30000;
+    
     private IOUtils() {
 
     }
@@ -1194,6 +1198,8 @@ public class IOUtils {
 
 			conn.setRequestProperty("Content-Type", "application/json; utf-8");
 			conn.setRequestProperty("Accept", "application/json");
+			conn.setConnectTimeout(CONNECTION_TIMEOUT);
+			conn.setReadTimeout(READ_TIMEOUT);
 			conn.setDoOutput(true);
 
 			try (OutputStream out = conn.getOutputStream()) {
