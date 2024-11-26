@@ -26,18 +26,18 @@ import com.tcdng.unify.core.util.EnumUtils;
  * @author The Code Department
  * @since 1.0
  */
-@StaticList(name = "entityfieldtypelist", description = "$m{staticlist.entityfieldtypelist}")
-public enum EntityFieldType implements EnumConst {
+@StaticList(name = "dynamicentityfieldtypelist", description = "$m{staticlist.dynamicentityfieldtypelist}")
+public enum DynamicEntityFieldType implements EnumConst {
 
     FOREIGN_KEY("FRK"),
-    TABLE_COLUMN("COL"),
+    FIELD("COL"),
     LIST_ONLY("LST"),
     CHILD("CLD"),
     CHILDLIST("CLL");
 
 	private final String code;
 
-	private EntityFieldType(String code) {
+	private DynamicEntityFieldType(String code) {
 		this.code = code;
 	}
 
@@ -48,7 +48,7 @@ public enum EntityFieldType implements EnumConst {
 
 	@Override
 	public String defaultCode() {
-		return TABLE_COLUMN.code;
+		return FIELD.code;
 	}
 
     public boolean isForeignKey() {
@@ -56,7 +56,7 @@ public enum EntityFieldType implements EnumConst {
     }
 
     public boolean isTableColumn() {
-        return TABLE_COLUMN.equals(this);
+        return FIELD.equals(this);
     }
 
     public boolean isListOnly() {
@@ -71,11 +71,11 @@ public enum EntityFieldType implements EnumConst {
         return CHILDLIST.equals(this);
     }
 
-	public static EntityFieldType fromCode(String code) {
-		return EnumUtils.fromCode(EntityFieldType.class, code);
+	public static DynamicEntityFieldType fromCode(String code) {
+		return EnumUtils.fromCode(DynamicEntityFieldType.class, code);
 	}
 
-	public static EntityFieldType fromName(String name) {
-		return EnumUtils.fromName(EntityFieldType.class, name);
+	public static DynamicEntityFieldType fromName(String name) {
+		return EnumUtils.fromName(DynamicEntityFieldType.class, name);
 	}
 }

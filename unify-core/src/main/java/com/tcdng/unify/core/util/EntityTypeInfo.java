@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.tcdng.unify.core.constant.DataType;
-import com.tcdng.unify.core.constant.EntityFieldType;
+import com.tcdng.unify.core.constant.DynamicEntityFieldType;
 
 /**
  * Entity type information.
@@ -88,7 +88,7 @@ public class EntityTypeInfo {
 				throw new IllegalArgumentException("Type information already contains field name [" + name + "]");
 			}
 			
-			this.fields.put(name, new EntityTypeFieldInfo(EntityFieldType.FOREIGN_KEY, DataType.LONG, parentEntityName, name, column, null));
+			this.fields.put(name, new EntityTypeFieldInfo(DynamicEntityFieldType.FOREIGN_KEY, DataType.LONG, parentEntityName, name, column, null));
 			return this;
 		}
 
@@ -97,7 +97,7 @@ public class EntityTypeInfo {
 				throw new IllegalArgumentException("Type information already contains field name [" + name + "]");
 			}
 			
-			this.fields.put(name, new EntityTypeFieldInfo(EntityFieldType.TABLE_COLUMN, dataType, null, name, column, sample));
+			this.fields.put(name, new EntityTypeFieldInfo(DynamicEntityFieldType.FIELD, dataType, null, name, column, sample));
 			return this;
 		}
 
@@ -106,7 +106,7 @@ public class EntityTypeInfo {
 				throw new IllegalArgumentException("Type information already contains field name [" + name + "]");
 			}
 			
-			this.fields.put(name, new EntityTypeFieldInfo(EntityFieldType.CHILD, childEntityName, name));
+			this.fields.put(name, new EntityTypeFieldInfo(DynamicEntityFieldType.CHILD, childEntityName, name));
 			return this;
 		}
 
@@ -115,7 +115,7 @@ public class EntityTypeInfo {
 				throw new IllegalArgumentException("Type information already contains field name [" + name + "]");
 			}
 			
-			this.fields.put(name, new EntityTypeFieldInfo(EntityFieldType.CHILDLIST, childEntityName, name));
+			this.fields.put(name, new EntityTypeFieldInfo(DynamicEntityFieldType.CHILDLIST, childEntityName, name));
 			return this;
 		}
 		

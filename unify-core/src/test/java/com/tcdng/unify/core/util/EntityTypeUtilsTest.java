@@ -26,7 +26,7 @@ import org.junit.Test;
 
 import com.tcdng.unify.core.AbstractUnifyComponentTest;
 import com.tcdng.unify.core.constant.DataType;
-import com.tcdng.unify.core.constant.EntityFieldType;
+import com.tcdng.unify.core.constant.DynamicEntityFieldType;
 
 /**
  * Entity type utilities tests.
@@ -75,7 +75,7 @@ public class EntityTypeUtilsTest extends AbstractUnifyComponentTest {
 		assertEquals("title", fieldInfo.getName());
 		assertEquals("TITLE", fieldInfo.getColumn());
 		assertEquals(DataType.STRING, fieldInfo.getDataType());
-		assertEquals(EntityFieldType.TABLE_COLUMN, fieldInfo.getType());
+		assertEquals(DynamicEntityFieldType.FIELD, fieldInfo.getType());
 		assertEquals("C++ for Engineers", fieldInfo.getSample());
 		
 		fieldInfo = fields.get(1);
@@ -83,7 +83,7 @@ public class EntityTypeUtilsTest extends AbstractUnifyComponentTest {
 		assertEquals("quantity", fieldInfo.getName());
 		assertEquals("QUANTITY", fieldInfo.getColumn());
 		assertEquals(DataType.INTEGER, fieldInfo.getDataType());
-		assertEquals(EntityFieldType.TABLE_COLUMN, fieldInfo.getType());
+		assertEquals(DynamicEntityFieldType.FIELD, fieldInfo.getType());
 		assertEquals("250", fieldInfo.getSample());
 		
 		fieldInfo = fields.get(2);
@@ -91,7 +91,7 @@ public class EntityTypeUtilsTest extends AbstractUnifyComponentTest {
 		assertEquals("price", fieldInfo.getName());
 		assertEquals("PRICE", fieldInfo.getColumn());
 		assertEquals(DataType.DECIMAL, fieldInfo.getDataType());
-		assertEquals(EntityFieldType.TABLE_COLUMN, fieldInfo.getType());
+		assertEquals(DynamicEntityFieldType.FIELD, fieldInfo.getType());
 		assertEquals("22500.25", fieldInfo.getSample());
 		
 		fieldInfo = fields.get(3);
@@ -99,7 +99,7 @@ public class EntityTypeUtilsTest extends AbstractUnifyComponentTest {
 		assertEquals("onSale", fieldInfo.getName());
 		assertEquals("ON_SALE", fieldInfo.getColumn());
 		assertEquals(DataType.BOOLEAN, fieldInfo.getDataType());
-		assertEquals(EntityFieldType.TABLE_COLUMN, fieldInfo.getType());		
+		assertEquals(DynamicEntityFieldType.FIELD, fieldInfo.getType());		
 		assertEquals("true", fieldInfo.getSample());
 	}
 
@@ -122,7 +122,7 @@ public class EntityTypeUtilsTest extends AbstractUnifyComponentTest {
 		assertEquals("title", fieldInfo.getName());
 		assertEquals("TITLE", fieldInfo.getColumn());
 		assertEquals(DataType.STRING, fieldInfo.getDataType());
-		assertEquals(EntityFieldType.TABLE_COLUMN, fieldInfo.getType());
+		assertEquals(DynamicEntityFieldType.FIELD, fieldInfo.getType());
 		assertEquals("C++ for Engineers", fieldInfo.getSample());
 
 		fieldInfo = fields.get(1);
@@ -130,7 +130,7 @@ public class EntityTypeUtilsTest extends AbstractUnifyComponentTest {
 		assertEquals("quantity", fieldInfo.getName());
 		assertEquals("QUANTITY", fieldInfo.getColumn());
 		assertEquals(DataType.INTEGER, fieldInfo.getDataType());
-		assertEquals(EntityFieldType.TABLE_COLUMN, fieldInfo.getType());
+		assertEquals(DynamicEntityFieldType.FIELD, fieldInfo.getType());
 		assertEquals("250", fieldInfo.getSample());
 
 		fieldInfo = fields.get(2);
@@ -138,7 +138,7 @@ public class EntityTypeUtilsTest extends AbstractUnifyComponentTest {
 		assertEquals("price", fieldInfo.getName());
 		assertEquals("PRICE", fieldInfo.getColumn());
 		assertEquals(DataType.DECIMAL, fieldInfo.getDataType());
-		assertEquals(EntityFieldType.TABLE_COLUMN, fieldInfo.getType());
+		assertEquals(DynamicEntityFieldType.FIELD, fieldInfo.getType());
 		assertEquals("22500.25", fieldInfo.getSample());
 
 		fieldInfo = fields.get(3);
@@ -146,7 +146,7 @@ public class EntityTypeUtilsTest extends AbstractUnifyComponentTest {
 		assertEquals("onSale", fieldInfo.getName());
 		assertEquals("ON_SALE", fieldInfo.getColumn());
 		assertEquals(DataType.BOOLEAN, fieldInfo.getDataType());
-		assertEquals(EntityFieldType.TABLE_COLUMN, fieldInfo.getType());
+		assertEquals(DynamicEntityFieldType.FIELD, fieldInfo.getType());
 		assertEquals("true", fieldInfo.getSample());
 
 		fieldInfo = fields.get(4);
@@ -154,7 +154,7 @@ public class EntityTypeUtilsTest extends AbstractUnifyComponentTest {
 		assertEquals("author", fieldInfo.getName());
 		assertNull(fieldInfo.getColumn());
 		assertNull(fieldInfo.getDataType());
-		assertEquals(EntityFieldType.CHILD, fieldInfo.getType());
+		assertEquals(DynamicEntityFieldType.CHILD, fieldInfo.getType());
 		assertEquals("rootAuthor", fieldInfo.getChildEntityName());
 		assertNull(fieldInfo.getSample());
 
@@ -170,7 +170,7 @@ public class EntityTypeUtilsTest extends AbstractUnifyComponentTest {
 		assertEquals("rootId", fieldInfo.getName());
 		assertEquals("ROOT_ID", fieldInfo.getColumn());
 		assertEquals(DataType.LONG, fieldInfo.getDataType());
-		assertEquals(EntityFieldType.FOREIGN_KEY, fieldInfo.getType());
+		assertEquals(DynamicEntityFieldType.FOREIGN_KEY, fieldInfo.getType());
 		assertEquals("root", fieldInfo.getParentEntityName());
 		assertNull(fieldInfo.getSample());
 
@@ -179,7 +179,7 @@ public class EntityTypeUtilsTest extends AbstractUnifyComponentTest {
 		assertEquals("name", fieldInfo.getName());
 		assertEquals("NAME", fieldInfo.getColumn());
 		assertEquals(DataType.STRING, fieldInfo.getDataType());
-		assertEquals(EntityFieldType.TABLE_COLUMN, fieldInfo.getType());
+		assertEquals(DynamicEntityFieldType.FIELD, fieldInfo.getType());
 		assertEquals("Susan Bramer", fieldInfo.getSample());
 
 		fieldInfo = fields.get(2);
@@ -187,7 +187,7 @@ public class EntityTypeUtilsTest extends AbstractUnifyComponentTest {
 		assertEquals("dateOfBirth", fieldInfo.getName());
 		assertEquals("DATE_OF_BIRTH", fieldInfo.getColumn());
 		assertEquals(DataType.STRING, fieldInfo.getDataType());
-		assertEquals(EntityFieldType.TABLE_COLUMN, fieldInfo.getType());
+		assertEquals(DynamicEntityFieldType.FIELD, fieldInfo.getType());
 		assertEquals("27-01-1964", fieldInfo.getSample());
 	}
 
@@ -211,7 +211,7 @@ public class EntityTypeUtilsTest extends AbstractUnifyComponentTest {
 		assertEquals("title", fieldInfo.getName());
 		assertEquals("TITLE", fieldInfo.getColumn());
 		assertEquals(DataType.STRING, fieldInfo.getDataType());
-		assertEquals(EntityFieldType.TABLE_COLUMN, fieldInfo.getType());
+		assertEquals(DynamicEntityFieldType.FIELD, fieldInfo.getType());
 		assertEquals("C++ for Engineers", fieldInfo.getSample());
 
 		fieldInfo = fields.get(1);
@@ -219,7 +219,7 @@ public class EntityTypeUtilsTest extends AbstractUnifyComponentTest {
 		assertEquals("quantity", fieldInfo.getName());
 		assertEquals("QUANTITY", fieldInfo.getColumn());
 		assertEquals(DataType.INTEGER, fieldInfo.getDataType());
-		assertEquals(EntityFieldType.TABLE_COLUMN, fieldInfo.getType());
+		assertEquals(DynamicEntityFieldType.FIELD, fieldInfo.getType());
 		assertEquals("250", fieldInfo.getSample());
 
 		fieldInfo = fields.get(2);
@@ -227,7 +227,7 @@ public class EntityTypeUtilsTest extends AbstractUnifyComponentTest {
 		assertEquals("price", fieldInfo.getName());
 		assertEquals("PRICE", fieldInfo.getColumn());
 		assertEquals(DataType.DECIMAL, fieldInfo.getDataType());
-		assertEquals(EntityFieldType.TABLE_COLUMN, fieldInfo.getType());
+		assertEquals(DynamicEntityFieldType.FIELD, fieldInfo.getType());
 		assertEquals("22500.25", fieldInfo.getSample());
 
 		fieldInfo = fields.get(3);
@@ -235,7 +235,7 @@ public class EntityTypeUtilsTest extends AbstractUnifyComponentTest {
 		assertEquals("onSale", fieldInfo.getName());
 		assertEquals("ON_SALE", fieldInfo.getColumn());
 		assertEquals(DataType.BOOLEAN, fieldInfo.getDataType());
-		assertEquals(EntityFieldType.TABLE_COLUMN, fieldInfo.getType());
+		assertEquals(DynamicEntityFieldType.FIELD, fieldInfo.getType());
 		assertEquals("false", fieldInfo.getSample());
 
 		fieldInfo = fields.get(4);
@@ -243,7 +243,7 @@ public class EntityTypeUtilsTest extends AbstractUnifyComponentTest {
 		assertEquals("author", fieldInfo.getName());
 		assertNull(fieldInfo.getColumn());
 		assertNull(fieldInfo.getDataType());
-		assertEquals(EntityFieldType.CHILD, fieldInfo.getType());
+		assertEquals(DynamicEntityFieldType.CHILD, fieldInfo.getType());
 		assertEquals("rootAuthor", fieldInfo.getChildEntityName());
 		assertNull(fieldInfo.getSample());
 
@@ -260,7 +260,7 @@ public class EntityTypeUtilsTest extends AbstractUnifyComponentTest {
 		assertEquals("rootId", fieldInfo.getName());
 		assertEquals("ROOT_ID", fieldInfo.getColumn());
 		assertEquals(DataType.LONG, fieldInfo.getDataType());
-		assertEquals(EntityFieldType.FOREIGN_KEY, fieldInfo.getType());
+		assertEquals(DynamicEntityFieldType.FOREIGN_KEY, fieldInfo.getType());
 		assertEquals("root", fieldInfo.getParentEntityName());
 		assertNull(fieldInfo.getSample());
 
@@ -269,7 +269,7 @@ public class EntityTypeUtilsTest extends AbstractUnifyComponentTest {
 		assertEquals("name", fieldInfo.getName());
 		assertEquals("NAME", fieldInfo.getColumn());
 		assertEquals(DataType.STRING, fieldInfo.getDataType());
-		assertEquals(EntityFieldType.TABLE_COLUMN, fieldInfo.getType());
+		assertEquals(DynamicEntityFieldType.FIELD, fieldInfo.getType());
 		assertEquals("Susan Bramer", fieldInfo.getSample());
 
 		fieldInfo = fields.get(2);
@@ -277,7 +277,7 @@ public class EntityTypeUtilsTest extends AbstractUnifyComponentTest {
 		assertEquals("dateOfBirth", fieldInfo.getName());
 		assertEquals("DATE_OF_BIRTH", fieldInfo.getColumn());
 		assertEquals(DataType.STRING, fieldInfo.getDataType());
-		assertEquals(EntityFieldType.TABLE_COLUMN, fieldInfo.getType());
+		assertEquals(DynamicEntityFieldType.FIELD, fieldInfo.getType());
 		assertEquals("27-01-1964", fieldInfo.getSample());
 
 		fieldInfo = fields.get(3);
@@ -285,7 +285,7 @@ public class EntityTypeUtilsTest extends AbstractUnifyComponentTest {
 		assertEquals("addresses", fieldInfo.getName());
 		assertNull(fieldInfo.getColumn());
 		assertNull(fieldInfo.getDataType());
-		assertEquals(EntityFieldType.CHILDLIST, fieldInfo.getType());
+		assertEquals(DynamicEntityFieldType.CHILDLIST, fieldInfo.getType());
 		assertEquals("rootAuthorAddresses", fieldInfo.getChildEntityName());
 		assertNull(fieldInfo.getSample());
 
@@ -302,7 +302,7 @@ public class EntityTypeUtilsTest extends AbstractUnifyComponentTest {
 		assertEquals("rootAuthorId", fieldInfo.getName());
 		assertEquals("ROOT_AUTHOR_ID", fieldInfo.getColumn());
 		assertEquals(DataType.LONG, fieldInfo.getDataType());
-		assertEquals(EntityFieldType.FOREIGN_KEY, fieldInfo.getType());
+		assertEquals(DynamicEntityFieldType.FOREIGN_KEY, fieldInfo.getType());
 		assertEquals("rootAuthor", fieldInfo.getParentEntityName());
 		assertNull(fieldInfo.getSample());
 
@@ -311,7 +311,7 @@ public class EntityTypeUtilsTest extends AbstractUnifyComponentTest {
 		assertEquals("line1", fieldInfo.getName());
 		assertEquals("LINE_1", fieldInfo.getColumn());
 		assertEquals(DataType.STRING, fieldInfo.getDataType());
-		assertEquals(EntityFieldType.TABLE_COLUMN, fieldInfo.getType());
+		assertEquals(DynamicEntityFieldType.FIELD, fieldInfo.getType());
 		assertEquals("24 Parklane", fieldInfo.getSample());
 
 		fieldInfo = fields.get(2);
@@ -319,7 +319,7 @@ public class EntityTypeUtilsTest extends AbstractUnifyComponentTest {
 		assertEquals("line2", fieldInfo.getName());
 		assertEquals("LINE_2", fieldInfo.getColumn());
 		assertEquals(DataType.STRING, fieldInfo.getDataType());
-		assertEquals(EntityFieldType.TABLE_COLUMN, fieldInfo.getType());
+		assertEquals(DynamicEntityFieldType.FIELD, fieldInfo.getType());
 		assertEquals("Apapa", fieldInfo.getSample());
 	}
 
