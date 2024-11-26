@@ -16,19 +16,40 @@
 
 package com.tcdng.unify.core.constant;
 
+import com.tcdng.unify.common.annotation.StaticList;
+import com.tcdng.unify.common.constants.EnumConst;
+import com.tcdng.unify.core.util.EnumUtils;
+
 /**
  * Entity field type.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public enum EntityFieldType {
+@StaticList(name = "entityfieldtypelist", description = "$m{staticlist.entityfieldtypelist}")
+public enum EntityFieldType implements EnumConst {
 
-    FOREIGN_KEY,
-    TABLE_COLUMN,
-    LIST_ONLY,
-    CHILD,
-    CHILDLIST;
+    FOREIGN_KEY("FRK"),
+    TABLE_COLUMN("COL"),
+    LIST_ONLY("LST"),
+    CHILD("CLD"),
+    CHILDLIST("CLL");
+
+	private final String code;
+
+	private EntityFieldType(String code) {
+		this.code = code;
+	}
+
+	@Override
+	public String code() {
+		return this.code;
+	}
+
+	@Override
+	public String defaultCode() {
+		return TABLE_COLUMN.code;
+	}
 
     public boolean isForeignKey() {
         return FOREIGN_KEY.equals(this);
@@ -49,4 +70,12 @@ public enum EntityFieldType {
     public boolean isChildList() {
         return CHILDLIST.equals(this);
     }
+
+	public static EntityFieldType fromCode(String code) {
+		return EnumUtils.fromCode(EntityFieldType.class, code);
+	}
+
+	public static EntityFieldType fromName(String name) {
+		return EnumUtils.fromName(EntityFieldType.class, name);
+	}
 }
