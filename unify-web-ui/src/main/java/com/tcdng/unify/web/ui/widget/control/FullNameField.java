@@ -28,7 +28,7 @@ import com.tcdng.unify.core.constant.TextCase;
  * @since 1.0
  */
 @Component("ui-fullname")
-@UplAttributes({ @UplAttribute(name = "case", type = TextCase.class, defaultVal = "CAMEL"),
+@UplAttributes({ @UplAttribute(name = "case", type = TextCase.class, defaultVal = "CAPITAL"),
         @UplAttribute(name = "special", type = boolean.class, defaultVal = "false") })
 public class FullNameField extends TextField {
 
