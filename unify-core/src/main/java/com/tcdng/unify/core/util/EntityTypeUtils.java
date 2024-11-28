@@ -53,20 +53,25 @@ public final class EntityTypeUtils {
 	}
 	
 	public static List<EntityTypeInfo> getEntityTypeInfoFromJson(final String json) throws UnifyException {
+		return EntityTypeUtils.getEntityTypeInfoFromJson(null, json);
+	}
+	
+	public static List<EntityTypeInfo> getEntityTypeInfoFromJson(final String name, final String json) throws UnifyException {
 		if (json != null) {
 			List<EntityTypeInfo> list = new ArrayList<EntityTypeInfo>();
 			try {
+				final String _name = !StringUtils.isBlank(name) ? name: "root";
 				JsonValue root = Json.parse(json);
 				if (root.isArray()) {
 					JsonArray array = (JsonArray) root;
 					if (array.size() > 0) {
 						JsonValue _root = array.get(0);
 						if (_root.isObject()) {
-							getEntityInfo(list, (JsonObject) _root, "root", null, 0);
+							getEntityInfo(list, (JsonObject) _root, _name, null, 0);
 						}
 					}
 				} else if (root.isObject()) {
-					getEntityInfo(list, (JsonObject) root, "root", null, 0);
+					getEntityInfo(list, (JsonObject) root, _name, null, 0);
 				}
 			} catch (Exception e) {
 				throw new UnifyException(UnifyCoreErrorConstants.DATAUTIL_ERROR, e);

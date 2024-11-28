@@ -55,7 +55,8 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("angle-left", "f104");
         registerSymbol("angle-right", "f105");
         registerSymbol("angle-up", "f106");
-        registerSymbol("archive", "f187");
+        registerSymbol("angle-up", "f106");
+        registerSymbol("application", "f3fa");
         registerSymbol("arrow-down", "f063");
         registerSymbol("arrow-left", "f060");
         registerSymbol("arrow-right", "f061");
@@ -170,6 +171,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("rocket", "f135");
         registerSymbol("satellite-disk", "f7c0");
         registerSymbol("save", "f0c7");
+        registerSymbol("scroll", "f70e");
         registerSymbol("search", "f002");
         registerSymbol("sign-in", "f2f6");
         registerSymbol("sign-out", "f2f5");

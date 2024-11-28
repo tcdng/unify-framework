@@ -1513,6 +1513,11 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 	}
 
 	@Override
+	public String getReportingName(String name) {
+		return name;
+	}
+
+	@Override
 	public String ensureUnreservedIdentifier(String name) {
 		return reservedWords.contains(name.toUpperCase()) ? "RZ_" + name : name;
 	}
@@ -2211,13 +2216,19 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 				isAppend |= appendWhereLimitOffsetSuffixClause(sql, query.getOffset(), limit, isAppend);
 			}
 
+			boolean isOrderAppend = false;
 			if (queryType.includeOrder() && query.isOrder()) {
 				if (!(queryType.isUpdate() && !(query.isLimit() || query.isOffset()))) {
 					isAppend |= appendOrderClause(sql, sqlEntityInfo, query);
+					isOrderAppend = true;
 				}
 			}
 
 			if (queryType.includeLimit()) {
+				if (!isOrderAppend && (query.isOffset() || limit > 0)) {
+					isAppend |= appendPseudoOrderClause(sql);
+				}
+				
 				isAppend |= appendLimitOffsetSuffixClause(sql, query.getOffset(), limit, isAppend);
 			}
 

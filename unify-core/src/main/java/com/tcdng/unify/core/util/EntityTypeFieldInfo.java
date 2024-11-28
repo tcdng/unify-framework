@@ -17,7 +17,7 @@
 package com.tcdng.unify.core.util;
 
 import com.tcdng.unify.core.constant.DataType;
-import com.tcdng.unify.core.constant.EntityFieldType;
+import com.tcdng.unify.core.constant.DynamicEntityFieldType;
 
 /**
  * Entity type field information.
@@ -27,7 +27,7 @@ import com.tcdng.unify.core.constant.EntityFieldType;
  */
 public class EntityTypeFieldInfo {
 
-	private EntityFieldType type;
+	private DynamicEntityFieldType type;
 
 	private DataType dataType;
 
@@ -41,7 +41,7 @@ public class EntityTypeFieldInfo {
 
 	private String sample;
 
-	public EntityTypeFieldInfo(EntityFieldType type, DataType dataType, String parentEntityName, String name,
+	public EntityTypeFieldInfo(DynamicEntityFieldType type, DataType dataType, String parentEntityName, String name,
 			String column, String sample) {
 		this.type = type;
 		this.dataType = dataType;
@@ -51,13 +51,13 @@ public class EntityTypeFieldInfo {
 		this.sample = sample;
 	}
 
-	public EntityTypeFieldInfo(EntityFieldType type, String childEntityName, String name) {
+	public EntityTypeFieldInfo(DynamicEntityFieldType type, String childEntityName, String name) {
 		this.type = type;
 		this.childEntityName = childEntityName;
 		this.name = name;
 	}
 
-	public EntityFieldType getType() {
+	public DynamicEntityFieldType getType() {
 		return type;
 	}
 

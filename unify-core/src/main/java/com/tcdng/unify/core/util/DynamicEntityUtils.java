@@ -41,7 +41,7 @@ import com.tcdng.unify.core.annotation.TableExt;
 import com.tcdng.unify.core.annotation.TableName;
 import com.tcdng.unify.core.annotation.TenantId;
 import com.tcdng.unify.core.annotation.UniqueConstraint;
-import com.tcdng.unify.core.constant.EntityFieldType;
+import com.tcdng.unify.core.constant.DynamicEntityFieldType;
 import com.tcdng.unify.core.database.dynamic.DynamicChildFieldInfo;
 import com.tcdng.unify.core.database.dynamic.DynamicChildListFieldInfo;
 import com.tcdng.unify.core.database.dynamic.DynamicColumnFieldInfo;
@@ -110,7 +110,7 @@ public final class DynamicEntityUtils {
 					importSet.add(dynamicFieldInfo.getEnumClassName());
 				}
 
-				final EntityFieldType type = dynamicFieldInfo.getFieldType();
+				final DynamicEntityFieldType type = dynamicFieldInfo.getFieldType();
 				String childClass = null;
 				if (managed) {
 					if (type.isForeignKey()) {

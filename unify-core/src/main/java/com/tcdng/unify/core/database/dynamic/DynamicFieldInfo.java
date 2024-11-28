@@ -19,7 +19,7 @@ package com.tcdng.unify.core.database.dynamic;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.DynamicFieldType;
 import com.tcdng.unify.core.constant.DataType;
-import com.tcdng.unify.core.constant.EntityFieldType;
+import com.tcdng.unify.core.constant.DynamicEntityFieldType;
 import com.tcdng.unify.core.util.StringUtils;
 
 /**
@@ -32,7 +32,7 @@ public abstract class DynamicFieldInfo {
 
 	private DynamicFieldType type;
 
-	private EntityFieldType fieldType;
+	private DynamicEntityFieldType fieldType;
 
 	private DataType dataType;
 
@@ -48,12 +48,12 @@ public abstract class DynamicFieldInfo {
 
 	private boolean tenantId;
 
-	public DynamicFieldInfo(DynamicFieldType type, EntityFieldType fieldType, DataType dataType, String columnName,
+	public DynamicFieldInfo(DynamicFieldType type, DynamicEntityFieldType fieldType, DataType dataType, String columnName,
 			String fieldName, String mapped, boolean descriptive, boolean tenantId) {
 		this(type, fieldType, dataType, columnName, fieldName, mapped, null, descriptive, tenantId);
 	}
 
-	public DynamicFieldInfo(DynamicFieldType type, EntityFieldType fieldType, DataType dataType, String columnName,
+	public DynamicFieldInfo(DynamicFieldType type, DynamicEntityFieldType fieldType, DataType dataType, String columnName,
 			String fieldName, String mapped, String enumClassName, boolean descriptive, boolean tenantId) {
 		this.type = type;
 		this.fieldType = fieldType;
@@ -70,7 +70,7 @@ public abstract class DynamicFieldInfo {
 		return type;
 	}
 
-	public EntityFieldType getFieldType() {
+	public DynamicEntityFieldType getFieldType() {
 		return fieldType;
 	}
 

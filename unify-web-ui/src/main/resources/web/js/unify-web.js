@@ -5325,12 +5325,24 @@ ux.textInputKeyup = function(uEv) {
 			var string = trgObj.value;
 			if ("upper" == evp.sTextCase) {
 				trgObj.value = string.toUpperCase();
-			} else if ("camel" == evp.sTextCase) {
+			} else if ("capital" == evp.sTextCase) {
 				const baseArr = string.split(" ")
 				const res = [];
 				for (var i = 0; i < baseArr.length; i++) {
 					var str = baseArr[i];
 					res.push(str.charAt(0).toUpperCase() + str.slice(1));
+				}
+				trgObj.value = res.join(" ");
+			} else if ("camel" == evp.sTextCase) {
+				const baseArr = string.split(" ")
+				const res = [];
+				for (var i = 0; i < baseArr.length; i++) {
+					var str = baseArr[i];
+					if (i == 0) {
+						res.push(str.charAt(0).toLowerCase() + str.slice(1));
+					} else {
+						res.push(str.charAt(0).toUpperCase() + str.slice(1));
+					}
 				}
 				trgObj.value = res.join(" ");
 			} else {
