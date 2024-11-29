@@ -29,5 +29,7 @@ public interface HttpResponseConstants {
 
 	int METHOD_NOT_ALLOWED = 405;
 
+	int NOT_ACCEPTABLE = 406;
+
 	int INTERNAL_SERVER_ERROR = 500;
 }

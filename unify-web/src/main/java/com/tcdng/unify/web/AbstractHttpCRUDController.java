@@ -32,45 +32,55 @@ import com.tcdng.unify.web.data.Response;
  */
 public abstract class AbstractHttpCRUDController extends AbstractHttpClientController {
 
-	public AbstractHttpCRUDController() {
+	private final String contentType;
+	
+	public AbstractHttpCRUDController(String contentType) {
 		super(Secured.FALSE);
+		this.contentType = contentType;
 	}
 
 	@Override
 	public final void process(ClientRequest request, ClientResponse response) throws UnifyException {
 		Response _response = null;
 		try {
-			final ClientRequestType clientRequestType = request.getType();
-			final String resource = request.getRequestPathParts().getControllerPathParts().getActionName();
-			switch (clientRequestType) {
-			case DELETE:
-				_response = processor().delete(resource, request.getRequestHeaders(), request.getParameters());
-				break;
-			case GET:
-				_response = processor().read(resource, request.getRequestHeaders(), request.getParameters());
-				break;
-			case POST:
-				_response = processor().create(resource, request.getRequestHeaders(), request.getParameters(),
-						request.getText());
-				break;
-			case PUT:
-			case PATCH:
-				_response = processor().update(resource, request.getRequestHeaders(), request.getParameters(),
-						request.getText());
-				break;
-			case HEAD:
-			case OPTIONS:
-			case TRACE:
-			default:
-				_response = getErrorResponse(HttpResponseConstants.METHOD_NOT_ALLOWED, "Method not allowed.",
-						"Request method \'" + clientRequestType + "\' not supported");
-				break;
+			String _contentType = request.getRequestHeaders().getHeader("Content-Type");
+			if (contentType.equals(_contentType)) {
+				final ClientRequestType clientRequestType = request.getType();
+				final String resource = request.getRequestPathParts().getControllerPathParts().getActionName();
+				switch (clientRequestType) {
+				case DELETE:
+					_response = processor().delete(resource, request.getRequestHeaders(), request.getParameters());
+					break;
+				case GET:
+					_response = processor().read(resource, request.getRequestHeaders(), request.getParameters());
+					break;
+				case POST:
+					_response = processor().create(resource, request.getRequestHeaders(), request.getParameters(),
+							request.getText());
+					break;
+				case PUT:
+				case PATCH:
+					_response = processor().update(resource, request.getRequestHeaders(), request.getParameters(),
+							request.getText());
+					break;
+				case HEAD:
+				case OPTIONS:
+				case TRACE:
+				default:
+					_response = getErrorResponse(HttpResponseConstants.METHOD_NOT_ALLOWED, "Method not allowed.",
+							"Request method \'" + clientRequestType + "\' not supported.");
+					break;
+				}
+			} else {
+				_response = getErrorResponse(HttpResponseConstants.NOT_ACCEPTABLE, "Content not acceptable.",
+						"Request content type \'" + _contentType + "\' not acceptable.");
 			}
 		} catch (Exception e) {
 			_response = getErrorResponse(HttpResponseConstants.INTERNAL_SERVER_ERROR, "Internal server error.",
 					e.getMessage());
 		} finally {
 			response.setStatus(_response.getStatus());
+			response.setContentType(contentType);
 			if (!response.isOutUsed()) {
 				Writer writer = response.getWriter();
 				try {
