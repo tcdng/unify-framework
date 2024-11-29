@@ -13,16 +13,27 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.web.http;
+package com.tcdng.unify.web;
+
+import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.web.constant.Secured;
 
 /**
- * HTTP request headers.
+ * Convenient base class for HTTP client controllers.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public interface HttpRequestHeaders {
+public abstract class AbstractHttpClientController extends AbstractController implements HttpClientController {
 
-	String getHeader(String name);
+	public AbstractHttpClientController(Secured secured) {
+		super(secured);
+	}
+
+	@Override
+	protected void onInitialize() throws UnifyException {
+		super.onInitialize();
+
+	}
 
 }

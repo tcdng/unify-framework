@@ -53,8 +53,7 @@ public abstract class AbstractPlainJsonController extends AbstractPlainControlle
 						remoteCallFormat, RemoteCallFormat.JSON, getName());
 			}
 
-			final String jsonRequest = (String) request.getParameter(RequestParameterConstants.REMOTE_CALL_BODY);
-			jsonResponse = doExecute(actionName, jsonRequest);
+			jsonResponse = doExecute(actionName, request.getText());
 		} catch (Exception e) {
 			StringBuilder sb = new StringBuilder();
 			sb.append("{ \"serverError\":");

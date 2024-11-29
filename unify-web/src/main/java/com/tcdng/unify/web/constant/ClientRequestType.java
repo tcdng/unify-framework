@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.tcdng.unify.web;
+package com.tcdng.unify.web.constant;
 
 /**
  * Client request type enumeration.
@@ -23,11 +23,42 @@ package com.tcdng.unify.web;
  * @since 1.0
  */
 public enum ClientRequestType {
-    GET,
-    HEAD,
-    POST,
-    PUT,
-    DELETE,
-    OPTIONS,
-    TRACE
+
+	GET, HEAD, POST, PUT, PATCH, DELETE, OPTIONS, TRACE;
+
+	public boolean isGet() {
+		return GET.equals(this);
+	}
+
+	public boolean isHead() {
+		return HEAD.equals(this);
+	}
+
+	public boolean isPost() {
+		return POST.equals(this);
+	}
+
+	public boolean isPut() {
+		return PUT.equals(this);
+	}
+
+	public boolean isPatch() {
+		return PATCH.equals(this);
+	}
+
+	public boolean isDelete() {
+		return DELETE.equals(this);
+	}
+
+	public boolean isOptions() {
+		return OPTIONS.equals(this);
+	}
+
+	public boolean isTrace() {
+		return TRACE.equals(this);
+	}
+
+	public boolean isCRUD() {
+		return GET.equals(this) || POST.equals(this) || PUT.equals(this) || PATCH.equals(this) || DELETE.equals(this);
+	}
 }

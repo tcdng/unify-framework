@@ -79,6 +79,9 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 
 	private static final int BUFFER_SIZE = 4096;
 
+	private static final String BODY_TEXT = "__bodyText";
+	private static final String BODY_BYTES = "__bodyBytes";
+
 	@Configurable
 	private ControllerFinder controllerFinder;
 
@@ -162,9 +165,11 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 			setRequestAttribute(UnifyWebRequestAttributeConstants.HEADERS, httpRequest);
 			setRequestAttribute(UnifyWebRequestAttributeConstants.PARAMETERS, httpRequest);
 
+			final Map<String, Object> parameters = extractRequestParameters(httpRequest, charset);
+			final String text = (String) parameters.remove(BODY_TEXT);
+			final byte[] bytes = (byte[]) parameters.remove(BODY_BYTES);
 			ClientRequest clientRequest = new HttpClientRequest(detectClientPlatform(httpRequest), methodType,
-					requestPathParts, charset, httpRequest, extractRequestParameters(httpRequest, charset),
-					extractCookies(httpRequest));
+					requestPathParts, charset, httpRequest, parameters, extractCookies(httpRequest), text, bytes);
 			ClientResponse clientResponse = new HttpClientResponse(httpResponse);
 
 			String origin = httpRequest.getHeader("origin");
@@ -383,7 +388,8 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 	private Map<String, Object> extractRequestParameters(HttpRequest httpRequest, Charset charset)
 			throws UnifyException {
 		Map<String, Object> result = new HashMap<String, Object>();
-		String contentType = httpRequest.getContentType() == null ? null : httpRequest.getContentType().toLowerCase();
+		final String contentType = httpRequest.getContentType() == null ? null
+				: httpRequest.getContentType().toLowerCase();
 		RemoteCallFormat remoteCallFormat = RemoteCallFormat.fromContentType(
 				httpRequest.getHeader(UnifyRequestHeaderConstants.REMOTE_MESSAGE_TYPE_HEADER), contentType);
 		if (remoteCallFormat != null) {
@@ -394,13 +400,12 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 					result.put(RequestParameterConstants.REMOTE_CALL_INPUTSTREAM, httpRequest.getInputStream());
 					break;
 				case TAGGED_BINARYMESSAGE:
-					result.put(RequestParameterConstants.REMOTE_CALL_BODY,
-							IOUtils.readAll(httpRequest.getInputStream()));
+					result.put(BODY_BYTES, IOUtils.readAll(httpRequest.getInputStream()));
 					break;
 				case JSON:
 				case TAGGED_XMLMESSAGE:
 				case XML:
-					result.put(RequestParameterConstants.REMOTE_CALL_BODY, IOUtils.readAll(httpRequest.getReader()));
+					result.put(BODY_TEXT, IOUtils.readAll(httpRequest.getReader()));
 					break;
 				default:
 					break;
@@ -413,29 +418,42 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 			if (isFormData) {
 				processParts(result, httpRequest);
 			} else {
-				boolean chkMorsic = true;
-				Map<String, String[]> httpRequestParamMap = httpRequest.getParameterMap();
-				for (Map.Entry<String, String[]> entry : httpRequestParamMap.entrySet()) {
-					String key = entry.getKey();
-					if (chkMorsic && RequestParameterConstants.MORSIC.equals(key)) {
-						chkMorsic = false;
-						continue;
+				try {
+					boolean chkMorsic = true;
+					Map<String, String[]> httpRequestParamMap = httpRequest.getParameterMap();
+					for (Map.Entry<String, String[]> entry : httpRequestParamMap.entrySet()) {
+						String key = entry.getKey();
+						if (chkMorsic && RequestParameterConstants.MORSIC.equals(key)) {
+							chkMorsic = false;
+							continue;
+						}
+
+						String[] values = entry.getValue();
+						if (values.length == 1) {
+							if (!values[0].isEmpty()) {
+								if (RequestParameterConstants.EXTERNAL_FORWARD.equals(key)) {
+									getSessionContext().setExternalForward(values[0]);
+								}
+
+								result.put(key, values[0]);
+							} else {
+								result.put(key, null);
+							}
+						} else {
+							result.put(key, values);
+						}
 					}
 
-					String[] values = entry.getValue();
-					if (values.length == 1) {
-						if (!values[0].isEmpty()) {
-							if (RequestParameterConstants.EXTERNAL_FORWARD.equals(key)) {
-								getSessionContext().setExternalForward(values[0]);
-							}
-							
-							result.put(key, values[0]);
-						} else {
-							result.put(key, null);
-						}
+					final MimeType mimeType = contentType != null ? MimeType.fromTemplate(contentType) : null;
+					if (mimeType == null || !mimeType.isTextable()) {
+						result.put(BODY_BYTES, IOUtils.readAll(httpRequest.getInputStream()));
 					} else {
-						result.put(key, values);
+						result.put(BODY_TEXT, IOUtils.readAll(httpRequest.getReader()));
 					}
+				} catch (UnifyException e) {
+					throw e;
+				} catch (IOException e) {
+					throwOperationErrorException(e);
 				}
 			}
 		}

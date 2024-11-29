@@ -15,7 +15,6 @@
  */
 package com.tcdng.unify.web;
 
-import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,6 +22,7 @@ import java.util.Set;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.constant.ClientPlatform;
+import com.tcdng.unify.web.constant.ClientRequestType;
 import com.tcdng.unify.web.http.HttpRequestHeaders;
 
 /**
@@ -37,6 +37,22 @@ public class TestClientRequest extends AbstractClientRequest {
 
     private Map<String, Object> parameters;
 
+    private String text;
+    
+    private byte[] bytes;
+    
+    public TestClientRequest(RequestPathParts requestPathParts, String text) {
+        this.requestPathParts = requestPathParts;
+        parameters = new HashMap<String, Object>();
+        this.text = text;
+    }
+    
+    public TestClientRequest(RequestPathParts requestPathParts, byte[] bytes) {
+        this.requestPathParts = requestPathParts;
+        parameters = new HashMap<String, Object>();
+        this.bytes = bytes;
+    }
+    
     public TestClientRequest(RequestPathParts requestPathParts) {
         this.requestPathParts = requestPathParts;
         parameters = new HashMap<String, Object>();
@@ -68,6 +84,11 @@ public class TestClientRequest extends AbstractClientRequest {
 	}
 
 	@Override
+	public Map<String, Object> getParameters() {
+		return parameters;
+	}
+
+	@Override
     public Set<String> getParameterNames() {
         return parameters.keySet();
     }
@@ -82,9 +103,14 @@ public class TestClientRequest extends AbstractClientRequest {
     }
 
     @Override
-    public InputStream getInputStream() throws UnifyException {
-        return null;
-    }
+	public String getText() throws UnifyException {
+		return text;
+	}
+
+	@Override
+	public byte[] getBytes() throws UnifyException {
+		return bytes;
+	}
 
     @Override
     public Set<String> getCookieNames() {

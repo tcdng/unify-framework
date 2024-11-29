@@ -38,10 +38,9 @@ public class RemoteCallControllerTest extends AbstractUnifyWebTest {
 				WebApplicationComponents.APPLICATION_PATHINFOREPOSITORY);
 
 		TestClientRequest request = new TestClientRequest(
-				new RequestPathParts(pir.getControllerPathParts("/remotecall/mock/getAccountDetails")));
-		String reqXml = "<accountDetailParams>" + "<accountNo>0123456785</accountNo>" + "</accountDetailParams>";
+				new RequestPathParts(pir.getControllerPathParts("/remotecall/mock/getAccountDetails")),
+				"<accountDetailParams>" + "<accountNo>0123456785</accountNo>" + "</accountDetailParams>");
 		request.setParameter(RequestParameterConstants.REMOTE_CALL_FORMAT, RemoteCallFormat.XML);
-		request.setParameter(RequestParameterConstants.REMOTE_CALL_BODY, reqXml);
 
 		TestClientResponse response = new TestClientResponse();
 		controllerFinder.findController(request.getRequestPathParts().getControllerPathParts()).process(request, response);
@@ -60,10 +59,9 @@ public class RemoteCallControllerTest extends AbstractUnifyWebTest {
 				WebApplicationComponents.APPLICATION_PATHINFOREPOSITORY);
 
 		TestClientRequest request = new TestClientRequest(
-				new RequestPathParts(pir.getControllerPathParts("/remotecall/mock/getAccountDetails")));
-		String reqJson = "{" + "\"accountNo\":\"0123456785\"" + "}";
+				new RequestPathParts(pir.getControllerPathParts("/remotecall/mock/getAccountDetails")),
+				"{" + "\"accountNo\":\"0123456785\"" + "}");
 		request.setParameter(RequestParameterConstants.REMOTE_CALL_FORMAT, RemoteCallFormat.JSON);
-		request.setParameter(RequestParameterConstants.REMOTE_CALL_BODY, reqJson);
 
         TestClientResponse response = new TestClientResponse();
         controllerFinder.findController(request.getRequestPathParts().getControllerPathParts()).process(request, response);

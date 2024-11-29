@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -84,7 +85,7 @@ public class HttpRequestImpl implements HttpRequest {
         return request.getInputStream();
     }
 
-    @Override
+	@Override
     public Map<String, String[]> getParameterMap() {
         return request.getParameterMap();
     }

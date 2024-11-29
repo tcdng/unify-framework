@@ -51,8 +51,7 @@ public abstract class AbstractPlainXmlController extends AbstractPlainController
 						remoteCallFormat, RemoteCallFormat.XML, getName());
 			}
 
-			final String xmlRequest = (String) request.getParameter(RequestParameterConstants.REMOTE_CALL_BODY);
-			xmlResponse = doExecute(actionName, xmlRequest);
+			xmlResponse = doExecute(actionName, request.getText());
 		} catch (Exception e) {
 			xmlResponse = "<serverError>" + e.getMessage() + "</serverError>";
 		}

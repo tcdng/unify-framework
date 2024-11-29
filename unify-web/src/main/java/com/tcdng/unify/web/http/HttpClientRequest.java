@@ -15,19 +15,15 @@
  */
 package com.tcdng.unify.web.http;
 
-import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.Set;
 
-import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.constant.ClientPlatform;
 import com.tcdng.unify.web.AbstractClientRequest;
 import com.tcdng.unify.web.ClientCookie;
-import com.tcdng.unify.web.ClientRequestType;
 import com.tcdng.unify.web.RequestPathParts;
-import com.tcdng.unify.web.UnifyWebErrorConstants;
-import com.tcdng.unify.web.constant.RequestParameterConstants;
+import com.tcdng.unify.web.constant.ClientRequestType;
 
 /**
  * HTTP client request.
@@ -51,9 +47,13 @@ public class HttpClientRequest extends AbstractClientRequest {
 
 	private Map<String, ClientCookie> cookies;
 
+	private String text;
+	
+	private byte[] bytes;
+	
 	public HttpClientRequest(ClientPlatform clientPlatform, HttpRequestMethodType methodType,
 			RequestPathParts requestPathParts, Charset charset, HttpRequestHeaders headers,
-			Map<String, Object> parameters, Map<String, ClientCookie> cookies) {
+			Map<String, Object> parameters, Map<String, ClientCookie> cookies, String text, byte[] bytes) {
 		this.clientPlatform = clientPlatform;
 		this.methodType = methodType;
 		this.requestPathParts = requestPathParts;
@@ -61,6 +61,8 @@ public class HttpClientRequest extends AbstractClientRequest {
 		this.charset = charset;
 		this.parameters = parameters;
 		this.cookies = cookies;
+		this.text = text;
+		this.bytes = bytes;
 	}
 
 	@Override
@@ -84,6 +86,11 @@ public class HttpClientRequest extends AbstractClientRequest {
 	}
 
 	@Override
+	public Map<String, Object> getParameters() {
+		return parameters;
+	}
+
+	@Override
 	public Set<String> getParameterNames() {
 		return parameters.keySet();
 	}
@@ -99,13 +106,13 @@ public class HttpClientRequest extends AbstractClientRequest {
 	}
 
 	@Override
-	public InputStream getInputStream() throws UnifyException {
-		InputStream in = (InputStream) parameters.get(RequestParameterConstants.REMOTE_CALL_INPUTSTREAM);
-		if (in == null) {
-			throw new UnifyException(UnifyWebErrorConstants.REMOTECALL_NOT_INPUTSTREAM);
-		}
+	public String getText() {
+		return text;
+	}
 
-		return in;
+	@Override
+	public byte[] getBytes() {
+		return bytes;
 	}
 
 	@Override

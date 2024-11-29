@@ -75,7 +75,7 @@ public abstract class AbstractRemoteCallController extends AbstractController im
             final ControllerPathParts reqPathParts = request.getRequestPathParts().getControllerPathParts();
             RemoteCallFormat remoteCallFormat =
                     (RemoteCallFormat) request.getParameter(RequestParameterConstants.REMOTE_CALL_FORMAT);
-            Object reqBody = request.getParameter(RequestParameterConstants.REMOTE_CALL_BODY);
+            Object reqBody = remoteCallFormat.mimeType().isTextable() ? request.getText() : request.getBytes();
             Object respBody = executeRemoteCall(remoteCallFormat,
                     reqPathParts.getControllerPath(), reqBody);
             response.setContentType(remoteCallFormat.mimeType().template());

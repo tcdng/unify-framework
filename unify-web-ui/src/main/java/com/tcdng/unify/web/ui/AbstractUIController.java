@@ -31,7 +31,7 @@ import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.core.util.SystemUtils;
-import com.tcdng.unify.web.AbstractController;
+import com.tcdng.unify.web.AbstractHttpClientController;
 import com.tcdng.unify.web.ClientRequest;
 import com.tcdng.unify.web.ClientResponse;
 import com.tcdng.unify.web.ControllerPathParts;
@@ -59,7 +59,7 @@ import com.tcdng.unify.web.ui.widget.ResponseWriterPool;
  * @author The Code Department
  * @since 1.0
  */
-public abstract class AbstractUIController extends AbstractController implements UIController {
+public abstract class AbstractUIController extends AbstractHttpClientController implements UIController {
 
 	@Configurable
 	private UIControllerUtil uiControllerUtil;

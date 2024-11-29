@@ -15,12 +15,13 @@
  */
 package com.tcdng.unify.web;
 
-import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.util.Map;
 import java.util.Set;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.constant.ClientPlatform;
+import com.tcdng.unify.web.constant.ClientRequestType;
 import com.tcdng.unify.web.http.HttpRequestHeaders;
 
 /**
@@ -53,6 +54,13 @@ public interface ClientRequest {
      */
     Charset getCharset();
 
+	/**
+	 * Gets request parameters.
+	 * 
+	 * @return the request parameters
+	 */
+	Map<String, Object> getParameters();
+    
     /**
      * Returns request parameter names.
      */
@@ -79,13 +87,22 @@ public interface ClientRequest {
     <T> T getParameter(Class<T> clazz, String name) throws UnifyException;
 
     /**
-     * Gets input stream associated with this request.
+     * Gets text body associated with this request.
      * 
-     * @return the input stream
+     * @return the body otherwise null
      * @throws UnifyException
      *             if not octet-stream request
      */
-    InputStream getInputStream() throws UnifyException;
+    String getText() throws UnifyException;
+
+    /**
+     * Gets body bytes associated with this request.
+     * 
+     * @return the body otherwise null
+     * @throws UnifyException
+     *             if not octet-stream request
+     */
+    byte[] getBytes() throws UnifyException;
 
     /**
      * Returns request cookie names.
