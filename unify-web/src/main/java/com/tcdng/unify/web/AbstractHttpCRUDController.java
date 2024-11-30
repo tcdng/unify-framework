@@ -33,10 +33,13 @@ import com.tcdng.unify.web.data.Response;
 public abstract class AbstractHttpCRUDController extends AbstractHttpClientController {
 
 	private final String contentType;
+
+	private final String processor;
 	
-	public AbstractHttpCRUDController(String contentType) {
+	public AbstractHttpCRUDController(String contentType, String processor) {
 		super(Secured.FALSE);
 		this.contentType = contentType;
+		this.processor = processor;
 	}
 
 	@Override
@@ -101,14 +104,6 @@ public abstract class AbstractHttpCRUDController extends AbstractHttpClientContr
 	}
 
 	/**
-	 * Gets the CRUD controller processor.
-	 * 
-	 * @return the processor
-	 * @throws UnifyException if an error occurs
-	 */
-	protected abstract HttpCRUDControllerProcessor processor() throws UnifyException;
-
-	/**
 	 * Gets response from supplied error parameters.
 	 * 
 	 * @param status    the status
@@ -118,4 +113,8 @@ public abstract class AbstractHttpCRUDController extends AbstractHttpClientContr
 	 * @throws UnifyException if an error occurs
 	 */
 	protected abstract Response getErrorResponse(int status, String errorText, String errorMsg) throws UnifyException;
+
+	private HttpCRUDControllerProcessor processor() throws UnifyException {
+		return getComponent(HttpCRUDControllerProcessor.class, processor);
+	}
 }

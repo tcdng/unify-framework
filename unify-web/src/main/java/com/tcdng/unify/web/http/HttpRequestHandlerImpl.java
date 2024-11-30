@@ -207,7 +207,7 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 					clientResponse.getWriter().write("<html>\n<head>\n");
 					clientResponse.getWriter()
 							.write("<meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\"/>\n");
-					clientResponse.getWriter().write("<title>Error 404</title>\n");
+					clientResponse.getWriter().write("<title>ErrorPart 404</title>\n");
 					clientResponse.getWriter().write("</head>\n<body>");
 					clientResponse.getWriter().write("<h2>HTTP ERROR 404 - Not found.</h2>\n");
 					clientResponse.getWriter().write("</body>\n</html>\n");

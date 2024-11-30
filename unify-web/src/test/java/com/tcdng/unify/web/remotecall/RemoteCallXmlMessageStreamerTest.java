@@ -262,11 +262,11 @@ public class RemoteCallXmlMessageStreamerTest extends AbstractUnifyComponentTest
     public void testMarshallPullXmlMessageResult() throws Exception {
         StringWriter sw = new StringWriter();
         String message = "<Transaction><Currency>NGN</Currency><Amount>2500.00</Amount></Transaction>";
-        getXmlMessageStreamer().marshal(new PullXmlMessageResult("methodName", "error20", "Some Error",
+        getXmlMessageStreamer().marshal(new PullXmlMessageResult("methodName", "error20", "Some ErrorPart",
                 new TaggedXmlMessage("tag", "BRN002", "DEPT125", "consumer", message)), sw);
         String marshalled = sw.toString();
         assertEquals(
-                "<PullXmlMessageResult methodCode = \"methodName\" errorCode = \"error20\" tag = \"tag\" branchCode = \"BRN002\" departmentCode = \"DEPT125\" consumer = \"consumer\"><errorMsg>Some Error</errorMsg><Transaction><Currency>NGN</Currency><Amount>2500.00</Amount></Transaction></PullXmlMessageResult>",
+                "<PullXmlMessageResult methodCode = \"methodName\" errorCode = \"error20\" tag = \"tag\" branchCode = \"BRN002\" departmentCode = \"DEPT125\" consumer = \"consumer\"><errorMsg>Some ErrorPart</errorMsg><Transaction><Currency>NGN</Currency><Amount>2500.00</Amount></Transaction></PullXmlMessageResult>",
                 marshalled);
     }
 
@@ -294,11 +294,11 @@ public class RemoteCallXmlMessageStreamerTest extends AbstractUnifyComponentTest
     @Test
     public void testUnmarshallPullXmlMessageResult() throws Exception {
         PullXmlMessageResult tbmp = getXmlMessageStreamer().unmarshal(PullXmlMessageResult.class,
-                "<PullXmlMessageResult methodCode = \"methodName\" errorCode = \"error10\" tag = \"tag\" consumer = \"consumer\"><errorMsg>Error Message!</errorMsg><Transaction tranCode = \"02\"><Currency>NGN</Currency><Amount>2500.00</Amount></Transaction></PullXmlMessageResult>");
+                "<PullXmlMessageResult methodCode = \"methodName\" errorCode = \"error10\" tag = \"tag\" consumer = \"consumer\"><errorMsg>ErrorPart Message!</errorMsg><Transaction tranCode = \"02\"><Currency>NGN</Currency><Amount>2500.00</Amount></Transaction></PullXmlMessageResult>");
         assertNotNull(tbmp);
         assertEquals("methodName", tbmp.getMethodCode());
         assertEquals("error10", tbmp.getErrorCode());
-        assertEquals("Error Message!", tbmp.getErrorMsg());
+        assertEquals("ErrorPart Message!", tbmp.getErrorMsg());
 
         TaggedXmlMessage tbm = tbmp.getTaggedMessage();
         assertNotNull(tbm);

@@ -135,7 +135,7 @@ public class HttpApplicationServlet extends HttpServlet {
 				pw = resp.getWriter();
 				pw.write("<html>\n<head>\n");
 				pw.write("<meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\"/>\n");
-				pw.write("<title>Error 500</title>\n");
+				pw.write("<title>ErrorPart 500</title>\n");
 				pw.write("</head>\n<body>");
 				pw.write("<h2>HTTP ERROR 500 - ");
 				pw.write(e.getMessage());
