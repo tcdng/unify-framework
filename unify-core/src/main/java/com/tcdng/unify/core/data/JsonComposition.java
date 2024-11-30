@@ -15,6 +15,7 @@
  */
 package com.tcdng.unify.core.data;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +33,7 @@ public class JsonComposition {
 
 	public JsonComposition(List<JsonObjectComposition> objects) {
 		this.root = objects.get(0).getName();
+		this.objects = new LinkedHashMap<String, JsonObjectComposition>();
 		for (JsonObjectComposition object: objects) {
 			this.objects.put(object.getName(), object);
 		}
