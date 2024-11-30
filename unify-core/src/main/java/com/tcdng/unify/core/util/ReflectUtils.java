@@ -929,7 +929,7 @@ public final class ReflectUtils {
 	@SuppressWarnings("unchecked")
 	public static <T> T shallowBeanCopy(T source) throws UnifyException {
 		try {
-			T result = (T) source.getClass().newInstance();
+			T result = (T) source.getClass().getDeclaredConstructor().newInstance();
 			ReflectUtils.shallowBeanCopy(result, source);
 			return result;
 		} catch (UnifyException e) {
@@ -1197,7 +1197,7 @@ public final class ReflectUtils {
 	@SuppressWarnings("unchecked")
 	public static <T> T newInstance(Class<T> clazz, String className) throws UnifyException {
 		try {
-			return (T) ReflectUtils.classForName(className).newInstance();
+			return (T) ReflectUtils.classForName(className).getDeclaredConstructor().newInstance();
 		} catch (Exception e) {
 			throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_INSTANTIATION_ERROR, clazz);
 		}
@@ -1211,7 +1211,7 @@ public final class ReflectUtils {
 	 */
 	public static <T> T newInstance(Class<T> clazz) throws UnifyException {
 		try {
-			return clazz.newInstance();
+			return clazz.getDeclaredConstructor().newInstance();
 		} catch (Exception e) {
 			throw new UnifyException(e, UnifyCoreErrorConstants.COMPONENT_INSTANTIATION_ERROR, clazz);
 		}

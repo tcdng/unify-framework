@@ -17,7 +17,6 @@ package com.tcdng.unify.web;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.constant.MimeType;
-import com.tcdng.unify.core.constant.PrintFormat;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.web.data.ErrorPart;
 import com.tcdng.unify.web.data.Response;
@@ -36,7 +35,7 @@ public abstract class AbstractJsonCRUDController extends AbstractHttpCRUDControl
 
 	@Override
 	protected final Response getErrorResponse(int status, String errorText, String errorMsg) throws UnifyException {
-		return new Response(status, DataUtils.asJsonString(new ErrorPart(errorText, errorMsg), PrintFormat.NONE));
+		return new Response(status, DataUtils.asJsonString(new ErrorPart(errorText, errorMsg)));
 	}
 
 }
