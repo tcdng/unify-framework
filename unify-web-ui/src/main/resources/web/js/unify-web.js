@@ -362,7 +362,6 @@ ux.respHandler = {
 		} else {
 			ux.refreshPageGlobals(resp);
 			ux.refreshPanels(resp);
-			ux.registerRespDebounce(resp);
 			if (resp.reloadURL) {
 				ux.docReloadURL = resp.reloadURL;
 			}
@@ -404,12 +403,10 @@ ux.respHandler = {
 	refreshPanelHdl : function(resp) {
 		ux.refreshPageGlobals(resp);
 		ux.refreshPanels(resp);
-		ux.registerRespDebounce(resp);
 	},
 
 	refreshSectionHdl : function(resp) {
 		ux.refreshSection(resp);
-		ux.registerRespDebounce(resp);
 	},
 
 	showPopupHdl : function(resp) {
@@ -582,12 +579,6 @@ ux.refreshPageGlobals = function(resp) {
 	ux.setPageNameAliases(resp);
 }
 
-ux.registerRespDebounce = function(resp) {
-	if (resp.debounceList) {
-		ux.registerDebounce(resp.debounceList, resp.debounceClear);
-	}
-}
-
 ux.setPageNameAliases = function(resp) {
 	if (resp.pageNameAliases) {
 		for (var i = 0; i < resp.pageNameAliases.length; i++) {
@@ -637,10 +628,6 @@ ux.ajaxCall = function(ajaxPrms) {
 	var uAjaxReq = ux.ajaxCreateRequest();
 	if (uAjaxReq == null)
 		return;
-
-	if (ajaxPrms.uIsDebounce) {
-		ajaxPrms.uDebounced = ux.effectDebounce();
-	}
 	
 	ux.triggerBusyIndicator();
 	try {
@@ -688,9 +675,6 @@ ux.ajaxCall = function(ajaxPrms) {
 ux.ajaxCallExit = function(ajaxPrms) {
 	ux.hideBusyIndicator();
 
-	if (ajaxPrms.uIsDebounce) {
-		 ux.clearDebounce(ajaxPrms.uDebounced);
-	}				
 	ux.postCommitExecuting = false;
 
 	if (ajaxPrms.uSync) {
@@ -5098,46 +5082,6 @@ ux.fireDelayedPost = function(pgNm) {
 		ux.delayedpanelposting[pgNm] = null;
 		if (_id(pgNm)) {
 			ux.ajaxCallWithJSONResp(null, evp);
-		}
-	}
-}
-
-/** Debounce */
-ux.registerDebounce = function(pgNmlist, clear) {
-	if (clear) {
-		ux.debouncetime = [];
-	}
-	
-	if(pgNmlist) {
-		var timestamp = new Date().getTime();
-		for (var i = 0; i < pgNmlist.length; i++) {
-			ux.debouncetime[pgNmlist[i]] = timestamp;
-		}
-	}
-}
-
-ux.effectDebounce = function() {
-	var debounced = [];
-	for(var pgNm in ux.debouncetime) {
-		var elem = _id(pgNm);
-		if (elem && !elem.disabled) {
-			elem.disabled = true;
-			debounced[pgNm] = ux.debouncetime[pgNm];
-		}
-	}
-	
-	return debounced;
-}
-
-ux.clearDebounce = function(debounced) {
-	if (debounced) {
-		for(var pgNm in debounced) {
-			if(debounced[pgNm] == ux.debouncetime[pgNm]) {
-				var elem = _id(pgNm);
-				if (elem) {
-					elem.disabled = false;
-				}				
-			} 
 		}
 	}
 }
