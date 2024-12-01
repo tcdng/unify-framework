@@ -17,6 +17,7 @@ package com.tcdng.unify.web;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.annotation.Singleton;
 
 /**
  * Convenient abstract base class for HTTP CRUD controller processors.
@@ -24,6 +25,7 @@ import com.tcdng.unify.core.UnifyException;
  * @author The Code Department
  * @since 1.0
  */
+@Singleton(false)
 public abstract class AbstractHttpCRUDControllerProcessor extends AbstractUnifyComponent
 		implements HttpCRUDControllerProcessor {
 

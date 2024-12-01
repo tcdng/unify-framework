@@ -34,12 +34,9 @@ public abstract class AbstractHttpCRUDController extends AbstractHttpClientContr
 
 	private final String contentType;
 
-	private final String processor;
-	
-	public AbstractHttpCRUDController(String contentType, String processor) {
+	public AbstractHttpCRUDController(String contentType) {
 		super(Secured.FALSE);
 		this.contentType = contentType;
-		this.processor = processor;
 	}
 
 	@Override
@@ -50,29 +47,42 @@ public abstract class AbstractHttpCRUDController extends AbstractHttpClientContr
 			if (contentType.equals(_contentType)) {
 				final ClientRequestType clientRequestType = request.getType();
 				final String resource = request.getRequestPathParts().getControllerPathParts().getActionName();
+				final String basePath = request.getRequestPathParts().getControllerPathParts().getControllerName();
+				HttpCRUDControllerProcessor _processor = processor(basePath, resource);
 				switch (clientRequestType) {
 				case DELETE:
-					_response = processor().delete(resource, request.getRequestHeaders(), request.getParameters());
+					if (_processor.isSupportDelete()) {
+						_response = _processor.delete(request.getRequestHeaders(), request.getParameters());
+					}
 					break;
 				case GET:
-					_response = processor().read(resource, request.getRequestHeaders(), request.getParameters());
+					if (_processor.isSupportRead()) {
+						_response = _processor.read(request.getRequestHeaders(), request.getParameters());
+					}
 					break;
 				case POST:
-					_response = processor().create(resource, request.getRequestHeaders(), request.getParameters(),
-							request.getText());
+					if (_processor.isSupportCreate()) {
+						_response = _processor.create(request.getRequestHeaders(), request.getParameters(),
+								request.getText());
+					}
 					break;
 				case PUT:
 				case PATCH:
-					_response = processor().update(resource, request.getRequestHeaders(), request.getParameters(),
-							request.getText());
+					if (_processor.isSupportUpdate()) {
+						_response = _processor.update(request.getRequestHeaders(), request.getParameters(),
+								request.getText());
+					}
 					break;
 				case HEAD:
 				case OPTIONS:
 				case TRACE:
 				default:
+					break;
+				}
+
+				if (_response == null) {
 					_response = getErrorResponse(HttpResponseConstants.METHOD_NOT_ALLOWED, "Method not allowed.",
 							"Request method \'" + clientRequestType + "\' not supported.");
-					break;
 				}
 			} else {
 				_response = getErrorResponse(HttpResponseConstants.NOT_ACCEPTABLE, "Content not acceptable.",
@@ -104,6 +114,16 @@ public abstract class AbstractHttpCRUDController extends AbstractHttpClientContr
 	}
 
 	/**
+	 * Gets Http CRUD controller processor.
+	 * 
+	 * @param basePath the base path
+	 * @param resource the resource
+	 * @return the processor
+	 * @throws UnifyException if an error occurs
+	 */
+	protected abstract HttpCRUDControllerProcessor processor(String basePath , String resource) throws UnifyException;
+
+	/**
 	 * Gets response from supplied error parameters.
 	 * 
 	 * @param status    the status
@@ -113,8 +133,4 @@ public abstract class AbstractHttpCRUDController extends AbstractHttpClientContr
 	 * @throws UnifyException if an error occurs
 	 */
 	protected abstract Response getErrorResponse(int status, String errorText, String errorMsg) throws UnifyException;
-
-	private HttpCRUDControllerProcessor processor() throws UnifyException {
-		return getComponent(HttpCRUDControllerProcessor.class, processor);
-	}
 }

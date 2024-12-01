@@ -29,8 +29,8 @@ import com.tcdng.unify.web.data.Response;
  */
 public abstract class AbstractJsonCRUDController extends AbstractHttpCRUDController {
 
-	public AbstractJsonCRUDController(String processor) {
-		super(MimeType.APPLICATION_JSON.template(), processor);
+	public AbstractJsonCRUDController() {
+		super(MimeType.APPLICATION_JSON.template());
 	}
 
 	@Override

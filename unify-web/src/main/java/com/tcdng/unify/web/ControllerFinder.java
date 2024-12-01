@@ -27,6 +27,23 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface ControllerFinder extends UnifyComponent {
 
+	/**
+	 * Registers an alias for a controller.
+	 * 
+	 * @param controllerName the controller name
+	 * @param alias          the alias name
+	 * @throws UnifyException if an error occurs
+	 */
+	void registerAlias(String controllerName, String alias) throws UnifyException;
+
+	/**
+	 * Clears aliases for a controller.
+	 * 
+	 * @param controllerName the controller name
+	 * @throws UnifyException if an error occurs
+	 */
+	void clearAliases(String controllerName) throws UnifyException;
+
     /**
      * Finds a controller component using supplied path parts..
      * 

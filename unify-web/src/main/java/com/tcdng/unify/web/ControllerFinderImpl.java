@@ -16,6 +16,10 @@
 
 package com.tcdng.unify.web;
 
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyComponentConfig;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
@@ -32,13 +36,34 @@ import com.tcdng.unify.core.util.IOUtils;
 @Component(WebApplicationComponents.APPLICATION_CONTROLLERFINDER)
 public class ControllerFinderImpl extends AbstractUnifyComponent implements ControllerFinder {
 
+	private final Map<String, String> controllerByAliases;
+	
+	public ControllerFinderImpl() {
+		this.controllerByAliases = new ConcurrentHashMap<String, String>();
+	}
+	
+	@Override
+	public void registerAlias(String controllerName, String alias) throws UnifyException {
+		controllerByAliases.put(alias, controllerName);
+	}
+
+	@Override
+	public void clearAliases(String controllerName) throws UnifyException {
+		for (String alias: new ArrayList<String>(controllerByAliases.keySet())) {
+			if (controllerName.equals(controllerByAliases.get(alias))) {
+				controllerByAliases.remove(alias);
+			}
+		}
+	}
+
 	@Override
 	public Controller findController(ControllerPathParts controllerPathParts) throws UnifyException {
 		logDebug("Finding controller for path [{0}]...", controllerPathParts.getControllerPath());
 		logDebug("Path variables [{0}]...", controllerPathParts.getPathVariables());
 		
 		final String controllerName = controllerPathParts.getControllerName();
-		UnifyComponentConfig unifyComponentConfig = getComponentConfig(Controller.class, controllerName);
+		final String _actualControllerName = getActualControllerName(controllerName);
+		UnifyComponentConfig unifyComponentConfig = getComponentConfig(Controller.class, _actualControllerName);
 
 		final String path = controllerPathParts.getControllerPath();
 		if (unifyComponentConfig == null) {
@@ -63,9 +88,9 @@ public class ControllerFinderImpl extends AbstractUnifyComponent implements Cont
 			throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_UNKNOWN_COMP, path);
 		}
 
-		Controller controller = (Controller) getComponent(controllerName);
+		Controller controller = (Controller) getComponent(_actualControllerName);
 		controller.ensureContextResources(controllerPathParts);
-		logDebug("Controller with name [{0}] found", controllerName);
+		logDebug("Controller for name [{0}] found", controllerName);
 		return controller;
 	}
 
@@ -79,4 +104,8 @@ public class ControllerFinderImpl extends AbstractUnifyComponent implements Cont
 
 	}
 
+	private String getActualControllerName(String controllerName) {
+		String _actualControllerName = controllerByAliases.get(controllerName);
+		return _actualControllerName == null ? controllerName : _actualControllerName;
+	}
 }

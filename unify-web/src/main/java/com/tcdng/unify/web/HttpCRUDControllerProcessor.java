@@ -33,49 +33,77 @@ public interface HttpCRUDControllerProcessor extends UnifyComponent {
 	/**
 	 * Performs a create operation.
 	 * 
-	 * @param resource   the resource name
 	 * @param headers    the request headers
 	 * @param parameters the request parameters
 	 * @param body       the request body
 	 * @return the response object
 	 * @throws UnifyException if an error occurs
 	 */
-	Response create(String resource, HttpRequestHeaders headers, Map<String, Object> parameters, String body)
+	Response create(HttpRequestHeaders headers, Map<String, Object> parameters, String body)
 			throws UnifyException;
-
+	
 	/**
 	 * Performs a read operation.
 	 * 
-	 * @param resource   the resource name
 	 * @param headers    the request headers
 	 * @param parameters the request parameters
 	 * @return the response object
 	 * @throws UnifyException if an error occurs
 	 */
-	Response read(String resource, HttpRequestHeaders headers, Map<String, Object> parameters) throws UnifyException;
+	Response read(HttpRequestHeaders headers, Map<String, Object> parameters) throws UnifyException;
 
 	/**
 	 * Performs an update operation.
 	 * 
-	 * @param resource   the resource name
 	 * @param headers    the request headers
 	 * @param parameters the request parameters
 	 * @param body       the request body
 	 * @return the response object
 	 * @throws UnifyException if an error occurs
 	 */
-	Response update(String resource, HttpRequestHeaders headers, Map<String, Object> parameters, String body)
+	Response update(HttpRequestHeaders headers, Map<String, Object> parameters, String body)
 			throws UnifyException;
 
 	/**
 	 * Performs a delete operation.
 	 * 
-	 * @param resource   the resource name
 	 * @param headers    the request headers
 	 * @param parameters the request parameters
 	 * @return the response object
 	 * @throws UnifyException if an error occurs
 	 */
-	Response delete(String resource, HttpRequestHeaders headers, Map<String, Object> parameters)
+	Response delete(HttpRequestHeaders headers, Map<String, Object> parameters)
 			throws UnifyException;
+
+	/**
+	 * Checks is processor supports create
+	 * 
+	 * @return true if supported otherwise false
+	 * @throws UnifyException if an error occurs
+	 */
+	boolean isSupportCreate() throws UnifyException;
+
+	/**
+	 * Checks is processor supports read
+	 * 
+	 * @return true if supported otherwise false
+	 * @throws UnifyException if an error occurs
+	 */
+	boolean isSupportRead() throws UnifyException;
+
+	/**
+	 * Checks is processor supports update
+	 * 
+	 * @return true if supported otherwise false
+	 * @throws UnifyException if an error occurs
+	 */
+	boolean isSupportUpdate() throws UnifyException;
+
+	/**
+	 * Checks is processor supports delete
+	 * 
+	 * @return true if supported otherwise false
+	 * @throws UnifyException if an error occurs
+	 */
+	boolean isSupportDelete() throws UnifyException;
 }
