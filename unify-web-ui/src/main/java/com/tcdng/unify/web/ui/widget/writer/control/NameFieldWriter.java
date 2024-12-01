@@ -40,6 +40,6 @@ public class NameFieldWriter extends TextFieldWriter {
         }
 
         return WebRegexUtils.getNameFormatRegex(nameField.isAcceptUnderscore(), nameField.isAcceptDollar(),
-                nameField.isAcceptPeriod(), nameField.isAcceptDash());
+                nameField.isAcceptPeriod(), nameField.isAcceptDash(), nameField.isAcceptSlash());
     }
 }
