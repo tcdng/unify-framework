@@ -15,11 +15,15 @@
  */
 package com.tcdng.unify.web;
 
+import java.util.List;
+
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Singleton;
+import com.tcdng.unify.core.data.JsonComposition;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.web.data.ErrorPart;
+import com.tcdng.unify.web.data.ErrorParts;
 import com.tcdng.unify.web.data.Response;
 
 /**
@@ -42,8 +46,22 @@ public abstract class AbstractHttpCRUDControllerProcessor extends AbstractUnifyC
 
 	}
 
+	protected final Response getResponse(int status, Object result) throws UnifyException {
+		return new Response(status, DataUtils.asJsonString(result));
+	}
+
+	protected final Response getResponse(JsonComposition jsonComposition, int status, Object result)
+			throws UnifyException {
+		return new Response(status, DataUtils.asJsonString(jsonComposition, result));
+	}
+
 	protected final Response getErrorResponse(int status, String errorText, String errorMsg) throws UnifyException {
 		return new Response(status, DataUtils.asJsonString(new ErrorPart(errorText, errorMsg)));
+	}
+
+	protected final Response getErrorResponse(int status, String errorText, List<String> errorMsgs)
+			throws UnifyException {
+		return new Response(status, DataUtils.asJsonString(new ErrorParts(errorText, errorMsgs)));
 	}
 
 }

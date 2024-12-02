@@ -27,6 +27,8 @@ public interface HttpResponseConstants {
 
 	int CREATED = 201;
 
+	int BAD_REQUEST = 400;
+
 	int UNAUTHORIZED = 401;
 
 	int METHOD_NOT_ALLOWED = 405;
