@@ -15,29 +15,31 @@
  */
 package com.tcdng.unify.web.data;
 
+import java.util.List;
+
 /**
- * Error part.
+ * Error parts.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public class ErrorPart {
+public class ErrorParts {
 
 	private String error;
 	
-	private String message;
+	private List<String> messages;
 
-	public ErrorPart(String error, String message) {
+	public ErrorParts(String error, List<String> messages) {
 		this.error = error;
-		this.message = message;
+		this.messages = messages;
 	}
 
 	public String getError() {
 		return error;
 	}
 
-	public String getMessage() {
-		return message;
+	public List<String> getMessages() {
+		return messages;
 	}
 		
 }
