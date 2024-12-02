@@ -16,9 +16,6 @@
 
 package com.tcdng.unify.web;
 
-import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.util.DataUtils;
-
 /**
  * Abstract base class for client requests.
  * 
@@ -26,10 +23,5 @@ import com.tcdng.unify.core.util.DataUtils;
  * @since 1.0
  */
 public abstract class AbstractClientRequest implements ClientRequest {
-
-    @Override
-    public <T> T getParameter(Class<T> clazz, String name) throws UnifyException {
-        return DataUtils.convert(clazz, getParameter(name));
-    }
 
 }

@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.tcdng.unify.core.constant.ClientPlatform;
+import com.tcdng.unify.core.data.Parameters;
 import com.tcdng.unify.web.AbstractClientRequest;
 import com.tcdng.unify.web.ClientCookie;
 import com.tcdng.unify.web.RequestPathParts;
@@ -43,7 +44,7 @@ public class HttpClientRequest extends AbstractClientRequest {
 
 	private HttpRequestHeaders headers;
 
-	private Map<String, Object> parameters;
+	private Parameters parameters;
 
 	private Map<String, ClientCookie> cookies;
 
@@ -59,7 +60,7 @@ public class HttpClientRequest extends AbstractClientRequest {
 		this.requestPathParts = requestPathParts;
 		this.headers = headers;
 		this.charset = charset;
-		this.parameters = parameters;
+		this.parameters = new Parameters(parameters);
 		this.cookies = cookies;
 		this.text = text;
 		this.bytes = bytes;
@@ -86,18 +87,8 @@ public class HttpClientRequest extends AbstractClientRequest {
 	}
 
 	@Override
-	public Map<String, Object> getParameters() {
+	public Parameters getParameters() {
 		return parameters;
-	}
-
-	@Override
-	public Set<String> getParameterNames() {
-		return parameters.keySet();
-	}
-
-	@Override
-	public Object getParameter(String name) {
-		return parameters.get(name);
 	}
 
 	@Override

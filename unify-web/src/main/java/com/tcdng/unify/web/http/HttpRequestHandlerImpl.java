@@ -354,7 +354,7 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 	 * @throws UnifyException if an error occurs
 	 */
 	private void ensureClientId(ClientRequest request) throws UnifyException {
-		String clientId = (String) request.getParameter(RequestParameterConstants.CLIENT_ID);
+		String clientId = (String) request.getParameters().getParam(RequestParameterConstants.CLIENT_ID);
 		if (StringUtils.isBlank(clientId)) {
 			clientId = UUID.randomUUID().toString();
 		}

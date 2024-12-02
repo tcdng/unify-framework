@@ -70,30 +70,29 @@ public abstract class AbstractRemoteCallController extends AbstractController im
     }
 
     @Override
-    public final void process(ClientRequest request, ClientResponse response) throws UnifyException {
-        try {
-            final ControllerPathParts reqPathParts = request.getRequestPathParts().getControllerPathParts();
-            RemoteCallFormat remoteCallFormat =
-                    (RemoteCallFormat) request.getParameter(RequestParameterConstants.REMOTE_CALL_FORMAT);
-            Object reqBody = remoteCallFormat.mimeType().isTextable() ? request.getText() : request.getBytes();
-            Object respBody = executeRemoteCall(remoteCallFormat,
-                    reqPathParts.getControllerPath(), reqBody);
-            response.setContentType(remoteCallFormat.mimeType().template());
-            if (request.getCharset() != null) {
-                response.setCharacterEncoding(request.getCharset().name());
-            }
+	public final void process(ClientRequest request, ClientResponse response) throws UnifyException {
+		try {
+			final ControllerPathParts reqPathParts = request.getRequestPathParts().getControllerPathParts();
+			RemoteCallFormat remoteCallFormat = (RemoteCallFormat) request.getParameters()
+					.getParam(RequestParameterConstants.REMOTE_CALL_FORMAT);
+			Object reqBody = remoteCallFormat.mimeType().isTextable() ? request.getText() : request.getBytes();
+			Object respBody = executeRemoteCall(remoteCallFormat, reqPathParts.getControllerPath(), reqBody);
+			response.setContentType(remoteCallFormat.mimeType().template());
+			if (request.getCharset() != null) {
+				response.setCharacterEncoding(request.getCharset().name());
+			}
 
-            if (remoteCallFormat.isStringFormat()) {
-                response.getWriter().write((String) respBody);
-            } else {
-                response.getOutputStream().write((byte[]) respBody);
-            }
-        } catch (Exception e) {
-            // TODO
-        } finally {
-            response.close();
-        }
-    }
+			if (remoteCallFormat.isStringFormat()) {
+				response.getWriter().write((String) respBody);
+			} else {
+				response.getOutputStream().write((byte[]) respBody);
+			}
+		} catch (Exception e) {
+			// TODO
+		} finally {
+			response.close();
+		}
+	}
 
     @Override
     public void ensureContextResources(ControllerPathParts controllerPathParts) throws UnifyException {

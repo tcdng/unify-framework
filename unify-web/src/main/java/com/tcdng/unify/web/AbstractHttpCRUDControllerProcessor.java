@@ -18,6 +18,9 @@ package com.tcdng.unify.web;
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Singleton;
+import com.tcdng.unify.core.util.DataUtils;
+import com.tcdng.unify.web.data.ErrorPart;
+import com.tcdng.unify.web.data.Response;
 
 /**
  * Convenient abstract base class for HTTP CRUD controller processors.
@@ -37,6 +40,10 @@ public abstract class AbstractHttpCRUDControllerProcessor extends AbstractUnifyC
 	@Override
 	protected void onTerminate() throws UnifyException {
 
+	}
+
+	protected final Response getErrorResponse(int status, String errorText, String errorMsg) throws UnifyException {
+		return new Response(status, DataUtils.asJsonString(new ErrorPart(errorText, errorMsg)));
 	}
 
 }

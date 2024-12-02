@@ -16,12 +16,11 @@
 package com.tcdng.unify.web;
 
 import java.nio.charset.Charset;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.constant.ClientPlatform;
+import com.tcdng.unify.core.data.Parameters;
 import com.tcdng.unify.web.constant.ClientRequestType;
 import com.tcdng.unify.web.http.HttpRequestHeaders;
 
@@ -35,7 +34,7 @@ public class TestClientRequest extends AbstractClientRequest {
 
     private RequestPathParts requestPathParts;
 
-    private Map<String, Object> parameters;
+    private Parameters parameters;
 
     private String text;
     
@@ -43,19 +42,19 @@ public class TestClientRequest extends AbstractClientRequest {
     
     public TestClientRequest(RequestPathParts requestPathParts, String text) {
         this.requestPathParts = requestPathParts;
-        parameters = new HashMap<String, Object>();
+        this.parameters = new Parameters();
         this.text = text;
     }
     
     public TestClientRequest(RequestPathParts requestPathParts, byte[] bytes) {
         this.requestPathParts = requestPathParts;
-        parameters = new HashMap<String, Object>();
+        this.parameters = new Parameters();
         this.bytes = bytes;
     }
     
     public TestClientRequest(RequestPathParts requestPathParts) {
         this.requestPathParts = requestPathParts;
-        parameters = new HashMap<String, Object>();
+        this.parameters = new Parameters();
     }
 
     @Override
@@ -84,25 +83,15 @@ public class TestClientRequest extends AbstractClientRequest {
 	}
 
 	@Override
-	public Map<String, Object> getParameters() {
+	public Parameters getParameters() {
 		return parameters;
 	}
 
+    public void setParameters(Parameters parameters) {
+		this.parameters = parameters;
+	}
+
 	@Override
-    public Set<String> getParameterNames() {
-        return parameters.keySet();
-    }
-
-    @Override
-    public Object getParameter(String name) {
-        return parameters.get(name);
-    }
-
-    public void setParameter(String name, Object value) {
-        parameters.put(name, value);
-    }
-
-    @Override
 	public String getText() throws UnifyException {
 		return text;
 	}

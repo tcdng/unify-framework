@@ -15,10 +15,9 @@
  */
 package com.tcdng.unify.web;
 
-import java.util.Map;
-
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.data.Parameters;
 import com.tcdng.unify.web.data.Response;
 import com.tcdng.unify.web.http.HttpRequestHeaders;
 
@@ -39,9 +38,8 @@ public interface HttpCRUDControllerProcessor extends UnifyComponent {
 	 * @return the response object
 	 * @throws UnifyException if an error occurs
 	 */
-	Response create(HttpRequestHeaders headers, Map<String, Object> parameters, String body)
-			throws UnifyException;
-	
+	Response create(HttpRequestHeaders headers, Parameters parameters, String body) throws UnifyException;
+
 	/**
 	 * Performs a read operation.
 	 * 
@@ -50,7 +48,7 @@ public interface HttpCRUDControllerProcessor extends UnifyComponent {
 	 * @return the response object
 	 * @throws UnifyException if an error occurs
 	 */
-	Response read(HttpRequestHeaders headers, Map<String, Object> parameters) throws UnifyException;
+	Response read(HttpRequestHeaders headers, Parameters parameters) throws UnifyException;
 
 	/**
 	 * Performs an update operation.
@@ -61,8 +59,7 @@ public interface HttpCRUDControllerProcessor extends UnifyComponent {
 	 * @return the response object
 	 * @throws UnifyException if an error occurs
 	 */
-	Response update(HttpRequestHeaders headers, Map<String, Object> parameters, String body)
-			throws UnifyException;
+	Response update(HttpRequestHeaders headers, Parameters parameters, String body) throws UnifyException;
 
 	/**
 	 * Performs a delete operation.
@@ -72,8 +69,7 @@ public interface HttpCRUDControllerProcessor extends UnifyComponent {
 	 * @return the response object
 	 * @throws UnifyException if an error occurs
 	 */
-	Response delete(HttpRequestHeaders headers, Map<String, Object> parameters)
-			throws UnifyException;
+	Response delete(HttpRequestHeaders headers, Parameters parameters) throws UnifyException;
 
 	/**
 	 * Checks is processor supports create
