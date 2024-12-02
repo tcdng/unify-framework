@@ -15,9 +15,9 @@
  */
 package com.tcdng.unify.core.data;
 
-import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.util.DataUtils;
@@ -37,7 +37,7 @@ public class Parameters {
 	}
 
 	public Parameters() {
-		this.values = Collections.emptyMap();
+		this.values = new ConcurrentHashMap<String, Object>();
 	}
 
 	public Set<String> getParamNames() {
