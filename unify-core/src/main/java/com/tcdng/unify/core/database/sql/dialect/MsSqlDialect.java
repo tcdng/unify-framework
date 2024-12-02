@@ -341,6 +341,15 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
 	}
 
 	@Override
+	public String generateDropIndexSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, String dbIndexName, PrintFormat format)
+			throws UnifyException {
+		StringBuilder sb = new StringBuilder();
+		String tableName = sqlEntitySchemaInfo.getSchemaTableName();
+		sb.append("DROP INDEX ").append(dbIndexName).append(" ON ").append(tableName);
+		return sb.toString();
+	}
+
+	@Override
 	public boolean isGeneratesUniqueConstraintsOnCreateTable() {
 		return false;
 	}
