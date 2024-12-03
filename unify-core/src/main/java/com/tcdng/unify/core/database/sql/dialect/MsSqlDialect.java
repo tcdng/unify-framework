@@ -372,6 +372,8 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
 
 	private static class MsSqlDataSourceDialectPolicies extends AbstractSqlDataSourceDialectPolicies {
 
+		private static final int MAXIMUM_CLAUSE_PARAMETERS = 2000;
+		
 		public void setSqlDataTypePolicies(Map<ColumnType, SqlDataTypePolicy> sqlDataTypePolicies) {
 			this.sqlDataTypePolicies = sqlDataTypePolicies;
 		}
@@ -382,7 +384,7 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
 
 		@Override
 		public int getMaxClauseValues() {
-			return -1;
+			return MAXIMUM_CLAUSE_PARAMETERS;
 		}
 
 		@Override

@@ -31,6 +31,8 @@ public interface HttpResponseConstants {
 
 	int UNAUTHORIZED = 401;
 
+	int NOT_FOUND = 404;
+
 	int METHOD_NOT_ALLOWED = 405;
 
 	int NOT_ACCEPTABLE = 406;
