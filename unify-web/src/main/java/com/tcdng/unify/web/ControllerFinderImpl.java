@@ -18,6 +18,7 @@ package com.tcdng.unify.web;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
@@ -37,30 +38,31 @@ import com.tcdng.unify.core.util.IOUtils;
 public class ControllerFinderImpl extends AbstractUnifyComponent implements ControllerFinder {
 
 	private final Map<String, String> controllerByAliases;
-	
+
 	public ControllerFinderImpl() {
 		this.controllerByAliases = new ConcurrentHashMap<String, String>();
 	}
-	
-	@Override
-	public void addAlias(String controllerName, String alias) throws UnifyException {
-		controllerByAliases.put(alias, controllerName);
-	}
 
 	@Override
-	public void removeAliases(String controllerName) throws UnifyException {
-		for (String alias: new ArrayList<String>(controllerByAliases.keySet())) {
-			if (controllerName.equals(controllerByAliases.get(alias))) {
+	public void setControllerAliases(String controllerName, Set<String> aliases) throws UnifyException {
+		logDebug("Setting aliases for controller [{0}]...", controllerName);
+		for (String alias : new ArrayList<String>(controllerByAliases.keySet())) {
+			if (controllerName.equals(controllerByAliases.get(alias)) && !aliases.contains(alias)) {
 				controllerByAliases.remove(alias);
 			}
 		}
+
+		for (String alias : aliases) {
+			controllerByAliases.put(alias, controllerName);
+		}
+		logDebug("Aliases for controller [{0}] successfully set.", controllerName);
 	}
 
 	@Override
 	public Controller findController(ControllerPathParts controllerPathParts) throws UnifyException {
 		logDebug("Finding controller for path [{0}]...", controllerPathParts.getControllerPath());
 		logDebug("Path variables [{0}]...", controllerPathParts.getPathVariables());
-		
+
 		final String controllerName = controllerPathParts.getControllerName();
 		final String _actualControllerName = getActualControllerName(controllerName);
 		UnifyComponentConfig unifyComponentConfig = getComponentConfig(Controller.class, _actualControllerName);
