@@ -34,29 +34,29 @@ public class JsonFieldComposition {
 
 	private String jsonName;
 
-	private String converter;
+	private String formatter;
 
 	private String references;
 
 	private JsonObjectComposition objectComposition;
 	
 	public JsonFieldComposition(DynamicEntityFieldType fieldType, DataType dataType, String name, String jsonName,
-			String converter, String references) {
+			String formatter, String references) {
 		this.fieldType = fieldType;
 		this.dataType = dataType;
 		this.name = name;
 		this.jsonName = jsonName == null ? name : jsonName;
-		this.converter = converter;
+		this.formatter = formatter;
 		this.references = references;
 	}
 	
 	public JsonFieldComposition(JsonObjectComposition objectComposition, DynamicEntityFieldType fieldType,
-			DataType dataType, String name, String jsonName, String converter, String references) {
+			DataType dataType, String name, String jsonName, String formatter, String references) {
 		this.fieldType = fieldType;
 		this.dataType = dataType;
 		this.name = name;
 		this.jsonName = jsonName == null ? name : jsonName;
-		this.converter = converter;
+		this.formatter = formatter;
 		this.references = references;
 		this.objectComposition = objectComposition;
 	}
@@ -69,8 +69,8 @@ public class JsonFieldComposition {
 		return jsonName;
 	}
 
-	public String getConverter() {
-		return converter;
+	public String getFormatter() {
+		return formatter;
 	}
 
 	public String getReferences() {
