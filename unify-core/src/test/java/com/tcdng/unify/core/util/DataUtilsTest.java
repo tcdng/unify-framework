@@ -44,7 +44,6 @@ import com.tcdng.unify.core.constant.DynamicEntityFieldType;
 import com.tcdng.unify.core.constant.OrderType;
 import com.tcdng.unify.core.constant.PrintFormat;
 import com.tcdng.unify.core.criterion.Order;
-import com.tcdng.unify.core.data.JsonComposition;
 import com.tcdng.unify.core.data.JsonFieldComposition;
 import com.tcdng.unify.core.data.JsonObjectComposition;
 import com.tcdng.unify.core.format.Formatter;
@@ -973,20 +972,19 @@ public class DataUtilsTest extends AbstractUnifyComponentTest {
 		}
 	}
 
-	private static JsonComposition ownerComposition;
+	private static JsonObjectComposition ownerComposition;
 
 	static {
-		JsonObjectComposition objectComposition1 = new JsonObjectComposition("owner", Arrays.asList(
-				new JsonFieldComposition(DynamicEntityFieldType.FIELD, DataType.STRING, "firstName", "firstName", null, null),
-				new JsonFieldComposition(DynamicEntityFieldType.FIELD, DataType.STRING, "lastName", "lastName", null, null),
-				new JsonFieldComposition(DynamicEntityFieldType.CHILDLIST, null, "docs", "documents", null,
-						"doc")));
 		JsonObjectComposition objectComposition2 = new JsonObjectComposition("doc", Arrays.asList(
 				new JsonFieldComposition(DynamicEntityFieldType.FIELD, DataType.STRING, "name", "Name", null, null),
 				new JsonFieldComposition(DynamicEntityFieldType.FIELD, DataType.STRING, "title", "Title", null, null),
 				new JsonFieldComposition(DynamicEntityFieldType.FIELD, DataType.INTEGER, "weight", "Weight", null,
 						null)));
-		ownerComposition = new JsonComposition(Arrays.asList(objectComposition1, objectComposition2));
+		ownerComposition = new JsonObjectComposition("owner", Arrays.asList(
+				new JsonFieldComposition(DynamicEntityFieldType.FIELD, DataType.STRING, "firstName", "firstName", null, null),
+				new JsonFieldComposition(DynamicEntityFieldType.FIELD, DataType.STRING, "lastName", "lastName", null, null),
+				new JsonFieldComposition(objectComposition2, DynamicEntityFieldType.CHILDLIST, null, "docs", "documents", null,
+						"doc")));
 	}
 
 	public static class Doc {
@@ -1033,15 +1031,14 @@ public class DataUtilsTest extends AbstractUnifyComponentTest {
 
 	}
 
-	private static JsonComposition docComposition;
+	private static JsonObjectComposition docComposition;
 
 	static {
-		JsonObjectComposition objectComposition = new JsonObjectComposition("doc", Arrays.asList(
+		docComposition = new JsonObjectComposition("doc", Arrays.asList(
 				new JsonFieldComposition(DynamicEntityFieldType.FIELD, DataType.STRING, "name", "Name", null, null),
 				new JsonFieldComposition(DynamicEntityFieldType.FIELD, DataType.STRING, "title", "Title", null, null),
 				new JsonFieldComposition(DynamicEntityFieldType.FIELD, DataType.INTEGER, "weight", "Weight", null,
 						null)));
-		docComposition = new JsonComposition(Arrays.asList(objectComposition));
 	}
 
 	public static class Inventory {

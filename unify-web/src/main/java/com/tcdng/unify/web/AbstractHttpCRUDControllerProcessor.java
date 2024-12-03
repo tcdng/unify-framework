@@ -20,7 +20,7 @@ import java.util.List;
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Singleton;
-import com.tcdng.unify.core.data.JsonComposition;
+import com.tcdng.unify.core.data.JsonObjectComposition;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.web.data.ErrorPart;
 import com.tcdng.unify.web.data.ErrorParts;
@@ -50,9 +50,9 @@ public abstract class AbstractHttpCRUDControllerProcessor extends AbstractUnifyC
 		return new Response(status, DataUtils.asJsonString(result));
 	}
 
-	protected final Response getResponse(JsonComposition jsonComposition, int status, Object result)
+	protected final Response getResponse(JsonObjectComposition jsonObjectComposition, int status, Object result)
 			throws UnifyException {
-		return new Response(status, DataUtils.asJsonString(jsonComposition, result));
+		return new Response(status, DataUtils.asJsonString(jsonObjectComposition, result));
 	}
 
 	protected final Response getErrorResponse(int status, String errorText, String errorMsg) throws UnifyException {

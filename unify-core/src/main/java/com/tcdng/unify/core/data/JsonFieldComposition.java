@@ -38,6 +38,8 @@ public class JsonFieldComposition {
 
 	private String references;
 
+	private JsonObjectComposition objectComposition;
+	
 	public JsonFieldComposition(DynamicEntityFieldType fieldType, DataType dataType, String name, String jsonName,
 			String converter, String references) {
 		this.fieldType = fieldType;
@@ -46,6 +48,17 @@ public class JsonFieldComposition {
 		this.jsonName = jsonName == null ? name : jsonName;
 		this.converter = converter;
 		this.references = references;
+	}
+	
+	public JsonFieldComposition(JsonObjectComposition objectComposition, DynamicEntityFieldType fieldType,
+			DataType dataType, String name, String jsonName, String converter, String references) {
+		this.fieldType = fieldType;
+		this.dataType = dataType;
+		this.name = name;
+		this.jsonName = jsonName == null ? name : jsonName;
+		this.converter = converter;
+		this.references = references;
+		this.objectComposition = objectComposition;
 	}
 
 	public String getName() {
@@ -94,5 +107,9 @@ public class JsonFieldComposition {
 
 	public boolean isObjectArray() {
 		return fieldType.isChildList();
+	}
+
+	public JsonObjectComposition getObjectComposition() {
+		return objectComposition;
 	}
 }
