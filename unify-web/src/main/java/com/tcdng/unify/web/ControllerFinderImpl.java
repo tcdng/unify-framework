@@ -16,7 +16,6 @@
 
 package com.tcdng.unify.web;
 
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -43,17 +42,13 @@ public class ControllerFinderImpl extends AbstractUnifyComponent implements Cont
 	}
 	
 	@Override
-	public void registerAlias(String controllerName, String alias) throws UnifyException {
+	public void addAlias(String controllerName, String alias) throws UnifyException {
 		controllerByAliases.put(alias, controllerName);
 	}
 
 	@Override
-	public void clearAliases(String controllerName) throws UnifyException {
-		for (String alias: new ArrayList<String>(controllerByAliases.keySet())) {
-			if (controllerName.equals(controllerByAliases.get(alias))) {
-				controllerByAliases.remove(alias);
-			}
-		}
+	public void removeAlias(String alias) throws UnifyException {
+		controllerByAliases.remove(alias);
 	}
 
 	@Override
