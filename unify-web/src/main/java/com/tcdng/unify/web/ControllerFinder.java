@@ -37,12 +37,12 @@ public interface ControllerFinder extends UnifyComponent {
 	void addAlias(String controllerName, String alias) throws UnifyException;
 
 	/**
-	 * Removes alias for a controller.
+	 * Removes all aliases for a controller.
 	 * 
 	 * @param alias the alias
 	 * @throws UnifyException if an error occurs
 	 */
-	void removeAlias(String alias) throws UnifyException;
+	void removeAliases(String controllerName) throws UnifyException;
 
     /**
      * Finds a controller component using supplied path parts..
