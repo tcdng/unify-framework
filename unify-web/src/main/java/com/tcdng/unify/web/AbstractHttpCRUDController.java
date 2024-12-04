@@ -34,6 +34,8 @@ public abstract class AbstractHttpCRUDController extends AbstractHttpClientContr
 
 	private final String contentType;
 
+	private Response noResourceIdResponse;
+
 	public AbstractHttpCRUDController(String contentType) {
 		super(Secured.FALSE);
 		this.contentType = contentType;
@@ -48,16 +50,18 @@ public abstract class AbstractHttpCRUDController extends AbstractHttpClientContr
 				final ClientRequestType clientRequestType = request.getType();
 				final String resource = request.getRequestPathParts().getControllerPathParts().getActionName();
 				final String basePath = request.getRequestPathParts().getControllerPathParts().getControllerName();
+				final Long resourceId = request.getRequestPathParts().getControllerPathParts().getResourceId();
 				HttpCRUDControllerProcessor _processor = processor(basePath, resource);
 				switch (clientRequestType) {
 				case DELETE:
 					if (_processor.isSupportDelete()) {
-						_response = _processor.delete(request.getRequestHeaders(), request.getParameters());
+						_response = resourceId == null ? getNoResourceIdResponse()
+								: _processor.delete(request.getRequestHeaders(), request.getParameters(), resourceId);
 					}
 					break;
 				case GET:
 					if (_processor.isSupportRead()) {
-						_response = _processor.read(request.getRequestHeaders(), request.getParameters());
+						_response = _processor.read(request.getRequestHeaders(), request.getParameters(), resourceId);
 					}
 					break;
 				case POST:
@@ -69,8 +73,9 @@ public abstract class AbstractHttpCRUDController extends AbstractHttpClientContr
 				case PUT:
 				case PATCH:
 					if (_processor.isSupportUpdate()) {
-						_response = _processor.update(request.getRequestHeaders(), request.getParameters(),
-								request.getText());
+						_response = resourceId == null ? getNoResourceIdResponse()
+								: _processor.update(request.getRequestHeaders(), request.getParameters(),
+										request.getText(), resourceId);
 					}
 					break;
 				case HEAD:
@@ -121,7 +126,7 @@ public abstract class AbstractHttpCRUDController extends AbstractHttpClientContr
 	 * @return the processor
 	 * @throws UnifyException if an error occurs
 	 */
-	protected abstract HttpCRUDControllerProcessor processor(String basePath , String resource) throws UnifyException;
+	protected abstract HttpCRUDControllerProcessor processor(String basePath, String resource) throws UnifyException;
 
 	/**
 	 * Gets response from supplied error parameters.
@@ -133,4 +138,17 @@ public abstract class AbstractHttpCRUDController extends AbstractHttpClientContr
 	 * @throws UnifyException if an error occurs
 	 */
 	protected abstract Response getErrorResponse(int status, String errorText, String errorMsg) throws UnifyException;
+
+	private Response getNoResourceIdResponse() throws UnifyException {
+		if (noResourceIdResponse == null) {
+			synchronized (this) {
+				if (noResourceIdResponse == null) {
+					noResourceIdResponse = getErrorResponse(HttpResponseConstants.BAD_REQUEST, "Missing resource ID.",
+							"Resource ID not present as path parameter.");
+				}
+			}
+		}
+
+		return noResourceIdResponse;
+	}
 }

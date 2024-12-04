@@ -25,6 +25,7 @@ import com.tcdng.unify.core.UnifyComponentConfig;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.data.FactoryMap;
+import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.util.WebPathUtils;
 
 /**
@@ -47,6 +48,7 @@ public class PathInfoRepositoryImpl extends AbstractUnifyComponent implements Pa
 				String pathId = controllerPath;
 				String controllerName = controllerPath;
 				String actionName = null;
+				Long resourceId = null;
 				List<String> pathVariables = Collections.emptyList();
 				int colIndex = controllerPath.indexOf(':');
 				if (colIndex > 0) {
@@ -57,6 +59,13 @@ public class PathInfoRepositoryImpl extends AbstractUnifyComponent implements Pa
 						pathId = controllerPath.substring(0, actionPartIndex);
 						pathVariable = controllerPath.substring(colIndex + 1, actionPartIndex);
 						actionName = controllerPath.substring(actionPartIndex);
+						if (StringUtils.isInteger(actionName)) {
+							resourceId = Long.parseLong(actionName);
+							final String _controllerPath = controllerName;
+							actionPartIndex = _controllerPath.lastIndexOf('/');
+							pathId = _controllerPath.substring(0, actionPartIndex);
+							actionName = _controllerPath.substring(actionPartIndex);
+						}
 					} else {
 						pathVariable = controllerPath.substring(colIndex + 1);
 					}
@@ -68,6 +77,14 @@ public class PathInfoRepositoryImpl extends AbstractUnifyComponent implements Pa
 						controllerName = controllerPath.substring(0, actionPartIndex);
 						pathId = controllerName;
 						actionName = controllerPath.substring(actionPartIndex);
+						if (StringUtils.isInteger(actionName)) {
+							resourceId = Long.parseLong(actionName);
+							final String _controllerPath = controllerName;
+							actionPartIndex = _controllerPath.lastIndexOf('/');
+							controllerName = _controllerPath.substring(0, actionPartIndex);
+							pathId = controllerName;
+							actionName = _controllerPath.substring(actionPartIndex);
+						}
 					}
 				}
 
@@ -77,7 +94,7 @@ public class PathInfoRepositoryImpl extends AbstractUnifyComponent implements Pa
 
 				boolean sessionless = ucc == null ? false : SessionlessController.class.isAssignableFrom(ucc.getType());
 				return new ControllerPathParts(controllerPath, pathId, controllerName, pathVariables, actionName,
-						sessionless);
+						resourceId, sessionless);
 			}
 		};
 	}

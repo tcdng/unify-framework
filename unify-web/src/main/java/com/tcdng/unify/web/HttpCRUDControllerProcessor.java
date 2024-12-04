@@ -45,10 +45,11 @@ public interface HttpCRUDControllerProcessor extends UnifyComponent {
 	 * 
 	 * @param headers    the request headers
 	 * @param parameters the request parameters
+	 * @param resourceId optional resource ID
 	 * @return the response object
 	 * @throws UnifyException if an error occurs
 	 */
-	Response read(HttpRequestHeaders headers, Parameters parameters) throws UnifyException;
+	Response read(HttpRequestHeaders headers, Parameters parameters, Long resourceId) throws UnifyException;
 
 	/**
 	 * Performs an update operation.
@@ -56,20 +57,23 @@ public interface HttpCRUDControllerProcessor extends UnifyComponent {
 	 * @param headers    the request headers
 	 * @param parameters the request parameters
 	 * @param body       the request body
+	 * @param resourceId the resource ID
 	 * @return the response object
 	 * @throws UnifyException if an error occurs
 	 */
-	Response update(HttpRequestHeaders headers, Parameters parameters, String body) throws UnifyException;
+	Response update(HttpRequestHeaders headers, Parameters parameters, String body, Long resourceId)
+			throws UnifyException;
 
 	/**
 	 * Performs a delete operation.
 	 * 
 	 * @param headers    the request headers
 	 * @param parameters the request parameters
+	 * @param resourceId the resource ID
 	 * @return the response object
 	 * @throws UnifyException if an error occurs
 	 */
-	Response delete(HttpRequestHeaders headers, Parameters parameters) throws UnifyException;
+	Response delete(HttpRequestHeaders headers, Parameters parameters, Long resourceId) throws UnifyException;
 
 	/**
 	 * Checks is processor supports create

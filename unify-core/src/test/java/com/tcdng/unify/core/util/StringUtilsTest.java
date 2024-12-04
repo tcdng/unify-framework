@@ -79,6 +79,23 @@ public class StringUtilsTest {
 	}
 	
 	@Test
+	public void testIsInteger() throws Exception {
+		assertFalse(StringUtils.isInteger(null));
+		assertFalse(StringUtils.isInteger(""));
+		assertFalse(StringUtils.isInteger(" "));
+		assertFalse(StringUtils.isInteger("a"));
+		assertFalse(StringUtils.isInteger("123a"));
+		assertFalse(StringUtils.isInteger("as234"));
+		assertFalse(StringUtils.isInteger(" 234"));
+		assertFalse(StringUtils.isInteger("234 "));
+		
+		assertTrue(StringUtils.isInteger("1"));
+		assertTrue(StringUtils.isInteger("1234"));
+		assertTrue(StringUtils.isInteger("54321"));
+		assertTrue(StringUtils.isInteger("543217"));
+	}
+	
+	@Test
 	public void testReplaceFirstNull() throws Exception {
         assertNull(StringUtils.replaceFirst(null, null, null));
         assertNull(StringUtils.replaceFirst(null, "abc", null));
