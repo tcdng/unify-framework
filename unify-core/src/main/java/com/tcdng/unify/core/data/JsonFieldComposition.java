@@ -38,13 +38,16 @@ public class JsonFieldComposition {
 
 	private JsonObjectComposition objectComposition;
 	
+	private boolean readOnly;
+	
 	public JsonFieldComposition(DynamicEntityFieldType fieldType, DataType dataType, String name, String jsonName,
-			String formatter) {
+			String formatter, boolean readOnly) {
 		this.fieldType = fieldType;
 		this.dataType = dataType;
 		this.name = name;
 		this.jsonName = jsonName == null ? name : jsonName;
 		this.formatter = formatter;
+		this.readOnly = readOnly;
 	}
 	
 	public JsonFieldComposition(JsonObjectComposition objectComposition, DynamicEntityFieldType fieldType,
@@ -67,6 +70,10 @@ public class JsonFieldComposition {
 
 	public String getFormatter() {
 		return formatter;
+	}
+
+	public boolean isReadOnly() {
+		return readOnly;
 	}
 
 	public boolean isString() {

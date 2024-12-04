@@ -950,7 +950,7 @@ public final class DataUtils {
 	 * Reads a JSON object. Has no support for collections.
 	 * 
 	 * @param clazz bean type
-	 * @param json   the JSON string
+	 * @param json  the JSON string
 	 * @throws UnifyException if an error occurs
 	 */
 	public static <T> T fromJsonString(Class<T> clazz, String json) throws UnifyException {
@@ -961,7 +961,7 @@ public final class DataUtils {
 	 * Reads a JSON object. Has no support for collections.
 	 * 
 	 * @param clazz bean type
-	 * @param json   the JSON string
+	 * @param json  the JSON string
 	 * @throws UnifyException if an error occurs
 	 */
 	public static <T> T fromJsonString(JsonObjectComposition comp, Class<T> clazz, String json) throws UnifyException {
@@ -1016,10 +1016,10 @@ public final class DataUtils {
 	 * @param reader the JSON reader
 	 * @throws UnifyException if an error occurs
 	 */
-	public static <T> T fromJsonReader(JsonObjectComposition comp, Class<T> clazz, Reader reader) throws UnifyException {
+	public static <T> T fromJsonReader(JsonObjectComposition comp, Class<T> clazz, Reader reader)
+			throws UnifyException {
 		try {
-			return DataUtils.getObjectFromJsonValue(comp, clazz, null,
-					Json.parse(reader));
+			return DataUtils.getObjectFromJsonValue(comp, clazz, null, Json.parse(reader));
 		} catch (UnifyException e) {
 			throw e;
 		} catch (Exception e) {
@@ -1100,20 +1100,22 @@ public final class DataUtils {
 			Map<String, GetterSetterInfo> accessors = ReflectUtils.getGetterSetterMap(clazz);
 			if (comp != null) {
 				for (JsonFieldComposition fcomp : comp.getFields()) {
-					GetterSetterInfo gInfo = accessors.get(fcomp.getName());
-					JsonValue jsonVal = jsonObject.get(fcomp.getJsonName());
+					if (!fcomp.isReadOnly()) {
+						GetterSetterInfo gInfo = accessors.get(fcomp.getName());
+						JsonValue jsonVal = jsonObject.get(fcomp.getJsonName());
 
-					Class<?> type = gInfo.getType();
-					if (Object.class.equals(type)) {
-						Object inst = gInfo.getGetter().invoke(bean);
-						if (inst != null) {
-							type = inst.getClass();
+						Class<?> type = gInfo.getType();
+						if (Object.class.equals(type)) {
+							Object inst = gInfo.getGetter().invoke(bean);
+							if (inst != null) {
+								type = inst.getClass();
+							}
 						}
-					}
 
-					Object val = getObjectFromJsonValue(fcomp.getObjectComposition(), type,
-							gInfo.getArgumentType0(), jsonVal);
-					DataUtils.setBeanProperty(bean, fcomp.getName(), val);
+						Object val = getObjectFromJsonValue(fcomp.getObjectComposition(), type,
+								gInfo.getArgumentType0(), jsonVal);
+						DataUtils.setBeanProperty(bean, fcomp.getName(), val);
+					}
 				}
 			} else {
 				for (String name : accessors.keySet()) {
@@ -1212,8 +1214,8 @@ public final class DataUtils {
 	 * @param printFormat  formatting type
 	 * @throws UnifyException if an error occurs
 	 */
-	public static void writeJsonObject(JsonObjectComposition comp, Object object, OutputStream outputStream, Charset charset,
-			PrintFormat printFormat) throws UnifyException {
+	public static void writeJsonObject(JsonObjectComposition comp, Object object, OutputStream outputStream,
+			Charset charset, PrintFormat printFormat) throws UnifyException {
 		if (charset == null) {
 			DataUtils.writeJsonObject(comp, object, new BufferedWriter(new OutputStreamWriter(outputStream)),
 					printFormat);
@@ -1244,8 +1246,8 @@ public final class DataUtils {
 	 * @param printFormat formatting type
 	 * @throws UnifyException if an error occurs
 	 */
-	public static void writeJsonObject(JsonObjectComposition comp, Object object, Writer writer, PrintFormat printFormat)
-			throws UnifyException {
+	public static void writeJsonObject(JsonObjectComposition comp, Object object, Writer writer,
+			PrintFormat printFormat) throws UnifyException {
 		try {
 			JsonValue jsonValue = DataUtils.getJsonValueFromObject(comp, object);
 			switch (printFormat) {
@@ -1277,7 +1279,8 @@ public final class DataUtils {
 		return DataUtils.asJsonString(null, obj, format);
 	}
 
-	public static String asJsonString(JsonObjectComposition comp, Object obj, PrintFormat format) throws UnifyException {
+	public static String asJsonString(JsonObjectComposition comp, Object obj, PrintFormat format)
+			throws UnifyException {
 		try {
 			StringWriter writer = new StringWriter();
 			DataUtils.writeJsonObject(comp, obj, writer, format);

@@ -976,12 +976,12 @@ public class DataUtilsTest extends AbstractUnifyComponentTest {
 
 	static {
 		JsonObjectComposition objectComposition2 = new JsonObjectComposition("doc", Arrays.asList(
-				new JsonFieldComposition(DynamicEntityFieldType.FIELD, DataType.STRING, "name", "Name", null),
-				new JsonFieldComposition(DynamicEntityFieldType.FIELD, DataType.STRING, "title", "Title", null),
-				new JsonFieldComposition(DynamicEntityFieldType.FIELD, DataType.INTEGER, "weight", "Weight", null)));
+				new JsonFieldComposition(DynamicEntityFieldType.FIELD, DataType.STRING, "name", "Name", null, false),
+				new JsonFieldComposition(DynamicEntityFieldType.FIELD, DataType.STRING, "title", "Title", null, false),
+				new JsonFieldComposition(DynamicEntityFieldType.FIELD, DataType.INTEGER, "weight", "Weight", null, false)));
 		ownerComposition = new JsonObjectComposition("owner", Arrays.asList(
-				new JsonFieldComposition(DynamicEntityFieldType.FIELD, DataType.STRING, "firstName", "firstName", null),
-				new JsonFieldComposition(DynamicEntityFieldType.FIELD, DataType.STRING, "lastName", "lastName", null),
+				new JsonFieldComposition(DynamicEntityFieldType.FIELD, DataType.STRING, "firstName", "firstName", null, false),
+				new JsonFieldComposition(DynamicEntityFieldType.FIELD, DataType.STRING, "lastName", "lastName", null, false),
 				new JsonFieldComposition(objectComposition2, DynamicEntityFieldType.CHILDLIST, null, "docs", "documents", null)));
 	}
 
@@ -1033,9 +1033,9 @@ public class DataUtilsTest extends AbstractUnifyComponentTest {
 
 	static {
 		docComposition = new JsonObjectComposition("doc", Arrays.asList(
-				new JsonFieldComposition(DynamicEntityFieldType.FIELD, DataType.STRING, "name", "Name", null),
-				new JsonFieldComposition(DynamicEntityFieldType.FIELD, DataType.STRING, "title", "Title", null),
-				new JsonFieldComposition(DynamicEntityFieldType.FIELD, DataType.INTEGER, "weight", "Weight", null)));
+				new JsonFieldComposition(DynamicEntityFieldType.FIELD, DataType.STRING, "name", "Name", null, false),
+				new JsonFieldComposition(DynamicEntityFieldType.FIELD, DataType.STRING, "title", "Title", null, false),
+				new JsonFieldComposition(DynamicEntityFieldType.FIELD, DataType.INTEGER, "weight", "Weight", null, false)));
 	}
 
 	public static class Inventory {
