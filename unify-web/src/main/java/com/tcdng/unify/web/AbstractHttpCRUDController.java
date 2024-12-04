@@ -48,20 +48,29 @@ public abstract class AbstractHttpCRUDController extends AbstractHttpClientContr
 			String _contentType = request.getRequestHeaders().getHeader("Content-Type");
 			if (contentType.equals(_contentType)) {
 				final ClientRequestType clientRequestType = request.getType();
-				final String resource = request.getRequestPathParts().getControllerPathParts().getActionName();
-				final String basePath = request.getRequestPathParts().getControllerPathParts().getControllerName();
-				final Long resourceId = request.getRequestPathParts().getControllerPathParts().getResourceId();
+				final ControllerPathParts parts = request.getRequestPathParts().getControllerPathParts();
+				final String resource = parts.getActionName();
+				final String basePath = parts.getControllerName();
 				HttpCRUDControllerProcessor _processor = processor(basePath, resource);
 				switch (clientRequestType) {
 				case DELETE:
 					if (_processor.isSupportDelete()) {
-						_response = resourceId == null ? getNoResourceIdResponse()
-								: _processor.delete(request.getRequestHeaders(), request.getParameters(), resourceId);
+						_response = parts.isWithResourceId()
+								? _processor.delete(request.getRequestHeaders(), request.getParameters(),
+										parts.getResourceId())
+								: getNoResourceIdResponse();
 					}
 					break;
 				case GET:
 					if (_processor.isSupportRead()) {
-						_response = _processor.read(request.getRequestHeaders(), request.getParameters(), resourceId);
+						if (parts.isWithOperation()) {
+							if ("count".equals(parts.getOperation())) {
+								_response = _processor.count(request.getRequestHeaders(), request.getParameters());
+							}
+						} else {
+							_response = _processor.read(request.getRequestHeaders(), request.getParameters(),
+									parts.getResourceId());
+						}
 					}
 					break;
 				case POST:
@@ -73,9 +82,10 @@ public abstract class AbstractHttpCRUDController extends AbstractHttpClientContr
 				case PUT:
 				case PATCH:
 					if (_processor.isSupportUpdate()) {
-						_response = resourceId == null ? getNoResourceIdResponse()
-								: _processor.update(request.getRequestHeaders(), request.getParameters(),
-										request.getText(), resourceId);
+						_response = parts.isWithResourceId()
+								? _processor.update(request.getRequestHeaders(), request.getParameters(),
+										request.getText(), parts.getResourceId())
+								: getNoResourceIdResponse();
 					}
 					break;
 				case HEAD:

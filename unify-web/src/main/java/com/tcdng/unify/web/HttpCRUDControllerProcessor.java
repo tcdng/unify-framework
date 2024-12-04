@@ -30,6 +30,16 @@ import com.tcdng.unify.web.http.HttpRequestHeaders;
 public interface HttpCRUDControllerProcessor extends UnifyComponent {
 
 	/**
+	 * Performs a count operation.
+	 * 
+	 * @param headers    the request headers
+	 * @param parameters the request parameters
+	 * @return the response object
+	 * @throws UnifyException if an error occurs
+	 */
+	Response count(HttpRequestHeaders headers, Parameters parameters) throws UnifyException;
+
+	/**
 	 * Performs a create operation.
 	 * 
 	 * @param headers    the request headers
