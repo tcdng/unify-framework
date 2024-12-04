@@ -16,7 +16,7 @@
 
 package com.tcdng.unify.web.http;
 
-import com.tcdng.unify.web.ClientRequestType;
+import com.tcdng.unify.web.constant.ClientRequestType;
 
 /**
  * Supported HTTP request method type enumeration.

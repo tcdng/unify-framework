@@ -341,6 +341,15 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
 	}
 
 	@Override
+	public String generateDropIndexSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, String dbIndexName, PrintFormat format)
+			throws UnifyException {
+		StringBuilder sb = new StringBuilder();
+		String tableName = sqlEntitySchemaInfo.getSchemaTableName();
+		sb.append("DROP INDEX ").append(dbIndexName).append(" ON ").append(tableName);
+		return sb.toString();
+	}
+
+	@Override
 	public boolean isGeneratesUniqueConstraintsOnCreateTable() {
 		return false;
 	}
@@ -363,6 +372,8 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
 
 	private static class MsSqlDataSourceDialectPolicies extends AbstractSqlDataSourceDialectPolicies {
 
+		private static final int MAXIMUM_CLAUSE_PARAMETERS = 2000;
+		
 		public void setSqlDataTypePolicies(Map<ColumnType, SqlDataTypePolicy> sqlDataTypePolicies) {
 			this.sqlDataTypePolicies = sqlDataTypePolicies;
 		}
@@ -373,7 +384,7 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
 
 		@Override
 		public int getMaxClauseValues() {
-			return -1;
+			return MAXIMUM_CLAUSE_PARAMETERS;
 		}
 
 		@Override

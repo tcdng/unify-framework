@@ -50,11 +50,11 @@ public abstract class AbstractPlainResourceController extends AbstractPlainOutpu
     }
 
     @Override
-    protected void prepareExecution(ClientRequest request) throws UnifyException {
-        resourceName = request.getParameter(String.class, RESOURCE_PARAMETER_NAME);
-        attachment = request.getParameter(boolean.class, ATTACHMENT_PARAMETER_NAME);
-        setContentDisposition();
-    }
+	protected void prepareExecution(ClientRequest request) throws UnifyException {
+		resourceName = request.getParameters().getParam(String.class, RESOURCE_PARAMETER_NAME);
+		attachment = request.getParameters().getParam(boolean.class, ATTACHMENT_PARAMETER_NAME);
+		setContentDisposition();
+	}
 
     @Override
     protected final void doExecute(OutputStream outStream, ClientRequest request) throws UnifyException {

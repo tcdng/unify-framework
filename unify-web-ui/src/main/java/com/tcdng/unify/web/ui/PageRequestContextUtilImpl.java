@@ -33,6 +33,7 @@ import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.constant.TopicEventType;
+import com.tcdng.unify.core.data.Parameters;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ClientRequest;
@@ -737,20 +738,21 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
 
     @Override
     public void extractRequestParameters(ClientRequest request) throws UnifyException {
+    	Parameters parameters = request.getParameters();
         setRequestAttribute(PageRequestParameterConstants.TARGET_VALUE,
-                request.getParameter(PageRequestParameterConstants.TARGET_VALUE));
+        		parameters.getParam(PageRequestParameterConstants.TARGET_VALUE));
         setRequestAttribute(PageRequestParameterConstants.WINDOW_NAME,
-                request.getParameter(PageRequestParameterConstants.WINDOW_NAME));
+        		parameters.getParam(PageRequestParameterConstants.WINDOW_NAME));
         setRequestAttribute(PageRequestParameterConstants.CONFIRM_MSG,
-                request.getParameter(PageRequestParameterConstants.CONFIRM_MSG));
+        		parameters.getParam(PageRequestParameterConstants.CONFIRM_MSG));
         setRequestAttribute(PageRequestParameterConstants.CONFIRM_MSGICON,
-                request.getParameter(PageRequestParameterConstants.CONFIRM_MSGICON));
+        		parameters.getParam(PageRequestParameterConstants.CONFIRM_MSGICON));
         setRequestAttribute(PageRequestParameterConstants.CONFIRM_PARAM,
-                request.getParameter(PageRequestParameterConstants.CONFIRM_PARAM));
+        		parameters.getParam(PageRequestParameterConstants.CONFIRM_PARAM));
         setRequestAttribute(RequestParameterConstants.REMOTE_VIEWER,
-                request.getParameter(RequestParameterConstants.REMOTE_VIEWER));
+        		parameters.getParam(RequestParameterConstants.REMOTE_VIEWER));
         setRequestAttribute(RequestParameterConstants.REMOTE_SESSION_ID,
-                request.getParameter(RequestParameterConstants.REMOTE_SESSION_ID));
+        		parameters.getParam(RequestParameterConstants.REMOTE_SESSION_ID));
     }
 
     @Override

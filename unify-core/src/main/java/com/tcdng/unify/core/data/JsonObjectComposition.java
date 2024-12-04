@@ -13,16 +13,33 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.web.http;
+package com.tcdng.unify.core.data;
+
+import java.util.List;
 
 /**
- * HTTP request headers.
+ * JSON object composition.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public interface HttpRequestHeaders {
+public class JsonObjectComposition {
 
-	String getHeader(String name);
+	private String name;
+
+	private List<JsonFieldComposition> fields;
+
+	public JsonObjectComposition(String name, List<JsonFieldComposition> fields) {
+		this.name = name;
+		this.fields = fields;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public List<JsonFieldComposition> getFields() {
+		return fields;
+	}
 
 }

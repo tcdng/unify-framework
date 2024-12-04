@@ -16,6 +16,8 @@
 
 package com.tcdng.unify.web;
 
+import java.util.Set;
+
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 
@@ -27,13 +29,20 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface ControllerFinder extends UnifyComponent {
 
-    /**
-     * Finds a controller component using supplied path parts..
-     * 
-     * @param controllerPathParts
-     *                            the path parts to use
-     * @throws UnifyException
-     *                        if an error occurs
-     */
-    Controller findController(ControllerPathParts controllerPathParts) throws UnifyException;
+	/**
+	 * Sets controller aliases.
+	 * 
+	 * @param controllerName the controller name
+	 * @param aliases        the aliases to set
+	 * @throws UnifyException if an error occurs
+	 */
+	void setControllerAliases(String controllerName, Set<String> aliases) throws UnifyException;
+
+	/**
+	 * Finds a controller component using supplied path parts..
+	 * 
+	 * @param controllerPathParts the path parts to use
+	 * @throws UnifyException if an error occurs
+	 */
+	Controller findController(ControllerPathParts controllerPathParts) throws UnifyException;
 }

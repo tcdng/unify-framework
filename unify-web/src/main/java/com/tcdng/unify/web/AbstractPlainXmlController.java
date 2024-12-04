@@ -44,15 +44,14 @@ public abstract class AbstractPlainXmlController extends AbstractPlainController
 			final String actionName = request.getRequestPathParts().getControllerPathParts().getActionName();
 			logDebug("Processing plain XML request with action [{0}]...", actionName);
 
-			RemoteCallFormat remoteCallFormat = (RemoteCallFormat) request
-					.getParameter(RequestParameterConstants.REMOTE_CALL_FORMAT);
+			RemoteCallFormat remoteCallFormat = (RemoteCallFormat) request.getParameters()
+					.getParam(RequestParameterConstants.REMOTE_CALL_FORMAT);
 			if (!RemoteCallFormat.XML.equals(remoteCallFormat)) {
 				throw new UnifyException(UnifyWebErrorConstants.CONTROLLER_MESSAGE_FORMAT_NOT_MATCH_EXPECTED,
 						remoteCallFormat, RemoteCallFormat.XML, getName());
 			}
 
-			final String xmlRequest = (String) request.getParameter(RequestParameterConstants.REMOTE_CALL_BODY);
-			xmlResponse = doExecute(actionName, xmlRequest);
+			xmlResponse = doExecute(actionName, request.getText());
 		} catch (Exception e) {
 			xmlResponse = "<serverError>" + e.getMessage() + "</serverError>";
 		}

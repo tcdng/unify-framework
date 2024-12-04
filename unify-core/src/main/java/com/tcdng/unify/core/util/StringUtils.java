@@ -84,6 +84,50 @@ public final class StringUtils {
 	}
 
 	/**
+	 * Tests is a string is a resource path
+	 * 
+	 * @param str the string to check
+	 * @return true if integer otherwise false
+	 */
+	public static boolean isResourceIdPath(String str) {
+		if (str != null && !str.isEmpty()) {
+			final int len = str.length();
+			if (len > 1 && str.charAt(0) == '/') {
+				for (int i = 1; i < len; i++) {
+					if (!Character.isDigit(str.charAt(i))) {
+						return false;
+					}
+				}
+
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Tests is a string is an integer.
+	 * 
+	 * @param str the string to check
+	 * @return true if integer otherwise false
+	 */
+	public static boolean isInteger(String str) {
+		if (str != null && !str.isEmpty()) {
+			final int len = str.length();
+			for (int i = 0; i < len; i++) {
+				if (!Character.isDigit(str.charAt(i))) {
+					return false;
+				}
+			}
+			
+			return true;
+		}
+
+		return false;
+	}
+	
+	/**
 	 * Generates a random alphanumeric string.
 	 * 
 	 * @param length the length

@@ -38,15 +38,21 @@ public class ControllerPathParts {
 
 	private String actionName;
 
+	private String operation;
+
+	private Long resourceId;
+
 	private boolean sessionless;
 
 	public ControllerPathParts(String controllerPath, String controllerPathId, String controllerName,
-			List<String> pathVariables, String actionName, boolean sessionless) {
+			List<String> pathVariables, String actionName, String operation, Long resourceId, boolean sessionless) {
 		this.controllerPath = controllerPath;
 		this.controllerPathId = controllerPathId;
 		this.controllerName = controllerName;
 		this.pathVariables = pathVariables;
 		this.actionName = actionName;
+		this.operation = operation;
+		this.resourceId = resourceId;
 		this.sessionless = sessionless;
 	}
 
@@ -68,6 +74,22 @@ public class ControllerPathParts {
 
 	public List<String> getPathVariables() {
 		return pathVariables;
+	}
+
+	public String getOperation() {
+		return operation;
+	}
+
+	public boolean isWithOperation() {
+		return operation != null;
+	}
+
+	public Long getResourceId() {
+		return resourceId;
+	}
+
+	public boolean isWithResourceId() {
+		return resourceId != null;
 	}
 
 	public boolean isSessionless() {

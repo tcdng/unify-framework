@@ -13,16 +13,29 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.web.http;
+package com.tcdng.unify.web.constant;
 
 /**
- * HTTP request headers.
+ * HTTP response constants.
  * 
  * @author The Code Department
- * @since 1.0
+ * @version 1.0
  */
-public interface HttpRequestHeaders {
+public interface HttpResponseConstants {
 
-	String getHeader(String name);
+	int OK = 200;
 
+	int CREATED = 201;
+
+	int BAD_REQUEST = 400;
+
+	int UNAUTHORIZED = 401;
+
+	int NOT_FOUND = 404;
+
+	int METHOD_NOT_ALLOWED = 405;
+
+	int NOT_ACCEPTABLE = 406;
+
+	int INTERNAL_SERVER_ERROR = 500;
 }

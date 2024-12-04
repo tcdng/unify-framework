@@ -46,15 +46,14 @@ public abstract class AbstractPlainJsonController extends AbstractPlainControlle
 			final String actionName = request.getRequestPathParts().getControllerPathParts().getActionName();
 			logDebug("Processing plain JSON request with action [{0}]...", actionName);
 
-			RemoteCallFormat remoteCallFormat = (RemoteCallFormat) request
-					.getParameter(RequestParameterConstants.REMOTE_CALL_FORMAT);
+			RemoteCallFormat remoteCallFormat = (RemoteCallFormat) request.getParameters()
+					.getParam(RequestParameterConstants.REMOTE_CALL_FORMAT);
 			if (!RemoteCallFormat.JSON.equals(remoteCallFormat)) {
 				throw new UnifyException(UnifyWebErrorConstants.CONTROLLER_MESSAGE_FORMAT_NOT_MATCH_EXPECTED,
 						remoteCallFormat, RemoteCallFormat.JSON, getName());
 			}
 
-			final String jsonRequest = (String) request.getParameter(RequestParameterConstants.REMOTE_CALL_BODY);
-			jsonResponse = doExecute(actionName, jsonRequest);
+			jsonResponse = doExecute(actionName, request.getText());
 		} catch (Exception e) {
 			StringBuilder sb = new StringBuilder();
 			sb.append("{ \"serverError\":");

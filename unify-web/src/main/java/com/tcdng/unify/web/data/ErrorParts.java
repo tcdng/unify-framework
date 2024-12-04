@@ -13,16 +13,33 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.web.http;
+package com.tcdng.unify.web.data;
+
+import java.util.List;
 
 /**
- * HTTP request headers.
+ * Error parts.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public interface HttpRequestHeaders {
+public class ErrorParts {
 
-	String getHeader(String name);
+	private String error;
+	
+	private List<String> messages;
 
+	public ErrorParts(String error, List<String> messages) {
+		this.error = error;
+		this.messages = messages;
+	}
+
+	public String getError() {
+		return error;
+	}
+
+	public List<String> getMessages() {
+		return messages;
+	}
+		
 }

@@ -13,16 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.web.http;
+package com.tcdng.unify.web;
 
 /**
- * HTTP request headers.
+ * HTTP client controller.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public interface HttpRequestHeaders {
-
-	String getHeader(String name);
+public interface HttpClientController extends Controller {
 
 }

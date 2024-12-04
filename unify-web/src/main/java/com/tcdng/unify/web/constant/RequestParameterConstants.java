@@ -49,8 +49,6 @@ public interface RequestParameterConstants {
 
     String REMOTE_CALL_FORMAT = "req_rcf";
 
-    String REMOTE_CALL_BODY = "req_rcb";
-
     String REMOTE_CALL_INPUTSTREAM = "req_rcin";
 
     String EXTERNAL_FORWARD = "req_fwd";

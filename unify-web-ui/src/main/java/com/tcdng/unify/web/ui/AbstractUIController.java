@@ -31,7 +31,7 @@ import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.core.util.SystemUtils;
-import com.tcdng.unify.web.AbstractController;
+import com.tcdng.unify.web.AbstractHttpClientController;
 import com.tcdng.unify.web.ClientRequest;
 import com.tcdng.unify.web.ClientResponse;
 import com.tcdng.unify.web.ControllerPathParts;
@@ -59,7 +59,7 @@ import com.tcdng.unify.web.ui.widget.ResponseWriterPool;
  * @author The Code Department
  * @since 1.0
  */
-public abstract class AbstractUIController extends AbstractController implements UIController {
+public abstract class AbstractUIController extends AbstractHttpClientController implements UIController {
 
 	@Configurable
 	private UIControllerUtil uiControllerUtil;
@@ -92,7 +92,7 @@ public abstract class AbstractUIController extends AbstractController implements
 			final ControllerPathParts reqPathParts = request.getRequestPathParts().getControllerPathParts();
 			PageController<?> docPageController = null;
 			ControllerPathParts docPathParts = null; 			
-			final String documentPath = (String) request.getParameter(PageRequestParameterConstants.DOCUMENT);
+			final String documentPath = (String) request.getParameters().getParam(PageRequestParameterConstants.DOCUMENT);
 			if (documentPath != null) {
 				docPathParts = pathInfoRepository.getControllerPathParts(documentPath);
 				docPageController = (PageController<?>) getControllerFinder().findController(docPathParts);
@@ -217,19 +217,18 @@ public abstract class AbstractUIController extends AbstractController implements
 	}
 
 	protected DataTransfer prepareDataTransfer(ClientRequest request) throws UnifyException {
-		final String actionId = (String) request.getParameter(PageRequestParameterConstants.VALIDATION_ACTION);
-		final boolean noTransfer = DataUtils.convert(boolean.class,
-				request.getParameter(PageRequestParameterConstants.NO_TRANSFER));
+		final String actionId = request.getParameters().getParam(String.class, PageRequestParameterConstants.VALIDATION_ACTION);
+		final boolean noTransfer = request.getParameters().getParam(boolean.class,PageRequestParameterConstants.NO_TRANSFER);
 		Map<String, DataTransferBlock> transferBlocks = null;
 		DataTransferParam dataTransferParam = getDataTransferParam();
 
 		final Set<String> reservedSet = WebUtils.getReservedRequestAttributes();
-		for (String transferId : request.getParameterNames()) {
+		for (String transferId : request.getParameters().getParamNames()) {
 			if (reservedSet.contains(transferId)) {
 				continue;
 			}
 
-			Object values = request.getParameter(transferId);
+			Object values = request.getParameters().getParam(transferId);
 			if (PageRequestParameterConstants.REFRESH.equals(transferId)) {
 				String[] strings = null;
 				if (values instanceof String[]) {
@@ -401,7 +400,7 @@ public abstract class AbstractUIController extends AbstractController implements
 			ControllerPathParts respPathParts = null;
 			Page page = null;
 			Result result = null;
-			if (StringUtils.isBlank((String) request.getParameter(PageRequestParameterConstants.DOCUMENT))
+			if (StringUtils.isBlank((String) request.getParameters().getParam(PageRequestParameterConstants.DOCUMENT))
 					&& !pageRequestContextUtil.isRemoteViewer()) {
 				if (getContainerSetting(boolean.class, UnifyWebPropertyConstants.APPLICATION_WEB_FRIENDLY_REDIRECT,
 						true)) {

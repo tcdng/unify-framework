@@ -13,16 +13,39 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.web.http;
+
+package com.tcdng.unify.web.data;
+
+import com.tcdng.unify.web.constant.HttpResponseConstants;
 
 /**
- * HTTP request headers.
+ * Response.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public interface HttpRequestHeaders {
+public class Response {
 
-	String getHeader(String name);
+	private final int responseCode;
+
+	private final String responseBody;
+
+	public Response(int responseCode, String responseBody) {
+		this.responseCode = responseCode;
+		this.responseBody = responseBody;
+	}
+
+	public Response(String responseBody) {
+		this.responseCode = HttpResponseConstants.OK;
+		this.responseBody = responseBody;
+	}
+
+	public int getStatus() {
+		return responseCode;
+	}
+
+	public String getResponseBody() {
+		return responseBody;
+	}
 
 }
