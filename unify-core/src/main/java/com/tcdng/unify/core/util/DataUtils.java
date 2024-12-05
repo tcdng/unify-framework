@@ -30,6 +30,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
+import java.text.Format;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -1112,8 +1113,24 @@ public final class DataUtils {
 							}
 						}
 
-						Object val = getObjectFromJsonValue(fcomp.getObjectComposition(), type,
-								gInfo.getArgumentType0(), jsonVal);
+						Object val = null;
+						if (Date.class.equals(type) && jsonVal.isString()) {
+							if (fcomp.isDate()) {
+								Format format = comp.getFormatContext().getFormat(
+										comp.isWithDateFormatter() ? comp.getDateFormatter() : fcomp.getFormatter());
+								val = format != null ? format.parseObject(jsonVal.asString()) : null;
+							} else if (fcomp.isDateTime()) {
+								Format format = comp.getFormatContext().getFormat(
+										comp.isWithDateTimeFormatter() ? comp.getDateTimeFormatter() : fcomp.getFormatter());
+								val = format != null ? format.parseObject(jsonVal.asString()) : null;
+							}
+						}
+						
+						if (val == null) {
+							val = getObjectFromJsonValue(fcomp.getObjectComposition(), type,
+									gInfo.getArgumentType0(), jsonVal);
+						}
+						
 						DataUtils.setBeanProperty(bean, fcomp.getName(), val);
 					}
 				}
@@ -1263,6 +1280,7 @@ public final class DataUtils {
 		} catch (UnifyException e) {
 			throw e;
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new UnifyException(UnifyCoreErrorConstants.DATAUTIL_ERROR, e);
 		}
 	}
@@ -1338,6 +1356,18 @@ public final class DataUtils {
 		if (comp != null) {
 			for (JsonFieldComposition fcomp : comp.getFields()) {
 				Object val = DataUtils.getBeanProperty(Object.class, obj, fcomp.getName());
+				if (val != null) {
+					if (fcomp.isDate()) {
+						Format format = comp.getFormatContext().getFormat(
+								comp.isWithDateFormatter() ? comp.getDateFormatter() : fcomp.getFormatter());
+						val = format != null ? format.format(val) : val;
+					} else if (fcomp.isDateTime()) {
+						Format format = comp.getFormatContext().getFormat(
+								comp.isWithDateTimeFormatter() ? comp.getDateTimeFormatter() : fcomp.getFormatter());
+						val = format != null ? format.format(val) : val;
+					}
+				}
+
 				jsonObject.add(fcomp.getJsonName(), getJsonValueFromObject(fcomp.getObjectComposition(), val));
 			}
 		} else {

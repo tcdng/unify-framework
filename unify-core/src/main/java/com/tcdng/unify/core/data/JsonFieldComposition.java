@@ -15,6 +15,7 @@
  */
 package com.tcdng.unify.core.data;
 
+import com.tcdng.unify.common.constants.StandardFormatType;
 import com.tcdng.unify.core.constant.DataType;
 import com.tcdng.unify.core.constant.DynamicEntityFieldType;
 
@@ -34,14 +35,14 @@ public class JsonFieldComposition {
 
 	private String jsonName;
 
-	private String formatter;
+	private StandardFormatType formatter;
 
 	private JsonObjectComposition objectComposition;
 	
 	private boolean readOnly;
 	
 	public JsonFieldComposition(DynamicEntityFieldType fieldType, DataType dataType, String name, String jsonName,
-			String formatter, boolean readOnly) {
+			StandardFormatType formatter, boolean readOnly) {
 		this.fieldType = fieldType;
 		this.dataType = dataType;
 		this.name = name;
@@ -51,7 +52,7 @@ public class JsonFieldComposition {
 	}
 	
 	public JsonFieldComposition(JsonObjectComposition objectComposition, DynamicEntityFieldType fieldType,
-			DataType dataType, String name, String jsonName, String formatter) {
+			DataType dataType, String name, String jsonName, StandardFormatType formatter) {
 		this.fieldType = fieldType;
 		this.dataType = dataType;
 		this.name = name;
@@ -68,7 +69,7 @@ public class JsonFieldComposition {
 		return jsonName;
 	}
 
-	public String getFormatter() {
+	public StandardFormatType getFormatter() {
 		return formatter;
 	}
 
