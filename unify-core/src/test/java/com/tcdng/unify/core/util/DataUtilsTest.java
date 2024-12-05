@@ -23,6 +23,7 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -38,6 +39,7 @@ import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.tcdng.unify.common.constants.StandardFormatType;
 import com.tcdng.unify.core.AbstractUnifyComponentTest;
 import com.tcdng.unify.core.constant.DataType;
 import com.tcdng.unify.core.constant.DynamicEntityFieldType;
@@ -670,10 +672,10 @@ public class DataUtilsTest extends AbstractUnifyComponentTest {
 
 	@Test
 	public void testToJsonObjectStringJsonCompositionComplex() throws Exception {
-		Owner owner = new Owner("Larry", "Barry", new Doc[] { new Doc("crane", "Crane", 24)});
+		Owner owner = new Owner("Larry", "Barry", new SimpleDateFormat("dd-MM-yyyy").parse("27-01-1978"), new Doc[] { new Doc("crane", "Crane", 24)});
 		String json = DataUtils.asJsonString(ownerComposition, owner, PrintFormat.NONE);
 		assertNotNull(json);
-		assertEquals("{\"firstName\":\"Larry\",\"lastName\":\"Barry\",\"documents\":[{\"Name\":\"crane\",\"Title\":\"Crane\",\"Weight\":24}]}", json);
+		assertEquals("{\"firstName\":\"Larry\",\"lastName\":\"Barry\",\"dob\":\"27/01/1978\",\"documents\":[{\"Name\":\"crane\",\"Title\":\"Crane\",\"Weight\":24}]}", json);
 	}
 
 	@Test
@@ -688,10 +690,11 @@ public class DataUtilsTest extends AbstractUnifyComponentTest {
 	@Test
 	public void testStringJsonToObjectJsonCompositionComplex() throws Exception {
 		Owner owner = DataUtils.fromJsonString(ownerComposition, Owner.class,
-				"{\"firstName\":\"Larry\",\"lastName\":\"Barry\",\"documents\":[{\"Name\":\"crane\",\"Title\":\"Crane\",\"Weight\":24}]}");
+				"{\"firstName\":\"Larry\",\"lastName\":\"Barry\",\"dob\":\"27/01/1978\",\"documents\":[{\"Name\":\"crane\",\"Title\":\"Crane\",\"Weight\":24}]}");
 		assertNotNull(owner);
 		assertEquals("Larry", owner.getFirstName());
 		assertEquals("Barry", owner.getLastName());
+		assertNotNull(owner.getDob());
 		
 		Doc[] docs = owner.getDocs();
 		assertNotNull(docs);
@@ -935,11 +938,14 @@ public class DataUtilsTest extends AbstractUnifyComponentTest {
 
 		private String lastName;
 
+		private Date dob;
+
 		private Doc[] docs;
 
-		public Owner(String firstName, String lastName, Doc[] docs) {
+		public Owner(String firstName, String lastName, Date dob, Doc[] docs) {
 			this.firstName = firstName;
 			this.lastName = lastName;
+			this.dob = dob;
 			this.docs = docs;
 		}
 
@@ -963,6 +969,14 @@ public class DataUtilsTest extends AbstractUnifyComponentTest {
 			this.lastName = lastName;
 		}
 
+		public Date getDob() {
+			return dob;
+		}
+
+		public void setDob(Date dob) {
+			this.dob = dob;
+		}
+
 		public Doc[] getDocs() {
 			return docs;
 		}
@@ -982,7 +996,9 @@ public class DataUtilsTest extends AbstractUnifyComponentTest {
 		ownerComposition = new JsonObjectComposition("owner", Arrays.asList(
 				new JsonFieldComposition(DynamicEntityFieldType.FIELD, DataType.STRING, "firstName", "firstName", null, false),
 				new JsonFieldComposition(DynamicEntityFieldType.FIELD, DataType.STRING, "lastName", "lastName", null, false),
-				new JsonFieldComposition(objectComposition2, DynamicEntityFieldType.CHILDLIST, null, "docs", "documents", null)));
+				new JsonFieldComposition(DynamicEntityFieldType.FIELD, DataType.DATE, "dob", "dob", null, false),
+				new JsonFieldComposition(objectComposition2, DynamicEntityFieldType.CHILDLIST, null, "docs", "documents", null)),
+				StandardFormatType.DATE_DDMMYYYY_SLASH, StandardFormatType.DATETIME_MMDDYYYY_SLASH);
 	}
 
 	public static class Doc {
