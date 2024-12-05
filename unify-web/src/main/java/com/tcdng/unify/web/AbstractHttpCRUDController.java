@@ -104,6 +104,7 @@ public abstract class AbstractHttpCRUDController extends AbstractHttpClientContr
 						"Request content type \'" + _contentType + "\' not acceptable.");
 			}
 		} catch (Exception e) {
+			logError(e);
 			_response = getErrorResponse(HttpResponseConstants.INTERNAL_SERVER_ERROR, "Internal server error.",
 					e.getMessage());
 		} finally {
