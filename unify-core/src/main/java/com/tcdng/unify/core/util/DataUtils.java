@@ -638,6 +638,20 @@ public final class DataUtils {
 		return blocks;
 	}
 
+	public static List<List<Long>> split(List<Long> list, final int blockSize) {
+		if (list != null) {
+			List<List<Long>> resultList = new ArrayList<List<Long>>();
+			final int[] blocks = DataUtils.splitToBlocks(list.size(), blockSize);
+			for (int i = 0, j = 0; i < blocks.length; i++, j += blocks[i]) {
+				resultList.add(list.subList(j, blocks[i]));
+			}
+
+			return resultList;
+		}
+
+		return Collections.emptyList();
+	}
+	
 	/**
 	 * Sorts a list by order
 	 * 
