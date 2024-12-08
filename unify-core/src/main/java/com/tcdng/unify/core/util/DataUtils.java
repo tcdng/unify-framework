@@ -642,8 +642,8 @@ public final class DataUtils {
 		if (list != null) {
 			List<List<Long>> resultList = new ArrayList<List<Long>>();
 			final int[] blocks = DataUtils.splitToBlocks(list.size(), blockSize);
-			for (int i = 0, j = 0; i < blocks.length; i++, j += blocks[i]) {
-				resultList.add(list.subList(j, blocks[i]));
+			for (int i = 0, j = 0; i < blocks.length; j += blocks[i],i++) {
+				resultList.add(list.subList(j, j + blocks[i]));
 			}
 
 			return resultList;
