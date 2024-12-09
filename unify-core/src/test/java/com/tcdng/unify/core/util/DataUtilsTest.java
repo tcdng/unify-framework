@@ -72,6 +72,48 @@ public class DataUtilsTest extends AbstractUnifyComponentTest {
 	}
 
 	@Test
+	public void testSplitA() throws Exception {
+		List<List<Long>> list = DataUtils.split(Arrays.asList(1L,2L,3L,4L,5L,6L,7L), 3);
+		assertNotNull(list);
+		assertEquals(3, list.size());
+		
+		List<Long> _l = list.get(0);
+		assertEquals(3, _l.size());
+		assertEquals(Long.valueOf(1L), _l.get(0));
+		assertEquals(Long.valueOf(2L), _l.get(1));
+		assertEquals(Long.valueOf(3L), _l.get(2));
+		
+		_l = list.get(1);
+		assertEquals(3, _l.size());
+		assertEquals(Long.valueOf(4L), _l.get(0));
+		assertEquals(Long.valueOf(5L), _l.get(1));
+		assertEquals(Long.valueOf(6L), _l.get(2));
+		
+		_l = list.get(2);
+		assertEquals(1, _l.size());
+		assertEquals(Long.valueOf(7L), _l.get(0));		
+	}
+
+	@Test
+	public void testSplitB() throws Exception {
+		List<List<Long>> list = DataUtils.split(Arrays.asList(1L,2L,3L,4L,5L,6L), 3);
+		assertNotNull(list);
+		assertEquals(2, list.size());
+		
+		List<Long> _l = list.get(0);
+		assertEquals(3, _l.size());
+		assertEquals(Long.valueOf(1L), _l.get(0));
+		assertEquals(Long.valueOf(2L), _l.get(1));
+		assertEquals(Long.valueOf(3L), _l.get(2));
+		
+		_l = list.get(1);
+		assertEquals(3, _l.size());
+		assertEquals(Long.valueOf(4L), _l.get(0));
+		assertEquals(Long.valueOf(5L), _l.get(1));
+		assertEquals(Long.valueOf(6L), _l.get(2));
+	}
+	
+	@Test
 	public void testUnmodifiableValuesListNull() throws Exception {
 		List<String> list = DataUtils.unmodifiableValuesList(null);
 		assertNotNull(list);
