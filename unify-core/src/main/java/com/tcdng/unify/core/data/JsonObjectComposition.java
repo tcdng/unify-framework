@@ -15,7 +15,9 @@
  */
 package com.tcdng.unify.core.data;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.tcdng.unify.common.constants.StandardFormatType;
 import com.tcdng.unify.convert.FormatContext;
@@ -38,6 +40,8 @@ public class JsonObjectComposition {
 
 	private List<JsonFieldComposition> fields;
 
+	private Map<String, JsonFieldComposition> map;
+	
 	public JsonObjectComposition(String name, List<JsonFieldComposition> fields, StandardFormatType dateFormatter,
 			StandardFormatType dateTimeFormatter) {
 		this.formatContext = new FormatContext();
@@ -45,6 +49,10 @@ public class JsonObjectComposition {
 		this.dateFormatter = dateFormatter;
 		this.dateTimeFormatter = dateTimeFormatter;
 		this.fields = fields;
+		this.map = new HashMap<String, JsonFieldComposition>();
+		for (JsonFieldComposition comp: fields) {
+			this.map.put(comp.getName(), comp);
+		}
 	}
 
 	public JsonObjectComposition(String name, List<JsonFieldComposition> fields) {
@@ -61,6 +69,10 @@ public class JsonObjectComposition {
 		return name;
 	}
 
+	public JsonFieldComposition getComposition(String name) {
+		return map.get(name);
+	}
+	
 	public StandardFormatType getDateFormatter() {
 		return dateFormatter;
 	}

@@ -1129,15 +1129,7 @@ public final class DataUtils {
 
 						Object val = null;
 						if (Date.class.equals(type) && jsonVal.isString()) {
-							if (fcomp.isDate()) {
-								Format format = comp.getFormatContext().getFormat(
-										comp.isWithDateFormatter() ? comp.getDateFormatter() : fcomp.getFormatter());
-								val = format != null ? format.parseObject(jsonVal.asString()) : null;
-							} else if (fcomp.isDateTime()) {
-								Format format = comp.getFormatContext().getFormat(
-										comp.isWithDateTimeFormatter() ? comp.getDateTimeFormatter() : fcomp.getFormatter());
-								val = format != null ? format.parseObject(jsonVal.asString()) : null;
-							}
+							val = DataUtils.getDateValue(comp, fcomp, jsonVal.asString());
 						}
 						
 						if (val == null) {
@@ -1173,6 +1165,24 @@ public final class DataUtils {
 		return bean;
 	}
 
+	public static Object getDateValue(JsonObjectComposition comp, String fieldName, String val) throws Exception {
+		return DataUtils.getDateValue(comp, comp.getComposition(fieldName), val);
+	}
+	
+	private static Object getDateValue(JsonObjectComposition comp, JsonFieldComposition fcomp, String val) throws Exception {
+		if (fcomp.isDate()) {
+			Format format = comp.getFormatContext().getFormat(
+					comp.isWithDateFormatter() ? comp.getDateFormatter() : fcomp.getFormatter());
+			return format != null ? format.parseObject(val) : null;
+		} else if (fcomp.isDateTime()) {
+			Format format = comp.getFormatContext().getFormat(
+					comp.isWithDateTimeFormatter() ? comp.getDateTimeFormatter() : fcomp.getFormatter());
+			return format != null ? format.parseObject(val) : null;
+		}
+		
+		return null;
+	}
+	
 	/**
 	 * Writes a JSON object to an output stream. Has no support for collections.
 	 * 
