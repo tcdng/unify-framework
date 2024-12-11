@@ -394,6 +394,21 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 				httpRequest.getHeader(UnifyRequestHeaderConstants.REMOTE_MESSAGE_TYPE_HEADER), contentType);
 		if (remoteCallFormat != null) {
 			result.put(RequestParameterConstants.REMOTE_CALL_FORMAT, remoteCallFormat);
+			Map<String, String[]> httpRequestParamMap = httpRequest.getParameterMap();
+			for (Map.Entry<String, String[]> entry : httpRequestParamMap.entrySet()) {
+				String key = entry.getKey();
+				String[] values = entry.getValue();
+				if (values.length == 1) {
+					if (!values[0].isEmpty()) {
+						result.put(key, values[0]);
+					} else {
+						result.put(key, null);
+					}
+				} else {
+					result.put(key, values);
+				}
+			}
+			
 			try {
 				switch (remoteCallFormat) {
 				case OCTETSTREAM:
