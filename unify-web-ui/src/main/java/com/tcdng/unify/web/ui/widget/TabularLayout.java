@@ -51,6 +51,14 @@ public interface TabularLayout extends Layout {
     boolean isCellPadding() throws UnifyException;
 
     /**
+     * Returns true if layout cells are strict.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    boolean isStrict() throws UnifyException;
+
+    /**
      * Returns layout widths.
      * 
      * @throws UnifyException
