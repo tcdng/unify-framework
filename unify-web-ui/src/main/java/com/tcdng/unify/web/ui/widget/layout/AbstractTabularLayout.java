@@ -32,7 +32,8 @@ import com.tcdng.unify.web.ui.widget.TabularLayout;
         @UplAttribute(name = "cellPadding", type = boolean.class, defaultVal = "true"),
         @UplAttribute(name = "cellStyle", type = String.class),
         @UplAttribute(name = "widths", type = String[].class),
-        @UplAttribute(name = "heights", type = String[].class), })
+        @UplAttribute(name = "heights", type = String[].class),
+        @UplAttribute(name = "strict", type = boolean.class, defaultVal = "false")})
 public abstract class AbstractTabularLayout extends AbstractLayout implements TabularLayout {
 
     @Override
@@ -46,6 +47,11 @@ public abstract class AbstractTabularLayout extends AbstractLayout implements Ta
     }
 
     @Override
+	public boolean isStrict() throws UnifyException {
+        return getUplAttribute(boolean.class, "strict");
+	}
+
+	@Override
     public String getCellStyle() throws UnifyException {
         return getUplAttribute(String.class, "cellStyle");
     }
