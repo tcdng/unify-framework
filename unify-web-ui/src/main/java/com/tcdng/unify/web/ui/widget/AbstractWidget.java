@@ -52,7 +52,8 @@ import com.tcdng.unify.web.ui.widget.panel.StandalonePanel;
  * @author The Code Department
  * @since 1.0
  */
-@UplAttributes({ @UplAttribute(name = "binding", type = String.class),
+@UplAttributes({
+		@UplAttribute(name = "binding", type = String.class),
 		@UplAttribute(name = "styleClass", type = String.class, defaultVal = "$e{}"),
 		@UplAttribute(name = "styleClassBinding", type = String.class),
 		@UplAttribute(name = "style", type = String.class),
@@ -61,7 +62,8 @@ import com.tcdng.unify.web.ui.widget.panel.StandalonePanel;
 		@UplAttribute(name = "captionParamBinding", type = String.class),
 		@UplAttribute(name = "columnStyle", type = String.class),
 		@UplAttribute(name = "columnSelectSummary", type = boolean.class),
-		@UplAttribute(name = "hint", type = String.class), @UplAttribute(name = "hintBinding", type = String.class),
+		@UplAttribute(name = "hint", type = String.class),
+		@UplAttribute(name = "hintBinding", type = String.class),
 		@UplAttribute(name = "readOnly", type = boolean.class, defaultVal = "false"),
 		@UplAttribute(name = "disabled", type = boolean.class, defaultVal = "false"),
 		@UplAttribute(name = "ignoreParentState", type = boolean.class, defaultVal = "false"),

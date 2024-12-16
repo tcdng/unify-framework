@@ -289,22 +289,49 @@ public class ConverterTest extends AbstractUnifyComponentTest {
         IndexedTarget target = converter.convert("", null);
         assertNotNull(target);
         assertEquals("", target.getTarget());
-        assertEquals(-1, target.getIndex());
+        assertEquals(-1, target.getValueIndex());
         
         target = converter.convert("subtract", null);
         assertNotNull(target);
         assertEquals("subtract", target.getTarget());
-        assertEquals(-1, target.getIndex());
+        assertNull(target.getBinding());
+        assertEquals(-1, target.getValueIndex());
+        assertEquals(-1, target.getTabIndex());
         
         target = converter.convert(":5", null);
         assertNotNull(target);
         assertEquals("", target.getTarget());
-        assertEquals(5, target.getIndex());
+        assertNull(target.getBinding());
+        assertEquals(5, target.getValueIndex());
+        assertEquals(-1, target.getTabIndex());
         
         target = converter.convert("add:1062", null);
         assertNotNull(target);
         assertEquals("add", target.getTarget());
-        assertEquals(1062, target.getIndex());       
+        assertNull(target.getBinding());
+        assertEquals(1062, target.getValueIndex());       
+        assertEquals(-1, target.getTabIndex());
+        
+        target = converter.convert("add:1062:name", null);
+        assertNotNull(target);
+        assertEquals("add", target.getTarget());
+        assertEquals("name", target.getBinding());
+        assertEquals(1062, target.getValueIndex());       
+        assertEquals(-1, target.getTabIndex());
+        
+        target = converter.convert("add_slow:1062:name", null);
+        assertNotNull(target);
+        assertEquals("add_slow", target.getTarget());
+        assertEquals("name", target.getBinding());
+        assertEquals(1062, target.getValueIndex());       
+        assertEquals(-1, target.getTabIndex());
+        
+        target = converter.convert("add_16:1062:name", null);
+        assertNotNull(target);
+        assertEquals("add", target.getTarget());
+        assertEquals("name", target.getBinding());
+        assertEquals(1062, target.getValueIndex());       
+        assertEquals(16, target.getTabIndex());
     }
 
     @Override
