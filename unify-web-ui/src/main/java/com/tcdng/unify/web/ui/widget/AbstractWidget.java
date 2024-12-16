@@ -506,12 +506,12 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 	}
 
 	@Override
-	public int getTabIndex() {
+	public int getTabIndex() throws UnifyException {
 		return tabIndex;
 	}
 
 	@Override
-	public void setTabIndex(int tabIndex) {
+	public void setTabIndex(int tabIndex)  throws UnifyException {
 		this.tabIndex = tabIndex;
 	}
 
