@@ -23,18 +23,21 @@ package com.tcdng.unify.core.data;
  */
 public class IndexedTarget {
 
-	public static final IndexedTarget BLANK = new IndexedTarget("", "", -1);
-	
-    private final String target;
-    
-    private final String binding;
-    
-    private final int index;
+	public static final IndexedTarget BLANK = new IndexedTarget("", "", -1, -1);
 
-    public IndexedTarget(String target, String binding, int index) {
+	private final String target;
+
+	private final String binding;
+
+	private final int valueIndex;
+
+	private final int tabIndex;
+
+	public IndexedTarget(String target, String binding, int valueIndex, int tabIndex) {
 		this.target = target;
 		this.binding = binding;
-		this.index = index;
+		this.valueIndex = valueIndex;
+		this.tabIndex = tabIndex;
 	}
 
 	public String getTarget() {
@@ -45,11 +48,19 @@ public class IndexedTarget {
 		return binding;
 	}
 
-	public int getIndex() {
-		return index;
+	public int getValueIndex() {
+		return valueIndex;
 	}
-	
-	public boolean isValidIndex() {
-		return index >= 0;
+
+	public boolean isValidValueIndex() {
+		return valueIndex >= 0;
+	}
+
+	public int getTabIndex() {
+		return tabIndex;
+	}
+
+	public boolean isValidTabIndex() {
+		return tabIndex >= 0;
 	}
 }

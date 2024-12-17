@@ -262,13 +262,15 @@ public abstract class AbstractMultiControl extends AbstractControl implements Mu
     }
 
     @Override
-    protected final ValueStore createValueStore(Object storageObject, int dataIndex) throws UnifyException {
-        if (uplValueMarker != null) {
-            return super.createValueStore(storageObject, uplValueMarker, dataIndex);
-        }
-        
-        return super.createValueStore(storageObject, dataIndex);
-    }
+	protected final ValueStore createValueStore(Object storageObject, int dataIndex) throws UnifyException {
+		if (uplValueMarker != null) {
+			final int tabIndex = getTabIndex();
+			return super.createValueStore(storageObject,
+					tabIndex >= 0 ? uplValueMarker + "_" + tabIndex : uplValueMarker, dataIndex);
+		}
+
+		return super.createValueStore(storageObject, dataIndex);
+	}
 
     /**
      * Removes all external child widgets.
