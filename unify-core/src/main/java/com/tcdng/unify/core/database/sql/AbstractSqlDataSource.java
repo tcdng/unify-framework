@@ -67,7 +67,7 @@ public abstract class AbstractSqlDataSource extends AbstractDataSource implement
     @Configurable("10000")
     private long getConnectionTimeout;
 
-    @Configurable("32")
+    @Configurable("64")
     private int maxConnections;
 
     @Configurable("1")
