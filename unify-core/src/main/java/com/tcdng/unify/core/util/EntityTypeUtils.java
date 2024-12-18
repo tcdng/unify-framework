@@ -16,6 +16,7 @@
 
 package com.tcdng.unify.core.util;
 
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -24,6 +25,7 @@ import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.opencsv.CSVReader;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.constant.DataType;
@@ -50,6 +52,45 @@ public final class EntityTypeUtils {
 
 	public static boolean isDelegateType(String type) {
 		return type.charAt(type.length() -1) == 'u' && type.indexOf(".u.") > 0;
+	}
+	
+	public static List<EntityTypeInfo> getEntityTypeInfoFromCsv(final String csv) throws UnifyException {
+		return EntityTypeUtils.getEntityTypeInfoFromJson(null, csv);
+	}
+	
+	public static List<EntityTypeInfo> getEntityTypeInfoFromCsv(final String name, final String csv) throws UnifyException {
+		if (csv != null) {
+			List<EntityTypeInfo> list = new ArrayList<EntityTypeInfo>();
+			EntityTypeInfo.Builder deib = EntityTypeInfo.newBuilder(name, 0);
+			
+			try (CSVReader reader = new CSVReader(new StringReader(csv))) {
+				String[] headerNames = reader.readNext();
+				String[] sample = reader.readNext();
+				final int len = headerNames.length;
+				for (int i = 0; i < len; i++) {
+					final String headerName = headerNames[i];
+					final String fieldName = StringUtils.decapitalize(StringUtils.underscore(headerName));
+					final String columnName = SqlUtils.generateSchemaElementName(fieldName);
+					
+					final String val = sample[i];
+					if (val.matches("-?\\d+")) {
+						deib.addFieldInfo(DataType.INTEGER, fieldName, columnName, val);
+                    } else if (val.matches("-?\\d*\\.\\d+")) {
+						deib.addFieldInfo(DataType.DECIMAL, fieldName, columnName, val);
+                    } else {
+						deib.addFieldInfo(DataType.STRING, fieldName, columnName, val);
+                    }
+				}
+				
+				list.add(deib.build());
+			} catch (Exception e) {
+				throw new UnifyException(UnifyCoreErrorConstants.DATAUTIL_ERROR, e);
+			}
+
+			return list;
+		}
+
+		return Collections.emptyList();
 	}
 	
 	public static List<EntityTypeInfo> getEntityTypeInfoFromJson(final String json) throws UnifyException {
