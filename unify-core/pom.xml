@@ -138,9 +138,9 @@
 			<version>0.9.5</version>
 		</dependency>
 		<dependency>
-		    <groupId>com.opencsv</groupId>
-		    <artifactId>opencsv</artifactId>
-		    <version>5.8</version>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-csv</artifactId>
+		    <version>1.10.0</version>
 		</dependency>
 		<!-- Common HTML to PDF reporting. -->
 		<dependency>
