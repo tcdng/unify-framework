@@ -203,14 +203,26 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 			} catch (Exception e) {
 				logError(e);
 				try {
-					clientResponse.setContentType(MimeType.TEXT_HTML.template());
-					clientResponse.getWriter().write("<html>\n<head>\n");
-					clientResponse.getWriter()
-							.write("<meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\"/>\n");
-					clientResponse.getWriter().write("<title>ErrorPart 404</title>\n");
-					clientResponse.getWriter().write("</head>\n<body>");
-					clientResponse.getWriter().write("<h2>HTTP ERROR 404 - Not found.</h2>\n");
-					clientResponse.getWriter().write("</body>\n</html>\n");
+					final String contentType = httpRequest.getHeader("Content-Type");
+					if (MimeType.APPLICATION_JSON.template().equals(contentType)) {
+						clientResponse.setContentType(MimeType.APPLICATION_JSON.template());
+						clientResponse.getWriter().write("{\n");
+						clientResponse.getWriter()
+								.write("  \"status\": 404,\n");
+						clientResponse.getWriter().write("  \"error\": \"Not Found\",\n");
+						clientResponse.getWriter().write("  \"message\": \"The resource you are looking for is not available.\"\n");
+						clientResponse.getWriter().write("}\n");
+					} else {
+						clientResponse.setContentType(MimeType.TEXT_HTML.template());
+						clientResponse.getWriter().write("<html>\n<head>\n");
+						clientResponse.getWriter()
+								.write("<meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\"/>\n");
+						clientResponse.getWriter().write("<title>ErrorPart 404</title>\n");
+						clientResponse.getWriter().write("</head>\n<body>");
+						clientResponse.getWriter().write("<h2>HTTP ERROR 404 - Not found.</h2>\n");
+						clientResponse.getWriter().write("</body>\n</html>\n");
+					}
+
 					clientResponse.setStatusNotFound();
 				} catch (IOException e1) {
 					logError(e1);
@@ -408,7 +420,7 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 					result.put(key, values);
 				}
 			}
-			
+
 			try {
 				switch (remoteCallFormat) {
 				case OCTETSTREAM:
