@@ -40,7 +40,13 @@ public enum StandardFormatType implements EnumConst  {
 	DATETIME_YYYYMMDD_SLASH("TYS","!fixeddatetimeformat pattern:$s{yyyy/MM/dd HH:mm:ss}","yyyy/MM/dd HH:mm:ss", false),
 	DATETIME_DDMMYYYY_DASH("TDD","!fixeddatetimeformat pattern:$s{dd-MM-yyyy HH:mm:ss}","dd-MM-yyyy HH:mm:ss", false),
 	DATETIME_MMDDYYYY_DASH("TMD","!fixeddatetimeformat pattern:$s{MM-dd-yyyy HH:mm:ss}","MM-dd-yyyy HH:mm:ss", false),
-	DATETIME_YYYYMMDD_DASH("TYD","!fixeddatetimeformat pattern:$s{yyyy-MM-dd HH:mm:ss}","yyyy-MM-dd HH:mm:ss", false);
+	DATETIME_YYYYMMDD_DASH("TYD","!fixeddatetimeformat pattern:$s{yyyy-MM-dd HH:mm:ss}","yyyy-MM-dd HH:mm:ss", false),
+	DATETIMEA_DDMMYYYY_SLASH("ADS","!fixeddatetimeformat pattern:$s{dd/MM/yyyy hh:mm:ss aa}","dd/MM/yyyy hh:mm:ss aa", false),
+	DATETIMEA_MMDDYYYY_SLASH("AMS","!fixeddatetimeformat pattern:$s{MM/dd/yyyy hh:mm:ss aa}","MM/dd/yyyy hh:mm:ss aa", false),
+	DATETIMEA_YYYYMMDD_SLASH("AYS","!fixeddatetimeformat pattern:$s{yyyy/MM/dd hh:mm:ss aa}","yyyy/MM/dd hh:mm:ss aa", false),
+	DATETIMEA_DDMMYYYY_DASH("ADD","!fixeddatetimeformat pattern:$s{dd-MM-yyyy hh:mm:ss aa}","dd-MM-yyyy hh:mm:ss aa", false),
+	DATETIMEA_MMDDYYYY_DASH("AMD","!fixeddatetimeformat pattern:$s{MM-dd-yyyy hh:mm:ss aa}","MM-dd-yyyy hh:mm:ss aa", false),
+	DATETIMEA_YYYYMMDD_DASH("AYD","!fixeddatetimeformat pattern:$s{yyyy-MM-dd hh:mm:ss aa}","yyyy-MM-dd hh:mm:ss aa", false);
 	
 	private final String code;
 	
