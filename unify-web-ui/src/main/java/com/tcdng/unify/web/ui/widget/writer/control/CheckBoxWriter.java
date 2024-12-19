@@ -67,7 +67,7 @@ public class CheckBoxWriter extends AbstractControlWriter {
 		writer.write("/>");
 		writer.write("</span>");
 
-		if (!checkBox.isLayoutCaption()) {
+		if (!checkBox.isLayoutCaption() && checkBox.getCaption() != null) {
 			writer.write("<span class=\"ui-inlabel\">");
 			writeCaption(writer, checkBox);
 			writer.write("</span>");
