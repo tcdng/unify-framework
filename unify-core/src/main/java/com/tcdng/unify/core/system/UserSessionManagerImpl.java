@@ -183,34 +183,34 @@ public class UserSessionManagerImpl extends AbstractBusinessService implements U
 
     @Periodic(PeriodicType.NORMAL)
     @Synchronized(USER_SESSION_LOCK)
-    public void performUserSessionHouseKeeping(TaskMonitor taskMonitor) throws UnifyException {
-        // Update active session records and remove inactive ones
-        Date now = db().getNow();
-        int expirationInSeconds = getContainerSetting(int.class, UnifyCorePropertyConstants.APPLICATION_SESSION_TIMEOUT,
-                UnifyCoreConstants.DEFAULT_APPLICATION_SESSION_TIMEOUT_SECONDS);
-        expirationInSeconds = expirationInSeconds + expirationInSeconds / 5;
-        Date expiryTime = CalendarUtils.getDateWithOffset(now, -(expirationInSeconds * 1000));
-        for (UserSession userSession : userSessions.values()) {
-            SessionContext sessionContext = userSession.getSessionContext();
-            boolean isNewLastAccessTime = sessionContext.isNewLastAccessTime();
-            Date lastAccessTime = sessionContext.getLastAccessTime();
-            if (lastAccessTime == null) {
-                lastAccessTime = now;
-            }
+	public void performUserSessionHouseKeeping(TaskMonitor taskMonitor) throws UnifyException {
+		// Update active session records and remove inactive ones
+		Date now = db().getNow();
+		int expirationInSeconds = getContainerSetting(int.class, UnifyCorePropertyConstants.APPLICATION_SESSION_TIMEOUT,
+				UnifyCoreConstants.DEFAULT_APPLICATION_SESSION_TIMEOUT_SECONDS);
+		expirationInSeconds = expirationInSeconds + expirationInSeconds / 5;
+		Date expiryTime = CalendarUtils.getDateWithOffset(now, -(expirationInSeconds * 1000));
+		for (UserSession userSession : userSessions.values()) {
+			SessionContext sessionContext = userSession.getSessionContext();
+			boolean isNewLastAccessTime = sessionContext.isNewLastAccessTime();
+			Date lastAccessTime = sessionContext.getLastAccessTime();
+			if (lastAccessTime == null) {
+				lastAccessTime = now;
+			}
 
-            if (isNewLastAccessTime) {
-                db().updateAll(new UserSessionTrackingQuery().id(sessionContext.getId()),
-                        new Update().add("node", getNodeId()).add("lastAccessTime", lastAccessTime));
-            }
+			if (isNewLastAccessTime) {
+				db().updateAll(new UserSessionTrackingQuery().id(sessionContext.getId()),
+						new Update().add("node", getNodeId()).add("lastAccessTime", lastAccessTime));
+			}
 
-            if (expiryTime.after(sessionContext.getLastAccessTime())) {
-                userSessions.remove(sessionContext.getId());
-            }
-        }
+			if (sessionContext.getLastAccessTime() != null && expiryTime.after(sessionContext.getLastAccessTime())) {
+				userSessions.remove(sessionContext.getId());
+			}
+		}
 
 		// Delete inactive session
 		db().deleteAll(new UserSessionTrackingQuery().expired(expiryTime));
-    }
+	}
 
     private void broadcast(UserSession userSession, String attribute, Object value) throws UnifyException {
         if (userSession != null) {
