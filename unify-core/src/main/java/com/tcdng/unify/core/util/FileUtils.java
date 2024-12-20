@@ -108,6 +108,10 @@ public final class FileUtils {
 					}
 				}
 				
+				if (IOUtils.isResourceFileInstance(fileName, workingPath)) {
+					return fileName;
+				}
+				
 				final String _fallFileName = fileName.substring(0, lastIndex) + "-fallback" + ext;
 				if (IOUtils.isResourceFileInstance(_fallFileName, workingPath)) {
 					return _fallFileName;
