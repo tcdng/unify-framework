@@ -15,27 +15,43 @@
  */
 package com.tcdng.unify.core.util;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
-import org.junit.Test;
-
 /**
- * FileUtils test.
+ * Post response object.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public class FileUtilsTest {
+public class PostResp<T> {
 
-    @Test
-	public void testExtendFileNameNull() throws Exception {
-		assertNull(FileUtils.detectPresentAndGetThemeFileName(null, null, null));
-		assertNull(FileUtils.detectPresentAndGetThemeFileName(null, "-blue", null));
+	private T result;
+	
+	private String error;
+	
+	private int status;
 
-		assertEquals("theme.png", FileUtils.detectPresentAndGetThemeFileName("theme.png", null, null));
-		assertEquals("/src/resources/theme.png",
-				FileUtils.detectPresentAndGetThemeFileName("/src/resources/theme.png", null, null));
+	public PostResp(T result, String error, int status) {
+		this.result = result;
+		this.error = error;
+		this.status = status;
 	}
 
+	public T getResult() {
+		return result;
+	}
+
+	public String getError() {
+		return error;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+	
+	public boolean isSuccess() {
+		return status >= 200 && status < 300;
+	}
+	
+	public boolean isError() {
+		return !isSuccess();
+	}
 }
