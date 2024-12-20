@@ -26,7 +26,6 @@ import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.file.FileResourceProvider;
 import com.tcdng.unify.core.util.FileUtils;
 import com.tcdng.unify.core.util.IOUtils;
-import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.constant.Secured;
 import com.tcdng.unify.web.ui.AbstractPageResourceController;
 
@@ -103,14 +102,7 @@ public class FileResourceController extends AbstractPageResourceController {
 
 	private String getThemeExtendedFileName(final String fileName, final String workingPath) throws UnifyException {
 		final String theme = getContainerSetting(String.class, UnifyCorePropertyConstants.APPLICATION_THEME);
-		if (!StringUtils.isBlank(theme)) {
-			final String _fileName = FileUtils.detectPresentAndGetThemeFileName(fileName, theme, workingPath);
-			if (_fileName != null) {
-				return _fileName;
-			}
-		}
-
-		return fileName;
+		return FileUtils.detectPresentAndGetThemeFileName(fileName, theme, workingPath);
 	}
 
 	protected class ResInputStream {
