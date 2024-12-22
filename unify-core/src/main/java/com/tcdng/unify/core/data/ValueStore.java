@@ -27,7 +27,7 @@ import com.tcdng.unify.core.format.Formatter;
  * @author The Code Department
  * @since 1.0
  */
-public interface ValueStore {
+public interface ValueStore extends Iterable<ValueStore>{
 
     /**
      * Sets the policy for this value store
