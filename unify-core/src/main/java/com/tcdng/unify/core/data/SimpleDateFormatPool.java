@@ -35,9 +35,21 @@ public class SimpleDateFormatPool extends AbstractPool<SimpleDateFormat> {
     private Locale locale;
 
     /**
+     * Constructs a simple date format pool using specified pattern. The
+     * pool is setup with a get timeout of 2 seconds, a minimum pool size of 1 and a
+     * maximum of 64.
+     * 
+     * @param pattern
+     *            the date pattern
+     */
+    public SimpleDateFormatPool(String pattern) {
+        this(pattern, Locale.getDefault(), 2000, 1, 64);
+    }
+
+    /**
      * Constructs a simple date format pool using specified pattern and locale. The
      * pool is setup with a get timeout of 2 seconds, a minimum pool size of 1 and a
-     * maximum of 32.
+     * maximum of 64.
      * 
      * @param pattern
      *            the date pattern
