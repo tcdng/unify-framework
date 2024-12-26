@@ -16,6 +16,7 @@
 
 package com.tcdng.unify.web;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -100,9 +101,21 @@ public class PathInfoRepositoryImpl extends AbstractUnifyComponent implements Pa
 					ucc = getComponentConfig(Controller.class, controllerName);
 				}
 
+				DocPathParts docPathParts = null;
+				final String[] _docParts = controllerPath.split("/");
+				if (_docParts.length > 2) {
+					final String docControllerName = "/" + _docParts[1];
+					final List<String> docPath = new ArrayList<String>();
+					for (int i = 2; i < _docParts.length; i++) {
+						docPath.add(_docParts[i]);
+					}
+
+					docPathParts = new DocPathParts(docControllerName, docPath);
+				}
+
 				boolean sessionless = ucc == null ? false : SessionlessController.class.isAssignableFrom(ucc.getType());
-				return new ControllerPathParts(controllerPath, pathId, controllerName, pathVariables, actionName,
-						operation, resourceId, sessionless);
+				return new ControllerPathParts(docPathParts, controllerPath, pathId, controllerName, pathVariables,
+						actionName, operation, resourceId, sessionless);
 			}
 		};
 	}

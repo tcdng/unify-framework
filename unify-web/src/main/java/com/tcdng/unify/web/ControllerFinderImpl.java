@@ -63,6 +63,16 @@ public class ControllerFinderImpl extends AbstractUnifyComponent implements Cont
 		logDebug("Finding controller for path [{0}]...", controllerPathParts.getControllerPath());
 		logDebug("Path variables [{0}]...", controllerPathParts.getPathVariables());
 
+		if (controllerPathParts.isWithDocPathParts()) {
+			DocPathParts docPathParts = controllerPathParts.getDocPathParts();
+			if (isComponent(docPathParts.getDocControllerName())) {
+				Controller controller = (Controller) getComponent(docPathParts.getDocControllerName());
+				if (controller instanceof DocumentController) {
+					return controller;
+				}
+			}
+		}
+		
 		final String controllerName = controllerPathParts.getControllerName();
 		final String _actualControllerName = getActualControllerName(controllerName);
 		UnifyComponentConfig unifyComponentConfig = getComponentConfig(Controller.class, _actualControllerName);
