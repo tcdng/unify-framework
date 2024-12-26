@@ -13,13 +13,20 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.web;
-
-import java.io.PrintWriter;
+package com.tcdng.unify.web.ui;
 
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.constant.MimeType;
+import com.tcdng.unify.web.AbstractController;
+import com.tcdng.unify.web.ClientRequest;
+import com.tcdng.unify.web.ClientResponse;
+import com.tcdng.unify.web.ControllerPathParts;
+import com.tcdng.unify.web.DocPathParts;
+import com.tcdng.unify.web.DocumentController;
 import com.tcdng.unify.web.constant.Secured;
+import com.tcdng.unify.web.ui.widget.ResponseWriter;
+import com.tcdng.unify.web.ui.widget.ResponseWriterPool;
 
 /**
  * Convenient abstract base class for document controllers.
@@ -29,6 +36,9 @@ import com.tcdng.unify.web.constant.Secured;
  */
 public abstract class AbstractDocumentController extends AbstractController implements DocumentController {
 
+	@Configurable
+	private ResponseWriterPool responseWriterPool;
+
 	public AbstractDocumentController(Secured secured) {
 		super(secured);
 	}
@@ -37,7 +47,13 @@ public abstract class AbstractDocumentController extends AbstractController impl
 	public void process(ClientRequest request, ClientResponse response) throws UnifyException {
 		response.setContentType(MimeType.TEXT_HTML.template());
 		final DocPathParts docPathParts = request.getRequestPathParts().getControllerPathParts().getDocPathParts();
-		writeDocument(response.getWriter(), docPathParts.getDocPath(), docPathParts.getSection());
+		ResponseWriter writer = responseWriterPool.getResponseWriter(request);
+		try {
+			writeDocument(writer, docPathParts.getDocPath(), docPathParts.getSection());
+			writer.writeTo(response.getWriter());
+		} finally {
+			responseWriterPool.restore(writer);
+		}
 	}
 
 	@Override
@@ -45,5 +61,5 @@ public abstract class AbstractDocumentController extends AbstractController impl
 
 	}
 
-	protected abstract void writeDocument(PrintWriter writer, String docPath, String section) throws UnifyException;
+	protected abstract void writeDocument(ResponseWriter writer, String docPath, String section) throws UnifyException;
 }
