@@ -16,7 +16,7 @@
 
 package com.tcdng.unify.web;
 
-import java.util.List;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * Documentation path parts.
@@ -28,19 +28,33 @@ public class DocPathParts {
 
 	private String docControllerName;
 
-	private List<String> docPath;
+	private String docPath;
 
-	public DocPathParts(String docControllerName, List<String> docPath) {
+	private String section;
+
+	public DocPathParts(String docControllerName, String docPath, String section) {
 		this.docControllerName = docControllerName;
 		this.docPath = docPath;
+		this.section = section;
 	}
 
 	public String getDocControllerName() {
 		return docControllerName;
 	}
 
-	public List<String> getDocPath() {
+	public String getDocPath() {
 		return docPath;
 	}
 
+	public String getSection() {
+		return section;
+	}
+
+	public boolean isWithDocPath() {
+		return !StringUtils.isBlank(docPath);
+	}
+
+	public boolean isWithSection() {
+		return !StringUtils.isBlank(section);
+	}
 }

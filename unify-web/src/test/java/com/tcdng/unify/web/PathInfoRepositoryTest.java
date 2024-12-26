@@ -31,97 +31,169 @@ import org.junit.Test;
  */
 public class PathInfoRepositoryTest extends AbstractUnifyWebTest {
 
-    private PathInfoRepository pir;
+	private PathInfoRepository pir;
 
-    @Test
-    public void testGetPathPartsNoAction() throws Exception {
-        ControllerPathParts controllerPathParts = pir.getControllerPathParts("/testauthor");
-        assertNotNull(controllerPathParts);
+	@Test
+	public void testGetPathPartsNoAction() throws Exception {
+		ControllerPathParts controllerPathParts = pir.getControllerPathParts("/testauthor");
+		assertNotNull(controllerPathParts);
 
-        assertEquals("/testauthor", controllerPathParts.getControllerPath());
-        assertEquals("/testauthor", controllerPathParts.getControllerPathId());
-        assertEquals("/testauthor", controllerPathParts.getControllerName());
-        assertNotNull(controllerPathParts.getPathVariables());
-        assertEquals(0, controllerPathParts.getPathVariables().size());
-        assertNull(controllerPathParts.getActionName());
-        assertFalse(controllerPathParts.isSessionless());
-        assertFalse(controllerPathParts.isActionPath());
-        assertFalse(controllerPathParts.isVariablePath());
-    }
+		assertEquals("/testauthor", controllerPathParts.getControllerPath());
+		assertEquals("/testauthor", controllerPathParts.getControllerPathId());
+		assertEquals("/testauthor", controllerPathParts.getControllerName());
+		assertNotNull(controllerPathParts.getPathVariables());
+		assertEquals(0, controllerPathParts.getPathVariables().size());
+		assertNull(controllerPathParts.getActionName());
+		assertFalse(controllerPathParts.isSessionless());
+		assertFalse(controllerPathParts.isActionPath());
+		assertFalse(controllerPathParts.isVariablePath());
+	}
 
-    @Test
-    public void testGetPathPartsWithAction() throws Exception {
-        ControllerPathParts controllerPathParts = pir.getControllerPathParts("/testauthor/createAuthor");
-        assertNotNull(controllerPathParts);
+	@Test
+	public void testGetDocPathPartsNoDocPath() throws Exception {
+		ControllerPathParts controllerPathParts = pir.getControllerPathParts("/docs");
+		assertNotNull(controllerPathParts);
 
-        assertEquals("/testauthor/createAuthor", controllerPathParts.getControllerPath());
-        assertEquals("/testauthor", controllerPathParts.getControllerPathId());
-        assertEquals("/testauthor", controllerPathParts.getControllerName());
-        assertNotNull(controllerPathParts.getPathVariables());
-        assertEquals(0, controllerPathParts.getPathVariables().size());
-        assertEquals("/createAuthor", controllerPathParts.getActionName());
-        assertFalse(controllerPathParts.isSessionless());
-        assertTrue(controllerPathParts.isActionPath());
-        assertFalse(controllerPathParts.isVariablePath());
-    }
+		DocPathParts docPathParts = controllerPathParts.getDocPathParts();
+		assertNotNull(docPathParts);
 
-    @Test
-    public void testGetPathPartsVariablePathNoAction() throws Exception {
-        ControllerPathParts controllerPathParts = pir.getControllerPathParts("/testauthor:20");
-        assertNotNull(controllerPathParts);
+		assertEquals("/docs", docPathParts.getDocControllerName());
+		assertFalse(docPathParts.isWithDocPath());
+		assertFalse(docPathParts.isWithSection());
+	}
 
-        assertEquals("/testauthor:20", controllerPathParts.getControllerPath());
-        assertEquals("/testauthor:20", controllerPathParts.getControllerPathId());
-        assertEquals("/testauthor", controllerPathParts.getControllerName());
-        assertNotNull(controllerPathParts.getPathVariables());
-        assertEquals(1, controllerPathParts.getPathVariables().size());
-        assertEquals("20", controllerPathParts.getPathVariables().get(0));
-        assertNull(controllerPathParts.getActionName());
-        assertFalse(controllerPathParts.isSessionless());
-        assertFalse(controllerPathParts.isActionPath());
-        assertTrue(controllerPathParts.isVariablePath());
-    }
+	@Test
+	public void testGetPathPartsWithAction() throws Exception {
+		ControllerPathParts controllerPathParts = pir.getControllerPathParts("/testauthor/createAuthor");
+		assertNotNull(controllerPathParts);
 
-    @Test
-    public void testGetPathPartsVariablePathWithAction() throws Exception {
-        ControllerPathParts controllerPathParts = pir.getControllerPathParts("/testauthor:35/createAuthor");
-        assertNotNull(controllerPathParts);
+		assertEquals("/testauthor/createAuthor", controllerPathParts.getControllerPath());
+		assertEquals("/testauthor", controllerPathParts.getControllerPathId());
+		assertEquals("/testauthor", controllerPathParts.getControllerName());
+		assertNotNull(controllerPathParts.getPathVariables());
+		assertEquals(0, controllerPathParts.getPathVariables().size());
+		assertEquals("/createAuthor", controllerPathParts.getActionName());
+		assertFalse(controllerPathParts.isSessionless());
+		assertTrue(controllerPathParts.isActionPath());
+		assertFalse(controllerPathParts.isVariablePath());
+	}
 
-        assertEquals("/testauthor:35/createAuthor", controllerPathParts.getControllerPath());
-        assertEquals("/testauthor:35", controllerPathParts.getControllerPathId());
-        assertEquals("/testauthor", controllerPathParts.getControllerName());
-        assertNotNull(controllerPathParts.getPathVariables());
-        assertEquals(1, controllerPathParts.getPathVariables().size());
-        assertEquals("35", controllerPathParts.getPathVariables().get(0));
-        assertEquals("/createAuthor", controllerPathParts.getActionName());
-        assertFalse(controllerPathParts.isSessionless());
-        assertTrue(controllerPathParts.isActionPath());
-        assertTrue(controllerPathParts.isVariablePath());
-    }
+	@Test
+	public void testGetDocPathPartsDocPath() throws Exception {
+		ControllerPathParts controllerPathParts = pir.getControllerPathParts("/docs/end-user-guide");
+		assertNotNull(controllerPathParts);
 
-    @Test
-    public void testGetPathPartsReuse() throws Exception {
-        ControllerPathParts pathParts1 = pir.getControllerPathParts("/testauthor:35/createAuthor");
-        ControllerPathParts pathParts2 = pir.getControllerPathParts("/testauthor:35/createAuthor");
-        assertNotNull(pathParts1);
-        assertNotNull(pathParts2);
-        assertTrue(pathParts1 == pathParts2);
+		DocPathParts docPathParts = controllerPathParts.getDocPathParts();
+		assertNotNull(docPathParts);
 
-        ControllerPathParts pathParts3 = pir.getControllerPathParts("/testauthor/createAuthor");
-        ControllerPathParts pathParts4 = pir.getControllerPathParts("/testauthor/createAuthor");
-        assertNotNull(pathParts3);
-        assertNotNull(pathParts4);
-        assertTrue(pathParts3 == pathParts4);
-    }
+		assertEquals("/docs", docPathParts.getDocControllerName());
+		assertTrue(docPathParts.isWithDocPath());
+		assertEquals("end-user-guide", docPathParts.getDocPath());
+		assertFalse(docPathParts.isWithSection());
+	}
 
-    @Override
-    protected void onSetup() throws Exception {
-        pir = (PathInfoRepository) getComponent(WebApplicationComponents.APPLICATION_PATHINFOREPOSITORY);
-    }
+	@Test
+	public void testGetDocPathPartsDocPathMultiple() throws Exception {
+		ControllerPathParts controllerPathParts = pir.getControllerPathParts("/docs/end-user-guide/java-installation");
+		assertNotNull(controllerPathParts);
 
-    @Override
-    protected void onTearDown() throws Exception {
+		DocPathParts docPathParts = controllerPathParts.getDocPathParts();
+		assertNotNull(docPathParts);
 
-    }
+		assertEquals("/docs", docPathParts.getDocControllerName());
+		assertTrue(docPathParts.isWithDocPath());
+		assertEquals("end-user-guide/java-installation", docPathParts.getDocPath());
+		assertFalse(docPathParts.isWithSection());
+	}
+
+	@Test
+	public void testGetDocPathPartsDocPathSection() throws Exception {
+		ControllerPathParts controllerPathParts = pir.getControllerPathParts("/docs/end-user-guide#getting-started");
+		assertNotNull(controllerPathParts);
+
+		DocPathParts docPathParts = controllerPathParts.getDocPathParts();
+		assertNotNull(docPathParts);
+
+		assertEquals("/docs", docPathParts.getDocControllerName());
+		assertTrue(docPathParts.isWithDocPath());
+		assertEquals("end-user-guide", docPathParts.getDocPath());
+		assertTrue(docPathParts.isWithSection());
+		assertEquals("getting-started", docPathParts.getSection());
+	}
+
+	@Test
+	public void testGetDocPathPartsDocPathSectionMultiple() throws Exception {
+		ControllerPathParts controllerPathParts = pir
+				.getControllerPathParts("/docs/end-user-guide/java-installation#getting-started");
+		assertNotNull(controllerPathParts);
+
+		DocPathParts docPathParts = controllerPathParts.getDocPathParts();
+		assertNotNull(docPathParts);
+
+		assertEquals("/docs", docPathParts.getDocControllerName());
+		assertTrue(docPathParts.isWithDocPath());
+		assertEquals("end-user-guide/java-installation", docPathParts.getDocPath());
+		assertTrue(docPathParts.isWithSection());
+		assertEquals("getting-started", docPathParts.getSection());
+	}
+
+	@Test
+	public void testGetPathPartsVariablePathNoAction() throws Exception {
+		ControllerPathParts controllerPathParts = pir.getControllerPathParts("/testauthor:20");
+		assertNotNull(controllerPathParts);
+
+		assertEquals("/testauthor:20", controllerPathParts.getControllerPath());
+		assertEquals("/testauthor:20", controllerPathParts.getControllerPathId());
+		assertEquals("/testauthor", controllerPathParts.getControllerName());
+		assertNotNull(controllerPathParts.getPathVariables());
+		assertEquals(1, controllerPathParts.getPathVariables().size());
+		assertEquals("20", controllerPathParts.getPathVariables().get(0));
+		assertNull(controllerPathParts.getActionName());
+		assertFalse(controllerPathParts.isSessionless());
+		assertFalse(controllerPathParts.isActionPath());
+		assertTrue(controllerPathParts.isVariablePath());
+	}
+
+	@Test
+	public void testGetPathPartsVariablePathWithAction() throws Exception {
+		ControllerPathParts controllerPathParts = pir.getControllerPathParts("/testauthor:35/createAuthor");
+		assertNotNull(controllerPathParts);
+
+		assertEquals("/testauthor:35/createAuthor", controllerPathParts.getControllerPath());
+		assertEquals("/testauthor:35", controllerPathParts.getControllerPathId());
+		assertEquals("/testauthor", controllerPathParts.getControllerName());
+		assertNotNull(controllerPathParts.getPathVariables());
+		assertEquals(1, controllerPathParts.getPathVariables().size());
+		assertEquals("35", controllerPathParts.getPathVariables().get(0));
+		assertEquals("/createAuthor", controllerPathParts.getActionName());
+		assertFalse(controllerPathParts.isSessionless());
+		assertTrue(controllerPathParts.isActionPath());
+		assertTrue(controllerPathParts.isVariablePath());
+	}
+
+	@Test
+	public void testGetPathPartsReuse() throws Exception {
+		ControllerPathParts pathParts1 = pir.getControllerPathParts("/testauthor:35/createAuthor");
+		ControllerPathParts pathParts2 = pir.getControllerPathParts("/testauthor:35/createAuthor");
+		assertNotNull(pathParts1);
+		assertNotNull(pathParts2);
+		assertTrue(pathParts1 == pathParts2);
+
+		ControllerPathParts pathParts3 = pir.getControllerPathParts("/testauthor/createAuthor");
+		ControllerPathParts pathParts4 = pir.getControllerPathParts("/testauthor/createAuthor");
+		assertNotNull(pathParts3);
+		assertNotNull(pathParts4);
+		assertTrue(pathParts3 == pathParts4);
+	}
+
+	@Override
+	protected void onSetup() throws Exception {
+		pir = (PathInfoRepository) getComponent(WebApplicationComponents.APPLICATION_PATHINFOREPOSITORY);
+	}
+
+	@Override
+	protected void onTearDown() throws Exception {
+
+	}
 
 }

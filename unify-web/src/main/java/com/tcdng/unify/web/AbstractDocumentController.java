@@ -16,8 +16,6 @@
 package com.tcdng.unify.web;
 
 import java.io.PrintWriter;
-import java.io.Writer;
-import java.util.List;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.constant.MimeType;
@@ -47,5 +45,5 @@ public abstract class AbstractDocumentController extends AbstractController impl
 
 	}
 
-	protected abstract void writeDocument(PrintWriter writer, List<String> docPath) throws UnifyException;
+	protected abstract void writeDocument(PrintWriter writer, String docPath) throws UnifyException;
 }

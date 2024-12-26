@@ -16,7 +16,6 @@
 
 package com.tcdng.unify.web;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -102,15 +101,20 @@ public class PathInfoRepositoryImpl extends AbstractUnifyComponent implements Pa
 				}
 
 				DocPathParts docPathParts = null;
-				final String[] _docParts = controllerPath.split("/");
-				if (_docParts.length > 2) {
+				final String[] _docParts = controllerPath.split("/", 3);
+				if (_docParts.length >= 2) {
 					final String docControllerName = "/" + _docParts[1];
-					final List<String> docPath = new ArrayList<String>();
-					for (int i = 2; i < _docParts.length; i++) {
-						docPath.add(_docParts[i]);
+					String docPath = _docParts.length == 3 ? docPath = _docParts[2] : null;
+					String section = null;
+					if (docPath != null) {
+						int index = docPath.lastIndexOf('#');
+						if (index > 0) {
+							section = docPath.substring(index + 1);
+							docPath = docPath.substring(0, index);
+						}
 					}
 
-					docPathParts = new DocPathParts(docControllerName, docPath);
+					docPathParts = new DocPathParts(docControllerName, docPath, section);
 				}
 
 				boolean sessionless = ucc == null ? false : SessionlessController.class.isAssignableFrom(ucc.getType());
