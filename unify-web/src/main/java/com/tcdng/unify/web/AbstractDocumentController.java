@@ -36,8 +36,8 @@ public abstract class AbstractDocumentController extends AbstractController impl
 	@Override
 	public void process(ClientRequest request, ClientResponse response) throws UnifyException {
 		response.setContentType(MimeType.TEXT_HTML.template());
-		writeDocument(response.getWriter(),
-				request.getRequestPathParts().getControllerPathParts().getDocPathParts().getDocPath());
+		final DocPathParts docPathParts = request.getRequestPathParts().getControllerPathParts().getDocPathParts();
+		writeDocument(response.getWriter(), docPathParts.getDocPath(), docPathParts.getSection());
 	}
 
 	@Override
@@ -45,5 +45,5 @@ public abstract class AbstractDocumentController extends AbstractController impl
 
 	}
 
-	protected abstract void writeDocument(PrintWriter writer, String docPath) throws UnifyException;
+	protected abstract void writeDocument(PrintWriter writer, String docPath, String section) throws UnifyException;
 }
