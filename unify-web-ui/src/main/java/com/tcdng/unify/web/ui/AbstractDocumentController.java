@@ -62,4 +62,10 @@ public abstract class AbstractDocumentController extends AbstractController impl
 	}
 
 	protected abstract void writeDocument(ResponseWriter writer, String docPath, String section) throws UnifyException;
+
+	protected void writeStyleSheet(ResponseWriter writer, String styleSheet) throws UnifyException {
+		writer.write("<link href=\"");
+		writer.writeContextResourceURL("/resource/file", MimeType.TEXT_CSS.template(), styleSheet);
+		writer.write("\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\">");
+	}
 }

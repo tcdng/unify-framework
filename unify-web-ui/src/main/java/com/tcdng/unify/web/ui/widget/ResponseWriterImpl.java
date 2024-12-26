@@ -185,6 +185,12 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 	}
 
 	@Override
+	public ResponseWriter write(char ch) {
+		buf.append(ch);
+		return this;
+	}
+
+	@Override
 	public ResponseWriter writeNotNull(Object object) {
 		if (object != null) {
 			buf.append(object);

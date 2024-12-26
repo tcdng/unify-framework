@@ -28,6 +28,14 @@ import com.tcdng.unify.web.ClientRequest;
 public interface ResponseWriterPool extends UnifyComponent {
 
     /**
+     * Returns a response writer from pool. Uses desktop client platform.
+     * 
+     * @throws UnifyException
+     *             if get operation times out.
+     */
+    ResponseWriter getResponseWriter() throws UnifyException;
+
+    /**
      * Returns a response writer from pool based on current session context.
      * 
      * @param clientRequest the client request object.

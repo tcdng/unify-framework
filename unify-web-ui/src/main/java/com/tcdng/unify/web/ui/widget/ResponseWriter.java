@@ -183,6 +183,11 @@ public interface ResponseWriter extends UnifyComponent {
     ResponseWriter write(Object object);
 
     /**
+     * Writes character and returns this writer.
+     */
+    ResponseWriter write(char ch);
+
+    /**
      * Writes object if object is not null and returns this writer.
      */
     ResponseWriter writeNotNull(Object object);
