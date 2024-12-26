@@ -17,7 +17,7 @@ package com.tcdng.unify.web.http;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.Writer;
+import java.io.PrintWriter;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.UnifyOperationException;
@@ -36,7 +36,7 @@ public class HttpClientResponse implements ClientResponse {
 
     private OutputStream outputStream;
 
-    private Writer writer;
+    private PrintWriter writer;
 
     private boolean outUsed;
 
@@ -74,7 +74,7 @@ public class HttpClientResponse implements ClientResponse {
     }
 
     @Override
-    public Writer getWriter() throws UnifyException {
+    public PrintWriter getWriter() throws UnifyException {
         try {
             if (writer == null) {
                 writer = response.getWriter();

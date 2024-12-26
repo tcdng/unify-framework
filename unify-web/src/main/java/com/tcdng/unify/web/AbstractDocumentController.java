@@ -15,6 +15,7 @@
  */
 package com.tcdng.unify.web;
 
+import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.List;
 
@@ -46,5 +47,5 @@ public abstract class AbstractDocumentController extends AbstractController impl
 
 	}
 
-	protected abstract void writeDocument(Writer writer, List<String> docPath) throws UnifyException;
+	protected abstract void writeDocument(PrintWriter writer, List<String> docPath) throws UnifyException;
 }

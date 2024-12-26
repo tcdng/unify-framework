@@ -224,8 +224,6 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 					}
 
 					clientResponse.setStatusNotFound();
-				} catch (IOException e1) {
-					logError(e1);
 				} finally {
 					clientResponse.close();
 				}
