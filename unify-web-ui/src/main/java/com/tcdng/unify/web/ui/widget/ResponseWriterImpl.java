@@ -544,7 +544,7 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 
 	@Override
 	public ResponseWriter writeURLParameter(String name, String value) throws UnifyException {
-		buf.append('&').append(getPageManager().getPageName(name)).append("=")
+		buf.append('&').append(plainResourceMode ? name : getPageManager().getPageName(name)).append("=")
 				.append(UrlUtils.encodeURLParameter(value));
 		return this;
 	}
