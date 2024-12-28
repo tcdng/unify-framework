@@ -91,8 +91,9 @@ public abstract class AbstractUIController extends AbstractHttpClientController 
 		try {
 			final ControllerPathParts reqPathParts = request.getRequestPathParts().getControllerPathParts();
 			PageController<?> docPageController = null;
-			ControllerPathParts docPathParts = null; 			
-			final String documentPath = (String) request.getParameters().getParam(PageRequestParameterConstants.DOCUMENT);
+			ControllerPathParts docPathParts = null;
+			final String documentPath = (String) request.getParameters()
+					.getParam(PageRequestParameterConstants.DOCUMENT);
 			if (documentPath != null) {
 				docPathParts = pathInfoRepository.getControllerPathParts(documentPath);
 				docPageController = (PageController<?>) getControllerFinder().findController(docPathParts);
@@ -114,7 +115,11 @@ public abstract class AbstractUIController extends AbstractHttpClientController 
 			response.close();
 		}
 	}
-	
+
+	protected boolean isPlainParameters() {
+		return false;
+	}
+
 	private void setAdditionalResponseHeaders(ClientResponse response) throws UnifyException {
 		Map<String, String> additionalResponseHeaders = uiControllerUtil.getAdditionalResponseHeaders();
 		for (Map.Entry<String, String> entry : additionalResponseHeaders.entrySet()) {
@@ -163,11 +168,11 @@ public abstract class AbstractUIController extends AbstractHttpClientController 
 	protected UIControllerUtil getUIControllerUtil() {
 		return uiControllerUtil;
 	}
-	
+
 	protected final <T> T getRequestParameter(Class<T> dataType, String paramName) throws UnifyException {
 		return DataUtils.convert(dataType, getHttpRequestParameter(paramName));
 	}
-	
+
 	protected final <T> T getExternalForward(Class<T> dataType) throws UnifyException {
 		return DataUtils.convert(dataType, getHttpRequestParameter(RequestParameterConstants.EXTERNAL_FORWARD));
 	}
@@ -217,8 +222,10 @@ public abstract class AbstractUIController extends AbstractHttpClientController 
 	}
 
 	protected DataTransfer prepareDataTransfer(ClientRequest request) throws UnifyException {
-		final String actionId = request.getParameters().getParam(String.class, PageRequestParameterConstants.VALIDATION_ACTION);
-		final boolean noTransfer = request.getParameters().getParam(boolean.class,PageRequestParameterConstants.NO_TRANSFER);
+		final String actionId = request.getParameters().getParam(String.class,
+				PageRequestParameterConstants.VALIDATION_ACTION);
+		final boolean noTransfer = request.getParameters().getParam(boolean.class,
+				PageRequestParameterConstants.NO_TRANSFER);
 		Map<String, DataTransferBlock> transferBlocks = null;
 		DataTransferParam dataTransferParam = getDataTransferParam();
 
@@ -279,7 +286,7 @@ public abstract class AbstractUIController extends AbstractHttpClientController 
 			if (noTransfer) {
 				continue;
 			}
-			
+
 			if (transferBlocks == null) {
 				transferBlocks = new HashMap<String, DataTransferBlock>();
 			}
@@ -287,8 +294,13 @@ public abstract class AbstractUIController extends AbstractHttpClientController 
 			DataTransferHeader header = new DataTransferHeader(values);
 			DataTransferBlock transferBlock = DataTransferUtils.createTransferBlock(transferId, header);
 			String id = transferBlock.getId();
-			header.setLongName(pageManager.getLongName(id));
-			header.setBindingInfo(dataTransferParam.getUIControllerInfo().getPropertyInfo(id));
+			if (isPlainParameters()) {
+				header.setLongName(id);
+				header.setBindingInfo(dataTransferParam.getUIControllerInfo().getPlainPropertyInfo(id));
+			} else {
+				header.setLongName(pageManager.getLongName(id));
+				header.setBindingInfo(dataTransferParam.getUIControllerInfo().getPropertyInfo(id));
+			}
 
 			DataTransferBlock eldestBlock = transferBlocks.get(id);
 			if (eldestBlock == null) {

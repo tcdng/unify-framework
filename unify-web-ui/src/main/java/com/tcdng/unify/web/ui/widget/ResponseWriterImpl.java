@@ -97,9 +97,27 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 
 	private boolean bracketOpen;
 
+	private boolean plainResourceMode;
+
 	public ResponseWriterImpl() {
 		this.history = new Stack<HistoryEntry>();
 		this.dataIndex = -1;
+		this.plainResourceMode = false;
+	}
+
+	@Override
+	public boolean isPlainResourceMode() {
+		return plainResourceMode;
+	}
+
+	@Override
+	public void setPlainResourceMode() {
+		this.plainResourceMode = true;
+	}
+
+	@Override
+	public void clearPlainResourceMode() {
+		this.plainResourceMode = false;
 	}
 
 	@Override
@@ -450,7 +468,7 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 			buf.append(requestContext.getTenantPath());
 		}
 
-		buf.append(path);
+		buf.append(plainResourceMode && path.startsWith("/resource") ? path + "/plain" :path);
 		for (String element : pathElement) {
 			buf.append(element);
 		}
@@ -488,25 +506,26 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 			boolean attachment, boolean clearOnRead) throws UnifyException {
 		writeContextURL(path);
 
+		final boolean plainResource = plainResourceMode && path.startsWith("/resource");
 		PageManager pageManager = getPageManager();
-		buf.append('?').append(pageManager.getPageName("resourceName")).append("=")
+		buf.append('?').append(plainResource ? "resourceName" : pageManager.getPageName("resourceName")).append("=")
 				.append(UrlUtils.encodeURLParameter(themeManager.expandThemeTag(resourceName)));
 		if (StringUtils.isNotBlank(contentType)) {
-			buf.append('&').append(pageManager.getPageName("contentType")).append("=")
+			buf.append('&').append(plainResource ? "contentType" : pageManager.getPageName("contentType")).append("=")
 					.append(UrlUtils.encodeURLParameter(contentType));
 		}
 
 		if (StringUtils.isNotBlank(scope)) {
-			buf.append('&').append(pageManager.getPageName("scope")).append("=")
+			buf.append('&').append(plainResource ? "scope" : pageManager.getPageName("scope")).append("=")
 					.append(UrlUtils.encodeURLParameter(scope));
 		}
 
 		if (attachment) {
-			buf.append('&').append(pageManager.getPageName("attachment")).append("=").append(attachment);
+			buf.append('&').append(plainResource ? "attachment" : pageManager.getPageName("attachment")).append("=").append(attachment);
 		}
 
 		if (clearOnRead) {
-			buf.append('&').append(pageManager.getPageName("clearOnRead")).append("=").append(clearOnRead);
+			buf.append('&').append(plainResource ? "clearOnRead" : pageManager.getPageName("clearOnRead")).append("=").append(clearOnRead);
 		}
 
 		if (pageManager.getCurrentRequestClientId() != null) {
@@ -878,6 +897,7 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 			functionAppendSym = false;
 			bracketOpen = false;
 			paramAppendSym = false;
+			plainResourceMode = false;
 		}
 	}
 

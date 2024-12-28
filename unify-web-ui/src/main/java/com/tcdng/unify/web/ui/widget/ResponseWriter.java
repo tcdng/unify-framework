@@ -1011,4 +1011,22 @@ public interface ResponseWriter extends UnifyComponent {
 	 * @return the references
 	 */
 	Set<String> getPostCommandRefs();
+	
+
+	/**
+	 * Checks if writer is in plain resource mode.
+	 * @return true if plain otherwise false
+	 */
+	boolean isPlainResourceMode();
+
+	/**
+	 * Sets writer to plain resource mode
+	 */
+	void setPlainResourceMode();
+
+	/**
+	 * Clears writer from plain resource mode
+	 */
+	void clearPlainResourceMode();
+
 }
