@@ -43,7 +43,7 @@ public class APIDiscoveryManagerTest extends AbstractUnifyWebTest {
         assertNotNull(adrci);
         assertEquals(APIDiscoveryRemoteCallCodeConstants.DISCOVER_REMOTE_CALL, adrci.getCode());
         assertEquals("Discover Remote Call", adrci.getDescription());
-        assertEquals("http://localhost/default/apidiscovery/discoverRemoteCall", adrci.getUrl());
+        assertEquals("http://localhost/apidiscovery/discoverRemoteCall", adrci.getUrl());
         assertFalse(adrci.isRestricted());
     }
 

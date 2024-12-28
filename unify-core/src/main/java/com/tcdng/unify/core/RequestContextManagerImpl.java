@@ -93,7 +93,7 @@ public class RequestContextManagerImpl extends AbstractUnifyComponent implements
             InetAddress inetAddress = InetAddress.getLocalHost();
             return new RequestContext(null,
                     new SessionContext(null, ApplicationUtils.generateSessionContextId(), applicationLocale,
-                            applicationTimeZone, "http://localhost", "/default", null, inetAddress.getHostName(),
+                            applicationTimeZone, "http://localhost", "", null, inetAddress.getHostName(),
                             inetAddress.getHostAddress(), null));
         } catch (UnknownHostException e) {
         }
