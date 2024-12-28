@@ -479,10 +479,11 @@ public interface ResponseWriter extends UnifyComponent {
      * 
      * @param imageName
      *                  the image name
+     * @param clearOnRead clear on read
      * @throws UnifyException
      *                        if an error occurs
      */
-    ResponseWriter writeScopeImageContextURL(String imageName) throws UnifyException;
+    ResponseWriter writeScopeImageContextURL(String imageName, boolean clearOnRead) throws UnifyException;
 
 	/**
 	 * Writes a streamer resource URL using supplied streamer component

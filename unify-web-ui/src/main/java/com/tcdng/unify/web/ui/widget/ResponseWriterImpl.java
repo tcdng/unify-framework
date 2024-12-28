@@ -557,14 +557,15 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 	}
 
 	@Override
-	public ResponseWriter writeScopeImageContextURL(String imageName) throws UnifyException {
-		return writeContextResourceURL("/resource/scope", MimeType.IMAGE.template(), imageName);
+	public ResponseWriter writeScopeImageContextURL(String imageName, boolean clearOnRead) throws UnifyException {
+		return writeContextResourceURL("/resource/scope", MimeType.IMAGE.template(), imageName)
+				.writeURLParameter("clearOnRead", String.valueOf(clearOnRead));
 	}
 
 	@Override
 	public ResponseWriter writeStreamerContextURL(MimeType mimeType, String streamer, String resourceName)
 			throws UnifyException {
-		return writeContextResourceURL("/resource/scope", mimeType.template(), resourceName)
+		return writeContextResourceURL("/resource/streamer", mimeType.template(), resourceName)
 				.writeURLParameter("streamer", streamer);
 	}
 
