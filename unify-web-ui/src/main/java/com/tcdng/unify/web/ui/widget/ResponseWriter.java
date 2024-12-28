@@ -23,6 +23,7 @@ import java.util.Set;
 
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.format.DateTimeFormat;
 import com.tcdng.unify.core.format.Pattern;
 import com.tcdng.unify.core.upl.UplComponent;
@@ -482,6 +483,17 @@ public interface ResponseWriter extends UnifyComponent {
      *                        if an error occurs
      */
     ResponseWriter writeScopeImageContextURL(String imageName) throws UnifyException;
+
+	/**
+	 * Writes a streamer resource URL using supplied streamer component
+	 * 
+	 * @param mimeType     the MIME type
+	 * @param streamer     the streamer
+	 * @param resourceName the resource name
+	 * @throws UnifyException if an error occurs
+	 */
+	ResponseWriter writeStreamerContextURL(MimeType mimeType, String streamer, String resourceName)
+			throws UnifyException;
 
     /**
      * Writes default command URL.

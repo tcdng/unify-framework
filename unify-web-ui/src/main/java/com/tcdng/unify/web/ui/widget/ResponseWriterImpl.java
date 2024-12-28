@@ -468,7 +468,7 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 			buf.append(requestContext.getTenantPath());
 		}
 
-		buf.append(plainResourceMode && path.startsWith("/resource") ? path + "/plain" :path);
+		buf.append(plainResourceMode && path.startsWith("/resource") ? path + "/plain" : path);
 		for (String element : pathElement) {
 			buf.append(element);
 		}
@@ -521,11 +521,13 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 		}
 
 		if (attachment) {
-			buf.append('&').append(plainResource ? "attachment" : pageManager.getPageName("attachment")).append("=").append(attachment);
+			buf.append('&').append(plainResource ? "attachment" : pageManager.getPageName("attachment")).append("=")
+					.append(attachment);
 		}
 
 		if (clearOnRead) {
-			buf.append('&').append(plainResource ? "clearOnRead" : pageManager.getPageName("clearOnRead")).append("=").append(clearOnRead);
+			buf.append('&').append(plainResource ? "clearOnRead" : pageManager.getPageName("clearOnRead")).append("=")
+					.append(clearOnRead);
 		}
 
 		if (pageManager.getCurrentRequestClientId() != null) {
@@ -551,20 +553,24 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 
 	@Override
 	public ResponseWriter writeFileImageContextURL(String src) throws UnifyException {
-		writeContextResourceURL("/resource/fileimage", null, src);
-		return this;
+		return writeContextResourceURL("/resource/fileimage", null, src);
 	}
 
 	@Override
 	public ResponseWriter writeScopeImageContextURL(String imageName) throws UnifyException {
-		writeContextResourceURL("/resource/scope", MimeType.IMAGE.template(), imageName);
-		return this;
+		return writeContextResourceURL("/resource/scope", MimeType.IMAGE.template(), imageName);
+	}
+
+	@Override
+	public ResponseWriter writeStreamerContextURL(MimeType mimeType, String streamer, String resourceName)
+			throws UnifyException {
+		return writeContextResourceURL("/resource/scope", mimeType.template(), resourceName)
+				.writeURLParameter("streamer", streamer);
 	}
 
 	@Override
 	public ResponseWriter writeCommandURL() throws UnifyException {
-		writeContextURL(getRequestContextUtil().getResponsePathParts().getControllerPathId(), "/command");
-		return this;
+		return writeContextURL(getRequestContextUtil().getResponsePathParts().getControllerPathId(), "/command");
 	}
 
 	@Override
