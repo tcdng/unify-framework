@@ -508,9 +508,11 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 		if (clearOnRead) {
 			buf.append('&').append(pageManager.getPageName("clearOnRead")).append("=").append(clearOnRead);
 		}
-		
-		buf.append('&').append(RequestParameterConstants.CLIENT_ID).append("=")
-			.append(UrlUtils.encodeURLParameter(pageManager.getCurrentRequestClientId()));
+
+		if (pageManager.getCurrentRequestClientId() != null) {
+			buf.append('&').append(RequestParameterConstants.CLIENT_ID).append("=")
+					.append(UrlUtils.encodeURLParameter(pageManager.getCurrentRequestClientId()));
+		}
 
 		if (pageRequestContextUtil.isRemoteViewer()) {
 			buf.append('&').append(RequestParameterConstants.REMOTE_VIEWER).append("=")
