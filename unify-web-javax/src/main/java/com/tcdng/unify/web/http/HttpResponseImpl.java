@@ -18,7 +18,7 @@ package com.tcdng.unify.web.http;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.Writer;
+import java.io.PrintWriter;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -61,7 +61,7 @@ public class HttpResponseImpl implements HttpResponse {
     }
 
     @Override
-    public Writer getWriter() throws IOException {
+    public PrintWriter getWriter() throws IOException {
         return response.getWriter();
     }
 

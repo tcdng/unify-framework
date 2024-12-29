@@ -23,6 +23,7 @@ import java.util.Set;
 
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.format.DateTimeFormat;
 import com.tcdng.unify.core.format.Pattern;
 import com.tcdng.unify.core.upl.UplComponent;
@@ -181,6 +182,11 @@ public interface ResponseWriter extends UnifyComponent {
      * Writes object and returns this writer.
      */
     ResponseWriter write(Object object);
+
+    /**
+     * Writes character and returns this writer.
+     */
+    ResponseWriter write(char ch);
 
     /**
      * Writes object if object is not null and returns this writer.
@@ -473,10 +479,22 @@ public interface ResponseWriter extends UnifyComponent {
      * 
      * @param imageName
      *                  the image name
+     * @param clearOnRead clear on read
      * @throws UnifyException
      *                        if an error occurs
      */
-    ResponseWriter writeScopeImageContextURL(String imageName) throws UnifyException;
+    ResponseWriter writeScopeImageContextURL(String imageName, boolean clearOnRead) throws UnifyException;
+
+	/**
+	 * Writes a streamer resource URL using supplied streamer component
+	 * 
+	 * @param mimeType     the MIME type
+	 * @param streamer     the streamer
+	 * @param resourceName the resource name
+	 * @throws UnifyException if an error occurs
+	 */
+	ResponseWriter writeStreamerContextURL(MimeType mimeType, String streamer, String resourceName)
+			throws UnifyException;
 
     /**
      * Writes default command URL.
@@ -1006,4 +1024,22 @@ public interface ResponseWriter extends UnifyComponent {
 	 * @return the references
 	 */
 	Set<String> getPostCommandRefs();
+	
+
+	/**
+	 * Checks if writer is in plain resource mode.
+	 * @return true if plain otherwise false
+	 */
+	boolean isPlainResourceMode();
+
+	/**
+	 * Sets writer to plain resource mode
+	 */
+	void setPlainResourceMode();
+
+	/**
+	 * Clears writer from plain resource mode
+	 */
+	void clearPlainResourceMode();
+
 }

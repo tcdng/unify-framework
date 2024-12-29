@@ -16,7 +16,6 @@
 
 package com.tcdng.unify.web;
 
-import java.io.IOException;
 import java.io.StringWriter;
 
 import com.tcdng.unify.core.UnifyException;
@@ -66,8 +65,6 @@ public abstract class AbstractPlainJsonController extends AbstractPlainControlle
 			try {
 				response.getWriter().write(jsonResponse);
 				response.getWriter().flush();
-			} catch (IOException e) {
-				throwOperationErrorException(e);
 			} catch (UnifyException e) {
 				throw e;
 			}

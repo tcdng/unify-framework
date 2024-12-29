@@ -29,7 +29,7 @@ public abstract class LocaleFactoryMaps<T, U> extends FactoryMaps<Locale, T, U> 
         this(false);
     }
 
-    public LocaleFactoryMaps(boolean checkStale) {
+    protected LocaleFactoryMaps(boolean checkStale) {
         super(checkStale);
     }
 }

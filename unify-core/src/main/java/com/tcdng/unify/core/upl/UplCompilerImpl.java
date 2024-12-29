@@ -42,6 +42,7 @@ import com.tcdng.unify.core.data.CycleDetector;
 import com.tcdng.unify.core.data.FactoryMap;
 import com.tcdng.unify.core.data.LocaleFactoryMaps;
 import com.tcdng.unify.core.data.LocaleMaps;
+import com.tcdng.unify.core.data.StaleableLocaleFactoryMaps;
 import com.tcdng.unify.core.message.ResourceBundles;
 import com.tcdng.unify.core.upl.UplUtils.UplComponentClone;
 import com.tcdng.unify.core.upl.UplUtils.UplGeneratorTarget;
@@ -96,7 +97,7 @@ public class UplCompilerImpl extends AbstractUnifyComponent implements UplCompil
 			}
 		};
 
-		uplDocumentByNameMap = new LocaleFactoryMaps<String, UplDocument>(true) {
+		uplDocumentByNameMap = new StaleableLocaleFactoryMaps<String, UplDocument>() {
 
 			@Override
 			protected boolean valueStale(Locale locale, String name, UplDocument values) throws Exception {

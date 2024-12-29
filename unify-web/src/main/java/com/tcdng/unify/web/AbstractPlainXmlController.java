@@ -16,7 +16,6 @@
 
 package com.tcdng.unify.web;
 
-import java.io.IOException;
 import java.io.StringWriter;
 
 import com.tcdng.unify.core.UnifyException;
@@ -60,8 +59,6 @@ public abstract class AbstractPlainXmlController extends AbstractPlainController
 			try {
 				response.getWriter().write(xmlResponse);
 				response.getWriter().flush();
-			} catch (IOException e) {
-				throwOperationErrorException(e);
 			} catch (UnifyException e) {
 				throw e;
 			}

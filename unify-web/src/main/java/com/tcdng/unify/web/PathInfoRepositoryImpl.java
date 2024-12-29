@@ -100,9 +100,26 @@ public class PathInfoRepositoryImpl extends AbstractUnifyComponent implements Pa
 					ucc = getComponentConfig(Controller.class, controllerName);
 				}
 
+				DocPathParts docPathParts = null;
+				final String[] _docParts = controllerPath.split("/", 3);
+				if (_docParts.length >= 2) {
+					final String docControllerName = "/" + _docParts[1];
+					String docPath = _docParts.length == 3 ? docPath = _docParts[2] : null;
+					String section = null;
+					if (docPath != null) {
+						int index = docPath.lastIndexOf('#');
+						if (index > 0) {
+							section = docPath.substring(index + 1);
+							docPath = docPath.substring(0, index);
+						}
+					}
+
+					docPathParts = new DocPathParts(docControllerName, docPath, section);
+				}
+
 				boolean sessionless = ucc == null ? false : SessionlessController.class.isAssignableFrom(ucc.getType());
-				return new ControllerPathParts(controllerPath, pathId, controllerName, pathVariables, actionName,
-						operation, resourceId, sessionless);
+				return new ControllerPathParts(docPathParts, controllerPath, pathId, controllerName, pathVariables,
+						actionName, operation, resourceId, sessionless);
 			}
 		};
 	}

@@ -21,6 +21,7 @@ import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
+import com.tcdng.unify.core.constant.ClientPlatform;
 import com.tcdng.unify.core.data.AbstractPool;
 import com.tcdng.unify.core.upl.UplComponent;
 import com.tcdng.unify.core.upl.UplComponentWriter;
@@ -37,61 +38,66 @@ import com.tcdng.unify.web.ui.WebUIApplicationComponents;
 @Component(WebUIApplicationComponents.APPLICATION_RESPONSEWRITERPOOL)
 public class ResponseWriterPoolImpl extends AbstractUnifyComponent implements ResponseWriterPool {
 
-    @Configurable
-    private UplComponentWriterManager uplComponentWriterManager;
+	@Configurable
+	private UplComponentWriterManager uplComponentWriterManager;
 
-    @Configurable("4000") // 4 seconds
-    private long getTimeout;
+	@Configurable("4000") // 4 seconds
+	private long getTimeout;
 
-    @Configurable("256")
-    private int maxSize;
+	@Configurable("256")
+	private int maxSize;
 
-    @Configurable("8")
-    private int minSize;
+	@Configurable("8")
+	private int minSize;
 
-    private InternalPool internalPool;
+	private InternalPool internalPool;
 
-    @Override
-    public ResponseWriter getResponseWriter(ClientRequest clientRequest) throws UnifyException {
-		return clientRequest != null ? internalPool
-				.borrowObject(uplComponentWriterManager.getWriters(clientRequest.getClientPlatform())) : null;
-    }
+	@Override
+	public ResponseWriter getResponseWriter() throws UnifyException {
+		return getResponseWriter(null);
+	}
 
-    @Override
-    public boolean restore(ResponseWriter writer) throws UnifyException {
-        return internalPool.returnObject(writer);
-    }
+	@Override
+	public ResponseWriter getResponseWriter(ClientRequest clientRequest) throws UnifyException {
+		return internalPool.borrowObject(uplComponentWriterManager
+				.getWriters(clientRequest != null ? clientRequest.getClientPlatform() : ClientPlatform.DESKTOP));
+	}
 
-    @Override
-    protected void onInitialize() throws UnifyException {
-        internalPool = new InternalPool();
-    }
+	@Override
+	public boolean restore(ResponseWriter writer) throws UnifyException {
+		return internalPool.returnObject(writer);
+	}
 
-    @Override
-    protected void onTerminate() throws UnifyException {
+	@Override
+	protected void onInitialize() throws UnifyException {
+		internalPool = new InternalPool();
+	}
 
-    }
+	@Override
+	protected void onTerminate() throws UnifyException {
 
-    private class InternalPool extends AbstractPool<ResponseWriter> {
+	}
 
-        public InternalPool() {
-            super(getTimeout, minSize, maxSize, true);
-        }
+	private class InternalPool extends AbstractPool<ResponseWriter> {
 
-        @Override
-        protected ResponseWriter createObject(Object... params) throws Exception {
-            return (ResponseWriter) getComponent(WebUIApplicationComponents.APPLICATION_RESPONSEWRITER);
-        }
+		public InternalPool() {
+			super(getTimeout, minSize, maxSize, true);
+		}
 
-        @SuppressWarnings("unchecked")
-        @Override
-        protected void onGetObject(ResponseWriter responseWriter, Object... params) throws Exception {
-            responseWriter.reset((Map<Class<? extends UplComponent>, UplComponentWriter>) params[0]);
-        }
+		@Override
+		protected ResponseWriter createObject(Object... params) throws Exception {
+			return (ResponseWriter) getComponent(WebUIApplicationComponents.APPLICATION_RESPONSEWRITER);
+		}
 
-        @Override
-        protected void destroyObject(ResponseWriter responseWriter) {
+		@SuppressWarnings("unchecked")
+		@Override
+		protected void onGetObject(ResponseWriter responseWriter, Object... params) throws Exception {
+			responseWriter.reset((Map<Class<? extends UplComponent>, UplComponentWriter>) params[0]);
+		}
 
-        }
-    }
+		@Override
+		protected void destroyObject(ResponseWriter responseWriter) {
+
+		}
+	}
 }

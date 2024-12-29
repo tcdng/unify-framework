@@ -97,9 +97,27 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 
 	private boolean bracketOpen;
 
+	private boolean plainResourceMode;
+
 	public ResponseWriterImpl() {
 		this.history = new Stack<HistoryEntry>();
 		this.dataIndex = -1;
+		this.plainResourceMode = false;
+	}
+
+	@Override
+	public boolean isPlainResourceMode() {
+		return plainResourceMode;
+	}
+
+	@Override
+	public void setPlainResourceMode() {
+		this.plainResourceMode = true;
+	}
+
+	@Override
+	public void clearPlainResourceMode() {
+		this.plainResourceMode = false;
 	}
 
 	@Override
@@ -181,6 +199,12 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 	@Override
 	public ResponseWriter write(Object object) {
 		buf.append(object);
+		return this;
+	}
+
+	@Override
+	public ResponseWriter write(char ch) {
+		buf.append(ch);
 		return this;
 	}
 
@@ -444,7 +468,7 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 			buf.append(requestContext.getTenantPath());
 		}
 
-		buf.append(path);
+		buf.append(plainResourceMode && path.startsWith("/resource") ? path + "/plain" : path);
 		for (String element : pathElement) {
 			buf.append(element);
 		}
@@ -482,29 +506,34 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 			boolean attachment, boolean clearOnRead) throws UnifyException {
 		writeContextURL(path);
 
+		final boolean plainResource = plainResourceMode && path.startsWith("/resource");
 		PageManager pageManager = getPageManager();
-		buf.append('?').append(pageManager.getPageName("resourceName")).append("=")
+		buf.append('?').append(plainResource ? "resourceName" : pageManager.getPageName("resourceName")).append("=")
 				.append(UrlUtils.encodeURLParameter(themeManager.expandThemeTag(resourceName)));
 		if (StringUtils.isNotBlank(contentType)) {
-			buf.append('&').append(pageManager.getPageName("contentType")).append("=")
+			buf.append('&').append(plainResource ? "contentType" : pageManager.getPageName("contentType")).append("=")
 					.append(UrlUtils.encodeURLParameter(contentType));
 		}
 
 		if (StringUtils.isNotBlank(scope)) {
-			buf.append('&').append(pageManager.getPageName("scope")).append("=")
+			buf.append('&').append(plainResource ? "scope" : pageManager.getPageName("scope")).append("=")
 					.append(UrlUtils.encodeURLParameter(scope));
 		}
 
 		if (attachment) {
-			buf.append('&').append(pageManager.getPageName("attachment")).append("=").append(attachment);
+			buf.append('&').append(plainResource ? "attachment" : pageManager.getPageName("attachment")).append("=")
+					.append(attachment);
 		}
 
 		if (clearOnRead) {
-			buf.append('&').append(pageManager.getPageName("clearOnRead")).append("=").append(clearOnRead);
+			buf.append('&').append(plainResource ? "clearOnRead" : pageManager.getPageName("clearOnRead")).append("=")
+					.append(clearOnRead);
 		}
-		
-		buf.append('&').append(RequestParameterConstants.CLIENT_ID).append("=")
-			.append(UrlUtils.encodeURLParameter(pageManager.getCurrentRequestClientId()));
+
+		if (pageManager.getCurrentRequestClientId() != null) {
+			buf.append('&').append(RequestParameterConstants.CLIENT_ID).append("=")
+					.append(UrlUtils.encodeURLParameter(pageManager.getCurrentRequestClientId()));
+		}
 
 		if (pageRequestContextUtil.isRemoteViewer()) {
 			buf.append('&').append(RequestParameterConstants.REMOTE_VIEWER).append("=")
@@ -517,27 +546,32 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 
 	@Override
 	public ResponseWriter writeURLParameter(String name, String value) throws UnifyException {
-		buf.append('&').append(getPageManager().getPageName(name)).append("=")
+		buf.append('&').append(plainResourceMode ? name : getPageManager().getPageName(name)).append("=")
 				.append(UrlUtils.encodeURLParameter(value));
 		return this;
 	}
 
 	@Override
 	public ResponseWriter writeFileImageContextURL(String src) throws UnifyException {
-		writeContextResourceURL("/resource/fileimage", null, src);
-		return this;
+		return writeContextResourceURL("/resource/fileimage", null, src);
 	}
 
 	@Override
-	public ResponseWriter writeScopeImageContextURL(String imageName) throws UnifyException {
-		writeContextResourceURL("/resource/scope", MimeType.IMAGE.template(), imageName);
-		return this;
+	public ResponseWriter writeScopeImageContextURL(String imageName, boolean clearOnRead) throws UnifyException {
+		return writeContextResourceURL("/resource/scope", MimeType.IMAGE.template(), imageName)
+				.writeURLParameter("clearOnRead", String.valueOf(clearOnRead));
+	}
+
+	@Override
+	public ResponseWriter writeStreamerContextURL(MimeType mimeType, String streamer, String resourceName)
+			throws UnifyException {
+		return writeContextResourceURL("/resource/streamer", mimeType.template(), resourceName)
+				.writeURLParameter("streamer", streamer);
 	}
 
 	@Override
 	public ResponseWriter writeCommandURL() throws UnifyException {
-		writeContextURL(getRequestContextUtil().getResponsePathParts().getControllerPathId(), "/command");
-		return this;
+		return writeContextURL(getRequestContextUtil().getResponsePathParts().getControllerPathId(), "/command");
 	}
 
 	@Override
@@ -870,6 +904,7 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 			functionAppendSym = false;
 			bracketOpen = false;
 			paramAppendSym = false;
+			plainResourceMode = false;
 		}
 	}
 
