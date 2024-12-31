@@ -18,7 +18,7 @@ package com.tcdng.unify.web.http;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.Writer;
+import java.io.PrintWriter;
 
 /**
  * HTTP response.
@@ -36,7 +36,7 @@ public interface HttpResponse {
 
     OutputStream getOutputStream() throws IOException;
     
-    Writer getWriter() throws IOException;
+    PrintWriter getWriter() throws IOException;
     
     void setStatus(int status);
     

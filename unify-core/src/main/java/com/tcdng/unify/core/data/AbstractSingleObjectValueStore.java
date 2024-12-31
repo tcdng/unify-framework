@@ -190,7 +190,7 @@ public abstract class AbstractSingleObjectValueStore<T> extends AbstractValueSto
 
     @Override
     public int size() {
-        return 0;
+        return 1;
     }
 
     @Override

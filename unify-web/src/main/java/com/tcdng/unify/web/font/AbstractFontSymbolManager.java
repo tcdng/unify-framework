@@ -16,7 +16,10 @@
 
 package com.tcdng.unify.web.font;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
@@ -77,6 +80,14 @@ public abstract class AbstractFontSymbolManager extends AbstractUnifyComponent i
     }
 
     @Override
+	public List<String> getSymbolNames() throws UnifyException {
+    	List<String> names = new ArrayList<String>();
+    	names.addAll(nameToHexMap.keySet());
+    	Collections.sort(names);
+		return names;
+	}
+
+	@Override
     public String resolveSymbolUnicode(String symbolName) throws UnifyException {
         String hex = nameToHexMap.get(symbolName);
         if (hex != null) {

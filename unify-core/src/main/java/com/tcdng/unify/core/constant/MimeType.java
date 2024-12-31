@@ -15,6 +15,9 @@
  */
 package com.tcdng.unify.core.constant;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Supported MIME types.
  * 
@@ -22,40 +25,74 @@ package com.tcdng.unify.core.constant;
  * @since 1.0
  */
 public enum MimeType {
-    APPLICATION_OCTETSTREAM("application/octet-stream"),
-    APPLICATION_PDF("application/pdf"),
-    APPLICATION_EXCEL("application/vnd.ms-excel;application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"),
-    APPLICATION_XLS("application/vnd.ms-excel"),
-    APPLICATION_XLSX("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"),
-    APPLICATION_WORD("application/msword;application/vnd.openxmlformats-officedocument.wordprocessingml.document"),
-    APPLICATION_DOC("application/msword"),
-    APPLICATION_DOCX("application/vnd.openxmlformats-officedocument.wordprocessingml.document"),
-    APPLICATION_JSON("application/json"),
-    APPLICATION_XML("application/xml"),
-    TEXT_HTML("text/html"),
-    TEXT_CSV("text/csv"),
-    TEXT_CSS("text/css"),
-    TEXT_JAVASCRIPT("text/javascript"),
-    TEXT_XML("text/xml"),
-    TEXT_PLAIN("text/plain"),
-    TEXT_PLAIN_UTF8("text/plain;charset=UTF-8"),
-    TEXT("text/*"),
-    IMAGE_PNG("image/png"),
-    IMAGE_JPG("image/jpg"),
-    IMAGE_GIF("image/gif"),
-    IMAGE_BMP("image/bmp"),
-    IMAGE("image/*"),
-    AUDIO("audio/*,audio/mp3"),
-    VIDEO("video/*,video/mp4");
+    APPLICATION_OCTETSTREAM("application/octet-stream", false),
+    APPLICATION_PDF("application/pdf", false),
+    APPLICATION_EXCEL("application/vnd.ms-excel;application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", false),
+    APPLICATION_XLS("application/vnd.ms-excel", false),
+    APPLICATION_XLSX("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", false),
+    APPLICATION_WORD("application/msword;application/vnd.openxmlformats-officedocument.wordprocessingml.document", false),
+    APPLICATION_DOC("application/msword", false),
+    APPLICATION_DOCX("application/vnd.openxmlformats-officedocument.wordprocessingml.document", false),
+    APPLICATION_JSON("application/json", true),
+    APPLICATION_XML("application/xml", true),
+    TEXT_HTML("text/html", true),
+    TEXT_CSV("text/csv", true),
+    TEXT_CSS("text/css", true),
+    TEXT_JAVASCRIPT("text/javascript", true),
+    TEXT_XML("text/xml", true),
+    TEXT_PLAIN("text/plain", true),
+    TEXT_PLAIN_UTF8("text/plain;charset=UTF-8", true),
+    TEXT("text/*", true),
+    IMAGE_PNG("image/png", false),
+    IMAGE_JPG("image/jpg", false),
+    IMAGE_GIF("image/gif", false),
+    IMAGE_BMP("image/bmp", false),
+    IMAGE("image/*", false),
+    AUDIO("audio/*,audio/mp3", false),
+    VIDEO("video/*,video/mp4", false);
 
-    private String template;
+    private final String template;
 
-    private MimeType(String template) {
+    private final boolean text;
+
+    private static final Map<String, MimeType> map = new HashMap<String, MimeType>();
+    static {
+    	map.put(APPLICATION_OCTETSTREAM.template, APPLICATION_OCTETSTREAM);
+    	map.put(APPLICATION_PDF.template, APPLICATION_PDF);
+    	map.put(APPLICATION_XLS.template, APPLICATION_XLS);
+    	map.put(APPLICATION_XLSX.template, APPLICATION_XLSX);
+    	map.put(APPLICATION_WORD.template, APPLICATION_WORD);
+    	map.put(APPLICATION_DOC.template, APPLICATION_DOC);
+    	map.put(APPLICATION_DOCX.template, APPLICATION_DOCX);
+    	map.put(APPLICATION_JSON.template, APPLICATION_JSON);
+    	map.put(APPLICATION_XML.template, APPLICATION_XML);
+    	map.put(TEXT_HTML.template, TEXT_HTML);
+    	map.put(TEXT_CSV.template, TEXT_CSV);
+    	map.put(TEXT_CSS.template, TEXT_CSS);
+    	map.put(TEXT_JAVASCRIPT.template, TEXT_JAVASCRIPT);
+    	map.put(TEXT_XML.template, TEXT_XML);
+    	map.put(TEXT_PLAIN.template, TEXT_PLAIN);
+    	map.put(IMAGE_PNG.template, IMAGE_PNG);
+    	map.put(IMAGE_JPG.template, IMAGE_JPG);
+    	map.put(IMAGE_GIF.template, IMAGE_GIF);
+    	map.put(IMAGE_BMP.template, IMAGE_BMP);
+    }
+    
+    private MimeType(String template, boolean text) {
         this.template = template;
+        this.text = text;
     }
 
+    public static MimeType fromTemplate(String template) {
+    	return map.get(template);
+    }
+    
     public String template() {
         return template;
+    }
+    
+    public boolean isTextable() {
+    	return text;
     }
     
     public boolean isApplicationOctetStream() {

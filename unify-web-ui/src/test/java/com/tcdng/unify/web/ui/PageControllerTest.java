@@ -78,9 +78,9 @@ public class PageControllerTest extends AbstractUnifyWebTest {
 		Widget uic1 = controller.getPageWidgetByLongName(Widget.class, "/testauthor.fullName");
 		Widget uic2 = controller.getPageWidgetByLongName(Widget.class, "/testauthor.birthDt");
 		Widget uic3 = controller.getPageWidgetByLongName(Widget.class, "/testauthor.height");
-		request.setParameter(uic1.getId(), "Tom Jones");
-		request.setParameter(uic2.getId(), birthDt);
-		request.setParameter(uic3.getId(), "24.22");
+		request.getParameters().setParam(uic1.getId(), "Tom Jones");
+		request.getParameters().setParam(uic2.getId(), birthDt);
+		request.getParameters().setParam(uic3.getId(), "24.22");
 
 		controller.process(request, response);
 

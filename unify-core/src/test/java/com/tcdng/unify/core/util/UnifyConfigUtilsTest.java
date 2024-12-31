@@ -74,7 +74,7 @@ public class UnifyConfigUtilsTest {
         assertEquals("org.hsqldb.jdbcDriver", settings.getSettingValue("driver"));
         assertEquals("jdbc:hsqldb:mem:test", settings.getSettingValue("connectionUrl"));
         assertEquals("1000", settings.getSettingValue("getConnectionTimeout"));
-        assertEquals("32", settings.getSettingValue("maxConnections"));
+        assertEquals("64", settings.getSettingValue("maxConnections"));
         assertEquals("1", settings.getSettingValue("minConnections"));
     }
 

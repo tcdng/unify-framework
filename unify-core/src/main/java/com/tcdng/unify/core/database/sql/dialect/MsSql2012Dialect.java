@@ -34,6 +34,15 @@ public class MsSql2012Dialect extends MsSqlDialect {
 	}
 
 	@Override
+	public String getReportingName(String name) {
+		if (!name.isEmpty() && name.charAt(0) == '[' && name.charAt(name.length() - 1) == ']') {
+			return name.substring(1, name.length() - 1);
+		}
+		
+		return name;
+	}
+
+	@Override
 	protected boolean appendLimitOffsetInfixClause(StringBuilder sql, int offset, int limit) throws UnifyException {
 		return false;
 	}
@@ -46,7 +55,7 @@ public class MsSql2012Dialect extends MsSqlDialect {
 
 	@Override
 	protected boolean appendPseudoOrderClause(StringBuilder sql) throws UnifyException {
-		sql.append(" ORDER BY (SELECT NULL)");
+		sql.append(" ORDER BY 1");
 		return true;
 	}
 

@@ -2679,6 +2679,35 @@ ux.msUnSelectAllOpt = function(ms) {
 	}
 }
 
+/** Palette */
+ux.rigPalette = function(rgp) {
+	const id = rgp.pId;
+	if (rgp.pColors) {
+		for (var i = 0; i < rgp.pColors.length; i++) {
+			const evp = {uId:id, uIndex:i, uCol:rgp.pColors};
+			ux.addHdl(_id(id + i), "click", ux.plInkClick, evp);			
+		}
+	}
+}
+
+ux.plInkClick = function(uEv) {
+	const evp = uEv.evp;
+	const id = evp.uId;
+	for (var i = 0; i < evp.uCol.length; i++) {
+		if (i == evp.uIndex) {
+			_id(id + i).className = i == 0 ? "palsel dflt":"palsel";
+			_id(id).value = evp.uCol[i];
+			
+			const lbl = _id(id + "_sel");
+			if (lbl) {
+				lbl.innerHTML = evp.uCol[i];
+			}
+		} else {
+			_id(id + i).className = i == 0 ? "pal dflt":"pal";
+		}
+	}
+}
+	
 /** Period field */
 ux.rigPeriodField = function(rgp) {
 	const id = rgp.pId;
@@ -5296,12 +5325,24 @@ ux.textInputKeyup = function(uEv) {
 			var string = trgObj.value;
 			if ("upper" == evp.sTextCase) {
 				trgObj.value = string.toUpperCase();
-			} else if ("camel" == evp.sTextCase) {
+			} else if ("capital" == evp.sTextCase) {
 				const baseArr = string.split(" ")
 				const res = [];
 				for (var i = 0; i < baseArr.length; i++) {
 					var str = baseArr[i];
 					res.push(str.charAt(0).toUpperCase() + str.slice(1));
+				}
+				trgObj.value = res.join(" ");
+			} else if ("camel" == evp.sTextCase) {
+				const baseArr = string.split(" ")
+				const res = [];
+				for (var i = 0; i < baseArr.length; i++) {
+					var str = baseArr[i];
+					if (i == 0) {
+						res.push(str.charAt(0).toLowerCase() + str.slice(1));
+					} else {
+						res.push(str.charAt(0).toUpperCase() + str.slice(1));
+					}
 				}
 				trgObj.value = res.join(" ");
 			} else {
@@ -5762,6 +5803,7 @@ ux.init = function() {
     ux.setfn(ux.optionsTextAreaOnShow, "ux42");
     ux.setfn(ux.rigFileUploadButton, "ux43");
 	ux.setfn(ux.rigRichTextEditor, "ux44");  
+	ux.setfn(ux.rigPalette, "ux45");  
 }
 
 ux.setfn = function(fn, id) {

@@ -85,7 +85,7 @@ public abstract class AbstractSqlDataSourceManager extends AbstractUnifyComponen
 				sqlSchemaManager.dropViewSchema(sqlDataSource, _options, viewList);
 			}
 
-			sqlSchemaManager.manageTableSchema(sqlDataSource, _options, tableList);
+			sqlSchemaManager.manageTableSchema(sqlDataSource, _options, tableList);			
 			sqlSchemaManager.manageViewSchema(sqlDataSource, _options, viewList);
 		}
 	}

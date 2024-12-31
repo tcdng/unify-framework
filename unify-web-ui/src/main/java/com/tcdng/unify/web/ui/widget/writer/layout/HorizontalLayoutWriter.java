@@ -40,14 +40,19 @@ public class HorizontalLayoutWriter extends AbstractTabularLayoutWriter {
             throws UnifyException {
         int columnIndex = 0;
         appendRowStart(writer, layout, 0);
-        boolean isAlternate = container.isAlternate();
+        final boolean isAlternate = container.isAlternate();
+        final boolean strict = layout.isStrict();
         for (String longName : container.getLayoutWidgetLongNames()) {
             Widget widget = container.getWidgetByLongName(longName);
             widget.setAlternateMode(isAlternate);
             if (widget.isVisible()) {
-                appendCellContent(writer, layout, widget, 0, columnIndex++);
+                appendCellContent(writer, layout, widget, 0, strict ? columnIndex : columnIndex++);
             } else if (widget.isHidden()) {
                 writer.writeStructureAndContent(widget);
+            }
+            
+            if (strict) {
+            	columnIndex++;
             }
         }
         appendRowEnd(writer);

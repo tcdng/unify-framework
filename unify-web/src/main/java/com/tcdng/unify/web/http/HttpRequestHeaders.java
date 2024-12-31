@@ -24,4 +24,5 @@ package com.tcdng.unify.web.http;
 public interface HttpRequestHeaders {
 
 	String getHeader(String name);
+
 }

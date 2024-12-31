@@ -113,6 +113,14 @@ public enum DataType implements EnumConst {
 	public boolean isTimestamp() {
 		return TIMESTAMP.equals(this) ||TIMESTAMP_UTC.equals(this);
 	}
+
+	public boolean isString() {
+		return STRING.equals(this) || CHAR.equals(this) || CLOB.equals(this);
+	}
+
+	public boolean isBoolean() {
+		return BOOLEAN.equals(this);
+	}
 	
 	public Set<DataType> convertibleFromTypes() {
 		return convertibleFromTypes;

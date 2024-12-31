@@ -18,7 +18,7 @@ package com.tcdng.unify.web;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.Writer;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,14 +39,14 @@ public class TestClientResponse implements ClientResponse {
 
     private ByteArrayOutputStream outputStream;
 
-    private Writer writer;
+    private PrintWriter writer;
 
     private boolean used;
 
     public TestClientResponse() {
         metas = new HashMap<String, String>();
         outputStream = new ByteArrayOutputStream();
-        writer = new OutputStreamWriter(outputStream);
+        writer = new PrintWriter(new OutputStreamWriter(outputStream));
     }
 
     @Override
@@ -71,7 +71,7 @@ public class TestClientResponse implements ClientResponse {
     }
 
     @Override
-    public Writer getWriter() throws UnifyException {
+    public PrintWriter getWriter() throws UnifyException {
         used = true;
         return writer;
     }

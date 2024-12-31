@@ -30,6 +30,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
+import java.text.Format;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -68,6 +69,8 @@ import com.tcdng.unify.core.convert.UploadedFileConverter;
 import com.tcdng.unify.core.criterion.Order;
 import com.tcdng.unify.core.data.IndexedTarget;
 import com.tcdng.unify.core.data.Input;
+import com.tcdng.unify.core.data.JsonFieldComposition;
+import com.tcdng.unify.core.data.JsonObjectComposition;
 import com.tcdng.unify.core.data.Money;
 import com.tcdng.unify.core.data.Period;
 import com.tcdng.unify.core.data.UploadedFile;
@@ -635,6 +638,20 @@ public final class DataUtils {
 		return blocks;
 	}
 
+	public static List<List<Long>> split(List<Long> list, final int blockSize) {
+		if (list != null) {
+			List<List<Long>> resultList = new ArrayList<List<Long>>();
+			final int[] blocks = DataUtils.splitToBlocks(list.size(), blockSize);
+			for (int i = 0, j = 0; i < blocks.length; j += blocks[i],i++) {
+				resultList.add(list.subList(j, j + blocks[i]));
+			}
+
+			return resultList;
+		}
+
+		return Collections.emptyList();
+	}
+	
 	/**
 	 * Sorts a list by order
 	 * 
@@ -678,7 +695,7 @@ public final class DataUtils {
 	/**
 	 * Sorts a list using comparator.
 	 * 
-	 * @param list        the list to sort
+	 * @param list       the list to sort
 	 * @param comparator the comparator
 	 */
 	public static <T> void sort(List<T> list, Comparator<T> comparator) {
@@ -947,12 +964,23 @@ public final class DataUtils {
 	/**
 	 * Reads a JSON object. Has no support for collections.
 	 * 
-	 * @param object bean to read to
-	 * @param json   the JSON string
+	 * @param clazz bean type
+	 * @param json  the JSON string
 	 * @throws UnifyException if an error occurs
 	 */
 	public static <T> T fromJsonString(Class<T> clazz, String json) throws UnifyException {
-		return DataUtils.fromJsonReader(clazz, new StringReader(json));
+		return DataUtils.fromJsonString(null, clazz, json);
+	}
+
+	/**
+	 * Reads a JSON object. Has no support for collections.
+	 * 
+	 * @param clazz bean type
+	 * @param json  the JSON string
+	 * @throws UnifyException if an error occurs
+	 */
+	public static <T> T fromJsonString(JsonObjectComposition comp, Class<T> clazz, String json) throws UnifyException {
+		return DataUtils.fromJsonReader(comp, clazz, new StringReader(json));
 	}
 
 	/**
@@ -965,11 +993,24 @@ public final class DataUtils {
 	 */
 	public static <T> T fromJsonInputStream(Class<T> clazz, InputStream inputStream, Charset charset)
 			throws UnifyException {
+		return DataUtils.fromJsonInputStream(null, clazz, inputStream, charset);
+	}
+
+	/**
+	 * Reads a JSON object. Has no support for collections.
+	 * 
+	 * @param object      bean to read to
+	 * @param inputStream the JSON input stream
+	 * @param charset     optional character set
+	 * @throws UnifyException if an error occurs
+	 */
+	public static <T> T fromJsonInputStream(JsonObjectComposition comp, Class<T> clazz, InputStream inputStream,
+			Charset charset) throws UnifyException {
 		if (charset == null) {
-			return DataUtils.fromJsonReader(clazz, new BufferedReader(new InputStreamReader(inputStream)));
+			return DataUtils.fromJsonReader(comp, clazz, new BufferedReader(new InputStreamReader(inputStream)));
 		}
 
-		return DataUtils.fromJsonReader(clazz, new BufferedReader(new InputStreamReader(inputStream, charset)));
+		return DataUtils.fromJsonReader(comp, clazz, new BufferedReader(new InputStreamReader(inputStream, charset)));
 	}
 
 	/**
@@ -980,19 +1021,30 @@ public final class DataUtils {
 	 * @throws UnifyException if an error occurs
 	 */
 	public static <T> T fromJsonReader(Class<T> clazz, Reader reader) throws UnifyException {
+		return DataUtils.fromJsonReader(null, clazz, reader);
+	}
+
+	/**
+	 * Reads a JSON object. Has no support for collections.
+	 * 
+	 * @param clazz  bean type
+	 * @param reader the JSON reader
+	 * @throws UnifyException if an error occurs
+	 */
+	public static <T> T fromJsonReader(JsonObjectComposition comp, Class<T> clazz, Reader reader)
+			throws UnifyException {
 		try {
-			return DataUtils.getObjectFromJsonValue(clazz, null, Json.parse(reader));
+			return DataUtils.getObjectFromJsonValue(comp, clazz, null, Json.parse(reader));
 		} catch (UnifyException e) {
 			throw e;
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new UnifyException(UnifyCoreErrorConstants.DATAUTIL_ERROR, e);
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	private static <T> T getObjectFromJsonValue(Class<T> clazz, Class<?> argClass, JsonValue jsonValue)
-			throws Exception {
+	private static <T> T getObjectFromJsonValue(JsonObjectComposition comp, Class<T> clazz, Class<?> argClass,
+			JsonValue jsonValue) throws Exception {
 		if (jsonValue == null || jsonValue.isNull()) {
 			return (T) ConverterUtils.getNullValue(clazz);
 		}
@@ -1025,14 +1077,14 @@ public final class DataUtils {
 				int len = jsonArray.size();
 				Object arr = Array.newInstance(compClass, len);
 				for (int i = 0; i < len; i++) {
-					Array.set(arr, i, DataUtils.getObjectFromJsonValue(compClass, null, jsonArray.get(i)));
+					Array.set(arr, i, DataUtils.getObjectFromJsonValue(comp, compClass, null, jsonArray.get(i)));
 				}
 
 				return (T) arr;
 			}
 
 			Object arr = Array.newInstance(compClass, 1);
-			Array.set(arr, 0, DataUtils.getObjectFromJsonValue(compClass, null, jsonValue));
+			Array.set(arr, 0, DataUtils.getObjectFromJsonValue(comp, compClass, null, jsonValue));
 
 			return (T) arr;
 		}
@@ -1045,10 +1097,10 @@ public final class DataUtils {
 				JsonArray jsonArray = jsonValue.asArray();
 				int len = jsonArray.size();
 				for (int i = 0; i < len; i++) {
-					result.add(DataUtils.getObjectFromJsonValue(argClass, null, jsonArray.get(i)));
+					result.add(DataUtils.getObjectFromJsonValue(comp, argClass, null, jsonArray.get(i)));
 				}
 			} else {
-				result.add(DataUtils.getObjectFromJsonValue(argClass, null, jsonValue));
+				result.add(DataUtils.getObjectFromJsonValue(comp, argClass, null, jsonValue));
 			}
 
 			return (T) result;
@@ -1061,27 +1113,85 @@ public final class DataUtils {
 		T bean = ReflectUtils.newInstance(clazz);
 		if (jsonObject.size() > 0) {
 			Map<String, GetterSetterInfo> accessors = ReflectUtils.getGetterSetterMap(clazz);
-			for (String name : accessors.keySet()) {
-				GetterSetterInfo gInfo = accessors.get(name);
-				if (!gInfo.isSetter() || !gInfo.isProperty()) {
-					continue;
-				}
+			if (comp != null) {
+				for (JsonFieldComposition fcomp : comp.getFields()) {
+					if (!fcomp.isReadOnly()) {
+						GetterSetterInfo gInfo = accessors.get(fcomp.getName());
+						JsonValue jsonVal = jsonObject.get(fcomp.getJsonName());
 
-				JsonValue jsonVal = jsonObject.get(name);
-				Class<?> type = gInfo.getType();
-				if (Object.class.equals(type)) {
-					Object inst = gInfo.getGetter().invoke(bean);
-					if (inst != null) {
-						type = inst.getClass();
+						Class<?> type = gInfo.getType();
+						if (Object.class.equals(type)) {
+							Object inst = gInfo.getGetter().invoke(bean);
+							if (inst != null) {
+								type = inst.getClass();
+							}
+						}
+
+						Object val = null;
+						if (Date.class.equals(type) && jsonVal.isString()) {
+							val = DataUtils.getDateValue(comp, fcomp, jsonVal.asString());
+						}
+						
+						if (val == null) {
+							val = getObjectFromJsonValue(fcomp.getObjectComposition(), type,
+									gInfo.getArgumentType0(), jsonVal);
+						}
+						
+						DataUtils.setBeanProperty(bean, fcomp.getName(), val);
 					}
 				}
+			} else {
+				for (String name : accessors.keySet()) {
+					GetterSetterInfo gInfo = accessors.get(name);
+					if (!gInfo.isSetter() || !gInfo.isProperty()) {
+						continue;
+					}
 
-				Object val = getObjectFromJsonValue(type, gInfo.getArgumentType0(), jsonVal);
-				gInfo.getSetter().invoke(bean, val);
+					JsonValue jsonVal = jsonObject.get(name);
+					Class<?> type = gInfo.getType();
+					if (Object.class.equals(type)) {
+						Object inst = gInfo.getGetter().invoke(bean);
+						if (inst != null) {
+							type = inst.getClass();
+						}
+					}
+
+					Object val = getObjectFromJsonValue(null, type, gInfo.getArgumentType0(), jsonVal);
+					gInfo.getSetter().invoke(bean, val);
+				}
 			}
 		}
 
 		return bean;
+	}
+
+	public static Object getDateValue(JsonObjectComposition comp, String fieldName, String val) throws Exception {
+		return DataUtils.getDateValue(comp, comp.getComposition(fieldName), val);
+	}
+	
+	private static Object getDateValue(JsonObjectComposition comp, JsonFieldComposition fcomp, String val) throws Exception {
+		if (fcomp.isDate()) {
+			Format format = comp.getFormatContext().getFormat(
+					comp.isWithDateFormatter() ? comp.getDateFormatter() : fcomp.getFormatter());
+			return format != null ? format.parseObject(val) : null;
+		} else if (fcomp.isDateTime()) {
+			Format format = comp.getFormatContext().getFormat(
+					comp.isWithDateTimeFormatter() ? comp.getDateTimeFormatter() : fcomp.getFormatter());
+			return format != null ? format.parseObject(val) : null;
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Writes a JSON object to an output stream. Has no support for collections.
+	 * 
+	 * @param object       the object to write
+	 * @param outputStream the output stream to write to
+	 * @throws UnifyException if an error occurs
+	 */
+	public static void writeJsonObject(Object object, OutputStream outputStream) throws UnifyException {
+		writeJsonObject(null, object, outputStream, null, PrintFormat.NONE);
 	}
 
 	/**
@@ -1091,8 +1201,9 @@ public final class DataUtils {
 	 * @param outputStream the output stream to write to
 	 * @throws UnifyException if an error occurs
 	 */
-	public static void writeJsonObject(Object object, OutputStream outputStream) throws UnifyException {
-		writeJsonObject(object, outputStream, null, PrintFormat.NONE);
+	public static void writeJsonObject(JsonObjectComposition comp, Object object, OutputStream outputStream)
+			throws UnifyException {
+		writeJsonObject(comp, object, outputStream, null, PrintFormat.NONE);
 	}
 
 	/**
@@ -1105,7 +1216,20 @@ public final class DataUtils {
 	 */
 	public static void writeJsonObject(Object object, OutputStream outputStream, PrintFormat printFormat)
 			throws UnifyException {
-		writeJsonObject(object, outputStream, null, printFormat);
+		writeJsonObject(null, object, outputStream, null, printFormat);
+	}
+
+	/**
+	 * Writes a JSON object to an output stream. Has no support for collections.
+	 * 
+	 * @param object       the object to write
+	 * @param outputStream the output stream to write to
+	 * @param printFormat  formatting type
+	 * @throws UnifyException if an error occurs
+	 */
+	public static void writeJsonObject(JsonObjectComposition comp, Object object, OutputStream outputStream,
+			PrintFormat printFormat) throws UnifyException {
+		writeJsonObject(comp, object, outputStream, null, printFormat);
 	}
 
 	/**
@@ -1119,12 +1243,27 @@ public final class DataUtils {
 	 */
 	public static void writeJsonObject(Object object, OutputStream outputStream, Charset charset,
 			PrintFormat printFormat) throws UnifyException {
+		writeJsonObject(null, object, outputStream, charset, printFormat);
+	}
+
+	/**
+	 * Writes a JSON object to an output stream. Has no support for collections.
+	 * 
+	 * @param object       the object to write
+	 * @param outputStream the output stream to write to
+	 * @param charset      optional character set
+	 * @param printFormat  formatting type
+	 * @throws UnifyException if an error occurs
+	 */
+	public static void writeJsonObject(JsonObjectComposition comp, Object object, OutputStream outputStream,
+			Charset charset, PrintFormat printFormat) throws UnifyException {
 		if (charset == null) {
-			DataUtils.writeJsonObject(object, new BufferedWriter(new OutputStreamWriter(outputStream)), printFormat);
+			DataUtils.writeJsonObject(comp, object, new BufferedWriter(new OutputStreamWriter(outputStream)),
+					printFormat);
 			return;
 		}
 
-		DataUtils.writeJsonObject(object, new BufferedWriter(new OutputStreamWriter(outputStream, charset)),
+		DataUtils.writeJsonObject(comp, object, new BufferedWriter(new OutputStreamWriter(outputStream, charset)),
 				printFormat);
 	}
 
@@ -1137,8 +1276,21 @@ public final class DataUtils {
 	 * @throws UnifyException if an error occurs
 	 */
 	public static void writeJsonObject(Object object, Writer writer, PrintFormat printFormat) throws UnifyException {
+		writeJsonObject(null, object, writer, printFormat);
+	}
+
+	/**
+	 * Writes a JSON object to a writer. Has no support for collections.
+	 * 
+	 * @param object      the object to write
+	 * @param writer      the writer to write to
+	 * @param printFormat formatting type
+	 * @throws UnifyException if an error occurs
+	 */
+	public static void writeJsonObject(JsonObjectComposition comp, Object object, Writer writer,
+			PrintFormat printFormat) throws UnifyException {
 		try {
-			JsonValue jsonValue = DataUtils.getJsonValueFromObject(object);
+			JsonValue jsonValue = DataUtils.getJsonValueFromObject(comp, object);
 			switch (printFormat) {
 			case PRETTY:
 				jsonValue.writeTo(writer, PrettyPrint.PRETTY_PRINT);
@@ -1152,14 +1304,28 @@ public final class DataUtils {
 		} catch (UnifyException e) {
 			throw e;
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new UnifyException(UnifyCoreErrorConstants.DATAUTIL_ERROR, e);
 		}
 	}
 
+	public static String asJsonString(Object obj) throws UnifyException {
+		return DataUtils.asJsonString(null, obj);
+	}
+
+	public static String asJsonString(JsonObjectComposition comp, Object obj) throws UnifyException {
+		return DataUtils.asJsonString(comp, obj, PrintFormat.NONE);
+	}
+
 	public static String asJsonString(Object obj, PrintFormat format) throws UnifyException {
+		return DataUtils.asJsonString(null, obj, format);
+	}
+
+	public static String asJsonString(JsonObjectComposition comp, Object obj, PrintFormat format)
+			throws UnifyException {
 		try {
 			StringWriter writer = new StringWriter();
-			DataUtils.writeJsonObject(obj, writer, format);
+			DataUtils.writeJsonObject(comp, obj, writer, format);
 			return writer.toString();
 		} catch (UnifyException e) {
 			throw e;
@@ -1168,14 +1334,14 @@ public final class DataUtils {
 		}
 	}
 
-	private static JsonValue getJsonValueFromObject(Object obj) throws Exception {
+	private static JsonValue getJsonValueFromObject(JsonObjectComposition comp, Object obj) throws Exception {
 		if (obj == null) {
 			return Json.NULL;
 		}
 
 		JsonValueConverter<?> converter = jsonConverterMap.get(obj.getClass());
 		if (converter != null) {
-			return converter.write(obj);
+			return converter.write(obj); // TODO get converter from composition
 		}
 
 		if (EnumConst.class.isAssignableFrom(obj.getClass())) {
@@ -1191,7 +1357,7 @@ public final class DataUtils {
 			JsonArray array = Json.array();
 			int len = Array.getLength(obj);
 			for (int i = 0; i < len; i++) {
-				array.add(getJsonValueFromObject(Array.get(obj, i)));
+				array.add(getJsonValueFromObject(comp, Array.get(obj, i)));
 			}
 
 			return array;
@@ -1201,7 +1367,7 @@ public final class DataUtils {
 		if (Collection.class.isAssignableFrom(obj.getClass())) {
 			JsonArray jsonArray = Json.array();
 			for (Object val : (Collection<?>) obj) {
-				jsonArray.add(getJsonValueFromObject(val));
+				jsonArray.add(getJsonValueFromObject(comp, val));
 			}
 
 			return jsonArray;
@@ -1211,15 +1377,34 @@ public final class DataUtils {
 
 		// Bean
 		JsonObject jsonObject = Json.object();
-		Map<String, GetterSetterInfo> accessors = ReflectUtils.getGetterSetterMap(obj.getClass());
-		for (String name : accessors.keySet()) {
-			GetterSetterInfo gInfo = accessors.get(name);
-			if (!gInfo.isGetter() || !gInfo.isProperty()) {
-				continue;
-			}
+		if (comp != null) {
+			for (JsonFieldComposition fcomp : comp.getFields()) {
+				Object val = DataUtils.getBeanProperty(Object.class, obj, fcomp.getName());
+				if (val != null) {
+					if (fcomp.isDate()) {
+						Format format = comp.getFormatContext().getFormat(
+								comp.isWithDateFormatter() ? comp.getDateFormatter() : fcomp.getFormatter());
+						val = format != null ? format.format(val) : val;
+					} else if (fcomp.isDateTime()) {
+						Format format = comp.getFormatContext().getFormat(
+								comp.isWithDateTimeFormatter() ? comp.getDateTimeFormatter() : fcomp.getFormatter());
+						val = format != null ? format.format(val) : val;
+					}
+				}
 
-			Object val = gInfo.getGetter().invoke(obj);
-			jsonObject.add(name, getJsonValueFromObject(val));
+				jsonObject.add(fcomp.getJsonName(), getJsonValueFromObject(fcomp.getObjectComposition(), val));
+			}
+		} else {
+			Map<String, GetterSetterInfo> accessors = ReflectUtils.getGetterSetterMap(obj.getClass());
+			for (String name : accessors.keySet()) {
+				GetterSetterInfo gInfo = accessors.get(name);
+				if (!gInfo.isGetter() || !gInfo.isProperty()) {
+					continue;
+				}
+
+				Object val = gInfo.getGetter().invoke(obj);
+				jsonObject.add(name, getJsonValueFromObject(null, val));
+			}
 		}
 
 		return jsonObject;

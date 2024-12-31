@@ -17,7 +17,7 @@
 package com.tcdng.unify.core.database.dynamic;
 
 import com.tcdng.unify.core.annotation.DynamicFieldType;
-import com.tcdng.unify.core.constant.EntityFieldType;
+import com.tcdng.unify.core.constant.DynamicEntityFieldType;
 
 /**
  * Dynamic child list field information.
@@ -33,7 +33,7 @@ public class DynamicChildListFieldInfo extends DynamicFieldInfo {
 
 	public DynamicChildListFieldInfo(DynamicFieldType type, DynamicEntityInfo childDynamicEntityInfo, String fieldName,
 			boolean editable) {
-		super(type, EntityFieldType.CHILDLIST, null, null, fieldName, null, null, false, false);
+		super(type, DynamicEntityFieldType.CHILDLIST, null, null, fieldName, null, null, false, false);
 		this.childDynamicEntityInfo = childDynamicEntityInfo;
 		this.editable = editable;
 	}

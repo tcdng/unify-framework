@@ -16,7 +16,6 @@
 
 package com.tcdng.unify.web;
 
-import java.io.IOException;
 import java.io.StringWriter;
 
 import com.tcdng.unify.core.UnifyException;
@@ -44,15 +43,14 @@ public abstract class AbstractPlainXmlController extends AbstractPlainController
 			final String actionName = request.getRequestPathParts().getControllerPathParts().getActionName();
 			logDebug("Processing plain XML request with action [{0}]...", actionName);
 
-			RemoteCallFormat remoteCallFormat = (RemoteCallFormat) request
-					.getParameter(RequestParameterConstants.REMOTE_CALL_FORMAT);
+			RemoteCallFormat remoteCallFormat = (RemoteCallFormat) request.getParameters()
+					.getParam(RequestParameterConstants.REMOTE_CALL_FORMAT);
 			if (!RemoteCallFormat.XML.equals(remoteCallFormat)) {
 				throw new UnifyException(UnifyWebErrorConstants.CONTROLLER_MESSAGE_FORMAT_NOT_MATCH_EXPECTED,
 						remoteCallFormat, RemoteCallFormat.XML, getName());
 			}
 
-			final String xmlRequest = (String) request.getParameter(RequestParameterConstants.REMOTE_CALL_BODY);
-			xmlResponse = doExecute(actionName, xmlRequest);
+			xmlResponse = doExecute(actionName, request.getText());
 		} catch (Exception e) {
 			xmlResponse = "<serverError>" + e.getMessage() + "</serverError>";
 		}
@@ -61,8 +59,6 @@ public abstract class AbstractPlainXmlController extends AbstractPlainController
 			try {
 				response.getWriter().write(xmlResponse);
 				response.getWriter().flush();
-			} catch (IOException e) {
-				throwOperationErrorException(e);
 			} catch (UnifyException e) {
 				throw e;
 			}

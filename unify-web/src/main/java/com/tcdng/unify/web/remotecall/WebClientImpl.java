@@ -52,7 +52,13 @@ import com.tcdng.unify.web.discovery.gem.data.DiscoverRemoteCallResult;
 @Component(WebApplicationComponents.APPLICATION_WEBCLIENT)
 public class WebClientImpl extends AbstractUnifyComponent implements WebClient {
 
-    @Configurable
+	@Configurable("10000")
+	private int connectTimeout;
+
+	@Configurable("30000")
+	private int readTimeout;
+
+	@Configurable
     private XmlObjectStreamer xmlObjectStreamer;
 
     @Configurable
@@ -180,6 +186,8 @@ public class WebClientImpl extends AbstractUnifyComponent implements WebClient {
             conn.setRequestMethod("POST");
             conn.setUseCaches(false);
             conn.setRequestProperty("Content-Type", format.mimeType().template());
+            conn.setConnectTimeout(connectTimeout);
+            conn.setReadTimeout(readTimeout);
             if (charset != null) {
                 conn.setRequestProperty("Accept-Charset", charset.name());
             }

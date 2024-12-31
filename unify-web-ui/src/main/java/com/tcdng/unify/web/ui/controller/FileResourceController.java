@@ -26,7 +26,6 @@ import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.file.FileResourceProvider;
 import com.tcdng.unify.core.util.FileUtils;
 import com.tcdng.unify.core.util.IOUtils;
-import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.constant.Secured;
 import com.tcdng.unify.web.ui.AbstractPageResourceController;
 
@@ -62,7 +61,9 @@ public class FileResourceController extends AbstractPageResourceController {
 		ResInputStream rin = null;
 		try {
 			rin = getInputStream();
-			IOUtils.writeAll(out, rin.getIn());
+			if (rin != null && rin.isPresent()) {
+				IOUtils.writeAll(out, rin.getIn());
+			}
 		} finally {
 			if (rin != null) {
 				contentType = rin.getContentType();
@@ -103,14 +104,7 @@ public class FileResourceController extends AbstractPageResourceController {
 
 	private String getThemeExtendedFileName(final String fileName, final String workingPath) throws UnifyException {
 		final String theme = getContainerSetting(String.class, UnifyCorePropertyConstants.APPLICATION_THEME);
-		if (!StringUtils.isBlank(theme)) {
-			final String _fileName = FileUtils.detectPresentAndGetThemeFileName(fileName, theme, workingPath);
-			if (_fileName != null) {
-				return _fileName;
-			}
-		}
-
-		return fileName;
+		return FileUtils.detectPresentAndGetThemeFileName(fileName, theme, workingPath);
 	}
 
 	protected class ResInputStream {
@@ -137,5 +131,8 @@ public class FileResourceController extends AbstractPageResourceController {
 			return contentType;
 		}
 
+		public boolean isPresent() {
+			return in != null;
+		}
 	}
 }

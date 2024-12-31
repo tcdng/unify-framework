@@ -18,13 +18,16 @@ package com.tcdng.unify.web;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyComponentConfig;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.data.FactoryMap;
+import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.util.WebPathUtils;
 
 /**
@@ -38,6 +41,13 @@ public class PathInfoRepositoryImpl extends AbstractUnifyComponent implements Pa
 
 	private FactoryMap<String, ControllerPathParts> controllerPathParts;
 
+	private static Map<String, String> operations;
+	static {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("/count", "count");
+		operations = Collections.unmodifiableMap(map);
+	}
+
 	public PathInfoRepositoryImpl() {
 		controllerPathParts = new FactoryMap<String, ControllerPathParts>() {
 
@@ -47,6 +57,8 @@ public class PathInfoRepositoryImpl extends AbstractUnifyComponent implements Pa
 				String pathId = controllerPath;
 				String controllerName = controllerPath;
 				String actionName = null;
+				String operation = null;
+				Long resourceId = null;
 				List<String> pathVariables = Collections.emptyList();
 				int colIndex = controllerPath.indexOf(':');
 				if (colIndex > 0) {
@@ -68,6 +80,19 @@ public class PathInfoRepositoryImpl extends AbstractUnifyComponent implements Pa
 						controllerName = controllerPath.substring(0, actionPartIndex);
 						pathId = controllerName;
 						actionName = controllerPath.substring(actionPartIndex);
+						if (StringUtils.isResourceIdPath(actionName)) {
+							resourceId = Long.parseLong(actionName.substring(1));
+						} else {
+							operation = operations.get(actionName);
+						}
+
+						if (resourceId != null || operation != null) {
+							final String _controllerPath = controllerName;
+							actionPartIndex = _controllerPath.lastIndexOf('/');
+							controllerName = _controllerPath.substring(0, actionPartIndex);
+							pathId = controllerName;
+							actionName = _controllerPath.substring(actionPartIndex);
+						}
 					}
 				}
 
@@ -75,9 +100,26 @@ public class PathInfoRepositoryImpl extends AbstractUnifyComponent implements Pa
 					ucc = getComponentConfig(Controller.class, controllerName);
 				}
 
+				DocPathParts docPathParts = null;
+				final String[] _docParts = controllerPath.split("/", 3);
+				if (_docParts.length >= 2) {
+					final String docControllerName = "/" + _docParts[1];
+					String docPath = _docParts.length == 3 ? docPath = _docParts[2] : null;
+					String section = null;
+					if (docPath != null) {
+						int index = docPath.lastIndexOf('#');
+						if (index > 0) {
+							section = docPath.substring(index + 1);
+							docPath = docPath.substring(0, index);
+						}
+					}
+
+					docPathParts = new DocPathParts(docControllerName, docPath, section);
+				}
+
 				boolean sessionless = ucc == null ? false : SessionlessController.class.isAssignableFrom(ucc.getType());
-				return new ControllerPathParts(controllerPath, pathId, controllerName, pathVariables, actionName,
-						sessionless);
+				return new ControllerPathParts(docPathParts, controllerPath, pathId, controllerName, pathVariables,
+						actionName, operation, resourceId, sessionless);
 			}
 		};
 	}

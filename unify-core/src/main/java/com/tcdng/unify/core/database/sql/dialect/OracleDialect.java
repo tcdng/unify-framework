@@ -333,6 +333,8 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
 
 	private static class OracleDataSourceDialectPolicies extends AbstractSqlDataSourceDialectPolicies {
 
+		private static final int MAXIMUM_CLAUSE_PARAMETERS = 1000;
+
 		public OracleDataSourceDialectPolicies() {
 			timestampFormat = new SimpleDateFormat(
 					"('TO_TIMESTAMP'(''yyyy-MM-dd HH:mm:ss'', '''yyyy-MM-dd HH24:mi:ss'''))");
@@ -348,7 +350,7 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
 
 		@Override
 		public int getMaxClauseValues() {
-			return 1000;
+			return MAXIMUM_CLAUSE_PARAMETERS;
 		}
 
 		@Override

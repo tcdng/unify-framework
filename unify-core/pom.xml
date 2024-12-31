@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.tcdng.unify</groupId>
 		<artifactId>unify</artifactId>
-		<version>3.1.1</version>
+		<version>3.1.2-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>unify-core</artifactId>
@@ -136,6 +136,11 @@
 			<groupId>com.eclipsesource.minimal-json</groupId>
 			<artifactId>minimal-json</artifactId>
 			<version>0.9.5</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-csv</artifactId>
+		    <version>1.10.0</version>
 		</dependency>
 		<!-- Common HTML to PDF reporting. -->
 		<dependency>

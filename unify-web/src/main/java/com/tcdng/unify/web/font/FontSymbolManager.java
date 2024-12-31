@@ -38,6 +38,14 @@ public interface FontSymbolManager extends UnifyComponent {
      */
     List<String> getFontResources() throws UnifyException;
 
+	/**
+	 * Gets the synbol names for this font symbol manager
+	 * 
+	 * @return the symbol names
+	 * @throws UnifyException if an error occurs
+	 */
+	List<String> getSymbolNames() throws UnifyException;
+    
     /**
      * Resolves uni-code code from supplied symbol code.
      * 

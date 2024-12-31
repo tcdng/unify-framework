@@ -40,10 +40,21 @@ public class IndexedTargetConverter extends AbstractConverter<IndexedTarget> {
         	if (parts.length > 1) {
         		final int targetIndex = Integer.parseInt(parts[1]);
         		final String binding = parts.length > 2 ?  parts[2] : null;
-            	return new IndexedTarget(parts[0], binding, targetIndex);
+        		String _target = parts[0];
+        		final int index = _target.lastIndexOf('_');
+        		int tabIndex = -1;
+        		if(index > 0) {
+        			try {
+						tabIndex = Integer.parseInt(_target.substring(index + 1));
+						_target = _target.substring(0, index);
+					} catch (NumberFormatException e) {
+					}
+        		}
+        		
+            	return new IndexedTarget(_target, binding, targetIndex, tabIndex);
         	}
 
-        	return new IndexedTarget(target, null, -1);
+        	return new IndexedTarget(target, null, -1, -1);
         }
 
         return null;

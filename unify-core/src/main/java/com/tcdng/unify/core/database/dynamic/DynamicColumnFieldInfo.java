@@ -18,7 +18,7 @@ package com.tcdng.unify.core.database.dynamic;
 
 import com.tcdng.unify.core.annotation.DynamicFieldType;
 import com.tcdng.unify.core.constant.DataType;
-import com.tcdng.unify.core.constant.EntityFieldType;
+import com.tcdng.unify.core.constant.DynamicEntityFieldType;
 
 /**
  * Dynamic table column field information.
@@ -42,7 +42,7 @@ public class DynamicColumnFieldInfo extends DynamicFieldInfo {
 
 	public DynamicColumnFieldInfo(DynamicFieldType type, String enumClassName, String columnName, String fieldName,
 			String mapped, boolean nullable, boolean descriptive, boolean tenantId) {
-		super(type, EntityFieldType.TABLE_COLUMN, DataType.STRING, columnName, fieldName, mapped, enumClassName,
+		super(type, DynamicEntityFieldType.FIELD, DataType.STRING, columnName, fieldName, mapped, enumClassName,
 				descriptive, tenantId);
 		this.nullable = nullable;
 	}
@@ -50,7 +50,7 @@ public class DynamicColumnFieldInfo extends DynamicFieldInfo {
 	public DynamicColumnFieldInfo(DynamicFieldType type, DataType dataType, String columnName, String fieldName,
 			String mapped, String transformer, String defaultVal, int length, int precision, int scale,
 			boolean nullable, boolean descriptive, boolean tenantId) {
-		super(type, EntityFieldType.TABLE_COLUMN, dataType, columnName, fieldName, mapped, null, descriptive, tenantId);
+		super(type, DynamicEntityFieldType.FIELD, dataType, columnName, fieldName, mapped, null, descriptive, tenantId);
 		this.transformer = transformer;
 		this.defaultVal = defaultVal;
 		this.length = length;

@@ -19,7 +19,7 @@ package com.tcdng.unify.core.database.dynamic;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.DynamicFieldType;
 import com.tcdng.unify.core.constant.DataType;
-import com.tcdng.unify.core.constant.EntityFieldType;
+import com.tcdng.unify.core.constant.DynamicEntityFieldType;
 
 /**
  * Dynamic list-only field information.
@@ -39,7 +39,7 @@ public class DynamicListOnlyFieldInfo extends DynamicFieldInfo {
 
 	public DynamicListOnlyFieldInfo(DynamicFieldType type, DynamicFieldInfo propertyFieldInfo, String columnName,
 			String fieldName, String key, String property, boolean descriptive, boolean resolved) {
-		super(type, EntityFieldType.LIST_ONLY, propertyFieldInfo.getDataType(), columnName, fieldName,
+		super(type, DynamicEntityFieldType.LIST_ONLY, propertyFieldInfo.getDataType(), columnName, fieldName,
 				null, propertyFieldInfo.getEnumClassName(), descriptive, false);
 		this.propertyFieldInfo = propertyFieldInfo;
 		this.key = key;
@@ -49,7 +49,7 @@ public class DynamicListOnlyFieldInfo extends DynamicFieldInfo {
 
 	public DynamicListOnlyFieldInfo(DynamicFieldType type, String columnName, String fieldName, String key,
 			String property, boolean descriptive) {
-		super(type, EntityFieldType.LIST_ONLY, DataType.STRING, columnName, fieldName, null, null, descriptive, false);
+		super(type, DynamicEntityFieldType.LIST_ONLY, DataType.STRING, columnName, fieldName, null, null, descriptive, false);
 		this.key = key;
 		this.property = property;
 		this.resolved = true;

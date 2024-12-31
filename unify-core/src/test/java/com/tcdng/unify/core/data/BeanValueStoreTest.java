@@ -25,6 +25,7 @@ import static org.junit.Assert.assertTrue;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.junit.Test;
@@ -49,6 +50,22 @@ public class BeanValueStoreTest {
     }
 
     @Test
+	public void testSimpleBeanPropertyIterator() throws Exception {
+        Address address = new Address("24 Parklane", "Apapa Lagos");
+        BeanValueStore bvs = new BeanValueStore(address);
+		
+		Iterator<ValueStore> it = bvs.iterator();
+		assertNotNull(it);
+		assertTrue(it.hasNext());
+		ValueStore ibvs = it.next();
+		assertNotNull(ibvs);
+		assertEquals("24 Parklane", ibvs.retrieve("line1"));
+		assertEquals("Apapa Lagos", ibvs.retrieve("line2"));
+
+		assertFalse(it.hasNext());
+	}
+
+    @Test
 	public void testRetrieveBeanListPropertyValue() throws Exception {
 		List<Address> addressList = Arrays.asList(
 				new Address("24 Parklane", "Apapa Lagos"),
@@ -61,6 +78,30 @@ public class BeanValueStoreTest {
 		bvs.setDataIndex(1);
 		assertEquals("38 Warehouse Road", bvs.retrieve("line1"));
 		assertEquals("Apapa Lagos", bvs.retrieve("line2"));
+	}
+
+    @Test
+	public void testBeanListPropertyIterator() throws Exception {
+		List<Address> addressList = Arrays.asList(
+				new Address("24 Parklane", "Apapa Lagos"),
+				new Address("38 Warehouse Road", "Apapa Lagos"));
+		ValueStore bvs = new BeanValueListStore(addressList);
+		
+		Iterator<ValueStore> it = bvs.iterator();
+		assertNotNull(it);
+		assertTrue(it.hasNext());
+		ValueStore ibvs = it.next();
+		assertNotNull(ibvs);
+		assertEquals("24 Parklane", ibvs.retrieve("line1"));
+		assertEquals("Apapa Lagos", ibvs.retrieve("line2"));
+
+		assertTrue(it.hasNext());
+		ibvs = it.next();
+		assertNotNull(ibvs);
+		assertEquals("38 Warehouse Road", ibvs.retrieve("line1"));
+		assertEquals("Apapa Lagos", ibvs.retrieve("line2"));
+
+		assertFalse(it.hasNext());
 	}
 
     @Test

@@ -48,6 +48,16 @@ public class UIControllerInfo extends ControllerInfo {
 		return pageNameToPropertyMap.get(pageName);
 	}
 
+	public PropertyInfo getPlainPropertyInfo(String property) {
+		PropertyInfo propertyInfo = pageNameToPropertyMap.get(property);
+		if (propertyInfo == null) {
+			propertyInfo = new PropertyInfo(property);
+			pageNameToPropertyMap.put(property, propertyInfo);
+		}
+		
+		return propertyInfo;
+	}
+
 	public void addPageNameToPropertyMappings(Map<String, PropertyInfo> pageNameToPropertyMap) {
 		pageNameToPropertyMap.putAll(pageNameToPropertyMap);
 	}

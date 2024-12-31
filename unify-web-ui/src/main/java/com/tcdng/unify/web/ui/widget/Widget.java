@@ -603,12 +603,12 @@ public interface Widget extends UplComponent {
      * @param tabIndex
      *                 the tab index to set
      */
-    void setTabIndex(int tabIndex);
+    void setTabIndex(int tabIndex) throws UnifyException;
 
     /**
      * Gets this widget's tab index
      */
-    int getTabIndex();
+    int getTabIndex() throws UnifyException;
 
     /**
      * Expects widget to add page name aliases to current request context.

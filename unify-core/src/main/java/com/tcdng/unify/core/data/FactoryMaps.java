@@ -35,7 +35,7 @@ public abstract class FactoryMaps<T, U, V> extends FactoryMap<T, FactoryMap<U, V
         this(false);
     }
 
-    public FactoryMaps(boolean checkStale) {
+    protected FactoryMaps(boolean checkStale) {
         this.checkStale = checkStale;
     }
 

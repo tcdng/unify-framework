@@ -55,6 +55,8 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("angle-left", "f104");
         registerSymbol("angle-right", "f105");
         registerSymbol("angle-up", "f106");
+        registerSymbol("angle-up", "f106");
+        registerSymbol("application", "f3fa");
         registerSymbol("archive", "f187");
         registerSymbol("arrow-down", "f063");
         registerSymbol("arrow-left", "f060");
@@ -81,6 +83,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("chevron-left", "f053");
         registerSymbol("chevron-right", "f054");
         registerSymbol("chevron-up", "f077");
+        registerSymbol("circle-pause", "f28b");
         registerSymbol("clock", "f017");
         registerSymbol("cloud", "f0c2");
         registerSymbol("cloud-download", "f381");
@@ -169,11 +172,13 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("rocket", "f135");
         registerSymbol("satellite-disk", "f7c0");
         registerSymbol("save", "f0c7");
+        registerSymbol("scroll", "f70e");
         registerSymbol("search", "f002");
         registerSymbol("sign-in", "f2f6");
         registerSymbol("sign-out", "f2f5");
         registerSymbol("site-map", "f0e8");
         registerSymbol("sort", "f0dc");
+        registerSymbol("step", "f54b");
         registerSymbol("stream", "f550");
         registerSymbol("swap", "f362");
         registerSymbol("sync", "f2f1");

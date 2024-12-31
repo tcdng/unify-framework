@@ -16,7 +16,7 @@
 package com.tcdng.unify.web.ui;
 
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.web.Controller;
+import com.tcdng.unify.web.HttpClientController;
 
 /**
  * User interface controller.
@@ -24,7 +24,7 @@ import com.tcdng.unify.web.Controller;
  * @author The Code Department
  * @since 1.0
  */
-public interface UIController extends Controller {
+public interface UIController extends HttpClientController {
 
     /**
      * Tests if controller is in read-only mode.

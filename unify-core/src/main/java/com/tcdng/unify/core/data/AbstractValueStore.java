@@ -21,7 +21,9 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 import com.tcdng.unify.core.UnifyException;
@@ -287,6 +289,11 @@ public abstract class AbstractValueStore implements ValueStore {
 
         return writer;
     }
+    
+    @Override
+    public Iterator<ValueStore> iterator() {
+        return new ValueStoreIterator();
+    }
 
     protected ValueStorePolicy getPolicy() {
         return policy;
@@ -295,6 +302,31 @@ public abstract class AbstractValueStore implements ValueStore {
     protected abstract void doSetDataIndex(int dataIndex);
     
     protected abstract Class<?> getDataClass() throws UnifyException;
+    
+    private class ValueStoreIterator implements Iterator<ValueStore> {
+    	
+        private int currentIndex = 0;
+
+        @Override
+        public boolean hasNext() {
+            return currentIndex < size();
+        }
+
+        @Override
+        public ValueStore next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+            
+            setDataIndex(currentIndex++);
+            return AbstractValueStore.this;
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException("Remove not supported");
+        }
+    }
     
     private class ValueStoreWriterImpl implements ValueStoreWriter{
         

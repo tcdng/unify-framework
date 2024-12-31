@@ -132,10 +132,11 @@ z-index:400;}
 .ui-document .dcpop {position:absolute;width:auto; z-index:101;}
 .ui-document .dcsysinfo {position:absolute;width:auto; z-index:102;}
 
-.dclatency {position:absolute;width:100%;height:100%;z-index:104;background-color: rgba(192, 192, 192, 0.20);}
+.dclatency {position:fixed;left:0px;width:100vw;height:100vh;z-index:104;background-color: rgba(192, 192, 192, 0.20);}
 .dclatency .base {display:block;width:400px;margin:14px auto;}
 .dclatency img {width:100%;height:12px;}
 
+  
 /** Deck */
 .ui-tilegroup {}
 .ui-tilegroup .tgtile {width: 86px; margin: 10px;}
@@ -770,6 +771,13 @@ overflow-x:hidden;overflow-y:scroll;border-top: solid 1px #A0A0A0;border-left: s
 .ui-optionstextarea .otalist .selyellow {background-color: #C0B800; color: #FFF;}
 .ui-optionstextarea .otalist .selorange {background-color: #C07833; color: #FFF;}
 .ui-optionstextarea .otalist .selgray {background-color: #787878; color: #FFF;}
+
+/** Palette */
+.ui-palette {}
+.ui-palette .txtsel {padding:2px;color:#404040;}
+.ui-palette .pal {display:block;width:36px;height:36px;border:2px solid #ffffff;box-sizing: border-box;}
+.ui-palette .palsel {display:block;width:36px;height:36px;border:2px solid #202020;box-sizing: border-box;}
+.ui-palette .dflt {background: repeating-linear-gradient(-45deg, #3c4e63, #3c4e63 5px, transparent 5px, transparent 10px);}
 
 /** Paragraph */
 .ui-paragraph {}

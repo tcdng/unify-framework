@@ -17,6 +17,7 @@ package com.tcdng.unify.core.security;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.util.IOUtils;
+import com.tcdng.unify.core.util.PostResp;
 
 /**
  * Convenient abstract base class for two-factor authentication REST service.
@@ -34,9 +35,9 @@ public abstract class AbstractTwoFactorAutenticationRestService extends Abstract
 
 	@Override
 	public boolean authenticate(String userName, String userEmail, String password) throws UnifyException {
-		TwoFactorAuthResponse resp = IOUtils.postObjectToEndpointUsingJson(TwoFactorAuthResponse.class, getAuthEndpoint(),
-				new TwoFactorAuthRequest(userName, userEmail, password));
-		return resp.isSuccess();
+		PostResp<TwoFactorAuthResponse> resp = IOUtils.postObjectToEndpointUsingJson(TwoFactorAuthResponse.class,
+				getAuthEndpoint(), new TwoFactorAuthRequest(userName, userEmail, password));
+		return resp.isSuccess() && resp.getResult().isSuccess();
 	}
 
 	protected abstract String getSendEndpoint() throws UnifyException;

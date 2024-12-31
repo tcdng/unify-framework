@@ -54,22 +54,17 @@ public class ImageWriter extends AbstractTargetControlWriter {
         if (image != null) {
             String imageName = "Img_" + imageCtrl.getId() + '_' + (new Date().getTime());
             setSessionAttribute(imageName, image);
-            writer.writeScopeImageContextURL(imageName);
-            writer.writeURLParameter("clearOnRead", "true");
+            writer.writeScopeImageContextURL(imageName, true);
        } else {
             String src = imageCtrl.getSrc();
             if (StringUtils.isNotBlank(src)) {
                 boolean alwaysFetch = imageCtrl.isAlwaysFetch();
                 if (TokenUtils.isContextScopeTag(src)) {
                     String imageName = TokenUtils.extractTokenValue(src);
-                    writer.writeScopeImageContextURL(imageName);
+                    writer.writeScopeImageContextURL(imageName, imageCtrl.isClearOnRead());
                     String scope = imageCtrl.getScope();
                     if (StringUtils.isNotBlank(scope)) {
                         writer.writeURLParameter("scope", scope);
-                    }
-
-                    if (imageCtrl.isClearOnRead()) {
-                        writer.writeURLParameter("clearOnRead", "true");
                     }
 
                     if (alwaysFetch) {

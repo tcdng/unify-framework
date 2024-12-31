@@ -44,7 +44,7 @@ public abstract class FactoryMap<T, U> {
 		this(false);
 	}
 
-	public FactoryMap(boolean checkStale) {
+	protected FactoryMap(boolean checkStale) {
 		map = new ConcurrentHashMap<T, U>();
 		this.checkStale = checkStale;
 	}

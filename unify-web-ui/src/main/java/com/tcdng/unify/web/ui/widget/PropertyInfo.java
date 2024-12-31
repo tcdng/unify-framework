@@ -38,6 +38,13 @@ public class PropertyInfo {
         this.masked = masked;
     }
 
+    public PropertyInfo(String property) {
+        this.property = property;
+        this.shortProperty = property;
+        this.longProperty = property;
+        this.masked = false;
+    }
+
     public String getProperty() {
         return property;
     }

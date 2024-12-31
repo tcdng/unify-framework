@@ -16,7 +16,7 @@
 package com.tcdng.unify.web;
 
 import java.io.OutputStream;
-import java.io.Writer;
+import java.io.PrintWriter;
 
 import com.tcdng.unify.core.UnifyException;
 
@@ -62,7 +62,7 @@ public interface ClientResponse {
     /**
      * Gets the response output stream
      */
-    Writer getWriter() throws UnifyException;
+    PrintWriter getWriter() throws UnifyException;
 
     /**
      * Returns true if response output is used.

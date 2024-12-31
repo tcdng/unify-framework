@@ -16,6 +16,8 @@
 
 package com.tcdng.unify.core.util;
 
+import java.util.regex.Pattern;
+
 import com.tcdng.unify.core.constant.ColorScheme;
 
 /**
@@ -25,6 +27,8 @@ import com.tcdng.unify.core.constant.ColorScheme;
  * @since 1.0
  */
 public final class ColorUtils {
+	
+    private static final Pattern HEX_COLOR_PATTERN = Pattern.compile("^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$");
 
     private ColorUtils() {
 
@@ -46,5 +50,13 @@ public final class ColorUtils {
         }
 
         return null;
+    }
+    
+    public static boolean isValidHexColor(String color) {
+    	if (color != null) {
+            return HEX_COLOR_PATTERN.matcher(color).matches();
+    	}
+    	
+    	return false;
     }
 }

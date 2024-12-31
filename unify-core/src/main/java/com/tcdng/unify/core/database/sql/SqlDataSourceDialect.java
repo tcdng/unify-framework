@@ -411,6 +411,13 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
 	String getPreferredName(String name);
 
 	/**
+	 * Returns the reporting name for dialect.
+	 * 
+	 * @param name the name
+	 */
+	String getReportingName(String name);
+
+	/**
 	 * Ensures unreserved name for dialect.
 	 * 
 	 * @param name the name

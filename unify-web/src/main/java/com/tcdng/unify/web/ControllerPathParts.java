@@ -28,6 +28,8 @@ import com.tcdng.unify.core.util.DataUtils;
  */
 public class ControllerPathParts {
 
+	private DocPathParts docPathParts;
+
 	private String controllerPath;
 
 	private String controllerPathId;
@@ -38,16 +40,28 @@ public class ControllerPathParts {
 
 	private String actionName;
 
+	private String operation;
+
+	private Long resourceId;
+
 	private boolean sessionless;
 
-	public ControllerPathParts(String controllerPath, String controllerPathId, String controllerName,
-			List<String> pathVariables, String actionName, boolean sessionless) {
+	public ControllerPathParts(DocPathParts docPathParts, String controllerPath, String controllerPathId,
+			String controllerName, List<String> pathVariables, String actionName, String operation, Long resourceId,
+			boolean sessionless) {
+		this.docPathParts = docPathParts;
 		this.controllerPath = controllerPath;
 		this.controllerPathId = controllerPathId;
 		this.controllerName = controllerName;
 		this.pathVariables = pathVariables;
 		this.actionName = actionName;
+		this.operation = operation;
+		this.resourceId = resourceId;
 		this.sessionless = sessionless;
+	}
+
+	public DocPathParts getDocPathParts() {
+		return docPathParts;
 	}
 
 	public String getControllerPath() {
@@ -70,6 +84,22 @@ public class ControllerPathParts {
 		return pathVariables;
 	}
 
+	public String getOperation() {
+		return operation;
+	}
+
+	public boolean isWithOperation() {
+		return operation != null;
+	}
+
+	public Long getResourceId() {
+		return resourceId;
+	}
+
+	public boolean isWithResourceId() {
+		return resourceId != null;
+	}
+
 	public boolean isSessionless() {
 		return sessionless;
 	}
@@ -80,6 +110,10 @@ public class ControllerPathParts {
 
 	public boolean isActionPath() {
 		return actionName != null;
+	}
+
+	public boolean isWithDocPathParts() {
+		return docPathParts != null;
 	}
 
 	public boolean isComponent(String componentLongName) {

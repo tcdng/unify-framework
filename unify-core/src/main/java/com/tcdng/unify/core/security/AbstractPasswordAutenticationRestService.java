@@ -17,6 +17,7 @@ package com.tcdng.unify.core.security;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.util.IOUtils;
+import com.tcdng.unify.core.util.PostResp;
 
 /**
  * Convenient abstract base class for password authentication REST service.
@@ -28,9 +29,9 @@ public abstract class AbstractPasswordAutenticationRestService extends AbstractP
 
 	@Override
 	public boolean authenticate(String userName, String userEmail, String password) throws UnifyException {
-		PasswordAuthResponse resp = IOUtils.postObjectToEndpointUsingJson(PasswordAuthResponse.class, getAuthEndpoint(),
-				new PasswordAuthRequest(userName, userEmail, password));
-		return resp.isSuccess();
+		PostResp<PasswordAuthResponse> resp = IOUtils.postObjectToEndpointUsingJson(PasswordAuthResponse.class,
+				getAuthEndpoint(), new PasswordAuthRequest(userName, userEmail, password));
+		return resp.isSuccess() && resp.getResult().isSuccess();
 	}
 
 	protected abstract String getAuthEndpoint() throws UnifyException;

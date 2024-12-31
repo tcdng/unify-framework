@@ -102,11 +102,16 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
 		}
 
 		if (nativeVal != null && defaultVal != null) {
-			if (nativeVal.charAt(0) == '(') {
-				int last = nativeVal.length() - 1;
-				if (nativeVal.charAt(last) == ')') {
-					return nativeVal.substring(1, last).equals(defaultVal);
-				}
+			if (defaultVal.charAt(0) == '\'') {
+				return nativeVal.equals("(" + defaultVal + ")");
+			}
+			
+			if (nativeVal.startsWith("('")) {
+				return nativeVal.equals("('" + defaultVal + "')");
+			}
+			
+			if (nativeVal.startsWith("((")) {
+				return nativeVal.equals("((" + defaultVal + "))");
 			}
 		}
 
@@ -336,6 +341,15 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
 	}
 
 	@Override
+	public String generateDropIndexSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, String dbIndexName, PrintFormat format)
+			throws UnifyException {
+		StringBuilder sb = new StringBuilder();
+		String tableName = sqlEntitySchemaInfo.getSchemaTableName();
+		sb.append("DROP INDEX ").append(dbIndexName).append(" ON ").append(tableName);
+		return sb.toString();
+	}
+
+	@Override
 	public boolean isGeneratesUniqueConstraintsOnCreateTable() {
 		return false;
 	}
@@ -358,6 +372,8 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
 
 	private static class MsSqlDataSourceDialectPolicies extends AbstractSqlDataSourceDialectPolicies {
 
+		private static final int MAXIMUM_CLAUSE_PARAMETERS = 2000;
+		
 		public void setSqlDataTypePolicies(Map<ColumnType, SqlDataTypePolicy> sqlDataTypePolicies) {
 			this.sqlDataTypePolicies = sqlDataTypePolicies;
 		}
@@ -368,7 +384,7 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
 
 		@Override
 		public int getMaxClauseValues() {
-			return -1;
+			return MAXIMUM_CLAUSE_PARAMETERS;
 		}
 
 		@Override

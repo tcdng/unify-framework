@@ -47,33 +47,39 @@ public final class WebRegexUtils {
      *            indicates if regex should permit period character
      * @param dash
      *            indicates if regex should permit dash character
+     * @param slash
+     *            indicates if regex should permit slash character
      * 
      * @return the name format regex
      * @throws UnifyException
      *             if an error occurs
      */
-    public static String getNameFormatRegex(boolean underscore, boolean dollar, boolean period, boolean dash)
-            throws UnifyException {
-        StringBuilder sb = new StringBuilder();
-        sb.append("^[\\\\w");
-        if (underscore) {
-            sb.append("\\\\_");
-        }
+	public static String getNameFormatRegex(boolean underscore, boolean dollar, boolean period, boolean dash,
+			boolean slash) throws UnifyException {
+		StringBuilder sb = new StringBuilder();
+		sb.append("^[\\\\w");
+		if (underscore) {
+			sb.append("\\\\_");
+		}
 
-        if (dollar) {
-            sb.append("\\\\$");
-        }
+		if (dollar) {
+			sb.append("\\\\$");
+		}
 
-        if (period) {
-            sb.append("\\\\.");
-        }
+		if (period) {
+			sb.append("\\\\.");
+		}
 
-        if (dash) {
-            sb.append("-");
-        }
-        sb.append("]*$");
-        return sb.toString();
-    }
+		if (dash) {
+			sb.append("-");
+		}
+
+		if (slash) {
+			sb.append("\\\\/");
+		}
+		sb.append("]*$");
+		return sb.toString();
+	}
 
     /**
      * Gets a JavaScript REGEX that allows alphanumeric characters and all special characters.

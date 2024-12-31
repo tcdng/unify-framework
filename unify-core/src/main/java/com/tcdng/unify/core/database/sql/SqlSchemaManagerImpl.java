@@ -85,7 +85,9 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 				schemaChangedClassList.size(), sqlDataSource.getName());
 		SqlSchemaManagerOptions options = new SqlSchemaManagerOptions(PrintFormat.NONE, ForceConstraints.fromBoolean(
 				!getContainerSetting(boolean.class, UnifyCorePropertyConstants.APPLICATION_FOREIGNKEY_EASE, false)));
+		
 		List<Class<? extends Entity>> viewList = buildDependencyDynamicViewList(sqlDataSource, schemaChangedClassList);
+
 		if (sqlDataSource.getDialect().isReconstructViewsOnTableSchemaUpdate()) {
 			dropViewSchema(sqlDataSource, options, viewList);
 		}
