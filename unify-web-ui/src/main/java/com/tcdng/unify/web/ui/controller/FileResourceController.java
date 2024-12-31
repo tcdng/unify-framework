@@ -61,7 +61,9 @@ public class FileResourceController extends AbstractPageResourceController {
 		ResInputStream rin = null;
 		try {
 			rin = getInputStream();
-			IOUtils.writeAll(out, rin.getIn());
+			if (rin != null && rin.isPresent()) {
+				IOUtils.writeAll(out, rin.getIn());
+			}
 		} finally {
 			if (rin != null) {
 				contentType = rin.getContentType();
@@ -129,5 +131,8 @@ public class FileResourceController extends AbstractPageResourceController {
 			return contentType;
 		}
 
+		public boolean isPresent() {
+			return in != null;
+		}
 	}
 }
