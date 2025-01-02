@@ -152,6 +152,8 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
 	private String dataSourceName;
 
+	private boolean supportUnifyViews;
+	
 	private boolean allObjectsInLowerCase;
 
 	private boolean useCallableFunctionMode;
@@ -1520,6 +1522,16 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 	@Override
 	public String ensureUnreservedIdentifier(String name) {
 		return reservedWords.contains(name.toUpperCase()) ? "RZ_" + name : name;
+	}
+
+	@Override
+	public final boolean isSupportUnifyViews() {
+		return supportUnifyViews;
+	}
+
+	@Override
+	public final void setSupportUnifyViews(boolean supportUnifyViews) {
+		this.supportUnifyViews = supportUnifyViews;
 	}
 
 	@Override

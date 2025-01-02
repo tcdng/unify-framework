@@ -41,6 +41,22 @@ public interface DataSourceDialect extends UnifyComponent {
      */
     String getDataSourceName();
     
+	/**
+	 * Checks if unify views are supported.
+	 * 
+	 * @return true if support unify views.
+	 * @throws UnifyException if an error occurs
+	 */
+	boolean isSupportUnifyViews() throws UnifyException;
+
+	/**
+	 * Set support unify views flag.
+	 * 
+	 * @param supportUnifyViews the flag to set
+	 * @throws UnifyException if an error occurs
+	 */
+	void setSupportUnifyViews(boolean supportUnifyViews) throws UnifyException;
+    
     /**
      * Checks if object are all renamed to lower case in dialect.
      * 

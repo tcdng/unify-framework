@@ -39,6 +39,9 @@ public abstract class AbstractDataSource extends AbstractUnifyComponent implemen
 	private boolean allObjectsInLowercase;
 
 	@Configurable("false")
+	private boolean supportUnifyViews;
+
+	@Configurable("false")
 	private boolean readOnly;
 
 	@Configurable("false")
@@ -55,6 +58,7 @@ public abstract class AbstractDataSource extends AbstractUnifyComponent implemen
 		if (dialect != null) {
 			dialect.setDataSourceName(getEntityMatchingName());
 			dialect.setAllObjectsInLowerCase(allObjectsInLowercase);
+			dialect.setSupportUnifyViews(supportUnifyViews);
 		}
 	}
 
@@ -85,9 +89,14 @@ public abstract class AbstractDataSource extends AbstractUnifyComponent implemen
 
 	@Override
 	protected void onInitialize() throws UnifyException {
+		if (ApplicationComponents.APPLICATION_DATASOURCE.equals(getName())) {
+			supportUnifyViews = true;
+		}
+		
 		if (dialect != null) {
 			dialect.setDataSourceName(getEntityMatchingName());
 			dialect.setAllObjectsInLowerCase(allObjectsInLowercase);
+			dialect.setSupportUnifyViews(supportUnifyViews);
 		}
 	}
 

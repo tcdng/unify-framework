@@ -274,6 +274,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 					viewName = tableName;
 				}
 
+				// Rename view if necessary
 				final String schema = getWorkingSchema(
 						ta != null ? AnnotationUtils.getAnnotationString(ta.schema()) : null,
 						sqlDataSourceDialect.getDataSourceName());
@@ -847,9 +848,8 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 						}
 					}
 				} while ((searchClass = searchClass.getSuperclass()) != null);
-
-				// Rename view if necessary
-				if (!listOnlyFieldMap.isEmpty() && ta != null && viewName.equals(tableName)) {
+				
+				if (!listOnlyFieldMap.isEmpty() && (ta != null || sqlDataSourceDialect.isSupportUnifyViews())  && viewName.equals(tableName)) {
 					viewName = SqlUtils.generateViewName(tableName);
 				}
 
