@@ -54,6 +54,8 @@ public class UserToken {
 
 	private Long tenantId;
 
+	private Long organizationId;
+
 	private boolean globalAccess;
 
 	private boolean reservedUser;
@@ -139,6 +141,14 @@ public class UserToken {
 
 	public Long getTenantId() {
 		return tenantId;
+	}
+
+	public Long getOrganizationId() {
+		return organizationId;
+	}
+
+	public void setOrganizationId(Long organizationId) {
+		this.organizationId = organizationId;
 	}
 
 	public String getIpAddress() {
