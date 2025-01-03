@@ -151,6 +151,10 @@ public class UserToken {
 		this.organizationId = organizationId;
 	}
 
+	public boolean isWithOrganization() {
+		return organizationId != null && organizationId > 0L;
+	}
+	
 	public String getIpAddress() {
 		return ipAddress;
 	}
