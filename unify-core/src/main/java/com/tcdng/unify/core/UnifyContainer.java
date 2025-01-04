@@ -40,6 +40,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import com.tcdng.unify.common.constants.UnifyStaticSettings;
 import com.tcdng.unify.core.annotation.Broadcast;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;

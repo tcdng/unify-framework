@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.tcdng.unify.common.constants.UnifyStaticSettings;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.core.util.TypeRepository;

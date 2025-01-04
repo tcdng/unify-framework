@@ -16,6 +16,7 @@
 
 package com.tcdng.unify.core;
 
+import com.tcdng.unify.common.constants.AbstractUnifyStaticSettings;
 import com.tcdng.unify.core.annotation.AutoDetect;
 
 /**

@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.tcdng.unify.core;
+package com.tcdng.unify.common.constants;
 
 /**
  * Static settings interface.

@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
 
+import com.tcdng.unify.common.constants.UnifyStaticSettings;
 import com.tcdng.unify.core.annotation.Parameter;
 import com.tcdng.unify.core.annotation.Singleton;
 import com.tcdng.unify.core.constant.LocaleType;
