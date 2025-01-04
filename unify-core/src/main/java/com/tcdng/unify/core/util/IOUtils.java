@@ -491,11 +491,40 @@ public class IOUtils {
 				outputStream.write(buffer, 0, read);
 				totalRead += read;
 			}
+
+			outputStream.flush();
 			return totalRead;
 		} catch (IOException e) {
 			throw new UnifyException(e, UnifyCoreErrorConstants.IOUTIL_STREAM_RW_ERROR);
 		} finally {
 			IOUtils.close(inputStream);
+		}
+	}
+
+	/**
+	 * Writes all data from reader to writer. Closes input stream at end of write.
+	 * 
+	 * @param writer the writer to write to
+	 * @param reader the reader to read from
+	 * @return the number of characters written
+	 * @throws UnifyException if an error occurs
+	 */
+	public static long writeAll(Writer writer, Reader reader) throws UnifyException {
+		try {
+			long totalRead = 0;
+			char[] buffer = new char[BUFFER_SIZE];
+			int read = 0;
+			while ((read = reader.read(buffer)) >= 0) {
+				writer.write(buffer, 0, read);
+				totalRead += read;
+			}
+
+			writer.flush();
+			return totalRead;
+		} catch (IOException e) {
+			throw new UnifyException(e, UnifyCoreErrorConstants.IOUTIL_STREAM_RW_ERROR);
+		} finally {
+			IOUtils.close(reader);
 		}
 	}
 
