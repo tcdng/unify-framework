@@ -34,6 +34,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URI;
@@ -498,6 +499,39 @@ public class IOUtils {
 			throw new UnifyException(e, UnifyCoreErrorConstants.IOUTIL_STREAM_RW_ERROR);
 		} finally {
 			IOUtils.close(inputStream);
+		}
+	}
+
+	/**
+	 * Writes all data from reader to output stream. Closes input stream at end of
+	 * write.
+	 * 
+	 * @param outputStream the output stream to write to
+	 * @param reader       the reader to read from
+	 * @return the number of characters written
+	 * @throws UnifyException if an error occurs
+	 */
+	public static long writeAll(OutputStream outputStream, Reader reader) throws UnifyException {
+		return IOUtils.writeAll(outputStream, reader, null);
+	}
+
+	/**
+	 * Writes all data from reader to output stream. Closes input stream at end of
+	 * write.
+	 * 
+	 * @param outputStream the output stream to write to
+	 * @param reader       the reader to read from
+	 * @param charSet      the character set
+	 * @return the number of characters written
+	 * @throws UnifyException if an error occurs
+	 */
+	public static long writeAll(OutputStream outputStream, Reader reader, String charSet) throws UnifyException {
+		try {
+			return IOUtils.writeAll(new OutputStreamWriter(outputStream, charSet == null ? "UTF-8" : charSet), reader);
+		} catch (UnsupportedEncodingException e) {
+			throw new UnifyException(e, UnifyCoreErrorConstants.IOUTIL_STREAM_RW_ERROR);
+		} catch (UnifyException e) {
+			throw e;
 		}
 	}
 
