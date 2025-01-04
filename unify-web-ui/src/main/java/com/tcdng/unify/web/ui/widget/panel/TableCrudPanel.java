@@ -17,8 +17,8 @@ package com.tcdng.unify.web.ui.widget.panel;
 
 import java.util.List;
 
+import com.tcdng.unify.common.database.Entity;
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.web.ui.widget.Panel;
 
 /**

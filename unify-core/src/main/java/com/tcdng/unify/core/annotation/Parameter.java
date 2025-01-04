@@ -19,7 +19,7 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-import com.tcdng.unify.core.constant.AnnotationConstants;
+import com.tcdng.unify.common.annotation.AnnotationConstants;
 
 /**
  * Annotation for declaring a parameter.

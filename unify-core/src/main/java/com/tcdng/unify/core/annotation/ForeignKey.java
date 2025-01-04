@@ -21,9 +21,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.tcdng.unify.core.constant.AnnotationConstants;
-import com.tcdng.unify.core.constant.DefaultColumnPositionConstants;
-import com.tcdng.unify.core.database.Entity;
+import com.tcdng.unify.common.annotation.AnnotationConstants;
+import com.tcdng.unify.common.constants.DefaultColumnPositionConstants;
+import com.tcdng.unify.common.database.Entity;
 
 /**
  * Annotation for indicating that a field is a foreign key. Also provides a

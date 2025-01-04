@@ -13,25 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
-package com.tcdng.unify.core.annotation;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+package com.tcdng.unify.common.data;
 
 /**
- * Unique constraints.
+ * A describable object interface.
  * 
  * @author The Code Department
  * @since 1.0
  */
-@Target(ElementType.TYPE)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface UniqueConstraints {
+public interface Describable {
 
-	String[] baseFields() default {};
-
-    UniqueConstraint[] value() default {};
+    String getDescription();
 }

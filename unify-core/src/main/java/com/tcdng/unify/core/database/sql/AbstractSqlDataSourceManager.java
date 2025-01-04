@@ -21,12 +21,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.tcdng.unify.common.database.Entity;
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.database.DataSourceManagerOptions;
-import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.util.SqlUtils;
 
 /**

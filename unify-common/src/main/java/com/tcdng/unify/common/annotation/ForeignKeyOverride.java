@@ -13,15 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.annotation;
+package com.tcdng.unify.common.annotation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-import com.tcdng.unify.core.constant.AnnotationConstants;
-import com.tcdng.unify.core.constant.DefaultColumnPositionConstants;
-import com.tcdng.unify.core.database.Entity;
+import com.tcdng.unify.common.constants.DefaultColumnPositionConstants;
+import com.tcdng.unify.common.database.Entity;
 
 /**
  * Annotation for overriding foreign key definition in super class.

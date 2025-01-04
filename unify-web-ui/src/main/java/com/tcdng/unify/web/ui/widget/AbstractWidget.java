@@ -18,6 +18,7 @@ package com.tcdng.unify.web.ui.widget;
 import java.text.MessageFormat;
 import java.util.Collection;
 
+import com.tcdng.unify.common.database.Entity;
 import com.tcdng.unify.core.RequestContext;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.ViewDirective;
@@ -25,7 +26,6 @@ import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.data.FileAttachmentInfo;
 import com.tcdng.unify.core.data.ValueStore;
-import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.database.Query;
 import com.tcdng.unify.core.upl.AbstractUplComponent;
 import com.tcdng.unify.core.util.DataUtils;

@@ -15,9 +15,9 @@
  */
 package com.tcdng.unify.core.application;
 
+import com.tcdng.unify.common.annotation.Table;
 import com.tcdng.unify.core.annotation.Column;
 import com.tcdng.unify.core.annotation.Id;
-import com.tcdng.unify.core.annotation.Table;
 import com.tcdng.unify.core.database.AbstractEntity;
 
 /**

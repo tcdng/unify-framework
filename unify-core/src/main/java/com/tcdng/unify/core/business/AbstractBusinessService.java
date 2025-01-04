@@ -18,6 +18,7 @@ package com.tcdng.unify.core.business;
 import java.util.Date;
 import java.util.Map;
 
+import com.tcdng.unify.common.database.Entity;
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.EntityEventSource;
@@ -27,7 +28,6 @@ import com.tcdng.unify.core.annotation.Transactional;
 import com.tcdng.unify.core.constant.TopicEventType;
 import com.tcdng.unify.core.database.Database;
 import com.tcdng.unify.core.database.DatabaseTransactionManager;
-import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.database.dynamic.sql.DynamicSqlDatabaseManager;
 import com.tcdng.unify.core.task.TaskLauncher;
 import com.tcdng.unify.core.task.TaskMonitor;

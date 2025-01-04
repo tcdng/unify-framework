@@ -25,9 +25,9 @@ import java.util.Locale;
 
 import org.junit.Test;
 
+import com.tcdng.unify.common.data.Listable;
 import com.tcdng.unify.core.AbstractUnifyComponentTest;
 import com.tcdng.unify.core.ApplicationComponents;
-import com.tcdng.unify.core.data.Listable;
 
 /**
  * Default list manager implementation tests.

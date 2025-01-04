@@ -13,23 +13,25 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.data;
+
+package com.tcdng.unify.common.annotation;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * A listable object interface.
+ * Unique constraints.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public interface Listable {
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface UniqueConstraints {
 
-    /**
-     * Returns the listable object's unique list key.
-     */
-    String getListKey();
+	String[] baseFields() default {};
 
-    /**
-     * Returns the listable object's list description.
-     */
-    String getListDescription();
+    UniqueConstraint[] value() default {};
 }

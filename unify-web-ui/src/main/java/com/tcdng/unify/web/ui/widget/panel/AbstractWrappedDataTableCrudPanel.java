@@ -16,10 +16,10 @@
 
 package com.tcdng.unify.web.ui.widget.panel;
 
+import com.tcdng.unify.common.database.Entity;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.UplBinding;
 import com.tcdng.unify.core.data.WrappedData;
-import com.tcdng.unify.core.database.Entity;
 
 /**
  * Abstract wrapped data table CRUD panel.

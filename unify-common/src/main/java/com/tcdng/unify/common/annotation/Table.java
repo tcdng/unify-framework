@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.annotation;
+package com.tcdng.unify.common.annotation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -21,8 +21,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.tcdng.unify.core.ApplicationComponents;
-import com.tcdng.unify.core.constant.AnnotationConstants;
+import com.tcdng.unify.common.constants.ApplicationCommonConstants;
 
 /**
  * Annotation for binding an entity to an RDBMS table.
@@ -42,9 +41,9 @@ public @interface Table {
 
     /**
      * The application data source that table belongs to. Defaults to
-     * {@link ApplicationComponents#APPLICATION_DATASOURCE}
+     * {@link ApplicationCommonConstants#APPLICATION_DATASOURCE}
      */
-    String datasource() default ApplicationComponents.APPLICATION_DATASOURCE;
+    String datasource() default ApplicationCommonConstants.APPLICATION_DATASOURCE;
 
     /**
      * Optional name of schema that table belongs to

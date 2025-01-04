@@ -18,7 +18,7 @@ package com.tcdng.unify.core.list;
 
 import java.util.List;
 
-import com.tcdng.unify.core.data.Listable;
+import com.tcdng.unify.common.data.Listable;
 
 /**
  * List listable value parameter.

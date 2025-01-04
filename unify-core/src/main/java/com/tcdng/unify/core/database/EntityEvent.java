@@ -15,6 +15,7 @@
  */
 package com.tcdng.unify.core.database;
 
+import com.tcdng.unify.common.database.Entity;
 import com.tcdng.unify.core.constant.TopicEventType;
 
 /**

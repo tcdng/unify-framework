@@ -13,24 +13,26 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.database;
+package com.tcdng.unify.common.annotation;
 
-import com.tcdng.unify.core.data.Describable;
-import com.tcdng.unify.core.data.Listable;
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 /**
- * Interface required by all entities.
+ * Annotation for declaring a table unique constraint.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public interface Entity extends Listable, Describable {
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+public @interface UniqueConstraint {
 
-	static final Long PRIMARY_TENANT_ID = 0L;
-	
-    Object getId();
-	
-    void setPreferredId(Object id);
+    /** The unique constraint properties */
+    String[] value();
     
-    boolean isReserved();
+    /** constraint condition*/
+	QueryRestriction[] condition() default {};
+
 }

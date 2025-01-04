@@ -15,7 +15,7 @@
  */
 package com.tcdng.unify.core;
 
-import com.tcdng.unify.core.database.Entity;
+import com.tcdng.unify.common.database.Entity;
 import com.tcdng.unify.core.util.StringUtils;
 
 /**

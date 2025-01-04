@@ -13,23 +13,23 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.constant;
+package com.tcdng.unify.common.data;
 
 /**
- * Column position constants.
+ * A listable object interface.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public interface DefaultColumnPositionConstants {
+public interface Listable {
 
-    int ID_POSITION = 0;
+    /**
+     * Returns the listable object's unique list key.
+     */
+    String getListKey();
 
-    int FK_POSITION = 2;
-
-    int COLUMN_POSITION = 4;
-
-    int LIST_POSITION = 4;
-
-    int VERSION_POSITION = 8;
+    /**
+     * Returns the listable object's list description.
+     */
+    String getListDescription();
 }

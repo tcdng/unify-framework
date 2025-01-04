@@ -18,8 +18,8 @@ package com.tcdng.unify.core.database.sql;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import com.tcdng.unify.common.database.Entity;
 import com.tcdng.unify.core.constant.ChildFetch;
-import com.tcdng.unify.core.database.Entity;
 
 /**
  * Child field information.

@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.tcdng.unify.common.database.Entity;
 import com.tcdng.unify.core.constant.OrderType;
 import com.tcdng.unify.core.criterion.Amongst;
 import com.tcdng.unify.core.criterion.And;

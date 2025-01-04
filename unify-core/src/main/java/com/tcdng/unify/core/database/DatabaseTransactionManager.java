@@ -17,6 +17,7 @@ package com.tcdng.unify.core.database;
 
 import java.util.List;
 
+import com.tcdng.unify.common.database.Entity;
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.TransactionAttribute;

@@ -23,9 +23,9 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 
+import com.tcdng.unify.common.database.Entity;
 import com.tcdng.unify.core.database.Database;
 import com.tcdng.unify.core.database.DatabaseTransactionManager;
-import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.database.Query;
 import com.tcdng.unify.core.database.TestSqlDataSource;
 import com.tcdng.unify.core.system.entities.AbstractSequencedEntity;

@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.tcdng.unify.common.database.Entity;
 import com.tcdng.unify.core.AbstractUnifyComponentTest;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyCorePropertyConstants;

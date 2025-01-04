@@ -13,16 +13,23 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.constant;
+package com.tcdng.unify.common.constants;
 
 /**
- * Annotation constants.
+ * Column position constants.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public interface AnnotationConstants {
+public interface DefaultColumnPositionConstants {
 
-    /** Used typically for string annotation attributes that default to none. */
-    String NONE = "[none]";
+    int ID_POSITION = 0;
+
+    int FK_POSITION = 2;
+
+    int COLUMN_POSITION = 4;
+
+    int LIST_POSITION = 4;
+
+    int VERSION_POSITION = 8;
 }

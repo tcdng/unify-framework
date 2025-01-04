@@ -17,8 +17,9 @@ package com.tcdng.unify.core.database.sql;
 
 import java.util.List;
 
+import com.tcdng.unify.common.annotation.ColumnType;
+import com.tcdng.unify.common.database.Entity;
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.constant.QueryAgainst;
 import com.tcdng.unify.core.criterion.AggregateFunction;
 import com.tcdng.unify.core.criterion.GroupingFunction;
@@ -26,7 +27,6 @@ import com.tcdng.unify.core.criterion.RestrictionType;
 import com.tcdng.unify.core.criterion.Update;
 import com.tcdng.unify.core.database.CallableProc;
 import com.tcdng.unify.core.database.DataSourceDialect;
-import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.database.NativeUpdate;
 import com.tcdng.unify.core.database.Query;
 

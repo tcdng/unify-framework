@@ -15,6 +15,8 @@
  */
 package com.tcdng.unify.core.data;
 
+import com.tcdng.unify.common.data.Listable;
+
 /**
  * List number data.
  * 
