@@ -16,8 +16,8 @@
 
 package com.tcdng.unify.web.ui;
 
+import com.tcdng.unify.common.annotation.AutoDetect;
 import com.tcdng.unify.common.constants.AbstractUnifyStaticSettings;
-import com.tcdng.unify.core.annotation.AutoDetect;
 
 /**
  * Unify web UI static settings.

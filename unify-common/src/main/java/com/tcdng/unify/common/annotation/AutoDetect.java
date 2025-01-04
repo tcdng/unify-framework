@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.tcdng.unify.core.annotation;
+package com.tcdng.unify.common.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

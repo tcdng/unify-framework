@@ -26,6 +26,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
 
+import com.tcdng.unify.common.annotation.AutoDetect;
 import com.tcdng.unify.common.constants.UnifyStaticSettings;
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyComponentSettings;
@@ -33,7 +34,6 @@ import com.tcdng.unify.core.UnifyContainerConfig;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyCorePropertyConstants;
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.annotation.AutoDetect;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.Configuration;
