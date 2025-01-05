@@ -65,7 +65,6 @@ public class FileResourceController extends AbstractPageResourceController {
 				IOUtils.writeAll(out, rin.getIn());
 			}
 		} catch (UnifyException e) {
-			System.out.println("@prime: resourceName = " + getResourceName());
 			throw e;
 		} finally {
 			if (rin != null) {
