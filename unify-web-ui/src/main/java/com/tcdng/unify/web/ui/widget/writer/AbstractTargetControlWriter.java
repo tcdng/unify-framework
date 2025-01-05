@@ -68,7 +68,8 @@ public abstract class AbstractTargetControlWriter extends AbstractControlWriter 
 			value = targetControl.getStringValue();
 		}
 
-		return value;
+		return targetControl.isResolve() ? resolveSessionMessage(value)
+				: value;
 	}
 
 	protected abstract void doWriteTargetControl(ResponseWriter writer, TargetControl targetControl)
