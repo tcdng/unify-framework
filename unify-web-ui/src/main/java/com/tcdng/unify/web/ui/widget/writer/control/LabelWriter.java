@@ -53,10 +53,6 @@ public class LabelWriter extends AbstractControlWriter {
         writer.write(">");
         String value = label.getStringValue();
         if (value != null) {
-        	if (label.isResolve()) {
-        		value = resolveSessionMessage(value);
-        	}
-        	
         	value = label.isTextUppercase() ? value.toUpperCase() : value;
             if (label.isHtmlEscape()) {
                 writer.writeWithHtmlEscape(value);

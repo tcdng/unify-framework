@@ -33,6 +33,7 @@ import com.tcdng.unify.web.ui.DataTransferBlock;
  * @since 1.0
  */
 @UplAttributes({
+		@UplAttribute(name = "resolve", type = boolean.class, defaultVal = "false"),
 		@UplAttribute(name = "formatter", type = Formatter.class),
 		@UplAttribute(name = "formatOverride", type = String.class) })
 public abstract class AbstractFormattedControl extends AbstractControl {
@@ -52,7 +53,8 @@ public abstract class AbstractFormattedControl extends AbstractControl {
 
 	@Override
 	public String getStringValue() throws UnifyException {
-		return DataUtils.convert(String.class, getValue(), getFormatter());
+		return isResolve() ? resolveSessionMessage(DataUtils.convert(String.class, getValue(), getFormatter()))
+				: DataUtils.convert(String.class, getValue(), getFormatter());
 	}
 
 	@Override
@@ -62,6 +64,10 @@ public abstract class AbstractFormattedControl extends AbstractControl {
 
 	public final String getFormatOverride() throws UnifyException {
 		return getUplAttribute(String.class, "formatOverride");
+	}
+
+	public final boolean isResolve() throws UnifyException {
+		return getUplAttribute(boolean.class, "resolve");
 	}
 
 	@SuppressWarnings("unchecked")
