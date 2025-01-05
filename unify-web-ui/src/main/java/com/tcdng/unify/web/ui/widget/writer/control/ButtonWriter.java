@@ -41,7 +41,7 @@ public class ButtonWriter extends AbstractTargetControlWriter {
         writeTagAttributesWithTrailingExtraStyleClass(writer, button, "g_fsm");
         writer.write("/>");
         String imageSrc = button.getUplAttribute(String.class, "imageSrc");
-        String caption = button.getCaption();
+        String caption = button.isResolve()? resolveSessionMessage(button.getCaption()) : button.getCaption();
         if (StringUtils.isNotBlank(imageSrc)) {
             writer.write("<img src=\"");
             writer.writeFileImageContextURL(imageSrc);
