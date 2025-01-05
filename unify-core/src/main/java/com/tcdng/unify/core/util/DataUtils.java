@@ -528,6 +528,10 @@ public final class DataUtils {
 		}
 	}
 
+	public static Object getBeanProperty(Object bean, String propertyName) throws UnifyException {
+		return ReflectUtils.getBeanProperty(bean, propertyName);
+	}
+
 	@SuppressWarnings("unchecked")
 	public static <T> Input<T> newInput(Class<T> type, String name, String description, String editor,
 			boolean mandatory) throws UnifyException {
