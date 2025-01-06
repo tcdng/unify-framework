@@ -64,6 +64,8 @@ public class FileResourceController extends AbstractPageResourceController {
 			if (rin != null && rin.isPresent()) {
 				IOUtils.writeAll(out, rin.getIn());
 			}
+		} catch (UnifyException e) {
+			throw e;
 		} finally {
 			if (rin != null) {
 				contentType = rin.getContentType();

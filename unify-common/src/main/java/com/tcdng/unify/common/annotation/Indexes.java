@@ -13,37 +13,23 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.annotation;
 
-import java.lang.annotation.Documented;
+package com.tcdng.unify.common.annotation;
+
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-
-import com.tcdng.unify.core.constant.AnnotationConstants;
+import java.lang.annotation.Target;
 
 /**
- * Annotation for overriding column definition in super class.
+ * Indexes.
  * 
  * @author The Code Department
  * @since 1.0
  */
-@Documented
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ColumnOverride {
+public @interface Indexes {
 
-    String field();
-
-    ColumnType type() default ColumnType.AUTO;
-
-    String name() default AnnotationConstants.NONE;
-
-    String transformer() default AnnotationConstants.NONE;
-
-    int length() default -1;
-
-    int precision() default -1;
-
-    int scale() default -1;
-
-    boolean nullable() default false;
+    Index[] value() default {};
 }

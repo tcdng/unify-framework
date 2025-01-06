@@ -15,7 +15,7 @@
  */
 package com.tcdng.unify.core.system.entities;
 
-import com.tcdng.unify.core.database.Entity;
+import com.tcdng.unify.common.database.Entity;
 
 /**
  * Sequenced entity.

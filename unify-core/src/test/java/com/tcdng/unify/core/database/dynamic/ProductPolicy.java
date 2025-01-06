@@ -17,10 +17,10 @@ package com.tcdng.unify.core.database.dynamic;
 
 import java.util.Date;
 
+import com.tcdng.unify.common.database.Entity;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.database.AbstractEntityPolicy;
-import com.tcdng.unify.core.database.Entity;
 
 /**
  * Policy class for product.

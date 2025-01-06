@@ -13,23 +13,26 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.constant;
+package com.tcdng.unify.common.annotation;
+
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 /**
- * Column position constants.
+ * Annotation for declaring a table unique constraint.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public interface DefaultColumnPositionConstants {
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+public @interface UniqueConstraint {
 
-    int ID_POSITION = 0;
+    /** The unique constraint properties */
+    String[] value();
+    
+    /** constraint condition*/
+	QueryRestriction[] condition() default {};
 
-    int FK_POSITION = 2;
-
-    int COLUMN_POSITION = 4;
-
-    int LIST_POSITION = 4;
-
-    int VERSION_POSITION = 8;
 }

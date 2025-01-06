@@ -18,7 +18,7 @@ package com.tcdng.unify.core.database.sql;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import com.tcdng.unify.core.annotation.ColumnType;
+import com.tcdng.unify.common.annotation.ColumnType;
 import com.tcdng.unify.core.transform.Transformer;
 import com.tcdng.unify.core.util.StringUtils;
 

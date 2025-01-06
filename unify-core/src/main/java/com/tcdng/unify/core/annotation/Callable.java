@@ -21,8 +21,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import com.tcdng.unify.common.annotation.AnnotationConstants;
 import com.tcdng.unify.core.ApplicationComponents;
-import com.tcdng.unify.core.constant.AnnotationConstants;
 
 /**
  * Annotation that indicates a callable procedure.

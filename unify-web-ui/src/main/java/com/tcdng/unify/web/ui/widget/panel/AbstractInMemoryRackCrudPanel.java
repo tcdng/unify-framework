@@ -15,8 +15,8 @@
  */
 package com.tcdng.unify.web.ui.widget.panel;
 
+import com.tcdng.unify.common.database.Entity;
 import com.tcdng.unify.core.annotation.UplBinding;
-import com.tcdng.unify.core.database.Entity;
 
 /**
  * Abstract in-memory rack CRUD panel.

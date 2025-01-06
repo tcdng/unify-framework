@@ -18,6 +18,7 @@ package com.tcdng.unify.core.database;
 import java.util.List;
 import java.util.Set;
 
+import com.tcdng.unify.common.database.Entity;
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 

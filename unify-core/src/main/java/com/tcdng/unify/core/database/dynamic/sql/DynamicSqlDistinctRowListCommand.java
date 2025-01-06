@@ -20,11 +20,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import com.tcdng.unify.common.data.Listable;
 import com.tcdng.unify.core.ApplicationAliasConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.data.ListData;
-import com.tcdng.unify.core.data.Listable;
 import com.tcdng.unify.core.database.NativeQuery;
 import com.tcdng.unify.core.database.sql.SqlDistinctRowListConfig;
 import com.tcdng.unify.core.database.sql.SqlDistinctRowListConfigManager;

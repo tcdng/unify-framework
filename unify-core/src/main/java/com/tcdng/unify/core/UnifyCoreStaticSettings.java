@@ -16,7 +16,8 @@
 
 package com.tcdng.unify.core;
 
-import com.tcdng.unify.core.annotation.AutoDetect;
+import com.tcdng.unify.common.annotation.AutoDetect;
+import com.tcdng.unify.common.constants.AbstractUnifyStaticSettings;
 
 /**
  * Unify core static settings.

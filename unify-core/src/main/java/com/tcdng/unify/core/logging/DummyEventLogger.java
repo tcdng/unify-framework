@@ -17,9 +17,9 @@ package com.tcdng.unify.core.logging;
 
 import java.util.List;
 
+import com.tcdng.unify.common.database.Entity;
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.database.Entity;
 
 /**
  * Dummy event logger.

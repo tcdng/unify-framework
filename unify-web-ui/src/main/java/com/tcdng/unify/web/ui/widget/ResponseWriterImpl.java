@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
+import com.tcdng.unify.common.data.Listable;
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.RequestContext;
 import com.tcdng.unify.core.ThemeManager;
@@ -34,7 +35,6 @@ import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.Singleton;
 import com.tcdng.unify.core.constant.MimeType;
-import com.tcdng.unify.core.data.Listable;
 import com.tcdng.unify.core.format.DateTimeFormat;
 import com.tcdng.unify.core.format.Pattern;
 import com.tcdng.unify.core.upl.UplComponent;

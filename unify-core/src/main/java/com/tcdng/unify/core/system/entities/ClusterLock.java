@@ -17,10 +17,10 @@ package com.tcdng.unify.core.system.entities;
 
 import java.util.Date;
 
+import com.tcdng.unify.common.annotation.ColumnType;
+import com.tcdng.unify.common.annotation.Table;
 import com.tcdng.unify.core.annotation.Column;
-import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.annotation.Id;
-import com.tcdng.unify.core.annotation.Table;
 
 /**
  * Entity for storing cluster synchronization lock information.

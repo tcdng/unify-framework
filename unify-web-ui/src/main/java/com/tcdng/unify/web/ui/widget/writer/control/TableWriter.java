@@ -142,6 +142,7 @@ public class TableWriter extends AbstractControlWriter {
 			writer.writeStructureAndContent(table.getColumnIndexCtrl());
 			writer.writeStructureAndContent(table.getSortDirectionCtrl());
 		}
+		
 		writer.write("</div>");
 	}
 

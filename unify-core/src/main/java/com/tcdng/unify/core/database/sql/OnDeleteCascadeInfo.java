@@ -18,7 +18,7 @@ package com.tcdng.unify.core.database.sql;
 
 import java.lang.reflect.Field;
 
-import com.tcdng.unify.core.database.Entity;
+import com.tcdng.unify.common.database.Entity;
 
 /**
  * On delete cascade information.

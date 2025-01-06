@@ -13,15 +13,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.data;
+package com.tcdng.unify.common.annotation;
 
 /**
- * A describable object interface.
+ * Annotation constants.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public interface Describable {
+public interface AnnotationConstants {
 
-    String getDescription();
+    /** Used typically for string annotation attributes that default to none. */
+    String NONE = "[none]";
 }

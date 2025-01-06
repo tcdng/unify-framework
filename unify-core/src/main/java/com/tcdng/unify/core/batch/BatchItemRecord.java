@@ -15,7 +15,7 @@
  */
 package com.tcdng.unify.core.batch;
 
-import com.tcdng.unify.core.database.Entity;
+import com.tcdng.unify.common.database.Entity;
 
 /**
  * Represents a batch item record.

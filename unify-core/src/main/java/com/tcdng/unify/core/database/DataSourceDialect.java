@@ -17,6 +17,7 @@ package com.tcdng.unify.core.database;
 
 import java.util.Map;
 
+import com.tcdng.unify.common.database.Entity;
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.criterion.Restriction;
@@ -40,6 +41,22 @@ public interface DataSourceDialect extends UnifyComponent {
      * Gets the name of the data source utilizing this dialect object.
      */
     String getDataSourceName();
+    
+	/**
+	 * Checks if unify views are supported.
+	 * 
+	 * @return true if support unify views.
+	 * @throws UnifyException if an error occurs
+	 */
+	boolean isSupportUnifyViews() throws UnifyException;
+
+	/**
+	 * Set support unify views flag.
+	 * 
+	 * @param supportUnifyViews the flag to set
+	 * @throws UnifyException if an error occurs
+	 */
+	void setSupportUnifyViews(boolean supportUnifyViews) throws UnifyException;
     
     /**
      * Checks if object are all renamed to lower case in dialect.

@@ -19,8 +19,8 @@ package com.tcdng.unify.core.database;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
+import com.tcdng.unify.common.annotation.Table;
 import com.tcdng.unify.core.annotation.Column;
-import com.tcdng.unify.core.annotation.Table;
 
 /**
  * Loan application.

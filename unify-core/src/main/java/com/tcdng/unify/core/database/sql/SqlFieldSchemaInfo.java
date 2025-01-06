@@ -15,7 +15,7 @@
  */
 package com.tcdng.unify.core.database.sql;
 
-import com.tcdng.unify.core.annotation.ColumnType;
+import com.tcdng.unify.common.annotation.ColumnType;
 
 /**
  * SQL field schema information.

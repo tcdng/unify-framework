@@ -15,8 +15,8 @@
  */
 package com.tcdng.unify.core.database;
 
+import com.tcdng.unify.common.annotation.Table;
 import com.tcdng.unify.core.annotation.Column;
-import com.tcdng.unify.core.annotation.Table;
 
 /**
  * Test server config.

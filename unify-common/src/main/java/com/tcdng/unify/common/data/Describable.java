@@ -13,38 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
-package com.tcdng.unify.core;
+package com.tcdng.unify.common.data;
 
 /**
- * Base class for abstract static settings.
+ * A describable object interface.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public abstract class AbstractUnifyStaticSettings implements UnifyStaticSettings {
+public interface Describable {
 
-    private String messageBase;
-
-    private int level;
-
-    public AbstractUnifyStaticSettings(String messageBase, int level) {
-        this.messageBase = messageBase;
-        this.level = level;
-    }
-
-    public AbstractUnifyStaticSettings(String messageBase) {
-        this.messageBase = messageBase;
-    }
-
-    @Override
-    public String getMessageBase() {
-        return messageBase;
-    }
-
-    @Override
-    public int getLevel() {
-        return level;
-    }
-
+    String getDescription();
 }

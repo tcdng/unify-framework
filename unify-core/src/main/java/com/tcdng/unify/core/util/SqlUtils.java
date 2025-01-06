@@ -29,8 +29,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.tcdng.unify.core.annotation.ColumnType;
-import com.tcdng.unify.core.database.Entity;
+import com.tcdng.unify.common.annotation.ColumnType;
+import com.tcdng.unify.common.database.Entity;
 import com.tcdng.unify.core.database.Query;
 import com.tcdng.unify.core.database.StaticReference;
 import com.tcdng.unify.core.database.StaticReferenceQuery;

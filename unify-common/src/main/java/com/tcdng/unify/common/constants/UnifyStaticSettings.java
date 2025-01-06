@@ -14,21 +14,23 @@
  * the License.
  */
 
-package com.tcdng.unify.core.annotation;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+package com.tcdng.unify.common.constants;
 
 /**
- * Automatic detection annotation.
+ * Static settings interface.
  * 
  * @author The Code Department
  * @since 1.0
  */
-@Target(ElementType.TYPE)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface AutoDetect {
+public interface UnifyStaticSettings {
 
+    /**
+     * Returns the messages bundle resource name.
+     */
+    String getMessageBase();
+
+    /**
+     * Returns the settings priority level.
+     */
+    int getLevel();
 }

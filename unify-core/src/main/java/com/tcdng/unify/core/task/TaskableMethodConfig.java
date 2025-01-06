@@ -18,7 +18,7 @@ package com.tcdng.unify.core.task;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import com.tcdng.unify.core.data.Listable;
+import com.tcdng.unify.common.data.Listable;
 import com.tcdng.unify.core.data.ParamConfig;
 import com.tcdng.unify.core.util.DataUtils;
 

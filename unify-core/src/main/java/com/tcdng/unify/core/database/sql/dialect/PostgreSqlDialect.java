@@ -26,8 +26,8 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
+import com.tcdng.unify.common.annotation.ColumnType;
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.constant.PrintFormat;
 import com.tcdng.unify.core.constant.TimeSeriesType;

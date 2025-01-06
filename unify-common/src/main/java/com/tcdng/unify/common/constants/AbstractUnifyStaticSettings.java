@@ -13,23 +13,38 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.data;
+
+package com.tcdng.unify.common.constants;
 
 /**
- * A listable object interface.
+ * Base class for abstract static settings.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public interface Listable {
+public abstract class AbstractUnifyStaticSettings implements UnifyStaticSettings {
 
-    /**
-     * Returns the listable object's unique list key.
-     */
-    String getListKey();
+    private String messageBase;
 
-    /**
-     * Returns the listable object's list description.
-     */
-    String getListDescription();
+    private int level;
+
+    public AbstractUnifyStaticSettings(String messageBase, int level) {
+        this.messageBase = messageBase;
+        this.level = level;
+    }
+
+    public AbstractUnifyStaticSettings(String messageBase) {
+        this.messageBase = messageBase;
+    }
+
+    @Override
+    public String getMessageBase() {
+        return messageBase;
+    }
+
+    @Override
+    public int getLevel() {
+        return level;
+    }
+
 }

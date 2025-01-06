@@ -13,24 +13,23 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
-package com.tcdng.unify.core;
+package com.tcdng.unify.common.constants;
 
 /**
- * Static settings interface.
+ * Column position constants.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public interface UnifyStaticSettings {
+public interface DefaultColumnPositionConstants {
 
-    /**
-     * Returns the messages bundle resource name.
-     */
-    String getMessageBase();
+    int ID_POSITION = 0;
 
-    /**
-     * Returns the settings priority level.
-     */
-    int getLevel();
+    int FK_POSITION = 2;
+
+    int COLUMN_POSITION = 4;
+
+    int LIST_POSITION = 4;
+
+    int VERSION_POSITION = 8;
 }

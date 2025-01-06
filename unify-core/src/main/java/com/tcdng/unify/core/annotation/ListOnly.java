@@ -21,7 +21,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.tcdng.unify.core.constant.AnnotationConstants;
+import com.tcdng.unify.common.annotation.AnnotationConstants;
 
 /**
  * Annotation for marking a field as a view-only property. A view-only property

@@ -13,23 +13,25 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+package com.tcdng.unify.common.annotation;
 
-package com.tcdng.unify.core.annotation;
-
-import java.lang.annotation.ElementType;
+import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 
 /**
- * Indexes.
+ * Annotation for declaring a table index.
  * 
  * @author The Code Department
  * @since 1.0
  */
-@Target(ElementType.TYPE)
+@Documented
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Indexes {
+public @interface Index {
 
-    Index[] value() default {};
+    /** The index properties */
+    String[] value();
+
+    /** Specifies if index should have unique values */
+    boolean unique() default false;
 }

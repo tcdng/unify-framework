@@ -13,16 +13,23 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.core.constant;
+package com.tcdng.unify.common.data;
 
 /**
- * Annotation constants.
+ * A listable object interface.
  * 
  * @author The Code Department
  * @since 1.0
  */
-public interface AnnotationConstants {
+public interface Listable {
 
-    /** Used typically for string annotation attributes that default to none. */
-    String NONE = "[none]";
+    /**
+     * Returns the listable object's unique list key.
+     */
+    String getListKey();
+
+    /**
+     * Returns the listable object's list description.
+     */
+    String getListDescription();
 }

@@ -40,6 +40,8 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import com.tcdng.unify.common.annotation.AnnotationConstants;
+import com.tcdng.unify.common.constants.UnifyStaticSettings;
 import com.tcdng.unify.core.annotation.Broadcast;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
@@ -52,7 +54,6 @@ import com.tcdng.unify.core.application.BootService;
 import com.tcdng.unify.core.business.BusinessLogicUnit;
 import com.tcdng.unify.core.business.BusinessService;
 import com.tcdng.unify.core.business.internal.ProxyBusinessServiceGenerator;
-import com.tcdng.unify.core.constant.AnnotationConstants;
 import com.tcdng.unify.core.data.FactoryMap;
 import com.tcdng.unify.core.data.LocaleFactoryMaps;
 import com.tcdng.unify.core.format.DateTimeFormatter;

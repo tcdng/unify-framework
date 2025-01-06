@@ -15,11 +15,11 @@
  */
 package com.tcdng.unify.web.ui.widget.writer.control;
 
+import com.tcdng.unify.common.data.Listable;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.constant.LocaleType;
-import com.tcdng.unify.core.data.Listable;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ui.widget.control.ListReadOnlyTextField;
 import com.tcdng.unify.web.ui.widget.control.TextField;
