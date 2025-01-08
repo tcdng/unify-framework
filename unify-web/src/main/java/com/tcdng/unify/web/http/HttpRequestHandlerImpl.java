@@ -45,6 +45,7 @@ import com.tcdng.unify.core.util.CalendarUtils;
 import com.tcdng.unify.core.util.ColorUtils;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.IOUtils;
+import com.tcdng.unify.core.util.RandomUtils;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ClientCookie;
 import com.tcdng.unify.web.ClientRequest;
@@ -78,6 +79,8 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 	private static final String DISPOSITION_MODIFICATIONDATE = "modification-date";
 
 	private static final int BUFFER_SIZE = 4096;
+
+	private static final int CLIENT_ID_LEN = 16;
 
 	private static final String BODY_TEXT = "__bodyText";
 	private static final String BODY_BYTES = "__bodyBytes";
@@ -366,7 +369,7 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 	private void ensureClientId(ClientRequest request) throws UnifyException {
 		String clientId = (String) request.getParameters().getParam(RequestParameterConstants.CLIENT_ID);
 		if (StringUtils.isBlank(clientId)) {
-			clientId = UUID.randomUUID().toString();
+			clientId = RandomUtils.generateRandomAlphanumeric(CLIENT_ID_LEN);
 		}
 
 		setRequestAttribute(RequestParameterConstants.CLIENT_ID, clientId);

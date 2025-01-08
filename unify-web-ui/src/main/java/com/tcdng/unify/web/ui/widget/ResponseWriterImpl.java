@@ -404,7 +404,7 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 		writeContextURL(path);
 		PageManager pageManager = getPageManager();
 		if (pageManager.getCurrentRequestClientId() != null) {
-			buf.append('?').append(RequestParameterConstants.CLIENT_ID).append("=")
+			buf.append(path.indexOf('?') >= 0 ? '&' : '?').append(RequestParameterConstants.CLIENT_ID).append("=")
 					.append(UrlUtils.encodeURLParameter(pageManager.getCurrentRequestClientId()));
 		}
 
