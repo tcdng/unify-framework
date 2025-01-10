@@ -15,6 +15,8 @@
  */
 package com.tcdng.unify.core.database.sql;
 
+import com.tcdng.unify.core.annotation.Configurable;
+
 /**
  * Default implementation of SQL data source.
  * 
@@ -23,9 +25,12 @@ package com.tcdng.unify.core.database.sql;
  */
 public class SqlDataSourceImpl extends AbstractSqlDataSource {
 
+	@Configurable
+	private String preferredName;
+
     @Override
     public String getPreferredName() {
-        return null;
+        return preferredName;
     }
 
 }
