@@ -4682,7 +4682,10 @@ ux.buildObjParams = function(trgObj, evp, param, refs) {
 			pb.append("req_rsi", ux.docSessionId);
 		} else {
 			pb.append("req_doc", ux.docPath);
-			pb.append("req_cid", ux.getClientId());
+			if (evp.uURL.indexOf("req_cid") < 0) {
+				pb.append("req_cid", ux.getClientId());
+			}
+			
 			pb.append("req_win", window.name);
 		}
 		if (evp.uValidateAct) {
@@ -4708,7 +4711,10 @@ ux.buildObjParams = function(trgObj, evp, param, refs) {
 			pb += ("&req_rsi=" + _enc(ux.docSessionId));
 		} else {
 			pb += ("&req_doc=" + _enc(ux.docPath));
-			pb += ("&req_cid=" + _enc(ux.getClientId()));
+			if (evp.uURL.indexOf("req_cid") < 0) {
+				pb += ("&req_cid=" + _enc(ux.getClientId()));
+			}
+
 			pb += ("&req_win=" + _enc(window.name));
 		}
 		if (evp.uValidateAct) {
