@@ -506,7 +506,7 @@ ux.postPath = function(resp) {
 			}
 		}
 		
-		var prm = "req_doc=" + _enc(ux.docPath) + "&req_cid=" + _enc(ux.getClientId());
+		var prm = "req_doc=" + _enc(ux.docPath) + (path.indexOf("req_cid") < 0  ? "&req_cid=" + _enc(ux.getClientId()):"");
 		if(resp.target) {
 			prm += "&req_trg=" + _enc(resp.target);
 		}
@@ -789,7 +789,7 @@ ux.post = function(uEv) {
 
 ux.postToPath = function(evp) {
 	var ajaxPrms = ux.ajaxConstructCallParam(evp.uPath,
-			"req_doc=" + _enc(ux.docPath) + "&req_cid=" + _enc(ux.getClientId())
+			"req_doc=" + _enc(ux.docPath) + (evp.uPath.indexOf("req_cid") < 0  ? "&req_cid=" + _enc(ux.getClientId()):"")
 			+ (evp.uTarget ? "&req_trg=" + _enc(evp.uTarget) :"") ,
 			false, true, false, ux.processJSON);
 	ux.ajaxCall(ajaxPrms);
