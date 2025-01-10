@@ -17,6 +17,7 @@ package com.tcdng.unify.core.system;
 
 import java.util.Date;
 
+import com.tcdng.unify.common.database.Entity;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.business.BusinessService;
 
@@ -38,6 +39,15 @@ public interface SequenceNumberService extends BusinessService {
      *             if an error occurs
      */
     void ensureCachedBlockSequence(String sequenceName) throws UnifyException;
+
+	/**
+	 * Checks if class is of this sequence.
+	 *
+	 * @param clazz the entity class
+	 * @return true if of this sequence otherwise false
+	 * @throws UnifyException if an error occurs
+	 */
+	<T extends Entity> boolean isOfThisSequence(Class<T> clazz) throws UnifyException;
 
     /**
      * Returns the next available sequence number from cached block for sequence

@@ -113,6 +113,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 	}
 
 	@Override
+	public <T extends Entity> boolean isOfThisDatabase(Class<T> clazz) throws UnifyException {
+		return sqlDataSourceDialect.isWithSqlEntityInfo(clazz);
+	}
+
+	@Override
 	public <T extends Entity> T find(Class<T> clazz, Object id) throws UnifyException {
 		return find(clazz, id, FetchChild.TRUE);
 	}

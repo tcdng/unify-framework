@@ -55,6 +55,15 @@ public interface DatabaseSession {
      */
     Object create(Entity record) throws UnifyException;
 
+	/**
+	 * Checks if class is of this database.
+	 *
+	 * @param clazz the entity class
+	 * @return true if of this database otherwise false
+	 * @throws UnifyException if an error occurs
+	 */
+	<T extends Entity> boolean isOfThisDatabase(Class<T> clazz) throws UnifyException;
+
     /**
      * Retrieves a record by ID. List-only properties of returned object are not
      * populated. Child and child list properties are populated.

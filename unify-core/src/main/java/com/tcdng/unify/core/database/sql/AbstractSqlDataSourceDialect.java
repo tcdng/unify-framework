@@ -960,6 +960,11 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 	}
 
 	@Override
+	public boolean isWithSqlEntityInfo(Class<?> clazz) throws UnifyException {
+		return sqlEntityInfoFactory.isWithSqlEntityInfo(clazz);
+	}
+
+	@Override
 	public List<SqlEntityInfo> findAllChildSqlEntityInfos(Class<?> clazz) throws UnifyException {
 		return sqlEntityInfoFactory.findAllChildSqlEntityInfos(clazz);
 	}

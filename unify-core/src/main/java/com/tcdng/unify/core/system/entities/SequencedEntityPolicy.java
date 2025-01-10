@@ -45,11 +45,16 @@ public class SequencedEntityPolicy extends AbstractEntityPolicy {
     }
 
     @Override
-    public Object preCreate(Entity record, Date now) throws UnifyException {
-        Long id = sequenceNumberService.getCachedBlockNextSequenceNumber(record.getClass().getName());
-        ((AbstractSequencedEntity) record).setId(id);
-        return id;
-    }
+	public Object preCreate(Entity record, Date now) throws UnifyException {
+		if (!sequenceNumberService.isOfThisSequence(record.getClass())) {
+			throw new IllegalArgumentException(
+					"Sequence for entity class [" + record.getClass().getName() + "] is unsupported.");
+		}
+
+		Long id = sequenceNumberService.getCachedBlockNextSequenceNumber(record.getClass().getName());
+		((AbstractSequencedEntity) record).setId(id);
+		return id;
+	}
 
     protected final SequenceNumberService getSequenceNumberService() {
         return sequenceNumberService;

@@ -108,6 +108,15 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
 	 *                        occurs
 	 */
 	List<SqlEntityInfo> findAllChildSqlEntityInfos(Class<?> clazz) throws UnifyException;
+	
+	/**
+	 * Checks if dialect is with entity information.
+	 * 
+	 * @param clazz the entity type
+	 * @return true if present otherwise false
+	 * @throws UnifyException if an error occurs
+	 */
+	boolean isWithSqlEntityInfo(Class<?> clazz) throws UnifyException;
 
 	/**
 	 * Finds the SQL entity information for an entity.
