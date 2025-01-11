@@ -72,6 +72,7 @@ public class DataSourceManagerContext {
 			}
 			
 			entities.add(entityClass);
+			tableUtilised.add(entityClass);
 			return true;
 		}
 		
@@ -87,6 +88,7 @@ public class DataSourceManagerContext {
 			}
 			
 			entities.add(entityClass);
+			viewUtilised.add(entityClass);
 			return true;
 		}
 		
