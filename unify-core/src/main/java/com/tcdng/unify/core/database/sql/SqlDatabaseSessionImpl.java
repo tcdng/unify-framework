@@ -96,6 +96,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 	}
 
 	@Override
+	public boolean isManaged() throws UnifyException {
+		return sqlDataSource.isManaged();
+	}
+
+	@Override
 	public String getDataSourceName() {
 		return sqlDataSource.getName();
 	}

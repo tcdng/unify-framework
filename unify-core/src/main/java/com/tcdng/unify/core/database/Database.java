@@ -44,6 +44,14 @@ public interface Database extends UnifyComponent {
      *             if an error occurs
 	 */
 	boolean isReadOnly() throws UnifyException;
+	/**
+	 * Checks if database is managed
+	 * 
+	 * @return true if database is managed otherwise false
+     * @throws UnifyException
+     *             if an error occurs
+	 */
+	boolean isManaged() throws UnifyException;
 
     /**
      * Gets the database dataSource.

@@ -44,6 +44,15 @@ public interface DatabaseSession {
 	 */
 	boolean isReadOnly() throws UnifyException;
 
+	/**
+	 * Checks if database session is managed
+	 * 
+	 * @return true if database session is managed otherwise false
+     * @throws UnifyException
+     *             if an error occurs
+	 */
+	boolean isManaged() throws UnifyException;
+
     /**
      * Creates an record in the database.
      * 

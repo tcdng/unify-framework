@@ -43,6 +43,15 @@ public interface DataSource extends UnifyComponent {
      *             if an error occurs
 	 */
 	boolean isReadOnly() throws UnifyException;
+	
+	/**
+	 * Checks if datasource is managed
+	 * 
+	 * @return true if datasource is managed otherwise false
+     * @throws UnifyException
+     *             if an error occurs
+	 */
+	boolean isManaged() throws UnifyException;
 
 	/**
 	 * Checks if datasource initialization is delayed.

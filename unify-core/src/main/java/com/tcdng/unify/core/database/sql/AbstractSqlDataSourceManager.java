@@ -79,7 +79,7 @@ public abstract class AbstractSqlDataSourceManager extends AbstractUnifyComponen
 	@Override
 	public void manageDataSource(DataSourceManagerContext ctx, String dataSourceName) throws UnifyException {
 		SqlDataSource sqlDataSource = getSqlDataSource(dataSourceName);
-		if (!sqlDataSource.isReadOnly()) {
+		if (sqlDataSource.isManaged() && !sqlDataSource.isReadOnly()) {
 			SqlSchemaManagerOptions _options = new SqlSchemaManagerOptions(ctx.getOptions());
 			List<Class<?>> tableList = getDependencyTableEntities(ctx, dataSourceName);
 			List<Class<? extends Entity>> viewList = new ArrayList<Class<? extends Entity>>(SqlUtils.getEntityClassList(tableList));

@@ -38,6 +38,11 @@ public abstract class AbstractSqlDatabase extends AbstractDatabase implements Sq
 	}
 
 	@Override
+	public boolean isManaged() throws UnifyException {
+		return getDataSource().isManaged();
+	}
+
+	@Override
 	public DatabaseSession createDatabaseSession() throws UnifyException {
 		return new SqlDatabaseSessionImpl((SqlDataSource) getDataSource(), sqlStatementExecutor);
 	}
