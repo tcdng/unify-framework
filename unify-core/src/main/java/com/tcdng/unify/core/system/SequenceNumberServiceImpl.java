@@ -74,9 +74,10 @@ public class SequenceNumberServiceImpl extends AbstractBusinessService implement
     }
 
     @Override
-	public boolean exists(Entity inst, List<String> fieldNames) throws UnifyException {
+	public boolean exists(Class<? extends Entity> entityClass, Object inst, List<String> fieldNames)
+			throws UnifyException {
 		if (!DataUtils.isBlank(fieldNames)) {
-			Query<? extends Entity> query = Query.of(inst.getClass());
+			Query<? extends Entity> query = Query.of(entityClass);
 			for (String fieldName : fieldNames) {
 				Object val = DataUtils.getBeanProperty(inst, fieldName);
 				if (val != null) {

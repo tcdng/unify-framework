@@ -32,12 +32,13 @@ import com.tcdng.unify.core.UnifyException;
 public interface UniqueConstraintChecker extends UnifyComponent {
 
 	/**
-	 * Checks if entity already exists.
+	 * Checks if entity with object details already exists.
 	 * 
-	 * @param inst       the entity to check
-	 * @param fieldNames the unique key fields
+	 * @param entityClass the entity class
+	 * @param inst        the bean to check
+	 * @param fieldNames  the unique key fields
 	 * @return true if exists otherwise false
 	 * @throws UnifyException if an error occurs
 	 */
-	boolean exists(Entity inst, List<String> fieldNames) throws UnifyException;
+	boolean exists(Class<? extends Entity> entityClass, Object inst, List<String> fieldNames) throws UnifyException;
 }
