@@ -28,7 +28,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.SessionAttributeProvider;
@@ -425,8 +424,6 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 			try {
 				switch (remoteCallFormat) {
 				case OCTETSTREAM:
-					result.put(RequestParameterConstants.REMOTE_CALL_INPUTSTREAM, httpRequest.getInputStream());
-					break;
 				case TAGGED_BINARYMESSAGE:
 					result.put(BODY_BYTES, IOUtils.readAll(httpRequest.getInputStream()));
 					break;
