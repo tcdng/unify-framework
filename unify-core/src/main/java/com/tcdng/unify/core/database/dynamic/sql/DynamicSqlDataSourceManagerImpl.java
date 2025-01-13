@@ -27,6 +27,7 @@ import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.constant.ForceConstraints;
 import com.tcdng.unify.core.constant.PrintFormat;
 import com.tcdng.unify.core.data.FactoryMap;
+import com.tcdng.unify.core.database.DataSourceManagerContext;
 import com.tcdng.unify.core.database.DataSourceManagerOptions;
 import com.tcdng.unify.core.database.NativeQuery;
 import com.tcdng.unify.core.database.sql.AbstractSqlDataSourceManager;
@@ -217,12 +218,12 @@ public class DynamicSqlDataSourceManagerImpl extends AbstractSqlDataSourceManage
     private void createAndInitDynamicSqlDataSource(DynamicSqlDataSourceConfig dynamicSqlDataSourceConfig)
             throws UnifyException {
         dynamicSqlDataSourceMap.get(dynamicSqlDataSourceConfig.getName(), dynamicSqlDataSourceConfig);
-        DataSourceManagerOptions options = new DataSourceManagerOptions(PrintFormat.NONE,
+        final DataSourceManagerContext ctx = new DataSourceManagerContext(new DataSourceManagerOptions(PrintFormat.NONE,
                 ForceConstraints.fromBoolean(!getContainerSetting(boolean.class,
-                        UnifyCorePropertyConstants.APPLICATION_FOREIGNKEY_EASE, false)));
-        initDataSource(dynamicSqlDataSourceConfig.getName(), options);
+                        UnifyCorePropertyConstants.APPLICATION_FOREIGNKEY_EASE, false))));
+        initDataSource(ctx, dynamicSqlDataSourceConfig.getName());
         if (dynamicSqlDataSourceConfig.isManageSchema()) {
-            manageDataSource(dynamicSqlDataSourceConfig.getName(), options);
+            manageDataSource(ctx, dynamicSqlDataSourceConfig.getName());
         }
     }
 

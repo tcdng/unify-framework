@@ -1839,6 +1839,11 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 	}
 
 	@Override
+	public boolean isWithSqlEntityInfo(Class<?> clazz) throws UnifyException {
+		return sqlEntityInfoMap.isKey(clazz);
+	}
+
+	@Override
 	public SqlEntityInfo createSqlEntityInfo(Class<?> entityClass) throws UnifyException {
 		return sqlEntityInfoMap.get(entityClass);
 	}

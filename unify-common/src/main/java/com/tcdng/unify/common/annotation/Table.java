@@ -112,4 +112,9 @@ public @interface Table {
      * Indicates identity column is managed. Defaults to true.
      */
     boolean identityManaged() default true;
+    
+    /**
+     * Allow alternate ID source
+     */
+    boolean allowAlternateIdSource() default false;
 }

@@ -21,6 +21,8 @@ import java.util.Map;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
+import com.tcdng.unify.common.annotation.Table;
+import com.tcdng.unify.common.database.Entity;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
@@ -67,6 +69,16 @@ public class SequenceNumberServiceImpl extends AbstractBusinessService implement
     }
 
     @Override
+	public <T extends Entity> boolean isOfThisSequence(Class<T> clazz) throws UnifyException {
+    	if (!db().isOfThisDatabase(clazz)) {
+        	Table ta = clazz.getAnnotation(Table.class);    	
+    		return  ta != null && ta.allowAlternateIdSource();
+    	}
+    	
+    	return true;
+	}
+
+	@Override
     @Synchronized("sys:nextdatesequencenumber-lock")
 	public void ensureCachedBlockSequence(String sequencedName) throws UnifyException {
         SequenceBlock sequenceBlock = sequenceBlockMap.get(sequencedName);

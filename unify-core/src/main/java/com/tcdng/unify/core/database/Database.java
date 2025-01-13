@@ -35,7 +35,7 @@ import com.tcdng.unify.core.criterion.Update;
  * @since 1.0
  */
 public interface Database extends UnifyComponent {
-
+	
 	/**
 	 * Checks if database is read-only
 	 * 
@@ -44,6 +44,14 @@ public interface Database extends UnifyComponent {
      *             if an error occurs
 	 */
 	boolean isReadOnly() throws UnifyException;
+	/**
+	 * Checks if database is managed
+	 * 
+	 * @return true if database is managed otherwise false
+     * @throws UnifyException
+     *             if an error occurs
+	 */
+	boolean isManaged() throws UnifyException;
 
     /**
      * Gets the database dataSource.
@@ -80,6 +88,15 @@ public interface Database extends UnifyComponent {
      *             if an error occurs
      */
     DatabaseSession createDatabaseSession() throws UnifyException;
+
+	/**
+	 * Checks if class is of this database.
+	 *
+	 * @param clazz the entity class
+	 * @return true if of this database otherwise false
+	 * @throws UnifyException if an error occurs
+	 */
+	<T extends Entity> boolean isOfThisDatabase(Class<T> clazz) throws UnifyException;
 
     /**
      * Finds record of specified type by id. List-only properties of returned object

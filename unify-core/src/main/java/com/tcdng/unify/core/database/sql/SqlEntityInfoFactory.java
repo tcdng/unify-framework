@@ -28,7 +28,16 @@ import com.tcdng.unify.core.database.CallableProc;
  * @since 1.0
  */
 public interface SqlEntityInfoFactory extends UnifyComponent {
-
+	
+	/**
+	 * Checks if factory is with entity information.
+	 * 
+	 * @param clazz the entity type
+	 * @return true if present otherwise false
+	 * @throws UnifyException if an error occurs
+	 */
+	boolean isWithSqlEntityInfo(Class<?> clazz) throws UnifyException;
+	
 	/**
 	 * Finds all SQL child entity information for an entity.
 	 * 

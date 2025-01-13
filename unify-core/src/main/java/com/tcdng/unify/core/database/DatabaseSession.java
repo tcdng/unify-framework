@@ -44,6 +44,15 @@ public interface DatabaseSession {
 	 */
 	boolean isReadOnly() throws UnifyException;
 
+	/**
+	 * Checks if database session is managed
+	 * 
+	 * @return true if database session is managed otherwise false
+     * @throws UnifyException
+     *             if an error occurs
+	 */
+	boolean isManaged() throws UnifyException;
+
     /**
      * Creates an record in the database.
      * 
@@ -54,6 +63,15 @@ public interface DatabaseSession {
      *             if an error occurs during creation
      */
     Object create(Entity record) throws UnifyException;
+
+	/**
+	 * Checks if class is of this database.
+	 *
+	 * @param clazz the entity class
+	 * @return true if of this database otherwise false
+	 * @throws UnifyException if an error occurs
+	 */
+	<T extends Entity> boolean isOfThisDatabase(Class<T> clazz) throws UnifyException;
 
     /**
      * Retrieves a record by ID. List-only properties of returned object are not

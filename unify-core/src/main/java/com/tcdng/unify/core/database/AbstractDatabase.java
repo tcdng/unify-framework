@@ -47,6 +47,11 @@ public abstract class AbstractDatabase extends AbstractUnifyComponent implements
     }
 
     @Override
+	public <T extends Entity> boolean isOfThisDatabase(Class<T> clazz) throws UnifyException {
+		return getDatabaseSession().isOfThisDatabase(clazz);
+	}
+
+	@Override
     public <T extends Entity> T find(Class<T> clazz, Object pk) throws UnifyException {
         return getDatabaseSession().find(clazz, pk);
     }

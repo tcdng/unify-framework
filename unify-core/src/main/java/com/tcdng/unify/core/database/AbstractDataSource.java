@@ -42,6 +42,9 @@ public abstract class AbstractDataSource extends AbstractUnifyComponent implemen
 	@Configurable("false")
 	private boolean supportUnifyViews;
 
+	@Configurable("true")
+	private boolean managed;
+
 	@Configurable("false")
 	private boolean readOnly;
 
@@ -64,12 +67,17 @@ public abstract class AbstractDataSource extends AbstractUnifyComponent implemen
 	}
 
 	@Override
+	public final boolean isManaged() throws UnifyException {
+		return managed;
+	}
+
+	@Override
 	public final boolean isReadOnly() {
 		return readOnly;
 	}
 
 	@Override
-	public boolean isInitDelayed() throws UnifyException {
+	public final boolean isInitDelayed() throws UnifyException {
 		return initDelayed;
 	}
 

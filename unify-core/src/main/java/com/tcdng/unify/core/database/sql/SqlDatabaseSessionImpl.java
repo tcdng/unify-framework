@@ -96,6 +96,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 	}
 
 	@Override
+	public boolean isManaged() throws UnifyException {
+		return sqlDataSource.isManaged();
+	}
+
+	@Override
 	public String getDataSourceName() {
 		return sqlDataSource.getName();
 	}
@@ -110,6 +115,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 		}
 
 		return create(sqlEntityInfo, record);
+	}
+
+	@Override
+	public <T extends Entity> boolean isOfThisDatabase(Class<T> clazz) throws UnifyException {
+		return sqlDataSourceDialect.isWithSqlEntityInfo(clazz);
 	}
 
 	@Override
