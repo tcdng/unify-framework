@@ -155,13 +155,11 @@ ux.setupDocument = function(docClientId, docPath, docPopupBaseId, docPopupId, do
 }
 
 ux.setClientId = function(clientId) {
-	if (sessionStorage.getItem("req_cid") == null) {
-		sessionStorage.setItem("req_cid", clientId)
-	}
+	sessionStorage.setItem("req_cid", clientId);
 }
 
 ux.getClientId = function() {
-	return sessionStorage.getItem("req_cid")
+	return sessionStorage.getItem("req_cid");
 }
 
 ux.wsPushUpdate = function(wsSyncPath) {
