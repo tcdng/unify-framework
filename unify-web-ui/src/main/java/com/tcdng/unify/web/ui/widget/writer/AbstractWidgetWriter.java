@@ -15,6 +15,7 @@
  */
 package com.tcdng.unify.web.ui.widget.writer;
 
+import java.util.Collection;
 import java.util.List;
 
 import com.tcdng.unify.core.RequestContext;
@@ -81,9 +82,9 @@ public abstract class AbstractWidgetWriter extends AbstractDhtmlWriter implement
 	}
 
 	@Override
-	public void writeBehavior(ResponseWriter writer, Widget widget, EventHandler[] eventHandlers, String event)
-			throws UnifyException {
-        doWriteBehavior(writer, widget, eventHandlers, event);
+	public void writeBehavior(ResponseWriter writer, Widget widget, EventHandler[] eventHandlers,
+			Collection<String> events) throws UnifyException {
+		doWriteBehavior(writer, widget, eventHandlers, events);
 	}
 
 	@Override
@@ -130,8 +131,8 @@ public abstract class AbstractWidgetWriter extends AbstractDhtmlWriter implement
 		doWriteBehavior(writer, widget, eventHandlers, null);
 	}
 	
-	protected void doWriteBehavior(ResponseWriter writer, Widget widget, EventHandler[] eventHandlers, String event)
-			throws UnifyException {
+	protected void doWriteBehavior(ResponseWriter writer, Widget widget, EventHandler[] eventHandlers,
+			Collection<String> events) throws UnifyException {
 		if (eventHandlers != null && !widget.isContainerDisabled()) {
 			String id = widget.getId();
 			if (widget.isBindEventsToFacade()) {
@@ -140,7 +141,7 @@ public abstract class AbstractWidgetWriter extends AbstractDhtmlWriter implement
 
 			getRequestContext().setQuickReference(widget.getValueStore());
 			for (EventHandler eventHandler : eventHandlers) {
-				if (event == null || event.equals(eventHandler.getEvent())) {
+				if (events == null || events.contains(eventHandler.getEvent())) {
 					final String eventBinding = eventHandler.getEventBinding();
 					final String preferredEvent = !StringUtils.isBlank(eventBinding)
 							? widget.getValue(String.class, eventBinding)

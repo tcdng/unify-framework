@@ -15,6 +15,8 @@
  */
 package com.tcdng.unify.web.ui.widget.writer;
 
+import java.util.Collection;
+
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.upl.UplComponentWriter;
 import com.tcdng.unify.web.ui.widget.EventHandler;
@@ -97,10 +99,10 @@ public interface WidgetWriter extends UplComponentWriter {
 	 * @param writer        the response writer
 	 * @param widget        the user interface widget to write
 	 * @param eventHandlers event handlers
-	 * @param event         the event to trigger
+	 * @param events         the events to trigger
 	 * @throws UnifyException if an error occurs
 	 */
-	void writeBehavior(ResponseWriter writer, Widget widget, EventHandler[] eventHandlers, String event)
+	void writeBehavior(ResponseWriter writer, Widget widget, EventHandler[] eventHandlers, Collection<String> events)
 			throws UnifyException;
 
     /**

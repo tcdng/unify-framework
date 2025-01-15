@@ -184,9 +184,9 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 	}
 
 	@Override
-	public ResponseWriter writeBehavior(Widget widget, EventHandler[] eventHandlers, String event)
+	public ResponseWriter writeBehavior(Widget widget, EventHandler[] eventHandlers, Collection<String> events)
 			throws UnifyException {
-		((WidgetWriter) getWriter(widget)).writeBehavior(this, widget, eventHandlers, event);
+		((WidgetWriter) getWriter(widget)).writeBehavior(this, widget, eventHandlers, events);
 		return this;
 	}
 
