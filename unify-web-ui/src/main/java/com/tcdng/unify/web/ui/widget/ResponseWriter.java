@@ -149,6 +149,16 @@ public interface ResponseWriter extends UnifyComponent {
 	 */
 	ResponseWriter writeBehavior(Widget widget, EventHandler[] eventHandlers) throws UnifyException;
 
+	/**
+	 * Writes widget behavior with event handlers.
+	 * 
+	 * @param widget        the user interface widget to write
+	 * @param eventHandlers the event handlers
+	 * @param event the event to write for
+	 * @throws UnifyException if an error occurs
+	 */
+	ResponseWriter writeBehavior(Widget widget, EventHandler[] eventHandlers, String event) throws UnifyException;
+
     /**
      * Writes widget behavior.
      * 
