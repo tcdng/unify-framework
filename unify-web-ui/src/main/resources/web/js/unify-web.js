@@ -6250,7 +6250,8 @@ ux.doOpenPopup = function(openPrm) {
 				y = openPrm.uLoc.y;
 			}
 			
-			ux.popCurr.style.left = x + 'px';
+			var popRect = ux.boundingRect(ux.popCurr);
+			ux.popCurr.style.left = (openPrm.relLeft ? x - popRect.width : x) + 'px';
 			ux.popCurr.style.top = y + 'px';
 			ux.popCurr.style.minWidth = frameRect.width + 'px';
 		}
