@@ -15,6 +15,7 @@
  */
 package com.tcdng.unify.web.ui.widget.writer.container;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import com.tcdng.unify.core.UnifyException;
@@ -91,13 +92,14 @@ public class DocumentWriter extends AbstractPageWriter {
 
 		// Write style sheet links
 		writeStyleSheet(writer, "$t{css/unify-web.css}");
-		Set<String> excludeStyleSheet = document.getExcludeStyleSheet();
+		Set<String> excludeStyleSheet = new HashSet<String>(document.getExcludeStyleSheet());
 
 		String[] styleSheets = document.getStyleSheet();
 		if (styleSheets != null) {
 			for (String styleSheet : styleSheets) {
 				if (!excludeStyleSheet.contains(styleSheet)) {
 					writeStyleSheet(writer, styleSheet);
+					excludeStyleSheet.add(styleSheet); // Avoid duplication
 				}
 			}
 		}
@@ -105,6 +107,7 @@ public class DocumentWriter extends AbstractPageWriter {
 		for (String styleSheet : getPageManager().getDocumentStyleSheets()) {
 			if (!excludeStyleSheet.contains(styleSheet)) {
 				writeStyleSheet(writer, styleSheet);
+				excludeStyleSheet.add(styleSheet); // Avoid duplication
 			}
 		}
 
@@ -115,13 +118,14 @@ public class DocumentWriter extends AbstractPageWriter {
 
 		// Write javascript sources
 		writeJavascript(writer, "web/js/unify-web.js");
-		Set<String> excludeScripts = document.getExcludeScript();
+		Set<String> excludeScripts = new HashSet<String>(document.getExcludeScript());
 
 		String[] scripts = document.getScript();
 		if (scripts != null) {
 			for (String script : scripts) {
 				if (!excludeScripts.contains(script)) {
 					writeJavascript(writer, script);
+					excludeScripts.add(script); // Avoid duplication
 				}
 			}
 		}
@@ -129,6 +133,7 @@ public class DocumentWriter extends AbstractPageWriter {
 		for (String script : getPageManager().getDocumentsScripts()) {
 			if (!excludeScripts.contains(script)) {
 				writeJavascript(writer, script);
+				excludeScripts.add(script); // Avoid duplication
 			}
 		}
 
