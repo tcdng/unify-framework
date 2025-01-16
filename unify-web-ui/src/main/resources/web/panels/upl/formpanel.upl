@@ -8,5 +8,5 @@
 !ui-panel:mainBodyPanel layout:$f{mainLayout} components:$c{form} components:$f{formAttachment}
    
 !ui-form:form captionSuffix:$f{formCaptionSuffix} styleClass:$f{formStyleClass} readOnly:$f{formReadOnly}
-    columns:$f{formColumns} section:$f{formSection} binding:$f{formBinding}
+    columns:$f{formColumns} section:$f{formSection} binding:$f{formBinding} across:$f{formAcross}
     
