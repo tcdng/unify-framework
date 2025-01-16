@@ -61,16 +61,30 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
 				ForceConstraints.fromBoolean(!getContainerSetting(boolean.class,
 						UnifyCorePropertyConstants.APPLICATION_FOREIGNKEY_EASE, false))));
 		List<String> datasources = getApplicationDataSources();
+		
+		
+		
+		// Initialize data sources with application datasource first
 		ctx.setStrictEntitySort(true);
+		if (datasources.remove(ApplicationComponents.APPLICATION_DATASOURCE)) {
+			datasources.add(0, ApplicationComponents.APPLICATION_DATASOURCE);
+		}
+
 		for (String datasource : datasources) {
 			dataSourceManager.initDataSource(ctx, datasource);
 		}
 
+		// Initialize other data sources with application datasource last
 		ctx.setStrictEntitySort(false);
+		if (datasources.remove(ApplicationComponents.APPLICATION_DATASOURCE)) {
+			datasources.add(ApplicationComponents.APPLICATION_DATASOURCE);
+		}
+
 		for (String datasource : datasources) {
 			dataSourceManager.initDataSource(ctx, datasource);
 		}
 
+		// Deployment
 		boolean isDeploymentPerformed = false;
 		if (isDeploymentMode()) {
 			Feature deploymentFeature = getFeature("deploymentVersion", "0.0");
@@ -137,12 +151,6 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
 	private List<String> getApplicationDataSources() throws UnifyException {
 		List<String> appDataSourceNames = getComponentNames(SqlDataSource.class);
 		appDataSourceNames.remove(ApplicationComponents.APPLICATION_DYNAMICSQLDATASOURCE);
-		
-		// Put application datasource at bottom of list
-		if (appDataSourceNames.remove(ApplicationComponents.APPLICATION_DATASOURCE)) {
-			appDataSourceNames.add(ApplicationComponents.APPLICATION_DATASOURCE);
-		}
-
 		return appDataSourceNames;
 	}
 
