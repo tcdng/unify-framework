@@ -359,7 +359,9 @@ public class UplCompilerImpl extends AbstractUnifyComponent implements UplCompil
 				}
 			} else if (TokenUtils.isForeignTag(string)) {
 				string = TokenUtils.extractTokenValue(string);
-				value = compileUplElement.getParentElement().getAttributeValue(string);
+				value = compileUplElement.isWithParentElement()
+						? compileUplElement.getParentElement().getAttributeValue(string)
+						: compileUplElement.getAttributeValue(string);
 			} else if (TokenUtils.isMessageToken(string)) {
 				value = compilerContext.getMessages().getMessage(compilerContext.getLocale(),
 						TokenUtils.extractTokenValue(string));

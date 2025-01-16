@@ -194,8 +194,7 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 			ensureClientId(clientRequest);
 			Controller controller;
 			try {
-				controller = controllerFinder
-						.findController(clientRequest.getRequestPathParts().getControllerPathParts());
+				controller = controllerFinder.findController(requestPathParts.getControllerPathParts());
 				if (controller.isRefererRequired()
 						&& StringUtils.isBlank(httpRequest.getHeader(HttpRequestHeaderConstants.REFERER))) {
 					throwOperationErrorException(
@@ -209,10 +208,10 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 					if (MimeType.APPLICATION_JSON.template().equals(contentType)) {
 						clientResponse.setContentType(MimeType.APPLICATION_JSON.template());
 						clientResponse.getWriter().write("{\n");
-						clientResponse.getWriter()
-								.write("  \"status\": 404,\n");
+						clientResponse.getWriter().write("  \"status\": 404,\n");
 						clientResponse.getWriter().write("  \"error\": \"Not Found\",\n");
-						clientResponse.getWriter().write("  \"message\": \"The resource you are looking for is not available.\"\n");
+						clientResponse.getWriter()
+								.write("  \"message\": \"The resource you are looking for is not available.\"\n");
 						clientResponse.getWriter().write("}\n");
 					} else {
 						clientResponse.setContentType(MimeType.TEXT_HTML.template());

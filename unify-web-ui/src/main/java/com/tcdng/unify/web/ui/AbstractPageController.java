@@ -370,6 +370,11 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 					}
 				}
 
+				if (StringUtils.isBlank(resultName)) {
+					throwOperationErrorException(
+							new IllegalArgumentException("No result name returned from action method call."));
+				}
+
 				respPageController = this;
 				logDebug("Processing result with name [{0}]...", resultName);
 				// Check if action result needs to be routed to containing

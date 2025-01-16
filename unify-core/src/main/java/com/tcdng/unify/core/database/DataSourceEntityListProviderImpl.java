@@ -33,21 +33,33 @@ import com.tcdng.unify.core.util.AnnotationUtils;
 public class DataSourceEntityListProviderImpl extends AbstractDataSourceEntityListProvider {
 
 	@Override
-    public List<Class<?>> getTableEntityTypes(String dataSourceName) throws UnifyException {
+    public List<Class<?>> getTableEntityTypes(String dataSourceName, boolean strict) throws UnifyException {
         List<Class<?>> entityList = new ArrayList<Class<?>>();
         // Enumeration constants
         for (Class<? extends EnumConst> enumConstClass : getAnnotatedClasses(EnumConst.class, StaticList.class)) {
             StaticList sa = enumConstClass.getAnnotation(StaticList.class);
-            if (AnnotationUtils.isStaticListDataSource(sa, dataSourceName)) {
-                entityList.add(enumConstClass);
+            if (strict) {
+                if (AnnotationUtils.isStrictStaticListDataSource(sa, dataSourceName)) {
+                    entityList.add(enumConstClass);
+                }
+            } else {
+                if (AnnotationUtils.isStaticListDataSource(sa, dataSourceName)) {
+                    entityList.add(enumConstClass);
+                }
             }
         }
 
         // Entities
         for (Class<? extends Entity> entityClass : getAnnotatedClasses(Entity.class, Table.class)) {
             Table ta = entityClass.getAnnotation(Table.class);
-            if (AnnotationUtils.isTableDataSource(ta, dataSourceName)) {
-                entityList.add(entityClass);
+            if (strict) {
+                if (AnnotationUtils.isStrictTableDataSource(ta, dataSourceName)) {
+                    entityList.add(entityClass);
+                }
+            } else {
+                if (AnnotationUtils.isTableDataSource(ta, dataSourceName)) {
+                    entityList.add(entityClass);
+                }
             }
         }
 
@@ -56,9 +68,16 @@ public class DataSourceEntityListProviderImpl extends AbstractDataSourceEntityLi
             Class<?> extendedEntityClass = entityClass.getSuperclass();
             if (extendedEntityClass != null) {
                 Table ta = extendedEntityClass.getAnnotation(Table.class);
-                if (AnnotationUtils.isTableDataSource(ta, dataSourceName)) {
-                    int index = entityList.indexOf(extendedEntityClass);
-                    entityList.add(index + 1, entityClass);
+                if (strict) {
+                    if (AnnotationUtils.isStrictTableDataSource(ta, dataSourceName)) {
+                        int index = entityList.indexOf(extendedEntityClass);
+                        entityList.add(index + 1, entityClass);
+                    }
+                } else {
+                    if (AnnotationUtils.isTableDataSource(ta, dataSourceName)) {
+                        int index = entityList.indexOf(extendedEntityClass);
+                        entityList.add(index + 1, entityClass);
+                    }
                 }
             }
         }
@@ -66,13 +85,19 @@ public class DataSourceEntityListProviderImpl extends AbstractDataSourceEntityLi
     }
 
     @Override
-    public List<Class<? extends Entity>> getViewEntityTypes(String dataSourceName) throws UnifyException {
+    public List<Class<? extends Entity>> getViewEntityTypes(String dataSourceName, boolean strict) throws UnifyException {
         List<Class<? extends Entity>> entityList = new ArrayList<Class<? extends Entity>>();
         // Entities
         for (Class<? extends Entity> entityClass : getAnnotatedClasses(Entity.class, View.class)) {
             View va = entityClass.getAnnotation(View.class);
-            if (AnnotationUtils.isViewDataSource(va, dataSourceName)) {
-                entityList.add(entityClass);
+            if (strict) {
+                if (AnnotationUtils.isStrictViewDataSource(va, dataSourceName)) {
+                    entityList.add(entityClass);
+                }
+            } else {
+                if (AnnotationUtils.isViewDataSource(va, dataSourceName)) {
+                    entityList.add(entityClass);
+                }
             }
         }
 

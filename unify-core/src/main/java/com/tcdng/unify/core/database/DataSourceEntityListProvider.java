@@ -42,7 +42,7 @@ public interface DataSourceEntityListProvider extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    List<Class<?>> getTableEntityTypes(String datasourceName) throws UnifyException;
+    List<Class<?>> getTableEntityTypes(String datasourceName, boolean strict) throws UnifyException;
 
     /**
      * Returns a list of entity types annotated with {@link View} that are
@@ -52,7 +52,7 @@ public interface DataSourceEntityListProvider extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    List<Class<? extends Entity>> getViewEntityTypes(String datasourceName) throws UnifyException;
+    List<Class<? extends Entity>> getViewEntityTypes(String datasourceName, boolean strict) throws UnifyException;
 
     /**
      * Gets entity aliases by data source.

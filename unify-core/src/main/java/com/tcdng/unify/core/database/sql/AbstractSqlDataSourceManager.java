@@ -122,14 +122,14 @@ public abstract class AbstractSqlDataSourceManager extends AbstractUnifyComponen
 
 	private void scanTableEntityTypes(DataSourceManagerContext ctx, String dataSourceName, SqlDataSource sqlDataSource)
 			throws UnifyException {
-		for (Class<?> clazz : sqlDataSource.getTableEntityTypes()) {
+		for (Class<?> clazz : sqlDataSource.getTableEntityTypes(ctx.isStrictEntitySort())) {
 			ctx.addTableEntityClass(dataSourceName, clazz);
 		}
 	}
 
 	private void scanViewEntityTypes(DataSourceManagerContext ctx, String dataSourceName, SqlDataSource sqlDataSource)
 			throws UnifyException {
-		for (Class<? extends Entity> clazz : sqlDataSource.getViewEntityTypes()) {
+		for (Class<? extends Entity> clazz : sqlDataSource.getViewEntityTypes(ctx.isStrictEntitySort())) {
 			ctx.addViewEntityClass(dataSourceName, clazz);
 		}
 	}

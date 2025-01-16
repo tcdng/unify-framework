@@ -82,13 +82,13 @@ public abstract class AbstractDataSource extends AbstractUnifyComponent implemen
 	}
 
 	@Override
-	public List<Class<?>> getTableEntityTypes() throws UnifyException {
-		return entityListProvider.getTableEntityTypes(getEntityMatchingName());
+	public List<Class<?>> getTableEntityTypes(boolean strict) throws UnifyException {
+		return entityListProvider.getTableEntityTypes(getEntityMatchingName(), strict);
 	}
 
 	@Override
-	public List<Class<? extends Entity>> getViewEntityTypes() throws UnifyException {
-		return entityListProvider.getViewEntityTypes(getEntityMatchingName());
+	public List<Class<? extends Entity>> getViewEntityTypes(boolean strict) throws UnifyException {
+		return entityListProvider.getViewEntityTypes(getEntityMatchingName(), strict);
 	}
 
 	@Override
