@@ -93,18 +93,18 @@ public class DocumentWriter extends AbstractPageWriter {
 		writeStyleSheet(writer, "$t{css/unify-web.css}");
 		Set<String> excludeStyleSheet = document.getExcludeStyleSheet();
 
-		for (String styleSheet : getPageManager().getDocumentStyleSheets()) {
-			if (!excludeStyleSheet.contains(styleSheet)) {
-				writeStyleSheet(writer, styleSheet);
-			}
-		}
-
 		String[] styleSheets = document.getStyleSheet();
 		if (styleSheets != null) {
 			for (String styleSheet : styleSheets) {
 				if (!excludeStyleSheet.contains(styleSheet)) {
 					writeStyleSheet(writer, styleSheet);
 				}
+			}
+		}
+
+		for (String styleSheet : getPageManager().getDocumentStyleSheets()) {
+			if (!excludeStyleSheet.contains(styleSheet)) {
+				writeStyleSheet(writer, styleSheet);
 			}
 		}
 
@@ -117,18 +117,18 @@ public class DocumentWriter extends AbstractPageWriter {
 		writeJavascript(writer, "web/js/unify-web.js");
 		Set<String> excludeScripts = document.getExcludeScript();
 
-		for (String script : getPageManager().getDocumentsScripts()) {
-			if (!excludeScripts.contains(script)) {
-				writeJavascript(writer, script);
-			}
-		}
-
 		String[] scripts = document.getScript();
 		if (scripts != null) {
 			for (String script : scripts) {
 				if (!excludeScripts.contains(script)) {
 					writeJavascript(writer, script);
 				}
+			}
+		}
+
+		for (String script : getPageManager().getDocumentsScripts()) {
+			if (!excludeScripts.contains(script)) {
+				writeJavascript(writer, script);
 			}
 		}
 
