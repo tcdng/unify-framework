@@ -43,6 +43,8 @@ public class DataSourceManagerContext {
 	
 	private Set<Class<? extends Entity>> viewUtilised;
 	
+	private boolean strictEntitySort;
+	
 	public DataSourceManagerContext(DataSourceManagerContext ctx, DataSourceManagerOptions options) {
 		this.options = options;
 		this.tableEnitiesByDataSource = ctx.tableEnitiesByDataSource;
@@ -61,6 +63,14 @@ public class DataSourceManagerContext {
 	
 	public DataSourceManagerOptions getOptions() {
 		return options;
+	}
+
+	public boolean isStrictEntitySort() {
+		return strictEntitySort;
+	}
+
+	public void setStrictEntitySort(boolean strictEntitySort) {
+		this.strictEntitySort = strictEntitySort;
 	}
 
 	public boolean addTableEntityClass(String datasource, Class<?> entityClass) {

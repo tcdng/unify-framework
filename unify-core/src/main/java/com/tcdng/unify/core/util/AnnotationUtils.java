@@ -87,12 +87,24 @@ public final class AnnotationUtils {
         return AnnotationUtils.isSchemaElementDataSource(sa.datasource(), dataSourceToCheck);
     }
     
+    public static boolean isStrictStaticListDataSource(StaticList sa, String dataSourceToCheck) {
+        return sa.datasource().equals(dataSourceToCheck);
+    }
+    
     public static boolean isTableDataSource(Table ta, String dataSourceToCheck) {
         return AnnotationUtils.isSchemaElementDataSource(ta.datasource(), dataSourceToCheck);
     }
     
+    public static boolean isStrictTableDataSource(Table ta, String dataSourceToCheck) {
+        return ta.datasource().equals(dataSourceToCheck);
+    }
+    
     public static boolean isViewDataSource(View va, String dataSourceToCheck) {
         return AnnotationUtils.isSchemaElementDataSource(va.datasource(), dataSourceToCheck);
+    }
+    
+    public static boolean isStrictViewDataSource(View va, String dataSourceToCheck) {
+        return va.datasource().equals(dataSourceToCheck);
     }
     
     private static boolean isSchemaElementDataSource(String entityDataSources, String dataSourceToCheck) {

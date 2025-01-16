@@ -78,7 +78,7 @@ public interface DataSource extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    List<Class<?>> getTableEntityTypes() throws UnifyException;
+    List<Class<?>> getTableEntityTypes(boolean strict) throws UnifyException;
 
     /**
      * Returns a list of entity types annotated with {@link View} that are
@@ -87,7 +87,7 @@ public interface DataSource extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
      */
-    List<Class<? extends Entity>> getViewEntityTypes() throws UnifyException;
+    List<Class<? extends Entity>> getViewEntityTypes(boolean strict) throws UnifyException;
 
     /**
      * Returns the data source dialect.

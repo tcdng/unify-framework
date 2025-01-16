@@ -61,6 +61,12 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
 				ForceConstraints.fromBoolean(!getContainerSetting(boolean.class,
 						UnifyCorePropertyConstants.APPLICATION_FOREIGNKEY_EASE, false))));
 		List<String> datasources = getApplicationDataSources();
+		ctx.setStrictEntitySort(true);
+		for (String datasource : datasources) {
+			dataSourceManager.initDataSource(ctx, datasource);
+		}
+
+		ctx.setStrictEntitySort(false);
 		for (String datasource : datasources) {
 			dataSourceManager.initDataSource(ctx, datasource);
 		}
