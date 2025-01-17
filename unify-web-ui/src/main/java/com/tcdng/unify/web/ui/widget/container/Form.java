@@ -35,10 +35,12 @@ import com.tcdng.unify.web.ui.widget.Widget;
  * @since 1.0
  */
 @Component("ui-form")
-@UplAttributes({ @UplAttribute(name = "columns", type = int.class, defaultVal = "1"),
-        @UplAttribute(name = "section", type = Section[].class, mandatory = true),
-        @UplAttribute(name = "requiredSymbol", type = String.class, defaultVal = "*"),
-        @UplAttribute(name = "captionSuffix", type = String.class, defaultVal = ":") })
+@UplAttributes({
+	@UplAttribute(name = "columns", type = int.class, defaultVal = "1"),
+	@UplAttribute(name = "across", type = boolean.class, defaultVal = "false"),
+    @UplAttribute(name = "section", type = Section[].class, mandatory = true),
+    @UplAttribute(name = "requiredSymbol", type = String.class, defaultVal = "*"),
+    @UplAttribute(name = "captionSuffix", type = String.class, defaultVal = ":") })
 public class Form extends AbstractContainer {
 
     private FormSection[] formSections;
@@ -117,6 +119,10 @@ public class Form extends AbstractContainer {
         }
     }
 
+    public boolean isAcross() throws UnifyException {
+    	return getUplAttribute(boolean.class, "across");
+    }
+    
     public FormSection[] getSections() throws UnifyException {
         return formSections;
     }
