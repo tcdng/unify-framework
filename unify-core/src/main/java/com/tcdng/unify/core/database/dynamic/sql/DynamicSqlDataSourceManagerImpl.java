@@ -17,6 +17,7 @@ package com.tcdng.unify.core.database.dynamic.sql;
 
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.tcdng.unify.core.ApplicationComponents;
@@ -24,9 +25,12 @@ import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyCorePropertyConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.constant.ForceConstraints;
 import com.tcdng.unify.core.constant.PrintFormat;
 import com.tcdng.unify.core.data.FactoryMap;
+import com.tcdng.unify.core.database.DataSourceEntityContext;
+import com.tcdng.unify.core.database.DataSourceEntityListProvider;
 import com.tcdng.unify.core.database.DataSourceManagerContext;
 import com.tcdng.unify.core.database.DataSourceManagerOptions;
 import com.tcdng.unify.core.database.NativeQuery;
@@ -46,7 +50,10 @@ import com.tcdng.unify.core.database.sql.SqlTableType;
 public class DynamicSqlDataSourceManagerImpl extends AbstractSqlDataSourceManager
         implements DynamicSqlDataSourceManager {
 
-    private FactoryMap<String, DynamicSqlDataSource> dynamicSqlDataSourceMap;
+	@Configurable(ApplicationComponents.APPLICATION_DATASOURCE_ENTITYLIST_PROVIDER)
+	private DataSourceEntityListProvider entityListProvider;
+
+	private FactoryMap<String, DynamicSqlDataSource> dynamicSqlDataSourceMap;
 
     public DynamicSqlDataSourceManagerImpl() {
         dynamicSqlDataSourceMap = new FactoryMap<String, DynamicSqlDataSource>() {
@@ -218,7 +225,9 @@ public class DynamicSqlDataSourceManagerImpl extends AbstractSqlDataSourceManage
     private void createAndInitDynamicSqlDataSource(DynamicSqlDataSourceConfig dynamicSqlDataSourceConfig)
             throws UnifyException {
         dynamicSqlDataSourceMap.get(dynamicSqlDataSourceConfig.getName(), dynamicSqlDataSourceConfig);
-        final DataSourceManagerContext ctx = new DataSourceManagerContext(new DataSourceManagerOptions(PrintFormat.NONE,
+
+		final DataSourceEntityContext entityCtx = entityListProvider.getDataSourceEntityContext(Arrays.asList(dynamicSqlDataSourceConfig.getName()));
+        final DataSourceManagerContext ctx = new DataSourceManagerContext(entityCtx, new DataSourceManagerOptions(PrintFormat.NONE,
                 ForceConstraints.fromBoolean(!getContainerSetting(boolean.class,
                         UnifyCorePropertyConstants.APPLICATION_FOREIGNKEY_EASE, false))));
         initDataSource(ctx, dynamicSqlDataSourceConfig.getName());

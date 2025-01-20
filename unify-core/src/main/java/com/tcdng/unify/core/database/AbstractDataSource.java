@@ -17,7 +17,6 @@ package com.tcdng.unify.core.database;
 
 import java.util.List;
 
-import com.tcdng.unify.common.database.Entity;
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
@@ -42,7 +41,7 @@ public abstract class AbstractDataSource extends AbstractUnifyComponent implemen
 	@Configurable("false")
 	private boolean supportUnifyViews;
 
-	@Configurable("true")
+	@Configurable("false")
 	private boolean managed;
 
 	@Configurable("false")
@@ -50,9 +49,6 @@ public abstract class AbstractDataSource extends AbstractUnifyComponent implemen
 
 	@Configurable("false")
 	private boolean initDelayed;
-
-	@Configurable(ApplicationComponents.APPLICATION_DATASOURCE_ENTITYLIST_PROVIDER)
-	private DataSourceEntityListProvider entityListProvider;
 
 	@Configurable
 	private List<String> entityList;
@@ -82,16 +78,6 @@ public abstract class AbstractDataSource extends AbstractUnifyComponent implemen
 	}
 
 	@Override
-	public List<Class<?>> getTableEntityTypes(boolean strict) throws UnifyException {
-		return entityListProvider.getTableEntityTypes(getEntityMatchingName(), strict);
-	}
-
-	@Override
-	public List<Class<? extends Entity>> getViewEntityTypes(boolean strict) throws UnifyException {
-		return entityListProvider.getViewEntityTypes(getEntityMatchingName(), strict);
-	}
-
-	@Override
 	public DataSourceDialect getDialect() throws UnifyException {
 		return dialect;
 	}
@@ -100,6 +86,7 @@ public abstract class AbstractDataSource extends AbstractUnifyComponent implemen
 	protected void onInitialize() throws UnifyException {
 		if (ApplicationComponents.APPLICATION_DATASOURCE.equals(getName())) {
 			supportUnifyViews = true;
+			managed = true;
 		}
 		
 		if (dialect != null) {

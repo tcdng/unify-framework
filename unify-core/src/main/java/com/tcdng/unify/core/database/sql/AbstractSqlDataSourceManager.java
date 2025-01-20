@@ -41,9 +41,9 @@ public abstract class AbstractSqlDataSourceManager extends AbstractUnifyComponen
 	private SqlSchemaManager sqlSchemaManager;
 
 	private List<String> delayedDataSourceList;
-	
+
 	private boolean delayedInit;
-	
+
 	public AbstractSqlDataSourceManager() {
 		this.delayedDataSourceList = new ArrayList<String>();
 	}
@@ -51,9 +51,6 @@ public abstract class AbstractSqlDataSourceManager extends AbstractUnifyComponen
 	@Override
 	public void initDataSource(DataSourceManagerContext ctx, String dataSourceName) throws UnifyException {
 		SqlDataSource sqlDataSource = getSqlDataSource(dataSourceName);
-		scanTableEntityTypes(ctx, dataSourceName, sqlDataSource);
-		scanViewEntityTypes(ctx, dataSourceName, sqlDataSource);
-		
 		if (sqlDataSource.isInitDelayed()) {
 			delayedDataSourceList.add(dataSourceName);
 		} else {
@@ -82,13 +79,14 @@ public abstract class AbstractSqlDataSourceManager extends AbstractUnifyComponen
 		if (sqlDataSource.isManaged() && !sqlDataSource.isReadOnly()) {
 			SqlSchemaManagerOptions _options = new SqlSchemaManagerOptions(ctx.getOptions());
 			List<Class<?>> tableList = getDependencyTableEntities(ctx, dataSourceName);
-			List<Class<? extends Entity>> viewList = new ArrayList<Class<? extends Entity>>(SqlUtils.getEntityClassList(tableList));
+			List<Class<? extends Entity>> viewList = new ArrayList<Class<? extends Entity>>(
+					SqlUtils.getEntityClassList(tableList));
 			viewList.addAll(getDependencyViewOnlyEntities(ctx, dataSourceName));
 			if (sqlDataSource.getDialect().isReconstructViewsOnTableSchemaUpdate()) {
 				sqlSchemaManager.dropViewSchema(sqlDataSource, _options, viewList);
 			}
 
-			sqlSchemaManager.manageTableSchema(sqlDataSource, _options, tableList);			
+			sqlSchemaManager.manageTableSchema(sqlDataSource, _options, tableList);
 			sqlSchemaManager.manageViewSchema(sqlDataSource, _options, viewList);
 		}
 	}
@@ -96,16 +94,16 @@ public abstract class AbstractSqlDataSourceManager extends AbstractUnifyComponen
 	@Override
 	public void initDelayedDataSource(DataSourceManagerContext ctx) throws UnifyException {
 		if (!delayedInit) {
-			synchronized(this) {
+			synchronized (this) {
 				if (!delayedInit) {
-					for (String dataSourceName: delayedDataSourceList) {
+					for (String dataSourceName : delayedDataSourceList) {
 						SqlDataSource sqlDataSource = getSqlDataSource(dataSourceName);
 						buildSqlEntityFactoryInformation(ctx, dataSourceName, sqlDataSource);
 					}
 					delayedInit = true;
 				}
 			}
-		}		
+		}
 	}
 
 	@Override
@@ -120,44 +118,33 @@ public abstract class AbstractSqlDataSourceManager extends AbstractUnifyComponen
 
 	protected abstract SqlDataSource getSqlDataSource(String dataSourceName) throws UnifyException;
 
-	private void scanTableEntityTypes(DataSourceManagerContext ctx, String dataSourceName, SqlDataSource sqlDataSource)
-			throws UnifyException {
-		for (Class<?> clazz : sqlDataSource.getTableEntityTypes(ctx.isStrictEntitySort())) {
-			ctx.addTableEntityClass(dataSourceName, clazz);
-		}
-	}
-
-	private void scanViewEntityTypes(DataSourceManagerContext ctx, String dataSourceName, SqlDataSource sqlDataSource)
-			throws UnifyException {
-		for (Class<? extends Entity> clazz : sqlDataSource.getViewEntityTypes(ctx.isStrictEntitySort())) {
-			ctx.addViewEntityClass(dataSourceName, clazz);
-		}
-	}
-
 	private void buildSqlEntityFactoryInformation(DataSourceManagerContext ctx, String dataSourceName,
 			SqlDataSource sqlDataSource) throws UnifyException {
 		logDebug("Building SQL information for data source [{0}]...", dataSourceName);
 		SqlDataSourceDialect sqlDataSourceDialect = sqlDataSource.getDialect();
 
-		List<Class<?>> tableEntityTypes = ctx.getTableEntityClasses(dataSourceName);
+		List<Class<?>> tableEntityTypes = ctx.getEntityCtx().getTableEntities(dataSourceName);
 		logDebug("Constructing SQL information for [{0}] table types...", tableEntityTypes.size());
 		for (Class<?> entityClass : tableEntityTypes) {
 			sqlDataSourceDialect.createSqlEntityInfo(entityClass);
 		}
 
-		List<Class<? extends Entity>> viewEntityTypes = ctx.getViewEntityClasses(dataSourceName);
+		List<Class<? extends Entity>> viewEntityTypes = ctx.getEntityCtx().getViewEntities(dataSourceName);
 		logDebug("Constructing SQL information for [{0}] view types...", viewEntityTypes.size());
 		for (Class<?> entityClass : viewEntityTypes) {
 			sqlDataSourceDialect.createSqlEntityInfo(entityClass);
 		}
 	}
 
-	private List<Class<?>> getDependencyTableEntities(DataSourceManagerContext ctx, String dataSourceName) throws UnifyException {
+	private List<Class<?>> getDependencyTableEntities(DataSourceManagerContext ctx, String dataSourceName)
+			throws UnifyException {
 		SqlDataSource sqlDataSource = getSqlDataSource(dataSourceName);
-		return sqlSchemaManager.buildParentDependencyList(sqlDataSource, ctx.getTableEntityClasses(dataSourceName));
+		return sqlSchemaManager.buildParentDependencyList(sqlDataSource,
+				ctx.getEntityCtx().getTableEntities(dataSourceName));
 	}
-	
-	private List<Class<? extends Entity>> getDependencyViewOnlyEntities(DataSourceManagerContext ctx, String dataSourceName) throws UnifyException {
-		return ctx.getViewEntityClasses(dataSourceName);
+
+	private List<Class<? extends Entity>> getDependencyViewOnlyEntities(DataSourceManagerContext ctx,
+			String dataSourceName) throws UnifyException {
+		return ctx.getEntityCtx().getViewEntities(dataSourceName);
 	}
 }
