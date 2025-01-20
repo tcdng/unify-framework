@@ -28,6 +28,8 @@ import com.tcdng.unify.core.annotation.Transactional;
 import com.tcdng.unify.core.business.AbstractBusinessService;
 import com.tcdng.unify.core.constant.ForceConstraints;
 import com.tcdng.unify.core.constant.PrintFormat;
+import com.tcdng.unify.core.database.DataSourceEntityContext;
+import com.tcdng.unify.core.database.DataSourceEntityListProvider;
 import com.tcdng.unify.core.database.DataSourceManager;
 import com.tcdng.unify.core.database.DataSourceManagerContext;
 import com.tcdng.unify.core.database.DataSourceManagerOptions;
@@ -51,35 +53,20 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
 	@Configurable(ApplicationComponents.APPLICATION_DATASOURCEMANAGER)
 	private DataSourceManager dataSourceManager;
 
+	@Configurable(ApplicationComponents.APPLICATION_DATASOURCE_ENTITYLIST_PROVIDER)
+	private DataSourceEntityListProvider entityListProvider;
+
 	private List<StartupShutdownHook> startupShutdownHooks;
 
 	@Override
 	@Transactional
 	public void startup() throws UnifyException {
 		logInfo("Initializing datasources...");
-		final DataSourceManagerContext ctx = new DataSourceManagerContext(new DataSourceManagerOptions(PrintFormat.NONE,
+		final List<String> datasources = getApplicationDataSources();
+		final DataSourceEntityContext entityCtx = entityListProvider.getDataSourceEntityContext(datasources);
+		final DataSourceManagerContext ctx = new DataSourceManagerContext(entityCtx, new DataSourceManagerOptions(PrintFormat.NONE,
 				ForceConstraints.fromBoolean(!getContainerSetting(boolean.class,
 						UnifyCorePropertyConstants.APPLICATION_FOREIGNKEY_EASE, false))));
-		List<String> datasources = getApplicationDataSources();
-		
-		
-		
-		// Initialize data sources with application datasource first
-		ctx.setStrictEntitySort(true);
-		if (datasources.remove(ApplicationComponents.APPLICATION_DATASOURCE)) {
-			datasources.add(0, ApplicationComponents.APPLICATION_DATASOURCE);
-		}
-
-		for (String datasource : datasources) {
-			dataSourceManager.initDataSource(ctx, datasource);
-		}
-
-		// Initialize other data sources with application datasource last
-		ctx.setStrictEntitySort(false);
-		if (datasources.remove(ApplicationComponents.APPLICATION_DATASOURCE)) {
-			datasources.add(ApplicationComponents.APPLICATION_DATASOURCE);
-		}
-
 		for (String datasource : datasources) {
 			dataSourceManager.initDataSource(ctx, datasource);
 		}

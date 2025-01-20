@@ -504,13 +504,15 @@ ux.postPath = function(resp) {
 			}
 		}
 		
-		var prm = "req_doc=" + _enc(ux.docPath) + (path.indexOf("req_cid") < 0  ? "&req_cid=" + _enc(ux.getClientId()):"");
-		if(resp.target) {
-			prm += "&req_trg=" + _enc(resp.target);
+		if (path) {
+			var prm = "req_doc=" + _enc(ux.docPath) + (path.indexOf("req_cid") < 0  ? "&req_cid=" + _enc(ux.getClientId()):"");
+			if(resp.target) {
+				prm += "&req_trg=" + _enc(resp.target);
+			}
+
+			var ajaxPrms = ux.ajaxConstructCallParam(path, prm, false, true, false, ux.processJSON);
+			ux.ajaxCall(ajaxPrms);
 		}
-		
-		var ajaxPrms = ux.ajaxConstructCallParam(path, prm, false, true, false, ux.processJSON);
-		ux.ajaxCall(ajaxPrms);
 	}
 }
 

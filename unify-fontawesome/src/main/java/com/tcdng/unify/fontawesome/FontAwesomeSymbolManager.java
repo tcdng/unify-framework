@@ -79,6 +79,10 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("chart-area", "f1fe");
         registerSymbol("chart-bar", "f080");
         registerSymbol("chart-pie", "f200");
+        registerSymbol("chevron-circle-down", "f13a");
+        registerSymbol("chevron-circle-left", "f137");
+        registerSymbol("chevron-circle-right", "f138");
+        registerSymbol("chevron-circle-up", "f139");
         registerSymbol("chevron-down", "f078");
         registerSymbol("chevron-left", "f053");
         registerSymbol("chevron-right", "f054");
@@ -129,6 +133,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("flag-checkered", "f11e");
         registerSymbol("folder", "f07b");
         registerSymbol("folder-open", "f07c");
+        registerSymbol("folder-plus", "f65e");
         registerSymbol("forward", "f04e");
         registerSymbol("forward-fast", "f050");
         registerSymbol("globe-africa", "f57c");
@@ -160,6 +165,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("outdent", "f03b");
         registerSymbol("paint-brush", "f1fc");
         registerSymbol("paper-clip", "f0c6");
+        registerSymbol("parachute-box", "f4cd");
         registerSymbol("play", "f04b");
         registerSymbol("plus", "f067");
         registerSymbol("plus-square", "f0fe");

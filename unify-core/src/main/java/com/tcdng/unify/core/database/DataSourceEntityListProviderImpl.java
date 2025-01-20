@@ -16,7 +16,11 @@
 package com.tcdng.unify.core.database;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import com.tcdng.unify.common.annotation.StaticList;
 import com.tcdng.unify.common.annotation.Table;
@@ -33,75 +37,72 @@ import com.tcdng.unify.core.util.AnnotationUtils;
 public class DataSourceEntityListProviderImpl extends AbstractDataSourceEntityListProvider {
 
 	@Override
-    public List<Class<?>> getTableEntityTypes(String dataSourceName, boolean strict) throws UnifyException {
-        List<Class<?>> entityList = new ArrayList<Class<?>>();
-        // Enumeration constants
-        for (Class<? extends EnumConst> enumConstClass : getAnnotatedClasses(EnumConst.class, StaticList.class)) {
-            StaticList sa = enumConstClass.getAnnotation(StaticList.class);
-            if (strict) {
-                if (AnnotationUtils.isStrictStaticListDataSource(sa, dataSourceName)) {
-                    entityList.add(enumConstClass);
-                }
-            } else {
-                if (AnnotationUtils.isStaticListDataSource(sa, dataSourceName)) {
-                    entityList.add(enumConstClass);
-                }
-            }
-        }
+	public DataSourceEntityContext getDataSourceEntityContext(List<String> datasources) throws UnifyException {
+		Map<String, List<Class<?>>> tableEnitiesByDataSource = new HashMap<String, List<Class<?>>>();
+		Map<String, List<Class<? extends Entity>>> viewEnitiesByDataSource = new HashMap<String, List<Class<? extends Entity>>>();
+		final List<String> _datasources = new ArrayList<String>(datasources);
+		if (_datasources.remove(ApplicationComponents.APPLICATION_DATASOURCE)) {
+			_datasources.add(ApplicationComponents.APPLICATION_DATASOURCE);
+		}
 
-        // Entities
-        for (Class<? extends Entity> entityClass : getAnnotatedClasses(Entity.class, Table.class)) {
-            Table ta = entityClass.getAnnotation(Table.class);
-            if (strict) {
-                if (AnnotationUtils.isStrictTableDataSource(ta, dataSourceName)) {
-                    entityList.add(entityClass);
-                }
-            } else {
-                if (AnnotationUtils.isTableDataSource(ta, dataSourceName)) {
-                    entityList.add(entityClass);
-                }
-            }
-        }
+		Set<Class<?>> usedTables = new HashSet<Class<?>>();
+		Set<Class<? extends Entity>> usedViews = new HashSet<Class<? extends Entity>>();
+		for (String datasource : _datasources) {
+			List<Class<?>> tableEntities = new ArrayList<Class<?>>();
+			// Enumeration constants
+			for (Class<? extends EnumConst> enumConstClass : getAnnotatedClasses(EnumConst.class, StaticList.class)) {
+				StaticList sa = enumConstClass.getAnnotation(StaticList.class);
+				if (AnnotationUtils.isStaticListDataSource(sa, datasource)) {
+					if (!usedTables.contains(enumConstClass)) {
+						tableEntities.add(enumConstClass);
+						usedTables.add(enumConstClass);
+					}
+				}
+			}
 
-        // Extensions
-        for (Class<? extends Entity> entityClass : getAnnotatedClasses(Entity.class, TableExt.class)) {
-            Class<?> extendedEntityClass = entityClass.getSuperclass();
-            if (extendedEntityClass != null) {
-                Table ta = extendedEntityClass.getAnnotation(Table.class);
-                if (strict) {
-                    if (AnnotationUtils.isStrictTableDataSource(ta, dataSourceName)) {
-                        int index = entityList.indexOf(extendedEntityClass);
-                        entityList.add(index + 1, entityClass);
-                    }
-                } else {
-                    if (AnnotationUtils.isTableDataSource(ta, dataSourceName)) {
-                        int index = entityList.indexOf(extendedEntityClass);
-                        entityList.add(index + 1, entityClass);
-                    }
-                }
-            }
-        }
-        return entityList;
-    }
+			// Entities
+			for (Class<? extends Entity> entityClass : getAnnotatedClasses(Entity.class, Table.class)) {
+				Table ta = entityClass.getAnnotation(Table.class);
+				if (AnnotationUtils.isTableDataSource(ta, datasource)) {
+					if (!usedTables.contains(entityClass)) {
+						tableEntities.add(entityClass);
+						usedTables.add(entityClass);
+					}
+				}
+			}
 
-    @Override
-    public List<Class<? extends Entity>> getViewEntityTypes(String dataSourceName, boolean strict) throws UnifyException {
-        List<Class<? extends Entity>> entityList = new ArrayList<Class<? extends Entity>>();
-        // Entities
-        for (Class<? extends Entity> entityClass : getAnnotatedClasses(Entity.class, View.class)) {
-            View va = entityClass.getAnnotation(View.class);
-            if (strict) {
-                if (AnnotationUtils.isStrictViewDataSource(va, dataSourceName)) {
-                    entityList.add(entityClass);
-                }
-            } else {
-                if (AnnotationUtils.isViewDataSource(va, dataSourceName)) {
-                    entityList.add(entityClass);
-                }
-            }
-        }
+			// Extensions
+			for (Class<? extends Entity> entityClass : getAnnotatedClasses(Entity.class, TableExt.class)) {
+				Class<?> extendedEntityClass = entityClass.getSuperclass();
+				if (extendedEntityClass != null) {
+					Table ta = extendedEntityClass.getAnnotation(Table.class);
+					if (AnnotationUtils.isTableDataSource(ta, datasource)) {
+						if (!usedTables.contains(entityClass)) {
+							final int index = tableEntities.indexOf(extendedEntityClass);
+							tableEntities.add(index + 1, entityClass);
+							usedTables.add(entityClass);
+						}
+					}
+				}
+			}
 
-        return entityList;
-    }
+			// Views
+			List<Class<? extends Entity>> viewEntities = new ArrayList<Class<? extends Entity>>();
+			for (Class<? extends Entity> entityClass : getAnnotatedClasses(Entity.class, View.class)) {
+				View va = entityClass.getAnnotation(View.class);
+				if (AnnotationUtils.isViewDataSource(va, datasource)) {
+					if (!usedViews.contains(entityClass)) {
+						viewEntities.add(entityClass);
+						usedViews.add(entityClass);
+					}
+				}
+			}
+			
+			tableEnitiesByDataSource.put(datasource, tableEntities);
+			viewEnitiesByDataSource.put(datasource, viewEntities);
+		}
+
+		return new DataSourceEntityContext(_datasources, tableEnitiesByDataSource, viewEnitiesByDataSource);
+	}
 
 }
