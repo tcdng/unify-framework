@@ -30,9 +30,9 @@ import com.tcdng.unify.common.database.Entity;
 public class DataSourceEntityContext {
 
 	private List<String> datasources;
-	
+
 	private Map<String, List<Class<?>>> tableEnitiesByDataSource;
-	
+
 	private Map<String, List<Class<? extends Entity>>> viewEnitiesByDataSource;
 
 	public DataSourceEntityContext(List<String> datasources, Map<String, List<Class<?>>> tableEnitiesByDataSource,
@@ -40,6 +40,11 @@ public class DataSourceEntityContext {
 		this.datasources = datasources;
 		this.tableEnitiesByDataSource = tableEnitiesByDataSource;
 		this.viewEnitiesByDataSource = viewEnitiesByDataSource;
+	}
+
+	public void addDataSourceAlias(String oldName, String newName) {
+		tableEnitiesByDataSource.put(newName, getTableEntities(oldName));
+		viewEnitiesByDataSource.put(newName, getViewEntities(oldName));
 	}
 
 	public List<String> getDatasources() {
@@ -55,4 +60,5 @@ public class DataSourceEntityContext {
 		List<Class<? extends Entity>> result = viewEnitiesByDataSource.get(datasource);
 		return result != null ? result : Collections.emptyList();
 	}
+
 }

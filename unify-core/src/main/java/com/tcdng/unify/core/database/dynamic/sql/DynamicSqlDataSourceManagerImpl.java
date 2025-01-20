@@ -222,19 +222,23 @@ public class DynamicSqlDataSourceManagerImpl extends AbstractSqlDataSourceManage
         return dynamicSqlDataSourceMap.get(dataSourceConfigName);
     }
 
-    private void createAndInitDynamicSqlDataSource(DynamicSqlDataSourceConfig dynamicSqlDataSourceConfig)
-            throws UnifyException {
-        dynamicSqlDataSourceMap.get(dynamicSqlDataSourceConfig.getName(), dynamicSqlDataSourceConfig);
+	private void createAndInitDynamicSqlDataSource(DynamicSqlDataSourceConfig dynamicSqlDataSourceConfig)
+			throws UnifyException {
+		dynamicSqlDataSourceMap.get(dynamicSqlDataSourceConfig.getName(), dynamicSqlDataSourceConfig);
 
-		final DataSourceEntityContext entityCtx = entityListProvider.getDataSourceEntityContext(Arrays.asList(dynamicSqlDataSourceConfig.getName()));
-        final DataSourceManagerContext ctx = new DataSourceManagerContext(entityCtx, new DataSourceManagerOptions(PrintFormat.NONE,
-                ForceConstraints.fromBoolean(!getContainerSetting(boolean.class,
-                        UnifyCorePropertyConstants.APPLICATION_FOREIGNKEY_EASE, false))));
-        initDataSource(ctx, dynamicSqlDataSourceConfig.getName());
-        if (dynamicSqlDataSourceConfig.isManageSchema()) {
-            manageDataSource(ctx, dynamicSqlDataSourceConfig.getName());
-        }
-    }
+		final DataSourceEntityContext entityCtx = entityListProvider
+				.getDataSourceEntityContext(Arrays.asList(dynamicSqlDataSourceConfig.getPreferredName()));
+		entityCtx.addDataSourceAlias(dynamicSqlDataSourceConfig.getPreferredName(),
+				dynamicSqlDataSourceConfig.getName());
+		final DataSourceManagerContext ctx = new DataSourceManagerContext(entityCtx,
+				new DataSourceManagerOptions(PrintFormat.NONE,
+						ForceConstraints.fromBoolean(!getContainerSetting(boolean.class,
+								UnifyCorePropertyConstants.APPLICATION_FOREIGNKEY_EASE, false))));
+		initDataSource(ctx, dynamicSqlDataSourceConfig.getName());
+		if (dynamicSqlDataSourceConfig.isManageSchema()) {
+			manageDataSource(ctx, dynamicSqlDataSourceConfig.getName());
+		}
+	}
 
     private DynamicSqlDataSource getNewDynamicSqlDataSource(DynamicSqlDataSourceConfig dynamicSqlDataSourceConfig)
             throws UnifyException {

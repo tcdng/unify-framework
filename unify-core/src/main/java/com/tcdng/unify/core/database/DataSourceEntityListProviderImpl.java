@@ -97,6 +97,9 @@ public class DataSourceEntityListProviderImpl extends AbstractDataSourceEntityLi
 					}
 				}
 			}
+			
+			tableEnitiesByDataSource.put(datasource, tableEntities);
+			viewEnitiesByDataSource.put(datasource, viewEntities);
 		}
 
 		return new DataSourceEntityContext(_datasources, tableEnitiesByDataSource, viewEnitiesByDataSource);

@@ -63,7 +63,7 @@ public abstract class AbstractDataSource extends AbstractUnifyComponent implemen
 	}
 
 	@Override
-	public final boolean isManaged() throws UnifyException {
+	public boolean isManaged() throws UnifyException {
 		return managed;
 	}
 

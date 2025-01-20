@@ -66,4 +66,9 @@ public class DynamicSqlDataSourceImpl extends AbstractSqlDataSource implements D
     public boolean isConfigured() throws UnifyException {
         return configured;
     }
+
+	@Override
+	public final boolean isManaged() throws UnifyException {
+		return true;
+	}
 }

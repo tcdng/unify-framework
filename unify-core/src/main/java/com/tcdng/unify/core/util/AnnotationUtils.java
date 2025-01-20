@@ -96,6 +96,6 @@ public final class AnnotationUtils {
     }
     
     private static boolean isSchemaElementDataSource(String entityDataSources, String dataSourceToCheck) {
-        return entityDataSources.indexOf(dataSourceToCheck) >= 0;
+        return dataSourceToCheck != null && entityDataSources.indexOf(dataSourceToCheck) >= 0;
     }
 }
