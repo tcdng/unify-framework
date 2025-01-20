@@ -42,15 +42,31 @@ public abstract class AbstractSqlDataSourceManager extends AbstractUnifyComponen
 
 	private List<String> delayedDataSourceList;
 
+	private List<String> datasources;
+	
 	private boolean delayedInit;
 
 	public AbstractSqlDataSourceManager() {
 		this.delayedDataSourceList = new ArrayList<String>();
+		this.datasources = new ArrayList<String>();
+	}
+
+	@Override
+	public String getDataSource(Class<?> clazz) throws UnifyException {
+		for (String datasource : datasources) {
+			if (getSqlDataSource(datasource).getDialect().isWithSqlEntityInfo(clazz)) {
+				return datasource;
+			}
+		}
+
+		return null;
 	}
 
 	@Override
 	public void initDataSource(DataSourceManagerContext ctx, String dataSourceName) throws UnifyException {
 		SqlDataSource sqlDataSource = getSqlDataSource(dataSourceName);
+		datasources.add(dataSourceName);
+		
 		if (sqlDataSource.isInitDelayed()) {
 			delayedDataSourceList.add(dataSourceName);
 		} else {

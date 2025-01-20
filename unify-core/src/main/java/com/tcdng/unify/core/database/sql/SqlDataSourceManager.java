@@ -16,6 +16,7 @@
 
 package com.tcdng.unify.core.database.sql;
 
+import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.database.DataSourceManager;
 
 /**
@@ -25,5 +26,14 @@ import com.tcdng.unify.core.database.DataSourceManager;
  * @since 1.0
  */
 public interface SqlDataSourceManager extends DataSourceManager {
+
+	/**
+	 * Checks if datasource flor class exists.
+	 * 
+	 * @param clazz the entity type
+	 * @return the data source name
+	 * @throws UnifyException if an error occurs
+	 */
+	String getDataSource(Class<?> clazz) throws UnifyException;
 
 }
