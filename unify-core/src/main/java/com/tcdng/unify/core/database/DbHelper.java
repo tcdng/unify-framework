@@ -23,13 +23,13 @@ import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 
 /**
- * Unique constraint checker.
+ * Database helper.
  * 
  * @author The Code Department
  * @since 1.0
  */
 
-public interface UniqueConstraintChecker extends UnifyComponent {
+public interface DbHelper extends UnifyComponent {
 
 	/**
 	 * Checks if entity with object details already exists.
@@ -41,4 +41,13 @@ public interface UniqueConstraintChecker extends UnifyComponent {
 	 * @throws UnifyException if an error occurs
 	 */
 	boolean exists(Class<? extends Entity> entityClass, Object inst, List<String> fieldNames) throws UnifyException;
+
+	/**
+	 * Checks if entities exist based on criteria.
+	 * 
+	 * @param query the criteria
+	 * @return true if exist otherwise false
+	 * @throws UnifyException if an error occurs
+	 */
+	boolean exists(Query<? extends Entity> query) throws UnifyException;
 }
