@@ -34,7 +34,7 @@ import com.tcdng.unify.core.annotation.Transactional;
 import com.tcdng.unify.core.business.AbstractBusinessService;
 import com.tcdng.unify.core.criterion.Update;
 import com.tcdng.unify.core.database.Query;
-import com.tcdng.unify.core.database.UniqueConstraintChecker;
+import com.tcdng.unify.core.database.DbHelper;
 import com.tcdng.unify.core.system.entities.ClusterDateSequenceNumber;
 import com.tcdng.unify.core.system.entities.ClusterDateSequenceNumberQuery;
 import com.tcdng.unify.core.system.entities.ClusterSequenceBlock;
@@ -56,7 +56,7 @@ import com.tcdng.unify.core.util.ThreadUtils;
  */
 @Transactional
 @Component(ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE)
-public class SequenceNumberServiceImpl extends AbstractBusinessService implements SequenceNumberService, UniqueConstraintChecker {
+public class SequenceNumberServiceImpl extends AbstractBusinessService implements SequenceNumberService, DbHelper {
 
     private Map<String, SequenceBlock> sequenceBlockMap;
 
@@ -90,10 +90,15 @@ public class SequenceNumberServiceImpl extends AbstractBusinessService implement
 				query.addNotEquals("id", id);
 			}
 
-			return db().countAll(query) > 0;
+			return db(entityClass).countAll(query) > 0;
 		}
 
 		return false;
+	}
+
+	@Override
+	public boolean exists(Query<? extends Entity> query) throws UnifyException {
+		return db(query.getEntityClass()).countAll(query) > 0;
 	}
 
 	@Override
