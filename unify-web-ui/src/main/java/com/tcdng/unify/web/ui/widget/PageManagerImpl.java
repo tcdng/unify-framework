@@ -86,6 +86,8 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
 
 	private List<String> documentScripts;
 
+	private List<String> documentFonts;
+
 	private String pageNamePrefix;
 
 	public PageManagerImpl() {
@@ -93,6 +95,7 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
 		valueReferences = new HashMap<String, List<String>>();
 		documentStyleSheets = Collections.emptyList();
 		documentScripts = Collections.emptyList();
+		documentFonts = Collections.emptyList();
 		pageNamePrefix = PAGENAME_PREFIX;
 
 		pageNameMap = new PageNameMap();
@@ -299,6 +302,11 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
 	}
 
 	@Override
+	public List<String> getDocumentFonts() {
+		return documentFonts;
+	}
+
+	@Override
 	public Page createPage(Locale locale, String name) throws UnifyException {
 		return (Page) createStandalonePanel(locale, name);
 	}
@@ -484,6 +492,12 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
 				getContainerSetting(Object.class, UnifyWebPropertyConstants.APPLICATION_DOCUMENT_SCRIPT));
 		if (scripts != null) {
 			documentScripts = Collections.unmodifiableList(scripts);
+		}
+
+		List<String> fonts = DataUtils.convert(ArrayList.class, String.class,
+				getContainerSetting(Object.class, UnifyWebPropertyConstants.APPLICATION_DOCUMENT_FONT));
+		if (fonts != null) {
+			documentFonts = Collections.unmodifiableList(fonts);
 		}
 	}
 
