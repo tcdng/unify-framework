@@ -292,8 +292,8 @@ public class DocumentWriter extends AbstractPageWriter {
 		if (fonts != null) {
 			for (String font : fonts) {
 				if (!excludeFonts.contains(font)) {
-					final String[] parts =  font.split(":", 2);
-					writeFont(writer, parts[0], parts[1]);
+					final String[] parts =  font.split(":", 5);
+					writeFont(writer, parts[0], parts[1], parts[2], parts[3], parts[4]);
 					excludeFonts.add(font); // Avoid duplication
 				}
 			}
@@ -301,8 +301,8 @@ public class DocumentWriter extends AbstractPageWriter {
 
 		for (String font : getPageManager().getDocumentFonts()) {
 			if (!excludeFonts.contains(font)) {
-				final String[] parts =  font.split(":", 2);
-				writeFont(writer, parts[0], parts[1]);
+				final String[] parts =  font.split(":", 5);
+				writeFont(writer, parts[0], parts[1], parts[2], parts[3], parts[4]);
 				excludeFonts.add(font); // Avoid duplication
 			}
 		}
@@ -319,6 +319,14 @@ public class DocumentWriter extends AbstractPageWriter {
 
 	private void writeFont(ResponseWriter writer, String family, String fontResource) throws UnifyException {
 		writer.write("@font-face {font-family: '").write(family).write("'; src: url(");
+		writer.writeContextResourceURL("/resource/file", MimeType.APPLICATION_OCTETSTREAM.template(), fontResource);
+		writer.write(");} ");
+	}
+
+	private void writeFont(ResponseWriter writer, String family, String weight, String stretch, String style,
+			String fontResource) throws UnifyException {
+		writer.write("@font-face {font-family: '").write(family).write("'; font-weight:").write(weight)
+				.write("; font-stretch:").write(stretch).write("; font-style:").write(style).write("; src: url(");
 		writer.writeContextResourceURL("/resource/file", MimeType.APPLICATION_OCTETSTREAM.template(), fontResource);
 		writer.write(");} ");
 	}
