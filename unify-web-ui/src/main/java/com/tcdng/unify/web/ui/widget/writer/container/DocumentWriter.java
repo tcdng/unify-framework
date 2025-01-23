@@ -288,7 +288,7 @@ public class DocumentWriter extends AbstractPageWriter {
 		
 		// Additional
 		Set<String> excludeFonts = new HashSet<String>();
-		String[] fonts = document.getScript();
+		String[] fonts = document.getFont();
 		if (fonts != null) {
 			for (String font : fonts) {
 				if (!excludeFonts.contains(font)) {
