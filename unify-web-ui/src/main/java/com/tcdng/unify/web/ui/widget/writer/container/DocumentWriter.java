@@ -277,18 +277,36 @@ public class DocumentWriter extends AbstractPageWriter {
 			int i = 0;
 			fsb.append(".g_fsm {font-family: ").append(document.getFontFamily());
 			for (String fontResource : getFontResources()) {
+				writeFont(writer, "FontSymbolMngr" + i, fontResource);
 				fsb.append(", 'FontSymbolMngr").append(i).append('\'');
-
-				writer.write("@font-face {font-family: 'FontSymbolMngr").write(i).write("'; src: url(");
-				writer.writeContextResourceURL("/resource/file", MimeType.APPLICATION_OCTETSTREAM.template(),
-						fontResource);
-				writer.write(");} ");
 				i++;
 			}
+			
 			fsb.append(";}");
-
 			writer.write(fsb);
 		}
+		
+		// Additional
+		Set<String> excludeFonts = new HashSet<String>();
+		String[] fonts = document.getFont();
+		if (fonts != null) {
+			for (String font : fonts) {
+				if (!excludeFonts.contains(font)) {
+					final String[] parts =  font.split(":", 5);
+					writeFont(writer, parts[0], parts[1], parts[2], parts[3], parts[4]);
+					excludeFonts.add(font); // Avoid duplication
+				}
+			}
+		}
+
+		for (String font : getPageManager().getDocumentFonts()) {
+			if (!excludeFonts.contains(font)) {
+				final String[] parts =  font.split(":", 5);
+				writeFont(writer, parts[0], parts[1], parts[2], parts[3], parts[4]);
+				excludeFonts.add(font); // Avoid duplication
+			}
+		}
+		
 		writer.write("</style>");
 	}
 
@@ -297,6 +315,20 @@ public class DocumentWriter extends AbstractPageWriter {
 				.write(":before {content: \"\";vertical-align:middle;display: inline-block;width: 100%;height: 100%;background: url(");
 		writer.writeFileImageContextURL(imgSrc);
 		writer.write(")no-repeat center/100% 100%; }");
+	}
+
+	private void writeFont(ResponseWriter writer, String family, String fontResource) throws UnifyException {
+		writer.write("@font-face {font-family: '").write(family).write("'; src: url(");
+		writer.writeContextResourceURL("/resource/file", MimeType.APPLICATION_OCTETSTREAM.template(), fontResource);
+		writer.write(");} ");
+	}
+
+	private void writeFont(ResponseWriter writer, String family, String weight, String stretch, String style,
+			String fontResource) throws UnifyException {
+		writer.write("@font-face {font-family: '").write(family).write("'; font-weight:").write(weight)
+				.write("; font-stretch:").write(stretch).write("; font-style:").write(style).write("; src: url(");
+		writer.writeContextResourceURL("/resource/file", MimeType.APPLICATION_OCTETSTREAM.template(), fontResource);
+		writer.write(");} ");
 	}
 
 	private void writeResourcesStyleSheet(ResponseWriter writer) throws UnifyException {
