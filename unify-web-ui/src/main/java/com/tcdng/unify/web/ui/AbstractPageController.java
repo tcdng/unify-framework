@@ -518,7 +518,7 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 	 * Shows a dynamic popup.
 	 * 
 	 * @param dynTitle     the title
-	 * @param dynPanelName the panel name
+	 * @param dynPanelName the panel name (should be a standalone panel)
 	 * @param dynPanelBean the panel bean
 	 * @param width        the popup width
 	 * @param height       the popup height
