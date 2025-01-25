@@ -25,6 +25,7 @@ import com.tcdng.unify.core.UnifyCoreSessionAttributeConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.Singleton;
+import com.tcdng.unify.core.annotation.UplBinding;
 import com.tcdng.unify.core.constant.TopicEventType;
 import com.tcdng.unify.core.data.DownloadFile;
 import com.tcdng.unify.core.data.FileAttachmentInfo;
@@ -55,6 +56,7 @@ import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.Widget;
 import com.tcdng.unify.web.ui.widget.WidgetCommandManager;
 import com.tcdng.unify.web.ui.widget.WidgetContainer;
+import com.tcdng.unify.web.ui.widget.data.DynPopup;
 import com.tcdng.unify.web.ui.widget.data.Hint.MODE;
 import com.tcdng.unify.web.ui.widget.data.MessageBox;
 import com.tcdng.unify.web.ui.widget.data.MessageBoxCaptions;
@@ -71,6 +73,7 @@ import com.tcdng.unify.web.ui.widget.data.TaskMonitorInfo;
  * @since 1.0
  */
 @Singleton
+@UplBinding("web/reserved/upl/basepage.upl")
 public abstract class AbstractPageController<T extends PageBean> extends AbstractUIController
 		implements PageController<T> {
 
@@ -507,6 +510,25 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 	 * @throws UnifyException if an error occurs
 	 */
 	protected String showPopup(Popup popup) throws UnifyException {
+		setSessionAttribute(UnifyWebSessionAttributeConstants.POPUP, popup);
+		return popup.getResultMapping();
+	}
+
+	/**
+	 * Shows a dynamic popup.
+	 * 
+	 * @param dynTitle     the title
+	 * @param dynPanelName the panel name
+	 * @param dynPanelBean the panel bean
+	 * @param width        the popup width
+	 * @param height       the popup height
+	 * @return the result mapping
+	 * @throws UnifyException if an error occurs
+	 */
+	protected String showDynamicPopup(String dynTitle, String dynPanelName, Object dynPanelBean, int width, int height)
+			throws UnifyException {
+		final Popup popup = new Popup(ResultMappingConstants.SHOW_DYNAMIC_POPUP,
+				new DynPopup(dynTitle, dynPanelName, dynPanelBean), width, height);
 		setSessionAttribute(UnifyWebSessionAttributeConstants.POPUP, popup);
 		return popup.getResultMapping();
 	}
