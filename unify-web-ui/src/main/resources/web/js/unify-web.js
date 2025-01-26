@@ -5607,6 +5607,11 @@ ux.onSpecialKeyHandler = function(uEv) {
 		}
 	} else {
 		if (uEv.uKeyCode == uEv.evp.uSpecialKeyCode) {
+			if (UNIFY_KEY_ENTER == uEv.uKeyCode
+				&& (uEv.uShortKeyCode & UNIFY_SHIFT > 0)) {
+				return;
+			}
+			
 			uEv.evp.uSpecialKeyHandler(uEv);
 		}
 	}
