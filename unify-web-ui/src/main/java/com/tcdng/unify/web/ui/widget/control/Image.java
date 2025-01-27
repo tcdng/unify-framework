@@ -28,11 +28,12 @@ import com.tcdng.unify.web.ui.widget.AbstractTargetControl;
  * @since 1.0
  */
 @Component("ui-image")
-@UplAttributes({ @UplAttribute(name = "src", type = String.class),
-        @UplAttribute(name = "srcBinding", type = String.class),
-        @UplAttribute(name = "scope", type = String.class),
-        @UplAttribute(name = "clearOnRead", type = boolean.class, defaultVal = "true"),
-        @UplAttribute(name = "alwaysFetch", type = boolean.class) })
+@UplAttributes({
+	@UplAttribute(name = "src", type = String.class),
+    @UplAttribute(name = "srcBinding", type = String.class),
+    @UplAttribute(name = "scope", type = String.class),
+    @UplAttribute(name = "clearOnRead", type = boolean.class, defaultVal = "true"),
+    @UplAttribute(name = "alwaysFetch", type = boolean.class) })
 public class Image extends AbstractTargetControl {
 
     public String getSrc() throws UnifyException {

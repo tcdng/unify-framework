@@ -4,13 +4,13 @@
 // you may not use this file except in compliance with the License.
 // File: popuppanel.upl
 !ui-popuppanel layout:$d{!ui-vertical style:$s{width:100%;}}
-    components:$c{titleBar popupBody}
+    components:$c{titleBar popupBodyPanel}
 
 !ui-titlebar:titleBar captionBinding:$s{dynTitle} draggable:true components:$c{captionCancelBtn}
 !ui-image:captionCancelBtn src:$t{images/cross_white.png} styleClass:$e{tbbutton}
      eventHandler:$d{!ui-event event:onclick action:$c{closeAct}}
      
-!ui-dynamicpanel:popupBody
+!ui-dynamicpanel:popupBodyPanel
     panelNameBinding:$s{dynPanelName}
     panelValueBinding:$s{dynPanelBean}
      
