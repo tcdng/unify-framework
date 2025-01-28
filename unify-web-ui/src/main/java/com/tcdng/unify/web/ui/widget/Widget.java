@@ -646,6 +646,13 @@ public interface Widget extends UplComponent {
     WriteWork getWriteWork() throws UnifyException;
 
     /**
+     * Gets indexed handler count to be used for this widget
+     * @return the count. Zero in most cases.
+     * @throws UnifyException if an error occurs
+     */
+    int getIndexedHandlerCount() throws UnifyException;
+    
+    /**
      * Returns true if widget is a control.
      */
     boolean isControl();

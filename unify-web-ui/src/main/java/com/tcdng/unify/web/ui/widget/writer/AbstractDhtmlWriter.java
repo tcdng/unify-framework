@@ -791,6 +791,9 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
 			writer.write("\"uFunc\":\"").write(alias).write("\",");
 		}
 		writer.write("\"uId\":\"").write(id).write("\"");
+		if (writer.isWithDataIndex()) {
+			writer.write(",\"uSendTrg\":").write(writer.getDataIndex());
+		}
 
 		if (reqUtil.isRemoteViewer()) {
 			writer.write(",\"uViewer\":\"").write(reqUtil.getRemoteViewer()).write("\"");

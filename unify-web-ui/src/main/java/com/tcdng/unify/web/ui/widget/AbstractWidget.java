@@ -377,6 +377,11 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 	}
 
 	@Override
+	public int getIndexedHandlerCount() throws UnifyException {
+		return 0;
+	}
+
+	@Override
 	public boolean isRelayCommand() {
 		return false;
 	}
