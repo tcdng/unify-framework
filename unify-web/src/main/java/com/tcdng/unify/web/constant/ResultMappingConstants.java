@@ -65,5 +65,7 @@ public interface ResultMappingConstants {
 
     String SHOW_ATTACHMENT = "resrv.showattachment";
 
+    String SHOW_DYNAMIC_POPUP = "resrv.showdynamicpopup";
+
     String VALIDATION_ERROR = "resrv.validationerror";
 }

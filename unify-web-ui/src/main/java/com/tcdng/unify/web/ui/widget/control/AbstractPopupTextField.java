@@ -25,7 +25,8 @@ import com.tcdng.unify.core.annotation.UplAttributes;
  * @author The Code Department
  * @since 1.0
  */
-@UplAttributes({ @UplAttribute(name = "buttonImgSrc", type = String.class, defaultVal = "$t{images/droparrow.png}"),
+@UplAttributes({
+		@UplAttribute(name = "buttonImgSrc", type = String.class, defaultVal = "$t{images/droparrow.png}"),
         @UplAttribute(name = "buttonSymbol", type = String.class, defaultVal = "angle-down"),
         @UplAttribute(name = "timeout", type = long.class, defaultVal = "-1"),
         @UplAttribute(name = "clearable", type = boolean.class),

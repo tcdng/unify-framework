@@ -1004,6 +1004,13 @@ public interface ResponseWriter extends UnifyComponent {
 	void setDataIndex(int dataIndex);
 	
 	/**
+	 * Checks if data index is valid
+	 * 
+	 * @return true if valid otherwise false
+	 */
+	boolean isWithDataIndex();
+	
+	/**
 	 * Indicates post command references should be kept.
 	 * 
 	 * @return true if set otherwise false

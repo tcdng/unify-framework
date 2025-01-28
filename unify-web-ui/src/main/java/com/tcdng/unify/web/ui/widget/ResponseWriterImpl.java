@@ -918,6 +918,7 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 			bracketOpen = false;
 			paramAppendSym = false;
 			plainResourceMode = false;
+			dataIndex = -1;
 		}
 	}
 
@@ -944,6 +945,11 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 	@Override
 	public void setDataIndex(int dataIndex) {
 		this.dataIndex = dataIndex;
+	}
+
+	@Override
+	public boolean isWithDataIndex() {
+		return dataIndex >= 0;
 	}
 
 	@Override

@@ -61,7 +61,7 @@ public class PageManagerTest extends AbstractUnifyWebTest {
         Page page = pageManager.createPage(Locale.getDefault(), "/testauthor");
 
         // Page level
-        assertEquals(11, page.getWidgetLongNames().size());
+        assertEquals(15, page.getWidgetLongNames().size());
 
         Widget uici = page.getWidgetByLongName("/testauthor.mainPanel");
         assertEquals("/testauthor.mainPanel", uici.getLongName());

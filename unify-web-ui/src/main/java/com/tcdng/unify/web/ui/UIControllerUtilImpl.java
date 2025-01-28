@@ -288,6 +288,9 @@ public class UIControllerUtilImpl extends AbstractUnifyComponent implements UICo
         defaultResultMap.put(ResultMappingConstants.SHOW_POPUP, new Result(new PageControllerResponse[] {
                 (PageControllerResponse) getUplComponent(defaultLocale, "!showpopupresponse", false) }));
 
+        defaultResultMap.put(ResultMappingConstants.SHOW_DYNAMIC_POPUP, new Result(new PageControllerResponse[] {
+                (PageControllerResponse) getUplComponent(defaultLocale, "!showpopupresponse popup:$s{dynPopup}", false) }));
+
         defaultResultMap.put(ResultMappingConstants.HIDE_POPUP,
                 new Result(new PageControllerResponse[] {
                         (PageControllerResponse) getUplComponent(defaultLocale, "!hidepopupresponse", false),
