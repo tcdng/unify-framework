@@ -302,6 +302,9 @@ z-index:400;}
 /** Dialog rack CRUD panel */
 .ui-dialograckcrudpanel {}
 
+/** Popup panel */
+.ui-popuppanel {background: #FFF; border: 1px solid #A9A9A9;}
+
 /** Fixed content panel */
 .ui-fixedcontentpanel {}
 .ui-fixedcontentpanel .fcphint {position: relative; top: 2px; height:0px; overflow-y:visible; width: 100%; z-index:100;}
