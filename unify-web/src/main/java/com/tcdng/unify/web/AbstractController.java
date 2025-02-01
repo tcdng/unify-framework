@@ -21,6 +21,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.data.ValueStore;
 import com.tcdng.unify.core.logging.EventLogger;
+import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.SystemUtils;
 import com.tcdng.unify.core.util.ValueStoreUtils;
 import com.tcdng.unify.web.constant.Secured;
@@ -74,6 +75,10 @@ public abstract class AbstractController extends AbstractUnifyComponent implemen
 	
 	protected HttpRequestHeaders getHttpRequestHeaders() throws UnifyException {
 		return (HttpRequestHeaders) getRequestAttribute(UnifyWebRequestAttributeConstants.HEADERS);
+	}
+
+	protected final <T> T getRequestParameter(Class<T> dataType, String paramName) throws UnifyException {
+		return DataUtils.convert(dataType, getHttpRequestParameter(paramName));
 	}
 
 	protected HttpRequestParameters getHttpRequestParameters() throws UnifyException {

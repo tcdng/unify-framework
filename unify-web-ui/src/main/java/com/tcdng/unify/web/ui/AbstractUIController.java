@@ -169,10 +169,6 @@ public abstract class AbstractUIController extends AbstractHttpClientController 
 		return uiControllerUtil;
 	}
 
-	protected final <T> T getRequestParameter(Class<T> dataType, String paramName) throws UnifyException {
-		return DataUtils.convert(dataType, getHttpRequestParameter(paramName));
-	}
-
 	protected final <T> T getExternalForward(Class<T> dataType) throws UnifyException {
 		return DataUtils.convert(dataType, getHttpRequestParameter(RequestParameterConstants.EXTERNAL_FORWARD));
 	}
