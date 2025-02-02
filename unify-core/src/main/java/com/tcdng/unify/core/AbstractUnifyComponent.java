@@ -921,6 +921,19 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	}
 
 	/**
+	 * Removes an attribute from current session.
+	 * 
+	 * @param name the name of the attribute to remove
+	 * @return the value of attribute remove, otherwise null.
+	 * @throws UnifyException if an error occurs
+	 */
+	protected <T> T removeSessionAttribute(Class<T> typeClass, String name) throws UnifyException {
+		Object val = unifyComponentContext != null ? unifyComponentContext.getSessionContext().removeAttribute(name)
+				: null;
+		return DataUtils.convert(typeClass, val);
+	}
+
+	/**
 	 * Removes attributes from current session.
 	 * 
 	 * @param names the names of the attributes to remove

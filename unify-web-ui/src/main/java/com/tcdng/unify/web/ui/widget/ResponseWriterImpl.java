@@ -543,11 +543,6 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 					.append(clearOnRead);
 		}
 
-		if (pageManager.getCurrentRequestClientId() != null) {
-			buf.append('&').append(RequestParameterConstants.CLIENT_ID).append("=")
-					.append(UrlUtils.encodeURLParameter(pageManager.getCurrentRequestClientId()));
-		}
-
 		if (pageRequestContextUtil.isRemoteViewer()) {
 			buf.append('&').append(RequestParameterConstants.REMOTE_VIEWER).append("=")
 					.append(pageRequestContextUtil.getRemoteViewer());
