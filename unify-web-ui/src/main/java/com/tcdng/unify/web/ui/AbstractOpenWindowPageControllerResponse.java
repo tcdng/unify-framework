@@ -16,7 +16,7 @@
 package com.tcdng.unify.web.ui;
 
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.web.data.WebStringWriter;
+import com.tcdng.unify.core.data.WebStringWriter;
 import com.tcdng.unify.web.ui.widget.Page;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 

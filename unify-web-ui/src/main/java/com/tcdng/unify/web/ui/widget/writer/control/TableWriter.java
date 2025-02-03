@@ -24,6 +24,7 @@ import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.data.ValueStore;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
+import com.tcdng.unify.core.util.html.HtmlUtils;
 import com.tcdng.unify.core.util.json.JsonWriter;
 import com.tcdng.unify.web.ui.widget.Control;
 import com.tcdng.unify.web.ui.widget.EventHandler;
@@ -36,7 +37,6 @@ import com.tcdng.unify.web.ui.widget.control.Table.Column;
 import com.tcdng.unify.web.ui.widget.control.Table.Row;
 import com.tcdng.unify.web.ui.widget.control.Table.RowValueStore;
 import com.tcdng.unify.web.ui.widget.writer.AbstractControlWriter;
-import com.tcdng.unify.web.util.HtmlUtils;
 
 /**
  * Table writer.

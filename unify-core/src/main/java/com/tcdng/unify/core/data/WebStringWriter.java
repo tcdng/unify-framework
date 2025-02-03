@@ -14,12 +14,11 @@
  * the License.
  */
 
-package com.tcdng.unify.web.data;
+package com.tcdng.unify.core.data;
 
-import com.tcdng.unify.core.data.LargeStringWriter;
 import com.tcdng.unify.core.util.StringUtils;
+import com.tcdng.unify.core.util.html.HtmlUtils;
 import com.tcdng.unify.core.util.json.JsonUtils;
-import com.tcdng.unify.web.util.HtmlUtils;
 
 /**
  * Web string writer.

@@ -23,13 +23,13 @@ import java.util.Set;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.constant.MimeType;
+import com.tcdng.unify.core.data.WebStringWriter;
 import com.tcdng.unify.core.format.DateTimeFormat;
 import com.tcdng.unify.core.format.Pattern;
 import com.tcdng.unify.core.upl.UplComponent;
 import com.tcdng.unify.core.upl.UplComponentWriter;
 import com.tcdng.unify.core.util.html.HtmlTextWriter;
 import com.tcdng.unify.core.util.json.JsonWriter;
-import com.tcdng.unify.web.data.WebStringWriter;
 
 /**
  * Used for writing response to a user request. Writers are determined at

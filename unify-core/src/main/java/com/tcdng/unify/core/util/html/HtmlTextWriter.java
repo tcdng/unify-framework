@@ -16,6 +16,7 @@
 package com.tcdng.unify.core.util.html;
 
 import com.tcdng.unify.core.UnifyComponent;
+import com.tcdng.unify.core.data.WebStringWriter;
 
 /**
  * HTML text writer.
@@ -49,5 +50,32 @@ public interface HtmlTextWriter extends UnifyComponent {
      * Writes string with HTML escape and returns this writer.
      */
     HtmlTextWriter writeWithHtmlEscape(String string);
+
+    /**
+     * Instructs this writer to use a secondary buffer for all write operations.
+     */
+    void useSecondary();
+
+    /**
+     * Instructs this writer to use a secondary buffer for all write operations.
+     * 
+     * @param initialCapacity
+     *                        the initial capacity
+     */
+    void useSecondary(int initialCapacity);
+
+    /**
+     * Discards current secondary buffer.
+     * 
+     * @return the discarded buffer otherwise null
+     */
+    WebStringWriter discardSecondary();
+
+    /**
+     * Discards current secondary buffer with merge.
+     * 
+     * @return the discarded buffer otherwise null
+     */
+    WebStringWriter discardMergeSecondary();
 
 }
