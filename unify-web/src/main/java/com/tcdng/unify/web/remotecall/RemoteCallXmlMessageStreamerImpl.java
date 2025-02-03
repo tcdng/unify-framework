@@ -42,7 +42,7 @@ import com.tcdng.unify.core.data.TaggedXmlMessage;
 import com.tcdng.unify.core.stream.AbstractObjectStreamer;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.core.util.XmlUtils;
-import com.tcdng.unify.web.util.HtmlUtils;
+import com.tcdng.unify.core.util.html.HtmlUtils;
 
 /**
  * Remote call XML message streamer.

@@ -20,6 +20,8 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import com.tcdng.unify.core.data.WebStringWriter;
+
 /**
  * Web string writer tests.
  * 
