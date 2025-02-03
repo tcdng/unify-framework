@@ -75,7 +75,7 @@ public class WebStringWriter extends LargeStringWriter {
     }
 
     public WebStringWriter appendHtmlEscaped(WebStringWriter wsw) {
-        if (wsw == null) {
+        if (wsw == null) { 
             super.append(StringUtils.NULL_STRING);
         } else {
             char[] data = wsw.getData();
