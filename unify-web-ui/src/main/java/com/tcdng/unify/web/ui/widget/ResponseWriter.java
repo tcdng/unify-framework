@@ -21,13 +21,13 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.format.DateTimeFormat;
 import com.tcdng.unify.core.format.Pattern;
 import com.tcdng.unify.core.upl.UplComponent;
 import com.tcdng.unify.core.upl.UplComponentWriter;
+import com.tcdng.unify.core.util.html.HtmlTextWriter;
 import com.tcdng.unify.core.util.json.JsonWriter;
 import com.tcdng.unify.web.data.WebStringWriter;
 
@@ -39,7 +39,7 @@ import com.tcdng.unify.web.data.WebStringWriter;
  * @author The Code Department
  * @since 1.0
  */
-public interface ResponseWriter extends UnifyComponent {
+public interface ResponseWriter extends HtmlTextWriter {
 
     /**
      * Writes a message using application locale.
@@ -188,31 +188,6 @@ public interface ResponseWriter extends UnifyComponent {
      */
 	ResponseWriter writeBehavior(Behavior behavior, String id, String cmdTag, String preferredEvent)
 			throws UnifyException;
-
-    /**
-     * Writes object and returns this writer.
-     */
-    ResponseWriter write(Object object);
-
-    /**
-     * Writes character and returns this writer.
-     */
-    ResponseWriter write(char ch);
-
-    /**
-     * Writes object if object is not null and returns this writer.
-     */
-    ResponseWriter writeNotNull(Object object);
-
-    /**
-     * Writes HTML fixed space (&nbsp;).
-     */
-    ResponseWriter writeHtmlFixedSpace();
-
-    /**
-     * Writes string with HTML escape and returns this writer.
-     */
-    ResponseWriter writeWithHtmlEscape(String string);
 
     /**
      * Writes a JSON quoted string.
