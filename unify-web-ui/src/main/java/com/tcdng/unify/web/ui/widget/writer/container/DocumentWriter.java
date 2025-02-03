@@ -90,6 +90,9 @@ public class DocumentWriter extends AbstractPageWriter {
 		writer.writeFileImageContextURL(document.getFavicon());
 		writer.write("\">");
 
+		// Write font symbols
+		writeEmbeddedStyle(writer, document);
+
 		// Write style sheet links
 		writeStyleSheet(writer, "$t{css/unify-web.css}");
 		Set<String> excludeStyleSheet = new HashSet<String>(document.getExcludeStyleSheet());
@@ -112,9 +115,6 @@ public class DocumentWriter extends AbstractPageWriter {
 		}
 
 		writeResourcesStyleSheet(writer);
-
-		// Write font symbols
-		writeEmbeddedStyle(writer, document);
 
 		// Write javascript sources
 		writeJavascript(writer, "web/js/unify-web.js");

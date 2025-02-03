@@ -118,6 +118,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("exclamation-circle", "f06a");
         registerSymbol("expand", "f065");
         registerSymbol("file", "f15b");
+        registerSymbol("file-alt", "f15c");
         registerSymbol("file-contract", "f56c");
         registerSymbol("file-download", "f56d");
         registerSymbol("file-edit", "f31c");
@@ -149,6 +150,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("italic", "f033");
         registerSymbol("key", "f084");
         registerSymbol("laptop-house", "e066");
+        registerSymbol("laugh", "f599");
         registerSymbol("link", "f0c1");
         registerSymbol("list", "f03a");
         registerSymbol("lock", "f023");
@@ -160,12 +162,14 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("minus", "f068");
         registerSymbol("minus-square", "f146");
         registerSymbol("money-bill", "f0d6");
+        registerSymbol("mountain", "f6fc");
         registerSymbol("network-wired", "f6ff");
         registerSymbol("newspaper", "f1ea");
         registerSymbol("outdent", "f03b");
         registerSymbol("paint-brush", "f1fc");
         registerSymbol("paper-clip", "f0c6");
         registerSymbol("parachute-box", "f4cd");
+        registerSymbol("pen-nib", "f5ad");
         registerSymbol("play", "f04b");
         registerSymbol("plus", "f067");
         registerSymbol("plus-square", "f0fe");
@@ -203,6 +207,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("user", "f007");
         registerSymbol("users", "f0c0");
         registerSymbol("user-check", "f4fc");
+        registerSymbol("user-cog", "f4fe");
         registerSymbol("user-edit", "f4ff");
         registerSymbol("user-tag", "f507");
         registerSymbol("vector-square", "f5cb");
