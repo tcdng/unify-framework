@@ -190,6 +190,31 @@ public interface ResponseWriter extends HtmlTextWriter {
 			throws UnifyException;
 
     /**
+     * Writes object and returns this writer.
+     */
+    ResponseWriter write(Object object);
+
+    /**
+     * Writes character and returns this writer.
+     */
+    ResponseWriter write(char ch);
+
+    /**
+     * Writes object if object is not null and returns this writer.
+     */
+    ResponseWriter writeNotNull(Object object);
+
+    /**
+     * Writes HTML fixed space (&nbsp;).
+     */
+    ResponseWriter writeHtmlFixedSpace();
+
+    /**
+     * Writes string with HTML escape and returns this writer.
+     */
+    ResponseWriter writeWithHtmlEscape(String string);
+
+    /**
      * Writes a JSON quoted string.
      * 
      * @param string
