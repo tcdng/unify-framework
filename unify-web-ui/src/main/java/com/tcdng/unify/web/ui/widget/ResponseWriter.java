@@ -39,7 +39,7 @@ import com.tcdng.unify.core.util.json.JsonWriter;
  * @author The Code Department
  * @since 1.0
  */
-public interface ResponseWriter extends HtmlTextWriter {
+public interface ResponseWriter extends HtmlTextWriter { 
 
     /**
      * Writes a message using application locale.
