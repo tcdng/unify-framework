@@ -913,33 +913,6 @@ public interface ResponseWriter extends HtmlTextWriter {
      */
     void writeTo(Writer writer) throws UnifyException;
 
-    /**
-     * Instructs this writer to use a secondary buffer for all write operations.
-     */
-    void useSecondary();
-
-    /**
-     * Instructs this writer to use a secondary buffer for all write operations.
-     * 
-     * @param initialCapacity
-     *                        the initial capacity
-     */
-    void useSecondary(int initialCapacity);
-
-    /**
-     * Discards current secondary buffer.
-     * 
-     * @return the discarded buffer otherwise null
-     */
-    WebStringWriter discardSecondary();
-
-    /**
-     * Discards current secondary buffer with merge.
-     * 
-     * @return the discarded buffer otherwise null
-     */
-    WebStringWriter discardMergeSecondary();
-
 	/**
 	 * Sets dynamic confirmation message.
 	 * 
