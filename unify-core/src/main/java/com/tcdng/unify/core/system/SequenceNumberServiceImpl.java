@@ -74,10 +74,33 @@ public class SequenceNumberServiceImpl extends AbstractBusinessService implement
         sequenceBlockMap = new HashMap<String, SequenceBlock>();
     }
 
-    @Override
-	public List<Set<String>> getUniqueConstraints(Class<? extends Entity> entityClass) throws UnifyException {
-		// TODO Auto-generated method stub
-		return null;
+	@Override
+	public boolean exists(Class<? extends Entity> entityClass, Object inst, String fieldName) throws UnifyException {
+		List<Set<String>> uniqueConstraints = db(entityClass).getUniqueConstraints(entityClass);
+		if (!DataUtils.isBlank(uniqueConstraints)) {
+			for (Set<String> fieldNames : uniqueConstraints) {
+				if (fieldNames.contains(fieldName)) {
+					Query<? extends Entity> query = Query.of(entityClass);
+					for (String _fieldName : fieldNames) {
+						Object val = DataUtils.getBeanProperty(inst, _fieldName);
+						if (val != null) {
+							query.addEquals(_fieldName, val);
+						}
+					}
+
+					final Long id = DataUtils.getBeanProperty(Long.class, inst, "id");
+					if (QueryUtils.isValidLongCriteria(id)) {
+						query.addNotEquals("id", id);
+					}
+
+					if (db(entityClass).countAll(query) > 0) {
+						return true;
+					}
+				}
+			}
+		}
+
+		return false;
 	}
 
 	@Override
