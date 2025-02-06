@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -121,7 +122,7 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 
 	private List<SqlViewRestrictionInfo> viewRestrictionList;
 
-	private List<List<String>> uniqueConstraints;
+	private List<Set<String>> uniqueConstraints;
 	
 	private boolean identityManaged;
 
@@ -449,14 +450,14 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 		return foreignKeyList;
 	}
 
-	public List<List<String>> getUniqueConstraints() {
+	public List<Set<String>> getUniqueConstraints() {
 		if (uniqueConstraints == null) {
 			synchronized (this) {
 				if (uniqueConstraints == null) {
 					if (!DataUtils.isBlank(uniqueConstraintMap)) {
-						uniqueConstraints = new ArrayList<List<String>>();
+						uniqueConstraints = new ArrayList<Set<String>>();
 						for (SqlUniqueConstraintInfo info : uniqueConstraintMap.values()) {
-							uniqueConstraints.add(info.getFieldNameList());
+							uniqueConstraints.add(new HashSet<String>(info.getFieldNameList()));
 						}
 
 						uniqueConstraints = Collections.unmodifiableList(uniqueConstraints);

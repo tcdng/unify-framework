@@ -16,6 +16,9 @@
 
 package com.tcdng.unify.core.database;
 
+import java.util.List;
+import java.util.Set;
+
 import com.tcdng.unify.common.database.Entity;
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
@@ -29,6 +32,15 @@ import com.tcdng.unify.core.UnifyException;
 
 public interface DbHelper extends UnifyComponent {
 
+	/**
+	 * Gets entity's unique constraint.
+	 * 
+	 * @param entityClass the entity class
+	 * @return the unique constraints
+	 * @throws UnifyException if an error occurs
+	 */
+	List<Set<String>> getUniqueConstraints(Class<? extends Entity> entityClass) throws UnifyException;
+	
 	/**
 	 * Checks if entity with object details already exists.
 	 * 

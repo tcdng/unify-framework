@@ -947,7 +947,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 	}
 
 	@Override
-	public List<List<String>> getUniqueConstraints(Class<? extends Entity> entityClass) throws UnifyException {
+	public List<Set<String>> getUniqueConstraints(Class<? extends Entity> entityClass) throws UnifyException {
 		final SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(entityClass);
 		return sqlEntityInfo.getUniqueConstraints();
 	}

@@ -880,7 +880,7 @@ public interface DatabaseSession {
      * @throws UnifyException
      *             if an error occurs during modify
 	 */
-	List<List<String>> getUniqueConstraints(Class<? extends Entity> entityClass) throws UnifyException;
+	List<Set<String>> getUniqueConstraints(Class<? extends Entity> entityClass) throws UnifyException;
 
 	/**
 	 * Executes an aggregate function that match specified query.

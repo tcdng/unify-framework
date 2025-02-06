@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
@@ -74,10 +75,16 @@ public class SequenceNumberServiceImpl extends AbstractBusinessService implement
     }
 
     @Override
+	public List<Set<String>> getUniqueConstraints(Class<? extends Entity> entityClass) throws UnifyException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
 	public boolean exists(Class<? extends Entity> entityClass, Object inst) throws UnifyException {
-		List<List<String>> uniqueConstraints = db(entityClass).getUniqueConstraints(entityClass);
+		List<Set<String>> uniqueConstraints = db(entityClass).getUniqueConstraints(entityClass);
 		if (!DataUtils.isBlank(uniqueConstraints)) {
-			for (List<String> fieldNames : uniqueConstraints) {
+			for (Set<String> fieldNames : uniqueConstraints) {
 				Query<? extends Entity> query = Query.of(entityClass);
 				for (String fieldName : fieldNames) {
 					Object val = DataUtils.getBeanProperty(inst, fieldName);

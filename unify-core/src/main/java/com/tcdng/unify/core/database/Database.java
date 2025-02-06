@@ -980,7 +980,7 @@ public interface Database extends UnifyComponent {
      * @throws UnifyException
      *             if an error occurs
 	 */
-	List<List<String>> getUniqueConstraints(Class<? extends Entity> entityClass) throws UnifyException;
+	List<Set<String>> getUniqueConstraints(Class<? extends Entity> entityClass) throws UnifyException;
 
 	/**
 	 * Executes an aggregate function that match specified query.

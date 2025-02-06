@@ -380,7 +380,7 @@ public abstract class AbstractDatabase extends AbstractUnifyComponent implements
     }
 
     @Override
-	public List<List<String>> getUniqueConstraints(Class<? extends Entity> entityClass) throws UnifyException {
+	public List<Set<String>> getUniqueConstraints(Class<? extends Entity> entityClass) throws UnifyException {
 		return getDatabaseSession().getUniqueConstraints(entityClass);
 	}
 
