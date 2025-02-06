@@ -93,7 +93,7 @@ public class SequenceNumberServiceImpl extends AbstractBusinessService implement
 						query.addNotEquals("id", id);
 					}
 
-					if (db(entityClass).countAll(query) > 0) {
+					if (!query.isEmptyCriteria() && db(entityClass).countAll(query) > 0) {
 						return true;
 					}
 				}
