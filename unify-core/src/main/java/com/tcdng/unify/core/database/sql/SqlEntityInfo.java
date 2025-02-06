@@ -121,6 +121,8 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 
 	private List<SqlViewRestrictionInfo> viewRestrictionList;
 
+	private List<List<String>> uniqueConstraints;
+	
 	private boolean identityManaged;
 
 	private boolean schemaAlreadyManaged;
@@ -447,6 +449,27 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 		return foreignKeyList;
 	}
 
+	public List<List<String>> getUniqueConstraints() {
+		if (uniqueConstraints == null) {
+			synchronized (this) {
+				if (uniqueConstraints == null) {
+					if (!DataUtils.isBlank(uniqueConstraintMap)) {
+						uniqueConstraints = new ArrayList<List<String>>();
+						for (SqlUniqueConstraintInfo info : uniqueConstraintMap.values()) {
+							uniqueConstraints.add(info.getFieldNameList());
+						}
+
+						uniqueConstraints = Collections.unmodifiableList(uniqueConstraints);
+					} else {
+						uniqueConstraints = Collections.emptyList();
+					}
+				}
+			}
+		}
+
+		return uniqueConstraints;
+	}
+
 	public boolean isChildSqlEntityInfo(Class<?> clazz) {
 		for (SqlForeignKeyInfo sqlForeignKeyInfo : foreignKeyList) {
 			if (clazz.equals(sqlForeignKeyInfo.getSqlFieldInfo().getForeignEntityInfo().getEntityClass())) {
@@ -700,4 +723,5 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 		this.managedFieldInfoList = this.fieldInfoList;
 		this.managedListFieldInfoList = this.listFieldInfoList;
 	}
+	
 }

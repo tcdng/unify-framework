@@ -74,23 +74,27 @@ public class SequenceNumberServiceImpl extends AbstractBusinessService implement
     }
 
     @Override
-	public boolean exists(Class<? extends Entity> entityClass, Object inst, List<String> fieldNames)
-			throws UnifyException {
-		if (!DataUtils.isBlank(fieldNames)) {
-			Query<? extends Entity> query = Query.of(entityClass);
-			for (String fieldName : fieldNames) {
-				Object val = DataUtils.getBeanProperty(inst, fieldName);
-				if (val != null) {
-					query.addEquals(fieldName, val);
+	public boolean exists(Class<? extends Entity> entityClass, Object inst) throws UnifyException {
+		List<List<String>> uniqueConstraints = db(entityClass).getUniqueConstraints(entityClass);
+		if (!DataUtils.isBlank(uniqueConstraints)) {
+			for (List<String> fieldNames : uniqueConstraints) {
+				Query<? extends Entity> query = Query.of(entityClass);
+				for (String fieldName : fieldNames) {
+					Object val = DataUtils.getBeanProperty(inst, fieldName);
+					if (val != null) {
+						query.addEquals(fieldName, val);
+					}
+				}
+
+				final Long id = DataUtils.getBeanProperty(Long.class, inst, "id");
+				if (QueryUtils.isValidLongCriteria(id)) {
+					query.addNotEquals("id", id);
+				}
+
+				if (db(entityClass).countAll(query) > 0) {
+					return true;
 				}
 			}
-
-			final Long id = DataUtils.getBeanProperty(Long.class, inst, "id");
-			if (QueryUtils.isValidLongCriteria(id)) {
-				query.addNotEquals("id", id);
-			}
-
-			return db(entityClass).countAll(query) > 0;
 		}
 
 		return false;

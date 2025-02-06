@@ -380,6 +380,11 @@ public abstract class AbstractDatabase extends AbstractUnifyComponent implements
     }
 
     @Override
+	public List<List<String>> getUniqueConstraints(Class<? extends Entity> entityClass) throws UnifyException {
+		return getDatabaseSession().getUniqueConstraints(entityClass);
+	}
+
+	@Override
     public Aggregation aggregate(AggregateFunction aggregateFunction, Query<? extends Entity> query)
             throws UnifyException {
         return getDatabaseSession().aggregate(aggregateFunction, query);

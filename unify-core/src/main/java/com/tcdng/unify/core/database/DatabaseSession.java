@@ -873,6 +873,16 @@ public interface DatabaseSession {
     int count(Query<? extends Entity> query) throws UnifyException;
 
 	/**
+	 * Gets unique constraints for entity.
+	 * 
+	 * @param entityClass the entity class
+	 * @return list of unique constraints
+     * @throws UnifyException
+     *             if an error occurs during modify
+	 */
+	List<List<String>> getUniqueConstraints(Class<? extends Entity> entityClass) throws UnifyException;
+
+	/**
 	 * Executes an aggregate function that match specified query.
 	 * 
 	 * @param aggregateFunction the aggregate function
