@@ -479,20 +479,29 @@ public abstract class AbstractSqlDataSource extends AbstractDataSource implement
         return shutdownOnTerminate;
     }
 
-    private SqlConnectionPool createSqlConnectionPool() throws UnifyException {
-        String xUsername = null;
-        String xPassword = null;
-        if (!StringUtils.isBlank(username)) {
-            xUsername = username;
-            xPassword = password;
-        } else if (passwordAuthentication != null) {
-            xUsername = passwordAuthentication.getUsername();
-            xPassword = passwordAuthentication.getPassword();
-        }
+	private SqlConnectionPool createSqlConnectionPool() throws UnifyException {
+		final String prefix = "unify-" + getUnifyComponentContext().getName();
+		String xConnectionUrl = System.getenv(prefix + "-url");
+		String xUsername = System.getenv(prefix + "-username");
+		String xPassword = System.getenv(prefix + "-password");
 
-        return new SqlConnectionPool(connectionUrl, xUsername, xPassword, getConnectionTimeout, minConnections,
-                maxConnections);
-    }
+		if (xConnectionUrl == null) {
+			xConnectionUrl = connectionUrl;
+		}
+
+		if (xUsername == null) {
+			xUsername = !StringUtils.isBlank(username) ? username
+					: (passwordAuthentication != null ? passwordAuthentication.getUsername() : null);
+		}
+
+		if (xPassword == null) {
+			xPassword = !StringUtils.isBlank(password) ? password
+					: (passwordAuthentication != null ? passwordAuthentication.getPassword() : null);
+		}
+
+		return new SqlConnectionPool(xConnectionUrl, xUsername, xPassword, getConnectionTimeout, minConnections,
+				maxConnections);
+	}
 
     protected class SqlConnectionPool extends AbstractPool<Connection> {
 
