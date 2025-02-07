@@ -971,6 +971,16 @@ public interface Database extends UnifyComponent {
      *             if an error occurs
      */
     <T extends Entity> int countAll(Query<T> query) throws UnifyException;
+    
+	/**
+	 * Gets unique constraints for entity.
+	 * 
+	 * @param entityClass the entity class
+	 * @return list of unique constraints
+     * @throws UnifyException
+     *             if an error occurs
+	 */
+	List<Set<String>> getUniqueConstraints(Class<? extends Entity> entityClass) throws UnifyException;
 
 	/**
 	 * Executes an aggregate function that match specified query.

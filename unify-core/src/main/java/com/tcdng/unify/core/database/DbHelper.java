@@ -16,8 +16,6 @@
 
 package com.tcdng.unify.core.database;
 
-import java.util.List;
-
 import com.tcdng.unify.common.database.Entity;
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
@@ -30,17 +28,27 @@ import com.tcdng.unify.core.UnifyException;
  */
 
 public interface DbHelper extends UnifyComponent {
+	
+	/**
+	 * Checks if entity with object details already exists.
+	 * 
+	 * @param entityClass the entity class
+	 * @param inst        the bean to check
+	 * @param fieldName   the field name to check
+	 * @return true if exists otherwise false
+	 * @throws UnifyException if an error occurs
+	 */
+	boolean exists(Class<? extends Entity> entityClass, Object inst, String fieldName) throws UnifyException;
 
 	/**
 	 * Checks if entity with object details already exists.
 	 * 
 	 * @param entityClass the entity class
 	 * @param inst        the bean to check
-	 * @param fieldNames  the unique key fields
 	 * @return true if exists otherwise false
 	 * @throws UnifyException if an error occurs
 	 */
-	boolean exists(Class<? extends Entity> entityClass, Object inst, List<String> fieldNames) throws UnifyException;
+	boolean exists(Class<? extends Entity> entityClass, Object inst) throws UnifyException;
 
 	/**
 	 * Checks if entities exist based on criteria.

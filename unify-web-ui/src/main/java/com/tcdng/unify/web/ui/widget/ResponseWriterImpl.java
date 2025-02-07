@@ -905,6 +905,7 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 	public void reset(Map<Class<? extends UplComponent>, UplComponentWriter> writers) {
 		this.writers = writers;
 		this.postCommandRefs = null;
+		dataIndex = -1;
 		if (buf == null || !buf.isEmpty() || !history.isEmpty()) {
 			buf = new WebStringWriter(initialBufferCapacity);
 			history.clear();
@@ -913,7 +914,6 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 			bracketOpen = false;
 			paramAppendSym = false;
 			plainResourceMode = false;
-			dataIndex = -1;
 		}
 	}
 
