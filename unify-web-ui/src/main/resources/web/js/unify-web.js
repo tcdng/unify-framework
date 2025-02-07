@@ -4631,14 +4631,6 @@ ux.buildObjParams = function(trgObj, evp, param, refs) {
 			pb += ("&req_cprm=" + _enc(evp.uConfPrm));
 		}
 	}
-
-	if (_df(evp.uSendTrg)) {
-		if (isForm) {
-			pb.append("req_trg", evp.uSendTrg);
-		} else {
-			pb += ("&req_trg=" + _enc(evp.uSendTrg));
-		}
-	}
 	
 	if (_df(evp.uId) && evp.uId.startsWith("row_")) {
 		trgObj = ux.findParent(trgObj, "tr");
@@ -4673,6 +4665,16 @@ ux.buildObjParams = function(trgObj, evp, param, refs) {
 			} else {
 				pb += ("&req_trg=" + _enc(_val));
 			}
+			
+			evp.uSendTrg = undefined; //Disallow multiple target values
+		}
+	}
+
+	if (_df(evp.uSendTrg)) {
+		if (isForm) {
+			pb.append("req_trg", evp.uSendTrg);
+		} else {
+			pb += ("&req_trg=" + _enc(evp.uSendTrg));
 		}
 	}
 
