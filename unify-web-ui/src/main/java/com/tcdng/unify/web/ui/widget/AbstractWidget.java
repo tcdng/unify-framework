@@ -28,6 +28,7 @@ import com.tcdng.unify.core.data.FileAttachmentInfo;
 import com.tcdng.unify.core.data.ValueStore;
 import com.tcdng.unify.core.database.Query;
 import com.tcdng.unify.core.upl.AbstractUplComponent;
+import com.tcdng.unify.core.upl.UplElementReferences;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.TargetPath;
@@ -768,6 +769,14 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 
 	protected String getRequestCommandTag() throws UnifyException {
 		return getRequestContextUtil().getRequestCommandTag();
+	}
+
+	protected void commandRefreshPanels(UplElementReferences references) throws UnifyException {
+		if (references != null) {
+			getRequestContextUtil()
+					.setResponseRefreshPanels(DataUtils.toArray(String.class, references.getLongNames()));
+			setCommandResultMapping(ResultMappingConstants.REFRESH_PANELS);
+		}
 	}
 
 	protected void commandRefreshPanels(String... panelLongName) throws UnifyException {
