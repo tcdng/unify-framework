@@ -87,6 +87,10 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("chevron-left", "f053");
         registerSymbol("chevron-right", "f054");
         registerSymbol("chevron-up", "f077");
+        registerSymbol("circle-arrow-down", "f358");
+        registerSymbol("circle-arrow-left", "f359");
+        registerSymbol("circle-arrow-right", "f35a");
+        registerSymbol("circle-arrow-up", "f35b");
         registerSymbol("circle-pause", "f28b");
         registerSymbol("clock", "f017");
         registerSymbol("cloud", "f0c2");

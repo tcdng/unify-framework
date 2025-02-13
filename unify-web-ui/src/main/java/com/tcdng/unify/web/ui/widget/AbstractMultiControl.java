@@ -39,8 +39,9 @@ import com.tcdng.unify.web.ui.widget.panel.StandalonePanel;
  * @author The Code Department
  * @since 1.0
  */
-@UplAttributes({ @UplAttribute(name = "components", type = UplElementReferences.class),
-        @UplAttribute(name = "valueMarker", type = String.class) })
+@UplAttributes({
+	@UplAttribute(name = "components", type = UplElementReferences.class),
+    @UplAttribute(name = "valueMarker", type = String.class) })
 public abstract class AbstractMultiControl extends AbstractControl implements MultiControl {
 
     private Map<String, ChildWidgetInfo> widgetInfoMap;
