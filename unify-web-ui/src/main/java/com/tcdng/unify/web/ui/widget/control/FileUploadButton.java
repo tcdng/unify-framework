@@ -21,12 +21,11 @@ import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.constant.FileAttachmentType;
 import com.tcdng.unify.core.data.UploadedFile;
-import com.tcdng.unify.core.upl.UplElementReferences;
 import com.tcdng.unify.web.ui.DataTransferBlock;
 import com.tcdng.unify.web.ui.widget.AbstractMultiControl;
 import com.tcdng.unify.web.ui.widget.Control;
-import com.tcdng.unify.web.ui.widget.UploadControlHandler;
 import com.tcdng.unify.web.ui.widget.UploadControl;
+import com.tcdng.unify.web.ui.widget.UploadControlHandler;
 
 /**
  * File upload button.
@@ -36,7 +35,7 @@ import com.tcdng.unify.web.ui.widget.UploadControl;
  */
 @Component("ui-fileuploadbutton")
 @UplAttributes({
-	@UplAttribute(name = "refresh", type = UplElementReferences.class),
+	@UplAttribute(name = "refresh", type = String[].class),
 	@UplAttribute(name = "type", type = FileAttachmentType.class, defaultVal = "wildcard"),
 	@UplAttribute(name = "caption", type = String.class, defaultVal = "$m{button.upload}") })
 public class FileUploadButton extends AbstractMultiControl implements UploadControl {
@@ -63,7 +62,7 @@ public class FileUploadButton extends AbstractMultiControl implements UploadCont
 		}
 
 		uploadedFile = null;		
-		commandRefreshPanels(getUplAttribute(UplElementReferences.class, "refresh"));
+		commandRefreshPanels(getUplAttribute(String[].class, "refresh"));
 	}
 
 	@Override

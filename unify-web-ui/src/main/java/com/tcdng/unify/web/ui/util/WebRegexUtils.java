@@ -108,26 +108,36 @@ public final class WebRegexUtils {
      * Gets JavaScript REGEX for alphanumeric only.
      * 
      * @param  special
+     * @param  dash
      * @param  space
      * @return the alphanumeric format regex
      * @throws UnifyException
      *             if an error occurs
      */
-    public static String getAlphanumericFormatRegex(boolean special, boolean space) throws UnifyException {
-        if (special) {
-            if (space) {
-                return "^[ 0-9a-zA-Z/&%\\\\-\\\\.\\\\(\\\\),]*$";
-            }
+	public static String getAlphanumericFormatRegex(boolean special, boolean dash, boolean space)
+			throws UnifyException {
+		if (special) {
+			if (space) {
+				return "^[ 0-9a-zA-Z/&%\\\\-\\\\.\\\\(\\\\),]*$";
+			}
 
-            return "^[0-9a-zA-Z/&%\\\\-\\\\.\\\\(\\\\),]*$";
-        }
-        
-        if (space) {
-            return "^[ 0-9a-zA-Z]*$";
-        }
-        
-        return "^[0-9a-zA-Z]*$";
-    }
+			return "^[0-9a-zA-Z/&%\\\\-\\\\.\\\\(\\\\),]*$";
+		}
+
+		if (dash) {
+			if (space) {
+				return "^[ \\\\-0-9a-zA-Z]*$";
+			}
+			
+			return "^[\\\\-0-9a-zA-Z]*$";
+		}
+
+		if (space) {
+			return "^[ 0-9a-zA-Z]*$";
+		}
+
+		return "^[0-9a-zA-Z]*$";
+	}
 
     /**
      * Gets JavaScript REGEX that allows only alphabetic characters.
