@@ -131,6 +131,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("file-import", "f56f");
         registerSymbol("file-invoice", "f570");
         registerSymbol("file-pdf", "f1c1");
+        registerSymbol("file-plus", "f477");
         registerSymbol("file-upload", "f574");
         registerSymbol("file-word", "f1c2");
         registerSymbol("filter", "f0b0");
