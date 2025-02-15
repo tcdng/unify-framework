@@ -23,7 +23,7 @@ import com.tcdng.unify.web.ui.widget.EventHandler;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.Widget;
 import com.tcdng.unify.web.ui.widget.control.FileUploadButton;
-import com.tcdng.unify.web.ui.widget.writer.AbstractControlWriter;
+import com.tcdng.unify.web.ui.widget.writer.AbstractAutoRefreshMultiControlWriter;
 
 /**
  * File upload button writer.
@@ -33,7 +33,7 @@ import com.tcdng.unify.web.ui.widget.writer.AbstractControlWriter;
  */
 @Writes(FileUploadButton.class)
 @Component("fileuploadbutton-writer")
-public class FileUploadButtonWriter extends AbstractControlWriter {
+public class FileUploadButtonWriter extends AbstractAutoRefreshMultiControlWriter {
 
 	@Override
 	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
@@ -57,7 +57,7 @@ public class FileUploadButtonWriter extends AbstractControlWriter {
 		writer.writeParam("pBtnId", fileUploadButton.getButtonCtrl().getId());
 		writer.writeParam("pEditable", fileUploadButton.isContainerEditable());
 		writer.writeParam("pIndex", fileUploadButton.getValueIndex());
-		writer.writeParam("pRef", DataUtils.toArray(String.class, writer.getPostCommandRefs()));
+		writer.writeParam("pRef", fileUploadButton.getRefs());
 		writer.endFunction();
 	}
 

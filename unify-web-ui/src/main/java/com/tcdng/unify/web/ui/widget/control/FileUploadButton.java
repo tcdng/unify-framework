@@ -22,7 +22,7 @@ import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.constant.FileAttachmentType;
 import com.tcdng.unify.core.data.UploadedFile;
 import com.tcdng.unify.web.ui.DataTransferBlock;
-import com.tcdng.unify.web.ui.widget.AbstractMultiControl;
+import com.tcdng.unify.web.ui.widget.AbstractAutoRefreshMultiControl;
 import com.tcdng.unify.web.ui.widget.Control;
 import com.tcdng.unify.web.ui.widget.UploadControl;
 import com.tcdng.unify.web.ui.widget.UploadControlHandler;
@@ -38,7 +38,7 @@ import com.tcdng.unify.web.ui.widget.UploadControlHandler;
 	@UplAttribute(name = "refresh", type = String[].class),
 	@UplAttribute(name = "type", type = FileAttachmentType.class, defaultVal = "wildcard"),
 	@UplAttribute(name = "caption", type = String.class, defaultVal = "$m{button.upload}") })
-public class FileUploadButton extends AbstractMultiControl implements UploadControl {
+public class FileUploadButton extends AbstractAutoRefreshMultiControl implements UploadControl { 
 
 	private Control fileControl;
 
@@ -93,11 +93,6 @@ public class FileUploadButton extends AbstractMultiControl implements UploadCont
 
 	public FileAttachmentType getType() throws UnifyException {
 		return getUplAttribute(FileAttachmentType.class, "type");
-	}
-
-	@Override
-	public boolean isRefreshesContainer() {
-		return true;
 	}
 
 	@Override
