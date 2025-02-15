@@ -53,7 +53,7 @@ public class Picture extends AbstractAutoRefreshMultiControl {
 
         uploadedFile = null;
     }
-
+    
     public Control getFileCtrl() {
         return fileControl;
     }

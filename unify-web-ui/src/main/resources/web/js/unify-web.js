@@ -410,6 +410,11 @@ ux.respHandler = {
 		ux.registerRespDebounce(resp);
 	},
 
+	autoRefreshHdl : function(resp) {
+		ux.autoRefresh(resp);
+		ux.registerRespDebounce(resp);
+	},
+
 	showPopupHdl : function(resp) {
 		ux.refreshPageGlobals(resp);
 		if (resp.showSysInfoPopup) {
@@ -552,6 +557,16 @@ ux.refreshSection = function(resp) {
 		if (trg) {
 			trg.innerHTML = resp.section.html;
 			ux.perform(resp.section.script);
+		}
+	}
+}
+
+ux.autoRefresh = function(resp) {
+	if (resp.autoRefresh) {
+		var trg = _id(resp.autoRefresh.target);
+		if (trg) {
+			trg.innerHTML = resp.autoRefresh.html;
+			ux.perform(resp.autoRefresh.script);
 		}
 	}
 }
@@ -2296,8 +2311,8 @@ ux.rigFileUploadView = function(rgp) {
 
 		var fileElem = _id(fileId)
 		var evp = ux.newEvPrm(rgp);
-		evp.uPanels = [ rgp.pContId ];
 		evp.uRef = rgp.pRef;
+		evp.uCmd = rgp.pId + "->autoRefresh";
 		evp.isUniqueTrg = true;
 		ux.addHdl(fileElem, "change", ux.post, evp);
 
@@ -2815,8 +2830,8 @@ ux.rigFileUploadButton = function(rgp) {
 	if (rgp.pEditable) {
 		const fileElem = _id(rgp.pFileId);
 		const evp = ux.newEvPrm(rgp);
-		evp.uPanels = [ rgp.pContId ];
 		evp.uRef = rgp.pRef;
+		evp.uCmd = rgp.pId + "->autoRefresh";
 		evp.uSendTrg = rgp.pIndex;
 		ux.addHdl(fileElem, "change", ux.post, evp);
 		ux.addHdl(_id(rgp.pBtnId), "click", function(uEv) {
@@ -2830,8 +2845,8 @@ ux.rigPhotoUpload = function(rgp) {
 	if (rgp.pEditable) {
 		const fileElem = _id(rgp.pFileId);
 		const evp = ux.newEvPrm(rgp);
-		evp.uPanels = [ rgp.pContId ];
 		evp.uRef = rgp.pRef;
+		evp.uCmd = rgp.pId + "->autoRefresh";
 		ux.addHdl(fileElem, "change", ux.post, evp);
 		ux.addHdl(_id(rgp.pImgId), "click", function(uEv) {
 			fileElem.click();

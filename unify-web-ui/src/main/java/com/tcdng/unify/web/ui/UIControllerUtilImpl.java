@@ -342,6 +342,9 @@ public class UIControllerUtilImpl extends AbstractUnifyComponent implements UICo
         defaultResultMap.put(ResultMappingConstants.REFRESH_SECTION, new Result(new PageControllerResponse[] {
                 (PageControllerResponse) getUplComponent(defaultLocale, "!refreshsectionresponse", false) }));
 
+        defaultResultMap.put(ResultMappingConstants.AUTO_REFRESH, new Result(new PageControllerResponse[] {
+                (PageControllerResponse) getUplComponent(defaultLocale, "!autorefreshresponse", false) }));
+
         defaultResultMap.put(ResultMappingConstants.VALIDATION_ERROR, new Result(new PageControllerResponse[] {
                 (PageControllerResponse) getUplComponent(defaultLocale, "!validationerrorresponse", false) }));
         defaultResultMap = Collections.unmodifiableMap(defaultResultMap);

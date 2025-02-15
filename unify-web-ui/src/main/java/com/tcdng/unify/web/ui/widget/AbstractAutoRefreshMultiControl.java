@@ -16,6 +16,11 @@
 package com.tcdng.unify.web.ui.widget;
 
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.web.annotation.Action;
+import com.tcdng.unify.web.constant.ResultMappingConstants;
+import com.tcdng.unify.web.constant.UnifyWebRequestAttributeConstants;
+import com.tcdng.unify.web.ui.widget.data.AutoRefresh;
+
 
 /**
  * Base class for auto-referesh multi-controls.
@@ -26,12 +31,18 @@ import com.tcdng.unify.core.UnifyException;
 public abstract class AbstractAutoRefreshMultiControl extends AbstractMultiControl {
 
 	private EventHandler[] handlers;
-	
+
 	private String[] refs;
-	
+
 	@Override
-	public final boolean isRefreshesContainer() {
-		return true;
+	public final boolean isRefreshesContainer() throws UnifyException {
+		return !isRequestAttribute(UnifyWebRequestAttributeConstants.AUTO_REFRESH);
+	}
+
+	@Action
+	public final void autoRefresh() throws UnifyException {
+		setRequestAttribute(UnifyWebRequestAttributeConstants.AUTO_REFRESH, new AutoRefresh(this));
+		setCommandResultMapping(ResultMappingConstants.AUTO_REFRESH);
 	}
 
 	public void saveForRefresh(EventHandler[] handlers, String[] refs) throws UnifyException {
@@ -43,7 +54,7 @@ public abstract class AbstractAutoRefreshMultiControl extends AbstractMultiContr
 		this.handlers = null;
 		this.refs = null;
 	}
-	
+
 	public EventHandler[] getHandlers() {
 		return handlers;
 	}
@@ -51,7 +62,7 @@ public abstract class AbstractAutoRefreshMultiControl extends AbstractMultiContr
 	public String[] getRefs() {
 		return refs;
 	}
-	
+
 	public boolean isSavePresent() {
 		return handlers != null || refs != null;
 	}

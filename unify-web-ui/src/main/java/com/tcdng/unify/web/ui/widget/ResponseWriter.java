@@ -395,6 +395,16 @@ public interface ResponseWriter extends HtmlTextWriter {
     ResponseWriter writeJsonSection(Widget widget, String sectionPageName) throws UnifyException;
 
     /**
+     * Writes a JSON widget auto-refresh object.
+     * 
+     * @param widget
+     *                        the widget to write
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    ResponseWriter writeJsonAutoRefresh(Widget widget) throws UnifyException;
+
+    /**
      * Writes a context request URL using supplied path elements
      * 
      * @param path
