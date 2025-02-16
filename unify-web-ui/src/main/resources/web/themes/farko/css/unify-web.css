@@ -25,6 +25,8 @@ select:not([multiple]){height:28px; padding-left: 4px; border: 1px solid #C8C8C8
 .ui-defbanner {white-space:pre; font-family: monospace;font-size:15px;list-style:none;}
 
 /**Reserved globals*/
+.ui-wcont {display:inline-block;}
+
 .ui-user-hint {width: 300px; margin-left: auto; margin-right: auto; color: black; font-weight: bold; font-size: 8pt; text-align: center;
 z-index:400;}
 .ui-user-hint-info {display:block; width: 100%;  padding: 6px 8px; border: 1px solid #77C477; background: #CCFCCC;}

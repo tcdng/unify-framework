@@ -650,7 +650,7 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 	}
 
 	@Override
-	public boolean isRefreshesContainer() {
+	public boolean isRefreshesContainer() throws UnifyException {
 		return false;
 	}
 

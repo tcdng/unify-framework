@@ -47,7 +47,7 @@ public abstract class AbstractWidgetWriter extends AbstractDhtmlWriter implement
     @Override
     public void writeStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
         widget.updateInternalState();
-        doWriteStructureAndContent(writer, widget);
+        doWriteStructureContentContainer(writer, widget);
         widget.addPageAliases();
     }
 
@@ -57,7 +57,7 @@ public abstract class AbstractWidgetWriter extends AbstractDhtmlWriter implement
         try {
             widget.setId(id);
             widget.updateInternalState();
-            doWriteStructureAndContent(writer, widget);
+            doWriteStructureContentContainer(writer, widget);
             widget.addPageAliases();
         } finally {
             widget.setId(origId);
@@ -207,5 +207,17 @@ public abstract class AbstractWidgetWriter extends AbstractDhtmlWriter implement
 
         return classBase;
     }
+
+	private void doWriteStructureContentContainer(ResponseWriter writer, Widget widget) throws UnifyException {
+		if (widget.isRefreshesContainer()) {
+			writer.write("<div class=\"ui-wcont\" id=\"wcont_").write(widget.getId()).write("\">");
+		}
+
+		doWriteStructureAndContent(writer, widget);
+
+		if (widget.isRefreshesContainer()) {
+			writer.write("</div>");
+		}
+	}
 
 }

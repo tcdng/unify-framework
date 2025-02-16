@@ -63,6 +63,8 @@ public interface ResultMappingConstants {
 
     String REFRESH_SECTION = "resrv.refreshsection";
 
+    String AUTO_REFRESH = "resrv.autorefresh";
+
     String SHOW_ATTACHMENT = "resrv.showattachment";
 
     String SHOW_DYNAMIC_POPUP = "resrv.showdynamicpopup";

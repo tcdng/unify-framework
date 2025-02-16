@@ -470,6 +470,30 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 	}
 
 	@Override
+	public ResponseWriter writeJsonAutoRefresh(Widget widget) throws UnifyException {
+		final String target = "wcont_" + widget.getId();
+		WidgetWriter widgetWriter = (WidgetWriter) getWriter(widget);
+		useSecondary();
+		widgetWriter.writeStructureAndContent(this, widget);
+		WebStringWriter htmlLsw = discardSecondary();
+
+		useSecondary();
+		EventHandler[] handlers = null;
+		widgetWriter.writeBehavior(this, widget, handlers);
+		WebStringWriter scriptLsw = discardSecondary();
+
+		buf.append("{\"target\":\"").append(target).append('"');
+		buf.append(",\"html\":");
+		buf.appendJsonQuoted(htmlLsw);
+		if (!scriptLsw.isEmpty()) {
+			buf.append(",\"script\":");
+			buf.append(scriptLsw);
+		}
+		buf.append('}');
+		return this;
+	}
+
+	@Override
 	public ResponseWriter writeContextURL(String path, String... pathElement) throws UnifyException {
 		RequestContext requestContext = getRequestContext();
 		if (pageRequestContextUtil.isRemoteViewer()) {
