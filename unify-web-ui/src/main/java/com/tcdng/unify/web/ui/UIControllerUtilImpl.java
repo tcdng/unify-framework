@@ -183,27 +183,35 @@ public class UIControllerUtilImpl extends AbstractUnifyComponent implements UICo
 
     @Override 
     public String executePageController(String fullActionPath) throws UnifyException {
-        Page currentPage = pageRequestContextUtil.getRequestPage();
+        final Page currentPage = pageRequestContextUtil.getRequestPage();
+        final ControllerPathParts currentPathParts = pageRequestContextUtil.getRequestPathParts();
         try {
             ControllerPathParts targetPathParts = pathInfoRepository.getControllerPathParts(fullActionPath);
+            pageRequestContextUtil.setRequestPathParts(targetPathParts);
+            
             PageController<?> targetPageController = (PageController<?>) controllerFinder
                     .findController(targetPathParts);
             loadRequestPage(targetPathParts);
             return targetPageController.executePageCall(targetPathParts.getActionName());
         } finally {
+        	pageRequestContextUtil.setRequestPathParts(currentPathParts); // Restore original path parts
             pageRequestContextUtil.setRequestPage(currentPage); // Restore original page
         }
     }
 
     @Override
     public void populatePageBean(String controllerName, String property, Object value) throws UnifyException {
-        Page currentPage = pageRequestContextUtil.getRequestPage();
+        final Page currentPage = pageRequestContextUtil.getRequestPage();
+        final ControllerPathParts currentPathParts = pageRequestContextUtil.getRequestPathParts();
         try {
             ControllerPathParts targetPathParts = pathInfoRepository.getControllerPathParts(controllerName);
+            pageRequestContextUtil.setRequestPathParts(targetPathParts);
+            
             controllerFinder.findController(targetPathParts); // Force target page to be created in session if necessary
             Page targetPage = loadRequestPage(targetPathParts);
             DataUtils.setNestedBeanProperty(targetPage.getPageBean(), property, value);
         } finally {
+        	pageRequestContextUtil.setRequestPathParts(currentPathParts); // Restore original path parts
             pageRequestContextUtil.setRequestPage(currentPage); // Restore original page
         }
     }
