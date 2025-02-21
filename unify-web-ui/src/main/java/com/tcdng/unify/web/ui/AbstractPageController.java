@@ -21,7 +21,6 @@ import java.util.List;
 
 import com.tcdng.unify.common.database.Entity;
 import com.tcdng.unify.core.SessionContext;
-import com.tcdng.unify.core.UnifyCoreSessionAttributeConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.Singleton;
@@ -257,7 +256,6 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 		return hidePopup();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public String executePageCall(String actionName) throws UnifyException {
 		try {
@@ -272,17 +270,13 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 
 				String resultName = openPage();
 				if (contentPanel != null && isContentSupport()) {
-					contentPanel.addContent(getPageRequestContextUtil().getRequestPage());
-
-					final List<String> stickyPaths = (List<String>) removeSessionAttribute(
-							UnifyCoreSessionAttributeConstants.STICKY_PATHS);
-					if (!DataUtils.isBlank(stickyPaths)) {
-						for (String stickyPath : stickyPaths) {
+					if (contentPanel.isBlankContent() && !DataUtils.isBlank(contentPanel.getPaths())) {
+						for (String stickyPath : contentPanel.getPaths()) {
 							fireOtherControllerAction(stickyPath);
 						}
-
-						// Revert to first?
 					}
+					
+					contentPanel.addContent(getPageRequestContextUtil().getRequestPage());
 				}
 
 				return resultName;

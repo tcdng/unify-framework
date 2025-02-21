@@ -39,6 +39,16 @@ public class SimpleContentPanelImpl extends AbstractContentPanel {
     }
 
     @Override
+	public String[] getPaths() throws UnifyException {
+		return null;
+	}
+
+	@Override
+	public boolean isBlankContent() throws UnifyException {
+		return true;
+	}
+
+	@Override
     public void clearPages() throws UnifyException {
         
     }
