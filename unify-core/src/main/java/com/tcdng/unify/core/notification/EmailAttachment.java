@@ -63,12 +63,13 @@ public class EmailAttachment {
 		this.inline = inline;
 	}
 
-	public EmailAttachment(FileAttachmentType type, String provider, String sourceId) {
-		this(type, provider, provider, false);
+	public EmailAttachment(FileAttachmentType type, String name, String provider, String sourceId) {
+		this(type, name, provider, sourceId, false);
 	}
 
-	public EmailAttachment(FileAttachmentType type, String provider, String sourceId, boolean inline) {
+	public EmailAttachment(FileAttachmentType type, String name, String provider, String sourceId, boolean inline) {
 		this.type = type;
+		this.name = name;
 		this.provider = provider;
 		this.sourceId = sourceId;
 		this.inline = inline;
