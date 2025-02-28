@@ -50,7 +50,7 @@ public abstract class AbstractParamGeneratorManager extends AbstractUnifyCompone
 				String[] tokens = token.split(":", 2);
 				if (tokens.length == 2) {
 					if ("g".equals(tokens[0])) {
-						return (ParamGenerator) getComponent(token);
+						return (ParamGenerator) getComponent(tokens[1]);
 					}
 
 					ParamGenerator generator = resolveParamGenerator(tokens[0]);
