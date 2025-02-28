@@ -40,12 +40,12 @@ public class ParameterizedStringGenerator {
 
 	private final List<StringToken> tokenList;
 
-	private final Map<StringToken, ParamGenerator> generators;
+	private final Map<String, ParamGenerator> generators;
 
 	private final Map<StandardFormatType, Formatter<?>> formatters;
 
 	public ParameterizedStringGenerator(ValueStoreReader itemReader, ValueStoreReader parentReader,
-			List<StringToken> tokenList, Map<StringToken, ParamGenerator> generators,
+			List<StringToken> tokenList, Map<String, ParamGenerator> generators,
 			Map<StandardFormatType, Formatter<?>> formatters) {
 		this.itemReader = itemReader;
 		this.parentReader = parentReader;
@@ -93,11 +93,12 @@ public class ParameterizedStringGenerator {
 				Formatter<Object> formatter = (Formatter<Object>) formatters.get(((ParamToken) token).getFormatType());
 				val = formatter != null ? formatter.format(val) : val;
 			} else if (token.isGeneratorParam()) {
-				ParamGenerator generator = generators.get(token);
-				val = generator != null
-						? generator.generate(itemReader != null ? itemReader : null,
-								parentReader != null ? parentReader : null, (ParamToken) token)
-						: null;
+				val = itemReader.getTempValue(token.getToken());
+				if (val == null) {
+					ParamGenerator generator = generators.get(token.getToken());
+					val = generator != null ? generator.generate(itemReader != null ? itemReader : null,
+							parentReader != null ? parentReader : null, (ParamToken) token) : null;
+				}
 			} else {
 				val = itemReader.getTempValue(token.getToken());
 				if (val == null) {

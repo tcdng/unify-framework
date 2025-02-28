@@ -61,7 +61,7 @@ public class ParamToken extends StringToken {
 	}
 
 	public static ParamToken getParamToken(String token) {
-		String[] tokens = token.split(":");
+		String[] tokens = token.split(":", 2);
 		if (tokens.length == 2) {
 			return tokens[0].trim().isEmpty() ? getGeneratorParamToken(tokens[1])
 					: getGeneratorParamToken(tokens[0], tokens[1]);

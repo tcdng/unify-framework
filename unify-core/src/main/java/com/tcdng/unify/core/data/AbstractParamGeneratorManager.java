@@ -41,23 +41,27 @@ public abstract class AbstractParamGeneratorManager extends AbstractUnifyCompone
 	@Configurable
 	private FormatHelper formarHelper;
 
-	private FactoryMap<ParamToken, ParamGenerator> generators;
+	private FactoryMap<String, ParamGenerator> generators;
 
 	public AbstractParamGeneratorManager() {
-		this.generators = new FactoryMap<ParamToken, ParamGenerator>() {
+		this.generators = new FactoryMap<String, ParamGenerator>() {
 			@Override
-			protected ParamGenerator create(ParamToken token, Object... params) throws Exception {
-				if ("g".equals(token.getComponent())) {
-					return (ParamGenerator) getComponent(token.getParam());
+			protected ParamGenerator create(String token, Object... params) throws Exception {
+				String[] tokens = token.split(":", 2);
+				if (tokens.length == 2) {
+					if ("g".equals(tokens[0])) {
+						return (ParamGenerator) getComponent(token);
+					}
+
+					ParamGenerator generator = resolveParamGenerator(tokens[0]);
+					if (generator != null) {
+						return generator;
+					}
 				}
 
-				ParamGenerator generator = resolveParamGenerator(token);
-				if (generator == null) {
-					throwOperationErrorException(new IllegalArgumentException(
-							"Could not resolve generator for [" + token.getToken() + "]."));
-				}
-
-				return generator;
+				throwOperationErrorException(
+						new IllegalArgumentException("Could not resolve generator for [" + token + "]."));
+				return null;
 			}
 		};
 	}
@@ -71,7 +75,7 @@ public abstract class AbstractParamGeneratorManager extends AbstractUnifyCompone
 	@Override
 	public ParameterizedStringGenerator getParameterizedStringGenerator(ValueStoreReader paramReader,
 			ValueStoreReader generatorReader, List<StringToken> tokenList) throws UnifyException {
-		Map<StringToken, ParamGenerator> _generators = new HashMap<StringToken, ParamGenerator>();
+		Map<String, ParamGenerator> _generators = new HashMap<String, ParamGenerator>();
 		Map<StandardFormatType, Formatter<?>> _formatters = new HashMap<StandardFormatType, Formatter<?>>();
 		if (!DataUtils.isBlank(tokenList)) {
 			for (StringToken token : tokenList) {
@@ -81,8 +85,8 @@ public abstract class AbstractParamGeneratorManager extends AbstractUnifyCompone
 						_formatters.put(formatType, formarHelper.newFormatter(formatType));
 					}
 				} else if (token.isGeneratorParam()) {
-					ParamGenerator _generator = generators.get((ParamToken) token);
-					_generators.put(token, _generator);
+					ParamGenerator _generator = generators.get(token.getToken());
+					_generators.put(token.getToken(), _generator);
 				}
 			}
 		}
@@ -100,5 +104,5 @@ public abstract class AbstractParamGeneratorManager extends AbstractUnifyCompone
 
 	}
 
-	protected abstract ParamGenerator resolveParamGenerator(ParamToken token) throws UnifyException;
+	protected abstract ParamGenerator resolveParamGenerator(String prefix) throws UnifyException;
 }
