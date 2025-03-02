@@ -30,6 +30,8 @@ import com.tcdng.unify.core.database.MappedEntityRepository;
  */
 public interface SqlEntitySchemaInfo {
 
+	String getAlias();
+
 	String getSchema();
 
 	String getTableName();
@@ -87,6 +89,8 @@ public interface SqlEntitySchemaInfo {
 	Map<String, ? extends SqlIndexSchemaInfo> getIndexList();
 
 	List<Map<String, Object>> getStaticValueList();
+
+	boolean isWithAlias();
 
 	boolean isWithTenantId();
 

@@ -51,7 +51,9 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 	private EntityPolicy entityPolicy;
 
 	private MappedEntityRepository mappedEntityRepository;
-	
+
+	private String alias;
+
 	private String schema;
 
 	private String tableName;
@@ -123,27 +125,29 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 	private List<SqlViewRestrictionInfo> viewRestrictionList;
 
 	private List<Set<String>> uniqueConstraints;
-	
+
 	private boolean identityManaged;
 
 	private boolean schemaAlreadyManaged;
 
 	public SqlEntityInfo(Long index, Class<? extends Entity> entityClass, Class<? extends EnumConst> enumConstClass,
-			EntityPolicy recordPolicy, MappedEntityRepository mappedEntityRepository, String schema, String tableName, String preferredTableName,
-			String schemaTableName, String tableAlias, String viewName, String preferredViewName, String schemaViewName,
-			SqlFieldInfo idFieldInfo, SqlFieldInfo versionFieldInfo, SqlFieldInfo tenantIdFieldInfo,
-			SqlFieldInfo fosterParentTypeFieldInfo, SqlFieldInfo fosterParentIdFieldInfo,
-			SqlFieldInfo categoryFieldInfo, Map<String, SqlFieldInfo> sQLFieldInfoMap,
-			List<SqlQueryRestrictionInfo> defaultRestrictionList, List<ChildFieldInfo> childInfoList,
-			List<ChildFieldInfo> childListInfoList, Map<String, SqlUniqueConstraintInfo> uniqueConstraintMap,
-			Map<String, SqlIndexInfo> indexMap, List<Map<String, Object>> staticValueList,
-			Map<String, Class<?>> viewBaseTables, List<SqlViewRestrictionInfo> viewRestrictionList,
-			boolean isAllObjectsInLowerCase, boolean identityManaged) throws UnifyException {
+			EntityPolicy recordPolicy, MappedEntityRepository mappedEntityRepository, String alias, String schema,
+			String tableName, String preferredTableName, String schemaTableName, String tableAlias, String viewName,
+			String preferredViewName, String schemaViewName, SqlFieldInfo idFieldInfo, SqlFieldInfo versionFieldInfo,
+			SqlFieldInfo tenantIdFieldInfo, SqlFieldInfo fosterParentTypeFieldInfo,
+			SqlFieldInfo fosterParentIdFieldInfo, SqlFieldInfo categoryFieldInfo,
+			Map<String, SqlFieldInfo> sQLFieldInfoMap, List<SqlQueryRestrictionInfo> defaultRestrictionList,
+			List<ChildFieldInfo> childInfoList, List<ChildFieldInfo> childListInfoList,
+			Map<String, SqlUniqueConstraintInfo> uniqueConstraintMap, Map<String, SqlIndexInfo> indexMap,
+			List<Map<String, Object>> staticValueList, Map<String, Class<?>> viewBaseTables,
+			List<SqlViewRestrictionInfo> viewRestrictionList, boolean isAllObjectsInLowerCase, boolean identityManaged)
+			throws UnifyException {
 		this.index = index;
 		this.entityClass = entityClass;
 		this.enumConstClass = enumConstClass;
 		this.entityPolicy = recordPolicy;
 		this.mappedEntityRepository = mappedEntityRepository;
+		this.alias = alias;
 		this.schema = schema;
 		this.tableName = tableName;
 		this.preferredTableName = preferredTableName;
@@ -206,6 +210,7 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 		this.entityClass = entityClass;
 		this.enumConstClass = originSqlEntityInfo.enumConstClass;
 		this.entityPolicy = originSqlEntityInfo.entityPolicy;
+		this.alias = originSqlEntityInfo.alias;
 		this.schema = originSqlEntityInfo.schema;
 		this.tableName = originSqlEntityInfo.tableName;
 		this.preferredTableName = originSqlEntityInfo.preferredTableName;
@@ -242,6 +247,16 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 		} else {
 			initFieldInfos(originSqlEntityInfo.listFieldInfoByName);
 		}
+	}
+
+	@Override
+	public String getAlias() {
+		return alias;
+	}
+
+	@Override
+	public boolean isWithAlias() {
+		return !StringUtils.isBlank(alias);
 	}
 
 	@Override
@@ -480,7 +495,7 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 
 		return false;
 	}
-	
+
 	public boolean isSchemaAlreadyManaged() {
 		return schemaAlreadyManaged;
 	}
@@ -724,5 +739,5 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 		this.managedFieldInfoList = this.fieldInfoList;
 		this.managedListFieldInfoList = this.listFieldInfoList;
 	}
-	
+
 }

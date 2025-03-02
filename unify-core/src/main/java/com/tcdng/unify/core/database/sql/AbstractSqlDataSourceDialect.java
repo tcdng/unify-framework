@@ -183,6 +183,11 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 	}
 
 	@Override
+	public List<SqlEntityInfo> getSqlEntityInfos() throws UnifyException {
+		return sqlEntityInfoFactory.getSqlEntityInfos();
+	}
+
+	@Override
 	public boolean isTenancyEnabled() throws UnifyException {
 		return tenancyEnabled;
 	}
