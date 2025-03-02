@@ -266,7 +266,7 @@ public class ClassUniqueIDManagerImpl extends AbstractUnifyComponent implements 
 						tableName = tableName.toLowerCase();
 					}
 
-					sqlEntityInfo = new SqlEntityInfo(null, ClassUniqueID.class, null, null, null, null, schema, tableName,
+					sqlEntityInfo = new SqlEntityInfo(null, ClassUniqueID.class, null, null, null, schema, tableName,
 							preferredTableName, schemaTableName, tableAlias, tableName, preferredTableName,
 							schemaTableName, idFieldInfo, null, null, null, null, null, propertyInfoMap, null, null,
 							null, null, null, null, null, null, sqlDataSource.getDialect().isAllObjectsInLowerCase(),

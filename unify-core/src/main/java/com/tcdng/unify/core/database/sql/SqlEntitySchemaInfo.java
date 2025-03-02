@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.tcdng.unify.common.data.EntityDTO;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.database.MappedEntityRepository;
 
@@ -30,7 +31,7 @@ import com.tcdng.unify.core.database.MappedEntityRepository;
  */
 public interface SqlEntitySchemaInfo {
 
-	String getAlias();
+	EntityDTO getEntityDTO() throws Exception;
 
 	String getSchema();
 
@@ -90,7 +91,7 @@ public interface SqlEntitySchemaInfo {
 
 	List<Map<String, Object>> getStaticValueList();
 
-	boolean isWithAlias();
+	boolean isWithEntityDTO();
 
 	boolean isWithTenantId();
 

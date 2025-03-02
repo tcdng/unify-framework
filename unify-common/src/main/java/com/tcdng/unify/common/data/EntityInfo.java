@@ -255,6 +255,10 @@ public class EntityInfo {
         return entityFieldInfo;
     }
 
+    public static Builder newBuilder() {
+        return new Builder(null);
+    }
+
     public static Builder newBuilder(String entityManagerFactory) {
         return new Builder(entityManagerFactory);
     }

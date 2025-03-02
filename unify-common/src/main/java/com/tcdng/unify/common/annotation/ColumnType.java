@@ -15,6 +15,7 @@
  */
 package com.tcdng.unify.common.annotation;
 
+import com.tcdng.unify.common.constants.ConnectFieldDataType;
 import com.tcdng.unify.common.constants.EnumConst;
 import com.tcdng.unify.common.util.EnumUtils;
 
@@ -26,34 +27,37 @@ import com.tcdng.unify.common.util.EnumUtils;
  */
 public enum ColumnType implements EnumConst {
 
-    AUTO("AUT"),
-    CHARACTER("CHR"),
-    BLOB("BLB"),
-    BOOLEAN("BLN"),
-    BOOLEAN_ARRAY("BLA"),
-    CLOB("CLB"),
-    DATE("DTE"),
-    DECIMAL("DEC"),
-    DOUBLE("DBL"),
-    DOUBLE_ARRAY("DBA"),
-    FLOAT("FLT"),
-    FLOAT_ARRAY("FLA"),
-    SHORT("SHT"),
-    SHORT_ARRAY("SHA"),
-    INTEGER("INT"),
-    INTEGER_ARRAY("INA"),
-    LONG("LNG"),
-    LONG_ARRAY("LNA"),
-    STRING("STR"),
-    STRING_ARRAY("STA"),
-    TIMESTAMP_UTC("TSU"),
-    TIMESTAMP("TSP"),
-    ENUMCONST("ECT");
+    AUTO("AUT", ConnectFieldDataType.STRING),
+    CHARACTER("CHR", ConnectFieldDataType.CHAR),
+    BLOB("BLB", ConnectFieldDataType.BLOB),
+    BOOLEAN("BLN", ConnectFieldDataType.BOOLEAN),
+    BOOLEAN_ARRAY("BLA", ConnectFieldDataType.STRING),
+    CLOB("CLB", ConnectFieldDataType.CLOB),
+    DATE("DTE", ConnectFieldDataType.DATE),
+    DECIMAL("DEC", ConnectFieldDataType.DECIMAL),
+    DOUBLE("DBL", ConnectFieldDataType.DOUBLE),
+    DOUBLE_ARRAY("DBA", ConnectFieldDataType.STRING),
+    FLOAT("FLT", ConnectFieldDataType.FLOAT),
+    FLOAT_ARRAY("FLA", ConnectFieldDataType.STRING),
+    SHORT("SHT", ConnectFieldDataType.SHORT),
+    SHORT_ARRAY("SHA", ConnectFieldDataType.STRING),
+    INTEGER("INT", ConnectFieldDataType.INTEGER),
+    INTEGER_ARRAY("INA", ConnectFieldDataType.STRING),
+    LONG("LNG", ConnectFieldDataType.LONG),
+    LONG_ARRAY("LNA", ConnectFieldDataType.STRING),
+    STRING("STR", ConnectFieldDataType.STRING),
+    STRING_ARRAY("STA", ConnectFieldDataType.STRING),
+    TIMESTAMP_UTC("TSU", ConnectFieldDataType.TIMESTAMP_UTC),
+    TIMESTAMP("TSP", ConnectFieldDataType.TIMESTAMP),
+    ENUMCONST("ECT", ConnectFieldDataType.ENUM);
 
     private final String code;
 
-    private ColumnType(String code) {
+    private final ConnectFieldDataType connectType;
+    
+    private ColumnType(String code, ConnectFieldDataType connectType) {
         this.code = code;
+        this.connectType = connectType;
     }
 
     @Override
@@ -66,6 +70,10 @@ public enum ColumnType implements EnumConst {
         return AUTO.code;
     }
 
+    public ConnectFieldDataType connectType() {
+    	return connectType;
+    }
+    
     public boolean isAuto() {
     	return AUTO.equals(this);
     }

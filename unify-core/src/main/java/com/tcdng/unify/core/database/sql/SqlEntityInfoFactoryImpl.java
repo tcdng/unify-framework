@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.tcdng.unify.common.annotation.EntityConnect;
 import com.tcdng.unify.common.annotation.ColumnOverride;
 import com.tcdng.unify.common.annotation.ColumnType;
 import com.tcdng.unify.common.annotation.ForeignKeyOverride;
@@ -234,7 +233,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 				}
 
 				return new SqlEntityInfo(null, StaticReference.class, (Class<? extends EnumConst>) entityClass, null,
-						null, null, schema, tableName, preferredTableName, schemaTableName, tableAlias, tableName,
+						null, schema, tableName, preferredTableName, schemaTableName, tableAlias, tableName,
 						preferredTableName, schemaTableName, idFieldInfo, null, null, null, null, null, propertyInfoMap,
 						null, null, null, null, null, null, null, null, sqlDataSourceDialect.isAllObjectsInLowerCase(),
 						true);
@@ -249,9 +248,6 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 						? getComponent(MappedEntityRepository.class, mappedEntityRepoName)
 						: null;
 
-				EntityConnect aa = entityClass.getAnnotation(EntityConnect.class);
-//				final String alias = aa != null ? AnnotationUtils.getAnnotationString(aa.value()) : null;
-				
 				TableName tn = entityClass.getAnnotation(TableName.class);
 				Table ta = entityClass.getAnnotation(Table.class);
 				String tableName = tn != null
@@ -976,7 +972,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
 				String tableAlias = "T" + (++tAliasCounter);
 				SqlEntityInfo sqlEntityInfo = new SqlEntityInfo(null, (Class<? extends Entity>) entityClass, null,
-						entityPolicy, mappedEntityRepository, null, schema, tableName, preferredTableName, schemaTableName,
+						entityPolicy, mappedEntityRepository, schema, tableName, preferredTableName, schemaTableName,
 						tableAlias, viewName, preferredViewName, schemaViewName, idFieldInfo, versionFieldInfo,
 						tenantIdFieldInfo, fosterParentTypeFieldInfo, fosterParentIdFieldInfo, categoryFieldInfo,
 						propertyInfoMap, defaultRestrictionList, childInfoList, childListInfoList, uniqueConstraintMap,
@@ -1460,7 +1456,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 				}
 
 				SqlEntityInfo sqlEntityInfo = new SqlEntityInfo(null, (Class<? extends Entity>) entityClass, null, null,
-						null, null, schema, viewName, preferredViewName, schemaViewName, null, viewName, preferredViewName,
+						null, schema, viewName, preferredViewName, schemaViewName, null, viewName, preferredViewName,
 						schemaViewName, idFieldInfo, null, null, null, null, null, propertyInfoMap, null, null, null,
 						null, null, null, tableReferences.getBaseTables(), viewRestrictionList,
 						sqlDataSourceDialect.isAllObjectsInLowerCase(), true);
