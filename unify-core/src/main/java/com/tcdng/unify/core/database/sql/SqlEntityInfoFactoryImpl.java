@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.tcdng.unify.common.annotation.Alias;
+import com.tcdng.unify.common.annotation.EntityConnect;
 import com.tcdng.unify.common.annotation.ColumnOverride;
 import com.tcdng.unify.common.annotation.ColumnType;
 import com.tcdng.unify.common.annotation.ForeignKeyOverride;
@@ -249,8 +249,8 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 						? getComponent(MappedEntityRepository.class, mappedEntityRepoName)
 						: null;
 
-				Alias aa = entityClass.getAnnotation(Alias.class);
-				final String alias = aa != null ? AnnotationUtils.getAnnotationString(aa.value()) : null;
+				EntityConnect aa = entityClass.getAnnotation(EntityConnect.class);
+//				final String alias = aa != null ? AnnotationUtils.getAnnotationString(aa.value()) : null;
 				
 				TableName tn = entityClass.getAnnotation(TableName.class);
 				Table ta = entityClass.getAnnotation(Table.class);
@@ -976,7 +976,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 
 				String tableAlias = "T" + (++tAliasCounter);
 				SqlEntityInfo sqlEntityInfo = new SqlEntityInfo(null, (Class<? extends Entity>) entityClass, null,
-						entityPolicy, mappedEntityRepository, alias, schema, tableName, preferredTableName, schemaTableName,
+						entityPolicy, mappedEntityRepository, null, schema, tableName, preferredTableName, schemaTableName,
 						tableAlias, viewName, preferredViewName, schemaViewName, idFieldInfo, versionFieldInfo,
 						tenantIdFieldInfo, fosterParentTypeFieldInfo, fosterParentIdFieldInfo, categoryFieldInfo,
 						propertyInfoMap, defaultRestrictionList, childInfoList, childListInfoList, uniqueConstraintMap,

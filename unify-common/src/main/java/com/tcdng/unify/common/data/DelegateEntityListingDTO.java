@@ -13,24 +13,34 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.common.annotation;
+package com.tcdng.unify.common.data;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.util.List;
+
 
 /**
- * Annotation for specifying an alias.
+ * Delegate listing DTO
  * 
  * @author The Code Department
  * @since 1.0
  */
-@Target(ElementType.TYPE)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Alias {
-    
-    /** The alias */
-    String value() default AnnotationConstants.NONE;
+public class DelegateEntityListingDTO {
+
+    private List<EntityListingDTO> listings;
+
+    private List<RedirectErrorDTO> redirectErrors;
+
+    public DelegateEntityListingDTO(List<EntityListingDTO> listings, List<RedirectErrorDTO> redirectErrors) {
+        this.listings = listings;
+        this.redirectErrors = redirectErrors;
+    }
+
+    public List<EntityListingDTO> getListings() {
+        return listings;
+    }
+
+    public List<RedirectErrorDTO> getRedirectErrors() {
+        return redirectErrors;
+    }
 
 }
