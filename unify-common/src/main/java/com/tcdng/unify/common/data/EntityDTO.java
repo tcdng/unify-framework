@@ -38,6 +38,8 @@ public class EntityDTO {
 
     private String tableName;
 
+    private boolean dynamic;
+
     private boolean actionPolicy;
 
     private boolean ignoreOnSync;
@@ -50,6 +52,7 @@ public class EntityDTO {
         this.name = entityInfo.getName();
         this.description = entityInfo.getDescription();
         this.tableName = entityInfo.getTableName();
+        this.dynamic = entityInfo.isDynamic();
         this.ignoreOnSync = entityInfo.isIgnoreOnSync();
         this.actionPolicy = entityInfo.isWithActionPolicy();
         this.fields = new ArrayList<EntityFieldDTO>();
@@ -103,7 +106,11 @@ public class EntityDTO {
         this.tableName = tableName;
     }
 
-    public boolean isIgnoreOnSync() {
+    public boolean isDynamic() {
+		return dynamic;
+	}
+
+	public boolean isIgnoreOnSync() {
         return ignoreOnSync;
     }
 
