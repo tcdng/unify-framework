@@ -38,6 +38,8 @@ public @interface EntityConnect {
 	
 	String entity();
 
+	String datasource() default AnnotationConstants.NONE;
+
 	String id() default AnnotationConstants.NONE;
 
 	String versionNo() default AnnotationConstants.NONE;
