@@ -38,6 +38,8 @@ public class EntityDTO {
 
     private String tableName;
 
+    private String implClass;
+
     private boolean dynamic;
 
     private boolean actionPolicy;
@@ -52,6 +54,7 @@ public class EntityDTO {
         this.name = entityInfo.getName();
         this.description = entityInfo.getDescription();
         this.tableName = entityInfo.getTableName();
+        this.implClass = entityInfo.getImplClass().getName();
         this.dynamic = entityInfo.isDynamic();
         this.ignoreOnSync = entityInfo.isIgnoreOnSync();
         this.actionPolicy = entityInfo.isWithActionPolicy();
@@ -106,7 +109,19 @@ public class EntityDTO {
         this.tableName = tableName;
     }
 
-    public boolean isDynamic() {
+    public String getImplClass() {
+		return implClass;
+	}
+
+	public void setImplClass(String implClass) {
+		this.implClass = implClass;
+	}
+
+	public void setDynamic(boolean dynamic) {
+		this.dynamic = dynamic;
+	}
+
+	public boolean isDynamic() {
 		return dynamic;
 	}
 
