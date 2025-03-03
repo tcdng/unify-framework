@@ -258,39 +258,45 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 	@Override
 	public EntityDTO getEntityDTO() throws Exception {
 		if (entityDTO == null) {
-			synchronized(this) {
+			synchronized (this) {
 				if (entityDTO == null) {
 					EntityConnect eca = entityClass.getAnnotation(EntityConnect.class);
 					if (eca != null) {
-	                    EntityInfo.Builder eib = EntityInfo.newBuilder();
-	                    final String id = AnnotationUtils.getAnnotationString(eca.id());
-	                    final String versionNo = AnnotationUtils.getAnnotationString(eca.versionNo());
-	                    eib.baseType(eca.base())
-	                            .name(ensureLongName(eca.application(), eca.entity()))
-	                            .tableName(tableName)
-	                            .description(eca.description())
-	                            .implementation(entityClass.getName())
-	                            .idFieldName(id != null ? id: "id")
-	                            .versionNoFieldName(versionNo != null ? versionNo :"versionNo")
-	                            .actionPolicy(eca.actionPolicy());
-	                    populateBaseFields(eib, eca.base());
-                        for (SqlFieldInfo sqlFieldInfo : fieldInfoList) {
-                            eib.addField(sqlFieldInfo.getColumnType().connectType(),
-                            		sqlFieldInfo.getFieldType().isEnum() ? String.class : sqlFieldInfo.getFieldType(),
-                            		sqlFieldInfo.getName(), NameUtils.describeName(sqlFieldInfo.getName()),
-                            		sqlFieldInfo.getColumnName(),
-                            		sqlFieldInfo.isForeignKey() && sqlFieldInfo.getForeignEntityInfo().isWithEntityDTO() ? sqlFieldInfo.getForeignEntityInfo().getEntityDTO().getName() : null,
-                                    sqlFieldInfo.getFieldType().isEnum() ? sqlFieldInfo.getFieldType().getName() : null,
-                                    sqlFieldInfo.getPrecision(), sqlFieldInfo.getScale(),
-                                    sqlFieldInfo.getLength(), sqlFieldInfo.isNullable());
-                        }
+						EntityInfo.Builder eib = EntityInfo.newBuilder();
+						final String id = AnnotationUtils.getAnnotationString(eca.id());
+						final String versionNo = AnnotationUtils.getAnnotationString(eca.versionNo());
+						final String description = AnnotationUtils.getAnnotationString(eca.description());
+						eib.baseType(eca.base()).dataSourceAlias(AnnotationUtils.getAnnotationString(eca.datasource()))
+								.name(ensureLongName(eca.application(), eca.entity())).tableName(tableName)
+								.description(description != null ? description : NameUtils.describeName(eca.entity()))
+								.implementation(entityClass.getName()).idFieldName(id != null ? id : "id")
+								.versionNoFieldName(versionNo != null ? versionNo : "versionNo")
+								.actionPolicy(eca.actionPolicy());
+						populateBaseFields(eib, eca.base());
+						for (SqlFieldInfo sqlFieldInfo : fieldInfoList) {
+							if (!eib.isPresent(sqlFieldInfo.getName())) {
+								eib.addField(sqlFieldInfo.getColumnType().connectType(),
+										sqlFieldInfo.getFieldType().isEnum() ? String.class
+												: sqlFieldInfo.getFieldType(),
+										sqlFieldInfo.getName(), NameUtils.describeName(sqlFieldInfo.getName()),
+										sqlFieldInfo.getColumnName(),
+										sqlFieldInfo.isForeignKey()
+												&& sqlFieldInfo.getForeignEntityInfo().isWithEntityDTO()
+														? sqlFieldInfo.getForeignEntityInfo().getEntityDTO().getName()
+														: null,
+										sqlFieldInfo.getFieldType().isEnum() ? sqlFieldInfo.getFieldType().getName()
+												: null,
+										sqlFieldInfo.getPrecision(), sqlFieldInfo.getScale(), sqlFieldInfo.getLength(),
+										sqlFieldInfo.isNullable());
+							}
+						}
 
-	                    entityDTO = new EntityDTO(eib.build());
+						entityDTO = new EntityDTO(eib.build());
 					}
-				}				
+				}
 			}
 		}
-		
+
 		return entityDTO;
 	}
 

@@ -367,6 +367,10 @@ public class EntityInfo {
 			return this;
 		}
 
+		public boolean isPresent(String fieldName) {
+			return fieldsByName.containsKey(fieldName);
+		}
+		
 		public Builder addField(ConnectFieldDataType type, Class<?> fieldClass, String fieldName, String description,
 				String column) throws Exception {
 			return addField(type, fieldClass, fieldName, description, column, null, null, 0, 0, 0, true);
