@@ -41,6 +41,7 @@ import com.tcdng.unify.core.upl.UplDocumentAttributes;
 import com.tcdng.unify.core.upl.UplElementAttributes;
 import com.tcdng.unify.core.upl.UplElementReferences;
 import com.tcdng.unify.core.util.DataUtils;
+import com.tcdng.unify.core.util.IOUtils;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ControllerPathParts;
 import com.tcdng.unify.web.UnifyWebPropertyConstants;
@@ -88,19 +89,22 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
 
 	private List<String> documentFonts;
 
+	private List<String> documentTagLines;
+
 	private String pageNamePrefix;
 
 	public PageManagerImpl() {
-		expandedReferences = new HashMap<String, List<String>>();
-		valueReferences = new HashMap<String, List<String>>();
-		documentStyleSheets = Collections.emptyList();
-		documentScripts = Collections.emptyList();
-		documentFonts = Collections.emptyList();
-		pageNamePrefix = PAGENAME_PREFIX;
+		this.expandedReferences = new HashMap<String, List<String>>();
+		this.valueReferences = new HashMap<String, List<String>>();
+		this.documentStyleSheets = Collections.emptyList();
+		this.documentScripts = Collections.emptyList();
+		this.documentFonts = Collections.emptyList();
+		this.documentTagLines = Collections.emptyList();
+		this.pageNamePrefix = PAGENAME_PREFIX;
 
-		pageNameMap = new PageNameMap();
+		this.pageNameMap = new PageNameMap();
 
-		standalonePanelInfoByNameMap = new LocaleFactoryMaps<String, StandalonePanelInfo>() {
+		this.standalonePanelInfoByNameMap = new LocaleFactoryMaps<String, StandalonePanelInfo>() {
 
 			@SuppressWarnings("unchecked")
 			@Override
@@ -237,7 +241,7 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
 			}
 		};
 
-		pageNamePropertyBindings = new FactoryMap<String, Map<String, PropertyInfo>>() {
+		this.pageNamePropertyBindings = new FactoryMap<String, Map<String, PropertyInfo>>() {
 
 			@Override
 			protected Map<String, PropertyInfo> create(String name, Object... params) throws Exception {
@@ -304,6 +308,11 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
 	@Override
 	public List<String> getDocumentFonts() {
 		return documentFonts;
+	}
+
+	@Override
+	public List<String> getDocumentTagLines() {
+		return documentTagLines;
 	}
 
 	@Override
@@ -498,6 +507,16 @@ public class PageManagerImpl extends AbstractUnifyComponent implements PageManag
 				getContainerSetting(Object.class, UnifyWebPropertyConstants.APPLICATION_DOCUMENT_FONT));
 		if (fonts != null) {
 			documentFonts = Collections.unmodifiableList(fonts);
+		}
+		
+		List<String> tags = DataUtils.convert(ArrayList.class, String.class,
+				getContainerSetting(Object.class, UnifyWebPropertyConstants.APPLICATION_DOCUMENT_TAG));
+		if (!DataUtils.isBlank(tags)) {
+			documentTagLines = new ArrayList<String>();
+			for (String tag: tags) {
+				List<String> tagLines = IOUtils.readFileResourceLines(tag, getWorkingPath());
+				documentTagLines.addAll(tagLines);
+			}
 		}
 	}
 

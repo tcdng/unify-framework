@@ -33,6 +33,8 @@ public interface UnifyWebPropertyConstants {
 
     String APPLICATION_DOCUMENT_SCRIPT = "application.web.script";
 
+    String APPLICATION_DOCUMENT_TAG = "application.web.tag";
+
     String APPLICATION_DOCUMENT_FONT = "application.web.font";
 
     String APPLICATION_WEB_RESPONSE_HEADER = "application.web.response.header";
