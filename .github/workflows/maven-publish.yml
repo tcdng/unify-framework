@@ -22,7 +22,7 @@ jobs:
         cache: maven
         
     - name: Setup Maven Version
-      uses: s4u/setup-maven-action@v11
+      uses: s4u/setup-maven-action@v3.1.0
       with:
         java-version: 8
         maven-version: 3.5.4
