@@ -21,6 +21,7 @@ import java.util.Map;
 
 import com.tcdng.unify.common.constants.StandardFormatType;
 import com.tcdng.unify.common.util.ParamToken;
+import com.tcdng.unify.common.util.ProcessVariableUtils;
 import com.tcdng.unify.common.util.StringToken;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.format.Formatter;
@@ -94,7 +95,7 @@ public class ParameterizedStringGenerator {
 				val = formatter != null ? formatter.format(val) : val;
 			} else if (token.isGeneratorParam()) {
 				val = itemReader.getTempValue(token.getToken());
-				if (val == null) {
+				if (val == null && !ProcessVariableUtils.isProcessVariable(token.getToken())) {
 					ParamGenerator generator = generators.get(token.getToken());
 					val = generator != null ? generator.generate(itemReader != null ? itemReader : null,
 							parentReader != null ? parentReader : null, (ParamToken) token) : null;

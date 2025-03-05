@@ -22,6 +22,7 @@ import java.util.Map;
 
 import com.tcdng.unify.common.constants.StandardFormatType;
 import com.tcdng.unify.common.util.ParamToken;
+import com.tcdng.unify.common.util.ProcessVariableUtils;
 import com.tcdng.unify.common.util.StringToken;
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyException;
@@ -85,8 +86,10 @@ public abstract class AbstractParamGeneratorManager extends AbstractUnifyCompone
 						_formatters.put(formatType, formarHelper.newFormatter(formatType));
 					}
 				} else if (token.isGeneratorParam()) {
-					ParamGenerator _generator = generators.get(token.getToken());
-					_generators.put(token.getToken(), _generator);
+					if (!ProcessVariableUtils.isProcessVariable(token.getToken())) {
+						ParamGenerator _generator = generators.get(token.getToken());
+						_generators.put(token.getToken(), _generator);
+					}
 				}
 			}
 		}
