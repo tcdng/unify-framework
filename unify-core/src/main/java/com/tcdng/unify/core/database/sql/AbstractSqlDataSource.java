@@ -87,6 +87,11 @@ public abstract class AbstractSqlDataSource extends AbstractDataSource implement
     }
 
     @Override
+	public List<SqlEntityInfo> getSqlEntityInfos() throws UnifyException {
+		return getDialect().getSqlEntityInfos();
+	}
+
+	@Override
     public String getAppSchema() throws UnifyException {
         if(StringUtils.isBlank(appSchema)) {
             return getDialect().getDefaultSchema();

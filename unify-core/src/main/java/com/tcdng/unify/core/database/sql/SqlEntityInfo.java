@@ -18,6 +18,7 @@ package com.tcdng.unify.core.database.sql;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -25,13 +26,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.tcdng.unify.common.annotation.EntityConnect;
+import com.tcdng.unify.common.constants.ConnectEntityBaseType;
+import com.tcdng.unify.common.constants.ConnectFieldDataType;
 import com.tcdng.unify.common.constants.EnumConst;
+import com.tcdng.unify.common.data.EntityDTO;
+import com.tcdng.unify.common.data.EntityInfo;
 import com.tcdng.unify.common.database.Entity;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.database.EntityPolicy;
 import com.tcdng.unify.core.database.MappedEntityRepository;
+import com.tcdng.unify.core.util.AnnotationUtils;
 import com.tcdng.unify.core.util.DataUtils;
+import com.tcdng.unify.core.util.NameUtils;
 import com.tcdng.unify.core.util.StringUtils;
 
 /**
@@ -51,7 +59,7 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 	private EntityPolicy entityPolicy;
 
 	private MappedEntityRepository mappedEntityRepository;
-	
+
 	private String schema;
 
 	private String tableName;
@@ -123,22 +131,25 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 	private List<SqlViewRestrictionInfo> viewRestrictionList;
 
 	private List<Set<String>> uniqueConstraints;
-	
+
 	private boolean identityManaged;
 
 	private boolean schemaAlreadyManaged;
 
+	private EntityDTO entityDTO;
+	
 	public SqlEntityInfo(Long index, Class<? extends Entity> entityClass, Class<? extends EnumConst> enumConstClass,
-			EntityPolicy recordPolicy, MappedEntityRepository mappedEntityRepository, String schema, String tableName, String preferredTableName,
-			String schemaTableName, String tableAlias, String viewName, String preferredViewName, String schemaViewName,
-			SqlFieldInfo idFieldInfo, SqlFieldInfo versionFieldInfo, SqlFieldInfo tenantIdFieldInfo,
-			SqlFieldInfo fosterParentTypeFieldInfo, SqlFieldInfo fosterParentIdFieldInfo,
-			SqlFieldInfo categoryFieldInfo, Map<String, SqlFieldInfo> sQLFieldInfoMap,
-			List<SqlQueryRestrictionInfo> defaultRestrictionList, List<ChildFieldInfo> childInfoList,
-			List<ChildFieldInfo> childListInfoList, Map<String, SqlUniqueConstraintInfo> uniqueConstraintMap,
-			Map<String, SqlIndexInfo> indexMap, List<Map<String, Object>> staticValueList,
-			Map<String, Class<?>> viewBaseTables, List<SqlViewRestrictionInfo> viewRestrictionList,
-			boolean isAllObjectsInLowerCase, boolean identityManaged) throws UnifyException {
+			EntityPolicy recordPolicy, MappedEntityRepository mappedEntityRepository, String schema,
+			String tableName, String preferredTableName, String schemaTableName, String tableAlias, String viewName,
+			String preferredViewName, String schemaViewName, SqlFieldInfo idFieldInfo, SqlFieldInfo versionFieldInfo,
+			SqlFieldInfo tenantIdFieldInfo, SqlFieldInfo fosterParentTypeFieldInfo,
+			SqlFieldInfo fosterParentIdFieldInfo, SqlFieldInfo categoryFieldInfo,
+			Map<String, SqlFieldInfo> sQLFieldInfoMap, List<SqlQueryRestrictionInfo> defaultRestrictionList,
+			List<ChildFieldInfo> childInfoList, List<ChildFieldInfo> childListInfoList,
+			Map<String, SqlUniqueConstraintInfo> uniqueConstraintMap, Map<String, SqlIndexInfo> indexMap,
+			List<Map<String, Object>> staticValueList, Map<String, Class<?>> viewBaseTables,
+			List<SqlViewRestrictionInfo> viewRestrictionList, boolean isAllObjectsInLowerCase, boolean identityManaged)
+			throws UnifyException {
 		this.index = index;
 		this.entityClass = entityClass;
 		this.enumConstClass = enumConstClass;
@@ -242,6 +253,56 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 		} else {
 			initFieldInfos(originSqlEntityInfo.listFieldInfoByName);
 		}
+	}
+
+	@Override
+	public EntityDTO getEntityDTO() throws Exception {
+		if (entityDTO == null) {
+			synchronized (this) {
+				if (entityDTO == null) {
+					EntityConnect eca = entityClass.getAnnotation(EntityConnect.class);
+					if (eca != null) {
+						EntityInfo.Builder eib = EntityInfo.newBuilder();
+						final String id = AnnotationUtils.getAnnotationString(eca.id());
+						final String versionNo = AnnotationUtils.getAnnotationString(eca.versionNo());
+						final String description = AnnotationUtils.getAnnotationString(eca.description());
+						eib.baseType(eca.base()).dataSourceAlias(AnnotationUtils.getAnnotationString(eca.datasource()))
+								.name(ensureLongName(eca.application(), eca.entity())).tableName(tableName)
+								.description(description != null ? description : NameUtils.describeName(eca.entity()))
+								.implementation(entityClass.getName()).idFieldName(id != null ? id : "id")
+								.versionNoFieldName(versionNo != null ? versionNo : "versionNo")
+								.actionPolicy(eca.actionPolicy());
+						populateBaseFields(eib, eca.base());
+						for (SqlFieldInfo sqlFieldInfo : fieldInfoList) {
+							if (!eib.isPresent(sqlFieldInfo.getName())) {
+								eib.addField(sqlFieldInfo.getColumnType().connectType(),
+										sqlFieldInfo.getFieldType().isEnum() ? String.class
+												: sqlFieldInfo.getFieldType(),
+										sqlFieldInfo.getName(), NameUtils.describeName(sqlFieldInfo.getName()),
+										sqlFieldInfo.getColumnName(),
+										sqlFieldInfo.isForeignKey()
+												&& sqlFieldInfo.getForeignEntityInfo().isWithEntityDTO()
+														? sqlFieldInfo.getForeignEntityInfo().getEntityDTO().getName()
+														: null,
+										sqlFieldInfo.getFieldType().isEnum() ? sqlFieldInfo.getFieldType().getName()
+												: null,
+										sqlFieldInfo.getPrecision(), sqlFieldInfo.getScale(), sqlFieldInfo.getLength(),
+										sqlFieldInfo.isNullable());
+							}
+						}
+
+						entityDTO = new EntityDTO(eib.build());
+					}
+				}
+			}
+		}
+
+		return entityDTO;
+	}
+
+	@Override
+	public boolean isWithEntityDTO() {
+		return entityClass.isAnnotationPresent(EntityConnect.class);
 	}
 
 	@Override
@@ -480,7 +541,7 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 
 		return false;
 	}
-	
+
 	public boolean isSchemaAlreadyManaged() {
 		return schemaAlreadyManaged;
 	}
@@ -679,6 +740,39 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 		return managedFieldInfoByName.keySet().containsAll(fieldNames);
 	}
 
+    private void populateBaseFields(EntityInfo.Builder eib, ConnectEntityBaseType base) throws Exception {
+        switch (base) {
+            case BASE_WORK_ENTITY:
+                eib.addField(ConnectFieldDataType.STRING, String.class, "workBranchCode", "Work Branch Code",
+                        "work_branch_cd");
+                eib.addField(ConnectFieldDataType.BOOLEAN, Boolean.class, "inWorkflow", "In Workflow",
+                        "in_workflow_fg");
+                eib.addField(ConnectFieldDataType.LONG, Long.class, "originalCopyId", "Original Copy ID",
+                        "original_copy_id");
+                eib.addField(ConnectFieldDataType.STRING, String.class, "wfItemVersionType", "Work Item Version Type",
+                        "wf_item_version_type");
+            case BASE_AUDIT_ENTITY:
+                eib.addField(ConnectFieldDataType.STRING, String.class, "createdBy", "Created By", "created_by");
+                eib.addField(ConnectFieldDataType.STRING, String.class, "updatedBy", "Updated By", "updated_by");
+                eib.addField(ConnectFieldDataType.TIMESTAMP, Date.class, "createDt", "Created On", "created_on");
+                eib.addField(ConnectFieldDataType.TIMESTAMP, Date.class, "updateDt", "Updated On", "updated_on");
+            case BASE_VERSION_ENTITY:
+                eib.addField(ConnectFieldDataType.LONG, long.class, "versionNo", "Version No.", "version_no");
+            case BASE_ENTITY:
+                eib.addField(ConnectFieldDataType.LONG, Long.class, "id", "ID", "id");
+            default:
+                break;
+        }
+    }
+
+    private String ensureLongName(String applicationName, String name) {
+        if (name != null && !name.trim().isEmpty() && name.indexOf('.') < 0) {
+            return applicationName + "." + name;
+        }
+
+        return name;
+    }
+
 	private void initFieldInfos(Map<String, SqlFieldInfo> sQLFieldInfoMap) throws UnifyException {
 		this.fieldInfoList = new ArrayList<SqlFieldInfo>();
 		this.listFieldInfoList = new ArrayList<SqlFieldInfo>();
@@ -724,5 +818,5 @@ public class SqlEntityInfo implements SqlEntitySchemaInfo {
 		this.managedFieldInfoList = this.fieldInfoList;
 		this.managedListFieldInfoList = this.listFieldInfoList;
 	}
-	
+
 }

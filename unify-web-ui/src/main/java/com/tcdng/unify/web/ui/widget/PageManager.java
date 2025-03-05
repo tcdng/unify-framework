@@ -67,6 +67,14 @@ public interface PageManager extends EntityEventSource {
     List<String> getDocumentFonts() throws UnifyException;
     
     /**
+     * Returns expanded configured common document tags for this container.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    List<String> getDocumentTagLines() throws UnifyException;
+    
+    /**
      * Creates a new page instance from document associated with specified page
      * controller and for specified locale.
      * 

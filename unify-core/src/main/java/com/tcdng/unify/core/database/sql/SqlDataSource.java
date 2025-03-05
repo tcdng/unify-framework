@@ -32,6 +32,14 @@ import com.tcdng.unify.core.database.NativeQuery;
  */
 public interface SqlDataSource extends DataSource, NameSqlDataSourceSchema {
 
+	/**
+	 * Gets all SQL entity information.
+	 * 
+	 * @return the list of entity information for this data source
+	 * @throws UnifyException if an error occurs
+	 */
+	List<SqlEntityInfo> getSqlEntityInfos() throws UnifyException;
+	
     /**
      * Gets a list of schemas in this data source.
      * 

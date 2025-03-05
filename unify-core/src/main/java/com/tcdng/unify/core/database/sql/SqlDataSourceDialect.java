@@ -58,6 +58,14 @@ public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
 	Long getUserTenantId() throws UnifyException;
 
 	/**
+	 * Gets all SQL entity information.
+	 * 
+	 * @return the list of entity information for this data source
+	 * @throws UnifyException if an error occurs
+	 */
+	List<SqlEntityInfo> getSqlEntityInfos() throws UnifyException;
+
+	/**
 	 * Gets the data source dialect default schema.
 	 * 
 	 * @return the default schema

@@ -137,6 +137,10 @@ public class DocumentWriter extends AbstractPageWriter {
 			}
 		}
 
+		for (String tagLine: getPageManager().getDocumentTagLines()) {
+			writer.write(tagLine);
+		}
+		
 		writeResourcesScript(writer);
 
 		writer.write("</head>");

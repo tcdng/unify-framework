@@ -28,6 +28,14 @@ import com.tcdng.unify.core.database.CallableProc;
  * @since 1.0
  */
 public interface SqlEntityInfoFactory extends UnifyComponent {
+
+	/**
+	 * Gets all SQL entity information.
+	 * 
+	 * @return the list of entity information for this data source
+	 * @throws UnifyException if an error occurs
+	 */
+	List<SqlEntityInfo> getSqlEntityInfos() throws UnifyException;
 	
 	/**
 	 * Checks if factory is with entity information.

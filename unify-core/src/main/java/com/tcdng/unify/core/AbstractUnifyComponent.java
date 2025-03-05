@@ -272,6 +272,16 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	}
 
 	/**
+	 * Gets container working path.
+	 * 
+	 * @return the working path
+	 * @throws UnifyException if an error occurs
+	 */
+	protected String getWorkingPath() throws UnifyException {
+		return unifyComponentContext.getWorkingPath();
+	}
+
+	/**
 	 * Returns the container static settings.
 	 * 
 	 * @return list of static settings

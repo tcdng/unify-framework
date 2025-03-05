@@ -1796,6 +1796,11 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 	}
 
 	@Override
+	public List<SqlEntityInfo> getSqlEntityInfos() throws UnifyException {
+		return new ArrayList<SqlEntityInfo>(sqlEntityInfoMap.values());
+	}
+
+	@Override
 	public void setSqlDataSourceDialect(SqlDataSourceDialect sqlDataSourceDialect) {
 		this.sqlDataSourceDialect = sqlDataSourceDialect;
 	}

@@ -5865,7 +5865,7 @@ ux.documentKeydownHandler = function(uEv) {
 			stopBackspace = elem.readOnly || elem.disabled;
 		}
 		
-		if (stopBackspace && element.tagName === "DIV") {
+		if (stopBackspace && elem.tagName === "DIV") {
 			stopBackspace = false;
 		}
 		
