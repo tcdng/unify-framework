@@ -52,7 +52,8 @@ public class ParamToken extends StringToken {
 	}
 
 	public static ParamToken getGeneratorParamToken(String component, String param) {
-		return new ParamToken(StringTokenType.GENERATOR_PARAM, component + ":" + param, component, param);
+		return new ParamToken("pv".equals(component) ? StringTokenType.PROCESS_PARAM : StringTokenType.GENERATOR_PARAM,
+				component + ":" + param, component, param);
 	}
 
 	public static ParamToken getFormattedParamToken(StandardFormatType formatType, String param) {

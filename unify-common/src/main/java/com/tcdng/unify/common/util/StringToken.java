@@ -70,4 +70,5 @@ public abstract class StringToken {
     public boolean isGeneratorParam() {
         return type.isGeneratorParam();
     }
+
 }
