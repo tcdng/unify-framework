@@ -149,6 +149,11 @@ public abstract class AbstractListValueStore<T> extends AbstractValueStore {
     }
 
     @Override
+	public Map<String, Object> getTempValues() throws UnifyException {
+		return temp;
+	}
+
+    @Override
     public void setTempValue(String name, Object value) throws UnifyException {
         if (temp == null) {
             temp = new HashMap<String, Object>();

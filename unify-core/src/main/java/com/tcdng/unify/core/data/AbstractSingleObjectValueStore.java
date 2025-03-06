@@ -145,6 +145,11 @@ public abstract class AbstractSingleObjectValueStore<T> extends AbstractValueSto
     }
 
     @Override
+	public Map<String, Object> getTempValues() throws UnifyException {
+		return temp;
+	}
+
+	@Override
 	public void setTempValues(Map<String, Object> values) throws UnifyException {
 		if (values != null) {
 	        if (temp == null) {
