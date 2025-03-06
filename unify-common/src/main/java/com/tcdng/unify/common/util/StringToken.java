@@ -67,6 +67,10 @@ public abstract class StringToken {
         return type.isFormattedParam();
     }
 
+    public boolean isProcessParam() {
+        return type.isProcessParam();
+    }
+
     public boolean isGeneratorParam() {
         return type.isGeneratorParam();
     }
