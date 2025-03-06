@@ -43,7 +43,9 @@ public class Email {
 
 	private String message;
 
-	private String sender;
+	private String senderContact;
+
+	private String senderName;
 
 	private String error;
 
@@ -59,21 +61,30 @@ public class Email {
 		this.error = error;
 	}
 
-	private Email(String subject, String message, String sender, List<EmailRecipient> recipients,
+	private Email(String subject, String message, String senderContact, String senderName, List<EmailRecipient> recipients,
 			List<EmailAttachment> attachments, Object id, boolean htmlMessage) {
 		this.subject = subject;
 		this.message = message;
-		this.sender = sender;
+		this.senderContact = senderContact;
+		this.senderName = senderName;
 		this.recipients = recipients;
 		this.attachments = attachments;
 		this.id = id;
 		this.htmlMessage = htmlMessage;
 	}
 
-	public String getSender() {
-		return sender;
+	public String getSenderContact() {
+		return senderContact;
 	}
 
+	public String getSenderName() {
+		return senderName;
+	}
+
+	public boolean isWithSenderName() {
+		return senderName != null;
+	}
+	
 	public List<EmailRecipient> getRecipients() {
 		return recipients;
 	}
@@ -130,6 +141,8 @@ public class Email {
 
 		private String senderAddress;
 
+		private String senderName;
+
 		private List<EmailRecipient> recipients;
 
 		private List<EmailAttachment> attachments;
@@ -159,6 +172,12 @@ public class Email {
 
 		public Builder fromSender(String senderAddress) {
 			this.senderAddress = senderAddress;
+			return this;
+		}
+
+		public Builder fromSender(String senderAddress, String senderName) {
+			this.senderAddress = senderAddress;
+			this.senderName = senderName;
 			return this;
 		}
 
@@ -249,7 +268,7 @@ public class Email {
 			if (recipients.isEmpty()) {
 				ErrorUtils.throwBuildError("Email requires at least one recipient");
 			}
-			return new Email(subject, message, senderAddress, DataUtils.unmodifiableList(recipients),
+			return new Email(subject, message, senderAddress, senderName, DataUtils.unmodifiableList(recipients),
 					DataUtils.unmodifiableList(attachments), id, htmlMessage);
 		}
 

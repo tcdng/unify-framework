@@ -129,7 +129,9 @@ public abstract class AbstractEmailServer extends AbstractUnifyComponent impleme
 		MimeMessage mimeMessage = null;
 		try {
 			mimeMessage = new MimeMessage(session);
-			mimeMessage.setFrom(new InternetAddress(email.getSender()));
+			mimeMessage.setFrom(
+					email.isWithSenderName() ? new InternetAddress(email.getSenderContact(), email.getSenderName())
+							: new InternetAddress(email.getSenderContact()));
 			List<EmailRecipient> recipents = email.getRecipients();
 			if (recipents.isEmpty()) {
 				throw new UnifyException(UnifyCoreErrorConstants.EMAIL_RECIPIENTS_REQUIRED);
