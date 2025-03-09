@@ -268,6 +268,14 @@ public interface ValueStore extends Iterable<ValueStore>{
      */
     <T> T getTempValue(Class<T> type, String name) throws UnifyException;
 
+	/**
+	 * Gets temporary values.
+	 * 
+	 * @return the values
+	 * @throws UnifyException if an error occurs
+	 */
+	Map<String, Object> getTempValues() throws UnifyException;
+    
     /**
      * Sets a temporary value using supplied name.
      * 
