@@ -29,6 +29,8 @@ import com.tcdng.unify.core.constant.ChildFetch;
  */
 public class ChildFieldInfo extends OnDeleteCascadeInfo {
 
+	private Method childFkIdGetter;
+
 	private Method childFkIdSetter;
 
 	private Method childFkTypeSetter;
@@ -50,11 +52,12 @@ public class ChildFieldInfo extends OnDeleteCascadeInfo {
 	private boolean idNumber;
 
 	public ChildFieldInfo(Class<? extends Entity> childEntityClass, String category, Field childFkIdField,
-			Method childFkIdSetter, Field childFkTypeField, Method childFkTypeSetter, Field childCatField,
+			Method childFkIdGetter, Method childFkIdSetter, Field childFkTypeField, Method childFkTypeSetter, Field childCatField,
 			Method childCatSetter, Field field, Method getter, Method setter, boolean editable, boolean list,
 			boolean idNumber) {
 		super(childEntityClass, childFkIdField, childFkTypeField, childCatField);
 		this.category = category;
+		this.childFkIdGetter = childFkIdGetter;
 		this.childFkIdSetter = childFkIdSetter;
 		this.childFkTypeSetter = childFkTypeSetter;
 		this.childCatSetter = childCatSetter;
@@ -68,6 +71,10 @@ public class ChildFieldInfo extends OnDeleteCascadeInfo {
 
 	public String getName() {
 		return field.getName();
+	}
+
+	public Method getChildFkIdGetter() {
+		return childFkIdGetter;
 	}
 
 	public Method getChildFkIdSetter() {
