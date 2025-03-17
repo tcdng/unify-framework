@@ -27,37 +27,42 @@ import com.tcdng.unify.common.util.EnumUtils;
  */
 public enum ColumnType implements EnumConst {
 
-    AUTO("AUT", ConnectFieldDataType.STRING),
-    CHARACTER("CHR", ConnectFieldDataType.CHAR),
-    BLOB("BLB", ConnectFieldDataType.BLOB),
-    BOOLEAN("BLN", ConnectFieldDataType.BOOLEAN),
-    BOOLEAN_ARRAY("BLA", ConnectFieldDataType.STRING),
-    CLOB("CLB", ConnectFieldDataType.CLOB),
-    DATE("DTE", ConnectFieldDataType.DATE),
-    DECIMAL("DEC", ConnectFieldDataType.DECIMAL),
-    DOUBLE("DBL", ConnectFieldDataType.DOUBLE),
-    DOUBLE_ARRAY("DBA", ConnectFieldDataType.STRING),
-    FLOAT("FLT", ConnectFieldDataType.FLOAT),
-    FLOAT_ARRAY("FLA", ConnectFieldDataType.STRING),
-    SHORT("SHT", ConnectFieldDataType.SHORT),
-    SHORT_ARRAY("SHA", ConnectFieldDataType.STRING),
-    INTEGER("INT", ConnectFieldDataType.INTEGER),
-    INTEGER_ARRAY("INA", ConnectFieldDataType.STRING),
-    LONG("LNG", ConnectFieldDataType.LONG),
-    LONG_ARRAY("LNA", ConnectFieldDataType.STRING),
-    STRING("STR", ConnectFieldDataType.STRING),
-    STRING_ARRAY("STA", ConnectFieldDataType.STRING),
-    TIMESTAMP_UTC("TSU", ConnectFieldDataType.TIMESTAMP_UTC),
-    TIMESTAMP("TSP", ConnectFieldDataType.TIMESTAMP),
-    ENUMCONST("ECT", ConnectFieldDataType.ENUM);
+    AUTO("AUT", ConnectFieldDataType.STRING, false),
+    CHARACTER("CHR", ConnectFieldDataType.CHAR, false),
+    BLOB("BLB", ConnectFieldDataType.BLOB, false),
+    BOOLEAN("BLN", ConnectFieldDataType.BOOLEAN, false),
+    BOOLEAN_ARRAY("BLA", ConnectFieldDataType.STRING, true),
+    CLOB("CLB", ConnectFieldDataType.CLOB, false),
+    DATE("DTE", ConnectFieldDataType.DATE, false),
+    DATE_ARRAY("DTA", ConnectFieldDataType.STRING, true),
+    DECIMAL("DEC", ConnectFieldDataType.DECIMAL, false),
+    DECIMAL_ARRAY("DEA", ConnectFieldDataType.STRING, true),
+    DOUBLE("DBL", ConnectFieldDataType.DOUBLE, false),
+    DOUBLE_ARRAY("DBA", ConnectFieldDataType.STRING, true),
+    FLOAT("FLT", ConnectFieldDataType.FLOAT, false),
+    FLOAT_ARRAY("FLA", ConnectFieldDataType.STRING, true),
+    SHORT("SHT", ConnectFieldDataType.SHORT, false),
+    SHORT_ARRAY("SHA", ConnectFieldDataType.STRING, true),
+    INTEGER("INT", ConnectFieldDataType.INTEGER, false),
+    INTEGER_ARRAY("INA", ConnectFieldDataType.STRING, true),
+    LONG("LNG", ConnectFieldDataType.LONG, false),
+    LONG_ARRAY("LNA", ConnectFieldDataType.STRING, true),
+    STRING("STR", ConnectFieldDataType.STRING, false),
+    STRING_ARRAY("STA", ConnectFieldDataType.STRING, true),
+    TIMESTAMP_UTC("TSU", ConnectFieldDataType.TIMESTAMP_UTC, false),
+    TIMESTAMP("TSP", ConnectFieldDataType.TIMESTAMP, false),
+    ENUMCONST("ECT", ConnectFieldDataType.ENUM, false);
 
     private final String code;
 
     private final ConnectFieldDataType connectType;
+
+    private final boolean array;
     
-    private ColumnType(String code, ConnectFieldDataType connectType) {
+    private ColumnType(String code, ConnectFieldDataType connectType, boolean array) {
         this.code = code;
         this.connectType = connectType;
+        this.array = array;
     }
 
     @Override
@@ -76,6 +81,10 @@ public enum ColumnType implements EnumConst {
     
     public boolean isAuto() {
     	return AUTO.equals(this);
+    }
+    
+    public boolean isArray() {
+    	return array;
     }
 
     public boolean isDate() {
