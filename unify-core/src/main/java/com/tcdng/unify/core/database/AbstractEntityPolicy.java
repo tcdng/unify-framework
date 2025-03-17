@@ -20,6 +20,7 @@ import java.util.Date;
 import com.tcdng.unify.common.database.Entity;
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.criterion.Update;
 
 /**
  * Abstract convenience class for entity policy.
@@ -55,6 +56,11 @@ public abstract class AbstractEntityPolicy extends AbstractUnifyComponent implem
     }
 
     @Override
+	public void preUpdate(Update update, Date now) throws UnifyException {
+		
+	}
+
+	@Override
     public void preDelete(Entity record, Date now) throws UnifyException {
 
     }

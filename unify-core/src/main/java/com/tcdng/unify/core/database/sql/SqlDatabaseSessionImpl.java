@@ -682,6 +682,12 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 	@Override
 	public int updateById(Class<? extends Entity> clazz, Object id, Update update) throws UnifyException {
 		ensureWritable();
+		SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(clazz);
+		EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
+		if (entityPolicy != null) {
+			entityPolicy.preUpdate(update, getNow());
+		}
+		
 		return getSqlStatementExecutor().executeUpdate(connection,
 				sqlDataSourceDialect.prepareUpdateStatement(clazz, id, update));
 	}
@@ -694,6 +700,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 			EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
 			if (entityPolicy != null) {
 				entityPolicy.preQuery(query);
+				entityPolicy.preUpdate(update, getNow());
 			}
 
 			if (sqlEntityInfo.isViewOnly()) {
