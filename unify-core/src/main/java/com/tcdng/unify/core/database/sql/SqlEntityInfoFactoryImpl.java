@@ -1949,18 +1949,19 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 			Class<? extends Entity> childClass, ChildFkFields childFkFields, boolean editable, boolean list)
 			throws UnifyException {
 		boolean idNumber = Number.class.isAssignableFrom(ReflectUtils.getGetterInfo(childClass, "id").getType());
-		GetterSetterInfo getterSetterInfo = ReflectUtils.getGetterSetterInfo(parentClass, childField.getName());
-		Method childFkIdSetter = ReflectUtils.getGetterSetterInfo(childClass, childFkFields.getFkIdField().getName())
-				.getSetter();
+		final GetterSetterInfo getterSetterInfo = ReflectUtils.getGetterSetterInfo(parentClass, childField.getName());
+		final GetterSetterInfo fkIdGetterSetterInfo = ReflectUtils.getGetterSetterInfo(childClass,
+				childFkFields.getFkIdField().getName());
 		Method childFkTypeSetter = childFkFields.getFkTypeField() != null
 				? ReflectUtils.getGetterSetterInfo(childClass, childFkFields.getFkTypeField().getName()).getSetter()
 				: null;
 		Method childCatSetter = childFkFields.getCategoryField() != null
 				? ReflectUtils.getGetterSetterInfo(childClass, childFkFields.getCategoryField().getName()).getSetter()
 				: null;
-		return new ChildFieldInfo(childClass, category, childFkFields.getFkIdField(), childFkIdSetter,
-				childFkFields.getFkTypeField(), childFkTypeSetter, childFkFields.getCategoryField(), childCatSetter,
-				childField, getterSetterInfo.getGetter(), getterSetterInfo.getSetter(), editable, list, idNumber);
+		return new ChildFieldInfo(childClass, category, childFkFields.getFkIdField(), fkIdGetterSetterInfo.getGetter(),
+				fkIdGetterSetterInfo.getSetter(), childFkFields.getFkTypeField(), childFkTypeSetter,
+				childFkFields.getCategoryField(), childCatSetter, childField, getterSetterInfo.getGetter(),
+				getterSetterInfo.getSetter(), editable, list, idNumber);
 	}
 
 	private ChildFkFields getFosterParentChildFkFields(Class<?> argumentType) throws UnifyException {
