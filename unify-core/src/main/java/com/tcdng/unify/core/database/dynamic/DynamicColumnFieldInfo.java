@@ -40,16 +40,19 @@ public class DynamicColumnFieldInfo extends DynamicFieldInfo {
 
 	private boolean nullable;
 
+	private boolean array;
+
 	public DynamicColumnFieldInfo(DynamicFieldType type, String enumClassName, String columnName, String fieldName,
-			String mapped, boolean nullable, boolean descriptive, boolean tenantId) {
+			String mapped, boolean nullable, boolean descriptive, boolean array, boolean tenantId) {
 		super(type, DynamicEntityFieldType.FIELD, DataType.STRING, columnName, fieldName, mapped, enumClassName,
 				descriptive, tenantId);
 		this.nullable = nullable;
+		this.array = array;
 	}
 
 	public DynamicColumnFieldInfo(DynamicFieldType type, DataType dataType, String columnName, String fieldName,
 			String mapped, String transformer, String defaultVal, int length, int precision, int scale,
-			boolean nullable, boolean descriptive, boolean tenantId) {
+			boolean nullable, boolean descriptive, boolean array, boolean tenantId) {
 		super(type, DynamicEntityFieldType.FIELD, dataType, columnName, fieldName, mapped, null, descriptive, tenantId);
 		this.transformer = transformer;
 		this.defaultVal = defaultVal;
@@ -57,6 +60,7 @@ public class DynamicColumnFieldInfo extends DynamicFieldInfo {
 		this.precision = precision;
 		this.scale = scale;
 		this.nullable = nullable;
+		this.array = array;
 	}
 
 	public String getTransformer() {
@@ -81,6 +85,10 @@ public class DynamicColumnFieldInfo extends DynamicFieldInfo {
 
 	public boolean isNullable() {
 		return nullable;
+	}
+
+	public boolean isArray() {
+		return array;
 	}
 
 }

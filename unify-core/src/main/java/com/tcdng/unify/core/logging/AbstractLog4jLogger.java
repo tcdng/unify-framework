@@ -128,7 +128,7 @@ public abstract class AbstractLog4jLogger extends AbstractUnifyComponent impleme
 						String loggingPattern = Unify.getSetting(String.class,
 								UnifyCorePropertyConstants.APPLICATION_LOGGER_PATTERN_SETTING);
 						if (loggingPattern == null) {
-							loggingPattern = "%d{ISO8601} %-5p %c{1} %m%n";
+							loggingPattern = "%d{ISO8601} %-5p -- [%-36.36c{1}] : %m%n";
 						}
 
 						boolean logToConsole = Unify.getSetting(boolean.class,
