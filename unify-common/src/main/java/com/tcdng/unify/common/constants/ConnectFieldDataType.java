@@ -27,54 +27,79 @@ import java.util.Date;
 public enum ConnectFieldDataType {
 
     CHAR(
-            Character.class),
+            Character.class, false),
     BOOLEAN(
-            Boolean.class),
+            Boolean.class, false),
     SHORT(
-            Short.class),
+            Short.class, false),
     INTEGER(
-            Integer.class),
+            Integer.class, false),
     LONG(
-            Long.class),
+            Long.class, false),
     FLOAT(
-            Float.class),
+            Float.class, false),
     DOUBLE(
-            Double.class),
+            Double.class, false),
     DECIMAL(
-            BigDecimal.class),
+            BigDecimal.class, false),
     DATE(
-            Date.class),
+            Date.class, false),
+    BOOLEAN_ARRAY(
+            Boolean.class, true),
+    SHORT_ARRAY(
+            Short.class, true),
+    INTEGER_ARRAY(
+            Integer.class, true),
+    LONG_ARRAY(
+            Long.class, true),
+    FLOAT_ARRAY(
+            Float.class, true),
+    DOUBLE_ARRAY(
+            Double.class, true),
+    DECIMAL_ARRAY(
+            BigDecimal.class, true),
+    DATE_ARRAY(
+            Date.class, true),
     TIMESTAMP_UTC(
-            Date.class),
+            Date.class, false),
     TIMESTAMP(
-            Date.class),
+            Date.class, false),
     CLOB(
-            String.class),
+            String.class, false),
     BLOB(
-            byte[].class),
+            byte[].class, false),
     STRING(
-            String.class),
+            String.class, false),
+    STRING_ARRAY(
+            String.class, true),
     ENUM(
-            String.class),
+            String.class, false),
     ENUM_REF(
-            String.class),
+            String.class, false),
     REF(
-            Long.class),
+            Long.class, false),
     LIST_ONLY(
-            null),
+            null, false),
     CHILD(
-            null),
+            null, false),
     CHILD_LIST(
-            null);
+            null, false);
 
     private final Class<?> javaClass;
 
-    private ConnectFieldDataType(Class<?> javaClass) {
+    private final boolean array;
+    
+    private ConnectFieldDataType(Class<?> javaClass, boolean array) {
         this.javaClass = javaClass;
+        this.array = array;
     }
 
     public Class<?> javaClass() {
         return javaClass;
+    }
+    
+    public boolean isArray() {
+        return array;
     }
     
     public boolean references() {
