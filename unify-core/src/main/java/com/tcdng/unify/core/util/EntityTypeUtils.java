@@ -61,6 +61,7 @@ public final class EntityTypeUtils {
 		return EntityTypeUtils.getEntityTypeInfoFromJson(null, csv);
 	}
 
+	@SuppressWarnings("deprecation")
 	public static List<EntityTypeInfo> getEntityTypeInfoFromCsv(final String name, final String csv)
 			throws UnifyException {
 		if (csv != null) {
@@ -78,11 +79,11 @@ public final class EntityTypeUtils {
 
 					final String val = record.get(i);
 					if (val.matches("-?\\d+")) {
-						deib.addFieldInfo(DataType.INTEGER, fieldName, columnName, val);
+						deib.addFieldInfo(DataType.INTEGER, fieldName, columnName, val, false);
 					} else if (val.matches("-?\\d*\\.\\d+")) {
-						deib.addFieldInfo(DataType.DECIMAL, fieldName, columnName, val);
+						deib.addFieldInfo(DataType.DECIMAL, fieldName, columnName, val, false);
 					} else {
-						deib.addFieldInfo(DataType.STRING, fieldName, columnName, val);
+						deib.addFieldInfo(DataType.STRING, fieldName, columnName, val, false);
 					}
 				}
 
@@ -144,35 +145,37 @@ public final class EntityTypeUtils {
 		for (String fieldName : object.names()) {
 			final String columnName = SqlUtils.generateSchemaElementName(fieldName);
 			final String longName = name + StringUtils.capitalizeFirstLetter(fieldName);
-			final JsonValue field = object.get(fieldName);
+			JsonValue field = object.get(fieldName);
+			final boolean array = field.isArray();
+			if (array) {
+				JsonArray _array = (JsonArray) field;
+				if (_array.isEmpty()) {
+					throw new IllegalArgumentException("Can not resolve element type of empty array field [" + fieldName +"].");
+				}
+				
+				field = _array.get(0);
+			}
+			
 			if (field.isString()) {
-				deib.addFieldInfo(DataType.STRING, fieldName, columnName, field.asString());
+				deib.addFieldInfo(DataType.STRING, fieldName, columnName, field.asString(), array);
 			} else if (field.isNumber()) {
 				if (field.toString().indexOf('.') >= 0) {
 					deib.addFieldInfo(DataType.DECIMAL, fieldName, columnName,
-							field.isNull() ? null : String.valueOf(field.asDouble()));
+							field.isNull() ? null : String.valueOf(field.asDouble()), array);
 				} else {
 					deib.addFieldInfo(DataType.INTEGER, fieldName, columnName,
-							field.isNull() ? null : String.valueOf(field.asInt()));
+							field.isNull() ? null : String.valueOf(field.asInt()), array);
 				}
 			} else if (field.isBoolean()) {
 				deib.addFieldInfo(DataType.BOOLEAN, fieldName, columnName,
-						field.isNull() ? null : String.valueOf(field.asBoolean()));
+						field.isNull() ? null : String.valueOf(field.asBoolean()), array);
 			} else if (field.isObject()) {
 				final EntityTypeInfo _childEntityInfo = getEntityInfo(list, (JsonObject) field, longName, _entityInfo,
 						depth + 1);
-				deib.addChildInfo(_childEntityInfo.getName(), fieldName);
-			} else if (field.isArray()) {
-				JsonArray array = (JsonArray) field;
-				if (array.size() > 0) {
-					JsonValue _field = array.get(0);
-					if (_field.isObject()) {
-						final EntityTypeInfo _childEntityInfo = getEntityInfo(list, (JsonObject) _field, longName,
-								_entityInfo, depth + 1);
-						deib.addChildListInfo(_childEntityInfo.getName(), fieldName);
-					} else {
-						// TODO
-					}
+				if (array) {
+					deib.addChildListInfo(_childEntityInfo.getName(), fieldName);
+				} else {
+					deib.addChildInfo(_childEntityInfo.getName(), fieldName);
 				}
 			}
 		}

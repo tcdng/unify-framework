@@ -16,6 +16,7 @@
 package com.tcdng.unify.core.util;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -59,7 +60,7 @@ public class EntityTypeUtilsTest extends AbstractUnifyComponentTest {
     @Test
 	public void testGetEntityTypeInfoFromJsonSimple() throws Exception {
 		List<EntityTypeInfo> list = EntityTypeUtils.getEntityTypeInfoFromJson(
-				"{\"title\":\"C++ for Engineers\", \"quantity\":250, \"price\":22500.25, \"onSale\":true}");
+				"{\"title\":\"C++ for Engineers\", \"quantity\":250, \"price\":22500.25, \"history\":[11236.75, 12450.75], \"onSale\":true}");
 		assertNotNull(list);
 		assertEquals(1, list.size());
 
@@ -68,38 +69,51 @@ public class EntityTypeUtilsTest extends AbstractUnifyComponentTest {
 		assertEquals("root", entityTypeInfo.getName());
 		List<EntityTypeFieldInfo> fields = entityTypeInfo.getFields();
 		assertNotNull(fields);
-		assertEquals(4, fields.size());
-		
+		assertEquals(5, fields.size());
+
 		EntityTypeFieldInfo fieldInfo = fields.get(0);
 		assertNotNull(fieldInfo);
 		assertEquals("title", fieldInfo.getName());
 		assertEquals("TITLE", fieldInfo.getColumn());
 		assertEquals(DataType.STRING, fieldInfo.getDataType());
 		assertEquals(DynamicEntityFieldType.FIELD, fieldInfo.getType());
+		assertFalse(fieldInfo.isArray());
 		assertEquals("C++ for Engineers", fieldInfo.getSample());
-		
+
 		fieldInfo = fields.get(1);
 		assertNotNull(fieldInfo);
 		assertEquals("quantity", fieldInfo.getName());
 		assertEquals("QUANTITY", fieldInfo.getColumn());
 		assertEquals(DataType.INTEGER, fieldInfo.getDataType());
 		assertEquals(DynamicEntityFieldType.FIELD, fieldInfo.getType());
+		assertFalse(fieldInfo.isArray());
 		assertEquals("250", fieldInfo.getSample());
-		
+
 		fieldInfo = fields.get(2);
 		assertNotNull(fieldInfo);
 		assertEquals("price", fieldInfo.getName());
 		assertEquals("PRICE", fieldInfo.getColumn());
 		assertEquals(DataType.DECIMAL, fieldInfo.getDataType());
 		assertEquals(DynamicEntityFieldType.FIELD, fieldInfo.getType());
+		assertFalse(fieldInfo.isArray());
 		assertEquals("22500.25", fieldInfo.getSample());
-		
+
 		fieldInfo = fields.get(3);
+		assertNotNull(fieldInfo);
+		assertEquals("history", fieldInfo.getName());
+		assertEquals("HISTORY", fieldInfo.getColumn());
+		assertEquals(DataType.DECIMAL, fieldInfo.getDataType());
+		assertEquals(DynamicEntityFieldType.FIELD, fieldInfo.getType());
+		assertTrue(fieldInfo.isArray());
+		assertEquals("11236.75", fieldInfo.getSample());
+
+		fieldInfo = fields.get(4);
 		assertNotNull(fieldInfo);
 		assertEquals("onSale", fieldInfo.getName());
 		assertEquals("ON_SALE", fieldInfo.getColumn());
 		assertEquals(DataType.BOOLEAN, fieldInfo.getDataType());
-		assertEquals(DynamicEntityFieldType.FIELD, fieldInfo.getType());		
+		assertEquals(DynamicEntityFieldType.FIELD, fieldInfo.getType());
+		assertFalse(fieldInfo.isArray());
 		assertEquals("true", fieldInfo.getSample());
 	}
 
