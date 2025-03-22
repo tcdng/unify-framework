@@ -903,7 +903,10 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
 		if (sqlResult.isTransformed()) {
 			value = ((Transformer<Object, Object>) sqlResult.getTransformer()).reverseTransform(value);
 		}
-		return value;
+
+		return value != null && value.getClass().isArray() && !value.getClass().equals(sqlResult.getType())
+				? DataUtils.convert(sqlResult.getType(), value)
+				: value;
 	}
 
 	@SuppressWarnings("unchecked")

@@ -31,22 +31,24 @@ public enum ColumnType implements EnumConst {
     CHARACTER("CHR", ConnectFieldDataType.CHAR),
     BLOB("BLB", ConnectFieldDataType.BLOB),
     BOOLEAN("BLN", ConnectFieldDataType.BOOLEAN),
-    BOOLEAN_ARRAY("BLA", ConnectFieldDataType.STRING),
+    BOOLEAN_ARRAY("BLA", ConnectFieldDataType.BOOLEAN_ARRAY),
     CLOB("CLB", ConnectFieldDataType.CLOB),
     DATE("DTE", ConnectFieldDataType.DATE),
+    DATE_ARRAY("DTA", ConnectFieldDataType.DATE_ARRAY),
     DECIMAL("DEC", ConnectFieldDataType.DECIMAL),
+    DECIMAL_ARRAY("DEA", ConnectFieldDataType.DECIMAL_ARRAY),
     DOUBLE("DBL", ConnectFieldDataType.DOUBLE),
-    DOUBLE_ARRAY("DBA", ConnectFieldDataType.STRING),
+    DOUBLE_ARRAY("DBA", ConnectFieldDataType.DOUBLE_ARRAY),
     FLOAT("FLT", ConnectFieldDataType.FLOAT),
-    FLOAT_ARRAY("FLA", ConnectFieldDataType.STRING),
+    FLOAT_ARRAY("FLA", ConnectFieldDataType.FLOAT_ARRAY),
     SHORT("SHT", ConnectFieldDataType.SHORT),
-    SHORT_ARRAY("SHA", ConnectFieldDataType.STRING),
+    SHORT_ARRAY("SHA", ConnectFieldDataType.SHORT_ARRAY),
     INTEGER("INT", ConnectFieldDataType.INTEGER),
-    INTEGER_ARRAY("INA", ConnectFieldDataType.STRING),
+    INTEGER_ARRAY("INA", ConnectFieldDataType.INTEGER_ARRAY),
     LONG("LNG", ConnectFieldDataType.LONG),
-    LONG_ARRAY("LNA", ConnectFieldDataType.STRING),
+    LONG_ARRAY("LNA", ConnectFieldDataType.LONG_ARRAY),
     STRING("STR", ConnectFieldDataType.STRING),
-    STRING_ARRAY("STA", ConnectFieldDataType.STRING),
+    STRING_ARRAY("STA", ConnectFieldDataType.STRING_ARRAY),
     TIMESTAMP_UTC("TSU", ConnectFieldDataType.TIMESTAMP_UTC),
     TIMESTAMP("TSP", ConnectFieldDataType.TIMESTAMP),
     ENUMCONST("ECT", ConnectFieldDataType.ENUM);
@@ -76,6 +78,10 @@ public enum ColumnType implements EnumConst {
     
     public boolean isAuto() {
     	return AUTO.equals(this);
+    }
+    
+    public boolean isArray() {
+    	return connectType.isArray();
     }
 
     public boolean isDate() {

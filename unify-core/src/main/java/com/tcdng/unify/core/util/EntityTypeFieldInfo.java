@@ -41,20 +41,24 @@ public class EntityTypeFieldInfo {
 
 	private String sample;
 
+	private boolean array;
+	
 	public EntityTypeFieldInfo(DynamicEntityFieldType type, DataType dataType, String parentEntityName, String name,
-			String column, String sample) {
+			String column, String sample, boolean array) {
 		this.type = type;
 		this.dataType = dataType;
 		this.parentEntityName = parentEntityName;
 		this.name = name;
 		this.column = column;
 		this.sample = sample;
+		this.array = array;
 	}
 
 	public EntityTypeFieldInfo(DynamicEntityFieldType type, String childEntityName, String name) {
 		this.type = type;
 		this.childEntityName = childEntityName;
 		this.name = name;
+		this.array = false;
 	}
 
 	public DynamicEntityFieldType getType() {
@@ -83,6 +87,10 @@ public class EntityTypeFieldInfo {
 
 	public String getSample() {
 		return sample;
+	}
+
+	public boolean isArray() {
+		return array;
 	}
 
 }

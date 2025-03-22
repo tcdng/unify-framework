@@ -373,31 +373,32 @@ public class DynamicEntityInfo {
 
 			withTenantIdField = true;
 			columnFields.put(fieldName, new DynamicColumnFieldInfo(type, DataType.LONG, columnName, fieldName, mapped,
-					null, "0", 0, precision, scale, false, false, true));
+					null, "0", 0, precision, scale, false, false, false, true));
 			return this;
 		}
 
 		public Builder addField(DynamicFieldType type, DataType dataType, String columnName, String fieldName,
 				String mapped, String defaultVal, int length, int precision, int scale, boolean nullable,
-				boolean descriptive) throws UnifyException {
+				boolean descriptive, boolean array) throws UnifyException {
 			return addField(type, dataType, columnName, fieldName, mapped, null, defaultVal, length, precision, scale,
-					nullable, descriptive);
+					nullable, descriptive, array);
 		}
 
 		public Builder addField(DynamicFieldType type, DataType dataType, String columnName, String fieldName,
 				String mapped, String transformer, String defaultVal, int length, int precision, int scale,
-				boolean nullable, boolean descriptive) throws UnifyException {
+				boolean nullable, boolean descriptive, boolean array) throws UnifyException {
 			checkFieldNameExist(fieldName);
 			columnFields.put(fieldName, new DynamicColumnFieldInfo(type, dataType, columnName, fieldName, mapped,
-					transformer, defaultVal, length, precision, scale, nullable, descriptive, false));
+					transformer, defaultVal, length, precision, scale, nullable, descriptive, array, false));
 			return this;
 		}
 
 		public Builder addField(DynamicFieldType type, String enumClassName, String columnName, String fieldName,
-				String mapped, String defaultVal, boolean nullable, boolean descriptive) throws UnifyException {
+				String mapped, String defaultVal, boolean nullable, boolean descriptive, boolean array)
+				throws UnifyException {
 			checkFieldNameExist(fieldName);
 			columnFields.put(fieldName, new DynamicColumnFieldInfo(type, enumClassName, columnName, fieldName, mapped,
-					nullable, descriptive, false));
+					nullable, descriptive, array, false));
 			return this;
 		}
 
