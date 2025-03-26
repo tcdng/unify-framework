@@ -39,133 +39,141 @@ import com.tcdng.unify.web.ui.widget.control.DropdownCheckList;
 @Component("dropdownchecklist-writer")
 public class DropdownCheckListWriter extends AbstractPopupTextFieldWriter {
 
-    @Override
-    protected void writePopupContent(ResponseWriter writer, AbstractPopupTextField popupTextField)
-            throws UnifyException {
-        DropdownCheckList dropdownCheckList = (DropdownCheckList) popupTextField;
-        List<? extends Listable> listableList = dropdownCheckList.getListables();
-        int length = listableList.size();
-        if (length > 0) {
-            int columns = dropdownCheckList.getColumns();
-            if (columns <= 0) {
-                columns = 1;
-            } else if (columns > length) {
-                columns = length;
-            }
+	@Override
+	protected void writePopupContent(ResponseWriter writer, AbstractPopupTextField popupTextField)
+			throws UnifyException {
+		DropdownCheckList dropdownCheckList = (DropdownCheckList) popupTextField;
+		List<? extends Listable> listableList = dropdownCheckList.getListables();
+		if (dropdownCheckList.isLoadingFailure()) {
+			writer.write("<div class=\"dclframe\">");
+			writer.write("<span>");
+			writer.writeWithHtmlEscape(resolveSessionMessage("$m{list.loadingfailure}"));
+			writer.write("</span>");
+			writer.write("</div>");
+		} else {
+			int length = listableList.size();
+			if (length > 0) {
+				int columns = dropdownCheckList.getColumns();
+				if (columns <= 0) {
+					columns = 1;
+				} else if (columns > length) {
+					columns = length;
+				}
 
-            boolean isDisabled = dropdownCheckList.isDisabled();
-            dropdownCheckList
-                    .setDisabled(dropdownCheckList.isContainerDisabled() || !dropdownCheckList.isContainerEditable());
+				boolean isDisabled = dropdownCheckList.isDisabled();
+				dropdownCheckList.setDisabled(
+						dropdownCheckList.isContainerDisabled() || !dropdownCheckList.isContainerEditable());
 
-            writeHiddenPush(writer, dropdownCheckList, PushType.CHECKBOX);
+				writeHiddenPush(writer, dropdownCheckList, PushType.CHECKBOX);
 
-            boolean isContainerDisabled = dropdownCheckList.isContainerDisabled();
-            writer.write("<div class=\"dclframe\"><table>");
-            String selectAllOption = dropdownCheckList.getSelectAllOption();
-            if (selectAllOption != null) {
-                writer.write("<tr><td colspan=\"").write(columns * 2).write("\">");
-                writer.write("<span ");
-                writeTagId(writer, "fac_" + dropdownCheckList.getSelectAllId());
-                if (isContainerDisabled) {
-                    writeTagStyleClass(writer, "g_cbd");
-                } else {
-                    writeTagStyleClass(writer, "g_cbb");
-                }
-                writer.write("/>");
-                writer.write("<input type=\"checkbox\"");
-                writeTagId(writer, dropdownCheckList.getSelectAllId());
-                writer.write("/>");
-                writer.write("</span>");
-                if (StringUtils.isNotBlank(selectAllOption)) {
-                    writer.writeWithHtmlEscape(selectAllOption);
-                } else {
-                    writer.writeHtmlFixedSpace();
-                }
-                writer.write("</td></tr>");
-            }
+				boolean isContainerDisabled = dropdownCheckList.isContainerDisabled();
+				writer.write("<div class=\"dclframe\"><table>");
+				String selectAllOption = dropdownCheckList.getSelectAllOption();
+				if (selectAllOption != null) {
+					writer.write("<tr><td colspan=\"").write(columns * 2).write("\">");
+					writer.write("<span ");
+					writeTagId(writer, "fac_" + dropdownCheckList.getSelectAllId());
+					if (isContainerDisabled) {
+						writeTagStyleClass(writer, "g_cbd");
+					} else {
+						writeTagStyleClass(writer, "g_cbb");
+					}
+					writer.write("/>");
+					writer.write("<input type=\"checkbox\"");
+					writeTagId(writer, dropdownCheckList.getSelectAllId());
+					writer.write("/>");
+					writer.write("</span>");
+					if (StringUtils.isNotBlank(selectAllOption)) {
+						writer.writeWithHtmlEscape(selectAllOption);
+					} else {
+						writer.writeHtmlFixedSpace();
+					}
+					writer.write("</td></tr>");
+				}
 
-            String groupId = dropdownCheckList.getId();
-            for (int i = 0; i < length;) {
-                writer.write("<tr>");
-                for (int j = 0; j < columns; j++, i++) {
-                    if (i < length) {
-                        Listable listable = listableList.get(i);
-                        writer.write("<td>");
-                        String namingIndexId = dropdownCheckList.getNamingIndexedId(i);
-                        writer.write("<span ");
-                        writeTagId(writer, "fac_" + namingIndexId);
-                        if (isContainerDisabled) {
-                            writeTagStyleClass(writer, "g_cbd");
-                        } else {
-                            writeTagStyleClass(writer, "g_cbb");
-                        }
+				String groupId = dropdownCheckList.getId();
+				for (int i = 0; i < length;) {
+					writer.write("<tr>");
+					for (int j = 0; j < columns; j++, i++) {
+						if (i < length) {
+							Listable listable = listableList.get(i);
+							writer.write("<td>");
+							String namingIndexId = dropdownCheckList.getNamingIndexedId(i);
+							writer.write("<span ");
+							writeTagId(writer, "fac_" + namingIndexId);
+							if (isContainerDisabled) {
+								writeTagStyleClass(writer, "g_cbd");
+							} else {
+								writeTagStyleClass(writer, "g_cbb");
+							}
 
-                        writer.write("/>");
-                        writer.write("<input type=\"checkbox\"");
-                        writeTagId(writer, namingIndexId);
-                        writeTagName(writer, groupId);
-                        writeTagValue(writer, listable.getListKey());
-                        writer.write("/>");
-                        writer.write("</span>");
-                        writer.write("</td><td>");
-                        writer.writeWithHtmlEscape(listable.getListDescription());
-                        writer.write("</td>");
-                    } else {
-                        writer.write("<td>&nbsp;</td><td>&nbsp;</td>");
-                    }
-                }
-                writer.write("</tr>");
-            }
-            writer.write("</table></div>");
-            dropdownCheckList.setDisabled(isDisabled);
-        }
-    }
+							writer.write("/>");
+							writer.write("<input type=\"checkbox\"");
+							writeTagId(writer, namingIndexId);
+							writeTagName(writer, groupId);
+							writeTagValue(writer, listable.getListKey());
+							writer.write("/>");
+							writer.write("</span>");
+							writer.write("</td><td>");
+							writer.writeWithHtmlEscape(listable.getListDescription());
+							writer.write("</td>");
+						} else {
+							writer.write("<td>&nbsp;</td><td>&nbsp;</td>");
+						}
+					}
+					writer.write("</tr>");
+				}
+				writer.write("</table></div>");
+				dropdownCheckList.setDisabled(isDisabled);
+			}
+		}
+	}
 
-    @Override
-    protected void doWritePopupTextFieldBehaviour(ResponseWriter writer, AbstractPopupTextField popupTextField,
-            boolean popupEnabled) throws UnifyException {
-        DropdownCheckList dropdownCheckList = (DropdownCheckList) popupTextField;
-        ListControlInfo listControlInfo = dropdownCheckList.getListControlInfo(popupTextField.getFormatter());
-        writer.beginFunction("ux.rigDropdownChecklist");
-        writer.writeParam("pId", dropdownCheckList.getId());
-        writer.writeParam("pNm", dropdownCheckList.getId());
-        writer.writeParam("pFacId", dropdownCheckList.getFacadeId());
-        if (dropdownCheckList.getSelectAllOption() != null) {
-            writer.writeParam("pSelAllId", dropdownCheckList.getSelectAllId());
-        }
+	@Override
+	protected void doWritePopupTextFieldBehaviour(ResponseWriter writer, AbstractPopupTextField popupTextField,
+			boolean popupEnabled) throws UnifyException {
+		DropdownCheckList dropdownCheckList = (DropdownCheckList) popupTextField;
+		ListControlInfo listControlInfo = dropdownCheckList.getListControlInfo(popupTextField.getFormatter());
+		writer.beginFunction("ux.rigDropdownChecklist");
+		writer.writeParam("pId", dropdownCheckList.getId());
+		writer.writeParam("pNm", dropdownCheckList.getId());
+		writer.writeParam("pFacId", dropdownCheckList.getFacadeId());
+		if (dropdownCheckList.getSelectAllOption() != null) {
+			writer.writeParam("pSelAllId", dropdownCheckList.getSelectAllId());
+		}
 
-        writer.writeParam("pSelectIds", listControlInfo.getSelectIds());
-        writer.writeParam("pKeys", listControlInfo.getKeys());
-        writer.writeParam("pLabels", listControlInfo.getLabels());
-        writer.writeParam("pVal", dropdownCheckList.getValue(String[].class));
-        writer.writeParam("pEnabled", popupEnabled);
-        writer.writeParam("pActive", popupEnabled);
-        writer.endFunction();
-    }
+		writer.writeParam("pSelectIds", listControlInfo.getSelectIds());
+		writer.writeParam("pKeys", listControlInfo.getKeys());
+		writer.writeParam("pLabels", listControlInfo.getLabels());
+		writer.writeParam("pVal", dropdownCheckList.getValue(String[].class));
+		writer.writeParam("pEnabled", popupEnabled);
+		writer.writeParam("pActive", popupEnabled);
+		writer.endFunction();
+	}
 
-    @Override
-    protected String getOnShowAction() throws UnifyException {
-        return null;
-    }
+	@Override
+	protected String getOnShowAction() throws UnifyException {
+		return null;
+	}
 
-    @Override
-    protected String getOnShowParam(AbstractPopupTextField popupTextField) throws UnifyException {
-        return null;
-    }
+	@Override
+	protected String getOnShowParam(AbstractPopupTextField popupTextField) throws UnifyException {
+		return null;
+	}
 
-    @Override
-    protected String getOnHideAction() throws UnifyException {
-        return "ux.dcHidePopup";
-    }
+	@Override
+	protected String getOnHideAction() throws UnifyException {
+		return "ux.dcHidePopup";
+	}
 
-    @Override
-    protected String getOnHideParam(AbstractPopupTextField popupTextField) throws UnifyException {
-        DropdownCheckList dropdownCheckList = (DropdownCheckList) popupTextField;
-        JsonWriter jw = new JsonWriter();
-        jw.beginObject();
-        jw.write("id", dropdownCheckList.getId());
-        jw.endObject();
-        return jw.toString();
-    }
+	@Override
+	protected String getOnHideParam(AbstractPopupTextField popupTextField) throws UnifyException {
+		DropdownCheckList dropdownCheckList = (DropdownCheckList) popupTextField;
+		JsonWriter jw = new JsonWriter();
+		jw.beginObject();
+		jw.write("id", dropdownCheckList.getId());
+		jw.endObject();
+		return jw.toString();
+	}
 
 }
