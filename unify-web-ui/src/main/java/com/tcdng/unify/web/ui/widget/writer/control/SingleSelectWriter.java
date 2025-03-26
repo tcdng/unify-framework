@@ -40,78 +40,84 @@ import com.tcdng.unify.web.ui.widget.control.SingleSelect;
 public class SingleSelectWriter extends AbstractPopupTextFieldWriter {
 
     @Override
-    protected void writePopupContent(ResponseWriter writer, AbstractPopupTextField popupTextField)
-            throws UnifyException {
-        SingleSelect singleSelect = (SingleSelect) popupTextField;
+	protected void writePopupContent(ResponseWriter writer, AbstractPopupTextField popupTextField)
+			throws UnifyException {
+		SingleSelect singleSelect = (SingleSelect) popupTextField;
 
-        writer.write("<div id=\"").write(singleSelect.getFramePanelId())
-                .write("\" class=\"ssborder\" style=\"overflow-y:auto;overflow-x:hidden;\" tabindex=\"-1\">");
-        writer.write("<div id=\"").write(singleSelect.getListPanelId()).write("\" class=\"sslist\">");
-        List<? extends Listable> listableList = singleSelect.getListables();
-        int length = listableList.size();
+		writer.write("<div id=\"").write(singleSelect.getFramePanelId())
+				.write("\" class=\"ssborder\" style=\"overflow-y:auto;overflow-x:hidden;\" tabindex=\"-1\">");
+		writer.write("<div id=\"").write(singleSelect.getListPanelId()).write("\" class=\"sslist\">");
+		List<? extends Listable> listableList = singleSelect.getListables();
+		if (singleSelect.isLoadingFailure()) {
+			writer.write("<a id=\"").write(singleSelect.getBlankOptionId()).write("\">");
+			writer.writeWithHtmlEscape(resolveSessionMessage("$m{list.loadingfailure}"));
+			writer.write("</a>");
+		} else {
+			final int length = listableList.size();
+			String blankOption = singleSelect.getBlankOption();
+			if (blankOption != null) {
+				writer.write("<a id=\"").write(singleSelect.getBlankOptionId()).write("\">");
+				if (StringUtils.isBlank(blankOption)) {
+					writer.writeHtmlFixedSpace();
+				} else {
+					writer.writeWithHtmlEscape(blankOption);
 
-        String blankOption = singleSelect.getBlankOption();
-        if (blankOption != null) {
-            writer.write("<a id=\"").write(singleSelect.getBlankOptionId()).write("\">");
-            if (StringUtils.isBlank(blankOption)) {
-                writer.writeHtmlFixedSpace();
-            } else {
-                writer.writeWithHtmlEscape(blankOption);
+				}
 
-            }
+				writer.write("</a>");
+			}
 
-            writer.write("</a>");
-        }
+			final boolean htmlescape = singleSelect.isHtmlEscape();
+			for (int i = 0; i < length; i++) {
+				writer.write("<a");
+				writeTagId(writer, singleSelect.getNamingIndexedId(i));
+				if (htmlescape) {
+					writer.write(" class=\"norm\">");
+				} else {
+					writer.write(" class=\"norm g_fsm\">");
+				}
 
-        final boolean htmlescape = singleSelect.isHtmlEscape();
-        for (int i = 0; i < length; i++) {
-            writer.write("<a");
-            writeTagId(writer, singleSelect.getNamingIndexedId(i));
-            if (htmlescape) {
-            	writer.write(" class=\"norm\">");
-            } else {
-            	writer.write(" class=\"norm g_fsm\">");
-            }
-            
-            writer.write("</a>");
-        }
-        writer.write("</div>");
-        writer.write("</div>");
-    }
+				writer.write("</a>");
+			}
+		}
+
+		writer.write("</div>");
+		writer.write("</div>");
+	}
 
     @Override
-    protected void doWritePopupTextFieldBehaviour(ResponseWriter writer, AbstractPopupTextField popupTextField,
-            boolean popupEnabled) throws UnifyException {
-        SingleSelect singleSelect = (SingleSelect) popupTextField;
-        ListControlInfo listControlInfo = singleSelect.getListControlInfo(singleSelect.getFormatter());
+	protected void doWritePopupTextFieldBehaviour(ResponseWriter writer, AbstractPopupTextField popupTextField,
+			boolean popupEnabled) throws UnifyException {
+		SingleSelect singleSelect = (SingleSelect) popupTextField;
+		ListControlInfo listControlInfo = singleSelect.getListControlInfo(singleSelect.getFormatter());
 
-        // Append rigging
-        final boolean htmlescape = singleSelect.isHtmlEscape();
-        writer.beginFunction("ux.rigSingleSelect");
-        writer.writeParam("pId", singleSelect.getId());
-        writer.writeParam("pFacId", singleSelect.getFacadeId());
-        writer.writeParam("pFrmId", singleSelect.getFramePanelId());
-        writer.writeParam("pLstId", singleSelect.getListPanelId());
-        writer.writeParam("pBlnkId", singleSelect.getBlankOptionId());
-        writer.writeParam("pICnt", listControlInfo.size());
-        writer.writeParam("pSelectIds", listControlInfo.getSelectIds());
-        writer.writeParam("pKeys", listControlInfo.getKeys());
-        writer.writeParam("pLabels", listControlInfo.getLabels());
-        writer.writeParam("pIsBlankOption", singleSelect.getBlankOption() != null);
-        if (htmlescape) {
-        	writer.writeParam("pNormCls", "norm");
-            writer.writeParam("pSelCls", getUserColorStyleClass("sel"));
-        } else {
-        	writer.writeParam("pNormCls", "norm g_fsm");
-            writer.writeParam("pSelCls", getUserColorStyleClass("sel") + " g_fsm");
-        }
-        
-        writer.writeParam("pEnabled", popupEnabled);
-        writer.writeParam("pColors", singleSelect.isColors());
-        writer.writeParam("pSelColId", singleSelect.getPopupButtonColorId());
-        writer.writeParam("pVal", singleSelect.getStringValue());
-        writer.endFunction();
-    }
+		// Append rigging
+		final boolean htmlescape = singleSelect.isHtmlEscape();
+		writer.beginFunction("ux.rigSingleSelect");
+		writer.writeParam("pId", singleSelect.getId());
+		writer.writeParam("pFacId", singleSelect.getFacadeId());
+		writer.writeParam("pFrmId", singleSelect.getFramePanelId());
+		writer.writeParam("pLstId", singleSelect.getListPanelId());
+		writer.writeParam("pBlnkId", singleSelect.getBlankOptionId());
+		writer.writeParam("pICnt", listControlInfo.size());
+		writer.writeParam("pSelectIds", listControlInfo.getSelectIds());
+		writer.writeParam("pKeys", listControlInfo.getKeys());
+		writer.writeParam("pLabels", listControlInfo.getLabels());
+		writer.writeParam("pIsBlankOption", singleSelect.isLoadingFailure() || singleSelect.getBlankOption() != null);
+		if (htmlescape) {
+			writer.writeParam("pNormCls", "norm");
+			writer.writeParam("pSelCls", getUserColorStyleClass("sel"));
+		} else {
+			writer.writeParam("pNormCls", "norm g_fsm");
+			writer.writeParam("pSelCls", getUserColorStyleClass("sel") + " g_fsm");
+		}
+
+		writer.writeParam("pEnabled", popupEnabled);
+		writer.writeParam("pColors", singleSelect.isColors());
+		writer.writeParam("pSelColId", singleSelect.getPopupButtonColorId());
+		writer.writeParam("pVal", singleSelect.getStringValue());
+		writer.endFunction();
+	}
 
     @Override
     protected void writeTrailingAddOn(ResponseWriter writer, Widget widget) throws UnifyException {
