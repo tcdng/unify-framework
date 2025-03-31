@@ -155,7 +155,7 @@ public abstract class AbstractLog4jLogger extends AbstractUnifyComponent impleme
 							String fileMaxSize = Unify.getSetting(String.class,
 									UnifyCorePropertyConstants.APPLICATION_LOG_FILEMAXSIZE);
 							if (fileMaxSize == null) {
-								fileMaxSize = "1MB";
+								fileMaxSize = "5MB";
 							}
 
 							int fileMaxBackup = Unify.getSetting(int.class,

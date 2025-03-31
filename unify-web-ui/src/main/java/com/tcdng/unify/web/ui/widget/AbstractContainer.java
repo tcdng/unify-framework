@@ -196,6 +196,14 @@ public abstract class AbstractContainer extends AbstractDataTransferWidget imple
     }
 
     @Override
+	public void setWidgetFocus(String shortName) throws UnifyException {
+    	Widget widget = getWidgetByShortName(shortName);
+    	if (widget instanceof Control) {
+    		((Control) widget).setFocus();
+    	}
+	}
+
+	@Override
     public void populate(DataTransferBlock transferBlock) throws UnifyException {
         if (transferBlock != null) {
             DataTransferBlock childBlock = transferBlock.getChildBlock();
