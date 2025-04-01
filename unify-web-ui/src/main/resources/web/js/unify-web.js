@@ -5345,19 +5345,26 @@ ux.textInputKeyup = function(uEv) {
 		var evp = uEv.evp;
 		if (evp.sTextCase) {
 			var pos = ux.getCaretPosition(trgObj);
-			var string = trgObj.value;
+			var val = trgObj.value;
 			if ("upper" == evp.sTextCase) {
-				trgObj.value = string.toUpperCase();
+				trgObj.value = val.toUpperCase();
 			} else if ("capital" == evp.sTextCase) {
-				const baseArr = string.split(" ")
+				const baseArr = val.split(" ")
 				const res = [];
 				for (var i = 0; i < baseArr.length; i++) {
 					var str = baseArr[i];
 					res.push(str.charAt(0).toUpperCase() + str.slice(1));
 				}
 				trgObj.value = res.join(" ");
+			} else if ("path" == evp.sTextCase) {
+				if (val && val.length > 0) {
+					if (val.charAt(0) != '/') {
+						trgObj.value = "/" + val;
+						pos.start++;
+					}
+				}
 			} else if ("camel" == evp.sTextCase) {
-				const baseArr = string.split(" ")
+				const baseArr = val.split(" ")
 				const res = [];
 				for (var i = 0; i < baseArr.length; i++) {
 					var str = baseArr[i];
@@ -5369,7 +5376,7 @@ ux.textInputKeyup = function(uEv) {
 				}
 				trgObj.value = res.join(" ");
 			} else {
-				trgObj.value = string.toLowerCase();
+				trgObj.value = val.toLowerCase();
 			}
 			
 			ux.setCaretPosition(trgObj, pos.start, pos.start);
