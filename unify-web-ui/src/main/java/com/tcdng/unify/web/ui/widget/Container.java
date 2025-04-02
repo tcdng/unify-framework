@@ -167,6 +167,16 @@ public interface Container extends DataTransferWidget, WidgetContainer {
     boolean isWidgetEditable(String shortName) throws UnifyException;
 
     /**
+     * Sets the focused state of a widget in container.
+     * 
+     * @param shortName
+     *            the widget short name
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void setWidgetFocus(String shortName) throws UnifyException;
+
+    /**
      * Returns a widget from page associated with this container by long name.
      * 
      * @param clazz

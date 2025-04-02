@@ -29,7 +29,8 @@ public enum TextCase implements EnumConst {
     LOWER("LC"),
     UPPER("UC"),
     CAMEL("CM"),
-    CAPITAL("CP");
+    CAPITAL("CP"),
+    PATH("PT");
 
     private final String code;
 

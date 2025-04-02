@@ -872,6 +872,10 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 		return getPageRequestContextUtil().getRequestPage().isWidgetEditable(shortName);
 	}
 
+	protected void setPageWidgetFocus(String shortName) throws UnifyException {
+		getPageRequestContextUtil().getRequestPage().setWidgetFocus(shortName);
+	}
+
 	/**
 	 * Launches a task using supplied setup.
 	 * 

@@ -82,6 +82,16 @@ public final class WebRegexUtils {
 	}
 
     /**
+     * Gets a JavaScript REGEX that allows only paths.
+     * 
+     * @throws UnifyException
+     *             if an error occurs
+     */
+	public static String getPathFormatRegex() throws UnifyException {
+		return "^(?!.*\\\\/\\\\/)[a-zA-Z0-9_$/-]+$";
+	}
+
+    /**
      * Gets a JavaScript REGEX that allows alphanumeric characters and all special characters.
      * 
      * @return the name format regex
