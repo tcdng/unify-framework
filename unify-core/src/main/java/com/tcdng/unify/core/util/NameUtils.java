@@ -59,6 +59,52 @@ public final class NameUtils {
         return NameUtils.describeName(description);
     }
 
+	/**
+	 * Inflates text as name. All spaces and underscores are removed with camel
+	 * casing.
+	 * 
+	 * @param text the text to inflate
+	 * @return the inflated text
+	 */
+	public static String inflateAsName(String text) {
+		if (text != null) {
+			if (text.isEmpty()) {
+				return text;
+			}
+			
+			StringBuilder sb = new StringBuilder();
+			final int len = text.length();
+			boolean caps = false;
+			for(int i = 0; i < len; i++) {
+				char ch = text.charAt(i);
+				if (ch == '_' || ch == ' ') {
+					caps = true;
+				} else {
+					sb.append(caps ? Character.toUpperCase(ch) : ch);
+					caps = false;
+				}
+			}
+			
+			return sb.toString();
+		}
+
+		return null;
+	}
+
+	/**
+	 * Inflates text as name then applies describe function.
+	 * 
+	 * @param text the text to inflate
+	 * @return the inflated text
+	 */
+	public static String inflateAsDescription(String text) {
+		if (text != null) {
+			return NameUtils.describeName(NameUtils.inflateAsName(text));
+		}
+
+		return null;
+	}
+
     /**
      * Describes a name. Breaks down a name into spaced words by detecting a
      * lowercase-uppercase character junction and inserting the space character, '

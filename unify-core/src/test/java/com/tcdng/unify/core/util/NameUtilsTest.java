@@ -29,6 +29,22 @@ import org.junit.Test;
 public class NameUtilsTest {
 
     @Test
+    public void testInflateAsName() throws Exception {
+        assertNull(NameUtils.inflateAsName(null));
+        assertEquals("", NameUtils.inflateAsName(""));
+        assertEquals("runOnTime", NameUtils.inflateAsName("run_on_time"));
+        assertEquals("TheSkyIsBlue", NameUtils.inflateAsName("The sky is blue"));
+    }
+
+    @Test
+    public void testInflateAsDescription() throws Exception {
+        assertNull(NameUtils.inflateAsDescription(null));
+        assertEquals("", NameUtils.inflateAsDescription(""));
+        assertEquals("Run On Time", NameUtils.inflateAsDescription("run_on_time"));
+        assertEquals("The Sky Is Blue", NameUtils.inflateAsDescription("The sky is blue"));
+    }
+
+    @Test
     public void testDescribeName() throws Exception {
         assertNull(NameUtils.describeName(null));
         assertEquals("", NameUtils.describeName(""));
