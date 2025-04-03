@@ -1076,7 +1076,7 @@ public interface UnifyCoreErrorConstants {
     /**
      * No password authentication service component configured for application.
      */
-    String NO_PASSWORD_AUTH_SERVICE_COMP = "UC_0115";
+    //String NO_PASSWORD_AUTH_SERVICE_COMP = "UC_0115";
 
     /** Default restriction not allowed for field type. Class - {0}, name - {1} */
     String DEFAULT_RESTRICTION_FIELD_NOT_ALLOWED = "UC_0116";

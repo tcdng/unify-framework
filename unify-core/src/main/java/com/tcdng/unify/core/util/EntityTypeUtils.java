@@ -79,11 +79,11 @@ public final class EntityTypeUtils {
 
 					final String val = record.get(i);
 					if (val.matches("-?\\d+")) {
-						deib.addFieldInfo(DataType.INTEGER, fieldName, columnName, val, false);
+						deib.addFieldInfo(DataType.INTEGER, fieldName, null, columnName, val, false);
 					} else if (val.matches("-?\\d*\\.\\d+")) {
-						deib.addFieldInfo(DataType.DECIMAL, fieldName, columnName, val, false);
+						deib.addFieldInfo(DataType.DECIMAL, fieldName, null, columnName, val, false);
 					} else {
-						deib.addFieldInfo(DataType.STRING, fieldName, columnName, val, false);
+						deib.addFieldInfo(DataType.STRING, fieldName, null, columnName, val, false);
 					}
 				}
 
@@ -139,43 +139,45 @@ public final class EntityTypeUtils {
 		if (_parentEntityTypeInfo != null) {
 			final String _fieldName = _parentEntityTypeInfo.getName() + "Id";
 			final String _columnName = SqlUtils.generateSchemaElementName(_fieldName);
-			deib.addForeignKeyInfo(_parentEntityTypeInfo.getName(), _fieldName, _columnName);
+			deib.addForeignKeyInfo(_parentEntityTypeInfo.getName(), _fieldName, _fieldName, _columnName);
 		}
 
-		for (String fieldName : object.names()) {
-			final String columnName = SqlUtils.generateSchemaElementName(fieldName);
-			final String longName = name + StringUtils.capitalizeFirstLetter(fieldName);
-			JsonValue field = object.get(fieldName);
+		for (String jsonFieldName : object.names()) {
+			final String nrmFieldName = NameUtils.inflateAsName(jsonFieldName);
+			final String columnName = SqlUtils.generateSchemaElementName(nrmFieldName);
+			final String longName = name + StringUtils.capitalizeFirstLetter(nrmFieldName);
+			JsonValue field = object.get(jsonFieldName);
 			final boolean array = field.isArray();
 			if (array) {
 				JsonArray _array = (JsonArray) field;
 				if (_array.isEmpty()) {
-					throw new IllegalArgumentException("Can not resolve element type of empty array field [" + fieldName +"].");
+					throw new IllegalArgumentException(
+							"Can not resolve element type of empty array field [" + jsonFieldName + "].");
 				}
-				
+
 				field = _array.get(0);
 			}
-			
+
 			if (field.isString()) {
-				deib.addFieldInfo(DataType.STRING, fieldName, columnName, field.asString(), array);
+				deib.addFieldInfo(DataType.STRING, nrmFieldName, jsonFieldName, columnName, field.asString(), array);
 			} else if (field.isNumber()) {
 				if (field.toString().indexOf('.') >= 0) {
-					deib.addFieldInfo(DataType.DECIMAL, fieldName, columnName,
+					deib.addFieldInfo(DataType.DECIMAL, nrmFieldName, jsonFieldName, columnName,
 							field.isNull() ? null : String.valueOf(field.asDouble()), array);
 				} else {
-					deib.addFieldInfo(DataType.INTEGER, fieldName, columnName,
+					deib.addFieldInfo(DataType.INTEGER, nrmFieldName, jsonFieldName, columnName,
 							field.isNull() ? null : String.valueOf(field.asInt()), array);
 				}
 			} else if (field.isBoolean()) {
-				deib.addFieldInfo(DataType.BOOLEAN, fieldName, columnName,
+				deib.addFieldInfo(DataType.BOOLEAN, nrmFieldName, jsonFieldName, columnName,
 						field.isNull() ? null : String.valueOf(field.asBoolean()), array);
 			} else if (field.isObject()) {
 				final EntityTypeInfo _childEntityInfo = getEntityInfo(list, (JsonObject) field, longName, _entityInfo,
 						depth + 1);
 				if (array) {
-					deib.addChildListInfo(_childEntityInfo.getName(), fieldName);
+					deib.addChildListInfo(_childEntityInfo.getName(), nrmFieldName, jsonFieldName);
 				} else {
-					deib.addChildInfo(_childEntityInfo.getName(), fieldName);
+					deib.addChildInfo(_childEntityInfo.getName(), nrmFieldName, jsonFieldName);
 				}
 			}
 		}
