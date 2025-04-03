@@ -285,8 +285,13 @@ public class MySqlDialect extends AbstractSqlDataSourceDialect {
 			if (!sqlFieldSchemaInfo.isNullable()) {
 				sb.append("UPDATE ").append(sqlEntitySchemaInfo.getSchemaTableName()).append(" SET ")
 						.append(sqlFieldSchemaInfo.getPreferredColumnName()).append(" = ");
-				sqlDataTypePolicy.appendDefaultVal(sb, sqlFieldSchemaInfo.getFieldType(),
-						sqlFieldSchemaInfo.getDefaultVal());
+				if (sqlFieldSchemaInfo.getColumnType().isLob()) {
+					sb.append("''");
+				} else {
+					sqlDataTypePolicy.appendDefaultVal(sb, sqlFieldSchemaInfo.getFieldType(),
+							sqlFieldSchemaInfo.getDefaultVal());
+				}
+
 				sb.append(" WHERE ").append(sqlFieldSchemaInfo.getPreferredColumnName()).append(" IS NULL");
 				sqlList.add(sb.toString());
 				StringUtils.truncate(sb);

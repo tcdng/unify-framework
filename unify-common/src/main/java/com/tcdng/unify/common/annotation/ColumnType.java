@@ -92,6 +92,14 @@ public enum ColumnType implements EnumConst {
     	return BLOB.equals(this) || CLOB.equals(this);
     }
 
+    public boolean isBlob() {
+    	return BLOB.equals(this);
+    }
+
+    public boolean isClob() {
+    	return CLOB.equals(this);
+    }
+
     public boolean isString() {
     	return STRING.equals(this);
     }

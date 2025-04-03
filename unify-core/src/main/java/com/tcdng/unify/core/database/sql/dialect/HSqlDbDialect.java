@@ -256,8 +256,15 @@ public class HSqlDbDialect extends AbstractSqlDataSourceDialect {
 			if (!sqlFieldSchemaInfo.isNullable()) {
 				sb.append("UPDATE ").append(sqlEntitySchemaInfo.getSchemaTableName()).append(" SET ")
 						.append(sqlFieldSchemaInfo.getPreferredColumnName()).append(" = ");
-				sqlDataTypePolicy.appendDefaultVal(sb, sqlFieldSchemaInfo.getFieldType(),
-						sqlFieldSchemaInfo.getDefaultVal());
+				if (sqlFieldSchemaInfo.getColumnType().isBlob()) {
+					sb.append("CAST('' AS BLOB)");
+				} else if (sqlFieldSchemaInfo.getColumnType().isClob()) {
+					sb.append("CAST('' AS CLOB)");
+				} else {
+					sqlDataTypePolicy.appendDefaultVal(sb, sqlFieldSchemaInfo.getFieldType(),
+							sqlFieldSchemaInfo.getDefaultVal());
+				}
+
 				sb.append(" WHERE ").append(sqlFieldSchemaInfo.getPreferredColumnName()).append(" IS NULL");
 				sqlList.add(sb.toString());
 				StringUtils.truncate(sb);
