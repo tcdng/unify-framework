@@ -579,7 +579,7 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 								&& StringUtils.isNotBlank(pkColumnName)) {
 							TableConstraint tConst = managedTableConstraints.get(fkName);
 							if (tConst == null) {
-								tConst = new TableConstraint(fkName, pkTableName, false);
+								tConst = new TableConstraint(fkName, pkTableName, false, false);
 								managedTableConstraints.put(fkName, tConst);
 							}
 
@@ -598,7 +598,7 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 							boolean unique = SqlUtils.isUniqueConstraintName(idxName);
 							TableConstraint tConst = managedTableConstraints.get(idxName);
 							if (tConst == null) {
-								tConst = new TableConstraint(idxName, null, unique);
+								tConst = new TableConstraint(idxName, null, false, unique);
 								managedTableConstraints.put(idxName, tConst);
 							}
 
@@ -897,12 +897,15 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 
 		private Set<String> columns;
 
+		private boolean check;
+
 		private boolean unique;
 
-		public TableConstraint(String name, String tableName, boolean unique) {
+		public TableConstraint(String name, String tableName, boolean check, boolean unique) {
 			this.columns = new HashSet<String>();
 			this.name = name;
 			this.tableName = tableName;
+			this.check = check;
 			this.unique = unique;
 		}
 
@@ -928,6 +931,10 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 
 		public boolean isUniqueConst() {
 			return tableName == null && unique;
+		}
+
+		public boolean isCheck() {
+			return check;
 		}
 
 		public boolean isIndex() {
