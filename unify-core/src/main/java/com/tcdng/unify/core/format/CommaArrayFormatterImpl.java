@@ -26,7 +26,7 @@ import com.tcdng.unify.core.util.StringUtils;
  * @author The Code Department
  * @since 1.0
  */
-@Component("commaarrayformat")
+@Component(name = "commaarrayformat", description = "Comma Array Format")
 public class CommaArrayFormatterImpl extends AbstractFormatter<String[]> {
 
     public CommaArrayFormatterImpl() {
