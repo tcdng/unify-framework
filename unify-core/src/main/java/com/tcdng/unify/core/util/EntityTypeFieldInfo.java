@@ -37,6 +37,8 @@ public class EntityTypeFieldInfo {
 
 	private String name;
 
+	private String jsonName;
+
 	private String column;
 
 	private String sample;
@@ -44,20 +46,22 @@ public class EntityTypeFieldInfo {
 	private boolean array;
 	
 	public EntityTypeFieldInfo(DynamicEntityFieldType type, DataType dataType, String parentEntityName, String name,
-			String column, String sample, boolean array) {
+			String jsonName, String column, String sample, boolean array) {
 		this.type = type;
 		this.dataType = dataType;
 		this.parentEntityName = parentEntityName;
 		this.name = name;
+		this.jsonName = jsonName;
 		this.column = column;
 		this.sample = sample;
 		this.array = array;
 	}
 
-	public EntityTypeFieldInfo(DynamicEntityFieldType type, String childEntityName, String name) {
+	public EntityTypeFieldInfo(DynamicEntityFieldType type, String childEntityName, String name, String jsonName) {
 		this.type = type;
 		this.childEntityName = childEntityName;
 		this.name = name;
+		this.jsonName = jsonName;
 		this.array = false;
 	}
 
@@ -81,6 +85,10 @@ public class EntityTypeFieldInfo {
 		return name;
 	}
 
+	public String getJsonName() {
+		return jsonName;
+	}
+
 	public String getColumn() {
 		return column;
 	}
@@ -93,4 +101,7 @@ public class EntityTypeFieldInfo {
 		return array;
 	}
 
+	public String toString() {
+		return StringUtils.toXmlString(this);
+	}
 }

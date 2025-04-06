@@ -58,6 +58,8 @@ import com.tcdng.unify.core.format.Formatter;
  */
 public class DataUtilsTest extends AbstractUnifyComponentTest {
 
+	private Formatter<?> commaArrayFormatter;
+
 	private Formatter<?> pipeArrayFormatter;
 
 	private List<Book> bookList;
@@ -850,7 +852,7 @@ public class DataUtilsTest extends AbstractUnifyComponentTest {
 	}
 
 	@Test
-	public void testConvertToStringFromArray() throws Exception {
+	public void testConvertToStringFromPipeArray() throws Exception {
 		String val = DataUtils.convert(String.class, new String[] { "Red", "Green", "Blue" });
 		assertEquals("Red,Green,Blue", val);
 
@@ -866,6 +868,56 @@ public class DataUtilsTest extends AbstractUnifyComponentTest {
 	}
 
 	@Test
+	public void testConvertToStringFromCommaArray() throws Exception {
+		String val = DataUtils.convert(String.class, new String[] { "Red", "Green", "Blue" });
+		assertEquals("Red,Green,Blue", val);
+
+		val = DataUtils.convert(String.class, new String[] { "Red", "Green", "Blue" }, commaArrayFormatter);
+		assertEquals("Red,Green,Blue", val);
+
+		String[] vals = DataUtils.convert(String[].class, val, commaArrayFormatter);
+		assertNotNull(vals);
+		assertEquals(3, vals.length);
+		assertEquals("Red", vals[0]);
+		assertEquals("Green", vals[1]);
+		assertEquals("Blue", vals[2]);
+	}
+
+	@Test
+	public void testConvertToIntegerFromCommaArray() throws Exception {
+		int[] vals = DataUtils.convert(int[].class, "10,75,32", commaArrayFormatter);
+		assertNotNull(vals);
+		assertEquals(3, vals.length);
+		assertEquals(10, vals[0]);
+		assertEquals(75, vals[1]);
+		assertEquals(32, vals[2]);
+	}
+
+	@Test
+	public void testConvertToIntegerFromPipeArray() throws Exception {
+		int[] vals = DataUtils.convert(int[].class, "10|75|32", pipeArrayFormatter);
+		assertNotNull(vals);
+		assertEquals(3, vals.length);
+		assertEquals(10, vals[0]);
+		assertEquals(75, vals[1]);
+		assertEquals(32, vals[2]);
+	}
+
+	@Test
+	public void testConvertToCommaArrayFromInteger() throws Exception {
+		String vals = DataUtils.convert(String.class, new int[]{10,75,32}, commaArrayFormatter);
+		assertNotNull(vals);
+		assertEquals(vals, "10,75,32");
+	}
+
+	@Test
+	public void testConvertToPipeArrayFromInteger() throws Exception {
+		String vals = DataUtils.convert(String.class, new int[]{10,75,32}, pipeArrayFormatter);
+		assertNotNull(vals);
+		assertEquals(vals, "10|75|32");
+	}
+
+	@Test
 	public void testAddBigDecimal() throws Exception {
 		assertEquals(BigDecimal.ZERO, DataUtils.add(null, null));
 		assertEquals(BigDecimal.TEN, DataUtils.add(BigDecimal.TEN, null));
@@ -875,8 +927,8 @@ public class DataUtilsTest extends AbstractUnifyComponentTest {
 
 	@Override
 	protected void onSetup() throws Exception {
+		commaArrayFormatter = (Formatter<?>) getUplComponent(Locale.ENGLISH, "!commaarrayformat");
 		pipeArrayFormatter = (Formatter<?>) getUplComponent(Locale.ENGLISH, "!pipearrayformat");
-
 	}
 
 	@Override

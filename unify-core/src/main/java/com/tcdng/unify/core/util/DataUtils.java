@@ -1053,8 +1053,10 @@ public final class DataUtils {
 		try {
 			return DataUtils.getObjectFromJsonValue(comp, clazz, null, Json.parse(reader));
 		} catch (UnifyException e) {
+			e.printStackTrace();
 			throw e;
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new UnifyException(UnifyCoreErrorConstants.DATAUTIL_ERROR, e);
 		}
 	}
@@ -1604,7 +1606,7 @@ public final class DataUtils {
 			throws UnifyException {
 		try {
 			return ConverterUtils.convert(targetClazz, value, formatter);
-		} catch (Exception e) {
+		} catch (Exception e) {e.printStackTrace();
 			throw new UnifyException(UnifyCoreErrorConstants.DATAUTIL_ERROR, e);
 		}
 	}

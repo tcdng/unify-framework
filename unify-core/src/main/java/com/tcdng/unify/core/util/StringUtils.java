@@ -48,6 +48,25 @@ public final class StringUtils {
 	}
 
 	/**
+	 * Trims all non-null strings.
+	 * 
+	 * @param str supplied string array
+	 * @return a new string array with trimmed string otherwise bull
+	 */
+	public static String[] trimAll(String[] str) {
+		if (str != null) {
+			String[] result = new String[str.length];
+			for (int i = 0; i < str.length; i++) {
+				result[i] = str[i] != null ? str[i].trim() : null;
+			}
+
+			return result;
+		}
+
+		return null;
+	}
+	
+	/**
 	 * Gets string composition.
 	 * 
 	 * @param str the string

@@ -58,7 +58,7 @@ public class LongConverter extends AbstractConverter<Long> {
 		if (value instanceof String) {
 			String string = ((String) value).trim();
 			if (!string.isEmpty()) {
-				if (formatter == null) {
+				if (formatter == null || formatter.isArrayFormat()) {
 					return Long.decode(string);
 				}
 				return doConvert(formatter.parse(string), null);
