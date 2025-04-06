@@ -235,6 +235,7 @@ public final class ConverterUtils {
 					} else if (!targetClass.isAssignableFrom(arrValue.getClass())) {
 						arrValue = converter.convert(arrValue, formatter);
 					}
+
 					Array.set(result, i, arrValue);
 				}
 			}

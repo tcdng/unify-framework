@@ -40,7 +40,7 @@ public class PipeArrayFormatterImpl extends AbstractFormatter<String[]> {
 
     @Override
     protected String[] doParse(String string) throws UnifyException {
-        return string != null? StringUtils.split(string, "\\|") : null;
+        return StringUtils.trimAll(string != null? StringUtils.split(string, "\\|") : null);
     }
 
     @Override

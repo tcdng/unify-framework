@@ -31,7 +31,7 @@ public class IntegerConverter extends AbstractConverter<Integer> {
 		if (value instanceof String) {
 			String string = ((String) value).trim();
 			if (!string.isEmpty()) {
-				if (formatter == null) {
+				if (formatter == null || formatter.isArrayFormat()) {
 					return string.indexOf('.') >= 0 ? (int) Double.parseDouble(string) : Integer.decode(string);
 				}
 				return doConvert(formatter.parse(string), null);

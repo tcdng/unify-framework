@@ -100,6 +100,7 @@ public class StringConverter extends AbstractConverter<String> {
                 }
             }
 
+            value = ConverterUtils.convert(((Formatter<Object>) formatter).getDataType(), value);
             return ((Formatter<Object>) formatter).format(value);
         }
         return null;
