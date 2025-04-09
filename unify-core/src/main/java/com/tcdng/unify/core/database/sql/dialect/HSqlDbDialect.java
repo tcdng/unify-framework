@@ -115,6 +115,26 @@ public class HSqlDbDialect extends AbstractSqlDataSourceDialect {
 		return false;
 	}
 
+
+	@Override
+	public String generateGetCheckConstraintsSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, PrintFormat format)
+			throws UnifyException {
+		StringBuilder sb = new StringBuilder();
+		sb.append("SELECT * FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_TYPE = 'CHECK' AND TABLE_NAME = '")
+		.append(sqlEntitySchemaInfo.getSchemaTableName())
+		.append("'");
+		return sb.toString();
+	}
+
+	@Override
+	public String generateDropCheckConstraintSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, String checkName,
+			PrintFormat format) throws UnifyException {
+		StringBuilder sb = new StringBuilder();
+		sb.append("ALTER TABLE \'").append(sqlEntitySchemaInfo.getSchemaTableName()).append("\' DROP CONSTRAINT \'")
+				.append(checkName).append("\'");
+		return sb.toString();
+	}
+
 	@Override
 	public String generateTestSql() throws UnifyException {
 		return "VALUES CURRENT_TIMESTAMP";
