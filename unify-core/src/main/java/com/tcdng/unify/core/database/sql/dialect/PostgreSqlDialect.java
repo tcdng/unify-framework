@@ -136,9 +136,9 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
 		sb.append("SELECT conname FROM pg_constraint")
 		.append(" JOIN pg_class ON conrelid = pg_class.oid")
 		.append(" JOIN pg_namespace ON pg_class.relnamespace = pg_namespace.oid")
-		.append(" WHERE contype = \'c\'")
-		.append(" AND relname = \'").append(sqlEntitySchemaInfo.getSchemaTableName()).append("\'")
-		.append(" AND nspname = \'").append(sqlEntitySchemaInfo.getSchema()).append("\'");
+		.append(" WHERE contype = 'c'")
+		.append(" AND relname = '").append(sqlEntitySchemaInfo.getSchemaTableName()).append("'")
+		.append(" AND nspname = '").append(sqlEntitySchemaInfo.getSchema()).append("'");
 		return sb.toString();
 	}
 

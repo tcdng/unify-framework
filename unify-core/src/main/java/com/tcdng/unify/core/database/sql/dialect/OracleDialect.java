@@ -141,8 +141,8 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
 	public String generateGetCheckConstraintsSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, PrintFormat format)
 			throws UnifyException {
 		StringBuilder sb = new StringBuilder();
-		sb.append("SELECT constraint_name FROM user_constraints WHERE table_name = \'")
-				.append(sqlEntitySchemaInfo.getSchemaTableName()).append("\' AND constraint_type = \'C\'");
+		sb.append("SELECT constraint_name FROM user_constraints WHERE table_name = '")
+				.append(sqlEntitySchemaInfo.getSchemaTableName()).append("' AND constraint_type = 'C'");
 		return sb.toString();
 	}
 
