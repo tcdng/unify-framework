@@ -130,6 +130,28 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
 	}
 
 	@Override
+	public String generateGetCheckConstraintsSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, PrintFormat format)
+			throws UnifyException {
+		StringBuilder sb = new StringBuilder();
+		sb.append("SELECT conname FROM pg_constraint")
+		.append(" JOIN pg_class ON conrelid = pg_class.oid")
+		.append(" JOIN pg_namespace ON pg_class.relnamespace = pg_namespace.oid")
+		.append(" WHERE contype = 'c'")
+		.append(" AND relname = '").append(sqlEntitySchemaInfo.getSchemaTableName()).append("'")
+		.append(" AND nspname = '").append(sqlEntitySchemaInfo.getSchema()).append("'");
+		return sb.toString();
+	}
+
+	@Override
+	public String generateDropCheckConstraintSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, String checkName,
+			PrintFormat format) throws UnifyException {
+		StringBuilder sb = new StringBuilder();
+		sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName()).append(" DROP CONSTRAINT ")
+				.append(checkName);
+		return sb.toString();
+	}
+
+	@Override
 	public String generateDropUniqueConstraintSql(SqlEntitySchemaInfo sqlEntitySchemaInfo,
 			String dbUniqueConstraintName, PrintFormat format) throws UnifyException {
 		StringBuilder sb = new StringBuilder();
@@ -298,10 +320,6 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
 			sb.append(", ALTER COLUMN ").append(sqlFieldSchemaInfo.getColumnName());
 			sb.append(" DROP NOT NULL");
 		} else {
-			sb.append(", ALTER COLUMN ").append(sqlFieldSchemaInfo.getColumnName());
-			sb.append(" SET ");
-			sqlDataTypePolicy.appendDefaultSql(sb, sqlFieldSchemaInfo.getFieldType(),
-					sqlFieldSchemaInfo.getDefaultVal());
 			sb.append(", ALTER COLUMN ").append(sqlFieldSchemaInfo.getColumnName());
 			sb.append(" SET NOT NULL");
 		}

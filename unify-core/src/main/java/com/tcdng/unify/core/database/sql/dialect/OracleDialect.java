@@ -138,6 +138,24 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
 	}
 
 	@Override
+	public String generateGetCheckConstraintsSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, PrintFormat format)
+			throws UnifyException {
+		StringBuilder sb = new StringBuilder();
+		sb.append("SELECT constraint_name FROM user_constraints WHERE table_name = '")
+				.append(sqlEntitySchemaInfo.getSchemaTableName()).append("' AND constraint_type = 'C'");
+		return sb.toString();
+	}
+
+	@Override
+	public String generateDropCheckConstraintSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, String checkName,
+			PrintFormat format) throws UnifyException {
+		StringBuilder sb = new StringBuilder();
+		sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName()).append(" DROP CONSTRAINT ")
+				.append(checkName);
+		return sb.toString();
+	}
+
+	@Override
 	public String generateDropColumn(SqlEntitySchemaInfo sqlRecordSchemaInfo, SqlFieldSchemaInfo sqlFieldSchemaInfo,
 			PrintFormat format) throws UnifyException {
 		StringBuilder sb = new StringBuilder();
@@ -181,6 +199,35 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
 				sqlFieldSchemaInfo.getLength());
 
 		if (sqlColumnAlterInfo.isNullableChange()) {
+			if (sqlFieldSchemaInfo.getColumnType().isLob()) {
+				final String tableName = sqlEntitySchemaInfo.getSchemaTableName();
+				final String columnName = sqlFieldSchemaInfo.getPreferredColumnName();
+				sb.append("ALTER TABLE ").append(tableName).append(" ADD (");
+				sb.append(columnName).append("_tmp0 ");
+				sqlDataTypePolicy.appendTypeSql(sb, sqlFieldSchemaInfo.getLength(),
+						sqlFieldSchemaInfo.getPrecision(), sqlFieldSchemaInfo.getScale());
+				sb.append(sqlFieldSchemaInfo.isNullable() ? " NULL": " NOT NULL" ).append(")");
+				sqlList.add(sb.toString());
+				StringUtils.truncate(sb);
+
+				sb.append("UPDATE ").append(tableName).append(" SET ");
+				sb.append(columnName).append("_tmp0 = ");
+				sb.append(columnName);
+				sqlList.add(sb.toString());
+				StringUtils.truncate(sb);
+
+				sb.append("ALTER TABLE ").append(tableName).append(" DROP COLUMN ").append(columnName);
+				sqlList.add(sb.toString());
+				StringUtils.truncate(sb);
+
+				sb.append("ALTER TABLE ").append(tableName).append(" RENAME COLUMN ").append(columnName)
+						.append("_tmp0 TO ").append(columnName);
+				sqlList.add(sb.toString());
+				StringUtils.truncate(sb);
+
+				return sqlList;
+			}
+			
 			if (!sqlFieldSchemaInfo.isNullable()) {
 				sb.append("UPDATE ").append(sqlEntitySchemaInfo.getSchemaTableName()).append(" SET ")
 						.append(sqlFieldSchemaInfo.getPreferredColumnName()).append(" = ");
@@ -208,7 +255,7 @@ public class OracleDialect extends AbstractSqlDataSourceDialect {
 		sb.append("MODIFY ");
 		appendColumnAndTypeSql(sb, sqlFieldSchemaInfo, sqlColumnAlterInfo);
 		sqlList.add(sb.toString());
-		StringUtils.truncate(sb);
+
 		return sqlList;
 	}
 
