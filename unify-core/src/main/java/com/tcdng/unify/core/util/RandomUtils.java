@@ -26,9 +26,9 @@ import java.security.SecureRandom;
  */
 public final class RandomUtils {
 
-	private static String LETTERS = "abcdefghijklmnopqrstuvwxyz";
+	private static String LETTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-	private static String ALPHANUMERIC = "0123456789abcdefghijklmnopqrstuvwxyz";
+	private static String ALPHANUMERIC = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 	private static String DIGITS = "0123456789";
 	

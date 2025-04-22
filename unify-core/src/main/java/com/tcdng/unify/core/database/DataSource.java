@@ -15,13 +15,8 @@
  */
 package com.tcdng.unify.core.database;
 
-import java.util.List;
-
-import com.tcdng.unify.common.annotation.StaticList;
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.annotation.Table;
-import com.tcdng.unify.core.annotation.View;
 
 /**
  * A data source component. Entity types are defined at this level. This is
@@ -42,6 +37,15 @@ public interface DataSource extends UnifyComponent {
      *             if an error occurs
 	 */
 	boolean isReadOnly() throws UnifyException;
+	
+	/**
+	 * Checks if datasource is managed
+	 * 
+	 * @return true if datasource is managed otherwise false
+     * @throws UnifyException
+     *             if an error occurs
+	 */
+	boolean isManaged() throws UnifyException;
 
 	/**
 	 * Checks if datasource initialization is delayed.
@@ -58,26 +62,6 @@ public interface DataSource extends UnifyComponent {
      * @return the preferred name otherwise null
      */
     String getPreferredName();
-
-    /**
-     * Returns a list of entity types annotated with {@link Table} and enumerations
-     * annotated with {@link StaticList} that are maintained in this data source.
-     * Entity types in list are expected to be ordered based on dependency with
-     * parents coming before dependents.
-     * 
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    List<Class<?>> getTableEntityTypes() throws UnifyException;
-
-    /**
-     * Returns a list of entity types annotated with {@link View} that are
-     * maintained in this data source.
-     * 
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    List<Class<? extends Entity>> getViewEntityTypes() throws UnifyException;
 
     /**
      * Returns the data source dialect.

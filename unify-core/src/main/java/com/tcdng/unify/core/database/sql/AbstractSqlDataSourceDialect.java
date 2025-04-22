@@ -27,7 +27,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.tcdng.unify.common.annotation.ColumnType;
 import com.tcdng.unify.common.constants.EnumConst;
+import com.tcdng.unify.common.database.Entity;
 import com.tcdng.unify.convert.util.ConverterUtils;
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyCoreConstants;
@@ -35,7 +37,6 @@ import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyCorePropertyConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.UnifyOperationException;
-import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.Singleton;
 import com.tcdng.unify.core.constant.ForeignConstraints;
@@ -58,7 +59,6 @@ import com.tcdng.unify.core.criterion.Update;
 import com.tcdng.unify.core.criterion.UpdateExpression;
 import com.tcdng.unify.core.data.FactoryMap;
 import com.tcdng.unify.core.database.CallableProc;
-import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.database.NativeParam;
 import com.tcdng.unify.core.database.NativeQuery;
 import com.tcdng.unify.core.database.NativeUpdate;
@@ -88,12 +88,14 @@ import com.tcdng.unify.core.database.sql.criterion.policy.NotLikeBeginPolicy;
 import com.tcdng.unify.core.database.sql.criterion.policy.NotLikeEndPolicy;
 import com.tcdng.unify.core.database.sql.criterion.policy.NotLikePolicy;
 import com.tcdng.unify.core.database.sql.criterion.policy.OrPolicy;
+import com.tcdng.unify.core.database.sql.data.policy.BigDecimalArrayPolicy;
 import com.tcdng.unify.core.database.sql.data.policy.BigDecimalPolicy;
 import com.tcdng.unify.core.database.sql.data.policy.BlobPolicy;
 import com.tcdng.unify.core.database.sql.data.policy.BooleanArrayPolicy;
 import com.tcdng.unify.core.database.sql.data.policy.BooleanPolicy;
 import com.tcdng.unify.core.database.sql.data.policy.CharacterPolicy;
 import com.tcdng.unify.core.database.sql.data.policy.ClobPolicy;
+import com.tcdng.unify.core.database.sql.data.policy.DateArrayPolicy;
 import com.tcdng.unify.core.database.sql.data.policy.DatePolicy;
 import com.tcdng.unify.core.database.sql.data.policy.DoubleArrayPolicy;
 import com.tcdng.unify.core.database.sql.data.policy.DoublePolicy;
@@ -152,6 +154,8 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 
 	private String dataSourceName;
 
+	private boolean supportUnifyViews;
+	
 	private boolean allObjectsInLowerCase;
 
 	private boolean useCallableFunctionMode;
@@ -178,6 +182,11 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 		sqlStatementPoolsFactory = new SqlStatementPoolsFactory();
 		noPrecisionTypes = new HashSet<String>(
 				Arrays.asList("BIGINT", "DATETIME", "TIMESTAMP", "INT2", "INT4", "INT8"));
+	}
+
+	@Override
+	public List<SqlEntityInfo> getSqlEntityInfos() throws UnifyException {
+		return sqlEntityInfoFactory.getSqlEntityInfos();
 	}
 
 	@Override
@@ -958,6 +967,11 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 	}
 
 	@Override
+	public boolean isWithSqlEntityInfo(Class<?> clazz) throws UnifyException {
+		return sqlEntityInfoFactory.isWithSqlEntityInfo(clazz);
+	}
+
+	@Override
 	public List<SqlEntityInfo> findAllChildSqlEntityInfos(Class<?> clazz) throws UnifyException {
 		return sqlEntityInfoFactory.findAllChildSqlEntityInfos(clazz);
 	}
@@ -1523,6 +1537,16 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 	}
 
 	@Override
+	public final boolean isSupportUnifyViews() {
+		return supportUnifyViews;
+	}
+
+	@Override
+	public final void setSupportUnifyViews(boolean supportUnifyViews) {
+		this.supportUnifyViews = supportUnifyViews;
+	}
+
+	@Override
 	public final boolean isAllObjectsInLowerCase() {
 		return allObjectsInLowerCase;
 	}
@@ -1560,7 +1584,9 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 		sqlDataTypePolicies.put(ColumnType.CHARACTER, new CharacterPolicy());
 		sqlDataTypePolicies.put(ColumnType.CLOB, new ClobPolicy());
 		sqlDataTypePolicies.put(ColumnType.DATE, new DatePolicy());
+		sqlDataTypePolicies.put(ColumnType.DATE_ARRAY, new DateArrayPolicy());
 		sqlDataTypePolicies.put(ColumnType.DECIMAL, new BigDecimalPolicy());
+		sqlDataTypePolicies.put(ColumnType.DECIMAL_ARRAY, new BigDecimalArrayPolicy());
 		sqlDataTypePolicies.put(ColumnType.DOUBLE, new DoublePolicy());
 		sqlDataTypePolicies.put(ColumnType.DOUBLE_ARRAY, new DoubleArrayPolicy());
 		sqlDataTypePolicies.put(ColumnType.FLOAT, new FloatPolicy());

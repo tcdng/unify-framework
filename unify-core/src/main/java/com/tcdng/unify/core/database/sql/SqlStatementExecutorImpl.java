@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.tcdng.unify.common.constants.EnumConst;
+import com.tcdng.unify.common.database.Entity;
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
@@ -44,7 +45,6 @@ import com.tcdng.unify.core.criterion.AggregateType;
 import com.tcdng.unify.core.criterion.GroupingFunction;
 import com.tcdng.unify.core.database.Aggregation;
 import com.tcdng.unify.core.database.CallableProc;
-import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.database.GroupingAggregation;
 import com.tcdng.unify.core.database.GroupingAggregation.Grouping;
 import com.tcdng.unify.core.database.StaticReference;
@@ -903,7 +903,10 @@ public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements 
 		if (sqlResult.isTransformed()) {
 			value = ((Transformer<Object, Object>) sqlResult.getTransformer()).reverseTransform(value);
 		}
-		return value;
+
+		return value != null && value.getClass().isArray() && !value.getClass().equals(sqlResult.getType())
+				? DataUtils.convert(sqlResult.getType(), value)
+				: value;
 	}
 
 	@SuppressWarnings("unchecked")

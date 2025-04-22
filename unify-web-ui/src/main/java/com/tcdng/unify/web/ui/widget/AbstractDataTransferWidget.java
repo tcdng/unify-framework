@@ -26,6 +26,8 @@ import com.tcdng.unify.web.ui.util.WidgetUtils;
  * @since 1.0
  */
 public abstract class AbstractDataTransferWidget extends AbstractWidget implements DataTransferWidget {
+    
+    private boolean loadingFailure;
 
     @Override
     public String getId() throws UnifyException {
@@ -36,5 +38,13 @@ public abstract class AbstractDataTransferWidget extends AbstractWidget implemen
 
         return super.getId();
     }
+
+	public boolean isLoadingFailure() {
+		return loadingFailure;
+	}
+
+	public void setLoadingFailure(boolean loadingFailure) {
+		this.loadingFailure = loadingFailure;
+	}
 
 }

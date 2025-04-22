@@ -84,6 +84,10 @@ public class UplElement implements UplElementAttributes {
         return parentElement;
     }
 
+    public boolean isWithParentElement() {
+    	return parentElement != null;
+    }
+    
     public void setParentElement(UplElement parentElement) {
         this.parentElement = parentElement;
     }

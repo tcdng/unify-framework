@@ -43,6 +43,14 @@ public interface TargetControl extends Control {
      */
     String getTargetId() throws UnifyException;
 
+	/**
+	 * Indicated is message resolution is required
+	 * 
+	 * @return the return
+	 * @throws UnifyException if an error occurs
+	 */
+	boolean isResolve() throws UnifyException;
+    
     /**
      * Returns control's debounce flag.
      * 

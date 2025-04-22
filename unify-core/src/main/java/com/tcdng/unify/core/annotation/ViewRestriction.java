@@ -20,7 +20,7 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-import com.tcdng.unify.core.constant.AnnotationConstants;
+import com.tcdng.unify.common.annotation.AnnotationConstants;
 import com.tcdng.unify.core.criterion.RestrictionType;
 
 /**
@@ -38,13 +38,13 @@ public @interface ViewRestriction {
 
     /**
      * The property of left table in restriction operation.
-     * Expected format is [Table Alias].[propertyName]. Example: T1.id
+     * Expected format is [Table EntityConnect].[propertyName]. Example: T1.id
      */
     String leftProperty();
 
     /**
      * Optional property of right table in restriction operation.
-     * Expected format is [Table Alias].[propertyName]. Example: T2.id
+     * Expected format is [Table EntityConnect].[propertyName]. Example: T2.id
      */
     String rightProperty() default AnnotationConstants.NONE;
 

@@ -28,6 +28,7 @@ import com.tcdng.unify.core.ui.MenuItemSet;
 import com.tcdng.unify.core.ui.MenuSet;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
+import com.tcdng.unify.core.util.html.HtmlUtils;
 import com.tcdng.unify.core.util.json.JsonWriter;
 import com.tcdng.unify.web.ui.widget.Container;
 import com.tcdng.unify.web.ui.widget.EventHandler;
@@ -36,7 +37,6 @@ import com.tcdng.unify.web.ui.widget.Widget;
 import com.tcdng.unify.web.ui.widget.panel.AbstractFlyoutMenu;
 import com.tcdng.unify.web.ui.widget.panel.FlyoutMenu;
 import com.tcdng.unify.web.ui.widget.writer.AbstractPanelWriter;
-import com.tcdng.unify.web.util.HtmlUtils;
 
 /**
  * Flyout menu writer.

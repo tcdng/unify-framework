@@ -21,7 +21,7 @@ import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.data.UploadedFile;
 import com.tcdng.unify.web.ui.DataTransferBlock;
-import com.tcdng.unify.web.ui.widget.AbstractMultiControl;
+import com.tcdng.unify.web.ui.widget.AbstractAutoRefreshMultiControl;
 import com.tcdng.unify.web.ui.widget.Control;
 
 /**
@@ -36,7 +36,7 @@ import com.tcdng.unify.web.ui.widget.Control;
 	@UplAttribute(name = "category", type = String.class),
 	@UplAttribute(name = "parentCategory", type = String.class),
 	@UplAttribute(name = "parentFieldName", type = String.class) })
-public class Picture extends AbstractMultiControl {
+public class Picture extends AbstractAutoRefreshMultiControl {
 
     private Control fileControl;
 
@@ -53,7 +53,7 @@ public class Picture extends AbstractMultiControl {
 
         uploadedFile = null;
     }
-
+    
     public Control getFileCtrl() {
         return fileControl;
     }
@@ -69,11 +69,6 @@ public class Picture extends AbstractMultiControl {
     public void setUploadedFile(UploadedFile[] uploadedFile) {
         this.uploadedFile = uploadedFile;
     }
-
-    @Override
-	public boolean isRefreshesContainer() {
-		return true;
-	}
 
     @Override
     protected void doOnPageConstruct() throws UnifyException {

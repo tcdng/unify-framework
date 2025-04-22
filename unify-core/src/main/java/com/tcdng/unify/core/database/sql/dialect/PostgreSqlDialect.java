@@ -26,8 +26,8 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
+import com.tcdng.unify.common.annotation.ColumnType;
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.constant.PrintFormat;
 import com.tcdng.unify.core.constant.TimeSeriesType;
@@ -127,6 +127,28 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
 	@Override
 	public String generateUTCTimestampSql() throws UnifyException {
 		return "SELECT NOW() AT TIME ZONE 'utc'";
+	}
+
+	@Override
+	public String generateGetCheckConstraintsSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, PrintFormat format)
+			throws UnifyException {
+		StringBuilder sb = new StringBuilder();
+		sb.append("SELECT conname FROM pg_constraint")
+		.append(" JOIN pg_class ON conrelid = pg_class.oid")
+		.append(" JOIN pg_namespace ON pg_class.relnamespace = pg_namespace.oid")
+		.append(" WHERE contype = 'c'")
+		.append(" AND relname = '").append(sqlEntitySchemaInfo.getSchemaTableName()).append("'")
+		.append(" AND nspname = '").append(sqlEntitySchemaInfo.getSchema()).append("'");
+		return sb.toString();
+	}
+
+	@Override
+	public String generateDropCheckConstraintSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, String checkName,
+			PrintFormat format) throws UnifyException {
+		StringBuilder sb = new StringBuilder();
+		sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName()).append(" DROP CONSTRAINT ")
+				.append(checkName);
+		return sb.toString();
 	}
 
 	@Override
@@ -268,8 +290,15 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
 			if (!sqlFieldSchemaInfo.isNullable()) {
 				sb.append("UPDATE ").append(sqlEntitySchemaInfo.getSchemaTableName()).append(" SET ")
 						.append(sqlFieldSchemaInfo.getPreferredColumnName()).append(" = ");
-				sqlDataTypePolicy.appendDefaultVal(sb, sqlFieldSchemaInfo.getFieldType(),
-						sqlFieldSchemaInfo.getDefaultVal());
+				if (sqlFieldSchemaInfo.getColumnType().isBlob()) {
+					sb.append("''::BYTEA");
+				} else if (sqlFieldSchemaInfo.getColumnType().isClob()) {
+					sb.append("''");
+				} else {
+					sqlDataTypePolicy.appendDefaultVal(sb, sqlFieldSchemaInfo.getFieldType(),
+							sqlFieldSchemaInfo.getDefaultVal());
+				}
+
 				sb.append(" WHERE ").append(sqlFieldSchemaInfo.getPreferredColumnName()).append(" IS NULL");
 				sqlList.add(sb.toString());
 				StringUtils.truncate(sb);
@@ -291,10 +320,6 @@ public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {
 			sb.append(", ALTER COLUMN ").append(sqlFieldSchemaInfo.getColumnName());
 			sb.append(" DROP NOT NULL");
 		} else {
-			sb.append(", ALTER COLUMN ").append(sqlFieldSchemaInfo.getColumnName());
-			sb.append(" SET ");
-			sqlDataTypePolicy.appendDefaultSql(sb, sqlFieldSchemaInfo.getFieldType(),
-					sqlFieldSchemaInfo.getDefaultVal());
 			sb.append(", ALTER COLUMN ").append(sqlFieldSchemaInfo.getColumnName());
 			sb.append(" SET NOT NULL");
 		}

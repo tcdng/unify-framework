@@ -20,15 +20,15 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.tcdng.unify.common.annotation.AnnotationConstants;
 import com.tcdng.unify.common.annotation.StaticList;
+import com.tcdng.unify.common.annotation.Table;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Parameter;
 import com.tcdng.unify.core.annotation.Parameters;
 import com.tcdng.unify.core.annotation.Schedulable;
-import com.tcdng.unify.core.annotation.Table;
 import com.tcdng.unify.core.annotation.View;
-import com.tcdng.unify.core.constant.AnnotationConstants;
 
 /**
  * Provides utility methods for annotations.
@@ -96,13 +96,6 @@ public final class AnnotationUtils {
     }
     
     private static boolean isSchemaElementDataSource(String entityDataSources, String dataSourceToCheck) {
-        String[] datasources = StringUtils.commaSplit(entityDataSources);
-        for(String datasource: datasources) {
-            if(dataSourceToCheck.equals(datasource.trim())) {
-                return true;
-            }
-        }
-        
-        return false;
+        return dataSourceToCheck != null && entityDataSources.indexOf(dataSourceToCheck) >= 0;
     }
 }

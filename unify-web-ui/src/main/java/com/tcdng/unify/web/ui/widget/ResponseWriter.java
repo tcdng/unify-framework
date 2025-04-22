@@ -21,15 +21,15 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.constant.MimeType;
+import com.tcdng.unify.core.data.WebStringWriter;
 import com.tcdng.unify.core.format.DateTimeFormat;
 import com.tcdng.unify.core.format.Pattern;
 import com.tcdng.unify.core.upl.UplComponent;
 import com.tcdng.unify.core.upl.UplComponentWriter;
+import com.tcdng.unify.core.util.html.HtmlTextWriter;
 import com.tcdng.unify.core.util.json.JsonWriter;
-import com.tcdng.unify.web.data.WebStringWriter;
 
 /**
  * Used for writing response to a user request. Writers are determined at
@@ -39,7 +39,7 @@ import com.tcdng.unify.web.data.WebStringWriter;
  * @author The Code Department
  * @since 1.0
  */
-public interface ResponseWriter extends UnifyComponent {
+public interface ResponseWriter extends HtmlTextWriter { 
 
     /**
      * Writes a message using application locale.
@@ -148,6 +148,17 @@ public interface ResponseWriter extends UnifyComponent {
 	 * @throws UnifyException if an error occurs
 	 */
 	ResponseWriter writeBehavior(Widget widget, EventHandler[] eventHandlers) throws UnifyException;
+
+	/**
+	 * Writes widget behavior with event handlers.
+	 * 
+	 * @param widget        the user interface widget to write
+	 * @param eventHandlers the event handlers
+	 * @param events        the events to write for
+	 * @throws UnifyException if an error occurs
+	 */
+	ResponseWriter writeBehavior(Widget widget, EventHandler[] eventHandlers, Collection<String> events)
+			throws UnifyException;
 
     /**
      * Writes widget behavior.
@@ -382,6 +393,16 @@ public interface ResponseWriter extends UnifyComponent {
      *                        if an error occurs
      */
     ResponseWriter writeJsonSection(Widget widget, String sectionPageName) throws UnifyException;
+
+    /**
+     * Writes a JSON widget auto-refresh object.
+     * 
+     * @param widget
+     *                        the widget to write
+     * @throws UnifyException
+     *                        if an error occurs
+     */
+    ResponseWriter writeJsonAutoRefresh(Widget widget) throws UnifyException;
 
     /**
      * Writes a context request URL using supplied path elements
@@ -902,33 +923,6 @@ public interface ResponseWriter extends UnifyComponent {
      */
     void writeTo(Writer writer) throws UnifyException;
 
-    /**
-     * Instructs this writer to use a secondary buffer for all write operations.
-     */
-    void useSecondary();
-
-    /**
-     * Instructs this writer to use a secondary buffer for all write operations.
-     * 
-     * @param initialCapacity
-     *                        the initial capacity
-     */
-    void useSecondary(int initialCapacity);
-
-    /**
-     * Discards current secondary buffer.
-     * 
-     * @return the discarded buffer otherwise null
-     */
-    WebStringWriter discardSecondary();
-
-    /**
-     * Discards current secondary buffer with merge.
-     * 
-     * @return the discarded buffer otherwise null
-     */
-    WebStringWriter discardMergeSecondary();
-
 	/**
 	 * Sets dynamic confirmation message.
 	 * 
@@ -991,6 +985,13 @@ public interface ResponseWriter extends UnifyComponent {
 	 * @param dataIndex the data index to set
 	 */
 	void setDataIndex(int dataIndex);
+	
+	/**
+	 * Checks if data index is valid
+	 * 
+	 * @return true if valid otherwise false
+	 */
+	boolean isWithDataIndex();
 	
 	/**
 	 * Indicates post command references should be kept.

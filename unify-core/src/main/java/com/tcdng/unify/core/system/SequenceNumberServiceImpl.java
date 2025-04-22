@@ -17,10 +17,14 @@ package com.tcdng.unify.core.system;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
+import com.tcdng.unify.common.annotation.Table;
+import com.tcdng.unify.common.database.Entity;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
@@ -30,6 +34,8 @@ import com.tcdng.unify.core.annotation.TransactionAttribute;
 import com.tcdng.unify.core.annotation.Transactional;
 import com.tcdng.unify.core.business.AbstractBusinessService;
 import com.tcdng.unify.core.criterion.Update;
+import com.tcdng.unify.core.database.Query;
+import com.tcdng.unify.core.database.DbHelper;
 import com.tcdng.unify.core.system.entities.ClusterDateSequenceNumber;
 import com.tcdng.unify.core.system.entities.ClusterDateSequenceNumberQuery;
 import com.tcdng.unify.core.system.entities.ClusterSequenceBlock;
@@ -39,6 +45,8 @@ import com.tcdng.unify.core.system.entities.ClusterSequenceNumberQuery;
 import com.tcdng.unify.core.system.entities.ClusterUniqueString;
 import com.tcdng.unify.core.system.entities.ClusterUniqueStringQuery;
 import com.tcdng.unify.core.util.CalendarUtils;
+import com.tcdng.unify.core.util.DataUtils;
+import com.tcdng.unify.core.util.QueryUtils;
 import com.tcdng.unify.core.util.ThreadUtils;
 
 /**
@@ -49,7 +57,7 @@ import com.tcdng.unify.core.util.ThreadUtils;
  */
 @Transactional
 @Component(ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE)
-public class SequenceNumberServiceImpl extends AbstractBusinessService implements SequenceNumberService {
+public class SequenceNumberServiceImpl extends AbstractBusinessService implements SequenceNumberService, DbHelper {
 
     private Map<String, SequenceBlock> sequenceBlockMap;
 
@@ -66,7 +74,78 @@ public class SequenceNumberServiceImpl extends AbstractBusinessService implement
         sequenceBlockMap = new HashMap<String, SequenceBlock>();
     }
 
-    @Override
+	@Override
+	public boolean exists(Class<? extends Entity> entityClass, Object inst, String fieldName) throws UnifyException {
+		List<Set<String>> uniqueConstraints = db(entityClass).getUniqueConstraints(entityClass);
+		if (!DataUtils.isBlank(uniqueConstraints)) {
+			for (Set<String> fieldNames : uniqueConstraints) {
+				if (fieldNames.contains(fieldName)) {
+					Query<? extends Entity> query = Query.of(entityClass);
+					for (String _fieldName : fieldNames) {
+						Object val = DataUtils.getBeanProperty(inst, _fieldName);
+						if (val != null) {
+							query.addEquals(_fieldName, val);
+						}
+					}
+
+					final Long id = DataUtils.getBeanProperty(Long.class, inst, "id");
+					if (QueryUtils.isValidLongCriteria(id)) {
+						query.addNotEquals("id", id);
+					}
+
+					if (!query.isEmptyCriteria() && db(entityClass).countAll(query) > 0) {
+						return true;
+					}
+				}
+			}
+		}
+
+		return false;
+	}
+
+	@Override
+	public boolean exists(Class<? extends Entity> entityClass, Object inst) throws UnifyException {
+		List<Set<String>> uniqueConstraints = db(entityClass).getUniqueConstraints(entityClass);
+		if (!DataUtils.isBlank(uniqueConstraints)) {
+			for (Set<String> fieldNames : uniqueConstraints) {
+				Query<? extends Entity> query = Query.of(entityClass);
+				for (String fieldName : fieldNames) {
+					Object val = DataUtils.getBeanProperty(inst, fieldName);
+					if (val != null) {
+						query.addEquals(fieldName, val);
+					}
+				}
+
+				final Long id = DataUtils.getBeanProperty(Long.class, inst, "id");
+				if (QueryUtils.isValidLongCriteria(id)) {
+					query.addNotEquals("id", id);
+				}
+
+				if (db(entityClass).countAll(query) > 0) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	@Override
+	public boolean exists(Query<? extends Entity> query) throws UnifyException {
+		return db(query.getEntityClass()).countAll(query) > 0;
+	}
+
+	@Override
+	public <T extends Entity> boolean isOfThisSequence(Class<T> clazz) throws UnifyException {
+    	if (!db().isOfThisDatabase(clazz)) {
+        	Table ta = clazz.getAnnotation(Table.class);    	
+    		return  ta != null && ta.allowAlternateIdSource();
+    	}
+    	
+    	return true;
+	}
+
+	@Override
     @Synchronized("sys:nextdatesequencenumber-lock")
 	public void ensureCachedBlockSequence(String sequencedName) throws UnifyException {
         SequenceBlock sequenceBlock = sequenceBlockMap.get(sequencedName);

@@ -18,6 +18,7 @@ package com.tcdng.unify.web.ui.widget;
 import java.text.MessageFormat;
 import java.util.Collection;
 
+import com.tcdng.unify.common.database.Entity;
 import com.tcdng.unify.core.RequestContext;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.ViewDirective;
@@ -25,9 +26,9 @@ import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.data.FileAttachmentInfo;
 import com.tcdng.unify.core.data.ValueStore;
-import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.database.Query;
 import com.tcdng.unify.core.upl.AbstractUplComponent;
+import com.tcdng.unify.core.upl.UplElementReferences;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.TargetPath;
@@ -377,6 +378,11 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 	}
 
 	@Override
+	public int getIndexedHandlerCount() throws UnifyException {
+		return 0;
+	}
+
+	@Override
 	public boolean isRelayCommand() {
 		return false;
 	}
@@ -644,7 +650,7 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 	}
 
 	@Override
-	public boolean isRefreshesContainer() {
+	public boolean isRefreshesContainer() throws UnifyException {
 		return false;
 	}
 
@@ -763,6 +769,14 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 
 	protected String getRequestCommandTag() throws UnifyException {
 		return getRequestContextUtil().getRequestCommandTag();
+	}
+
+	protected void commandRefreshPanels(UplElementReferences references) throws UnifyException {
+		if (references != null) {
+			getRequestContextUtil()
+					.setResponseRefreshPanels(DataUtils.toArray(String.class, references.getLongNames()));
+			setCommandResultMapping(ResultMappingConstants.REFRESH_PANELS);
+		}
 	}
 
 	protected void commandRefreshPanels(String... panelLongName) throws UnifyException {

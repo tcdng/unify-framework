@@ -150,6 +150,11 @@ public abstract class AbstractArrayValueStore<T> extends AbstractValueStore {
     }
 
     @Override
+	public Map<String, Object> getTempValues() throws UnifyException {
+		return temp;
+	}
+
+    @Override
 	public void setTempValues(Map<String, Object> values) throws UnifyException {
 		if (values != null) {
 	        if (temp == null) {

@@ -27,55 +27,79 @@ import com.tcdng.unify.core.constant.FileAttachmentType;
  */
 public class EmailAttachment {
 
-    private FileAttachmentType type;
+	private FileAttachmentType type;
 
-    private String name;
+	private String name;
 
-    private File file;
+	private String provider;
 
-    private byte[] blob;
+	private String sourceId;
 
-    private boolean inline;
+	private File file;
 
-    public EmailAttachment(FileAttachmentType type, String name, File file) {
-        this(type, name, file, false);
-    }
+	private byte[] blob;
 
-    public EmailAttachment(FileAttachmentType type, String name, File file, boolean inline) {
-        this.type = type;
-        this.name = name;
-        this.file = file;
-        this.inline = inline;
-    }
+	private boolean inline;
 
-    public EmailAttachment(FileAttachmentType type, String name, byte[] blob) {
-        this(type, name, blob, false);
-    }
+	public EmailAttachment(FileAttachmentType type, String name, File file) {
+		this(type, name, file, false);
+	}
 
-    public EmailAttachment(FileAttachmentType type, String name, byte[] blob, boolean inline) {
-        this.type = type;
-        this.name = name;
-        this.blob = blob;
-        this.inline = inline;
-    }
+	public EmailAttachment(FileAttachmentType type, String name, File file, boolean inline) {
+		this.type = type;
+		this.name = name;
+		this.file = file;
+		this.inline = inline;
+	}
 
-    public FileAttachmentType getType() {
-        return type;
-    }
+	public EmailAttachment(FileAttachmentType type, String name, byte[] blob) {
+		this(type, name, blob, false);
+	}
 
-    public String getName() {
-        return name;
-    }
+	public EmailAttachment(FileAttachmentType type, String name, byte[] blob, boolean inline) {
+		this.type = type;
+		this.name = name;
+		this.blob = blob;
+		this.inline = inline;
+	}
 
-    public File getFile() {
-        return file;
-    }
+	public EmailAttachment(FileAttachmentType type, String name, String provider, String sourceId) {
+		this(type, name, provider, sourceId, false);
+	}
 
-    public byte[] getBlob() {
-        return blob;
-    }
+	public EmailAttachment(FileAttachmentType type, String name, String provider, String sourceId, boolean inline) {
+		this.type = type;
+		this.name = name;
+		this.provider = provider;
+		this.sourceId = sourceId;
+		this.inline = inline;
+	}
 
-    public boolean isInline() {
-        return inline;
-    }
+	public FileAttachmentType getType() {
+		return type;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public File getFile() {
+		return file;
+	}
+
+	public byte[] getBlob() {
+		return blob;
+	}
+
+	public boolean isInline() {
+		return inline;
+	}
+
+	public String getProvider() {
+		return provider;
+	}
+
+	public String getSourceId() {
+		return sourceId;
+	}
 }

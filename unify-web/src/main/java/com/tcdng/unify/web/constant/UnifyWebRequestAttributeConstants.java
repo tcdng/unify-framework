@@ -29,6 +29,8 @@ public interface UnifyWebRequestAttributeConstants {
 
     String REFRESH_SECTION = "WR.refreshSection";
 
+    String AUTO_REFRESH = "WR.autoRefresh";
+
     String COMMAND_POSTRESPONSE_PATH = "WR.commandPostPath";
 
     String SYSTEM_ERROR_RECOVERY_PATH = "WR.systemErrorRecoveryPath";

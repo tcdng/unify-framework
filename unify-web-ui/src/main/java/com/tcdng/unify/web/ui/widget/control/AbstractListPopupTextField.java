@@ -24,10 +24,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.tcdng.unify.common.data.Listable;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
-import com.tcdng.unify.core.data.Listable;
+import com.tcdng.unify.core.data.ListData;
 import com.tcdng.unify.core.format.Formatter;
 import com.tcdng.unify.web.ui.WebUIApplicationComponents;
 import com.tcdng.unify.web.ui.widget.ListControl;
@@ -71,18 +72,26 @@ public abstract class AbstractListPopupTextField extends AbstractPopupTextField 
 
     @Override
     public List<? extends Listable> getListables() throws UnifyException {
-        if (!excludes.isEmpty()) {
-            List<Listable> list = new ArrayList<Listable>();
-            for (Listable listable: getListControlUtils().getListables(this)) {
-                if (!excludes.contains(listable.getListKey())) {
-                    list.add(listable);
-                }
-            }
-            
-            return list;
-        }
+    	setLoadingFailure(false);
+        try {
+			if (!excludes.isEmpty()) {
+			    List<Listable> list = new ArrayList<Listable>();
+			    for (Listable listable: getListControlUtils().getListables(this)) {
+			        if (!excludes.contains(listable.getListKey())) {
+			            list.add(listable);
+			        }
+			    }
+			    
+			    return list;
+			}
+			
+			return getListControlUtils().getListables(this);
+		} catch (Exception e) {
+			logError(e);
+	    	setLoadingFailure(true);
+		}
         
-        return getListControlUtils().getListables(this);
+        return Collections.emptyList();
     }
 
     @Override

@@ -34,6 +34,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URI;
@@ -491,11 +492,73 @@ public class IOUtils {
 				outputStream.write(buffer, 0, read);
 				totalRead += read;
 			}
+
+			outputStream.flush();
 			return totalRead;
 		} catch (IOException e) {
 			throw new UnifyException(e, UnifyCoreErrorConstants.IOUTIL_STREAM_RW_ERROR);
 		} finally {
 			IOUtils.close(inputStream);
+		}
+	}
+
+	/**
+	 * Writes all data from reader to output stream. Closes input stream at end of
+	 * write.
+	 * 
+	 * @param outputStream the output stream to write to
+	 * @param reader       the reader to read from
+	 * @return the number of characters written
+	 * @throws UnifyException if an error occurs
+	 */
+	public static long writeAll(OutputStream outputStream, Reader reader) throws UnifyException {
+		return IOUtils.writeAll(outputStream, reader, null);
+	}
+
+	/**
+	 * Writes all data from reader to output stream. Closes input stream at end of
+	 * write.
+	 * 
+	 * @param outputStream the output stream to write to
+	 * @param reader       the reader to read from
+	 * @param charSet      the character set
+	 * @return the number of characters written
+	 * @throws UnifyException if an error occurs
+	 */
+	public static long writeAll(OutputStream outputStream, Reader reader, String charSet) throws UnifyException {
+		try {
+			return IOUtils.writeAll(new OutputStreamWriter(outputStream, charSet == null ? "UTF-8" : charSet), reader);
+		} catch (UnsupportedEncodingException e) {
+			throw new UnifyException(e, UnifyCoreErrorConstants.IOUTIL_STREAM_RW_ERROR);
+		} catch (UnifyException e) {
+			throw e;
+		}
+	}
+
+	/**
+	 * Writes all data from reader to writer. Closes input stream at end of write.
+	 * 
+	 * @param writer the writer to write to
+	 * @param reader the reader to read from
+	 * @return the number of characters written
+	 * @throws UnifyException if an error occurs
+	 */
+	public static long writeAll(Writer writer, Reader reader) throws UnifyException {
+		try {
+			long totalRead = 0;
+			char[] buffer = new char[BUFFER_SIZE];
+			int read = 0;
+			while ((read = reader.read(buffer)) >= 0) {
+				writer.write(buffer, 0, read);
+				totalRead += read;
+			}
+
+			writer.flush();
+			return totalRead;
+		} catch (IOException e) {
+			throw new UnifyException(e, UnifyCoreErrorConstants.IOUTIL_STREAM_RW_ERROR);
+		} finally {
+			IOUtils.close(reader);
 		}
 	}
 

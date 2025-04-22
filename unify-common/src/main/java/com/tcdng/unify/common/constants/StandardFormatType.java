@@ -25,6 +25,8 @@ import com.tcdng.unify.common.util.EnumUtils;
  */
 public enum StandardFormatType implements EnumConst  {
 	
+	PIPE_ARRAY("ARP","!pipearrayformat","#|#|#", false),
+	COMMA_ARRAY("ARC","!commaarrayformat","#,#,#", false),
 	INTEGER("INT","!integerformat","######", true),
 	INTEGER_GROUPED("ING","!integerformat useGrouping:true","###,###", true),
 	DECIMAL("DEC","!decimalformat scale:2","#####0.00", true),

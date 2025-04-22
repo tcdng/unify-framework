@@ -39,13 +39,16 @@ public abstract class AbstractDataSource extends AbstractUnifyComponent implemen
 	private boolean allObjectsInLowercase;
 
 	@Configurable("false")
+	private boolean supportUnifyViews;
+
+	@Configurable("false")
+	private boolean managed;
+
+	@Configurable("false")
 	private boolean readOnly;
 
 	@Configurable("false")
 	private boolean initDelayed;
-
-	@Configurable(ApplicationComponents.APPLICATION_DATASOURCE_ENTITYLIST_PROVIDER)
-	private DataSourceEntityListProvider entityListProvider;
 
 	@Configurable
 	private List<String> entityList;
@@ -55,7 +58,13 @@ public abstract class AbstractDataSource extends AbstractUnifyComponent implemen
 		if (dialect != null) {
 			dialect.setDataSourceName(getEntityMatchingName());
 			dialect.setAllObjectsInLowerCase(allObjectsInLowercase);
+			dialect.setSupportUnifyViews(supportUnifyViews);
 		}
+	}
+
+	@Override
+	public boolean isManaged() throws UnifyException {
+		return managed;
 	}
 
 	@Override
@@ -64,18 +73,8 @@ public abstract class AbstractDataSource extends AbstractUnifyComponent implemen
 	}
 
 	@Override
-	public boolean isInitDelayed() throws UnifyException {
+	public final boolean isInitDelayed() throws UnifyException {
 		return initDelayed;
-	}
-
-	@Override
-	public List<Class<?>> getTableEntityTypes() throws UnifyException {
-		return entityListProvider.getTableEntityTypes(getEntityMatchingName());
-	}
-
-	@Override
-	public List<Class<? extends Entity>> getViewEntityTypes() throws UnifyException {
-		return entityListProvider.getViewEntityTypes(getEntityMatchingName());
 	}
 
 	@Override
@@ -85,9 +84,15 @@ public abstract class AbstractDataSource extends AbstractUnifyComponent implemen
 
 	@Override
 	protected void onInitialize() throws UnifyException {
+		if (ApplicationComponents.APPLICATION_DATASOURCE.equals(getName())) {
+			supportUnifyViews = true;
+			managed = true;
+		}
+		
 		if (dialect != null) {
 			dialect.setDataSourceName(getEntityMatchingName());
 			dialect.setAllObjectsInLowerCase(allObjectsInLowercase);
+			dialect.setSupportUnifyViews(supportUnifyViews);
 		}
 	}
 

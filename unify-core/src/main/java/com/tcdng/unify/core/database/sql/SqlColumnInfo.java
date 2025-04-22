@@ -15,7 +15,7 @@
  */
 package com.tcdng.unify.core.database.sql;
 
-import com.tcdng.unify.core.data.Listable;
+import com.tcdng.unify.common.data.Listable;
 
 /**
  * SQL table column information.

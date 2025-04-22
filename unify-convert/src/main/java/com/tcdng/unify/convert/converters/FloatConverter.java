@@ -31,7 +31,7 @@ public class FloatConverter extends AbstractConverter<Float> {
         if (value instanceof String) {
             String string = ((String) value).trim();
             if (!string.isEmpty()) {
-                if (formatter == null) {
+                if (formatter == null || formatter.isArrayFormat()) {
                     return Float.valueOf(string);
                 }
                 return doConvert(formatter.parse(string), null);

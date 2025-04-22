@@ -40,7 +40,7 @@ public interface ScriptingEngine extends UnifyComponent {
      * @throws UnifyException
      *                        if an error occurs
      */
-    <T> T evaluate(Class<T> resultType, String script) throws UnifyException;
+    <T extends Number> T evaluate(Class<T> resultType, String script) throws UnifyException;
 
     /**
      * Evaluates a script.
@@ -55,5 +55,5 @@ public interface ScriptingEngine extends UnifyComponent {
      * @throws UnifyException
      *                        if an error occurs
      */
-    <T> T evaluate(Class<T> resultType, String script, Map<String, Object> params) throws UnifyException;
+    <T extends Number> T evaluate(Class<T> resultType, String script, Map<String, Number> params) throws UnifyException;
 }

@@ -42,8 +42,4 @@ public class RefreshSection {
         return sectionPageName;
     }
 
-    @Override
-    public String toString() {
-        return "RefreshSection [widget=" + widget + ", sectionPageName=" + sectionPageName + "]";
-    }
 }

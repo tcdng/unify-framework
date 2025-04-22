@@ -30,12 +30,18 @@ import com.tcdng.unify.core.annotation.UplAttributes;
 @UplAttributes({ 
 		@UplAttribute(name = "space", type = boolean.class, defaultVal = "false"),
         @UplAttribute(name = "spaceBinding", type = String.class),
+		@UplAttribute(name = "dash", type = boolean.class, defaultVal = "false"),
+        @UplAttribute(name = "dashBinding", type = String.class),
         @UplAttribute(name = "special", type = boolean.class, defaultVal = "false"),
         @UplAttribute(name = "specialBinding", type = String.class) })
 public class AlphanumericField extends TextField {
 
     public boolean isSpace() throws UnifyException {
         return getUplAttribute(boolean.class, "space", "spaceBinding");
+    }
+
+    public boolean isDash() throws UnifyException {
+        return getUplAttribute(boolean.class, "dash", "dashBinding");
     }
 
     public boolean isSpecial() throws UnifyException {

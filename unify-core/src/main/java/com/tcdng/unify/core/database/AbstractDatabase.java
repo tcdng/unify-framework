@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import com.tcdng.unify.common.database.Entity;
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
@@ -46,6 +47,11 @@ public abstract class AbstractDatabase extends AbstractUnifyComponent implements
     }
 
     @Override
+	public <T extends Entity> boolean isOfThisDatabase(Class<T> clazz) throws UnifyException {
+		return getDatabaseSession().isOfThisDatabase(clazz);
+	}
+
+	@Override
     public <T extends Entity> T find(Class<T> clazz, Object pk) throws UnifyException {
         return getDatabaseSession().find(clazz, pk);
     }
@@ -374,6 +380,11 @@ public abstract class AbstractDatabase extends AbstractUnifyComponent implements
     }
 
     @Override
+	public List<Set<String>> getUniqueConstraints(Class<? extends Entity> entityClass) throws UnifyException {
+		return getDatabaseSession().getUniqueConstraints(entityClass);
+	}
+
+	@Override
     public Aggregation aggregate(AggregateFunction aggregateFunction, Query<? extends Entity> query)
             throws UnifyException {
         return getDatabaseSession().aggregate(aggregateFunction, query);

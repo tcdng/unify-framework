@@ -18,7 +18,6 @@ package com.tcdng.unify.web.ui.widget.writer.control;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
-import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ui.widget.Control;
 import com.tcdng.unify.web.ui.widget.EventHandler;
@@ -26,7 +25,7 @@ import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.Widget;
 import com.tcdng.unify.web.ui.widget.control.FileUpload;
 import com.tcdng.unify.web.ui.widget.control.FileUploadView;
-import com.tcdng.unify.web.ui.widget.writer.AbstractControlWriter;
+import com.tcdng.unify.web.ui.widget.writer.AbstractAutoRefreshMultiControlWriter;
 
 /**
  * File upload view writer.
@@ -36,7 +35,7 @@ import com.tcdng.unify.web.ui.widget.writer.AbstractControlWriter;
  */
 @Writes(FileUploadView.class)
 @Component("fileuploadview-writer")
-public class FileUploadViewWriter extends AbstractControlWriter {
+public class FileUploadViewWriter extends AbstractAutoRefreshMultiControlWriter {
 
 	@Override
 	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
@@ -112,7 +111,7 @@ public class FileUploadViewWriter extends AbstractControlWriter {
 		writer.writeParam("pViewId", fileAttachment.getViewCtrl().getBaseId());
 		writer.writeParam("pRemId", fileAttachment.getRemoveCtrl().getBaseId());
 		writer.writeParam("pEditable", fileAttachment.isContainerEditable());
-		writer.writeParam("pRef", DataUtils.toArray(String.class, writer.getPostCommandRefs()));
+		writer.writeParam("pRef", fileAttachment.getRefs());
 		writer.endFunction();
 	}
 }

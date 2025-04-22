@@ -22,9 +22,9 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
+import com.tcdng.unify.common.annotation.ColumnType;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.constant.PrintFormat;
 import com.tcdng.unify.core.constant.TimeSeriesType;
@@ -224,6 +224,24 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
 	}
 
 	@Override
+	public String generateGetCheckConstraintsSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, PrintFormat format)
+			throws UnifyException {
+		StringBuilder sb = new StringBuilder();
+		sb.append("SELECT CONSTRAINT_NAME FROM INFORMATION_SCHEMA.CHECK_CONSTRAINTS WHERE TABLE_NAME  = '")
+				.append(sqlEntitySchemaInfo.getSchemaTableName()).append("'");
+		return sb.toString();
+	}
+
+	@Override
+	public String generateDropCheckConstraintSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, String checkName,
+			PrintFormat format) throws UnifyException {
+		StringBuilder sb = new StringBuilder();
+		sb.append("ALTER TABLE ").append(sqlEntitySchemaInfo.getSchemaTableName()).append(" DROP CONSTRAINT [")
+				.append(checkName).append("]");
+		return sb.toString();
+	}
+
+	@Override
 	public String generateRenameTable(SqlEntitySchemaInfo sqlRecordSchemaInfo,
 			SqlEntitySchemaInfo oldSqlRecordSchemaInfo, PrintFormat format) throws UnifyException {
 		StringBuilder sb = new StringBuilder();
@@ -260,8 +278,15 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
 			if (!sqlFieldSchemaInfo.isNullable()) {
 				sb.append("UPDATE ").append(sqlEntitySchemaInfo.getSchemaTableName()).append(" SET ")
 						.append(sqlFieldSchemaInfo.getPreferredColumnName()).append(" = ");
-				sqlDataTypePolicy.appendDefaultVal(sb, sqlFieldSchemaInfo.getFieldType(),
-						sqlFieldSchemaInfo.getDefaultVal());
+				if (sqlFieldSchemaInfo.getColumnType().isBlob()) {
+					sb.append("0x");
+				} else if (sqlFieldSchemaInfo.getColumnType().isClob()) {
+					sb.append("''");
+				} else {
+					sqlDataTypePolicy.appendDefaultVal(sb, sqlFieldSchemaInfo.getFieldType(),
+							sqlFieldSchemaInfo.getDefaultVal());
+				}
+
 				sb.append(" WHERE ").append(sqlFieldSchemaInfo.getPreferredColumnName()).append(" IS NULL");
 				sqlList.add(sb.toString());
 				StringUtils.truncate(sb);

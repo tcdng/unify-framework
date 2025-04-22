@@ -32,9 +32,10 @@ import com.tcdng.unify.web.ui.widget.control.TextField;
 @Component("alphanumericfield-writer")
 public class AlphanumericFieldWriter extends TextFieldWriter {
 
-    @Override
-    protected String getFormatRegex(TextField textField) throws UnifyException {
-        AlphanumericField alphanumericField = (AlphanumericField) textField;
-        return WebRegexUtils.getAlphanumericFormatRegex(alphanumericField.isSpecial(), alphanumericField.isSpace());
-    }
+	@Override
+	protected String getFormatRegex(TextField textField) throws UnifyException {
+		AlphanumericField alphanumericField = (AlphanumericField) textField;
+		return WebRegexUtils.getAlphanumericFormatRegex(alphanumericField.isSpecial(), alphanumericField.isDash(),
+				alphanumericField.isSpace());
+	}
 }

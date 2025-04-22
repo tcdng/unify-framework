@@ -167,6 +167,11 @@ public class ContentPanelImpl extends AbstractContentPanel {
 	}
 
 	@Override
+	public boolean isBlankContent() throws UnifyException {
+		return contentList.isEmpty();
+	}
+
+	@Override
 	public void clearPages() throws UnifyException {
 		contentByPathIdMap.clear();
 		contentList.clear();

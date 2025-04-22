@@ -33,6 +33,7 @@ import com.tcdng.unify.core.annotation.UplAttributes;
 @UplAttributes({
 		@UplAttribute(name = "styleSheet", type = String[].class),
 	    @UplAttribute(name = "script", type = String[].class),
+	    @UplAttribute(name = "font", type = String[].class),
 		@UplAttribute(name = "excludeStyleSheet", type = String[].class),
 	    @UplAttribute(name = "excludeScript", type = String[].class),
         @UplAttribute(name = "fontFamily", type = String.class, defaultVal = "arial, Open Sans"),
@@ -58,6 +59,10 @@ public abstract class AbstractHtmlPage extends AbstractPage {
     
     public String[] getScript() throws UnifyException {
     	return getUplAttribute(String[].class, "script");
+    }
+    
+    public String[] getFont() throws UnifyException {
+    	return getUplAttribute(String[].class, "font");
     }
     
     public Set<String> getExcludeStyleSheet() throws UnifyException {

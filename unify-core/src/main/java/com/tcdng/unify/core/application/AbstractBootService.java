@@ -28,7 +28,10 @@ import com.tcdng.unify.core.annotation.Transactional;
 import com.tcdng.unify.core.business.AbstractBusinessService;
 import com.tcdng.unify.core.constant.ForceConstraints;
 import com.tcdng.unify.core.constant.PrintFormat;
+import com.tcdng.unify.core.database.DataSourceEntityContext;
+import com.tcdng.unify.core.database.DataSourceEntityListProvider;
 import com.tcdng.unify.core.database.DataSourceManager;
+import com.tcdng.unify.core.database.DataSourceManagerContext;
 import com.tcdng.unify.core.database.DataSourceManagerOptions;
 import com.tcdng.unify.core.database.sql.SqlDataSource;
 import com.tcdng.unify.core.util.DataUtils;
@@ -50,19 +53,25 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
 	@Configurable(ApplicationComponents.APPLICATION_DATASOURCEMANAGER)
 	private DataSourceManager dataSourceManager;
 
+	@Configurable(ApplicationComponents.APPLICATION_DATASOURCE_ENTITYLIST_PROVIDER)
+	private DataSourceEntityListProvider entityListProvider;
+
 	private List<StartupShutdownHook> startupShutdownHooks;
 
 	@Override
 	@Transactional
 	public void startup() throws UnifyException {
 		logInfo("Initializing datasources...");
-		DataSourceManagerOptions options = new DataSourceManagerOptions(PrintFormat.NONE, ForceConstraints.fromBoolean(
-				!getContainerSetting(boolean.class, UnifyCorePropertyConstants.APPLICATION_FOREIGNKEY_EASE, false)));
-		List<String> datasources = getApplicationDataSources();
+		final List<String> datasources = getApplicationDataSources();
+		final DataSourceEntityContext entityCtx = entityListProvider.getDataSourceEntityContext(datasources);
+		final DataSourceManagerContext ctx = new DataSourceManagerContext(entityCtx, new DataSourceManagerOptions(PrintFormat.NONE,
+				ForceConstraints.fromBoolean(!getContainerSetting(boolean.class,
+						UnifyCorePropertyConstants.APPLICATION_FOREIGNKEY_EASE, false))));
 		for (String datasource : datasources) {
-			dataSourceManager.initDataSource(datasource, options);
+			dataSourceManager.initDataSource(ctx, datasource);
 		}
 
+		// Deployment
 		boolean isDeploymentPerformed = false;
 		if (isDeploymentMode()) {
 			Feature deploymentFeature = getFeature("deploymentVersion", "0.0");
@@ -72,7 +81,7 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
 				// Blank database. Manage data sources first time.
 				logInfo("Managing datasources...");
 				for (String datasource : datasources) {
-					dataSourceManager.manageDataSource(datasource, options);
+					dataSourceManager.manageDataSource(ctx, datasource);
 				}
 
 				deploymentFeature = getFeature("deploymentVersion", "0.0");
@@ -82,7 +91,8 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
 				isDataSourcesManaged = true;
 			}
 
-			isDeploymentPerformed = performBootDeployment(deploymentFeature, auxiliaryFeature, isDataSourcesManaged);
+			isDeploymentPerformed = performBootDeployment(ctx, deploymentFeature, auxiliaryFeature,
+					isDataSourcesManaged);
 		}
 
 		startupShutdownHooks = getStartupShutdownHooks();
@@ -93,7 +103,7 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
 		}
 
 		onStartup(isDeploymentPerformed);
-		dataSourceManager.initDelayedDataSource();
+		dataSourceManager.initDelayedDataSource(ctx);
 	}
 
 	@Override
@@ -133,7 +143,7 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
 
 	@SuppressWarnings("unchecked")
 	@Synchronized(BOOT_DEPLOYMENT_LOCK)
-	private boolean performBootDeployment(Feature deploymentFeature, Feature auxiliaryFeature,
+	private boolean performBootDeployment(DataSourceManagerContext ctx, Feature deploymentFeature, Feature auxiliaryFeature,
 			boolean isDataSourcesManaged) throws UnifyException {
 		logInfo("Checking application version information...");
 		deploymentFeature = getFeature("deploymentVersion", "0.0");
@@ -153,9 +163,10 @@ public abstract class AbstractBootService<T extends FeatureDefinition> extends A
 				DataSourceManagerOptions options = new DataSourceManagerOptions(PrintFormat.NONE,
 						ForceConstraints.fromBoolean(!getContainerSetting(boolean.class,
 								UnifyCorePropertyConstants.APPLICATION_FOREIGNKEY_EASE, false)));
+				DataSourceManagerContext _ctx = new DataSourceManagerContext(ctx, options);
 				List<String> datasources = getApplicationDataSources();
 				for (String datasource : datasources) {
-					dataSourceManager.manageDataSource(datasource, options);
+					dataSourceManager.manageDataSource(_ctx, datasource);
 				}
 			}
 		}

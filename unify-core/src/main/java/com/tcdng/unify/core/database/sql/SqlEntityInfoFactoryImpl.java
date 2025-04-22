@@ -28,7 +28,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.tcdng.unify.common.annotation.ColumnOverride;
+import com.tcdng.unify.common.annotation.ColumnType;
+import com.tcdng.unify.common.annotation.ForeignKeyOverride;
+import com.tcdng.unify.common.annotation.Index;
+import com.tcdng.unify.common.annotation.Indexes;
+import com.tcdng.unify.common.annotation.QueryRestriction;
+import com.tcdng.unify.common.annotation.Table;
+import com.tcdng.unify.common.annotation.UniqueConstraint;
+import com.tcdng.unify.common.annotation.UniqueConstraints;
+import com.tcdng.unify.common.constants.DefaultColumnPositionConstants;
 import com.tcdng.unify.common.constants.EnumConst;
+import com.tcdng.unify.common.database.Entity;
 import com.tcdng.unify.convert.util.ConverterUtils;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyComponentConfig;
@@ -41,43 +52,32 @@ import com.tcdng.unify.core.annotation.CategoryColumn;
 import com.tcdng.unify.core.annotation.Child;
 import com.tcdng.unify.core.annotation.ChildList;
 import com.tcdng.unify.core.annotation.Column;
-import com.tcdng.unify.core.annotation.ColumnOverride;
-import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.DefaultQueryRestrictions;
-import com.tcdng.unify.core.annotation.QueryRestriction;
 import com.tcdng.unify.core.annotation.ForeignKey;
-import com.tcdng.unify.core.annotation.ForeignKeyOverride;
 import com.tcdng.unify.core.annotation.FosterParentId;
 import com.tcdng.unify.core.annotation.FosterParentType;
 import com.tcdng.unify.core.annotation.Id;
 import com.tcdng.unify.core.annotation.InOutParam;
 import com.tcdng.unify.core.annotation.InParam;
-import com.tcdng.unify.core.annotation.Index;
-import com.tcdng.unify.core.annotation.Indexes;
 import com.tcdng.unify.core.annotation.ListOnly;
 import com.tcdng.unify.core.annotation.Mapped;
 import com.tcdng.unify.core.annotation.OutParam;
 import com.tcdng.unify.core.annotation.Policy;
 import com.tcdng.unify.core.annotation.ResultField;
-import com.tcdng.unify.core.annotation.Table;
 import com.tcdng.unify.core.annotation.TableExt;
 import com.tcdng.unify.core.annotation.TableName;
 import com.tcdng.unify.core.annotation.TableRef;
 import com.tcdng.unify.core.annotation.TenantId;
-import com.tcdng.unify.core.annotation.UniqueConstraint;
-import com.tcdng.unify.core.annotation.UniqueConstraints;
 import com.tcdng.unify.core.annotation.Version;
 import com.tcdng.unify.core.annotation.View;
 import com.tcdng.unify.core.annotation.ViewRestriction;
-import com.tcdng.unify.core.constant.DefaultColumnPositionConstants;
 import com.tcdng.unify.core.criterion.Equals;
 import com.tcdng.unify.core.criterion.RestrictionType;
 import com.tcdng.unify.core.data.CycleDetector;
 import com.tcdng.unify.core.data.FactoryMap;
 import com.tcdng.unify.core.database.CallableProc;
-import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.database.EntityPolicy;
 import com.tcdng.unify.core.database.MappedEntityRepository;
 import com.tcdng.unify.core.database.StaticReference;
@@ -274,6 +274,7 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 					viewName = tableName;
 				}
 
+				// Rename view if necessary
 				final String schema = getWorkingSchema(
 						ta != null ? AnnotationUtils.getAnnotationString(ta.schema()) : null,
 						sqlDataSourceDialect.getDataSourceName());
@@ -847,9 +848,8 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 						}
 					}
 				} while ((searchClass = searchClass.getSuperclass()) != null);
-
-				// Rename view if necessary
-				if (!listOnlyFieldMap.isEmpty() && ta != null && viewName.equals(tableName)) {
+				
+				if (!listOnlyFieldMap.isEmpty() && (ta != null || sqlDataSourceDialect.isSupportUnifyViews())  && viewName.equals(tableName)) {
 					viewName = SqlUtils.generateViewName(tableName);
 				}
 
@@ -1796,6 +1796,11 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 	}
 
 	@Override
+	public List<SqlEntityInfo> getSqlEntityInfos() throws UnifyException {
+		return new ArrayList<SqlEntityInfo>(sqlEntityInfoMap.values());
+	}
+
+	@Override
 	public void setSqlDataSourceDialect(SqlDataSourceDialect sqlDataSourceDialect) {
 		this.sqlDataSourceDialect = sqlDataSourceDialect;
 	}
@@ -1836,6 +1841,11 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 		}
 
 		return sqlEntityInfo;
+	}
+
+	@Override
+	public boolean isWithSqlEntityInfo(Class<?> clazz) throws UnifyException {
+		return sqlEntityInfoMap.isKey(clazz);
 	}
 
 	@Override
@@ -1939,18 +1949,19 @@ public class SqlEntityInfoFactoryImpl extends AbstractSqlEntityInfoFactory {
 			Class<? extends Entity> childClass, ChildFkFields childFkFields, boolean editable, boolean list)
 			throws UnifyException {
 		boolean idNumber = Number.class.isAssignableFrom(ReflectUtils.getGetterInfo(childClass, "id").getType());
-		GetterSetterInfo getterSetterInfo = ReflectUtils.getGetterSetterInfo(parentClass, childField.getName());
-		Method childFkIdSetter = ReflectUtils.getGetterSetterInfo(childClass, childFkFields.getFkIdField().getName())
-				.getSetter();
+		final GetterSetterInfo getterSetterInfo = ReflectUtils.getGetterSetterInfo(parentClass, childField.getName());
+		final GetterSetterInfo fkIdGetterSetterInfo = ReflectUtils.getGetterSetterInfo(childClass,
+				childFkFields.getFkIdField().getName());
 		Method childFkTypeSetter = childFkFields.getFkTypeField() != null
 				? ReflectUtils.getGetterSetterInfo(childClass, childFkFields.getFkTypeField().getName()).getSetter()
 				: null;
 		Method childCatSetter = childFkFields.getCategoryField() != null
 				? ReflectUtils.getGetterSetterInfo(childClass, childFkFields.getCategoryField().getName()).getSetter()
 				: null;
-		return new ChildFieldInfo(childClass, category, childFkFields.getFkIdField(), childFkIdSetter,
-				childFkFields.getFkTypeField(), childFkTypeSetter, childFkFields.getCategoryField(), childCatSetter,
-				childField, getterSetterInfo.getGetter(), getterSetterInfo.getSetter(), editable, list, idNumber);
+		return new ChildFieldInfo(childClass, category, childFkFields.getFkIdField(), fkIdGetterSetterInfo.getGetter(),
+				fkIdGetterSetterInfo.getSetter(), childFkFields.getFkTypeField(), childFkTypeSetter,
+				childFkFields.getCategoryField(), childCatSetter, childField, getterSetterInfo.getGetter(),
+				getterSetterInfo.getSetter(), editable, list, idNumber);
 	}
 
 	private ChildFkFields getFosterParentChildFkFields(Class<?> argumentType) throws UnifyException {

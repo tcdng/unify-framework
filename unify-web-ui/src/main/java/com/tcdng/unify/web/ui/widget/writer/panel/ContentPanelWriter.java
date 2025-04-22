@@ -15,9 +15,6 @@
  */
 package com.tcdng.unify.web.ui.widget.writer.panel;
 
-import java.util.Arrays;
-
-import com.tcdng.unify.core.UnifyCoreSessionAttributeConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
@@ -80,7 +77,6 @@ public class ContentPanelWriter extends AbstractPanelWriter {
 			}
 
 			writer.writeParam("pImmURL", getContextURL(paths[0])); 
-			setSessionAttribute(UnifyCoreSessionAttributeConstants.STICKY_PATHS, Arrays.asList(_cpaths));
 		} else {
 			writer.writeParam("pCurIdx", contentPanel.getPageIndex());
 			ContentInfo currentContentInfo = contentPanel.getCurrentContentInfo();

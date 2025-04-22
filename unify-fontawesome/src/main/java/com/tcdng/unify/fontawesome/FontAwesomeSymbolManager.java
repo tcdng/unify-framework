@@ -79,10 +79,19 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("chart-area", "f1fe");
         registerSymbol("chart-bar", "f080");
         registerSymbol("chart-pie", "f200");
+        registerSymbol("chevron-circle-down", "f13a");
+        registerSymbol("chevron-circle-left", "f137");
+        registerSymbol("chevron-circle-right", "f138");
+        registerSymbol("chevron-circle-up", "f139");
         registerSymbol("chevron-down", "f078");
         registerSymbol("chevron-left", "f053");
         registerSymbol("chevron-right", "f054");
         registerSymbol("chevron-up", "f077");
+        registerSymbol("clipboard-check", "f46c");
+        registerSymbol("circle-arrow-down", "f358");
+        registerSymbol("circle-arrow-left", "f359");
+        registerSymbol("circle-arrow-right", "f35a");
+        registerSymbol("circle-arrow-up", "f35b");
         registerSymbol("circle-pause", "f28b");
         registerSymbol("clock", "f017");
         registerSymbol("cloud", "f0c2");
@@ -105,8 +114,8 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("door-open", "f52b");
         registerSymbol("download", "f019");
         registerSymbol("edit", "f044");
-        registerSymbol("ellipsis-h", "f141");
-        registerSymbol("ellipsis-v", "f142");
+        registerSymbol("ellipsis-horizontal", "f141");
+        registerSymbol("ellipsis-vertical", "f142");
         registerSymbol("eye", "f06e");
         registerSymbol("equals", "f52c");
         registerSymbol("ethernet", "f796");
@@ -114,6 +123,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("exclamation-circle", "f06a");
         registerSymbol("expand", "f065");
         registerSymbol("file", "f15b");
+        registerSymbol("file-alt", "f15c");
         registerSymbol("file-contract", "f56c");
         registerSymbol("file-download", "f56d");
         registerSymbol("file-edit", "f31c");
@@ -122,6 +132,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("file-import", "f56f");
         registerSymbol("file-invoice", "f570");
         registerSymbol("file-pdf", "f1c1");
+        registerSymbol("file-plus", "f477");
         registerSymbol("file-upload", "f574");
         registerSymbol("file-word", "f1c2");
         registerSymbol("filter", "f0b0");
@@ -129,6 +140,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("flag-checkered", "f11e");
         registerSymbol("folder", "f07b");
         registerSymbol("folder-open", "f07c");
+        registerSymbol("folder-plus", "f65e");
         registerSymbol("forward", "f04e");
         registerSymbol("forward-fast", "f050");
         registerSymbol("globe-africa", "f57c");
@@ -144,6 +156,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("italic", "f033");
         registerSymbol("key", "f084");
         registerSymbol("laptop-house", "e066");
+        registerSymbol("laugh", "f599");
         registerSymbol("link", "f0c1");
         registerSymbol("list", "f03a");
         registerSymbol("lock", "f023");
@@ -155,11 +168,14 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("minus", "f068");
         registerSymbol("minus-square", "f146");
         registerSymbol("money-bill", "f0d6");
+        registerSymbol("mountain", "f6fc");
         registerSymbol("network-wired", "f6ff");
         registerSymbol("newspaper", "f1ea");
         registerSymbol("outdent", "f03b");
         registerSymbol("paint-brush", "f1fc");
         registerSymbol("paper-clip", "f0c6");
+        registerSymbol("parachute-box", "f4cd");
+        registerSymbol("pen-nib", "f5ad");
         registerSymbol("play", "f04b");
         registerSymbol("plus", "f067");
         registerSymbol("plus-square", "f0fe");
@@ -197,6 +213,7 @@ public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {
         registerSymbol("user", "f007");
         registerSymbol("users", "f0c0");
         registerSymbol("user-check", "f4fc");
+        registerSymbol("user-cog", "f4fe");
         registerSymbol("user-edit", "f4ff");
         registerSymbol("user-tag", "f507");
         registerSymbol("vector-square", "f5cb");

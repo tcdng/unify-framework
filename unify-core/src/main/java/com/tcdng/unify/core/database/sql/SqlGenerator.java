@@ -35,6 +35,29 @@ import com.tcdng.unify.core.constant.Views;
  */
 public interface SqlGenerator extends UnifyComponent {
 
+	/**
+	 * Generates a native get table check constraints SQL for specified record type.
+	 * 
+	 * @param sqlEntitySchemaInfo record schema information
+	 * @param format              flag that indicates if SQL should be formatted
+	 * @return the generated get table check constraints SQL
+	 * @throws UnifyException if an error occurs
+	 */
+	String generateGetCheckConstraintsSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, PrintFormat format)
+			throws UnifyException;
+
+	/**
+	 * Generates a native delete table check constraint SQL for specified record
+	 * type.
+	 * 
+	 * @param sqlEntitySchemaInfo record schema information
+	 * @param format              flag that indicates if SQL should be formatted
+	 * @return the generated delete table check constraints SQL
+	 * @throws UnifyException if an error occurs
+	 */
+	String generateDropCheckConstraintSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, String checkName, PrintFormat format)
+			throws UnifyException;
+
     /**
      * Generates all native create SQL for record type.
      * 

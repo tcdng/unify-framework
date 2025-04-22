@@ -26,14 +26,15 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
 
+import com.tcdng.unify.common.constants.UnifyStaticSettings;
+import com.tcdng.unify.common.data.Listable;
+import com.tcdng.unify.common.database.Entity;
 import com.tcdng.unify.core.annotation.Parameter;
 import com.tcdng.unify.core.annotation.Singleton;
 import com.tcdng.unify.core.constant.LocaleType;
 import com.tcdng.unify.core.constant.PrintFormat;
-import com.tcdng.unify.core.data.Listable;
 import com.tcdng.unify.core.data.ParamConfig;
 import com.tcdng.unify.core.data.ValueStore;
-import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.format.Formatter;
 import com.tcdng.unify.core.logging.Logger;
 import com.tcdng.unify.core.logging.LoggingLevel;
@@ -268,6 +269,16 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 */
 	protected String getWorkingPathFilename(String relativeFilename) throws UnifyException {
 		return unifyComponentContext.getWorkingPathFilename(relativeFilename);
+	}
+
+	/**
+	 * Gets container working path.
+	 * 
+	 * @return the working path
+	 * @throws UnifyException if an error occurs
+	 */
+	protected String getWorkingPath() throws UnifyException {
+		return unifyComponentContext.getWorkingPath();
 	}
 
 	/**
@@ -917,6 +928,19 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 */
 	protected Object removeSessionAttribute(String name) throws UnifyException {
 		return unifyComponentContext != null ? unifyComponentContext.getSessionContext().removeAttribute(name) : null;
+	}
+
+	/**
+	 * Removes an attribute from current session.
+	 * 
+	 * @param name the name of the attribute to remove
+	 * @return the value of attribute remove, otherwise null.
+	 * @throws UnifyException if an error occurs
+	 */
+	protected <T> T removeSessionAttribute(Class<T> typeClass, String name) throws UnifyException {
+		Object val = unifyComponentContext != null ? unifyComponentContext.getSessionContext().removeAttribute(name)
+				: null;
+		return DataUtils.convert(typeClass, val);
 	}
 
 	/**

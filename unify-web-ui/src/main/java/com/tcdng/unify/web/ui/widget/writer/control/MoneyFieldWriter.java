@@ -18,10 +18,10 @@ package com.tcdng.unify.web.ui.widget.writer.control;
 
 import java.util.List;
 
+import com.tcdng.unify.common.data.Listable;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
-import com.tcdng.unify.core.data.Listable;
 import com.tcdng.unify.core.format.NumberFormatter;
 import com.tcdng.unify.core.util.json.JsonWriter;
 import com.tcdng.unify.web.ui.util.WebRegexUtils;
@@ -43,27 +43,34 @@ import com.tcdng.unify.web.ui.widget.control.TextField;
 public class MoneyFieldWriter extends AbstractPopupTextFieldWriter {
 
     @Override
-    protected void writePopupContent(ResponseWriter writer, AbstractPopupTextField popupTextField)
-            throws UnifyException {
-        MoneyField moneyField = (MoneyField) popupTextField;
+	protected void writePopupContent(ResponseWriter writer, AbstractPopupTextField popupTextField)
+			throws UnifyException {
+		MoneyField moneyField = (MoneyField) popupTextField;
 
-        writer.write("<div id=\"").write(moneyField.getFramePanelId())
-                .write("\" class=\"mfborder\" style=\"overflow-y:auto;overflow-x:hidden;\" tabindex=\"-1\">");
-        writer.write("<div id=\"").write(moneyField.getListPanelId()).write("\" class=\"mflist\">");
-        List<? extends Listable> listableList = moneyField.getListables();
-        int length = listableList.size();
+		writer.write("<div id=\"").write(moneyField.getFramePanelId())
+				.write("\" class=\"mfborder\" style=\"overflow-y:auto;overflow-x:hidden;\" tabindex=\"-1\">");
+		writer.write("<div id=\"").write(moneyField.getListPanelId()).write("\" class=\"mflist\">");
+		List<? extends Listable> listableList = moneyField.getListables();
+		if (moneyField.isLoadingFailure()) {
+			writer.write("<a>");
+			writer.writeWithHtmlEscape(resolveSessionMessage("$m{list.loadingfailure}"));
+			writer.write("</a>");
+		} else {
+			int length = listableList.size();
 
-        for (int i = 0; i < length; i++) {
-            Listable listable = listableList.get(i);
-            writer.write("<a");
-            writeTagId(writer, moneyField.getNamingIndexedId(i));
-            writer.write(">");
-            writer.writeWithHtmlEscape(listable.getListDescription());
-            writer.write("</a>");
-        }
-        writer.write("</div>");
-        writer.write("</div>");
-    }
+			for (int i = 0; i < length; i++) {
+				Listable listable = listableList.get(i);
+				writer.write("<a");
+				writeTagId(writer, moneyField.getNamingIndexedId(i));
+				writer.write(">");
+				writer.writeWithHtmlEscape(listable.getListDescription());
+				writer.write("</a>");
+			}
+		}
+
+		writer.write("</div>");
+		writer.write("</div>");
+	}
 
     @Override
     protected void doWritePopupTextFieldBehaviour(ResponseWriter writer, AbstractPopupTextField popupTextField, boolean popupEnabled)

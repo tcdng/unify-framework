@@ -20,6 +20,7 @@ import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.constant.TextCase;
+import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.constant.ExtensionType;
 import com.tcdng.unify.web.ui.DataTransferBlock;
 import com.tcdng.unify.web.ui.widget.AbstractFormattedControl;
@@ -36,6 +37,8 @@ import com.tcdng.unify.web.ui.widget.AbstractFormattedControl;
 		@UplAttribute(name = "minLen", type = int.class),
         @UplAttribute(name = "maxLen", type = int.class),
         @UplAttribute(name = "case", type = TextCase.class),
+        @UplAttribute(name = "placeholder", type = String.class),
+        @UplAttribute(name = "placeholderBinding", type = String.class),
         @UplAttribute(name = "trim", type = boolean.class, defaultVal = "false"),
         @UplAttribute(name = "spellCheck", type = boolean.class, defaultVal = "false"),
         @UplAttribute(name = "extStyleClass", type = String.class, defaultVal = "tread"),
@@ -71,6 +74,15 @@ public class TextField extends AbstractFormattedControl {
 
     public String getExtStyleClass() throws UnifyException {
         return getUplAttribute(String.class, "extStyleClass");
+    }
+
+    public String getPlaceholder() throws UnifyException {
+    	final String placeholderBinding = getUplAttribute(String.class, "placeholderBinding");
+    	if (!StringUtils.isBlank(placeholderBinding)) {
+    		return getStringValue(placeholderBinding);
+    	}
+    	
+        return getUplAttribute(String.class, "placeholder");
     }
 
     public boolean getExtReadOnly() throws UnifyException {

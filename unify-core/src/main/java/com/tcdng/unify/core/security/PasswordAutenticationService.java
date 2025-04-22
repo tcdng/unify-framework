@@ -15,6 +15,8 @@
  */
 package com.tcdng.unify.core.security;
 
+import java.util.List;
+
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 
@@ -26,18 +28,24 @@ import com.tcdng.unify.core.UnifyException;
  */
 public interface PasswordAutenticationService extends UnifyComponent {
 
-    /**
-     * Authenticates a user with supplied password.
-     * 
-     * @param userName
-     *            the user name to authenticate
-	 * @param userEmail       the user email
-     * @param password
-     *            the password
-     * @return a true is returned if supplied credentials are successfully
-     *         authenticated
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    boolean authenticate(String userName, String userEmail, String password) throws UnifyException;
+	/**
+	 * Authenticates a user with supplied password.
+	 * 
+	 * @param userName  the user name to authenticate
+	 * @param userEmail the user email
+	 * @param password  the password
+	 * @return a true is returned if supplied credentials are successfully
+	 *         authenticated
+	 * @throws UnifyException if an error occurs
+	 */
+	boolean authenticate(String userName, String userEmail, String password) throws UnifyException;
+
+	/**
+	 * Gets the list of user roles
+	 * 
+	 * @param userName the user name the user name to authenticate
+	 * @return the list of roles
+	 * @throws UnifyException if an error occurs
+	 */
+	List<String> getRoles(String userName) throws UnifyException;
 }

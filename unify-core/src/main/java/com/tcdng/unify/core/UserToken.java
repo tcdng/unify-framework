@@ -15,7 +15,7 @@
  */
 package com.tcdng.unify.core;
 
-import com.tcdng.unify.core.database.Entity;
+import com.tcdng.unify.common.database.Entity;
 import com.tcdng.unify.core.util.StringUtils;
 
 /**
@@ -53,6 +53,8 @@ public class UserToken {
 	private Long userId;
 
 	private Long tenantId;
+
+	private Long organizationId;
 
 	private boolean globalAccess;
 
@@ -141,6 +143,18 @@ public class UserToken {
 		return tenantId;
 	}
 
+	public Long getOrganizationId() {
+		return organizationId;
+	}
+
+	public void setOrganizationId(Long organizationId) {
+		this.organizationId = organizationId;
+	}
+
+	public boolean isWithOrganization() {
+		return organizationId != null && organizationId > 0L;
+	}
+	
 	public String getIpAddress() {
 		return ipAddress;
 	}

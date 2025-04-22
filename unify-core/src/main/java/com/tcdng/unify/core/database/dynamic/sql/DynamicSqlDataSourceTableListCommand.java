@@ -19,9 +19,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import com.tcdng.unify.common.data.Listable;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
-import com.tcdng.unify.core.data.Listable;
 import com.tcdng.unify.core.database.sql.SqlTableInfo;
 import com.tcdng.unify.core.database.sql.SqlTableType;
 import com.tcdng.unify.core.util.DataUtils;

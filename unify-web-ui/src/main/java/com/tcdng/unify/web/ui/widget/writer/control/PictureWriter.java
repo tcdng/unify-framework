@@ -18,12 +18,11 @@ package com.tcdng.unify.web.ui.widget.writer.control;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
-import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.web.ui.widget.EventHandler;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.Widget;
 import com.tcdng.unify.web.ui.widget.control.Picture;
-import com.tcdng.unify.web.ui.widget.writer.AbstractControlWriter;
+import com.tcdng.unify.web.ui.widget.writer.AbstractAutoRefreshMultiControlWriter;
 
 /**
  * Picture writer.
@@ -33,7 +32,7 @@ import com.tcdng.unify.web.ui.widget.writer.AbstractControlWriter;
  */
 @Writes(Picture.class)
 @Component("picture-writer")
-public class PictureWriter extends AbstractControlWriter {
+public class PictureWriter extends AbstractAutoRefreshMultiControlWriter {
 
 	@Override
 	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
@@ -56,7 +55,7 @@ public class PictureWriter extends AbstractControlWriter {
 		writer.writeParam("pFileId", picture.getFileCtrl().getId());
 		writer.writeParam("pImgId", picture.getImageCtrl().getId());
 		writer.writeParam("pEditable", picture.isContainerEditable());
-		writer.writeParam("pRef", DataUtils.toArray(String.class, writer.getPostCommandRefs()));
+		writer.writeParam("pRef", picture.getRefs());
 		writer.endFunction();
 	}
 

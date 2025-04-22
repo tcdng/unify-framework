@@ -29,6 +29,7 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.tcdng.unify.common.database.Entity;
 import com.tcdng.unify.core.AbstractUnifyComponentTest;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyException;
@@ -37,7 +38,6 @@ import com.tcdng.unify.core.annotation.DynamicFieldType;
 import com.tcdng.unify.core.constant.DataType;
 import com.tcdng.unify.core.constant.OrderType;
 import com.tcdng.unify.core.database.DatabaseTransactionManager;
-import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.database.Query;
 import com.tcdng.unify.core.database.dynamic.DynamicEntityInfo;
 import com.tcdng.unify.core.database.sql.SqlDatabase;
@@ -87,6 +87,8 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
 			ReflectUtils.setBeanProperty(inst, "name", "5dPrinter");
 			ReflectUtils.setBeanProperty(inst, "serialNo", "202004-0003");
 			ReflectUtils.setBeanProperty(inst, "price", BigDecimal.valueOf(10.99));
+			ReflectUtils.setBeanProperty(inst, "history",
+					new BigDecimal[] { BigDecimal.valueOf(12.25), BigDecimal.valueOf(0.99) });
 			ReflectUtils.setBeanProperty(inst, "createDt", createDt);
 			ReflectUtils.setBeanProperty(inst, "order", OrderType.ASCENDING);
 			Long id = (Long) db.create(inst);
@@ -111,6 +113,8 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
 			ReflectUtils.setBeanProperty(inst, "name", "6dPrinter");
 			ReflectUtils.setBeanProperty(inst, "serialNo", "202004-8883");
 			ReflectUtils.setBeanProperty(inst, "price", BigDecimal.valueOf(40.25));
+			ReflectUtils.setBeanProperty(inst, "history",
+					new BigDecimal[] { BigDecimal.valueOf(12.25), BigDecimal.valueOf(0.99) });
 			ReflectUtils.setBeanProperty(inst, "createDt", createDt);
 			ReflectUtils.setBeanProperty(inst, "order", OrderType.DESCENDING);
 			Long id = (Long) db.create(inst);
@@ -120,6 +124,11 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
 			assertEquals("6dPrinter", ReflectUtils.getBeanProperty(fInst, "name"));
 			assertEquals("202004-8883", ReflectUtils.getBeanProperty(fInst, "serialNo"));
 			assertEquals(BigDecimal.valueOf(40.25), ReflectUtils.getBeanProperty(fInst, "price"));
+			BigDecimal[] history = (BigDecimal[]) ReflectUtils.getBeanProperty(fInst, "history");
+			assertNotNull(history);
+			assertEquals(2, history.length);
+			assertEquals(BigDecimal.valueOf(12.25), history[0]);
+			assertEquals(BigDecimal.valueOf(0.99), history[1]);
 			assertEquals(createDt, ReflectUtils.getBeanProperty(fInst, "createDt"));
 			assertNull(ReflectUtils.getBeanProperty(fInst, "expiryDt"));
 			assertEquals("6dPrinter", fInst.getDescription());
@@ -143,6 +152,8 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
 			ReflectUtils.setBeanProperty(inst, "name", "6dPrinter");
 			ReflectUtils.setBeanProperty(inst, "serialNo", "202004-8883");
 			ReflectUtils.setBeanProperty(inst, "price", BigDecimal.valueOf(40.25));
+			ReflectUtils.setBeanProperty(inst, "history",
+					new BigDecimal[] { BigDecimal.valueOf(12.25), BigDecimal.valueOf(0.99) });
 			ReflectUtils.setBeanProperty(inst, "createDt", createDt);
 			ReflectUtils.setBeanProperty(inst, "order", OrderType.DESCENDING);
 			Long id = (Long) db.create(inst);
@@ -151,6 +162,7 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
 			assertNotNull(fInst);
 			ReflectUtils.setBeanProperty(fInst, "serialNo", "202004-7773");
 			ReflectUtils.setBeanProperty(fInst, "price", BigDecimal.valueOf(90.62));
+			ReflectUtils.setBeanProperty(fInst, "history", new BigDecimal[] {BigDecimal.valueOf(90.62)});
 			ReflectUtils.setBeanProperty(fInst, "order", OrderType.ASCENDING);
 			db.updateByIdVersion(fInst);
 
@@ -159,6 +171,10 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
 			assertEquals("6dPrinter", ReflectUtils.getBeanProperty(ffInst, "name"));
 			assertEquals("202004-7773", ReflectUtils.getBeanProperty(ffInst, "serialNo"));
 			assertEquals(BigDecimal.valueOf(90.62), ReflectUtils.getBeanProperty(ffInst, "price"));
+			BigDecimal[] history = (BigDecimal[]) ReflectUtils.getBeanProperty(fInst, "history");
+			assertNotNull(history);
+			assertEquals(1, history.length);
+			assertEquals(BigDecimal.valueOf(90.62), history[0]);
 			assertEquals(createDt, ReflectUtils.getBeanProperty(ffInst, "createDt"));
 			assertNull(ReflectUtils.getBeanProperty(ffInst, "expiryDt"));
 			assertEquals(OrderType.ASCENDING, ReflectUtils.getBeanProperty(ffInst, "order"));
@@ -478,17 +494,19 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
 						schemaChanged)
 				.tableName("EQUIPMENT").version(1L)
 				.addField(DynamicFieldType.GENERATION, DataType.STRING, "EQUIPMENT_NM", "name", mapped, defaultVal, 32,
-						0, 0, false, true)
+						0, 0, false, true, false)
 				.addField(DynamicFieldType.GENERATION, DataType.STRING, "SERIAL_NO", "serialNo", mapped, "00000000", 0,
-						0, 0, false, false)
+						0, 0, false, false, false)
 				.addField(DynamicFieldType.GENERATION, DataType.DECIMAL, "PRICE", "price", mapped, defaultVal, 0, 18, 2,
-						false, false)
+						false, false, false)
+				.addField(DynamicFieldType.GENERATION, DataType.DECIMAL, "HISTORY", "history", mapped, defaultVal, 0, 18, 2,
+						true, false, true)
 				.addField(DynamicFieldType.GENERATION, DataType.DATE, "EXPIRY_DT", "expiryDt", mapped, defaultVal, 0, 0,
-						0, true, false)
+						0, true, false, false)
 				.addField(DynamicFieldType.GENERATION, DataType.TIMESTAMP_UTC, "CREATE_DT", "createDt", mapped,
-						defaultVal, 0, 0, 0, false, false)
+						defaultVal, 0, 0, 0, false, false, false)
 				.addField(DynamicFieldType.GENERATION, OrderType.class.getName(), "EQUIPMENT_ORDER", "order", mapped,
-						defaultVal, false, false)
+						defaultVal, false, false, false)
 				.build();
 
 		dynamicEntityInfoExt = DynamicEntityInfo
@@ -496,15 +514,15 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
 						DynamicEntityInfo.ManagedType.MANAGED, schemaChanged)
 				.baseClassName(Equipment.class.getName()).version(1L)
 				.addField(DynamicFieldType.INFO_ONLY, DataType.STRING, "EQUIPMENT_NM", "name", mapped, defaultVal, 32,
-						0, 0, false, true)
+						0, 0, false, true, false)
 				.addField(DynamicFieldType.INFO_ONLY, DataType.STRING, "SERIAL_NO", "serialNo", mapped, defaultVal, 0,
-						0, 0, false, true)
+						0, 0, false, true, false)
 				.addField(DynamicFieldType.GENERATION, DataType.DECIMAL, "PRICE", "price", mapped, defaultVal, 0, 18, 2,
-						false, true)
+						false, true, false)
 				.addField(DynamicFieldType.GENERATION, DataType.DATE, "EXPIRY_DT", "expiryDt", mapped, defaultVal, 0, 0,
-						0, true, false)
+						0, true, false, false)
 				.addField(DynamicFieldType.GENERATION, DataType.TIMESTAMP_UTC, "CREATE_DT", "createDt", mapped,
-						defaultVal, 0, 0, 0, false, false)
+						defaultVal, 0, 0, 0, false, false, false)
 				.build();
 
 		DynamicEntityInfo.Builder adeib = DynamicEntityInfo.newBuilder(DynamicEntityType.TABLE,
@@ -516,11 +534,11 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
 				.version(1L);
 		bookDynamicEntityInfo = bdeib.prefetch();
 
-		adeib.addField(DynamicFieldType.INFO_ONLY, DataType.LONG, "PASCAL_ID", "id", null, null, 0, 0, 0, false, false)
+		adeib.addField(DynamicFieldType.INFO_ONLY, DataType.LONG, "PASCAL_ID", "id", null, null, 0, 0, 0, false, false, false)
 				.addField(DynamicFieldType.GENERATION, DataType.STRING, "TAUTHOR_NM", "name", mapped, defaultVal, 32, 0,
-						0, false, true)
+						0, false, true, false)
 				.addField(DynamicFieldType.GENERATION, DataType.STRING, "TACCOUNTNO", "accountNo", mapped, defaultVal,
-						32, 0, 0, false, true)
+						32, 0, 0, false, true, false)
 				.addForeignKeyField(DynamicFieldType.GENERATION, DynamicEntityInfo.SELF_REFERENCE, "PARENT_AUTHOR_ID",
 						"parentAuthorId", defaultVal, false, true)
 				.addListOnlyField(DynamicFieldType.GENERATION, null, "parentAuthorName", "parentAuthorId", "name",
@@ -531,7 +549,7 @@ public class DynamicSqlEntityLoaderTest extends AbstractUnifyComponentTest {
 		
 		bdeib.addForeignKeyField(DynamicFieldType.GENERATION, authorDynamicEntityInfo, null, "authorId", "1", false, false)
 				.addField(DynamicFieldType.GENERATION, DataType.STRING, "TITLE", "title", mapped, defaultVal, 32, 0, 0,
-						false, true)
+						false, true, false)
 				.addListOnlyField(DynamicFieldType.GENERATION, null, "authorName", "authorId", "name", false).build();
 
 		dynamicEntityInfo.finalizeResolution();

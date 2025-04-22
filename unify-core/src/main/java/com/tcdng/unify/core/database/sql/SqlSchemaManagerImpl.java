@@ -34,6 +34,8 @@ import java.util.Set;
 
 import com.tcdng.unify.common.annotation.StaticList;
 import com.tcdng.unify.common.constants.EnumConst;
+import com.tcdng.unify.common.data.Listable;
+import com.tcdng.unify.common.database.Entity;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyCorePropertyConstants;
@@ -42,8 +44,6 @@ import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.constant.ForceConstraints;
 import com.tcdng.unify.core.constant.LocaleType;
 import com.tcdng.unify.core.constant.PrintFormat;
-import com.tcdng.unify.core.data.Listable;
-import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.util.SqlUtils;
 import com.tcdng.unify.core.util.StringUtils;
 
@@ -85,7 +85,7 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 				schemaChangedClassList.size(), sqlDataSource.getName());
 		SqlSchemaManagerOptions options = new SqlSchemaManagerOptions(PrintFormat.NONE, ForceConstraints.fromBoolean(
 				!getContainerSetting(boolean.class, UnifyCorePropertyConstants.APPLICATION_FOREIGNKEY_EASE, false)));
-		
+
 		List<Class<? extends Entity>> viewList = buildDependencyDynamicViewList(sqlDataSource, schemaChangedClassList);
 
 		if (sqlDataSource.getDialect().isReconstructViewsOnTableSchemaUpdate()) {
@@ -286,8 +286,8 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 				if (!alterTableColumnsSql.isEmpty()) {
 					// Drop all constraints and indexes
 					logDebug("Dropping all constraints and indexes...");
-					dropConstraintSql.addAll(generateDropConstraints(sqlDataSourceDialect, sqlEntityInfo,
-							managedTableConstraints.values(), printFormat));
+					dropConstraintSql.addAll(generateDropConstraints(databaseMetaData, sqlDataSourceDialect,
+							sqlEntityInfo, managedTableConstraints.values(), printFormat));
 
 					// Recreate all constraints and indexes
 					logDebug("Recreating all constraints and indexes...");
@@ -396,8 +396,8 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 
 					// Drop unused constraints and indexes
 					logDebug("Dropping unused constraints and indexes...");
-					dropConstraintSql.addAll(generateDropConstraints(sqlDataSourceDialect, sqlEntityInfo,
-							managedTableConstraints.values(), printFormat));
+					dropConstraintSql.addAll(generateDropConstraints(databaseMetaData, sqlDataSourceDialect,
+							sqlEntityInfo, managedTableConstraints.values(), printFormat));
 				}
 
 				tableUpdateSql.addAll(dropConstraintSql);
@@ -579,7 +579,7 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 								&& StringUtils.isNotBlank(pkColumnName)) {
 							TableConstraint tConst = managedTableConstraints.get(fkName);
 							if (tConst == null) {
-								tConst = new TableConstraint(fkName, pkTableName, false);
+								tConst = new TableConstraint(fkName, pkTableName, false, false);
 								managedTableConstraints.put(fkName, tConst);
 							}
 
@@ -598,7 +598,7 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 							boolean unique = SqlUtils.isUniqueConstraintName(idxName);
 							TableConstraint tConst = managedTableConstraints.get(idxName);
 							if (tConst == null) {
-								tConst = new TableConstraint(idxName, null, unique);
+								tConst = new TableConstraint(idxName, null, false, unique);
 								managedTableConstraints.put(idxName, tConst);
 							}
 
@@ -617,7 +617,8 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 		return managedTableConstraints;
 	}
 
-	private List<String> generateDropConstraints(SqlDataSourceDialect sqlDataSourceDialect, SqlEntityInfo sqlEntityInfo,
+	private List<String> generateDropConstraints(DatabaseMetaData databaseMetaData,
+			SqlDataSourceDialect sqlDataSourceDialect, SqlEntityInfo sqlEntityInfo,
 			Collection<TableConstraint> constraints, PrintFormat printFormat) throws UnifyException {
 		List<String> dropSql = new ArrayList<String>();
 		for (TableConstraint tConst : constraints) {
@@ -630,6 +631,31 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 			} else {
 				dropSql.add(sqlDataSourceDialect.generateDropIndexSql(sqlEntityInfo, tConst.getName(), printFormat));
 			}
+		}
+
+		Connection connection = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			connection = databaseMetaData.getConnection();
+			pstmt = connection
+					.prepareStatement(sqlDataSourceDialect.generateGetCheckConstraintsSql(sqlEntityInfo, printFormat));
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				final String checkName = rs.getString(1);
+				dropSql.add(sqlDataSourceDialect.generateDropCheckConstraintSql(sqlEntityInfo, checkName, printFormat));
+			}
+
+		} catch (SQLException e) {
+			try {
+				connection.rollback();
+			} catch (SQLException e1) {
+			}
+
+			throwOperationErrorException(e);
+		} finally {
+			SqlUtils.close(rs);
+			SqlUtils.close(pstmt);
 		}
 
 		return dropSql;
@@ -655,7 +681,7 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 				boolean isDropView = false;
 				rs = databaseMetaData.getTables(null, appSchema, sqlEntityInfo.getViewName(), null);
 				if (rs.next()) {
-					String tableType = rs.getString("TABLE_TYPE");
+					final String tableType = rs.getString("TABLE_TYPE");
 					if (!"VIEW".equalsIgnoreCase(tableType)) {
 						throw new UnifyException(UnifyCoreErrorConstants.SQLSCHEMAMANAGER_UNABLE_TO_UPDATE_TABLE,
 								sqlDataSource.getName(), sqlEntityInfo.getViewName(), tableType);
@@ -897,12 +923,15 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 
 		private Set<String> columns;
 
+		private boolean check;
+
 		private boolean unique;
 
-		public TableConstraint(String name, String tableName, boolean unique) {
+		public TableConstraint(String name, String tableName, boolean check, boolean unique) {
 			this.columns = new HashSet<String>();
 			this.name = name;
 			this.tableName = tableName;
+			this.check = check;
 			this.unique = unique;
 		}
 
@@ -928,6 +957,10 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 
 		public boolean isUniqueConst() {
 			return tableName == null && unique;
+		}
+
+		public boolean isCheck() {
+			return check;
 		}
 
 		public boolean isIndex() {

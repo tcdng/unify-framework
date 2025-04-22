@@ -3,7 +3,7 @@
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 
-!ui-page
+!ui-document
 
 !ui-panel:pagePopup styleClass:$e{ui-pagepopup} layout:$d{!ui-vertical style:$s{width:100%;}}
     components:$c{titleBar popupBody actionPanel}

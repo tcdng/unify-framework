@@ -50,255 +50,270 @@ import com.tcdng.unify.core.util.StringUtils;
  */
 public abstract class AbstractEmailServer extends AbstractUnifyComponent implements EmailServer {
 
-    private FactoryMap<String, InternalConfig> configurations;
+	private FactoryMap<String, InternalConfig> configurations;
 
-    public AbstractEmailServer() {
-        configurations = new FactoryMap<String, InternalConfig>()
-            {
+	public AbstractEmailServer() {
+		configurations = new FactoryMap<String, InternalConfig>() {
 
-                @Override
-                protected InternalConfig create(String configName, Object... params) throws Exception {
-                    EmailServerConfig emailServerConfig = (EmailServerConfig) params[0];
-                    Properties properties = new Properties(System.getProperties());
-                    Authenticator authenticator = null;
-                    properties.put("mail.smtp.host", emailServerConfig.getHostAddress());
-                    if (emailServerConfig.getHostPort() != null) {
-                        properties.put("mail.smtp.port", String.valueOf(emailServerConfig.getHostPort()));
-                    }
+			@Override
+			protected InternalConfig create(String configName, Object... params) throws Exception {
+				EmailServerConfig emailServerConfig = (EmailServerConfig) params[0];
+				Properties properties = new Properties(System.getProperties());
+				Authenticator authenticator = null;
+				properties.put("mail.smtp.host", emailServerConfig.getHostAddress());
+				if (emailServerConfig.getHostPort() != null) {
+					properties.put("mail.smtp.port", String.valueOf(emailServerConfig.getHostPort()));
+				}
 
-                    if (StringUtils.isNotBlank(emailServerConfig.getUsername())) {
-                        authenticator = new SessionAuthenticator(emailServerConfig.getUsername(),
-                                emailServerConfig.getPassword());
-                    }
+				if (StringUtils.isNotBlank(emailServerConfig.getUsername())) {
+					authenticator = new SessionAuthenticator(emailServerConfig.getUsername(),
+							emailServerConfig.getPassword());
+				}
 
-                    if (authenticator != null || StringUtils.isNotBlank(emailServerConfig.getAuthentication())) {
-                        if (NetworkSecurityType.SSL.equals(emailServerConfig.getSecurityType())) {
-                            if (emailServerConfig.getHostPort() != null) {
-                                properties.put("mail.smtp.socketFactory.port",
-                                        String.valueOf(emailServerConfig.getHostPort()));
-                            }
+				if (authenticator != null || StringUtils.isNotBlank(emailServerConfig.getAuthentication())) {
+					if (NetworkSecurityType.SSL.equals(emailServerConfig.getSecurityType())) {
+						if (emailServerConfig.getHostPort() != null) {
+							properties.put("mail.smtp.socketFactory.port",
+									String.valueOf(emailServerConfig.getHostPort()));
+						}
 
-                            properties.put("mail.smtp.ssl.enable", "true");
-                            properties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-                        } else if (NetworkSecurityType.TLS.equals(emailServerConfig.getSecurityType())) {
-                            properties.put("mail.smtp.starttls.enable", "true");
-                            properties.put("mail.smtp.ssl.protocols", "TLSv1 TLSv1.1 TLSv1.2");
-                        }
+						properties.put("mail.smtp.ssl.enable", "true");
+						properties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+					} else if (NetworkSecurityType.TLS.equals(emailServerConfig.getSecurityType())) {
+						properties.put("mail.smtp.starttls.enable", "true");
+						properties.put("mail.smtp.ssl.protocols", "TLSv1 TLSv1.1 TLSv1.2");
+					}
 
-                        properties.put("mail.smtp.auth", "true");
-                    }
+					properties.put("mail.smtp.auth", "true");
+				}
 
-                    return new InternalConfig(emailServerConfig, properties, authenticator);
-                }
+				return new InternalConfig(emailServerConfig, properties, authenticator);
+			}
 
-            };
-    }
+		};
+	}
 
-    @Override
-    public void configure(String configName, EmailServerConfig emailServerConfig) throws UnifyException {
-        configurations.remove(configName);
-        logDebug("Configuring email server with [{0}]...", emailServerConfig);
-        configurations.get(configName, emailServerConfig);
-    }
+	@Override
+	public void configure(String configName, EmailServerConfig emailServerConfig) throws UnifyException {
+		configurations.remove(configName);
+		logDebug("Configuring email server with [{0}]...", emailServerConfig);
+		configurations.get(configName, emailServerConfig);
+	}
 
-    @Override
-    public boolean isConfigured(String configName) throws UnifyException {
-        return configurations.isKey(configName);
-    }
+	@Override
+	public boolean isConfigured(String configName) throws UnifyException {
+		return configurations.isKey(configName);
+	}
 
-    @Override
-    protected void onInitialize() throws UnifyException {
+	@Override
+	protected void onInitialize() throws UnifyException {
 
-    }
+	}
 
-    @Override
-    protected void onTerminate() throws UnifyException {
+	@Override
+	protected void onTerminate() throws UnifyException {
 
-    }
+	}
 
-    protected void checkConfiguration(String configName) throws UnifyException {
-        if (!configurations.isKey(configName)) {
-            throw new UnifyException(UnifyCoreErrorConstants.EMAILSERVER_CONFIGURATION_UNKNOWN, configName);
-        }
-    }
+	protected void checkConfiguration(String configName) throws UnifyException {
+		if (!configurations.isKey(configName)) {
+			throw new UnifyException(UnifyCoreErrorConstants.EMAILSERVER_CONFIGURATION_UNKNOWN, configName);
+		}
+	}
 
-    protected MimeMessage createMimeMessage(String configName, Email email) throws UnifyException {
-        return createMimeMessage(getSession(configName), email);
-    }
+	protected MimeMessage createMimeMessage(String configName, Email email) throws UnifyException {
+		return createMimeMessage(getSession(configName), email);
+	}
 
-    protected MimeMessage createMimeMessage(Session session, Email email) throws UnifyException {
-        MimeMessage mimeMessage = null;
-        try {
-            mimeMessage = new MimeMessage(session);
-            mimeMessage.setFrom(new InternetAddress(email.getSender()));
-            List<EmailRecipient> recipents = email.getRecipients();
-            if (recipents.isEmpty()) {
-                throw new UnifyException(UnifyCoreErrorConstants.EMAIL_RECIPIENTS_REQUIRED);
-            }
+	protected MimeMessage createMimeMessage(Session session, Email email) throws UnifyException {
+		MimeMessage mimeMessage = null;
+		try {
+			mimeMessage = new MimeMessage(session);
+			mimeMessage.setFrom(
+					email.isWithSenderName() ? new InternetAddress(email.getSenderContact(), email.getSenderName())
+							: new InternetAddress(email.getSenderContact()));
+			List<EmailRecipient> recipents = email.getRecipients();
+			if (recipents.isEmpty()) {
+				throw new UnifyException(UnifyCoreErrorConstants.EMAIL_RECIPIENTS_REQUIRED);
+			}
 
-            List<InternetAddress> recipientAddresses = null;
-            List<InternetAddress> ccRecipientAddresses = null;
-            List<InternetAddress> bccRecipientAddresses = null;
-            for (EmailRecipient emailRecipient : recipents) {
-                switch (emailRecipient.getType()) {
-                    case BCC:
-                        if (bccRecipientAddresses == null) {
-                            bccRecipientAddresses = new ArrayList<InternetAddress>();
-                        }
-                        bccRecipientAddresses.add(new InternetAddress(emailRecipient.getAddress()));
-                        break;
-                    case CC:
-                        if (ccRecipientAddresses == null) {
-                            ccRecipientAddresses = new ArrayList<InternetAddress>();
-                        }
-                        ccRecipientAddresses.add(new InternetAddress(emailRecipient.getAddress()));
-                        break;
-                    case TO:
-                        if (recipientAddresses == null) {
-                            recipientAddresses = new ArrayList<InternetAddress>();
-                        }
-                        recipientAddresses.add(new InternetAddress(emailRecipient.getAddress()));
-                        break;
-                    default:
-                        break;
+			List<InternetAddress> recipientAddresses = null;
+			List<InternetAddress> ccRecipientAddresses = null;
+			List<InternetAddress> bccRecipientAddresses = null;
+			for (EmailRecipient emailRecipient : recipents) {
+				switch (emailRecipient.getType()) {
+				case BCC:
+					if (bccRecipientAddresses == null) {
+						bccRecipientAddresses = new ArrayList<InternetAddress>();
+					}
+					bccRecipientAddresses.add(new InternetAddress(emailRecipient.getAddress()));
+					break;
+				case CC:
+					if (ccRecipientAddresses == null) {
+						ccRecipientAddresses = new ArrayList<InternetAddress>();
+					}
+					ccRecipientAddresses.add(new InternetAddress(emailRecipient.getAddress()));
+					break;
+				case TO:
+					if (recipientAddresses == null) {
+						recipientAddresses = new ArrayList<InternetAddress>();
+					}
+					recipientAddresses.add(new InternetAddress(emailRecipient.getAddress()));
+					break;
+				default:
+					break;
 
-                }
-            }
+				}
+			}
 
-            if (recipientAddresses == null) {
-                throw new UnifyException(UnifyCoreErrorConstants.EMAIL_RECIPIENTS_REQUIRED);
-            }
-            mimeMessage.addRecipients(Message.RecipientType.TO,
-                    recipientAddresses.toArray(new InternetAddress[recipientAddresses.size()]));
+			if (recipientAddresses == null) {
+				throw new UnifyException(UnifyCoreErrorConstants.EMAIL_RECIPIENTS_REQUIRED);
+			}
+			mimeMessage.addRecipients(Message.RecipientType.TO,
+					recipientAddresses.toArray(new InternetAddress[recipientAddresses.size()]));
 
-            if (ccRecipientAddresses != null) {
-                mimeMessage.addRecipients(Message.RecipientType.CC,
-                        ccRecipientAddresses.toArray(new InternetAddress[ccRecipientAddresses.size()]));
-            }
+			if (ccRecipientAddresses != null) {
+				mimeMessage.addRecipients(Message.RecipientType.CC,
+						ccRecipientAddresses.toArray(new InternetAddress[ccRecipientAddresses.size()]));
+			}
 
-            if (bccRecipientAddresses != null) {
-                mimeMessage.addRecipients(Message.RecipientType.BCC,
-                        bccRecipientAddresses.toArray(new InternetAddress[bccRecipientAddresses.size()]));
-            }
+			if (bccRecipientAddresses != null) {
+				mimeMessage.addRecipients(Message.RecipientType.BCC,
+						bccRecipientAddresses.toArray(new InternetAddress[bccRecipientAddresses.size()]));
+			}
 
-            mimeMessage.setSubject(email.getSubject());
-            List<EmailAttachment> attachments = email.getAttachments();
-            if (attachments.isEmpty()) {
-                if (email.isHtmlMessage()) {
-                    mimeMessage.setContent(email.getMessage(), "text/html");
-                } else {
-                    mimeMessage.setText(email.getMessage());
-                }
-            } else {
-                Multipart multipart = new MimeMultipart();
+			mimeMessage.setSubject(email.getSubject());
+			List<EmailAttachment> attachments = email.getAttachments();
+			if (attachments.isEmpty()) {
+				if (email.isHtmlMessage()) {
+					mimeMessage.setContent(email.getMessage(), "text/html");
+				} else {
+					mimeMessage.setText(email.getMessage());
+				}
+			} else {
+				Multipart multipart = new MimeMultipart();
 
-                // Create the message content part
-                MimeBodyPart messageBodyPart = new MimeBodyPart();
-                if (email.isHtmlMessage()) {
-                    messageBodyPart.setContent(email.getMessage(), "text/html");
-                } else {
-                    messageBodyPart.setText(email.getMessage());
-                }
-                multipart.addBodyPart(messageBodyPart);
+				// Create the message content part
+				MimeBodyPart messageBodyPart = new MimeBodyPart();
+				if (email.isHtmlMessage()) {
+					messageBodyPart.setContent(email.getMessage(), "text/html");
+				} else {
+					messageBodyPart.setText(email.getMessage());
+				}
+				multipart.addBodyPart(messageBodyPart);
 
-                // Add attachments if any
-                for (EmailAttachment emailAttachment : attachments) {
-                    if (emailAttachment.getBlob() != null) {
-                        messageBodyPart = new MimeBodyPart();
-                        MimeType mimeType = FileAttachmentType.WILDCARD.mimeType();
-                        FileAttachmentType type = emailAttachment.getType();
-                        if (type != null) {
-                            mimeType = type.mimeType();
-                        }
+				// Add attachments if any
+				for (EmailAttachment emailAttachment : attachments) {
+					MimeType mimeType = FileAttachmentType.WILDCARD.mimeType();
+					FileAttachmentType type = emailAttachment.getType();
+					if (type != null) {
+						mimeType = type.mimeType();
+					}
 
-                        messageBodyPart.setDataHandler(new DataHandler(
-                                new ByteArrayDataSource(emailAttachment.getBlob(), mimeType.template())));
-                        messageBodyPart.setHeader("Content-Type", mimeType.template());
-                        messageBodyPart.setFileName(emailAttachment.getName());
-                        multipart.addBodyPart(messageBodyPart);
-                    } else if (emailAttachment.getFile() != null) {
-                        messageBodyPart = new MimeBodyPart();
-                        messageBodyPart.setDataHandler(new DataHandler(new FileDataSource(emailAttachment.getFile())));
-                        messageBodyPart.setFileName(emailAttachment.getName());
-                        multipart.addBodyPart(messageBodyPart);
-                    }
-                }
+					final DataHandler dataHandler = getDataHandler(emailAttachment, mimeType);
+					messageBodyPart = new MimeBodyPart();
+					messageBodyPart.setDataHandler(dataHandler);
+					messageBodyPart.setHeader("Content-Type", mimeType.template());
+					if (emailAttachment.isInline()) {
+						messageBodyPart.setHeader("Content-ID", "<" + emailAttachment.getName() + ">");
+					}
 
-                // Add parts to message
-                mimeMessage.setContent(multipart);
-            }
+					messageBodyPart.setFileName(emailAttachment.getName());
+					messageBodyPart
+							.setDisposition(emailAttachment.isInline() ? MimeBodyPart.INLINE : MimeBodyPart.ATTACHMENT);
+					multipart.addBodyPart(messageBodyPart);
+				}
 
-            mimeMessage.saveChanges();
-        } catch (UnifyException e) {
-            throw e;
-        } catch (Exception e) {
-            throwOperationErrorException(e);
-        }
+				// Add parts to message
+				mimeMessage.setContent(multipart);
+			}
 
-        return mimeMessage;
-    }
+			mimeMessage.saveChanges();
+		} catch (UnifyException e) {
+			throw e;
+		} catch (Exception e) {
+			throwOperationErrorException(e);
+		}
 
-    protected Session getSession(String configName) throws UnifyException {
-        checkConfiguration(configName);
+		return mimeMessage;
+	}
 
-        InternalConfig internalConfig = configurations.get(configName);
-        Authenticator authenthicator = internalConfig.getAuthenticator();
-        if (authenthicator == null && StringUtils.isNotBlank(internalConfig.getOrigConfig().getAuthentication())) {
-            Authentication passwordAuthentication = (Authentication) getComponent(
-                    internalConfig.getOrigConfig().getAuthentication());
-            authenthicator = new SessionAuthenticator(passwordAuthentication.getUsername(),
-                    passwordAuthentication.getPassword());
-        }
+	protected Session getSession(String configName) throws UnifyException {
+		checkConfiguration(configName);
 
-        if (authenthicator != null) {
-            return Session.getInstance(internalConfig.getProperties(), authenthicator);
-        }
+		InternalConfig internalConfig = configurations.get(configName);
+		Authenticator authenthicator = internalConfig.getAuthenticator();
+		if (authenthicator == null && StringUtils.isNotBlank(internalConfig.getOrigConfig().getAuthentication())) {
+			Authentication passwordAuthentication = (Authentication) getComponent(
+					internalConfig.getOrigConfig().getAuthentication());
+			authenthicator = new SessionAuthenticator(passwordAuthentication.getUsername(),
+					passwordAuthentication.getPassword());
+		}
 
-        return Session.getInstance(internalConfig.getProperties());
-    }
+		if (authenthicator != null) {
+			return Session.getInstance(internalConfig.getProperties(), authenthicator);
+		}
 
-    private class SessionAuthenticator extends Authenticator {
+		return Session.getInstance(internalConfig.getProperties());
+	}
 
-        private String userName;
+	private DataHandler getDataHandler(EmailAttachment emailAttachment, MimeType mimeType) throws UnifyException {
+		if (emailAttachment.getBlob() != null) {
+			return new DataHandler(new ByteArrayDataSource(emailAttachment.getBlob(), mimeType.template()));
+		} else if (emailAttachment.getFile() != null) {
+			return new DataHandler(new FileDataSource(emailAttachment.getFile()));
+		} else if (emailAttachment.getProvider() != null) {
+			byte[] data = ((NotificationAttachmentProvider) getComponent(emailAttachment.getProvider()))
+					.provide(emailAttachment.getSourceId());
+			return new DataHandler(new ByteArrayDataSource(data, mimeType.template()));
+		}
 
-        private String password;
+		throwOperationErrorException(new IllegalArgumentException("Email attachment has no resolvale source."));
+		return null;
+	}
 
-        public SessionAuthenticator(String userName, String password) {
-            this.userName = userName;
-            this.password = password;
-        }
+	private class SessionAuthenticator extends Authenticator {
 
-        @Override
-        protected javax.mail.PasswordAuthentication getPasswordAuthentication() {
-            return new javax.mail.PasswordAuthentication(userName, password);
-        }
-    }
+		private String userName;
 
-    private class InternalConfig {
+		private String password;
 
-        private EmailServerConfig origConfig;
+		public SessionAuthenticator(String userName, String password) {
+			this.userName = userName;
+			this.password = password;
+		}
 
-        private Properties properties;
+		@Override
+		protected javax.mail.PasswordAuthentication getPasswordAuthentication() {
+			return new javax.mail.PasswordAuthentication(userName, password);
+		}
+	}
 
-        private Authenticator authenticator;
+	private class InternalConfig {
 
-        public InternalConfig(EmailServerConfig origConfig, Properties properties, Authenticator authenticator) {
-            this.origConfig = origConfig;
-            this.properties = properties;
-            this.authenticator = authenticator;
-        }
+		private EmailServerConfig origConfig;
 
-        public EmailServerConfig getOrigConfig() {
-            return origConfig;
-        }
+		private Properties properties;
 
-        public Properties getProperties() {
-            return properties;
-        }
+		private Authenticator authenticator;
 
-        public Authenticator getAuthenticator() {
-            return authenticator;
-        }
+		public InternalConfig(EmailServerConfig origConfig, Properties properties, Authenticator authenticator) {
+			this.origConfig = origConfig;
+			this.properties = properties;
+			this.authenticator = authenticator;
+		}
 
-    }
+		public EmailServerConfig getOrigConfig() {
+			return origConfig;
+		}
+
+		public Properties getProperties() {
+			return properties;
+		}
+
+		public Authenticator getAuthenticator() {
+			return authenticator;
+		}
+
+	}
 }

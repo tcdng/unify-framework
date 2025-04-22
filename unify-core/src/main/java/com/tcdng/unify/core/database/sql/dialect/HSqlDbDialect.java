@@ -24,9 +24,9 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
+import com.tcdng.unify.common.annotation.ColumnType;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.UnifyOperationException;
-import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.constant.PrintFormat;
 import com.tcdng.unify.core.constant.TimeSeriesType;
@@ -113,6 +113,26 @@ public class HSqlDbDialect extends AbstractSqlDataSourceDialect {
 		}
 
 		return false;
+	}
+
+
+	@Override
+	public String generateGetCheckConstraintsSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, PrintFormat format)
+			throws UnifyException {
+		StringBuilder sb = new StringBuilder();
+		sb.append("SELECT * FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_TYPE = 'CHECK' AND TABLE_NAME = '")
+		.append(sqlEntitySchemaInfo.getSchemaTableName())
+		.append("'");
+		return sb.toString();
+	}
+
+	@Override
+	public String generateDropCheckConstraintSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, String checkName,
+			PrintFormat format) throws UnifyException {
+		StringBuilder sb = new StringBuilder();
+		sb.append("ALTER TABLE \'").append(sqlEntitySchemaInfo.getSchemaTableName()).append("\' DROP CONSTRAINT \'")
+				.append(checkName).append("\'");
+		return sb.toString();
 	}
 
 	@Override
@@ -256,8 +276,15 @@ public class HSqlDbDialect extends AbstractSqlDataSourceDialect {
 			if (!sqlFieldSchemaInfo.isNullable()) {
 				sb.append("UPDATE ").append(sqlEntitySchemaInfo.getSchemaTableName()).append(" SET ")
 						.append(sqlFieldSchemaInfo.getPreferredColumnName()).append(" = ");
-				sqlDataTypePolicy.appendDefaultVal(sb, sqlFieldSchemaInfo.getFieldType(),
-						sqlFieldSchemaInfo.getDefaultVal());
+				if (sqlFieldSchemaInfo.getColumnType().isBlob()) {
+					sb.append("CAST('' AS BLOB)");
+				} else if (sqlFieldSchemaInfo.getColumnType().isClob()) {
+					sb.append("CAST('' AS CLOB)");
+				} else {
+					sqlDataTypePolicy.appendDefaultVal(sb, sqlFieldSchemaInfo.getFieldType(),
+							sqlFieldSchemaInfo.getDefaultVal());
+				}
+
 				sb.append(" WHERE ").append(sqlFieldSchemaInfo.getPreferredColumnName()).append(" IS NULL");
 				sqlList.add(sb.toString());
 				StringUtils.truncate(sb);

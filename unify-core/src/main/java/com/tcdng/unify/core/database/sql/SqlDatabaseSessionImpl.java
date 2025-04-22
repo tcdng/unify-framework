@@ -29,10 +29,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.Stack;
 
+import com.tcdng.unify.common.annotation.ColumnType;
+import com.tcdng.unify.common.database.Entity;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.UnifyOperationException;
-import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.constant.ChildFetch;
 import com.tcdng.unify.core.constant.FetchChild;
 import com.tcdng.unify.core.constant.IncludeListOnly;
@@ -51,7 +52,6 @@ import com.tcdng.unify.core.criterion.Update;
 import com.tcdng.unify.core.database.Aggregation;
 import com.tcdng.unify.core.database.CallableProc;
 import com.tcdng.unify.core.database.DatabaseSession;
-import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.database.EntityPolicy;
 import com.tcdng.unify.core.database.GroupingAggregation;
 import com.tcdng.unify.core.database.MappedEntityRepository;
@@ -70,17 +70,17 @@ import com.tcdng.unify.core.util.SqlUtils;
 public class SqlDatabaseSessionImpl implements DatabaseSession {
 
 	private final SqlDataSource sqlDataSource;
-	
+
 	private final SqlDataSourceDialect sqlDataSourceDialect;
-	
+
 	private final SqlStatementExecutor sqlStatementExecutor;
-	
+
 	private Connection connection;
-	
+
 	private Stack<Savepoint> savepointStack;
-	
+
 	private boolean closed;
-	
+
 	public SqlDatabaseSessionImpl(SqlDataSource sqlDataSource, SqlStatementExecutor sqlStatementExecutor)
 			throws UnifyException {
 		this.sqlDataSource = sqlDataSource;
@@ -93,6 +93,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 	@Override
 	public boolean isReadOnly() throws UnifyException {
 		return sqlDataSource.isReadOnly();
+	}
+
+	@Override
+	public boolean isManaged() throws UnifyException {
+		return sqlDataSource.isManaged();
 	}
 
 	@Override
@@ -110,6 +115,11 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 		}
 
 		return create(sqlEntityInfo, record);
+	}
+
+	@Override
+	public <T extends Entity> boolean isOfThisDatabase(Class<T> clazz) throws UnifyException {
+		return sqlDataSourceDialect.isWithSqlEntityInfo(clazz);
 	}
 
 	@Override
@@ -672,6 +682,12 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 	@Override
 	public int updateById(Class<? extends Entity> clazz, Object id, Update update) throws UnifyException {
 		ensureWritable();
+		SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(clazz);
+		EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
+		if (entityPolicy != null) {
+			entityPolicy.preUpdate(update, getNow());
+		}
+		
 		return getSqlStatementExecutor().executeUpdate(connection,
 				sqlDataSourceDialect.prepareUpdateStatement(clazz, id, update));
 	}
@@ -684,6 +700,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 			EntityPolicy entityPolicy = sqlEntityInfo.getEntityPolicy();
 			if (entityPolicy != null) {
 				entityPolicy.preQuery(query);
+				entityPolicy.preUpdate(update, getNow());
 			}
 
 			if (sqlEntityInfo.isViewOnly()) {
@@ -761,7 +778,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 		} finally {
 			sqlDataSourceDialect.restoreStatement(sqlStatement);
 		}
-		
+
 		return result;
 	}
 
@@ -825,7 +842,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 		} finally {
 			sqlDataSourceDialect.restoreStatement(sqlStatement);
 		}
-		
+
 		return result;
 	}
 
@@ -856,7 +873,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 		} finally {
 			sqlDataSourceDialect.restoreStatement(sqlStatement);
 		}
-		
+
 		return result;
 	}
 
@@ -911,7 +928,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 		} catch (Exception e) {
 			throw new UnifyOperationException(e, getClass().getSimpleName());
 		}
-		
+
 		return 0;
 	}
 
@@ -934,6 +951,12 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 		return getSqlStatementExecutor().executeSingleObjectResultQuery(connection, int.class,
 				sqlDataSourceDialect.getSqlTypePolicy(int.class),
 				sqlDataSourceDialect.prepareCountStatement(query, QueryAgainst.VIEW), MustMatch.TRUE);
+	}
+
+	@Override
+	public List<Set<String>> getUniqueConstraints(Class<? extends Entity> entityClass) throws UnifyException {
+		final SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(entityClass);
+		return sqlEntityInfo.getUniqueConstraints();
 	}
 
 	@Override
@@ -1173,7 +1196,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 	protected void finalize() throws Throwable {
 		close();
 	}
-	
+
 	private void ensureWritable() throws UnifyException {
 		if (isReadOnly()) {
 			throw new UnifyException(UnifyCoreErrorConstants.DATASOURCE_IN_READONLY_MODE, sqlDataSource.getName());
@@ -1637,7 +1660,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 	@SuppressWarnings("unchecked")
 	private void updateChildRecords(SqlEntityInfo sqlEntityInfo, Entity record, ChildFetch fetch, boolean versionNo)
 			throws UnifyException {
-		Object id = record.getId();
+		final Object id = record.getId();
 		try {
 			final String tableName = sqlEntityInfo.getTableName();
 			if (sqlEntityInfo.isSingleChildList()) {
@@ -1648,7 +1671,7 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 
 					Entity childRecord = (Entity) alfi.getGetter().invoke(record);
 					if (childRecord != null) {
-						if (childRecord.getId() == null) {
+						if (childRecord.getId() == null || isNotOfParent(alfi, childRecord, id)) {
 							setParentAttributes(alfi, childRecord, id, tableName);
 							deleteChildRecords(alfi, tableName, id);
 							create(childRecord);
@@ -1682,7 +1705,8 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 							Number last = null;
 							for (Entity childRecord : childList) {
 								Number cid = (Number) childRecord.getId();
-								if (cid == null || (last != null && cid.longValue() < last.longValue())) {
+								if (cid == null || (last != null && cid.longValue() < last.longValue())
+										|| isNotOfParent(alfi, childRecord, id)) {
 									clear = true;
 									break;
 								}
@@ -1738,6 +1762,10 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 		} catch (Exception e) {
 			throw new UnifyOperationException(e, getClass().getSimpleName());
 		}
+	}
+
+	private boolean isNotOfParent(ChildFieldInfo alfi, Entity childRecord, Object parentId) throws Exception {
+		return !parentId.equals(alfi.getChildFkIdGetter().invoke(childRecord));
 	}
 
 	private void setParentAttributes(ChildFieldInfo alfi, Entity childRecord, Object parentId, String tableName)

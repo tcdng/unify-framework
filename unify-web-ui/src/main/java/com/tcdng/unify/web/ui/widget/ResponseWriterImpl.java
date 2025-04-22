@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
+import com.tcdng.unify.common.data.Listable;
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.RequestContext;
 import com.tcdng.unify.core.ThemeManager;
@@ -34,7 +35,7 @@ import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.Singleton;
 import com.tcdng.unify.core.constant.MimeType;
-import com.tcdng.unify.core.data.Listable;
+import com.tcdng.unify.core.data.WebStringWriter;
 import com.tcdng.unify.core.format.DateTimeFormat;
 import com.tcdng.unify.core.format.Pattern;
 import com.tcdng.unify.core.upl.UplComponent;
@@ -44,7 +45,6 @@ import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.core.util.json.JsonUtils;
 import com.tcdng.unify.core.util.json.JsonWriter;
 import com.tcdng.unify.web.constant.RequestParameterConstants;
-import com.tcdng.unify.web.data.WebStringWriter;
 import com.tcdng.unify.web.ui.PageRequestContextUtil;
 import com.tcdng.unify.web.ui.UnifyWebUIErrorConstants;
 import com.tcdng.unify.web.ui.WebUIApplicationComponents;
@@ -180,6 +180,13 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 	@Override
 	public ResponseWriter writeBehavior(Widget widget, EventHandler[] eventHandlers) throws UnifyException {
 		((WidgetWriter) getWriter(widget)).writeBehavior(this, widget, eventHandlers);
+		return this;
+	}
+
+	@Override
+	public ResponseWriter writeBehavior(Widget widget, EventHandler[] eventHandlers, Collection<String> events)
+			throws UnifyException {
+		((WidgetWriter) getWriter(widget)).writeBehavior(this, widget, eventHandlers, events);
 		return this;
 	}
 
@@ -402,6 +409,12 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 	public ResponseWriter writeJsonPathVariable(String name, String path) throws UnifyException {
 		useSecondary(128);
 		writeContextURL(path);
+		PageManager pageManager = getPageManager();
+		if (pageManager.getCurrentRequestClientId() != null) {
+			buf.append(path.indexOf('?') >= 0 ? '&' : '?').append(RequestParameterConstants.CLIENT_ID).append("=")
+					.append(UrlUtils.encodeURLParameter(pageManager.getCurrentRequestClientId()));
+		}
+
 		WebStringWriter pathLsw = discardSecondary();
 
 		buf.append("\"").append(name).append("\":");
@@ -446,6 +459,30 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 		WebStringWriter scriptLsw = discardSecondary();
 
 		buf.append("{\"target\":\"").append(sectionPageName).append('"');
+		buf.append(",\"html\":");
+		buf.appendJsonQuoted(htmlLsw);
+		if (!scriptLsw.isEmpty()) {
+			buf.append(",\"script\":");
+			buf.append(scriptLsw);
+		}
+		buf.append('}');
+		return this;
+	}
+
+	@Override
+	public ResponseWriter writeJsonAutoRefresh(Widget widget) throws UnifyException {
+		final String target = "wcont_" + widget.getId();
+		WidgetWriter widgetWriter = (WidgetWriter) getWriter(widget);
+		useSecondary();
+		widgetWriter.writeStructureAndContent(this, widget);
+		WebStringWriter htmlLsw = discardSecondary();
+
+		useSecondary();
+		EventHandler[] handlers = null;
+		widgetWriter.writeBehavior(this, widget, handlers);
+		WebStringWriter scriptLsw = discardSecondary();
+
+		buf.append("{\"target\":\"").append(target).append('"');
 		buf.append(",\"html\":");
 		buf.appendJsonQuoted(htmlLsw);
 		if (!scriptLsw.isEmpty()) {
@@ -528,11 +565,6 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 		if (clearOnRead) {
 			buf.append('&').append(plainResource ? "clearOnRead" : pageManager.getPageName("clearOnRead")).append("=")
 					.append(clearOnRead);
-		}
-
-		if (pageManager.getCurrentRequestClientId() != null) {
-			buf.append('&').append(RequestParameterConstants.CLIENT_ID).append("=")
-					.append(UrlUtils.encodeURLParameter(pageManager.getCurrentRequestClientId()));
 		}
 
 		if (pageRequestContextUtil.isRemoteViewer()) {
@@ -897,6 +929,7 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 	public void reset(Map<Class<? extends UplComponent>, UplComponentWriter> writers) {
 		this.writers = writers;
 		this.postCommandRefs = null;
+		dataIndex = -1;
 		if (buf == null || !buf.isEmpty() || !history.isEmpty()) {
 			buf = new WebStringWriter(initialBufferCapacity);
 			history.clear();
@@ -931,6 +964,11 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 	@Override
 	public void setDataIndex(int dataIndex) {
 		this.dataIndex = dataIndex;
+	}
+
+	@Override
+	public boolean isWithDataIndex() {
+		return dataIndex >= 0;
 	}
 
 	@Override

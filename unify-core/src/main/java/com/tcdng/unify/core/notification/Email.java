@@ -36,77 +36,88 @@ import com.tcdng.unify.core.util.StringUtils;
  * @since 1.0
  */
 public class Email {
-    
-    private Object id;
 
-    private String subject;
+	private Object id;
 
-    private String message;
+	private String subject;
 
-    private String sender;
+	private String message;
 
-    private String error;
+	private String senderContact;
 
-    private List<EmailRecipient> recipients;
+	private String senderName;
 
-    private List<EmailAttachment> attachments;
+	private String error;
 
-    private boolean htmlMessage;
+	private List<EmailRecipient> recipients;
 
-    private boolean sent;
+	private List<EmailAttachment> attachments;
 
-    public Email(String error) {
-    	this.error = error;
-    }
-    
-    private Email(String subject, String message, String sender, List<EmailRecipient> recipients,
-            List<EmailAttachment> attachments, Object id, boolean htmlMessage) {
-        this.subject = subject;
-        this.message = message;
-        this.sender = sender;
-        this.recipients = recipients;
-        this.attachments = attachments;
-        this.id = id;
-        this.htmlMessage = htmlMessage;
-    }
+	private boolean htmlMessage;
 
-    public String getSender() {
-        return sender;
-    }
+	private boolean sent;
 
-    public List<EmailRecipient> getRecipients() {
-        return recipients;
-    }
+	public Email(String error) {
+		this.error = error;
+	}
 
-    public List<EmailAttachment> getAttachments() {
-        return attachments;
-    }
+	private Email(String subject, String message, String senderContact, String senderName, List<EmailRecipient> recipients,
+			List<EmailAttachment> attachments, Object id, boolean htmlMessage) {
+		this.subject = subject;
+		this.message = message;
+		this.senderContact = senderContact;
+		this.senderName = senderName;
+		this.recipients = recipients;
+		this.attachments = attachments;
+		this.id = id;
+		this.htmlMessage = htmlMessage;
+	}
 
-    public String getSubject() {
-        return subject;
-    }
+	public String getSenderContact() {
+		return senderContact;
+	}
 
-    public String getMessage() {
-        return message;
-    }
+	public String getSenderName() {
+		return senderName;
+	}
 
-    public Object getId() {
-        return id;
-    }
+	public boolean isWithSenderName() {
+		return senderName != null;
+	}
+	
+	public List<EmailRecipient> getRecipients() {
+		return recipients;
+	}
 
-    public boolean isHtmlMessage() {
-        return htmlMessage;
-    }
+	public List<EmailAttachment> getAttachments() {
+		return attachments;
+	}
 
-    public boolean isSent() {
-        return sent;
-    }
+	public String getSubject() {
+		return subject;
+	}
 
-    public void setSent(boolean sent) {
-        this.sent = sent;
-    }
+	public String getMessage() {
+		return message;
+	}
 
-    public String getError() {
+	public Object getId() {
+		return id;
+	}
+
+	public boolean isHtmlMessage() {
+		return htmlMessage;
+	}
+
+	public boolean isSent() {
+		return sent;
+	}
+
+	public void setSent(boolean sent) {
+		this.sent = sent;
+	}
+
+	public String getError() {
 		return error;
 	}
 
@@ -119,135 +130,154 @@ public class Email {
 	}
 
 	public static Builder newBuilder() {
-        return new Builder();
-    }
+		return new Builder();
+	}
 
-    public static class Builder {
+	public static class Builder {
 
-        private String subject;
+		private String subject;
 
-        private String message;
+		private String message;
 
-        private String senderAddress;
+		private String senderAddress;
 
-        private List<EmailRecipient> recipients;
+		private String senderName;
 
-        private List<EmailAttachment> attachments;
-        
-        private Object id;
+		private List<EmailRecipient> recipients;
 
-        private boolean htmlMessage;
+		private List<EmailAttachment> attachments;
 
-        private Set<String> contacts;
-        
-        private Builder() {
-            this.recipients = new ArrayList<EmailRecipient>();
-            this.contacts = new HashSet<String>();
-        }
+		private Object id;
 
-        public Builder toRecipient(EmailRecipient.TYPE type, String recipientAddress) {
-        	addRecipient(type, recipientAddress);
-            return this;
-        }
+		private boolean htmlMessage;
 
-        public Builder toRecipients(EmailRecipient.TYPE type, Collection<String> recipientAddresses) {
-            for (String recipientAddress : recipientAddresses) {
-            	addRecipient(type, recipientAddress);
-            }
-            return this;
-        }
- 
-        public Builder fromSender(String senderAddress) {
-            this.senderAddress = senderAddress;
-            return this;
-        }
+		private Set<String> contacts;
 
-        public Builder containingMessage(String message) {
-            this.message = message;
-            return this;
-        }
+		private Builder() {
+			this.recipients = new ArrayList<EmailRecipient>();
+			this.contacts = new HashSet<String>();
+		}
 
-        public Builder withId(Object id) {
-            this.id = id;
-            return this;
-        }
+		public Builder toRecipient(EmailRecipient.TYPE type, String recipientAddress) {
+			addRecipient(type, recipientAddress);
+			return this;
+		}
 
-        public Builder withSubject(String subject) {
-            this.subject = subject;
-            return this;
-        }
+		public Builder toRecipients(EmailRecipient.TYPE type, Collection<String> recipientAddresses) {
+			for (String recipientAddress : recipientAddresses) {
+				addRecipient(type, recipientAddress);
+			}
+			return this;
+		}
 
-        public Builder withAttachment(String name, File file, FileAttachmentType type) {
-            getAttachments().add(new EmailAttachment(type, name, file));
-            return this;
-        }
+		public Builder fromSender(String senderAddress) {
+			this.senderAddress = senderAddress;
+			return this;
+		}
 
-        public Builder withAttachment(String name, File file, FileAttachmentType type, boolean inline) {
-            getAttachments().add(new EmailAttachment(type, name, file, inline));
-            return this;
-        }
+		public Builder fromSender(String senderAddress, String senderName) {
+			this.senderAddress = senderAddress;
+			this.senderName = senderName;
+			return this;
+		}
 
-        public Builder withAttachment(String name, byte[] blob, FileAttachmentType type) {
-            getAttachments().add(new EmailAttachment(type, name, blob));
-            return this;
-        }
+		public Builder containingMessage(String message) {
+			this.message = message;
+			return this;
+		}
 
-        public Builder withAttachment(String name, byte[] blob, FileAttachmentType type, boolean inline) {
-            getAttachments().add(new EmailAttachment(type, name, blob, inline));
-            return this;
-        }
+		public Builder withId(Object id) {
+			this.id = id;
+			return this;
+		}
 
-        public Builder withAttachment(FileAttachment fileAttachment) {
-            getAttachments().add(new EmailAttachment(fileAttachment.getType(), fileAttachment.getFileName(),
-                    fileAttachment.getData()));
-            return this;
-        }
+		public Builder withSubject(String subject) {
+			this.subject = subject;
+			return this;
+		}
 
-        public Builder withAttachments(Collection<FileAttachment> fileAttachments) {
-            for (FileAttachment fileAttachment : fileAttachments) {
-                getAttachments().add(new EmailAttachment(fileAttachment.getType(), fileAttachment.getFileName(),
-                        fileAttachment.getData()));
-            }
-            return this;
-        }
+		public Builder withAttachment(String name, File file, FileAttachmentType type) {
+			getAttachments().add(new EmailAttachment(type, name, file));
+			return this;
+		}
 
-        public Builder asHTML(boolean htmlMessage) {
-            this.htmlMessage = htmlMessage;
-            return this;
-        }
-        
-        private void addRecipient(EmailRecipient.TYPE type, String recipientAddress) {
-        	if (contacts.add(recipientAddress)) {
-                recipients.add(new EmailRecipient(type, recipientAddress));
-        	}
-        }
+		public Builder withAttachment(String name, File file, FileAttachmentType type, boolean inline) {
+			getAttachments().add(new EmailAttachment(type, name, file, inline));
+			return this;
+		}
 
-        public Email build() throws UnifyException {
-            if (StringUtils.isBlank(subject)) {
-                ErrorUtils.throwBuildError("Email subject is required");
-            }
+		public Builder withAttachment(String name, byte[] blob, FileAttachmentType type) {
+			getAttachments().add(new EmailAttachment(type, name, blob));
+			return this;
+		}
 
-            if (StringUtils.isBlank(message)) {
-                ErrorUtils.throwBuildError("Email message is required");
-            }
+		public Builder withAttachment(String name, byte[] blob, FileAttachmentType type, boolean inline) {
+			getAttachments().add(new EmailAttachment(type, name, blob, inline));
+			return this;
+		}
 
-            if (StringUtils.isBlank(senderAddress)) {
-                ErrorUtils.throwBuildError("Email sender address is required");
-            }
+		public Builder withAttachment(String name, String provider, String sourceId, FileAttachmentType type) {
+			getAttachments().add(new EmailAttachment(type, name, provider, sourceId));
+			return this;
+		}
 
-            if (recipients.isEmpty()) {
-                ErrorUtils.throwBuildError("Email requires at least one recipient");
-            }
-            return new Email(subject, message, senderAddress, DataUtils.unmodifiableList(recipients),
-                    DataUtils.unmodifiableList(attachments), id, htmlMessage);
-        }
+		public Builder withAttachment(String name, String provider, String sourceId, FileAttachmentType type,
+				boolean inline) {
+			getAttachments().add(new EmailAttachment(type, name, provider, sourceId, inline));
+			return this;
+		}
 
-        private List<EmailAttachment> getAttachments() {
-            if (attachments == null) {
-                attachments = new ArrayList<EmailAttachment>();
-            }
+		public Builder withAttachment(FileAttachment fileAttachment) {
+			getAttachments().add(new EmailAttachment(fileAttachment.getType(), fileAttachment.getFileName(),
+					fileAttachment.getData()));
+			return this;
+		}
 
-            return attachments;
-        }
-    }
+		public Builder withAttachments(Collection<FileAttachment> fileAttachments) {
+			for (FileAttachment fileAttachment : fileAttachments) {
+				getAttachments().add(new EmailAttachment(fileAttachment.getType(), fileAttachment.getFileName(),
+						fileAttachment.getData()));
+			}
+			return this;
+		}
+
+		public Builder asHTML(boolean htmlMessage) {
+			this.htmlMessage = htmlMessage;
+			return this;
+		}
+
+		private void addRecipient(EmailRecipient.TYPE type, String recipientAddress) {
+			if (contacts.add(recipientAddress)) {
+				recipients.add(new EmailRecipient(type, recipientAddress));
+			}
+		}
+
+		public Email build() throws UnifyException {
+			if (StringUtils.isBlank(subject)) {
+				ErrorUtils.throwBuildError("Email subject is required");
+			}
+
+			if (StringUtils.isBlank(message)) {
+				ErrorUtils.throwBuildError("Email message is required");
+			}
+
+			if (StringUtils.isBlank(senderAddress)) {
+				ErrorUtils.throwBuildError("Email sender address is required");
+			}
+
+			if (recipients.isEmpty()) {
+				ErrorUtils.throwBuildError("Email requires at least one recipient");
+			}
+			return new Email(subject, message, senderAddress, senderName, DataUtils.unmodifiableList(recipients),
+					DataUtils.unmodifiableList(attachments), id, htmlMessage);
+		}
+
+		private List<EmailAttachment> getAttachments() {
+			if (attachments == null) {
+				attachments = new ArrayList<EmailAttachment>();
+			}
+
+			return attachments;
+		}
+	}
 }

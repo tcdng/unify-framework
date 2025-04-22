@@ -791,6 +791,9 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
 			writer.write("\"uFunc\":\"").write(alias).write("\",");
 		}
 		writer.write("\"uId\":\"").write(id).write("\"");
+		if (writer.isWithDataIndex()) {
+			writer.write(",\"uSendTrg\":").write(writer.getDataIndex());
+		}
 
 		if (reqUtil.isRemoteViewer()) {
 			writer.write(",\"uViewer\":\"").write(reqUtil.getRemoteViewer()).write("\"");
@@ -877,7 +880,9 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
 			if (pageAction.isUplAttribute("path")) {
 				String actionPath = pageAction.getUplAttribute(String.class, "path");
 				if (actionPath != null) {
-					if (TokenUtils.isNameTag(actionPath) || TokenUtils.isPathTag(actionPath)) {
+					if(TokenUtils.isPathTag(actionPath)) {
+						actionPath = TokenUtils.extractTokenValue(actionPath);
+					} else if (TokenUtils.isNameTag(actionPath)) {
 						actionPath = pathId + TokenUtils.extractTokenValue(actionPath);
 					} else if (TokenUtils.isRequestAttributeTag(actionPath)) {
 						actionPath = pathId + getRequestAttribute(TokenUtils.extractTokenValue(actionPath));

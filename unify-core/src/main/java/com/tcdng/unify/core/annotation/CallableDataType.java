@@ -16,6 +16,7 @@
 
 package com.tcdng.unify.core.annotation;
 
+import com.tcdng.unify.common.annotation.ColumnType;
 import com.tcdng.unify.common.constants.EnumConst;
 import com.tcdng.unify.core.util.EnumUtils;
 

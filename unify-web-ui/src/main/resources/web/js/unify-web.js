@@ -155,13 +155,11 @@ ux.setupDocument = function(docClientId, docPath, docPopupBaseId, docPopupId, do
 }
 
 ux.setClientId = function(clientId) {
-	if (sessionStorage.getItem("req_cid") == null) {
-		sessionStorage.setItem("req_cid", clientId)
-	}
+	sessionStorage.setItem("req_cid", clientId);
 }
 
 ux.getClientId = function() {
-	return sessionStorage.getItem("req_cid")
+	return sessionStorage.getItem("req_cid");
 }
 
 ux.wsPushUpdate = function(wsSyncPath) {
@@ -412,6 +410,11 @@ ux.respHandler = {
 		ux.registerRespDebounce(resp);
 	},
 
+	autoRefreshHdl : function(resp) {
+		ux.autoRefresh(resp);
+		ux.registerRespDebounce(resp);
+	},
+
 	showPopupHdl : function(resp) {
 		ux.refreshPageGlobals(resp);
 		if (resp.showSysInfoPopup) {
@@ -506,13 +509,15 @@ ux.postPath = function(resp) {
 			}
 		}
 		
-		var prm = "req_doc=" + _enc(ux.docPath) + "&req_cid=" + _enc(ux.getClientId());
-		if(resp.target) {
-			prm += "&req_trg=" + _enc(resp.target);
+		if (path) {
+			var prm = "req_doc=" + _enc(ux.docPath) + (path.indexOf("req_cid") < 0  ? "&req_cid=" + _enc(ux.getClientId()):"");
+			if(resp.target) {
+				prm += "&req_trg=" + _enc(resp.target);
+			}
+
+			var ajaxPrms = ux.ajaxConstructCallParam(path, prm, false, true, false, ux.processJSON);
+			ux.ajaxCall(ajaxPrms);
 		}
-		
-		var ajaxPrms = ux.ajaxConstructCallParam(path, prm, false, true, false, ux.processJSON);
-		ux.ajaxCall(ajaxPrms);
 	}
 }
 
@@ -552,6 +557,16 @@ ux.refreshSection = function(resp) {
 		if (trg) {
 			trg.innerHTML = resp.section.html;
 			ux.perform(resp.section.script);
+		}
+	}
+}
+
+ux.autoRefresh = function(resp) {
+	if (resp.autoRefresh) {
+		var trg = _id(resp.autoRefresh.target);
+		if (trg) {
+			trg.innerHTML = resp.autoRefresh.html;
+			ux.perform(resp.autoRefresh.script);
 		}
 	}
 }
@@ -789,7 +804,7 @@ ux.post = function(uEv) {
 
 ux.postToPath = function(evp) {
 	var ajaxPrms = ux.ajaxConstructCallParam(evp.uPath,
-			"req_doc=" + _enc(ux.docPath) + "&req_cid=" + _enc(ux.getClientId())
+			"req_doc=" + _enc(ux.docPath) + (evp.uPath.indexOf("req_cid") < 0  ? "&req_cid=" + _enc(ux.getClientId()):"")
 			+ (evp.uTarget ? "&req_trg=" + _enc(evp.uTarget) :"") ,
 			false, true, false, ux.processJSON);
 	ux.ajaxCall(ajaxPrms);
@@ -2296,8 +2311,8 @@ ux.rigFileUploadView = function(rgp) {
 
 		var fileElem = _id(fileId)
 		var evp = ux.newEvPrm(rgp);
-		evp.uPanels = [ rgp.pContId ];
 		evp.uRef = rgp.pRef;
+		evp.uCmd = rgp.pId + "->autoRefresh";
 		evp.isUniqueTrg = true;
 		ux.addHdl(fileElem, "change", ux.post, evp);
 
@@ -2815,8 +2830,8 @@ ux.rigFileUploadButton = function(rgp) {
 	if (rgp.pEditable) {
 		const fileElem = _id(rgp.pFileId);
 		const evp = ux.newEvPrm(rgp);
-		evp.uPanels = [ rgp.pContId ];
 		evp.uRef = rgp.pRef;
+		evp.uCmd = rgp.pId + "->autoRefresh";
 		evp.uSendTrg = rgp.pIndex;
 		ux.addHdl(fileElem, "change", ux.post, evp);
 		ux.addHdl(_id(rgp.pBtnId), "click", function(uEv) {
@@ -2830,8 +2845,8 @@ ux.rigPhotoUpload = function(rgp) {
 	if (rgp.pEditable) {
 		const fileElem = _id(rgp.pFileId);
 		const evp = ux.newEvPrm(rgp);
-		evp.uPanels = [ rgp.pContId ];
 		evp.uRef = rgp.pRef;
+		evp.uCmd = rgp.pId + "->autoRefresh";
 		ux.addHdl(fileElem, "change", ux.post, evp);
 		ux.addHdl(_id(rgp.pImgId), "click", function(uEv) {
 			fileElem.click();
@@ -4631,14 +4646,6 @@ ux.buildObjParams = function(trgObj, evp, param, refs) {
 			pb += ("&req_cprm=" + _enc(evp.uConfPrm));
 		}
 	}
-
-	if (_df(evp.uSendTrg)) {
-		if (isForm) {
-			pb.append("req_trg", evp.uSendTrg);
-		} else {
-			pb += ("&req_trg=" + _enc(evp.uSendTrg));
-		}
-	}
 	
 	if (_df(evp.uId) && evp.uId.startsWith("row_")) {
 		trgObj = ux.findParent(trgObj, "tr");
@@ -4673,6 +4680,16 @@ ux.buildObjParams = function(trgObj, evp, param, refs) {
 			} else {
 				pb += ("&req_trg=" + _enc(_val));
 			}
+			
+			evp.uSendTrg = undefined; //Disallow multiple target values
+		}
+	}
+
+	if (_df(evp.uSendTrg)) {
+		if (isForm) {
+			pb.append("req_trg", evp.uSendTrg);
+		} else {
+			pb += ("&req_trg=" + _enc(evp.uSendTrg));
 		}
 	}
 
@@ -4682,7 +4699,10 @@ ux.buildObjParams = function(trgObj, evp, param, refs) {
 			pb.append("req_rsi", ux.docSessionId);
 		} else {
 			pb.append("req_doc", ux.docPath);
-			pb.append("req_cid", ux.getClientId());
+			if (evp.uURL.indexOf("req_cid") < 0) {
+				pb.append("req_cid", ux.getClientId());
+			}
+			
 			pb.append("req_win", window.name);
 		}
 		if (evp.uValidateAct) {
@@ -4708,7 +4728,10 @@ ux.buildObjParams = function(trgObj, evp, param, refs) {
 			pb += ("&req_rsi=" + _enc(ux.docSessionId));
 		} else {
 			pb += ("&req_doc=" + _enc(ux.docPath));
-			pb += ("&req_cid=" + _enc(ux.getClientId()));
+			if (evp.uURL.indexOf("req_cid") < 0) {
+				pb += ("&req_cid=" + _enc(ux.getClientId()));
+			}
+
 			pb += ("&req_win=" + _enc(window.name));
 		}
 		if (evp.uValidateAct) {
@@ -5322,19 +5345,26 @@ ux.textInputKeyup = function(uEv) {
 		var evp = uEv.evp;
 		if (evp.sTextCase) {
 			var pos = ux.getCaretPosition(trgObj);
-			var string = trgObj.value;
+			var val = trgObj.value;
 			if ("upper" == evp.sTextCase) {
-				trgObj.value = string.toUpperCase();
+				trgObj.value = val.toUpperCase();
 			} else if ("capital" == evp.sTextCase) {
-				const baseArr = string.split(" ")
+				const baseArr = val.split(" ")
 				const res = [];
 				for (var i = 0; i < baseArr.length; i++) {
 					var str = baseArr[i];
 					res.push(str.charAt(0).toUpperCase() + str.slice(1));
 				}
 				trgObj.value = res.join(" ");
+			} else if ("path" == evp.sTextCase) {
+				if (val && val.length > 0) {
+					if (val.charAt(0) != '/') {
+						trgObj.value = "/" + val;
+						pos.start++;
+					}
+				}
 			} else if ("camel" == evp.sTextCase) {
-				const baseArr = string.split(" ")
+				const baseArr = val.split(" ")
 				const res = [];
 				for (var i = 0; i < baseArr.length; i++) {
 					var str = baseArr[i];
@@ -5346,7 +5376,7 @@ ux.textInputKeyup = function(uEv) {
 				}
 				trgObj.value = res.join(" ");
 			} else {
-				trgObj.value = string.toLowerCase();
+				trgObj.value = val.toLowerCase();
 			}
 			
 			ux.setCaretPosition(trgObj, pos.start, pos.start);
@@ -5601,6 +5631,11 @@ ux.onSpecialKeyHandler = function(uEv) {
 		}
 	} else {
 		if (uEv.uKeyCode == uEv.evp.uSpecialKeyCode) {
+			if (UNIFY_KEY_ENTER == uEv.uKeyCode
+				&& (uEv.uShortKeyCode & UNIFY_SHIFT > 0)) {
+				return;
+			}
+			
 			uEv.evp.uSpecialKeyHandler(uEv);
 		}
 	}
@@ -5837,7 +5872,7 @@ ux.documentKeydownHandler = function(uEv) {
 			stopBackspace = elem.readOnly || elem.disabled;
 		}
 		
-		if (stopBackspace && element.tagName === "DIV") {
+		if (stopBackspace && elem.tagName === "DIV") {
 			stopBackspace = false;
 		}
 		
@@ -6246,7 +6281,8 @@ ux.doOpenPopup = function(openPrm) {
 				y = openPrm.uLoc.y;
 			}
 			
-			ux.popCurr.style.left = x + 'px';
+			var popRect = ux.boundingRect(ux.popCurr);
+			ux.popCurr.style.left = (openPrm.relLeft ? x - popRect.width : x) + 'px';
 			ux.popCurr.style.top = y + 'px';
 			ux.popCurr.style.minWidth = frameRect.width + 'px';
 		}

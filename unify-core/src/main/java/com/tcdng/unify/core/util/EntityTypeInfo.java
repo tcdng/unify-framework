@@ -35,7 +35,7 @@ public class EntityTypeInfo {
 	private String name;
 
 	private int depth;
-	
+
 	private List<EntityTypeFieldInfo> fields;
 
 	private EntityTypeInfo(String name, int depth) {
@@ -63,17 +63,17 @@ public class EntityTypeInfo {
 	public List<EntityTypeFieldInfo> getFields() {
 		return fields;
 	}
-	
+
 	public static Builder newBuilder(String name, int depth) {
 		return new Builder(name, depth);
 	}
-	
+
 	public static class Builder {
 
 		private Map<String, EntityTypeFieldInfo> fields;
-		
+
 		private EntityTypeInfo prefetch;
-		
+
 		public Builder(String name, int depth) {
 			this.prefetch = new EntityTypeInfo(name, depth);
 			this.fields = new LinkedHashMap<String, EntityTypeFieldInfo>();
@@ -82,43 +82,48 @@ public class EntityTypeInfo {
 		public EntityTypeInfo prefetch() {
 			return prefetch;
 		}
-		
-		public Builder addForeignKeyInfo(String parentEntityName, String name, String column) {
+
+		public Builder addForeignKeyInfo(String parentEntityName, String name, String jsonName, String column) {
 			if (this.fields.containsKey(name)) {
 				throw new IllegalArgumentException("Type information already contains field name [" + name + "]");
 			}
-			
-			this.fields.put(name, new EntityTypeFieldInfo(DynamicEntityFieldType.FOREIGN_KEY, DataType.LONG, parentEntityName, name, column, null));
+
+			this.fields.put(name, new EntityTypeFieldInfo(DynamicEntityFieldType.FOREIGN_KEY, DataType.LONG,
+					parentEntityName, name, jsonName, column, null, false));
 			return this;
 		}
 
-		public Builder addFieldInfo(DataType dataType, String name, String column, String sample) {
+		public Builder addFieldInfo(DataType dataType, String name, String jsonName, String column, String sample,
+				boolean array) {
 			if (this.fields.containsKey(name)) {
 				throw new IllegalArgumentException("Type information already contains field name [" + name + "]");
 			}
-			
-			this.fields.put(name, new EntityTypeFieldInfo(DynamicEntityFieldType.FIELD, dataType, null, name, column, sample));
+
+			this.fields.put(name, new EntityTypeFieldInfo(DynamicEntityFieldType.FIELD, dataType, null, name, jsonName,
+					column, sample, array));
 			return this;
 		}
 
-		public Builder addChildInfo(String childEntityName, String name) {
+		public Builder addChildInfo(String childEntityName, String name, String jsonName) {
 			if (this.fields.containsKey(name)) {
 				throw new IllegalArgumentException("Type information already contains field name [" + name + "]");
 			}
-			
-			this.fields.put(name, new EntityTypeFieldInfo(DynamicEntityFieldType.CHILD, childEntityName, name));
+
+			this.fields.put(name,
+					new EntityTypeFieldInfo(DynamicEntityFieldType.CHILD, childEntityName, name, jsonName));
 			return this;
 		}
 
-		public Builder addChildListInfo(String childEntityName, String name) {
+		public Builder addChildListInfo(String childEntityName, String name, String jsonName) {
 			if (this.fields.containsKey(name)) {
 				throw new IllegalArgumentException("Type information already contains field name [" + name + "]");
 			}
-			
-			this.fields.put(name, new EntityTypeFieldInfo(DynamicEntityFieldType.CHILDLIST, childEntityName, name));
+
+			this.fields.put(name,
+					new EntityTypeFieldInfo(DynamicEntityFieldType.CHILDLIST, childEntityName, name, jsonName));
 			return this;
 		}
-		
+
 		public EntityTypeInfo build() {
 			prefetch.setFields(DataUtils.unmodifiableList(fields.values()));
 			return prefetch;

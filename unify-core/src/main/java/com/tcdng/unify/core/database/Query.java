@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.tcdng.unify.common.database.Entity;
 import com.tcdng.unify.core.constant.OrderType;
 import com.tcdng.unify.core.criterion.Amongst;
 import com.tcdng.unify.core.criterion.And;
@@ -380,6 +381,13 @@ public class Query<T extends Entity> implements Cloneable {
         return this;
     }
 
+    public Query<T> addSelect(Collection<String> fields) {
+        for (String field : fields) {
+            innerGetSelect().add(field);
+        }
+        return this;
+    }
+
     public Query<T> addSelect(Select select) {
         innerGetSelect().addAll(select.values());
         return this;
@@ -387,6 +395,13 @@ public class Query<T extends Entity> implements Cloneable {
     
     public Query<T> addGroupBy(String field) {
         innerGetGroupBy().add(field);
+        return this;
+    }
+
+    public Query<T> addGroupBy(Collection<String> fields) {
+        for (String field : fields) {
+            innerGetGroupBy().add(field);
+        }
         return this;
     }
 
@@ -399,6 +414,13 @@ public class Query<T extends Entity> implements Cloneable {
 
     public Query<T> addOrder(String field) {
         getOrder().add(field);
+        return this;
+    }
+
+    public Query<T> addOrder(Collection<String> fields) {
+        for (String field : fields) {
+            getOrder().add(field);
+        }
         return this;
     }
 

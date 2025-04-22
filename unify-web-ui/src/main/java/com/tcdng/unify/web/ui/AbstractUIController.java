@@ -169,10 +169,6 @@ public abstract class AbstractUIController extends AbstractHttpClientController 
 		return uiControllerUtil;
 	}
 
-	protected final <T> T getRequestParameter(Class<T> dataType, String paramName) throws UnifyException {
-		return DataUtils.convert(dataType, getHttpRequestParameter(paramName));
-	}
-
 	protected final <T> T getExternalForward(Class<T> dataType) throws UnifyException {
 		return DataUtils.convert(dataType, getHttpRequestParameter(RequestParameterConstants.EXTERNAL_FORWARD));
 	}
@@ -231,6 +227,7 @@ public abstract class AbstractUIController extends AbstractHttpClientController 
 
 		final Set<String> reservedSet = WebUtils.getReservedRequestAttributes();
 		for (String transferId : request.getParameters().getParamNames()) {
+			logDebug("Processing transfer ID [{0}]...", transferId);
 			if (reservedSet.contains(transferId)) {
 				continue;
 			}
@@ -298,8 +295,12 @@ public abstract class AbstractUIController extends AbstractHttpClientController 
 				header.setLongName(id);
 				header.setBindingInfo(dataTransferParam.getUIControllerInfo().getPlainPropertyInfo(id));
 			} else {
-				header.setLongName(pageManager.getLongName(id));
-				header.setBindingInfo(dataTransferParam.getUIControllerInfo().getPropertyInfo(id));
+				if (DataTransferUtils.isLikePageName(id)) {
+					header.setLongName(pageManager.getLongName(id));
+					header.setBindingInfo(dataTransferParam.getUIControllerInfo().getPropertyInfo(id));
+				} else {
+					continue;
+				}
 			}
 
 			DataTransferBlock eldestBlock = transferBlocks.get(id);

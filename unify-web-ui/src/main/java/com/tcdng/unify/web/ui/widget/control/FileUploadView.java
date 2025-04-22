@@ -15,6 +15,7 @@
  */
 package com.tcdng.unify.web.ui.widget.control;
 
+import com.tcdng.unify.common.database.Entity;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.UplAttribute;
@@ -22,11 +23,10 @@ import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.constant.FileAttachmentType;
 import com.tcdng.unify.core.data.FileAttachmentInfo;
 import com.tcdng.unify.core.data.UploadedFile;
-import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.annotation.Action;
 import com.tcdng.unify.web.ui.DataTransferBlock;
-import com.tcdng.unify.web.ui.widget.AbstractMultiControl;
+import com.tcdng.unify.web.ui.widget.AbstractAutoRefreshMultiControl;
 import com.tcdng.unify.web.ui.widget.Control;
 
 /**
@@ -35,7 +35,7 @@ import com.tcdng.unify.web.ui.widget.Control;
  * @author The Code Department
  * @since 1.0
  */
-@Component("ui-fileuploadview")
+@Component("ui-fileuploadview") 
 @UplAttributes({
 		@UplAttribute(name = "type", type = FileAttachmentType.class, defaultVal = "wildcard"),
 		@UplAttribute(name = "filenameBinding", type = String.class),
@@ -44,7 +44,7 @@ import com.tcdng.unify.web.ui.widget.Control;
 		@UplAttribute(name = "parentCategory", type = String.class),
 		@UplAttribute(name = "parentFieldName", type = String.class),
 		@UplAttribute(name = "viewPath", type = String.class) })
-public class FileUploadView extends AbstractMultiControl {
+public class FileUploadView extends AbstractAutoRefreshMultiControl {
 
 	private FileUpload fileCtrl;
 
@@ -171,11 +171,6 @@ public class FileUploadView extends AbstractMultiControl {
 
 	public Control getRemoveCtrl() {
 		return removeCtrl;
-	}
-
-	@Override
-	public boolean isRefreshesContainer() {
-		return true;
 	}
 
 	@Override

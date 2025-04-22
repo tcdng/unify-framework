@@ -15,9 +15,9 @@
  */
 package com.tcdng.unify.core.system.entities;
 
+import com.tcdng.unify.common.annotation.ColumnType;
+import com.tcdng.unify.common.annotation.Table;
 import com.tcdng.unify.core.annotation.Column;
-import com.tcdng.unify.core.annotation.ColumnType;
-import com.tcdng.unify.core.annotation.Table;
 
 /**
  * Single version CLOB entity.

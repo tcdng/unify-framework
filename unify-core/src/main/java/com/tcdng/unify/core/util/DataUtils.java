@@ -49,13 +49,13 @@ import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.eclipsesource.json.PrettyPrint;
+import com.tcdng.unify.common.annotation.ColumnType;
 import com.tcdng.unify.common.constants.EnumConst;
 import com.tcdng.unify.convert.converters.ConverterFormatter;
 import com.tcdng.unify.convert.util.ConverterUtils;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Column;
-import com.tcdng.unify.core.annotation.ColumnType;
 import com.tcdng.unify.core.constant.DataType;
 import com.tcdng.unify.core.constant.PrintFormat;
 import com.tcdng.unify.core.convert.ByteArrayConverter;
@@ -167,25 +167,33 @@ public final class DataUtils {
 		map.put(Boolean.class, ColumnType.BOOLEAN);
 		map.put(Boolean[].class, ColumnType.BOOLEAN_ARRAY);
 		map.put(boolean.class, ColumnType.BOOLEAN);
+		map.put(boolean[].class, ColumnType.BOOLEAN_ARRAY);
 		map.put(char.class, ColumnType.CHARACTER);
 		map.put(Character.class, ColumnType.CHARACTER);
 		map.put(Date.class, ColumnType.DATE);
+		map.put(Date[].class, ColumnType.DATE_ARRAY);
 		map.put(BigDecimal.class, ColumnType.DECIMAL);
+		map.put(BigDecimal[].class, ColumnType.DECIMAL_ARRAY);
 		map.put(Double.class, ColumnType.DOUBLE);
 		map.put(Double[].class, ColumnType.DOUBLE_ARRAY);
 		map.put(double.class, ColumnType.DOUBLE);
+		map.put(double[].class, ColumnType.DOUBLE_ARRAY);
 		map.put(Float.class, ColumnType.FLOAT);
 		map.put(Float[].class, ColumnType.FLOAT_ARRAY);
 		map.put(float.class, ColumnType.FLOAT);
+		map.put(float[].class, ColumnType.FLOAT_ARRAY);
 		map.put(Integer.class, ColumnType.INTEGER);
 		map.put(Integer[].class, ColumnType.INTEGER_ARRAY);
 		map.put(int.class, ColumnType.INTEGER);
+		map.put(int[].class, ColumnType.INTEGER_ARRAY);
 		map.put(Long.class, ColumnType.LONG);
 		map.put(Long[].class, ColumnType.LONG_ARRAY);
 		map.put(long.class, ColumnType.LONG);
+		map.put(long[].class, ColumnType.LONG_ARRAY);
 		map.put(Short.class, ColumnType.SHORT);
 		map.put(Short[].class, ColumnType.SHORT_ARRAY);
 		map.put(short.class, ColumnType.SHORT);
+		map.put(short[].class, ColumnType.SHORT_ARRAY);
 		map.put(String.class, ColumnType.STRING);
 		map.put(String[].class, ColumnType.STRING_ARRAY);
 		classToColumnMap = Collections.unmodifiableMap(map);
@@ -264,18 +272,23 @@ public final class DataUtils {
 		map.put(Double.class, new JsonDoubleConverter());
 		map.put(Double[].class, new JsonDoubleArrayConverter());
 		map.put(double.class, new JsonDoubleConverter());
+		map.put(double[].class, new JsonDoubleArrayConverter());
 		map.put(Float.class, new JsonFloatConverter());
 		map.put(Float[].class, new JsonFloatArrayConverter());
 		map.put(float.class, new JsonFloatConverter());
+		map.put(float[].class, new JsonFloatArrayConverter());
 		map.put(Integer.class, new JsonIntConverter());
 		map.put(Integer[].class, new JsonIntArrayConverter());
 		map.put(int.class, new JsonIntConverter());
+		map.put(int[].class, new JsonIntArrayConverter());
 		map.put(Long.class, new JsonLongConverter());
 		map.put(Long[].class, new JsonLongArrayConverter());
 		map.put(long.class, new JsonLongConverter());
+		map.put(long[].class, new JsonLongArrayConverter());
 		map.put(Short.class, new JsonShortConverter());
 		map.put(Short[].class, new JsonShortArrayConverter());
 		map.put(short.class, new JsonShortConverter());
+		map.put(short[].class, new JsonShortArrayConverter());
 		map.put(String.class, new JsonStringConverter());
 		map.put(String[].class, new JsonStringArrayConverter());
 		map.put(Date.class, new JsonDateConverter());
@@ -526,6 +539,10 @@ public final class DataUtils {
 		} catch (Exception e) {
 			throw new UnifyException(UnifyCoreErrorConstants.COMPONENT_OPERATION_ERROR, e);
 		}
+	}
+
+	public static Object getBeanProperty(Object bean, String propertyName) throws UnifyException {
+		return ReflectUtils.getBeanProperty(bean, propertyName);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -1036,8 +1053,10 @@ public final class DataUtils {
 		try {
 			return DataUtils.getObjectFromJsonValue(comp, clazz, null, Json.parse(reader));
 		} catch (UnifyException e) {
+			e.printStackTrace();
 			throw e;
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new UnifyException(UnifyCoreErrorConstants.DATAUTIL_ERROR, e);
 		}
 	}
@@ -1587,7 +1606,7 @@ public final class DataUtils {
 			throws UnifyException {
 		try {
 			return ConverterUtils.convert(targetClazz, value, formatter);
-		} catch (Exception e) {
+		} catch (Exception e) {e.printStackTrace();
 			throw new UnifyException(UnifyCoreErrorConstants.DATAUTIL_ERROR, e);
 		}
 	}

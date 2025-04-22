@@ -17,8 +17,10 @@ package com.tcdng.unify.core.database;
 
 import java.util.Date;
 
+import com.tcdng.unify.common.database.Entity;
 import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.criterion.Update;
 
 /**
  * Entity policy.
@@ -51,6 +53,18 @@ public interface EntityPolicy extends UnifyComponent {
      *             if an error occurs
      */
     void preUpdate(Entity record, Date now) throws UnifyException;
+
+    /**
+     * Entity pre-update method. Called before update of record.
+     * 
+     * @param update
+     *            the update object
+     * @param now
+     *            the now time stamp
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void preUpdate(Update update, Date now) throws UnifyException;
 
     /**
      * Entity pre-delete method. Called before delete of record.

@@ -36,6 +36,11 @@ public final class DataTransferUtils {
 		return DataTransferUtils.createTransferBlock(transferId, null);
 	}
 
+	public static boolean isLikePageName(String pageName) {
+		return pageName != null && pageName.length() >= 2 && pageName.charAt(0) == 'p'
+				&& Character.isDigit(pageName.charAt(1));
+	}
+	
 	public static DataTransferBlock createTransferBlock(String transferId, DataTransferHeader header) {
 		DataTransferBlock transferBlock = null;
 		String id = transferId;

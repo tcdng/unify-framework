@@ -15,9 +15,9 @@
  */
 package com.tcdng.unify.core.batch;
 
+import com.tcdng.unify.common.annotation.Table;
+import com.tcdng.unify.common.annotation.UniqueConstraint;
 import com.tcdng.unify.core.annotation.Column;
-import com.tcdng.unify.core.annotation.Table;
-import com.tcdng.unify.core.annotation.UniqueConstraint;
 import com.tcdng.unify.core.database.AbstractTestVersionedTableEntity;
 
 /**

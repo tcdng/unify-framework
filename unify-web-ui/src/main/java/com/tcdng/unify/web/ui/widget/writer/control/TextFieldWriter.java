@@ -18,6 +18,7 @@ package com.tcdng.unify.web.ui.widget.writer.control;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
+import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.core.util.json.JsonWriter;
 import com.tcdng.unify.web.constant.ExtensionType;
 import com.tcdng.unify.web.ui.widget.EventHandler;
@@ -199,6 +200,13 @@ public class TextFieldWriter extends AbstractControlWriter {
 		} else if (textField.isHiddenMimic()) {
 			writer.write(" value=\"\"");
 		}
+
+		String placeholder = textField.getPlaceholder();
+		if (!StringUtils.isBlank(placeholder))	{
+			writer.write(" placeholder=\"");
+			writer.writeWithHtmlEscape(resolveSessionMessage(placeholder));
+			writer.write("\"");
+		}		
 
 		writer.write(" spellcheck=\"").write(textField.isSpellCheck()).write("\"");
 		if (textField.isAutoComplete()) {

@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import com.tcdng.unify.common.database.Entity;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.criterion.AggregateFunction;
 import com.tcdng.unify.core.criterion.GroupingFunction;
@@ -43,6 +44,15 @@ public interface DatabaseSession {
 	 */
 	boolean isReadOnly() throws UnifyException;
 
+	/**
+	 * Checks if database session is managed
+	 * 
+	 * @return true if database session is managed otherwise false
+     * @throws UnifyException
+     *             if an error occurs
+	 */
+	boolean isManaged() throws UnifyException;
+
     /**
      * Creates an record in the database.
      * 
@@ -53,6 +63,15 @@ public interface DatabaseSession {
      *             if an error occurs during creation
      */
     Object create(Entity record) throws UnifyException;
+
+	/**
+	 * Checks if class is of this database.
+	 *
+	 * @param clazz the entity class
+	 * @return true if of this database otherwise false
+	 * @throws UnifyException if an error occurs
+	 */
+	<T extends Entity> boolean isOfThisDatabase(Class<T> clazz) throws UnifyException;
 
     /**
      * Retrieves a record by ID. List-only properties of returned object are not
@@ -852,6 +871,16 @@ public interface DatabaseSession {
      *             if an error occurs during modify
      */
     int count(Query<? extends Entity> query) throws UnifyException;
+
+	/**
+	 * Gets unique constraints for entity.
+	 * 
+	 * @param entityClass the entity class
+	 * @return list of unique constraints
+     * @throws UnifyException
+     *             if an error occurs during modify
+	 */
+	List<Set<String>> getUniqueConstraints(Class<? extends Entity> entityClass) throws UnifyException;
 
 	/**
 	 * Executes an aggregate function that match specified query.

@@ -18,13 +18,13 @@ package com.tcdng.unify.web.ui.widget;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.tcdng.unify.common.database.Entity;
 import com.tcdng.unify.core.UnifyCoreRequestAttributeConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.constant.TopicEventType;
 import com.tcdng.unify.core.data.DownloadFile;
-import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.UnifyWebSessionAttributeConstants;
 import com.tcdng.unify.web.annotation.Action;
@@ -46,6 +46,7 @@ import com.tcdng.unify.web.ui.widget.data.MessageResult;
  */
 @UplAttributes({
 		@UplAttribute(name = "backImageSrc", type = String.class),
+		@UplAttribute(name = "backImageSrcBinding", type = String.class),
 		@UplAttribute(name = "backImageCover", type = boolean.class, defaultVal = "true"),
 		@UplAttribute(name = "refreshPath", type = String.class),
 		@UplAttribute(name = "refreshEvery", type = int.class),
@@ -136,7 +137,7 @@ public abstract class AbstractPanel extends AbstractContainer implements Panel {
 
 	@Override
 	public String getBackImageSrc() throws UnifyException {
-		return getUplAttribute(String.class, "backImageSrc");
+		return getUplAttribute(String.class, "backImageSrc", "backImageSrcBinding");
 	}
 
 	@Override

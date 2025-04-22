@@ -30,6 +30,20 @@ import com.tcdng.unify.web.constant.ClosePageMode;
 public interface ContentPanel extends Panel {
 
 	/**
+	 * Gets sticky paths.
+	 * 
+	 * @return the sticky paths
+	 * @throws UnifyException if an error occurs
+	 */
+	String[] getPaths() throws UnifyException;
+	
+	/**
+	 * Returns true if content size is zero.
+	 * @throws UnifyException if an error occurs
+	 */
+	boolean isBlankContent() throws UnifyException;
+	
+	/**
 	 * Return true if content panel is in detach window.
 	 * @throws UnifyException if an error occurs
 	 */

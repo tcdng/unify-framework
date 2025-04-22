@@ -31,7 +31,7 @@ public class ShortConverter extends AbstractConverter<Short> {
         if (value instanceof String) {
             String string = ((String) value).trim();
             if (!string.isEmpty()) {
-                if (formatter == null) {
+                if (formatter == null || formatter.isArrayFormat()) {
                     return Short.decode(string);
                 }
                 return doConvert(formatter.parse(string), null);

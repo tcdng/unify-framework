@@ -31,7 +31,7 @@ public class DoubleConverter extends AbstractConverter<Double> {
         if (value instanceof String) {
             String string = ((String) value).trim();
             if (!string.isEmpty()) {
-                if (formatter == null) {
+                if (formatter == null || formatter.isArrayFormat()) {
                     return Double.valueOf(string);
                 }
                 return doConvert(formatter.parse(string), null);

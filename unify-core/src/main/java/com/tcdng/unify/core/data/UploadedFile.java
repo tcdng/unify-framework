@@ -64,9 +64,10 @@ public class UploadedFile {
         return 0;
     }
 
-    @Override
-    public String toString() {
-        return "file=\'" + this.filename + "\', size=" + this.getSize() + ", creationDate = " + creationDate
-                + ", modificationDate = " + modificationDate;
-    }
+	@Override
+	public String toString() {
+		return "UploadedFile [filename=" + filename + ", creationDate=" + creationDate + ", modificationDate="
+				+ modificationDate + ", data=" + (data != null ? data.length : 0) + "]";
+	}
+
 }

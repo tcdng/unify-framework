@@ -30,6 +30,7 @@ public enum StringTokenType implements EnumConst {
 	NEWLINE("NLN"),
 	PARAM("PRM"),
 	FORMATTED_PARAM("FPR"),
+	PROCESS_PARAM("PPR"),
 	GENERATOR_PARAM("GPR");
 
     private final String code;
@@ -57,11 +58,15 @@ public enum StringTokenType implements EnumConst {
     }
 
 	public boolean isParam() {
-        return PARAM.equals(this) || FORMATTED_PARAM.equals(this) || GENERATOR_PARAM.equals(this);
+        return PARAM.equals(this) || FORMATTED_PARAM.equals(this) || PROCESS_PARAM.equals(this) || GENERATOR_PARAM.equals(this);
     }
 
     public boolean isFormattedParam() {
         return FORMATTED_PARAM.equals(this);
+    }
+
+    public boolean isProcessParam() {
+        return PROCESS_PARAM.equals(this);
     }
 
     public boolean isGeneratorParam() {

@@ -15,6 +15,7 @@
  */
 package com.tcdng.unify.web.ui.widget.writer;
 
+import java.util.Collection;
 import java.util.List;
 
 import com.tcdng.unify.core.RequestContext;
@@ -46,7 +47,7 @@ public abstract class AbstractWidgetWriter extends AbstractDhtmlWriter implement
     @Override
     public void writeStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
         widget.updateInternalState();
-        doWriteStructureAndContent(writer, widget);
+        doWriteStructureContentContainer(writer, widget);
         widget.addPageAliases();
     }
 
@@ -56,7 +57,7 @@ public abstract class AbstractWidgetWriter extends AbstractDhtmlWriter implement
         try {
             widget.setId(id);
             widget.updateInternalState();
-            doWriteStructureAndContent(writer, widget);
+            doWriteStructureContentContainer(writer, widget);
             widget.addPageAliases();
         } finally {
             widget.setId(origId);
@@ -78,6 +79,12 @@ public abstract class AbstractWidgetWriter extends AbstractDhtmlWriter implement
 	public final void writeBehavior(ResponseWriter writer, Widget widget, EventHandler[] eventHandlers)
 			throws UnifyException {
         doWriteBehavior(writer, widget, eventHandlers);
+	}
+
+	@Override
+	public void writeBehavior(ResponseWriter writer, Widget widget, EventHandler[] eventHandlers,
+			Collection<String> events) throws UnifyException {
+		doWriteBehavior(writer, widget, eventHandlers, events);
 	}
 
 	@Override
@@ -118,22 +125,52 @@ public abstract class AbstractWidgetWriter extends AbstractDhtmlWriter implement
             throws UnifyException {
 
     }
-
+    
 	protected void doWriteBehavior(ResponseWriter writer, Widget widget, EventHandler[] eventHandlers)
 			throws UnifyException {
+		doWriteBehavior(writer, widget, eventHandlers, null);
+	}
+	
+	protected void doWriteBehavior(ResponseWriter writer, Widget widget, EventHandler[] eventHandlers,
+			Collection<String> events) throws UnifyException {
 		if (eventHandlers != null && !widget.isContainerDisabled()) {
+			final int indexed = widget.getIndexedHandlerCount();
 			String id = widget.getId();
 			if (widget.isBindEventsToFacade()) {
 				id = widget.getFacadeId();
 			}
 
 			getRequestContext().setQuickReference(widget.getValueStore());
-			for (EventHandler eventHandler : eventHandlers) {
-				final String eventBinding = eventHandler.getEventBinding();
-				final String preferredEvent = !StringUtils.isBlank(eventBinding)
-						? widget.getValue(String.class, eventBinding)
-						: null;
-				writer.writeBehavior(eventHandler, id, widget.getBinding(), preferredEvent);
+
+			if (indexed > 0) {
+				final int initial = writer.getDataIndex();
+				try {
+					for (int i = 0; i < indexed; i++) {
+						writer.setDataIndex(i);
+						final String _id = id + i;
+						for (EventHandler eventHandler : eventHandlers) {
+							if (events == null || events.contains(eventHandler.getEvent())) {
+								final String eventBinding = eventHandler.getEventBinding();
+								final String preferredEvent = !StringUtils.isBlank(eventBinding)
+										? widget.getValue(String.class, eventBinding)
+										: null;
+								writer.writeBehavior(eventHandler, _id, widget.getBinding(), preferredEvent);
+							}
+						}
+					}
+				} finally  {
+					writer.setDataIndex(initial);
+				}
+			} else {
+				for (EventHandler eventHandler : eventHandlers) {
+					if (events == null || events.contains(eventHandler.getEvent())) {
+						final String eventBinding = eventHandler.getEventBinding();
+						final String preferredEvent = !StringUtils.isBlank(eventBinding)
+								? widget.getValue(String.class, eventBinding)
+								: null;
+						writer.writeBehavior(eventHandler, id, widget.getBinding(), preferredEvent);
+					}
+				}
 			}
 		}
 	}
@@ -170,5 +207,17 @@ public abstract class AbstractWidgetWriter extends AbstractDhtmlWriter implement
 
         return classBase;
     }
+
+	private void doWriteStructureContentContainer(ResponseWriter writer, Widget widget) throws UnifyException {
+		if (widget.isRefreshesContainer()) {
+			writer.write("<div class=\"ui-wcont\" id=\"wcont_").write(widget.getId()).write("\">");
+		}
+
+		doWriteStructureAndContent(writer, widget);
+
+		if (widget.isRefreshesContainer()) {
+			writer.write("</div>");
+		}
+	}
 
 }

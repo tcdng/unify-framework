@@ -73,7 +73,7 @@ public abstract class AbstractFormatter<T> extends AbstractUplComponent implemen
 
     @Override
     public boolean isArrayFormat() {
-        return Object[].class.isAssignableFrom(dataType);
+        return dataType.isArray();
     }
 
     @Override

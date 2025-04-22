@@ -19,20 +19,19 @@ import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.List;
 
+import com.tcdng.unify.common.database.Entity;
 import com.tcdng.unify.core.SessionContext;
-import com.tcdng.unify.core.UnifyCoreSessionAttributeConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.Singleton;
+import com.tcdng.unify.core.annotation.UplBinding;
 import com.tcdng.unify.core.constant.TopicEventType;
 import com.tcdng.unify.core.data.DownloadFile;
 import com.tcdng.unify.core.data.FileAttachmentInfo;
-import com.tcdng.unify.core.database.Entity;
 import com.tcdng.unify.core.task.TaskLauncher;
 import com.tcdng.unify.core.task.TaskMonitor;
 import com.tcdng.unify.core.task.TaskSetup;
 import com.tcdng.unify.core.upl.UplElementReferences;
-import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.ReflectUtils;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ClientRequest;
@@ -55,6 +54,7 @@ import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.Widget;
 import com.tcdng.unify.web.ui.widget.WidgetCommandManager;
 import com.tcdng.unify.web.ui.widget.WidgetContainer;
+import com.tcdng.unify.web.ui.widget.data.DynPopup;
 import com.tcdng.unify.web.ui.widget.data.Hint.MODE;
 import com.tcdng.unify.web.ui.widget.data.MessageBox;
 import com.tcdng.unify.web.ui.widget.data.MessageBoxCaptions;
@@ -71,6 +71,7 @@ import com.tcdng.unify.web.ui.widget.data.TaskMonitorInfo;
  * @since 1.0
  */
 @Singleton
+@UplBinding("web/reserved/upl/basepage.upl")
 public abstract class AbstractPageController<T extends PageBean> extends AbstractUIController
 		implements PageController<T> {
 
@@ -254,41 +255,35 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 		return hidePopup();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public String executePageCall(String actionName) throws UnifyException {
 		try {
+			final PageRequestContextUtil ctxUtil = getPageRequestContextUtil();
 			if ("/openPage".equals(actionName)) {
-				ContentPanel contentPanel = !getPageRequestContextUtil().isRemoteViewer()
-						? (getPageRequestContextUtil().getRequestDocument() != null
-								? getPageRequestContextUtil().getRequestDocument().getContentPanel()
-								: null)
+				ContentPanel contentPanel = !ctxUtil.isRemoteViewer()
+						? (ctxUtil.getRequestDocument() != null ? ctxUtil.getRequestDocument().getContentPanel() : null)
 						: null;
 				getPage().setAttribute(PageAttributeConstants.IN_DETACHED_WINDOW,
 						contentPanel != null ? contentPanel.isDetachedWindow() : false);
 
 				String resultName = openPage();
 				if (contentPanel != null && isContentSupport()) {
-					contentPanel.addContent(getPageRequestContextUtil().getRequestPage());
-
-					final List<String> stickyPaths = (List<String>) removeSessionAttribute(
-							UnifyCoreSessionAttributeConstants.STICKY_PATHS);
-					if (!DataUtils.isBlank(stickyPaths)) {
-						for (String stickyPath : stickyPaths) {
+					final String path = ctxUtil.getRequestPathParts().getControllerPath();
+					if (contentPanel.isBlankContent() && !Arrays.asList(contentPanel.getPaths()).contains(path)) {
+						for (String stickyPath : contentPanel.getPaths()) {
 							fireOtherControllerAction(stickyPath);
 						}
-
-						// Revert to first?
 					}
+
+					contentPanel.addContent(ctxUtil.getRequestPage());
 				}
 
 				return resultName;
 			} else if ("/replacePage".equals(actionName)) {
 				String resultName = openPage();
-				PageRequestContextUtil pageRequestContextUtil = getPageRequestContextUtil();
-				if (!getPageRequestContextUtil().isRemoteViewer()) {
-					ContentPanel contentPanel = pageRequestContextUtil.getRequestDocument().getContentPanel();
-					Page currentPage = getPageRequestContextUtil().getRequestPage();
+				if (!ctxUtil.isRemoteViewer()) {
+					ContentPanel contentPanel = ctxUtil.getRequestDocument().getContentPanel();
+					Page currentPage = ctxUtil.getRequestPage();
 					String pathToReplaceId = contentPanel.insertContent(currentPage);
 					if (!StringUtils.isBlank(pathToReplaceId)) {
 						performClosePages(contentPanel, Arrays.asList(pathToReplaceId), true);
@@ -297,7 +292,7 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 
 				return resultName;
 			} else if ("/closePage".equals(actionName)) {
-				ClosePageMode closePageMode = getPageRequestContextUtil().getRequestTargetValue(ClosePageMode.class);
+				ClosePageMode closePageMode = ctxUtil.getRequestTargetValue(ClosePageMode.class);
 				performClosePage(closePageMode, true);
 				return ResultMappingConstants.CLOSE;
 			}
@@ -368,6 +363,11 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 					} else {
 						resultName = executePageCall("/indexPage");
 					}
+				}
+
+				if (StringUtils.isBlank(resultName)) {
+					throwOperationErrorException(
+							new IllegalArgumentException("No result name returned from action method call."));
 				}
 
 				respPageController = this;
@@ -502,6 +502,25 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 	 * @throws UnifyException if an error occurs
 	 */
 	protected String showPopup(Popup popup) throws UnifyException {
+		setSessionAttribute(UnifyWebSessionAttributeConstants.POPUP, popup);
+		return popup.getResultMapping();
+	}
+
+	/**
+	 * Shows a dynamic popup.
+	 * 
+	 * @param dynTitle     the title
+	 * @param dynPanelName the panel name (should be a standalone panel)
+	 * @param dynPanelBean the panel bean
+	 * @param width        the popup width
+	 * @param height       the popup height
+	 * @return the result mapping
+	 * @throws UnifyException if an error occurs
+	 */
+	protected String showDynamicPopup(String dynTitle, String dynPanelName, Object dynPanelBean, int width, int height)
+			throws UnifyException {
+		final Popup popup = new Popup(ResultMappingConstants.SHOW_DYNAMIC_POPUP,
+				new DynPopup(dynTitle, dynPanelName, dynPanelBean), width, height);
 		setSessionAttribute(UnifyWebSessionAttributeConstants.POPUP, popup);
 		return popup.getResultMapping();
 	}
@@ -851,6 +870,10 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 
 	protected boolean isPageWidgetEditable(String shortName) throws UnifyException {
 		return getPageRequestContextUtil().getRequestPage().isWidgetEditable(shortName);
+	}
+
+	protected void setPageWidgetFocus(String shortName) throws UnifyException {
+		getPageRequestContextUtil().getRequestPage().setWidgetFocus(shortName);
 	}
 
 	/**

@@ -29,8 +29,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.tcdng.unify.core.annotation.ColumnType;
-import com.tcdng.unify.core.database.Entity;
+import com.tcdng.unify.common.annotation.ColumnType;
+import com.tcdng.unify.common.database.Entity;
 import com.tcdng.unify.core.database.Query;
 import com.tcdng.unify.core.database.StaticReference;
 import com.tcdng.unify.core.database.StaticReferenceQuery;
@@ -80,7 +80,7 @@ public final class SqlUtils {
 	private static final int DEFAULT_LONG_PRECISION = 20;
 	private static final int DEFAULT_SHORT_PRECISION = 5;
 	private static final int DEFAULT_STRING_LEN = 32;
-	private static final int DEFAULT_STRINGARRAY_LEN = 256;
+	private static final int DEFAULT_STRINGARRAY_LEN = 1024;
 	private static final int DEFAULT_ENUMCONST_LEN = StaticReference.CODE_LENGTH;
 
 	private static final int MAX_CONSTRAINT_TABLE_PREFIX_LEN = 14;
@@ -501,7 +501,9 @@ public final class SqlUtils {
 				nLength = length;
 			}
 			break;
+		case DECIMAL_ARRAY:
 		case BOOLEAN_ARRAY:
+		case DATE_ARRAY:
 		case DOUBLE_ARRAY:
 		case FLOAT_ARRAY:
 		case INTEGER_ARRAY:
