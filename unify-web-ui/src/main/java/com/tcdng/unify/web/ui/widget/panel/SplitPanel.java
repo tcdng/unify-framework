@@ -25,7 +25,7 @@ import com.tcdng.unify.web.ui.widget.AbstractPanel;
  * A split panel containing two (only two) widgets each in a resizable window.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-splitpanel")
 @UplAttributes({ @UplAttribute(name = "minorMin", type = int.class), @UplAttribute(name = "minorMax", type = int.class),

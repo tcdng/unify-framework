@@ -21,7 +21,7 @@ import com.tcdng.unify.web.ClientSyncManager;
  * Client synchronization utilities.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public final class ClientSyncUtils {
 

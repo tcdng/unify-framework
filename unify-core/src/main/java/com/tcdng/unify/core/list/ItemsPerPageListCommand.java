@@ -29,7 +29,7 @@ import com.tcdng.unify.core.data.ListNumberData;
  * Items per page list command.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("itemsperpagelist")
 public class ItemsPerPageListCommand extends AbstractZeroParamsListCommand {

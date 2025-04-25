@@ -27,7 +27,7 @@ import org.junit.Test;
  * Value store simple calculator tests.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class ValueStoreSimpleCalculatorTest {
 

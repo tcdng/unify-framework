@@ -22,7 +22,7 @@ import java.util.Collection;
  * Convenient abstract base class for compound restriction builders.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractCompoundRestrictionBuilder {
 

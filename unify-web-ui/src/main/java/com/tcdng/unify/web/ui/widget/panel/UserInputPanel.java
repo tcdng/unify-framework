@@ -23,7 +23,7 @@ import com.tcdng.unify.web.ui.widget.AbstractPanel;
  * Panel for user input.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-userinputpanel")
 @UplBinding("web/panels/upl/userinputpanel.upl")

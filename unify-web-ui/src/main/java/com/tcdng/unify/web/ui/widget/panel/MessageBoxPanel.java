@@ -25,7 +25,7 @@ import com.tcdng.unify.web.ui.widget.data.MessageBox;
  * Represents a message box panel.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-messageboxpanel")
 @UplBinding("web/panels/upl/messageboxpanel.upl")

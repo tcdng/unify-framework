@@ -21,7 +21,7 @@ import com.tcdng.unify.core.annotation.Component;
  * Forward page action.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-forward")
 public class ForwardAction extends PostAction {

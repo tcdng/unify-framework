@@ -27,7 +27,7 @@ import com.tcdng.unify.core.annotation.Id;
  * Cluster node entity.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Table("UNCLUSTERNODE")
 public class ClusterNode extends AbstractSystemEntity implements Listable {

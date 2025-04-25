@@ -26,7 +26,7 @@ import com.tcdng.unify.web.ui.widget.TabularLayout;
  * Abstract base class for tabular layouts.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @UplAttributes({ @UplAttribute(name = "cellType", type = TabularCellType.class, defaultVal = "top"),
         @UplAttribute(name = "cellPadding", type = boolean.class, defaultVal = "true"),

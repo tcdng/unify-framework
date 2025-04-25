@@ -23,7 +23,7 @@ import com.tcdng.unify.web.remotecall.RemoteCallResult;
  * Discover remote call result.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @JacksonXmlRootElement
 public class DiscoverRemoteCallResult extends RemoteCallResult {

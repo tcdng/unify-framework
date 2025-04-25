@@ -26,7 +26,7 @@ import com.tcdng.unify.convert.FormatContext;
  * JSON object composition.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class JsonObjectComposition {
 

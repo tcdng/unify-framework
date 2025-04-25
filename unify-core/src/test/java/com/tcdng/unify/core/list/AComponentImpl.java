@@ -24,7 +24,7 @@ import com.tcdng.unify.core.annotation.Component;
  * Test A component implementation.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(name = "a-component", description = "A Component")
 public class AComponentImpl extends AbstractUnifyComponent implements AComponent {

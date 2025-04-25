@@ -22,7 +22,7 @@ import com.tcdng.unify.core.annotation.Policy;
  * Abstract base class for test entities.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Policy("testentity-policy")
 public abstract class AbstractTestTableEntity extends AbstractEntity {

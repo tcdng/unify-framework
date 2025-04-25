@@ -19,7 +19,7 @@ package com.tcdng.unify.core.criterion;
  * Division update expression.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class DivisionExpression extends AbstractSimpleArithmeticUpdateExpression {
 

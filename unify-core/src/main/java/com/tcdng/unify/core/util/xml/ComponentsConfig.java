@@ -26,7 +26,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
  * Unify components configuration.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @JsonInclude(Include.NON_NULL)
 public class ComponentsConfig {

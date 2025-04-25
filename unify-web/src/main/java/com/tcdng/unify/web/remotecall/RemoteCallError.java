@@ -21,7 +21,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
  * Remote call error.
  * 
  * @author Lateef
- * @since 1.0
+ * @since 4.1
  */
 @JacksonXmlRootElement
 public class RemoteCallError extends RemoteCallResult {

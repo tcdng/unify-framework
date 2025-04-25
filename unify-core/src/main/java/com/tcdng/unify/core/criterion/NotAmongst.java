@@ -21,7 +21,7 @@ import java.util.Collection;
  * Restriction for a property not amongst a list of values.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class NotAmongst extends AbstractMultipleParamRestriction {
 

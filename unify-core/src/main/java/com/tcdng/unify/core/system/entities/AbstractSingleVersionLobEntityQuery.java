@@ -21,7 +21,7 @@ import com.tcdng.unify.core.database.Query;
  * Convenient abstract base class for single version large object query.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class AbstractSingleVersionLobEntityQuery<T extends AbstractSingleVersionLobEntity> extends Query<T> {
 

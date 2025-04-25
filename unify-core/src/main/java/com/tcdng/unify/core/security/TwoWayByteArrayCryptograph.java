@@ -22,7 +22,7 @@ import com.tcdng.unify.core.transform.Transformer;
  * Used for encoding and decoding byte arrays.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface TwoWayByteArrayCryptograph extends Transformer<byte[], byte[]> {
     /**

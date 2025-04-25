@@ -22,7 +22,7 @@ import com.tcdng.unify.core.constant.NetworkSecurityType;
  * Abstract notification server configuration.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractNotifServerConfig {
 

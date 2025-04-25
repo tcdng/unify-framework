@@ -25,7 +25,7 @@ import com.tcdng.unify.web.ui.widget.AbstractTargetControl;
  * Toggle button with changing text based on binding property state.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-togglebutton")
 @UplAttributes({ @UplAttribute(name = "toggleBinding", type = String.class, mandatory = true),

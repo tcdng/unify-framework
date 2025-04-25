@@ -22,7 +22,7 @@ import com.tcdng.unify.core.annotation.Callable;
  * Test callable procedure with no parameters and with results.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Callable(procedure = "procedure_c", results = {CallableResultA.class})
 public class CallableProcC extends AbstractCallableProc {

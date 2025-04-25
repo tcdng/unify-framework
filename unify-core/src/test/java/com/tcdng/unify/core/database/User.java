@@ -24,7 +24,7 @@ import com.tcdng.unify.core.annotation.Column;
  * Test user entity.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Table(name = "TEST_USER")
 public class User extends AbstractTestVersionedTableEntity {

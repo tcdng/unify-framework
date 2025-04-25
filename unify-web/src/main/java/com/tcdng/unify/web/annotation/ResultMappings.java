@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
  * Annotation for declaring a set of result mappings for a page-controller.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

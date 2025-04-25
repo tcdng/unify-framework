@@ -24,7 +24,7 @@ import com.tcdng.unify.core.annotation.UplAttributes;
  * Base class for controls with target element.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @UplAttributes({
     @UplAttribute(name = "staticBindingValue", type = String.class),

@@ -25,7 +25,7 @@ import com.tcdng.unify.core.annotation.ListOnly;
  * Test employee entity.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Table(name = "EMPLOYEE", uniqueConstraints = { @UniqueConstraint({ "fullName" }) })
 public class Employee extends AbstractTestVersionedTableEntity {

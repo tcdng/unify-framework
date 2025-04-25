@@ -40,7 +40,7 @@ import com.tcdng.unify.web.ui.widget.Widget;
  * Convenient abstract implementation of standalone panel.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @UplAttributes({ @UplAttribute(name = "validationList", type = PageValidation[].class) })
 public abstract class AbstractStandalonePanel extends AbstractPanel implements StandalonePanel {

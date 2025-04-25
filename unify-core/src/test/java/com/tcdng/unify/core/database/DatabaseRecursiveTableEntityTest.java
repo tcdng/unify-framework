@@ -29,7 +29,7 @@ import com.tcdng.unify.core.UnifyCorePropertyConstants;
  * Database recursive table entity tests.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class DatabaseRecursiveTableEntityTest extends AbstractUnifyComponentTest {
 

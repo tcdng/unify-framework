@@ -23,7 +23,7 @@ import com.tcdng.unify.core.annotation.UplAttributes;
  * Abstract base class for popup text fields.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @UplAttributes({
 		@UplAttribute(name = "buttonImgSrc", type = String.class, defaultVal = "$t{images/droparrow.png}"),

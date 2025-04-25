@@ -22,7 +22,7 @@ import com.tcdng.unify.core.database.sql.SqlLikeType;
  * Case-insensitive like begin with operator policy.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class ILikeBeginPolicy extends ILikePolicy {
 

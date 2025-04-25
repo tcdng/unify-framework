@@ -23,7 +23,7 @@ import java.util.Set;
  * Restriction object.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface Restriction {
 	

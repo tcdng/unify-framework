@@ -29,7 +29,7 @@ import com.tcdng.unify.web.ui.widget.Widget;
  * UPL descriptor page validation.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-upldescriptorvalidation")
 public class UplDescriptorValidation extends AbstractPageValidation {

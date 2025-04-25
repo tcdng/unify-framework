@@ -19,7 +19,7 @@ package com.tcdng.unify.core.format;
  * Number types.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public enum NumberType {
 	INTEGER,

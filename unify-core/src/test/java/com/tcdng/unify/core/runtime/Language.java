@@ -25,7 +25,7 @@ import java.lang.annotation.Target;
  * Test language annotation.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

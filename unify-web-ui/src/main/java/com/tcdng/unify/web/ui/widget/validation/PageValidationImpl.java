@@ -38,7 +38,7 @@ import com.tcdng.unify.web.ui.widget.panel.StandalonePanel;
  * Default page component validation implementation.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-validation")
 public class PageValidationImpl extends AbstractPageValidation {

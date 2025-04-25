@@ -22,7 +22,7 @@ import com.tcdng.unify.web.ui.widget.AbstractPanel;
  * Abstract dialogue panel.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @UplBinding("web/panels/upl/dialogpanel.upl")
 public abstract class AbstractDialogPanel extends AbstractPanel {

@@ -34,7 +34,7 @@ import com.tcdng.unify.core.util.StringUtils;
  * Date condition list command.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("dateconditionlist")
 public class DateConditionListCommand extends AbstractZeroParamsListCommand {

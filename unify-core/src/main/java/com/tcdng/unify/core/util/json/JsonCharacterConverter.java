@@ -22,7 +22,7 @@ import com.eclipsesource.json.JsonValue;
  * JSON character value converter.
  * 
  * @author Lateef
- * @since 1.0
+ * @since 4.1
  */
 public class JsonCharacterConverter implements JsonValueConverter<Character> {
     @Override

@@ -49,7 +49,7 @@ import com.tcdng.unify.core.upl.UplElementReferences;
  * Converter tests.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class ConverterTest extends AbstractUnifyComponentTest {
 

@@ -28,7 +28,7 @@ import com.tcdng.unify.core.annotation.ListOnly;
  * Parameter values entity.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Table(name = "UNPARAMVALUES", uniqueConstraints = { @UniqueConstraint({ "parametersDefId", "instTypeName", "instId" }) })
 public class ParameterValues extends AbstractSystemSequencedEntity {

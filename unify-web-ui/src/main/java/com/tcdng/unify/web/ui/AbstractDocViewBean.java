@@ -20,7 +20,7 @@ package com.tcdng.unify.web.ui;
  * Convenient base class for document view bean.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractDocViewBean extends AbstractPageBean implements DocViewBean {
 

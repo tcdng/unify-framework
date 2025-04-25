@@ -31,7 +31,7 @@ import com.tcdng.unify.web.util.RealPathUtils;
  * Resource controller for fetching file resources from application real path.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(WebApplicationComponents.APPLICATION_REALPATHRESOURCECONTROLLER)
 public class RealPathResourceController extends FileResourceController {

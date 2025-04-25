@@ -28,7 +28,7 @@ import com.tcdng.unify.core.UnifyException;
  * Used for managing the retrieval of lists from list commands.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface ListManager extends UnifyComponent {
 

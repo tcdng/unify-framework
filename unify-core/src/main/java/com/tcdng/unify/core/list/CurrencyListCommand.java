@@ -32,7 +32,7 @@ import com.tcdng.unify.core.util.DataUtils;
  * Currency list command.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("currencylist")
 public class CurrencyListCommand extends AbstractListCommand<CurrencyListParams> {

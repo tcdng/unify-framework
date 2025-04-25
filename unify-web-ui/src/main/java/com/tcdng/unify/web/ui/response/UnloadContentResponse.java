@@ -28,7 +28,7 @@ import com.tcdng.unify.web.ui.widget.ResponseWriter;
  * Used for generating a close page content response.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("unloadcontentresponse")
 public class UnloadContentResponse extends AbstractJsonPageControllerResponse {

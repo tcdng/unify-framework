@@ -23,7 +23,7 @@ import com.tcdng.unify.web.discovery.gem.data.APIDiscoveryRemoteCallInfo;
  * API discovery manager.
  * 
  * @author Lateef
- * @since 1.0
+ * @since 4.1
  */
 public interface APIDiscoveryManager extends UnifyComponent {
 

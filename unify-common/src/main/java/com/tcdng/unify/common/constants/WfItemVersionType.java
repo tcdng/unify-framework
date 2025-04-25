@@ -22,7 +22,7 @@ import com.tcdng.unify.common.util.EnumUtils;
  * Workflow item version type enumeration.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @StaticList(name = "wfitemversiontypelist", description = "$m{staticlist.wfitemversiontypelist}")
 public enum WfItemVersionType implements EnumConst {

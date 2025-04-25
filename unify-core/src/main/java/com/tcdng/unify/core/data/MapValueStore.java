@@ -24,7 +24,7 @@ import com.tcdng.unify.core.format.Formatter;
  * A map value store.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class MapValueStore extends AbstractSingleObjectValueStore<Map<String, Object>> {
 

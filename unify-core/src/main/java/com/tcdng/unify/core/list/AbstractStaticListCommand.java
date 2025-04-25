@@ -28,7 +28,7 @@ import com.tcdng.unify.core.util.StringUtils;
  * Abstract base component for a static list list command.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractStaticListCommand extends AbstractZeroParamsListCommand {
 

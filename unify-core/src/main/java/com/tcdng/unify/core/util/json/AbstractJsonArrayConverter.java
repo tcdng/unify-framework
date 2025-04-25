@@ -25,7 +25,7 @@ import com.eclipsesource.json.JsonValue;
  * Abstract base JSON array converter,
  * 
  * @author Lateef
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractJsonArrayConverter<T> implements JsonValueConverter<T[]> {
 

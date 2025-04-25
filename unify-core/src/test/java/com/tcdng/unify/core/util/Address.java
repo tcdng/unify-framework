@@ -19,7 +19,7 @@ package com.tcdng.unify.core.util;
  * Test address data class.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class Address {
 

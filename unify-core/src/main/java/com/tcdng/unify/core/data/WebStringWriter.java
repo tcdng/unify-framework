@@ -24,7 +24,7 @@ import com.tcdng.unify.core.util.json.JsonUtils;
  * Web string writer.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class WebStringWriter extends LargeStringWriter {
 

@@ -29,7 +29,7 @@ import com.tcdng.unify.core.annotation.Configurable;
  * description values to form a list of listables, which is returned on execute.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractTypeListCommand<T extends UnifyComponent> extends AbstractZeroParamsListCommand {
 

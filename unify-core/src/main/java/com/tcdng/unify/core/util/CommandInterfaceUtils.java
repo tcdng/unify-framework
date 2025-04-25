@@ -22,7 +22,7 @@ import java.net.Socket;
  * Command interface utilities.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public final class CommandInterfaceUtils {
 

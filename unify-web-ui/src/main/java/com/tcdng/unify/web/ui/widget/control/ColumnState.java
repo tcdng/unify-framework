@@ -21,7 +21,7 @@ import com.tcdng.unify.core.UnifyException;
  * The state of a table column.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface ColumnState {
 

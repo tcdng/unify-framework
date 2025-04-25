@@ -20,7 +20,7 @@ package com.tcdng.unify.core.annotation;
  * Dynamic field type enumeration.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public enum DynamicFieldType {
     GENERATION,

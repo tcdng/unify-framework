@@ -20,7 +20,7 @@ package com.tcdng.unify.core;
  * Theme manager
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface ThemeManager extends UnifyComponent {
 

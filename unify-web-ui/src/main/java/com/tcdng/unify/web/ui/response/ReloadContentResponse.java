@@ -21,7 +21,7 @@ import com.tcdng.unify.core.annotation.Component;
  * Used for generating a reload/refresh entire page content response.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("reloadcontentresponse")
 public class ReloadContentResponse extends LoadContentResponse {

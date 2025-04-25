@@ -31,7 +31,7 @@ import com.tcdng.unify.web.ui.WebUIApplicationComponents;
  * Default widget command manager implementation.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(WebUIApplicationComponents.APPLICATION_UICOMMANDMANAGER)
 public class WidgetCommandManagerImpl extends AbstractUnifyComponent implements WidgetCommandManager {

@@ -22,7 +22,7 @@ import com.tcdng.unify.core.UnifyException;
  * Manages widget commands.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface WidgetCommandManager extends UnifyComponent {
 

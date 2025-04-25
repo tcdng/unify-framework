@@ -21,7 +21,7 @@ import java.util.List;
  * Test round robin.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class TestRoundRobin extends AbstractRoundRobin<Account> {
 

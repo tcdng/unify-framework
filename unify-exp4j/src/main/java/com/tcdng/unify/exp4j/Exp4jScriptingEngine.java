@@ -29,7 +29,7 @@ import net.objecthunter.exp4j.ExpressionBuilder;
  * Implementation of scripting engine using exp4j library.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(Exp4jApplicationComponents.EXP4J_SCRIPTINGENGINE)
 public class Exp4jScriptingEngine extends AbstractScriptingEngine {

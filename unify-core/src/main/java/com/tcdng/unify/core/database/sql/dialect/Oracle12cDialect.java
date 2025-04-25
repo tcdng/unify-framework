@@ -23,7 +23,7 @@ import com.tcdng.unify.core.database.sql.SqlDialectNameConstants;
  * Oracle 12c SQL dialect.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(name = SqlDialectNameConstants.ORACLE_12C, description = "$m{sqldialect.oracle12cdb}")
 public class Oracle12cDialect extends OracleDialect {

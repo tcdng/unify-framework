@@ -34,7 +34,7 @@ import com.tcdng.unify.core.util.DataUtils;
  * SQL distinct row list command.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("sqldistinctrowlist")
 public class DynamicSqlDistinctRowListCommand extends AbstractDynamicSqlDataSourceListCommand {

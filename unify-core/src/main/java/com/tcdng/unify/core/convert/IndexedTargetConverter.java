@@ -24,7 +24,7 @@ import com.tcdng.unify.core.data.IndexedTarget;
  * A value to indexed target converter.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class IndexedTargetConverter extends AbstractConverter<IndexedTarget> {
 

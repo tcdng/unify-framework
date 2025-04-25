@@ -26,7 +26,7 @@ import com.tcdng.unify.web.ui.widget.data.ColorLegendInfo;
  * Color legend.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-colorlegend")
 @UplAttributes({@UplAttribute(name = "columns", type = int.class, defaultVal = "1")})

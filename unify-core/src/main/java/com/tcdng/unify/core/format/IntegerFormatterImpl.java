@@ -24,7 +24,7 @@ import com.tcdng.unify.core.annotation.Component;
  * Default integer formatter implementation.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(name = "integerformat", description = "$m{format.integer}")
 public class IntegerFormatterImpl extends AbstractNumberFormatter<Integer> implements IntegerFormatter {

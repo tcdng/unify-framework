@@ -26,7 +26,7 @@ import com.tcdng.unify.core.annotation.Id;
  * Entity for storing cluster synchronization lock information.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Table("UNCLUSTERLOCK")
 public class ClusterLock extends AbstractSystemEntity {

@@ -27,7 +27,7 @@ import com.tcdng.unify.web.font.AbstractFontSymbolManager;
  * Font Awesome symbol manager.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(FontAwesomeApplicationComponents.FONTAWESOME_FONTSYMBOLMANAGER)
 public class FontAwesomeSymbolManager extends AbstractFontSymbolManager {

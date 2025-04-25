@@ -37,7 +37,7 @@ import com.tcdng.unify.core.util.json.JsonWriter;
  * user session context.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface ResponseWriter extends HtmlTextWriter { 
 

@@ -30,7 +30,7 @@ import com.tcdng.unify.core.annotation.Configurable;
  * Abstract HTTP client implementation.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractHttpClient extends AbstractUnifyComponent implements HttpClient {
 

@@ -27,7 +27,7 @@ import java.lang.annotation.Target;
  * have a String return type.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Documented
 @Target(ElementType.METHOD)

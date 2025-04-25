@@ -21,7 +21,7 @@ import com.tcdng.unify.common.constants.ConnectFieldDataType;
  * Entity field DTO.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class EntityFieldDTO {
 

@@ -28,7 +28,7 @@ import com.tcdng.unify.web.ui.AbstractPageResourceController;
  * Resource controller for fetching resources using streamer.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("/resource/streamer")
 public class StreamerResourceController extends AbstractPageResourceController {

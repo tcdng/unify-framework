@@ -24,7 +24,7 @@ import com.tcdng.unify.core.annotation.Taskable;
  * Proxy business service method information relay.
  * 
  * @author Lateef
- * @since 1.0
+ * @since 4.1
  */
 public interface ProxyBusinessServiceMethodRelay extends UnifyComponent {
 

@@ -22,7 +22,7 @@ import com.tcdng.unify.core.list.AbstractTypeListCommand;
  * Batch file read processor list command.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("batchfilereadprocessorlist")
 public class BatchFileReadProcessorListCommand extends AbstractTypeListCommand<BatchFileReadProcessor> {

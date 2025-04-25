@@ -22,7 +22,7 @@ import com.tcdng.unify.web.ui.AbstractPageBean;
  * System information page bean.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class SystemInfoPageBean extends AbstractPageBean {
 

@@ -35,7 +35,7 @@ import com.tcdng.unify.web.ui.widget.Widget;
  * Unique record page validation.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-uniquevalidation")
 @UplAttributes({ @UplAttribute(name = "type", type = Class.class),

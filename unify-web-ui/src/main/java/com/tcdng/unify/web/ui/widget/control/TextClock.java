@@ -25,7 +25,7 @@ import com.tcdng.unify.web.ui.widget.AbstractControl;
  * Represents a text clock.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-textclock")
 @UplAttributes({ @UplAttribute(name = "dateTitle", type = String.class, defaultVal = "$m{textclock.date.title}"),

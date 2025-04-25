@@ -27,7 +27,7 @@ import com.tcdng.unify.core.data.AbstractPool;
  * Cipher pool.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class CipherPool extends AbstractPool<Cipher> {
 

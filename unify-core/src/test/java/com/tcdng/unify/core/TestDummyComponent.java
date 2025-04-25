@@ -21,7 +21,7 @@ import com.tcdng.unify.core.annotation.Configurable;
  * Test dummy component.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Configurable("test-dummy")
 public class TestDummyComponent extends AbstractUnifyComponent {

@@ -27,7 +27,7 @@ import com.tcdng.unify.web.ui.widget.Widget;
  * Abstract base class for UI panel writers.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractPanelWriter extends AbstractContainerWriter implements PanelWriter {
 

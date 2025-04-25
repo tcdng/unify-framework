@@ -22,7 +22,7 @@ import com.tcdng.unify.core.data.FactoryMap;
  * Convenient abstract base class for alternative privilege providers
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractAlternativePrivilegeProvider extends AbstractUnifyComponent
 		implements AlternativePrivilegeProvider {

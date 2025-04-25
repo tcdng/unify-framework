@@ -26,7 +26,7 @@ import com.tcdng.unify.common.constants.ConnectEntityBaseType;
  * Annotation for specifying entity connection.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

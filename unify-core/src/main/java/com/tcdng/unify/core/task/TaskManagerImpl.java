@@ -47,7 +47,7 @@ import com.tcdng.unify.core.util.ReflectUtils;
  * Default implementation of a task manager.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(ApplicationComponents.APPLICATION_TASKMANAGER)
 public class TaskManagerImpl extends AbstractUnifyComponent implements TaskManager {

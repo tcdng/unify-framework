@@ -20,7 +20,7 @@ package com.tcdng.unify.core.task;
  * Task execution type.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public enum TaskExecType {
     RUN_IMMEDIATE, RUN_IMMEDIATE_BLOCK, RUN_AFTER, RUN_PERIODIC

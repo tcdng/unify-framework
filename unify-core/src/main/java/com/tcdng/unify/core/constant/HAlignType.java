@@ -24,7 +24,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * Horizontal alignment types.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Tooling(description = "Horizontal Alignment")
 @StaticList(name = "horizontalalignlist", description = "$m{staticlist.horizontalalignlist}")

@@ -23,7 +23,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * Tagged message type.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @StaticList(name = "taggedmessagetypelist", description="$m{staticlist.taggedmessagetypelist}")
 public enum TaggedMessageType implements EnumConst {

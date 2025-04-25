@@ -22,7 +22,7 @@ import com.tcdng.unify.web.ui.widget.AbstractListControl;
  * A label with a caption obtained by mapping bean value to a list value.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-listlabel")
 public class ListLabel extends AbstractListControl {

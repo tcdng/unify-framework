@@ -26,7 +26,7 @@ import com.tcdng.unify.web.ui.widget.panel.StandalonePanel;
  * A user interface page.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface Page extends StandalonePanel {
 

@@ -33,7 +33,7 @@ import com.tcdng.unify.web.ui.PageController;
  * Web application list command.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("webapplicationlist")
 public class WebApplicationListCommand extends AbstractZeroParamsListCommand {

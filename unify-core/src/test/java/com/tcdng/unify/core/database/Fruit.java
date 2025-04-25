@@ -23,7 +23,7 @@ import com.tcdng.unify.core.annotation.Column;
  * Test fruit entity.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Table(name = "FRUIT", uniqueConstraints = { @UniqueConstraint({ "name" }) })
 public class Fruit extends AbstractTestVersionedTableEntity {

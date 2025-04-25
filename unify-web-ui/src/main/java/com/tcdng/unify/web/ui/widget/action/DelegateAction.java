@@ -22,7 +22,7 @@ import com.tcdng.unify.web.ui.widget.AbstractPageAction;
  * Delegate action.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-delegate")
 public class DelegateAction extends AbstractPageAction {

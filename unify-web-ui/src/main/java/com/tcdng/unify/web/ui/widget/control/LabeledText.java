@@ -24,7 +24,7 @@ import com.tcdng.unify.web.ui.widget.AbstractFormattedControl;
  * A labeled text control.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-labeledtext")
 @UplAttributes({ @UplAttribute(name = "maxLen", type = int.class) })

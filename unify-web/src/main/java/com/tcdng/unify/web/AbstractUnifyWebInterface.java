@@ -21,7 +21,7 @@ import com.tcdng.unify.core.AbstractUnifyContainerInterface;
  * Abstract base for a unify web interface.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractUnifyWebInterface extends AbstractUnifyContainerInterface implements UnifyWebInterface {
 

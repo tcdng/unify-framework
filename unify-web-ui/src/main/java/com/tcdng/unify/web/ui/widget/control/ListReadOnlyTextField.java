@@ -26,7 +26,7 @@ import com.tcdng.unify.web.constant.ExtensionType;
  * List read-only text field.
  * 
  * @author Lateef Ojulari
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-listreadonlytext")
 @UplAttributes({

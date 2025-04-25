@@ -26,7 +26,7 @@ import com.tcdng.unify.core.constant.Gender;
  * Test author record.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Table(name = "AUTHOR")
 public class Author extends AbstractTestVersionedTableEntity {

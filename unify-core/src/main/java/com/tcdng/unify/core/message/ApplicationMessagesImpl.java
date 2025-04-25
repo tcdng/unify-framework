@@ -27,7 +27,7 @@ import com.tcdng.unify.core.annotation.Component;
  * Application messages implementation.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(ApplicationComponents.APPLICATION_MESSAGES)
 public class ApplicationMessagesImpl extends AbstractUnifyComponent implements ApplicationMessages {

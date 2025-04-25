@@ -30,7 +30,7 @@ import com.tcdng.unify.web.ui.DataTransferBlock;
  * Serves as a convenient base class for controls with formatted data.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @UplAttributes({
 		@UplAttribute(name = "resolve", type = boolean.class, defaultVal = "false"),

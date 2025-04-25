@@ -24,7 +24,7 @@ import com.tcdng.unify.core.annotation.Tooling;
  * Default implementation of a byte array cryptograph.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Tooling(description = "Default Two-way Bytes Cryptograph")
 @Component(ApplicationComponents.APPLICATION_BYTEARRAYCRYPTOGRAPH)

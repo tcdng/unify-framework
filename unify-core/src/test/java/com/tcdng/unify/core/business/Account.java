@@ -23,7 +23,7 @@ import com.tcdng.unify.core.database.AbstractTestVersionedTableEntity;
  * Account entity.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Table
 public class Account extends AbstractTestVersionedTableEntity {

@@ -26,7 +26,7 @@ import com.tcdng.unify.web.ui.widget.AbstractControl;
  * A text area widget.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-textarea")
 @UplAttributes({

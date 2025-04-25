@@ -28,7 +28,7 @@ import com.tcdng.unify.core.util.StringUtils;
  * A bulk SMS object.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class BulkSms {
 

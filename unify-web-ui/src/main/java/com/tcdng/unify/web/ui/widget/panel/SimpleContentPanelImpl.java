@@ -28,7 +28,7 @@ import com.tcdng.unify.web.ui.widget.Page;
  * Simple content panel.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-simplecontentpanel")
 public class SimpleContentPanelImpl extends AbstractContentPanel {

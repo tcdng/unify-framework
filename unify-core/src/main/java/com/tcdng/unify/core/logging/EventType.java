@@ -23,7 +23,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * Supported event types.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @StaticList(name = "auditactionlist", description="$m{staticlist.auditactionlist}")
 public enum EventType implements EnumConst {

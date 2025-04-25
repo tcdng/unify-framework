@@ -19,7 +19,7 @@ package com.tcdng.unify.core.system;
  * Sequence number test task constants.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface SequenceTestTaskConstants {
 

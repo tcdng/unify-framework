@@ -23,7 +23,7 @@ import com.tcdng.unify.common.constants.AbstractUnifyStaticSettings;
  * Unify web static settings.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @AutoDetect
 public class UnifyWebStaticSettings extends AbstractUnifyStaticSettings {

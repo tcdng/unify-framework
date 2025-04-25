@@ -19,7 +19,7 @@ package com.tcdng.unify.core.util;
  * Property information.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class PropertyInfo implements Comparable<PropertyInfo> {
 

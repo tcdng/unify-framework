@@ -23,7 +23,7 @@ import com.tcdng.unify.web.ui.widget.AbstractDocument;
  * Basic document.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-document")
 public class BasicDocument extends AbstractDocument {

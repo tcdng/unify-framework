@@ -25,7 +25,7 @@ import com.tcdng.unify.common.annotation.AnnotationConstants;
  * Used to declare a UPL attribute for a component.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

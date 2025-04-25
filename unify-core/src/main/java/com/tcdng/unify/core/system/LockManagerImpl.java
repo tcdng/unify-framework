@@ -39,7 +39,7 @@ import com.tcdng.unify.core.util.ThreadUtils;
  * Lock manager implementation.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(ApplicationComponents.APPLICATION_LOCKMANAGER)
 public class LockManagerImpl extends AbstractUnifyComponent implements LockManager {

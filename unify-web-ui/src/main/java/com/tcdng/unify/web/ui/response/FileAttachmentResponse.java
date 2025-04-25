@@ -27,7 +27,7 @@ import com.tcdng.unify.web.ui.AbstractOpenWindowPageControllerResponse;
  * File attachment response
  *
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("fileattachmentresponse")
 public class FileAttachmentResponse extends AbstractOpenWindowPageControllerResponse {

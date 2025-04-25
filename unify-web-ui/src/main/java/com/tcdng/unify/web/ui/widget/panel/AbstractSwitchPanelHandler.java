@@ -23,7 +23,7 @@ import com.tcdng.unify.core.UnifyException;
  * Convenient abstract base class for switch panel handlers.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractSwitchPanelHandler extends AbstractUnifyComponent implements SwitchPanelHandler {
 

@@ -22,7 +22,7 @@ import com.tcdng.unify.core.list.AbstractStaticListCommand;
  * Rich text font size list command.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("richtextfontsizelist")
 public class RichTextFontSizeListCommand extends AbstractStaticListCommand {

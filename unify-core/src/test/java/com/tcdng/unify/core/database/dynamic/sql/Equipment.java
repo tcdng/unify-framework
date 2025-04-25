@@ -23,7 +23,7 @@ import com.tcdng.unify.core.database.AbstractTestVersionedTableEntity;
  * Extensible equipment entity.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Table(name = "EXT_EQUIPMENT")
 public class Equipment extends AbstractTestVersionedTableEntity {

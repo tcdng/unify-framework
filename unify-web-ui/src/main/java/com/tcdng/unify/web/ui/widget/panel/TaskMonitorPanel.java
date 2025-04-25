@@ -27,7 +27,7 @@ import com.tcdng.unify.web.ui.widget.data.TaskMonitorInfo;
  * Represents a task monitor box panel.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-taskmonitorpanel")
 @UplBinding("web/panels/upl/taskmonitorpanel.upl")

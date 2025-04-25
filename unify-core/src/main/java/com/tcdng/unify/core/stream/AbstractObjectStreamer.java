@@ -29,7 +29,7 @@ import com.tcdng.unify.core.constant.PrintFormat;
  * Convenient base class for object streamer.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractObjectStreamer extends AbstractUnifyComponent implements ObjectStreamer {
 

@@ -25,7 +25,7 @@ import com.tcdng.unify.core.UnifyException;
  * XML object read/write.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface XmlObjectStreamer extends ObjectStreamer {
 

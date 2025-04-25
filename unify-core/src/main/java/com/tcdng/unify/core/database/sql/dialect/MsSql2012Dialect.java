@@ -23,7 +23,7 @@ import com.tcdng.unify.core.database.sql.SqlDialectNameConstants;
  * MS SQL 2012 dialect.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(name = SqlDialectNameConstants.MSSQL_2012, description = "$m{sqldialect.mssql2012db}")
 public class MsSql2012Dialect extends MsSqlDialect {

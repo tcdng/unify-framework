@@ -28,7 +28,7 @@ import com.tcdng.unify.web.ui.widget.writer.AbstractPanelWriter;
  * Detached panel writer.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Writes(DetachedPanel.class)
 @Component("detachedpanel-writer")

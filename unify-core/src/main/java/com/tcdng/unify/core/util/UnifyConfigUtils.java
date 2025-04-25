@@ -51,7 +51,7 @@ import com.tcdng.unify.core.util.xml.UnifyConfig;
  * Provides utility methods for reading framework configuration.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public final class UnifyConfigUtils {
 

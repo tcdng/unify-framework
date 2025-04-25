@@ -22,7 +22,7 @@ import com.tcdng.unify.core.UnifyException;
  * Convenient abstract base class for file attachment handler.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractFileAttachmentHandler extends AbstractUnifyComponent implements FileAttachmentHandler {
 

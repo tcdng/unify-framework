@@ -31,7 +31,7 @@ import com.tcdng.unify.web.ui.widget.writer.AbstractControlWriter;
  * Palette writer.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Writes(Palette.class)
 @Component("palette-writer")

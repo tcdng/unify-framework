@@ -22,7 +22,7 @@ import com.tcdng.unify.core.list.AbstractTypeListCommand;
  * Report servers list command.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("reportservertypelist")
 public class ReportServerTypeListCommand extends AbstractTypeListCommand<ReportServer> {

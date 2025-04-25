@@ -26,7 +26,7 @@ import com.tcdng.unify.core.database.AbstractEntityPolicy;
  * User session tracking entity.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("usersessiontracking-entitypolicy")
 public class UserSessionTrackingPolicy extends AbstractEntityPolicy {

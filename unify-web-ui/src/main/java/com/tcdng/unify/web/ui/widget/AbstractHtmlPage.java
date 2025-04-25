@@ -28,7 +28,7 @@ import com.tcdng.unify.core.annotation.UplAttributes;
  * Abstract user interface document.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @UplAttributes({
 		@UplAttribute(name = "styleSheet", type = String[].class),

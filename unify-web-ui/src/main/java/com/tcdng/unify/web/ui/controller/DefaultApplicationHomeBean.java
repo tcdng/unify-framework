@@ -22,7 +22,7 @@ import com.tcdng.unify.web.ui.AbstractPageBean;
  * Default application home page bean.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class DefaultApplicationHomeBean extends AbstractPageBean {
 

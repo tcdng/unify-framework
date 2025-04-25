@@ -25,7 +25,7 @@ import com.tcdng.unify.web.ui.widget.ResponseWriter;
  * Closes current browser window/tab.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("closewindowresponse")
 public class CloseWindowResponse extends AbstractJsonPageControllerResponse {

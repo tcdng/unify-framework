@@ -31,7 +31,7 @@ import com.tcdng.unify.core.chart.SingleValueSeries;
  * XChart simple dial generator.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(XChartApplicationComponents.XCHART_SIMPLEDIALGENERATOR)
 public class SimpleDialGeneratorUnit extends AbstractXChartGeneratorUnit<SimpleDialChart> {

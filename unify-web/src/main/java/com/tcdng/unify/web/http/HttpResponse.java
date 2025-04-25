@@ -24,7 +24,7 @@ import java.io.PrintWriter;
  * HTTP response.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface HttpResponse {
     

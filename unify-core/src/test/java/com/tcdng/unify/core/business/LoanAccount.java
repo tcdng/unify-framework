@@ -25,7 +25,7 @@ import com.tcdng.unify.core.database.AbstractTestVersionedTableEntity;
  * Load account entity.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Table
 public class LoanAccount extends AbstractTestVersionedTableEntity {

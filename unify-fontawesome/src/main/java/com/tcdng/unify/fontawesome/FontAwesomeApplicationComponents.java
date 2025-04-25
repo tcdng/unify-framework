@@ -19,7 +19,7 @@ package com.tcdng.unify.fontawesome;
  * Font Awesome application components.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface FontAwesomeApplicationComponents {
 

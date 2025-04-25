@@ -26,7 +26,7 @@ import com.tcdng.unify.common.constants.EnumConst;
  * Convenient abstract enumeration constants serializer adapter class.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractEnumConstSerializer<T extends EnumConst> extends JsonSerializer<T> {
 

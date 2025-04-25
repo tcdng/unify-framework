@@ -22,7 +22,7 @@ import com.tcdng.unify.web.ui.widget.AbstractPage;
  * Default implementation of a page.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-page")
 public class BasicPage extends AbstractPage {

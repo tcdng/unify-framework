@@ -37,7 +37,7 @@ import jakarta.servlet.ServletContext;
  * Credits to <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class HttpWebTypeUtils extends TypeUtils {
 

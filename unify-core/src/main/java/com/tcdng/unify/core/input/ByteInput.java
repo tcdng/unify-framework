@@ -22,7 +22,7 @@ import com.tcdng.unify.core.data.Input;
  * Byte input.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class ByteInput extends Input<Byte> {
 

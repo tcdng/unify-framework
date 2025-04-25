@@ -24,7 +24,7 @@ import com.tcdng.unify.web.remotecall.RemoteCallResult;
  * Remote action.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class RemoteAction extends Action {
 

@@ -26,7 +26,7 @@ import com.tcdng.unify.core.upl.UplElementReferences;
  * Simple test UPL component.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("test-uplelementa")
 @UplAttributes({ @UplAttribute(name = "name", type = String.class),

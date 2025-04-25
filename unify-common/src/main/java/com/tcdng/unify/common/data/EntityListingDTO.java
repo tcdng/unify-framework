@@ -19,7 +19,7 @@ package com.tcdng.unify.common.data;
  * Entity listing DTO.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class EntityListingDTO {
 

@@ -34,7 +34,7 @@ import com.tcdng.unify.core.data.PackableDocConfig.FieldConfig;
  * Packable document configuration builder tests.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class PackableDocConfigTest {
 

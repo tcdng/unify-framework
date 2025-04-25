@@ -23,7 +23,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * Constant definitions for frequency units.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @StaticList(name = "frequencyunitlist", description="$m{staticlist.frequencyunitlist}")
 public enum FrequencyUnit implements EnumConst {

@@ -19,7 +19,7 @@ package com.tcdng.unify.core.annotation;
  * Transaction attribute enumeration.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public enum TransactionAttribute {
     REQUIRED, REQUIRES_NEW, SUPPORTS, NOT_SUPPORTED, MANDATORY, NEVER

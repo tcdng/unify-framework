@@ -24,7 +24,7 @@ import java.util.Set;
  * A fluent generic map.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class FluentMap<T, U> {
 

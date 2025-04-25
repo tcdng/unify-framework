@@ -29,7 +29,7 @@ import com.tcdng.unify.web.ui.widget.Control;
  * A table that allows users to shift row contents up or down.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-rack")
 @UplAttributes({

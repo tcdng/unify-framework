@@ -32,7 +32,7 @@ import com.tcdng.unify.core.util.FilterUtils;
  * String field condition list command.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("stringfieldconditionlist")
 public class StringFieldConditionListCommand extends AbstractZeroParamsListCommand {

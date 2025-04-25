@@ -26,7 +26,7 @@ import com.tcdng.unify.web.ui.widget.AbstractControl;
  * of bean property the control is tied to.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-swappableimage")
 @UplAttributes({ @UplAttribute(name = "src", type = String[].class, mandatory = true),

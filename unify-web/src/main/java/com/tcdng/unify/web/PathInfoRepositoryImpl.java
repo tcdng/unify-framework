@@ -34,7 +34,7 @@ import com.tcdng.unify.web.util.WebPathUtils;
  * Default path information repository implementation.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(WebApplicationComponents.APPLICATION_PATHINFOREPOSITORY)
 public class PathInfoRepositoryImpl extends AbstractUnifyComponent implements PathInfoRepository {

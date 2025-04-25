@@ -26,7 +26,7 @@ import com.tcdng.unify.core.upl.UplElementReferences;
  * Test document UPL element.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("test-upldocumenta")
 @UplBinding("com/tcdng/unify/core/resources/test-upldocumenta.upl")

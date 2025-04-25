@@ -28,7 +28,7 @@ import com.tcdng.unify.core.criterion.RestrictionType;
  * Author view-only entity.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @View(
     name = "V_AUTHORVIEW", primaryAlias = "t1",

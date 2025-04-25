@@ -27,7 +27,7 @@ import com.tcdng.unify.common.annotation.AnnotationConstants;
  * Annotation that indicates a type is available for tooling.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

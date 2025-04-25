@@ -23,7 +23,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * Restriction type enumeration.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @StaticList(name = "restrictiontypelist", description="$m{staticlist.restrictiontypelist}")
 public enum RestrictionType implements EnumConst {

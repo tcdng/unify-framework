@@ -30,7 +30,7 @@ import com.tcdng.unify.web.ui.widget.control.ControlColorMode;
  * Abstract user interface control.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @UplAttributes({
 		@UplAttribute(name = "focus", type = boolean.class),

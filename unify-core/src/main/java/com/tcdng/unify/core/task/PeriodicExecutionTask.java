@@ -23,7 +23,7 @@ import com.tcdng.unify.core.annotation.Component;
  * Periodic execution task.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(PeriodicExecutionTaskConstants.PERIODIC_METHOD_TASK)
 public class PeriodicExecutionTask extends AbstractTask {

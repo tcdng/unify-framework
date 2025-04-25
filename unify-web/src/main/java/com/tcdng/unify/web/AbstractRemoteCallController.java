@@ -40,7 +40,7 @@ import com.tcdng.unify.web.remotecall.RemoteCallXmlMessageStreamer;
  * Convenient base class for remote call controller.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractRemoteCallController extends AbstractController implements RemoteCallController {
 

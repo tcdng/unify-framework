@@ -27,7 +27,7 @@ import com.tcdng.unify.core.util.TokenUtils;
  * Default theme manager implementation.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(WebApplicationComponents.APPLICATION_THEMEMANAGER)
 public class ThemeManagerImpl extends AbstractUnifyComponent implements ThemeManager {

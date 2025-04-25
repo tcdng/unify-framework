@@ -36,7 +36,7 @@ import com.tcdng.unify.core.stream.AbstractObjectStreamer;
  * Remote call tagged binary message streamer.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("rc-binarymessagestreamer")
 public class RemoteCallBinaryMessageStreamerImpl extends AbstractObjectStreamer

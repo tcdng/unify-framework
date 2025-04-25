@@ -23,7 +23,7 @@ import com.tcdng.unify.convert.util.ConverterUtils;
  * A value to long converter.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class LongConverter extends AbstractConverter<Long> {
 

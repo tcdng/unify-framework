@@ -34,7 +34,7 @@ import com.tcdng.unify.web.ui.widget.WriteWork;
  * Represents an input field for capturing money.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-money")
 @UplAttributes({ @UplAttribute(name = "currency", type = String.class),

@@ -33,7 +33,7 @@ import com.tcdng.unify.web.ui.widget.writer.AbstractControlWriter;
  * Multi-select writer.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Writes(MultiSelect.class)
 @Component("multiselect-writer")

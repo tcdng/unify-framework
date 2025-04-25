@@ -23,7 +23,7 @@ import com.tcdng.unify.core.format.Formatter;
  * Report formatter store.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface ReportFormatterStore extends UnifyComponent {
 

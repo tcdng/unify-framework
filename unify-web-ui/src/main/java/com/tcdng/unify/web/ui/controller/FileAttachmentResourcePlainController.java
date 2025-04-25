@@ -21,7 +21,7 @@ import com.tcdng.unify.core.annotation.Component;
  * Resource controller for file attachment.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("/resource/fileattachment/plain")
 public class FileAttachmentResourcePlainController extends FileAttachmentResourceController {

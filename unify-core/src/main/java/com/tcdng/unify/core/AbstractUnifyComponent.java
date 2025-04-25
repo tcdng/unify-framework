@@ -59,7 +59,7 @@ import com.tcdng.unify.core.util.ValueStoreUtils;
  * {@link Singleton} annotation.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Singleton(true)
 public abstract class AbstractUnifyComponent implements UnifyComponent {

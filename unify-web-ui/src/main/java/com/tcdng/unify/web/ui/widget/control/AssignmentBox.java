@@ -31,7 +31,7 @@ import com.tcdng.unify.web.ui.widget.Control;
  * and already assigned items.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-assignmentbox")
 @UplAttributes({ @UplAttribute(name = "filterList1", type = String.class),

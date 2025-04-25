@@ -27,7 +27,7 @@ import com.tcdng.unify.core.annotation.TenantId;
  * Test company account record.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Table(name = "COMPANY_ACCOUNT")
 @UniqueConstraints({

@@ -26,7 +26,7 @@ import com.tcdng.unify.core.UnifyException;
  * Type used for generating a specific type of chart.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface ChartGeneratorUnit<T extends Chart> extends UnifyComponent {
 

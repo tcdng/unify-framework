@@ -21,7 +21,7 @@ import com.tcdng.unify.core.annotation.Component;
  * Default percent formatter implementation.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(name = "percentformat", description = "$m{format.percent}")
 public class PercentFormatterImpl extends DecimalFormatterImpl implements PercentFormatter {

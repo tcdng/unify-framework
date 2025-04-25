@@ -22,7 +22,7 @@ import com.tcdng.unify.common.constants.EnumConst;
  * String token type.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @StaticList(name = "stringtokentypelist", description="$m{staticlist.stringtokentypelist}")
 public enum StringTokenType implements EnumConst {

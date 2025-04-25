@@ -35,7 +35,7 @@ import com.tcdng.unify.web.remotecall.RemoteCallResult;
  * Default API discovery manager implementation.
  * 
  * @author Lateef
- * @since 1.0
+ * @since 4.1
  */
 @Component(WebApplicationComponents.APPLICATION_APIDISCOVERYMANAGER)
 public class APIDiscoveryManagerImpl extends AbstractUnifyComponent implements APIDiscoveryManager {

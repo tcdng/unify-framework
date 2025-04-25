@@ -23,7 +23,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * Supported SQL table type enumeration.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @StaticList(name = "sqltabletypelist", description="$m{staticlist.sqltabletypelist}")
 public enum SqlTableType implements EnumConst {

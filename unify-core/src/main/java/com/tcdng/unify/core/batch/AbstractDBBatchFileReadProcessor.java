@@ -28,7 +28,7 @@ import com.tcdng.unify.core.util.ReflectUtils;
  * Convenient base class for database batch file read processor.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractDBBatchFileReadProcessor<T extends BatchRecord, U extends BatchItemRecord>
         extends AbstractBatchFileReadProcessor implements DBBatchFileReadProcessor {

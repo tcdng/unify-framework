@@ -24,7 +24,7 @@ import com.tcdng.unify.web.ui.widget.PropertyInfo;
  * Encapsulates information about a resource controller.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class ResourceControllerInfo extends UIControllerInfo {
 

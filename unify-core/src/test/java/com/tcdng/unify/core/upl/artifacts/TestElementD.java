@@ -24,7 +24,7 @@ import com.tcdng.unify.core.upl.AbstractUplComponent;
  * Test document D
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("test-uplelementd")
 @UplAttributes({ @UplAttribute(name = "names", type = String[].class, mandatory = true) })

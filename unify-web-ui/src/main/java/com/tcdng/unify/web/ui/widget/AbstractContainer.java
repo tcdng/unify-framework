@@ -36,7 +36,7 @@ import com.tcdng.unify.web.ui.widget.data.Popup;
  * Abstract user interface container.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @UplAttributes({ @UplAttribute(name = "layout", type = Layout.class),
         @UplAttribute(name = "components", type = UplElementReferences.class),

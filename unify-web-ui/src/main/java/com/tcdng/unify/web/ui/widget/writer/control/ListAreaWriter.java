@@ -28,7 +28,7 @@ import com.tcdng.unify.web.ui.widget.writer.AbstractControlWriter;
  * List area writer.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Writes(ListArea.class)
 @Component("listarea-writer")

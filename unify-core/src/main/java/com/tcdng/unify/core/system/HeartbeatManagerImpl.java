@@ -39,7 +39,7 @@ import com.tcdng.unify.core.util.CalendarUtils;
  * Heartbeat manager implementation.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(ApplicationComponents.APPLICATION_HEARTBEATMANAGER)
 public class HeartbeatManagerImpl extends AbstractBusinessService implements HeartbeatManager {

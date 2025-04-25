@@ -27,7 +27,7 @@ import com.tcdng.unify.web.ui.widget.writer.DocumentLayoutWriter;
  * Abstract base class for UI document layout writers.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractDocumentLayoutWriter extends AbstractDhtmlWriter implements DocumentLayoutWriter {
 

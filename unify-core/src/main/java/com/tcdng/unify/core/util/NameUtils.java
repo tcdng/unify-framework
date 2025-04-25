@@ -21,7 +21,7 @@ import com.tcdng.unify.common.database.Entity;
  * Provides utility methods for naming.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public final class NameUtils {
 

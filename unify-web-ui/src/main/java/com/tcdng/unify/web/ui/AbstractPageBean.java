@@ -23,7 +23,7 @@ import com.tcdng.unify.core.util.DataUtils;
  * Convenient base class for page bean.
  *  
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractPageBean implements PageBean {
 

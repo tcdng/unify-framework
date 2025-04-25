@@ -51,7 +51,7 @@ import com.tcdng.unify.core.util.StringUtils;
  * Default implementation of SQL schema manager.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(ApplicationComponents.APPLICATION_SQLSCHEMAMANAGER)
 public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {

@@ -26,7 +26,7 @@ import com.tcdng.unify.core.database.sql.AbstractSqlDataTypePolicy;
  * Character data type SQL policy.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class CharacterPolicy extends AbstractSqlDataTypePolicy {
 

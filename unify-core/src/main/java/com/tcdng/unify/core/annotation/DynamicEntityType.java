@@ -20,7 +20,7 @@ package com.tcdng.unify.core.annotation;
  * Dynamic entity type enumeration.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public enum DynamicEntityType {
     TABLE,

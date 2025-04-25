@@ -27,7 +27,7 @@ import com.tcdng.unify.common.annotation.AnnotationConstants;
  * Annotation for indicating a type or field is mapped.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Documented
 @Target({ElementType.TYPE, ElementType.FIELD})

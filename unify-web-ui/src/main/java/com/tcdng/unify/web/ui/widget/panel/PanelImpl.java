@@ -22,7 +22,7 @@ import com.tcdng.unify.web.ui.widget.AbstractPanel;
  * Basic panel implementation.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-panel")
 public class PanelImpl extends AbstractPanel {

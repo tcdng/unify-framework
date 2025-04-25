@@ -24,7 +24,7 @@ import com.tcdng.unify.web.ui.constant.MessageType;
  * Alert warning control.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-alertwarning")
 @UplAttributes({

@@ -22,7 +22,7 @@ import com.tcdng.unify.core.annotation.UplBinding;
  * Abstract in-memory rack CRUD panel.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @UplBinding("web/panels/upl/inmemoryrackcrudpanel.upl")
 public abstract class AbstractInMemoryRackCrudPanel<T extends Entity> extends AbstractInMemoryTableCrudPanel<T> {

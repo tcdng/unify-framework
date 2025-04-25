@@ -27,7 +27,7 @@ import com.tcdng.unify.core.annotation.Policy;
  * User session entity.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Policy("usersessiontracking-entitypolicy")
 @Table("UNUSERSESSION")

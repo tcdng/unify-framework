@@ -25,7 +25,7 @@ import com.tcdng.unify.web.ui.widget.AbstractMultiControl;
  * Title bar with basic controls.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-titlebar")
 @UplAttributes({ @UplAttribute(name = "draggable", type = boolean.class, defaultVal = "false") })

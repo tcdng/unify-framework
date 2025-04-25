@@ -59,7 +59,7 @@ import com.tcdng.unify.core.util.UnifyConfigUtils;
  * Default implementation of a UPL simple descriptor compiler.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(ApplicationComponents.APPLICATION_UPLCOMPILER)
 public class UplCompilerImpl extends AbstractUnifyComponent implements UplCompiler {

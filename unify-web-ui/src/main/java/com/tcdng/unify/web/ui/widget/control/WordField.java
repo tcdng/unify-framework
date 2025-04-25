@@ -21,7 +21,7 @@ import com.tcdng.unify.core.annotation.Component;
  * An input text field that allows only alphabetic characters.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-word")
 public class WordField extends TextField {

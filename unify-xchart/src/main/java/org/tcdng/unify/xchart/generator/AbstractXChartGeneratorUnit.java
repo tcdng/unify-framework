@@ -37,7 +37,7 @@ import com.tcdng.unify.core.util.DataUtils;
  * Abstract base class for XChart chart generator units.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractXChartGeneratorUnit<T extends Chart> extends AbstractChartGeneratorUnit<T> {
 

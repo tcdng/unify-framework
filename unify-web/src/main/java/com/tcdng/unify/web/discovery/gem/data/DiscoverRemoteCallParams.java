@@ -24,7 +24,7 @@ import com.tcdng.unify.web.remotecall.RemoteCallParams;
  * Discover remote call parameters.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @JacksonXmlRootElement
 public class DiscoverRemoteCallParams extends RemoteCallParams {

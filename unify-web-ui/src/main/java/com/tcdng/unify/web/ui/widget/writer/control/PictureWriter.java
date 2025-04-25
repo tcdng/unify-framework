@@ -28,7 +28,7 @@ import com.tcdng.unify.web.ui.widget.writer.AbstractAutoRefreshMultiControlWrite
  * Picture writer.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Writes(Picture.class)
 @Component("picture-writer")

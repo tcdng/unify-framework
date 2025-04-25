@@ -20,7 +20,7 @@ package com.tcdng.unify.jasperreports.server;
  * Book test class.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class Book {
 

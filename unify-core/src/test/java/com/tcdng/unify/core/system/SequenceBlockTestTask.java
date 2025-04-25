@@ -26,7 +26,7 @@ import com.tcdng.unify.core.task.TaskMonitor;
  * Sequence block test task.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("clustersequenceblock-test")
 public class SequenceBlockTestTask extends AbstractTask {

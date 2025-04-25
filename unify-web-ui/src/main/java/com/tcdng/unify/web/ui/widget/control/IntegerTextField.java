@@ -24,7 +24,7 @@ import com.tcdng.unify.core.annotation.UplAttributes;
  * An input text field that allows only digits.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-integertext")
 @UplAttributes({ @UplAttribute(name = "acceptPlus", type = boolean.class),

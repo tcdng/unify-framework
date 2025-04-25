@@ -19,7 +19,7 @@ package com.tcdng.unify.core;
  * Role privilege manager.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface RolePrivilegeManager extends UnifyComponent {
 	

@@ -24,7 +24,7 @@ import com.tcdng.unify.core.annotation.Component;
  * Default implementation of a two-factor authentication service.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(ApplicationComponents.APPLICATION_TWOFACTORAUTHENTICATIONSERVICE)
 public class TwoFactorAutenticationServiceImpl extends AbstractTwoFactorAutenticationService {

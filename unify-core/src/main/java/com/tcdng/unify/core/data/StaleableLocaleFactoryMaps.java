@@ -19,7 +19,7 @@ package com.tcdng.unify.core.data;
  * An abstract generic staleable locale map of generic factory maps.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class StaleableLocaleFactoryMaps<T, U> extends LocaleFactoryMaps<T, U> {
 

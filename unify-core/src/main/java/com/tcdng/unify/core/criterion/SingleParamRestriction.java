@@ -20,7 +20,7 @@ package com.tcdng.unify.core.criterion;
  * Single parameter restriction object.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface SingleParamRestriction extends SimpleRestriction {
 

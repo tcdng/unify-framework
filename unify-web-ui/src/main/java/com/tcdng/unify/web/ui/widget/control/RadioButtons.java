@@ -22,7 +22,7 @@ import com.tcdng.unify.web.ui.widget.AbstractGroupListControl;
  * A group of radio buttons that allows single selection.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-radiobuttons")
 public class RadioButtons extends AbstractGroupListControl {

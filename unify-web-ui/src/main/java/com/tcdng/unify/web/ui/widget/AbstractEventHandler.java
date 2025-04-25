@@ -24,7 +24,7 @@ import com.tcdng.unify.core.upl.UplElementReferences;
  * Serves as a base class for an event handler.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @UplAttributes({
 	@UplAttribute(name = "event", type = String.class, mandatory = true),

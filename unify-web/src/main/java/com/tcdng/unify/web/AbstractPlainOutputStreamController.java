@@ -27,7 +27,7 @@ import com.tcdng.unify.core.constant.MimeType;
  * Abstract plain output stream controller.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractPlainOutputStreamController extends AbstractPlainController {
 

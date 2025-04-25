@@ -31,7 +31,7 @@ import com.tcdng.unify.web.ui.widget.writer.AbstractControlWriter;
  * Text area writer.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Writes(TextArea.class)
 @Component("textarea-writer")

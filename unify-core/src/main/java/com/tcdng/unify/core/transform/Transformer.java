@@ -22,7 +22,7 @@ import com.tcdng.unify.core.UnifyException;
  * Used for transforming between two types.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface Transformer<U, V> extends UnifyComponent {
     /**

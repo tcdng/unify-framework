@@ -21,7 +21,7 @@ import com.tcdng.unify.core.annotation.Component;
  * Resource controller for fetching resources from application or session scope.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("/resource/scope/plain")
 public class ScopeResourcePlainController extends ScopeResourceController {

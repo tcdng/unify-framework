@@ -29,7 +29,7 @@ import com.tcdng.unify.core.data.ListNumberData;
  * Hours list command.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("hourslist")
 public class HoursListCommand extends AbstractZeroParamsListCommand {

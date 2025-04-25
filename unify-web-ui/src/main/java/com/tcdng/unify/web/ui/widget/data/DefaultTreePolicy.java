@@ -23,7 +23,7 @@ import com.tcdng.unify.web.ui.WebUIApplicationComponents;
  * Default implementation of a tree policy.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(WebUIApplicationComponents.APPLICATION_DEFAULT_TREEPOLICY)
 public class DefaultTreePolicy extends AbstractTreePolicy {

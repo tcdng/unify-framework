@@ -21,7 +21,7 @@ import com.tcdng.unify.common.util.EnumUtils;
  * Standard format type.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public enum StandardFormatType implements EnumConst  {
 	

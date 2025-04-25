@@ -45,7 +45,7 @@ import com.tcdng.unify.core.util.IOUtils;
  * implement a single {@link #doGenerateReport(Report, OutputStream)} method.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractReportServer extends AbstractUnifyComponent
 		implements ReportServer, ReportFormatterStore {

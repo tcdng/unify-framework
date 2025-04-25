@@ -26,7 +26,7 @@ import com.tcdng.unify.web.remotecall.RemoteCallResult;
  * Test account detail result.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @JacksonXmlRootElement(localName = "accountDetailResult")
 @JsonPropertyOrder({ "accountNo", "accountName", "balance" })

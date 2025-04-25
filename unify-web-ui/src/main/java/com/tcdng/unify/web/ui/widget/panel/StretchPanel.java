@@ -24,7 +24,7 @@ import com.tcdng.unify.web.ui.widget.AbstractPanel;
  * page resize.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-stretchpanel")
 public class StretchPanel extends AbstractPanel {

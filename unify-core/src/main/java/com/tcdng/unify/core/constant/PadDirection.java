@@ -23,7 +23,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * Character padding direction constants.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @StaticList(name = "paddirectionlist", description="$m{staticlist.paddirectionlist}")
 public enum PadDirection implements EnumConst {

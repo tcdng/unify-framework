@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
  * Used for indicating a component is a plug-in.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

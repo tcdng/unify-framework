@@ -23,7 +23,7 @@ import com.tcdng.unify.core.UnifyException;
  * Convenient base class for a tagged XML message consumer.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractTaggedXmlMessageConsumer extends AbstractUnifyComponent
         implements TaggedXmlMessageConsumer {

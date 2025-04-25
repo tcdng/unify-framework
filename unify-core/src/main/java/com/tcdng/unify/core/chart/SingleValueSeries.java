@@ -22,7 +22,7 @@ import java.awt.Color;
  * Single value series object.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class SingleValueSeries {
 

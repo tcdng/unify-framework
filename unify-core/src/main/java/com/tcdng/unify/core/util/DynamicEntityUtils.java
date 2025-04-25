@@ -56,7 +56,7 @@ import com.tcdng.unify.core.database.dynamic.DynamicUniqueConstraintInfo;
  * Dynamic entity utilities.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public final class DynamicEntityUtils {
 

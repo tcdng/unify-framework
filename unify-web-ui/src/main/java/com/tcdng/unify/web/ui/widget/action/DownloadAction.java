@@ -24,7 +24,7 @@ import com.tcdng.unify.web.ui.widget.AbstractPageAction;
  * Download action.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-download")
 @UplAttributes({ @UplAttribute(name = "resource", type = String.class, mandatory = true) })

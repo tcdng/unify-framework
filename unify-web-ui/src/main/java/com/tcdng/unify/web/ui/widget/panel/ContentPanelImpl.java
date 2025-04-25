@@ -43,7 +43,7 @@ import com.tcdng.unify.web.ui.widget.Widget;
  * {@link LoadContentResponse} and {@link HintUserResponse}
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-contentpanel")
 @UplAttributes({ @UplAttribute(name = "documentPath", type = String.class),

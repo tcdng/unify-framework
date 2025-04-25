@@ -34,7 +34,7 @@ import com.tcdng.unify.web.ui.AbstractPageResourceController;
  * class-loader path or exact path.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("/resource/file")
 public class FileResourceController extends AbstractPageResourceController {

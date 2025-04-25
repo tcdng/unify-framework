@@ -24,7 +24,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * Constant definitions for requirement type.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Tooling(description = "Requirement Type")
 @StaticList(name = "requirementtypelist", description="$m{staticlist.requirementtypelist}")

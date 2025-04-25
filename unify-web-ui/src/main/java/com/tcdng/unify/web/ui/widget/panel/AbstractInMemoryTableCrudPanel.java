@@ -26,7 +26,7 @@ import com.tcdng.unify.core.util.ReflectUtils;
  * Abstract in-memory table CRUD panel.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @UplBinding("web/panels/upl/inmemorytablecrudpanel.upl")
 public abstract class AbstractInMemoryTableCrudPanel<T extends Entity> extends AbstractTableCrudPanel<T> {

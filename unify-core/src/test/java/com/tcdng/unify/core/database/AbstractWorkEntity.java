@@ -24,7 +24,7 @@ import com.tcdng.unify.core.annotation.ChildList;
  * Abstract base test class for work entities.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractWorkEntity extends AbstractTestVersionedTableEntity {
 

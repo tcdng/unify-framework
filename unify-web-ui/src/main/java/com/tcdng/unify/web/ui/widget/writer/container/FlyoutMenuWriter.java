@@ -42,7 +42,7 @@ import com.tcdng.unify.web.ui.widget.writer.AbstractPanelWriter;
  * Flyout menu writer.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Writes(FlyoutMenu.class)
 @Component("flyoutmenu-writer")

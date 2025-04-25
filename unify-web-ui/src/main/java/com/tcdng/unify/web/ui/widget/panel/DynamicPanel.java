@@ -35,7 +35,7 @@ import com.tcdng.unify.web.ui.widget.Widget;
  * Represents a dynamic panel.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-dynamicpanel")
 @UplAttributes({ @UplAttribute(name = "panelNameBinding", type = String.class, mandatory = true),

@@ -22,7 +22,7 @@ import com.tcdng.unify.core.UnifyException;
  * Authentication component for retrieving a user name and password.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface Authentication extends UnifyComponent {
 

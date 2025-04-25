@@ -23,7 +23,7 @@ import com.tcdng.unify.web.ui.widget.AbstractPanel;
  * Represents a form panel.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-formpanel")
 @UplBinding("web/panels/upl/formpanel.upl")

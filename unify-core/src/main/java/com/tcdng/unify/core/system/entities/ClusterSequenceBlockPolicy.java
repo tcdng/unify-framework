@@ -26,7 +26,7 @@ import com.tcdng.unify.core.database.AbstractEntityPolicy;
  * Sequence block entity policy.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("sequenceblock-policy")
 public class ClusterSequenceBlockPolicy extends AbstractEntityPolicy {

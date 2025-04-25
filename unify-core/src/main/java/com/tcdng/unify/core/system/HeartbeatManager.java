@@ -24,7 +24,7 @@ import com.tcdng.unify.core.database.Query;
  * Manages application heart beats.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface HeartbeatManager extends BusinessService {
 

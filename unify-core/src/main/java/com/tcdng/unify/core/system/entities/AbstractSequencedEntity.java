@@ -24,7 +24,7 @@ import com.tcdng.unify.core.database.AbstractEntity;
  * Abstract class for entity instances with IDs based on sequence number.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Tooling(name = "plainSequenced", description = "Plain Sequenced")
 @Policy("sequencedentity-policy")

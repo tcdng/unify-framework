@@ -27,7 +27,7 @@ import com.tcdng.unify.core.database.dynamic.DynamicEntityInfo;
  * Dynamic SQL entity loader.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface DynamicSqlEntityLoader extends UnifyComponent {
 

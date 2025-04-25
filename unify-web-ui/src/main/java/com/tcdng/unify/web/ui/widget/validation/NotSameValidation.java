@@ -21,7 +21,7 @@ import com.tcdng.unify.core.annotation.Component;
  * Not same page validation.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-notsamevalidation")
 public class NotSameValidation extends AbstractComparisonPageValidation {

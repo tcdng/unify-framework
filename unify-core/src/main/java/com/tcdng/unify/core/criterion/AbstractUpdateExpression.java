@@ -19,7 +19,7 @@ package com.tcdng.unify.core.criterion;
  * Convenient abstract base class for update expressions.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractUpdateExpression implements UpdateExpression {
 

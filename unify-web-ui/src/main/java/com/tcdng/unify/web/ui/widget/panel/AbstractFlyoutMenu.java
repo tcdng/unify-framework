@@ -29,7 +29,7 @@ import com.tcdng.unify.web.ui.widget.Control;
  * Abstract base for flyout menu panels.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @UplAttributes({
 	@UplAttribute(name = "backImageCover", type = boolean.class, defaultVal = "true") })

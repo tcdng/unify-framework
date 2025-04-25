@@ -25,7 +25,7 @@ import com.tcdng.unify.web.ui.widget.AbstractControl;
  * Hidden input control.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-hidden")
 @UplAttributes({ @UplAttribute(name = "hidden", type = boolean.class, defaultVal = "true") })

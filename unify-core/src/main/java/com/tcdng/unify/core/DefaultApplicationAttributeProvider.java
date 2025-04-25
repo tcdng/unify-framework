@@ -23,7 +23,7 @@ import com.tcdng.unify.core.annotation.Component;
  * Default application attribute providers
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("default-applicationattributeprovider")
 public class DefaultApplicationAttributeProvider extends AbstractApplicationAttributeProvider {

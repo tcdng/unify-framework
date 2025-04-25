@@ -71,7 +71,7 @@ import net.sf.jasperreports.engine.type.VerticalTextAlignEnum;
  * manipulation of a jasper design object.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractJasperReportsLayoutManager extends AbstractUnifyComponent
 		implements JasperReportsLayoutManager {

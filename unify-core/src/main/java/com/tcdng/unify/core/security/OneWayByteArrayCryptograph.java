@@ -22,7 +22,7 @@ import com.tcdng.unify.core.transform.Transformer;
  * Used for one-way byte array encryption.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface OneWayByteArrayCryptograph extends Transformer<byte[], byte[]> {
     /**

@@ -25,7 +25,7 @@ import com.tcdng.unify.core.annotation.Singleton;
  * Convenient base class for UPL components.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Singleton(false)
 public abstract class AbstractUplComponent extends AbstractUnifyComponent implements UplComponent {

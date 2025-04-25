@@ -46,7 +46,7 @@ import com.tcdng.unify.core.util.CalendarUtils;
  * Default implementation of application user session manager.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Transactional
 @Component(ApplicationComponents.APPLICATION_USERSESSIONMANAGER)

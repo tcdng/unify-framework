@@ -25,7 +25,7 @@ import com.tcdng.unify.core.annotation.Version;
  * Entity for storing sequence block information.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Policy("sequenceblock-policy")
 @Table("UNCLUSTERSEQBLOCK")

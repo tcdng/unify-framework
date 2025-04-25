@@ -24,7 +24,7 @@ import com.tcdng.unify.core.annotation.Policy;
  * Test report parameter option entity.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Policy("testentitynorest-policy")
 @Table(name = "REPORT_PARAMETEROPT")

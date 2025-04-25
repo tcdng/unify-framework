@@ -22,7 +22,7 @@ import com.tcdng.unify.core.annotation.Component;
  * Default message formatter implementation.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(name = "messageformat", description = "$m{format.message}")
 public class MessageFormatterImpl extends AbstractFormatter<Object> implements MessageFormatter {

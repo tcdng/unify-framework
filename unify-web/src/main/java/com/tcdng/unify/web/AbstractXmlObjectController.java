@@ -22,7 +22,7 @@ import com.tcdng.unify.core.annotation.Configurable;
  * Abstract XML object controller.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractXmlObjectController<T, U> extends AbstractPlainXmlController {
 

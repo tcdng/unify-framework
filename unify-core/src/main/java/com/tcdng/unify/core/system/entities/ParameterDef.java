@@ -24,7 +24,7 @@ import com.tcdng.unify.core.annotation.ForeignKey;
  * Parameter definition entity.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Table(name = "UNPARAMDEF", uniqueConstraints = { @UniqueConstraint({ "parametersDefId", "name" }) })
 public class ParameterDef extends AbstractSequencedEntity {

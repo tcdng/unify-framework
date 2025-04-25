@@ -24,7 +24,7 @@ import com.tcdng.unify.web.ui.WebUIApplicationComponents;
  * Abstract user interface behavior.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractBehavior extends AbstractUplComponent implements Behavior {
 

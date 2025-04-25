@@ -19,7 +19,7 @@ package com.tcdng.unify.core.database.sql.data.policy;
  * Integer array data type SQL policy.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class IntegerArrayPolicy extends StringArrayPolicy {
 

@@ -35,7 +35,7 @@ import com.tcdng.unify.web.ui.widget.data.SearchBox;
  * A search box panel.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-searchboxpanel")
 @UplBinding("web/panels/upl/searchboxpanel.upl")

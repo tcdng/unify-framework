@@ -22,7 +22,7 @@ import com.tcdng.unify.core.data.TaggedXmlMessage;
  * Push tagged XML message remote call parameters.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class PushXmlMessageParams extends RemoteCallParams {
 

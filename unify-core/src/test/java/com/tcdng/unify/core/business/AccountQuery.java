@@ -21,7 +21,7 @@ import com.tcdng.unify.core.database.AbstractTestTableEntityQuery;
  * Account query.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class AccountQuery extends AbstractTestTableEntityQuery<Account> {
 

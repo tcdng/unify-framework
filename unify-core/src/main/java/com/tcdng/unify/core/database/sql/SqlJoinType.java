@@ -24,7 +24,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * Supported SQL join type enumeration.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @StaticList(name = "sqljointypelist", description="$m{staticlist.sqljointypelist}")
 public enum SqlJoinType implements EnumConst {

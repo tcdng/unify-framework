@@ -27,7 +27,7 @@ import com.tcdng.unify.common.database.Entity;
  * Indicates a list of child records.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)

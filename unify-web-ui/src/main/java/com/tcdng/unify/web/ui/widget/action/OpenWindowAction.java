@@ -22,7 +22,7 @@ import com.tcdng.unify.web.ui.widget.AbstractPageAction;
  * Open window action.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-openwindow")
 public class OpenWindowAction extends AbstractPageAction {

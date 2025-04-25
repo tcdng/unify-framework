@@ -34,7 +34,7 @@ import com.tcdng.unify.core.data.TaggedBinaryMessage;
  * Remote call binary message streamer test.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class RemoteCallBinaryMessageStreamerTest extends AbstractUnifyComponentTest {
 

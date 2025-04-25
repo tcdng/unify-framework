@@ -31,7 +31,7 @@ import com.tcdng.unify.core.util.ClassForNameProvider;
  * invalidated whenever the version of any of its members changes.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface RuntimeJavaClassManager extends UnifyComponent, ClassForNameProvider {
 

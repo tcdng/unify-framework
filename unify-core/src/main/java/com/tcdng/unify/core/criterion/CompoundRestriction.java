@@ -23,7 +23,7 @@ import java.util.List;
  * Compound restriction object.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface CompoundRestriction extends Restriction {
 

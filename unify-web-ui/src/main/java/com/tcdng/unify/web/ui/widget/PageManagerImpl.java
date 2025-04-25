@@ -55,7 +55,7 @@ import com.tcdng.unify.web.util.WebPathUtils;
  * Default implementation of page manager.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(WebUIApplicationComponents.APPLICATION_PAGEMANAGER)
 public class PageManagerImpl extends AbstractUnifyComponent implements PageManager {

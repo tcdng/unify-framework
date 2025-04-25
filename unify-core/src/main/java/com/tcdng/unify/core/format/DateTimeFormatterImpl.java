@@ -21,7 +21,7 @@ import com.tcdng.unify.core.annotation.Component;
  * Default date-time formatter implementation.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(name = "datetimeformat", description = "$m{format.datetime}")
 public class DateTimeFormatterImpl extends AbstractDateFormatter implements DateTimeFormatter {

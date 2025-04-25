@@ -29,7 +29,7 @@ import com.tcdng.unify.web.ui.widget.ResponseWriter;
  * Used for generating a load/refresh entire page content response.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("loadcontentresponse")
 public class LoadContentResponse extends AbstractJsonPageControllerResponse {

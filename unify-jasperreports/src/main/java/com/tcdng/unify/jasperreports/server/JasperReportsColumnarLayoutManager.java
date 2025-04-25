@@ -40,7 +40,7 @@ import net.sf.jasperreports.engine.type.HorizontalTextAlignEnum;
  * Used for columnar report layout.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("jasperreports-columnarlayoutmanager")
 public class JasperReportsColumnarLayoutManager extends AbstractJasperReportsLayoutManager {

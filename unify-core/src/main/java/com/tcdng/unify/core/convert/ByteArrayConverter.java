@@ -23,7 +23,7 @@ import com.tcdng.unify.core.data.UploadedFile;
  * Byte array converter.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class ByteArrayConverter extends AbstractConverter<byte[]> {
 

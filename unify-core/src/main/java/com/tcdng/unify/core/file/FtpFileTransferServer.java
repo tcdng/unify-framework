@@ -41,7 +41,7 @@ import com.tcdng.unify.core.util.IOUtils;
  * File transfer server based on FTP.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(name = ApplicationComponents.APPLICATION_FTPTRANSFERSERVER, description = "FTP")
 public class FtpFileTransferServer extends AbstractFileTransferServer {

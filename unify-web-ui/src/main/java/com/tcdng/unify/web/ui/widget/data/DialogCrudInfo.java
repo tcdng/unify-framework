@@ -26,7 +26,7 @@ import com.tcdng.unify.core.util.ReflectUtils;
  * Dialog CRUD object.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class DialogCrudInfo<T> {
 

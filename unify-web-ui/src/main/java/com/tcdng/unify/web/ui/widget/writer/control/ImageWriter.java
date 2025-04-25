@@ -32,7 +32,7 @@ import com.tcdng.unify.web.ui.widget.writer.AbstractTargetControlWriter;
  * Image control writer.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Writes(Image.class)
 @Component("image-writer")

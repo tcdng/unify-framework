@@ -32,7 +32,7 @@ import com.tcdng.unify.web.ui.widget.data.TreeTypeInfo.ExtendedTreeItemTypeInfo;
  * Tree object.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class Tree {
 

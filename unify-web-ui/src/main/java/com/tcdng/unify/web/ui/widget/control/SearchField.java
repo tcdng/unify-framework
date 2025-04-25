@@ -30,7 +30,7 @@ import com.tcdng.unify.web.ui.widget.data.RefreshSection;
  * A search input control.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-search")
 @UplAttributes({ @UplAttribute(name = "filterLabel", type = String.class, defaultVal = "$m{search.filter}"),

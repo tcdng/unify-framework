@@ -28,7 +28,7 @@ import com.tcdng.unify.core.system.SequenceNumberService;
  * Convenient base class for sequenced entity policies IDs.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("sequencedentity-policy")
 public class SequencedEntityPolicy extends AbstractEntityPolicy {

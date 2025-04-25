@@ -29,7 +29,7 @@ import com.tcdng.unify.web.ui.widget.Page;
  * Default page path information repository implementation.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(WebUIApplicationComponents.APPLICATION_PAGEPATHINFOREPOSITORY)
 public class PagePathInfoRepositoryImpl extends AbstractUnifyComponent implements PagePathInfoRepository {

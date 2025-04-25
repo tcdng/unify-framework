@@ -19,7 +19,7 @@ package com.tcdng.unify.core.database.sql;
  * Interface with policy methods for an SQL data type.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface SqlDataTypePolicy {
 

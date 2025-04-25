@@ -30,7 +30,7 @@ import com.tcdng.unify.core.util.ThreadUtils;
  * Unique string test task.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("uniquestringtest-task")
 public class UniqueStringTestTask extends AbstractTask {

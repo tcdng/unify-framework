@@ -28,7 +28,7 @@ import com.tcdng.unify.web.ui.widget.AbstractFormattedControl;
  * A debit-credit label control.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-debitcreditlabel")
 @UplAttributes({ @UplAttribute(name = "negativeCredit", type = boolean.class, defaultVal = "true") })

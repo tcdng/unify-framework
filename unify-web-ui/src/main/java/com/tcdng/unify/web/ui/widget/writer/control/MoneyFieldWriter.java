@@ -36,7 +36,7 @@ import com.tcdng.unify.web.ui.widget.control.TextField;
  * Money field writer.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Writes(MoneyField.class)
 @Component("moneyfield-writer")

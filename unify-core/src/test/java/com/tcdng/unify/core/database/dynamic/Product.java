@@ -27,7 +27,7 @@ import com.tcdng.unify.core.database.AbstractEntity;
  * Product entity.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Policy("product-policy")
 @Table(name = "PRODUCT", datasource= "inventory")

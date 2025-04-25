@@ -26,7 +26,7 @@ import com.tcdng.unify.core.UnifyException;
  * non-singletons.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface ResourceGenerator<T> extends UnifyComponent {
 

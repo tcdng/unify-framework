@@ -32,7 +32,7 @@ import com.tcdng.unify.web.ui.widget.ResponseWriterPool;
  * Convenient abstract base class for document controllers.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractDocumentController extends AbstractController implements DocumentController {
 

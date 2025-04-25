@@ -21,7 +21,7 @@ import java.util.Date;
  * Test author class.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class Author {
     private String name;

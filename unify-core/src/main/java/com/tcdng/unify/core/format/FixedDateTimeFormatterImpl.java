@@ -21,7 +21,7 @@ import com.tcdng.unify.core.annotation.Component;
  * Fixed date time formatter.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(name = "fixeddatetimeformat", description = "$m{format.fixeddatetime}")
 public class FixedDateTimeFormatterImpl extends AbstractDateFormatter implements DateTimeFormatter {

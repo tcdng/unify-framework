@@ -25,7 +25,7 @@ import com.tcdng.unify.convert.util.ConverterUtils;
  * JSON date array value converter.
  * 
  * @author Lateef
- * @since 1.0
+ * @since 4.1
  */
 public class JsonDateArrayConverter extends AbstractJsonArrayConverter<Date> {
 

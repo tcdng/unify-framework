@@ -34,7 +34,7 @@ import com.tcdng.unify.web.WebApplicationComponents;
  * HTTP request handler test.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class HttpRequestHandlerTest extends AbstractUnifyWebTest {
 

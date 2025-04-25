@@ -40,7 +40,7 @@ import com.tcdng.unify.core.database.sql.SqlFieldDimensions;
  * Provides utility methods for SQL manipulation.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public final class SqlUtils {
 

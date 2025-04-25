@@ -26,7 +26,7 @@ import com.tcdng.unify.core.annotation.Singleton;
  * Abstract implementation of a cryptograph providing two-way encryption.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Singleton(false)
 public abstract class AbstractTwoWayCryptograph extends AbstractUnifyComponent {

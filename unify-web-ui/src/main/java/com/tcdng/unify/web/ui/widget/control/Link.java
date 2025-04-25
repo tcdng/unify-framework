@@ -28,7 +28,7 @@ import com.tcdng.unify.web.ui.widget.AbstractTargetControl;
  * A link control.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-link")
 @UplAttributes({ @UplAttribute(name = "preferredCaption", type = String.class),

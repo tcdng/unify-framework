@@ -25,7 +25,7 @@ import com.tcdng.unify.web.data.Response;
  * Convenient base class for JSON CRUD controllers.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractJsonCRUDController extends AbstractHttpCRUDController {
 

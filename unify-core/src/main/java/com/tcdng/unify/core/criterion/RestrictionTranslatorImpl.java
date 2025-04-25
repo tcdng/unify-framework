@@ -29,7 +29,7 @@ import com.tcdng.unify.core.util.StringUtils;
  * Default implementation of restriction translator.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(ApplicationComponents.APPLICATION_RESTRICTIONTRANSLATOR)
 public class RestrictionTranslatorImpl extends AbstractRestrictionTranslator {

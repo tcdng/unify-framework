@@ -26,7 +26,7 @@ import com.tcdng.unify.web.ui.widget.Widget;
  * A basic change password panel.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-changepasswordpanel")
 @UplBinding("web/panels/upl/changepasswordpanel.upl")

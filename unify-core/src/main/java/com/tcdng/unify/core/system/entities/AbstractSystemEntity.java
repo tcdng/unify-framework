@@ -21,7 +21,7 @@ import com.tcdng.unify.core.database.AbstractEntity;
  * Base class for system entities.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractSystemEntity extends AbstractEntity {
 

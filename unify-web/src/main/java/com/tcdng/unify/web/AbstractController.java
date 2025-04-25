@@ -33,7 +33,7 @@ import com.tcdng.unify.web.http.HttpRequestParameters;
  * Abstract base controller component.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractController extends AbstractUnifyComponent implements Controller {
 

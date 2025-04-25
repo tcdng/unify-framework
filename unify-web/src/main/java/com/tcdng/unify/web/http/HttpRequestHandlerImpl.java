@@ -67,7 +67,7 @@ import com.tcdng.unify.web.remotecall.RemoteCallFormat;
  * Default application HTTP request handler.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(WebApplicationComponents.APPLICATION_HTTPREQUESTHANDLER)
 public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements HttpRequestHandler {

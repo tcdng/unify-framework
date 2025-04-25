@@ -24,7 +24,7 @@ import com.tcdng.unify.web.constant.Secured;
  * class-loader path or exact path.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("/resource/fileimage")
 public class FileImageResourceController extends FileResourceController {

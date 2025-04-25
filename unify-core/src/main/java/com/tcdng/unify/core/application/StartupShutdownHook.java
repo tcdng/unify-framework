@@ -22,7 +22,7 @@ import com.tcdng.unify.core.UnifyException;
  * An application startup-shutdown hook component.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface StartupShutdownHook extends UnifyComponent {
 

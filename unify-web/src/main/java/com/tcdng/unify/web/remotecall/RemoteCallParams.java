@@ -21,7 +21,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
  * Remote call parameter.
  * 
  * @author Lateef
- * @since 1.0
+ * @since 4.1
  */
 public abstract class RemoteCallParams {
 

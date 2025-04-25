@@ -20,7 +20,7 @@ package com.tcdng.unify.core.list;
  * Currency list command parameters.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class CurrencyListParams extends AbstractListParam {
 

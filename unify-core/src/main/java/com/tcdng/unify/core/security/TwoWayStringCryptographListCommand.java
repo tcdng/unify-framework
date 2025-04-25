@@ -23,7 +23,7 @@ import com.tcdng.unify.core.list.AbstractTypeListCommand;
  * Two-way cryptograph list command list command.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("twowaystringcryptographlist")
 public class TwoWayStringCryptographListCommand extends AbstractTypeListCommand<TwoWayStringCryptograph> {

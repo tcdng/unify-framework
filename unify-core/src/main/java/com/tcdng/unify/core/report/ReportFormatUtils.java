@@ -24,7 +24,7 @@ import com.tcdng.unify.core.util.StringUtils;
  * Reports format util.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public final class ReportFormatUtils {
 

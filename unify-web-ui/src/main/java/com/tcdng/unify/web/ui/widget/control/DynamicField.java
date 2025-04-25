@@ -30,7 +30,7 @@ import com.tcdng.unify.web.ui.widget.Control;
  * An input control whose field type varies at runtime.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-dynamic")
 @UplAttributes({ @UplAttribute(name = "descriptorBinding", type = String.class, mandatory = true),

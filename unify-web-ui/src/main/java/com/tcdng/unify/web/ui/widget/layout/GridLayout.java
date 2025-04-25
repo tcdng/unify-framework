@@ -24,7 +24,7 @@ import com.tcdng.unify.core.annotation.UplAttributes;
  * Renders components in a grid layout.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-grid")
 @UplAttributes({ @UplAttribute(name = "columns", type = int.class, defaultVal = "1") })

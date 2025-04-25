@@ -31,7 +31,7 @@ import com.tcdng.unify.core.util.DataUtils;
  * Implementation of JSON object streamer.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(name = ApplicationComponents.APPLICATION_JSONOBJECTSTREAMER, description = "JSON Object Streamer")
 public class JsonObjectStreamerImpl extends AbstractObjectStreamer implements JsonObjectStreamer {

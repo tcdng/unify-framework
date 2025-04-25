@@ -24,7 +24,7 @@ import com.tcdng.unify.core.criterion.Restriction;
  * SQL generation policy.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface SqlCriteriaPolicy {
     /**

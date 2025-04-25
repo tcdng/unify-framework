@@ -47,7 +47,7 @@ import com.tcdng.unify.web.discovery.gem.data.DiscoverRemoteCallResult;
  * Default implementation of a web client.
  * 
  * @author Lateef
- * @since 1.0
+ * @since 4.1
  */
 @Component(WebApplicationComponents.APPLICATION_WEBCLIENT)
 public class WebClientImpl extends AbstractUnifyComponent implements WebClient {

@@ -45,7 +45,7 @@ import com.tcdng.unify.jcifs.JCIFSApplicationComponents;
  * File transfer server based on JCIFS.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(name = JCIFSApplicationComponents.JCIFS_TRANSFERSERVER, description = "JCIFS (Windows SMB)")
 public class JcifsFileTransferServer extends AbstractFileTransferServer {

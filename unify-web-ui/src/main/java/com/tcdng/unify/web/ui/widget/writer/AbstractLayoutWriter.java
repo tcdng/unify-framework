@@ -19,7 +19,7 @@ package com.tcdng.unify.web.ui.widget.writer;
  * Abstract base class for UI layout writers.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractLayoutWriter extends AbstractDhtmlWriter implements LayoutWriter {
 

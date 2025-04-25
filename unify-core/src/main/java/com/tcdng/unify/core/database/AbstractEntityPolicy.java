@@ -26,7 +26,7 @@ import com.tcdng.unify.core.criterion.Update;
  * Abstract convenience class for entity policy.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractEntityPolicy extends AbstractUnifyComponent implements EntityPolicy {
 

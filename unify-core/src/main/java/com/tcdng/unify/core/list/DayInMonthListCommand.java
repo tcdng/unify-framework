@@ -28,7 +28,7 @@ import com.tcdng.unify.core.data.ListNumberData;
  * Day-in-month list command.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("dayinmonthlist")
 public class DayInMonthListCommand extends AbstractZeroParamsListCommand {

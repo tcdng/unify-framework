@@ -22,7 +22,7 @@ import com.tcdng.unify.core.annotation.Version;
  * Abstract base class for test versioned entities.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Policy("testversionedentity-policy")
 public abstract class AbstractTestVersionedTableEntity extends AbstractTestTableEntity {

@@ -26,7 +26,7 @@ import com.tcdng.unify.core.database.Query;
  * Generic business service.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface GenericService extends BusinessService {
 

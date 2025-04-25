@@ -33,7 +33,7 @@ import com.tcdng.unify.core.util.CalendarUtils;
  * Abstract base class for a date formatter.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @UplAttributes({ @UplAttribute(name = "style", type = String.class),
         @UplAttribute(name = "timeZoneId", type = String.class), @UplAttribute(name = "pattern", type = String.class) })

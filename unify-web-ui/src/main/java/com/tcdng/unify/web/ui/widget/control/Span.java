@@ -22,7 +22,7 @@ import com.tcdng.unify.web.ui.widget.AbstractControl;
  * Represents a text-containing span.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-span")
 public class Span extends AbstractControl {

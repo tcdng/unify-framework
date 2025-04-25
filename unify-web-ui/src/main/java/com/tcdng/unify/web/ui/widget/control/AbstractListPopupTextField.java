@@ -41,7 +41,7 @@ import com.tcdng.unify.web.ui.widget.WriteWork;
  * Abstract base class for list pop-up text fields.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @UplAttributes({
         @UplAttribute(name = "list", type = String.class),

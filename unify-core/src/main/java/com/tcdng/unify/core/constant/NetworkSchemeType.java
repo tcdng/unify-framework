@@ -23,7 +23,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * Network scheme constants.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @StaticList(name = "networkschemelist", description="$m{staticlist.networkschemelist}")
 public enum NetworkSchemeType implements EnumConst {

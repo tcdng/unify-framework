@@ -19,7 +19,7 @@ package com.tcdng.unify.core.annotation;
  * Enumerates various periodic types.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public enum PeriodicType {
     /** 1 hour */

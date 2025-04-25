@@ -29,7 +29,7 @@ import com.tcdng.unify.core.util.StringUtils;
  * Repository for widget instances.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class WidgetRepository {
 

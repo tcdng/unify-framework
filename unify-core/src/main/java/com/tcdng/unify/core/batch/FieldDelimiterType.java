@@ -23,7 +23,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * Field delimiter type.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @StaticList(name = "fielddelimiterlist", description="$m{staticlist.fielddelimiterlist}")
 public enum FieldDelimiterType implements EnumConst {

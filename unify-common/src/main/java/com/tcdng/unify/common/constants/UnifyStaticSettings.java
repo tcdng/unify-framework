@@ -20,7 +20,7 @@ package com.tcdng.unify.common.constants;
  * Static settings interface.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface UnifyStaticSettings {
 

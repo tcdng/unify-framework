@@ -39,7 +39,7 @@ import com.tcdng.unify.core.data.FactoryMap;
  * Implementation of XML object streamer.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(name = ApplicationComponents.APPLICATION_XMLOBJECTSTREAMER, description = "XML Object Streamer")
 public class XmlObjectStreamerImpl extends AbstractObjectStreamer implements XmlObjectStreamer {

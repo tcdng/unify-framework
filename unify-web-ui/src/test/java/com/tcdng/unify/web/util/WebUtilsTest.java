@@ -28,7 +28,7 @@ import com.tcdng.unify.web.ui.util.WebUtils;
  * Web utilities tests.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class WebUtilsTest {
 

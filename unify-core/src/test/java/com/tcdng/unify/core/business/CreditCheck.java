@@ -27,7 +27,7 @@ import com.tcdng.unify.core.database.AbstractEntity;
  * Credit check.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Policy("creditcheck-policy")
 @Table(datasource = "thirdparty-datasource", name = "CREDIT_CHECK", adhoc =  true)

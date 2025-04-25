@@ -26,7 +26,7 @@ import com.tcdng.unify.core.system.entities.ClusterNodeQuery;
  * Used to manage operations across clustered instances of unify container.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface ClusterService extends BusinessService {
 

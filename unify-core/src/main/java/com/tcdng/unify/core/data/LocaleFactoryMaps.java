@@ -21,7 +21,7 @@ import java.util.Locale;
  * An abstract generic locale map of generic factory maps.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class LocaleFactoryMaps<T, U> extends FactoryMaps<Locale, T, U> {
 

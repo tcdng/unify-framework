@@ -28,7 +28,7 @@ import com.tcdng.unify.web.ui.widget.data.ValidationInfo;
  * Base class for UI validation.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @UplAttributes({ @UplAttribute(name = "borderErrStyle", type = String.class, defaultVal = "2px solid #F0C0C0"),
         @UplAttribute(name = "components", type = UplElementReferences.class) })

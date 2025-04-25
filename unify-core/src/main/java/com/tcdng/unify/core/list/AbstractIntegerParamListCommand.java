@@ -20,7 +20,7 @@ package com.tcdng.unify.core.list;
  * Abstract base component for an integer parameter list command.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractIntegerParamListCommand extends AbstractListCommand<IntegerParam> {
 

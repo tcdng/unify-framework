@@ -20,7 +20,7 @@ package com.tcdng.unify.web.constant;
  * Client request type enumeration.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public enum ClientRequestType {
 

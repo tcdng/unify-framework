@@ -20,7 +20,7 @@ package com.tcdng.unify.core.resource;
  * An image generator component.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface ImageGenerator extends ResourceGenerator<ImageFormat> {
 

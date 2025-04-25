@@ -28,7 +28,7 @@ import com.tcdng.unify.core.data.ParamConfig;
  * Task manager.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface TaskManager extends UnifyComponent {
 

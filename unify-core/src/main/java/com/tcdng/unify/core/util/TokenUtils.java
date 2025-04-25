@@ -23,7 +23,7 @@ import java.util.Set;
  * Provides utility methods for UPL tokens.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public final class TokenUtils {
 

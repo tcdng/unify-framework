@@ -22,7 +22,7 @@ import com.tcdng.unify.core.UnifyException;
  * SQL distinct row list configuration manager.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface SqlDistinctRowListConfigManager extends UnifyComponent {
 

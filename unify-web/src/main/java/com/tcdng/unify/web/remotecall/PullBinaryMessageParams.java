@@ -20,7 +20,7 @@ package com.tcdng.unify.web.remotecall;
  * Pull tagged binary message remote call parameters.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class PullBinaryMessageParams extends RemoteCallParams {
 

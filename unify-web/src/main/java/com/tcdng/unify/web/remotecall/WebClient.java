@@ -24,7 +24,7 @@ import com.tcdng.unify.core.UnifyException;
  * Web client
  * 
  * @author Lateef
- * @since 1.0
+ * @since 4.1
  */
 public interface WebClient extends UnifyComponent {
 

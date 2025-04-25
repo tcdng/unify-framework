@@ -24,7 +24,7 @@ import com.tcdng.unify.core.constant.TextCase;
  * An input text field that allows enforces input to match a path
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-path")
 @UplAttributes({

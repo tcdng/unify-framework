@@ -31,7 +31,7 @@ import com.tcdng.unify.web.util.RealPathUtils;
  * Plain real path resource controller.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("/plain/resource/realpath")
 public class PlainRealPathResourceController extends AbstractPlainResourceController {

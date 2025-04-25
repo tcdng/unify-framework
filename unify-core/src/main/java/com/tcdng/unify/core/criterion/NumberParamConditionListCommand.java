@@ -32,7 +32,7 @@ import com.tcdng.unify.core.util.FilterUtils;
  * Number parameter condition list command.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("numberparamconditionlist")
 public class NumberParamConditionListCommand extends AbstractZeroParamsListCommand {

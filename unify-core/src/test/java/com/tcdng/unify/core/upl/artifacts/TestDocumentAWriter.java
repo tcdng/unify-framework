@@ -23,7 +23,7 @@ import com.tcdng.unify.core.upl.AbstractUplComponentWriter;
  * Test document A writer.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Writes(TestDocumentA.class)
 @Component("testdocumenta-writer")

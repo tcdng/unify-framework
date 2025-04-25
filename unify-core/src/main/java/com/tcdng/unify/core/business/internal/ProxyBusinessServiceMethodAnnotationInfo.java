@@ -22,7 +22,7 @@ import com.tcdng.unify.core.annotation.Taskable;
  * Proxy business service method annotation information.
  * 
  * @author Lateef
- * @since 1.0
+ * @since 4.1
  */
 public class ProxyBusinessServiceMethodAnnotationInfo {
 

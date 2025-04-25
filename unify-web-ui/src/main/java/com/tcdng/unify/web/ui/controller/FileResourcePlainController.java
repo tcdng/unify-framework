@@ -22,7 +22,7 @@ import com.tcdng.unify.core.annotation.Component;
  * class-loader path or exact path.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("/resource/file/plain")
 public class FileResourcePlainController extends FileResourceController {

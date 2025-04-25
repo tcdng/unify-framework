@@ -31,7 +31,7 @@ import com.tcdng.unify.web.ui.widget.Layout;
  * Repeat panel.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-repeatpanel")
 @UplAttributes({ @UplAttribute(name = "layout", type = Layout.class, mandatory = true),

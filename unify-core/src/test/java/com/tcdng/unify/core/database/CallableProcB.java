@@ -28,7 +28,7 @@ import com.tcdng.unify.core.annotation.OutParam;
  * Test callable procedure with parameters and no results.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Callable(procedure = "procedure_b", params = "itemId, startDt, endDt, accountName, balance")
 public class CallableProcB  extends AbstractCallableProc {

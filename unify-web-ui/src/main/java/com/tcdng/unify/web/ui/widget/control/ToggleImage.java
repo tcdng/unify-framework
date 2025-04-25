@@ -25,7 +25,7 @@ import com.tcdng.unify.web.ui.widget.AbstractTargetControl;
  * boolean value of the widget's binded property.
  *
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-toggleimage")
 @UplAttributes({ @UplAttribute(name = "onImgSrc", type = String.class, defaultVal = "$t{images/toggleon.png}"),

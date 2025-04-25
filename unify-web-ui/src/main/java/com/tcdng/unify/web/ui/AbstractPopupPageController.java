@@ -29,7 +29,7 @@ import com.tcdng.unify.web.ui.widget.data.Popup;
  * Convenient base for pop-up page controller implementation.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @UplBinding("web/reserved/upl/popuppage.upl")
 @ResultMappings({

@@ -26,7 +26,7 @@ import com.tcdng.unify.core.annotation.ListOnly;
  * Test branch account record.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Table(name = "BRANCH_ACCOUNT")
 public class BranchAccount extends AbstractTestVersionedTableEntity {

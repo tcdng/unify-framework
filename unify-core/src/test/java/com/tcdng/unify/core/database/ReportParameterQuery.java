@@ -23,7 +23,7 @@ import com.tcdng.unify.core.constant.BooleanType;
  * Query object for test report parameter record.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class ReportParameterQuery extends AbstractTestTableEntityQuery<ReportParameter> {
 

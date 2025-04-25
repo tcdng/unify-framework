@@ -22,7 +22,7 @@ import com.tcdng.unify.core.list.AbstractTypeListCommand;
  * Formatter list command.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @SuppressWarnings("rawtypes")
 @Component("formatterlist")

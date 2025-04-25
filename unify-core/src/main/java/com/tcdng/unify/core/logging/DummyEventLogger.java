@@ -25,7 +25,7 @@ import com.tcdng.unify.core.UnifyException;
  * Dummy event logger.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class DummyEventLogger extends AbstractUnifyComponent implements EventLogger {
 

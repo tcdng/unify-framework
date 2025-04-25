@@ -22,7 +22,7 @@ import java.util.Date;
  * Interconnect field data type.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public enum ConnectFieldDataType {
 

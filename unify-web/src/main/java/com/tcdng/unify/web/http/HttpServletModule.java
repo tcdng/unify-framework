@@ -44,7 +44,7 @@ import com.tcdng.unify.web.constant.ReservedPageControllerConstants;
  * handling the exchange of http requests and responses between both containers.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class HttpServletModule  {
 

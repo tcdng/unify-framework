@@ -19,7 +19,7 @@ package com.tcdng.unify.web.ui.widget;
  * Abstract document layout.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractDocumentLayout extends AbstractLayout implements DocumentLayout {
 

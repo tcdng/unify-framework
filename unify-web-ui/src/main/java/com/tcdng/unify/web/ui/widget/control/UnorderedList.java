@@ -26,7 +26,7 @@ import com.tcdng.unify.web.ui.widget.AbstractControl;
  * Represents an unordered list..
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-unorderedlist")
 @UplAttributes({ @UplAttribute(name = "item", type = String[].class) })

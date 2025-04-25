@@ -37,7 +37,7 @@ import com.tcdng.unify.core.util.ThreadUtils;
  * Lock manager test case.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class LockManagerTest extends AbstractUnifyComponentTest {
 

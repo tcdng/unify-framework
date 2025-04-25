@@ -22,7 +22,7 @@ import com.tcdng.unify.web.ui.widget.AbstractPanel;
  * Represents a panel with a window and a title bar.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-windowpanel")
 public class WindowPanel extends AbstractPanel {

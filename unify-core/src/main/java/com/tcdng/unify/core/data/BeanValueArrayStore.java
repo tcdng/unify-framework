@@ -25,7 +25,7 @@ import com.tcdng.unify.core.util.ReflectUtils;
  * Bean value array store.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class BeanValueArrayStore extends AbstractArrayValueStore<Object> {
 

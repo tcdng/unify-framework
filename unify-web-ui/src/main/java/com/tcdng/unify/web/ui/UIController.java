@@ -22,7 +22,7 @@ import com.tcdng.unify.web.HttpClientController;
  * User interface controller.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface UIController extends HttpClientController {
 

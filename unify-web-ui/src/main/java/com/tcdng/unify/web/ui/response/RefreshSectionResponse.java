@@ -29,7 +29,7 @@ import com.tcdng.unify.web.ui.widget.data.RefreshSection;
  * rendered with a div tag. Refresh section data is gotten from request context.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("refreshsectionresponse")
 public class RefreshSectionResponse extends AbstractJsonPageControllerResponse {

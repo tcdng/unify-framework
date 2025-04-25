@@ -22,7 +22,7 @@ import com.tcdng.unify.core.UnifyException;
  * A component for logging messages and exceptions.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface Logger extends UnifyComponent {
     /**

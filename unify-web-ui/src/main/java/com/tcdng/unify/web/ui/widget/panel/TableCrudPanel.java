@@ -25,7 +25,7 @@ import com.tcdng.unify.web.ui.widget.Panel;
  * Represents a table CRUD panel.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface TableCrudPanel<T extends Entity> extends Panel {
 

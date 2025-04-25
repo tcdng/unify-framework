@@ -28,7 +28,7 @@ import com.tcdng.unify.core.data.LocaleFactoryMaps;
  * Default implementation of a regex pattern store.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(ApplicationComponents.APPLICATION_REGEXPATTERNSTORE)
 public class RegexPatternStoreImpl extends AbstractUnifyComponent implements RegexPatternStore {

@@ -28,7 +28,7 @@ import com.tcdng.unify.web.remotecall.RemoteCallFormat;
  * Abstract plain XML controller.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractPlainXmlController extends AbstractPlainController {
 

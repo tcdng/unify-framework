@@ -25,7 +25,7 @@ import com.tcdng.unify.core.UnifyException;
  * Component for storing regex patterns.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface RegexPatternStore extends UnifyComponent {
 

@@ -22,7 +22,7 @@ import com.tcdng.unify.core.annotation.Component;
  * Test generated dodument.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("test-generateddoc")
 public class TestGeneratedDocument extends TestDocumentH {

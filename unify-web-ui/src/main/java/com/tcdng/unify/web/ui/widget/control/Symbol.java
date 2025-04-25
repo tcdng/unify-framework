@@ -24,7 +24,7 @@ import com.tcdng.unify.web.ui.widget.AbstractTargetControl;
  * A symbol widget.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-symbol")
 @UplAttributes({ @UplAttribute(name = "symbol", type = String.class, mandatory = true),

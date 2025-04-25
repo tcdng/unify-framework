@@ -36,7 +36,7 @@ import com.tcdng.unify.core.constant.PrintFormat;
  * Jackson JSON object streaming manager implementation test.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class JsonObjectStreamerTest extends AbstractUnifyComponentTest {
 

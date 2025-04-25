@@ -21,7 +21,7 @@ import com.tcdng.unify.core.annotation.Component;
  * Resource controller for fetching resources using streamer.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("/resource/streamer/plain")
 public class StreamerResourcePlainController extends StreamerResourceController {

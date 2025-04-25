@@ -22,7 +22,7 @@ import com.tcdng.unify.core.UnifyException;
  * Abstract base component for a list command.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractListCommand<T extends ListParam> extends AbstractUnifyComponent
         implements ListCommand<T> {

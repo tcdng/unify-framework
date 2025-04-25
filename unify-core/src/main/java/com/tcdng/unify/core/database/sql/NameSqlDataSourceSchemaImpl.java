@@ -25,7 +25,7 @@ import com.tcdng.unify.core.annotation.Singleton;
  * Default implementation of named SLQ datasource schema.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Singleton(false)
 public class NameSqlDataSourceSchemaImpl extends AbstractUnifyComponent implements NameSqlDataSourceSchema {

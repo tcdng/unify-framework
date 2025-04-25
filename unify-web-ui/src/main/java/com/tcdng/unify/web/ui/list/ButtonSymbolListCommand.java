@@ -33,7 +33,7 @@ import com.tcdng.unify.web.font.FontSymbolManager;
  * Button symbol list command.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("buttonsymbollist")
 public class ButtonSymbolListCommand extends AbstractListCommand<ZeroParams> {

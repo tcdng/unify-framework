@@ -23,7 +23,7 @@ import com.tcdng.unify.core.UnifyException;
  * Used for generating UPL sources.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface UplGenerator extends UnifyComponent {
 

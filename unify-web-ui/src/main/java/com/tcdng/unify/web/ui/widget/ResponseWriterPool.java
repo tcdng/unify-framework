@@ -23,7 +23,7 @@ import com.tcdng.unify.web.ClientRequest;
  * Represents a pool of response writers that facilitates writer reuse.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface ResponseWriterPool extends UnifyComponent {
 

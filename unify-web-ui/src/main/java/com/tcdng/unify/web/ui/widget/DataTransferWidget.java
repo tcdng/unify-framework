@@ -22,7 +22,7 @@ import com.tcdng.unify.web.ui.DataTransferBlock;
  * A widget that can transfer data.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface DataTransferWidget extends Widget {
 

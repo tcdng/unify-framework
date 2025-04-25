@@ -23,7 +23,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * Report layout types.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public enum ReportLayoutType implements EnumConst {
     TABULAR("TBL"),

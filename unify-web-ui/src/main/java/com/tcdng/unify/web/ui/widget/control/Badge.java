@@ -23,7 +23,7 @@ import com.tcdng.unify.web.ui.widget.AbstractControl;
  * A badge widget.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-badge")
 public class Badge extends AbstractControl {

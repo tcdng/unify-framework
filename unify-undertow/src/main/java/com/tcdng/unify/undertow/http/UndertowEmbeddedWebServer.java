@@ -57,7 +57,7 @@ import static io.undertow.websockets.jsr.WebSocketDeploymentInfo.ATTRIBUTE_NAME;
  * Undertow embedded web server.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(UndertowApplicationComponents.UNDERTOW_EMBEDDEDWEBSERVER)
 public class UndertowEmbeddedWebServer extends AbstractEmbeddedHttpWebServer {

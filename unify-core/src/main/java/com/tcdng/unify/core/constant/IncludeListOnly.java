@@ -20,7 +20,7 @@ package com.tcdng.unify.core.constant;
  * Include list-only enumeration.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public enum IncludeListOnly {
     TRUE,

@@ -22,7 +22,7 @@ import com.tcdng.unify.web.ui.widget.AbstractDocumentLayout;
  * Type-1 desktop document layout component.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-desktoptype1")
 public class DesktopType1Layout extends AbstractDocumentLayout {

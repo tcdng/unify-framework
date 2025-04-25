@@ -25,7 +25,7 @@ import com.tcdng.unify.core.database.DataSource;
  * Default application SQL database.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(ApplicationComponents.APPLICATION_DATABASE)
 public class DefaultApplicationSqlDatabaseImpl extends AbstractSqlDatabase {

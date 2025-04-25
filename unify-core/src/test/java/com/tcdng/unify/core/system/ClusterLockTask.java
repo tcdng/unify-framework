@@ -27,7 +27,7 @@ import com.tcdng.unify.core.util.ThreadUtils;
  * Cluster synchronization test task.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("clustershareddata-test")
 public class ClusterLockTask extends AbstractTask {

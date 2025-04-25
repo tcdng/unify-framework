@@ -21,7 +21,7 @@ import com.tcdng.unify.core.database.sql.SqlJoinType;
  * A report table join.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class ReportTableJoin {
 

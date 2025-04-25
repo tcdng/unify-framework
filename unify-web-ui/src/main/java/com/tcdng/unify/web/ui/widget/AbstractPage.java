@@ -34,7 +34,7 @@ import com.tcdng.unify.web.ui.widget.panel.StandalonePanel;
  * Serves as the base class for a page component.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @UplAttributes({ @UplAttribute(name = "subCaption", type = String.class),
 		@UplAttribute(name = "subCaptionBinding", type = String.class),

@@ -30,7 +30,7 @@ import com.tcdng.unify.web.ui.widget.writer.AbstractPanelWriter;
  * Accordion panel writer.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Writes(AccordionPanel.class)
 @Component("accordionpanel-writer")

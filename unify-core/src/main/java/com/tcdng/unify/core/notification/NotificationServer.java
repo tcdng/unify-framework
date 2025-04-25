@@ -22,7 +22,7 @@ import com.tcdng.unify.core.UnifyException;
  * Interface for a notification server component.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface NotificationServer<T extends AbstractNotifServerConfig> extends UnifyComponent {
 

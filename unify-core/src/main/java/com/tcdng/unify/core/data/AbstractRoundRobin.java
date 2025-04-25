@@ -22,7 +22,7 @@ import java.util.List;
  * Abstract base class for round-robin.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractRoundRobin<T> {
 

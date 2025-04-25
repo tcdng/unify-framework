@@ -27,7 +27,7 @@ import com.tcdng.unify.common.annotation.AnnotationConstants;
  * Indicates field contains foster parent ID information.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)

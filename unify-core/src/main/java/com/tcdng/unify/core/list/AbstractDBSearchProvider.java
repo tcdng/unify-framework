@@ -31,7 +31,7 @@ import com.tcdng.unify.core.util.StringUtils;
  * Convenient base class for database search provider list commands.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractDBSearchProvider extends AbstractSearchProviderListCommand {
 

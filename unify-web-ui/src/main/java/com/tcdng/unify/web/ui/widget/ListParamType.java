@@ -23,7 +23,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * List parameter type.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public enum ListParamType implements EnumConst {
 

@@ -20,7 +20,7 @@ package com.tcdng.unify.core.list;
  * Convenient base class for search provider list commands.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractSearchProviderListCommand extends AbstractListCommand<SearchProviderParams>
         implements SearchProvider {

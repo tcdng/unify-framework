@@ -29,7 +29,7 @@ import com.tcdng.unify.web.constant.Secured;
  * Mock resource controller.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("/resource/mock")
 public class MockResourceController extends AbstractPageResourceController {

@@ -19,7 +19,7 @@ package com.tcdng.unify.convert.converters;
  * A value to byte converter.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class ByteConverter extends AbstractConverter<Byte> {
 

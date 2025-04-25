@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
  * Annotation for indicating if a component is a singleton or not.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Documented
 @Inherited

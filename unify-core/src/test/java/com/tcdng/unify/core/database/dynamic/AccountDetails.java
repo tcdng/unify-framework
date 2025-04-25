@@ -27,7 +27,7 @@ import com.tcdng.unify.core.database.AbstractEntity;
  * Account details record.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Policy("accountdetails-policy")
 @Table(name = "ACCOUNT_DETAILS", adhoc = true)

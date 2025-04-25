@@ -24,7 +24,7 @@ import com.tcdng.unify.core.annotation.UplAttributes;
  * Represents a drop-down list with options for selecting symbols.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-symbolselect")
 	@UplAttributes({ @UplAttribute(name = "htmlEscape", type = boolean.class, defaultVal = "false"),

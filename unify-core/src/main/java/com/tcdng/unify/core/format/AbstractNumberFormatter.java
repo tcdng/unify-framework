@@ -28,7 +28,7 @@ import com.tcdng.unify.core.util.FormattingUtils;
  * Abstract base class for a number formatter.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @UplAttributes({
 		@UplAttribute(name = "precision", type = int.class), @UplAttribute(name = "scale", type = int.class),

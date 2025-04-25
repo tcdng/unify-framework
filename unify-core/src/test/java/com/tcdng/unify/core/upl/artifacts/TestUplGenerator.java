@@ -24,7 +24,7 @@ import com.tcdng.unify.core.upl.AbstractUplGenerator;
  * Test UPL generator.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("test-uplgenerator")
 public class TestUplGenerator extends AbstractUplGenerator {

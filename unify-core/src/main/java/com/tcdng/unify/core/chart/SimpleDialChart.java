@@ -22,7 +22,7 @@ import com.tcdng.unify.core.constant.ColorPalette;
  * Simple dial chart.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class SimpleDialChart extends AbstractChart {
 

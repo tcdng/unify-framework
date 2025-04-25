@@ -24,7 +24,7 @@ import com.tcdng.unify.core.data.Audit.TrailItem;
  * Packable document audit.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class PackableDocAudit {
 

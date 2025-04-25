@@ -25,7 +25,7 @@ import com.tcdng.unify.core.annotation.TableExt;
  * Test branch account extension record.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @TableExt
 public class BranchAccountExt extends BranchAccount {

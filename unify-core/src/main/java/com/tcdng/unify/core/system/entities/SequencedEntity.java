@@ -21,7 +21,7 @@ import com.tcdng.unify.common.database.Entity;
  * Sequenced entity.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface SequencedEntity extends Entity {
 

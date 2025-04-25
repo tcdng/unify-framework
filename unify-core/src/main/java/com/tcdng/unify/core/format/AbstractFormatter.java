@@ -27,7 +27,7 @@ import com.tcdng.unify.core.upl.AbstractUplComponent;
  * Abstract formatter.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @UplAttributes({
 	@UplAttribute(name = "template", type = String.class),

@@ -23,7 +23,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * Message box result.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public enum MessageResult implements EnumConst {
 

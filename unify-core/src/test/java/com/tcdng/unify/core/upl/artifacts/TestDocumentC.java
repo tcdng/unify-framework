@@ -22,7 +22,7 @@ import com.tcdng.unify.core.annotation.UplBinding;
  * Test document UPL element.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("test-upldocumentc")
 @UplBinding("com/tcdng/unify/core/resources/test-upldocumentc.upl")

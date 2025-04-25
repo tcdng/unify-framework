@@ -19,7 +19,7 @@ package com.tcdng.unify.core.criterion;
  * Restriction for a property that ends with a value.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class EndsWith extends AbstractSingleParamRestriction {
 

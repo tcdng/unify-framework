@@ -26,7 +26,7 @@ import com.tcdng.unify.core.format.NumberFormatter;
  * Represents an input field for entering a decimal amount.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-decimal")
 @UplAttributes({ @UplAttribute(name = "scale", type = int.class),

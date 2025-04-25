@@ -28,7 +28,7 @@ import com.tcdng.unify.web.ui.widget.data.AutoRefresh;
  * Used for generating an auto-refresh response.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("autorefreshresponse")
 public class AutoRefreshResponse extends AbstractJsonPageControllerResponse {

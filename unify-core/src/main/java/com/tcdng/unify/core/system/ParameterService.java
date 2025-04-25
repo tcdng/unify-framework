@@ -28,7 +28,7 @@ import com.tcdng.unify.core.system.entities.ParameterDef;
  * Used to manage parameter definitions and parameter instantiations.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface ParameterService extends BusinessService {
 

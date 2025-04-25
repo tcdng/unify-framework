@@ -42,7 +42,7 @@ import com.tcdng.unify.web.ui.widget.Widget;
  * Abstract base class for DHTML writers.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
 

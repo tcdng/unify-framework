@@ -30,7 +30,7 @@ import com.tcdng.unify.web.ui.widget.data.Hints;
  * result with {@link ResultMapping}.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("hintuserresponse")
 public class HintUserResponse extends AbstractJsonPageControllerResponse {

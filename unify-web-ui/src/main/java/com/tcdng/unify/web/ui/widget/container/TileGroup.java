@@ -32,7 +32,7 @@ import com.tcdng.unify.web.ui.widget.Control;
  * widget to check the current session for a tile list.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-tilegroup")
 @UplAttributes({ @UplAttribute(name = "columns", type = int.class),

@@ -26,7 +26,7 @@ import com.tcdng.unify.core.annotation.UplAttributes;
  * Default cent formatter implementation.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(name = "centformat", description = "$m{format.cent}")
 @UplAttributes({ @UplAttribute(name = "precision", type = int.class),

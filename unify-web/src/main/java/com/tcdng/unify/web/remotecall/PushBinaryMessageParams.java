@@ -22,7 +22,7 @@ import com.tcdng.unify.core.data.TaggedBinaryMessage;
  * Push tagged binary message remote call parameters.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class PushBinaryMessageParams extends RemoteCallParams {
 

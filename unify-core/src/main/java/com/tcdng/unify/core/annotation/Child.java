@@ -27,7 +27,7 @@ import com.tcdng.unify.common.annotation.AnnotationConstants;
  * Indicates a child record.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)

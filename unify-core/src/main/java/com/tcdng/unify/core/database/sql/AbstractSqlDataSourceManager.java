@@ -33,7 +33,7 @@ import com.tcdng.unify.core.util.SqlUtils;
  * Convenient abstract base class for SQL data source managers.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractSqlDataSourceManager extends AbstractUnifyComponent implements SqlDataSourceManager {
 

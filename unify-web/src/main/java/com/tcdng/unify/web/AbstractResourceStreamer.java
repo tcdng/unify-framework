@@ -23,7 +23,7 @@ import com.tcdng.unify.core.annotation.Singleton;
  * Convenient base class for resource streamers.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Singleton(false)
 public abstract class AbstractResourceStreamer extends AbstractUnifyComponent implements ResourceStreamer {

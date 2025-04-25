@@ -22,7 +22,7 @@ import com.tcdng.unify.web.ui.widget.AbstractRegexPageValidation;
  * Website page validation.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-websitevalidation")
 public class WebsiteValidation extends AbstractRegexPageValidation {

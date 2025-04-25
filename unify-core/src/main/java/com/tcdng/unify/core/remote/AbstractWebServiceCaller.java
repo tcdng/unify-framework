@@ -31,7 +31,7 @@ import com.tcdng.unify.core.util.IOUtils;
  * Convenient base class for web service caller.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractWebServiceCaller extends AbstractUnifyComponent implements WebServiceCaller {
 

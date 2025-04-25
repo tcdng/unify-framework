@@ -19,7 +19,7 @@ package com.tcdng.unify.convert.converters;
  * Used for converting a value to a particular type.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface Converter<T> {
 

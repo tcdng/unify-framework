@@ -27,7 +27,7 @@ import java.util.Map;
  * Color palette.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public enum ColorPalette {
     

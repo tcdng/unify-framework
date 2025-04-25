@@ -22,7 +22,7 @@ import com.tcdng.unify.core.constant.ColorPalette;
  * Abstract base class for charts.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractChart implements Chart {
 

@@ -24,7 +24,7 @@ import com.tcdng.unify.core.annotation.FosterParentType;
  * Test file attachment record.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Table(name = "FILEATTACHMENT")
 public class FileAttachment extends AbstractTestVersionedTableEntity {

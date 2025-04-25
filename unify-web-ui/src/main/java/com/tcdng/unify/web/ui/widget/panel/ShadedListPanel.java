@@ -23,7 +23,7 @@ import com.tcdng.unify.web.ui.widget.AbstractPanel;
  * Represents a shaded list panel.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-shadedlistpanel")
 @UplBinding("web/panels/upl/shadedlistpanel.upl")

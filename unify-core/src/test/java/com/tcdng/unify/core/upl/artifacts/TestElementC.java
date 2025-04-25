@@ -26,7 +26,7 @@ import com.tcdng.unify.core.upl.AbstractUplComponent;
  * Complex test UPL component.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("test-uplelementc")
 @UplAttributes({

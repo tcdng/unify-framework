@@ -29,7 +29,7 @@ import com.tcdng.unify.core.data.ListNumberData;
  * Days list command.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("dayslist")
 public class DaysListCommand extends AbstractZeroParamsListCommand {

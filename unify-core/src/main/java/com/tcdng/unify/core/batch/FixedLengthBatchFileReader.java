@@ -22,7 +22,7 @@ import com.tcdng.unify.core.annotation.Component;
  * Fixed length batch file reader.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(name = "fixedlength-batchfilereader", description = "$m{batchfilereader.fixedlength}")
 public class FixedLengthBatchFileReader extends AbstractMultiLineTextFileRecordReader {

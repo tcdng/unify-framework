@@ -23,7 +23,7 @@ import com.tcdng.unify.core.annotation.Component;
  * Policy class for test record with no restriction.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("testentitynorest-policy")
 public class TestEntityNoRestPolicy extends TestEntityPolicy {

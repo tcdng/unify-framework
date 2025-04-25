@@ -24,7 +24,7 @@ import com.tcdng.unify.core.upl.UplComponent;
  * Represents a user interface section.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface Section extends UplComponent {
 

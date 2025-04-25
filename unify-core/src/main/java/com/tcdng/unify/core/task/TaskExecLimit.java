@@ -19,7 +19,7 @@ package com.tcdng.unify.core.task;
  * Task execution limit.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public enum TaskExecLimit {
     ALLOW_SINGLE,

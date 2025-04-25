@@ -32,7 +32,7 @@ import com.tcdng.unify.core.UnifyException;
  * Default two-way string cryptograph implementation tests.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class TwoWayStringCryptographImplTest extends AbstractUnifyComponentTest {
 

@@ -19,7 +19,7 @@ package com.tcdng.unify.core;
  * Convenient abstract base class for session attribute providers
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractSessionAttributeProvider extends AbstractAttributeProvider
 		implements SessionAttributeProvider {

@@ -38,7 +38,7 @@ import com.tcdng.unify.web.ui.widget.control.Table;
  * Abstract base class for simple CRUD panels.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @UplBinding("web/panels/upl/tablecrudpanel.upl")
 @UplAttributes({ @UplAttribute(name = "createNext", type = boolean.class, defaultVal = "false") })

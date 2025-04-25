@@ -23,7 +23,7 @@ import com.tcdng.unify.core.annotation.Configurable;
  * Convenient base class for remote call gate.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractRemoteCallGate extends AbstractUnifyComponent implements RemoteCallGate {
 

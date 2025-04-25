@@ -46,7 +46,7 @@ import com.tcdng.unify.core.util.StringUtils;
  * Convenient base class for email server (based on java mail).
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractEmailServer extends AbstractUnifyComponent implements EmailServer {
 

@@ -25,7 +25,7 @@ import com.tcdng.unify.web.constant.ExtensionType;
  * Abstract base class for number fields.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @UplAttributes({ @UplAttribute(name = "precision", type = int.class),
 		@UplAttribute(name = "acceptNegative", type = boolean.class),

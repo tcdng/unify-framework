@@ -26,7 +26,7 @@ import com.tcdng.unify.web.WebApplicationComponents;
  * HTTP client implementation.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(WebApplicationComponents.APPLICATION_HTTPCLIENT)
 public class HttpClientImpl extends AbstractHttpClient {

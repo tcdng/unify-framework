@@ -24,7 +24,7 @@ import com.tcdng.unify.core.filter.AbstractMultipleParamObjectFilterPolicy;
  * Not amongst list policy.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class NotAmongstPolicy extends AbstractMultipleParamObjectFilterPolicy {
 

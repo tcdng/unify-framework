@@ -27,7 +27,7 @@ import com.tcdng.unify.core.annotation.ResultField;
  * Test callable result class.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Table(name = "LICENSE")
 @CallableResult

@@ -33,7 +33,7 @@ import com.tcdng.unify.web.ui.WebUIApplicationComponents;
  * Default implementation of response writer pool.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(WebUIApplicationComponents.APPLICATION_RESPONSEWRITERPOOL)
 public class ResponseWriterPoolImpl extends AbstractUnifyComponent implements ResponseWriterPool {

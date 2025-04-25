@@ -21,7 +21,7 @@ import com.tcdng.unify.core.annotation.Component;
  * An input text field that allows series - letters followed by digits.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-series")
 public class SeriesField extends TextField {

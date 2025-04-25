@@ -24,7 +24,7 @@ import com.tcdng.unify.web.ui.widget.writer.AbstractPanelWriter;
  * Panel writer.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Writes(Panel.class)
 @Component("panel-writer")

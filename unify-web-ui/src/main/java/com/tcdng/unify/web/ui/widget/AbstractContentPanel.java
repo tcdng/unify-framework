@@ -24,7 +24,7 @@ import com.tcdng.unify.core.annotation.UplAttributes;
  * Convenient abstract base class for content panels.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @UplAttributes({
 	@UplAttribute(name = "detachedWindow", type = boolean.class) })

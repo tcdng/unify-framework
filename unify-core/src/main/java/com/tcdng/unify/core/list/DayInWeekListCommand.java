@@ -32,7 +32,7 @@ import com.tcdng.unify.core.util.StringUtils;
  * Day-in-week list command.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("dayinweeklist")
 public class DayInWeekListCommand extends AbstractZeroParamsListCommand {

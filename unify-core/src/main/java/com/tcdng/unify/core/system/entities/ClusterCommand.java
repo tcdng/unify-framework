@@ -23,7 +23,7 @@ import com.tcdng.unify.core.annotation.ForeignKey;
  * Cluster command entity.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Table("UNCLUSTERCOMMAND")
 public class ClusterCommand extends AbstractSystemSequencedEntity {

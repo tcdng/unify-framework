@@ -32,7 +32,7 @@ import com.tcdng.unify.web.ui.widget.writer.AbstractControlWriter;
  * Multi-parameter writer.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Writes(MultiDynamic.class)
 @Component("multidynamic-writer")

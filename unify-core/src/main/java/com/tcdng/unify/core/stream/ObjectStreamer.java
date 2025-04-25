@@ -29,7 +29,7 @@ import com.tcdng.unify.core.constant.PrintFormat;
  * Interface for object stream read/write device.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface ObjectStreamer extends UnifyComponent {
 

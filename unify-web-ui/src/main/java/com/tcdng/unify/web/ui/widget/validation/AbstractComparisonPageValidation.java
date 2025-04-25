@@ -28,7 +28,7 @@ import com.tcdng.unify.web.ui.widget.Widget;
  * Abstract regex page validation.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractComparisonPageValidation extends AbstractPageValidation {
 

@@ -27,7 +27,7 @@ import com.tcdng.unify.core.util.DataUtils;
  * Area chart.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class AreaChart extends AbstractChart {
 

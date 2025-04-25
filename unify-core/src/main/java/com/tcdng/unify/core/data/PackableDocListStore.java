@@ -25,7 +25,7 @@ import com.tcdng.unify.core.format.Formatter;
  * Packable document list value store.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class PackableDocListStore extends AbstractListValueStore<PackableDoc> {
 

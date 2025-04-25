@@ -22,7 +22,7 @@ import com.tcdng.unify.core.UnifyException;
  * A two-factor authentication service component.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface TwoFactorAutenticationService extends UnifyComponent {
 

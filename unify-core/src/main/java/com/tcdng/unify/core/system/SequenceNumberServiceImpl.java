@@ -53,7 +53,7 @@ import com.tcdng.unify.core.util.ThreadUtils;
  * Default implementation of a sequence number service.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Transactional
 @Component(ApplicationComponents.APPLICATION_SEQUENCENUMBERSERVICE)

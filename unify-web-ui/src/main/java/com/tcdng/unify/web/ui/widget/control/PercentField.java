@@ -24,7 +24,7 @@ import com.tcdng.unify.core.format.Formatter;
  * Represents an input field for entering a percentage amount.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-percent")
 @UplAttributes({ @UplAttribute(name = "formatter", type = Formatter.class, defaultVal = "$d{!percentformat}") })

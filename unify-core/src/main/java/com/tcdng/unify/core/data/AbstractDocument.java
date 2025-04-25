@@ -20,7 +20,7 @@ package com.tcdng.unify.core.data;
  * Abstract document.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractDocument implements Document {
 

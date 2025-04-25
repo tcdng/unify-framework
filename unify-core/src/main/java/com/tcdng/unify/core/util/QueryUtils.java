@@ -24,7 +24,7 @@ import com.tcdng.unify.core.database.sql.SqlEntityInfo;
  * Provides utility methods for queries.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public final class QueryUtils {
 

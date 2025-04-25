@@ -29,7 +29,7 @@ import com.tcdng.unify.web.ui.widget.ResponseWriter;
  * Used for generating a refresh panel response.
  * 
  * @author The Code Department 
- * @since 1.0
+ * @since 4.1
  */
 @Component("refreshpanelresponse")
 @UplAttributes({ @UplAttribute(name = "panels", type = String[].class) })

@@ -19,7 +19,7 @@ package com.tcdng.unify.web.data;
  * Error part.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class ErrorPart {
 

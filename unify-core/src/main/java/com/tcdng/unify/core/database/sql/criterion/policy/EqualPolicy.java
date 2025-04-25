@@ -21,7 +21,7 @@ import com.tcdng.unify.core.database.sql.SqlDataSourceDialectPolicies;
  * Equals operator policy.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class EqualPolicy extends SingleParameterPolicy {
     public EqualPolicy(SqlDataSourceDialectPolicies rootPolicies) {

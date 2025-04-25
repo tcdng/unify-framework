@@ -22,7 +22,7 @@ import com.tcdng.unify.core.list.AbstractTypeListCommand;
  * File batch reader list command.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("batchfilereaderlist")
 public class BatchFileReaderListCommand extends AbstractTypeListCommand<BatchFileReader> {

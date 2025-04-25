@@ -31,7 +31,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * Data type constants.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @StaticList(name = "datatypelist", description = "$m{staticlist.datatypelist}")
 public enum DataType implements EnumConst {

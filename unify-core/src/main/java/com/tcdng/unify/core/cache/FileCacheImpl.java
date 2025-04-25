@@ -26,7 +26,7 @@ import com.tcdng.unify.core.annotation.Component;
  * Default implementation of a file cache.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(ApplicationComponents.APPLICATION_FILECACHE)
 public class FileCacheImpl extends AbstractTransformCache<String, byte[], InputStream> implements FileCache {

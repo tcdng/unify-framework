@@ -19,7 +19,7 @@ package com.tcdng.unify.web.ui.widget.data;
  * Color legend item.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class ColorLegendItem {
 

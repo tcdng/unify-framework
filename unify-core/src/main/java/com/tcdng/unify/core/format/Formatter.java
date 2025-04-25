@@ -26,7 +26,7 @@ import com.tcdng.unify.core.upl.UplComponent;
  * string back to a value.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface Formatter<T> extends UplComponent, ConverterFormatter<T> {
 

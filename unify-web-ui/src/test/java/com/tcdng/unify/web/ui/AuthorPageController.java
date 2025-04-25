@@ -35,7 +35,7 @@ import com.tcdng.unify.web.annotation.ResultMappings;
  * Test author page controller.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("/testauthor")
 @UplBinding("web/test/upl/testauthor.upl")

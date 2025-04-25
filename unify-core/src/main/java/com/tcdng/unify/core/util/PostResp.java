@@ -19,7 +19,7 @@ package com.tcdng.unify.core.util;
  * Post response object.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class PostResp<T> {
 

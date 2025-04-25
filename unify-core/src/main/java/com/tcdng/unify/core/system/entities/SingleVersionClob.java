@@ -23,7 +23,7 @@ import com.tcdng.unify.core.annotation.Column;
  * Single version CLOB entity.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Table("UNSINGLEVERSIONCLOB")
 public class SingleVersionClob extends AbstractSingleVersionLobEntity {

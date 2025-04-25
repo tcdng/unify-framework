@@ -24,7 +24,7 @@ import com.tcdng.unify.core.util.StringUtils;
  * Abstract user interface document.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @UplAttributes({
         @UplAttribute(name = "layout", type = DocumentLayout.class, defaultVal = "$d{!ui-desktoptype0}"),

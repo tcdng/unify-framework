@@ -29,7 +29,7 @@ import com.tcdng.unify.core.stream.ObjectStreamer;
  * JSON web service caller.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(ApplicationComponents.APPLICATION_JSONWEBSERVICECALLER)
 public class JsonWebServiceCaller extends AbstractWebServiceCaller {

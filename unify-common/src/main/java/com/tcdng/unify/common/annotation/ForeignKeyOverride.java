@@ -26,7 +26,7 @@ import com.tcdng.unify.common.database.Entity;
  * Annotation for overriding foreign key definition in super class.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

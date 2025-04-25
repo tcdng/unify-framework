@@ -24,7 +24,7 @@ import com.tcdng.unify.core.annotation.Parameters;
  * Delimited batch file reader.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(name = "delimited-batchfilereader", description = "$m{batchfilereader.delimited}")
 @Parameters({ @Parameter(

@@ -24,7 +24,7 @@ import com.tcdng.unify.core.UnifyException;
  * Task status logger.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface TaskStatusLogger extends UnifyComponent {
 

@@ -33,7 +33,7 @@ import com.tcdng.unify.web.ui.widget.control.DropdownCheckList;
  * Dropdown multi-select writer.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Writes(DropdownCheckList.class)
 @Component("dropdownchecklist-writer")

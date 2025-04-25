@@ -28,7 +28,7 @@ import com.tcdng.unify.core.util.CalendarUtils;
  * Date data type SQL policy.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class DatePolicy extends AbstractSqlDataTypePolicy {
 

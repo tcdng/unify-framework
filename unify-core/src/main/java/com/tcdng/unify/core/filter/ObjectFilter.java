@@ -24,7 +24,7 @@ import com.tcdng.unify.core.util.FilterUtils;
  * Object filter class.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class ObjectFilter {
 

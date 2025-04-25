@@ -19,7 +19,7 @@ package com.tcdng.unify.convert.converters;
  * A value to float converter.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class FloatConverter extends AbstractConverter<Float> {
 

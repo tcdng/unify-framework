@@ -27,7 +27,7 @@ import com.tcdng.unify.web.ui.widget.writer.AbstractTargetControlWriter;
  * Symbol writer.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Writes(Symbol.class)
 @Component("symbol-writer")

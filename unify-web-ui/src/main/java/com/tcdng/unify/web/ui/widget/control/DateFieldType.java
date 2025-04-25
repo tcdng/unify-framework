@@ -23,7 +23,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * Date field type.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public enum DateFieldType implements EnumConst {
 

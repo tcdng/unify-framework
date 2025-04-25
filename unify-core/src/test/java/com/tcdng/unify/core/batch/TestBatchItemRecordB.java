@@ -24,7 +24,7 @@ import com.tcdng.unify.core.database.AbstractTestVersionedTableEntity;
  * Test batch item record B.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Table(name = "TESTBATCHITEMB")
 public class TestBatchItemRecordB extends AbstractTestVersionedTableEntity implements BatchItemRecord {

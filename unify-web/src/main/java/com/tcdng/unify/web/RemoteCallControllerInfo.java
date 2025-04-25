@@ -21,7 +21,7 @@ import java.util.Map;
  * Encapsulates information about a remote-call controller.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class RemoteCallControllerInfo extends ControllerInfo<RemoteAction> {
 

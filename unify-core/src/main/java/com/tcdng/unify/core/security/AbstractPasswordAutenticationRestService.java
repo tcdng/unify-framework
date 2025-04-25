@@ -23,7 +23,7 @@ import com.tcdng.unify.core.util.PostResp;
  * Convenient abstract base class for password authentication REST service.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractPasswordAutenticationRestService extends AbstractPasswordAutenticationService {
 

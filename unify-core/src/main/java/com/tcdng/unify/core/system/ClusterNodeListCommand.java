@@ -30,7 +30,7 @@ import com.tcdng.unify.core.system.entities.ClusterNodeQuery;
  * A list of nodes in the current cluster.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("clusternodelist")
 public class ClusterNodeListCommand extends AbstractZeroParamsListCommand {

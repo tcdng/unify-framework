@@ -25,7 +25,7 @@ import com.tcdng.unify.core.annotation.Component;
  * Policy class for test versioned record.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("testversionedentity-policy")
 public class TestVersionedEntityPolicy extends TestEntityPolicy {

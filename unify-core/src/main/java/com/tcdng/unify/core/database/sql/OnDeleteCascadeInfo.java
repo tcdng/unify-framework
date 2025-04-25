@@ -24,7 +24,7 @@ import com.tcdng.unify.common.database.Entity;
  * On delete cascade information.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class OnDeleteCascadeInfo {
 

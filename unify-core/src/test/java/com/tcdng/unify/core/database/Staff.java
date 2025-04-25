@@ -25,7 +25,7 @@ import com.tcdng.unify.core.annotation.Column;
  * Staff entity.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Table(name = "STAFF")
 public class Staff extends AbstractTestVersionedTableEntity {

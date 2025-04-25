@@ -24,7 +24,7 @@ import com.tcdng.unify.core.UnifyException;
  * File server used for transferring files.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface FileTransferServer extends UnifyComponent {
 

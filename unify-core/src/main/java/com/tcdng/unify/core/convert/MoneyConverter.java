@@ -27,7 +27,7 @@ import com.tcdng.unify.core.format.DecimalFormatter;
  * A value to money converter.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class MoneyConverter extends AbstractConverter<Money> {
 

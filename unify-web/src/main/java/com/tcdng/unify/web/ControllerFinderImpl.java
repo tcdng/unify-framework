@@ -32,7 +32,7 @@ import com.tcdng.unify.core.util.IOUtils;
  * Default implementation of a controller finder.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(WebApplicationComponents.APPLICATION_CONTROLLERFINDER)
 public class ControllerFinderImpl extends AbstractUnifyComponent implements ControllerFinder {

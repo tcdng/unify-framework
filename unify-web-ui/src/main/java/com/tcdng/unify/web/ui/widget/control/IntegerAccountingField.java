@@ -24,7 +24,7 @@ import com.tcdng.unify.core.format.Formatter;
  * Input field for entering accounting whole numbers.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-integer-accounting")
 @UplAttributes({ @UplAttribute(name = "formatter", type = Formatter.class, defaultVal = "$d{!integeraccountingformat}") })

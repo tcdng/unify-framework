@@ -23,7 +23,7 @@ import com.tcdng.unify.core.data.MarkedTree.MarkedTreePolicy;
  * Handles rules relating to a tree.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface TreePolicy extends MarkedTreePolicy<TreeItem> {
 

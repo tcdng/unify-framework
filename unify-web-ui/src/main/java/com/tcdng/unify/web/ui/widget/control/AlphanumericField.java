@@ -24,7 +24,7 @@ import com.tcdng.unify.core.annotation.UplAttributes;
  * An input text field that allows only alphanumeric characters.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-alphanumeric")
 @UplAttributes({ 

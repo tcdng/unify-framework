@@ -44,7 +44,7 @@ import com.tcdng.unify.web.ui.widget.data.TreeTypeInfo.ExtendedTreeItemTypeInfo;
  * Represents a tree explorer control.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-treeexplorer")
 @UplAttributes({ @UplAttribute(name = "collapsedIcon", type = String.class, defaultVal = "$t{images/collapsed.png}"),

@@ -25,7 +25,7 @@ import java.lang.annotation.Target;
  * Used for binding a UPL document to a component.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Documented
 @Target(ElementType.TYPE)

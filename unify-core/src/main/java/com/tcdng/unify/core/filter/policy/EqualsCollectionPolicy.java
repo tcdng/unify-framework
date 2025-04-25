@@ -22,7 +22,7 @@ import com.tcdng.unify.core.filter.AbstractCollectionSizeObjectFilterPolicy;
  * Collection size equals policy.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class EqualsCollectionPolicy extends AbstractCollectionSizeObjectFilterPolicy {
 

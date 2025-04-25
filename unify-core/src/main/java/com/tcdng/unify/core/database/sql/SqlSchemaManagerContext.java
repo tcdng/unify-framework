@@ -23,7 +23,7 @@ import java.util.List;
  * SQL schema manager context.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class SqlSchemaManagerContext {
 

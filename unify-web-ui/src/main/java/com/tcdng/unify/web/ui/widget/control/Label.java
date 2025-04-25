@@ -27,7 +27,7 @@ import com.tcdng.unify.web.ui.widget.AbstractFormattedControl;
  * A label control.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-label")
 @UplAttributes({

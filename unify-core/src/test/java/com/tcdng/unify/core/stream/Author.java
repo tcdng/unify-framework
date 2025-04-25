@@ -25,7 +25,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
  * Data object for tests.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @JacksonXmlRootElement
 @JsonPropertyOrder({ "fullName", "books", "picture", "account" })

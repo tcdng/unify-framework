@@ -24,7 +24,7 @@ import com.tcdng.unify.core.annotation.ForeignKey;
  * Parameter value entity.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Table(name = "UNPARAMVALUE", uniqueConstraints = { @UniqueConstraint({ "parameterValuesId", "paramKey" }) })
 public class ParameterValue extends AbstractSystemSequencedEntity {

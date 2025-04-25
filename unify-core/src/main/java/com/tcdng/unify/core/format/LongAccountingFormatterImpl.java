@@ -24,7 +24,7 @@ import com.tcdng.unify.core.annotation.Component;
  * Default long (accounting) formatter implementation.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(name = "longaccountingformat", description = "$m{format.long.accounting}")
 public class LongAccountingFormatterImpl extends AbstractNumberFormatter<Long> implements LongFormatter {

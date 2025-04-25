@@ -25,7 +25,7 @@ import com.tcdng.unify.core.data.SAXParserPool;
  * XML utilities.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public final class XmlUtils {
 

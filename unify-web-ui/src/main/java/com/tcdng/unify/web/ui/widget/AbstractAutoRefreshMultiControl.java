@@ -26,7 +26,7 @@ import com.tcdng.unify.web.ui.widget.data.AutoRefresh;
  * Base class for auto-referesh multi-controls.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractAutoRefreshMultiControl extends AbstractMultiControl {
 

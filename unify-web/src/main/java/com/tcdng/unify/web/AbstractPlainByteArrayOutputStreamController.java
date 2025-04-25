@@ -27,7 +27,7 @@ import com.tcdng.unify.core.util.StringUtils;
  * Abstract plain output stream controller.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractPlainByteArrayOutputStreamController extends AbstractPlainOutputStreamController {
 

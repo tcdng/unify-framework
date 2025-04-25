@@ -19,7 +19,7 @@ package com.tcdng.unify.core.util.xml;
  * Convenient abstract enumeration constants XML adapter class.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractEnumConstXmlAdapter {
 }

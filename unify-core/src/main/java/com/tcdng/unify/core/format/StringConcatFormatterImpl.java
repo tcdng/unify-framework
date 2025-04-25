@@ -27,7 +27,7 @@ import com.tcdng.unify.core.annotation.UplAttributes;
  * Default implementation of a string concatenation formatter.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(name = "stringconcatformat", description = "$m{format.stringconcat}")
 @UplAttributes({ @UplAttribute(name = "newline", type = boolean.class) })

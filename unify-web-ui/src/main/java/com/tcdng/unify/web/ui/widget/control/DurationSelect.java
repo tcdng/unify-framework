@@ -27,7 +27,7 @@ import com.tcdng.unify.web.ui.widget.Control;
  * Widget used for selecting a duration.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-durationselect")
 @UplAttributes({

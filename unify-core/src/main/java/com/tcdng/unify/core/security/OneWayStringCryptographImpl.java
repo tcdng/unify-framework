@@ -25,7 +25,7 @@ import com.tcdng.unify.core.annotation.Tooling;
  * Default implementation of a one-way string cryptograph.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Tooling(description = "Default One-way String Cryptograph")
 @Component("oneway-stringcryptograph")

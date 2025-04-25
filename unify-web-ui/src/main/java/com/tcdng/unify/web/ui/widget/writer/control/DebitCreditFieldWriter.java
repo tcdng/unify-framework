@@ -33,7 +33,7 @@ import com.tcdng.unify.web.ui.widget.control.TextField;
  * Debit/Credit field writer.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Writes(DebitCreditField.class)
 @Component("debitcreditfield-writer")

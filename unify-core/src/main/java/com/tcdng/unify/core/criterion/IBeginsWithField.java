@@ -20,7 +20,7 @@ package com.tcdng.unify.core.criterion;
  * Restriction for a property that begins with case-insensitive a field value.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class IBeginsWithField extends AbstractSingleParamRestriction {
 

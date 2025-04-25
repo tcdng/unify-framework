@@ -28,7 +28,7 @@ import com.tcdng.unify.core.UnifyOperationException;
  * Link grid information.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class LinkGridInfo {
 

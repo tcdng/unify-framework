@@ -19,7 +19,7 @@ package com.tcdng.unify.core.database.sql.data.policy;
  * Double array data type SQL policy.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class DoubleArrayPolicy extends StringArrayPolicy {
 

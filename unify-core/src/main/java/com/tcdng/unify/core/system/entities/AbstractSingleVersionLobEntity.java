@@ -23,7 +23,7 @@ import com.tcdng.unify.core.annotation.TenantId;
  * Abstract base class for single version large objects.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractSingleVersionLobEntity extends AbstractSequencedEntity {
 

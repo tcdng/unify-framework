@@ -22,7 +22,7 @@ import com.tcdng.unify.web.constant.Secured;
  * Convenient base class for HTTP client controllers.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractHttpClientController extends AbstractController implements HttpClientController {
 

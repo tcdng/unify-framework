@@ -29,7 +29,7 @@ import com.tcdng.unify.web.remotecall.RemoteCallFormat;
  * Abstract plain JSON controller.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractPlainJsonController extends AbstractPlainController {
 

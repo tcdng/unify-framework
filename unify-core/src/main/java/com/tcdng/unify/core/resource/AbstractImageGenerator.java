@@ -22,7 +22,7 @@ import com.tcdng.unify.core.annotation.Singleton;
  * Convenient abstract base class for an image generator.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Singleton(false)
 public abstract class AbstractImageGenerator extends AbstractResourceGenerator<ImageFormat> implements ImageGenerator {

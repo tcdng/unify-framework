@@ -27,7 +27,7 @@ import com.tcdng.unify.common.annotation.UniqueConstraint;
  * Annotation for indicating an entity extension.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

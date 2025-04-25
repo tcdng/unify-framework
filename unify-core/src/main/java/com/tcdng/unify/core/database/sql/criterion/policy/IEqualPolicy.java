@@ -21,7 +21,7 @@ import com.tcdng.unify.core.database.sql.SqlDataSourceDialectPolicies;
  * Case-insensitive equals operator policy.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class IEqualPolicy extends SingleParameterPolicy {
     public IEqualPolicy(SqlDataSourceDialectPolicies rootPolicies) {

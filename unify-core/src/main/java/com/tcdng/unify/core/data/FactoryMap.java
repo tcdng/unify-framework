@@ -30,7 +30,7 @@ import com.tcdng.unify.core.util.DataUtils;
  * {@link #get(Object, Object...)} method.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class FactoryMap<T, U> {
 

@@ -27,7 +27,7 @@ import jakarta.servlet.http.HttpSessionBindingListener;
  * HTTP user session implementation.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class HttpUserSessionImpl extends AbstractHttpUserSession implements HttpSessionBindingListener {
 

@@ -61,7 +61,7 @@ import com.tcdng.unify.core.util.StringUtils;
  * PostgreSQL SQL dialect.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(name = SqlDialectNameConstants.POSTGRESQL, description = "$m{sqldialect.postgresdb}")
 public class PostgreSqlDialect extends AbstractSqlDataSourceDialect {

@@ -43,7 +43,7 @@ import com.tcdng.unify.core.util.CalendarUtils;
  * Sequence number service tests (Standalone mode).
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class SequenceNumberServiceTest extends AbstractUnifyComponentTest {
 

@@ -25,7 +25,7 @@ import com.tcdng.unify.web.constant.RealPathConstants;
  * Plain download path resource controller.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("/plain/resource/downloadpath")
 public class PlainDownloadPathResourceController extends PlainRealPathResourceController {

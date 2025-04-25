@@ -22,7 +22,7 @@ import com.tcdng.unify.core.list.AbstractTypeListCommand;
  * File transfer server list command.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("filetransferserverlist")
 public class FileTransferServerListCommand extends AbstractTypeListCommand<FileTransferServer> {

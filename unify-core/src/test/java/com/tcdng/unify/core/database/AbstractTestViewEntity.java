@@ -19,7 +19,7 @@ package com.tcdng.unify.core.database;
  * Abstract base class for test view entities.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractTestViewEntity extends AbstractEntity {
 

@@ -24,7 +24,7 @@ import com.tcdng.unify.web.constant.Secured;
  * Convenient abstract base class for void page bean page controller.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractVoidBeanPageController extends AbstractPageController<VoidPageBean> {
 

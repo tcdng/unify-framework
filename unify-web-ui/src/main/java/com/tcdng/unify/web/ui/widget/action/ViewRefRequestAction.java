@@ -22,7 +22,7 @@ import com.tcdng.unify.web.ui.widget.AbstractPageAction;
  * View refence request action.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-viewrefrequest")
 public class ViewRefRequestAction extends AbstractPageAction {

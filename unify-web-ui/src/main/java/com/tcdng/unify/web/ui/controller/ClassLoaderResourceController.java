@@ -25,7 +25,7 @@ import com.tcdng.unify.web.constant.Secured;
  * Resource controller for fetching file resources from class loader.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(WebApplicationComponents.APPLICATION_CLASSLOADERRESOURCECONTROLLER)
 public class ClassLoaderResourceController extends FileResourceController {

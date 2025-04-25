@@ -27,7 +27,7 @@ import com.tcdng.unify.web.ui.widget.data.DialogCrudInfo;
  * Dialog table CRUD panel.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-dialogtablecrudpanel")
 @UplBinding("web/panels/upl/dialogtablecrudpanel.upl")

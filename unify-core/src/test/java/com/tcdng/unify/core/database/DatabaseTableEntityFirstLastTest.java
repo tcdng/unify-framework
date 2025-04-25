@@ -31,7 +31,7 @@ import com.tcdng.unify.core.constant.Gender;
  * Database table entity first-last records tests.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class DatabaseTableEntityFirstLastTest extends AbstractUnifyComponentTest {
 

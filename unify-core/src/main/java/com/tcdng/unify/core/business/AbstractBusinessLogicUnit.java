@@ -25,7 +25,7 @@ import com.tcdng.unify.core.database.Database;
  * Convenient base class for a business logic unit.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractBusinessLogicUnit extends AbstractUnifyComponent implements BusinessLogicUnit {
 

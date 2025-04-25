@@ -25,7 +25,7 @@ import com.tcdng.unify.core.format.Formatter;
  * Year-end field.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-yearend")
 @UplAttributes({

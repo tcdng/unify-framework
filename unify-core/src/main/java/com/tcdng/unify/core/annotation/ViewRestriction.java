@@ -27,7 +27,7 @@ import com.tcdng.unify.core.criterion.RestrictionType;
  * Defines a view restriction.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

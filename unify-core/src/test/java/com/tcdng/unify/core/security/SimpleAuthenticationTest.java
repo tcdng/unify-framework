@@ -26,7 +26,7 @@ import com.tcdng.unify.core.Setting;
  * Simple password authentication tests.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class SimpleAuthenticationTest extends AbstractUnifyComponentTest {
 

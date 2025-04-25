@@ -23,7 +23,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * Page size type.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @StaticList(name = "pagesizetypelist", description="$m{staticlist.pagesizetypelist}")
 public enum PageSizeType implements EnumConst {

@@ -21,7 +21,7 @@ package com.tcdng.unify.core.criterion;
  * 
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractRestrictionTranslatorMapper implements RestrictionTranslatorMapper {
 

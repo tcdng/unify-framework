@@ -25,7 +25,7 @@ import com.tcdng.unify.web.ui.widget.AbstractPageAction;
  * Disable action.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-disable")
 @UplAttributes({ @UplAttribute(name = "valueComponentList", type = UplElementReferences.class) })

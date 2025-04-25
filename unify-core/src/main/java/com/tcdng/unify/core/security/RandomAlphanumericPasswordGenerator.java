@@ -24,7 +24,7 @@ import com.tcdng.unify.core.util.StringUtils;
  * Random alphanumeric password generator.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(name = "randomalphanumeric-passwordgenerator", description = "$m{passwordgenerator.randomalphanumeric}")
 public class RandomAlphanumericPasswordGenerator extends AbstractUnifyComponent implements PasswordGenerator {

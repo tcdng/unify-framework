@@ -24,7 +24,7 @@ import com.tcdng.unify.web.ui.widget.AbstractPanel;
  * Represents a search criteria panel.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-searchcriteriapanel")
 @UplBinding("web/panels/upl/searchcriteriapanel.upl")

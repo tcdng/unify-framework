@@ -29,7 +29,7 @@ import com.tcdng.unify.core.UnifyException;
  * An abstract generic pool that provides basic object pooling functionality.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractPool<T> {
 

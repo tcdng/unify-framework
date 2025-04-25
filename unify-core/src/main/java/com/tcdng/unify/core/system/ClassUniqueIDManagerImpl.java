@@ -48,7 +48,7 @@ import com.tcdng.unify.core.util.SqlUtils;
  * Default class unique ID manager implementation.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(ApplicationComponents.APPLICATION_CLASSUNIQUEIDMANAGER)
 public class ClassUniqueIDManagerImpl extends AbstractUnifyComponent implements ClassUniqueIDManager {

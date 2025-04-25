@@ -22,7 +22,7 @@ import com.tcdng.unify.web.util.ClientSyncUtils;
  * Convenient abstract base class for client synchronization end-points.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractClientSyncEndpoint implements ClientSyncEndpoint {
 

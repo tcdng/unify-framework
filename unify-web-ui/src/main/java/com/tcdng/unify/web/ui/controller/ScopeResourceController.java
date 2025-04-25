@@ -31,7 +31,7 @@ import com.tcdng.unify.web.ui.AbstractPageResourceController;
  * Resource controller for fetching resources from application or session scope.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("/resource/scope")
 public class ScopeResourceController extends AbstractPageResourceController {

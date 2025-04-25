@@ -20,7 +20,7 @@ package com.tcdng.unify.core.util;
  * Argument type information.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class ArgumentTypeInfo {
 

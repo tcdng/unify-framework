@@ -20,7 +20,7 @@ package com.tcdng.unify.web.constant;
  * Secured flags enumeration.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public enum Secured {
     TRUE,

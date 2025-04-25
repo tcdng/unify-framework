@@ -29,7 +29,7 @@ import com.tcdng.unify.web.ui.widget.ResponseWriter;
  * Used for generating an open window response.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("openwindowresponse")
 @UplAttributes({ @UplAttribute(name = "path", type = String.class),

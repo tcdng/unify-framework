@@ -27,7 +27,7 @@ import com.tcdng.unify.common.annotation.AnnotationConstants;
  * Annotation for indicating that a method is observed by expiration manager.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Documented
 @Target(ElementType.METHOD)

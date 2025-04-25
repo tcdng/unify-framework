@@ -23,7 +23,7 @@ import com.tcdng.unify.common.util.EnumUtils;
  * Database column type enumeration.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public enum ColumnType implements EnumConst {
 

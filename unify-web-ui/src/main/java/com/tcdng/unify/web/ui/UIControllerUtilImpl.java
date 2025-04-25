@@ -55,7 +55,7 @@ import com.tcdng.unify.web.ui.widget.PropertyInfo;
  * Default implementation of application UI controller utilities.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(WebUIApplicationComponents.APPLICATION_UICONTROLLERUTIL)
 public class UIControllerUtilImpl extends AbstractUnifyComponent implements UIControllerUtil {

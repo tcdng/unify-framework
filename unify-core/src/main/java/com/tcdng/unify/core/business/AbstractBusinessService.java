@@ -40,7 +40,7 @@ import com.tcdng.unify.core.util.CalendarUtils;
  * service. Any concrete subclass of this class is managed by the container.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractBusinessService extends AbstractUnifyComponent implements BusinessService {
 

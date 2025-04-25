@@ -19,7 +19,7 @@ package com.tcdng.unify.core;
  * Convenient abstract user token providers.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractUserTokenProvider extends AbstractUnifyComponent implements UserTokenProvider {
 

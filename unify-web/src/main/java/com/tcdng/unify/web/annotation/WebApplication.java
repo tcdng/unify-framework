@@ -25,7 +25,7 @@ import java.lang.annotation.Target;
  * entry point.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

@@ -21,7 +21,7 @@ import com.tcdng.unify.core.UnifyException;
  * BasicDocument panels.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface DocumentPanels {
 

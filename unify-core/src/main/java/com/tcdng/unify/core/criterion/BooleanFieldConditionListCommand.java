@@ -32,7 +32,7 @@ import com.tcdng.unify.core.util.FilterUtils;
  * Boolean field condition list command.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("booleanfieldconditionlist")
 public class BooleanFieldConditionListCommand extends AbstractZeroParamsListCommand {

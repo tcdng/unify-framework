@@ -36,7 +36,7 @@ import com.tcdng.unify.web.constant.Secured;
  * Abstract base class for page resource controllers.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Singleton(false)
 public abstract class AbstractPageResourceController extends AbstractUIController implements PageResourceController {

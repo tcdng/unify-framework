@@ -29,7 +29,7 @@ import com.tcdng.unify.web.ui.widget.panel.StandalonePanel;
  * Manages the creation page components.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface PageManager extends EntityEventSource {
 

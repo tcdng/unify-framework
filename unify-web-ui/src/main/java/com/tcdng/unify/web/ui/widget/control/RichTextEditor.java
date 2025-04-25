@@ -26,7 +26,7 @@ import com.tcdng.unify.web.ui.widget.Control;
  * Rich text editor.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-richtexteditor")
 @UplAttributes({ @UplAttribute(name = "rows", type = int.class),

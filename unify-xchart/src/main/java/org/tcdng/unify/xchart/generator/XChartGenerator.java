@@ -26,7 +26,7 @@ import com.tcdng.unify.core.chart.AbstractChartGenerator;
  * Implementation of a chart generator using XChart.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(XChartApplicationComponents.XCHART_CHARTGENERATOR)
 public class XChartGenerator extends AbstractChartGenerator {

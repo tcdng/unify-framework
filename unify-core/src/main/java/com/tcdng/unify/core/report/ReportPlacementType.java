@@ -24,7 +24,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * Report placement types.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @StaticList(name = "reportplacementlist", description = "$m{staticlist.reportplacementlist}")
 public enum ReportPlacementType implements EnumConst {

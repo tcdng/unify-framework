@@ -24,7 +24,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * Supported report format type.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @StaticList(name = "reportformatlist", description="$m{staticlist.reportformatlist}")
 public enum ReportFormat implements EnumConst {

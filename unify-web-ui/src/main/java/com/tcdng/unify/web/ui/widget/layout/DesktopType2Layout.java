@@ -24,7 +24,7 @@ import com.tcdng.unify.web.ui.widget.AbstractDocumentLayout;
  * Type-2 desktop document layout component.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-desktoptype2")
 @UplAttributes({ @UplAttribute(name = "collapsibleSidebar", type = boolean.class, defaultVal = "false") })

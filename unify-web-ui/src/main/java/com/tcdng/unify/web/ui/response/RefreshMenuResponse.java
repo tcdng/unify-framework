@@ -31,7 +31,7 @@ import com.tcdng.unify.web.ui.widget.ResponseWriter;
  * defining an action result with {@link ResultMapping}.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("refreshmenuresponse")
 public class RefreshMenuResponse extends AbstractJsonPageControllerResponse {

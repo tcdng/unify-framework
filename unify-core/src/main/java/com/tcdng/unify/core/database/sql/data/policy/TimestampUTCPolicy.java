@@ -28,7 +28,7 @@ import com.tcdng.unify.core.database.sql.AbstractSqlDataTypePolicy;
  * Timestamp (UTC) type SQL policy.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class TimestampUTCPolicy extends AbstractSqlDataTypePolicy {
 

@@ -27,7 +27,7 @@ import com.tcdng.unify.core.annotation.Component;
  * Listable parameter list command.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("listableparamlist")
 public class ListableParamListCommand extends AbstractListCommand<ListableListParam> {

@@ -28,7 +28,7 @@ import com.tcdng.unify.core.util.StringUtils;
  * File attachment type.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @StaticList(name = "fileattachmenttypelist", description = "$m{staticlist.fileattachmenttypelist}")
 public enum FileAttachmentType implements EnumConst {

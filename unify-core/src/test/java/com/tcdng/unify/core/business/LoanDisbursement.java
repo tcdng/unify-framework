@@ -24,7 +24,7 @@ import com.tcdng.unify.core.database.AbstractTestVersionedTableEntity;
  * Loan disbursement record.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Table
 public class LoanDisbursement extends AbstractTestVersionedTableEntity {

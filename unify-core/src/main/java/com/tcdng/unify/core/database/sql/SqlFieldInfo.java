@@ -27,7 +27,7 @@ import com.tcdng.unify.core.util.StringUtils;
  * other information for a record field.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class SqlFieldInfo implements SqlFieldSchemaInfo {
 

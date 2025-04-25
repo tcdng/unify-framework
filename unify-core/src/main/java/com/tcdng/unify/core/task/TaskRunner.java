@@ -25,7 +25,7 @@ import com.tcdng.unify.core.annotation.PeriodicType;
  * Task runner.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface TaskRunner extends UnifyComponent {
 

@@ -25,7 +25,7 @@ import com.tcdng.unify.web.ui.widget.AbstractListControl;
  * bind to any value attribute. Descriptions are gotten from list objects.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-listarea")
 @UplAttributes({ @UplAttribute(name = "binding", type = String.class, mandatory = false) })

@@ -29,7 +29,7 @@ import com.tcdng.unify.core.util.ThreadUtils;
  * Date sequence number task.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("datesequencenumber-task")
 public class DateSequenceNumberTask extends AbstractTask {

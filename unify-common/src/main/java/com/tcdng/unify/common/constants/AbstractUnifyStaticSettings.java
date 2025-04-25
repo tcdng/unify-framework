@@ -20,7 +20,7 @@ package com.tcdng.unify.common.constants;
  * Base class for abstract static settings.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractUnifyStaticSettings implements UnifyStaticSettings {
 

@@ -35,7 +35,7 @@ import com.tcdng.unify.core.constant.ClientPlatform;
  * Default implementation of UPL component writer manager.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(ApplicationComponents.APPLICATION_UPLCOMPONENTWRITERMANAGER)
 public class UplComponentWriterManagerImpl extends AbstractUnifyComponent implements UplComponentWriterManager {

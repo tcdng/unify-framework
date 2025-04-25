@@ -21,7 +21,7 @@ import com.tcdng.unify.core.annotation.Component;
  * Arranges widgets in a horizontal layout.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-horizontal")
 public class HorizontalLayout extends AbstractTabularLayout {

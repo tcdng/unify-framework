@@ -24,7 +24,7 @@ import com.tcdng.unify.web.ui.widget.writer.AbstractPageWriter;
  * Basic page writer.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Writes(BasicPage.class)
 @Component("page-writer")

@@ -23,7 +23,7 @@ import com.tcdng.unify.web.ui.widget.ResponseWriter;
  * User interface panel writer.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface PanelWriter extends ContainerWriter {
 

@@ -25,7 +25,7 @@ import com.tcdng.unify.web.annotation.RemoteAction;
  * Mock remote call controller.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("/remotecall/mock")
 public class MockRemoteCallController extends AbstractRemoteCallController {

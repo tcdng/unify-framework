@@ -27,7 +27,7 @@ import com.tcdng.unify.core.constant.BooleanType;
  * Test loan report parameter entity.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Policy("testentitynorest-policy")
 @Table(name = "LOAN_REPORT_PARAMETER")

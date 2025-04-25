@@ -24,7 +24,7 @@ import com.tcdng.unify.core.database.Query;
  * User session tracking query.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class UserSessionTrackingQuery extends Query<UserSessionTracking> {
 

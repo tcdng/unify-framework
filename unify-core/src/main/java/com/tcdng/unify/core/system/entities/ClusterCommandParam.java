@@ -24,7 +24,7 @@ import com.tcdng.unify.core.annotation.ListOnly;
  * Cluster command parameter entity.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Table("UNCLUSTERCOMMANDPRM")
 public class ClusterCommandParam extends AbstractSystemSequencedEntity {

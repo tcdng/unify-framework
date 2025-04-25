@@ -24,7 +24,7 @@ import com.tcdng.unify.web.ui.widget.AbstractPanel;
  * A popup panel.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-popuppanel")
 @UplBinding("web/panels/upl/popuppanel.upl")

@@ -26,7 +26,7 @@ import com.tcdng.unify.web.constant.ClientSyncNameConstants;
  * Jetty client synchronization websocket implementation.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @SuppressWarnings("serial")
 @WebServlet(name = "MyWebSocketServlet", urlPatterns = {ClientSyncNameConstants.SYNC_CONTEXT})

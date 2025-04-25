@@ -39,7 +39,7 @@ import com.tcdng.unify.core.util.SqlUtils;
  * Dynamic SQL database static entities test.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class DynamicSqlDatabaseStaticEntityTest extends AbstractUnifyComponentTest {
 

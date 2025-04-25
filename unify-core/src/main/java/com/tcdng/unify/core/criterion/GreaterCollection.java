@@ -19,7 +19,7 @@ package com.tcdng.unify.core.criterion;
  * Restriction for a collection size greater than a value.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class GreaterCollection extends AbstractSingleParamRestriction {
 

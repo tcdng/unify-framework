@@ -19,7 +19,7 @@ package com.tcdng.unify.common.constants;
  * Interconnect entity base type.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public enum ConnectEntityBaseType {
     BASE_ENTITY,

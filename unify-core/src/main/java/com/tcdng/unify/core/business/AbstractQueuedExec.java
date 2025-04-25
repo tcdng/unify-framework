@@ -22,7 +22,7 @@ import java.util.concurrent.Executors;
  * Convenient base class for queued execution.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractQueuedExec<T> implements QueuedExec<T> {
 

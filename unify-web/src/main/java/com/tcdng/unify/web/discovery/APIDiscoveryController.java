@@ -31,7 +31,7 @@ import com.tcdng.unify.web.discovery.gem.data.DiscoverRemoteCallResult;
  * gateway operation restrictions are ignored.
  * 
  * @author Lateef
- * @since 1.0
+ * @since 4.1
  */
 @Component(WebApplicationComponents.APPLICATION_APIDISCOVERY_CONTROLLER)
 public class APIDiscoveryController extends AbstractRemoteCallController {

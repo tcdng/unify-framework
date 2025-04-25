@@ -19,7 +19,7 @@ package com.tcdng.unify.core.database;
  * Test server configuration query.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class ServerConfigQuery extends AbstractTestTableEntityQuery<ServerConfig> {
 

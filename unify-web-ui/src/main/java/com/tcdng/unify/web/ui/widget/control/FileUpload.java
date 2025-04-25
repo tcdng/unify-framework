@@ -25,7 +25,7 @@ import com.tcdng.unify.web.ui.widget.AbstractControl;
  * A file upload widget used for selecting files and uploading to server.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-fileupload")
 @UplAttributes({ @UplAttribute(name = "accept", type = String.class),

@@ -20,7 +20,7 @@ package com.tcdng.unify.core.criterion;
  * Or restriction builder.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class OrBuilder extends AbstractCompoundRestrictionBuilder {
 

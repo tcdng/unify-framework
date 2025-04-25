@@ -65,7 +65,7 @@ import com.tcdng.unify.core.util.SqlUtils;
  * Implementation of an SQL database session.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class SqlDatabaseSessionImpl implements DatabaseSession {
 

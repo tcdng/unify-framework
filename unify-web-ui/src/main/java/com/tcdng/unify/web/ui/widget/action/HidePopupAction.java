@@ -22,7 +22,7 @@ import com.tcdng.unify.web.ui.widget.AbstractPageAction;
  * Hide popup action.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-hidepopup")
 public class HidePopupAction extends AbstractPageAction {

@@ -26,7 +26,7 @@ import com.tcdng.unify.web.ui.AbstractPageController;
  * Default application home controller
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(ReservedPageControllerConstants.DEFAULT_APPLICATION_HOME)
 @UplBinding("web/reserved/upl/defaulthome.upl")

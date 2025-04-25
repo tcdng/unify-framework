@@ -36,7 +36,7 @@ import com.tcdng.unify.web.ui.widget.writer.AbstractPanelWriter;
  * Content panel writer.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Writes(ContentPanelImpl.class)
 @Component("contentpanel-writer")

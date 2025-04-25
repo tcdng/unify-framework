@@ -30,7 +30,7 @@ import com.tcdng.unify.core.database.sql.SqlTableType;
  * Dynamic SQL data source manager.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface DynamicSqlDataSourceManager extends SqlDataSourceManager {
 

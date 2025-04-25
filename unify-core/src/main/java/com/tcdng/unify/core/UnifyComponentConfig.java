@@ -25,7 +25,7 @@ import com.tcdng.unify.core.util.DataUtils;
  * Configuration for a unify component.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class UnifyComponentConfig implements Listable {
 

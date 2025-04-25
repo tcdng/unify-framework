@@ -29,7 +29,7 @@ import com.tcdng.unify.core.UnifyException;
  * Abstract base class for chart generators.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractChartGenerator extends AbstractUnifyComponent implements ChartGenerator {
 

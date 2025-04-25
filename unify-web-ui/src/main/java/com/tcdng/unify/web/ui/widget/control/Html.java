@@ -22,7 +22,7 @@ import com.tcdng.unify.web.ui.widget.AbstractControl;
  * HTML control.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-html")
 public class Html extends AbstractControl {

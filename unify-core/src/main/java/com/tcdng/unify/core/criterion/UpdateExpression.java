@@ -19,7 +19,7 @@ package com.tcdng.unify.core.criterion;
  * Used to specify fields to update with values.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface UpdateExpression {
 

@@ -37,7 +37,7 @@ import com.tcdng.unify.web.ui.widget.Widget;
  * Abstract base class for widget writers.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractWidgetWriter extends AbstractDhtmlWriter implements WidgetWriter {
 

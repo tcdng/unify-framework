@@ -41,7 +41,7 @@ import com.tcdng.unify.core.util.VersionUtils;
  * Convenient base class for boot business service.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractBootService<T extends FeatureDefinition> extends AbstractBusinessService
 		implements BootService {

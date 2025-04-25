@@ -19,7 +19,7 @@ package com.tcdng.unify.core.database;
  * Query object for test fruit.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class FruitQuery extends AbstractTestTableEntityQuery<Fruit> {
 

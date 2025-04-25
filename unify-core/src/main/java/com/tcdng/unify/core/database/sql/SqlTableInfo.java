@@ -21,7 +21,7 @@ import com.tcdng.unify.common.data.Listable;
  * SQL table information.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class SqlTableInfo implements Listable {
 

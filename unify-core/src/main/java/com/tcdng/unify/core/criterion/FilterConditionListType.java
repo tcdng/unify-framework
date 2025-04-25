@@ -20,7 +20,7 @@ package com.tcdng.unify.core.criterion;
  * Filter condition list type.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public enum FilterConditionListType {
     IMMEDIATE_ONLY,

@@ -23,7 +23,7 @@ import com.tcdng.unify.web.ui.widget.AbstractListControl;
  * A list that allows multiple selection.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-multiselect")
 public class MultiSelect extends AbstractListControl {

@@ -33,7 +33,7 @@ import com.tcdng.unify.core.UnifyOperationException;
  * Provides utility methods for XML configuration.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public final class XmlConfigUtils {
 

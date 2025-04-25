@@ -22,7 +22,7 @@ import java.util.Map;
  * Supported MIME types.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public enum MimeType {
     APPLICATION_OCTETSTREAM("application/octet-stream", false),

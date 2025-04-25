@@ -24,7 +24,7 @@ import com.tcdng.unify.core.annotation.Component;
  * Test parameter generator B
  * 
  * @author Lateef Ojulari
- * @since 1.0
+ * @since 4.1
  */
 @Component(name = "test-gen-b")
 public class TestAbstractParamGeneratorB extends AbstractParamGenerator {

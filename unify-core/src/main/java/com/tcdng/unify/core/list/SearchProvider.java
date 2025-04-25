@@ -24,7 +24,7 @@ import com.tcdng.unify.core.UnifyException;
  * Search provider component.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface SearchProvider extends ListCommand<SearchProviderParams> {
 

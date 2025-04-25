@@ -27,7 +27,7 @@ import com.tcdng.unify.core.constant.DeploymentMode;
  * Proxy business service generator by extension class generator.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface ProxyBusinessServiceGenerator extends ProxyBusinessServiceMethodRelay {
 

@@ -21,7 +21,7 @@ import com.tcdng.unify.core.database.sql.SqlDataSourceDialectPolicies;
  * Less than operator policy.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class LessPolicy extends SingleParameterPolicy {
     public LessPolicy(SqlDataSourceDialectPolicies rootPolicies) {

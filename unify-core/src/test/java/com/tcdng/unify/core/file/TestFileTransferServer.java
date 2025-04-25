@@ -28,7 +28,7 @@ import com.tcdng.unify.core.annotation.Configurable;
  * A file transfer server for test purposes.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class TestFileTransferServer extends AbstractFileTransferServer {
 

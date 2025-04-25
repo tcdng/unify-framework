@@ -28,7 +28,7 @@ import com.tcdng.unify.common.annotation.Table;
  * Defines a table reference.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

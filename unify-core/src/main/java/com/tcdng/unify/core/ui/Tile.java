@@ -20,7 +20,7 @@ package com.tcdng.unify.core.ui;
  * that displays a rectangle bounding an image with some text.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class Tile {
 

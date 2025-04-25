@@ -25,7 +25,7 @@ import com.tcdng.unify.web.ui.widget.Control;
  * Represents an accordion.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-accordionpanel")
 public class AccordionPanel extends AbstractPanel {

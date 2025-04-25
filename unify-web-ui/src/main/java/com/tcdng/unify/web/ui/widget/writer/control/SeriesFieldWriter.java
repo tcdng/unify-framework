@@ -26,7 +26,7 @@ import com.tcdng.unify.web.ui.widget.control.TextField;
  * Series field writer.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Writes(SeriesField.class)
 @Component("seriesfield-writer")

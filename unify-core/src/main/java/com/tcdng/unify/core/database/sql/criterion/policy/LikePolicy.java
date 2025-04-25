@@ -23,7 +23,7 @@ import com.tcdng.unify.core.database.sql.SqlLikeType;
  * Like operator policy.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class LikePolicy extends SingleParameterPolicy {
 

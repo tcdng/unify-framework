@@ -28,7 +28,7 @@ import com.tcdng.unify.core.data.FactoryMap;
  * An abstract class that implements the base functionality of a cache.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractCache<T, U> extends AbstractUnifyComponent implements Cache<T, U> {
 

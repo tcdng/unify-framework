@@ -28,7 +28,7 @@ import com.tcdng.unify.web.ui.widget.layout.DesktopType0Layout;
  * Type-0 desktop layout writer.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Writes(DesktopType0Layout.class)
 @Component("desktoptype0-writer")

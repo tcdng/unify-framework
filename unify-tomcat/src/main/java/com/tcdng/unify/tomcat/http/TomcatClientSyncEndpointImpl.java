@@ -34,7 +34,7 @@ import com.tcdng.unify.web.constant.ClientSyncNameConstants;
  * Tomcat client synchronization end-point implementation.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @ServerEndpoint(ClientSyncNameConstants.SYNC_CONTEXT)
 public class TomcatClientSyncEndpointImpl extends AbstractClientSyncEndpoint {

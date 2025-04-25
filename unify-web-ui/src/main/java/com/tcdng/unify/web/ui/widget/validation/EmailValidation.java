@@ -22,7 +22,7 @@ import com.tcdng.unify.web.ui.widget.AbstractRegexPageValidation;
  * Email validation.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-emailvalidation")
 public class EmailValidation extends AbstractRegexPageValidation {

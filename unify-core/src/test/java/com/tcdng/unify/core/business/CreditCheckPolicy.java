@@ -26,7 +26,7 @@ import com.tcdng.unify.core.database.AbstractEntityPolicy;
  * Policy class for credit checks.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("creditcheck-policy")
 public class CreditCheckPolicy extends AbstractEntityPolicy {

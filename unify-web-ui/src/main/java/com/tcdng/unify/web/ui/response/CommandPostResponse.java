@@ -27,7 +27,7 @@ import com.tcdng.unify.web.ui.widget.ResponseWriter;
  * Used for generating a command post to path response.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("commandpostresponse")
 public class CommandPostResponse extends AbstractJsonPageControllerResponse {

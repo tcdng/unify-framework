@@ -23,7 +23,7 @@ import com.tcdng.unify.core.UnifyException;
  * Download path logger.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface DownloadPathLogger extends UnifyComponent {
 

@@ -19,7 +19,7 @@ package com.tcdng.unify.core.logging;
  * Supported logging levels.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public enum LoggingLevel {
     DEBUG, INFO, WARN, ERROR, SEVERE

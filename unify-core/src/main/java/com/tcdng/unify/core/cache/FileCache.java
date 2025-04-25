@@ -21,7 +21,7 @@ import java.io.InputStream;
  * A file cache component interface.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface FileCache extends TransformCache<String, byte[], InputStream> {
 

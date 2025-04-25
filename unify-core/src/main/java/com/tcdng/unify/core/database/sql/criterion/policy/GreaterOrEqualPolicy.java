@@ -21,7 +21,7 @@ import com.tcdng.unify.core.database.sql.SqlDataSourceDialectPolicies;
  * Greater that or equal operator policy.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class GreaterOrEqualPolicy extends SingleParameterPolicy {
     public GreaterOrEqualPolicy(SqlDataSourceDialectPolicies rootPolicies) {

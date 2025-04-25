@@ -30,7 +30,7 @@ import com.tcdng.unify.core.constant.BooleanType;
  * Test report parameter entity.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Policy("testentitynorest-policy")
 @Table(name = "REPORT_PARAMETER")

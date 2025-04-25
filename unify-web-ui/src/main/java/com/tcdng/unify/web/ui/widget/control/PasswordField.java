@@ -22,7 +22,7 @@ import com.tcdng.unify.core.annotation.Component;
  * Represents an input text field for entering a password.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-password")
 public class PasswordField extends TextField {

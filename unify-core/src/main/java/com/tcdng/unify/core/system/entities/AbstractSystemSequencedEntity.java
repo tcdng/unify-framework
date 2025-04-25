@@ -19,7 +19,7 @@ package com.tcdng.unify.core.system.entities;
  * Base class for system sequenced entities.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractSystemSequencedEntity extends AbstractSequencedEntity {
 

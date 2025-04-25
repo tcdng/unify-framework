@@ -56,7 +56,7 @@ import com.tcdng.unify.web.http.HttpApplicationServlet;
  * Jetty embedded web server.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(JettyApplicationComponents.JETTY_EMBEDDEDWEBSERVER)
 public class JettyEmbeddedWebServer extends AbstractEmbeddedHttpWebServer {

@@ -30,7 +30,7 @@ import com.tcdng.unify.core.criterion.RestrictionType;
  * Native query builder tests.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class NativeQueryBuilderTest {
 

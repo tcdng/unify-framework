@@ -43,7 +43,7 @@ import net.sf.jasperreports.engine.type.PositionTypeEnum;
  * Used to manage tabular images only report layout.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("jasperreports-tabularimagesonlylayoutmanager")
 public class JasperReportsTabularImagesOnlyLayoutManager extends AbstractJasperReportsLayoutManager {

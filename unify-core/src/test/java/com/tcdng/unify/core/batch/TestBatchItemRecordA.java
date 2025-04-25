@@ -24,7 +24,7 @@ import com.tcdng.unify.core.database.AbstractTestVersionedTableEntity;
  * Test batch item record A.
  *
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Table(name = "TESTBATCHITEMA", uniqueConstraints = { @UniqueConstraint({ "accountNo" }) })
 public class TestBatchItemRecordA extends AbstractTestVersionedTableEntity implements BatchItemRecord {

@@ -21,7 +21,7 @@ import com.tcdng.unify.core.constant.MimeType;
  * Data object that represents a download file.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class DownloadFile {
 

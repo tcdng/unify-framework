@@ -19,7 +19,7 @@ package com.tcdng.unify.core.util;
  * Test contact address class.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class ContactAddress extends Address {
 

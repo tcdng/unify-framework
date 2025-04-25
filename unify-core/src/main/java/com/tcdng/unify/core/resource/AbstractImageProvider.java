@@ -26,7 +26,7 @@ import com.tcdng.unify.core.util.IOUtils;
  * Convenient abstract base class for image providers.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractImageProvider extends AbstractUnifyComponent implements ImageProvider {
 

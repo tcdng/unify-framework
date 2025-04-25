@@ -22,7 +22,7 @@ import com.tcdng.unify.web.constant.ClientRequestType;
  * Supported HTTP request method type enumeration.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public enum HttpRequestMethodType {
     GET(ClientRequestType.GET),

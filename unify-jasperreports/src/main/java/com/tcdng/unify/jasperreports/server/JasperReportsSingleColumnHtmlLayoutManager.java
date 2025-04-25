@@ -31,7 +31,7 @@ import net.sf.jasperreports.engine.type.BreakTypeEnum;
  * Single column embedded HTML layout
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("jasperreports-singlecolumnhtmllayoutmanager")
 public class JasperReportsSingleColumnHtmlLayoutManager extends AbstractJasperReportsLayoutManager {

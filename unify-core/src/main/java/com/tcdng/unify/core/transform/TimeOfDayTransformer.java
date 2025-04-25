@@ -27,7 +27,7 @@ import com.tcdng.unify.core.util.CalendarUtils;
  * Used to transform date values to dates with time only elements.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Tooling(name = "timeOfDayTrans", description = "Time-Of-Day Transformer")
 @Component("timeofday-transformer")

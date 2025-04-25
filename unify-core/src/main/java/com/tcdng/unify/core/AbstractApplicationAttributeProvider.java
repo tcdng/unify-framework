@@ -19,7 +19,7 @@ package com.tcdng.unify.core;
  * Convenient abstract base class for application attribute providers
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractApplicationAttributeProvider extends AbstractAttributeProvider
 		implements ApplicationAttributeProvider {

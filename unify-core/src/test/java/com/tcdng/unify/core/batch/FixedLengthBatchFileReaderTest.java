@@ -30,7 +30,7 @@ import com.tcdng.unify.core.util.ValueStoreUtils;
  * Fixed length batch file reader tests.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class FixedLengthBatchFileReaderTest extends AbstractUnifyComponentTest {
 

@@ -30,7 +30,7 @@ import com.tcdng.unify.core.Setting;
  * Default one-way string cryptograph implementation test.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class OneWayStringCryptographImplTest extends AbstractUnifyComponentTest {
 

@@ -19,7 +19,7 @@ package com.tcdng.unify.core.format;
  * A string value concatenation formatter.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface StringConcatFormatter extends Formatter<Object> {
 

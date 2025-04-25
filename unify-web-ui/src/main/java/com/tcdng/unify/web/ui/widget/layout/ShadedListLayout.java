@@ -26,7 +26,7 @@ import com.tcdng.unify.web.ui.widget.AbstractLayout;
  * Arranges captioned widgets in a vertical shaded layout.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-shadedlist")
 @UplAttributes({

@@ -21,7 +21,7 @@ import com.tcdng.unify.common.database.Entity;
  * Represents a batch item record.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface BatchItemRecord extends Entity {
 

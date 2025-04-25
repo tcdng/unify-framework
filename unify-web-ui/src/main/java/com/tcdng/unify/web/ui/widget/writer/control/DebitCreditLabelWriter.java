@@ -27,7 +27,7 @@ import com.tcdng.unify.web.ui.widget.writer.AbstractControlWriter;
  * Debit credit label writer.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Writes(DebitCreditLabel.class)
 @Component("debitcreditlabel-writer")

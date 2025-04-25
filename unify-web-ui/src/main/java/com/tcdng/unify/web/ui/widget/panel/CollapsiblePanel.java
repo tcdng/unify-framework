@@ -25,7 +25,7 @@ import com.tcdng.unify.web.ui.widget.AbstractPanel;
  * A collapsible panel.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-collapsiblepanel")
 @UplBinding("web/panels/upl/collapsiblepanel.upl")

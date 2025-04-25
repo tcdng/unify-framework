@@ -26,7 +26,7 @@ import com.tcdng.unify.web.ui.widget.Widget;
  * Abstract base class for auto-referesh multi-control writers.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractAutoRefreshMultiControlWriter extends AbstractControlWriter {
 

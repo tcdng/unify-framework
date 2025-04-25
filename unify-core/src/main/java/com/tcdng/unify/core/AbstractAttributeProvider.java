@@ -22,7 +22,7 @@ import java.util.Map;
  * Convenient abstract base class for attribute providers
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractAttributeProvider extends AbstractUnifyComponent implements AttributeProvider {
 

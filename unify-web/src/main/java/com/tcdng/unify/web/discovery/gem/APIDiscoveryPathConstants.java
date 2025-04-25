@@ -21,7 +21,7 @@ import com.tcdng.unify.web.WebApplicationComponents;
  * API discovery path constants.
  * 
  * @author Lateef
- * @since 1.0
+ * @since 4.1
  */
 public interface APIDiscoveryPathConstants {
 

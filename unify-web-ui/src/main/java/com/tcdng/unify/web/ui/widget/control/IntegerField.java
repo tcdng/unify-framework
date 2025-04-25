@@ -26,7 +26,7 @@ import com.tcdng.unify.core.format.NumberFormatter;
  * Input field for entering whole numbers.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-integer")
 @UplAttributes({ @UplAttribute(name = "formatter", type = Formatter.class, defaultVal = "$d{!integerformat}") })

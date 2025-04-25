@@ -35,7 +35,7 @@ import com.tcdng.unify.core.util.ReflectUtils;
  * Tests default implementation of runtime java class manager.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class RuntimeJavaClassManagerTest extends AbstractUnifyComponentTest {
 

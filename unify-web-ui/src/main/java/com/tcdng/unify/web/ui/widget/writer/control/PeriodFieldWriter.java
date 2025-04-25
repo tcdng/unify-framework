@@ -37,7 +37,7 @@ import com.tcdng.unify.web.ui.widget.control.TextField;
  * Period field writer.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Writes(PeriodField.class)
 @Component("periodfield-writer")

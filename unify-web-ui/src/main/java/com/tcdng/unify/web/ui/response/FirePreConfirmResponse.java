@@ -25,7 +25,7 @@ import com.tcdng.unify.web.ui.widget.ResponseWriter;
  * Used for generating a fire pre-confirm response.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("firepreconfirmresponse")
 public class FirePreConfirmResponse extends AbstractJsonPageControllerResponse {

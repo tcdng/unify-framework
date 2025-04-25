@@ -22,7 +22,7 @@ import com.tcdng.unify.core.data.MarkedTree.MarkedTreeItemUpdater;
  * Tree item updater interface.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface TreeItemUpdater extends MarkedTreeItemUpdater<TreeItem> {
 

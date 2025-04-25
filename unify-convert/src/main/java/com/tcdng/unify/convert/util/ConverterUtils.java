@@ -60,7 +60,7 @@ import com.tcdng.unify.convert.converters.StringConverter;
  * Conversion utility methods for data manipulation.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @SuppressWarnings("rawtypes")
 public final class ConverterUtils {

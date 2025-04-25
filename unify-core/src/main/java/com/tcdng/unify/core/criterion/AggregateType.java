@@ -21,7 +21,7 @@ import java.util.Date;
  * Supported aggregate function enumeration.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public enum AggregateType {
     COUNT(Object.class),

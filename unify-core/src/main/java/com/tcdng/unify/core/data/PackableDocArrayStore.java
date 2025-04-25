@@ -23,7 +23,7 @@ import com.tcdng.unify.core.format.Formatter;
  * Packable document array value store.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class PackableDocArrayStore extends AbstractArrayValueStore<PackableDoc> {
 

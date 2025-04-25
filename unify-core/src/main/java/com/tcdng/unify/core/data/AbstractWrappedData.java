@@ -21,7 +21,7 @@ import com.tcdng.unify.core.util.StringUtils;
  * Convenient abstract wrapped data class.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractWrappedData<T> implements WrappedData<T> {
 

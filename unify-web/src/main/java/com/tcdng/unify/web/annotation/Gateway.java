@@ -25,7 +25,7 @@ import java.lang.annotation.Target;
  * Annotation for specifying a remote call controller gate.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Inherited
 @Target(ElementType.TYPE)

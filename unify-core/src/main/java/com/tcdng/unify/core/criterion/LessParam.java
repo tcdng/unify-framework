@@ -20,7 +20,7 @@ package com.tcdng.unify.core.criterion;
  * Restriction for a property less than a parameter value.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class LessParam extends AbstractSingleParamRestriction {
 

@@ -21,7 +21,7 @@ import com.tcdng.unify.core.UnifyComponent;
  * Base interface for all UPL component writers.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface UplComponentWriter extends UnifyComponent {
 

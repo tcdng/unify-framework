@@ -34,7 +34,7 @@ import com.tcdng.unify.core.data.TaggedXmlMessage;
  * Remote call XML message streamer test.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class RemoteCallXmlMessageStreamerTest extends AbstractUnifyComponentTest {
 

@@ -24,7 +24,7 @@ import com.tcdng.unify.core.util.xml.AbstractEnumConstXmlAdapter;
  * Requirement type XML adapter.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class RequirementTypeXmlAdapter extends AbstractEnumConstXmlAdapter {
     

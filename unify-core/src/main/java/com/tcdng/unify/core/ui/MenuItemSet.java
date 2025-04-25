@@ -21,7 +21,7 @@ import java.util.List;
  * Menu item set data object.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class MenuItemSet extends MenuItem {
 

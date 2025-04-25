@@ -26,7 +26,7 @@ import java.util.Set;
  * Convenient abstract base class for compound restrictions.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractCompoundRestriction extends AbstractRestriction implements CompoundRestriction {
 

@@ -26,7 +26,7 @@ import com.tcdng.unify.core.criterion.RestrictionType;
  * SQl data source dialect policies.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface SqlDataSourceDialectPolicies {
 

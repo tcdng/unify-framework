@@ -27,7 +27,7 @@ import com.tcdng.unify.common.constants.DefaultColumnPositionConstants;
  * Annotation for indicating that a field is a version number.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)

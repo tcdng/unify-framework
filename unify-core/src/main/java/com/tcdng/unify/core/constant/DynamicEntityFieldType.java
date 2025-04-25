@@ -24,7 +24,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * Entity field type.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @StaticList(name = "dynamicentityfieldtypelist", description = "$m{staticlist.dynamicentityfieldtypelist}")
 public enum DynamicEntityFieldType implements EnumConst {

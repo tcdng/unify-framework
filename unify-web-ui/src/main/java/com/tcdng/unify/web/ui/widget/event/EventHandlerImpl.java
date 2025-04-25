@@ -28,7 +28,7 @@ import com.tcdng.unify.web.ui.widget.PageAction;
  * Event handler implementation.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-event")
 public class EventHandlerImpl extends AbstractEventHandler {

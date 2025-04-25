@@ -32,7 +32,7 @@ import com.tcdng.unify.web.ui.widget.panel.StandalonePanel;
  * value it renders.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface Widget extends UplComponent {
 

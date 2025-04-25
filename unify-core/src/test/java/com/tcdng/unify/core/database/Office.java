@@ -22,7 +22,7 @@ import com.tcdng.unify.core.annotation.Column;
  * Test office entity.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Table(name = "OFFICE")
 public class Office extends AbstractTestVersionedTableEntity {

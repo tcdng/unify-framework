@@ -22,7 +22,7 @@ import com.eclipsesource.json.JsonValue;
  * JSON boolean value converter.
  * 
  * @author Lateef
- * @since 1.0
+ * @since 4.1
  */
 public class JsonBooleanConverter implements JsonValueConverter<Boolean> {
     @Override

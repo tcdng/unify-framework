@@ -51,7 +51,7 @@ import com.tcdng.unify.web.ui.widget.panel.StandalonePanel;
  * Abstract base class for widgets.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @UplAttributes({
 		@UplAttribute(name = "binding", type = String.class),

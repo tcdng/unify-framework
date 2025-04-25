@@ -29,7 +29,7 @@ import com.tcdng.unify.core.database.sql.AbstractSqlDataTypePolicy;
  * BLOB data type SQL policy.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class BlobPolicy extends AbstractSqlDataTypePolicy {
 

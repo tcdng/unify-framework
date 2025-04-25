@@ -36,7 +36,7 @@ import com.tcdng.unify.core.util.DataUtils;
  * XChart line chart generator.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(XChartApplicationComponents.XCHART_LINECHARTGENERATOR)
 public class LineChartGeneratorUnit extends AbstractXChartGeneratorUnit<LineChart> {

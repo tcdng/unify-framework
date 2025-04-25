@@ -22,7 +22,7 @@ import com.tcdng.unify.web.ui.widget.AbstractControl;
  * Represents a paragraph.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-paragraph")
 public class Paragraph extends AbstractControl {

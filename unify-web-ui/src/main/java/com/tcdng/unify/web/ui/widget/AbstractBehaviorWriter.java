@@ -22,7 +22,7 @@ import com.tcdng.unify.web.ui.widget.writer.BehaviorWriter;
  * Abstract base class for UI behaviour writers.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractBehaviorWriter extends AbstractDhtmlWriter implements BehaviorWriter {
 

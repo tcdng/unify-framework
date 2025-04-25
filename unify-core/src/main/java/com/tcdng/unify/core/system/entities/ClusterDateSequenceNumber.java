@@ -26,7 +26,7 @@ import com.tcdng.unify.core.annotation.TenantId;
  * Entity for storing date sequence number generation information.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Table(name = "UNCLUSTERDATESEQ", uniqueConstraints = { @UniqueConstraint({ "sequenceName", "sequenceDate" }) })
 public class ClusterDateSequenceNumber extends AbstractSystemSequencedEntity {

@@ -31,7 +31,7 @@ import com.tcdng.unify.web.ui.widget.data.Popup;
  * Used for generating a show popup response.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("showpopupresponse")
 @UplAttributes({

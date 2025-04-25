@@ -19,7 +19,7 @@ package com.tcdng.unify.core.criterion;
  * Addition update expression.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class AdditionExpression extends AbstractSimpleArithmeticUpdateExpression {
 

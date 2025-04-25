@@ -49,7 +49,7 @@ import com.tcdng.unify.core.util.StringUtils;
  * MySQL SQL dialect.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(name = SqlDialectNameConstants.MYSQL, description = "$m{sqldialect.mysqldb}")
 public class MySqlDialect extends AbstractSqlDataSourceDialect {

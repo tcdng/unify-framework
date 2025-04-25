@@ -57,7 +57,7 @@ import com.tcdng.unify.web.ui.widget.ResponseWriterPool;
  * Convenient base class for user interface controllers.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractUIController extends AbstractHttpClientController implements UIController {
 

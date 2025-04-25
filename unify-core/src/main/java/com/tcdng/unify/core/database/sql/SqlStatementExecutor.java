@@ -34,7 +34,7 @@ import com.tcdng.unify.core.database.GroupingAggregation;
  * Used to execute SQL statements with database through connection objects.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface SqlStatementExecutor extends UnifyComponent {
 

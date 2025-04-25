@@ -22,7 +22,7 @@ import com.tcdng.unify.core.filter.AbstractSingleParamObjectFilterPolicy;
  * Equals (case insensitive) policy.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class IEqualsPolicy extends AbstractSingleParamObjectFilterPolicy {
 

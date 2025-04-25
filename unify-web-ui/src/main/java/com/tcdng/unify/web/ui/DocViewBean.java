@@ -20,7 +20,7 @@ package com.tcdng.unify.web.ui;
  * Document view page bean.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface DocViewBean extends PageBean {
 

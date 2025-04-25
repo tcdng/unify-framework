@@ -27,7 +27,7 @@ import com.tcdng.unify.core.util.FilterUtils;
  * Logical conjunction policy.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class AndPolicy extends AbstractCompoundObjectFilterPolicy {
 

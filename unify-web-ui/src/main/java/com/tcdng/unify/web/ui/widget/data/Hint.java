@@ -19,7 +19,7 @@ package com.tcdng.unify.web.ui.widget.data;
  * Hint data object.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class Hint {
 

@@ -22,7 +22,7 @@ import com.tcdng.unify.core.constant.FileAttachmentType;
  * Notification attachment definition.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class FileAttachment {
 

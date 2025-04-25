@@ -20,7 +20,7 @@ package com.tcdng.unify.web.remotecall;
  * Push tagged binary message remote call result.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class PushBinaryMessageResult extends RemoteCallResult {
 

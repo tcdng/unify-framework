@@ -28,7 +28,7 @@ import com.tcdng.unify.web.ui.widget.writer.AbstractControlWriter;
  * Text clock writer.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Writes(TextClock.class)
 @Component("textclock-writer")

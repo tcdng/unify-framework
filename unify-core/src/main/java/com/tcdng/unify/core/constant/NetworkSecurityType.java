@@ -24,7 +24,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * Network security type list.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @StaticList(name = "networksecuritytypelist", description="$m{staticlist.networksecuritytypelist}")
 public enum NetworkSecurityType implements EnumConst {

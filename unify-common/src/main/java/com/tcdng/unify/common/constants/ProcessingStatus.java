@@ -22,7 +22,7 @@ import com.tcdng.unify.common.util.EnumUtils;
  * Processing status constants.
  * 
  * @author FlowCentral Technologies Limited
- * @since 1.0
+ * @since 4.1
  */
 @StaticList(name = "processingstatuslist", description = "$m{staticlist.processingstatuslist}")
 public enum ProcessingStatus implements EnumConst {

@@ -28,7 +28,7 @@ import com.tcdng.unify.core.util.StringUtils;
  * Default implementation of an e-mail server component using SMTP.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(ApplicationComponents.APPLICATION_DEFAULTEMAILSERVER)
 public class SmtpEmailServer extends AbstractEmailServer implements EmailServer {

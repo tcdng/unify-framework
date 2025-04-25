@@ -29,7 +29,7 @@ import com.tcdng.unify.web.ui.WebUIApplicationComponents;
  * A convenient base class for controls that make use of a list.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @UplAttributes({
         @UplAttribute(name = "list", type = String.class),

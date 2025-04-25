@@ -42,7 +42,7 @@ import com.tcdng.unify.web.util.ClientSyncUtils;
  * datasource.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Transactional
 @Component(WebApplicationComponents.APPLICATION_CLIENTSYNCMANAGER)

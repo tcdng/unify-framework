@@ -19,7 +19,7 @@ package com.tcdng.unify.core.database.sql;
  * SQL statement type enumeration.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public enum SqlStatementType {
     CREATE,

@@ -22,7 +22,7 @@ import com.tcdng.unify.web.constant.ReservedPageControllerConstants;
  * Common utilities page controller.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(ReservedPageControllerConstants.COMMONUTILITIES)
 public class CommonUtilitiesPageController extends AbstractCommonUtilitiesPageController<CommonUtilitiesPageBean> {

@@ -27,7 +27,7 @@ import java.lang.annotation.Target;
  * decision on which to utilize.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Documented
 @Target(ElementType.TYPE)

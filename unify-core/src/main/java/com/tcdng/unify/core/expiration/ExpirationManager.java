@@ -21,7 +21,7 @@ import com.tcdng.unify.core.UnifyComponent;
  * Component interface for managing expirable references.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface ExpirationManager extends UnifyComponent {
 

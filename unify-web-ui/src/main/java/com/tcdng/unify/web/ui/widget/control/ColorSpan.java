@@ -22,7 +22,7 @@ import com.tcdng.unify.web.ui.widget.AbstractControl;
  * Color span representing color text. Color text must be in hex.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-colorspan")
 public class ColorSpan extends AbstractControl {

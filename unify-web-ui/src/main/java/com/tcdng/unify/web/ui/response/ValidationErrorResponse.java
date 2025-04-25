@@ -26,7 +26,7 @@ import com.tcdng.unify.web.ui.widget.data.ValidationInfo;
  * Used for generating form validation error response.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("validationerrorresponse")
 public class ValidationErrorResponse extends AbstractJsonPageControllerResponse {

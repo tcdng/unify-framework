@@ -24,7 +24,7 @@ import com.tcdng.unify.web.ui.widget.AbstractPanel;
  * Content panel with fixed components.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-fixedcontentpanel")
 public class FixedContentPanel extends AbstractPanel {

@@ -20,7 +20,7 @@ package com.tcdng.unify.web.ui.widget;
  * Push type enumeration.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public enum PushType {
 

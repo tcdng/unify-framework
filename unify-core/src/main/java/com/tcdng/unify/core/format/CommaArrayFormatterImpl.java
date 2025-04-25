@@ -24,7 +24,7 @@ import com.tcdng.unify.core.util.StringUtils;
  * Comma array formatter.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(name = "commaarrayformat", description = "Comma Array Format")
 public class CommaArrayFormatterImpl extends AbstractFormatter<String[]> {

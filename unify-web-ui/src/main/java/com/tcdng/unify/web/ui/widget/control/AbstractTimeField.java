@@ -23,7 +23,7 @@ import com.tcdng.unify.web.constant.ExtensionType;
  * Abstract base class for popup time fields.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractTimeField extends AbstractPopupTextField {
 

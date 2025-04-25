@@ -24,7 +24,7 @@ import com.tcdng.unify.web.ui.widget.writer.AbstractEventHandlerWriter;
  * Event handler writer.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Writes(EventHandler.class)
 @Component("eventhandler-writer")

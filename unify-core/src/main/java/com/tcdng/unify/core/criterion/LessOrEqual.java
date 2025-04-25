@@ -19,7 +19,7 @@ package com.tcdng.unify.core.criterion;
  * Restriction for a property less than or equal to a value.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class LessOrEqual extends AbstractSingleParamRestriction {
 

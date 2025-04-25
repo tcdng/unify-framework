@@ -26,7 +26,7 @@ import com.tcdng.unify.web.ui.widget.Control;
  * Represents a group control.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-group")
 @UplAttributes({ @UplAttribute(name = "focus", type = boolean.class),

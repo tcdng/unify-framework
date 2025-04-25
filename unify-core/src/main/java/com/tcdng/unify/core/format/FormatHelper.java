@@ -27,7 +27,7 @@ import com.tcdng.unify.core.UnifyException;
  * obtaining formatting information.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface FormatHelper extends UnifyComponent {
 

@@ -27,7 +27,7 @@ import com.tcdng.unify.core.util.IOUtils;
  * Convenient base class for multi-line text file record reader.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractMultiLineTextFileRecordReader extends AbstractBatchFileReader {
 

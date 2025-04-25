@@ -41,7 +41,7 @@ import com.tcdng.unify.core.util.ReflectUtils;
  * Default implementation of expiration manager.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(ApplicationComponents.APPLICATION_EXPIRATIONMANAGER)
 public class ExpirationManagerImpl extends AbstractUnifyComponent implements ExpirationManager {

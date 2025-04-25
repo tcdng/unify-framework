@@ -23,7 +23,7 @@ import com.tcdng.unify.web.ui.widget.PlainHtml;
  * Plain HTML
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-plainhtml")
 public class BasicPlainHtml extends AbstractHtmlPage implements PlainHtml {

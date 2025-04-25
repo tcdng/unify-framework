@@ -24,7 +24,7 @@ import com.tcdng.unify.core.annotation.UplAttributes;
  * Default money amount formatter.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(name = "moneyformat", description = "$m{format.money}")
 @UplAttributes({ @UplAttribute(name = "currency", type = String.class, mandatory = true)})

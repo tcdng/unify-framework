@@ -22,7 +22,7 @@ import com.tcdng.unify.core.list.AbstractTypeListCommand;
  * Password generator list command.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("passwordgeneratorlist")
 public class PasswordGeneratorListCommand extends AbstractTypeListCommand<PasswordGenerator> {

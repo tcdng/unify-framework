@@ -26,7 +26,7 @@ import com.tcdng.unify.core.business.BusinessService;
  * clustered environment.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface SequenceNumberService extends BusinessService {
 

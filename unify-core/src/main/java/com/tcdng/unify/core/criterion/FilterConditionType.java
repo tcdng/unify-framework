@@ -25,7 +25,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * Filter condition type enumeration.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @StaticList(name = "filterconditiontypelist", description = "$m{staticlist.filterconditiontypelist}")
 public enum FilterConditionType implements EnumConst {

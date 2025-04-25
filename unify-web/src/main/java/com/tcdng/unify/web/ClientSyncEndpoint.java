@@ -20,7 +20,7 @@ package com.tcdng.unify.web;
  * Client synchronization end-point.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface ClientSyncEndpoint {
 

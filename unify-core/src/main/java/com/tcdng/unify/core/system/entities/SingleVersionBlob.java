@@ -22,7 +22,7 @@ import com.tcdng.unify.core.annotation.Column;
  * Single version BLOB entity.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Table("UNSINGLEVERSIONBLOB")
 public class SingleVersionBlob extends AbstractSingleVersionLobEntity {

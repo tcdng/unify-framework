@@ -21,7 +21,7 @@ import java.lang.reflect.Method;
  * Getter setter information.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class GetterSetterInfo {
 

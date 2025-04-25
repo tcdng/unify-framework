@@ -28,7 +28,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * Convenient abstract enumeration constants deserializer adapter class.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractEnumConstDeserializer<T extends EnumConst> extends JsonDeserializer<T> {
 

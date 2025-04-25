@@ -25,7 +25,7 @@ import com.tcdng.unify.core.constant.TextCase;
  * An input text field that allows only full name.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-fullname")
 @UplAttributes({ @UplAttribute(name = "case", type = TextCase.class, defaultVal = "CAPITAL"),

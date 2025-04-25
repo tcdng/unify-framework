@@ -24,7 +24,7 @@ import com.tcdng.unify.web.ui.widget.ResponseWriter;
  * Behavior writer.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface BehaviorWriter extends UplComponentWriter {
 

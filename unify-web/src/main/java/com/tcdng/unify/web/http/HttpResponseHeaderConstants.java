@@ -19,7 +19,7 @@ package com.tcdng.unify.web.http;
  * HTTP response header constants.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface HttpResponseHeaderConstants {
 	

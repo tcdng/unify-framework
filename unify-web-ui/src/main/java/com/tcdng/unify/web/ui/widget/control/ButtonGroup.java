@@ -25,7 +25,7 @@ import com.tcdng.unify.web.ui.widget.data.ButtonGroupInfo;
  * Button group widget.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-buttongroup")
 public class ButtonGroup extends AbstractMultiControl {

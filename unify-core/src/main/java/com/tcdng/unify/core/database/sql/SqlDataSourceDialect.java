@@ -35,7 +35,7 @@ import com.tcdng.unify.core.database.Query;
  * statement information and provide SQL policy objects.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface SqlDataSourceDialect extends DataSourceDialect, SqlGenerator {
 

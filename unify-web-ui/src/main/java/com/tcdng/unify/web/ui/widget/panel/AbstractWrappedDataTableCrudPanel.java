@@ -25,7 +25,7 @@ import com.tcdng.unify.core.data.WrappedData;
  * Abstract wrapped data table CRUD panel.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @UplBinding("web/panels/upl/wrappeddatatablecrudpanel.upl")
 public abstract class AbstractWrappedDataTableCrudPanel<T extends Entity, U extends WrappedData<T>>

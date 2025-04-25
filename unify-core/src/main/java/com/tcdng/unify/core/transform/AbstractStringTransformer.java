@@ -22,7 +22,7 @@ import com.tcdng.unify.core.UnifyException;
  * Abstract base convenience class for a string transformer.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractStringTransformer extends AbstractUnifyComponent implements Transformer<String, String> {
 

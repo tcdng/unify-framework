@@ -23,7 +23,7 @@ import com.tcdng.unify.core.annotation.Column;
  * Entity for storing unique string information.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Table(name = "UNCLUSTERUNIQUESTRING", uniqueConstraints = { @UniqueConstraint({ "uniqueString" }) })
 public class ClusterUniqueString extends AbstractSystemSequencedEntity {

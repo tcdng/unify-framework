@@ -22,7 +22,7 @@ import com.tcdng.unify.core.UnifyException;
  * Class unique ID manager.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface ClassUniqueIDManager extends UnifyComponent {
 

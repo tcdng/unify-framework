@@ -21,7 +21,7 @@ import com.tcdng.unify.core.annotation.Component;
  * Test batch file processor A.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("test-batchfileprocessor-a")
 public class TestBatchFileProcessorA extends AbstractDBBatchItemFileReadProcessor<TestBatchItemRecordA> {

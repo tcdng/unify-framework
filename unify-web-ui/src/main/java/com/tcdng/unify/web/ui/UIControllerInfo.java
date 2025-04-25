@@ -26,7 +26,7 @@ import com.tcdng.unify.web.ui.widget.PropertyInfo;
  * User interface controller information.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @SuppressWarnings("rawtypes")
 public class UIControllerInfo extends ControllerInfo {

@@ -23,7 +23,7 @@ import com.tcdng.unify.core.data.LockInfo;
  * Lock manager.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface LockManager extends UnifyComponent {
 

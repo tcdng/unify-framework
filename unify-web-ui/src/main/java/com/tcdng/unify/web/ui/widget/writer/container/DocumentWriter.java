@@ -42,7 +42,7 @@ import com.tcdng.unify.web.ui.widget.writer.AbstractPageWriter;
  * Basic document writer.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Writes(BasicDocument.class)
 @Component("document-writer")

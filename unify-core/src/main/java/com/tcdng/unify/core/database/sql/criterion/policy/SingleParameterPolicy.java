@@ -32,7 +32,7 @@ import com.tcdng.unify.core.transform.Transformer;
  * Base single parameter operator policy.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class SingleParameterPolicy extends AbstractSqlCriteriaPolicy {
 

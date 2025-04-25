@@ -22,7 +22,7 @@ import com.tcdng.unify.core.UnifyException;
  * Represents a task to be executed. Tasks run in separate threads.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface Task extends UnifyComponent {
 

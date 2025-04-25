@@ -26,7 +26,7 @@ import com.tcdng.unify.core.annotation.Column;
  * Loan application.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Table(name = "LOANAPPLICATION")
 public class LoanApplication extends AbstractWorkEntity {

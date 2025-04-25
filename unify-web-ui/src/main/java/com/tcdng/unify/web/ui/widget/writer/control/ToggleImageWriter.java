@@ -27,7 +27,7 @@ import com.tcdng.unify.web.ui.widget.writer.AbstractTargetControlWriter;
  * Toggle image writer.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Writes(ToggleImage.class)
 @Component("toggleimage-writer")

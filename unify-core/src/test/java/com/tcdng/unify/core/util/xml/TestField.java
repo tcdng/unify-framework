@@ -28,7 +28,7 @@ import com.tcdng.unify.core.util.xml.adapter.DataTypeXmlAdapter;
  * Data object for tests.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @JacksonXmlRootElement(localName = "test-field")
 @JsonPropertyOrder({ "name", "type" })

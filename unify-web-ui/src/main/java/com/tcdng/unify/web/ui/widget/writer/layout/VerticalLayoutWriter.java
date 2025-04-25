@@ -29,7 +29,7 @@ import com.tcdng.unify.web.ui.widget.layout.VerticalLayout;
  * Vertical layout writer.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Writes(VerticalLayout.class)
 @Component("verticallayout-writer")

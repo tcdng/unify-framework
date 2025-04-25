@@ -23,7 +23,7 @@ import com.tcdng.unify.core.data.FluentSet;
  * Used to specify fields to group by.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class GroupBy extends FluentSet<String> {
 

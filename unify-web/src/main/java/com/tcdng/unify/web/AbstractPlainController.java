@@ -22,7 +22,7 @@ import com.tcdng.unify.web.constant.Secured;
  * Convenient base class for plain controllers.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractPlainController extends AbstractController implements PlainController {
 

@@ -23,7 +23,7 @@ import com.tcdng.unify.core.data.ValueStoreReader;
  * Widget state policy.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface WidgetStatePolicy extends UnifyComponent {
 

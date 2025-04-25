@@ -22,7 +22,7 @@ import com.tcdng.unify.core.annotation.Column;
  * Test branch record.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Table(name = "BRANCH")
 public class Branch extends AbstractTestVersionedTableEntity {

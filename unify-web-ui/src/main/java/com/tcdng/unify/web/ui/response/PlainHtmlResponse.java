@@ -30,7 +30,7 @@ import com.tcdng.unify.web.ui.widget.ResponseWriter;
  * Used for generating a plain HTML response.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("plainhtmlresponse")
 @UplAttributes({ @UplAttribute(name = "html", type = String.class),

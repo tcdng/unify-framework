@@ -33,7 +33,7 @@ import com.tcdng.unify.web.ServerEventMsg;
  * Jetty client synchronization end-point implementation.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @WebSocket
 public class JettyClientSyncEndpointImpl extends AbstractClientSyncEndpoint {

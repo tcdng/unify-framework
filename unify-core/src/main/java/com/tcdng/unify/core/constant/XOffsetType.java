@@ -24,7 +24,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * X-offset type list.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Tooling(description = "X-Offset Type List")
 @StaticList(name = "xoffsettypelist", description = "$m{staticlist.xoffsettypelist}")

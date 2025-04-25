@@ -22,7 +22,7 @@ import com.tcdng.unify.core.annotation.UplBinding;
  * Test document for far defaulted foreign attribute.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("test-upldocumentg")
 @UplBinding("com/tcdng/unify/core/resources/test-upldocumentg.upl")

@@ -30,7 +30,7 @@ import com.tcdng.unify.web.ui.widget.writer.AbstractControlWriter;
  * Title bar writer.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Writes(TitleBar.class)
 @Component("titlebar-writer")

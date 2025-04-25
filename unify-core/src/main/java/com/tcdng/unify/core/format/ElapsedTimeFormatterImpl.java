@@ -25,7 +25,7 @@ import com.tcdng.unify.core.util.CalendarUtils;
  * Default implementation of an elapsed time formatter.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(name = "elapsedtimeformat", description = "$m{format.elapsedtime}")
 public class ElapsedTimeFormatterImpl extends AbstractFormatter<Date> implements ElapsedTimeFormatter {

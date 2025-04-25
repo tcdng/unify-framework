@@ -24,7 +24,7 @@ import com.tcdng.unify.web.constant.UnifyRequestHeaderConstants;
  * Supported remote call messaging formats.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public enum RemoteCallFormat implements EnumConst {
 

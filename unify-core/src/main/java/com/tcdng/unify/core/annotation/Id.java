@@ -28,7 +28,7 @@ import com.tcdng.unify.common.constants.DefaultColumnPositionConstants;
  * Annotation for indicating that a field is a primary key.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Documented
 @Target(ElementType.FIELD)

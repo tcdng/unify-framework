@@ -22,7 +22,7 @@ import com.tcdng.unify.web.ui.widget.AbstractPageAction;
  * Clear action.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-clear")
 public class ClearAction extends AbstractPageAction {

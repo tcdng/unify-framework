@@ -23,7 +23,7 @@ import com.tcdng.unify.core.annotation.Column;
  * Test product entity.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Table(name = "TESTPRODUCT", uniqueConstraints = { @UniqueConstraint({ "name" }) })
 public class Product extends AbstractTestVersionedTableEntity {

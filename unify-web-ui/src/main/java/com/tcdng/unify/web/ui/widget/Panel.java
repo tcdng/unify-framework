@@ -21,7 +21,7 @@ import com.tcdng.unify.core.UnifyException;
  * A user interface panel.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface Panel extends Container {
 

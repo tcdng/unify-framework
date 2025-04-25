@@ -21,7 +21,7 @@ import com.tcdng.unify.core.database.Query;
  * Query object for test account details.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class AccountDetailsQuery extends Query<AccountDetails> {
 

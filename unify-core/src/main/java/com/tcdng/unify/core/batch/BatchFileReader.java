@@ -27,7 +27,7 @@ import com.tcdng.unify.core.data.ValueStore;
  * Batch file reader. This component should be implemented as a non-singleton.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface BatchFileReader extends UnifyComponent {
 

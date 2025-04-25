@@ -28,7 +28,7 @@ import com.tcdng.unify.web.ui.widget.control.Table;
  * Unify container information page controller.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("/reserved/info")
 @UplBinding("web/reserved/upl/containerinfo.upl")

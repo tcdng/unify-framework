@@ -23,7 +23,7 @@ import com.tcdng.unify.core.annotation.UplBinding;
  * Dialog rack CRUD panel.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-dialograckcrudpanel")
 @UplBinding("web/panels/upl/dialograckcrudpanel.upl")

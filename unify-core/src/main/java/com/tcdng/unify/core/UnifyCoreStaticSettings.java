@@ -23,7 +23,7 @@ import com.tcdng.unify.common.constants.AbstractUnifyStaticSettings;
  * Unify core static settings.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @AutoDetect
 public class UnifyCoreStaticSettings extends AbstractUnifyStaticSettings {

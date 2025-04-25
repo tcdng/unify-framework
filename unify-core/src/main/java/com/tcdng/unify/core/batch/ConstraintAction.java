@@ -23,7 +23,7 @@ import com.tcdng.unify.core.util.EnumUtils;
  * Duplicate batch or batch item on constraint action.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @StaticList(name = "constraintactionlist", description="$m{staticlist.constraintactionlist}")
 public enum ConstraintAction implements EnumConst {

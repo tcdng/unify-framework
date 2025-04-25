@@ -56,7 +56,7 @@ import com.tcdng.unify.core.util.SqlUtils;
  * Default implementation of an SQL statement executor.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(ApplicationComponents.APPLICATION_SQLSTATEMENTEXECUTOR)
 public class SqlStatementExecutorImpl extends AbstractUnifyComponent implements SqlStatementExecutor {

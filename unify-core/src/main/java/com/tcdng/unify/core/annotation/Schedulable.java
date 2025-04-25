@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
  * Marker annotation for indicating a task is schedulable.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Documented
 @Inherited

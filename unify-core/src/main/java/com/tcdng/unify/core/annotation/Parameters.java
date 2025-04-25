@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
  * Used for defining parameters for a component.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Documented
 @Inherited

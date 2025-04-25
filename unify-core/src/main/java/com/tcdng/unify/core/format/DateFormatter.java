@@ -21,7 +21,7 @@ import java.util.Date;
  * Used for formatting and parsing a date.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface DateFormatter extends Formatter<Date> {
 

@@ -27,7 +27,7 @@ import com.tcdng.unify.core.constant.TopicEventType;
  * A database transaction manager.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface DatabaseTransactionManager extends UnifyComponent {
 	

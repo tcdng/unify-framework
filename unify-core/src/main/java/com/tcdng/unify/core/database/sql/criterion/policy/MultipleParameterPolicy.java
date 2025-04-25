@@ -35,7 +35,7 @@ import com.tcdng.unify.core.util.DataUtils;
  * Base multiple parameter operator policy.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @SuppressWarnings("unchecked")
 public abstract class MultipleParameterPolicy extends AbstractSqlCriteriaPolicy {

@@ -26,7 +26,7 @@ import com.tcdng.unify.core.upl.UplElementReferences;
  * Test class for deep document tests.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("test-upldocumentd")
 @UplBinding("com/tcdng/unify/core/resources/test-upldocumentd.upl")

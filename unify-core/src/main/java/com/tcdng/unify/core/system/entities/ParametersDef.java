@@ -26,7 +26,7 @@ import com.tcdng.unify.core.annotation.Column;
  * Parameters definition entity.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Table(name = "UNPARAMETERSDEF", uniqueConstraints = { @UniqueConstraint({ "typeName" }) })
 public class ParametersDef extends AbstractSystemSequencedEntity {

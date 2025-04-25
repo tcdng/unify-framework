@@ -28,7 +28,7 @@ import com.tcdng.unify.core.util.DataUtils;
  * Convenient abstract base class for multiple parameter object filter policies.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractMultipleParamObjectFilterPolicy implements ObjectFilterPolicy {
 

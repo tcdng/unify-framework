@@ -21,7 +21,7 @@ import com.tcdng.unify.core.format.NumberSymbols;
  * Provides utility methods for string manipulation.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public final class FormattingUtils {
 

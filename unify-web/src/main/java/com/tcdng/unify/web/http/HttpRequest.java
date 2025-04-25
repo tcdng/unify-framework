@@ -31,7 +31,7 @@ import com.tcdng.unify.web.ClientCookie;
  * HTTP request.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface HttpRequest extends HttpRequestHeaders, HttpRequestParameters {
 

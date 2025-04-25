@@ -35,7 +35,7 @@ import com.tcdng.unify.core.util.DataUtils;
  * Default implementation of type list factory.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(ApplicationComponents.APPLICATION_TYPELISTFACTORY)
 public class TypeListFactoryImpl extends AbstractUnifyComponent implements TypeListFactory {

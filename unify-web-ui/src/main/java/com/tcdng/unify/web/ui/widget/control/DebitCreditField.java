@@ -27,7 +27,7 @@ import com.tcdng.unify.web.constant.ExtensionType;
  * Debit/Credit field.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-debitcredit")
 @UplAttributes({

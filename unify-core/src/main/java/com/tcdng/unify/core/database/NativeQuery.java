@@ -28,7 +28,7 @@ import com.tcdng.unify.core.util.DataUtils;
  * A native query object.
  * 
  * @author Lateef
- * @since 1.0
+ * @since 4.1
  */
 public class NativeQuery {
 

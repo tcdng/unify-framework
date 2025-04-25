@@ -24,7 +24,7 @@ import com.tcdng.unify.core.annotation.Component;
  * Default implementation for parameter generator manager.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(ApplicationComponents.APPLICATION_PARAMGENERATORMANAGER)
 public class ParamGeneratorManagerImpl extends AbstractParamGeneratorManager {

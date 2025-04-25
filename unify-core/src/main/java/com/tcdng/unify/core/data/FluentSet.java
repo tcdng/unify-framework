@@ -23,7 +23,7 @@ import java.util.Set;
  * A fluent generic set.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class FluentSet<T> {
 

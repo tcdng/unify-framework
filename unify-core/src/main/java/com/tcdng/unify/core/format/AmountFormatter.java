@@ -19,7 +19,7 @@ package com.tcdng.unify.core.format;
  * Used for formating and parsing amounts.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface AmountFormatter extends DecimalFormatter {
 

@@ -28,7 +28,7 @@ import com.tcdng.unify.web.ui.widget.Control;
  * A image control with user selection option.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-picture")
 @UplAttributes({

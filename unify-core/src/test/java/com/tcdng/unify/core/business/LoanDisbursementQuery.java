@@ -21,7 +21,7 @@ import com.tcdng.unify.core.database.AbstractTestTableEntityQuery;
  * Loan disbursement query.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class LoanDisbursementQuery extends AbstractTestTableEntityQuery<LoanDisbursement> {
 

@@ -27,7 +27,7 @@ import com.tcdng.unify.core.annotation.Column;
  * Test report record.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Table("REPORT")
 public class Report extends AbstractTestVersionedTableEntity {

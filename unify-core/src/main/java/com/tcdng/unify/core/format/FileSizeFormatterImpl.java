@@ -24,7 +24,7 @@ import com.tcdng.unify.core.annotation.Component;
  * Default implementation of a file size formatter.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(name = "filesizeformat", description = "$m{format.filesize}")
 public class FileSizeFormatterImpl extends AbstractFormatter<Number> implements FileSizeFormatter {

@@ -35,7 +35,7 @@ import com.tcdng.unify.core.constant.BooleanType;
  * Database table extension entity CRUD tests.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class DatabaseTableExtensionEntityCRUDTest extends AbstractUnifyComponentTest {
 

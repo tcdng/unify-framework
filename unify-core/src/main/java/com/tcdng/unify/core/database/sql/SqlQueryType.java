@@ -21,7 +21,7 @@ package com.tcdng.unify.core.database.sql;
  * indicate sub-elements to include.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public enum SqlQueryType {
 

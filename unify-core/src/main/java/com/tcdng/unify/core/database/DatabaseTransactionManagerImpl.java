@@ -37,7 +37,7 @@ import com.tcdng.unify.core.constant.TopicEventType;
  * Default application database transaction manager implementation.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(ApplicationComponents.APPLICATION_DATABASETRANSACTIONMANAGER)
 public class DatabaseTransactionManagerImpl extends AbstractUnifyComponent implements DatabaseTransactionManager {

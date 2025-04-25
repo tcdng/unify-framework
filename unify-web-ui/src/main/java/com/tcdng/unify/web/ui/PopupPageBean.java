@@ -20,7 +20,7 @@ package com.tcdng.unify.web.ui;
  * Pop-up page bean.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class PopupPageBean extends AbstractPageBean {
 

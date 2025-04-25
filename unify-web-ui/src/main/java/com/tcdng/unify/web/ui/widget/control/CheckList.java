@@ -23,7 +23,7 @@ import com.tcdng.unify.web.ui.widget.AbstractGroupListControl;
  * A list of check boxes that allows multiple selection.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-checklist")
 public class CheckList extends AbstractGroupListControl {

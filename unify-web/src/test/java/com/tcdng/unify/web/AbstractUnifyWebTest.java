@@ -22,7 +22,7 @@ import com.tcdng.unify.core.UnifyCorePropertyConstants;
  * Convenient abstract unify web test class.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractUnifyWebTest extends AbstractUnifyComponentTest {
 

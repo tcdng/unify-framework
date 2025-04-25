@@ -19,7 +19,7 @@ package com.tcdng.unify.core.database;
  * Abstract base test entity query.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractTestTableEntityQuery<T extends AbstractTestTableEntity> extends Query<T> {
 

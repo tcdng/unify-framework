@@ -22,7 +22,7 @@ import java.util.Date;
  * Convenient abstract base class for client synchronization sessions.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractClientSyncSession implements ClientSyncSession {
 

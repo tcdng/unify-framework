@@ -26,7 +26,7 @@ import com.tcdng.unify.web.ui.widget.AbstractPanel;
  * Detached panel.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-detachedpanel")
 @UplAttributes({ @UplAttribute(name = "orientation", type = OrientationType.class, defaultVal = "bottom_right") })

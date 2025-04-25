@@ -21,7 +21,7 @@ import com.tcdng.unify.core.annotation.Component;
  * Submit action.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-submit")
 public class SubmitAction extends PostAction {

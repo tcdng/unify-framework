@@ -27,7 +27,7 @@ import com.tcdng.unify.core.annotation.Component;
  * Unify command interface.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("unify-commandinterface")
 public class UnifyCommandInterface extends AbstractUnifyContainerInterface {

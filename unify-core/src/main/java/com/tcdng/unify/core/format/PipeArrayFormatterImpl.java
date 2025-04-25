@@ -24,7 +24,7 @@ import com.tcdng.unify.core.util.StringUtils;
  * Pipe array formatter.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(name = "pipearrayformat", description = "Pipe Array Format")
 public class PipeArrayFormatterImpl extends AbstractFormatter<String[]> {

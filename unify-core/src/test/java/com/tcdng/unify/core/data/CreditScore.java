@@ -22,7 +22,7 @@ import java.math.BigDecimal;
  * 
  * 
  * @author Lateef Ojulari
- * @since 1.0
+ * @since 4.1
  */
 public class CreditScore {
 

@@ -32,7 +32,7 @@ import com.tcdng.unify.web.remotecall.RemoteCallResult;
  * Default implementation of application controller utilities.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(WebApplicationComponents.APPLICATION_CONTROLLERUTIL)
 public class ControllerUtilImpl extends AbstractUnifyComponent implements ControllerUtil {
