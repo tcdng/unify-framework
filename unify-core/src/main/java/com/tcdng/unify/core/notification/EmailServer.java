@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2024 The Code Department.
+ * Copyright 2018-2025 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,7 +22,7 @@ import com.tcdng.unify.core.UnifyException;
  * Interface for an email server component.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public interface EmailServer extends UnifyComponent {
 

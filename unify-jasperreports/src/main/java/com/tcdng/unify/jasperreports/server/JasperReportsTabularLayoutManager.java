@@ -49,7 +49,7 @@ import net.sf.jasperreports.engine.type.StretchTypeEnum;
  * Used for tabular report layout.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("jasperreports-tabularlayoutmanager")
 public class JasperReportsTabularLayoutManager extends AbstractJasperReportsLayoutManager {

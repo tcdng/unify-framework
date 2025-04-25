@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2024 The Code Department.
+ * Copyright 2018-2025 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,7 +22,7 @@ import com.tcdng.unify.web.ui.widget.AbstractListControl;
  * A label with a caption obtained by mapping bean value to a list value.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("ui-listlabel")
 public class ListLabel extends AbstractListControl {

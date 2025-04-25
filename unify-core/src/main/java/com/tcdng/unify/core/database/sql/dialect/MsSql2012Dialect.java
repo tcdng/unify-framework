@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2024 The Code Department.
+ * Copyright 2018-2025 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,7 +23,7 @@ import com.tcdng.unify.core.database.sql.SqlDialectNameConstants;
  * MS SQL 2012 dialect.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(name = SqlDialectNameConstants.MSSQL_2012, description = "$m{sqldialect.mssql2012db}")
 public class MsSql2012Dialect extends MsSqlDialect {

@@ -23,7 +23,7 @@ import com.tcdng.unify.web.ui.util.WidgetUtils;
  * Base class for data transfer widgets
  * 
  * @author Lateef Ojulari
- * @since 1.0
+ * @since 4.1
  */
 public abstract class AbstractDataTransferWidget extends AbstractWidget implements DataTransferWidget {
     

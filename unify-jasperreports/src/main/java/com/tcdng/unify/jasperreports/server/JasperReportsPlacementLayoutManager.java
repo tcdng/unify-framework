@@ -28,7 +28,7 @@ import net.sf.jasperreports.engine.design.JasperDesign;
  * Used for placement report layout.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component("jasperreports-placementlayoutmanager")
 public class JasperReportsPlacementLayoutManager extends AbstractJasperReportsLayoutManager {

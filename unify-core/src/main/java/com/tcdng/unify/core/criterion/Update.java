@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2024 The Code Department.
+ * Copyright 2018-2025 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,7 +23,7 @@ import com.tcdng.unify.core.data.FluentMap;
  * Used to specify fields to update with values.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 public class Update extends FluentMap<String, Object> {
 

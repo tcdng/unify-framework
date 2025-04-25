@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2024 The Code Department.
+ * Copyright 2018-2025 The Code Department.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -35,7 +35,7 @@ import com.tcdng.unify.core.constant.ClientPlatform;
  * Default implementation of UPL component writer manager.
  * 
  * @author The Code Department
- * @since 1.0
+ * @since 4.1
  */
 @Component(ApplicationComponents.APPLICATION_UPLCOMPONENTWRITERMANAGER)
 public class UplComponentWriterManagerImpl extends AbstractUnifyComponent implements UplComponentWriterManager {
