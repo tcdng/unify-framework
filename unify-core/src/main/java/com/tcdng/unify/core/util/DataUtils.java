@@ -51,6 +51,7 @@ import com.eclipsesource.json.JsonValue;
 import com.eclipsesource.json.PrettyPrint;
 import com.tcdng.unify.common.annotation.ColumnType;
 import com.tcdng.unify.common.constants.EnumConst;
+import com.tcdng.unify.convert.FormatContext;
 import com.tcdng.unify.convert.converters.ConverterFormatter;
 import com.tcdng.unify.convert.util.ConverterUtils;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
@@ -133,31 +134,6 @@ public final class DataUtils {
 	public static final byte[] ZEROLEN_BYTE_ARRAY = new byte[0];
 
 	public static final String EMPTY_STRING = "";
-
-	private static final Map<Class<?>, DataType> classToDataTypeMap;
-
-	static {
-		Map<Class<?>, DataType> map = new HashMap<Class<?>, DataType>();
-		map.put(byte[].class, DataType.BLOB);
-		map.put(Boolean.class, DataType.BOOLEAN);
-		map.put(boolean.class, DataType.BOOLEAN);
-		map.put(char.class, DataType.CHAR);
-		map.put(Character.class, DataType.CHAR);
-		map.put(Date.class, DataType.DATE);
-		map.put(BigDecimal.class, DataType.DECIMAL);
-		map.put(Double.class, DataType.DOUBLE);
-		map.put(double.class, DataType.DOUBLE);
-		map.put(Float.class, DataType.FLOAT);
-		map.put(float.class, DataType.FLOAT);
-		map.put(Integer.class, DataType.INTEGER);
-		map.put(int.class, DataType.INTEGER);
-		map.put(Long.class, DataType.LONG);
-		map.put(long.class, DataType.LONG);
-		map.put(Short.class, DataType.SHORT);
-		map.put(short.class, DataType.SHORT);
-		map.put(String.class, DataType.STRING);
-		classToDataTypeMap = Collections.unmodifiableMap(map);
-	}
 
 	private static final Map<Class<?>, ColumnType> classToColumnMap;
 
@@ -354,14 +330,7 @@ public final class DataUtils {
 	 * @throws UnifyException if data type is unsupported
 	 */
 	public static DataType getDataType(Class<?> clazz) throws UnifyException {
-		DataType dataType = classToDataTypeMap.get(clazz);
-		if (dataType == null) {
-			if (EnumConst.class.isAssignableFrom(clazz)) {
-				return DataType.STRING;
-			}
-			throw new UnifyException(UnifyCoreErrorConstants.RECORD_UNSUPPORTED_PROPERTY_TYPE, clazz);
-		}
-		return dataType;
+		return ReflectUtils.getDataType(clazz);
 	}
 
 	/**
@@ -383,14 +352,7 @@ public final class DataUtils {
 	 * @throws UnifyException if an error occurs
 	 */
 	public static DataType findDataType(Class<?> clazz) throws UnifyException {
-		DataType dataType = classToDataTypeMap.get(clazz);
-		if (dataType == null) {
-			if (EnumConst.class.isAssignableFrom(clazz)) {
-				return DataType.STRING;
-			}
-		}
-
-		return dataType;
+		return ReflectUtils.findDataType(clazz);
 	}
 
 	/**
@@ -659,7 +621,7 @@ public final class DataUtils {
 		if (list != null) {
 			List<List<Long>> resultList = new ArrayList<List<Long>>();
 			final int[] blocks = DataUtils.splitToBlocks(list.size(), blockSize);
-			for (int i = 0, j = 0; i < blocks.length; j += blocks[i],i++) {
+			for (int i = 0, j = 0; i < blocks.length; j += blocks[i], i++) {
 				resultList.add(list.subList(j, j + blocks[i]));
 			}
 
@@ -668,7 +630,7 @@ public final class DataUtils {
 
 		return Collections.emptyList();
 	}
-	
+
 	/**
 	 * Sorts a list by order
 	 * 
@@ -1053,7 +1015,6 @@ public final class DataUtils {
 		try {
 			return DataUtils.getObjectFromJsonValue(comp, clazz, null, Json.parse(reader));
 		} catch (UnifyException e) {
-			e.printStackTrace();
 			throw e;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1148,25 +1109,27 @@ public final class DataUtils {
 
 						Object val = null;
 						if (Date.class.equals(type) && jsonVal.isString()) {
-							val = DataUtils.getDateValue(comp, fcomp, jsonVal.asString());
+							val = DataUtils.getDateValue(null, comp, fcomp, jsonVal.asString());
 						}
-						
+
 						if (val == null) {
-							val = getObjectFromJsonValue(fcomp.getObjectComposition(), type,
-									gInfo.getArgumentType0(), jsonVal);
+							val = getObjectFromJsonValue(fcomp.getObjectComposition(), type, gInfo.getArgumentType0(),
+									jsonVal);
 						}
-						
+
 						DataUtils.setBeanProperty(bean, fcomp.getName(), val);
 					}
 				}
 			} else {
+				FormatContext fmtCtx = null;
 				for (String name : accessors.keySet()) {
 					GetterSetterInfo gInfo = accessors.get(name);
 					if (!gInfo.isSetter() || !gInfo.isProperty()) {
 						continue;
 					}
 
-					JsonValue jsonVal = jsonObject.get(name);
+					final JsonFieldComposition fcomp = gInfo.getComp();
+					JsonValue jsonVal = jsonObject.get(fcomp != null ? fcomp.getJsonName() : name);
 					Class<?> type = gInfo.getType();
 					if (Object.class.equals(type)) {
 						Object inst = gInfo.getGetter().invoke(bean);
@@ -1175,7 +1138,19 @@ public final class DataUtils {
 						}
 					}
 
-					Object val = getObjectFromJsonValue(null, type, gInfo.getArgumentType0(), jsonVal);
+					Object val = null;
+					if (fcomp != null && Date.class.equals(type) && jsonVal.isString()) {
+						if (fmtCtx == null) {
+							fmtCtx = new FormatContext();
+						}
+						
+						val = DataUtils.getDateValue(fmtCtx, null, fcomp, jsonVal.asString());
+					}
+
+					if (val == null) {
+						val = getObjectFromJsonValue(null, type, gInfo.getArgumentType0(), jsonVal);
+					}
+
 					gInfo.getSetter().invoke(bean, val);
 				}
 			}
@@ -1184,24 +1159,30 @@ public final class DataUtils {
 		return bean;
 	}
 
-	public static Object getDateValue(JsonObjectComposition comp, String fieldName, String val) throws Exception {
-		return DataUtils.getDateValue(comp, comp.getComposition(fieldName), val);
+	public static Object getDateValue(FormatContext fmtCtx, JsonObjectComposition comp, String fieldName, String val) throws Exception {
+		return DataUtils.getDateValue(fmtCtx, comp, comp.getComposition(fieldName), val);
 	}
-	
-	private static Object getDateValue(JsonObjectComposition comp, JsonFieldComposition fcomp, String val) throws Exception {
+
+	private static Object getDateValue(FormatContext fmtCtx, JsonObjectComposition comp, JsonFieldComposition fcomp,
+			String val) throws Exception {
+		if (comp != null) {
+			fmtCtx = comp.getFormatContext();
+		}
+
 		if (fcomp.isDate()) {
-			Format format = comp.getFormatContext().getFormat(
-					comp.isWithDateFormatter() ? comp.getDateFormatter() : fcomp.getFormatter());
+			Format format = fmtCtx.getFormat(
+					comp != null && comp.isWithDateFormatter() ? comp.getDateFormatter() : fcomp.getFormatter());
 			return format != null ? format.parseObject(val) : null;
 		} else if (fcomp.isDateTime()) {
-			Format format = comp.getFormatContext().getFormat(
-					comp.isWithDateTimeFormatter() ? comp.getDateTimeFormatter() : fcomp.getFormatter());
+			Format format = fmtCtx
+					.getFormat(comp != null && comp.isWithDateTimeFormatter() ? comp.getDateTimeFormatter()
+							: fcomp.getFormatter());
 			return format != null ? format.parseObject(val) : null;
 		}
-		
+
 		return null;
 	}
-	
+
 	/**
 	 * Writes a JSON object to an output stream. Has no support for collections.
 	 * 
@@ -1401,8 +1382,8 @@ public final class DataUtils {
 				Object val = DataUtils.getBeanProperty(Object.class, obj, fcomp.getName());
 				if (val != null) {
 					if (fcomp.isDate()) {
-						Format format = comp.getFormatContext().getFormat(
-								comp.isWithDateFormatter() ? comp.getDateFormatter() : fcomp.getFormatter());
+						Format format = comp.getFormatContext()
+								.getFormat(comp.isWithDateFormatter() ? comp.getDateFormatter() : fcomp.getFormatter());
 						val = format != null ? format.format(val) : val;
 					} else if (fcomp.isDateTime()) {
 						Format format = comp.getFormatContext().getFormat(
@@ -1415,6 +1396,7 @@ public final class DataUtils {
 			}
 		} else {
 			Map<String, GetterSetterInfo> accessors = ReflectUtils.getGetterSetterMap(obj.getClass());
+			FormatContext fmtCtx = null;
 			for (String name : accessors.keySet()) {
 				GetterSetterInfo gInfo = accessors.get(name);
 				if (!gInfo.isGetter() || !gInfo.isProperty()) {
@@ -1422,7 +1404,30 @@ public final class DataUtils {
 				}
 
 				Object val = gInfo.getGetter().invoke(obj);
-				jsonObject.add(name, getJsonValueFromObject(null, val));
+				if (gInfo.isWithJsonComp()) {
+					JsonFieldComposition fcomp = gInfo.getComp();
+					if (val != null) {
+						if (fcomp.isDate()) {
+							if (fmtCtx == null) {
+								fmtCtx = new FormatContext();
+							}
+
+							Format format = fmtCtx.getFormat(fcomp.getFormatter());
+							val = format != null ? format.format(val) : val;
+						} else if (fcomp.isDateTime()) {
+							if (fmtCtx == null) {
+								fmtCtx = new FormatContext();
+							}
+
+							Format format = fmtCtx.getFormat(fcomp.getFormatter());
+							val = format != null ? format.format(val) : val;
+						}
+					}
+
+					jsonObject.add(fcomp.getJsonName(), getJsonValueFromObject(null, val));
+				} else {
+					jsonObject.add(name, getJsonValueFromObject(null, val));
+				}
 			}
 		}
 
@@ -1606,7 +1611,8 @@ public final class DataUtils {
 			throws UnifyException {
 		try {
 			return ConverterUtils.convert(targetClazz, value, formatter);
-		} catch (Exception e) {e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
 			throw new UnifyException(UnifyCoreErrorConstants.DATAUTIL_ERROR, e);
 		}
 	}

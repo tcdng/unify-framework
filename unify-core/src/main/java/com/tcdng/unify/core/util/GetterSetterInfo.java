@@ -17,6 +17,8 @@ package com.tcdng.unify.core.util;
 
 import java.lang.reflect.Method;
 
+import com.tcdng.unify.core.data.JsonFieldComposition;
+
 /**
  * Getter setter information.
  * 
@@ -25,6 +27,8 @@ import java.lang.reflect.Method;
  */
 public class GetterSetterInfo {
 
+	private JsonFieldComposition comp;
+	
     private String name;
 
     private Method getter;
@@ -50,7 +54,21 @@ public class GetterSetterInfo {
         this.field = field;
     }
 
-    public String getName() {
+    public JsonFieldComposition getComp() {
+		return comp;
+	}
+
+	public void setComp(JsonFieldComposition comp) {
+		if (this.comp == null) {
+			this.comp = comp;
+		}
+	}
+
+	public boolean isWithJsonComp() {
+		return comp != null;
+	}
+	
+	public String getName() {
         return name;
     }
 
