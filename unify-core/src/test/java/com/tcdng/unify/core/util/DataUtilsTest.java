@@ -41,6 +41,7 @@ import org.junit.Test;
 
 import com.tcdng.unify.common.constants.StandardFormatType;
 import com.tcdng.unify.core.AbstractUnifyComponentTest;
+import com.tcdng.unify.core.annotation.JsonAlias;
 import com.tcdng.unify.core.constant.DataType;
 import com.tcdng.unify.core.constant.DynamicEntityFieldType;
 import com.tcdng.unify.core.constant.OrderType;
@@ -468,6 +469,16 @@ public class DataUtilsTest extends AbstractUnifyComponentTest {
 	}
 
 	@Test
+	public void testReadEmptyJsonObjectAlias() throws Exception {
+		String json = "{}";
+		Template template = DataUtils.fromJsonString(Template.class, json);
+		assertNotNull(template);
+		assertNull(template.getName());
+		assertNull(template.getDateOfBirth());
+		assertFalse(template.isCsm());
+	}
+
+	@Test
 	public void testReadJsonObject() throws Exception {
 		String json = "{\"order\":\"DESC\",\"author\":\"Bramer & Bramer\", \"price\":2.54, \"priceHistory\":[2.35, 2.03], \"copies\":20, \"censored\":true}";
 		Book book = DataUtils.fromJsonString(Book.class, json);
@@ -482,6 +493,16 @@ public class DataUtilsTest extends AbstractUnifyComponentTest {
 		assertEquals(2, priceHistory.length);
 		assertEquals(Double.valueOf(2.35), priceHistory[0]);
 		assertEquals(Double.valueOf(2.03), priceHistory[1]);
+	}
+
+	@Test
+	public void testReadJsonObjectAlias() throws Exception {
+		String json = "{\"name\":\"Sambo\",\"dob\":\"20250429\",\"isCSM\":true}";
+		Template template = DataUtils.fromJsonString(Template.class, json);
+		assertNotNull(template);
+		assertEquals("Sambo", template.getName());
+		assertEquals(new SimpleDateFormat("yyyy/MM/dd").parse("2025/04/29"), template.getDateOfBirth());
+		assertTrue(template.isCsm());
 	}
 
 	@Test
@@ -578,17 +599,23 @@ public class DataUtilsTest extends AbstractUnifyComponentTest {
 		assertEquals(128, picture.getHeight());
 	}
 
-//    @Test(expected = UnifyException.class)
-//    public void testReadJsonObjectUnknownMember() throws Exception {
-//        String json = "{\"author\":\"Bramer & Bramer\", \"tax\":2.54, \"priceHistory\":[2.35, 2.03], \"copies\":20, \"censored\":true}";
-//        DataUtils.fromJsonString(Book.class, json);
-//    }
-
 	@Test
 	public void testToEmptyJsonObjectString() throws Exception {
 		String json = DataUtils.asJsonString(new Inventory(), PrintFormat.NONE);
 		assertNotNull(json);
 		assertEquals("{\"entries\":null}", json);
+	}
+
+	@Test
+	public void testToEmptyJsonObjectStringAlias() throws Exception {
+		String json = DataUtils.asJsonString(new Template(), PrintFormat.NONE);
+		assertNotNull(json);
+	}
+
+	@Test
+	public void testToJsonObjectStringAlias() throws Exception {
+		String json = DataUtils.asJsonString(new Template("Sambo", new Date(), true), PrintFormat.NONE);
+		assertNotNull(json);
 	}
 
 	@Test
@@ -1146,6 +1173,52 @@ public class DataUtilsTest extends AbstractUnifyComponentTest {
 				new JsonFieldComposition(DynamicEntityFieldType.FIELD, DataType.STRING, "name", "Name", null, false),
 				new JsonFieldComposition(DynamicEntityFieldType.FIELD, DataType.STRING, "title", "Title", null, false),
 				new JsonFieldComposition(DynamicEntityFieldType.FIELD, DataType.INTEGER, "weight", "Weight", null, false)));
+	}
+
+	public static class Template {
+		
+		private String name;
+		
+		@JsonAlias(name = "dob", format = StandardFormatType.DATE_YYYYMMDD)
+		private Date dateOfBirth;
+		
+		@JsonAlias(name = "isCSM")
+		private boolean csm;
+
+		public Template(String name, Date dateOfBirth, boolean csm) {
+			this.name = name;
+			this.dateOfBirth = dateOfBirth;
+			this.csm = csm;
+		}
+
+		public Template() {
+
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		public Date getDateOfBirth() {
+			return dateOfBirth;
+		}
+
+		public void setDateOfBirth(Date dateOfBirth) {
+			this.dateOfBirth = dateOfBirth;
+		}
+
+		public boolean isCsm() {
+			return csm;
+		}
+
+		public void setCsm(boolean csm) {
+			this.csm = csm;
+		}
+
 	}
 
 	public static class Inventory {

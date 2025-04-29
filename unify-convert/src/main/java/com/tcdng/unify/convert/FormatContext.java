@@ -47,7 +47,7 @@ public class FormatContext {
 	}
 
 	public Format getFormat(StandardFormatType type) {
-		if (type != null) {
+		if (type != null && !type.isNopType()) {
 			Format format = formats.get(type);
 			if (format == null) {
 				if (type.isDateType()) {

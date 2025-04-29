@@ -23,10 +23,12 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.WildcardType;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -34,10 +36,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.tcdng.unify.common.constants.EnumConst;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.UnifyOperationException;
+import com.tcdng.unify.core.annotation.JsonAlias;
+import com.tcdng.unify.core.constant.DataType;
+import com.tcdng.unify.core.constant.DynamicEntityFieldType;
 import com.tcdng.unify.core.data.FactoryMap;
+import com.tcdng.unify.core.data.JsonFieldComposition;
 import com.tcdng.unify.core.data.WrappedData;
 
 /**
@@ -66,6 +73,31 @@ public final class ReflectUtils {
 	private static final Map<String, Class<?>> primitiveToClassMap = new HashMap<String, Class<?>>();
 
 	private static ClassForNameProvider classForNameProvider;
+
+	private static final Map<Class<?>, DataType> classToDataTypeMap;
+
+	static {
+		Map<Class<?>, DataType> map = new HashMap<Class<?>, DataType>();
+		map.put(byte[].class, DataType.BLOB);
+		map.put(Boolean.class, DataType.BOOLEAN);
+		map.put(boolean.class, DataType.BOOLEAN);
+		map.put(char.class, DataType.CHAR);
+		map.put(Character.class, DataType.CHAR);
+		map.put(Date.class, DataType.DATE);
+		map.put(BigDecimal.class, DataType.DECIMAL);
+		map.put(Double.class, DataType.DOUBLE);
+		map.put(double.class, DataType.DOUBLE);
+		map.put(Float.class, DataType.FLOAT);
+		map.put(float.class, DataType.FLOAT);
+		map.put(Integer.class, DataType.INTEGER);
+		map.put(int.class, DataType.INTEGER);
+		map.put(Long.class, DataType.LONG);
+		map.put(long.class, DataType.LONG);
+		map.put(Short.class, DataType.SHORT);
+		map.put(short.class, DataType.SHORT);
+		map.put(String.class, DataType.STRING);
+		classToDataTypeMap = Collections.unmodifiableMap(map);
+	}
 
 	static {
 		primitiveToClassMap.put("boolean", boolean.class);
@@ -131,12 +163,14 @@ public final class ReflectUtils {
 			protected Map<String, GetterSetterInfo> create(Class<?> beanClass, Object... params) throws Exception {
 				Map<String, GetterSetterInfo> map = new LinkedHashMap<String, GetterSetterInfo>();
 				Method[] methods = beanClass.getMethods();
-				Set<String> fieldNames = declaredFieldMap.get(beanClass).keySet();
+				final Map<String, Field> fields = declaredFieldMap.get(beanClass);
+				final Set<String> fieldNames = fields.keySet();
 				for (Method method : methods) {
 					if (method.isBridge() || method.isSynthetic()) {
 						continue;
 					}
 
+					String fieldName = null;
 					String name = method.getName();
 					if (!void.class.equals(method.getReturnType()) && method.getParameterTypes().length == 0) {
 						boolean isIs = false;
@@ -151,7 +185,7 @@ public final class ReflectUtils {
 								StringBuilder sb = new StringBuilder();
 								sb.append(Character.toLowerCase(name.charAt(index)));
 								sb.append(name.substring(index + 1));
-								final String fieldName = sb.toString();
+								fieldName = sb.toString();
 								final Class<?> fieldType = method.getReturnType();
 								GetterSetterInfo gsInfo = map.get(fieldName);
 								Class<?> argumentType0 = ReflectUtils.getArgumentType(method.getGenericReturnType(), 0);
@@ -165,8 +199,8 @@ public final class ReflectUtils {
 										map.put(fieldName, new GetterSetterInfo(fieldName, method, null,
 												wrappedBean.getDataType(), null, null, false));
 									} else {
-										map.put(fieldName, new GetterSetterInfo(fieldName, method, null,
-												fieldType, argumentType0, argumentType1, isField));
+										map.put(fieldName, new GetterSetterInfo(fieldName, method, null, fieldType,
+												argumentType0, argumentType1, isField));
 									}
 								} else {
 									if (isField && (!gsInfo.getType().equals(method.getReturnType())
@@ -189,7 +223,7 @@ public final class ReflectUtils {
 							StringBuilder sb = new StringBuilder();
 							sb.append(Character.toLowerCase(name.charAt(3)));
 							sb.append(name.substring(4));
-							final String fieldName = sb.toString();
+							fieldName = sb.toString();
 							final Class<?> fieldType = method.getParameterTypes()[0];
 							boolean isField = fieldNames.contains(fieldName);
 							final GetterSetterInfo gsInfo = map.get(fieldName);
@@ -214,6 +248,23 @@ public final class ReflectUtils {
 
 								map.put(fieldName, new GetterSetterInfo(fieldName, gsInfo.getGetter(), method,
 										fieldType, argumentType0, argumentType1, isField));
+							}
+						}
+					}
+
+					if (fieldName != null) {
+						final GetterSetterInfo info = map.get(fieldName);
+						if (info != null && info.isGetterSetter()) {
+							Field field = fields.get(fieldName);
+							if (field != null && field.isAnnotationPresent(JsonAlias.class)) {
+								final JsonAlias ja = field.getAnnotation(JsonAlias.class);
+								final String preferredName = AnnotationUtils.getAnnotationString(ja.name());
+								if (!StringUtils.isBlank(preferredName)) {
+									map.get(fieldName)
+											.setComp(new JsonFieldComposition(DynamicEntityFieldType.FIELD,
+													ReflectUtils.getDataType(field.getType()), fieldName, preferredName,
+													ja.format(), false));
+								}
 							}
 						}
 					}
@@ -599,6 +650,42 @@ public final class ReflectUtils {
 			getterSetterInfo.setArgumentType0(argumentType0);
 			getterSetterInfo.setArgumentType1(argumentType1);
 		}
+	}
+
+	/**
+	 * Returns the data type equivalence of supplied data type.
+	 * 
+	 * @param clazz the data type
+	 * @return the equivalent data type
+	 * @throws UnifyException if data type is unsupported
+	 */
+	public static DataType getDataType(Class<?> clazz) throws UnifyException {
+		DataType dataType = classToDataTypeMap.get(clazz);
+		if (dataType == null) {
+			if (EnumConst.class.isAssignableFrom(clazz)) {
+				return DataType.STRING;
+			}
+			throw new UnifyException(UnifyCoreErrorConstants.RECORD_UNSUPPORTED_PROPERTY_TYPE, clazz);
+		}
+		return dataType;
+	}
+
+	/**
+	 * Finds the data type equivalence of supplied class.
+	 * 
+	 * @param clazz the data type
+	 * @return the equivalent data type if found otherwise null
+	 * @throws UnifyException if an error occurs
+	 */
+	public static DataType findDataType(Class<?> clazz) throws UnifyException {
+		DataType dataType = classToDataTypeMap.get(clazz);
+		if (dataType == null) {
+			if (EnumConst.class.isAssignableFrom(clazz)) {
+				return DataType.STRING;
+			}
+		}
+
+		return dataType;
 	}
 
 	/**

@@ -25,18 +25,25 @@ import com.tcdng.unify.common.util.EnumUtils;
  */
 public enum StandardFormatType implements EnumConst  {
 	
+	NONE("NOP","","", false),
 	PIPE_ARRAY("ARP","!pipearrayformat","#|#|#", false),
 	COMMA_ARRAY("ARC","!commaarrayformat","#,#,#", false),
 	INTEGER("INT","!integerformat","######", true),
 	INTEGER_GROUPED("ING","!integerformat useGrouping:true","###,###", true),
 	DECIMAL("DEC","!decimalformat scale:2","#####0.00", true),
 	DECIMAL_GROUPED("DEG","!decimalformat scale:2 useGrouping:true","###,##0.00", true),
+	DATE_DDMMYYYY("DDF","!fixeddatetimeformat pattern:$s{ddMMyyyy}","ddMMyyyy", false),
+	DATE_MMDDYYYY("DMF","!fixeddatetimeformat pattern:$s{MMddyyyy}","MMddyyyy", false),
+	DATE_YYYYMMDD("DYF","!fixeddatetimeformat pattern:$s{yyyyMMdd}","yyyyMMdd", false),
 	DATE_DDMMYYYY_SLASH("DDS","!fixeddatetimeformat pattern:$s{dd/MM/yyyy}","dd/MM/yyyy", false),
 	DATE_MMDDYYYY_SLASH("DMS","!fixeddatetimeformat pattern:$s{MM/dd/yyyy}","MM/dd/yyyy", false),
 	DATE_YYYYMMDD_SLASH("DYS","!fixeddatetimeformat pattern:$s{yyyy/MM/dd}","yyyy/MM/dd", false),
 	DATE_DDMMYYYY_DASH("DDD","!fixeddatetimeformat pattern:$s{dd-MM-yyyy}","dd-MM-yyyy", false),
 	DATE_MMDDYYYY_DASH("DMD","!fixeddatetimeformat pattern:$s{MM-dd-yyyy}","MM-dd-yyyy", false),
 	DATE_YYYYMMDD_DASH("DYD","!fixeddatetimeformat pattern:$s{yyyy-MM-dd}","yyyy-MM-dd", false),
+	DATETIME_DDMMYYYY("TDF","!fixeddatetimeformat pattern:$s{ddMMyyyy HH:mm:ss}","ddMMyyyy HH:mm:ss", false),
+	DATETIME_MMDDYYYY("TMF","!fixeddatetimeformat pattern:$s{MMddyyyy HH:mm:ss}","MMddyyyy HH:mm:ss", false),
+	DATETIME_YYYYMMDD("TYF","!fixeddatetimeformat pattern:$s{yyyyMMdd HH:mm:ss}","yyyyMMdd HH:mm:ss", false),
 	DATETIME_DDMMYYYY_SLASH("TDS","!fixeddatetimeformat pattern:$s{dd/MM/yyyy HH:mm:ss}","dd/MM/yyyy HH:mm:ss", false),
 	DATETIME_MMDDYYYY_SLASH("TMS","!fixeddatetimeformat pattern:$s{MM/dd/yyyy HH:mm:ss}","MM/dd/yyyy HH:mm:ss", false),
 	DATETIME_YYYYMMDD_SLASH("TYS","!fixeddatetimeformat pattern:$s{yyyy/MM/dd HH:mm:ss}","yyyy/MM/dd HH:mm:ss", false),
@@ -85,6 +92,10 @@ public enum StandardFormatType implements EnumConst  {
 
 	public String label() {
 		return format;
+	}
+
+	public boolean isNopType() {
+		return NONE.equals(this);
 	}
 
 	public boolean isNumberType() {
