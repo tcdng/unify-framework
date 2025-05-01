@@ -227,7 +227,11 @@ public class MsSqlDialect extends AbstractSqlDataSourceDialect {
 	public String generateGetCheckConstraintsSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, PrintFormat format)
 			throws UnifyException {
 		StringBuilder sb = new StringBuilder();
-		sb.append("SELECT CONSTRAINT_NAME FROM INFORMATION_SCHEMA.CHECK_CONSTRAINTS WHERE TABLE_NAME  = '")
+		sb.append("SELECT cc.CONSTRAINT_NAME");
+		sb.append(" FROM INFORMATION_SCHEMA.CHECK_CONSTRAINTS cc");
+		sb.append(" JOIN INFORMATION_SCHEMA.CONSTRAINT_TABLE_USAGE ctu");
+		sb.append(" ON cc.CONSTRAINT_NAME = ctu.CONSTRAINT_NAME");
+		sb.append(" WHERE ctu.TABLE_NAME = '")
 				.append(sqlEntitySchemaInfo.getSchemaTableName()).append("'");
 		return sb.toString();
 	}
