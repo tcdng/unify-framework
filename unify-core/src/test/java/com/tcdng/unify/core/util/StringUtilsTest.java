@@ -163,6 +163,13 @@ public class StringUtilsTest {
     }
 
     @Test
+    public void testFlattenQuote() throws Exception {
+        assertNull(StringUtils.flatten(null));
+        assertEquals("runontime", StringUtils.flatten("runOn'Time"));
+        assertEquals("the_sky_is_blue", StringUtils.flatten("The' sky is \"blue\""));
+    }
+
+    @Test
     public void testToNonNullString() throws Exception {
         assertEquals("Tom", StringUtils.toNonNullString("Tom", "Harry"));
         assertEquals("Harry", StringUtils.toNonNullString(null, "Harry"));

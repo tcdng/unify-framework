@@ -1950,8 +1950,6 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 		if (sqlFieldSchemaInfo.isPrimaryKey()) {
 			if(sqlFieldSchemaInfo.isAutoIncrement()) {
 				appendAutoIncrementPrimaryKey(sb);
-			} else {
-				sb.append(" PRIMARY KEY NOT NULL");
 			}
 		} else {
 			if (sqlColumnAlterInfo.isDefaultChange()) {
@@ -1960,13 +1958,13 @@ public abstract class AbstractSqlDataSourceDialect extends AbstractUnifyComponen
 							sqlFieldSchemaInfo.getDefaultVal());
 				}
 			}
+		}
 
-			if (sqlColumnAlterInfo.isNullableChange()) {
-				if (!sqlFieldSchemaInfo.isNullable()) {
-					sb.append(" NOT NULL");
-				} else {
-					sb.append(" NULL");
-				}
+		if (sqlColumnAlterInfo.isNullableChange()) {
+			if (!sqlFieldSchemaInfo.isNullable()) {
+				sb.append(" NOT NULL");
+			} else {
+				sb.append(" NULL");
 			}
 		}
 	}
