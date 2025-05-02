@@ -15,6 +15,8 @@
  */
 package com.tcdng.unify.web.ui.widget.writer.panel;
 
+import java.util.List;
+
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
@@ -70,13 +72,7 @@ public class ContentPanelWriter extends AbstractPanelWriter {
 		}
 
 		if (contentPanel.getPageCount() == 0) {
-			final String[] paths = contentPanel.getPaths();
-			final String[] _cpaths = new String[paths.length - 1];
-			for (int i = 0; i < _cpaths.length; i++) {
-				_cpaths[i] = paths[i + 1];
-			}
-
-			writer.writeParam("pImmURL", getContextURL(paths[0])); 
+			writer.writeParam("pImmURL", getContextURL(contentPanel.getPaths().get(0)));
 		} else {
 			writer.writeParam("pCurIdx", contentPanel.getPageIndex());
 			ContentInfo currentContentInfo = contentPanel.getCurrentContentInfo();
@@ -182,12 +178,9 @@ public class ContentPanelWriter extends AbstractPanelWriter {
 			writer.write("<div style=\"display:table-row;width:100%;\">");
 			writer.write("<div style=\"display:table-cell;\">");
 			writer.write("<div id=\"").write(contentPanel.getTabPaneId()).write("\" class=\"cptabbar\">");
-
+			final List<String> paths = contentPanel.getPaths();
 			logDebug("Writing header tabs for content panel [{0}]...", contentPanel.getLongName());
 			writer.write("<ul class=\"cptab\">");
-			final int stickyIndex = contentPanel.isStickyPaths() && contentPanel.getPaths() != null
-					? contentPanel.getPaths().length - 1
-					: 0;
 			for (int i = 0; i < contentPanel.getPageCount(); i++) {
 				ContentInfo contentInfo = contentPanel.getContentInfo(i);
 				writer.write("<li");
@@ -232,7 +225,7 @@ public class ContentPanelWriter extends AbstractPanelWriter {
 
 				writer.write("</a>");
 
-				if (i > stickyIndex) {
+				if (!paths.contains(contentInfo.getOpenPath())) {
 					writer.write("<img id=\"").write(contentPanel.getTabItemImgId(i)).write("\" src=\"");
 					writer.writeFileImageContextURL("$t{images/cross_gray.png}");
 					writer.write("\"/>");
