@@ -35,7 +35,7 @@ public interface ContentPanel extends Panel {
 	 * @return the sticky paths
 	 * @throws UnifyException if an error occurs
 	 */
-	String[] getPaths() throws UnifyException;
+	List<String> getPaths() throws UnifyException;
 	
 	/**
 	 * Returns true if content size is zero.

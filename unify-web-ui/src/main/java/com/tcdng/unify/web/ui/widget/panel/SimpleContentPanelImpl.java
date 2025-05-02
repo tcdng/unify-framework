@@ -39,8 +39,8 @@ public class SimpleContentPanelImpl extends AbstractContentPanel {
     }
 
     @Override
-	public String[] getPaths() throws UnifyException {
-		return null;
+	public List<String> getPaths() throws UnifyException {
+		return Collections.emptyList();
 	}
 
 	@Override

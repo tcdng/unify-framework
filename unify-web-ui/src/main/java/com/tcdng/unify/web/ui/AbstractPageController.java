@@ -268,8 +268,8 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 
 				String resultName = openPage();
 				if (contentPanel != null && isContentSupport()) {
-					final String path = ctxUtil.getRequestPathParts().getControllerPath();
-					if (contentPanel.isBlankContent() && !Arrays.asList(contentPanel.getPaths()).contains(path)) {
+					if (contentPanel.isBlankContent()
+							&& !contentPanel.getPaths().contains(ctxUtil.getRequestPathParts().getControllerPath())) {
 						for (String stickyPath : contentPanel.getPaths()) {
 							fireOtherControllerAction(stickyPath);
 						}
@@ -332,7 +332,7 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 	protected boolean isContentSupport() throws UnifyException {
 		return true;
 	}
-	
+
 	@Override
 	protected DataTransferParam getDataTransferParam() throws UnifyException {
 		Page page = getPageRequestContextUtil().getRequestPage();
@@ -988,13 +988,13 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 	 * 
 	 * @param eventType the event type
 	 * @param topic     the topic to set
-	 * @param title the associated title
+	 * @param title     the associated title
 	 * @throws UnifyException if an error occurs
 	 */
 	protected void addClientTopicEvent(TopicEventType eventType, String topic, String title) throws UnifyException {
 		getPageRequestContextUtil().addClientTopicEvent(eventType, topic + ":" + title);
 	}
-	
+
 	/**
 	 * Executes on {@link #initPage()}
 	 * 
