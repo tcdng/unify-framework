@@ -24,6 +24,7 @@ import com.tcdng.unify.core.UnifyComponent;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.constant.TopicEventType;
 import com.tcdng.unify.web.ClientRequest;
+import com.tcdng.unify.web.ClientResponse;
 import com.tcdng.unify.web.ControllerPathParts;
 import com.tcdng.unify.web.TargetPath;
 import com.tcdng.unify.web.data.TopicEvent;
@@ -857,4 +858,20 @@ public interface PageRequestContextUtil extends UnifyComponent {
 	 * @throws UnifyException if an error occurs
 	 */
 	boolean isLowLatencyRequest() throws UnifyException;
+	
+	/**
+	 * Sets request client response.
+	 * 
+	 * @param response the response object
+	 * @throws UnifyException if an error occurs
+	 */
+	void setClientResponse(ClientResponse response) throws UnifyException;
+	
+	/**
+	 * Gets request client response.
+	 * 
+	 * @return the client response
+	 * @throws UnifyException if an error occurs
+	 */
+	ClientResponse getClientResponse() throws UnifyException;
 }

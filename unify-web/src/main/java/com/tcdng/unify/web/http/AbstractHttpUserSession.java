@@ -85,7 +85,17 @@ public abstract class AbstractHttpUserSession implements HttpUserSession {
 	}
 
 	@Override
-	public void setTransient(UserSessionManager userSessionManager) {
+	public boolean isUserLoggedIn() {
+		return sessionContext != null	&& sessionContext.isUserLoggedIn();
+	}
+
+	@Override
+	public boolean isAuthorized() {
+		return sessionContext != null && sessionContext.isAuthorized();
+	}
+
+	@Override
+	public void setUserSessionManager(UserSessionManager userSessionManager) {
 		this.userSessionManager = userSessionManager;
 	}
 }

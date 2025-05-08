@@ -37,6 +37,7 @@ import com.tcdng.unify.core.data.Parameters;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ClientRequest;
+import com.tcdng.unify.web.ClientResponse;
 import com.tcdng.unify.web.ControllerPathParts;
 import com.tcdng.unify.web.TargetPath;
 import com.tcdng.unify.web.constant.RequestParameterConstants;
@@ -122,6 +123,8 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
     private static final String CLIENT_TOPIC = "CLIENT_TOPIC";
 
     private static final String CLIENT_TOPIC_EVENTS = "CLIENT_TOPIC_EVENTS";
+
+    private static final String CLIENT_RESPONSE = "CLIENT_RESPONSE";
     
     @Override
     public void setRequestPage(Page page) throws UnifyException {
@@ -601,6 +604,16 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
 	@Override
 	public void setClientTopic(String topic) throws UnifyException {
 		setRequestAttribute(CLIENT_TOPIC, topic);
+	}
+
+	@Override
+	public void setClientResponse(ClientResponse response) throws UnifyException {
+		setRequestAttribute(CLIENT_RESPONSE, response);
+	}
+
+	@Override
+	public ClientResponse getClientResponse() throws UnifyException {
+        return getRequestAttribute(ClientResponse.class, CLIENT_RESPONSE);
 	}
 
 	@Override

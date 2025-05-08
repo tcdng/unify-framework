@@ -87,6 +87,54 @@ public interface EntityPolicy extends UnifyComponent {
      *             if an error occurs
      */
     void preQuery(Query<? extends Entity> query) throws UnifyException;
+    
+    /**
+     * Entity post-create method. Called after creation of record.
+     * 
+     * @param record
+     *            the created record
+     * @param now
+     *            the now time stamp
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void postCreate(Entity record, Date now) throws UnifyException;
+
+    /**
+     * Entity post-update method. Called after update of record.
+     * 
+     * @param record
+     *            the updated record
+     * @param now
+     *            the now time stamp
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void postUpdate(Entity record, Date now) throws UnifyException;
+
+    /**
+     * Entity post-update method. Called after update of record.
+     * 
+     * @param update
+     *            the update object
+     * @param now
+     *            the now time stamp
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void postUpdate(Update update, Date now) throws UnifyException;
+
+    /**
+     * Entity post-delete method. Called after delete of record.
+     * 
+     * @param record
+     *            the deleted record
+     * @param now
+     *            the now time stamp
+     * @throws UnifyException
+     *             if an error occurs
+     */
+    void postDelete(Entity record, Date now) throws UnifyException;
 
     /**
      * Called on creation of record error.

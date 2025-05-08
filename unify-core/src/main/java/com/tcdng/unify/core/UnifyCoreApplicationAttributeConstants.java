@@ -23,4 +23,8 @@ package com.tcdng.unify.core;
  */
 public interface UnifyCoreApplicationAttributeConstants {
 
+    String SESSION_COOKIE_NAME = "UNIFYCORE.SESSIONCOOKIENAME";
+
+    String LONG_SESSION_COOKIE_NAME = "UNIFYCORE.LONGSESSIONCOOKIENAME";
+
 }

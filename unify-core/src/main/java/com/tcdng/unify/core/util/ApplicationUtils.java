@@ -32,4 +32,8 @@ public final class ApplicationUtils {
     public static synchronized String generateSessionContextId() {
         return UUID.randomUUID().toString();
     }
+
+    public static synchronized String generateSessionCookieId() {
+        return UUID.randomUUID().toString();
+    }
 }
