@@ -35,6 +35,7 @@ import com.tcdng.unify.core.upl.UplElementReferences;
 import com.tcdng.unify.core.util.ApplicationUtils;
 import com.tcdng.unify.core.util.ReflectUtils;
 import com.tcdng.unify.core.util.StringUtils;
+import com.tcdng.unify.web.ClientCookie;
 import com.tcdng.unify.web.ClientRequest;
 import com.tcdng.unify.web.ClientResponse;
 import com.tcdng.unify.web.ControllerPathParts;
@@ -456,6 +457,33 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 					response.setCookie(longUserSessionManager.getLongSessionCookieName(), cookieId, sessionInSecs);
 					return true;
 				}
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Deletes long user session.
+	 * 
+	 * @param sessionInSecs session in seconds.
+	 * @return true if set otherwise false
+	 * @throws UnifyException if an error occurs
+	 */
+	protected boolean deleteLongUserSession() throws UnifyException {
+		final ClientRequest request = getPageRequestContextUtil().getClientRequest();
+		final ClientResponse response = getPageRequestContextUtil().getClientResponse();
+		if (request != null && response != null) {
+			if (isComponent(LongUserSessionManager.class)) {
+				final LongUserSessionManager longUserSessionManager = getComponent(LongUserSessionManager.class);
+				final String cookieName = longUserSessionManager.getLongSessionCookieName();
+				ClientCookie clientCookie = request.getCookie(cookieName);
+				if (clientCookie != null) {
+					final String cookieId = clientCookie.getVal();
+					longUserSessionManager.deleteLongSession(cookieId);
+					response.setCookie(cookieName, cookieId, 0);					
+					return true;
+				}			
 			}
 		}
 

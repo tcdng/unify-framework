@@ -125,6 +125,8 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
     private static final String CLIENT_TOPIC_EVENTS = "CLIENT_TOPIC_EVENTS";
 
     private static final String CLIENT_RESPONSE = "CLIENT_RESPONSE";
+
+    private static final String CLIENT_REQUEST = "CLIENT_REQUEST";
     
     @Override
     public void setRequestPage(Page page) throws UnifyException {
@@ -614,6 +616,16 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
 	@Override
 	public ClientResponse getClientResponse() throws UnifyException {
         return getRequestAttribute(ClientResponse.class, CLIENT_RESPONSE);
+	}
+
+	@Override
+	public void setClientRequest(ClientRequest request) throws UnifyException {
+		setRequestAttribute(CLIENT_REQUEST, request);
+	}
+
+	@Override
+	public ClientRequest getClientRequest() throws UnifyException {
+        return getRequestAttribute(ClientRequest.class, CLIENT_REQUEST);
 	}
 
 	@Override

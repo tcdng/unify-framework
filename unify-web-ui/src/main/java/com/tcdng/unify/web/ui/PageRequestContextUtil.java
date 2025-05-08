@@ -860,6 +860,22 @@ public interface PageRequestContextUtil extends UnifyComponent {
 	boolean isLowLatencyRequest() throws UnifyException;
 	
 	/**
+	 * Sets request client request.
+	 * 
+	 * @param request the request object
+	 * @throws UnifyException if an error occurs
+	 */
+	void setClientRequest(ClientRequest request) throws UnifyException;
+	
+	/**
+	 * Gets request client request.
+	 * 
+	 * @return the client request
+	 * @throws UnifyException if an error occurs
+	 */
+	ClientRequest getClientRequest() throws UnifyException;
+	
+	/**
 	 * Sets request client response.
 	 * 
 	 * @param response the response object

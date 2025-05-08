@@ -55,4 +55,13 @@ public interface LongUserSessionManager extends UnifyComponent {
 	 * @throws UnifyException if an error occurs
 	 */
 	boolean saveLongSession(String userLoginId, String cookieId, int sessionInSecs) throws UnifyException;
+
+	/**
+	 * Deletes long session.
+	 * 
+	 * @param cookieId      the cookie ID
+	 * @return true if set otherwise false
+	 * @throws UnifyException if an error occurs
+	 */
+	boolean deleteLongSession(String cookieId) throws UnifyException;
 }
