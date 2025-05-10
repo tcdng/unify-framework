@@ -643,7 +643,11 @@ public class SqlSchemaManagerImpl extends AbstractSqlSchemaManager {
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
 				final String checkName = rs.getString(1);
-				dropSql.add(sqlDataSourceDialect.generateDropCheckConstraintSql(sqlEntityInfo, checkName, printFormat));
+				final String sql = sqlDataSourceDialect.generateDropCheckConstraintSql(sqlEntityInfo, checkName,
+						printFormat);
+				if (!StringUtils.isBlank(sql)) {
+					dropSql.add(sql);
+				}
 			}
 
 		} catch (SQLException e) {

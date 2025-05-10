@@ -34,22 +34,27 @@ import com.tcdng.unify.web.ui.widget.writer.AbstractLayoutWriter;
 public abstract class AbstractTabularLayoutWriter extends AbstractLayoutWriter {
 
     @Override
-    public void writeStructureAndContent(ResponseWriter writer, Layout layout, Container container)
-            throws UnifyException {
-        TabularLayout tabularLayout = (TabularLayout) layout;
-        writer.write("<div");
-        writeTagStyleClass(writer, "ui-tabular " + layout.getStyleClass());
-        writeTagStyle(writer, layout.getStyle());
-        writer.write(">");
-        if (container.isRepeater()) {
-            if (container.getRepeatValueStores() != null) {
-                writeRepeatTableContent(writer, tabularLayout, container);
-            }
-        } else {
-            writeTableContent(writer, tabularLayout, container);
-        }
-        writer.write("</div>");
-    }
+	public void writeStructureAndContent(ResponseWriter writer, Layout layout, Container container)
+			throws UnifyException {
+		TabularLayout tabularLayout = (TabularLayout) layout;
+		writer.write("<div");
+		writeTagStyleClass(writer, "ui-tabular " + layout.getStyleClass());
+		writeTagStyle(writer, layout.getStyle());
+		writer.write(">");
+		if (container.isRepeater()) {
+			if (container.getRepeatValueStores() != null) {
+				getRequestContextUtil().setIgnorePanelSwitched(true);
+				try {
+					writeRepeatTableContent(writer, tabularLayout, container);
+				} finally {
+					getRequestContextUtil().setIgnorePanelSwitched(false);
+				}
+			}
+		} else {
+			writeTableContent(writer, tabularLayout, container);
+		}
+		writer.write("</div>");
+	}
 
     protected void appendRowStart(ResponseWriter writer, TabularLayout layout, int rowIndex) throws UnifyException {
         writer.write("<div class=\"lrow\">");

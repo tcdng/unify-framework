@@ -80,6 +80,8 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
 
     private static final String SWITCHED_PANELS = "SWITCHED_PANELS";
 
+    private static final String IGNORE_PANEL_SWITCHED = "IGNORE_PANEL_SWITCHED";
+
     private static final String REQUEST_DOCUMENT = "REQUEST_DOCUMENT";
 
     private static final String REQUEST_PAGE = "REQUEST_PAGE";
@@ -424,7 +426,16 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
     }
 
     @Override
+	public void setIgnorePanelSwitched(boolean ignorePanelSwitched) throws UnifyException {
+		setRequestAttribute(IGNORE_PANEL_SWITCHED, ignorePanelSwitched);
+	}
+
+	@Override
     public boolean isPanelSwitched(Panel panel) throws UnifyException {
+		if (getRequestAttribute(boolean.class, IGNORE_PANEL_SWITCHED)) {
+			return false;
+		}
+		
         Set<Panel> switchedPanels = (Set<Panel>) getRequestAttribute(SWITCHED_PANELS);
         return switchedPanels != null && switchedPanels.contains(panel);
     }

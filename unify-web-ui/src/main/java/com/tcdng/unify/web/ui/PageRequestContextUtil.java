@@ -476,6 +476,16 @@ public interface PageRequestContextUtil extends UnifyComponent {
     void setPanelSwitchStateFlag(Panel panel) throws UnifyException;
 
     /**
+     * Set ignore panel switched.
+     * 
+     * @param ignorePanelSwitched
+     *            ignore panel switched
+     * @throws UnifyException
+     *             if an error occusr
+     */
+    void setIgnorePanelSwitched(boolean ignorePanelSwitched) throws UnifyException;
+
+    /**
      * Returns true is panel has been switch in current request context.
      * 
      * @param panel

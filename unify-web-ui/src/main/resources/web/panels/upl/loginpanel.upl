@@ -1,3 +1,4 @@
+// Copyright 2025 The Code Department
 //Login Panel UPL
 !ui-loginpanel layout:$d{!ui-vertical} components:$c{headerPanel mainPanel loginActionPanel}
     formCaptionSuffix:$s{:} loginNameCase:upper loginMessageStyleClass:$e{lpmessage}

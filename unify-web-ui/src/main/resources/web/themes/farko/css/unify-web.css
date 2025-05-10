@@ -376,6 +376,14 @@ z-index:400;}
 
 .ui-rackcrudpanel {}
 
+/** Symbol card panel */
+.ui-symbolcardpanel {width:180px;min-height:200px;color:#404040;border:solid 1px #404040;border-radius: 4px;
+	padding:12px 4px;margin:2px;}
+.ui-symbolcardpanel .scsym {font-weight:bold;font-size:3em;}
+.ui-symbolcardpanel .sccap {font-weight:bold;font-size: 1.2em;margin: 8px 0px;}
+.ui-symbolcardpanel .scdsc {}
+
+
 /** Split panel */
 .ui-splitpanel {width:100%; height:100%;}
 .ui-splitpanel .spminor {border: 1px solid #BCBCBC;}
@@ -917,8 +925,9 @@ overflow-x:hidden;overflow-y:scroll;border-top: solid 1px #A0A0A0;border-left: s
 .ui-swappableimage {}
 
 /** Symbol */
-.ui-symbol {padding: 0px 4px; min-height:28px; font-size:14px; background-color: transparent; border: none; cursor: pointer; color:#202020;}
-.ui-symbol:disabled {cursor:default; color:#C8C8C8;}
+.ui-symbol {padding: 0px 4px; min-height:28px; font-size:14px; background-color: transparent; border: none;
+	color: inherit;}
+.ui-symbol:disabled {color:#C8C8C8;}
 
 /** Table */
 .ui-table {height:100%;}
@@ -1047,3 +1056,17 @@ overflow-x:hidden;overflow-y:scroll;border-top: solid 1px #A0A0A0;border-left: s
 
 /** Word Field */
 .ui-word {}
+
+/** Common effects */
+.popdiv {
+  transition: all 0.3s ease;
+  transform: translateY(0);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  cursor:pointer;
+}
+
+.popdiv:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+}

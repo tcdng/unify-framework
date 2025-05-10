@@ -1,0 +1,11 @@
+// Copyright 2025 The Code Department
+//Symbol card panel UPL
+!ui-symbolcardpanel layout:$d{!ui-vertical style:$s{width:100%;text-align:center;}}
+	components:$c{headerPanel caption description}
+	styleClassBinding:styleClass
+   
+!ui-panel:headerPanel style:$s{width:100%;} components:$c{symbol}
+!ui-symbol:symbol styleClass:$e{scsym} binding:icon
+
+!ui-label:caption styleClass:$e{sccap} binding:caption
+!ui-label:description styleClass:$e{scdsc} binding:description

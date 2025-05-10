@@ -34,8 +34,9 @@ import com.tcdng.unify.web.ui.widget.Layout;
  * @since 4.1
  */
 @Component("ui-repeatpanel")
-@UplAttributes({ @UplAttribute(name = "layout", type = Layout.class, mandatory = true),
-		@UplAttribute(name = "components", type = UplElementReferences.class, mandatory = true) })
+@UplAttributes({
+	@UplAttribute(name = "layout", type = Layout.class, mandatory = true),
+	@UplAttribute(name = "components", type = UplElementReferences.class, mandatory = true) })
 public class RepeatPanel extends AbstractPanel {
 
 	private List<ValueStore> valueStoreList;
