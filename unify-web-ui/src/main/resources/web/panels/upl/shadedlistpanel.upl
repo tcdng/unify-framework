@@ -1,4 +1,7 @@
-//Shaded List Panel UPL
+// UPL template for shadded list panel
+// Copyright 2018-2025 The Code Department.
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
 !ui-shadedlistpanel components:$c{detailsPanel}
 
 !ui-panel:detailsPanel layout:$d{!ui-shadedlist} components:$g{shadedDetailsList}

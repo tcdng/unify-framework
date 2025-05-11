@@ -13,18 +13,20 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tcdng.unify.web.ui.widget.data;
+package com.tcdng.unify.web.ui.widget.panel;
+
+import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.annotation.UplBinding;
+import com.tcdng.unify.web.ui.widget.AbstractPanel;
 
 /**
- * Symbol card.
+ * Blurb panel.
  * 
  * @author The Code Department
  * @since 4.1
  */
-public class SymbolCard extends Blurb {
-
-	public SymbolCard(String icon, String caption, String description, String path) {
-		super(icon, caption, description, path);
-	}
+@Component("ui-blurbpanel")
+@UplBinding("web/panels/upl/blurbpanel.upl")
+public class BlurbPanel extends AbstractPanel {
 
 }

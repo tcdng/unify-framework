@@ -15,16 +15,52 @@
  */
 package com.tcdng.unify.web.ui.widget.data;
 
+import com.tcdng.unify.core.util.StringUtils;
+
 /**
- * Symbol card.
+ * Blurb.
  * 
  * @author The Code Department
  * @since 4.1
  */
-public class SymbolCard extends Blurb {
+public class Blurb {
 
-	public SymbolCard(String icon, String caption, String description, String path) {
-		super(icon, caption, description, path);
+	private String icon;
+
+	private String caption;
+
+	private String path;
+
+	private String description;
+
+	public Blurb(String icon, String caption, String description, String path) {
+		this.icon = icon;
+		this.caption = caption;
+		this.description = description;
+		this.path = path;
 	}
 
+	public String getIcon() {
+		return icon;
+	}
+
+	public String getCaption() {
+		return caption;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public String getStyleClass() {
+		return isWithPath()? "popdiv": null;
+	}
+	
+	public boolean isWithPath() {
+		return !StringUtils.isBlank(path);
+	}
 }

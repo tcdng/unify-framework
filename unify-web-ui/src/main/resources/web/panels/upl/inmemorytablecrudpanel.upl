@@ -1,5 +1,7 @@
-// UPL template for in-memory table CRUD panel
-// Copyright 2015 The Code Department
+// UPL template for im-memory table CRUD panel
+// Copyright 2018-2025 The Code Department.
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
 !ui-inmemorytablecrudpanel  tableReadOnly:true
     createFrmBtnLabel:$m{button.addandclose} createNextFrmBtnLabel:$m{button.addandnext}
     saveFrmBtnLabel:$m{button.update}

@@ -235,6 +235,13 @@ z-index:400;}
 .ui-assignmentpanel {border: 1px solid #A9A9A9; background: #FFF;}
 .ui-assignmentpanel-label {font-weight: bold; font-size: 12pt; text-align: left;}
 
+/** Blurb panel */
+.ui-blurbpanel {width:100%;color:#404040;border:solid 1px #A0A0A0;border-radius:4px;
+	padding:4px 4px;margin:4px;box-sizing: border-box;min-height:78px;}
+.ui-blurbpanel .blsym {font-weight:bold;font-size:1.4em;color:#404040;}
+.ui-blurbpanel .blcap {font-weight:bold;font-size: 1.2em;text-align:left;margin-bottom:6px;}
+.ui-blurbpanel .bldsc {text-align:left;margin-bottom:4px;color:#808080;}
+
 /** Collapsible panel */
 .ui-collapsiblepanel {border: 1px solid #A9A9A9; background: #FFF;}
 .ui-collapsiblepanel .cptitlebar {display:block; font-size:20px; color:#878787; background-color:#EDEDED;}
@@ -377,11 +384,11 @@ z-index:400;}
 .ui-rackcrudpanel {}
 
 /** Symbol card panel */
-.ui-symbolcardpanel {width:180px;min-height:200px;color:#404040;border:solid 1px #404040;border-radius: 4px;
+.ui-symbolcardpanel {width:180px;min-height:200px;color:#404040;border:solid 1px #A0A0A0;border-radius: 4px;
 	padding:12px 4px;margin:2px;}
-.ui-symbolcardpanel .scsym {font-weight:bold;font-size:3em;}
+.ui-symbolcardpanel .scsym {font-weight:bold;font-size:3em;color:#404040;}
 .ui-symbolcardpanel .sccap {font-weight:bold;font-size: 1.2em;margin: 8px 0px;}
-.ui-symbolcardpanel .scdsc {}
+.ui-symbolcardpanel .scdsc {color:#808080;}
 
 
 /** Split panel */

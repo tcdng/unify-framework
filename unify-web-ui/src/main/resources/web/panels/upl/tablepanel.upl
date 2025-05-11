@@ -1,4 +1,7 @@
-//Table Panel UPL
+// UPL template for table panel
+// Copyright 2018-2025 The Code Department.
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
 !ui-tablepanel layout:$d{!ui-vertical} components:$c{contentTbl}
     tableStyleClass:$e{ui-table} tableMultiSelectCheckboxes:true
     tableSerialNumberSymbol:$s{*}

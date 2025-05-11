@@ -1,4 +1,7 @@
-//Task monitor panel
+// UPL template for task monitor panel
+// Copyright 2018-2025 The Code Department.
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
 !ui-taskmonitorpanel layout:$d{!ui-vertical style:$s{width:100%;}}
     components:$c{titleBar taskMonitorContentPanel taskMonitorActionPanel}
     refreshEvery:500 refreshOnUserAct:false
