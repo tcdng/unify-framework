@@ -116,5 +116,5 @@ public @interface Table {
     /**
      * Allow alternate ID source
      */
-    boolean allowAlternateIdSource() default false;
+    boolean allowAlternateIdSource() default true;
 }

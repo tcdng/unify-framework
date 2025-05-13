@@ -30,6 +30,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.Synchronized;
+import com.tcdng.unify.core.annotation.TableName;
 import com.tcdng.unify.core.annotation.TransactionAttribute;
 import com.tcdng.unify.core.annotation.Transactional;
 import com.tcdng.unify.core.business.AbstractBusinessService;
@@ -139,7 +140,12 @@ public class SequenceNumberServiceImpl extends AbstractBusinessService implement
 	public <T extends Entity> boolean isOfThisSequence(Class<T> clazz) throws UnifyException {
     	if (!db().isOfThisDatabase(clazz)) {
         	Table ta = clazz.getAnnotation(Table.class);    	
-    		return  ta != null && ta.allowAlternateIdSource();
+    		if (ta != null && ta.allowAlternateIdSource()) {
+    			return true;
+    		}
+    		
+        	TableName tna = clazz.getAnnotation(TableName.class);    	
+        	return tna != null && tna.allowAlternateIdSource();
     	}
     	
     	return true;
