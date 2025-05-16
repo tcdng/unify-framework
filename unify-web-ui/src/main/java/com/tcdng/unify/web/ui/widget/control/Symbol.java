@@ -27,7 +27,8 @@ import com.tcdng.unify.web.ui.widget.AbstractTargetControl;
  * @since 4.1
  */
 @Component("ui-symbol")
-@UplAttributes({ @UplAttribute(name = "symbol", type = String.class, mandatory = true),
+@UplAttributes({
+		@UplAttribute(name = "symbol", type = String.class),
         @UplAttribute(name = "debounce", type = boolean.class, defaultVal = "true") })
 public class Symbol extends AbstractTargetControl {
 

@@ -1,3 +1,5 @@
-// UPL template for wrapped data table CRUD panel
-// Copyright 2015 The Code Department
+// UPL template for wrapped data table panel
+// Copyright 2018-2025 The Code Department.
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
 !ui-wrappeddatatablecrudpanel formBinding:wrappedRecord

@@ -1,5 +1,7 @@
-// UPL template for record dialog table CRUD panel
-// Copyright 2018-2022 The Code Department
+// UPL template for table CRUD dialog panel
+// Copyright 2018-2025 The Code Department.
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
 !ui-dialogtablecrudpanel
 	dialogCaptionBinding:title
 	dialogBodyLayout:$d{!ui-horizontal style:$s{width:100%;} widths:$l{440px none}}

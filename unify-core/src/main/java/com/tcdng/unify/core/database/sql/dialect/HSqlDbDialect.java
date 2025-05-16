@@ -129,6 +129,10 @@ public class HSqlDbDialect extends AbstractSqlDataSourceDialect {
 	@Override
 	public String generateDropCheckConstraintSql(SqlEntitySchemaInfo sqlEntitySchemaInfo, String checkName,
 			PrintFormat format) throws UnifyException {
+		if ("PUBLIC".equals(checkName)) {
+			return "";
+		}
+		
 		StringBuilder sb = new StringBuilder();
 		sb.append("ALTER TABLE \'").append(sqlEntitySchemaInfo.getSchemaTableName()).append("\' DROP CONSTRAINT \'")
 				.append(checkName).append("\'");

@@ -1,0 +1,15 @@
+// UPL template for blurb panel
+// Copyright 2018-2025 The Code Department.
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+//Blurb panel UPL
+!ui-blurbpanel layout:$d{!ui-horizontal style:$s{width:100%;text-align:center;} widths:$l{22px none}}
+	components:$c{symbol bodyPanel}
+	styleClassBinding:styleClass
+   
+!ui-symbol:symbol styleClass:$e{blsym} binding:icon
+
+!ui-panel:bodyPanel layout:$d{!ui-vertical style:$s{width:100%;}} style:$s{width:100%;}
+	components:$c{caption description}
+!ui-label:caption styleClass:$e{blcap} binding:caption
+!ui-label:description styleClass:$e{bldsc} binding:description

@@ -93,6 +93,7 @@ public class HttpResponseImpl implements HttpResponse {
     @Override
     public void setCookie(String name, String val) {
         Cookie cookie = new Cookie(name, val);
+        cookie.setPath("/");
         response.addCookie(cookie);
     }
 
@@ -103,6 +104,7 @@ public class HttpResponseImpl implements HttpResponse {
             cookie.setMaxAge(maxAge);
         }
         
+        cookie.setPath("/");
         response.addCookie(cookie);
     }
 

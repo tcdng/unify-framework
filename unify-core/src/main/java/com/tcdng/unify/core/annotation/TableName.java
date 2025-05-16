@@ -40,4 +40,9 @@ public @interface TableName {
 
     /** Column overrides */
     ColumnOverride[] columnOverrides() default {};
+    
+    /**
+     * Allow alternate ID source
+     */
+    boolean allowAlternateIdSource() default true;
 }

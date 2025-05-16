@@ -37,6 +37,7 @@ import com.tcdng.unify.core.data.Parameters;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ClientRequest;
+import com.tcdng.unify.web.ClientResponse;
 import com.tcdng.unify.web.ControllerPathParts;
 import com.tcdng.unify.web.TargetPath;
 import com.tcdng.unify.web.constant.RequestParameterConstants;
@@ -78,6 +79,8 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
     private static final String REFRESH_PANELS = "REFRESH_PANELS";
 
     private static final String SWITCHED_PANELS = "SWITCHED_PANELS";
+
+    private static final String IGNORE_PANEL_SWITCHED = "IGNORE_PANEL_SWITCHED";
 
     private static final String REQUEST_DOCUMENT = "REQUEST_DOCUMENT";
 
@@ -122,6 +125,10 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
     private static final String CLIENT_TOPIC = "CLIENT_TOPIC";
 
     private static final String CLIENT_TOPIC_EVENTS = "CLIENT_TOPIC_EVENTS";
+
+    private static final String CLIENT_RESPONSE = "CLIENT_RESPONSE";
+
+    private static final String CLIENT_REQUEST = "CLIENT_REQUEST";
     
     @Override
     public void setRequestPage(Page page) throws UnifyException {
@@ -419,7 +426,16 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
     }
 
     @Override
+	public void setIgnorePanelSwitched(boolean ignorePanelSwitched) throws UnifyException {
+		setRequestAttribute(IGNORE_PANEL_SWITCHED, ignorePanelSwitched);
+	}
+
+	@Override
     public boolean isPanelSwitched(Panel panel) throws UnifyException {
+		if (getRequestAttribute(boolean.class, IGNORE_PANEL_SWITCHED)) {
+			return false;
+		}
+		
         Set<Panel> switchedPanels = (Set<Panel>) getRequestAttribute(SWITCHED_PANELS);
         return switchedPanels != null && switchedPanels.contains(panel);
     }
@@ -601,6 +617,26 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
 	@Override
 	public void setClientTopic(String topic) throws UnifyException {
 		setRequestAttribute(CLIENT_TOPIC, topic);
+	}
+
+	@Override
+	public void setClientResponse(ClientResponse response) throws UnifyException {
+		setRequestAttribute(CLIENT_RESPONSE, response);
+	}
+
+	@Override
+	public ClientResponse getClientResponse() throws UnifyException {
+        return getRequestAttribute(ClientResponse.class, CLIENT_RESPONSE);
+	}
+
+	@Override
+	public void setClientRequest(ClientRequest request) throws UnifyException {
+		setRequestAttribute(CLIENT_REQUEST, request);
+	}
+
+	@Override
+	public ClientRequest getClientRequest() throws UnifyException {
+        return getRequestAttribute(ClientRequest.class, CLIENT_REQUEST);
 	}
 
 	@Override

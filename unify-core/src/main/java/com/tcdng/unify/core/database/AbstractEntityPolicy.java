@@ -71,6 +71,26 @@ public abstract class AbstractEntityPolicy extends AbstractUnifyComponent implem
     }
 
     @Override
+	public void postCreate(Entity record, Date now) throws UnifyException {
+		
+	}
+
+	@Override
+	public void postUpdate(Entity record, Date now) throws UnifyException {
+		
+	}
+
+	@Override
+	public void postUpdate(Update update, Date now) throws UnifyException {
+		
+	}
+
+	@Override
+	public void postDelete(Entity record, Date now) throws UnifyException {
+		
+	}
+
+	@Override
     public void onCreateError(Entity record) {
 
     }

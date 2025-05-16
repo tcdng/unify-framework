@@ -1027,8 +1027,7 @@ public class UnifyContainer {
 	 * @throws UnifyException If component an error occurs.
 	 */
 	public boolean isComponent(Class<? extends UnifyComponent> componentType) throws UnifyException {
-		List<UnifyComponentConfig> configs = getComponentConfigs(componentType);
-		return !configs.isEmpty();
+		return !getComponentConfigs(componentType).isEmpty();
 	}
 
 	/**

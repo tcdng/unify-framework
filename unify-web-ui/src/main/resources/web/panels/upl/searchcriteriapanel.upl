@@ -1,4 +1,7 @@
-//Search Panel UPL
+// UPL template for seacrch criteria panel
+// Copyright 2018-2025 The Code Department.
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
 !ui-searchcriteriapanel layout:$d{!ui-vertical} components:$c{criteriaPanel buttonPanel}
     searchClearList:$c{criteriaPanel} searchLayout:$d{!ui-grid showCaption:true captionSuffix:$s{:}}
 

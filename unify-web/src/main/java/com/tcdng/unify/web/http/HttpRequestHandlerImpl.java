@@ -96,6 +96,9 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 	@Configurable
 	private SessionAttributeProvider attributeProvider;
 
+	@Configurable
+	private LongUserSessionManager longUserSessionManager;
+
 	private FactoryMap<String, RequestPathParts> requestPathParts;
 
 	private Set<String> remoteViewerList;
@@ -299,7 +302,11 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 			}
 		}
 
-		userSession.setTransient(httpModule.getUserSessionManager());
+		if (longUserSessionManager != null) {
+			longUserSessionManager.performAutoLogin(httpRequest, userSession);
+		}
+
+		userSession.setUserSessionManager(httpModule.getUserSessionManager());
 		return userSession;
 	}
 
@@ -331,7 +338,7 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 		HttpUserSession userSession = httpRequest.createHttpUserSession(attributeProvider,
 				httpModule.getApplicationLocale(), httpModule.getApplicationTimeZone(), sessionId, uriBase.toString(),
 				httpModule.getContextPath(), reqPathParts.getTenantPath(), remoteIpAddress);
-		userSession.setTransient(httpModule.getUserSessionManager());
+		userSession.setUserSessionManager(httpModule.getUserSessionManager());
 		return userSession;
 	}
 

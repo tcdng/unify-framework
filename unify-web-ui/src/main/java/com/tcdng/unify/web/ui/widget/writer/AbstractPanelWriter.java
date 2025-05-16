@@ -56,6 +56,7 @@ public abstract class AbstractPanelWriter extends AbstractContainerWriter implem
 		writer.setDataIndex(_valueStore != null ? _valueStore.getDataIndex() : -1);
 		try {
 			super.doWriteBehavior(writer, widget, handlers);
+
 			if (panel.isAllowRefresh()) {
 				int refreshEvery = panel.getRefreshEvery();
 				if (refreshEvery > 0) {

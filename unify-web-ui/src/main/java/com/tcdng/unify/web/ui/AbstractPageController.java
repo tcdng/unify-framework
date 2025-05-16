@@ -32,8 +32,10 @@ import com.tcdng.unify.core.task.TaskLauncher;
 import com.tcdng.unify.core.task.TaskMonitor;
 import com.tcdng.unify.core.task.TaskSetup;
 import com.tcdng.unify.core.upl.UplElementReferences;
+import com.tcdng.unify.core.util.ApplicationUtils;
 import com.tcdng.unify.core.util.ReflectUtils;
 import com.tcdng.unify.core.util.StringUtils;
+import com.tcdng.unify.web.ClientCookie;
 import com.tcdng.unify.web.ClientRequest;
 import com.tcdng.unify.web.ClientResponse;
 import com.tcdng.unify.web.ControllerPathParts;
@@ -45,6 +47,7 @@ import com.tcdng.unify.web.constant.ResetOnWrite;
 import com.tcdng.unify.web.constant.ResultMappingConstants;
 import com.tcdng.unify.web.constant.Secured;
 import com.tcdng.unify.web.constant.UnifyWebRequestAttributeConstants;
+import com.tcdng.unify.web.http.LongUserSessionManager;
 import com.tcdng.unify.web.ui.widget.ContentPanel;
 import com.tcdng.unify.web.ui.widget.DataTransferWidget;
 import com.tcdng.unify.web.ui.widget.Document;
@@ -345,9 +348,11 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 			ControllerPathParts docPathParts) throws UnifyException {
 		ResponseWriter writer = getResponseWriterPool().getResponseWriter(request);
 		UIControllerUtil uiControllerUtil = getUIControllerUtil();
+		final PageRequestContextUtil pageRequestContextUtil = getPageRequestContextUtil();
+		pageRequestContextUtil.setClientResponse(response);
 		try {
 			final ControllerPathParts reqPathParts = request.getRequestPathParts().getControllerPathParts();
-			getPageRequestContextUtil().setRequestPathParts(reqPathParts);
+			pageRequestContextUtil.setRequestPathParts(reqPathParts);
 			ControllerPathParts respPathParts = reqPathParts;
 			PageControllerInfo pbbInfo = uiControllerUtil.getPageControllerInfo(getName());
 			Page page = uiControllerUtil.loadRequestPage(reqPathParts);
@@ -402,7 +407,7 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 			}
 
 			// Write response using information from response path parts
-			getPageRequestContextUtil().setResponsePathParts(respPathParts);
+			pageRequestContextUtil.setResponsePathParts(respPathParts);
 			Result result = pbbInfo.getResult(resultName);
 			if (respPageController != null && result.isReload()) {
 				respPageController.reloadPage();
@@ -418,7 +423,7 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 			writer.writeTo(response.getWriter());
 		} finally {
 			// Remove closed pages from session
-			getSessionContext().removeAttributes(getPageRequestContextUtil().getClosedPagePaths());
+			getSessionContext().removeAttributes(pageRequestContextUtil.getClosedPagePaths());
 
 			// Restore writer
 			getResponseWriterPool().restore(writer);
@@ -434,10 +439,55 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 		return resolveRequestPage().getPathVariables();
 	}
 
-	private Page resolveRequestPage() throws UnifyException {
-		PageRequestContextUtil rcUtil = getPageRequestContextUtil();
-		Page contentPage = rcUtil.getContentPage();
-		return contentPage == null ? rcUtil.getRequestPage() : contentPage;
+	/**
+	 * Creates long user session.
+	 * 
+	 * @param sessionInSecs session in seconds.
+	 * @return true if set otherwise false
+	 * @throws UnifyException if an error occurs
+	 */
+	protected boolean createLongUserSession(int sessionInSecs) throws UnifyException {
+		final ClientResponse response = getPageRequestContextUtil().getClientResponse();
+		if (response != null) {
+			if (isComponent(LongUserSessionManager.class)) {
+				final String cookieId = ApplicationUtils.generateSessionCookieId();
+				final LongUserSessionManager longUserSessionManager = getComponent(LongUserSessionManager.class);
+				if (longUserSessionManager.saveLongSession(getUserToken().getUserLoginId(), cookieId,
+						sessionInSecs)) {
+					response.setCookie(longUserSessionManager.getLongSessionCookieName(), cookieId, sessionInSecs);
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Deletes long user session.
+	 * 
+	 * @param sessionInSecs session in seconds.
+	 * @return true if set otherwise false
+	 * @throws UnifyException if an error occurs
+	 */
+	protected boolean deleteLongUserSession() throws UnifyException {
+		final ClientRequest request = getPageRequestContextUtil().getClientRequest();
+		final ClientResponse response = getPageRequestContextUtil().getClientResponse();
+		if (request != null && response != null) {
+			if (isComponent(LongUserSessionManager.class)) {
+				final LongUserSessionManager longUserSessionManager = getComponent(LongUserSessionManager.class);
+				final String cookieName = longUserSessionManager.getLongSessionCookieName();
+				ClientCookie clientCookie = request.getCookie(cookieName);
+				if (clientCookie != null) {
+					final String cookieId = clientCookie.getVal();
+					longUserSessionManager.deleteLongSession(cookieId);
+					response.setCookie(cookieName, cookieId, 0);					
+					return true;
+				}			
+			}
+		}
+
+		return false;
 	}
 
 	/**
@@ -1074,6 +1124,12 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 
 	protected void setResultMapping(String resultMappingName) throws UnifyException {
 		getPageRequestContextUtil().setCommandResultMapping(resultMappingName);
+	}
+
+	private Page resolveRequestPage() throws UnifyException {
+		PageRequestContextUtil rcUtil = getPageRequestContextUtil();
+		Page contentPage = rcUtil.getContentPage();
+		return contentPage == null ? rcUtil.getRequestPage() : contentPage;
 	}
 
 	private void performClosePage(ClosePageMode closePageMode, boolean isFireClose) throws UnifyException {

@@ -464,6 +464,17 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	}
 
 	/**
+	 * Checks if component with name is defined in container.
+	 * 
+	 * @param componentType the component type
+	 * @return a true value if component type exists otherwise false
+	 * @throws UnifyException If component an error occurs.
+	 */
+	public boolean isComponent(Class<? extends UnifyComponent> componentType) throws UnifyException {
+		return unifyComponentContext.isComponent(componentType);
+	}
+
+	/**
 	 * Gets a UPL component with specified descriptor.
 	 * 
 	 * @param locale     the locale

@@ -106,30 +106,29 @@
               </execution>
             </executions>
           </plugin>
-          <plugin>
-            <groupId>org.sonatype.plugins</groupId>
-            <artifactId>nexus-staging-maven-plugin</artifactId>
-            <version>1.6.7</version>
-            <extensions>true</extensions>
-            <configuration>
-              <serverId>sonatype-nexus-staging</serverId>
-              <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-              <autoReleaseAfterClose>true</autoReleaseAfterClose>
-              <stagingProgressTimeoutMinutes>10</stagingProgressTimeoutMinutes>
-            </configuration>
-          </plugin>
+	        <plugin>
+	          <groupId>org.sonatype.central</groupId>
+	          <artifactId>central-publishing-maven-plugin</artifactId>
+	          <version>0.7.0</version>
+	          <extensions>true</extensions>
+	          <configuration>
+	            <publishingServerId>central</publishingServerId>
+	            <autoPublish>true</autoPublish>
+                <waitUntil>published</waitUntil>
+	          </configuration>
+	        </plugin>
         </plugins>
       </build>
       <distributionManagement>
         <snapshotRepository>
           <id>sonatype-nexus-snapshots</id>
-          <name>Sonatype Nexus Snapshots</name>
-          <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+          <name>Central Portal Snapshots</name>
+          <url>https://central.sonatype.com/repository/maven-snapshots/</url>
         </snapshotRepository>
         <repository>
           <id>sonatype-nexus-staging</id>
-          <name>Nexus Release Repository</name>
-          <url>http://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+          <name>Central Portal Release</name>
+          <url>https://central.sonatype.com/service/local/staging/deploy/maven2/</url>
         </repository>
       </distributionManagement>
     </profile>

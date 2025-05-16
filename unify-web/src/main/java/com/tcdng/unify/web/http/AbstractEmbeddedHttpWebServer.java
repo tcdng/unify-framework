@@ -18,13 +18,14 @@ package com.tcdng.unify.web.http;
 
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.RequestContextManager;
+import com.tcdng.unify.core.UnifyCoreApplicationAttributeConstants;
 import com.tcdng.unify.core.UnifyCorePropertyConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.system.UserSessionManager;
-import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.UnifyWebPropertyConstants;
 import com.tcdng.unify.web.WebApplicationComponents;
+import com.tcdng.unify.web.util.CookieUtils;
 
 /**
  * Abstract base class for embedded HTTP web servers.
@@ -88,10 +89,12 @@ public abstract class AbstractEmbeddedHttpWebServer extends AbstractHttpWebInter
 
 	protected String generateSessionCookieName() throws UnifyException {
 		final int port = isHttpsOnly() ? getHttpsPort() : getHttpPort();
-		final String infix = StringUtils
-				.flatten(getContainerSetting(String.class, UnifyCorePropertyConstants.APPLICATION_CODE, "unify"))
-				.replaceAll("[^a-zA-Z0-9_]", "");
-		return ("JS_" + infix + "_" + port).toUpperCase();
+		final String infix = getContainerSetting(String.class, UnifyCorePropertyConstants.APPLICATION_CODE, "unify");
+		final String sessionCookieName = CookieUtils.getSessionCookieName(infix, port);
+		final String longSessionCookieName = CookieUtils.getLongSessionCookieName(infix, port);
+		setApplicationAttribute(UnifyCoreApplicationAttributeConstants.SESSION_COOKIE_NAME, sessionCookieName);
+		setApplicationAttribute(UnifyCoreApplicationAttributeConstants.LONG_SESSION_COOKIE_NAME, longSessionCookieName);
+		return sessionCookieName;
 	}
 	
 	protected int getHttpsPort() {

@@ -29,5 +29,10 @@ public interface HttpUserSession extends UserSession {
     
     void invalidate();
 
-    void setTransient(UserSessionManager userSessionManager);
+    void setUserSessionManager(UserSessionManager userSessionManager);
+    
+    boolean isUserLoggedIn();
+
+	boolean isAuthorized();
+
 }
