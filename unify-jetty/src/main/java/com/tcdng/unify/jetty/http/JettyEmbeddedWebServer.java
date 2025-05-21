@@ -134,7 +134,6 @@ public class JettyEmbeddedWebServer extends AbstractEmbeddedHttpWebServer {
                             UnifyCoreConstants.DEFAULT_APPLICATION_SESSION_TIMEOUT_SECONDS));
             final String sessionCookieName = generateSessionCookieName();
             context.getSessionHandler().getSessionCookieConfig().setName(sessionCookieName);
-//            context.getSessionHandler().getSessionCookieConfig().setHttpOnly(true);            
             httpServer.setHandler(context);
 
             // Websocket
