@@ -1370,7 +1370,7 @@ public class UnifyContainer {
 		List<String> messageBaseList = new ArrayList<String>();
 		for (UnifyStaticSettings unifyStaticSettings : staticSettings) {
 			String messageBase = unifyStaticSettings.getMessageBase();
-			if (StringUtils.isNotBlank(messageBase)) {
+			if (StringUtils.isNotBlank(messageBase) && !messageBaseList.contains(messageBase)) {
 				messageBaseList.add(messageBase);
 			}
 		}
