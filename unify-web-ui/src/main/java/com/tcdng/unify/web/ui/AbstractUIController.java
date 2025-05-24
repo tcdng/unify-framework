@@ -341,7 +341,7 @@ public abstract class AbstractUIController extends AbstractHttpClientController 
 
 	@SuppressWarnings("unchecked")
 	protected void writeResponse(ResponseWriter writer, Page page, Result result) throws UnifyException {
-		if (MimeType.APPLICATION_JSON.equals(result.getMimeType())) {
+		if (!result.isDocumentPathResponse() && MimeType.APPLICATION_JSON.equals(result.getMimeType())) {
 			writer.write("{\"jsonResp\":[");
 			boolean appendSym = false;
 			for (PageControllerResponse pageControllerResponse : result.getResponses()) {

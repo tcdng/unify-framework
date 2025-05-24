@@ -27,6 +27,8 @@ public interface RequestParameterConstants {
 
     String CLIENT_ID = "req_cid";
 
+    String CLIENT_UNIFY = "req_ux";
+
     String REMOTE_VIEWER = "req_rv";
 
     String REMOTE_SESSION_ID = "req_rsi";
@@ -48,8 +50,6 @@ public interface RequestParameterConstants {
     String REMOTE_COLOR_SCHEME = "req_csm";
 
     String REMOTE_CALL_FORMAT = "req_rcf";
-
-    //String REMOTE_CALL_INPUTSTREAM = "req_rcin";
 
     String EXTERNAL_FORWARD = "req_fwd";
 }

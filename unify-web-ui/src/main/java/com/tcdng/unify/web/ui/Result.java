@@ -15,7 +15,9 @@
  */
 package com.tcdng.unify.web.ui;
 
+import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.constant.MimeType;
+import com.tcdng.unify.core.util.DataUtils;
 
 /**
  * AggregateItem mapping data object.
@@ -59,5 +61,17 @@ public class Result {
 
 	public boolean isReload() {
 		return reload;
+	}
+
+	public boolean isDocumentPathResponse() throws UnifyException {
+		return !DataUtils.isBlank(pageControllerResponses) && pageControllerResponses[0].isDocumentPathResponse();
+	}
+
+	public String getDocumentPath() throws UnifyException {
+		if (!DataUtils.isBlank(pageControllerResponses)) {
+			return pageControllerResponses[0].getDocumentPath();
+		}
+
+		return null;
 	}
 }

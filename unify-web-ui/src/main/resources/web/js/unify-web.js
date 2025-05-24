@@ -4593,6 +4593,13 @@ ux.buildObjParams = function(trgObj, evp, param, refs) {
 		}
 	}
 
+	// Unify source marker
+	if (isForm) {
+		pb.append("req_ux", "true");
+	} else {
+		pb += ("&req_ux=true");
+	}
+
 	var pb = param.value;
 	var isForm = param.isForm;
 	if (_df(evp.uLoginId)) {

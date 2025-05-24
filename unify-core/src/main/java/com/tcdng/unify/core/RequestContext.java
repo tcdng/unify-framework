@@ -33,6 +33,8 @@ public class RequestContext extends Context {
 
     private Object quickReference;
 
+    private boolean unifyRequest;
+    
     public RequestContext(String requestPath, SessionContext sessionContext) {
         this.requestPath = requestPath;
         this.sessionContext = sessionContext;
@@ -69,4 +71,12 @@ public class RequestContext extends Context {
     public void setQuickReference(Object quickReference) {
         this.quickReference = quickReference;
     }
+
+	public boolean isUnifyRequest() {
+		return unifyRequest;
+	}
+
+	public void setUnifyRequest(boolean unifyRequest) {
+		this.unifyRequest = unifyRequest;
+	}
 }

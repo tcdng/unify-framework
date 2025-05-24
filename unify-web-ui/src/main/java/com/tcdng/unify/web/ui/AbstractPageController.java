@@ -25,6 +25,7 @@ import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.Singleton;
 import com.tcdng.unify.core.annotation.UplBinding;
+import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.constant.TopicEventType;
 import com.tcdng.unify.core.data.DownloadFile;
 import com.tcdng.unify.core.data.FileAttachmentInfo;
@@ -300,8 +301,7 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 				return ResultMappingConstants.CLOSE;
 			}
 
-			String resultName = (String) getUIControllerUtil().getPageControllerInfo(getName()).getAction(actionName)
-					.getMethod().invoke(this);
+			String resultName = executeAction(this, actionName);
 			if (ResultMappingConstants.CLOSE.equals(resultName)) {
 				// Handle other actions that also return CLOSE result
 				performClosePage(ClosePageMode.CLOSE, false);
@@ -310,10 +310,7 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 			return resultName;
 		} catch (UnifyException e) {
 			throw e;
-		} catch (Exception e) {
-			throwOperationErrorException(e);
 		}
-		return null;
 	}
 
 	@Override
@@ -353,15 +350,15 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 		try {
 			final ControllerPathParts reqPathParts = request.getRequestPathParts().getControllerPathParts();
 			pageRequestContextUtil.setRequestPathParts(reqPathParts);
-			ControllerPathParts respPathParts = reqPathParts;
 			PageControllerInfo pbbInfo = uiControllerUtil.getPageControllerInfo(getName());
-			Page page = uiControllerUtil.loadRequestPage(reqPathParts);
+			ControllerPathParts respPathParts = reqPathParts;
+			Page restPage = uiControllerUtil.loadRequestPage(reqPathParts);
 			String resultName = ResultMappingConstants.VALIDATION_ERROR;
 
 			DataTransfer dataTransfer = prepareDataTransfer(request);
 			PageController<?> respPageController = null;
-			if (validate(page, dataTransfer)) {
-				synchronized (page) {
+			if (validate(restPage, dataTransfer)) {
+				synchronized (restPage) {
 					populate(dataTransfer);
 					if (reqPathParts.isActionPath()) {
 						resultName = executePageCall(reqPathParts.getActionName());
@@ -379,13 +376,13 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 				logDebug("Processing result with name [{0}]...", resultName);
 				// Check if action result needs to be routed to containing
 				// document controller
-				if (!pbbInfo.hasResultWithName(resultName) && !page.isDocument()) {
+				if (!pbbInfo.hasResultWithName(resultName) && !restPage.isDocument()) {
 					if (docPageController != null) {
 						logDebug("Result with name [{0}] not found for controller [{1}]...", resultName,
 								respPageController.getName());
 						respPathParts = docPathParts;
 						respPageController = docPageController;
-						page = uiControllerUtil.loadRequestPage(respPathParts);
+						restPage = uiControllerUtil.loadRequestPage(respPathParts);
 						pbbInfo = uiControllerUtil.getPageControllerInfo(respPageController.getName());
 						logDebug("Result with name [{0}] routed to controller [{1}]...", resultName,
 								respPageController.getName());
@@ -399,23 +396,33 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 					respPathParts = pagePathInfoRepository
 							.getControllerPathParts(uiControllerUtil.getCommonUtilitiesControllerName());
 					respPageController = (PageController<?>) getControllerFinder().findController(respPathParts);
-					page = uiControllerUtil.loadRequestPage(respPathParts);
+					restPage = uiControllerUtil.loadRequestPage(respPathParts);
 					pbbInfo = uiControllerUtil.getPageControllerInfo(respPageController.getName());
 					logDebug("Result with name [{0}] routed to controller [{1}]...", resultName,
 							respPageController.getName());
 				}
 			}
 
+			Result result = pbbInfo.getResult(resultName);
+			if (result.isDocumentPathResponse()) {
+				final String path = result.getDocumentPath();
+				logDebug("Redirecting to load document controller [{0}]...", path);
+				respPathParts = pagePathInfoRepository.getControllerPathParts(path);
+				respPageController = (PageController<?>) getControllerFinder().findController(respPathParts);
+				restPage = uiControllerUtil.loadRequestPage(respPathParts);
+				executeAction(respPageController, "/indexPage");
+			}
+
 			// Write response using information from response path parts
 			pageRequestContextUtil.setResponsePathParts(respPathParts);
-			Result result = pbbInfo.getResult(resultName);
 			if (respPageController != null && result.isReload()) {
 				respPageController.reloadPage();
 			}
 
-			writeResponse(writer, page, result);
+			writeResponse(writer, restPage, result);
 
-			response.setContentType(result.getMimeType().template());
+			response.setContentType(
+					result.isDocumentPathResponse() ? MimeType.TEXT_HTML.template() : result.getMimeType().template());
 			if (request.getCharset() != null) {
 				response.setCharacterEncoding(request.getCharset().name());
 			}
@@ -452,8 +459,7 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 			if (isComponent(LongUserSessionManager.class)) {
 				final String cookieId = ApplicationUtils.generateSessionCookieId();
 				final LongUserSessionManager longUserSessionManager = getComponent(LongUserSessionManager.class);
-				if (longUserSessionManager.saveLongSession(getUserToken().getUserLoginId(), cookieId,
-						sessionInSecs)) {
+				if (longUserSessionManager.saveLongSession(getUserToken().getUserLoginId(), cookieId, sessionInSecs)) {
 					response.setCookie(longUserSessionManager.getLongSessionCookieName(), cookieId, sessionInSecs);
 					return true;
 				}
@@ -481,9 +487,9 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 				if (clientCookie != null) {
 					final String cookieId = clientCookie.getVal();
 					longUserSessionManager.deleteLongSession(cookieId);
-					response.setCookie(cookieName, cookieId, 0);					
+					response.setCookie(cookieName, cookieId, 0);
 					return true;
-				}			
+				}
 			}
 		}
 
@@ -1124,6 +1130,19 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 
 	protected void setResultMapping(String resultMappingName) throws UnifyException {
 		getPageRequestContextUtil().setCommandResultMapping(resultMappingName);
+	}
+
+	private String executeAction(PageController<?> pageController, String actionName) throws UnifyException {
+		try {
+			return (String) getUIControllerUtil().getPageControllerInfo(getName()).getAction(actionName).getMethod()
+					.invoke(pageController);
+		} catch (UnifyException e) {
+			throw e;
+		} catch (Exception e) {
+			throwOperationErrorException(e);
+		}
+
+		return null;
 	}
 
 	private Page resolveRequestPage() throws UnifyException {

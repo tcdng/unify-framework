@@ -39,6 +39,16 @@ public abstract class AbstractPageControllerResponse extends AbstractUplComponen
 
     @Configurable
     private FormatHelper formatHelper;
+    
+    @Override
+	public boolean isDocumentPathResponse() throws UnifyException {
+		return false;
+	}
+
+	@Override
+	public String getDocumentPath() throws UnifyException {
+		return null;
+	}
 
     @Override
     protected void onInitialize() throws UnifyException {

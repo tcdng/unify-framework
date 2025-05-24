@@ -167,6 +167,9 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 				charset = Charset.forName(httpRequest.getCharacterEncoding());
 			}
 
+			getRequestContext()
+					.setUnifyRequest(Boolean.valueOf(httpRequest.getParameter(RequestParameterConstants.CLIENT_UNIFY)));
+			
 			setRequestAttribute(UnifyWebRequestAttributeConstants.HEADERS, httpRequest);
 			setRequestAttribute(UnifyWebRequestAttributeConstants.PARAMETERS, httpRequest);
 
