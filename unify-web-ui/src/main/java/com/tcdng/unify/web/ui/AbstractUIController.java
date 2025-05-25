@@ -427,16 +427,17 @@ public abstract class AbstractUIController extends AbstractHttpClientController 
 			ControllerPathParts respPathParts = null;
 			Page page = null;
 			Result result = null;
-			final String path404 = UnifyWebErrorConstants.CONTROLLER_UNKNOWN_ACTION.equals(errorCode)
-					? getContainerSetting(String.class, UnifyWebPropertyConstants.APPLICATION_404)
-					: null;
-			if (!StringUtils.isBlank(path404)) {
-				respPathParts = pathInfoRepository.getControllerPathParts(path404);
+			final String path40x = UnifyWebErrorConstants.LOGIN_REQUIRED.equals(errorCode)
+					? getContainerSetting(String.class, UnifyWebPropertyConstants.APPLICATION_401)
+					: (UnifyWebErrorConstants.CONTROLLER_UNKNOWN_ACTION.equals(errorCode)
+							? getContainerSetting(String.class, UnifyWebPropertyConstants.APPLICATION_404)
+							: null);
+			if (!StringUtils.isBlank(path40x)) {
+				respPathParts = pathInfoRepository.getControllerPathParts(path40x);
 				pageController = (PageController<?>) getControllerFinder().findController(respPathParts);
 				page = uiControllerUtil.loadRequestPage(respPathParts);
 				final String resultName = executeAction(pageController, "/indexPage");
-				result = uiControllerUtil.getPageControllerInfo(pageController.getName())
-						.getResult(resultName);
+				result = uiControllerUtil.getPageControllerInfo(pageController.getName()).getResult(resultName);
 			} else {
 				if (StringUtils
 						.isBlank((String) request.getParameters().getParam(PageRequestParameterConstants.DOCUMENT))
