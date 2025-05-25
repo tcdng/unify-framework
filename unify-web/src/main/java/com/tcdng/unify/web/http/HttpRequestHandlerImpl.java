@@ -51,6 +51,7 @@ import com.tcdng.unify.web.ClientRequest;
 import com.tcdng.unify.web.ClientResponse;
 import com.tcdng.unify.web.Controller;
 import com.tcdng.unify.web.ControllerFinder;
+import com.tcdng.unify.web.ControllerPathParts;
 import com.tcdng.unify.web.PathInfoRepository;
 import com.tcdng.unify.web.RequestPathParts;
 import com.tcdng.unify.web.TenantPathManager;
@@ -169,7 +170,7 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 
 			getRequestContext()
 					.setUnifyRequest(Boolean.valueOf(httpRequest.getParameter(RequestParameterConstants.CLIENT_UNIFY)));
-			
+
 			setRequestAttribute(UnifyWebRequestAttributeConstants.HEADERS, httpRequest);
 			setRequestAttribute(UnifyWebRequestAttributeConstants.PARAMETERS, httpRequest);
 
@@ -198,7 +199,7 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 			}
 
 			ensureClientId(clientRequest);
-			Controller controller;
+			Controller controller = null;
 			try {
 				controller = controllerFinder.findController(requestPathParts.getControllerPathParts());
 				if (controller.isRefererRequired()
@@ -209,6 +210,7 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 				}
 			} catch (Exception e) {
 				logError(e);
+				boolean exit = true;
 				try {
 					final String contentType = httpRequest.getHeader("Content-Type");
 					if (MimeType.APPLICATION_JSON.template().equals(contentType)) {
@@ -220,22 +222,36 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 								.write("  \"message\": \"The resource you are looking for is not available.\"\n");
 						clientResponse.getWriter().write("}\n");
 					} else {
-						clientResponse.setContentType(MimeType.TEXT_HTML.template());
-						clientResponse.getWriter().write("<html>\n<head>\n");
-						clientResponse.getWriter()
-								.write("<meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\"/>\n");
-						clientResponse.getWriter().write("<title>ErrorPart 404</title>\n");
-						clientResponse.getWriter().write("</head>\n<body>");
-						clientResponse.getWriter().write("<h2>HTTP ERROR 404 - Not found.</h2>\n");
-						clientResponse.getWriter().write("</body>\n</html>\n");
+						final String path404 = getContainerSetting(String.class,
+								UnifyWebPropertyConstants.APPLICATION_404);
+						if (!StringUtils.isBlank(path404)) {
+							logDebug("Redirecting to 404 controller [{0}]...", path404);
+							ControllerPathParts controllerPathParts = pathInfoRepository.getControllerPathParts(path404);
+							controller = controllerFinder.findController(controllerPathParts);
+							requestPathParts.setControllerPathParts(controllerPathParts);
+							exit = false;
+						} else {
+							clientResponse.setContentType(MimeType.TEXT_HTML.template());
+							clientResponse.getWriter().write("<html>\n<head>\n");
+							clientResponse.getWriter()
+									.write("<meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\"/>\n");
+							clientResponse.getWriter().write("<title>ErrorPart 404</title>\n");
+							clientResponse.getWriter().write("</head>\n<body>");
+							clientResponse.getWriter().write("<h2>HTTP ERROR 404 - Not found.</h2>\n");
+							clientResponse.getWriter().write("</body>\n</html>\n");
+						}
 					}
 
 					clientResponse.setStatusNotFound();
 				} finally {
-					clientResponse.close();
+					if (exit) {
+						clientResponse.close();
+					}
 				}
 
-				return;
+				if (exit) {
+					return;
+				}
 			}
 
 			controller.process(clientRequest, clientResponse);

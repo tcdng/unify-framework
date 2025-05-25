@@ -39,7 +39,11 @@ public class RequestPathParts {
         this.controllerPathParts = controllerPathParts;
     }
 
-    public ControllerPathParts getControllerPathParts() {
+    public void setControllerPathParts(ControllerPathParts controllerPathParts) {
+		this.controllerPathParts = controllerPathParts;
+	}
+
+	public ControllerPathParts getControllerPathParts() {
         return controllerPathParts;
     }
 

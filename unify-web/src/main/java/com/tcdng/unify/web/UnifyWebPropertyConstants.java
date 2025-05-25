@@ -25,6 +25,8 @@ public interface UnifyWebPropertyConstants {
 
     String APPLICATION_HOME = "application.web.home";
 
+    String APPLICATION_404 = "application.web.404";
+
     String APPLICATION_COMMON_UTILITIES = "application.web.common";
 
     String APPLICATION_THEME = "application.web.theme";
