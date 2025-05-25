@@ -379,6 +379,19 @@ public abstract class AbstractUIController extends AbstractHttpClientController 
 		}
 	}
 
+	protected String executeAction(PageController<?> pageController, String actionName) throws UnifyException {
+		try {
+			return (String) getUIControllerUtil().getPageControllerInfo(getName()).getAction(actionName).getMethod()
+					.invoke(pageController);
+		} catch (UnifyException e) {
+			throw e;
+		} catch (Exception e) {
+			throwOperationErrorException(e);
+		}
+
+		return null;
+	}
+
 	private void writeExceptionResponse(ClientRequest request, ClientResponse response, Exception e)
 			throws UnifyException {
 		logError(e);
@@ -393,8 +406,9 @@ public abstract class AbstractUIController extends AbstractHttpClientController 
 
 		// Set exception attributes in session context.
 		boolean loginRequired = false;
+		String errorCode = null;
 		if (e instanceof UnifyException) {
-			String errorCode = ((UnifyException) e).getUnifyError().getErrorCode();
+			errorCode = ((UnifyException) e).getUnifyError().getErrorCode();
 			loginRequired = UnifyWebErrorConstants.LOGIN_REQUIRED.equals(errorCode)
 					|| UnifyCoreErrorConstants.UNKNOWN_PAGE_NAME.equals(errorCode)
 					|| SystemUtils.isForceLogoutErrorCode(errorCode);
@@ -413,30 +427,43 @@ public abstract class AbstractUIController extends AbstractHttpClientController 
 			ControllerPathParts respPathParts = null;
 			Page page = null;
 			Result result = null;
-			if (StringUtils.isBlank((String) request.getParameters().getParam(PageRequestParameterConstants.DOCUMENT))
-					&& !pageRequestContextUtil.isRemoteViewer()) {
-				if (getContainerSetting(boolean.class, UnifyWebPropertyConstants.APPLICATION_WEB_FRIENDLY_REDIRECT,
-						true)) {
+			final String path404 = UnifyWebErrorConstants.CONTROLLER_UNKNOWN_ACTION.equals(errorCode)
+					? getContainerSetting(String.class, UnifyWebPropertyConstants.APPLICATION_404)
+					: null;
+			if (!StringUtils.isBlank(path404)) {
+				respPathParts = pathInfoRepository.getControllerPathParts(path404);
+				pageController = (PageController<?>) getControllerFinder().findController(respPathParts);
+				page = uiControllerUtil.loadRequestPage(respPathParts);
+				final String resultName = executeAction(pageController, "/indexPage");
+				result = uiControllerUtil.getPageControllerInfo(pageController.getName())
+						.getResult(resultName);
+			} else {
+				if (StringUtils
+						.isBlank((String) request.getParameters().getParam(PageRequestParameterConstants.DOCUMENT))
+						&& !pageRequestContextUtil.isRemoteViewer()) {
+					if (getContainerSetting(boolean.class, UnifyWebPropertyConstants.APPLICATION_WEB_FRIENDLY_REDIRECT,
+							true)) {
+						respPathParts = pathInfoRepository
+								.getControllerPathParts(SystemInfoConstants.UNAUTHORIZED_CONTROLLER_NAME);
+						pageController = (PageController<?>) getControllerFinder().findController(respPathParts);
+						page = uiControllerUtil.loadRequestPage(respPathParts);
+						page.setWidgetVisible("stackTrace", !loginRequired && !uiControllerUtil.isHideErrorTrace());
+						result = uiControllerUtil.getPageControllerInfo(pageController.getName())
+								.getResult(ResultMappingConstants.INDEX);
+					} else {
+						throwOperationErrorException(
+								new RuntimeException("Attempting to access an unauthorized path."));
+					}
+				} else {
 					respPathParts = pathInfoRepository
-							.getControllerPathParts(SystemInfoConstants.UNAUTHORIZED_CONTROLLER_NAME);
+							.getControllerPathParts(SystemInfoConstants.SYSTEMINFO_CONTROLLER_NAME);
 					pageController = (PageController<?>) getControllerFinder().findController(respPathParts);
 					page = uiControllerUtil.loadRequestPage(respPathParts);
 					page.setWidgetVisible("stackTrace", !loginRequired && !uiControllerUtil.isHideErrorTrace());
 					result = uiControllerUtil.getPageControllerInfo(pageController.getName())
-							.getResult(ResultMappingConstants.INDEX);
-				} else {
-					throwOperationErrorException(new RuntimeException("Attempting to access an unauthorized path."));
+							.getResult(SystemInfoConstants.SHOW_SYSTEM_EXCEPTION_MAPPING);
 				}
-			} else {
-				respPathParts = pathInfoRepository
-						.getControllerPathParts(SystemInfoConstants.SYSTEMINFO_CONTROLLER_NAME);
-				pageController = (PageController<?>) getControllerFinder().findController(respPathParts);
-				page = uiControllerUtil.loadRequestPage(respPathParts);
-				page.setWidgetVisible("stackTrace", !loginRequired && !uiControllerUtil.isHideErrorTrace());
-				result = uiControllerUtil.getPageControllerInfo(pageController.getName())
-						.getResult(SystemInfoConstants.SHOW_SYSTEM_EXCEPTION_MAPPING);
 			}
-
 			pageRequestContextUtil.setResponsePathParts(respPathParts);
 			writeResponse(writer, page, result);
 

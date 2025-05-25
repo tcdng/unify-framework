@@ -346,6 +346,7 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 		ResponseWriter writer = getResponseWriterPool().getResponseWriter(request);
 		UIControllerUtil uiControllerUtil = getUIControllerUtil();
 		final PageRequestContextUtil pageRequestContextUtil = getPageRequestContextUtil();
+		pageRequestContextUtil.setClientRequest(request);
 		pageRequestContextUtil.setClientResponse(response);
 		try {
 			final ControllerPathParts reqPathParts = request.getRequestPathParts().getControllerPathParts();
@@ -1130,19 +1131,6 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 
 	protected void setResultMapping(String resultMappingName) throws UnifyException {
 		getPageRequestContextUtil().setCommandResultMapping(resultMappingName);
-	}
-
-	private String executeAction(PageController<?> pageController, String actionName) throws UnifyException {
-		try {
-			return (String) getUIControllerUtil().getPageControllerInfo(getName()).getAction(actionName).getMethod()
-					.invoke(pageController);
-		} catch (UnifyException e) {
-			throw e;
-		} catch (Exception e) {
-			throwOperationErrorException(e);
-		}
-
-		return null;
 	}
 
 	private Page resolveRequestPage() throws UnifyException {
