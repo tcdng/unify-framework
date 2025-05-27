@@ -38,6 +38,7 @@ import com.tcdng.unify.web.ControllerPathParts;
 import com.tcdng.unify.web.PathInfoRepository;
 import com.tcdng.unify.web.UnifyWebErrorConstants;
 import com.tcdng.unify.web.UnifyWebPropertyConstants;
+import com.tcdng.unify.web.UnifyWebSessionAttributeConstants;
 import com.tcdng.unify.web.constant.ReadOnly;
 import com.tcdng.unify.web.constant.RequestParameterConstants;
 import com.tcdng.unify.web.constant.ResetOnWrite;
@@ -427,17 +428,18 @@ public abstract class AbstractUIController extends AbstractHttpClientController 
 			ControllerPathParts respPathParts = null;
 			Page page = null;
 			Result result = null;
-			final String path40x = UnifyWebErrorConstants.LOGIN_REQUIRED.equals(errorCode)
+			final String pathX0x = UnifyWebErrorConstants.LOGIN_REQUIRED.equals(errorCode)
 					? getContainerSetting(String.class, UnifyWebPropertyConstants.APPLICATION_401)
 					: (UnifyWebErrorConstants.CONTROLLER_UNKNOWN_ACTION.equals(errorCode)
 							? getContainerSetting(String.class, UnifyWebPropertyConstants.APPLICATION_404)
-							: null);
-			if (!StringUtils.isBlank(path40x)) {
-				respPathParts = pathInfoRepository.getControllerPathParts(path40x);
+							: getContainerSetting(String.class, UnifyWebPropertyConstants.APPLICATION_500));
+			if (!StringUtils.isBlank(pathX0x)) {
+				respPathParts = pathInfoRepository.getControllerPathParts(pathX0x);
 				pageController = (PageController<?>) getControllerFinder().findController(respPathParts);
 				page = uiControllerUtil.loadRequestPage(respPathParts);
 				final String resultName = executeAction(pageController, "/indexPage");
 				result = uiControllerUtil.getPageControllerInfo(pageController.getName()).getResult(resultName);
+				setSessionAttribute(UnifyWebSessionAttributeConstants.INTERNAL_SERVER_ERROR, message);
 			} else {
 				if (StringUtils
 						.isBlank((String) request.getParameters().getParam(PageRequestParameterConstants.DOCUMENT))
