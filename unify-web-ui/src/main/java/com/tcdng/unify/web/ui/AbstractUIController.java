@@ -414,7 +414,7 @@ public abstract class AbstractUIController extends AbstractHttpClientController 
 					|| UnifyCoreErrorConstants.UNKNOWN_PAGE_NAME.equals(errorCode)
 					|| SystemUtils.isForceLogoutErrorCode(errorCode);
 		}
-		String message = getExceptionMessage(LocaleType.SESSION, e);
+		final String message = getExceptionMessage(LocaleType.SESSION, e);
 		setSessionAttribute(SystemInfoConstants.LOGIN_REQUIRED_FLAG, loginRequired);
 		setSessionAttribute(SystemInfoConstants.EXCEPTION_MESSAGE_KEY, message);
 
@@ -430,16 +430,17 @@ public abstract class AbstractUIController extends AbstractHttpClientController 
 			Result result = null;
 			final String pathX0x = UnifyWebErrorConstants.LOGIN_REQUIRED.equals(errorCode)
 					? getContainerSetting(String.class, UnifyWebPropertyConstants.APPLICATION_401)
-					: (UnifyWebErrorConstants.CONTROLLER_UNKNOWN_ACTION.equals(errorCode)
-							? getContainerSetting(String.class, UnifyWebPropertyConstants.APPLICATION_404)
-							: getContainerSetting(String.class, UnifyWebPropertyConstants.APPLICATION_500));
+					: ((UnifyWebErrorConstants.CONTROLLER_UNKNOWN_ACTION.equals(errorCode)
+							|| UnifyCoreErrorConstants.RECORD_SINGLEOBJECT_NO_MATCHING_RECORD.equals(errorCode))
+									? getContainerSetting(String.class, UnifyWebPropertyConstants.APPLICATION_404)
+									: getContainerSetting(String.class, UnifyWebPropertyConstants.APPLICATION_500));
 			if (!StringUtils.isBlank(pathX0x)) {
+				setSessionAttribute(UnifyWebSessionAttributeConstants.INTERNAL_SERVER_ERROR, message);
 				respPathParts = pathInfoRepository.getControllerPathParts(pathX0x);
 				pageController = (PageController<?>) getControllerFinder().findController(respPathParts);
 				page = uiControllerUtil.loadRequestPage(respPathParts);
 				final String resultName = executeAction(pageController, "/indexPage");
 				result = uiControllerUtil.getPageControllerInfo(pageController.getName()).getResult(resultName);
-				setSessionAttribute(UnifyWebSessionAttributeConstants.INTERNAL_SERVER_ERROR, message);
 			} else {
 				if (StringUtils
 						.isBlank((String) request.getParameters().getParam(PageRequestParameterConstants.DOCUMENT))
