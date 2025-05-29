@@ -39,4 +39,25 @@ public final class ApplicationUtils {
 		return StringUtils.concatenateUsingSeparatorFixed(':', userToken.getBranchCode(), userToken.getDepartmentCode(),
 				userToken.getRoleCode(), userToken.getOrganizationCode());
 	}
+
+	public static synchronized void popuplateFromLongSessionCookieId(UserToken userToken, String cookieId) {
+		final String[] parts = StringUtils.split(cookieId, "\\:");
+		if (parts.length == 4) {
+			if (!StringUtils.isBlank(parts[0])) {
+				userToken.setBranchCode(parts[0]);
+			}
+			
+			if (!StringUtils.isBlank(parts[1])) {
+				userToken.setDepartmentCode(parts[1]);
+			}
+			
+			if (!StringUtils.isBlank(parts[2])) {
+				userToken.setRoleCode(parts[2]);
+			}
+			
+			if (!StringUtils.isBlank(parts[3])) {
+				userToken.setOrganizationCode(parts[3]);
+			}			
+		}
+	}
 }

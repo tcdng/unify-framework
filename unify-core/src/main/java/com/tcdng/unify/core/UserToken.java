@@ -117,6 +117,10 @@ public class UserToken {
 		return userId;
 	}
 
+	public void setBranchCode(String branchCode) {
+		this.branchCode = branchCode;
+	}
+
 	public String getBranchCode() {
 		return branchCode;
 	}
