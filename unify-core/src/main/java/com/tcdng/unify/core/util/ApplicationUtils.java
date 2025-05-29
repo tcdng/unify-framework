@@ -27,13 +27,13 @@ import com.tcdng.unify.core.UserToken;
  */
 public final class ApplicationUtils {
 
-    private ApplicationUtils() {
+	private ApplicationUtils() {
 
-    }
+	}
 
-    public static synchronized String generateSessionContextId() {
-        return UUID.randomUUID().toString();
-    }
+	public static synchronized String generateSessionContextId() {
+		return UUID.randomUUID().toString();
+	}
 
 	public static synchronized String generateLongSessionCookieId(UserToken userToken) {
 		return StringUtils.concatenateUsingSeparatorFixed(':', userToken.getBranchCode(), userToken.getDepartmentCode(),
@@ -43,21 +43,10 @@ public final class ApplicationUtils {
 	public static synchronized void popuplateFromLongSessionCookieId(UserToken userToken, String cookieId) {
 		final String[] parts = StringUtils.split(cookieId, "\\:");
 		if (parts.length == 4) {
-			if (!StringUtils.isBlank(parts[0])) {
-				userToken.setBranchCode(parts[0]);
-			}
-			
-			if (!StringUtils.isBlank(parts[1])) {
-				userToken.setDepartmentCode(parts[1]);
-			}
-			
-			if (!StringUtils.isBlank(parts[2])) {
-				userToken.setRoleCode(parts[2]);
-			}
-			
-			if (!StringUtils.isBlank(parts[3])) {
-				userToken.setOrganizationCode(parts[3]);
-			}			
+			userToken.setBranchCode(!StringUtils.isBlank(parts[0]) ? parts[0] : null);
+			userToken.setDepartmentCode(!StringUtils.isBlank(parts[1]) ? parts[1] : null);
+			userToken.setRoleCode(!StringUtils.isBlank(parts[2]) ? parts[2] : null);
+			userToken.setOrganizationCode(!StringUtils.isBlank(parts[3]) ? parts[3] : null);
 		}
 	}
 }
