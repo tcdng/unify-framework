@@ -22,6 +22,7 @@ import java.util.List;
 import com.tcdng.unify.common.database.Entity;
 import com.tcdng.unify.core.SessionContext;
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.core.UserToken;
 import com.tcdng.unify.core.annotation.Configurable;
 import com.tcdng.unify.core.annotation.Singleton;
 import com.tcdng.unify.core.annotation.UplBinding;
@@ -29,6 +30,7 @@ import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.constant.TopicEventType;
 import com.tcdng.unify.core.data.DownloadFile;
 import com.tcdng.unify.core.data.FileAttachmentInfo;
+import com.tcdng.unify.core.security.TwoWayStringCryptograph;
 import com.tcdng.unify.core.task.TaskLauncher;
 import com.tcdng.unify.core.task.TaskMonitor;
 import com.tcdng.unify.core.task.TaskSetup;
@@ -458,9 +460,11 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 		final ClientResponse response = getPageRequestContextUtil().getClientResponse();
 		if (response != null) {
 			if (isComponent(LongUserSessionManager.class)) {
-				final String cookieId = ApplicationUtils.generateSessionCookieId();
+				final TwoWayStringCryptograph cryptograph = getComponent(TwoWayStringCryptograph.class);
+				final UserToken userToken = getUserToken();
+				final String cookieId = cryptograph.encrypt(ApplicationUtils.generateLongSessionCookieId(userToken));
 				final LongUserSessionManager longUserSessionManager = getComponent(LongUserSessionManager.class);
-				if (longUserSessionManager.saveLongSession(getUserToken().getUserLoginId(), cookieId, sessionInSecs)) {
+				if (longUserSessionManager.saveLongSession(userToken.getUserLoginId(), cookieId, sessionInSecs)) {
 					response.setCookie(longUserSessionManager.getLongSessionCookieName(), cookieId, sessionInSecs);
 					return true;
 				}

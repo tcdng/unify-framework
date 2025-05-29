@@ -50,6 +50,8 @@ public class UserToken {
 
 	private String zoneCode;
 
+	private String organizationCode;
+
 	private Long userId;
 
 	private Long tenantId;
@@ -141,6 +143,14 @@ public class UserToken {
 
 	public Long getTenantId() {
 		return tenantId;
+	}
+
+	public String getOrganizationCode() {
+		return organizationCode;
+	}
+
+	public void setOrganizationCode(String organizationCode) {
+		this.organizationCode = organizationCode;
 	}
 
 	public Long getOrganizationId() {
