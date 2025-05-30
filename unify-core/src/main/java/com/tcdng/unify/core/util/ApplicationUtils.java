@@ -43,7 +43,7 @@ public final class ApplicationUtils {
 
 	public static synchronized boolean popuplateFromLongSessionCookieId(UserToken userToken, String cookieId) {
 		final String[] parts = StringUtils.split(cookieId, "\\:");
-		if (parts.length == 5) {
+		if (parts.length == 6) {
 			userToken.setBranchCode(!StringUtils.isBlank(parts[1]) ? parts[1] : null);
 			userToken.setDepartmentCode(!StringUtils.isBlank(parts[2]) ? parts[3] : null);
 			userToken.setRoleCode(!StringUtils.isBlank(parts[3]) ? parts[3] : null);
