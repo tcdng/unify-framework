@@ -36,17 +36,21 @@ public final class ApplicationUtils {
 	}
 
 	public static synchronized String generateLongSessionCookieId(UserToken userToken) {
-		return StringUtils.concatenateUsingSeparatorFixed(':', userToken.getBranchCode(), userToken.getDepartmentCode(),
-				userToken.getRoleCode(), userToken.getOrganizationCode());
+		return StringUtils.concatenateUsingSeparatorFixed(':', userToken.getUserLoginId(), userToken.getBranchCode(),
+				userToken.getDepartmentCode(), userToken.getRoleCode(), userToken.getOrganizationCode());
 	}
 
-	public static synchronized void popuplateFromLongSessionCookieId(UserToken userToken, String cookieId) {
+	public static synchronized boolean popuplateFromLongSessionCookieId(UserToken userToken, String cookieId) {
 		final String[] parts = StringUtils.split(cookieId, "\\:");
-		if (parts.length == 4) {
-			userToken.setBranchCode(!StringUtils.isBlank(parts[0]) ? parts[0] : null);
-			userToken.setDepartmentCode(!StringUtils.isBlank(parts[1]) ? parts[1] : null);
-			userToken.setRoleCode(!StringUtils.isBlank(parts[2]) ? parts[2] : null);
-			userToken.setOrganizationCode(!StringUtils.isBlank(parts[3]) ? parts[3] : null);
+		if (parts.length == 5) {
+			userToken.setBranchCode(!StringUtils.isBlank(parts[1]) ? parts[1] : null);
+			userToken.setDepartmentCode(!StringUtils.isBlank(parts[2]) ? parts[3] : null);
+			userToken.setRoleCode(!StringUtils.isBlank(parts[3]) ? parts[3] : null);
+			userToken.setOrganizationCode(!StringUtils.isBlank(parts[4]) ? parts[4] : null);
+			
+			return userToken.getUserLoginId().equals(parts[0]);
 		}
+		
+		return false;
 	}
 }
