@@ -39,11 +39,13 @@ public interface LongUserSessionManager extends UnifyComponent {
 	 * Auto-login of long user session.
 	 * 
 	 * @param httpRequest the HTTP request
+	 * @param httpResponse the HTTP response
 	 * @param userSession the user session
 	 * @throws UnifyException if an error occurs
 	 * @return true if auto-login was successful otherwise false
 	 */
-	boolean performAutoLogin(HttpRequest httpRequest, HttpUserSession userSession) throws UnifyException;
+	boolean performAutoLogin(HttpRequest httpRequest,
+			HttpResponse httpResponse, HttpUserSession userSession) throws UnifyException;
 
 	/**
 	 * Saves long session.

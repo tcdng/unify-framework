@@ -58,6 +58,8 @@ public class UserToken {
 
 	private Long organizationId;
 
+	private int sessionInSecs;
+	
 	private boolean globalAccess;
 
 	private boolean reservedUser;
@@ -195,6 +197,14 @@ public class UserToken {
 
 	public void setThemePath(String themePath) {
 		this.themePath = themePath;
+	}
+
+	public int getSessionInSecs() {
+		return sessionInSecs;
+	}
+
+	public void setSessionInSecs(int sessionInSecs) {
+		this.sessionInSecs = sessionInSecs;
 	}
 
 	public boolean isGlobalAccess() {

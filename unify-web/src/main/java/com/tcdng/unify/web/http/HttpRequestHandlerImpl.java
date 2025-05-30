@@ -261,8 +261,9 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 		}
 	}
 
+	@Override
 	public UserSession getUserSession(HttpServletModule httpModule, HttpRequest httpRequest,
-			RequestPathParts reqPathParts) throws UnifyException {
+			HttpResponse httpResponse, RequestPathParts reqPathParts) throws UnifyException {
 		HttpUserSession userSession = null;
 		if (reqPathParts.isSessionless()) {
 			// Non-UI controllers are session less. Handle sessionless remote call
@@ -322,7 +323,7 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 		}
 
 		if (longUserSessionManager != null) {
-			longUserSessionManager.performAutoLogin(httpRequest, userSession);
+			longUserSessionManager.performAutoLogin(httpRequest, httpResponse, userSession);
 		}
 
 		userSession.setUserSessionManager(httpModule.getUserSessionManager());

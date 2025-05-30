@@ -462,6 +462,7 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 			if (isComponent(LongUserSessionManager.class)) {
 				final TwoWayStringCryptograph cryptograph = getComponent(TwoWayStringCryptograph.class);
 				final UserToken userToken = getUserToken();
+				userToken.setSessionInSecs(sessionInSecs);
 				final String cookieId = cryptograph.encrypt(ApplicationUtils.generateLongSessionCookieId(userToken));
 				final LongUserSessionManager longUserSessionManager = getComponent(LongUserSessionManager.class);
 				if (longUserSessionManager.saveLongSession(userToken.getUserLoginId(), cookieId, sessionInSecs)) {

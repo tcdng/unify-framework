@@ -37,7 +37,8 @@ public final class ApplicationUtils {
 
 	public static synchronized String generateLongSessionCookieId(UserToken userToken) {
 		return StringUtils.concatenateUsingSeparatorFixed(':', userToken.getUserLoginId(), userToken.getBranchCode(),
-				userToken.getDepartmentCode(), userToken.getRoleCode(), userToken.getOrganizationCode());
+				userToken.getDepartmentCode(), userToken.getRoleCode(), userToken.getOrganizationCode(),
+				userToken.getSessionInSecs());
 	}
 
 	public static synchronized boolean popuplateFromLongSessionCookieId(UserToken userToken, String cookieId) {
@@ -47,10 +48,10 @@ public final class ApplicationUtils {
 			userToken.setDepartmentCode(!StringUtils.isBlank(parts[2]) ? parts[3] : null);
 			userToken.setRoleCode(!StringUtils.isBlank(parts[3]) ? parts[3] : null);
 			userToken.setOrganizationCode(!StringUtils.isBlank(parts[4]) ? parts[4] : null);
-			
+			userToken.setSessionInSecs(!StringUtils.isBlank(parts[5]) ? Integer.parseInt(parts[5]) : 0);
 			return userToken.getUserLoginId().equals(parts[0]);
 		}
-		
+
 		return false;
 	}
 }
