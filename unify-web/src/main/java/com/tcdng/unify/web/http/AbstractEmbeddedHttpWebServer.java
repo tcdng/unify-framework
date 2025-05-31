@@ -138,7 +138,7 @@ public abstract class AbstractEmbeddedHttpWebServer extends AbstractHttpWebInter
 	}
 	
 	protected int getSessionSeconds() throws UnifyException {
-		return longUserSessionManager != null ? longUserSessionManager.getLongSessionSeconds()
+		return longUserSessionManager != null ? longUserSessionManager.getDefaultLongSessionSeconds()
 				: (getContainerSetting(int.class, UnifyCorePropertyConstants.APPLICATION_SESSION_TIMEOUT,
 						UnifyCoreConstants.DEFAULT_APPLICATION_SESSION_TIMEOUT_SECONDS));
 	}
