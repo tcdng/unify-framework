@@ -49,6 +49,10 @@ public abstract class AbstractLongUserSessionManager extends AbstractUnifyCompon
 				if (optional.isPresent()) {
 					final UserToken userToken = optional.get();
 					userSession.getSessionContext().setUserToken(userToken);
+					System.out.println("@prime: XXXXXXXXXXXXXX");
+					System.out.println("@prime: performAutoLogin()");
+					System.out.println("@prime: sessionInSecs = " + userToken.getSessionInSecs());
+					System.out.println("@prime: XXXXXXXXXXXXXX");
 					httpResponse.setCookie(getLongSessionCookieName(), cookieId, userToken.getSessionInSecs());
 					return true;
 				}

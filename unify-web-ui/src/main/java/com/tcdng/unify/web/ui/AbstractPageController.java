@@ -452,20 +452,20 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 	/**
 	 * Creates long user session.
 	 * 
-	 * @param sessionInSecs session in seconds.
 	 * @return true if set otherwise false
 	 * @throws UnifyException if an error occurs
 	 */
-	protected boolean createLongUserSession(int sessionInSecs) throws UnifyException {
+	protected boolean createLongUserSession() throws UnifyException {
 		final ClientResponse response = getPageRequestContextUtil().getClientResponse();
 		if (response != null) {
 			if (isComponent(LongUserSessionManager.class)) {
+				final LongUserSessionManager longUserSessionManager = getComponent(LongUserSessionManager.class);
 				final TwoWayStringCryptograph cryptograph = getComponent(TwoWayStringCryptograph.class);
 				final UserToken userToken = getUserToken();
+				final int sessionInSecs = longUserSessionManager.getLongSessionSeconds();
 				userToken.setSessionInSecs(sessionInSecs);
 				final String cookieId = cryptograph.encrypt(ApplicationUtils.generateLongSessionCookieId(userToken));
-				final LongUserSessionManager longUserSessionManager = getComponent(LongUserSessionManager.class);
-				if (longUserSessionManager.saveLongSession(userToken.getUserLoginId(), cookieId, sessionInSecs)) {
+				if (longUserSessionManager.saveLongSession(userToken.getUserLoginId(), cookieId)) {
 					response.setCookie(longUserSessionManager.getLongSessionCookieName(), cookieId, sessionInSecs);
 					return true;
 				}

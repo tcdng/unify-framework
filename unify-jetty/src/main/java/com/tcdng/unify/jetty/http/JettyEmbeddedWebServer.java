@@ -40,9 +40,7 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 
-import com.tcdng.unify.core.UnifyCoreConstants;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
-import com.tcdng.unify.core.UnifyCorePropertyConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.constant.NetworkSchemeType;
@@ -129,9 +127,7 @@ public class JettyEmbeddedWebServer extends AbstractEmbeddedHttpWebServer {
                     portList, getContextPath(), getServletPath());
             ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
             context.setContextPath(getContextPath());
-            context.getSessionHandler().setMaxInactiveInterval(
-                    getContainerSetting(int.class, UnifyCorePropertyConstants.APPLICATION_SESSION_TIMEOUT,
-                            UnifyCoreConstants.DEFAULT_APPLICATION_SESSION_TIMEOUT_SECONDS));
+            context.getSessionHandler().setMaxInactiveInterval(getSessionSeconds());
             final String sessionCookieName = generateSessionCookieName();
             context.getSessionHandler().getSessionCookieConfig().setName(sessionCookieName);
             httpServer.setHandler(context);

@@ -36,6 +36,13 @@ public interface LongUserSessionManager extends UnifyComponent {
 	String getLongSessionCookieName() throws UnifyException;
 
 	/**
+	 * Gets long session seconds 
+	 * @return the session seconds
+	 * @throws UnifyException if an error occurs
+	 */
+	int getLongSessionSeconds() throws UnifyException;
+	
+	/**
 	 * Auto-login of long user session.
 	 * 
 	 * @param httpRequest the HTTP request
@@ -52,11 +59,10 @@ public interface LongUserSessionManager extends UnifyComponent {
 	 * 
 	 * @param userLoginId   the user login ID
 	 * @param cookieId      the cookie ID
-	 * @param sessionInSecs session in seconds
 	 * @return true if set otherwise false
 	 * @throws UnifyException if an error occurs
 	 */
-	boolean saveLongSession(String userLoginId, String cookieId, int sessionInSecs) throws UnifyException;
+	boolean saveLongSession(String userLoginId, String cookieId) throws UnifyException;
 
 	/**
 	 * Deletes long session.
