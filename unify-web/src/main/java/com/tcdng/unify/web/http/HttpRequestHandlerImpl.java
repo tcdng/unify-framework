@@ -170,6 +170,9 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 			setRequestAttribute(UnifyWebRequestAttributeConstants.PARAMETERS, httpRequest);
 
 			final Map<String, Object> parameters = extractRequestParameters(httpRequest, charset);
+			final String tempClientPrm = removeSessionAttribute(String.class,
+					UnifyWebSessionAttributeConstants.TEMP_CLIENT_ID_PARAM);
+			final String cid = !StringUtils.isBlank(tempClientPrm) ? (String) parameters.remove(tempClientPrm) : null;
 			final String text = (String) parameters.remove(BODY_TEXT);
 			final byte[] bytes = (byte[]) parameters.remove(BODY_BYTES);
 			ClientRequest clientRequest = new HttpClientRequest(detectClientPlatform(httpRequest), methodType,
@@ -193,11 +196,9 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 				}
 			}
 
-			final String tempClientPrm = removeSessionAttribute(String.class,
-					UnifyWebSessionAttributeConstants.TEMP_CLIENT_ID_PARAM);
-			setRequestAttribute(UnifyWebRequestAttributeConstants.CLIENT_ID, clientRequest.getParameters().getParam(
-					!StringUtils.isBlank(tempClientPrm) ? tempClientPrm : RequestParameterConstants.CLIENT_ID));
-			
+			setRequestAttribute(UnifyWebRequestAttributeConstants.CLIENT_ID, !StringUtils.isBlank(cid) ? cid
+					: clientRequest.getParameters().getParam(RequestParameterConstants.CLIENT_ID));
+
 			Controller controller = null;
 			try {
 				controller = controllerFinder.findController(requestPathParts.getControllerPathParts());
