@@ -66,6 +66,9 @@ const TIMESTAMP_SET = ":TS";
 ux.postCommitQueue = [];
 ux.postCommitExecuting = false;
 
+ux.cidCookieName=null;
+ux.cidPath="";
+
 ux.docPath = "";
 ux.docPopupBaseId = null;
 ux.docPopupId = null;
@@ -144,22 +147,37 @@ ux.registerExtension = function(extLiteral, extObj) {
 }
 
 /** Basic * */
-ux.setupDocument = function(docClientId, docPath, docPopupBaseId, docPopupId, docSysInfoId, docLatencyId, docSessionId) {
-	ux.setClientId(docClientId);
+ux.setupDocument = function(cidCookieName, cidPath, docPath, docPopupBaseId, docPopupId,
+	docSysInfoId, docLatencyId, docSessionId) {
+	ux.cidCookieName = cidCookieName;
+	ux.cidPath = cidPath;
 	ux.docPath = docPath;
 	ux.docPopupBaseId = docPopupBaseId;
 	ux.docPopupId = docPopupId;
 	ux.docSysInfoId = docSysInfoId;
 	ux.busyIndicator = docLatencyId;
 	ux.docSessionId = docSessionId;
+	
+	ux.setCidCookie();
 }
 
-ux.setClientId = function(clientId) {
-	sessionStorage.setItem("req_cid", clientId);
+ux.setCidCookie = function() {
+	document.cookie = ux.cidCookieName + "=" + ux.getClientId() + "; path=/; max-age=31556952; SameSite=Strict;";
+	ux.postCommit({uURL:ux.cidPath});
 }
-
+	
 ux.getClientId = function() {
-	return sessionStorage.getItem("req_cid");
+	let cid = sessionStorage.getItem("page_cid");
+	if (cid === null) {
+		let uxstore = localStorage.getItem("ux_store");
+		let _uxstore = uxstore !== null ? JSON.parse(uxstore): {cid:0};
+		_uxstore.cid++;
+		cid = "cid" + _uxstore.cid.toString(16);
+		sessionStorage.setItem("page_cid", cid);
+		localStorage.setItem("ux_store", JSON.stringify(_uxstore));
+	}
+	
+	return cid;
 }
 
 ux.wsPushUpdate = function(wsSyncPath) {
@@ -510,7 +528,7 @@ ux.postPath = function(resp) {
 		}
 		
 		if (path) {
-			var prm = "req_doc=" + _enc(ux.docPath) + (path.indexOf("req_cid") < 0  ? "&req_cid=" + _enc(ux.getClientId()):"");
+			var prm = "req_doc=" + _enc(ux.docPath)
 			if(resp.target) {
 				prm += "&req_trg=" + _enc(resp.target);
 			}
@@ -689,6 +707,12 @@ ux.ajaxCall = function(ajaxPrms) {
 		};
 		
 		if (ajaxPrms.uParam) {
+			if (ajaxPrms.uEncoded) {
+				ajaxPrms.uParam += ("&req_ux=true");
+			} else {
+				ajaxPrms.uParam.append("req_ux", "true");
+			}
+			
 			uAjaxReq.send(ajaxPrms.uParam);
 		} else {
 			uAjaxReq.send();
@@ -804,8 +828,7 @@ ux.post = function(uEv) {
 
 ux.postToPath = function(evp) {
 	var ajaxPrms = ux.ajaxConstructCallParam(evp.uPath,
-			"req_doc=" + _enc(ux.docPath) + (evp.uPath.indexOf("req_cid") < 0  ? "&req_cid=" + _enc(ux.getClientId()):"")
-			+ (evp.uTarget ? "&req_trg=" + _enc(evp.uTarget) :"") ,
+			"req_doc=" + _enc(ux.docPath) + (evp.uTarget ? "&req_trg=" + _enc(evp.uTarget) :"") ,
 			false, true, false, ux.processJSON);
 	ux.ajaxCall(ajaxPrms);
 }
@@ -4593,13 +4616,6 @@ ux.buildObjParams = function(trgObj, evp, param, refs) {
 		}
 	}
 
-	// Unify source marker
-	if (isForm) {
-		pb.append("req_ux", "true");
-	} else {
-		pb += ("&req_ux=true");
-	}
-
 	var pb = param.value;
 	var isForm = param.isForm;
 	if (_df(evp.uLoginId)) {
@@ -4706,10 +4722,6 @@ ux.buildObjParams = function(trgObj, evp, param, refs) {
 			pb.append("req_rsi", ux.docSessionId);
 		} else {
 			pb.append("req_doc", ux.docPath);
-			if (evp.uURL.indexOf("req_cid") < 0) {
-				pb.append("req_cid", ux.getClientId());
-			}
-			
 			pb.append("req_win", window.name);
 		}
 		if (evp.uValidateAct) {
@@ -4735,10 +4747,6 @@ ux.buildObjParams = function(trgObj, evp, param, refs) {
 			pb += ("&req_rsi=" + _enc(ux.docSessionId));
 		} else {
 			pb += ("&req_doc=" + _enc(ux.docPath));
-			if (evp.uURL.indexOf("req_cid") < 0) {
-				pb += ("&req_cid=" + _enc(ux.getClientId()));
-			}
-
 			pb += ("&req_win=" + _enc(window.name));
 		}
 		if (evp.uValidateAct) {
@@ -5756,6 +5764,8 @@ ux.init = function() {
 	// Window handler
 	ux.addHdl(window, "beforeunload", ux.windowUnload,
 					{});
+	ux.addHdl(window, "focus", ux.windowFocus,
+					{});
 	
 	// Register self as extension
 	ux.registerExtension("ux", ux);
@@ -5861,6 +5871,11 @@ ux.setHintTimeout = function(millisec) {
 }
 
 ux.windowUnload = function(uEv) {
+
+}
+
+ux.windowFocus = function(uEv) {
+	ux.setCidCookie();
 
 }
 

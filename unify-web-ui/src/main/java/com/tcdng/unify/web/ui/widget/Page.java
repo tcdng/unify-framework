@@ -18,7 +18,7 @@ package com.tcdng.unify.web.ui.widget;
 import java.util.List;
 
 import com.tcdng.unify.core.UnifyException;
-import com.tcdng.unify.web.ControllerPathParts;
+import com.tcdng.unify.web.PageParts;
 import com.tcdng.unify.web.ui.PageBean;
 import com.tcdng.unify.web.ui.widget.panel.StandalonePanel;
 
@@ -28,7 +28,7 @@ import com.tcdng.unify.web.ui.widget.panel.StandalonePanel;
  * @author The Code Department
  * @since 4.1
  */
-public interface Page extends StandalonePanel {
+public interface Page extends StandalonePanel, PageParts {
 
     /**
      * Sets the page bean for this page.
@@ -179,20 +179,6 @@ public interface Page extends StandalonePanel {
      * Returns true if page is document.
      */
     boolean isDocument();
-
-	/**
-	 * Sets this page path parts
-	 * 
-	 * @param controllerPathParts the path parts to set
-	 * @param pageId              the page ID to set.
-	 * 
-	 */
-	void setPathParts(ControllerPathParts controllerPathParts, String pageId);
-
-    /**
-     * Returns the page ID
-     */
-    String getPageId();
 
     /**
      * Returns the page path ID

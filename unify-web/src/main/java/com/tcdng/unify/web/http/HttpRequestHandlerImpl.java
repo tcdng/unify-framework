@@ -31,6 +31,7 @@ import java.util.Set;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.SessionAttributeProvider;
+import com.tcdng.unify.core.UnifyCoreApplicationAttributeConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.UserSession;
 import com.tcdng.unify.core.UserToken;
@@ -44,7 +45,6 @@ import com.tcdng.unify.core.util.CalendarUtils;
 import com.tcdng.unify.core.util.ColorUtils;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.IOUtils;
-import com.tcdng.unify.core.util.RandomUtils;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ClientCookie;
 import com.tcdng.unify.web.ClientRequest;
@@ -52,17 +52,20 @@ import com.tcdng.unify.web.ClientResponse;
 import com.tcdng.unify.web.Controller;
 import com.tcdng.unify.web.ControllerFinder;
 import com.tcdng.unify.web.ControllerPathParts;
+import com.tcdng.unify.web.PageParts;
 import com.tcdng.unify.web.PathInfoRepository;
 import com.tcdng.unify.web.RequestPathParts;
 import com.tcdng.unify.web.TenantPathManager;
 import com.tcdng.unify.web.UnifyWebErrorConstants;
 import com.tcdng.unify.web.UnifyWebPropertyConstants;
+import com.tcdng.unify.web.UnifyWebSessionAttributeConstants;
 import com.tcdng.unify.web.WebApplicationComponents;
 import com.tcdng.unify.web.constant.RequestParameterConstants;
 import com.tcdng.unify.web.constant.ReservedPageControllerConstants;
 import com.tcdng.unify.web.constant.UnifyRequestHeaderConstants;
 import com.tcdng.unify.web.constant.UnifyWebRequestAttributeConstants;
 import com.tcdng.unify.web.remotecall.RemoteCallFormat;
+import com.tcdng.unify.web.util.WebPathUtils;
 
 /**
  * Default application HTTP request handler.
@@ -79,8 +82,6 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 	private static final String DISPOSITION_MODIFICATIONDATE = "modification-date";
 
 	private static final int BUFFER_SIZE = 4096;
-
-	private static final int CLIENT_ID_LEN = 16;
 
 	private static final String BODY_TEXT = "__bodyText";
 	private static final String BODY_BYTES = "__bodyBytes";
@@ -103,6 +104,8 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 	private FactoryMap<String, RequestPathParts> requestPathParts;
 
 	private Set<String> remoteViewerList;
+
+	private String cidCookieName;
 
 	private boolean isRemoteViewStrict;
 
@@ -168,9 +171,6 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 				charset = Charset.forName(httpRequest.getCharacterEncoding());
 			}
 
-			getRequestContext()
-					.setUnifyRequest(Boolean.valueOf(httpRequest.getParameter(RequestParameterConstants.CLIENT_UNIFY)));
-
 			setRequestAttribute(UnifyWebRequestAttributeConstants.HEADERS, httpRequest);
 			setRequestAttribute(UnifyWebRequestAttributeConstants.PARAMETERS, httpRequest);
 
@@ -198,7 +198,27 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 				}
 			}
 
-			ensureClientId(clientRequest);
+			final ClientCookie cidCookie = clientRequest.getCookie(getCidCookieName());
+			if (cidCookie != null) {
+				final String clientId = cidCookie.getVal();
+				setRequestAttribute(UnifyWebRequestAttributeConstants.CLIENT_ID, clientId);
+				if ("/cid".equals(requestPathParts.getControllerPathParts().getControllerName())) {
+					PageParts page = removeSessionAttribute(PageParts.class,
+							UnifyWebSessionAttributeConstants.TEMP_CLIENT_ID);
+					if (page != null) {
+						final String pageId = WebPathUtils
+								.getPageId(page.getControllerPathParts().getControllerPathId(), clientId);
+						page.setPathParts(page.getControllerPathParts(), pageId);
+						setSessionAttribute(pageId, page);
+					}
+
+					clientResponse.setContentType(MimeType.APPLICATION_JSON.template());
+					clientResponse.getWriter().write("{}");
+					clientResponse.setStatusOk();
+					return;
+				}
+			}
+
 			Controller controller = null;
 			try {
 				controller = controllerFinder.findController(requestPathParts.getControllerPathParts());
@@ -226,7 +246,8 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 								UnifyWebPropertyConstants.APPLICATION_404);
 						if (!StringUtils.isBlank(path404)) {
 							logDebug("Redirecting to 404 controller [{0}]...", path404);
-							ControllerPathParts controllerPathParts = pathInfoRepository.getControllerPathParts(path404);
+							ControllerPathParts controllerPathParts = pathInfoRepository
+									.getControllerPathParts(path404);
 							controller = controllerFinder.findController(controllerPathParts);
 							requestPathParts.setControllerPathParts(controllerPathParts);
 							exit = false;
@@ -262,8 +283,8 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 	}
 
 	@Override
-	public UserSession getUserSession(HttpServletModule httpModule, HttpRequest httpRequest,
-			HttpResponse httpResponse, RequestPathParts reqPathParts) throws UnifyException {
+	public UserSession getUserSession(HttpServletModule httpModule, HttpRequest httpRequest, HttpResponse httpResponse,
+			RequestPathParts reqPathParts) throws UnifyException {
 		HttpUserSession userSession = null;
 		if (reqPathParts.isSessionless()) {
 			// Non-UI controllers are session less. Handle sessionless remote call
@@ -383,21 +404,17 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 
 	}
 
-	/**
-	 * Ensures client ID exists as a request attribute. Note: As simple as this
-	 * implementation looks, this function is critical for maintaining a unique
-	 * client ID per browser tab irrespective of session. Tread carefully.
-	 * 
-	 * @param request the request object
-	 * @throws UnifyException if an error occurs
-	 */
-	private void ensureClientId(ClientRequest request) throws UnifyException {
-		String clientId = (String) request.getParameters().getParam(RequestParameterConstants.CLIENT_ID);
-		if (StringUtils.isBlank(clientId)) {
-			clientId = RandomUtils.generateRandomAlphanumeric(CLIENT_ID_LEN);
+	private String getCidCookieName() throws UnifyException {
+		if (cidCookieName == null) {
+			synchronized (this) {
+				if (cidCookieName == null) {
+					cidCookieName = getApplicationAttribute(String.class,
+							UnifyCoreApplicationAttributeConstants.SESSION_CID_COOKIE_NAME);
+				}
+			}
 		}
 
-		setRequestAttribute(RequestParameterConstants.CLIENT_ID, clientId);
+		return cidCookieName;
 	}
 
 	private ClientPlatform detectClientPlatform(HttpRequest httpRequest) {

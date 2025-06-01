@@ -97,6 +97,7 @@ public abstract class AbstractEmbeddedHttpWebServer extends AbstractHttpWebInter
 		final String sessionCookieName = CookieUtils.getSessionCookieName(infix, port);
 		final String longSessionCookieName = CookieUtils.getLongSessionCookieName(infix, port);
 		setApplicationAttribute(UnifyCoreApplicationAttributeConstants.SESSION_COOKIE_NAME, sessionCookieName);
+		setApplicationAttribute(UnifyCoreApplicationAttributeConstants.SESSION_CID_COOKIE_NAME, sessionCookieName + "_cid");
 		setApplicationAttribute(UnifyCoreApplicationAttributeConstants.LONG_SESSION_COOKIE_NAME, longSessionCookieName);
 		return sessionCookieName;
 	}

@@ -25,10 +25,6 @@ public interface RequestParameterConstants {
 
     String MORSIC = "morsic";
 
-    String CLIENT_ID = "req_cid";
-
-    String CLIENT_UNIFY = "req_ux";
-
     String REMOTE_VIEWER = "req_rv";
 
     String REMOTE_SESSION_ID = "req_rsi";

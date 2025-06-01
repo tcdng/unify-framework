@@ -409,14 +409,8 @@ public class ResponseWriterImpl extends AbstractUnifyComponent implements Respon
 	public ResponseWriter writeJsonPathVariable(String name, String path) throws UnifyException {
 		useSecondary(128);
 		writeContextURL(path);
-		PageManager pageManager = getPageManager();
-		if (pageManager.getCurrentRequestClientId() != null) {
-			buf.append(path.indexOf('?') >= 0 ? '&' : '?').append(RequestParameterConstants.CLIENT_ID).append("=")
-					.append(UrlUtils.encodeURLParameter(pageManager.getCurrentRequestClientId()));
-		}
-
+		
 		WebStringWriter pathLsw = discardSecondary();
-
 		buf.append("\"").append(name).append("\":");
 		buf.appendJsonQuoted(pathLsw);
 		return this;
