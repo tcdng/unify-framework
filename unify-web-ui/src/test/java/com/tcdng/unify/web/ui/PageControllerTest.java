@@ -28,6 +28,8 @@ import com.tcdng.unify.web.RequestPathParts;
 import com.tcdng.unify.web.TestClientRequest;
 import com.tcdng.unify.web.TestClientResponse;
 import com.tcdng.unify.web.WebApplicationComponents;
+import com.tcdng.unify.web.constant.UnifyWebRequestAttributeConstants;
+import com.tcdng.unify.web.ui.controller.DocumentLoaderController;
 import com.tcdng.unify.web.ui.widget.Widget;
 
 /**
@@ -39,33 +41,38 @@ import com.tcdng.unify.web.ui.widget.Widget;
 public class PageControllerTest extends AbstractUnifyWebTest {
 
 	@Test
-    public void testPopulateControllerProperty() throws Exception {
-        ControllerFinder controllerFinder = (ControllerFinder) getComponent(
-                WebApplicationComponents.APPLICATION_CONTROLLERFINDER);
-        UIControllerUtil uicu = (UIControllerUtil) getComponent(
-                WebUIApplicationComponents.APPLICATION_UICONTROLLERUTIL);
-        PathInfoRepository pathInfoRepository = (PathInfoRepository) getComponent(
-                WebApplicationComponents.APPLICATION_PATHINFOREPOSITORY);
+	public void testPopulateControllerProperty() throws Exception {
+		PageRequestContextUtil prcu = (PageRequestContextUtil) getComponent(
+				WebUIApplicationComponents.APPLICATION_PAGEREQUESTCONTEXTUTIL);
+		ControllerFinder controllerFinder = (ControllerFinder) getComponent(
+				WebApplicationComponents.APPLICATION_CONTROLLERFINDER);
+		UIControllerUtil uicu = (UIControllerUtil) getComponent(
+				WebUIApplicationComponents.APPLICATION_UICONTROLLERUTIL);
+		PathInfoRepository pathInfoRepository = (PathInfoRepository) getComponent(
+				WebApplicationComponents.APPLICATION_PATHINFOREPOSITORY);
 
-        // Create page controller and load page to request context
-        AuthorPageController controller = (AuthorPageController) controllerFinder
-                .findController(pathInfoRepository.getControllerPathParts("/testauthor"));
+		prcu.setRequestAttribute(UnifyWebRequestAttributeConstants.CLIENT_ID, "cid1");
+		// Create page controller and load page to request context
+		AuthorPageController controller = (AuthorPageController) controllerFinder
+				.findController(pathInfoRepository.getControllerPathParts("/testauthor"));
 
-        Date birthDt = new Date();
-        uicu.populatePageBean("/testauthor", "fullName", "Adrian Skim");
-        uicu.populatePageBean("/testauthor", "birthDt", birthDt);
-        uicu.populatePageBean("/testauthor", "height", Double.valueOf(25.34));
+		Date birthDt = new Date();
+		uicu.populatePageBean("/testauthor", "fullName", "Adrian Skim");
+		uicu.populatePageBean("/testauthor", "birthDt", birthDt);
+		uicu.populatePageBean("/testauthor", "height", Double.valueOf(25.34));
 
-        AuthorPageBean authorPageBean = (AuthorPageBean) controller.getPage().getPageBean();
-        assertEquals("Adrian Skim", authorPageBean.getFullName());
-        assertEquals(birthDt, authorPageBean.getBirthDt());
-        assertEquals(Double.valueOf(25.34), authorPageBean.getHeight());
-    }
+		AuthorPageBean authorPageBean = (AuthorPageBean) controller.getPage().getPageBean();
+		assertEquals("Adrian Skim", authorPageBean.getFullName());
+		assertEquals(birthDt, authorPageBean.getBirthDt());
+		assertEquals(Double.valueOf(25.34), authorPageBean.getHeight());
+	}
 
 	@Test
 	public void testExecutePageController() throws Exception {
-        ControllerFinder controllerFinder = (ControllerFinder) getComponent(
-                WebApplicationComponents.APPLICATION_CONTROLLERFINDER);
+		PageRequestContextUtil prcu = (PageRequestContextUtil) getComponent(
+				WebUIApplicationComponents.APPLICATION_PAGEREQUESTCONTEXTUTIL);
+		ControllerFinder controllerFinder = (ControllerFinder) getComponent(
+				WebApplicationComponents.APPLICATION_CONTROLLERFINDER);
 		PathInfoRepository pir = (PathInfoRepository) getComponent(
 				WebApplicationComponents.APPLICATION_PATHINFOREPOSITORY);
 
@@ -73,8 +80,10 @@ public class PageControllerTest extends AbstractUnifyWebTest {
 		TestClientRequest request = new TestClientRequest(
 				new RequestPathParts(pir.getControllerPathParts("/testauthor/createAuthor")));
 		Date birthDt = new Date();
+
+		prcu.setRequestAttribute(UnifyWebRequestAttributeConstants.CLIENT_ID, "cid1");
 		AuthorPageController controller = (AuthorPageController) controllerFinder
-                .findController(pir.getControllerPathParts("/testauthor"));
+				.findController(pir.getControllerPathParts("/testauthor"));
 		Widget uic1 = controller.getPageWidgetByLongName(Widget.class, "/testauthor.fullName");
 		Widget uic2 = controller.getPageWidgetByLongName(Widget.class, "/testauthor.birthDt");
 		Widget uic3 = controller.getPageWidgetByLongName(Widget.class, "/testauthor.height");
@@ -91,8 +100,22 @@ public class PageControllerTest extends AbstractUnifyWebTest {
 		assertEquals(Double.valueOf(24.22), authorPageBean.getHeight());
 
 		// Test result
-		assertEquals("{\"jsonResp\":[{\"handler\":\"hintUserHdl\"},{\"handler\":\"refreshMenuHdl\"}],\"scrollReset\":true}",
+		assertEquals(
+				"{\"jsonResp\":[{\"handler\":\"hintUserHdl\"},{\"handler\":\"refreshMenuHdl\"}],\"scrollReset\":true}",
 				response.toString());
+	}
+
+	@SuppressWarnings("unused")
+	@Test
+	public void testDocumentLoading() throws Exception {
+		ControllerFinder controllerFinder = (ControllerFinder) getComponent(
+				WebApplicationComponents.APPLICATION_CONTROLLERFINDER);
+		PathInfoRepository pathInfoRepository = (PathInfoRepository) getComponent(
+				WebApplicationComponents.APPLICATION_PATHINFOREPOSITORY);
+
+		// Create page controller and load page to request context
+		DocumentLoaderController controller = (DocumentLoaderController) controllerFinder
+				.findController(pathInfoRepository.getControllerPathParts("/testauthor"));
 	}
 
 	@Override

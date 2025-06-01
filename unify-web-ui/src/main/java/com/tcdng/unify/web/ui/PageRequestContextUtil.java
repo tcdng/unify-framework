@@ -88,6 +88,25 @@ public interface PageRequestContextUtil extends UnifyComponent {
      */
     Page getContentPage() throws UnifyException;
 
+	/**
+	 * Gets a request attribute.
+	 * 
+	 * @param dataType the data type to convert to
+	 * @param name     the attribute name
+	 * @return the attribute value
+	 * @throws UnifyException if an error occurs
+	 */
+	<T> T getRequestAttribute(Class<T> dataType, String name) throws UnifyException;
+    
+	/**
+	 * Sets request attribute.
+	 * 
+	 * @param name  the attribute name
+	 * @param value the value to set
+	 * @throws UnifyException if an error occurs
+	 */
+	void setRequestAttribute(String name, Object value) throws UnifyException;
+	
     /**
      * Sets current request context's popup long name.
      * 

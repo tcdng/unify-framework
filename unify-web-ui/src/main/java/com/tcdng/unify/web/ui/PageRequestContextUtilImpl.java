@@ -161,6 +161,16 @@ public class PageRequestContextUtilImpl extends AbstractUnifyComponent implement
     }
 
     @Override
+    public <T> T getRequestAttribute(Class<T> dataType, String name) throws UnifyException {
+		return super.getRequestAttribute(dataType, name);
+	}
+
+	@Override
+	public void setRequestAttribute(String name, Object value) throws UnifyException {
+		super.setRequestAttribute(name, value);
+	}
+
+	@Override
     public void setRequestPopupPanel(Panel panel) throws UnifyException {
         setRequestAttribute(REQUEST_POPUP_PANEL, panel);
     }
