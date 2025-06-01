@@ -66,9 +66,6 @@ const TIMESTAMP_SET = ":TS";
 ux.postCommitQueue = [];
 ux.postCommitExecuting = false;
 
-ux.cidCookieName=null;
-ux.cidPath="";
-
 ux.docPath = "";
 ux.docPopupBaseId = null;
 ux.docPopupId = null;
@@ -147,25 +144,15 @@ ux.registerExtension = function(extLiteral, extObj) {
 }
 
 /** Basic * */
-ux.setupDocument = function(cidCookieName, cidPath, docPath, docPopupBaseId, docPopupId,
-	docSysInfoId, docLatencyId, docSessionId) {
-	ux.cidCookieName = cidCookieName;
-	ux.cidPath = cidPath;
+ux.setupDocument = function(docPath, docPopupBaseId, docPopupId, docSysInfoId, docLatencyId, docSessionId) {
 	ux.docPath = docPath;
 	ux.docPopupBaseId = docPopupBaseId;
 	ux.docPopupId = docPopupId;
 	ux.docSysInfoId = docSysInfoId;
 	ux.busyIndicator = docLatencyId;
 	ux.docSessionId = docSessionId;
-	
-	ux.setCidCookie();
 }
 
-ux.setCidCookie = function() {
-	document.cookie = ux.cidCookieName + "=" + ux.getClientId() + "; path=/; max-age=31556952; SameSite=Strict;";
-	ux.postCommit({uURL:ux.cidPath});
-}
-	
 ux.getClientId = function() {
 	let cid = sessionStorage.getItem("page_cid");
 	if (cid === null) {
@@ -708,9 +695,9 @@ ux.ajaxCall = function(ajaxPrms) {
 		
 		if (ajaxPrms.uParam) {
 			if (ajaxPrms.uEncoded) {
-				ajaxPrms.uParam += ("&req_ux=true");
+				ajaxPrms.uParam += ("&req_cid=" + _enc(ux.getClientId()));
 			} else {
-				ajaxPrms.uParam.append("req_ux", "true");
+				ajaxPrms.uParam.append("req_cid", ux.getClientId());
 			}
 			
 			uAjaxReq.send(ajaxPrms.uParam);
@@ -5764,8 +5751,6 @@ ux.init = function() {
 	// Window handler
 	ux.addHdl(window, "beforeunload", ux.windowUnload,
 					{});
-	ux.addHdl(window, "focus", ux.windowFocus,
-					{});
 	
 	// Register self as extension
 	ux.registerExtension("ux", ux);
@@ -5874,10 +5859,6 @@ ux.windowUnload = function(uEv) {
 
 }
 
-ux.windowFocus = function(uEv) {
-	ux.setCidCookie();
-
-}
 
 ux.documentKeydownHandler = function(uEv) {
 	// Hide popup on tab

@@ -27,6 +27,8 @@ import com.tcdng.unify.core.UnifyCoreErrorConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.util.IOUtils;
+import com.tcdng.unify.core.util.StringUtils;
+import com.tcdng.unify.web.constant.UnifyWebRequestAttributeConstants;
 
 /**
  * Default implementation of a controller finder.
@@ -72,7 +74,7 @@ public class ControllerFinderImpl extends AbstractUnifyComponent implements Cont
 				}
 			}
 		}
-		
+
 		final String controllerName = controllerPathParts.getControllerName();
 		final String _actualControllerName = getActualControllerName(controllerName);
 		UnifyComponentConfig unifyComponentConfig = getComponentConfig(Controller.class, _actualControllerName);
@@ -101,6 +103,13 @@ public class ControllerFinderImpl extends AbstractUnifyComponent implements Cont
 		}
 
 		Controller controller = (Controller) getComponent(_actualControllerName);
+		if (controller.isPageController() && StringUtils
+				.isBlank(getRequestAttribute(String.class, UnifyWebRequestAttributeConstants.CLIENT_ID))) {
+			setRequestAttribute(UnifyWebRequestAttributeConstants.LOADER_FORWARD_PATH,
+					controllerPathParts.getControllerPath());
+			controller = (Controller) getComponent(WebApplicationComponents.APPLICATION_DOCUMENTLOADERCONTROLLER);
+		}
+
 		controller.ensureContextResources(controllerPathParts);
 		logDebug("Controller for name [{0}] found", controllerName);
 		return controller;

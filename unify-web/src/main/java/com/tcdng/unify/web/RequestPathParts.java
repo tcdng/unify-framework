@@ -87,10 +87,4 @@ public class RequestPathParts {
         return tenantPath != null;
     }
 
-    @Override
-    public String toString() {
-        return "RequestPathParts [getControllerPath()=" + getControllerPath() + ", getControllerName()="
-                + getControllerName() + ", getPathVariable()=" + getPathVariables() + ", getTenantPath()="
-                + getTenantPath() + "]";
-    }
 }

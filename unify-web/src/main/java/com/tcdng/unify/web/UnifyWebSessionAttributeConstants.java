@@ -35,6 +35,6 @@ public interface UnifyWebSessionAttributeConstants extends com.tcdng.unify.core.
     
     String INTERNAL_SERVER_ERROR = "UNIFYWEB.INTERNALSERVERERROR";
     
-    String TEMP_CLIENT_ID = "UNIFYWEB::tempClientId";
+    String TEMP_CLIENT_ID_PARAM = "UNIFYWEB.TEMPCLIENTIDPRM";
 
 }

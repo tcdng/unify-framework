@@ -48,4 +48,6 @@ public interface WebApplicationComponents {
     String APPLICATION_CLIENTSYNCMANAGER = "application-clientsyncmanager";
     
     String APPLICATION_PAGEEVENTBROADCASTER= "application-pageeventbroadcaster";
+
+    String APPLICATION_DOCUMENTLOADERCONTROLLER = "/documentloader";
 }

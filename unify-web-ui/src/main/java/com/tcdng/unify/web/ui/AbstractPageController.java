@@ -134,6 +134,11 @@ public abstract class AbstractPageController<T extends PageBean> extends Abstrac
 	}
 
 	@Override
+	public final boolean isPageController() {
+		return true;
+	}
+
+	@Override
 	public final Page getPage() throws UnifyException {
 		return getPageRequestContextUtil().getRequestPage();
 	}

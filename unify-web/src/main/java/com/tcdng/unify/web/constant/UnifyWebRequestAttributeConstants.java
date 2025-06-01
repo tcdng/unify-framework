@@ -43,5 +43,7 @@ public interface UnifyWebRequestAttributeConstants {
 
     String CLIENT_ID = "WR.CLIENTID";
 
+    String LOADER_FORWARD_PATH = "WR.LOADERFORWARDPATH";
+
     String TIMESTAMP_VARIABLE = ":TV";
 }

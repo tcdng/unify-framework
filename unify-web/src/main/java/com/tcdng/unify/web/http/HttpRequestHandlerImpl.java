@@ -31,7 +31,6 @@ import java.util.Set;
 
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.SessionAttributeProvider;
-import com.tcdng.unify.core.UnifyCoreApplicationAttributeConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.UserSession;
 import com.tcdng.unify.core.UserToken;
@@ -52,7 +51,6 @@ import com.tcdng.unify.web.ClientResponse;
 import com.tcdng.unify.web.Controller;
 import com.tcdng.unify.web.ControllerFinder;
 import com.tcdng.unify.web.ControllerPathParts;
-import com.tcdng.unify.web.PageParts;
 import com.tcdng.unify.web.PathInfoRepository;
 import com.tcdng.unify.web.RequestPathParts;
 import com.tcdng.unify.web.TenantPathManager;
@@ -65,7 +63,6 @@ import com.tcdng.unify.web.constant.ReservedPageControllerConstants;
 import com.tcdng.unify.web.constant.UnifyRequestHeaderConstants;
 import com.tcdng.unify.web.constant.UnifyWebRequestAttributeConstants;
 import com.tcdng.unify.web.remotecall.RemoteCallFormat;
-import com.tcdng.unify.web.util.WebPathUtils;
 
 /**
  * Default application HTTP request handler.
@@ -104,8 +101,6 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 	private FactoryMap<String, RequestPathParts> requestPathParts;
 
 	private Set<String> remoteViewerList;
-
-	private String cidCookieName;
 
 	private boolean isRemoteViewStrict;
 
@@ -198,27 +193,11 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 				}
 			}
 
-			final ClientCookie cidCookie = clientRequest.getCookie(getCidCookieName());
-			if (cidCookie != null) {
-				final String clientId = cidCookie.getVal();
-				setRequestAttribute(UnifyWebRequestAttributeConstants.CLIENT_ID, clientId);
-				if ("/cid".equals(requestPathParts.getControllerPathParts().getControllerName())) {
-					PageParts page = removeSessionAttribute(PageParts.class,
-							UnifyWebSessionAttributeConstants.TEMP_CLIENT_ID);
-					if (page != null) {
-						final String pageId = WebPathUtils
-								.getPageId(page.getControllerPathParts().getControllerPathId(), clientId);
-						page.setPathParts(page.getControllerPathParts(), pageId);
-						setSessionAttribute(pageId, page);
-					}
-
-					clientResponse.setContentType(MimeType.APPLICATION_JSON.template());
-					clientResponse.getWriter().write("{}");
-					clientResponse.setStatusOk();
-					return;
-				}
-			}
-
+			final String tempClientPrm = removeSessionAttribute(String.class,
+					UnifyWebSessionAttributeConstants.TEMP_CLIENT_ID_PARAM);
+			setRequestAttribute(UnifyWebRequestAttributeConstants.CLIENT_ID, clientRequest.getParameters().getParam(
+					!StringUtils.isBlank(tempClientPrm) ? tempClientPrm : RequestParameterConstants.CLIENT_ID));
+			
 			Controller controller = null;
 			try {
 				controller = controllerFinder.findController(requestPathParts.getControllerPathParts());
@@ -402,19 +381,6 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 	@Override
 	protected void onTerminate() throws UnifyException {
 
-	}
-
-	private String getCidCookieName() throws UnifyException {
-		if (cidCookieName == null) {
-			synchronized (this) {
-				if (cidCookieName == null) {
-					cidCookieName = getApplicationAttribute(String.class,
-							UnifyCoreApplicationAttributeConstants.SESSION_CID_COOKIE_NAME);
-				}
-			}
-		}
-
-		return cidCookieName;
 	}
 
 	private ClientPlatform detectClientPlatform(HttpRequest httpRequest) {

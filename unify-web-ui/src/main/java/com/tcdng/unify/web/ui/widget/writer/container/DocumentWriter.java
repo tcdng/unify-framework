@@ -18,7 +18,6 @@ package com.tcdng.unify.web.ui.widget.writer.container;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.tcdng.unify.core.UnifyCoreApplicationAttributeConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
@@ -197,15 +196,12 @@ public class DocumentWriter extends AbstractPageWriter {
 	protected void doWriteBehavior(ResponseWriter writer, Widget widget, EventHandler[] handlers)
 			throws UnifyException {
 		BasicDocument document = (BasicDocument) widget;
-		final String cidCookieName = getApplicationAttribute(String.class,
-				UnifyCoreApplicationAttributeConstants.SESSION_CID_COOKIE_NAME);
-		final String cidPath = getContextURL("/cid");
 		writer.write("<script");
 		writeNonce(writer);
 		writer.write(">");
 		// Set document properties
 		ControllerPathParts controllerPathParts = pathInfoRepository.getControllerPathParts(document);
-		writer.write("ux.setupDocument(\"").write(cidCookieName).write("\",\"").write(cidPath).write("\",\"")
+		writer.write("ux.setupDocument(\"")
 				.write(controllerPathParts.getControllerPathId()).write("\", \"").write(document.getPopupBaseId())
 				.write("\", \"").write(document.getPopupWinId()).write("\", \"").write(document.getPopupSysId())
 				.write("\", \"").write(document.getLatencyPanelId()).write("\", \"").write(getSessionContext().getId())
