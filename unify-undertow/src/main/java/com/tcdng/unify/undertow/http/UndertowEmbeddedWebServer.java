@@ -15,6 +15,8 @@
  */
 package com.tcdng.unify.undertow.http;
 
+import static io.undertow.websockets.jsr.WebSocketDeploymentInfo.ATTRIBUTE_NAME;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.nio.file.Files;
@@ -29,9 +31,7 @@ import javax.net.ssl.SSLContext;
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.Servlet;
 
-import com.tcdng.unify.core.UnifyCoreConstants;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
-import com.tcdng.unify.core.UnifyCorePropertyConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.constant.NetworkSchemeType;
@@ -50,8 +50,6 @@ import io.undertow.servlet.api.ServletInfo;
 import io.undertow.servlet.api.ServletSessionConfig;
 import io.undertow.servlet.util.ImmediateInstanceFactory;
 import io.undertow.websockets.jsr.WebSocketDeploymentInfo;
-
-import static io.undertow.websockets.jsr.WebSocketDeploymentInfo.ATTRIBUTE_NAME;
 
 /**
  * Undertow embedded web server.
@@ -142,9 +140,7 @@ public class UndertowEmbeddedWebServer extends AbstractEmbeddedHttpWebServer {
 			
 	        final String sessionCookieName = generateSessionCookieName();
 	        deploymentInfo.setServletSessionConfig(new ServletSessionConfig().setName(sessionCookieName));
-			deploymentInfo.setDefaultSessionTimeout(
-					getContainerSetting(int.class, UnifyCorePropertyConstants.APPLICATION_SESSION_TIMEOUT,
-							UnifyCoreConstants.DEFAULT_APPLICATION_SESSION_TIMEOUT_SECONDS));
+			deploymentInfo.setDefaultSessionTimeout(getSessionSeconds());
 			deploymentInfo.setDefaultMultipartConfig(new MultipartConfigElement(getMultipartLocation(),
 					getMultipartMaxFileSize(), getMultipartMaxRequestSize(), getMultipartFileSizeThreshold()));
 			DeploymentManager dm = Servlets.defaultContainer().addDeployment(deploymentInfo);

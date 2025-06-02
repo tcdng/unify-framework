@@ -56,9 +56,7 @@ public class DocumentWriter extends AbstractPageWriter {
 
 	@Override
 	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
-		BasicDocument document = (BasicDocument) widget;
-		document.setClientId(getPageManager().getCurrentRequestClientId());
-		
+		BasicDocument document = (BasicDocument) widget;		
 		writer.write("<!DOCTYPE html>");
 		writer.write("<html ");
 		writeTagAttributes(writer, document);
@@ -203,7 +201,7 @@ public class DocumentWriter extends AbstractPageWriter {
 		writer.write(">");
 		// Set document properties
 		ControllerPathParts controllerPathParts = pathInfoRepository.getControllerPathParts(document);
-		writer.write("ux.setupDocument(\"").write(document.getClientId()).write("\", \"")
+		writer.write("ux.setupDocument(\"")
 				.write(controllerPathParts.getControllerPathId()).write("\", \"").write(document.getPopupBaseId())
 				.write("\", \"").write(document.getPopupWinId()).write("\", \"").write(document.getPopupSysId())
 				.write("\", \"").write(document.getLatencyPanelId()).write("\", \"").write(getSessionContext().getId())

@@ -49,7 +49,7 @@ public abstract class AbstractDocumentController extends AbstractController impl
 		final DocPathParts docPathParts = request.getRequestPathParts().getControllerPathParts().getDocPathParts();
 		ResponseWriter writer = responseWriterPool.getResponseWriter(request);
 		try {
-			writeDocument(writer, docPathParts.getDocPath(), docPathParts.getSection());
+			writeDocument(writer, docPathParts.getDocPath(), docPathParts.getSection(), request.getQueryString());
 			writer.writeTo(response.getWriter());
 		} finally {
 			responseWriterPool.restore(writer);
@@ -61,5 +61,6 @@ public abstract class AbstractDocumentController extends AbstractController impl
 
 	}
 
-	protected abstract void writeDocument(ResponseWriter writer, String docPath, String section) throws UnifyException;
+	protected abstract void writeDocument(ResponseWriter writer, String docPath, String section, String queryString)
+			throws UnifyException;
 }

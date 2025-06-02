@@ -32,5 +32,9 @@ public interface UnifyWebSessionAttributeConstants extends com.tcdng.unify.core.
     String TASKMONITORINFO = "UNIFYWEB.TASKMONITORINFO";
     
     String POPUP = "UNIFYWEB.POPUP";
+    
+    String INTERNAL_SERVER_ERROR = "UNIFYWEB.INTERNALSERVERERROR";
+    
+    String TEMP_CLIENT_ID_PARAM = "UNIFYWEB.TEMPCLIENTIDPRM";
 
 }

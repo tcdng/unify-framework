@@ -61,4 +61,9 @@ public interface Controller extends UnifyComponent {
      * Returns true if controller requires a referrer.
      */
     boolean isRefererRequired();
+    
+    /**
+     * Returns true if controller is a page controller
+     */
+    boolean isPageController();
 }

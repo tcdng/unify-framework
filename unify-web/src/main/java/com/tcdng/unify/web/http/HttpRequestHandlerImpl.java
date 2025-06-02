@@ -44,18 +44,19 @@ import com.tcdng.unify.core.util.CalendarUtils;
 import com.tcdng.unify.core.util.ColorUtils;
 import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.core.util.IOUtils;
-import com.tcdng.unify.core.util.RandomUtils;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ClientCookie;
 import com.tcdng.unify.web.ClientRequest;
 import com.tcdng.unify.web.ClientResponse;
 import com.tcdng.unify.web.Controller;
 import com.tcdng.unify.web.ControllerFinder;
+import com.tcdng.unify.web.ControllerPathParts;
 import com.tcdng.unify.web.PathInfoRepository;
 import com.tcdng.unify.web.RequestPathParts;
 import com.tcdng.unify.web.TenantPathManager;
 import com.tcdng.unify.web.UnifyWebErrorConstants;
 import com.tcdng.unify.web.UnifyWebPropertyConstants;
+import com.tcdng.unify.web.UnifyWebSessionAttributeConstants;
 import com.tcdng.unify.web.WebApplicationComponents;
 import com.tcdng.unify.web.constant.RequestParameterConstants;
 import com.tcdng.unify.web.constant.ReservedPageControllerConstants;
@@ -78,8 +79,6 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 	private static final String DISPOSITION_MODIFICATIONDATE = "modification-date";
 
 	private static final int BUFFER_SIZE = 4096;
-
-	private static final int CLIENT_ID_LEN = 16;
 
 	private static final String BODY_TEXT = "__bodyText";
 	private static final String BODY_BYTES = "__bodyBytes";
@@ -171,10 +170,14 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 			setRequestAttribute(UnifyWebRequestAttributeConstants.PARAMETERS, httpRequest);
 
 			final Map<String, Object> parameters = extractRequestParameters(httpRequest, charset);
+			final String tempClientPrm = removeSessionAttribute(String.class,
+					UnifyWebSessionAttributeConstants.TEMP_CLIENT_ID_PARAM);
+			final String cid = !StringUtils.isBlank(tempClientPrm) ? (String) parameters.remove(tempClientPrm) : null;
 			final String text = (String) parameters.remove(BODY_TEXT);
 			final byte[] bytes = (byte[]) parameters.remove(BODY_BYTES);
 			ClientRequest clientRequest = new HttpClientRequest(detectClientPlatform(httpRequest), methodType,
-					requestPathParts, charset, httpRequest, parameters, extractCookies(httpRequest), text, bytes);
+					requestPathParts, charset, httpRequest, httpRequest.getQueryString(), parameters,
+					extractCookies(httpRequest), text, bytes);
 			ClientResponse clientResponse = new HttpClientResponse(httpResponse);
 
 			String origin = httpRequest.getHeader("origin");
@@ -194,8 +197,10 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 				}
 			}
 
-			ensureClientId(clientRequest);
-			Controller controller;
+			setRequestAttribute(UnifyWebRequestAttributeConstants.CLIENT_ID, !StringUtils.isBlank(cid) ? cid
+					: clientRequest.getParameters().getParam(RequestParameterConstants.CLIENT_ID));
+
+			Controller controller = null;
 			try {
 				controller = controllerFinder.findController(requestPathParts.getControllerPathParts());
 				if (controller.isRefererRequired()
@@ -206,6 +211,7 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 				}
 			} catch (Exception e) {
 				logError(e);
+				boolean exit = true;
 				try {
 					final String contentType = httpRequest.getHeader("Content-Type");
 					if (MimeType.APPLICATION_JSON.template().equals(contentType)) {
@@ -217,22 +223,37 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 								.write("  \"message\": \"The resource you are looking for is not available.\"\n");
 						clientResponse.getWriter().write("}\n");
 					} else {
-						clientResponse.setContentType(MimeType.TEXT_HTML.template());
-						clientResponse.getWriter().write("<html>\n<head>\n");
-						clientResponse.getWriter()
-								.write("<meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\"/>\n");
-						clientResponse.getWriter().write("<title>ErrorPart 404</title>\n");
-						clientResponse.getWriter().write("</head>\n<body>");
-						clientResponse.getWriter().write("<h2>HTTP ERROR 404 - Not found.</h2>\n");
-						clientResponse.getWriter().write("</body>\n</html>\n");
+						final String path404 = getContainerSetting(String.class,
+								UnifyWebPropertyConstants.APPLICATION_404);
+						if (!StringUtils.isBlank(path404)) {
+							logDebug("Redirecting to 404 controller [{0}]...", path404);
+							ControllerPathParts controllerPathParts = pathInfoRepository
+									.getControllerPathParts(path404);
+							controller = controllerFinder.findController(controllerPathParts);
+							requestPathParts.setControllerPathParts(controllerPathParts);
+							exit = false;
+						} else {
+							clientResponse.setContentType(MimeType.TEXT_HTML.template());
+							clientResponse.getWriter().write("<html>\n<head>\n");
+							clientResponse.getWriter()
+									.write("<meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\"/>\n");
+							clientResponse.getWriter().write("<title>ErrorPart 404</title>\n");
+							clientResponse.getWriter().write("</head>\n<body>");
+							clientResponse.getWriter().write("<h2>HTTP ERROR 404 - Not found.</h2>\n");
+							clientResponse.getWriter().write("</body>\n</html>\n");
+						}
 					}
 
 					clientResponse.setStatusNotFound();
 				} finally {
-					clientResponse.close();
+					if (exit) {
+						clientResponse.close();
+					}
 				}
 
-				return;
+				if (exit) {
+					return;
+				}
 			}
 
 			controller.process(clientRequest, clientResponse);
@@ -242,7 +263,8 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 		}
 	}
 
-	public UserSession getUserSession(HttpServletModule httpModule, HttpRequest httpRequest,
+	@Override
+	public UserSession getUserSession(HttpServletModule httpModule, HttpRequest httpRequest, HttpResponse httpResponse,
 			RequestPathParts reqPathParts) throws UnifyException {
 		HttpUserSession userSession = null;
 		if (reqPathParts.isSessionless()) {
@@ -303,7 +325,7 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 		}
 
 		if (longUserSessionManager != null) {
-			longUserSessionManager.performAutoLogin(httpRequest, userSession);
+			longUserSessionManager.performAutoLogin(httpRequest, httpResponse, userSession);
 		}
 
 		userSession.setUserSessionManager(httpModule.getUserSessionManager());
@@ -361,23 +383,6 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 	@Override
 	protected void onTerminate() throws UnifyException {
 
-	}
-
-	/**
-	 * Ensures client ID exists as a request attribute. Note: As simple as this
-	 * implementation looks, this function is critical for maintaining a unique
-	 * client ID per browser tab irrespective of session. Tread carefully.
-	 * 
-	 * @param request the request object
-	 * @throws UnifyException if an error occurs
-	 */
-	private void ensureClientId(ClientRequest request) throws UnifyException {
-		String clientId = (String) request.getParameters().getParam(RequestParameterConstants.CLIENT_ID);
-		if (StringUtils.isBlank(clientId)) {
-			clientId = RandomUtils.generateRandomAlphanumeric(CLIENT_ID_LEN);
-		}
-
-		setRequestAttribute(RequestParameterConstants.CLIENT_ID, clientId);
 	}
 
 	private ClientPlatform detectClientPlatform(HttpRequest httpRequest) {

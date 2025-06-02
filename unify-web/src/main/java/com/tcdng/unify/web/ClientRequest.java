@@ -61,6 +61,13 @@ public interface ClientRequest {
 	 */
     Parameters getParameters();
 
+	/**
+	 * Gets query string.
+	 * 
+	 * @return the query string
+	 */
+	String getQueryString();
+    
     /**
      * Gets text body associated with this request.
      * 

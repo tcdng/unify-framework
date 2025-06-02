@@ -39,7 +39,11 @@ public class RequestPathParts {
         this.controllerPathParts = controllerPathParts;
     }
 
-    public ControllerPathParts getControllerPathParts() {
+    public void setControllerPathParts(ControllerPathParts controllerPathParts) {
+		this.controllerPathParts = controllerPathParts;
+	}
+
+	public ControllerPathParts getControllerPathParts() {
         return controllerPathParts;
     }
 
@@ -83,10 +87,4 @@ public class RequestPathParts {
         return tenantPath != null;
     }
 
-    @Override
-    public String toString() {
-        return "RequestPathParts [getControllerPath()=" + getControllerPath() + ", getControllerName()="
-                + getControllerName() + ", getPathVariable()=" + getPathVariables() + ", getTenantPath()="
-                + getTenantPath() + "]";
-    }
 }

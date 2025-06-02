@@ -38,19 +38,23 @@ public abstract class AbstractLongUserSessionManager extends AbstractUnifyCompon
 	}
 
 	@Override
-	public boolean performAutoLogin(HttpRequest httpRequest, HttpUserSession userSession) throws UnifyException {
+	public boolean performAutoLogin(HttpRequest httpRequest, HttpResponse httpResponse, HttpUserSession userSession)
+			throws UnifyException {
 		final String cookieName = getLongSessionCookieName();
 		if (!userSession.isUserLoggedIn() && httpRequest.isWithCookie(cookieName)) {
 			Optional<ClientCookie> cookie = httpRequest.getCookie(cookieName);
 			if (cookie.isPresent()) {
-				Optional<UserToken> optional = getUserTokenByCookieId(cookie.get().getVal());
+				final String cookieId = cookie.get().getVal();
+				Optional<UserToken> optional = getUserTokenByCookieId(cookieId);
 				if (optional.isPresent()) {
-					userSession.getSessionContext().setUserToken(optional.get());
+					final UserToken userToken = optional.get();
+					userSession.getSessionContext().setUserToken(userToken);
+					httpResponse.setCookie(getLongSessionCookieName(), cookieId, userToken.getSessionInSecs());
 					return true;
 				}
 			}
 		}
-		
+
 		return false;
 	}
 

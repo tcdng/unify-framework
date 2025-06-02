@@ -17,6 +17,8 @@ package com.tcdng.unify.core.util;
 
 import java.util.UUID;
 
+import com.tcdng.unify.core.UserToken;
+
 /**
  * Application utilities.
  * 
@@ -25,15 +27,31 @@ import java.util.UUID;
  */
 public final class ApplicationUtils {
 
-    private ApplicationUtils() {
+	private ApplicationUtils() {
 
-    }
+	}
 
-    public static synchronized String generateSessionContextId() {
-        return UUID.randomUUID().toString();
-    }
+	public static synchronized String generateSessionContextId() {
+		return UUID.randomUUID().toString();
+	}
 
-    public static synchronized String generateSessionCookieId() {
-        return UUID.randomUUID().toString();
-    }
+	public static synchronized String generateLongSessionCookieId(UserToken userToken) {
+		return StringUtils.concatenateUsingSeparatorFixed(':', userToken.getUserLoginId(), userToken.getBranchCode(),
+				userToken.getDepartmentCode(), userToken.getRoleCode(), userToken.getOrganizationCode(),
+				userToken.getSessionInSecs());
+	}
+
+	public static synchronized boolean popuplateFromLongSessionCookieId(UserToken userToken, String cookieId) {
+		final String[] parts = StringUtils.split(cookieId, "\\:");
+		if (parts.length == 6) {
+			userToken.setBranchCode(!StringUtils.isBlank(parts[1]) ? parts[1] : null);
+			userToken.setDepartmentCode(!StringUtils.isBlank(parts[2]) ? parts[3] : null);
+			userToken.setRoleCode(!StringUtils.isBlank(parts[3]) ? parts[3] : null);
+			userToken.setOrganizationCode(!StringUtils.isBlank(parts[4]) ? parts[4] : null);
+			userToken.setSessionInSecs(!StringUtils.isBlank(parts[5]) ? Integer.parseInt(parts[5]) : 0);
+			return userToken.getUserLoginId().equals(parts[0]);
+		}
+
+		return false;
+	}
 }

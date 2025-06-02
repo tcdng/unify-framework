@@ -60,6 +60,11 @@ public abstract class AbstractController extends AbstractUnifyComponent implemen
 	}
 
 	@Override
+	public boolean isPageController() {
+		return false;
+	}
+
+	@Override
 	protected void onInitialize() throws UnifyException {
 
 	}

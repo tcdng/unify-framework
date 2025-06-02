@@ -50,12 +50,16 @@ public class UserToken {
 
 	private String zoneCode;
 
+	private String organizationCode;
+
 	private Long userId;
 
 	private Long tenantId;
 
 	private Long organizationId;
 
+	private int sessionInSecs;
+	
 	private boolean globalAccess;
 
 	private boolean reservedUser;
@@ -115,6 +119,10 @@ public class UserToken {
 		return userId;
 	}
 
+	public void setBranchCode(String branchCode) {
+		this.branchCode = branchCode;
+	}
+
 	public String getBranchCode() {
 		return branchCode;
 	}
@@ -141,6 +149,14 @@ public class UserToken {
 
 	public Long getTenantId() {
 		return tenantId;
+	}
+
+	public String getOrganizationCode() {
+		return organizationCode;
+	}
+
+	public void setOrganizationCode(String organizationCode) {
+		this.organizationCode = organizationCode;
 	}
 
 	public Long getOrganizationId() {
@@ -181,6 +197,14 @@ public class UserToken {
 
 	public void setThemePath(String themePath) {
 		this.themePath = themePath;
+	}
+
+	public int getSessionInSecs() {
+		return sessionInSecs;
+	}
+
+	public void setSessionInSecs(int sessionInSecs) {
+		this.sessionInSecs = sessionInSecs;
 	}
 
 	public boolean isGlobalAccess() {

@@ -29,12 +29,8 @@ import org.apache.catalina.Context;
 import org.apache.catalina.Wrapper;
 import org.apache.catalina.connector.Connector;
 import org.apache.catalina.startup.Tomcat;
-import org.apache.coyote.http11.Http11NioProtocol;
-import org.apache.tomcat.util.net.SSLHostConfig;
 
-import com.tcdng.unify.core.UnifyCoreConstants;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
-import com.tcdng.unify.core.UnifyCorePropertyConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.constant.NetworkSchemeType;
@@ -134,9 +130,7 @@ public class TomcatEmbeddedWebServer extends AbstractEmbeddedHttpWebServer {
 					getMultipartMaxFileSize(), getMultipartMaxRequestSize(), getMultipartFileSizeThreshold()));
 			context.addServletMappingDecoded(getServletPath(), _servletName);
 
-			context.setSessionTimeout(
-					getContainerSetting(int.class, UnifyCorePropertyConstants.APPLICATION_SESSION_TIMEOUT,
-							UnifyCoreConstants.DEFAULT_APPLICATION_SESSION_TIMEOUT_SECONDS) / 60);
+			context.setSessionTimeout(getSessionSeconds() / 60);
 			tomcat.start();
 			logInfo("HTTP server initialization completed.");
 		} catch (Exception e) {

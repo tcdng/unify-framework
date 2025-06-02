@@ -32,7 +32,7 @@ public class RequestContext extends Context {
     private SessionContext sessionContext;
 
     private Object quickReference;
-
+    
     public RequestContext(String requestPath, SessionContext sessionContext) {
         this.requestPath = requestPath;
         this.sessionContext = sessionContext;
@@ -69,4 +69,5 @@ public class RequestContext extends Context {
     public void setQuickReference(Object quickReference) {
         this.quickReference = quickReference;
     }
+
 }

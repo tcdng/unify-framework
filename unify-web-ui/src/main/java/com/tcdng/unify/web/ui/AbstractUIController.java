@@ -38,6 +38,7 @@ import com.tcdng.unify.web.ControllerPathParts;
 import com.tcdng.unify.web.PathInfoRepository;
 import com.tcdng.unify.web.UnifyWebErrorConstants;
 import com.tcdng.unify.web.UnifyWebPropertyConstants;
+import com.tcdng.unify.web.UnifyWebSessionAttributeConstants;
 import com.tcdng.unify.web.constant.ReadOnly;
 import com.tcdng.unify.web.constant.RequestParameterConstants;
 import com.tcdng.unify.web.constant.ResetOnWrite;
@@ -341,7 +342,7 @@ public abstract class AbstractUIController extends AbstractHttpClientController 
 
 	@SuppressWarnings("unchecked")
 	protected void writeResponse(ResponseWriter writer, Page page, Result result) throws UnifyException {
-		if (MimeType.APPLICATION_JSON.equals(result.getMimeType())) {
+		if (!result.isDocumentPathResponse() && MimeType.APPLICATION_JSON.equals(result.getMimeType())) {
 			writer.write("{\"jsonResp\":[");
 			boolean appendSym = false;
 			for (PageControllerResponse pageControllerResponse : result.getResponses()) {
@@ -379,6 +380,19 @@ public abstract class AbstractUIController extends AbstractHttpClientController 
 		}
 	}
 
+	protected String executeAction(PageController<?> pageController, String actionName) throws UnifyException {
+		try {
+			return (String) getUIControllerUtil().getPageControllerInfo(getName()).getAction(actionName).getMethod()
+					.invoke(pageController);
+		} catch (UnifyException e) {
+			throw e;
+		} catch (Exception e) {
+			throwOperationErrorException(e);
+		}
+
+		return null;
+	}
+
 	private void writeExceptionResponse(ClientRequest request, ClientResponse response, Exception e)
 			throws UnifyException {
 		logError(e);
@@ -393,13 +407,14 @@ public abstract class AbstractUIController extends AbstractHttpClientController 
 
 		// Set exception attributes in session context.
 		boolean loginRequired = false;
+		String errorCode = null;
 		if (e instanceof UnifyException) {
-			String errorCode = ((UnifyException) e).getUnifyError().getErrorCode();
+			errorCode = ((UnifyException) e).getUnifyError().getErrorCode();
 			loginRequired = UnifyWebErrorConstants.LOGIN_REQUIRED.equals(errorCode)
 					|| UnifyCoreErrorConstants.UNKNOWN_PAGE_NAME.equals(errorCode)
 					|| SystemUtils.isForceLogoutErrorCode(errorCode);
 		}
-		String message = getExceptionMessage(LocaleType.SESSION, e);
+		final String message = getExceptionMessage(LocaleType.SESSION, e);
 		setSessionAttribute(SystemInfoConstants.LOGIN_REQUIRED_FLAG, loginRequired);
 		setSessionAttribute(SystemInfoConstants.EXCEPTION_MESSAGE_KEY, message);
 
@@ -413,30 +428,46 @@ public abstract class AbstractUIController extends AbstractHttpClientController 
 			ControllerPathParts respPathParts = null;
 			Page page = null;
 			Result result = null;
-			if (StringUtils.isBlank((String) request.getParameters().getParam(PageRequestParameterConstants.DOCUMENT))
-					&& !pageRequestContextUtil.isRemoteViewer()) {
-				if (getContainerSetting(boolean.class, UnifyWebPropertyConstants.APPLICATION_WEB_FRIENDLY_REDIRECT,
-						true)) {
+			final String pathX0x = UnifyWebErrorConstants.LOGIN_REQUIRED.equals(errorCode)
+					? getContainerSetting(String.class, UnifyWebPropertyConstants.APPLICATION_401)
+					: ((UnifyWebErrorConstants.CONTROLLER_UNKNOWN_ACTION.equals(errorCode)
+							|| UnifyCoreErrorConstants.RECORD_SINGLEOBJECT_NO_MATCHING_RECORD.equals(errorCode))
+									? getContainerSetting(String.class, UnifyWebPropertyConstants.APPLICATION_404)
+									: getContainerSetting(String.class, UnifyWebPropertyConstants.APPLICATION_500));
+			if (!StringUtils.isBlank(pathX0x)) {
+				setSessionAttribute(UnifyWebSessionAttributeConstants.INTERNAL_SERVER_ERROR, message);
+				respPathParts = pathInfoRepository.getControllerPathParts(pathX0x);
+				pageController = (PageController<?>) getControllerFinder().findController(respPathParts);
+				page = uiControllerUtil.loadRequestPage(respPathParts);
+				final String resultName = executeAction(pageController, "/indexPage");
+				result = uiControllerUtil.getPageControllerInfo(pageController.getName()).getResult(resultName);
+			} else {
+				if (StringUtils
+						.isBlank((String) request.getParameters().getParam(PageRequestParameterConstants.DOCUMENT))
+						&& !pageRequestContextUtil.isRemoteViewer()) {
+					if (getContainerSetting(boolean.class, UnifyWebPropertyConstants.APPLICATION_WEB_FRIENDLY_REDIRECT,
+							true)) {
+						respPathParts = pathInfoRepository
+								.getControllerPathParts(SystemInfoConstants.UNAUTHORIZED_CONTROLLER_NAME);
+						pageController = (PageController<?>) getControllerFinder().findController(respPathParts);
+						page = uiControllerUtil.loadRequestPage(respPathParts);
+						page.setWidgetVisible("stackTrace", !loginRequired && !uiControllerUtil.isHideErrorTrace());
+						result = uiControllerUtil.getPageControllerInfo(pageController.getName())
+								.getResult(ResultMappingConstants.INDEX);
+					} else {
+						throwOperationErrorException(
+								new RuntimeException("Attempting to access an unauthorized path."));
+					}
+				} else {
 					respPathParts = pathInfoRepository
-							.getControllerPathParts(SystemInfoConstants.UNAUTHORIZED_CONTROLLER_NAME);
+							.getControllerPathParts(SystemInfoConstants.SYSTEMINFO_CONTROLLER_NAME);
 					pageController = (PageController<?>) getControllerFinder().findController(respPathParts);
 					page = uiControllerUtil.loadRequestPage(respPathParts);
 					page.setWidgetVisible("stackTrace", !loginRequired && !uiControllerUtil.isHideErrorTrace());
 					result = uiControllerUtil.getPageControllerInfo(pageController.getName())
-							.getResult(ResultMappingConstants.INDEX);
-				} else {
-					throwOperationErrorException(new RuntimeException("Attempting to access an unauthorized path."));
+							.getResult(SystemInfoConstants.SHOW_SYSTEM_EXCEPTION_MAPPING);
 				}
-			} else {
-				respPathParts = pathInfoRepository
-						.getControllerPathParts(SystemInfoConstants.SYSTEMINFO_CONTROLLER_NAME);
-				pageController = (PageController<?>) getControllerFinder().findController(respPathParts);
-				page = uiControllerUtil.loadRequestPage(respPathParts);
-				page.setWidgetVisible("stackTrace", !loginRequired && !uiControllerUtil.isHideErrorTrace());
-				result = uiControllerUtil.getPageControllerInfo(pageController.getName())
-						.getResult(SystemInfoConstants.SHOW_SYSTEM_EXCEPTION_MAPPING);
 			}
-
 			pageRequestContextUtil.setResponsePathParts(respPathParts);
 			writeResponse(writer, page, result);
 

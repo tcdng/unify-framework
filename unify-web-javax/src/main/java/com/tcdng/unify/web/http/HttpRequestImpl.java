@@ -66,6 +66,11 @@ public class HttpRequestImpl implements HttpRequest {
 	}
 
 	@Override
+	public String getQueryString() {
+		return request.getQueryString();
+	}
+
+	@Override
 	public String getCharacterEncoding() {
 		return request.getCharacterEncoding();
 	}

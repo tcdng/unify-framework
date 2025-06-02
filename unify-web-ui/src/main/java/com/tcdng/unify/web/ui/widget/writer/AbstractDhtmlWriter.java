@@ -698,7 +698,7 @@ public abstract class AbstractDhtmlWriter extends AbstractUplComponentWriter {
 	protected boolean writeCaption(ResponseWriter writer, Widget widget) throws UnifyException {
 		String caption = widget.getCaption();
 		if (caption != null) {
-			writer.writeWithHtmlEscape(caption);
+			writer.writeWithHtmlEscape(resolveSessionMessage(caption));
 			return true;
 		}
 

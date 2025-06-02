@@ -144,8 +144,7 @@ ux.registerExtension = function(extLiteral, extObj) {
 }
 
 /** Basic * */
-ux.setupDocument = function(docClientId, docPath, docPopupBaseId, docPopupId, docSysInfoId, docLatencyId, docSessionId) {
-	ux.setClientId(docClientId);
+ux.setupDocument = function(docPath, docPopupBaseId, docPopupId, docSysInfoId, docLatencyId, docSessionId) {
 	ux.docPath = docPath;
 	ux.docPopupBaseId = docPopupBaseId;
 	ux.docPopupId = docPopupId;
@@ -154,12 +153,17 @@ ux.setupDocument = function(docClientId, docPath, docPopupBaseId, docPopupId, do
 	ux.docSessionId = docSessionId;
 }
 
-ux.setClientId = function(clientId) {
-	sessionStorage.setItem("req_cid", clientId);
-}
-
 ux.getClientId = function() {
-	return sessionStorage.getItem("req_cid");
+	let cid = sessionStorage.getItem("page_cid");
+	if (cid === null) {
+		let uxstore = localStorage.getItem("ux_store");
+		let _uxstore = uxstore !== null ? JSON.parse(uxstore): {cid:0};
+		cid = "cid" + (++_uxstore.cid).toString(16);
+		sessionStorage.setItem("page_cid", cid);
+		localStorage.setItem("ux_store", JSON.stringify(_uxstore));
+	}
+	
+	return cid;
 }
 
 ux.wsPushUpdate = function(wsSyncPath) {
@@ -510,7 +514,7 @@ ux.postPath = function(resp) {
 		}
 		
 		if (path) {
-			var prm = "req_doc=" + _enc(ux.docPath) + (path.indexOf("req_cid") < 0  ? "&req_cid=" + _enc(ux.getClientId()):"");
+			var prm = "req_doc=" + _enc(ux.docPath)
 			if(resp.target) {
 				prm += "&req_trg=" + _enc(resp.target);
 			}
@@ -657,10 +661,14 @@ ux.ajaxCall = function(ajaxPrms) {
 		ajaxPrms.uDebounced = ux.effectDebounce();
 	}
 	
+	let index = ajaxPrms.uURL.indexOf('?');
+	const url = index > 0 ? ajaxPrms.uURL.substring(0, index) : ajaxPrms.uURL;
+	const param = index > 0 ? ajaxPrms.uURL.substring(index + 1) : null;
+	
 	ux.triggerBusyIndicator();
 	try {
 		ux.saveContentScroll();
-		uAjaxReq.open("POST", ajaxPrms.uURL, true);
+		uAjaxReq.open("POST", url, true);
 		if (ajaxPrms.uEncoded) {
 			uAjaxReq.setRequestHeader("Content-Type",
 					"application/x-www-form-urlencoded");
@@ -689,13 +697,30 @@ ux.ajaxCall = function(ajaxPrms) {
 		};
 		
 		if (ajaxPrms.uParam) {
+			if (ajaxPrms.uEncoded) {
+				if (param !== null) {
+					ajaxPrms.uParam += ("&" + param);
+				}
+				
+				ajaxPrms.uParam += ("&req_cid=" + _enc(ux.getClientId()));
+			} else {
+				if (param !== null) {
+					let params = new URLSearchParams(param);
+					for (let [key, val] of params.entries()) {
+					    ajaxPrms.uParam.append(key, val);
+					}
+				}
+				
+				ajaxPrms.uParam.append("req_cid", ux.getClientId());
+			}
+			
 			uAjaxReq.send(ajaxPrms.uParam);
 		} else {
 			uAjaxReq.send();
 		}
 	} catch (ex) {
 		ux.ajaxCallExit(ajaxPrms);
-		alert("Unable to connect to \'" + ajaxPrms.uURL + "\', exception = "
+		alert("Unable to connect to \'" + url + "\', exception = "
 				+ ex);
 	}
 }
@@ -804,8 +829,7 @@ ux.post = function(uEv) {
 
 ux.postToPath = function(evp) {
 	var ajaxPrms = ux.ajaxConstructCallParam(evp.uPath,
-			"req_doc=" + _enc(ux.docPath) + (evp.uPath.indexOf("req_cid") < 0  ? "&req_cid=" + _enc(ux.getClientId()):"")
-			+ (evp.uTarget ? "&req_trg=" + _enc(evp.uTarget) :"") ,
+			"req_doc=" + _enc(ux.docPath) + (evp.uTarget ? "&req_trg=" + _enc(evp.uTarget) :"") ,
 			false, true, false, ux.processJSON);
 	ux.ajaxCall(ajaxPrms);
 }
@@ -855,7 +879,7 @@ ux.openWindow = function(uEv) {
 		var url = evp.uURL;
 		var param = ux.buildReqParams(null, evp, refs);
 		if (param.value) {
-			url = url + "?" + param.value;
+			url = url + (url.indexOf('?') >= 0 ? "&":"?") + param.value;
 		}
 		
 		if (evp.uWinName) {
@@ -4699,10 +4723,6 @@ ux.buildObjParams = function(trgObj, evp, param, refs) {
 			pb.append("req_rsi", ux.docSessionId);
 		} else {
 			pb.append("req_doc", ux.docPath);
-			if (evp.uURL.indexOf("req_cid") < 0) {
-				pb.append("req_cid", ux.getClientId());
-			}
-			
 			pb.append("req_win", window.name);
 		}
 		if (evp.uValidateAct) {
@@ -4728,10 +4748,6 @@ ux.buildObjParams = function(trgObj, evp, param, refs) {
 			pb += ("&req_rsi=" + _enc(ux.docSessionId));
 		} else {
 			pb += ("&req_doc=" + _enc(ux.docPath));
-			if (evp.uURL.indexOf("req_cid") < 0) {
-				pb += ("&req_cid=" + _enc(ux.getClientId()));
-			}
-
 			pb += ("&req_win=" + _enc(window.name));
 		}
 		if (evp.uValidateAct) {
@@ -5857,6 +5873,7 @@ ux.windowUnload = function(uEv) {
 
 }
 
+
 ux.documentKeydownHandler = function(uEv) {
 	// Hide popup on tab
 	if (uEv.uKeyCode == UNIFY_KEY_TAB) {
@@ -6399,7 +6416,6 @@ ux.callPageResets = function() {
 		try {
 			ux.pageresets[id]();
 		} catch(e) {
-			//console.log(e.message);
 		}
 	}
 }

@@ -19,6 +19,7 @@ package com.tcdng.unify.web.http;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.RequestContextManager;
 import com.tcdng.unify.core.UnifyCoreApplicationAttributeConstants;
+import com.tcdng.unify.core.UnifyCoreConstants;
 import com.tcdng.unify.core.UnifyCorePropertyConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Configurable;
@@ -35,6 +36,9 @@ import com.tcdng.unify.web.util.CookieUtils;
  */
 public abstract class AbstractEmbeddedHttpWebServer extends AbstractHttpWebInterface implements EmbeddedHttpWebServer {
 
+	@Configurable
+	private LongUserSessionManager longUserSessionManager;
+	
     @Configurable("8080")
     private int httpPort;
 
@@ -132,4 +136,11 @@ public abstract class AbstractEmbeddedHttpWebServer extends AbstractHttpWebInter
 	protected int getMultipartFileSizeThreshold() {
 		return multipartFileSizeThreshold;
 	}
+	
+	protected int getSessionSeconds() throws UnifyException {
+		return longUserSessionManager != null ? longUserSessionManager.getDefaultLongSessionSeconds()
+				: (getContainerSetting(int.class, UnifyCorePropertyConstants.APPLICATION_SESSION_TIMEOUT,
+						UnifyCoreConstants.DEFAULT_APPLICATION_SESSION_TIMEOUT_SECONDS));
+	}
+ 
 }

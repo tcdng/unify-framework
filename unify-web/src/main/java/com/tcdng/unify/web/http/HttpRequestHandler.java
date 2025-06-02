@@ -50,21 +50,18 @@ public interface HttpRequestHandler extends UnifyComponent {
      */
     RequestPathParts getRequestPathParts(String requestPath) throws UnifyException;
 
-    /**
-     * Get user session.
-     * 
-     * @param httpModule
-     *                      the HTTP module
-     * @param httpRequest
-     *                      the request object
-     * @param reqPathParts
-     *                      the request path parts
-     * @return the user session
-     * @throws UnifyException
-     *                        if an error occurs
-     */
-    UserSession getUserSession(HttpServletModule httpModule, HttpRequest httpRequest,
-            RequestPathParts reqPathParts) throws UnifyException;
+	/**
+	 * Get user session.
+	 * 
+	 * @param httpModule   the HTTP module
+	 * @param httpRequest  the request object
+	 * @param httpResponse the response object
+	 * @param reqPathParts the request path parts
+	 * @return the user session
+	 * @throws UnifyException if an error occurs
+	 */
+	UserSession getUserSession(HttpServletModule httpModule, HttpRequest httpRequest, HttpResponse httpResponse,
+			RequestPathParts reqPathParts) throws UnifyException;
 
     /**
      * Handles HTTP request.

@@ -68,6 +68,11 @@ public abstract class AbstractPage extends AbstractStandalonePanel implements Pa
 	}
 
 	@Override
+	public ControllerPathParts getControllerPathParts() {
+		return controllerPathParts;
+	}
+
+	@Override
 	public String getPathId() {
 		if (controllerPathParts != null) {
 			return controllerPathParts.getControllerPathId();
@@ -94,7 +99,6 @@ public abstract class AbstractPage extends AbstractStandalonePanel implements Pa
 	public void setPageBean(PageBean pageBean) throws UnifyException {
 		setValueStore(ValueStoreUtils.getValueStore(pageBean, null, -1));
 		getRequestContextUtil().setContentScrollReset();
-		;
 	}
 
 	@Override

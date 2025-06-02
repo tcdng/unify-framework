@@ -184,25 +184,24 @@ public class HttpServletModule  {
         return embedded;
     }
     
-    public void handleRequest(HttpRequestMethodType type, HttpRequest httpRequest,
-            HttpResponse httpResponse) throws UnifyException {
-        if (!embedded || webInterface.isServicingRequests()) {
-            try {
-                HttpRequestHandler httpRequestHandler = getHttpRequestHandler();
-                RequestPathParts reqPathParts = httpRequestHandler.resolveRequestPath(httpRequest);
-                requestContextManager.loadRequestContext(
-                        httpRequestHandler.getUserSession(this, httpRequest, reqPathParts),
-                        httpRequest.getServletPath());
-                httpRequestHandler.handleRequest(type, reqPathParts, httpRequest,
-                        httpResponse);
-            } finally {
-                try {
-                    userSessionManager.updateCurrentSessionLastAccessTime();
-                } catch (Exception e) {
-                }
-                
-                requestContextManager.unloadRequestContext();
-            }
-        }
-    }
+	public void handleRequest(HttpRequestMethodType type, HttpRequest httpRequest, HttpResponse httpResponse)
+			throws UnifyException {
+		if (!embedded || webInterface.isServicingRequests()) {
+			try {
+				HttpRequestHandler httpRequestHandler = getHttpRequestHandler();
+				RequestPathParts reqPathParts = httpRequestHandler.resolveRequestPath(httpRequest);
+				requestContextManager.loadRequestContext(
+						httpRequestHandler.getUserSession(this, httpRequest, httpResponse, reqPathParts),
+						httpRequest.getServletPath());
+				httpRequestHandler.handleRequest(type, reqPathParts, httpRequest, httpResponse);
+			} finally {
+				try {
+					userSessionManager.updateCurrentSessionLastAccessTime();
+				} catch (Exception e) {
+				}
+
+				requestContextManager.unloadRequestContext();
+			}
+		}
+	}
 }

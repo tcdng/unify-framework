@@ -17,6 +17,9 @@ package com.tcdng.unify.web.ui.response;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
+import com.tcdng.unify.core.annotation.UplAttribute;
+import com.tcdng.unify.core.annotation.UplAttributes;
+import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ui.AbstractPageControllerResponse;
 import com.tcdng.unify.web.ui.widget.Document;
 import com.tcdng.unify.web.ui.widget.Page;
@@ -29,6 +32,8 @@ import com.tcdng.unify.web.ui.widget.ResponseWriter;
  * @since 4.1
  */
 @Component("loaddocumentresponse")
+@UplAttributes({
+	@UplAttribute(name = "path", type = String.class)})
 public class LoadDocumentResponse extends AbstractPageControllerResponse {
 
     @Override
@@ -38,4 +43,14 @@ public class LoadDocumentResponse extends AbstractPageControllerResponse {
         writer.writeStructureAndContent(document);
         writer.writeBehavior(document);
     }
+
+    @Override
+	public boolean isDocumentPathResponse() throws UnifyException {
+		return !StringUtils.isBlank(getDocumentPath());
+	}
+
+	@Override
+	public String getDocumentPath() throws UnifyException {
+		return getUplAttribute(String.class, "path");
+	}
 }

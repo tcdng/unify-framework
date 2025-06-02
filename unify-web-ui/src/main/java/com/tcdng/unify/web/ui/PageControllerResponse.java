@@ -28,15 +28,26 @@ import com.tcdng.unify.web.ui.widget.ResponseWriter;
  */
 public interface PageControllerResponse extends UplComponent {
 
-    /**
-     * Generates response.
-     * 
-     * @param writer
-     *            the response writer
-     * @param page
-     *            the page
-     * @throws UnifyException
-     *             if an error occurs
-     */
-    void generate(ResponseWriter writer, Page page) throws UnifyException;
+	/**
+	 * Generates response.
+	 * 
+	 * @param writer the response writer
+	 * @param page   the page
+	 * @throws UnifyException if an error occurs
+	 */
+	void generate(ResponseWriter writer, Page page) throws UnifyException;
+
+	/**
+	 * Returns true if whole document path.
+	 * 
+	 * @throws UnifyException if an error occurs
+	 */
+	boolean isDocumentPathResponse() throws UnifyException;
+	
+	/**
+	 * Gets the page document path.
+	 * @return the document path
+	 * @throws UnifyException if an error occurs
+	 */
+	String getDocumentPath() throws UnifyException;
 }

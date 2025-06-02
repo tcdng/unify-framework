@@ -83,6 +83,11 @@ public class TestClientRequest extends AbstractClientRequest {
 	}
 
 	@Override
+	public String getQueryString() {
+		return null;
+	}
+
+	@Override
 	public Parameters getParameters() {
 		return parameters;
 	}
