@@ -158,8 +158,7 @@ ux.getClientId = function() {
 	if (cid === null) {
 		let uxstore = localStorage.getItem("ux_store");
 		let _uxstore = uxstore !== null ? JSON.parse(uxstore): {cid:0};
-		_uxstore.cid++;
-		cid = "cid" + _uxstore.cid.toString(16);
+		cid = "cid" + (++_uxstore.cid).toString(16);
 		sessionStorage.setItem("page_cid", cid);
 		localStorage.setItem("ux_store", JSON.stringify(_uxstore));
 	}
