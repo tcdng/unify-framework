@@ -662,10 +662,14 @@ ux.ajaxCall = function(ajaxPrms) {
 		ajaxPrms.uDebounced = ux.effectDebounce();
 	}
 	
+	let index = ajaxPrms.uURL.indexOf('?');
+	const url = index > 0 ? ajaxPrms.uURL.substring(0, index) : ajaxPrms.uURL;
+	const param = index > 0 ? ajaxPrms.uURL.substring(index + 1) : null;
+	
 	ux.triggerBusyIndicator();
 	try {
 		ux.saveContentScroll();
-		uAjaxReq.open("POST", ajaxPrms.uURL, true);
+		uAjaxReq.open("POST", url, true);
 		if (ajaxPrms.uEncoded) {
 			uAjaxReq.setRequestHeader("Content-Type",
 					"application/x-www-form-urlencoded");
@@ -695,8 +699,19 @@ ux.ajaxCall = function(ajaxPrms) {
 		
 		if (ajaxPrms.uParam) {
 			if (ajaxPrms.uEncoded) {
+				if (param !== null) {
+					ajaxPrms.uParam += ("&" + param);
+				}
+				
 				ajaxPrms.uParam += ("&req_cid=" + _enc(ux.getClientId()));
 			} else {
+				if (param !== null) {
+					let params = new URLSearchParams(param);
+					for (let [key, val] of params.entries()) {
+					    ajaxPrms.uParam.append(key, val);
+					}
+				}
+				
 				ajaxPrms.uParam.append("req_cid", ux.getClientId());
 			}
 			
@@ -706,7 +721,7 @@ ux.ajaxCall = function(ajaxPrms) {
 		}
 	} catch (ex) {
 		ux.ajaxCallExit(ajaxPrms);
-		alert("Unable to connect to \'" + ajaxPrms.uURL + "\', exception = "
+		alert("Unable to connect to \'" + url + "\', exception = "
 				+ ex);
 	}
 }
@@ -865,7 +880,7 @@ ux.openWindow = function(uEv) {
 		var url = evp.uURL;
 		var param = ux.buildReqParams(null, evp, refs);
 		if (param.value) {
-			url = url + "?" + param.value;
+			url = url + (url.indexOf('?') >= 0 ? "&":"?") + param.value;
 		}
 		
 		if (evp.uWinName) {
@@ -6402,7 +6417,6 @@ ux.callPageResets = function() {
 		try {
 			ux.pageresets[id]();
 		} catch(e) {
-			//console.log(e.message);
 		}
 	}
 }

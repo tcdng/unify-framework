@@ -18,6 +18,7 @@ package com.tcdng.unify.web.ui.controller;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.util.RandomUtils;
+import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.UnifyWebSessionAttributeConstants;
 import com.tcdng.unify.web.WebApplicationComponents;
 import com.tcdng.unify.web.constant.Secured;
@@ -39,7 +40,7 @@ public class DocumentLoaderController extends AbstractDocumentController {
 	}
 
 	@Override
-	protected void writeDocument(ResponseWriter writer, String docPath, String section) throws UnifyException {
+	protected void writeDocument(ResponseWriter writer, String docPath, String section, String queryString) throws UnifyException {
 		final String contextPath = getRequestAttribute(String.class,
 				UnifyWebRequestAttributeConstants.LOADER_FORWARD_PATH);
 		final String tempParam = RandomUtils.generateRandomLetters(8);
@@ -62,7 +63,12 @@ public class DocumentLoaderController extends AbstractDocumentController {
 	    writer.write("let path=\"");
 		writer.writeContextURL(contextPath);
 		writer.write("?").write(tempParam).write("=");
-		writer.write("\" + cid;\n");	    
+		writer.write("\" + cid");
+		if (!StringUtils.isBlank(queryString)) {
+			writer.write(" + \"&").write(queryString).write("\"");
+		}
+		
+		writer.write(";\n");	    
 		writer.write("window.location.assign(path);\n");	
 		writer.write("</script>\n");
 	}

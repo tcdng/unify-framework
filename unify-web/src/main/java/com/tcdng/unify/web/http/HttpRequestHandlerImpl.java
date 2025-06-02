@@ -176,7 +176,8 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 			final String text = (String) parameters.remove(BODY_TEXT);
 			final byte[] bytes = (byte[]) parameters.remove(BODY_BYTES);
 			ClientRequest clientRequest = new HttpClientRequest(detectClientPlatform(httpRequest), methodType,
-					requestPathParts, charset, httpRequest, parameters, extractCookies(httpRequest), text, bytes);
+					requestPathParts, charset, httpRequest, httpRequest.getQueryString(), parameters,
+					extractCookies(httpRequest), text, bytes);
 			ClientResponse clientResponse = new HttpClientResponse(httpResponse);
 
 			String origin = httpRequest.getHeader("origin");

@@ -48,18 +48,21 @@ public class HttpClientRequest extends AbstractClientRequest {
 
 	private Map<String, ClientCookie> cookies;
 
+	private String queryString;
+	
 	private String text;
 	
 	private byte[] bytes;
 	
 	public HttpClientRequest(ClientPlatform clientPlatform, HttpRequestMethodType methodType,
-			RequestPathParts requestPathParts, Charset charset, HttpRequestHeaders headers,
+			RequestPathParts requestPathParts, Charset charset, HttpRequestHeaders headers, String queryString,
 			Map<String, Object> parameters, Map<String, ClientCookie> cookies, String text, byte[] bytes) {
 		this.clientPlatform = clientPlatform;
 		this.methodType = methodType;
 		this.requestPathParts = requestPathParts;
 		this.headers = headers;
 		this.charset = charset;
+		this.queryString = queryString;
 		this.parameters = new Parameters(parameters);
 		this.cookies = cookies;
 		this.text = text;
@@ -84,6 +87,11 @@ public class HttpClientRequest extends AbstractClientRequest {
 	@Override
 	public Charset getCharset() {
 		return charset;
+	}
+
+	@Override
+	public String getQueryString() {
+		return queryString;
 	}
 
 	@Override
