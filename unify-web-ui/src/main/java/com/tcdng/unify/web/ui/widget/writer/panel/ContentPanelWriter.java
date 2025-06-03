@@ -196,9 +196,10 @@ public class ContentPanelWriter extends AbstractPanelWriter {
 					title = page.getCaption();
 				}
 
+				title = resolveSessionMessage(title);
 				title = contentPanel.isTitleUppercase() && title != null ? title.toUpperCase() : title;
 
-				final String subTitle = page.getSubCaption();
+				final String subTitle = resolveSessionMessage(page.getSubCaption());
 				writer.write("><div><a ");
 				if (page.getUplAttribute(boolean.class, "remote")) {
 					String cpcat = CPREMOTE_CATEGORYBASE;
