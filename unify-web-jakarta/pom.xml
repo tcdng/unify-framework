@@ -31,9 +31,9 @@
 	</developers>
 
     <scm>
-        <connection>scm:git:git://github.com/tcdng/unify-framework.git</connection>
-        <developerConnection>scm:git:ssh://github.com:tcdng/unify-framework.git</developerConnection>
-        <url>http://github.com/tcdng/unify-framework/tree/master</url>
+        <connection>scm:git:git://github.com/flowcentraltechnologies/unify-framework.git</connection>
+        <developerConnection>scm:git:ssh://github.com:flowcentraltechnologies/unify-framework.git</developerConnection>
+        <url>http://github.com/flowcentraltechnologies/unify-framework/tree/master</url>
     </scm>
 
 	<properties>
