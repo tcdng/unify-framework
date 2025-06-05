@@ -45,8 +45,18 @@ public final class TokenUtils {
      *            the string to test
      */
     public static boolean isMessageToken(String string) {
-        return string.startsWith("$m{") && string.endsWith("}");
+        return string.startsWith("$m{") && string.charAt(string.length() - 1) == '}';
     }
+
+	/**
+	 * Get the index of message token.
+	 * 
+	 * @param string the string to get index of
+	 * @return index greater than or equal to 0
+	 */
+	public static int indexOfMessageToken(String string) {
+		return string.indexOf("$m{");
+	}
 
     /**
      * Tests if a string is a unify property token value
@@ -55,7 +65,7 @@ public final class TokenUtils {
      *            the string to test
      */
     public static boolean isUnifyPropertyToken(String string) {
-        return string.startsWith("$u{") && string.endsWith("}");
+        return string.startsWith("$u{") && string.charAt(string.length() - 1) == '}';
     }
 
     /**
@@ -65,7 +75,7 @@ public final class TokenUtils {
      *            the string to test
      */
     public static boolean isComponentListToken(String string) {
-        return string.startsWith("$c{") && string.endsWith("}");
+        return string.startsWith("$c{") && string.charAt(string.length() - 1) == '}';
     }
 
     /**
@@ -75,7 +85,7 @@ public final class TokenUtils {
      *            the string to test
      */
     public static boolean isStringToken(String string) {
-        return string.startsWith("$s{") && string.endsWith("}");
+        return string.startsWith("$s{") && string.charAt(string.length() - 1) == '}';
     }
 
     /**
@@ -85,7 +95,7 @@ public final class TokenUtils {
      *            the string to test
      */
     public static boolean isSettingToken(String string) {
-        return string.startsWith("$x{") && string.endsWith("}");
+        return string.startsWith("$x{") && string.charAt(string.length() - 1) == '}';
     }
 
     /**
@@ -95,7 +105,7 @@ public final class TokenUtils {
      *            the string to test
      */
     public static boolean isJavaConstantToken(String string) {
-        return string.startsWith("$j{") && string.endsWith("}");
+        return string.startsWith("$j{") && string.charAt(string.length() - 1) == '}';
     }
 
     /**
@@ -105,7 +115,7 @@ public final class TokenUtils {
      *            the string to test
      */
     public static boolean isDescriptorToken(String string) {
-        return string.startsWith("$d{") && string.endsWith("}");
+        return string.startsWith("$d{") && string.charAt(string.length() - 1) == '}';
     }
 
     /**
@@ -115,7 +125,7 @@ public final class TokenUtils {
      *            the string to test
      */
     public static boolean isListToken(String string) {
-        return string.startsWith("$l{") && string.endsWith("}");
+        return string.startsWith("$l{") && string.charAt(string.length() - 1) == '}';
     }
 
     /**
@@ -125,7 +135,7 @@ public final class TokenUtils {
      *            the string to test
      */
     public static boolean isContextScopeTag(String string) {
-        return string.startsWith("$o{") && string.endsWith("}");
+        return string.startsWith("$o{") && string.charAt(string.length() - 1) == '}';
     }
 
     /**
@@ -135,7 +145,7 @@ public final class TokenUtils {
      *            the string to test
      */
     public static boolean isNameTag(String string) {
-        return string.startsWith("$n{") && string.endsWith("}");
+        return string.startsWith("$n{") && string.charAt(string.length() - 1) == '}';
     }
 
     /**
@@ -145,7 +155,7 @@ public final class TokenUtils {
      *            the string to test
      */
     public static boolean isPathTag(String string) {
-        return string.startsWith("$p{") && string.endsWith("}");
+        return string.startsWith("$p{") && string.charAt(string.length() - 1) == '}';
     }
 
     /**
@@ -155,7 +165,7 @@ public final class TokenUtils {
      *            the string to test
      */
     public static boolean isRequestAttributeTag(String string) {
-        return string.startsWith("$r{") && string.endsWith("}");
+        return string.startsWith("$r{") && string.charAt(string.length() - 1) == '}';
     }
 
     /**
@@ -165,7 +175,7 @@ public final class TokenUtils {
      *            the string to test
      */
     public static boolean isGuardedTag(String string) {
-        return string.startsWith("$g{") && string.endsWith("}");
+        return string.startsWith("$g{") && string.charAt(string.length() - 1) == '}';
     }
 
     /**
@@ -175,7 +185,7 @@ public final class TokenUtils {
      *            the string to test
      */
     public static boolean isForeignTag(String string) {
-        return string.startsWith("$f{") && string.endsWith("}");
+        return string.startsWith("$f{") && string.charAt(string.length() - 1) == '}';
     }
 
     /**
@@ -185,7 +195,7 @@ public final class TokenUtils {
      *            the string to test
      */
     public static boolean isThemeTag(String string) {
-        return string.startsWith("$t{") && string.endsWith("}");
+        return string.startsWith("$t{") && string.charAt(string.length() - 1) == '}';
     }
 
     /**
@@ -195,7 +205,7 @@ public final class TokenUtils {
      *            the string to test
      */
     public static boolean isElementTypeTag(String string) {
-        return string.startsWith("$e{") && string.endsWith("}");
+        return string.startsWith("$e{") && string.charAt(string.length() - 1) == '}';
     }
 
     /**
@@ -205,7 +215,7 @@ public final class TokenUtils {
      *            the string to test
      */
     public static boolean isQuickReferenceTag(String string) {
-        return string.startsWith("$q{") && string.endsWith("}");
+        return string.startsWith("$q{") && string.charAt(string.length() - 1) == '}';
     }
 
     /**
@@ -215,7 +225,7 @@ public final class TokenUtils {
      *            the string to test
      */
     public static boolean isPopupTag(String string) {
-        return string.startsWith("$w{") && string.endsWith("}");
+        return string.startsWith("$w{") && string.charAt(string.length() - 1) == '}';
     }
 
     /**
@@ -252,7 +262,7 @@ public final class TokenUtils {
      * @return the extracted value
      */
     public static String getStringTokenValue(String string) {
-        if (string != null && string.startsWith("$s{") && string.endsWith("}")) {
+        if (string != null && string.startsWith("$s{") && string.charAt(string.length() - 1) == '}') {
             return string.substring(3, string.length() - 1);
         }
         return string;
