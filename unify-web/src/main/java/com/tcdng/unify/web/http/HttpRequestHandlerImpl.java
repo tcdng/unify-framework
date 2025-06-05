@@ -26,6 +26,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -165,6 +166,11 @@ public class HttpRequestHandlerImpl extends AbstractUnifyComponent implements Ht
 			if (httpRequest.getCharacterEncoding() != null) {
 				charset = Charset.forName(httpRequest.getCharacterEncoding());
 			}
+
+			final Locale reqLocale = getContainerSetting(boolean.class,
+					UnifyWebPropertyConstants.APPLICATION_WEB_BROWSER_LOCALE, false) ? httpRequest.getPreferredLocale()
+							: getApplicationLocale();
+			getSessionContext().setLocale(reqLocale);
 
 			setRequestAttribute(UnifyWebRequestAttributeConstants.HEADERS, httpRequest);
 			setRequestAttribute(UnifyWebRequestAttributeConstants.PARAMETERS, httpRequest);
