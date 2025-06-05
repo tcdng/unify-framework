@@ -1548,9 +1548,13 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 	 */
 	protected String resolveMessage(Locale locale, String message, Object... params) throws UnifyException {
 		if (message != null) {
-			if (TokenUtils.isMessageToken(message)) {
-				return getUnifyComponentContext().getMessages().getMessage(locale,
-						TokenUtils.extractTokenValue(message), params);
+			int start = TokenUtils.indexOfMessageToken(message);
+			if (start >= 0) {
+				int end = message.indexOf('}', start);
+				if (end > 0) {
+					return message.substring(0, start) + getUnifyComponentContext().getMessages().getMessage(locale,
+							message.substring(start + 3, end), params) + message.substring(end + 1);
+				}
 			}
 
 			if (TokenUtils.isUnifyPropertyToken(message)) {
@@ -1567,6 +1571,7 @@ public abstract class AbstractUnifyComponent implements UnifyComponent {
 				return MessageFormat.format(message, params);
 			}
 		}
+
 		return message;
 	}
 
