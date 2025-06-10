@@ -127,8 +127,9 @@ public final class WriterUtils {
         jsAliasMap.put("ux.setDelayedPanelPost", "ux41");
         jsAliasMap.put("ux.optionsTextAreaOnShow", "ux42");
         jsAliasMap.put("ux.rigFileUploadButton", "ux43");  
-        jsAliasMap.put("ux.rigRichTextEditor", "ux44");  
+        jsAliasMap.put("ux.rigRichTextEditor", "ux44");
         jsAliasMap.put("ux.rigPalette", "ux45");  
+        jsAliasMap.put("ux.rigTarget", "ux46");  
         
         eventToJSMap = new HashMap<String, String>();
         eventToJSMap.put("onblur", "blur");

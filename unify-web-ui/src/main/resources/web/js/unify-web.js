@@ -3297,6 +3297,14 @@ ux.rigTextArea = function(rgp) {
 	}
 }
 
+/** Target control */
+ux.rigTarget = function(rgp) {
+	const evp = ux.newEvPrm(rgp);
+	evp.uCmd = rgp.pId + "->handle";
+	evp.uPanels = [ rgp.pContId ];
+	ux.addHdl(_id(rgp.pId), "click", ux.post, evp);
+}
+
 /** Table */
 ux.rigTable = function(rgp) {
 	var id = rgp.pId;
@@ -5853,8 +5861,9 @@ ux.init = function() {
     ux.setfn(ux.setDelayedPanelPost, "ux41");
     ux.setfn(ux.optionsTextAreaOnShow, "ux42");
     ux.setfn(ux.rigFileUploadButton, "ux43");
-	ux.setfn(ux.rigRichTextEditor, "ux44");  
+	ux.setfn(ux.rigRichTextEditor, "ux44");
 	ux.setfn(ux.rigPalette, "ux45");  
+	ux.setfn(ux.rigTarget, "ux46");  
 }
 
 ux.setfn = function(fn, id) {

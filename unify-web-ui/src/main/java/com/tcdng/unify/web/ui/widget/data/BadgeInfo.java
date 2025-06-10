@@ -16,7 +16,13 @@
 
 package com.tcdng.unify.web.ui.widget.data;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import com.tcdng.unify.core.constant.ColorScheme;
+import com.tcdng.unify.core.util.StringUtils;
 
 /**
  * Badge information.
@@ -26,20 +32,98 @@ import com.tcdng.unify.core.constant.ColorScheme;
  */
 public class BadgeInfo {
 
-    private ColorScheme colorScheme;
+    private Map<String, BadgeItem> items;
 
-    private String caption;
+    private Map<String, String> nexts;
 
-    public BadgeInfo(ColorScheme colorScheme, String caption) {
-        this.colorScheme = colorScheme;
-        this.caption = caption;
+    private String preferredField;
+    
+    private BadgeInfo(Map<String, BadgeItem> items, String preferredField) {
+        this.items = items;
+        this.preferredField = preferredField;
     }
 
-    public ColorScheme getColorScheme() {
-        return colorScheme;
+    public BadgeItem getItem(String code) {
+    	if (!items.containsKey(code)) {
+    		throw new IllegalArgumentException("Unknown badge item with code [" + code + "].");
+    	}
+    	
+        return items.get(code);
     }
+    
+    public String getPreferredField() {
+		return preferredField;
+	}
 
-    public String getCaption() {
-        return caption;
+	public boolean isWithgPrefferedField() {
+		return !StringUtils.isBlank(preferredField);
+	}
+    
+	public String nextCode(String code) {
+		if (nexts == null) {
+			synchronized(this) {
+				if (nexts == null) {
+					nexts = new HashMap<String, String>();
+					String first = null;
+					String last = null;
+					for(String _code: items.keySet()) {
+						if (first == null) {
+							first = _code;
+						} else {
+							nexts.put(last, _code);
+						}
+						
+						last = _code;
+					}
+					
+					nexts.put(last, first);
+					nexts = Collections.unmodifiableMap(nexts);
+				}
+			}
+		}
+		
+		String _next = nexts.get(code);
+		if (StringUtils.isBlank(_next)) {
+    		throw new IllegalArgumentException("Unknown badge item with code [" + code + "].");
+		}
+		
+		return _next;
+	}
+	
+	public static Builder newBuilder() {
+    	return new Builder();
+    }
+    
+    public static class Builder {
+
+        private Map<String, BadgeItem> items;
+
+        private String preferredField;
+    	
+        public Builder() {
+        	this.items = new LinkedHashMap<String, BadgeItem>();
+        }
+        
+        public Builder preferred(String preferredField) {
+        	this.preferredField = preferredField;
+        	return this;
+        }
+        
+        public Builder addItem(String code, String caption, ColorScheme colorScheme) {
+        	if (items.containsKey(code)) {
+        		throw new IllegalArgumentException("Item with code [" + code + "] is already defined.");
+        	}
+        	
+        	this.items.put(code, new BadgeItem(colorScheme, caption));
+        	return this;
+        }
+        
+        public BadgeInfo build() {
+        	if (items.isEmpty()) {
+        		throw new IllegalArgumentException("No badge item defined.");
+        	}
+        	
+        	return new BadgeInfo(items, preferredField);
+        }
     }
 }

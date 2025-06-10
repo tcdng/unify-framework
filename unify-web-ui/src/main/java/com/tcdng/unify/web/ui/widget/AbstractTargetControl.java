@@ -19,6 +19,8 @@ package com.tcdng.unify.web.ui.widget;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
+import com.tcdng.unify.core.util.StringUtils;
+import com.tcdng.unify.web.annotation.Action;
 
 /**
  * Base class for controls with target element.
@@ -27,13 +29,24 @@ import com.tcdng.unify.core.annotation.UplAttributes;
  * @since 4.1
  */
 @UplAttributes({
+	@UplAttribute(name = "handler", type = String.class),
     @UplAttribute(name = "staticBindingValue", type = String.class),
     @UplAttribute(name = "alwaysValueIndex", type = boolean.class),
 	@UplAttribute(name = "resolve", type = boolean.class, defaultVal = "false"),
     @UplAttribute(name = "debounce", type = boolean.class)})
 public abstract class AbstractTargetControl extends AbstractControl implements TargetControl {
 
+	private TargetControlHandler handler;
+	
     private boolean alternateMode;
+    
+    @Action
+    public void handle() throws UnifyException {
+    	TargetControlHandler _handler = getHandler();
+    	if (_handler != null) {
+    		_handler.handle(getRequestTarget(String.class));
+    	}
+    }
     
     @Override
     public String getStaticBindingValue() throws UnifyException {
@@ -53,6 +66,23 @@ public abstract class AbstractTargetControl extends AbstractControl implements T
     public String getTargetId() throws UnifyException {
         return getPrefixedId("trg_");
     }
+
+    @Override
+	public void setHandler(TargetControlHandler handler) throws UnifyException {
+		this.handler = handler;
+	}
+
+	@Override
+	public TargetControlHandler getHandler() throws UnifyException {
+		if (handler == null) {
+			final String handlerName = getUplAttribute(String.class, "handler");
+			if (!StringUtils.isBlank(handlerName)) {
+				handler = getComponent(TargetControlHandler.class, handlerName);
+			}
+		}
+
+		return handler;
+	}
 
     @Override
     public boolean isAlwaysValueIndex() throws UnifyException {
