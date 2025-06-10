@@ -42,7 +42,23 @@ public interface TargetControl extends Control {
      *             if an error occurs
      */
     String getTargetId() throws UnifyException;
-
+    
+	/**
+	 * Sets the control handler.
+	 * 
+	 * @param handler the handler
+	 * @throws UnifyException if an error occurs
+	 */
+	void setHandler(TargetControlHandler handler) throws UnifyException;
+	
+	/**
+	 * Gets control handler.
+	 * 
+	 * @return the handler is exists
+	 * @throws UnifyException if an error occurs
+	 */
+	TargetControlHandler getHandler() throws UnifyException;
+	
 	/**
 	 * Indicated is message resolution is required
 	 * 

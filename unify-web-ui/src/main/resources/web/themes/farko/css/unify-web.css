@@ -507,6 +507,7 @@ z-index:400;}
 .badgeselyellow {background-color: #C0B800; color: #FFF;}
 .badgeselorange {background-color: #C07833; color: #FFF;}
 .badgeselgray {background-color: #787878; color: #FFF;}
+.pick {cursor: pointer;}
 
 /** Bell */
 .ui-bell {position:relative;width:28px;height:28px;}

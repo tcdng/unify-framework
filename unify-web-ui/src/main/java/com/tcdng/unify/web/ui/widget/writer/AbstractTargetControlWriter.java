@@ -17,6 +17,7 @@
 package com.tcdng.unify.web.ui.widget.writer;
 
 import com.tcdng.unify.core.UnifyException;
+import com.tcdng.unify.web.ui.widget.EventHandler;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.TargetControl;
 import com.tcdng.unify.web.ui.widget.Widget;
@@ -60,6 +61,22 @@ public abstract class AbstractTargetControlWriter extends AbstractControlWriter 
 		if (targetControl.isDebounce()) {
 			getRequestContextUtil().registerWidgetDebounce(targetControl.getId());
 		}
+	}
+
+	@Override
+	protected void doWriteBehavior(ResponseWriter writer, Widget widget, EventHandler[] handlers)
+			throws UnifyException {
+		TargetControl targetControl = (TargetControl) widget;
+		if (targetControl.getHandler() != null) {
+			writer.beginFunction("ux.rigTarget");
+			writer.writeParam("pId", targetControl.getId());
+			writer.writeParam("pContId", targetControl.getContainerId());
+			writer.writeCommandURLParam("pCmdURL");
+			writer.endFunction();
+			return;
+		}
+		
+		super.doWriteBehavior(writer, widget, handlers);
 	}
 
 	protected String resolveValue(TargetControl targetControl) throws UnifyException {
