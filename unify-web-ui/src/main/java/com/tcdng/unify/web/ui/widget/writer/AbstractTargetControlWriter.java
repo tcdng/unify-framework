@@ -39,7 +39,7 @@ public abstract class AbstractTargetControlWriter extends AbstractControlWriter 
 		final String value = resolveValue(targetControl);
 		final int index = targetControl.getValueIndex();
 		if (targetControl.isAlwaysValueIndex() && index >= 0) {
-			String indexPrefix = targetControl.getValueMarker();
+			String indexPrefix = targetControl.getHandler() == null ? targetControl.getValueMarker() : null;
 			if (indexPrefix != null) {
 				writer.write(" value=\"").write(indexPrefix).write(':').write(index).write(':')
 						.write(targetControl.getBinding()).write("\"");
