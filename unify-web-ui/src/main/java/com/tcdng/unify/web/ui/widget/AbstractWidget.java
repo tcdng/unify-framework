@@ -25,6 +25,7 @@ import com.tcdng.unify.core.ViewDirective;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
 import com.tcdng.unify.core.data.FileAttachmentInfo;
+import com.tcdng.unify.core.data.IndexedTarget;
 import com.tcdng.unify.core.data.ValueStore;
 import com.tcdng.unify.core.database.Query;
 import com.tcdng.unify.core.upl.AbstractUplComponent;
@@ -765,6 +766,10 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 
 	protected <T> T getRequestTarget(Class<T> clazz) throws UnifyException {
 		return getRequestContextUtil().getRequestTargetValue(clazz);
+	}
+
+	protected IndexedTarget getIndexedTarget(String target) throws UnifyException {
+		return DataUtils.convert(IndexedTarget.class, target);
 	}
 
 	protected String getRequestCommandTag() throws UnifyException {

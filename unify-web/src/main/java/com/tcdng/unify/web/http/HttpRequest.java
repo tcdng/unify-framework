@@ -56,6 +56,8 @@ public interface HttpRequest extends HttpRequestHeaders, HttpRequestParameters {
 
 	String getQueryString();
 
+	Locale getPreferredLocale();
+	
 	int getServerPort();
 
 	HttpUserSession createHttpUserSession(SessionAttributeProvider attributeProvider, Locale locale, TimeZone timeZone,

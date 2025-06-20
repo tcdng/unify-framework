@@ -16,8 +16,12 @@
 
 package com.tcdng.unify.web.ui.widget.control;
 
+import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
-import com.tcdng.unify.web.ui.widget.AbstractControl;
+import com.tcdng.unify.core.annotation.UplAttribute;
+import com.tcdng.unify.core.annotation.UplAttributes;
+import com.tcdng.unify.web.ui.widget.AbstractTargetControl;
+import com.tcdng.unify.web.ui.widget.data.BadgeInfo;
 
 /**
  * A badge widget.
@@ -26,6 +30,11 @@ import com.tcdng.unify.web.ui.widget.AbstractControl;
  * @since 4.1
  */
 @Component("ui-badge")
-public class Badge extends AbstractControl {
+@UplAttributes({
+	@UplAttribute(name = "badgeInfoBinding", type = String.class, mandatory = true) })
+public class Badge extends AbstractTargetControl {
 
+	public BadgeInfo getBadgeInfo() throws UnifyException {
+		return getValue(BadgeInfo.class, getUplAttribute(String.class, "badgeInfoBinding"));
+	}
 }

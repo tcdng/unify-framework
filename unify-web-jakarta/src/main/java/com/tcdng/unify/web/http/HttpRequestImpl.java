@@ -61,6 +61,11 @@ public class HttpRequestImpl implements HttpRequest {
     }
 
     @Override
+	public Locale getPreferredLocale() {
+		return request.getLocale();
+	}
+
+	@Override
     public String getPathInfo() {
         return request.getPathInfo();
     }

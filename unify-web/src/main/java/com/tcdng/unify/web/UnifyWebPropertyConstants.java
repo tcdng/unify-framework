@@ -58,4 +58,6 @@ public interface UnifyWebPropertyConstants {
     String APPLICATION_REMOTE_VIEWERS_STRICT = "application.web.remote.viewers.strict";
 
     String APPLICATION_TENANT_PATH_ENABLED = "application.web.tenantpath.enabled";
+
+    String APPLICATION_WEB_BROWSER_LOCALE = "application.web.browser.locale";
 }

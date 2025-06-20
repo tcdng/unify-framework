@@ -19,13 +19,13 @@ package com.tcdng.unify.web.ui.widget.writer.control;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
-import com.tcdng.unify.core.constant.ColorScheme;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
-import com.tcdng.unify.web.ui.widget.Widget;
+import com.tcdng.unify.web.ui.widget.TargetControl;
 import com.tcdng.unify.web.ui.widget.control.Badge;
 import com.tcdng.unify.web.ui.widget.data.BadgeInfo;
-import com.tcdng.unify.web.ui.widget.writer.AbstractControlWriter;
+import com.tcdng.unify.web.ui.widget.data.BadgeItem;
+import com.tcdng.unify.web.ui.widget.writer.AbstractTargetControlWriter;
 
 /**
  * Badge writer.
@@ -35,38 +35,24 @@ import com.tcdng.unify.web.ui.widget.writer.AbstractControlWriter;
  */
 @Writes(Badge.class)
 @Component("badge-writer")
-public class BadgeWriter extends AbstractControlWriter {
+public class BadgeWriter extends AbstractTargetControlWriter {
 
-    @Override
-    protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
-        Badge badge = (Badge) widget;
-        String caption = null;
-        ColorScheme scheme = null;
-        Object value = badge.getValue();
-        if (value instanceof String) {
-            caption = resolveSessionMessage((String) value);
-        } else if (value instanceof BadgeInfo) {
-            BadgeInfo badgeInfo = (BadgeInfo) value;
-            scheme = badgeInfo.getColorScheme();
-            caption = resolveSessionMessage(badgeInfo.getCaption());
-        }
+	@Override
+	protected void doWriteTargetControl(ResponseWriter writer, TargetControl targetControl) throws UnifyException {
+		final Badge badge = (Badge) targetControl;
+		final BadgeInfo badgeInfo = badge.getBadgeInfo();		
+		final String code = badge.getStringValue();
+		if (!StringUtils.isBlank(code)) {
+			BadgeItem item = badgeInfo.getItem(code);
 
-        writer.write("<span");
-        String sel = "badgesel";
-        if (scheme != null) {
-            sel += scheme.code();
-        }
-        writeTagId(writer, badge);
-        writeTagStyleClassWithTrailingExtraStyleClasses(writer, badge, sel);
-        writeTagStyle(writer, badge);
-        writer.write(">");
-        if (StringUtils.isBlank(caption)) {
-            caption = badge.getCaption();
-        }
-
-        if (caption != null) {
-            writer.writeWithHtmlEscape(caption);
-        }
-        writer.write("</span>");
-    }
+			writer.write("<span");
+			final String sel = "badgesel" + item.getColorScheme().code() + (badge.getHandler() != null ? " pick" :"");
+			writeTagId(writer, badge);
+			writeTagStyleClassWithTrailingExtraStyleClasses(writer, badge, sel);
+			writeTagStyle(writer, badge);
+			writer.write(">");
+			writer.writeWithHtmlEscape(resolveSessionMessage(item.getCaption()));
+			writer.write("</span>");
+		}
+	}
 }
