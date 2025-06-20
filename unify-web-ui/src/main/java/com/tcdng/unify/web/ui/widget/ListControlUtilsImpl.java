@@ -90,6 +90,7 @@ public class ListControlUtilsImpl extends AbstractUnifyComponent implements List
 						? HtmlUtils.getStringWithHtmlEscape(listable.getListDescription())
 						: listable.getListDescription();
 			}
+			labels[i] = resolveSessionMessage(labels[i]);
 			selectIds[i] = listControl.getNamingIndexedId(i);
 		}
 

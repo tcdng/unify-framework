@@ -772,7 +772,7 @@ public final class StringUtils {
 	 */
 	public static String flatten(String text) {
 		if (text != null) {
-			return text.replaceAll(" ", "_").replaceAll("[\"']", "").toLowerCase();
+			return text.replaceAll(" ", "_").replaceAll("-", "_").replaceAll("[\"']", "").toLowerCase();
 		}
 		return null;
 	}
