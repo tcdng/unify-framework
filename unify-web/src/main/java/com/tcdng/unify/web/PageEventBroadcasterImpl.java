@@ -113,17 +113,17 @@ public class PageEventBroadcasterImpl extends AbstractBusinessService implements
 		}
 	}
 
-	@Periodic(PeriodicType.FASTER)
-	public void broadcastEntityChange(TaskMonitor taskMonitor) throws UnifyException {
-		if (isInterfacesOpen()) {
-			for (EntityEvent entityEvent : tm().collectEntityEvents()) {
-				final String topic = entityEvent.getId() != null
-						? entityEvent.getEntityClass().getName() + ":" + entityEvent.getId()
-						: entityEvent.getEntityClass().getName();
-				broadcastTopicEvent(entityEvent.getSrcClientId(), entityEvent.getEventType().syncCmd(), topic);
-			}
-		}
-	}
+//	@Periodic(PeriodicType.FASTER)
+//	public void broadcastEntityChange(TaskMonitor taskMonitor) throws UnifyException {
+//		if (isInterfacesOpen()) {
+//			for (EntityEvent entityEvent : tm().collectEntityEvents()) {
+//				final String topic = entityEvent.getId() != null
+//						? entityEvent.getEntityClass().getName() + ":" + entityEvent.getId()
+//						: entityEvent.getEntityClass().getName();
+//				broadcastTopicEvent(entityEvent.getSrcClientId(), entityEvent.getEventType().syncCmd(), topic);
+//			}
+//		}
+//	}
 
 	@Broadcast
 	public void broadcastTopicEvent(String... params) throws UnifyException {
