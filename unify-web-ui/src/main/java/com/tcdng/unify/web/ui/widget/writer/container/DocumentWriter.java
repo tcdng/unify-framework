@@ -26,7 +26,6 @@ import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.data.WebStringWriter;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ControllerPathParts;
-import com.tcdng.unify.web.constant.ClientSyncNameConstants;
 import com.tcdng.unify.web.ui.PagePathInfoRepository;
 import com.tcdng.unify.web.ui.widget.Document;
 import com.tcdng.unify.web.ui.widget.DocumentLayout;
@@ -207,10 +206,10 @@ public class DocumentWriter extends AbstractPageWriter {
 				.write("\", \"").write(document.getLatencyPanelId()).write("\", \"").write(getSessionContext().getId())
 				.write("\");");
 
-		if (document.isPushUpdate()) {
-			final String wsContextPath = getSessionContext().getContextPath() + ClientSyncNameConstants.SYNC_CONTEXT;
-			writer.write("ux.wsPushUpdate(\"").write(wsContextPath).write("\");");
-		}
+//		if (document.isPushUpdate()) {
+//			final String wsContextPath = getSessionContext().getContextPath() + ClientSyncNameConstants.SYNC_CONTEXT;
+//			writer.write("ux.wsPushUpdate(\"").write(wsContextPath).write("\");");
+//		}
 
 		writer.useSecondary();
 		// Write layout behavior
