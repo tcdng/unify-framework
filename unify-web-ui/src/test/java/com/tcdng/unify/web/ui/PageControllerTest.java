@@ -27,6 +27,7 @@ import com.tcdng.unify.web.PathInfoRepository;
 import com.tcdng.unify.web.RequestPathParts;
 import com.tcdng.unify.web.TestClientRequest;
 import com.tcdng.unify.web.TestClientResponse;
+import com.tcdng.unify.web.UnifyWebPropertyConstants;
 import com.tcdng.unify.web.WebApplicationComponents;
 import com.tcdng.unify.web.constant.UnifyWebRequestAttributeConstants;
 import com.tcdng.unify.web.ui.controller.DocumentLoaderController;
@@ -116,6 +117,12 @@ public class PageControllerTest extends AbstractUnifyWebTest {
 		// Create page controller and load page to request context
 		DocumentLoaderController controller = (DocumentLoaderController) controllerFinder
 				.findController(pathInfoRepository.getControllerPathParts("/testauthor"));
+	}
+
+    @Override
+	protected void doAddSettingsAndDependencies() throws Exception {
+    	super.doAddSettingsAndDependencies();
+		addContainerSetting(UnifyWebPropertyConstants.APPLICATION_LOADING_PATH_ENABLED, "true");
 	}
 
 	@Override
