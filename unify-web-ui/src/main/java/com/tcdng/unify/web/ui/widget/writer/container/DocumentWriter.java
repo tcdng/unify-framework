@@ -18,6 +18,7 @@ package com.tcdng.unify.web.ui.widget.writer.container;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.tcdng.unify.core.UnifyCorePropertyConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
@@ -26,6 +27,7 @@ import com.tcdng.unify.core.constant.MimeType;
 import com.tcdng.unify.core.data.WebStringWriter;
 import com.tcdng.unify.core.util.StringUtils;
 import com.tcdng.unify.web.ControllerPathParts;
+import com.tcdng.unify.web.constant.ClientSyncNameConstants;
 import com.tcdng.unify.web.ui.PagePathInfoRepository;
 import com.tcdng.unify.web.ui.widget.Document;
 import com.tcdng.unify.web.ui.widget.DocumentLayout;
@@ -55,7 +57,7 @@ public class DocumentWriter extends AbstractPageWriter {
 
 	@Override
 	protected void doWriteStructureAndContent(ResponseWriter writer, Widget widget) throws UnifyException {
-		BasicDocument document = (BasicDocument) widget;		
+		BasicDocument document = (BasicDocument) widget;
 		writer.write("<!DOCTYPE html>");
 		writer.write("<html ");
 		writeTagAttributes(writer, document);
@@ -134,10 +136,10 @@ public class DocumentWriter extends AbstractPageWriter {
 			}
 		}
 
-		for (String tagLine: getPageManager().getDocumentTagLines()) {
+		for (String tagLine : getPageManager().getDocumentTagLines()) {
 			writer.write(tagLine);
 		}
-		
+
 		writeResourcesScript(writer);
 
 		writer.write("</head>");
@@ -170,9 +172,9 @@ public class DocumentWriter extends AbstractPageWriter {
 
 		writer.write("</div>");
 
-		//Latency base
+		// Latency base
 		writeLatencySection(writer, document);
-		
+
 		// Write document structure an content
 		DocumentLayout documentLayout = document.getUplAttribute(DocumentLayout.class, "layout");
 		writer.writeStructureAndContent(documentLayout, document);
@@ -200,16 +202,16 @@ public class DocumentWriter extends AbstractPageWriter {
 		writer.write(">");
 		// Set document properties
 		ControllerPathParts controllerPathParts = pathInfoRepository.getControllerPathParts(document);
-		writer.write("ux.setupDocument(\"")
-				.write(controllerPathParts.getControllerPathId()).write("\", \"").write(document.getPopupBaseId())
-				.write("\", \"").write(document.getPopupWinId()).write("\", \"").write(document.getPopupSysId())
-				.write("\", \"").write(document.getLatencyPanelId()).write("\", \"").write(getSessionContext().getId())
-				.write("\");");
+		writer.write("ux.setupDocument(\"").write(controllerPathParts.getControllerPathId()).write("\", \"")
+				.write(document.getPopupBaseId()).write("\", \"").write(document.getPopupWinId()).write("\", \"")
+				.write(document.getPopupSysId()).write("\", \"").write(document.getLatencyPanelId()).write("\", \"")
+				.write(getSessionContext().getId()).write("\");");
 
-//		if (document.isPushUpdate()) {
-//			final String wsContextPath = getSessionContext().getContextPath() + ClientSyncNameConstants.SYNC_CONTEXT;
-//			writer.write("ux.wsPushUpdate(\"").write(wsContextPath).write("\");");
-//		}
+		if (document.isPushUpdate()
+				&& getContainerSetting(boolean.class, UnifyCorePropertyConstants.APPLICATION_BROADCAST_ENTITY_CHANGE)) {
+			final String wsContextPath = getSessionContext().getContextPath() + ClientSyncNameConstants.SYNC_CONTEXT;
+			writer.write("ux.wsPushUpdate(\"").write(wsContextPath).write("\");");
+		}
 
 		writer.useSecondary();
 		// Write layout behavior
@@ -282,18 +284,18 @@ public class DocumentWriter extends AbstractPageWriter {
 				fsb.append(", 'FontSymbolMngr").append(i).append('\'');
 				i++;
 			}
-			
+
 			fsb.append(";}");
 			writer.write(fsb);
 		}
-		
+
 		// Additional
 		Set<String> excludeFonts = new HashSet<String>();
 		String[] fonts = document.getFont();
 		if (fonts != null) {
 			for (String font : fonts) {
 				if (!excludeFonts.contains(font)) {
-					final String[] parts =  font.split(":", 5);
+					final String[] parts = font.split(":", 5);
 					writeFont(writer, parts[0], parts[1], parts[2], parts[3], parts[4]);
 					excludeFonts.add(font); // Avoid duplication
 				}
@@ -302,12 +304,12 @@ public class DocumentWriter extends AbstractPageWriter {
 
 		for (String font : getPageManager().getDocumentFonts()) {
 			if (!excludeFonts.contains(font)) {
-				final String[] parts =  font.split(":", 5);
+				final String[] parts = font.split(":", 5);
 				writeFont(writer, parts[0], parts[1], parts[2], parts[3], parts[4]);
 				excludeFonts.add(font); // Avoid duplication
 			}
 		}
-		
+
 		writer.write("</style>");
 	}
 

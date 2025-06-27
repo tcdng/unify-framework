@@ -166,33 +166,33 @@ ux.getClientId = function() {
 	return cid;
 }
 
-//ux.wsPushUpdate = function(wsSyncPath) {
-//	ux.wsUrl = (location.protocol == "https:" ? "wss://" : "ws://")
-//		+ location.hostname
-//		+ (location.port ? ':' + location.port: '')
-//		+ wsSyncPath;
-//
-//	ux.wsSocket = new WebSocket(ux.wsUrl);
-//	ux.wsSocket.addEventListener('open', function (event) {
-//	    ux.wsSend("open", ux.getClientId());
-//	});
-//	ux.wsSocket.addEventListener('message', function (event) {
-//	    ux.wsReceive(event.data);
-//	});
-//}
-//
-//ux.wsSend = function(cmd, param) {
-//	if (ux.wsSocket) {
-//		ux.wsSocket.send(JSON.stringify({cmd:cmd, param:param}));
-//	}
-//}
-//
-//ux.wsReceive = function(txt) {
-//	const msg = JSON.parse(txt);
-//	if ("refresh" == msg.cmd) {
-//		ux.postToPath({uPath:ux.docReloadURL,uTarget:"refresh"});
-//	}
-//}
+ux.wsPushUpdate = function(wsSyncPath) {
+	ux.wsUrl = (location.protocol == "https:" ? "wss://" : "ws://")
+		+ location.hostname
+		+ (location.port ? ':' + location.port: '')
+		+ wsSyncPath;
+
+	ux.wsSocket = new WebSocket(ux.wsUrl);
+	ux.wsSocket.addEventListener('open', function (event) {
+	    ux.wsSend("open", ux.getClientId());
+	});
+	ux.wsSocket.addEventListener('message', function (event) {
+	    ux.wsReceive(event.data);
+	});
+}
+
+ux.wsSend = function(cmd, param) {
+	if (ux.wsSocket) {
+		ux.wsSocket.send(JSON.stringify({cmd:cmd, param:param}));
+	}
+}
+
+ux.wsReceive = function(txt) {
+	const msg = JSON.parse(txt);
+	if ("refresh" == msg.cmd) {
+		ux.postToPath({uPath:ux.docReloadURL,uTarget:"refresh"});
+	}
+}
 
 ux.processJSON = function(jsonstring) {
 	const fullResp = JSON.parse(jsonstring);
@@ -543,16 +543,16 @@ ux.refreshPanels = function(resp) {
 		ux.markNoPushWidgets(resp.noPushWidgets);
 	}
 
-//	if (resp.topic) {
-//		ux.wsSend("listen", resp.topic);
-//	}
-//
-//	if (resp.topicEvent) {
-//		for (var i = 0; i < resp.topicEvent.length; i++) {
-//			const event = resp.topicEvent[i];
-//			ux.wsSend(event.type, event.topic);
-//		}
-//	}
+	if (resp.topic) {
+		ux.wsSend("listen", resp.topic);
+	}
+
+	if (resp.topicEvent) {
+		for (var i = 0; i < resp.topicEvent.length; i++) {
+			const event = resp.topicEvent[i];
+			ux.wsSend(event.type, event.topic);
+		}
+	}
 }
 
 ux.refreshSection = function(resp) {

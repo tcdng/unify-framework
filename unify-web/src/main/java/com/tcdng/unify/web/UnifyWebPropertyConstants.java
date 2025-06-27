@@ -60,4 +60,6 @@ public interface UnifyWebPropertyConstants {
     String APPLICATION_TENANT_PATH_ENABLED = "application.web.tenantpath.enabled";
 
     String APPLICATION_WEB_BROWSER_LOCALE = "application.web.browser.locale";
+
+    String APPLICATION_LOADING_PATH_ENABLED = "application.web.loadingpath.enabled";
 }

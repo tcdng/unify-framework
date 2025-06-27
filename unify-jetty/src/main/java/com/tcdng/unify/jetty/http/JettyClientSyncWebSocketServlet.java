@@ -15,19 +15,26 @@
  */
 package com.tcdng.unify.jetty.http;
 
+import javax.servlet.annotation.WebServlet;
+
+import org.eclipse.jetty.websocket.servlet.WebSocketServlet;
+import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
+
+import com.tcdng.unify.web.constant.ClientSyncNameConstants;
+
 /**
  * Jetty client synchronization websocket implementation.
  * 
  * @author The Code Department
  * @since 4.1
  */
-//@SuppressWarnings("serial")
-//@WebServlet(name = "MyWebSocketServlet", urlPatterns = {ClientSyncNameConstants.SYNC_CONTEXT})
-public class JettyClientSyncWebSocketServlet  {
-//
-//	@Override
-//	public void configure(WebSocketServletFactory factory) {
-//		factory.register(JettyClientSyncEndpointImpl.class);
-//	}
+@SuppressWarnings("serial")
+@WebServlet(name = "MyWebSocketServlet", urlPatterns = {ClientSyncNameConstants.SYNC_CONTEXT})
+public class JettyClientSyncWebSocketServlet extends WebSocketServlet {
+
+	@Override
+	public void configure(WebSocketServletFactory factory) {
+		factory.register(JettyClientSyncEndpointImpl.class);
+	}
 
 }

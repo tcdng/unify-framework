@@ -41,7 +41,7 @@ public class DocumentLoaderController extends AbstractDocumentController {
 
 	@Override
 	protected void writeDocument(ResponseWriter writer, String docPath, String section, String queryString) throws UnifyException {
-		final String contextPath = getRequestAttribute(String.class,
+		final String contextPath = getSessionAttribute(String.class,
 				UnifyWebRequestAttributeConstants.LOADER_FORWARD_PATH);
 		final String tempParam = RandomUtils.generateRandomLetters(8);
 		setSessionAttribute(UnifyWebSessionAttributeConstants.TEMP_CLIENT_ID_PARAM, tempParam);

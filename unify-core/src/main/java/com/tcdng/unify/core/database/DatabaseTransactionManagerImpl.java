@@ -27,6 +27,7 @@ import com.tcdng.unify.common.database.Entity;
 import com.tcdng.unify.core.AbstractUnifyComponent;
 import com.tcdng.unify.core.ApplicationComponents;
 import com.tcdng.unify.core.UnifyCoreErrorConstants;
+import com.tcdng.unify.core.UnifyCorePropertyConstants;
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Configurable;
@@ -58,6 +59,8 @@ public class DatabaseTransactionManagerImpl extends AbstractUnifyComponent imple
 	
 	private List<EntityEvent> events;
 
+	private boolean broadcastEntityChange;
+	
 	public DatabaseTransactionManagerImpl() {
 		this.events = new ArrayList<EntityEvent>();
 	}
@@ -187,8 +190,10 @@ public class DatabaseTransactionManagerImpl extends AbstractUnifyComponent imple
 	@Override
 	public void commit() throws UnifyException {
 		List<EntityEvent> _events = getCurrentTransaction().commit();
-		synchronized (this) {
-			events.addAll(_events);
+		if (_events != null) {
+			synchronized (this) {
+				events.addAll(_events);
+			}
 		}
 	}
 
@@ -205,12 +210,15 @@ public class DatabaseTransactionManagerImpl extends AbstractUnifyComponent imple
 	@Override
 	public void setOffEntityEvent(TopicEventType eventType, String srcClientId, Class<? extends Entity> entityClass,
 			Object id) throws UnifyException {
-		getCurrentTransaction().addEntityEvent(eventType, srcClientId, entityClass, id);
+		if (broadcastEntityChange) {
+			getCurrentTransaction().addEntityEvent(eventType, srcClientId, entityClass, id);
+		}
 	}
 
 	@Override
 	protected void onInitialize() throws UnifyException {
-
+		broadcastEntityChange = getContainerSetting(boolean.class,
+				UnifyCorePropertyConstants.APPLICATION_BROADCAST_ENTITY_CHANGE);
 	}
 
 	@Override

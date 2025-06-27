@@ -133,8 +133,8 @@ public class JettyEmbeddedWebServer extends AbstractEmbeddedHttpWebServer {
             httpServer.setHandler(context);
 
             // Websocket
-//            ServletHolder jettyHolder = new ServletHolder(JettyClientSyncWebSocketServlet.class);
-//            context.addServlet(jettyHolder, ClientSyncNameConstants.SYNC_CONTEXT);
+            ServletHolder jettyHolder = new ServletHolder(JettyClientSyncWebSocketServlet.class);
+            context.addServlet(jettyHolder, ClientSyncNameConstants.SYNC_CONTEXT);
             
             // HTTP/HTTPS
             ServletHolder mainHolder = new ServletHolder(new HttpApplicationServlet(createHttpServletModule()));

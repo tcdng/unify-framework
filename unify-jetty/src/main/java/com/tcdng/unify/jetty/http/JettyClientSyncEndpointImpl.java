@@ -17,7 +17,17 @@ package com.tcdng.unify.jetty.http;
 
 import java.util.UUID;
 
+import org.eclipse.jetty.websocket.api.Session;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
+import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+
+import com.tcdng.unify.core.constant.PrintFormat;
+import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.web.AbstractClientSyncEndpoint;
+import com.tcdng.unify.web.AbstractClientSyncSession;
+import com.tcdng.unify.web.ServerEventMsg;
 
 /**
  * Jetty client synchronization end-point implementation.
@@ -25,7 +35,7 @@ import com.tcdng.unify.web.AbstractClientSyncEndpoint;
  * @author The Code Department
  * @since 4.1
  */
-//@WebSocket
+@WebSocket
 public class JettyClientSyncEndpointImpl extends AbstractClientSyncEndpoint {
 
 	private final String sessionId;
@@ -33,49 +43,49 @@ public class JettyClientSyncEndpointImpl extends AbstractClientSyncEndpoint {
 	public JettyClientSyncEndpointImpl() {
 		this.sessionId = UUID.randomUUID().toString();
 	}
-//	
-//	@OnWebSocketConnect
-//	public void onOpen(Session session) {
-//		handleOpenSession(new ClientSyncSessionImpl(session));
-//	}
-//
-//	@OnWebSocketMessage
-//	public void onMessage(Session session, String txt) {
-//		handleTextMessage(sessionId, txt);
-//	}
-//
-//	@OnWebSocketClose
-//	public void onClose(Session session, int statusCode, String reason) {
-//		handleCloseSession(sessionId, reason);
-//	}
-//
-//	private class ClientSyncSessionImpl extends AbstractClientSyncSession {
-//
-//		private final Session session;
-//
-//		public ClientSyncSessionImpl(Session session) {
-//			this.session = session;
-//		}
-//
-//		@Override
-//		public String getId() {
-//			return sessionId;
-//		}
-//
-//		@Override
-//		public void setIdleTimeoutInMilliSec(long expirationInMilliSeconds) {
-//			session.setIdleTimeout(expirationInMilliSeconds);
-//		}
-//
-//		@Override
-//		public void sendEventToRemote(ServerEventMsg event) {
-//			try {
-//				String msg = DataUtils.asJsonString(event, PrintFormat.NONE);
-//				session.getRemote().sendString(msg);
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//		}
-//
-//	}
+	
+	@OnWebSocketConnect
+	public void onOpen(Session session) {
+		handleOpenSession(new ClientSyncSessionImpl(session));
+	}
+
+	@OnWebSocketMessage
+	public void onMessage(Session session, String txt) {
+		handleTextMessage(sessionId, txt);
+	}
+
+	@OnWebSocketClose
+	public void onClose(Session session, int statusCode, String reason) {
+		handleCloseSession(sessionId, reason);
+	}
+
+	private class ClientSyncSessionImpl extends AbstractClientSyncSession {
+
+		private final Session session;
+
+		public ClientSyncSessionImpl(Session session) {
+			this.session = session;
+		}
+
+		@Override
+		public String getId() {
+			return sessionId;
+		}
+
+		@Override
+		public void setIdleTimeoutInMilliSec(long expirationInMilliSeconds) {
+			session.setIdleTimeout(expirationInMilliSeconds);
+		}
+
+		@Override
+		public void sendEventToRemote(ServerEventMsg event) {
+			try {
+				String msg = DataUtils.asJsonString(event, PrintFormat.NONE);
+				session.getRemote().sendString(msg);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+	}
 }
