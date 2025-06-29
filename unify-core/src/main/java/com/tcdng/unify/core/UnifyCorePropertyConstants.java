@@ -37,6 +37,8 @@ public interface UnifyCorePropertyConstants {
 
     String APPLICATION_BOOT = "application.boot";
 
+    String APPLICATION_BROADCAST_ENTITY_CHANGE= "application.broadcast.entity.change";
+
     String APPLICATION_INTERFACES = "application.interfaces";
 
     String APPLICATION_PROPERTIES= "application.properties";
