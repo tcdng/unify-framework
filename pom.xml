@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.tcdng.unify</groupId>
   <artifactId>unify</artifactId>
-  <version>4.1.1</version>
+  <version>4.1.2-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Unify Framework</name>
   <description>Unify Framework</description>
@@ -114,7 +114,6 @@
 	          <configuration>
 	            <publishingServerId>sonatype-nexus-staging</publishingServerId>
 	            <autoPublish>true</autoPublish>
-                <waitUntil>published</waitUntil>
 	          </configuration>
 	        </plugin>
         </plugins>
