@@ -54,18 +54,15 @@ import com.tcdng.unify.web.ui.widget.panel.StandalonePanel;
  * @author The Code Department
  * @since 4.1
  */
-@UplAttributes({
-		@UplAttribute(name = "binding", type = String.class),
+@UplAttributes({ @UplAttribute(name = "binding", type = String.class),
 		@UplAttribute(name = "styleClass", type = String.class, defaultVal = "$e{}"),
 		@UplAttribute(name = "styleClassBinding", type = String.class),
-		@UplAttribute(name = "style", type = String.class),
-		@UplAttribute(name = "caption", type = String.class),
+		@UplAttribute(name = "style", type = String.class), @UplAttribute(name = "caption", type = String.class),
 		@UplAttribute(name = "captionBinding", type = String.class),
 		@UplAttribute(name = "captionParamBinding", type = String.class),
 		@UplAttribute(name = "columnStyle", type = String.class),
 		@UplAttribute(name = "columnSelectSummary", type = boolean.class),
-		@UplAttribute(name = "hint", type = String.class),
-		@UplAttribute(name = "hintBinding", type = String.class),
+		@UplAttribute(name = "hint", type = String.class), @UplAttribute(name = "hintBinding", type = String.class),
 		@UplAttribute(name = "readOnly", type = boolean.class, defaultVal = "false"),
 		@UplAttribute(name = "disabled", type = boolean.class, defaultVal = "false"),
 		@UplAttribute(name = "ignoreParentState", type = boolean.class, defaultVal = "false"),
@@ -79,9 +76,9 @@ import com.tcdng.unify.web.ui.widget.panel.StandalonePanel;
 public abstract class AbstractWidget extends AbstractUplComponent implements Widget {
 
 	private static final EventHandler[] ZERO_EVENT_HANDLERS = new EventHandler[0];
-	
+
 	private EventHandler[] handlers;
-	
+
 	private String id;
 
 	private String groupId;
@@ -196,26 +193,26 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 
 	@Override
 	public EventHandler[] getEventHandlers() throws UnifyException {
-		if (handlers == null) { 
-			synchronized(this) {
+		if (handlers == null) {
+			synchronized (this) {
 				if (handlers == null) {
 					handlers = getUplAttribute(EventHandler[].class, "eventHandler");
 					if (handlers == null) {
 						handlers = ZERO_EVENT_HANDLERS;
 					}
-					
+
 					if (handlers.length > 0 && getUplAttribute(boolean.class, "copyEventHandlers")) {
 						EventHandler[] _handlers = new EventHandler[handlers.length];
 						for (int i = 0; i < handlers.length; i++) {
 							_handlers[i] = handlers[i].wrap();
 						}
-						
+
 						handlers = _handlers;
 					}
 				}
 			}
 		}
-		
+
 		return handlers;
 	}
 
@@ -351,7 +348,7 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 	@Override
 	public void useRecallMemory(Widget srcWidget) throws UnifyException {
 		if (srcWidget instanceof AbstractWidget) {
-			valueStoreMem = ((AbstractWidget) srcWidget).valueStoreMem;		
+			valueStoreMem = ((AbstractWidget) srcWidget).valueStoreMem;
 		}
 	}
 
@@ -518,7 +515,7 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 	}
 
 	@Override
-	public void setTabIndex(int tabIndex)  throws UnifyException {
+	public void setTabIndex(int tabIndex) throws UnifyException {
 		this.tabIndex = tabIndex;
 	}
 
@@ -560,6 +557,16 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 	@Override
 	public <T, U extends Collection<T>> U getValue(Class<U> clazz, Class<T> dataClass) throws UnifyException {
 		return convert(clazz, dataClass, getValue(), null);
+	}
+
+	@Override
+	public <T> T getTargetValue(Class<T> valueClass) throws UnifyException {
+		IndexedTarget target = getIndexedTarget();
+		return convert(valueClass,
+				target.isValidValueIndex()
+						? getValueStore().setDataIndex(target.getValueIndex()).getValueObjectAtDataIndex()
+						: getValue(),
+				null);
 	}
 
 	@Override
@@ -675,14 +682,14 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 
 	protected String getHttpRequestHeader(String headerName) throws UnifyException {
 		HttpRequestHeaders headers = getHttpRequestHeaders();
-		return headers != null? headers.getHeader(headerName) : null;
+		return headers != null ? headers.getHeader(headerName) : null;
 	}
 
 	protected String getHttpRequestParameter(String paramName) throws UnifyException {
 		HttpRequestParameters parameters = getHttpRequestParameters();
-		return parameters != null? parameters.getParameter(paramName) : null;
+		return parameters != null ? parameters.getParameter(paramName) : null;
 	}
-	
+
 	protected boolean isTempValue(String name) throws UnifyException {
 		return valueStore != null ? valueStore.isTempValue(name) : false;
 	}
@@ -768,6 +775,10 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 		return getRequestContextUtil().getRequestTargetValue(clazz);
 	}
 
+	protected IndexedTarget getIndexedTarget() throws UnifyException {
+		return DataUtils.convert(IndexedTarget.class, getRequestContextUtil().getRequestTargetValue(String.class));
+	}
+
 	protected IndexedTarget getIndexedTarget(String target) throws UnifyException {
 		return DataUtils.convert(IndexedTarget.class, target);
 	}
@@ -828,11 +839,11 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 		setCommandResultMapping(ResultMappingConstants.POST_RESPONSE);
 	}
 
-	protected void showAttachment(FileAttachmentInfo fileAttachmentInfo)  throws UnifyException {
+	protected void showAttachment(FileAttachmentInfo fileAttachmentInfo) throws UnifyException {
 		setRequestAttribute(UnifyWebRequestAttributeConstants.FILEATTACHMENTS_INFO, fileAttachmentInfo);
 		setCommandResultMapping(ResultMappingConstants.SHOW_ATTACHMENT);
 	}
-	
+
 	protected void refreshApplicationMenu() throws UnifyException {
 		setSessionAttribute(UnifyWebSessionAttributeConstants.REFRESH_MENU, Boolean.TRUE);
 	}
@@ -902,12 +913,12 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 	}
 
 	protected <T> T getUplAttribute(Class<T> type, String attribute, String bindingAttribute) throws UnifyException {
-        String binding = getUplAttribute(String.class, bindingAttribute);
-        if (StringUtils.isNotBlank(binding)) {
-            return getValue(type, binding);
-        }
-        
-        return getUplAttribute(type, attribute);
+		String binding = getUplAttribute(String.class, bindingAttribute);
+		if (StringUtils.isNotBlank(binding)) {
+			return getValue(type, binding);
+		}
+
+		return getUplAttribute(type, attribute);
 	}
 
 	/**

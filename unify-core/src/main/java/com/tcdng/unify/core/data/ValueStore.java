@@ -378,7 +378,7 @@ public interface ValueStore extends Iterable<ValueStore>{
      * @param dataIndex
      *                  the data index to set
      */
-    void setDataIndex(int dataIndex);
+    ValueStore setDataIndex(int dataIndex);
 
     /**
      * Returns the value store data prefix.

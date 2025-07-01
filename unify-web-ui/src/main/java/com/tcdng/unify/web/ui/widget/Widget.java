@@ -349,6 +349,17 @@ public interface Widget extends UplComponent {
      */
     <T, U extends Collection<T>> U getValue(Class<U> clazz, Class<T> dataClass) throws UnifyException;
 
+	/**
+	 * Returns the type converted target indexed value of this component value bean
+	 * attribute.
+	 * 
+	 * @param <T>
+	 * @param valueClass
+	 * @return the target value
+	 * @throws UnifyException if an error occurs
+	 */
+	<T> T getTargetValue(Class<T> valueClass) throws UnifyException;
+    
     /**
      * Returns this component's containing panel.
      * 

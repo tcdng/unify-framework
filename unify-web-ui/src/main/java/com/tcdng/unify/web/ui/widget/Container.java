@@ -206,7 +206,7 @@ public interface Container extends DataTransferWidget, WidgetContainer {
      * @throws UnifyException
      *             if an error occurs
      */
-    List<ValueStore> getRepeatValueStores() throws UnifyException;
+    ValueStore getRepeatValueStores() throws UnifyException;
 
     /**
      * Returns container layout

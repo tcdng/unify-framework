@@ -28,36 +28,42 @@ import com.tcdng.unify.core.data.IndexedTarget;
  */
 public class IndexedTargetConverter extends AbstractConverter<IndexedTarget> {
 
-    @Override
-    protected IndexedTarget doConvert(Object value, ConverterFormatter<?> formatter) throws Exception {
-        if (value instanceof IndexedTarget) {
-            return (IndexedTarget) value;
-        }
+	@Override
+	protected IndexedTarget doConvert(Object value, ConverterFormatter<?> formatter) throws Exception {
+		if (value instanceof IndexedTarget) {
+			return (IndexedTarget) value;
+		}
 
-        if (value instanceof String) {
-        	String target = ((String) value).trim();
-        	final String[] parts = target.split(":");
-        	if (parts.length > 1) {
-        		final int targetIndex = Integer.parseInt(parts[1]);
-        		final String binding = parts.length > 2 ?  parts[2] : null;
-        		String _target = parts[0];
-        		final int index = _target.lastIndexOf('_');
-        		int tabIndex = -1;
-        		if(index > 0) {
-        			try {
+		if (value instanceof String) {
+			String target = ((String) value).trim();
+			final String[] parts = target.split(":");
+			if (parts.length > 1) {
+				final int targetIndex = Integer.parseInt(parts[1]);
+				final String binding = parts.length > 2 ? parts[2] : null;
+				String _target = parts[0];
+				final int index = _target.lastIndexOf('_');
+				int tabIndex = -1;
+				if (index > 0) {
+					try {
 						tabIndex = Integer.parseInt(_target.substring(index + 1));
 						_target = _target.substring(0, index);
 					} catch (NumberFormatException e) {
 					}
-        		}
-        		
-            	return new IndexedTarget(_target, binding, targetIndex, tabIndex);
-        	}
+				}
 
-        	return new IndexedTarget(target, null, -1, -1);
-        }
+				return new IndexedTarget(_target, binding, targetIndex, tabIndex);
+			} else if (parts.length == 1) {
+				try {
+					final int targetIndex = Integer.parseInt(parts[0]);
+					return new IndexedTarget(target, null, targetIndex, -1);
+				} catch (NumberFormatException e) {
+				}
+			}
 
-        return null;
-    }
+			return new IndexedTarget(target, null, -1, -1);
+		}
+
+		return null;
+	}
 
 }
