@@ -305,6 +305,13 @@ public class ConverterTest extends AbstractUnifyComponentTest {
         assertEquals(5, target.getValueIndex());
         assertEquals(-1, target.getTabIndex());
         
+        target = converter.convert("5", null);
+        assertNotNull(target);
+        assertEquals("5", target.getTarget());
+        assertNull(target.getBinding());
+        assertEquals(5, target.getValueIndex());
+        assertEquals(-1, target.getTabIndex());
+        
         target = converter.convert("add:1062", null);
         assertNotNull(target);
         assertEquals("add", target.getTarget());
