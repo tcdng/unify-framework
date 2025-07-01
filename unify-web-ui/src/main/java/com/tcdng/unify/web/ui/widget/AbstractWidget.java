@@ -779,6 +779,10 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 		return DataUtils.convert(IndexedTarget.class, getRequestContextUtil().getRequestTargetValue(String.class));
 	}
 
+	protected IndexedTarget getIndexedTarget(String target) throws UnifyException {
+		return DataUtils.convert(IndexedTarget.class, target);
+	}
+
 	protected String getRequestCommandTag() throws UnifyException {
 		return getRequestContextUtil().getRequestCommandTag();
 	}
