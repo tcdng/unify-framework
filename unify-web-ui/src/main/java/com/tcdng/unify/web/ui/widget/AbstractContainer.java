@@ -204,17 +204,13 @@ public abstract class AbstractContainer extends AbstractDataTransferWidget imple
 	}
 
 	@Override
-    public void populate(DataTransferBlock transferBlock) throws UnifyException {
-        if (transferBlock != null) {
-            DataTransferBlock childBlock = transferBlock.getChildBlock();
-            DataTransferWidget childWidget = internalWidgets != null
-                    ? (DataTransferWidget) internalWidgets.get(childBlock.getId())
-                    : (DataTransferWidget) widgetRepository
-                            .getWidgetByBaseId(childBlock.getShortId(transferBlock.getId())); // TODO Unchain
-            childWidget.populate(childBlock);
-        }
-    }
-
+	public void populate(DataTransferBlock transferBlock) throws UnifyException {
+		DataTransferWidget childWidget = getChildDataTransferWidget(transferBlock);
+		if (childWidget != null) {
+			childWidget.populate(transferBlock.getChildBlock());
+		}
+	}
+	
     @Override
     public List<String> getLayoutWidgetLongNames() throws UnifyException {
         return getShallowReferencedLongNames("components");
@@ -226,7 +222,7 @@ public abstract class AbstractContainer extends AbstractDataTransferWidget imple
     }
 
     @Override
-    public List<ValueStore> getRepeatValueStores() throws UnifyException {
+    public ValueStore getRepeatValueStores() throws UnifyException {
         return null;
     }
 
@@ -362,6 +358,17 @@ public abstract class AbstractContainer extends AbstractDataTransferWidget imple
         
         return valueStore;
     }
+
+	protected DataTransferWidget getChildDataTransferWidget(DataTransferBlock transferBlock) throws UnifyException {
+		if (transferBlock != null) {
+			final DataTransferBlock childBlock = transferBlock.getChildBlock();
+			return internalWidgets != null ? (DataTransferWidget) internalWidgets.get(childBlock.getId())
+					: (DataTransferWidget) widgetRepository
+							.getWidgetByBaseId(childBlock.getShortId(transferBlock.getId())); // TODO Unchain
+		}
+
+		return null;
+	}
 
     /**
      * Adds an internal child widget to this container.

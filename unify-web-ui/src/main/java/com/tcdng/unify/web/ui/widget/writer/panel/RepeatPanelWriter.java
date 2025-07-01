@@ -16,13 +16,10 @@
 
 package com.tcdng.unify.web.ui.widget.writer.panel;
 
-import java.util.List;
-
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.Writes;
 import com.tcdng.unify.core.data.ValueStore;
-import com.tcdng.unify.core.util.DataUtils;
 import com.tcdng.unify.web.ui.widget.EventHandler;
 import com.tcdng.unify.web.ui.widget.ResponseWriter;
 import com.tcdng.unify.web.ui.widget.Widget;
@@ -44,9 +41,9 @@ public class RepeatPanelWriter extends AbstractPanelWriter {
 			throws UnifyException {
 		RepeatPanel repeatPanel = (RepeatPanel) widget;
 		Widget innerWidget = repeatPanel.getWidgetByLongName(repeatPanel.getLayoutWidgetLongNames().get(0));
-		List<ValueStore> valueStoreList = repeatPanel.getRepeatValueStores();
-		if (DataUtils.isNotBlank(valueStoreList)) {
-			for (ValueStore valueStore : valueStoreList) {
+		ValueStore repeatValueStore = repeatPanel.getRepeatValueStores();
+		if (repeatValueStore != null) {
+			for (ValueStore valueStore : repeatValueStore) {
 				if (innerWidget.isVisible()) {
 					innerWidget.setValueStore(valueStore);
 					writer.writeBehavior(innerWidget);

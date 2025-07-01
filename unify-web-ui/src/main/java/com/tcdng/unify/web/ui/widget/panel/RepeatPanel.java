@@ -15,13 +15,13 @@
  */
 package com.tcdng.unify.web.ui.widget.panel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.tcdng.unify.core.UnifyException;
 import com.tcdng.unify.core.annotation.Component;
 import com.tcdng.unify.core.annotation.UplAttribute;
 import com.tcdng.unify.core.annotation.UplAttributes;
+import com.tcdng.unify.core.data.BeanValueListStore;
 import com.tcdng.unify.core.data.ValueStore;
 import com.tcdng.unify.core.upl.UplElementReferences;
 import com.tcdng.unify.web.ui.widget.AbstractPanel;
@@ -39,25 +39,17 @@ import com.tcdng.unify.web.ui.widget.Layout;
 	@UplAttribute(name = "components", type = UplElementReferences.class, mandatory = true) })
 public class RepeatPanel extends AbstractPanel {
 
-	private List<ValueStore> valueStoreList;
+	private ValueStore repeatValueStore;
 
 	@Override
 	public void cascadeValueStore() throws UnifyException {
 		List<?> value = getValue(List.class);
-		if (value != null) {
-			valueStoreList = new ArrayList<ValueStore>();
-			final int len = value.size();
-			for (int i = 0; i < len; i++) {
-				valueStoreList.add(createValueStore(value.get(i), i));
-			}
-		} else {
-			valueStoreList = null;
-		}
+		repeatValueStore = value != null ? new BeanValueListStore(value) : null;
 	}
 
 	@Override
-	public List<ValueStore> getRepeatValueStores() throws UnifyException {
-		return valueStoreList;
+	public ValueStore getRepeatValueStores() throws UnifyException {
+		return repeatValueStore;
 	}
 
 	@Override

@@ -61,9 +61,10 @@ public abstract class AbstractValueStore implements ValueStore {
     }
 
     @Override
-    public final void setDataIndex(int dataIndex) {
+    public final ValueStore setDataIndex(int dataIndex) {
         savedValues = null;
         doSetDataIndex(dataIndex);
+        return this;
     }
 
     @Override
