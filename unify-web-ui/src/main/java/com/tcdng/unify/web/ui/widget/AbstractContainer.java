@@ -390,6 +390,7 @@ public abstract class AbstractContainer extends AbstractDataTransferWidget imple
         widget.setId(childId);
         widget.onPageConstruct();
         widget.setContainer(getContainer());
+        widget.setInRepeat(isRepeater());
         setWidgetValueBeanToThis(widget);
         internalWidgets.put(childId, widget);
         return widget;

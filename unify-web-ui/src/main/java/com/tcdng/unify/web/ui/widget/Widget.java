@@ -348,17 +348,6 @@ public interface Widget extends UplComponent {
      *                        if an error occurs.
      */
     <T, U extends Collection<T>> U getValue(Class<U> clazz, Class<T> dataClass) throws UnifyException;
-
-	/**
-	 * Returns the type converted target indexed value of this component value bean
-	 * attribute.
-	 * 
-	 * @param <T>
-	 * @param valueClass
-	 * @return the target value
-	 * @throws UnifyException if an error occurs
-	 */
-	<T> T getTargetValue(Class<T> valueClass) throws UnifyException;
     
     /**
      * Returns this component's containing panel.
@@ -429,6 +418,19 @@ public interface Widget extends UplComponent {
      *                        if an error occurs
      */
     boolean isMasked() throws UnifyException;
+
+    /**
+     * Sets the in-repeat flag.
+     * 
+     * @param inRepeat
+     *                   the flag to set
+     */
+    void setInRepeat(boolean inRepeat);
+
+    /**
+     * Returns the in-repeat flag.
+     */
+    boolean isInRepeat();
 
     /**
      * Sets the conforming flag. A conforming component's
