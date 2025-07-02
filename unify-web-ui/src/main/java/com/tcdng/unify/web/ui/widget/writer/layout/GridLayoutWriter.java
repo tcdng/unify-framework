@@ -84,7 +84,7 @@ public class GridLayoutWriter extends AbstractTabularLayoutWriter {
 			columns = 1;
 		}
 
-		Widget widget = container.getWidgetByLongName(container.getLayoutWidgetLongNames().get(0));
+        final Widget widget = container.getRepeatWidget();
 		boolean disabled = widget.isDisabled();
 		try {
 			boolean isAlternate = container.isAlternate();

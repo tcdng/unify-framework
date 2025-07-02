@@ -101,10 +101,11 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 
 	private boolean visible;
 
+	private boolean inRepeat;
+
 	public AbstractWidget() {
 		this.tabIndex = -1;
 		this.conforming = true;
-		this.disabled = false;
 		this.editable = true;
 		this.visible = true;
 	}
@@ -480,6 +481,16 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 	}
 
 	@Override
+	public void setInRepeat(boolean inRepeat) {
+		this.inRepeat = inRepeat;
+	}
+
+	@Override
+	public boolean isInRepeat() {
+		return inRepeat;
+	}
+
+	@Override
 	public boolean isBehaviorAlways() throws UnifyException {
 		return getUplAttribute(boolean.class, "behaviorAlways");
 	}
@@ -526,6 +537,13 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 
 	@Override
 	public Object getValue() throws UnifyException {
+		if (inRepeat) {
+			IndexedTarget target = getIndexedTarget();
+			if (target.isValidValueIndex()) {
+				return getValueStore().setDataIndex(target.getValueIndex()).getValueObjectAtDataIndex();
+			}
+		}
+
 		return getValue(getUplAttribute(String.class, "binding"));
 	}
 
@@ -557,16 +575,6 @@ public abstract class AbstractWidget extends AbstractUplComponent implements Wid
 	@Override
 	public <T, U extends Collection<T>> U getValue(Class<U> clazz, Class<T> dataClass) throws UnifyException {
 		return convert(clazz, dataClass, getValue(), null);
-	}
-
-	@Override
-	public <T> T getTargetValue(Class<T> valueClass) throws UnifyException {
-		IndexedTarget target = getIndexedTarget();
-		return convert(valueClass,
-				target.isValidValueIndex()
-						? getValueStore().setDataIndex(target.getValueIndex()).getValueObjectAtDataIndex()
-						: getValue(),
-				null);
 	}
 
 	@Override

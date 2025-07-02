@@ -58,7 +58,7 @@ public class VerticalLayoutWriter extends AbstractTabularLayoutWriter {
     protected void writeRepeatTableContent(ResponseWriter writer, TabularLayout layout, Container container)
             throws UnifyException {
         int rowIndex = 0;
-        Widget widget = container.getWidgetByLongName(container.getLayoutWidgetLongNames().get(0));
+        final Widget widget = container.getRepeatWidget();
         boolean isAlternate = container.isAlternate();
         for (ValueStore valueStore : container.getRepeatValueStores()) {
             widget.setValueStore(valueStore);
