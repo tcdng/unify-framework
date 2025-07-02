@@ -60,6 +60,14 @@ public interface Container extends DataTransferWidget, WidgetContainer {
      */
     Set<String> getWidgetLongNames() throws UnifyException;
 
+	/**
+	 * Gets this container's repeat widget.
+	 * 
+	 * @return the repeat widget
+	 * @throws UnifyException if an error occurs
+	 */
+	Widget getRepeatWidget() throws UnifyException;
+    
     /**
      * Gets widget by long name.
      * 

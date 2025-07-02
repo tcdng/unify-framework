@@ -126,6 +126,13 @@ public abstract class AbstractContainer extends AbstractDataTransferWidget imple
     }
 
     @Override
+	public Widget getRepeatWidget() throws UnifyException {
+		Widget widget = getWidgetByLongName(getLayoutWidgetLongNames().get(0));
+		widget.setInRepeat(true);
+		return widget;
+	}
+
+	@Override
     public Widget getWidgetByLongName(String longName) throws UnifyException {
         Widget widget = widgetRepository.getWidget(longName);
         if (widget == null) {
@@ -390,7 +397,6 @@ public abstract class AbstractContainer extends AbstractDataTransferWidget imple
         widget.setId(childId);
         widget.onPageConstruct();
         widget.setContainer(getContainer());
-        widget.setInRepeat(isRepeater());
         setWidgetValueBeanToThis(widget);
         internalWidgets.put(childId, widget);
         return widget;

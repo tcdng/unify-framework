@@ -63,7 +63,7 @@ public class HorizontalLayoutWriter extends AbstractTabularLayoutWriter {
             throws UnifyException {
         int columnIndex = 0;
         appendRowStart(writer, layout, 0);
-        Widget widget = container.getWidgetByLongName(container.getLayoutWidgetLongNames().get(0));
+        final Widget widget = container.getRepeatWidget();
         boolean isAlternate = container.isAlternate();
         for (ValueStore valueStore : container.getRepeatValueStores()) {
             widget.setValueStore(valueStore);
