@@ -297,14 +297,30 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 		SqlEntityInfo sqlEntityInfo = resolveSqlEntityInfo(query);
 		final Select select = query.getSelect();
 		try {
-			final SqlFieldInfo sqlFieldInfo = sqlEntityInfo.getIdFieldInfo();
-			query.setSelect(new Select(sqlFieldInfo.getName()));
-			return getSqlStatementExecutor().executeMultipleObjectListResultQuery(connection, idClass,
-					sqlDataSourceDialect.getSqlTypePolicy(sqlFieldInfo.getColumnType(), sqlFieldInfo.getLength()),
-					sqlDataSourceDialect.prepareRowLockStatement(query, RowLockType.NO_WAIT));
+
+			final SqlFieldInfo idFieldInfo = sqlEntityInfo.getIdFieldInfo();
+			if (sqlEntityInfo.testTrueFieldNamesOnly(query.getRestrictedFields())) {
+				query.setSelect(new Select(idFieldInfo.getName()));
+				return getSqlStatementExecutor().executeMultipleObjectListResultQuery(connection, idClass,
+						sqlDataSourceDialect.getSqlTypePolicy(idFieldInfo.getColumnType(), idFieldInfo.getLength()),
+						sqlDataSourceDialect.prepareRowLockStatement(query, RowLockType.NO_WAIT));
+			}
+
+			List<?> idList = valueList(idFieldInfo.getFieldType(), idFieldInfo.getName(), query);
+			if (!idList.isEmpty()) {
+				Query<U> iquery = Query.of(query.getEntityClass());
+				iquery.amongst(idFieldInfo.getName(), idList);
+				iquery.setSelect(new Select(idFieldInfo.getName()));
+				return getSqlStatementExecutor().executeMultipleObjectListResultQuery(connection, idClass,
+						sqlDataSourceDialect.getSqlTypePolicy(idFieldInfo.getColumnType(), idFieldInfo.getLength()),
+						sqlDataSourceDialect.prepareRowLockStatement(iquery, RowLockType.NO_WAIT));
+			}
+
 		} finally {
 			query.setSelect(select);
 		}
+
+		return Collections.emptyList();
 	}
 
 	@SuppressWarnings({ "unchecked" })
@@ -324,9 +340,21 @@ public class SqlDatabaseSessionImpl implements DatabaseSession {
 			final SqlFieldInfo idFieldInfo = sqlEntityInfo.getIdFieldInfo();
 			query.setSelect(new Select(idFieldInfo.getName()));
 			query.setOrder(new Order().add(idFieldInfo.getName()));
-			list = getSqlStatementExecutor().executeMultipleObjectListResultQuery(connection, idClass,
-					sqlDataSourceDialect.getSqlTypePolicy(idFieldInfo.getColumnType(), idFieldInfo.getLength()),
-					sqlDataSourceDialect.prepareRowLockStatement(query, RowLockType.SKIP));
+			if (sqlEntityInfo.testTrueFieldNamesOnly(query.getRestrictedFields())) {
+				list = getSqlStatementExecutor().executeMultipleObjectListResultQuery(connection, idClass,
+						sqlDataSourceDialect.getSqlTypePolicy(idFieldInfo.getColumnType(), idFieldInfo.getLength()),
+						sqlDataSourceDialect.prepareRowLockStatement(query, RowLockType.SKIP));
+			} else {
+				List<?> idList = valueList(idFieldInfo.getFieldType(), idFieldInfo.getName(), query);
+				if (!idList.isEmpty()) {
+					Query<U> iquery = Query.of(query.getEntityClass());
+					iquery.amongst(idFieldInfo.getName(), idList);
+					iquery.setSelect(new Select(idFieldInfo.getName()));
+					list = getSqlStatementExecutor().executeMultipleObjectListResultQuery(connection, idClass,
+							sqlDataSourceDialect.getSqlTypePolicy(idFieldInfo.getColumnType(), idFieldInfo.getLength()),
+							sqlDataSourceDialect.prepareRowLockStatement(iquery, RowLockType.SKIP));
+				}
+			}
 
 			if (!list.isEmpty()) {
 				if (limit > 0 && limit < list.size() && sqlDataSourceDialect.isRowLockLimitManual()) {
